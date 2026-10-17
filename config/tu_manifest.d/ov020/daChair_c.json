@@ -560,9 +560,9 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@691",
+      "from": "@690",
       "to": "@678",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the current source moves this TU's per-TU @NNN uniquifier, so mwcc emits it as @690 (was @691); licensed under the existing pin"
     }
   ]
 }

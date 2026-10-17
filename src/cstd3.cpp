@@ -116,16 +116,14 @@ extern "C" void func_0206ccd8(int fmt, ...)
     S s;
     int *p;
 
-    if (func_0206cf7c(0x20000) == 0) goto done;
+    if (func_0206cf7c(0x20000) != 0) {
+        s.f0 = 0;
+        s.f3 = 0;
+        s.f1 = -1;
+        s.cb = (void *)func_0206cbc0;
 
-    s.f0 = 0;
-    s.f3 = 0;
-    s.f1 = -1;
-    s.cb = (void *)func_0206cbc0;
-
-    p = (int *)(((int)&fmt) & ~3) + 1;
-    func_0206a928(&s, fmt, &p, p);
-done:
-    ;
+        p = (int *)(((int)&fmt) & ~3) + 1;
+        func_0206a928(&s, fmt, &p, p);
+    }
 }
 #pragma pop

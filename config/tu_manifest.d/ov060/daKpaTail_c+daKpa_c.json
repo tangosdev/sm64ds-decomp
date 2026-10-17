@@ -1542,7 +1542,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov060-daKpaTail_c+daKpa_c/daKpa_c.o (gitignored)",
+    "object": "build/tu/ov060-daKpaTail_c+daKpa_c/d_a_kpa.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 81,
     "functions_declared": 81,
@@ -1610,7 +1610,8 @@
         "_ZTS8dActor_c",
         "_ZTV11daKpaTail_c",
         "_ZTV7daKpa_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -4748,312 +4749,312 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2139",
+      "from": "@2143",
       "to": "@3094",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2289 -> @2247; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3094 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2247 -> @2139; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3094 is retained."
     },
     {
-      "from": "@2140",
+      "from": "@2144",
       "to": "@3095",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2290 -> @2248; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3095 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2248 -> @2140; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3095 is retained."
     },
     {
-      "from": "@2141",
+      "from": "@2145",
       "to": "@3096",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2291 -> @2249; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3096 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2249 -> @2141; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3096 is retained."
     },
     {
-      "from": "@2142",
+      "from": "@2146",
       "to": "@3097",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2292 -> @2250; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3097 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2250 -> @2142; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3097 is retained."
     },
     {
-      "from": "@2143",
+      "from": "@2147",
       "to": "@3098",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2293 -> @2251; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3098 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2251 -> @2143; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3098 is retained."
     },
     {
-      "from": "@2144",
+      "from": "@2148",
       "to": "@3099",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2294 -> @2252; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3099 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2252 -> @2144; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3099 is retained."
     },
     {
-      "from": "@2145",
+      "from": "@2149",
       "to": "@3100",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2295 -> @2253; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3100 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2253 -> @2145; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3100 is retained."
     },
     {
-      "from": "@2146",
+      "from": "@2150",
       "to": "@3101",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2296 -> @2254; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3101 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2254 -> @2146; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3101 is retained."
     },
     {
-      "from": "@2147",
+      "from": "@2151",
       "to": "@3102",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2297 -> @2255; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3102 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2255 -> @2147; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3102 is retained."
     },
     {
-      "from": "@2148",
+      "from": "@2152",
       "to": "@3103",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2298 -> @2256; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3103 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2256 -> @2148; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3103 is retained."
     },
     {
-      "from": "@2149",
+      "from": "@2153",
       "to": "@3104",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2299 -> @2257; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3104 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2257 -> @2149; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3104 is retained."
     },
     {
-      "from": "@2150",
+      "from": "@2154",
       "to": "@3105",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2300 -> @2258; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3105 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2258 -> @2150; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3105 is retained."
     },
     {
-      "from": "@2151",
+      "from": "@2155",
       "to": "@3106",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2301 -> @2259; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3106 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2259 -> @2151; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3106 is retained."
     },
     {
-      "from": "@2152",
+      "from": "@2156",
       "to": "@3107",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2302 -> @2260; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3107 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2260 -> @2152; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3107 is retained."
     },
     {
-      "from": "@2153",
+      "from": "@2157",
       "to": "@3108",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2303 -> @2261; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3108 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2261 -> @2153; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3108 is retained."
     },
     {
-      "from": "@2154",
+      "from": "@2158",
       "to": "@3109",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2304 -> @2262; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3109 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2262 -> @2154; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3109 is retained."
     },
     {
-      "from": "@2155",
+      "from": "@2159",
       "to": "@3110",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2305 -> @2263; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3110 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2263 -> @2155; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3110 is retained."
     },
     {
-      "from": "@2156",
+      "from": "@2160",
       "to": "@3111",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2306 -> @2264; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3111 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2264 -> @2156; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3111 is retained."
     },
     {
-      "from": "@2157",
+      "from": "@2161",
       "to": "@3112",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2307 -> @2265; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3112 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2265 -> @2157; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3112 is retained."
     },
     {
-      "from": "@2158",
+      "from": "@2162",
       "to": "@3113",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2308 -> @2266; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3113 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2266 -> @2158; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3113 is retained."
     },
     {
-      "from": "@2159",
+      "from": "@2163",
       "to": "@3114",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2309 -> @2267; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3114 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2267 -> @2159; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3114 is retained."
     },
     {
-      "from": "@2161",
+      "from": "@2165",
       "to": "@3115",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2311 -> @2269; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3115 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2269 -> @2161; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3115 is retained."
     },
     {
-      "from": "@2163",
+      "from": "@2167",
       "to": "@3116",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2313 -> @2271; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3116 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2271 -> @2163; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3116 is retained."
     },
     {
-      "from": "@2165",
+      "from": "@2169",
       "to": "@3117",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2315 -> @2273; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3117 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2273 -> @2165; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3117 is retained."
     },
     {
-      "from": "@2167",
+      "from": "@2171",
       "to": "@3118",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2317 -> @2275; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3118 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2275 -> @2167; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3118 is retained."
     },
     {
-      "from": "@2169",
+      "from": "@2173",
       "to": "@3119",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2319 -> @2277; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3119 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2277 -> @2169; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3119 is retained."
     },
     {
-      "from": "@2171",
+      "from": "@2175",
       "to": "@3120",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2321 -> @2279; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3120 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2279 -> @2171; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3120 is retained."
     },
     {
-      "from": "@2173",
+      "from": "@2177",
       "to": "@3121",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2323 -> @2281; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3121 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2281 -> @2173; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3121 is retained."
     },
     {
-      "from": "@2175",
+      "from": "@2179",
       "to": "@3122",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2325 -> @2283; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3122 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2283 -> @2175; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3122 is retained."
     },
     {
-      "from": "@2177",
+      "from": "@2181",
       "to": "@3123",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2327 -> @2285; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3123 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2285 -> @2177; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3123 is retained."
     },
     {
-      "from": "@2179",
+      "from": "@2183",
       "to": "@3124",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2329 -> @2287; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3124 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2287 -> @2179; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3124 is retained."
     },
     {
-      "from": "@2181",
+      "from": "@2185",
       "to": "@3125",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2331 -> @2289; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3125 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2289 -> @2181; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3125 is retained."
     },
     {
-      "from": "@2183",
+      "from": "@2187",
       "to": "@3126",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2333 -> @2291; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3126 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2291 -> @2183; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3126 is retained."
     },
     {
-      "from": "@2185",
+      "from": "@2189",
       "to": "@3127",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2335 -> @2293; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3127 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2293 -> @2185; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3127 is retained."
     },
     {
-      "from": "@2187",
+      "from": "@2191",
       "to": "@3128",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2337 -> @2295; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3128 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2295 -> @2187; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3128 is retained."
     },
     {
-      "from": "@2189",
+      "from": "@2193",
       "to": "@3129",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2339 -> @2297; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3129 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2297 -> @2189; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3129 is retained."
     },
     {
-      "from": "@2191",
+      "from": "@2195",
       "to": "@3130",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2341 -> @2299; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3130 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2299 -> @2191; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3130 is retained."
     },
     {
-      "from": "@2193",
+      "from": "@2197",
       "to": "@3131",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2343 -> @2301; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3131 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2301 -> @2193; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3131 is retained."
     },
     {
-      "from": "@2195",
+      "from": "@2199",
       "to": "@3132",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2345 -> @2303; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3132 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2303 -> @2195; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3132 is retained."
     },
     {
-      "from": "@2197",
+      "from": "@2201",
       "to": "@3133",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2347 -> @2305; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3133 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2305 -> @2197; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3133 is retained."
     },
     {
-      "from": "@2199",
+      "from": "@2203",
       "to": "@3134",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2349 -> @2307; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3134 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2307 -> @2199; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3134 is retained."
     },
     {
-      "from": "@2201",
+      "from": "@2205",
       "to": "@3135",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2351 -> @2309; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3135 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2309 -> @2201; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3135 is retained."
     },
     {
-      "from": "@2203",
+      "from": "@2207",
       "to": "@3136",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2353 -> @2311; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3136 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2311 -> @2203; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3136 is retained."
     },
     {
-      "from": "@2205",
+      "from": "@2209",
       "to": "@3137",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2355 -> @2313; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3137 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2313 -> @2205; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3137 is retained."
     },
     {
-      "from": "@2207",
+      "from": "@2211",
       "to": "@3138",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2357 -> @2315; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3138 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2315 -> @2207; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3138 is retained."
     },
     {
-      "from": "@2209",
+      "from": "@2213",
       "to": "@3139",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2359 -> @2317; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3139 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2317 -> @2209; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3139 is retained."
     },
     {
-      "from": "@2211",
+      "from": "@2215",
       "to": "@3140",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2361 -> @2319; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3140 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2319 -> @2211; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3140 is retained."
     },
     {
-      "from": "@2213",
+      "from": "@2217",
       "to": "@3141",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2363 -> @2321; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3141 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2321 -> @2213; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3141 is retained."
     },
     {
-      "from": "@2125",
+      "from": "@2129",
       "to": "@2261",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2275 -> @2233; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2261 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2233 -> @2125; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2261 is retained."
     },
     {
-      "from": "@2126",
+      "from": "@2130",
       "to": "@2262",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2276 -> @2234; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2262 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2234 -> @2126; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2262 is retained."
     },
     {
-      "from": "@2127",
+      "from": "@2131",
       "to": "@2263",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2277 -> @2235; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2263 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2235 -> @2127; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2263 is retained."
     },
     {
-      "from": "@2128",
+      "from": "@2132",
       "to": "@2264",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2278 -> @2236; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2264 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2236 -> @2128; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2264 is retained."
     },
     {
-      "from": "@2130",
+      "from": "@2134",
       "to": "@2266",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2280 -> @2238; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2266 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2238 -> @2130; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2266 is retained."
     },
     {
-      "from": "@2132",
+      "from": "@2136",
       "to": "@2268",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2282 -> @2240; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2268 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2240 -> @2132; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2268 is retained."
     },
     {
-      "from": "@2134",
+      "from": "@2138",
       "to": "@2270",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2284 -> @2242; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2270 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2242 -> @2134; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2270 is retained."
     },
     {
-      "from": "@2135",
+      "from": "@2139",
       "to": "@2271",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2285 -> @2243; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2271 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2243 -> @2135; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2271 is retained."
     },
     {
-      "from": "@2136",
+      "from": "@2140",
       "to": "@2272",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2286 -> @2244; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2272 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2244 -> @2136; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2272 is retained."
     },
     {
-      "from": "@2137",
+      "from": "@2141",
       "to": "@2273",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2287 -> @2245; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2273 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2245 -> @2137; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2273 is retained."
     },
     {
-      "from": "@2138",
+      "from": "@2142",
       "to": "@2274",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2288 -> @2246; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2274 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2246 -> @2138; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2274 is retained."
     },
     {
-      "from": "@2133",
+      "from": "@2137",
       "to": "@2269",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2283 -> @2241; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2269 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2241 -> @2133; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2269 is retained."
     },
     {
-      "from": "@2131",
+      "from": "@2135",
       "to": "@2267",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2281 -> @2239; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2267 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2239 -> @2131; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2267 is retained."
     },
     {
-      "from": "@2129",
+      "from": "@2133",
       "to": "@2265",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2279 -> @2237; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2265 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2237 -> @2129; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2265 is retained."
     }

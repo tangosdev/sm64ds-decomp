@@ -126,6 +126,8 @@ char *func_0206ece0(double x, char *buff_end, print_format format)
     p = (unsigned char *)buff_end;
     *--p = 0;
 
+    /* e_format/f_format gotos kept: %g re-enters the %e or %f arm, as in MSL's float2str,
+       and the arms sit in ROM order */
     switch (code) {
     case 'g':
     case 'G':

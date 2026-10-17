@@ -15,15 +15,11 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * CleanupResources, Behavior) and hands this overlay's model/collision
  * descriptor to the shared ov002 helpers; Init also Enable()s the mesh.
  *
- * The four bytes at 0x320 are this leaf's: the ov002 setup helper writes
- * mTimer and mEventBit from param1. 0x31e/0x31f sit in dBgActor_c's tail
- * padding and are not declared here.
+ * No fields of its own: the bytes at 0x31e..0x321 (mTurnDir, mState, mTimer,
+ * mEventBit) are daObjSwdoor_c's, written and read by the shared ov002
+ * helpers, and daObjSwdoor_c already rounds to the factory's 0x324.
  */
 struct daObjBSwdoor_c : daObjSwdoor_c {
-    u8 mTimer;     /* 0x320 */
-    u8 mEventBit;  /* 0x321 */
-    u8 pad_322[2];
-
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
     virtual ~daObjBSwdoor_c() {}
     virtual s32 Behavior();           /* slot 6 */

@@ -54,13 +54,8 @@ int func_ov007_020ae558(char *self)
                 if (v != 7) break;
                 if (r3_v != 0) break;
                 x = *(int*)((char*)g + 0x58);
-                if (x == -1) goto L26c;
-                if (flag2 == 7) goto L280;
-            L26c:
-                if (x != -1) break;
-                if (flag2 != 8) break;
-            L280:
-                ret = 7;
+                if ((x != -1 && flag2 == 7) || (x == -1 && flag2 == 8))
+                    ret = 7;
             }
         }
         break;

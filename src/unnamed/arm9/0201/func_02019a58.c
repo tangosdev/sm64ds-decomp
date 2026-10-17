@@ -8,12 +8,9 @@ extern unsigned char data_0209d4ec;
 
 void func_02019a58(void)
 {
-    goto enter;
-    do {
+    while (func_0205f650() != 1 && func_0205f66c(1) != 1) {
         func_0201a4d0();
-    enter:
-        if (func_0205f650() == 1) break;
-    } while (func_0205f66c(1) != 1);
+    }
 
     if (data_0209d4f4 != 0) {
         func_02011db4();

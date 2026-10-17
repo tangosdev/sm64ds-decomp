@@ -5,28 +5,18 @@ extern double func_020707a4(double, double);
 
 static inline int fpclassify_(double x) {
     union { double d; int w[2]; } u;
-    int cls;
     u.d = x;
-    if ((u.w[1] & 0x7ff00000) != 0) {
-        if ((u.w[1] & 0x7ff00000) == 0x7ff00000) {
-            if ((u.w[1] & 0xfffff) != 0) goto nan;
-            if (u.w[0] == 0) goto inf;
-        nan:
-            cls = 1; goto done;
-        inf:
-            cls = 2; goto done;
-        }
-    } else {
-        if ((u.w[1] & 0xfffff) != 0) goto sub;
-        if (u.w[0] == 0) goto zero;
-    sub:
-        cls = 5; goto done;
-    zero:
-        cls = 3; goto done;
+    switch (u.w[1] & 0x7ff00000) {
+    case 0x7ff00000:
+        if ((u.w[1] & 0xfffff) != 0 || u.w[0] != 0)
+            return 1;
+        return 2;
+    case 0:
+        if ((u.w[1] & 0xfffff) != 0 || u.w[0] != 0)
+            return 5;
+        return 3;
     }
-    cls = 4;
-done:
-    return cls;
+    return 4;
 }
 
 double func_020708b4(double x, int n) {

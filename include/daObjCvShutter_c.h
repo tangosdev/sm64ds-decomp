@@ -16,16 +16,11 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * overlay's model/collision descriptor to the shared ov002 helpers. Behavior
  * then re-syncs the collision mesh when IsClsnInRange says it is in range.
  *
- * The four bytes at 0x320 are daObjSwdoor_c base fields: the shared ov002
- * setup helper writes them for both leaves (PR #2579 types that helper as
- * daObjBSwdoor_c *). This leaf still declares mTimer/mEventBit here.
- * 0x31e/0x31f sit in dBgActor_c's tail padding and are not declared here.
+ * No fields of its own: the bytes at 0x31e..0x321 (mTurnDir, mState, mTimer,
+ * mEventBit) are daObjSwdoor_c's, written and read by the shared ov002
+ * helpers, and daObjSwdoor_c already rounds to the factory's 0x324.
  */
 struct daObjCvShutter_c : daObjSwdoor_c {
-    u8 mTimer;     /* 0x320 */
-    u8 mEventBit;  /* 0x321 */
-    u8 pad_322[2];
-
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
     virtual ~daObjCvShutter_c() {}
     virtual s32 Behavior();           /* slot 6 */

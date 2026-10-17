@@ -52,7 +52,7 @@ struct dScMgCurling2_piece {
     u8 xIndex;          /* 0x1e, into sCurling2StepXTable or _021419b8 */
     u8 yIndex;          /* 0x1f, into sCurling2StepYTable */
     u8  drawEnable;     /* 0x20 */
-    u8  sprite0;        /* 0x21, into data_ov006_0213a5e0 */
+    u8 sprite0;         /* 0x21, into sCurlingBitSprites */
     u8  sprite1;        /* 0x22 */
     u8  pad23;          /* 0x23 */
 };
@@ -130,7 +130,7 @@ struct dScMgCurling2_c : dScMgBase_c {
      *
      * The index each handler writes back agrees with that layout in every case
      * -- the two pushers hand to 3, the settler hands to 0, the Y chain runs
-     * 0 -> 1 -> 2 -> 0 -- and data_ov006_0212e4f4/_0212e4f8/_0212e4fc, the ROM
+     * 0 -> 1 -> 2 -> 0 -- and sCurling2StepXPicks/_0212e4f8/_0212e4fc, the ROM
      * tables the two pickers and PickStepMode read from, hold exactly {1, 2}.
      * Those handlers step one dScMgCurling2_piece (the 0x48c0 array). The
      * method names are still coined; the ROM does not carry them.

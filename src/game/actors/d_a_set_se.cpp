@@ -32,9 +32,9 @@
 #include "daSetSE_c.h"
 #include "dCamera_c.h"
 
-/* Sound.h does not declare PlayLong yet, so this TU re-opens the namespace
-   the way daBmb_c, daBrq_c and daObjPushblock_c do. Additive only: it does
-   not restate anything the header already has. */
+/* local extern: Sound.h declares PlayLong (returning int), but this TU does
+   not include Sound.h, so it re-opens the namespace the way daBmb_c,
+   daBrq_c and daObjPushblock_c do. */
 namespace Sound {
 u32 PlayLong(u32 handle, u32 bank, u32 soundId, const Vector3 &pos, s16 pitch);
 }

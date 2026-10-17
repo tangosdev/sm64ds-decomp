@@ -65,12 +65,9 @@ int func_02060b64(int *self)
         }
 
         if (reject == 0) {
-            if (d >= e2) goto set0;
-            if (d + 0x4000 > base) goto tail;
-        set0:
-            bad = 0;
+            if (d >= e2 || d + 0x4000 <= base)
+                bad = 0;
         }
-    tail:
 
         if (bad == 0) r5 = 1;
     }

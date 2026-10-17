@@ -437,7 +437,7 @@
       "evidence": "ten round states, plain-copied from the ROM constants"
     },
     {
-      "symbol": "data_ov006_02142490",
+      "symbol": "sMemory2CardSprites",
       "address": "0x02142490",
       "size": "0x5c",
       "binding": "STB_GLOBAL",
@@ -874,7 +874,7 @@
       "source": "0x2131814",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142490",
+      "symbol": "sMemory2CardSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x2142490"

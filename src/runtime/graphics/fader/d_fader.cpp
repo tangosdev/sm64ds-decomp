@@ -227,7 +227,7 @@ void dFdWipe_c::AdvanceFade()
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, -0x1000);
             Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, scale, scale, scale);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x4000);
-            ((ModelComponents *)(((char *)this) + 0x18))->Render(&data_020a0e68, 0);
+            model.data.Render(&data_020a0e68, 0);
         }
     }
     if (*(Fix12i*)((char*)&currInterp) == old) return;

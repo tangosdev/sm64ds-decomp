@@ -551,21 +551,9 @@ src/unnamed/arm9/0200/func_0200f46c.c:
     complete
     .text start:0x0200f46c end:0x0200f470
 
-src/_Z13CopyToViewMatPK9Matrix4x3.cpp:
+src/engine/view/Graphics3D.cpp:
     complete
-    .text start:0x0200f470 end:0x0200f4b4
-
-src/unnamed/arm9/0200/func_0200f4b4.c:
-    complete
-    .text start:0x0200f4b4 end:0x0200f4f4
-
-src/unnamed/arm9/0200/func_0200f4f4.c:
-    complete
-    .text start:0x0200f4f4 end:0x0200f558
-
-src/Initialise3dGraphics.cpp:
-    complete
-    .text start:0x0200f558 end:0x0200f658
+    .text start:0x0200f470 end:0x0200f658
 
 src/runtime/actor/d_actor.cpp:
     complete
@@ -724,21 +712,9 @@ src/engine/model/d_ext_common_model.cpp:
     complete
     .text start:0x0201609c end:0x02016254
 
-src/_ZN10ModelAnim24CopyERKS_Pcj.cpp:
+src/engine/model/ModelAnim2.cpp:
     complete
-    .text start:0x02016254 end:0x0201628c
-
-src/unnamed/arm9/0201/func_0201628c.c:
-    complete
-    .text start:0x0201628c end:0x020162a4
-
-src/unnamed/arm9/0201/func_020162a4.c:
-    complete
-    .text start:0x020162a4 end:0x020162c4
-
-src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c:
-    complete
-    .text start:0x020162c4 end:0x02016320
+    .text start:0x02016254 end:0x02016320
 
 src/_ZN10ModelAnim2D0Ev.cpp:
     complete
@@ -1397,17 +1373,9 @@ src/ui/messages/func_0201cb2c.c:
     complete
     .text start:0x0201cb2c end:0x0201cb7c
 
-src/_ZN10dScStage_c13UpdateMessageEv.cpp:
-    complete
-    .text start:0x0201cb7c end:0x0201cd08
-
-src/unnamed/arm9/0201/func_0201cd08.cpp:
-    complete
-    .text start:0x0201cd08 end:0x0201ce10
-
 src/Message.cpp:
     complete
-    .text start:0x0201ce10 end:0x0201fcd4
+    .text start:0x0201cb7c end:0x0201fcd4
 
 src/LoadFont.cpp:
     complete
@@ -3270,81 +3238,9 @@ src/Copy48BytesFixed.c:
     complete
     .text start:0x02056c1c end:0x02056c40
 
-src/_ZN3IRQ19Tim3OverflowHandlerEv.cpp:
+src/IRQ.cpp:
     complete
-    .text start:0x02056c40 end:0x02056c50
-
-src/_ZN3IRQ19Tim2OverflowHandlerEv.cpp:
-    complete
-    .text start:0x02056c50 end:0x02056c60
-
-src/_ZN3IRQ19Tim1OverflowHandlerEv.cpp:
-    complete
-    .text start:0x02056c60 end:0x02056c70
-
-src/_ZN3IRQ19Tim0OverflowHandlerEv.cpp:
-    complete
-    .text start:0x02056c70 end:0x02056c80
-
-src/_ZN3IRQ11Dma3HandlerEv.cpp:
-    complete
-    .text start:0x02056c80 end:0x02056c90
-
-src/_ZN3IRQ11Dma2HandlerEv.cpp:
-    complete
-    .text start:0x02056c90 end:0x02056ca0
-
-src/_ZN3IRQ11Dma1HandlerEv.cpp:
-    complete
-    .text start:0x02056ca0 end:0x02056cb0
-
-src/_ZN3IRQ11Dma0HandlerEv.cpp:
-    complete
-    .text start:0x02056cb0 end:0x02056cc0
-
-src/_ZN3IRQ13DmaTimHandlerEj.cpp:
-    complete
-    .text start:0x02056cc0 end:0x02056d60
-
-src/_ZN3IRQ12EmptyHandlerEv.cpp:
-    complete
-    .text start:0x02056d60 end:0x02056d64
-
-src/_ZN3IRQ15ClearInterruptsEj.cpp:
-    complete
-    .text start:0x02056d64 end:0x02056d98
-
-src/_ZN3IRQ11DisableIRQsEj.cpp:
-    complete
-    .text start:0x02056d98 end:0x02056de0
-
-src/_ZN3IRQ10EnableIRQsEj.cpp:
-    complete
-    .text start:0x02056de0 end:0x02056e18
-
-src/_ZN3IRQ7SetIRQsEj.cpp:
-    complete
-    .text start:0x02056e18 end:0x02056e4c
-
-src/unnamed/arm9/0205/func_02056e4c.c:
-    complete
-    .text start:0x02056e4c end:0x02056e98
-
-src/unnamed/arm9/0205/func_02056e98.c:
-    complete
-    .text start:0x02056e98 end:0x02056ee4
-
-src/_ZN3IRQ13GetIRQHandlerEj.cpp:
-    complete
-    .text start:0x02056ee4 end:0x02056f70
-
-src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp:
-    complete
-    .text start:0x02056f70 end:0x02057000
-
-src/unnamed/arm9/0205/func_02057000.c:
-    complete
-    .text start:0x02057000 end:0x02057014
+    .text start:0x02056c40 end:0x02057014
 
 src/unnamed/arm9/0205/func_020570a8.c:
     complete
@@ -3646,21 +3542,13 @@ src/unnamed/arm9/0205/func_0205938c.c:
     complete
     .text start:0x0205938c end:0x020593a8
 
-src/_ZN4CP1510EnableDTCMEv.cpp:
+src/engine/cp15/CP15_TCM.cpp:
     complete
-    .text start:0x020593a8 end:0x020593b8
+    .text start:0x020593a8 end:0x020593cc
 
-src/_ZN4CP1518GetDTCMBaseAddressEv.cpp:
+src/engine/cp15/CP15_ProtectionUnit.cpp:
     complete
-    .text start:0x020593b8 end:0x020593cc
-
-src/_ZN4CP159EnableMPUEv.cpp:
-    complete
-    .text start:0x020593cc end:0x020593dc
-
-src/_ZN4CP1510DisableMPUEv.cpp:
-    complete
-    .text start:0x020593dc end:0x020593ec
+    .text start:0x020593cc end:0x020593ec
 
 src/_ZN4CP1514MPUDataRegion1Ej.cpp:
     complete
@@ -3743,16 +3631,8 @@ src/unnamed/arm9/0205/func_02059cb4.cpp:
     complete
 
 src/IRQ3.cpp:
-    .text start:0x02059d08 end:0x02059d74
+    .text start:0x02059d08 end:0x02059d8c
     complete
-
-src/ARMProcessorMode.c:
-    complete
-    .text start:0x02059d74 end:0x02059d80
-
-src/_ZN4CP1516WaitForInterruptEv.cpp:
-    complete
-    .text start:0x02059d80 end:0x02059d8c
 
 src/unnamed/arm9/0205/func_02059dd4.c:
     complete
@@ -4086,25 +3966,9 @@ src/unnamed/arm9/0205/func_0205b858.c:
     complete
     .text start:0x0205b858 end:0x0205b864
 
-src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp:
+src/engine/pxi/PXI_Fifo.cpp:
     complete
-    .text start:0x0205b864 end:0x0205b988
-
-src/IPCSend.c:
-    complete
-    .text start:0x0205b988 end:0x0205ba3c
-
-src/unnamed/arm9/0205/func_0205ba3c.c:
-    complete
-    .text start:0x0205ba3c end:0x0205ba64
-
-src/unnamed/arm9/0205/func_0205ba64.c:
-    complete
-    .text start:0x0205ba64 end:0x0205bad8
-
-src/unnamed/arm9/0205/func_0205bad8.c:
-    complete
-    .text start:0x0205bad8 end:0x0205bbdc
+    .text start:0x0205b864 end:0x0205bbdc
 
 src/unnamed/arm9/0205/func_0205bbdc.c:
     complete
@@ -4694,21 +4558,9 @@ src/unnamed/arm9/0206/func_02060f60.cpp:
     complete
     .text start:0x02060f60 end:0x020610ac
 
-src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp:
+src/engine/card/CARD_PullOut.cpp:
     complete
-    .text start:0x020610ac end:0x020610fc
-
-src/unnamed/arm9/0206/func_020610fc.c:
-    complete
-    .text start:0x020610fc end:0x02061128
-
-src/unnamed/arm9/0206/func_02061128.c:
-    complete
-    .text start:0x02061128 end:0x02061138
-
-src/unnamed/arm9/0206/func_02061138.c:
-    complete
-    .text start:0x02061138 end:0x0206116c
+    .text start:0x020610ac end:0x0206116c
 
 src/unnamed/arm9/0206/func_0206116c.c:
     complete

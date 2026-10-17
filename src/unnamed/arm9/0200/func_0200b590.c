@@ -14,8 +14,23 @@ extern void _ZN9dBgCh_GndD1Ev(void *self);
 
 extern Vector3 data_02086e84;
 
+/* File-local view of dCamera_c (include/dCamera_c.h is C++): the fields this
+ * helper touches. */
+typedef struct {
+    char pad_000[0x80];
+    Vector3 lookAt; /* 0x080 */
+    Vector3 pos;    /* 0x08c */
+    /* func_020089f8 copies mTargetPlayer->mPos here every frame. */
+    Vector3 mTargetPos; /* 0x098 */
+    char pad_0a4[0xb0];
+    int mFlags; /* 0x154 */
+    char pad_158[0x24];
+    short mAngleY; /* 0x17c */
+} CameraView;
+
 void func_0200b590(char *c, short *a1, int arg2)
 {
+    CameraView *cam = (CameraView *)c;
     Vector3 v0;
     Vector3 rotated;
     short angle1;
@@ -41,8 +56,8 @@ void func_0200b590(char *c, short *a1, int arg2)
         v0.z = tz;
     }
 
-    angle1 = Vec3_HorzAngle((Vector3 *)(c + 0x98), &v0);
-    angle2 = Vec3_HorzAngle((Vector3 *)(c + 0x8c), &v0);
+    angle1 = Vec3_HorzAngle(&cam->mTargetPos, &v0);
+    angle2 = Vec3_HorzAngle(&cam->pos, &v0);
     diff = (short)(angle2 - angle1);
     if (diff < -0x4000)
         diff = -0x4000;
@@ -56,9 +71,9 @@ void func_0200b590(char *c, short *a1, int arg2)
     Vec3_RotateYAndTranslate((int *)&rotated, (int *)&v0, newAngle, (int *)&base);
     rotated.y = arg2;
 
-    selfZ = *(int *)(c + 0x88);
+    selfZ = cam->lookAt.z;
     dz = rotated.z - selfZ;
-    selfX = *(int *)(c + 0x80);
+    selfX = cam->lookAt.x;
     dx = rotated.x - selfX;
     pos.y = arg2 + 0x100000;
 
@@ -75,18 +90,18 @@ void func_0200b590(char *c, short *a1, int arg2)
             rotated.y = arg2;
     }
     rotated.y = rotated.y + 0x7d000;
-    dist = Vec3_HorzDist((Vector3 *)(c + 0x8c), (Vector3 *)(c + 0x98));
+    dist = Vec3_HorzDist(&cam->pos, &cam->mTargetPos);
     rem = 0x100000 - dist;
     if (rem > 0)
         rotated.y += rem;
-    if (*(int *)(c + 0x154) & 4) {
-        *(int *)(c + 0x8c) = rotated.x;
-        *(int *)(c + 0x90) = rotated.y;
-        *(int *)(c + 0x94) = rotated.z;
+    if (cam->mFlags & 4) {
+        cam->pos.x = rotated.x;
+        cam->pos.y = rotated.y;
+        cam->pos.z = rotated.z;
     } else {
-        func_020092c4((int)c, (Vector3 *)(c + 0x8c), &rotated);
+        func_020092c4((int)c, &cam->pos, &rotated);
     }
 
-    *(short *)(c + 0x17c) = Vec3_HorzAngle((Vector3 *)(c + 0x80), (Vector3 *)(c + 0x8c));
+    cam->mAngleY = Vec3_HorzAngle(&cam->lookAt, &cam->pos);
     _ZN9dBgCh_GndD1Ev(rg);
 }

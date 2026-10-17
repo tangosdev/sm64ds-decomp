@@ -355,7 +355,7 @@ void dScStarSel_c::func_ov003_020ae238()
 // CURSOR_MODE 1, CHAR_CURSOR to its strip slot, and PICKED_CHAR, data_02092128
 // and data_02092114 to the character, ANIM_MODE 2, and plays the same sound.
 //
-// With no record active (label sect2) the d-pad half of the control word
+// With no record active, the d-pad half of the control word
 // data_020a0e58 moves the selection: REPEAT_TIMER counts down, and while it is
 // zero a held left/right steps CHAR_CURSOR within [0, STRIP_MODE - 2] and reloads
 // the timer with 0x10 or 8 depending on data_020a0e5a.
@@ -377,46 +377,46 @@ void dScStarSel_c::func_ov003_020ae358()
     if (gTouchHeld[idx][0] != 0) {
         valid = gTouchEdge[idx][0] != 0;
     }
-    if (valid == 0) {
-        goto sect2;
-    }
-    if ((((unsigned char)(gTouchX[idx][0] - 0x58)) < 0x50) && (((unsigned char)((gTouchY[idx][0] - PANEL_Y(this)) + 0x28)) < 0x50)) {
-        CURSOR_MODE(this) = 2;
-        PICKED_CHAR(this) = 3;
-        FB(this, 0x118) = (unsigned char)(data_0208ee44 * 6);
-        ANIM_MODE(this) = 1;
-        FB(this, 0x119) = 0x10;
-        func_02012790(data_0209caa0[0x41] + 0x3c);
-        return;
-    }
-    if (STRIP_MODE(this) <= 1) {
-        return;
-    }
-    if (data_0209caa0[0x41] != 3) {
-        return;
-    }
-    for (i = 0; i < 3; i++) {
-        if (SaveData::IsCharacterUnlocked(i) != 0) {
-            int ri = gActivePlayerSlot;
-            if (((unsigned short)((gTouchHeld[gActivePlayerSlot][2] - CHAR_X(this, i)) + 0x18)) < 0x30) {
-                if (((unsigned short)((gTouchHeld[ri][3] - CHAR_Y(this, i)) + 0x18)) < 0x2b) {
-                    CURSOR_MODE(this) = 1;
-                    CHAR_CURSOR(this) = (unsigned char)func_ov003_020adec0(i);
-                    data_02092128 = (unsigned char)i;
-                    data_02092114 = (unsigned char)i;
-                    PICKED_CHAR(this) = (unsigned char)i;
-                    FB(this, 0x118) = (unsigned char)(data_0208ee44 * 3);
-                    ANIM_MODE(this) = 2;
-                    FB(this, 0x119) = 0x10;
-                    func_02012790(data_0209caa0[0x41] + 0x3c);
-                    return;
+    if (valid != 0) {
+        if ((((unsigned char)(gTouchX[idx][0] - 0x58)) < 0x50) &&
+            (((unsigned char)((gTouchY[idx][0] - PANEL_Y(this)) + 0x28)) < 0x50)) {
+            CURSOR_MODE(this) = 2;
+            PICKED_CHAR(this) = 3;
+            FB(this, 0x118) = (unsigned char)(data_0208ee44 * 6);
+            ANIM_MODE(this) = 1;
+            FB(this, 0x119) = 0x10;
+            func_02012790(data_0209caa0[0x41] + 0x3c);
+            return;
+        }
+        if (STRIP_MODE(this) <= 1) {
+            return;
+        }
+        if (data_0209caa0[0x41] != 3) {
+            return;
+        }
+        for (i = 0; i < 3; i++) {
+            if (SaveData::IsCharacterUnlocked(i) != 0) {
+                int ri = gActivePlayerSlot;
+                if (((unsigned short)((gTouchHeld[gActivePlayerSlot][2] - CHAR_X(this, i)) +
+                                      0x18)) < 0x30) {
+                    if (((unsigned short)((gTouchHeld[ri][3] - CHAR_Y(this, i)) + 0x18)) < 0x2b) {
+                        CURSOR_MODE(this) = 1;
+                        CHAR_CURSOR(this) = (unsigned char)func_ov003_020adec0(i);
+                        data_02092128 = (unsigned char)i;
+                        data_02092114 = (unsigned char)i;
+                        PICKED_CHAR(this) = (unsigned char)i;
+                        FB(this, 0x118) = (unsigned char)(data_0208ee44 * 3);
+                        ANIM_MODE(this) = 2;
+                        FB(this, 0x119) = 0x10;
+                        func_02012790(data_0209caa0[0x41] + 0x3c);
+                        return;
+                    }
                 }
             }
         }
-    }
 
-    return;
-sect2:
+        return;
+    }
     if (data_0209caa0[0x42] == 0) {
         unsigned short ctrl = data_020a0e58[0];
         if ((ctrl & 0x30) != 0) {

@@ -77,7 +77,7 @@
       "typeinfo_pointer_address": "0x0213cf0c",
       "typeinfo_pointer": "0x0213ce54"
     },
-    "extent_evidence": "Read from extracted/overlays/overlay_0006.bin. 0x0213cf08 = 0x00000000 (offset-to-top), 0x0213cf0c = 0x0213ce54 (= _ZTI12dScMgLuigi_c), then 36 consecutive relocated code pointers from slot 0 at 0x0213cf10 through slot 35 at 0x0213cf9c. The exclusive end 0x0213cfa0 is NOT a slot: its bytes are 2f 47 4d 2f 64 32 5f 64 ... = the ASCII string \"/MG/d_2d_mg_bg_luigi1_ncg.bin\\0\", and dsd gives it its own symbol data_ov006_0213cfa0. tools/rtti_vtables.py --own dScMgLuigi_c independently reports 36 slots against a 36-slot base. No trailing null slot was truncated here, because the table is followed by string data rather than by zeros.",
+    "extent_evidence": "Read from extracted/overlays/overlay_0006.bin. 0x0213cf08 = 0x00000000 (offset-to-top), 0x0213cf0c = 0x0213ce54 (= _ZTI12dScMgLuigi_c), then 36 consecutive relocated code pointers from slot 0 at 0x0213cf10 through slot 35 at 0x0213cf9c. The exclusive end 0x0213cfa0 is NOT a slot: its bytes are 2f 47 4d 2f 64 32 5f 64 ... = the ASCII string \"/MG/d_2d_mg_bg_luigi1_ncg.bin\\0\", and dsd gives it its own symbol sLuigiBg1NcgPath. tools/rtti_vtables.py --own dScMgLuigi_c independently reports 36 slots against a 36-slot base. No trailing null slot was truncated here, because the table is followed by string data rather than by zeros.",
     "complete_slots": [
       {
         "slot": 0,
@@ -600,7 +600,7 @@
       },
       {
         "range": "0x0213ce70..0x0213cf08",
-        "what": "class tables data_ov006_0213ce70/ce84/ce98/ceac/cec0/cee0, 7 addresses in this range loaded by this class's code"
+        "what": "class tables sLuigiTextSpritesByLanguage/ce84/ce98/ceac/cec0/cee0, 7 addresses in this range loaded by this class's code"
       },
       {
         "range": "0x0213cf08..0x0213cfa0",

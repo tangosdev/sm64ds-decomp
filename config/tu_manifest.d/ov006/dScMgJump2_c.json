@@ -56,35 +56,35 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN4Elem10DrawNumberEv",
+      "symbol": "_ZN10Jump2Popup10DrawNumberEv",
       "address": "0x020eed68",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020eed68.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN4Elem4TickEv",
+      "symbol": "_ZN10Jump2Popup4TickEv",
       "address": "0x020eedc8",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_020eedc8.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN4Elem5SpawnEiii",
+      "symbol": "_ZN10Jump2Popup5SpawnEiii",
       "address": "0x020eee3c",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020eee3c.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN4Node6UnlinkEv",
+      "symbol": "_ZN14Jump2PopupLink6UnlinkEv",
       "address": "0x020eeef4",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov006_020eeef4.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN4Node4LinkEv",
+      "symbol": "_ZN14Jump2PopupLink4LinkEv",
       "address": "0x020eef40",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_020eef40.c",
@@ -248,7 +248,7 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_021421c4",
+      "symbol": "sJump2Back02ModelFile",
       "address": "0x021421c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -288,7 +288,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_SubmitScore' differs between the legacy file that used to hold State_Result and the one that held State_Play; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b8' differs between the legacy file that used to hold _ZN12dScMgJump2_c16CleanupResourcesEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2BackFile' differs between the legacy file that used to hold _ZN12dScMgJump2_c16CleanupResourcesEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
@@ -607,7 +607,7 @@
     {
       "symbol": "_ZTV12dScMgJump2_c",
       "disposition": "deadstrip-data",
-      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump2_c.h defines `virtual ~dScMgJump2_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- OnYoshiTryEat, at ov006:0x020efaa8 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020eebe8 BELOW D0 at 0x020eec9c, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213ccfc, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020eebe8-0x020efc08), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213ccfc is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213ccf4 holds the offset-to-top 0 and 0x0213ccf8 holds 0x0213cca4, `&_ZTI12dScMgJump2_c` -- and those two words lie outside the symbol's extent (they fall inside data_ov006_0213cce0), so anchoring the comparison at the symbol leaves them uncompared. The slots themselves are covered in full, unlike ov018/daPgMthr_c: the next symbol is data_ov006_0213cd8c, so the _ZTV extent 0x0213ccfc-0x0213cd8c is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words.",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump2_c.h defines `virtual ~dScMgJump2_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- OnYoshiTryEat, at ov006:0x020efaa8 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020eebe8 BELOW D0 at 0x020eec9c, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213ccfc, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020eebe8-0x020efc08), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213ccfc is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213ccf4 holds the offset-to-top 0 and 0x0213ccf8 holds 0x0213cca4, `&_ZTI12dScMgJump2_c` -- and those two words lie outside the symbol's extent (they fall inside sJump2NcgByLanguage), so anchoring the comparison at the symbol leaves them uncompared. The slots themselves are covered in full, unlike ov018/daPgMthr_c: the next symbol is data_ov006_0213cd8c, so the _ZTV extent 0x0213ccfc-0x0213cd8c is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213ccfc"
     }
@@ -766,7 +766,7 @@
       "source": "0x02130f5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021421c4",
+      "symbol": "sJump2Back02ModelFile",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021421c4"

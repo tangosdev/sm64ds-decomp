@@ -16,7 +16,7 @@
    declared and reconstructed tree-wide now -- `PaintSquare(int, int, int, int)`,
    the family's pixel brush.  The guess recorded here, "draws a dMeter_c
    digit/glyph", was right: this class's override stamps a shape by testing
-   data_ov006_0213f9e4[row] one bit per column, so it paints a stipple pattern
+   sTeresaPaintMask[row] one bit per column, so it paints a stipple pattern
    rather than a solid square, and it really does barely touch `this` -- the
    object pointer arrives and is never read, because unlike the base it always
    draws into sub BG0 instead of consulting the layer index at +0x6c.  Fields below
@@ -93,12 +93,12 @@ struct dScMgTeresa_c : dScMgBase_c {
         u8  state;       /* 0x13 */
     };
 
-    /* The reveal sprite (Reveal_Draw, Reveal_State0..4). Its handlers take
+    /* The reveal sprite (Reveal_Draw, Reveal_StateStart..4). Its handlers take
        an index and dispatch on `state` through sTeresaRevealStateTable. */
     struct Reveal {
         s32 x;           /* 0x00 -- 20.12 */
         s32 y;           /* 0x04 -- 20.12 */
-        s32 vx;          /* 0x08 -- 20.12; Reveal_State1 slides x by it */
+        s32 vx;          /* 0x08 -- 20.12; Reveal_StateSlideIn slides x by it */
         s32 vy;          /* 0x0c -- also moves mMarker */
         u16 angle;       /* 0x10 -- OAM::Render rotation */
         u16 frameTimer;  /* 0x12 -- the frame steps every 8 */
@@ -110,7 +110,7 @@ struct dScMgTeresa_c : dScMgBase_c {
         u8  unk_1b;      /* 0x1b */
         u8  active;      /* 0x1c -- dispatch runs only while set */
         u8  frame;       /* 0x1d */
-        u8  phase;       /* 0x1e -- Reveal_State3: 0 rising, 1 falling */
+        u8 phase;        /* 0x1e -- Reveal_StateDipAndRise: 0 rising, 1 falling */
         u8  pad1f;
     };
 
@@ -135,15 +135,15 @@ struct dScMgTeresa_c : dScMgBase_c {
     void BigBoo_ShowResult();
     void BigBoo_SetDone();
     void BigBoo_Draw();
-    void BigBoo_State8(int idx);
-    void BigBoo_State7();
-    void BigBoo_State6(int index);
-    void BigBoo_State5(int i);
-    void BigBoo_State4(int idx);
-    void BigBoo_State3(int i);
-    void BigBoo_State2(int i);
-    void BigBoo_State1(int i);
-    void BigBoo_State0(int i);
+    void BigBoo_StateResult(int idx);
+    void BigBoo_StateGone();
+    void BigBoo_StateRemove(int index);
+    void BigBoo_StateExit(int i);
+    void BigBoo_StateOffscreen(int idx);
+    void BigBoo_StateFlyRight(int i);
+    void BigBoo_StateFlyLeft(int i);
+    void BigBoo_StateHover(int i);
+    void BigBoo_StateDropIn(int i);
     void BigBoo_Update();
     void BigBoo_Start();
     void BigBoo_Hide();
@@ -153,11 +153,11 @@ struct dScMgTeresa_c : dScMgBase_c {
     void Marker_Show();
     void Marker_Hide();
     void Reveal_Draw();
-    void Reveal_State4(int idx);
-    void Reveal_State3(int i);
-    void Reveal_State2(int i);
-    void Reveal_State1(int i);
-    void Reveal_State0(int i);
+    void Reveal_StateFinish(int idx);
+    void Reveal_StateDipAndRise(int i);
+    void Reveal_StateAnimate(int i);
+    void Reveal_StateSlideIn(int i);
+    void Reveal_StateStart(int i);
     void Reveal_Update();
     void Reveal_Start();
     void Reveal_Hide();
@@ -183,28 +183,28 @@ struct dScMgTeresa_c : dScMgBase_c {
     void TouchTestBoo(int idx);
     void CountRubbedTiles(int idx);
     void MoveBoo(int i);
-    void Boo_State7(int i);
-    void Boo_State6(int i);
-    void Boo_State5(int idx);
-    void Boo_State4(int idx);
-    void Boo_State3(int i);
-    void Boo_State2(int i);
+    void Boo_StateFadeAway(int i);
+    void Boo_StateFadeIn(int i);
+    void Boo_StateFound(int idx);
+    void Boo_StateHiddenTimed(int idx);
+    void Boo_StateHidden(int i);
+    void Boo_StateFadeOut(int i);
     void BounceBooOffWalls(int i);
     void StepBoo(int i);
     void StartBoosHiding();
-    void Boo_State1(int i);
-    void Boo_State0(int idx);
+    void Boo_StateFly(int i);
+    void Boo_StateAppear(int idx);
     void AnimateBoo(int i);
     void UpdateBoos();
     void SpawnBoos();
     void UpdateRubbing();
     void ReadRubTouch();
     void ResetRound();
-    void Scene_State4();
-    void Scene_State3();
-    void Scene_State2();
-    void Scene_State1();
-    void Scene_State0();
+    void Scene_StateResult();
+    void Scene_StateRoundEnd();
+    void Scene_StatePlay();
+    void Scene_StateReveal();
+    void Scene_StateInit();
 
     SmallBoo   mBoos[16];        /* 0x4660 */
     Exclaim    mExclaims[16];    /* 0x48a0 */

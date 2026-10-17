@@ -33,28 +33,34 @@ void func_02064470(struct Self *self, int r1, int r2)
     self->fa = mask;
     if (self->fc != e->b2) return;
     self->fd = e->b2;
-    if ((self->f8 & mask) == 0) goto after;
-    {
+    if ((self->f8 & mask) != 0) {
         unsigned short *p8 = (unsigned short *)(((int)self + 8));
         *p8 = *p8 & ~mask;
-    }
 
-    switch (r1) {
-    case 0: case 1: case 2: case 4:
-    case 5: case 6: case 7: case 8:
-    case 9: case 10: case 11:
-        break;
-    case 3:
-        self->f14 = e->fa;
-        self->f16 = e->f6;
-        self->f18 = e->f4;
-        break;
-    }
+        switch (r1) {
+        case 0:
+        case 1:
+        case 2:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+            break;
+        case 3:
+            self->f14 = e->fa;
+            self->f16 = e->f6;
+            self->f18 = e->f4;
+            break;
+        }
 
-    self->f4 = r1;
-    if (self->f10 != 0) {
-        self->f10(self);
+        self->f4 = r1;
+        if (self->f10 != 0) {
+            self->f10(self);
+        }
     }
-after:
     if (self->f8 == 0) self->f0 = 0;
 }

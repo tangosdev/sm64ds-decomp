@@ -148,7 +148,7 @@ extern u32 sMiniGmIconPalettes[];
 extern int sMiniGmIconChars[];
 extern struct Off9 sMiniGmIconScreenOffsets; /* 9-entry screen-offset table, not a matrix */
 extern const MgEntry sMiniGmRows[];
-extern int data_ov005_020c24dc[];
+extern int sMiniGmSaveTable[];
 extern int sMiniGmDigits[];
 extern void *sMiniGmRecordLabels[];
 
@@ -1191,7 +1191,7 @@ void MiniGm_ClearNew(void *self, int n)
 extern "C" {
 int MiniGm_GetSaveTable(void *a, int i) {
     int offset = i * 0x34;
-    return (*(unsigned int*)((char*)data_ov005_020c24dc + offset) >> 8) & 0xff;
+    return (*(unsigned int *)((char *)sMiniGmSaveTable + offset) >> 8) & 0xff;
 }
 }
 

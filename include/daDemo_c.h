@@ -6,6 +6,8 @@
 #include "dActor_c.h"
 #include "ModelAnim.h"
 
+struct TextureSequence;
+
 /* The nested classes' bases are declared here under the cartridge's RTTI
  * spellings rather than through the old project spellings. daDemo_c's
  * typeinfo and vtable records are emitted by this translation unit, and an
@@ -70,9 +72,9 @@ struct daDemo_c : dActor_c {
        as the non-primary base at the object tail (0x64 in anmModel_c, 0x50
        in simpleModel_c): bases destroy in reverse declaration order, so the
        Model/ModelAnim base runs before the Vector3 array, which is the
-       ROM's order and what its vmi typeinfo records encode. The remaining
-       resource pointers live inside the model bases; fields not proven as
-       members are read at raw offsets in the destructor bodies. */
+       ROM's order and what its vmi typeinfo records encode. Members a
+       nested class declares land after both bases (simpleModel_c's mFile
+       at 0x5c, anmModel_c's files at 0x70). */
     struct param_c {
         Vector3 mScale[1];
 
@@ -80,6 +82,23 @@ struct daDemo_c : dActor_c {
     };
 
     struct anmModel_c : param_c, dExtAnmModel_c {
+        /* Stored by func_ov002_020f6618, released by the destructor. */
+        SharedFilePtr *mModelFile;    /* 0x70 - BMD handed to SetFile */
+        SharedFilePtr **mAnimFiles;   /* 0x74 - BCA files for SetAnim */
+        SharedFilePtr **mTexSeqFiles; /* 0x78 - BTP files for the TextureSequence */
+        TextureSequence *mTexSeq;     /* 0x7c - allocated only when BTP files are given */
+        u8 mNumAnimFiles;             /* 0x80 */
+        u8 mNumTexSeqFiles;           /* 0x81 */
+        /* Entry of the 4-byte animation table (anim file, BTP file, loop
+           flag, next entry) last applied by func_ov002_020f6514;
+           func_ov002_020f64ac follows the entry's next field when the
+           animation finishes. */
+        u8 mAnimEntry; /* 0x82 */
+        /* func_ov002_020f6618's fourth argument (1 for param1 0x12/0x13):
+           while set, Behavior probes for the floor and lifts the actor
+           back onto it when it has sunk below. */
+        u8 mSnapToFloor; /* 0x83 */
+
         void func_ov002_020f64ac(char *r4);
         void func_ov002_020f6514(void *tbl, unsigned char arg);
         void func_ov002_020f65b8();
@@ -93,6 +112,9 @@ struct daDemo_c : dActor_c {
     };
 
     struct simpleModel_c : param_c, dExtSimpleModel_c {
+        /* Stored and loaded by func_ov002_020f6960, released by the destructor. */
+        SharedFilePtr *mFile; /* 0x5c */
+
         int func_ov002_020f6960(SharedFilePtr *fp, int n);
         virtual ~simpleModel_c();
         void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
@@ -184,6 +206,9 @@ struct daDemo_c : dActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDemo_c_size_must_be_0x104[
     sizeof(daDemo_c) == 0x104 ? 1 : -1];
+typedef char daDemo_c_anmModel_c_size_must_be_0x84[sizeof(daDemo_c::anmModel_c) == 0x84 ? 1 : -1];
+typedef char
+    daDemo_c_simpleModel_c_size_must_be_0x60[sizeof(daDemo_c::simpleModel_c) == 0x60 ? 1 : -1];
 typedef char daDemo_c_ScrollState_size_must_be_0x36[
     sizeof(daDemo_c::ScrollState) == 0x36 ? 1 : -1];
 #endif

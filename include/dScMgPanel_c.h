@@ -30,7 +30,7 @@ struct dScMgPanel_Banner {
     u8  pad_0f;
 };
 
-/* Sub-screen BG0 shake after a miss (Shake_State2/02104a10);
+/* Sub-screen BG0 shake after a miss (Shake_StateLoseTry/02104a10);
    state indexes sPanelShakeStateTable. */
 struct dScMgPanel_Shake {
     s32 unk_00;
@@ -63,7 +63,7 @@ struct dScMgPanel_Particle {
     s32 vy;           /* +0x0c */
     u8  active;       /* +0x10 */
     u8  stuck;        /* +0x11 -- set: no gravity */
-    u8  kind;         /* +0x12 -- sprite, data_ov006_0213def0 */
+    u8 kind;          /* +0x12 -- sprite, sPanelParticleSprites */
     u8  frame;        /* +0x13 -- five frames, then the slot frees */
     u8  tick;         /* +0x14 */
     u8  visible;      /* +0x15 */
@@ -138,16 +138,16 @@ struct dScMgPanel_c : dScMgBase_c {
     void Scroll_Start();
     void Scroll_Stop();
     void EnableOverlayLayer();
-    void Shake_State2(int index);
-    void Shake_State1(int index);
-    void Shake_State0(int index);
+    void Shake_StateLoseTry(int index);
+    void Shake_StateShake(int index);
+    void Shake_StateIdle(int index);
     void Shake_Update();
     void Shake_Start();
     void Shake_Stop();
     void Banner_Draw();
-    void Banner_State2();
-    void Banner_State1();
-    void Banner_State0();
+    void Banner_StateIdle();
+    void Banner_StateSettle();
+    void Banner_StatePopUp();
     void Banner_Update();
     void Banner_Show(int i);
     void DrawCursor();
@@ -156,19 +156,19 @@ struct dScMgPanel_c : dScMgBase_c {
     void TickSlideDelay();
     void ClearSlideFlag();
     void SetSlideFlag();
-    void IntroCard_State4();
-    void IntroCard_State3();
-    void IntroCard_State2();
-    void IntroCard_State1();
-    void IntroCard_State0();
+    void IntroCard_StateDone();
+    void IntroCard_StateSlideOut();
+    void IntroCard_StateHold();
+    void IntroCard_StateSlideIn();
+    void IntroCard_StateStart();
     void IntroCard_Update();
     void IntroCard_Start();
     void StartSolveCheck();
-    void Input_State3();
-    void Input_State2();
-    void Input_State1();
-    void Input_State0();
-    void Input_Update();
+    void Answer_StateFlipSolution();
+    void Answer_StateFindSolution();
+    void Answer_StateResetBoard();
+    void Answer_StateWaitButton();
+    void Answer_Update();
     void UpdateMoves();
     void DrawPanels();
     void CountMatches();
@@ -183,18 +183,18 @@ struct dScMgPanel_c : dScMgBase_c {
     void ClearGrid();
     void ResetRound();
     void Panel_StartAll();
-    void Panel_State3(int index);
-    void Panel_State2(int idx);
-    void Panel_State1(int index);
-    void Panel_State0(int index);
-    void Scene_State7();
-    void Scene_State6();
-    void Scene_State5();
-    void Scene_State4();
-    void Scene_State3();
-    void Scene_State2();
-    void Scene_State1();
-    void Scene_State0();
+    void Panel_StateFall(int index);
+    void Panel_StateBlink(int idx);
+    void Panel_StateFlip(int index);
+    void Panel_StateIdle(int index);
+    void Scene_StateGameOver();
+    void Scene_StateResult();
+    void Scene_StateShowAnswer();
+    void Scene_StateRewind();
+    void Scene_StateShowMisses();
+    void Scene_StatePlay();
+    void Scene_StateIntro();
+    void Scene_StateInit();
 };
 
 #ifndef SM64DS_PLATFORM_PC

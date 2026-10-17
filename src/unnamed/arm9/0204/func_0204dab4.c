@@ -45,10 +45,7 @@ void func_0204dab4(void *sys, Entry *buf, int count, unsigned int mask, void *cb
         fn = (void (*)(int *, Entry *, short *, int *))cb;
 
     walk = *(Node **)((char *)sys + 8);
-    if (walk == 0)
-        goto tail;
-
-    do {
+    while (walk != 0) {
         slot = 0;
         empty = -1;
 
@@ -90,9 +87,8 @@ void func_0204dab4(void *sys, Entry *buf, int count, unsigned int mask, void *cb
         }
 
         walk = walk->next;
-    } while (walk != 0);
+    }
 
-tail:
     j = 0;
     p = buf;
 

@@ -329,7 +329,7 @@
       "ordinal": 40
     },
     {
-      "symbol": "_ZN4ElemC1Ev",
+      "symbol": "_ZN8MgBannerC1Ev",
       "address": "0x020b4a70",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov004_020b4a70.c",
@@ -343,7 +343,7 @@
       "ordinal": 42
     },
     {
-      "symbol": "_ZN4ElemD1Ev",
+      "symbol": "_ZN8MgBannerD1Ev",
       "address": "0x020b4aa0",
       "size": "0x00000004",
       "legacy_source": "src/func_ov004_020b4aa0.c",
@@ -352,11 +352,11 @@
   ],
   "data": [
     {
-      "symbol": "data_ov004_020bc6e8",
+      "symbol": "sMgBannerFileTemplate",
       "address": "0x020bc6e8",
       "size": "0xe8",
       "binding": "STB_GLOBAL",
-      "evidence": "the 29-entry (29 x 8 = 0xe8) Entry table Mg_LoadBannerFiles copies into its stack frame: all zero but entry 1, { 0x140, &data_ov004_020b9f54 }. The cartridge's only reference to it is the load at 0x020b30a8, inside that function."
+      "evidence": "the 29-entry (29 x 8 = 0xe8) Entry table Mg_LoadBannerFiles copies into its stack frame: all zero but entry 1, { 0x140, &sMgMsgGiveUpSprites }. The cartridge's only reference to it is the load at 0x020b30a8, inside that function."
     }
   ],
   "bss": [
@@ -411,7 +411,7 @@
     }
   ],
   "notes": [
-    "Folded from 44 one-function sources (Mg_FreeBannerFiles .. func_ov004_020b4aa0). Mg_LoadBannerFiles had no complete delinks entry before, but it byte-matched; what it lacked was a licence for the 0xe8-byte table its local array initializer copies from. A local `Entry entries[29] = {...}` makes mwccarm emit that table as an anonymous input .rodata object (@N), while the cartridge keeps it in the module's .data at 0x020bc6e8, which the intact-object link cannot place from .rodata. The unit therefore defines it as an ordinary initialized global under its configured name data_ov004_020bc6e8, and the function copies it with a plain struct copy; the emitted instructions are the same.",
+    "Folded from 44 one-function sources (Mg_FreeBannerFiles .. func_ov004_020b4aa0). Mg_LoadBannerFiles had no complete delinks entry before, but it byte-matched; what it lacked was a licence for the 0xe8-byte table its local array initializer copies from. A local `Entry entries[29] = {...}` makes mwccarm emit that table as an anonymous input .rodata object (@N), while the cartridge keeps it in the module's .data at 0x020bc6e8, which the intact-object link cannot place from .rodata. The unit therefore defines it as an ordinary initialized global under its configured name sMgBannerFileTemplate, and the function copies it with a plain struct copy; the emitted instructions are the same.",
     "`#pragma defer_codegen off` is load-bearing: the shards' file-global opt_strength_reduction (Mg_LoadBannerFiles) and opt_propagation (Banner_DrawSqueeze, Banner_DrawZoomA, Banner_DrawZoomB) pragmas bind to their one function only with undeferred codegen, which also makes the source ROM-ascending.",
     "The per-source extern declarations disagreed on type for several symbols (sMgBannerFiles and data_ov006_021346bc as int vs pointer, Mg_RenderSpriteOn's argument widths, Banner_StartWaveBurst's return type); the single declaration set in the unit source picks one spelling each and the bodies cast to match. Banner_UpdateFall became void: no caller uses a result, and the void body compiles to the same bytes.",
     "Two-word struct copies (Banner_StartSpin, Banner_StartWaveBurst, Banner_Press) go through W2, a struct whose only member is an int[2]; plain {int a, b} structs scalarize under C++ and miss the ROM's block move.",
@@ -428,10 +428,10 @@
     "functions_declared": 44,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN4ElemC2Ev"
+        "_ZN8MgBannerC2Ev"
       ],
       "deadstripped": [
-        "_ZN4ElemC2Ev"
+        "_ZN8MgBannerC2Ev"
       ],
       "droppedSections": [
         80
@@ -636,7 +636,7 @@
   "production_mode": "intact-object",
   "compiler_only_output": [
     {
-      "symbol": "_ZN4ElemC2Ev",
+      "symbol": "_ZN8MgBannerC2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-object constructor beside the licensed complete-object C1; the ROM has no configured C2 home"
     }
@@ -677,7 +677,7 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "data_ov004_020bc6e8",
+      "symbol": "sMgBannerFileTemplate",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "The table is file-local in the source, as the anonymous template it replaces was. DSD requires a global symbol at the configured .data address; changing the ELF binding preserves all storage, relocations and emitted bytes."
@@ -713,7 +713,7 @@
       "source": "0x020bc6f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f54",
+      "symbol": "sMgMsgGiveUpSprites",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x020b9f54"
@@ -743,7 +743,7 @@
       "source": "0x20b99bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN4ElemD1Ev",
+      "symbol": "_ZN8MgBannerD1Ev",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b4aa0"
@@ -763,7 +763,7 @@
       "source": "0x20b99c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN4ElemC1Ev",
+      "symbol": "_ZN8MgBannerC1Ev",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b4a70"
@@ -903,7 +903,7 @@
       "source": "0x20b99fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9e98",
+      "symbol": "sMgMsgRetrySpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9e98"
@@ -923,7 +923,7 @@
       "source": "0x20b9a04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f54",
+      "symbol": "sMgMsgGiveUpSprites",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f54"
@@ -933,7 +933,7 @@
       "source": "0x20b9a08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9e8c",
+      "symbol": "sMgMsgQuitSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9e8c"
@@ -943,7 +943,7 @@
       "source": "0x20b9a0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f2c",
+      "symbol": "sMgMsgLevelClearSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f2c"
@@ -953,7 +953,7 @@
       "source": "0x20b9a10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ea4",
+      "symbol": "sMgMsgGoalSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ea4"
@@ -963,7 +963,7 @@
       "source": "0x20b9a14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9fd8",
+      "symbol": "sMgMsgHiScoreSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9fd8"
@@ -973,7 +973,7 @@
       "source": "0x20b9a18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9eb8",
+      "symbol": "sMgMsgPerfectSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9eb8"
@@ -983,7 +983,7 @@
       "source": "0x20b9a1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f5c",
+      "symbol": "sMgMsgResultHiScoreSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f5c"
@@ -993,7 +993,7 @@
       "source": "0x20b9a20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020ba010",
+      "symbol": "sMgMsgGameOverSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20ba010"
@@ -1003,7 +1003,7 @@
       "source": "0x20b9a24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9e90",
+      "symbol": "sMgMsgYouWinSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9e90"
@@ -1013,7 +1013,7 @@
       "source": "0x20b9a28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ed4",
+      "symbol": "sMgMsgTooBadSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ed4"
@@ -1023,7 +1023,7 @@
       "source": "0x20b9a2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ffc",
+      "symbol": "sMgMsgDrawSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ffc"
@@ -1033,7 +1033,7 @@
       "source": "0x20b9a30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f78",
+      "symbol": "sMgMsgStartSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f78"
@@ -1043,7 +1043,7 @@
       "source": "0x20b9a34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9fa0",
+      "symbol": "sMgMsgLevelSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9fa0"
@@ -1053,7 +1053,7 @@
       "source": "0x20b9a38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9e7c",
+      "symbol": "sMgMsgTimeOverSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9e7c"
@@ -1063,7 +1063,7 @@
       "source": "0x20b9a3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ebc",
+      "symbol": "sMgMsgWhereSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ebc"
@@ -1073,7 +1073,7 @@
       "source": "0x20b9a40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ee4",
+      "symbol": "sMgMsgLikeSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ee4"
@@ -1083,7 +1083,7 @@
       "source": "0x20b9a44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ea8",
+      "symbol": "sMgMsgHateSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ea8"
@@ -1093,7 +1093,7 @@
       "source": "0x20b9a48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ef0",
+      "symbol": "sMgMsgLoveSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ef0"
@@ -1103,7 +1103,7 @@
       "source": "0x20b9a4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f7c",
+      "symbol": "sMgMsgDislikeSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f7c"
@@ -1113,7 +1113,7 @@
       "source": "0x20b9a50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f0c",
+      "symbol": "sMgMsgEsperSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f0c"
@@ -1123,7 +1123,7 @@
       "source": "0x20b9a54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9e50",
+      "symbol": "sMgMsgSuperEsperSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9e50"
@@ -1133,7 +1133,7 @@
       "source": "0x20b9a58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9e70",
+      "symbol": "sMgMsgNoPairSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9e70"
@@ -1143,7 +1143,7 @@
       "source": "0x20b9a5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f60",
+      "symbol": "sMgMsgOnePairSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f60"
@@ -1153,7 +1153,7 @@
       "source": "0x20b9a60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9efc",
+      "symbol": "sMgMsgTwoPairSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9efc"
@@ -1163,7 +1163,7 @@
       "source": "0x20b9a64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9f88",
+      "symbol": "sMgMsgThreeCardSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9f88"
@@ -1173,7 +1173,7 @@
       "source": "0x20b9a68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9e78",
+      "symbol": "sMgMsgFullHouseSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9e78"
@@ -1183,7 +1183,7 @@
       "source": "0x20b9a6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9fc8",
+      "symbol": "sMgMsgFourCardSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9fc8"
@@ -1193,7 +1193,7 @@
       "source": "0x20b9a70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov004_020b9ee8",
+      "symbol": "sMgMsgFiveCardSpritesEnglish",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b9ee8"

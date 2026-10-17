@@ -53,6 +53,65 @@ typedef struct Pal {
     u32 prest : 15;
 } Pal;
 
+/* Particle::SystemDefinition (include/Particle__Manager.h): `data` there.
+ * texAnim and palette are read only when data's texanim / colorrand bits are
+ * set, and supply the spawned particle's texture and colour. */
+typedef struct SystemDefinition {
+    Def *data; /* 0x00 */
+    u8 pad_04[4];
+    TexAnim *texAnim; /* 0x08 */
+    u8 pad_0c[4];
+    Pal *palette; /* 0x10 */
+} SystemDefinition;
+
+/* Particle::System (include/Particle__System.h), whose names this reuses.
+ * Here callbackValue is the spawn-rate accumulator (data->rate is added each
+ * call, whole units spawn, the 12-bit fraction stays). emitRadius scales the
+ * spawn offset of every emitter shape. particleLifetime seeds each particle's
+ * lifetime. The byte at 0x59 (into the low five bits of the particle's 0x40
+ * halfword) has no established role and stays raw. */
+typedef struct ParticleSystem {
+    u8 pad_00[8];
+    List particles; /* 0x08 */
+    u8 pad_10[8];
+    SystemDefinition *mDefinition; /* 0x18 */
+    u8 pad_1c[4];
+    Vector3 position; /* 0x20 */
+    u8 pad_2c[0xe];
+    s16 callbackValue; /* 0x3a */
+    s16 direction[3];  /* 0x3c */
+    u8 pad_42[2];
+    int emitRadius;       /* 0x44 */
+    int callbackParam;    /* 0x48 */
+    int callbackVelocity; /* 0x4c */
+    int callbackScale;    /* 0x50 */
+    u16 particleLifetime; /* 0x54 */
+} ParticleSystem;
+
+/* Particle::Element (include/Particle__Element.h) and the fields past its
+ * 0x30 bytes that this spawn fills in. scale is seeded from the system's
+ * callbackScale, angle from the anglerand bit, texture and color as the
+ * SystemDefinition note says, and invLifetime is 0xffff / lifetime.
+ * The halfwords at 0x34, 0x38, 0x3c and 0x40 stay raw: this file only
+ * seeds them, so their roles are not established here. */
+typedef struct ParticleElement {
+    Node link;            /* 0x00 */
+    Vector3 basePosition; /* 0x08 */
+    Vector3 offset;       /* 0x14 */
+    Vector3 velocity;     /* 0x20 */
+    u16 lifetime;         /* 0x2c */
+    u16 age;              /* 0x2e */
+    int scale;            /* 0x30 */
+    u8 pad_34[2];
+    u16 angle; /* 0x36 */
+    u8 pad_38[2];
+    u16 texture; /* 0x3a */
+    u8 pad_3c[2];
+    u16 invLifetime; /* 0x3e */
+    u8 pad_40[2];
+    u8 color; /* 0x42 */
+} ParticleElement;
+
 extern void func_0204cebc(void *c);
 extern Node *func_0204d958(List *list);
 extern void func_0204d9a0(List *list, Node *node);
@@ -99,15 +158,16 @@ void func_0204c584(u8 *self, List *list)
     Vector3 vecC;
     Vector3 vecE;
     Vector3 nrm;
-    u8 *emitter;
+    SystemDefinition *emitter;
     Def *def;
-    u8 *p;
+    ParticleElement *p;
     int acc;
+    ParticleSystem *sys = (ParticleSystem *)self;
 
-    emitter = *(u8 **)(self + 0x18);
-    def = *(Def **)emitter;
-    acc = def->rate + *(s16 *)(self + 0x3a);
-    *(s16 *)(self + 0x3a) = acc & 0xfff;
+    emitter = sys->mDefinition;
+    def = emitter->data;
+    acc = def->rate + sys->callbackValue;
+    sys->callbackValue = acc & 0xfff;
     count = acc >> 0xc;
     {
         u32 t = def->mode;
@@ -125,27 +185,27 @@ void func_0204c584(u8 *self, List *list)
     d24 = i;
     d28 = i;
     do {
-        p = (u8 *)func_0204d958(list);
+        p = (ParticleElement *)func_0204d958(list);
         if (p == 0)
             return;
-        func_0204d9a0((List *)(self + 8), (Node *)p);
+        func_0204d9a0(&sys->particles, (Node *)p);
         switch (def->mode) {
         case 0:
-            *(int *)(p + 0x1c) = d14;
-            *(int *)(p + 0x18) = *(int *)(p + 0x1c);
-            *(int *)(p + 0x14) = *(int *)(p + 0x18);
+            p->offset.z = d14;
+            p->offset.y = p->offset.z;
+            p->offset.x = p->offset.y;
             break;
         case 1:
-            func_0204da4c((Vector3 *)(p + 0x14));
-            *(int *)(p + 0x14) = FX_MUL(*(int *)(p + 0x14), *(int *)(self + 0x44));
-            *(int *)(p + 0x18) = FX_MUL(*(int *)(p + 0x18), *(int *)(self + 0x44));
-            *(int *)(p + 0x1c) = FX_MUL(*(int *)(p + 0x1c), *(int *)(self + 0x44));
+            func_0204da4c(&p->offset);
+            p->offset.x = FX_MUL(p->offset.x, sys->emitRadius);
+            p->offset.y = FX_MUL(p->offset.y, sys->emitRadius);
+            p->offset.z = FX_MUL(p->offset.z, sys->emitRadius);
             break;
         case 2:
             func_0204d9f0(&vecB);
-            vecB.x = FX_MUL(vecB.x, *(int *)(self + 0x44));
-            vecB.y = FX_MUL(vecB.y, *(int *)(self + 0x44));
-            func_0204cd5c((int *)(p + 0x14), (int *)&vecB, def->sel, (s16 *)self);
+            vecB.x = FX_MUL(vecB.x, sys->emitRadius);
+            vecB.y = FX_MUL(vecB.y, sys->emitRadius);
+            func_0204cd5c((int *)&p->offset, (int *)&vecB, def->sel, (s16 *)self);
             break;
         case 3: {
             int q = d10 / count;
@@ -155,23 +215,23 @@ void func_0204c584(u8 *self, List *list)
             idx = (q >> 4) << 1;
             c = data_02082214[idx];
             sn = data_02082214[idx + 1];
-            vecC.x = FMul(c, *(int *)(self + 0x44));
-            vecC.y = FMul(sn, *(int *)(self + 0x44));
+            vecC.x = FMul(c, sys->emitRadius);
+            vecC.y = FMul(sn, sys->emitRadius);
             vecC.z = d18;
-            func_0204cd5c((int *)(p + 0x14), (int *)&vecC, def->sel, (s16 *)self);
+            func_0204cd5c((int *)&p->offset, (int *)&vecC, def->sel, (s16 *)self);
             break;
         }
         case 4:
-            func_0204da4c((Vector3 *)(p + 0x14));
-            *(int *)(p + 0x14) = FMul(FMul(*(int *)(p + 0x14), *(int *)(self + 0x44)), RandScale());
-            *(int *)(p + 0x18) = FMul(FMul(*(int *)(p + 0x18), *(int *)(self + 0x44)), RandScale());
-            *(int *)(p + 0x1c) = FMul(FMul(*(int *)(p + 0x1c), *(int *)(self + 0x44)), RandScale());
+            func_0204da4c(&p->offset);
+            p->offset.x = FMul(FMul(p->offset.x, sys->emitRadius), RandScale());
+            p->offset.y = FMul(FMul(p->offset.y, sys->emitRadius), RandScale());
+            p->offset.z = FMul(FMul(p->offset.z, sys->emitRadius), RandScale());
             break;
         case 5:
             func_0204d9f0(&vecE);
-            vecE.x = FMul(FMul(vecE.x, *(int *)(self + 0x44)), RandScale());
-            vecE.y = FMul(FMul(vecE.y, *(int *)(self + 0x44)), RandScale());
-            func_0204cd5c((int *)(p + 0x14), (int *)&vecE, def->sel, (s16 *)self);
+            vecE.x = FMul(FMul(vecE.x, sys->emitRadius), RandScale());
+            vecE.y = FMul(FMul(vecE.y, sys->emitRadius), RandScale());
+            func_0204cd5c((int *)&p->offset, (int *)&vecE, def->sel, (s16 *)self);
             break;
         }
         {
@@ -180,82 +240,87 @@ void func_0204c584(u8 *self, List *list)
             s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
             data_020a4d30 = s;
             b = def->b2e;
-            mag1 = (*(int *)(self + 0x48) * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
+            mag1 = (sys->callbackParam * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
             s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
             data_020a4d30 = s;
             b = def->b2e;
-            mag2 = (*(int *)(self + 0x4c) * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
+            mag2 = (sys->callbackVelocity * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
         }
-        if (*(int *)(p + 0x14) == 0 && *(int *)(p + 0x18) == 0 && *(int *)(p + 0x1c) == 0)
+        if (p->offset.x == 0 && p->offset.y == 0 && p->offset.z == 0)
             func_0204da4c(&nrm);
         else
-            NormalizeVec3((Vector3 *)(p + 0x14), &nrm);
-        *(int *)(p + 0x20) = (nrm.x * mag1 + *(s16 *)(self + 0x3c) * mag2) >> 0xc;
-        *(int *)(p + 0x24) = (nrm.y * mag1 + *(s16 *)(self + 0x3e) * mag2) >> 0xc;
-        *(int *)(p + 0x28) = (nrm.z * mag1 + *(s16 *)(self + 0x40) * mag2) >> 0xc;
-        *(Vector3 *)(p + 8) = *(Vector3 *)(self + 0x20);
+            NormalizeVec3(&p->offset, &nrm);
+        p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 0xc;
+        p->velocity.y = (nrm.y * mag1 + sys->direction[1] * mag2) >> 0xc;
+        p->velocity.z = (nrm.z * mag1 + sys->direction[2] * mag2) >> 0xc;
+        p->basePosition = sys->position;
         {
             u32 s;
             int b;
             s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
             data_020a4d30 = s;
             b = def->b2c;
-            *(int *)(p + 0x30) = (*(int *)(self + 0x50) * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
+            p->scale = (sys->callbackScale * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
         }
-        *(u16 *)(p + 0x34) = (u16)d1c;
-        if (def->texanim && (*(TexAnim **)(emitter + 8))->flag) {
+        *(u16 *)((u8 *)p + 0x34) = (u16)d1c;
+        if (def->texanim && emitter->texAnim->flag) {
             u32 s;
-            u8 *tex;
+            TexAnim *tex;
             s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
             data_020a4d30 = s;
-            tex = *(u8 **)(emitter + 8);
-            arr[0] = *(u16 *)tex;
+            tex = emitter->texAnim;
+            arr[0] = tex->a;
             arr[1] = def->tex;
-            arr[2] = *(u16 *)(tex + 2);
-            *(u16 *)(p + 0x3a) = arr[(s >> 0x14) % 3u];
+            arr[2] = tex->b;
+            p->texture = arr[(s >> 0x14) % 3u];
         } else {
-            *(u16 *)(p + 0x3a) = def->tex;
+            p->texture = def->tex;
         }
         {
-            u16 *q = (u16 *)(p + 0x40);
+            u16 *q = (u16 *)((u8 *)p + 0x40);
             *q = (u16)((*q & ~0x1f) | (*(u8 *)(self + 0x59) & 0x1f));
             *q = (u16)((*q & ~0x3e0) | 0x3e0);
         }
         if (def->anglerand) {
             u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
             data_020a4d30 = s;
-            *(u16 *)(p + 0x36) = (u16)s;
+            p->angle = (u16)s;
         } else {
-            *(u16 *)(p + 0x36) = (u16)d20;
+            p->angle = (u16)d20;
         }
         if (def->sizerand) {
-            *(u16 *)(p + 0x38) = (u16)((u32)((def->hi - def->lo) * (int)(RandVal() >> 0x14) + (def->lo << 0xc)) >> 0xc);
+            *(u16 *)((u8 *)p + 0x38) =
+                (u16)((u32)((def->hi - def->lo) * (int)(RandVal() >> 0x14) + (def->lo << 0xc)) >>
+                      0xc);
         } else {
-            *(u16 *)(p + 0x38) = (u16)d24;
+            *(u16 *)((u8 *)p + 0x38) = (u16)d24;
         }
         {
             u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
             data_020a4d30 = s;
-            *(u16 *)(p + 0x2c) = (u16)(((*(u16 *)(self + 0x54) * (0xff - ((def->b2d * (int)(s >> 0x18)) >> 8))) >> 8) + 1);
+            p->lifetime =
+                (u16)(((sys->particleLifetime * (0xff - ((def->b2d * (int)(s >> 0x18)) >> 8))) >>
+                       8) +
+                      1);
         }
-        *(u16 *)(p + 0x2e) = (u16)d28;
+        p->age = (u16)d28;
         {
             u32 b11 = def->colorrand;
-            if (b11 != 0 && ((Pal *)*(u8 **)(emitter + 0x10))->loop) {
+            if (b11 != 0 && emitter->palette->loop) {
                 u32 s;
                 u8 *pal;
                 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
                 data_020a4d30 = s;
-                pal = *(u8 **)(emitter + 0x10);
-                *(p + 0x42) = pal[(s >> 0x14) % pal[8]];
-            } else if (b11 != 0 && !((Pal *)*(u8 **)(emitter + 0x10))->loop) {
-                *(p + 0x42) = **(u8 **)(emitter + 0x10);
+                pal = (u8 *)emitter->palette;
+                p->color = pal[(s >> 0x14) % pal[8]];
+            } else if (b11 != 0 && !emitter->palette->loop) {
+                p->color = emitter->palette->colors[0];
             } else {
-                *(p + 0x42) = def->b33;
+                p->color = def->b33;
             }
         }
-        *(u16 *)(p + 0x3c) = (u16)(0xffff / (*(Def **)emitter)->b34);
-        *(u16 *)(p + 0x3e) = (u16)(0xffff / *(u16 *)(p + 0x2c));
+        *(u16 *)((u8 *)p + 0x3c) = (u16)(0xffff / emitter->data->b34);
+        p->invLifetime = (u16)(0xffff / p->lifetime);
         i += 1;
     } while (i < count);
 }

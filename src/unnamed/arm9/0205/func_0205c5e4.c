@@ -20,6 +20,9 @@ int func_0205c5e4(char* self, int idx) {
     int enabled;
     int busy;
 
+    /* enabled/t/t2/busy stay materialized 0/1 locals: testing the bit directly,
+       != 0, or an inline predicate each shrinks the function (0x188-0x19c) */
+
     flags = *(unsigned int*)(self + 0xc);
     enabled = 1;
     r = *(char**)(self + 8);
@@ -59,12 +62,8 @@ int func_0205c5e4(char* self, int idx) {
             unsigned short* p;
             irq = _ZN3IRQ7DisableEv();
             p = (unsigned short*)(r + 0xc);
-            goto chk;
-            do {
+            while ((busy = (*(unsigned int *)(r + 0x10) & 0x200) ? 1 : 0) != 0)
                 OS_SleepThread(p);
-chk:
-                busy = (*(unsigned int*)(r + 0x10) & 0x200) ? 1 : 0;
-            } while (busy != 0);
             ret = *(int*)(self + 0x14);
             _ZN3IRQ7RestoreEj(irq);
         }

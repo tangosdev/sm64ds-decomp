@@ -74,8 +74,12 @@ static inline int IsTouchJustBegun(u32 off) {
     return gTouchHeld[off] != 0 && *(gTouchHeld + off + 1) != 0;
 }
 
-/* data_0209f2d8 is the global mode byte; mode 2's meaning is unrecovered. */
-static inline int IsGameMode2(void) {
+/* data_0209f2d8 (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
+ * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
+ * script it resumes is FALL_IN_FRONT_OF_CASTLE_CUTSCENE (data_02089608),
+ * and EndKuppaScript clears it once no script is left to resume. The
+ * credits script does not set it. */
+static inline int IsCastleFallCutsceneRunning(void) {
     return data_0209f2d8 == 2;
 }
 
@@ -128,7 +132,7 @@ extern "C" void ProcessKuppaScript(void)
             } else if (cmd == 0xb) {
                 LoadLevelNoReturn((s8)s[6], s[7], (s8)s[8], 0);
                 data_0209fc4c = ReadUnalignedInt(s + 9);
-                if (!IsGameMode2())
+                if (!IsCastleFallCutsceneRunning())
                     Sound::StopLoadedMusic_Layer1(0x3c);
                 dScene_c::SetAndStopColorFader();
                 data_0209d4b0 = 0;

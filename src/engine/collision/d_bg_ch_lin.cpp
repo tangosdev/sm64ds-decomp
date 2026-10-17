@@ -48,31 +48,31 @@ dBgCh_Lin::~dBgCh_Lin()
 void dBgCh_Lin::SetObjAndLine(const Vector3 &start, const Vector3 &end,
                               dActor_c *actor)
 {
-    Vector3 mid;
+    Vector3 midpoint;
     dM3dGLin::Set(start, end);
     func_020353b0(this, actor);
     func_02037608();
-    mid.x = start.x + end.x;
-    mid.y = start.y + end.y;
-    mid.z = start.z + end.z;
-    mid.x >>= 1;
-    mid.y >>= 1;
-    mid.z >>= 1;
-    mBoundSphere.Set(mid, (clsnDist >> 1) + 0x1000);
+    midpoint.x = start.x + end.x;
+    midpoint.y = start.y + end.y;
+    midpoint.z = start.z + end.z;
+    midpoint.x >>= 1;
+    midpoint.y >>= 1;
+    midpoint.z >>= 1;
+    mBoundSphere.Set(midpoint, (clsnDist >> 1) + 0x1000);
 }
 
 // @symbol _ZN9dBgCh_Lin13func_02037608Ev
 void dBgCh_Lin::func_02037608()
 {
-    Vector3 a;
-    Vector3 b;
+    Vector3 startPoint;
+    Vector3 endPoint;
     hasClsn = 0;
     /* through the REFERENCE: a pointer-level upcast makes mwcc emit the
        null-checked MI adjustment (movs/addne), the ROM's is unconditional */
-    func_ov002_020fea4c((int *)&b, (int *)&(dM3dGLin &)*this);
-    lineEnd = b;
-    func_ov002_020fea68((int *)&a, (int *)&(dM3dGLin &)*this);
-    clsnDist = Vec3_Dist(&lineEnd, &a);
+    func_ov002_020fea4c((int *)&endPoint, (int *)&(dM3dGLin &)*this);
+    lineEnd = endPoint;
+    func_ov002_020fea68((int *)&startPoint, (int *)&(dM3dGLin &)*this);
+    clsnDist = Vec3_Dist(&lineEnd, &startPoint);
     dBgPi::Reset();
 }
 

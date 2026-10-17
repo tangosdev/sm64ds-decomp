@@ -37,8 +37,12 @@ void func_02035394(void *dst, void *src);
 /* local extern: the radius is Fix12 by value, so the call spells the symbol. */
 void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(
     dBgCh_SphCrr *sphere, const Vector3 *pos, Fix12i radius, dActor_c *actor);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *thiz, void *f, const Matrix4x3 *m, int fix, short s, void *b);
+/* local extern: the scale is Fix12 by value, so the call spells the symbol
+   with the scalar signature d_bg_w_kc_mbg.cpp defines. */
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *file,
+                                                                           const Matrix4x3 *mtx,
+                                                                           int scale, short angY,
+                                                                           void *clps);
 
 extern dBgCh_Lin data_020a0d0c;   /* the scratch line, in collider space */
 extern Vector3   data_020a0d60;   /* == data_020a0d0c.lineEnd  (+0x54) */
@@ -58,9 +62,10 @@ dBgW_KcMbgSclY::~dBgW_KcMbgSclY()
 
 // @symbol _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
 extern "C" void _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbgSclY *self, KCL_File *f, const Matrix4x3 *m, Fix12i fix, s16 s, CLPS_Block *b)
-{
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(self, f, m, fix, s, b);
+    dBgW_KcMbgSclY *self, KCL_File *file, const Matrix4x3 *mtx, Fix12i scale, s16 angY,
+    CLPS_Block *clps) {
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(self, file, mtx, scale,
+                                                                          angY, clps);
     self->scaleY = 0x1000;
     self->invScaleY = 0x1000;
 }
@@ -158,7 +163,15 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere)
 {
     Vector3 centre;
     Vector3 localCentre;
-    int d[12];
+    /* The local query's broad-phase box, and the same box scaled back out.
+       Plain words: Vector3 declares a destructor. */
+    struct BoxCorner {
+        s32 x, y, z;
+    };
+    struct {
+        BoxCorner localMin, localMax;
+        BoxCorner worldMin, worldMax;
+    } box;
     int inverseScale;
     int radius1;
     int radius2;
@@ -178,14 +191,15 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere)
     func_02035394(&loc, &sphere);
     r = dBgW_Kc::DetectClsn(loc);
     if (r) {
-        loc.func_02037a04((Vector3 *)d, (Vector3 *)(d + 3));
-        d[6] = FX_MUL(d[0], scale);
-        d[7] = FX_MUL(d[1], scale);
-        d[8] = FX_MUL(d[2], scale);
-        d[9] = FX_MUL(d[3], scale);
-        d[10] = FX_MUL(d[4], scale);
-        d[11] = FX_MUL(d[5], scale);
-        sphere.func_02037a6c(d[6], d[7], d[8], d[9], d[10], d[11]);
+        loc.func_02037a04((Vector3 *)&box.localMin, (Vector3 *)&box.localMax);
+        box.worldMin.x = FX_MUL(box.localMin.x, scale);
+        box.worldMin.y = FX_MUL(box.localMin.y, scale);
+        box.worldMin.z = FX_MUL(box.localMin.z, scale);
+        box.worldMax.x = FX_MUL(box.localMax.x, scale);
+        box.worldMax.y = FX_MUL(box.localMax.y, scale);
+        box.worldMax.z = FX_MUL(box.localMax.z, scale);
+        sphere.func_02037a6c(box.worldMin.x, box.worldMin.y, box.worldMin.z, box.worldMax.x,
+                             box.worldMax.y, box.worldMax.z);
         (dBgPi &)sphere = (dBgPi &)loc;
         sphere.flags |= 1;
         if (loc.flags & 4) {

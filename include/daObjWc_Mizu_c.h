@@ -36,7 +36,7 @@ struct daObjWc_Mizu_c : dBgActor_c {
     u8 mUseSpawnPosY;                 /* 0x338 -- param1 & 1; when clear InitResources overrides mPosY from the WDW water-level table data_ov029_02112b2c[setting] */
     u8  pad_339[0x3];
     s32 mSoundID;                      /* 0x33c */
-    u8 mTrueAreaID;                    /* 0x340 -- stored u8; Behavior reads it signed (ldrsb) */
+    s8 mTrueAreaID;                    /* 0x340 -- mAreaId as spawned; s8 like it */
     u8  pad_341;
     /* Behavior adds 0x200 per frame; (u16)>>4 indexes data_02082214.
        Same sine-table shape as daObjFl_UkiKi_c::mPhaseAngle. Was pad_341[3]

@@ -65,49 +65,49 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN14dScMgCurling_c10Bit_State2Ei",
+      "symbol": "_ZN14dScMgCurling_c21Bit_StateFallSlowDownEi",
       "address": "0x020e071c",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020e071c.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN14dScMgCurling_c10Bit_State1Ei",
+      "symbol": "_ZN14dScMgCurling_c20Bit_StateFallSpeedUpEi",
       "address": "0x020e07b0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_020e07b0.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN14dScMgCurling_c10Bit_State0Ei",
+      "symbol": "_ZN14dScMgCurling_c18Bit_StateFallStartEi",
       "address": "0x020e0884",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020e0884.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitA_State3Ei",
+      "symbol": "_ZN14dScMgCurling_c19BitA_StateDriftStopEi",
       "address": "0x020e091c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov006_020e091c.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitA_State2Ei",
+      "symbol": "_ZN14dScMgCurling_c19BitA_StateDriftLeftEi",
       "address": "0x020e0a24",
       "size": "0x00000140",
       "legacy_source": "src/func_ov006_020e0a24.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitA_State1Ei",
+      "symbol": "_ZN14dScMgCurling_c20BitA_StateDriftRightEi",
       "address": "0x020e0b64",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_020e0b64.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitA_State0Ei",
+      "symbol": "_ZN14dScMgCurling_c15BitA_StatePauseEi",
       "address": "0x020e0ca0",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020e0ca0.c",
@@ -121,28 +121,28 @@
       "ordinal": 10
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitB_State3Ei",
+      "symbol": "_ZN14dScMgCurling_c19BitB_StateDriftStopEi",
       "address": "0x020e0e18",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020e0e18.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitB_State2Ei",
+      "symbol": "_ZN14dScMgCurling_c19BitB_StateDriftLeftEi",
       "address": "0x020e0edc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e0edc.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitB_State1Ei",
+      "symbol": "_ZN14dScMgCurling_c20BitB_StateDriftRightEi",
       "address": "0x020e0ff0",
       "size": "0x00000110",
       "legacy_source": "src/func_ov006_020e0ff0.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN14dScMgCurling_c11BitB_State0Ei",
+      "symbol": "_ZN14dScMgCurling_c15BitB_StatePauseEi",
       "address": "0x020e1100",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e1100.c",
@@ -433,7 +433,7 @@
     "The incomplete struct C and the PMF/Entry typedefs above the member blocks are load-bearing: they are the representation the pointer-to-member tables at 0x0213c1e4..0x0213c2bc are filled with by __sinit_ov006_*, and completing struct C changes the pointer-to-member representation mwcc emits.",
     "Popup_UpdateAll took its parameter as `this` in its .c shard; `this` is a keyword once the shard is compiled as C++, so the parameter and its one body use are spelled `self` here. The emitted bytes are unchanged.",
     "FOLD RECONCILIATION, upper 19 + the hole, each settled by measurement with tools/tubuild.py verify (46/46). (1) cstd::atan2 keeps the int return the lower half needed; ResolveStoneCollision matches with it too. (2) Mg_GetTopRecord is declared (void); the Render shard declared it with one argument and passed Mg_GetTopRecord() nothing, and the bytes are the same. (3) LoadFile returns void * (its shard's spelling); PickHouse assigns it to a void * local. (4) ClearStones takes the scene as char * rather than the int its shard used; its opt_strength_reduction off is now a push/pop bracket. (5) Stone_Drag reads data_020a0de8 through the same 4-byte-record cast the lower half uses for data_020a0dea/data_020a0deb; indexing the TU's u8[] directly swaps two registers and costs 26 words. (6) Stone_Collide is the one-instruction tail veneer onto ResolveStoneCollision and is written as a plain call; mwcc emits the ldr ip / bx ip pair itself. (7) The state tables sCurlingAimTable and sCurlingSceneTable read by Scene_Play and Behavior are typed through the same incomplete receiver C as the four lower tables, as PMF0 (no argument); Behavior reads its state index through PopupView, which already names the word at 0x4eac.",
-    "Static initializer folded: the seven PMF state tables (0x021418b0..0x02141978) move out of the handwritten src/unnamed shard into src/minigames/d_s_mg_curling.cpp, defined through the existing PMF/PMF0/Entry typedefs and plain-copied from the ROM PMF constants at pmf_dScMgCurling_c_BitA_State2..0x0213c2bc. The emitted .init, .ctor and .bss are byte-identical to retail; no handles, no compiler temporaries, no renames. Table definition order is the retail initializer copy order."
+    "Static initializer folded: the seven PMF state tables (0x021418b0..0x02141978) move out of the handwritten src/unnamed shard into src/minigames/d_s_mg_curling.cpp, defined through the existing PMF/PMF0/Entry typedefs and plain-copied from the ROM PMF constants at pmf_dScMgCurling_c_BitA_StateDriftLeft..0x0213c2bc. The emitted .init, .ctor and .bss are byte-identical to retail; no handles, no compiler temporaries, no renames. Table definition order is the retail initializer copy order."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -685,7 +685,7 @@
     {
       "symbol": "_ZTV14dScMgCurling_c",
       "disposition": "deadstrip-data",
-      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways: (a) the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213c300 (the typeinfo word of the 8-byte offset-to-top/typeinfo preamble) through 0x0213c390 -- 37 consecutive relocated words, 1 typeinfo + 36 slots -- with the first gap at 0x0213c394; (b) tools/rtti_vtables.py --own dScMgCurling_c reports 36 slots over base dScMgBase_c (also 36), six of them overridden: slots 0, 6, 9, 16, 17, 18; (c) the next symbols.txt row after the address point is data_ov006_0213c394 at 0x0213c394. All three give symbol extent 0x0213c304..0x0213c394 = 0x90 = 36 slots, and STORAGE 0x0213c2fc..0x0213c394 = 0x98, which is exactly the size tools/tubuild.py verify reports for the .data section this TU emits (EXTRA .data _ZTV14dScMgCurling_c size=0x98). The cartridge keeps its canonical copy at the address point ov006:0x0213c304, outside this TU's only licensed range (.text 0x020e0638-0x020e3820), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
+      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways: (a) the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213c300 (the typeinfo word of the 8-byte offset-to-top/typeinfo preamble) through 0x0213c390 -- 37 consecutive relocated words, 1 typeinfo + 36 slots -- with the first gap at 0x0213c394; (b) tools/rtti_vtables.py --own dScMgCurling_c reports 36 slots over base dScMgBase_c (also 36), six of them overridden: slots 0, 6, 9, 16, 17, 18; (c) the next symbols.txt row after the address point is sCurlingMgDirPath at 0x0213c394. All three give symbol extent 0x0213c304..0x0213c394 = 0x90 = 36 slots, and STORAGE 0x0213c2fc..0x0213c394 = 0x98, which is exactly the size tools/tubuild.py verify reports for the .data section this TU emits (EXTRA .data _ZTV14dScMgCurling_c size=0x98). The cartridge keeps its canonical copy at the address point ov006:0x0213c304, outside this TU's only licensed range (.text 0x020e0638-0x020e3820), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213c304"
     },
@@ -989,7 +989,7 @@
       "source": "0x02130720",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitB_State0",
+      "symbol": "pmf_dScMgCurling_c_BitB_StatePause",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c28c"
@@ -999,7 +999,7 @@
       "source": "0x02130724",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitB_State1",
+      "symbol": "pmf_dScMgCurling_c_BitB_StateDriftRight",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c274"
@@ -1009,7 +1009,7 @@
       "source": "0x02130728",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitB_State2",
+      "symbol": "pmf_dScMgCurling_c_BitB_StateDriftLeft",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c26c"
@@ -1029,7 +1029,7 @@
       "source": "0x02130730",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitB_State3",
+      "symbol": "pmf_dScMgCurling_c_BitB_StateDriftStop",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c24c"
@@ -1039,7 +1039,7 @@
       "source": "0x02130734",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitA_State0",
+      "symbol": "pmf_dScMgCurling_c_BitA_StatePause",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c2a4"
@@ -1049,7 +1049,7 @@
       "source": "0x02130738",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitA_State1",
+      "symbol": "pmf_dScMgCurling_c_BitA_StateDriftRight",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c1ec"
@@ -1059,7 +1059,7 @@
       "source": "0x0213073c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitA_State2",
+      "symbol": "pmf_dScMgCurling_c_BitA_StateDriftLeft",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c1e4"
@@ -1079,7 +1079,7 @@
       "source": "0x02130744",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_BitA_State3",
+      "symbol": "pmf_dScMgCurling_c_BitA_StateDriftStop",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c1f4"
@@ -1089,7 +1089,7 @@
       "source": "0x02130748",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_Bit_State0",
+      "symbol": "pmf_dScMgCurling_c_Bit_StateFallStart",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c224"
@@ -1099,7 +1099,7 @@
       "source": "0x0213074c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_Bit_State1",
+      "symbol": "pmf_dScMgCurling_c_Bit_StateFallSpeedUp",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c284"
@@ -1109,7 +1109,7 @@
       "source": "0x02130750",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgCurling_c_Bit_State2",
+      "symbol": "pmf_dScMgCurling_c_Bit_StateFallSlowDown",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213c27c"

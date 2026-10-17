@@ -37,7 +37,7 @@ sMiniGmIconScreenOffsets kind:data(any) addr:0x020c2464
 data_ov005_020c2490 kind:data(any) addr:0x020c2490
 _ZTV11dScMiniGm_c kind:data(any) addr:0x020c2490
 sMiniGmRows kind:data(any) addr:0x020c24d8
-data_ov005_020c24dc kind:data(any) addr:0x020c24dc
+sMiniGmSaveTable kind:data(any) addr:0x020c24dc
 sMiniGmGroupTabs kind:data(any) addr:0x020c2c28
 data_ov005_020c2c48 kind:data(any) addr:0x020c2c48
 data_ov005_020c2c90 kind:data(any) addr:0x020c2c90

@@ -63,11 +63,12 @@ dCc_c::~dCc_c()
  * bytes as a method, but emits _ZN5dCc_c4InitEiijj. Production still names
  * this entry _ZN5dCc_c4InitE5Fix12IiES1_jj; keep the C-linkage boundary
  * until the symbol and its callers are reconciled. */
-extern "C" void _ZN5dCc_c4InitE5Fix12IiES1_jj(struct dCc_c *self, int a, int b, unsigned d, unsigned e) {
-  *(int*)&self->radius=a;
-  *(int*)&self->height=b;
-  *(int*)&self->flags=d;
-  *(int*)&self->vulnFlags=e;
+extern "C" void _ZN5dCc_c4InitE5Fix12IiES1_jj(dCc_c *self, int radius, int height, unsigned flags,
+                                              unsigned vulnFlags) {
+    self->radius = radius;
+    self->height = height;
+    self->flags = flags;
+    self->vulnFlags = vulnFlags;
 }
 
 // @symbol _ZN5dCc_c5ClearEv
@@ -192,11 +193,9 @@ void dCc_c::Process()
 
             if (sharedFlags & 0x4000000)
             {
-                u32* pf1 = (u32*)((char*)other + 0x20);
-                u32* pf0 = (u32*)((char*)data_0209cee8 + 0x20);
-                *pf0 |= 0x8000000;
+                data_0209cee8->hitFlags |= 0x8000000;
                 overlap -= 0x50000;
-                *pf1 |= 0x8000000;
+                other->hitFlags |= 0x8000000;
                 if (overlap < 0)
                     continue;
             }

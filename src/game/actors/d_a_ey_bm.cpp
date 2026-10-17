@@ -38,6 +38,7 @@
 
 #include "common.h"
 #include "daEyBm_c.h"
+#include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
 #include "Player.h"
@@ -63,21 +64,6 @@ struct EyBmVec3 {
 
 extern EyBmVec3 data_ov071_021230b8;
 
-/* Typed reconstruction of the actor-table descriptor at ov071:0x02122dc4. */
-struct DaEyBmSpawnInfo {
-    daEyBm_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char DaEyBmSpawnInfo_size_must_be_0x1c[
-    sizeof(DaEyBmSpawnInfo) == 0x1c ? 1 : -1];
-
 /* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
  * Yoshi is eating the actor, then has it in his mouth. Actor ID 0xbf is
  * PLAYER. These int-returning predicates are what make the ROM materialize
@@ -102,7 +88,8 @@ extern "C" daEyBm_c *daEyBm_c_classInit()
     return new daEyBm_c();
 }
 
-extern "C" DaEyBmSpawnInfo g_profile_EYEKUN_BEAM = {
+/* The actor-table descriptor, at ov071:0x02122dc4. */
+extern "C" SpawnInfo<daEyBm_c> g_profile_EYEKUN_BEAM = {
     daEyBm_c_classInit,
     0x0108,
     0x007a,

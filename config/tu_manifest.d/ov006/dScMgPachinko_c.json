@@ -83,28 +83,28 @@
       "ordinal": 5
     },
     {
-      "symbol": "PachinkoBg_State3",
+      "symbol": "PachinkoBg_StateSinkOut",
       "address": "0x020fa9c8",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020fa9c8.c",
       "ordinal": 6
     },
     {
-      "symbol": "PachinkoBg_State2",
+      "symbol": "PachinkoBg_StateScroll",
       "address": "0x020faac8",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020faac8.c",
       "ordinal": 7
     },
     {
-      "symbol": "PachinkoBg_State1",
+      "symbol": "PachinkoBg_StateRiseIn",
       "address": "0x020fab70",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov006_020fab70.c",
       "ordinal": 8
     },
     {
-      "symbol": "PachinkoBg_State0",
+      "symbol": "PachinkoBg_StateWaiting",
       "address": "0x020fac48",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov006_020fac48.c",
@@ -167,35 +167,35 @@
       "ordinal": 17
     },
     {
-      "symbol": "PachinkoFlyer_State4",
+      "symbol": "PachinkoFlyer_StateLeave",
       "address": "0x020fb0fc",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov006_020fb0fc.c",
       "ordinal": 18
     },
     {
-      "symbol": "PachinkoFlyer_State3",
+      "symbol": "PachinkoFlyer_StatePause",
       "address": "0x020fb1c4",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020fb1c4.c",
       "ordinal": 19
     },
     {
-      "symbol": "PachinkoFlyer_State2",
+      "symbol": "PachinkoFlyer_StateCross",
       "address": "0x020fb230",
       "size": "0x0000022c",
       "legacy_source": "src/func_ov006_020fb230.c",
       "ordinal": 20
     },
     {
-      "symbol": "PachinkoFlyer_State1",
+      "symbol": "PachinkoFlyer_StateDescend",
       "address": "0x020fb45c",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_020fb45c.c",
       "ordinal": 21
     },
     {
-      "symbol": "PachinkoFlyer_State0",
+      "symbol": "PachinkoFlyer_StateWaiting",
       "address": "0x020fb4e0",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov006_020fb4e0.c",
@@ -314,28 +314,28 @@
       "ordinal": 38
     },
     {
-      "symbol": "PachinkoPipe_State3",
+      "symbol": "PachinkoPipe_StateIdle",
       "address": "0x020fc1f8",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov006_020fc1f8.c",
       "ordinal": 39
     },
     {
-      "symbol": "PachinkoPipe_State2",
+      "symbol": "PachinkoPipe_StateSink",
       "address": "0x020fc2ec",
       "size": "0x00000214",
       "legacy_source": "src/func_ov006_020fc2ec.c",
       "ordinal": 40
     },
     {
-      "symbol": "PachinkoPipe_State1",
+      "symbol": "PachinkoPipe_StateRise",
       "address": "0x020fc500",
       "size": "0x00000218",
       "legacy_source": "src/func_ov006_020fc500.c",
       "ordinal": 41
     },
     {
-      "symbol": "PachinkoPipe_State0",
+      "symbol": "PachinkoPipe_StatePick",
       "address": "0x020fc718",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020fc718.c",
@@ -391,49 +391,49 @@
       "ordinal": 49
     },
     {
-      "symbol": "PachinkoBall_State6",
+      "symbol": "PachinkoBall_StatePop",
       "address": "0x020fce04",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_020fce04.c",
       "ordinal": 50
     },
     {
-      "symbol": "PachinkoBall_State5",
+      "symbol": "PachinkoBall_StateSpinAway",
       "address": "0x020fcec4",
       "size": "0x000001c4",
       "legacy_source": "src/func_ov006_020fcec4.c",
       "ordinal": 51
     },
     {
-      "symbol": "PachinkoBall_State4",
+      "symbol": "PachinkoBall_StateGlide",
       "address": "0x020fd088",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov006_020fd088.c",
       "ordinal": 52
     },
     {
-      "symbol": "PachinkoBall_State3",
+      "symbol": "PachinkoBall_StateDive",
       "address": "0x020fd17c",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov006_020fd17c.c",
       "ordinal": 53
     },
     {
-      "symbol": "PachinkoBall_State2",
+      "symbol": "PachinkoBall_StateDrift",
       "address": "0x020fd2d8",
       "size": "0x000005bc",
       "legacy_source": "src/func_ov006_020fd2d8.c",
       "ordinal": 54
     },
     {
-      "symbol": "PachinkoBall_State1",
+      "symbol": "PachinkoBall_StateFall",
       "address": "0x020fd894",
       "size": "0x00000138",
       "legacy_source": "src/func_ov006_020fd894.c",
       "ordinal": 55
     },
     {
-      "symbol": "PachinkoBall_State0",
+      "symbol": "PachinkoBall_StateWaiting",
       "address": "0x020fd9cc",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020fd9cc.c",
@@ -489,35 +489,35 @@
       "ordinal": 63
     },
     {
-      "symbol": "PachinkoBobOmb_State0",
+      "symbol": "PachinkoBobOmb_StateWaitGrab",
       "address": "0x020fe2e4",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020fe2e4.c",
       "ordinal": 64
     },
     {
-      "symbol": "PachinkoBobOmb_State1",
+      "symbol": "PachinkoBobOmb_StateAim",
       "address": "0x020fe394",
       "size": "0x000003bc",
       "legacy_source": "src/func_ov006_020fe394.cpp",
       "ordinal": 65
     },
     {
-      "symbol": "PachinkoBobOmb_State2",
+      "symbol": "PachinkoBobOmb_StateFlying",
       "address": "0x020fe750",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_020fe750.c",
       "ordinal": 66
     },
     {
-      "symbol": "PachinkoBobOmb_State3",
+      "symbol": "PachinkoBobOmb_StateFallAway",
       "address": "0x020fe90c",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020fe90c.c",
       "ordinal": 67
     },
     {
-      "symbol": "PachinkoBobOmb_State4",
+      "symbol": "PachinkoBobOmb_StateRemove",
       "address": "0x020fea54",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020fea54.c",
@@ -613,9 +613,9 @@
   ],
   "notes": [
     "Hand-assembled from the 45 legacy one-function sources of ROM ordinals 0..44, then widened by hand to the whole unit with the 30 of ordinals 45..74. tools/tubuild.py create cannot be used on this TU: several of the shards wrap their bodies in an extern \"C\" block, which its splitter refuses by design.",
-    "DECLARATION RECONCILIATION, all of it codegen-free and all of it settled by the 75/75 byte match rather than by argument. One extern \"C\" declaration per symbol at file scope; where two shards spelled one interface differently the definition's spelling (or the tree's dominant one) was kept and the call site took a cast. Mg_RenderSpriteBoth takes void* first and returns void. The G2 and G2S BG accessors are called through namespace declarations with their definitions' return types (G2: void*; G2S: unsigned); callers that want a char* or u16* cast at the use. DecompressLZ16 takes (void*, void*). Mg_InitBrush's second parameter is char. Mg_RenderSpriteBothScaled takes an OamAttr* first and returns int; the sprite record is only handled by pointer. MultiStore16 takes char*. func_02012468's eighth parameter is short. func_02012718 takes (int, int), its definition's spelling; PachinkoBall_CheckHitByBobOmb had passed its first argument through a void* cast and now passes the int table entry. cstd::sqrt and Sound::PlayBank2_2D are called through their namespace declarations; _ZN4cstd5atan2E5Fix12IiES1_ keeps its mangled C spelling, declared short(int, int) as its definition is. PachinkoDeco_UpdateAll, PachinkoFlyer_CheckHits and PachinkoFlyer_State2 keep their own definitions' char* parameter and the shadow-class call sites cast. Pachinko_PlotSubBg2Pixels's first parameter is spelled void* rather than the definition's int: it is never read. Pachinko_DrawScore and Pachinko_DrawTopRecord take an unnamed void*: Render passes the scene in r0 and neither reads it (the move into r0 before each call is in the cartridge). Render and Behavior pass `this` cast to each helper's own parameter type (char*, u8*, C*, C2*).",
+    "DECLARATION RECONCILIATION, all of it codegen-free and all of it settled by the 75/75 byte match rather than by argument. One extern \"C\" declaration per symbol at file scope; where two shards spelled one interface differently the definition's spelling (or the tree's dominant one) was kept and the call site took a cast. Mg_RenderSpriteBoth takes void* first and returns void. The G2 and G2S BG accessors are called through namespace declarations with their definitions' return types (G2: void*; G2S: unsigned); callers that want a char* or u16* cast at the use. DecompressLZ16 takes (void*, void*). Mg_InitBrush's second parameter is char. Mg_RenderSpriteBothScaled takes an OamAttr* first and returns int; the sprite record is only handled by pointer. MultiStore16 takes char*. func_02012468's eighth parameter is short. func_02012718 takes (int, int), its definition's spelling; PachinkoBall_CheckHitByBobOmb had passed its first argument through a void* cast and now passes the int table entry. cstd::sqrt and Sound::PlayBank2_2D are called through their namespace declarations; _ZN4cstd5atan2E5Fix12IiES1_ keeps its mangled C spelling, declared short(int, int) as its definition is. PachinkoDeco_UpdateAll, PachinkoFlyer_CheckHits and PachinkoFlyer_StateCross keep their own definitions' char* parameter and the shadow-class call sites cast. Pachinko_PlotSubBg2Pixels's first parameter is spelled void* rather than the definition's int: it is never read. Pachinko_DrawScore and Pachinko_DrawTopRecord take an unnamed void*: Render passes the scene in r0 and neither reads it (the move into r0 before each call is in the cartridge). Render and Behavior pass `this` cast to each helper's own parameter type (char*, u8*, C*, C2*).",
     "TWO SHIM-CLASS RENAMES. Ordinals 10 and 23 each dispatch through an ov006 pointer-to-member table and each legacy shard had called its receiver `struct C`, but the two spellings place their fields at DIFFERENT offsets (0x5c0e/0x5c0f against 0x5bc6/0x5bc8), so they are two different shadow classes that happened to share a name; the second is now C2 with its own PMF2. Ordinals 21 and 43 had likewise both named a local record `Ent` with different layouts; the second is now Ent7d0, and ordinals 57 and 62, whose shards declared the same {code pointer, adjustment} record as `Ent`, use Ent7d0 too. In both pointer-to-member cases the typedef is still formed while the class is INCOMPLETE, which is load-bearing -- mwccarm 2004/b56 picks its pointer-to-member representation from the completeness of the class at the point the type is formed. PachinkoBall_CheckFall and PachinkoBobOmb_DrawAll had named their char* parameter `this`, which C++ reserves; it is `thiz` here.",
-    "PRAGMAS. Optimisation pragmas inherited from the legacy shards are carried as positional push/off/pop brackets -- opt_common_subs on ordinals 17, 22, 36, 42, 47 and 48, opt_loop_invariants on ordinals 35 and 36, opt_prelinearize on ordinal 45 (PachinkoBall_DrawAll) and opt_propagation on ordinal 65 (PachinkoBobOmb_State1) -- which is what #pragma defer_codegen off makes bind per-bracket instead of leaking file-wide. defer_codegen off also forces the ROM-ASCENDING source order: with codegen deferred mwccarm emits one .text section per function in the REVERSE of source order, and verify confirms all 75 land in the expected ROM-ascending section order."
+    "PRAGMAS. Optimisation pragmas inherited from the legacy shards are carried as positional push/off/pop brackets -- opt_common_subs on ordinals 17, 22, 36, 42, 47 and 48, opt_loop_invariants on ordinals 35 and 36, opt_prelinearize on ordinal 45 (PachinkoBall_DrawAll) and opt_propagation on ordinal 65 (PachinkoBobOmb_StateAim) -- which is what #pragma defer_codegen off makes bind per-bracket instead of leaking file-wide. defer_codegen off also forces the ROM-ASCENDING source order: with codegen deferred mwccarm emits one .text section per function in the REVERSE of source order, and verify confirms all 75 land in the expected ROM-ascending section order."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -857,7 +857,7 @@
     {
       "symbol": "_ZTV15dScMgPachinko_c",
       "disposition": "deadstrip-data",
-      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated two ways that agree: (a) the address point in config/arm9/overlays/ov006/symbols.txt is 0x0213d9cc and the next data symbol is pmf_dScMgPachinko2_c_Paddle_State4 at 0x0213da5c, giving symbol extent 0x90 = 36 slots and STORAGE 0x0213d9c4..0x0213da5c = 0x98 once the 8-byte offset-to-top/typeinfo preamble is counted; (b) tubuild verify reports the emitted .data section for this symbol as exactly size=0x98. tools/rtti_vtables.py --own reports 39 slots, and the three beyond 36 are SPURIOUS -- include/dScMgPachinko_c.h already records that its slot 36 and slot 38 readings (Paddle_State4 and dScMgPachinko2_c_classInit) belong to the neighbouring g_profile_MG_TAMAIRE spawn descriptor at 0x0213da64, not to this class; the address-gap math above is what settles it, and the emitted size is the independent second witness. The cartridge keeps its canonical copy at the address point ov006:0x0213d9cc, outside this TU's only licensed range (.text 0x020fa75c-0x020ff3ec), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
+      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated two ways that agree: (a) the address point in config/arm9/overlays/ov006/symbols.txt is 0x0213d9cc and the next data symbol is pmf_dScMgPachinko2_c_Paddle_StateOrbit at 0x0213da5c, giving symbol extent 0x90 = 36 slots and STORAGE 0x0213d9c4..0x0213da5c = 0x98 once the 8-byte offset-to-top/typeinfo preamble is counted; (b) tubuild verify reports the emitted .data section for this symbol as exactly size=0x98. tools/rtti_vtables.py --own reports 39 slots, and the three beyond 36 are SPURIOUS -- include/dScMgPachinko_c.h already records that its slot 36 and slot 38 readings (Paddle_StateOrbit and dScMgPachinko2_c_classInit) belong to the neighbouring g_profile_MG_TAMAIRE spawn descriptor at 0x0213da64, not to this class; the address-gap math above is what settles it, and the emitted size is the independent second witness. The cartridge keeps its canonical copy at the address point ov006:0x0213d9cc, outside this TU's only licensed range (.text 0x020fa75c-0x020ff3ec), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213d9cc"
     },
@@ -981,7 +981,7 @@
       "source": "0x2131c58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBobOmb_State0",
+      "symbol": "pmf_PachinkoBobOmb_StateWaitGrab",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8a8"
@@ -991,7 +991,7 @@
       "source": "0x2131c5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBobOmb_State1",
+      "symbol": "pmf_PachinkoBobOmb_StateAim",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8f0"
@@ -1011,7 +1011,7 @@
       "source": "0x2131c64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBobOmb_State2",
+      "symbol": "pmf_PachinkoBobOmb_StateFlying",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8f8"
@@ -1021,7 +1021,7 @@
       "source": "0x2131c68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBobOmb_State3",
+      "symbol": "pmf_PachinkoBobOmb_StateFallAway",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8b8"
@@ -1031,7 +1031,7 @@
       "source": "0x2131c6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBobOmb_State4",
+      "symbol": "pmf_PachinkoBobOmb_StateRemove",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d908"
@@ -1041,7 +1041,7 @@
       "source": "0x2131c70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBall_State0",
+      "symbol": "pmf_PachinkoBall_StateWaiting",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8c0"
@@ -1051,7 +1051,7 @@
       "source": "0x2131c74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBall_State1",
+      "symbol": "pmf_PachinkoBall_StateFall",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8c8"
@@ -1071,7 +1071,7 @@
       "source": "0x2131c7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBall_State2",
+      "symbol": "pmf_PachinkoBall_StateDrift",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d898"
@@ -1081,7 +1081,7 @@
       "source": "0x2131c80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBall_State3",
+      "symbol": "pmf_PachinkoBall_StateDive",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d920"
@@ -1091,7 +1091,7 @@
       "source": "0x2131c84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBall_State4",
+      "symbol": "pmf_PachinkoBall_StateGlide",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8b0"
@@ -1101,7 +1101,7 @@
       "source": "0x2131c88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBall_State5",
+      "symbol": "pmf_PachinkoBall_StateSpinAway",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d880"
@@ -1111,7 +1111,7 @@
       "source": "0x2131c8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBall_State6",
+      "symbol": "pmf_PachinkoBall_StatePop",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8d8"
@@ -1121,7 +1121,7 @@
       "source": "0x2131c90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoPipe_State1",
+      "symbol": "pmf_PachinkoPipe_StateRise",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d940"
@@ -1131,7 +1131,7 @@
       "source": "0x2131c94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoPipe_State0",
+      "symbol": "pmf_PachinkoPipe_StatePick",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d930"
@@ -1141,7 +1141,7 @@
       "source": "0x2131c98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoPipe_State2",
+      "symbol": "pmf_PachinkoPipe_StateSink",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d938"
@@ -1151,7 +1151,7 @@
       "source": "0x2131c9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoPipe_State3",
+      "symbol": "pmf_PachinkoPipe_StateIdle",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8d0"
@@ -1171,7 +1171,7 @@
       "source": "0x2131ca4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoFlyer_State0",
+      "symbol": "pmf_PachinkoFlyer_StateWaiting",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d878"
@@ -1181,7 +1181,7 @@
       "source": "0x2131ca8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoFlyer_State1",
+      "symbol": "pmf_PachinkoFlyer_StateDescend",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8e8"
@@ -1201,7 +1201,7 @@
       "source": "0x2131cb0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoFlyer_State3",
+      "symbol": "pmf_PachinkoFlyer_StatePause",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d890"
@@ -1211,7 +1211,7 @@
       "source": "0x2131cb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoFlyer_State4",
+      "symbol": "pmf_PachinkoFlyer_StateLeave",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d888"
@@ -1221,7 +1221,7 @@
       "source": "0x2131cb8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoFlyer_State2",
+      "symbol": "pmf_PachinkoFlyer_StateCross",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8e0"
@@ -1231,7 +1231,7 @@
       "source": "0x2131cbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBg_State3",
+      "symbol": "pmf_PachinkoBg_StateSinkOut",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d900"
@@ -1241,7 +1241,7 @@
       "source": "0x2131cc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBg_State0",
+      "symbol": "pmf_PachinkoBg_StateWaiting",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d928"
@@ -1251,7 +1251,7 @@
       "source": "0x2131cc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBg_State1",
+      "symbol": "pmf_PachinkoBg_StateRiseIn",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d918"
@@ -1261,7 +1261,7 @@
       "source": "0x2131cc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_PachinkoBg_State2",
+      "symbol": "pmf_PachinkoBg_StateScroll",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d8a0"

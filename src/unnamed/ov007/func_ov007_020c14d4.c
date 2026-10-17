@@ -25,16 +25,14 @@ void func_ov007_020c14d4(struct Tex *t)
     slot = data_ov007_02104be8;
     end  = data_ov007_02104be0;
 
-    if (slot + t->size > end)
-        goto crash;
+    if (slot + t->size <= end) {
+        _ZN2GX16BeginLoadTexPlttEv();
+        _ZN2GX11LoadTexPlttEPKvjj(t->src, data_ov007_02104be8, t->size);
+        _ZN2GX14EndLoadTexPlttEv();
 
-    _ZN2GX16BeginLoadTexPlttEv();
-    _ZN2GX11LoadTexPlttEPKvjj(t->src, data_ov007_02104be8, t->size);
-    _ZN2GX14EndLoadTexPlttEv();
-
-    t->dest = data_ov007_02104be8;
-    data_ov007_02104be8 += t->size;
-    return;
-crash:
-    Crash();
+        t->dest = data_ov007_02104be8;
+        data_ov007_02104be8 += t->size;
+    } else {
+        Crash();
+    }
 }

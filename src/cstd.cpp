@@ -124,19 +124,18 @@ s32 func_02053130(s32 x)
 {
     s64 quotient;
 
-    if (x <= 0)
-        goto ret_zero;
+    if (x > 0) {
+        _ZN4cstd16reciprocal_asyncE5Fix12IiE(x);
+        func_02053008(x);
+        quotient = _ZN4cstd11ldiv_resultEv();
 
-    _ZN4cstd16reciprocal_asyncE5Fix12IiE(x);
-    func_02053008(x);
-    quotient = _ZN4cstd11ldiv_resultEv();
+        while (REG_SQRTCNT & SQRT_CONTROL_BUSY)
+            ;
 
-    while (REG_SQRTCNT & SQRT_CONTROL_BUSY)
-        ;
+        return (s32)((quotient * (s64)REG_SQRT_RESULT + (s64)0x200 * (s64)(1LL << 32)) >>
+                     (32 + 10));
+    }
 
-    return (s32)((quotient * (s64)REG_SQRT_RESULT + (s64)0x200 * (s64)(1LL << 32)) >> (32 + 10));
-
-ret_zero:
     return 0;
 }
 }

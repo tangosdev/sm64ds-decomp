@@ -206,6 +206,7 @@ jobs:
             tools.test_asm_policy \
             tools.test_asset_catalog \
             tools.test_bytegate \
+            tools.test_chaos_db_tiers \
             tools.test_check_call_arity \
             tools.test_check_data_definitions \
             tools.test_check_literal_load \
@@ -267,6 +268,11 @@ jobs:
 #                                      alias_names, which decides whether a source filed
 #                                      under a second name is found. Also drives the real
 #                                      chaos_db_ci over a fake repo for the counting rule.
+#   test_chaos_db_tiers         (31)   chaos_db_ci.py's per-function tier columns -- converted
+#                                      (per-symbol readings must sum to the stats.tiers
+#                                      headline), linked (the LINKED bar counts functions; a list
+#                                      from another port build than the stamp is refused),
+#                                      class and tuId/tuState.
 #   test_check_call_arity       (19)   check_call_arity.py -- the census of calls that
 #                                      pass fewer arguments than the callee declares:
 #                                      the matched-but-wrong signature, invisible to

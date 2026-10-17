@@ -1555,6 +1555,18 @@ def cmd_verify(args):
         upsert_manifest_entry(data, entry)
         save_manifest(data)
 
+    if getattr(args, "verdict", False):
+        state = "text-verified" if text_verified else "not-verified"
+        print(unit_verdict(
+            "tubuild.verify", entry["id"], state,
+            bytes=f"{n_match}/{len(rows)}",
+            missing=sum(1 for _o, _s, v in rows if v == "MISSING"),
+            relocs="ok" if all_reloc_ok else "fail",
+            order="ok" if not bad_pairs else "partial",
+            unlicensed=n_unlicensed, policy=len(policy_reasons),
+            promotable="yes" if (text_verified and not promotion_refused) else "no",
+            exit=0 if (text_verified and not promotion_refused) else 1))
+
     # A PROMOTION REFUSED is a failure of this command even when the bytes
     # reproduced. `text_verified` is deliberately NOT folded into: it drives the
     # manifest status above, and "the bytes match but the policy refuses the
@@ -1562,6 +1574,28 @@ def cmd_verify(args):
     # Before this, a refused promotion exited 0 and any caller trusting the exit
     # code shipped it.
     return 0 if (text_verified and not promotion_refused) else 1
+
+
+# ========================================================== one-line verdict
+
+VERDICT_PREFIX = "UNIT-VERDICT"
+
+
+def unit_verdict(tool, unit_id, result, **fields):
+    """The stable machine line `--verdict` appends: one line, space-separated
+    ``key=value`` pairs after a fixed prefix, keys in a fixed order per tool.
+
+    For callers that cannot parse a human report (tangOS Console scores a run by
+    a success pattern): match ``^UNIT-VERDICT `` and read ``result=``. The line is
+    printed only when the command reached a verdict; an exception, a compile
+    error or a missing manifest entry prints none, and the absence is itself the
+    failure. Values never contain spaces, so splitting on whitespace is safe.
+    Adding a key at the end is compatible; renaming or reordering one is not.
+    """
+    parts = [VERDICT_PREFIX, f"tool={tool}", f"id={unit_id}", f"result={result}"]
+    for key, value in fields.items():
+        parts.append(f"{key}={str(value).replace(' ', '_')}")
+    return " ".join(parts)
 
 
 # ========================================================== `linkcheck` -- scratch delinks
@@ -2514,6 +2548,18 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     inv = elf_inventory(obj_bytes)
     licensed = {f["symbol"] for f in entry.get("functions", [])}
     licensed |= {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
+    # Classify the raw preimage of an explicitly owned function before the
+    # later rename stage. Validate the same ELF and unique canonical home;
+    # this adds no deadstrip policy and does not change the object bytes.
+    renames = entry.get("defined_symbol_renames") or []
+    if isinstance(renames, list) and any(
+            isinstance(row, dict) and "owned_function" in row for row in renames):
+        _mapping, requested, rename_errors = RA.validated_defined_symbol_rename_plan(
+            obj_bytes, entry)
+        if rename_errors:
+            return None, {"requested": [], "ownedFunctionCorrespondences": []}, rename_errors
+        licensed |= {row["from"] for row in requested
+                     if "owned_function" in row and row["to"] in licensed}
     extras = {s["name"]: s for s in inv["symbols"]
               if s["type"] == "STT_FUNC" and not s["name"].startswith("$")
               and s["name"] not in licensed}
@@ -3031,32 +3077,7 @@ def _apply_defined_renames_for_audit(obj_bytes, audited_bytes, policy_reasons, e
 
 def apply_defined_symbol_rename_policy(obj_bytes, entry):
     """Renumber manifest-licensed compiler-local definitions to fleet-unique names."""
-    raw = entry.get("defined_symbol_renames", [])
-    if raw is None:
-        raw = []
-    if not isinstance(raw, list):
-        return None, {"requested": [], "renamed": []}, \
-            ["defined_symbol_renames must be a list"]
-    owned = {row["symbol"] for _section, row in manifest_owned_symbol_rows(entry)}
-    mapping, requested, reasons = {}, [], []
-    for ordinal, row in enumerate(raw):
-        label = f"defined_symbol_renames[{ordinal}]"
-        if not isinstance(row, dict):
-            reasons.append(f"{label} is not an object")
-            continue
-        missing = [key for key in ("from", "to", "evidence") if not row.get(key)]
-        if missing:
-            reasons.append(f"{label} is missing {missing}")
-            continue
-        old, new = str(row["from"]), str(row["to"])
-        if new not in owned:
-            reasons.append(f"{label} renames to {new}, which the manifest does not own")
-            continue
-        if old in mapping:
-            reasons.append(f"duplicate defined symbol rename for {old}")
-            continue
-        mapping[old] = new
-        requested.append(dict(row))
+    mapping, requested, reasons = RA.validated_defined_symbol_rename_plan(obj_bytes, entry)
     if reasons:
         return None, {"requested": requested, "renamed": []}, reasons
     out, plan = OI.rename_defined_symbols(obj_bytes, mapping)
@@ -6709,6 +6730,9 @@ def main():
     p.add_argument("--no-write", action="store_true",
                    help="do not write the verification block back into the manifest "
                         "(sibling-control runs; the default still records it)")
+    p.add_argument("--verdict", action="store_true",
+                   help="append one stable `UNIT-VERDICT ...` line for machine callers; "
+                        "the report above it is unchanged")
     p.set_defaults(func=cmd_verify)
 
     p = sub.add_parser("partial", help="plan sec 9 -- derive one isolated object per "

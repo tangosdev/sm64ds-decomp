@@ -59,6 +59,7 @@ enum dScMgSnowball_c_AssetId {
    here, so the one copy that has to be a block move goes through M4x3Flat,
    below, rather than member-wise through Vector3's destructor. */
 #include "dScMgSnowball_c.h"
+#include "SpawnInfo.h"
 #include "types.h"
 #include "decl_common.h"
 #include "common.h"
@@ -144,7 +145,7 @@ namespace G3X  { void SetFog(bool enable, int blend, int slope, int offset); }
 
 extern "C" {
 extern void RenderOamBothScreens(int a, int b, int c, int d, int e, int f);
-extern int data_ov006_02139c6c[];
+extern int sSnowballBitSprites[];
 extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *dst);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
@@ -163,7 +164,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern void MultiStore16(int val, char *dst, int n);
-extern u16 data_ov006_0212f3bc[];
+extern u16 sSnowballCourseTiles[];
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern void Mg_SetTopScreenYOffset(int);
@@ -174,9 +175,9 @@ extern void SetSubBg3Offset(int, int);
 extern void func_020731dc(void *, void *, void **);
 extern void Quaternion_Normalize(s32 *);
 extern void *_ZN7Vector3D1Ev(void *object);
-extern u32 data_ov006_02143004;
-extern void *data_ov006_02143008;
-extern s32 data_ov006_02143014[3];
+extern u32 sSnowball_ResetScene_UnitYGuard;
+extern void *sSnowball_ResetScene_UnitYDtorRec;
+extern s32 sSnowball_ResetScene_UnitY[3];
 extern s32 data_02092768[4];
 void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
@@ -231,8 +232,7 @@ void dScMgSnowball_c::SnowSpray_DrawAll()
     for (i = 0; i < 0x20; i++) {
         if (*(unsigned char *)(p + 0xba34) != 0) {
             RenderOamBothScreens(
-                data_ov006_02139c6c[*(int *)(p + 0xba30)],
-                *(int *)(p + 0xba14) >> 0xc,
+                sSnowballBitSprites[*(int *)(p + 0xba30)], *(int *)(p + 0xba14) >> 0xc,
                 ((((*(int *)(p + 0xba18) - *(int *)(p + 0xba1c)) - self->mScrollY) >> 0xc) - 0x110),
                 -1, 0, 0);
         }
@@ -791,7 +791,7 @@ void dScMgSnowball_c::RedrawCourse()
  * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
  * main and the sub engine. Each cell index comes from the u16 grid at
  * self+0x4f38 (row stride 0x5c0, column `col`); its four tiles are the four
- * u16 words of data_ov006_0212f3bc[idx], written with MultiStore16 (two
+ * u16 words of sSnowballCourseTiles[idx], written with MultiStore16 (two
  * halfwords each) at screen offset ((col & 0xf) << 7) + 2*j, +2, +0x40,
  * +0x42. flag == 1 targets the first half of the screen block, anything else
  * the half at +0x800.
@@ -821,7 +821,7 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag)
 
     if (flag == 1) {
         masked = col & 0xf;
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + 6);
+        tile = *(u16 *)((char *)sSnowballCourseTiles + 6);
         row = scene;
         i = 0;
         j = i;
@@ -830,42 +830,42 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag)
         n = 2;
         do {
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
             scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
             MultiStore16(v0 = tile, (char *)(scr + j), n);
 
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
             scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
             MultiStore16(v1 = tile, (char *)(scr + j + 1), n);
 
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
             scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
             MultiStore16(v2 = tile, (char *)(scr + j + 0x20), n);
 
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
             scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
             MultiStore16(v3 = tile, (char *)(scr + j + 0x21), n);
 
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
             scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v4 = tile, (char *)(scr + j), n);
 
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
             scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v5 = tile, (char *)(scr + j + 1), n);
 
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
             scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v6 = tile, (char *)(scr + j + 0x20), n);
 
             idx = *(u16 *)(row + 0x4f38);
-            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+            tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
             scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v7 = tile, (char *)(scr + j + 0x21), n);
 
@@ -885,42 +885,42 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag)
     k842 = 0x842;
     do {
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
         scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + 0x800 + off);
         MultiStore16(w0 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
         scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + 0x802 + off);
         MultiStore16(w1 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
         scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + 0x840 + off);
         MultiStore16(w2 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
         scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + k842 + off);
         MultiStore16(w3 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
         scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + 0x800 + off);
         MultiStore16(w4 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
         scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + 0x802 + off);
         MultiStore16(w5 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
         scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + 0x840 + off);
         MultiStore16(w6 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
-        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+        tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
         scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + k842 + off);
         MultiStore16(w7 = tile, (char *)(scr + j), n);
 
@@ -1331,25 +1331,25 @@ void dScMgSnowball_c::ResetScene()
     H(0xab80) = 0;
     H(0xab82) = 0;
 
-    if (!(data_ov006_02143004 & 1)) {
-        data_ov006_02143014[0] = 0;
-        data_ov006_02143014[1] = 0x1000;
-        data_ov006_02143014[2] = 0;
-        func_020731dc(data_ov006_02143014, (void *)&_ZN7Vector3D1Ev,
-                      &data_ov006_02143008);
-        data_ov006_02143004 |= 1;
+    if (!(sSnowball_ResetScene_UnitYGuard & 1)) {
+        sSnowball_ResetScene_UnitY[0] = 0;
+        sSnowball_ResetScene_UnitY[1] = 0x1000;
+        sSnowball_ResetScene_UnitY[2] = 0;
+        func_020731dc(sSnowball_ResetScene_UnitY, (void *)&_ZN7Vector3D1Ev,
+                      &sSnowball_ResetScene_UnitYDtorRec);
+        sSnowball_ResetScene_UnitYGuard |= 1;
     }
 
-    I(0xab84) = data_ov006_02143014[0];
-    I(0xab88) = data_ov006_02143014[1];
-    I(0xab8c) = data_ov006_02143014[2];
+    I(0xab84) = sSnowball_ResetScene_UnitY[0];
+    I(0xab88) = sSnowball_ResetScene_UnitY[1];
+    I(0xab8c) = sSnowball_ResetScene_UnitY[2];
     func_0203ce80((struct Vector3 *)tmp, (struct Vector3 *)(c + 0xab84));
 
     I(0xab90) = data_02092768[0];
     I(0xab94) = data_02092768[1];
     I(0xab98) = data_02092768[2];
     I(0xab9c) = data_02092768[3];
-    Quaternion_FromVector3((int *)(c + 0xab90), (struct Vector3 *)data_ov006_02143014,
+    Quaternion_FromVector3((int *)(c + 0xab90), (struct Vector3 *)sSnowball_ResetScene_UnitY,
                            (struct Vector3 *)(c + 0xab84));
     Quaternion_Normalize((s32 *)(c + 0xab90));
 
@@ -1399,9 +1399,9 @@ s32 dScMgSnowball_c::Render()
     {
         int base = self->mGoalY;
         int t = (((self->mPosY >> 0xc) - base) * 0x7c) / (self->mStartY - base);
-        Mg_RenderSpriteBoth(data_ov006_02139d24[0], 0xf0, t + 0x22, -1, 0);
+        Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[0], 0xf0, t + 0x22, -1, 0);
     }
-    Mg_RenderSpriteBoth(data_ov006_02139d24[1], 0xf0, 0x60, -1, 0);
+    Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 0xf0, 0x60, -1, 0);
 
     m[2] = 0xfffff008;
     m[1] = 0;
@@ -1440,11 +1440,11 @@ s32 dScMgSnowball_c::Render()
                     if (*(u8*)(p + 0xb2d8) == 1) idx += 8;
                     int a1 = (*(int*)(c + i1 * 8 + 0xacd8) - self->mScrollX) >> 0xc;
                     int a2 = ((t5 - t6) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(data_ov006_02138d64[idx], a1, a2, -1, -1);
+                    Mg_RenderSpriteBoth(sSnowballBreakableAnimSprites[idx], a1, a2, -1, -1);
                 } else {
                     int a1 = (*(int*)(c + i1 * 8 + 0xacd8) - self->mScrollX) >> 0xc;
                     int a2 = ((t5 - t6) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(data_ov006_02139c24, a1, a2, -1, 2);
+                    Mg_RenderSpriteBoth(sSnowballBreakableSprite, a1, a2, -1, 2);
                 }
             }
         }
@@ -1461,7 +1461,7 @@ s32 dScMgSnowball_c::Render()
                 case 2: {
                     int a1 = (*(int*)(c + i2 * 8 + 0xb5d8) - self->mScrollX) >> 0xc;
                     int a2 = ((t6 - t7) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(data_ov006_02139d18, a1, a2, -1, 1);
+                    Mg_RenderSpriteBoth(sSnowballObstacleSprite, a1, a2, -1, 1);
                     break;
                 }
                 case 3: {
@@ -1469,7 +1469,7 @@ s32 dScMgSnowball_c::Render()
                     int sel = (v < 0x80000) ? 1 : 0;
                     int a1 = (v - self->mScrollX) >> 0xc;
                     int a2 = ((t6 - t7) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(data_ov006_02139c80[sel], a1, a2, -1, 1);
+                    Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[sel], a1, a2, -1, 1);
                     break;
                 }
                 }
@@ -1480,7 +1480,7 @@ s32 dScMgSnowball_c::Render()
     {
         int a1 = (self->mDrawPosX - self->mScrollX) >> 0xc;
         int a2 = ((self->mDrawPosY - self->mScrollY) >> 0xc) - 0x110;
-        Mg_RenderSpriteBoth(data_ov006_02139c38, a1, a2, -1, 2);
+        Mg_RenderSpriteBoth(sSnowballBallSprite, a1, a2, -1, 2);
     }
 
     {
@@ -1520,11 +1520,14 @@ s32 dScMgSnowball_c::Render()
                 }
                 {
                     int idx = GetGameLanguage();
-                    Mg_RenderSpriteBothMtx(*(void**)((char*)data_ov006_0213fff0[idx] + 0xc), 0x5c, r4, 0);
+                    Mg_RenderSpriteBothMtx(
+                        *(void **)((char *)sSnowballTextSpritesByLanguage[idx] + 0xc), 0x5c, r4, 0);
                 }
                 {
                     int idx = GetGameLanguage();
-                    Mg_RenderSpriteBothMtx(*(void**)((char*)data_ov006_0213fff0[idx] + 0x1c), 0x90, r4, 0);
+                    Mg_RenderSpriteBothMtx(
+                        *(void **)((char *)sSnowballTextSpritesByLanguage[idx] + 0x1c), 0x90, r4,
+                        0);
                 }
             }
         }
@@ -1954,18 +1957,18 @@ s32 dScMgSnowball_c::InitResources()
     data_0209d45c |= 0xc;
     data_0209d454 |= 0xc;
 
-    buf = Ov004_LoadFileByPath(&data_ov006_0214009c);
+    buf = Ov004_LoadFileByPath(&sSnowballBgNclPath);
     CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
     GX::LoadBGPltt(buf, 0x100, 0x100);
     GXS::LoadBGPltt(buf, 0x100, 0x100);
     Ov004_Deallocate(buf);
 
-    buf = Ov004_LoadFileByPath(&data_ov006_021400bc);
+    buf = Ov004_LoadFileByPath(&sSnowballNcgPath);
     DecompressLZ16(buf, (void *)0x6400000);
     DecompressLZ16(buf, (void *)0x6600000);
     Ov004_Deallocate(buf);
 
-    buf = Ov004_LoadFileByPath(&data_ov006_021400dc);
+    buf = Ov004_LoadFileByPath(&sSnowballNclPath);
     CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
     GX::LoadOBJPltt(buf, 0, 0x100);
     GXS::LoadOBJPltt(buf, 0, 0x100);
@@ -2061,14 +2064,14 @@ void dScMgSnowball_c::Bit_DrawAll()
         if (a->arr[i].f1e != 0) {
             int bb = a->arr[i].a >> 12;
             int cc = (a->arr[i].b - a->fixed) >> 12;
-            Mg_RenderSubSpriteMtx((void*)data_ov006_02139c6c[a->arr[i].f1f], bb, cc, 0);
-            DrawOamSprite((void*)data_ov006_02139c6c[a->arr[i].f20], bb, cc, 0);
+            Mg_RenderSubSpriteMtx((void *)sSnowballBitSprites[a->arr[i].f1f], bb, cc, 0);
+            DrawOamSprite((void *)sSnowballBitSprites[a->arr[i].f20], bb, cc, 0);
         }
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c10Bit_State2Ei
-void dScMgSnowball_c::Bit_State2(int idx){
+// @symbol _ZN15dScMgSnowball_c21Bit_StateFallSlowDownEi
+void dScMgSnowball_c::Bit_StateFallSlowDown(int idx) {
     char *c = (char *)this;
   int off = idx * 0x24;
   short* h = (short*)(c + 0xbeac + off);
@@ -2088,14 +2091,13 @@ void dScMgSnowball_c::Bit_State2(int idx){
   *(unsigned char*)(c + 0xb000 + off + 0xeb1) = 0;
 }
 
-// @symbol _ZN15dScMgSnowball_c10Bit_State1Ei
+// @symbol _ZN15dScMgSnowball_c20Bit_StateFallSpeedUpEi
 extern "C" {
 extern int RandomIntInternal(int* seed);
 extern int data_0209d4b8;
 
 }
-void dScMgSnowball_c::Bit_State1(int idx)
-{
+void dScMgSnowball_c::Bit_StateFallSpeedUp(int idx) {
     unsigned char *base = (unsigned char *)this;
     int off = idx * 0x24;
     int* pa = (int*)(base + 0xbea0 + off);
@@ -2118,12 +2120,12 @@ void dScMgSnowball_c::Bit_State1(int idx)
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c10Bit_State0Ei
+// @symbol _ZN15dScMgSnowball_c18Bit_StateFallStartEi
 extern "C" {
 extern int RandomIntInternal(int* seed);
 extern int data_0209d4b8;
 }
-void dScMgSnowball_c::Bit_State0(int i) {
+void dScMgSnowball_c::Bit_StateFallStart(int i) {
     char *c = (char *)this;
   int idx = i * 0x24;
   unsigned int r;
@@ -2136,9 +2138,8 @@ void dScMgSnowball_c::Bit_State0(int i) {
   *(short*)(c + 0xbeac + idx) = (unsigned char)r;
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitA_State3Ei
-void dScMgSnowball_c::BitA_State3(int idx)
-{
+// @symbol _ZN15dScMgSnowball_c19BitA_StateDriftStopEi
+void dScMgSnowball_c::BitA_StateDriftStop(int idx) {
     char *self = (char *)this;
     int off = idx * 0x24;
     int *be94 = (int*)(self + 0xbe94 + off);
@@ -2165,14 +2166,13 @@ void dScMgSnowball_c::BitA_State3(int idx)
     *(unsigned char*)(self + 0xbeb0 + off) = 0;
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitA_State2Ei
+// @symbol _ZN15dScMgSnowball_c19BitA_StateDriftLeftEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 
 }
-void dScMgSnowball_c::BitA_State2(int i)
-{
+void dScMgSnowball_c::BitA_StateDriftLeft(int i) {
     char *base = (char *)this;
     int o = i * 0x24;
     unsigned short *aa8;
@@ -2207,14 +2207,13 @@ void dScMgSnowball_c::BitA_State2(int i)
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitA_State1Ei
+// @symbol _ZN15dScMgSnowball_c20BitA_StateDriftRightEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 
 }
-void dScMgSnowball_c::BitA_State1(int index)
-{
+void dScMgSnowball_c::BitA_StateDriftRight(int index) {
     char *base = (char *)this;
     int i = index * 0x24;
     unsigned short v;
@@ -2248,15 +2247,14 @@ void dScMgSnowball_c::BitA_State1(int index)
     *(short *)(base + 0xbeaa + i) = (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 & 0xff;
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitA_State0Ei
+// @symbol _ZN15dScMgSnowball_c15BitA_StatePauseEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern unsigned char data_ov006_0212f3b0[];
 
 }
-void dScMgSnowball_c::BitA_State0(int i)
-{
+void dScMgSnowball_c::BitA_StatePause(int i) {
     char *o = (char *)this;
     int n = i * 0x24;
     if (*(unsigned short *)(o + 0xbea8 + n) != 0) {
@@ -2285,8 +2283,8 @@ void dScMgSnowball_c::Bit_RunKindA(int i) {
   (this->*sSnowballBitStateTable[idx1].pmf)(i);
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitB_State3Ei
-void dScMgSnowball_c::BitB_State3(int i){
+// @symbol _ZN15dScMgSnowball_c19BitB_StateDriftStopEi
+void dScMgSnowball_c::BitB_StateDriftStop(int i) {
     char *c = (char *)this;
   int o = i*0x24;
   char *b9c = c + 0xbe9c;
@@ -2312,9 +2310,8 @@ void dScMgSnowball_c::BitB_State3(int i){
   }
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitB_State2Ei
-void dScMgSnowball_c::BitB_State2(int idx)
-{
+// @symbol _ZN15dScMgSnowball_c19BitB_StateDriftLeftEi
+void dScMgSnowball_c::BitB_StateDriftLeft(int idx) {
     char *c = (char *)this;
     int n = idx * 0x24;
     unsigned short d;
@@ -2342,9 +2339,8 @@ void dScMgSnowball_c::BitB_State2(int idx)
     *(unsigned char *)(c + 0xbeb0 + n) = 3;
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitB_State1Ei
-void dScMgSnowball_c::BitB_State1(int index)
-{
+// @symbol _ZN15dScMgSnowball_c20BitB_StateDriftRightEi
+void dScMgSnowball_c::BitB_StateDriftRight(int index) {
     char *base = (char *)this;
     int n;
 
@@ -2376,15 +2372,14 @@ void dScMgSnowball_c::BitB_State1(int index)
     *(unsigned char *)(base + 0xbeb0 + index * 0x24) = 3;
 }
 
-// @symbol _ZN15dScMgSnowball_c11BitB_State0Ei
+// @symbol _ZN15dScMgSnowball_c15BitB_StatePauseEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern unsigned char data_ov006_0212f3ac[];
 
 }
-void dScMgSnowball_c::BitB_State0(int idx)
-{
+void dScMgSnowball_c::BitB_StatePause(int idx) {
     char *c = (char *)this;
     int n = idx * 0x24;
     unsigned short d;
@@ -2542,16 +2537,13 @@ void dScMgSnowball_c::Bit_InitAll()
     }
 }
 
-/* The registry word between the PMF descriptors: classInit, then the
- * actor id 0x179 stored in both halfwords. */
-extern "C" void *dScMgSnowball_c_classInit(void);
-struct SnowballProfile {
-    void *(*init)(void);
-    unsigned short actorId;
-    unsigned short actorId2;
-};
-SnowballProfile g_profile_MG_SNOWBALL = {
-    dScMgSnowball_c_classInit, 0x179, 0x179,
+/* MG_SNOWBALL's base profile, between the PMF descriptors: classInit, then
+ * the same priority (0x179, the registry id) in both halfwords. */
+extern "C" dScMgSnowball_c *dScMgSnowball_c_classInit(void);
+BaseSpawnInfo<dScMgSnowball_c> g_profile_MG_SNOWBALL = {
+    dScMgSnowball_c_classInit,
+    0x179,
+    0x179,
 };
 
 /* Source order is copy order. Each entry is a {function, 0} descriptor;
@@ -2562,23 +2554,23 @@ extern "C" PMF_0212a2e0 sSnowballBitKindTable[3] = {
     &dScMgSnowball_c::Bit_RunKindA,
 };
 extern "C" PMF_0212a224 sSnowballBitBStateTable[4] = {
-    &dScMgSnowball_c::BitB_State0,
-    &dScMgSnowball_c::BitB_State1,
-    &dScMgSnowball_c::BitB_State2,
-    &dScMgSnowball_c::BitB_State3,
+    &dScMgSnowball_c::BitB_StatePause,
+    &dScMgSnowball_c::BitB_StateDriftRight,
+    &dScMgSnowball_c::BitB_StateDriftLeft,
+    &dScMgSnowball_c::BitB_StateDriftStop,
 };
 /* Six slots so the symbol runs to the overlay bss end at 0x021430a0.
  * Only the first four are copied from descriptors; the tail stays zero. */
 Entry_02129d94 sSnowballBitAStateTable[6] = {
-    {&dScMgSnowball_c::BitA_State0},
-    {&dScMgSnowball_c::BitA_State1},
-    {&dScMgSnowball_c::BitA_State2},
-    {&dScMgSnowball_c::BitA_State3},
+    {&dScMgSnowball_c::BitA_StatePause},
+    {&dScMgSnowball_c::BitA_StateDriftRight},
+    {&dScMgSnowball_c::BitA_StateDriftLeft},
+    {&dScMgSnowball_c::BitA_StateDriftStop},
 };
 Entry_02129d94 sSnowballBitStateTable[3] = {
-    {&dScMgSnowball_c::Bit_State0},
-    {&dScMgSnowball_c::Bit_State1},
-    {&dScMgSnowball_c::Bit_State2},
+    {&dScMgSnowball_c::Bit_StateFallStart},
+    {&dScMgSnowball_c::Bit_StateFallSpeedUp},
+    {&dScMgSnowball_c::Bit_StateFallSlowDown},
 };
 
 // @symbol dScMgSnowball_c_classInit
@@ -2590,11 +2582,10 @@ Entry_02129d94 sSnowballBitStateTable[3] = {
  * constructor body is the free dScMgSnowball_c_Construct above (see the banner),
  * so the factory calls the class's operator new itself and hands the
  * storage over. */
-extern "C" void *dScMgSnowball_c_classInit(void)
-{
+extern "C" dScMgSnowball_c *dScMgSnowball_c_classInit(void) {
     void *p = dScMgSnowball_c::operator new(sizeof(dScMgSnowball_c));
     if (p) {
-        return dScMgSnowball_c_Construct((char *)p);
+        return (dScMgSnowball_c *)dScMgSnowball_c_Construct((char *)p);
     }
-    return p;
+    return (dScMgSnowball_c *)p;
 }

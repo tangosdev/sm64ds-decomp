@@ -45,14 +45,12 @@ void func_0206f338(struct S *s, int p)
         do {
             e = ((*--q - 0x30) + carry) & 0xff;
             carry = (e > 9) ? 1 : 0;
-            if (carry != 0) goto decrement;
-            if (e != 0) goto store;
-        decrement:
-            p--;
-            continue;
-        store:
-            *q = e + 0x30;
-            break;
+            if (carry != 0 || e == 0) {
+                p--;
+            } else {
+                *q = e + 0x30;
+                break;
+            }
         } while (p != 0);
     }
 
@@ -64,6 +62,6 @@ void func_0206f338(struct S *s, int p)
         return;
     }
     if (p == 0)
-        goto reset;
+        goto reset; /* kept: MSL's round_decimal shares the zero result this way */
     s->len = p;
 }

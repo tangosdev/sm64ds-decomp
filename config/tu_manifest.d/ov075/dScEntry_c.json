@@ -8,7 +8,7 @@
     {
       "name": ".text",
       "start": "0x02115ab8",
-      "end": "0x02116128"
+      "end": "0x021165b0"
     }
   ],
   "functions": [
@@ -102,6 +102,20 @@
       "size": "0x0000004c",
       "legacy_source": "src/func_ov075_021160dc.cpp",
       "ordinal": 12
+    },
+    {
+      "symbol": "func_ov075_02116128",
+      "address": "0x02116128",
+      "size": "0x000000f4",
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116128.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov075_0211621c",
+      "address": "0x0211621c",
+      "size": "0x00000394",
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211621c.c",
+      "ordinal": 14
     }
   ],
   "verification": {
@@ -109,12 +123,12 @@
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 13,
-    "functions_declared": 13,
-    "emission_order": "all 13 in ROM-ascending section order",
+    "functions_matched": 15,
+    "functions_declared": 15,
+    "emission_order": "all 15 in ROM-ascending section order",
     "linkcheck": "SCRATCH-LINK-VERIFIED 0x02115bac..0x02116128 at the original promotion; module fidelity 106/106 exact; ROM sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 identical to stock control. The widen to 0x02115ab8..0x02116128 is not re-recorded here: tools/tubuild.py linkcheck refuses an already-enrolled text-only TU ('intact production requires one .text claim and at least one non-text claim'). Its link proof is the full `python tools/rombuild.py -j8`: 106/106 modules exact, 0 mismatching, ROM-build analysis PASS, with src/actors/dScEntry_c.cpp recompiled.",
     "dsd_check_symbols": "FAIL on 9 pre-existing error lines; baseline control has the same 9 (0 new, 0 resolved). NOT green.",
-    "object": "build/tu/ov075-dScEntry_c/dScEntry_c.o (gitignored)",
+    "object": "build/tu/ov075-dScEntry_c/d_s_entry.o (gitignored)",
     "compilerOnlyOutput": {
       "requested": [
         "_ZN10dScEntry_cD2Ev",
@@ -140,10 +154,6 @@
         18,
         32,
         33,
-        35,
-        36,
-        37,
-        38,
         39,
         40,
         41,
@@ -169,7 +179,11 @@
         61,
         62,
         63,
-        64
+        64,
+        65,
+        66,
+        67,
+        68
       ],
       "data": [
         "_ZTV10dScEntry_c",
@@ -212,7 +226,8 @@
         "_ZTV10dScEntry_c",
         "_ZTVN10dScEntry_c15graphCallback_cE",
         "_ZTVN10dScEntry_c6icon_cE"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -389,6 +404,8 @@
     "DESTRUCTOR FORM. The cartridge places dScEntry_c's D1 (0x02115ab8) BELOW its D0 (0x02115b28). Under deferred codegen the out-of-line `dScEntry_c::~dScEntry_c() {}` emitted D0 before D1 (measured at the original promotion: 13/13 bytes, but `licensed .text functions are not emitted in ROM address order`), and the in-class form emitted no pair at all because no factory is in range to instantiate the class. The form shipped here is ov003/dScStarSel_c's and ov006/dScMgFlower_c's: `#pragma defer_codegen off` above every function, the file rewritten in ROM-ascending order, and the unchanged out-of-line destructor defined first. It emits D1, D0, D2; D1 and D0 reproduce the cartridge and D2 is unreferenced and deadstripped. The destructor is dScEntry_c's first declared non-inline virtual, so this TU is the key function and now also emits _ZTV10dScEntry_c and the typeinfo chain up to fBase_c, each deadstrip-data against its cartridge home.",
     "WHAT THE WIDENED RANGE PROVED. `python tools/tubuild.py verify ov075/dScEntry_c`: 13/13 MATCH, objisolate clean, reloc-destinations clean, all 13 in ROM-ascending emission order, compiler-only policy accepted. `tubuild linkcheck` refuses an already-enrolled text-only TU (see verification.linkcheck), so the link proof is the full `python tools/rombuild.py -j8`: 106/106 modules exact, 0 mismatching, ROM-build analysis PASS. The original promotion's SCRATCH-LINK-VERIFIED record for 0x02115bac..0x02116128 is kept in verification.linkcheck; `dsd check symbols --fail` failed there on 9 error lines, all 9 present in the baseline control too, so it was not green then and is not reported as such now.",
     "THE FIVE HOMELESS COMPILER-ONLY FUNCTIONS ARE NOT DUPLICATES. _ZN10dScEntry_cD2Ev, _ZN10dScEntry_c6icon_cD2Ev, _ZN10dScEntry_c6icon_cD0Ev, _ZN12OamAnimationD2Ev and _ZN10dScEntry_c15graphCallback_cC2Ev are emitted by mwccarm and defined by no symbols.txt in the tree, so they take a plain `deadstrip`, not `deadstrip-duplicate` (which requires a configured ROM home another source owns). The nineteen RTTI/vtable records take `deadstrip-data`; every canonical home is in .data, outside the claimed .text run.",
-    "UPDATE 2026-10-15, SUPERSEDES THE NEAR-MISS REASON ABOVE: func_ov075_02116128 now matches (commit 9a3ed3a8a5; notes/mwccarm-codegen.md '6bo resolved'), and every function in 0x02116128..0x0211a210 has its own `complete` delinks entry -- 69 one-function sources, a mix of .c and .cpp. What keeps this range from widening is no longer a mismatch: joining the two parts means folding those 69 files into one C++ source. Referrer census over every relocs.txt: no code outside this class reaches any of them; they are called from dScEntry_c::InitResources/Behavior, from one another, or reached through the step tables __sinit_ov075_0211bb00 copies into .bss, and that initializer also constructs dScEntry_c::graphCallback_c, so it belongs to this unit."
-  ]
+    "UPDATE 2026-10-15, SUPERSEDES THE NEAR-MISS REASON ABOVE: func_ov075_02116128 now matches (commit 9a3ed3a8a5; notes/mwccarm-codegen.md '6bo resolved'), and every function in 0x02116128..0x0211a210 has its own `complete` delinks entry -- 69 one-function sources, a mix of .c and .cpp. What keeps this range from widening is no longer a mismatch: joining the two parts means folding those 69 files into one C++ source. Referrer census over every relocs.txt: no code outside this class reaches any of them; they are called from dScEntry_c::InitResources/Behavior, from one another, or reached through the step tables __sinit_ov075_0211bb00 copies into .bss, and that initializer also constructs dScEntry_c::graphCallback_c, so it belongs to this unit.",
+    "2026-10-16: extend the existing scene input through 0x021165b0 with its border-palette and player-row helpers. All configured inbound relocations to the 60 helpers in 0x02116128..0x0211a210 originate in this scene code or its step tables. This is partial consolidation, not a claim that the separate dEntObj embedded mesh at 0x0211a948 belongs to dScEntry."
+  ],
+  "reconstruction_followup": "The gap contained 60 loose helpers, not 69 (nine upper functions already promoted). Two absorbed here; 58 remain. The next helper 021165b0 overlaps PR #3947. Mesh helpers are a separate dEntObj embedded object. Historical proof records retain their original ranges."
 }

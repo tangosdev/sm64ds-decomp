@@ -24,9 +24,8 @@
  *   would need the class constructor, which is not reconstructed.
  *   Its __cxa_vec_ctor calls take the icon_c and OamAnimation
  *   structors by address, which C++ cannot spell.
- * - Render and Behavior read the per-frame and per-render steps
- *   and the icon count through dScEntryStepView. The header still
- *   holds 0x50..0x70 and 0x264..0x283 as opaque storage.
+ * - The header holds 0x50, 0x6c..0x70 and 0x264..0x280 as opaque
+ *   storage.
  * - InitResources keeps its `int b = (actorID == 7)' flag locals.
  *   Folding the first one into its condition rewrites the function
  *   (999 words, measured).
@@ -92,18 +91,6 @@ extern u8 data_0209d454;
 extern u8 data_0209f4ae[];
 extern s32 data_0208ee44;
 
-/* The scene's two pointer-to-member steps: Behavior runs the one at
- * 0x5c every frame, Render the one at 0x64. */
-struct dScEntryStepView;
-typedef void (dScEntryStepView::*dScEntryStep)();
-struct dScEntryStepView {
-    u8 pad0[0x5c];
-    dScEntryStep behaviorStep; /* 0x5c */
-    dScEntryStep renderStep;   /* 0x64 */
-    u8 pad6c[0x280 - 0x6c];
-    u8 iconCount; /* 0x280 */
-};
-
 /* The scene manager Behavior polls through its slot 5. */
 struct VObj {
     virtual void v0();
@@ -138,11 +125,8 @@ void dScEntry_c::OnPendingDestroy() {}
 /* Slot 9. */
 // @symbol _ZN10dScEntry_c6RenderEv
 s32 dScEntry_c::Render() {
-    dScEntryStepView *c = (dScEntryStepView *)this;
-    if (*(int *)&c->renderStep != 0) {
-        dScEntryStep *p = &c->renderStep;
-        (c->**p)();
-    }
+    if (mRenderStep != 0)
+        (this->*mRenderStep)();
     func_0203083c();
     return 1;
 }
@@ -151,8 +135,6 @@ s32 dScEntry_c::Render() {
  * per-frame step, then every live icon. */
 // @symbol _ZN10dScEntry_c8BehaviorEv
 s32 dScEntry_c::Behavior() {
-    dScEntryStepView *c = (dScEntryStepView *)this;
-
     if (mIsFading != 0) {
         mFadeTick++;
         if ((mFadeTick & 1) == 0) {
@@ -172,24 +154,22 @@ s32 dScEntry_c::Behavior() {
     if (data_0209fc68 != 0) {
         int t = (data_0209fc68 == 6);
         if (t != 0)
-            func_ov075_02119dc4(c, &data_ov075_0211d930);
+            func_ov075_02119dc4(this, &data_ov075_0211d930);
     }
 
-    if (*(volatile int *)&c->behaviorStep != 0) {
-        dScEntryStep *p = &c->behaviorStep;
-        (c->**p)();
-    }
+    if (mBehaviorStep != 0)
+        (this->*mBehaviorStep)();
 
     {
         int i = 0;
-        int n = c->iconCount;
+        int n = mIconCount;
         if (n > 0) {
             icon_c *o = mIcons;
             do {
                 o->Behavior();
                 i++;
                 o++;
-            } while (i < c->iconCount);
+            } while (i < mIconCount);
         }
     }
     return 1;
@@ -333,8 +313,8 @@ extern OamAnimation *_ZN12OamAnimationC1Ev(OamAnimation *object);
 void *dScEntry_c_classInit_RESULT(void) {
     /* The raw byte pointer preserves the ROM factory's address-expression
        tree; typed member expressions fold five instructions in mwccarm.
-       Members cast through it (pauseFlags, mIcons, mOamAnimations) are
-       byte-neutral; 0x54..0x6c have no header names. */
+       Members cast through it (pauseFlags, the three steps, mIcons,
+       mOamAnimations) are byte-neutral. */
     char *p = (char *)_ZN7fBase_cnwEj(sizeof(dScEntry_c));
     if (p) {
         struct P2 v;
@@ -350,9 +330,9 @@ void *dScEntry_c_classInit_RESULT(void) {
         /* Array-member copies preserve the original C aggregate-copy schedule
            in C++ without changing the two-word value's type or layout. */
         *(struct P2Copy *)&v = *(struct P2Copy *)&data_02086b58;
-        *(struct P2Copy *)(p + 0x54) = *(struct P2Copy *)&v;
-        *(struct P2Copy *)(p + 0x5c) = *(struct P2Copy *)&v;
-        *(struct P2Copy *)(p + 0x64) = *(struct P2Copy *)&v;
+        *(struct P2Copy *)&((dScEntry_c *)p)->mEnterStep = *(struct P2Copy *)&v;
+        *(struct P2Copy *)&((dScEntry_c *)p)->mBehaviorStep = *(struct P2Copy *)&v;
+        *(struct P2Copy *)&((dScEntry_c *)p)->mRenderStep = *(struct P2Copy *)&v;
         __cxa_vec_ctor(((dScEntry_c *)p)->mIcons, 9, sizeof(dScEntry_c::icon_c),
                        (void (*)(void *))_ZN10dScEntry_c6icon_cC1Ev,
                        (void (*)(void *))_ZN10dScEntry_c6icon_cD1Ev);

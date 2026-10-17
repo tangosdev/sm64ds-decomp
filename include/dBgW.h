@@ -81,14 +81,19 @@ struct dBgW {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     dActor_c *owner;             /* 0x04 - set by Enable, null when free */
     s32 ownerUniqueID;        /* 0x08 - owner->uniqueID, -1 when free */
-    Fix12i unk_0c;            /* 0x0c - init -0x1000 */
-    s32 unk_10;               /* 0x10 */
+    /* The query TUs cull a collider by distance from its owner's position
+       raised by clipOffsetY. -0x1000 (the init value) means "use the owner's
+       own clip box": owner mClipOffsetY, and mClipRadius << 3 as the radius. */
+    Fix12i clipRadius;        /* 0x0c - init -0x1000 */
+    Fix12i clipOffsetY;       /* 0x10 */
     u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
     void (*beforeClsnCallback)(dBgW *self, dActor_c *actor,
                                dBgPi *res, Vector3 *pos,
                                Vector3_16 *motionAng, Vector3_16 *ang); /* 0x18 */
-    s32 unk_1c;               /* 0x1c */
+    /* Run by func_02038234 when an actor commits a floor hit on this collider
+       (dBgCh_Actr's floor-result path), as (collider, owner, actor). */
+    void (*stoodOnCallback)(dBgW *, dActor_c *, dActor_c *); /* 0x1c */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~dBgW();                          /* slots 0/1 */
@@ -156,12 +161,12 @@ struct dBgW {
     void **vtable;            /* 0x00 */
     struct dActor_c *owner;      /* 0x04 */
     s32 ownerUniqueID;        /* 0x08 */
-    s32 unk_0c;               /* 0x0c */
-    s32 unk_10;               /* 0x10 */
+    s32 clipRadius;           /* 0x0c */
+    s32 clipOffsetY;          /* 0x10 */
     u8 slotIdx;               /* 0x14 */
     u8 pad_15[3];
     void *beforeClsnCallback; /* 0x18 */
-    s32 unk_1c;               /* 0x1c */
+    void *stoodOnCallback;    /* 0x1c */
 };
 
 #endif /* __cplusplus */

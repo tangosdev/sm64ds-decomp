@@ -11,13 +11,11 @@ inline char *pad(char *a, int b)
     return a + b;
 }
 
-/* goto-pin so if-conversion emits movgt-then-movle (notes §6o) */
+/* a <= b first so if-conversion emits movgt-then-movle (notes §6o); a > b swaps them */
 inline int imin(int a, int b)
 {
-    if (a > b)
-        goto retb;
-    return a;
-retb:
+    if (a <= b)
+        return a;
     return b;
 }
 

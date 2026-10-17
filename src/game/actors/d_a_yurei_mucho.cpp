@@ -11,9 +11,6 @@
  * spelling, which is what the unowned PMF .data records resolve by name.
  *
  * Remaining reconstruction under issue #2478:
- * - The integer-cast field forms, `(int)this + 0x3d8` in Behavior and
- *   `(int)this + 0x3c0` in func_ov065_0211696c. Writing `&mBobAngle`, or
- *   `mShotPosX <<= 3`, DIFFs.
  * - mStateTimer comparisons stay unsigned short, because the ROM loads it
  *   with ldrh.
  * - The Mtx43 / V3A overlays on mModelAnim.mat4x3, mShadowMat and the
@@ -237,15 +234,11 @@ int daYurei_Mucho_c::Behavior()
         unk_0ac = keep;
     }
     if (mCurrentState != (State *)data_ov065_0211d650) {
-        int *pAngle;
         int ang;
         int idx;
         short tbl;
         int result;
-        /* The add sits INSIDE the integer cast, which is load-bearing here:
-           `(int)this + 0x3d8` is not interchangeable with `&mBobAngle`. */
-        pAngle = (int *)(((int)this + 0x3d8));
-        *pAngle += 0x200;
+        mBobAngle += 0x200;
         ang = mBobAngle;
         /* The shift must be LOGICAL so the angle wraps -- writing it on the
            signed s16 would read the wrong table entry for negative angles. */
@@ -333,11 +326,10 @@ void daYurei_Mucho_c::func_ov065_0211696c()
     mShotPosX = data_020a0e68[9];
     mShotPosY = data_020a0e68[10];
     mShotPosZ = data_020a0e68[11];
-    /* Integer-cast <<= is load-bearing: `mShotPosX <<= 3` DIFFs. */
-    *(int *)(((int)this + 0x3c0)) <<= 3;
-    *(int *)(((int)this + 0x3c4)) <<= 3;
-    *(int *)(((int)this + 0x3c4)) -= 0xa000;
-    *(int *)(((int)this + 0x3c8)) <<= 3;
+    mShotPosX <<= 3;
+    mShotPosY <<= 3;
+    mShotPosY -= 0xa000;
+    mShotPosZ <<= 3;
 
     Matrix4x3_FromTranslation(data_020a0e68,
         mPosX >> 3,

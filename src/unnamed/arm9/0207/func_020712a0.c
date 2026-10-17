@@ -15,14 +15,20 @@ void func_020712a0(Decimal *result, unsigned char *digits, short exp)
     result->sig.length = (unsigned char)i;
     if (digits[0] == 0) return;
     if (digits[0] < 5) return;
-    if (digits[0] > 5) goto docall;
-    c = digits[1];
-    digits++;
-    while (c != 0) {
-        if (c != 0x30) goto docall;
-        c = *++digits;
+    if (digits[0] <= 5) {
+        c = digits[1];
+        digits++;
+        while (c != 0) {
+            /* Kept goto: break plus a `c == 0` guard (+8), while (c == '0') (+4),
+               for (;;) with the return inside (-4), a duplicated call (+20) and
+               an inline must-round predicate (+12..+20) all change the object. */
+            if (c != 0x30)
+                goto docall;
+            c = *++digits;
+        }
+        if ((result->sig.text[i - 1] & 1) == 0)
+            return;
     }
-    if ((result->sig.text[i - 1] & 1) == 0) return;
 docall:
     func_02071644(result, result->sig.length);
 }

@@ -32,26 +32,24 @@ dBgW_Kc::dBgW_Kc()
 dBgW_Kc::~dBgW_Kc() {}
 
 // @symbol func_020397dc
-extern "C" int func_020397dc(int x)
-{
-    if (x <= 8 && x >= -8) return 1;
-    return 0;
+/* True when a divisor is too close to zero to divide by (|value| <= 8). */
+extern "C" int func_020397dc(int value) {
+    return value <= 8 && value >= -8;
 }
 
 // @symbol func_020397b8
-extern "C" int func_020397b8(int x)
-{
-    if (x < 0x600) {
-        if (x > -0xccc) return 1;
-    }
-    return 0;
+/* True when a face normal's y lies strictly inside the wall band. */
+extern "C" int func_020397b8(int normalY) {
+    return normalY < 0x600 && normalY > -0xccc;
 }
 
 // @symbol func_02039794
-extern "C" int func_02039794(int x)
-{
-    if (x > 0x600) return 0;
-    if (x > -0xccc) return 1;
+/* Slope band of a face normal's y: 0 floor, 1 wall, 2 underside. */
+extern "C" int func_02039794(int normalY) {
+    if (normalY > 0x600)
+        return 0;
+    if (normalY > -0xccc)
+        return 1;
     return 2;
 }
 
@@ -87,9 +85,9 @@ void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock)
 }
 
 // @symbol func_020396dc
-extern "C" unsigned func_020396dc(int **p, unsigned x)
-{
-    return (x - (unsigned)p[8][2]) >> 4;
+/* A prism record's index in the file's triangle table (records are 0x10). */
+extern "C" unsigned func_020396dc(dBgW_Kc *self, KCL_Tri *tri) {
+    return ((unsigned)tri - (unsigned)self->kclFile->tris) >> 4;
 }
 
 // @symbol _ZN7dBgW_Kc9Virtual08Ev

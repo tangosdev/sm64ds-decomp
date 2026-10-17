@@ -10,7 +10,7 @@
    words (address-gap math against the neighbouring g_profile_MG_TAMAIRE
    table, and relocs.txt cross-references confirm it belongs to a wholly
    different actor's spawn descriptor, not this class) -- excluded, along
-   with Paddle_State4 and dScMgPachinko2_c_classInit, from this migration.
+   with Paddle_StateOrbit and dScMgPachinko2_c_classInit, from this migration.
    Fields below dScMgBase_c's own 0x4660 are INHERITED, not this class's
    own -- accessed via raw offsets on a char* cast of `this` (0xa4, 0xc0,
    0xc3, 0xc4 all touched here, all already dScMgBase_c's own, same as
@@ -138,12 +138,12 @@ struct dScMgPachinko_fx {
 
 /* The flyer that crosses the top of the board: Lakitu on his cloud (seen in
    melonDS). Its state handlers dispatch on `state`, guarded by `active`
-   (PachinkoFlyer_State0..). */
+   (PachinkoFlyer_StateWaiting..). */
 struct dScMgPachinko_flyer {
     s32 x;          /* 0x00 -- 20.12 */
     s32 y;          /* 0x04 -- 20.12 */
     s32 vx;         /* 0x08 -- 20.12 */
-    s32 vy;         /* 0x0c -- 20.12; Flyer_State0 seeds 0x2000, State1 adds it to y */
+    s32 vy;         /* 0x0c -- 20.12; StateWaiting seeds 0x2000, StateDescend adds it to y */
     s32 sound;      /* 0x10 -- looping sound handle */
     u16 delay;      /* 0x14 */
     u8  active;     /* 0x16 */
@@ -165,7 +165,7 @@ struct dScMgPachinko_target {
     u8  pad0b;
 };
 
-/* The scrolling background (PachinkoBg_State0..), dispatched on `state`. */
+/* The scrolling background (PachinkoBg_StateWaiting..), dispatched on `state`. */
 struct dScMgPachinko_bg {
     s32 x;          /* 0x00 -- 20.12 */
     s32 y;          /* 0x04 -- 20.12 */

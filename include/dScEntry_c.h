@@ -22,10 +22,18 @@ struct dScEntry_c : dScene_c {
 
     struct graphCallback_c;
 
-    u8  unk_050[0x20];           /* 0x050 */
+    typedef void (dScEntry_c::*Step)();
+
+    u8 unk_050[0x4];             /* 0x050 */
+    Step mEnterStep;             /* 0x054 -- run as soon as a step set is installed */
+    Step mBehaviorStep;          /* 0x05c -- Behavior runs it every frame */
+    Step mRenderStep;            /* 0x064 -- Render runs it every frame */
+    u8 pad_06c[0x4];             /* 0x06c */
     icon_c mIcons[9];            /* 0x070..0x1b4 */
     OamAnimation mOamAnimations[4]; /* 0x1b4..0x264 */
-    u8  unk_264[0x1f];           /* 0x264 */
+    u8 unk_264[0x1c];               /* 0x264 */
+    u8 mIconCount;                  /* 0x280 -- live entries of mIcons */
+    u8 pad_281[0x2];                /* 0x281 */
     u8  mFadeBrightness;           /* 0x283 -- driven into the sub engine's MASTER_BRIGHT */
     u8  mFadeTick;                 /* 0x284 -- steps the fade every other frame */
     u8  mIsFading;                 /* 0x285 -- while set, Behavior runs the fade and nothing else */
@@ -56,6 +64,7 @@ struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScEntry_c_size_must_be_0x288[sizeof(dScEntry_c) == 0x288 ? 1 : -1];
+typedef char dScEntry_c_Step_size_must_be_0x8[sizeof(dScEntry_c::Step) == 0x8 ? 1 : -1];
 typedef char icon_c_size_must_be_0x24[
     sizeof(dScEntry_c::icon_c) == 0x24 ? 1 : -1];
 typedef char dScEntry_oam_animation_size_must_be_0x2c[

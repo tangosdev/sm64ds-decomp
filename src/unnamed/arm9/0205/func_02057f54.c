@@ -21,12 +21,10 @@ void func_02057f54(void){
   void *r6;
   struct Node58 *r5;
   struct CtxState *s = &data_020a6134;
-  if (s->m4 == 0){
-    if (ARMProcessorMode() != 0x12) goto cont;
+  if (s->m4 != 0 || ARMProcessorMode() == 0x12) {
+      s->m0 = 1;
+      return;
   }
-  s->m0 = 1;
-  return;
-cont:
   r6 = data_020a612c[0];
   r5 = func_0205801c();
   if (r6 == (void*)r5) return;

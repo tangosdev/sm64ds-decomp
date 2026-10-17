@@ -197,28 +197,28 @@
       "ordinal": 24
     },
     {
-      "symbol": "Dealer_StateCollect",
+      "symbol": "Dealer_StateDeal",
       "address": "0x020c11c0",
       "size": "0x00000260",
       "legacy_source": "src/func_ov006_020c11c0.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "Dealer_StartCollect",
+      "symbol": "Dealer_StartDeal",
       "address": "0x020c1420",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020c1420.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "Dealer_StateDeal",
+      "symbol": "Dealer_StateShuffle",
       "address": "0x020c14bc",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020c14bc.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "Dealer_StartDeal",
+      "symbol": "Dealer_StartShuffle",
       "address": "0x020c1604",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c1604.c",
@@ -365,7 +365,7 @@
       "ordinal": 48
     },
     {
-      "symbol": "Presenter_StateAnim7Loop",
+      "symbol": "Presenter_StateSurprisedThenIdle",
       "address": "0x020c22d8",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c22d8.c",
@@ -379,7 +379,7 @@
       "ordinal": 50
     },
     {
-      "symbol": "Presenter_StateAnim4",
+      "symbol": "Presenter_StateLoseStart",
       "address": "0x020c23a8",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020c23a8.cpp",
@@ -393,7 +393,7 @@
       "ordinal": 52
     },
     {
-      "symbol": "Presenter_StateAnim7",
+      "symbol": "Presenter_StateSurprisedThenSmile",
       "address": "0x020c24e4",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c24e4.cpp",
@@ -407,7 +407,7 @@
       "ordinal": 54
     },
     {
-      "symbol": "Presenter_StateAnim1",
+      "symbol": "Presenter_StateMistake",
       "address": "0x020c263c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c263c.c",
@@ -421,7 +421,7 @@
       "ordinal": 56
     },
     {
-      "symbol": "Presenter_StateAnim2",
+      "symbol": "Presenter_StateWin",
       "address": "0x020c26f4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c26f4.c",
@@ -547,35 +547,35 @@
       "ordinal": 74
     },
     {
-      "symbol": "FlowerFace_StateReactB",
+      "symbol": "FlowerFace_StateHate",
       "address": "0x020c38ac",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c38ac.c",
       "ordinal": 75
     },
     {
-      "symbol": "FlowerFace_PlayReactB",
+      "symbol": "FlowerFace_PlayHate",
       "address": "0x020c38b0",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c38b0.c",
       "ordinal": 76
     },
     {
-      "symbol": "FlowerFace_StateReactA",
+      "symbol": "FlowerFace_StateLike",
       "address": "0x020c3904",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c3904.c",
       "ordinal": 77
     },
     {
-      "symbol": "FlowerFace_PlayReactA",
+      "symbol": "FlowerFace_PlayLike",
       "address": "0x020c3908",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c3908.c",
       "ordinal": 78
     },
     {
-      "symbol": "FlowerFace_StateReact",
+      "symbol": "FlowerFace_StatePick",
       "address": "0x020c395c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c395c.c",

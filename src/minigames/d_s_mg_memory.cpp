@@ -71,19 +71,19 @@ extern short data_02082214[];
 void func_02012790(int a);
 void MgCoins_StartLoseOneMore(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-extern u16 data_ov006_0213d168[];
-extern void *data_ov006_0214236c[];
-extern unsigned short data_ov006_0213d0a8[];
+extern u16 sMemoryCardFrameSprites[];
+extern void *sMemoryCardSprites[];
+extern unsigned short sMemoryFlipFrameTimes[];
 extern void Mg_SaveRecordPair(int a, int b);
 extern s16 data_02082214[];
-extern u16* data_ov006_0213d09c[];
+extern u16 *sMemoryCardPositionsPerDifficulty[];
 extern int MgCoins_StartPayout(int);
 extern short gMgCoinsStatus;
 extern void Mg_SetPerfectBanner(void);
 extern void Mg_SetSharedState(int c);
 extern void Mg_SubmitScore(int self);
 extern void Dealer_PlayWin(void *c);
-extern void Dealer_StartDeal(char *c, int unused, short count, int ready);
+extern void Dealer_StartShuffle(char *c, int unused, short count, int ready);
 extern int data_0209d4b8;
 extern int RandomIntInternal(int *seed);
 extern void FreeGfxSlotsById(int x);
@@ -324,7 +324,7 @@ void dScMgMemory_c::DrawCards()
     int spriteIndex, dim;
     char *p;
 
-    /* data_ov006_0213d168 is indexed as [value][frame], five frames per value. */
+    /* sMemoryCardFrameSprites is indexed as [value][frame], five frames per value. */
     p = raw;
     i = 0;
     do {
@@ -333,9 +333,8 @@ void dScMgMemory_c::DrawCards()
             dim = 0;
             if (mState != 2)
                 dim = 1;
-            spriteIndex = data_ov006_0213d168[card->card.value * 5 + card->card.frame];
-            Hud_RenderSprite(data_ov006_0214236c[spriteIndex],
-                             card->card.x >> 12,
+            spriteIndex = sMemoryCardFrameSprites[card->card.value * 5 + card->card.frame];
+            Hud_RenderSprite(sMemoryCardSprites[spriteIndex], card->card.x >> 12,
                              card->card.y >> 12, -1, dim);
         }
         i += 1;
@@ -422,7 +421,7 @@ void dScMgMemory_c::CardFlipDown(int i){
     unsigned short timer;
     mCards[i].animTimer += 1;
     timer = mCards[i].animTimer;
-    if (timer < (data_ov006_0213d0a8[mCards[i].frame] & 0xff))
+    if (timer < (sMemoryFlipFrameTimes[mCards[i].frame] & 0xff))
         return;
     mCards[i].animTimer = 0;
     mCards[i].frame -= 1;
@@ -437,7 +436,7 @@ void dScMgMemory_c::CardWait(int /* card */)
 void dScMgMemory_c::CardFlipUp(int card)
 {
     ++mCards[card].animTimer;
-    if (mCards[card].animTimer < (data_ov006_0213d0a8[mCards[card].frame] & 0xff))
+    if (mCards[card].animTimer < (sMemoryFlipFrameTimes[mCards[card].frame] & 0xff))
         return;
     mCards[card].animTimer = 0;
     ++mCards[card].frame;
@@ -509,7 +508,7 @@ void dScMgMemory_c::CardIdle(int /* card */)
 void dScMgMemory_c::CardMove(int card)
 {
     int positionIndex = card * 2;
-    u16* positions = data_ov006_0213d09c[mDifficulty];
+    u16 *positions = sMemoryCardPositionsPerDifficulty[mDifficulty];
     int dx, dy, targetX, targetY;
     targetX = positions[positionIndex];
     dx = targetX - (mCards[card].x >> 12);
@@ -800,9 +799,9 @@ void dScMgMemory_c::RoundStart(){
     mReadyCount = 0;
     mDealCount = 0;
     if (mDifficulty >= 2)
-        Dealer_StartDeal((char *)&mShared, 4, 3, (int)&mReadyCount);
+        Dealer_StartShuffle((char *)&mShared, 4, 3, (int)&mReadyCount);
     else
-        Dealer_StartDeal((char *)&mShared, 4, 2, (int)&mReadyCount);
+        Dealer_StartShuffle((char *)&mShared, 4, 2, (int)&mReadyCount);
     mShared.ready = 1;
     mSubstate = 1;
     if (mPromptBlinkCount == 0) {
@@ -1072,7 +1071,7 @@ s32 dScMgMemory_c::InitResources()
 
     data_0209d45c = 0x11;
     LoadCard2SubBg3();
-    tiles = LoadFile(data_ov006_0213d0c4[GetGameLanguage()]);
+    tiles = LoadFile(sMemoryCardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(tiles, (void *)0x6400000);
     GX::LoadOBJPltt(palette, 0, 0x100);
@@ -1144,7 +1143,7 @@ extern "C" dScMgMemory_cState pmf_dScMgMemory_c_PlayerDrop;
 extern "C" dScMgMemory_cState pmf_dScMgMemory_c_PlayerMove;
 extern "C" dScMgMemory_cState pmf_dScMgMemory_c_PlayerWait;
 
-void *data_ov006_0214236c[15] = {
+void *sMemoryCardSprites[15] = {
     (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],
     (void *)sMgCardSprites[11], (void *)sMgCardSprites[12], (void *)sMgCardSprites[13],
     (void *)sMgCardSprites[14], (void *)sMgCardSprites[3],  (void *)sMgCardSprites[4],

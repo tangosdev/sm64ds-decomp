@@ -1,0 +1,188 @@
+{
+  "id": "arm9/IRQ",
+  "module": "arm9",
+  "source": "src/IRQ.cpp",
+  "promoted_source": "src/IRQ.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's interrupt module (os_interrupt.c), 0x02056c40..0x02057014: 19 functions, gapless in config/arm9/delinks.txt. Every member reads or writes the interrupt state: the handler table data_02099fe4, the DMA/timer callback table data_020a60c4 (timers from data_020a60f4), the IE-bit index table data_02099fd4, or IME/IE/IF (0x04000208/0x04000210/0x04000214).",
+    "mwccarm emits .text in reverse source order. Read from the highest address down, the run follows os_interrupt.c in order: OS_InitIrqTable (func_02057000), OS_SetIrqFunction (SetIRQHandler), OS_GetIrqFunction (GetIRQHandler), OSi_EnterDmaCallback (func_02056e98, IE bit 8+n), OSi_EnterTimerCallback (func_02056e4c, IE bit 3+n), OS_SetIrqMask, OS_EnableIrqMask, OS_DisableIrqMask, OS_ResetRequestIrqMask (ClearInterrupts), OS_IrqDummy (EmptyHandler), OSi_IrqCallback (DmaTimHandler), then the DMA 0-3 and timer 0-3 stubs.",
+    "TOP EDGE: func_02057014 at 0x02057014 is OS_UnLockCartridge, the bottom of OS_spinLock.c's run (its source documents OS_GetLockID/OS_ReleaseLockID at func_02057020/func_02057078 and OS_UnlockCartridge at func_02057178).",
+    "BOTTOM EDGE: Copy48BytesFixed at 0x02056c1c..0x02056c40 is a hand-assembled MI block-copy primitive, not interrupt code."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02056c40",
+      "end": "0x02057014"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN3IRQ19Tim3OverflowHandlerEv",
+      "address": "0x02056c40",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ19Tim3OverflowHandlerEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN3IRQ19Tim2OverflowHandlerEv",
+      "address": "0x02056c50",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ19Tim2OverflowHandlerEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN3IRQ19Tim1OverflowHandlerEv",
+      "address": "0x02056c60",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ19Tim1OverflowHandlerEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN3IRQ19Tim0OverflowHandlerEv",
+      "address": "0x02056c70",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ19Tim0OverflowHandlerEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN3IRQ11Dma3HandlerEv",
+      "address": "0x02056c80",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ11Dma3HandlerEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN3IRQ11Dma2HandlerEv",
+      "address": "0x02056c90",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ11Dma2HandlerEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN3IRQ11Dma1HandlerEv",
+      "address": "0x02056ca0",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ11Dma1HandlerEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN3IRQ11Dma0HandlerEv",
+      "address": "0x02056cb0",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN3IRQ11Dma0HandlerEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN3IRQ13DmaTimHandlerEj",
+      "address": "0x02056cc0",
+      "size": "0x000000a0",
+      "legacy_source": "src/_ZN3IRQ13DmaTimHandlerEj.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN3IRQ12EmptyHandlerEv",
+      "address": "0x02056d60",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN3IRQ12EmptyHandlerEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN3IRQ15ClearInterruptsEj",
+      "address": "0x02056d64",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN3IRQ15ClearInterruptsEj.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN3IRQ11DisableIRQsEj",
+      "address": "0x02056d98",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN3IRQ11DisableIRQsEj.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN3IRQ10EnableIRQsEj",
+      "address": "0x02056de0",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN3IRQ10EnableIRQsEj.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN3IRQ7SetIRQsEj",
+      "address": "0x02056e18",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN3IRQ7SetIRQsEj.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_02056e4c",
+      "address": "0x02056e4c",
+      "size": "0x0000004c",
+      "legacy_source": "src/unnamed/arm9/0205/func_02056e4c.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_02056e98",
+      "address": "0x02056e98",
+      "size": "0x0000004c",
+      "legacy_source": "src/unnamed/arm9/0205/func_02056e98.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN3IRQ13GetIRQHandlerEj",
+      "address": "0x02056ee4",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN3IRQ13GetIRQHandlerEj.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN3IRQ13SetIRQHandlerEjPFvvE",
+      "address": "0x02056f70",
+      "size": "0x00000090",
+      "legacy_source": "src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_02057000",
+      "address": "0x02057000",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02057000.c",
+      "ordinal": 18
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main, so there was no candidate id to create from. The schema follows arm9/GX_VramCnt.",
+    "Every existing linker name is kept: the IRQ:: members keep their namespace spelling, and the address-named members (func_02057000, func_02056e98, func_02056e4c) stay under extern \"C\" with the signatures their shards defined.",
+    "Text-only: the tables data_02099fe4, data_02099fd4 (.data) and data_020a60c4 (.bss) belong to this file in the SDK but are not claimed here.",
+    "PC port: smoke_gx hostgens func_02056e98 by symbol, which emits this whole file; everything else is under #ifndef _MSC_VER because port/ntr/runtime.cpp supplies the host interrupt registry."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-IRQ/IRQ.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 19,
+    "functions_declared": 19,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

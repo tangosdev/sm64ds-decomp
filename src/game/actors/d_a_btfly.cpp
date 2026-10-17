@@ -519,22 +519,15 @@ int daBtfly_c::Behavior()
         {
             int s = mHorzSpeed;
             int idx = ((unsigned short)mPrevAngleX >> 4) << 1;
-            /* Spelled out: FX_MUL drops p, which renumbers the TU's @NNN objects. */
-            long long p;
-            p = (long long)(-(int)data_02082214[idx]) * s;
-            mVertSpeed = (int)((p + 0x800) >> 0xc);
-            p = (long long)(int)data_02082214[idx + 1] * s;
-            int horiz = (int)((p + 0x800) >> 0xc);
-            {
-                int idx2 = ((unsigned short)mPrevAngleY >> 4) << 1;
-                p = (long long)horiz * (int)data_02082214[idx2];
-                unk_0a4 = (int)((p + 0x800) >> 0xc);
-            }
-            {
-                int idx3 = (((unsigned short)mPrevAngleY >> 4) << 1) + 1;
-                p = (long long)horiz * (int)data_02082214[idx3];
-                unk_0ac = (int)((p + 0x800) >> 0xc);
-            }
+            int velY = FX_MUL(-(int)data_02082214[idx], s);
+            mVertSpeed = velY;
+            int horiz = FX_MUL((int)data_02082214[idx + 1], s);
+            int idx2 = ((unsigned short)mPrevAngleY >> 4) << 1;
+            int velX = FX_MUL(horiz, (int)data_02082214[idx2]);
+            unk_0a4 = velX;
+            int idx3 = (((unsigned short)mPrevAngleY >> 4) << 1) + 1;
+            int velZ = FX_MUL(horiz, (int)data_02082214[idx3]);
+            unk_0ac = velZ;
         }
         UpdatePosWithOnlySpeed(0);
         mStateTimer++;

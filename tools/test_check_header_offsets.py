@@ -1274,5 +1274,60 @@ class CvQualifiedFieldTests(unittest.TestCase):
         self.assertIn("const Mystery mValue;", out)
 
 
+class NamedArrayBoundTests(unittest.TestCase):
+    """An array bound can be a constant the same header defines.
+
+    `PresenterFile mAnims[PRESENTER_ANIM_COUNT];` came back UNPARSED, which
+    failed the minigame pass-7 PR (#3939) on a header whose offsets were right.
+    """
+
+    def _run(self, text):
+        with tempfile.TemporaryDirectory(prefix="offset_bound_") as tmp:
+            header = pathlib.Path(tmp) / "Widget.h"
+            header.write_text(text, encoding="utf-8")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                rc = C.main([str(header)])
+            return rc, out.getvalue()
+
+    def test_an_enumerator_count_sizes_the_array(self):
+        rc, out = self._run(
+            "enum WidgetAnim {\n    ANIM_A, /* first */\n    ANIM_B,\n    ANIM_COUNT\n};\n"
+            "struct Widget {\n"
+            "    s32 anims[ANIM_COUNT]; /* 0x000 */\n"
+            "    u16 tail; /* 0x008 */\n};\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0xa", out)
+
+    def test_explicit_values_and_defines_are_read(self):
+        rc, out = self._run(
+            "#define WIDGET_SLOTS 0x3\n"
+            "enum { K_FIRST = 4, K_NEXT, K_ALIAS = K_FIRST };\n"
+            "struct Widget {\n"
+            "    u8 slots[WIDGET_SLOTS]; /* 0x000 */\n"
+            "    u8 more[K_NEXT]; /* 0x003 */\n"
+            "    u8 again[K_ALIAS][2]; /* 0x008 */\n"
+            "    u8 tail; /* 0x010 */\n};\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("4 commented fields, 0 mismatched, 0 unparsed, struct spans 0x11", out)
+
+    def test_a_wrong_offset_after_a_named_bound_still_fails(self):
+        rc, out = self._run(
+            "enum { N = 2 };\nstruct Widget {\n"
+            "    s32 a[N]; /* 0x000 */\n"
+            "    u8 tail; /* 0x004 */\n};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
+
+    def test_a_bound_defined_elsewhere_is_still_unparsed(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    s32 a[ELSEWHERE_COUNT]; /* 0x000 */\n"
+            "    u8 tail; /* 0x004 */\n};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("UNPARSED", out)
+        self.assertIn("a[ELSEWHERE_COUNT];", out)
+
+
 if __name__ == "__main__":
     unittest.main()

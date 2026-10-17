@@ -46,7 +46,7 @@
   "base_chain": {
     "chain": ["dMgJump3DMario_c", "dMg3DHeyhoObjAdapter_c"],
     "length": 2,
-    "chain_terminates_evidence": "_ZTI22dMg3DHeyhoObjAdapter_c at 0x0213b000 is only 8 bytes (the next symbol, data_ov006_0213b008, starts at 0x0213b008) and its vptr word is 0x0209a774 = _ZTVN3abi17__class_type_infoE, the ROOT __class_type_info with NO base word. The chain is exactly two classes, proven from the cartridge rather than from build/rtti.json's edge list.",
+    "chain_terminates_evidence": "_ZTI22dMg3DHeyhoObjAdapter_c at 0x0213b000 is only 8 bytes (the next symbol, sJump3DBounceVy, starts at 0x0213b008) and its vptr word is 0x0209a774 = _ZTVN3abi17__class_type_infoE, the ROOT __class_type_info with NO base word. The chain is exactly two classes, proven from the cartridge rather than from build/rtti.json's edge list.",
     "edges": [
       {"derived": "dMgJump3DMario_c", "base": "dMg3DHeyhoObjAdapter_c", "derived_key": "ov006:0x0213b0a4", "base_key": "ov006:0x0213b000", "offset": 0, "resolved_by": "own_module"}
     ],
@@ -77,7 +77,7 @@
       {"slot": 1, "address": "0x0213b0d0", "target": "0x020c76d0"},
       {"slot": 2, "address": "0x0213b0d4", "target": "0x020c762c"}
     ],
-    "extent_evidence": "Corroborated four ways. (a) The next symbols.txt row after the address point is data_ov006_0213b0d8 at 0x0213b0d8, and there is NO interior phantom symbol inside the table to truncate a romdata_check extent lookup. (b) The unbroken relocation run in config/arm9/overlays/ov006/relocs.txt covers 0x0213b0c8 (the typeinfo word) through 0x0213b0d4 and stops there. (c) The word at 0x0213b0d8 is 0x02134b6c, which is inside ov006 .data (>= 0x02133600), not a code address, so it cannot be a fourth slot. (d) MEASURED: a probe TU compiled with the pinned mwccarm 2004/b56 emits _ZTV16dMgJump3DMario_c at size 0x14, exactly the storage extent above. There are no trailing null slots hiding a further declaration.",
+    "extent_evidence": "Corroborated four ways. (a) The next symbols.txt row after the address point is sPuffSprites at 0x0213b0d8, and there is NO interior phantom symbol inside the table to truncate a romdata_check extent lookup. (b) The unbroken relocation run in config/arm9/overlays/ov006/relocs.txt covers 0x0213b0c8 (the typeinfo word) through 0x0213b0d4 and stops there. (c) The word at 0x0213b0d8 is 0x02134b6c, which is inside ov006 .data (>= 0x02133600), not a code address, so it cannot be a fourth slot. (d) MEASURED: a probe TU compiled with the pinned mwccarm 2004/b56 emits _ZTV16dMgJump3DMario_c at size 0x14, exactly the storage extent above. There are no trailing null slots hiding a further declaration.",
     "address_point_evidence": "The constructor at 0x020c8a04 loads the literal 0x0213b0cc from its own pool at 0x020c8a2c and stores it at [this]. The _ZTV symbol IS the address point; the two header words sit at -8 and -4."
   },
 

@@ -351,12 +351,11 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
             /* unk_0a4 / unk_0ac: world velocity X/Z next to mVertSpeed. */
             s32 velX = unk_0a4;
             s32 velZ = unk_0ac;
-            /* Spelled out: FX_MUL drops prodX / prodZ, which renumbers the TU's @NNN objects. */
-            long long prodX = (long long)floorNormal.x * (long long)velX;
-            long long prodZ = (long long)floorNormal.z * (long long)velZ;
-            int termX = (int)((prodX + 0x800) >> 12);
-            int termZ = (int)((prodZ + 0x800) >> 12);
-            mVertSpeed = -(cstd::fdiv(termX + termZ, floorNormal.y) + 0x8000);
+            int termX = FX_MUL(floorNormal.x, velX);
+            int termZ = FX_MUL(floorNormal.z, velZ);
+            int dot = termX + termZ;
+            int slope = cstd::fdiv(dot, floorNormal.y);
+            mVertSpeed = -(slope + 0x8000);
         }
     }
     if (((dBgCh_Actr *)clsn)->IsOnWall()) {

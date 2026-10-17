@@ -16,21 +16,21 @@ int func_0206470c(BitmapFind *self) {
     word = self->bits + (idx >> 5);
     start = idx;
     bit = idx & 0x1f;
+    /* found/fail gotos kept: break + return -1, while(), and do-while forms all re-lay the loop */
     for (;;) {
         if (!(*word & (1 << bit))) goto found;
         idx++;
-        if (idx >= self->max) goto wrap;
-        bit++;
-        if (bit > 0x1f) {
+        if (idx < self->max) {
+            bit++;
+            if (bit > 0x1f) {
+                bit = 0;
+                word++;
+            }
+        } else {
+            idx = 0;
             bit = 0;
-            word++;
+            word = self->bits;
         }
-        goto check;
-    wrap:
-        idx = 0;
-        bit = 0;
-        word = self->bits;
-    check:
         if (idx == start) goto fail;
     }
 found:

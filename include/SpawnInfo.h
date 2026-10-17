@@ -43,4 +43,22 @@ template <class T> struct SpawnInfo {
 typedef char SpawnInfo_size_must_be_0x1c[sizeof(SpawnInfo<void>) == 0x1c ? 1 : -1];
 #endif
 
+/* BaseSpawnInfo, the 0x08 base profile: the descriptor a scene or other
+ * non-actor process registers. It is SpawnInfo's first three fields, the ones
+ * func_02043098 and fBase_c::fBase_c read; the actor tail (flags and the four
+ * clip ranges) is read by dActor_c::dActor_c alone. The pilot's six
+ * 0x08 rows are this form (notes/actor-profile-pilot.md, answer 1).
+ * BaseSpawnInfo is a decomp name like SpawnInfo, chosen to read as its base
+ * form. It is a separate aggregate rather than SpawnInfo's base class, so
+ * both keep brace initialization. */
+template <class T> struct BaseSpawnInfo {
+    T *(*classInit)();
+    u16 behaviorPriority;
+    u16 renderPriority;
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char BaseSpawnInfo_size_must_be_0x08[sizeof(BaseSpawnInfo<void>) == 0x08 ? 1 : -1];
+#endif
+
 #endif /* SPAWNINFO_H */

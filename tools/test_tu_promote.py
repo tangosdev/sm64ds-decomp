@@ -26,6 +26,16 @@ def intact_proof(sections):
 
 
 class IntactPromotion(unittest.TestCase):
+    def test_delinks_path_puts_tcm_modules_beside_arm9(self):
+        config = pathlib.Path("cfg")
+        with mock.patch.object(TP, "CONFIG", config):
+            self.assertEqual(TP.delinks_path("arm9"), config / "arm9/delinks.txt")
+            self.assertEqual(TP.delinks_path("main"), config / "arm9/delinks.txt")
+            self.assertEqual(TP.delinks_path("itcm"), config / "arm9/itcm/delinks.txt")
+            self.assertEqual(TP.delinks_path("dtcm"), config / "arm9/dtcm/delinks.txt")
+            self.assertEqual(TP.delinks_path("ov047"),
+                             config / "arm9/overlays/ov047/delinks.txt")
+
     def test_batch_preflight_refuses_shared_legacy_before_mutation(self):
         with tempfile.TemporaryDirectory() as td:
             root = pathlib.Path(td)

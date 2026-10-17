@@ -552,9 +552,9 @@ void daOwl_c::func_ov094_021361d8()
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         mAngleX, mAngleY, mAngleZ);
     mModelAnim.ApplyOpacity(mOpacity, 1);
-    *(Matrix4x3 *)((char *)this + 0x328) = data_020a0e68;
-    MulMat4x3Mat4x3((const int *)(*(char **)((char *)this + 0x320) + 0x30),
-        (const int *)((char *)this + 0x328), out.m);
+    mModelAnim.mat4x3 = data_020a0e68;
+    MulMat4x3Mat4x3((const int *)&mModelAnim.data.transforms[1], (const int *)&mModelAnim.mat4x3,
+                    out.m);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0x38000) >> 3,
@@ -579,7 +579,7 @@ void daOwl_c::func_ov094_021362e0()
     *(volatile Fix12i *)&v.y = z;
     *(volatile Fix12i *)&v.z = z;
     m = mRider;
-    data_020a0e68 = *(Matrix4x3 *)(*(char **)((char *)m + 0xc8));
+    data_020a0e68 = *m->mCarryMatrix;
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, z, z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x6000, 0x1000, 0x4000);
     v.x = data_020a0e68.m[9];
@@ -590,7 +590,7 @@ void daOwl_c::func_ov094_021362e0()
     mPosZ = v.z << 3;
     mPrevAngleY = mRider->mAngleY;
     mPrevAngleX = (s16)z;
-    *(Matrix4x3 *)((char *)this + 0x328) = data_020a0e68;
+    mModelAnim.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN7daOwl_c16CleanupResourcesEv

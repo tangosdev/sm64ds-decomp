@@ -20,16 +20,16 @@
  * SaveSnapshot is a three-way state machine gated by two slot-indexed
  * byte tables (gTouchHeld/gTouchEdge) and driven by the touch x/y lanes -- the two more (gTouchX/
  * gTouchY, both shifted left 12 to become fixed-point):
- *   - "trigger" (a new flag byte set): sets the base's unk_031, zeroes the
- *     base's mVel0/mVel1, latches unk_03c/mDriveNow from the tables and
- *     mirrors each into unk_034/mDriveBase -- then, only if mCurrent1 is above
+ *   - "trigger" (a new flag byte set): sets the base's mTriggered, zeroes the
+ *     base's mVel0/mVel1, latches mGrabX/mDriveNow from the tables and
+ *     mirrors each into mGrabXSaved/mDriveBase -- then, only if mCurrent1 is above
  *     the 0xa0000 baseline, pulls mDriveBase down by the excess.
- *   - "active" (unk_031 already 1): recomputes mDriveNow from the table each
+ *   - "active" (mTriggered already 1): recomputes mDriveNow from the table each
  *     call and clamps it to [mDriveBase, mDriveBase + 0x38000], recomputes
  *     mCurrent1 from mDriveNow - mDriveBase + 0xa0000, and plays a sound via
  *     Sound_PlayIfNotActive (stored back into mSoundHandle) whenever that new
  *     mCurrent1 differs from the snapshot mSnapshot1.
- *   - "release": clears the base's unk_031/mVel0/mVel1, OR (if neither
+ *   - "release": clears the base's mTriggered/mVel0/mVel1, OR (if neither
  *     the trigger nor the release condition holds) eases mCurrent1 back
  *     toward the 0xa0000 baseline using the base's mVel1 as velocity.
  *
@@ -39,14 +39,14 @@
  * struct member. All three drop to a plain compound assignment on the real
  * member and still reproduce byte-exact.
  *
- * unk_034 and unk_03c are set together, once, in the "trigger" branch
- * (unk_034 = unk_03c) and never read again -- not by this class's own three
+ * mGrabXSaved and mGrabX are set together, once, in the "trigger" branch
+ * (mGrabXSaved = mGrabX) and never read again -- not by this class's own three
  * functions and not by anything else in the tree. They keep unk_ names on
  * purpose: their width and their write are evidenced, their meaning is not.
  *
  * mSoundHandle is the sound handle Sound_PlayIfNotActive returns; RestoreInitial
  * zeroes it and it is the ONLY offset RestoreInitial's own zero pass
- * reaches -- unk_034/mDriveBase/unk_03c/mDriveNow carry whatever SaveSnapshot
+ * reaches -- mGrabXSaved/mDriveBase/mGrabX/mDriveNow carry whatever SaveSnapshot
  * last left there across a restore.
  *
  * FIELD NAMES and their evidence are tabulated in
@@ -70,7 +70,7 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
 
-    s32 unk_034;     /* 0x034 -- copied from unk_03c in the trigger branch and
+    s32 mGrabXSaved; /* 0x034 -- copied from mGrabX in the trigger branch and
                           never read again by anything in the tree. No evidence
                           of a use, so no name. */
     s32 mDriveBase;  /* 0x038 -- the drive reading captured at the trigger frame,
@@ -79,8 +79,8 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
                           height is recomputed as
                           `mCurrent1 = mDriveNow - mDriveBase + 0xa0000`, so this
                           is the zero point that reading is measured from. */
-    s32 unk_03c;     /* 0x03c -- gTouchX[slot*4] << 12, latched once in
-                          the trigger branch (and mirrored into unk_034).
+    s32 mGrabX;      /* 0x03c -- gTouchX[slot*4] << 12, latched once in
+                          the trigger branch (and mirrored into mGrabXSaved).
                           Nothing in the tree reads either back. No name. */
     s32 mDriveNow;   /* 0x040 -- gTouchY[slot*4] << 12, the live drive
                           reading. Latched at trigger, then re-read every active

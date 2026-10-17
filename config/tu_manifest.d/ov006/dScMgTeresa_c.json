@@ -9,7 +9,7 @@
     "HISTORY: WHOLE UNIT. tu_map calls 0x0211cbd0..0x021207a8 one contiguous linker run of 81 functions (build/tu_map.json, tools/tu_map.py). This TU licenses all 81, ROM ordinals 0..80, as one .text claim. Below it is src/minigames/d_s_mg_sound.cpp (ends 0x0211cbd0); above it is dScMgTeresa_c_classInit in src/d_s_mg_teresa.cpp (0x021207a8..0x021207dc), which tu_map does not put in this unit and which stays its own file.",
     "class label(s): dScMgTeresa_c",
     "WIDENED from the earlier 48-function claim 0x0211cbd0..0x0211e72c. The one function that bounded it, DrawBoos (0x0211e72c, size 0xac), had no matching source and no delinks entry; it was byte-matched and enrolled in its own file first, and with it the run is one piece. 33 files were folded: that function and the 32 above it, AreBoosSettled through InitResources, including the six own overrides Virtual88, Virtual50, OnYoshiTryEat, Render, Behavior and InitResources.",
-    "PRAGMA BRACKETS. Seven folded files carried a file-global pragma, and each now sits in a #pragma push/pop bracket around its one function: Reveal_State3, 0211db7c, 0211ea70 and 0211f9fc (opt_common_subs off), FoundMark_Spawn and 0211fbf8 (opt_strength_reduction off), and Virtual88 (opt_loop_invariants off). Every one is load-bearing. Deleting the first three gives 45/48 with exactly those three DIFF; deleting the four added by the widen gives 77/81 with exactly those four DIFF. The brackets bind only while #pragma defer_codegen off is in force: keeping them but dropping that pragma gave the same DIFFs and inverted the emission order.",
+    "PRAGMA BRACKETS. Seven folded files carried a file-global pragma, and each now sits in a #pragma push/pop bracket around its one function: Reveal_StateDipAndRise, 0211db7c, 0211ea70 and 0211f9fc (opt_common_subs off), FoundMark_Spawn and 0211fbf8 (opt_strength_reduction off), and Virtual88 (opt_loop_invariants off). Every one is load-bearing. Deleting the first three gives 45/48 with exactly those three DIFF; deleting the four added by the widen gives 77/81 with exactly those four DIFF. The brackets bind only while #pragma defer_codegen off is in force: keeping them but dropping that pragma gave the same DIFFs and inverted the emission order.",
     "DESTRUCTOR ORDER. The cartridge has D1 at 0x0211cbd0 below D0 at 0x0211cbf4 and no D2 home. One out-of-line ~dScMgTeresa_c() under #pragma defer_codegen off emits D1, D0, D2 in that order (deferred codegen gives D2, D0, D1, measured with the pinned 2004/b56); the D2 is a compiler_only_output deadstrip row. include/dScMgTeresa_c.h is unchanged.",
     "KEY FUNCTION. The out-of-line destructor is the class's key function, so this TU emits _ZTV/_ZTI/_ZTS13dScMgTeresa_c and the ancestor RTTI chain (fBase_c, dBase_c, dScene_c, dScMgBase_c). Each is a deadstrip-data row with its canonical symbols.txt home; ov006 .data stays ROM-owned, so the TU stays text-only. The widen did not change this.",
     "HISTORY: SOURCE ORDER IS ROM-ASCENDING, lowest address first, under #pragma defer_codegen off; tubuild verify reports all 81 in ROM-ascending emission order.",
@@ -76,63 +76,63 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State8Ei",
+      "symbol": "_ZN13dScMgTeresa_c18BigBoo_StateResultEi",
       "address": "0x0211cd24",
       "size": "0x0000016c",
       "legacy_source": "src/func_ov006_0211cd24.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State7Ev",
+      "symbol": "_ZN13dScMgTeresa_c16BigBoo_StateGoneEv",
       "address": "0x0211ce90",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0211ce90.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State6Ei",
+      "symbol": "_ZN13dScMgTeresa_c18BigBoo_StateRemoveEi",
       "address": "0x0211ce94",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_0211ce94.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State5Ei",
+      "symbol": "_ZN13dScMgTeresa_c16BigBoo_StateExitEi",
       "address": "0x0211cef4",
       "size": "0x00000124",
       "legacy_source": "src/func_ov006_0211cef4.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State4Ei",
+      "symbol": "_ZN13dScMgTeresa_c21BigBoo_StateOffscreenEi",
       "address": "0x0211d018",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov006_0211d018.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State3Ei",
+      "symbol": "_ZN13dScMgTeresa_c20BigBoo_StateFlyRightEi",
       "address": "0x0211d0f8",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov006_0211d0f8.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State2Ei",
+      "symbol": "_ZN13dScMgTeresa_c19BigBoo_StateFlyLeftEi",
       "address": "0x0211d224",
       "size": "0x00000144",
       "legacy_source": "src/func_ov006_0211d224.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State1Ei",
+      "symbol": "_ZN13dScMgTeresa_c17BigBoo_StateHoverEi",
       "address": "0x0211d368",
       "size": "0x00000180",
       "legacy_source": "src/func_ov006_0211d368.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13BigBoo_State0Ei",
+      "symbol": "_ZN13dScMgTeresa_c18BigBoo_StateDropInEi",
       "address": "0x0211d4e8",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_0211d4e8.c",
@@ -202,35 +202,35 @@
       "ordinal": 22
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13Reveal_State4Ei",
+      "symbol": "_ZN13dScMgTeresa_c18Reveal_StateFinishEi",
       "address": "0x0211d86c",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_0211d86c.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13Reveal_State3Ei",
+      "symbol": "_ZN13dScMgTeresa_c22Reveal_StateDipAndRiseEi",
       "address": "0x0211d924",
       "size": "0x000001ac",
       "legacy_source": "src/func_ov006_0211d924.c",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13Reveal_State2Ei",
+      "symbol": "_ZN13dScMgTeresa_c19Reveal_StateAnimateEi",
       "address": "0x0211dad0",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_0211dad0.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13Reveal_State1Ei",
+      "symbol": "_ZN13dScMgTeresa_c19Reveal_StateSlideInEi",
       "address": "0x0211db7c",
       "size": "0x00000164",
       "legacy_source": "src/func_ov006_0211db7c.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c13Reveal_State0Ei",
+      "symbol": "_ZN13dScMgTeresa_c17Reveal_StateStartEi",
       "address": "0x0211dce0",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_0211dce0.c",
@@ -412,42 +412,42 @@
       "ordinal": 52
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State7Ei",
+      "symbol": "_ZN13dScMgTeresa_c17Boo_StateFadeAwayEi",
       "address": "0x0211ebdc",
       "size": "0x00000258",
       "legacy_source": "src/func_ov006_0211ebdc.c",
       "ordinal": 53
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State6Ei",
+      "symbol": "_ZN13dScMgTeresa_c15Boo_StateFadeInEi",
       "address": "0x0211ee34",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov006_0211ee34.c",
       "ordinal": 54
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State5Ei",
+      "symbol": "_ZN13dScMgTeresa_c14Boo_StateFoundEi",
       "address": "0x0211f040",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211f040.cpp",
       "ordinal": 55
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State4Ei",
+      "symbol": "_ZN13dScMgTeresa_c20Boo_StateHiddenTimedEi",
       "address": "0x0211f0d0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_0211f0d0.c",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State3Ei",
+      "symbol": "_ZN13dScMgTeresa_c15Boo_StateHiddenEi",
       "address": "0x0211f1a4",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_0211f1a4.c",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State2Ei",
+      "symbol": "_ZN13dScMgTeresa_c16Boo_StateFadeOutEi",
       "address": "0x0211f224",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_0211f224.c",
@@ -475,14 +475,14 @@
       "ordinal": 61
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State1Ei",
+      "symbol": "_ZN13dScMgTeresa_c12Boo_StateFlyEi",
       "address": "0x0211f554",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_0211f554.c",
       "ordinal": 62
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c10Boo_State0Ei",
+      "symbol": "_ZN13dScMgTeresa_c15Boo_StateAppearEi",
       "address": "0x0211f5d4",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211f5d4.c",
@@ -531,35 +531,35 @@
       "ordinal": 69
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c12Scene_State4Ev",
+      "symbol": "_ZN13dScMgTeresa_c17Scene_StateResultEv",
       "address": "0x0211fd44",
       "size": "0x00000134",
       "legacy_source": "src/func_ov006_0211fd44.c",
       "ordinal": 70
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c12Scene_State3Ev",
+      "symbol": "_ZN13dScMgTeresa_c19Scene_StateRoundEndEv",
       "address": "0x0211fe78",
       "size": "0x00000190",
       "legacy_source": "src/func_ov006_0211fe78.c",
       "ordinal": 71
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c12Scene_State2Ev",
+      "symbol": "_ZN13dScMgTeresa_c15Scene_StatePlayEv",
       "address": "0x02120008",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_02120008.c",
       "ordinal": 72
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c12Scene_State1Ev",
+      "symbol": "_ZN13dScMgTeresa_c17Scene_StateRevealEv",
       "address": "0x021200a8",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_021200a8.c",
       "ordinal": 73
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c12Scene_State0Ev",
+      "symbol": "_ZN13dScMgTeresa_c15Scene_StateInitEv",
       "address": "0x021200cc",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_021200cc.c",
@@ -720,7 +720,7 @@
     {
       "symbol": "_ZTV13dScMgTeresa_c",
       "disposition": "deadstrip-data",
-      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways, per notes/agents/roles/writer.md: (a) the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213fa08 (the typeinfo word of the 8-byte offset-to-top/typeinfo preamble) through 0x0213fa98, with the first gap at 0x0213fa9c and the next relocation at 0x0213faa0 belonging to the 8-stride pointer-to-member table that follows; (b) tools/rtti_vtables.py --own dScMgTeresa_c reports 36 slots; (c) the next symbols.txt row after the address point is data_ov006_0213fa9c at 0x0213fa9c. All three give symbol extent 0x0213fa0c..0x0213fa9c = 0x90 = 36 slots, and STORAGE 0x0213fa04..0x0213fa9c = 0x98, which is exactly the size of the .data section this TU emits for it. (The naive next-symbol read happens to be RIGHT here: this table's phantom interior symbol, data_ov006_0213fa0c, sits ON the address point rather than inside the table.) The cartridge keeps its canonical copy at ov006:0x0213fa0c, outside this TU's only licensed range (.text 0x0211cbd0-0x021207a8), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
+      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways, per notes/agents/roles/writer.md: (a) the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213fa08 (the typeinfo word of the 8-byte offset-to-top/typeinfo preamble) through 0x0213fa98, with the first gap at 0x0213fa9c and the next relocation at 0x0213faa0 belonging to the 8-stride pointer-to-member table that follows; (b) tools/rtti_vtables.py --own dScMgTeresa_c reports 36 slots; (c) the next symbols.txt row after the address point is sTrmpTouchBlocked at 0x0213fa9c. All three give symbol extent 0x0213fa0c..0x0213fa9c = 0x90 = 36 slots, and STORAGE 0x0213fa04..0x0213fa9c = 0x98, which is exactly the size of the .data section this TU emits for it. (The naive next-symbol read happens to be RIGHT here: this table's phantom interior symbol, data_ov006_0213fa0c, sits ON the address point rather than inside the table.) The cartridge keeps its canonical copy at ov006:0x0213fa0c, outside this TU's only licensed range (.text 0x0211cbd0-0x021207a8), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213fa0c"
     },
@@ -733,9 +733,9 @@
   "externalized_output": [],
   "notes": [
     "Hand-assembled: tools/tubuild.py create ov006/dScMgTeresa_c CANNOT run on this TU. cmd_create handles a sourceless member when it assembles the SOURCE (it writes a banner and warns SOURCELESS), but build_manifest_entry (tubuild.py:959) still calls SP.path_for(name).relative_to(REPO) unguarded, so the run writes src_tu/actors/d_s_mg_teresa.cpp and then dies with \"AttributeError: 'NoneType' object has no attribute 'relative_to'\" before any manifest entry is written. The generated source was used as a parts list and this manifest was written by hand. The 33 functions from 0x0211e72c up were folded in by hand later, for the whole-unit widen.",
-    "Declaration conflicts between the folded files are resolved the same way throughout: one extern \"C\" declaration per symbol at file scope, and a cast at the call where a file had spelled the parameter differently. Local struct tags are renamed per view rather than merged, because merging changes mwccarm pointer-to-member and struct-copy codegen: the four files that each said 'struct C' became TeresaPmfA (+0x4be0/+0x4be1), TeresaPmfB (+0x4bba/+0x4bbc), RowArray (a 0x24-stride row walk) and TeresaPmfC (UpdateBoos's per-Boo handler table); Behavior's 'struct C'/'Entry' became TeresaPmfD/TeresaPmfDEntry; Scene_State4's 'struct B' became ScoreView; and 'struct Elem' is split into SlotElem and HudElem. tubuild's conflict detector raised the first four on the generated source.",
-    "decl_common.h is included and matched. It already declares nine of this TU's own members -- BigBoo_Draw, 0211d75c, 0211d7b4, 0211d7ec, 0211dd6c, 0211ddcc, 0211e118, 0211e29c, 0211e460 -- seven of them as void* where the legacy file used char*, unsigned char* or a shadow struct. Those seven definitions are spelled to match the header and take a one-line cast alias in the body, per writer.md's fix pattern; the two already-char* ones are unchanged. decl_common.h also types Mg_RenderSubSpriteMtx as (void*, int, int, void*) where the legacy file said (int, int, int, int), so RisingIcon_DrawAll's call site carries two casts. The widen added three more that decl_common.h already declares: DrawBoos is defined with its void * and an alias in the body, and SpawnBoos and 0211fbf8 were already char *. gMgScene is void * in dScMgBase_c.h, so Scene_State4 casts it to its ScoreView.",
-    "Spellings the widen had to keep. G2's functions are called by their mangled names, because decl_common.h declares `int G2[]` and a G2 namespace would collide with it; G2S, GX and GXS are namespaces as in dScMgHanachan_c. Boo_State7 and 0211f224 call SetBlendAlpha through the mangled extern with int parameters: G2x.h's unsigned short parameters narrow `0x10 - alpha` at the call, and the cartridge does not (both DIFF through G2x::SetBlendAlpha). UpdateRubbing's distance pair is a local POD struct, not Vector3: Vector3's C++ destructor changes that frame and emits _ZN7Vector3D1Ev (measured DIFF). Marker_Update is empty and now takes the unused object pointer that Scene_State1 passes it; its bytes are unchanged.",
+    "Declaration conflicts between the folded files are resolved the same way throughout: one extern \"C\" declaration per symbol at file scope, and a cast at the call where a file had spelled the parameter differently. Local struct tags are renamed per view rather than merged, because merging changes mwccarm pointer-to-member and struct-copy codegen: the four files that each said 'struct C' became TeresaPmfA (+0x4be0/+0x4be1), TeresaPmfB (+0x4bba/+0x4bbc), RowArray (a 0x24-stride row walk) and TeresaPmfC (UpdateBoos's per-Boo handler table); Behavior's 'struct C'/'Entry' became TeresaPmfD/TeresaPmfDEntry; Scene_StateResult's 'struct B' became ScoreView; and 'struct Elem' is split into SlotElem and HudElem. tubuild's conflict detector raised the first four on the generated source.",
+    "decl_common.h is included and matched. It already declares nine of this TU's own members -- BigBoo_Draw, 0211d75c, 0211d7b4, 0211d7ec, 0211dd6c, 0211ddcc, 0211e118, 0211e29c, 0211e460 -- seven of them as void* where the legacy file used char*, unsigned char* or a shadow struct. Those seven definitions are spelled to match the header and take a one-line cast alias in the body, per writer.md's fix pattern; the two already-char* ones are unchanged. decl_common.h also types Mg_RenderSubSpriteMtx as (void*, int, int, void*) where the legacy file said (int, int, int, int), so RisingIcon_DrawAll's call site carries two casts. The widen added three more that decl_common.h already declares: DrawBoos is defined with its void * and an alias in the body, and SpawnBoos and 0211fbf8 were already char *. gMgScene is void * in dScMgBase_c.h, so Scene_StateResult casts it to its ScoreView.",
+    "Spellings the widen had to keep. G2's functions are called by their mangled names, because decl_common.h declares `int G2[]` and a G2 namespace would collide with it; G2S, GX and GXS are namespaces as in dScMgHanachan_c. Boo_StateFadeAway and 0211f224 call SetBlendAlpha through the mangled extern with int parameters: G2x.h's unsigned short parameters narrow `0x10 - alpha` at the call, and the cartridge does not (both DIFF through G2x::SetBlendAlpha). UpdateRubbing's distance pair is a local POD struct, not Vector3: Vector3's C++ destructor changes that frame and emits _ZN7Vector3D1Ev (measured DIFF). Marker_Update is empty and now takes the unused object pointer that Scene_StateReveal passes it; its bytes are unchanged.",
     "Static initializer folded: the four PMF state tables (reveal-pair, scene, per-Boo, big-Boo flight) make mwcc emit __sinit_d_s_mg_teresa.cpp itself (0x2c4, raw-byte-identical to retail __sinit_ov006_02132f68 with the same instruction sequence and relocation sites); the handwritten shard is retired. No handles, no compiler temporaries, no renames. This fold does NOT license the .data PMF descriptors or any other .data.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
@@ -1013,7 +1013,7 @@
       "source": "0x021331b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Scene_State0",
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateInit",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f904"
@@ -1023,7 +1023,7 @@
       "source": "0x021331b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Scene_State1",
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateReveal",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f92c"
@@ -1043,7 +1043,7 @@
       "source": "0x021331bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Scene_State2",
+      "symbol": "pmf_dScMgTeresa_c_Scene_StatePlay",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f954"
@@ -1053,7 +1053,7 @@
       "source": "0x021331c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Scene_State3",
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateRoundEnd",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f964"
@@ -1063,7 +1063,7 @@
       "source": "0x021331c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Scene_State4",
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateResult",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f914"
@@ -1073,7 +1073,7 @@
       "source": "0x021331c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State0",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateAppear",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f934"
@@ -1083,7 +1083,7 @@
       "source": "0x021331cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State1",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFly",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f8dc"
@@ -1103,7 +1103,7 @@
       "source": "0x021331d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State2",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeOut",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f94c"
@@ -1113,7 +1113,7 @@
       "source": "0x021331d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State3",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateHidden",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f8ec"
@@ -1123,7 +1123,7 @@
       "source": "0x021331dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Reveal_State0",
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateStart",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f99c"
@@ -1133,7 +1133,7 @@
       "source": "0x021331e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State4",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateHiddenTimed",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f8e4"
@@ -1143,7 +1143,7 @@
       "source": "0x021331e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State5",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFound",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f8d4"
@@ -1153,7 +1153,7 @@
       "source": "0x021331e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State6",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeIn",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f93c"
@@ -1163,7 +1163,7 @@
       "source": "0x021331ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Boo_State7",
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeAway",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f96c"
@@ -1173,7 +1173,7 @@
       "source": "0x021331f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Reveal_State1",
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateSlideIn",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f994"
@@ -1193,7 +1193,7 @@
       "source": "0x021331f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Reveal_State3",
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateDipAndRise",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f984"
@@ -1203,7 +1203,7 @@
       "source": "0x021331fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Reveal_State2",
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateAnimate",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f98c"
@@ -1213,7 +1213,7 @@
       "source": "0x02133200",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_Reveal_State4",
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateFinish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f97c"
@@ -1223,7 +1223,7 @@
       "source": "0x02133204",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State0",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateDropIn",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f90c"
@@ -1243,7 +1243,7 @@
       "source": "0x0213320c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State1",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateHover",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f95c"
@@ -1253,7 +1253,7 @@
       "source": "0x02133210",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State2",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateFlyLeft",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f91c"
@@ -1263,7 +1263,7 @@
       "source": "0x02133214",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State3",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateFlyRight",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f8fc"
@@ -1273,7 +1273,7 @@
       "source": "0x02133218",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State4",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateOffscreen",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f944"
@@ -1283,7 +1283,7 @@
       "source": "0x0213321c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State5",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateExit",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f8f4"
@@ -1293,7 +1293,7 @@
       "source": "0x02133220",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State6",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateRemove",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f9ac"
@@ -1303,7 +1303,7 @@
       "source": "0x02133224",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State7",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateGone",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f9a4"
@@ -1313,7 +1313,7 @@
       "source": "0x02133228",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgTeresa_c_BigBoo_State8",
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateResult",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213f924"

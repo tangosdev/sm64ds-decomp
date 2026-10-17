@@ -16,8 +16,7 @@
  */
 
 // leftovers: OAM::Render stays mangled (Fix12 by value -- this TU's render
-// calls). func_02034d34 calls the fader at +0x50 through the ScMbFader view
-// because dFdColor_c's header does not declare slots m2/m5. func_02034b1c
+// calls). func_02034b1c
 // writes the global graphCallback_c by offset (that object's initializer, not
 // a dScMB_c method). func_02034fbc stays free (no receiver). classInit stays
 // the literal construction sequence (`return new` inlines a different fader
@@ -62,17 +61,6 @@ extern int _ZTV8dFader_c[];
 extern int _ZTV15dFdBrightness_c[];
 extern int _ZTV10dFdColor_c[];
 }
-
-/* Fader at dScMB_c+0x50. Slots 5 and 2 are what this TU calls; the header's
- * dFdColor_c does not declare them. */
-struct ScMbFader {
-    virtual int v0();
-    virtual int v1();
-    virtual int m2();
-    virtual int v3();
-    virtual int v4();
-    virtual int m5();
-};
 
 #pragma defer_codegen off
 
@@ -167,11 +155,11 @@ int dScMB_c::graphCallback_c::GraphCallback0()
 }
 
 // @symbol _ZN7dScMB_c13func_02034d34Ev
-int dScMB_c::func_02034d34()
-{
-    int r = ((ScMbFader *)((char *)this + 0x50))->m5();
-    if (r) return r;
-    return ((ScMbFader *)((char *)this + 0x50))->m2();
+// Its sole caller ignores the result; AdvanceFade itself returns void.
+void dScMB_c::func_02034d34() {
+    if (fader.IsAtStart())
+        return;
+    fader.AdvanceFade();
 }
 
 // @symbol _ZN7dScMB_c16CleanupResourcesEv

@@ -27,9 +27,6 @@
  * constructor copies them into the BSS slots at startup.
  *
  * deslop leftovers:
- * - func_ov090_02133710: a reference through pad_380[4] differs by 3 words
- *   (ldr/str via a register). The ROM is [this, #0x384], so the phase
- *   stays *(s32 *)((char *)self + 0x384).
  * - func_ov090_02133710: `if (hit->actorID != 0xbf)` is size 0x120 to
  *   0x114. The int temporary stays.
  * - func_ov090_0213387c: ModelAnim::SetAnim with a Fix12<int> speed is
@@ -153,17 +150,15 @@ extern "C" void func_ov090_02133710(daShark_c *self)
 {
     Vector3 offset;
     Vector3 pos;
-    /* Swing phase lives at +0x384, inside pad_380. A pointer or reference
-     * to that word addresses it from a register; the ROM uses [this, #0x384]. */
-    *(s32 *)((char *)self + 0x384) += 1;
-    if (*(s32 *)((char *)self + 0x384) > 2)
-        *(s32 *)((char *)self + 0x384) = 0;
+    self->mSwingPhase += 1;
+    if (self->mSwingPhase > 2)
+        self->mSwingPhase = 0;
     offset.x = 0;
     offset.y = 0;
     offset.z = 0;
-    if (*(s32 *)((char *)self + 0x384) == 1)
+    if (self->mSwingPhase == 1)
         offset.z = 0x8c000;
-    else if (*(s32 *)((char *)self + 0x384) == 2)
+    else if (self->mSwingPhase == 2)
         offset.z = -0x8c000;
     Matrix4x3_FromRotationY(data_020a0e68, 0);
     MulVec3Mat4x3(&offset, data_020a0e68, &self->mClsnOffset);

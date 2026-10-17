@@ -52,17 +52,10 @@ void func_ov075_0211867c(char *self)
                     bit = *p;
                     if (bit != 0) {
                         acc |= *(u16 *)(data_020a0e58 + (i << 2) + 2) & 0xc;
-                        bit = gTouchHeld[i << 2];
-                        if (bit == 0)
-                            goto set0;
-                        bit = (gTouchHeld + (i << 2))[1];
-                        if (bit != 0) {
+                        if (gTouchHeld[i << 2] != 0 && (gTouchHeld + (i << 2))[1] != 0)
                             bit = one;
-                            goto orr;
-                        }
-                    set0:
-                        bit = zero;
-                    orr:
+                        else
+                            bit = zero;
                         acc |= bit;
                     }
                     i = i + 1;

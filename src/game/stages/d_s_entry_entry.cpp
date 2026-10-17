@@ -34,7 +34,7 @@ void* dScEntry_c_classInit_ENTRY(void)
         *(char**)p = data_0208e4b8;
         *(char**)p = _ZTV8dScene_c;
         {
-            unsigned char *flags = (unsigned char *)((int)p + 0x13);
+            unsigned char *flags = &((dScEntry_c *)p)->pauseFlags;
             *flags |= 1;
             *flags |= 4;
         }
@@ -42,16 +42,15 @@ void* dScEntry_c_classInit_ENTRY(void)
         /* Array-member copies preserve the original C aggregate-copy schedule
            in C++ without changing the two-word value's type or layout. */
         *(struct P2Copy *)&v = *(struct P2Copy *)&data_02086b58;
-        *(struct P2Copy *)(p + 0x54) = *(struct P2Copy *)&v;
-        *(struct P2Copy *)(p + 0x5c) = *(struct P2Copy *)&v;
-        *(struct P2Copy *)(p + 0x64) = *(struct P2Copy *)&v;
-        __cxa_vec_ctor(p + 0x70, 9, sizeof(dScEntry_c::icon_c),
-                      (void (*)(void *))_ZN10dScEntry_c6icon_cC1Ev,
-                      (void (*)(void *))_ZN10dScEntry_c6icon_cD1Ev);
-        __cxa_vec_ctor(p + 0x1b4, 4,
-                      sizeof(((dScEntry_c *)p)->mOamAnimations[0]),
-                      (void (*)(void *))_ZN12OamAnimationC1Ev,
-                      (void (*)(void *))_ZN12OamAnimationD1Ev);
+        *(struct P2Copy *)&((dScEntry_c *)p)->mEnterStep = *(struct P2Copy *)&v;
+        *(struct P2Copy *)&((dScEntry_c *)p)->mBehaviorStep = *(struct P2Copy *)&v;
+        *(struct P2Copy *)&((dScEntry_c *)p)->mRenderStep = *(struct P2Copy *)&v;
+        __cxa_vec_ctor(((dScEntry_c *)p)->mIcons, 9, sizeof(dScEntry_c::icon_c),
+                       (void (*)(void *))_ZN10dScEntry_c6icon_cC1Ev,
+                       (void (*)(void *))_ZN10dScEntry_c6icon_cD1Ev);
+        __cxa_vec_ctor(
+            ((dScEntry_c *)p)->mOamAnimations, 4, sizeof(((dScEntry_c *)p)->mOamAnimations[0]),
+            (void (*)(void *))_ZN12OamAnimationC1Ev, (void (*)(void *))_ZN12OamAnimationD1Ev);
     }
     return p;
 }

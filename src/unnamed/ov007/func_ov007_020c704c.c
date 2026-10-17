@@ -24,7 +24,6 @@ int func_ov007_020c704c(S *self, Vec3 *b, int r2arg, int r3arg, int radius)
 {
     int dx, dy, sum, spd, ratio;
     s64 sdx, sdy;
-    int *q;
 
     dx = b->x - self->p->x;
     dy = b->y - self->p->y;
@@ -47,10 +46,8 @@ int func_ov007_020c704c(S *self, Vec3 *b, int r2arg, int r3arg, int radius)
         spd = func_020531a4(sum);
         ratio = _ZN4cstd4fdivEii(r2arg, spd);
 
-        q = (int *)(int)((char *)self + 0x10);
-        *q = *q + FX_MUL(ratio, sdx);
-        self = (S *)(int)((char *)self + 0x14);
-        *(int *)self = *(int *)self + FX_MUL(ratio, sdy);
+        self->f10 += FX_MUL(ratio, sdx);
+        self->f14 += FX_MUL(ratio, sdy);
         return 1;
     }
     return 0;

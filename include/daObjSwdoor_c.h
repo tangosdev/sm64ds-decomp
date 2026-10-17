@@ -25,14 +25,13 @@
  * Each one's destructor stores this class's vtable between its own and
  * _ZTV10dBgActor_c.
  *
- * NO FIELDS HERE, AND THAT IS A DELIBERATE FLOOR RATHER THAN A FINDING. Its own
- * Render (`func_ov002_020babf0`) dispatches through the Model at 0xd4 and its own
- * destructor destroys only dBgActor_c's two members; nothing it owns reaches above
- * sizeof(dBgActor_c). Both factories pass 804 = 0x324, four bytes more, and with the
- * Behavior slot null there is no method of this class that could be reading them.
- * The four bytes are declared on the leaves. Same reading as include/daObjMaruta_c.h,
- * and the same caveat: it is the weaker of the two possibilities and the only one
- * the evidence supports.
+ * FOUR BYTE FIELDS, 0x31e..0x321. Both factories pass 804 = 0x324. The bytes
+ * are read and written only by the two ov002 helpers this class's translation
+ * unit owns -- func_ov002_020bad10 (setup) and func_ov002_020bac18 (the
+ * per-frame body) -- which both leaves call with themselves as the argument;
+ * neither leaf's own code names them. So they are this class's, declared below.
+ * The first two land in dBgActor_c's tail padding (0x31e, 0x31f), the same
+ * reuse daObjRc_Guruguru_c::mAngVelY makes; the size assert below holds it.
  */
 
 #ifdef __cplusplus
@@ -69,11 +68,25 @@ struct daObjSwdoor_c : dBgActor_c {
     virtual s32 InitResources() = 0;        /* slot  0 */
     virtual s32 CleanupResources() = 0;     /* slot  3 */
     virtual s32 Behavior() = 0;             /* slot  6 */
+
+    /* The shutter's own four bytes. func_ov002_020bad10 (setup) writes all
+       four from param1; func_ov002_020bac18 (the per-frame body both leaves
+       install as Behavior) runs on them. The first two sit in dBgActor_c's
+       tail padding, which mwccarm lets a derived class reuse.
+       mTurnDir is param1 bit 0: nonzero turns mAngleY by +0x100 a frame
+       while turning, zero by -0x100. mState runs 0 (wait for the event),
+       1 (turning), 2 (done). mTimer is the start-up delay (5), then the
+       0x40-frame turn. mEventBit is param1 bits 1..5, the Event bit that
+       starts it. */
+    u8 mTurnDir;  /* 0x31e */
+    u8 mState;    /* 0x31f */
+    u8 mTimer;    /* 0x320 */
+    u8 mEventBit; /* 0x321 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjSwdoor_c_size_must_be_0x320[sizeof(daObjSwdoor_c) == 0x320 ? 1 : -1];
+typedef char daObjSwdoor_c_size_must_be_0x324[sizeof(daObjSwdoor_c) == 0x324 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

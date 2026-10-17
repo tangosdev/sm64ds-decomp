@@ -18,8 +18,7 @@
 // leftovers: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled
 // (Fix12<int> by value -- a method call homes the argument and size-DIFFs,
 // 6az; this TU's InitResources/Behavior calls). DecIfAbove0_Short and
-// RandomIntInternal keep linker names (no header home). Behavior's
-// mMoveDir toggle goes through a laundered address (measured).
+// RandomIntInternal keep linker names (no header home).
 // TtcRotatingGear_* handles keep their coined
 // spellings (only names in the tree); data_ov065_0211c0d0/0211c0d4 speed and
 // timer tables, data_0209f2c0 clock byte, data_0209e650 RNG, and the ov035
@@ -158,14 +157,13 @@ int daObjCtMecha08_c::Behavior()
             if (!IsInRange(mPosY, lower, upper)) {
                 mPosY = Clamp(mPosY, lower, upper);
 
-                /* MEASURED: THE LAUNDERED ADDRESS IS LOAD-BEARING. Spelling
-                   this as `mMoveDir ^= 1` or as a load/store pair through the
-                   member changes the function's size, not just its
-                   allocation -- the RMW-address CSE described in
-                   notes/mwccarm-codegen.md. Taking the address through an
-                   integer first defeats it. 0x32e is the offset of
-                   mMoveDir. */
-                u8 *dirp = (u8 *)((int)this + 0x32e);
+                /* Plain `mMoveDir ^= 1` emits the same .text (`mMoveDir =
+                   dir ^ 1` through the member does not: 0x190 -> 0x184). The
+                   two locals feed mwccarm's per-TU @NNN counter, one number
+                   per named local: without them __sinit's registration nodes
+                   come out @418..@421, not the @420..@423 the manifest
+                   renames. */
+                u8 *dirp = &mMoveDir;
                 u8 dir = *dirp;
                 *dirp = dir ^ 1;
 

@@ -8,7 +8,7 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20ff420..0x210428c, 74 function(s), from build/tu_map.json (tools/tu_map.py)",
-    "class label: dScMgPachinko2_c. tu_map also lists dScMgPachinko_c for this run, but only because rtti_vtables.py over-reads dScMgPachinko_c's vtable into the neighbouring g_profile_MG_TAMAIRE descriptor, landing its spurious slots 36 and 38 on Paddle_State4 and dScMgPachinko2_c_classInit (include/dScMgPachinko_c.h records both as spurious). No dScMgPachinko_c symbol lies in the run, and this TU defines and emits nothing of dScMgPachinko_c.",
+    "class label: dScMgPachinko2_c. tu_map also lists dScMgPachinko_c for this run, but only because rtti_vtables.py over-reads dScMgPachinko_c's vtable into the neighbouring g_profile_MG_TAMAIRE descriptor, landing its spurious slots 36 and 38 on Paddle_StateOrbit and dScMgPachinko2_c_classInit (include/dScMgPachinko_c.h records both as spurious). No dScMgPachinko_c symbol lies in the run, and this TU defines and emits nothing of dScMgPachinko_c.",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
   "sections": [
@@ -70,35 +70,35 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c10Cup_State4Ei",
+      "symbol": "_ZN16dScMgPachinko2_c15Cup_StateDecideEi",
       "address": "0x020ff690",
       "size": "0x00000238",
       "legacy_source": "src/func_ov006_020ff690.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c10Cup_State3Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Cup_StateHopRightEi",
       "address": "0x020ff8c8",
       "size": "0x0000028c",
       "legacy_source": "src/func_ov006_020ff8c8.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c10Cup_State2Ei",
+      "symbol": "_ZN16dScMgPachinko2_c16Cup_StateHopLeftEi",
       "address": "0x020ffb54",
       "size": "0x00000290",
       "legacy_source": "src/func_ov006_020ffb54.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c10Cup_State1Ei",
+      "symbol": "_ZN16dScMgPachinko2_c13Cup_StateWaitEi",
       "address": "0x020ffde4",
       "size": "0x00000170",
       "legacy_source": "src/func_ov006_020ffde4.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c10Cup_State0Ei",
+      "symbol": "_ZN16dScMgPachinko2_c13Cup_StateInitEi",
       "address": "0x020fff54",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_020fff54.c",
@@ -231,49 +231,49 @@
       "ordinal": 27
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c14Paddle_State14Ei",
+      "symbol": "_ZN16dScMgPachinko2_c19Paddle_StateFlyAwayEi",
       "address": "0x021009b8",
       "size": "0x00000150",
       "legacy_source": "src/func_ov006_021009b8.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c14Paddle_State13Ei",
+      "symbol": "_ZN16dScMgPachinko2_c21Paddle_StateDropBallsEi",
       "address": "0x02100b08",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_02100b08.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c14Paddle_State12Ei",
+      "symbol": "_ZN16dScMgPachinko2_c18Paddle_StateGatherEi",
       "address": "0x02100bac",
       "size": "0x000001e4",
       "legacy_source": "src/func_ov006_02100bac.c",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c14Paddle_State11Ei",
+      "symbol": "_ZN16dScMgPachinko2_c20Paddle_StateRiseHomeEi",
       "address": "0x02100d90",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_02100d90.c",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c14Paddle_State10Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateSwingEi",
       "address": "0x02100e3c",
       "size": "0x00000140",
       "legacy_source": "src/func_ov006_02100e3c.c",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State9Ei",
+      "symbol": "_ZN16dScMgPachinko2_c24Paddle_StateFallToGroundEi",
       "address": "0x02100f7c",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_02100f7c.c",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State8Ei",
+      "symbol": "_ZN16dScMgPachinko2_c23Paddle_StateKnockedDownEi",
       "address": "0x02101088",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_02101088.c",
@@ -287,56 +287,56 @@
       "ordinal": 35
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State7Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StatePauseEi",
       "address": "0x02101224",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_02101224.c",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State6Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateCrossEi",
       "address": "0x021012cc",
       "size": "0x00000420",
       "legacy_source": "src/func_ov006_021012cc.c",
       "ordinal": 37
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State5Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateWeaveEi",
       "address": "0x021016ec",
       "size": "0x000002f4",
       "legacy_source": "src/func_ov006_021016ec.c",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State4Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateOrbitEi",
       "address": "0x021019e0",
       "size": "0x00000110",
       "legacy_source": "src/func_ov006_021019e0.c",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State3Ei",
+      "symbol": "_ZN16dScMgPachinko2_c19Paddle_StateBoxLoopEi",
       "address": "0x02101af0",
       "size": "0x00000398",
       "legacy_source": "src/func_ov006_02101af0.c",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State2Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateSweepEi",
       "address": "0x02101e88",
       "size": "0x0000023c",
       "legacy_source": "src/func_ov006_02101e88.c",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State1Ei",
+      "symbol": "_ZN16dScMgPachinko2_c19Paddle_StateDescendEi",
       "address": "0x021020c4",
       "size": "0x000001b0",
       "legacy_source": "src/func_ov006_021020c4.c",
       "ordinal": 42
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c13Paddle_State0Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateSpawnEi",
       "address": "0x02102274",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov006_02102274.c",
@@ -448,56 +448,56 @@
       "ordinal": 58
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State0Ei",
+      "symbol": "_ZN16dScMgPachinko2_c18Ball_StateWaitGrabEi",
       "address": "0x02102f3c",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_02102f3c.c",
       "ordinal": 59
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State1Ei",
+      "symbol": "_ZN16dScMgPachinko2_c13Ball_StateAimEi",
       "address": "0x02102fe8",
       "size": "0x00000378",
       "legacy_source": "src/func_ov006_02102fe8.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State2Ei",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateFlyingEi",
       "address": "0x02103360",
       "size": "0x000002a8",
       "legacy_source": "src/func_ov006_02103360.c",
       "ordinal": 61
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State3Ei",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateTumbleEi",
       "address": "0x02103608",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_02103608.c",
       "ordinal": 62
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State4Ei",
+      "symbol": "_ZN16dScMgPachinko2_c13Ball_StateHopEi",
       "address": "0x0210371c",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_0210371c.c",
       "ordinal": 63
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State5Ei",
+      "symbol": "_ZN16dScMgPachinko2_c17Ball_StateWalkOffEi",
       "address": "0x02103870",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_02103870.c",
       "ordinal": 64
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State6Ei",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateRemoveEi",
       "address": "0x0210397c",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_0210397c.c",
       "ordinal": 65
     },
     {
-      "symbol": "_ZN16dScMgPachinko2_c11Ball_State7Ei",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateScoredEi",
       "address": "0x02103994",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov006_02103994.c",
@@ -937,7 +937,7 @@
       "source": "0x02131f28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State0",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateWaitGrab",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da84"
@@ -947,7 +947,7 @@
       "source": "0x02131f2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State1",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateAim",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213daf4"
@@ -967,7 +967,7 @@
       "source": "0x02131f34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State2",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateFlying",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da74"
@@ -977,7 +977,7 @@
       "source": "0x02131f38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State3",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateTumble",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da94"
@@ -987,7 +987,7 @@
       "source": "0x02131f3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State4",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateHop",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da9c"
@@ -997,7 +997,7 @@
       "source": "0x02131f40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State5",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateWalkOff",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da7c"
@@ -1007,7 +1007,7 @@
       "source": "0x02131f44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State6",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateRemove",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dadc"
@@ -1017,7 +1017,7 @@
       "source": "0x02131f48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State7",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StatePause",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dad4"
@@ -1027,7 +1027,7 @@
       "source": "0x02131f4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Ball_State7",
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateScored",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dafc"
@@ -1037,7 +1037,7 @@
       "source": "0x02131f50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State0",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSpawn",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db04"
@@ -1047,7 +1047,7 @@
       "source": "0x02131f54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State1",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateDescend",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dae4"
@@ -1057,7 +1057,7 @@
       "source": "0x02131f58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State2",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSweep",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db0c"
@@ -1077,7 +1077,7 @@
       "source": "0x02131f60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State8",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateKnockedDown",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db14"
@@ -1087,7 +1087,7 @@
       "source": "0x02131f64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State3",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateBoxLoop",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da8c"
@@ -1097,7 +1097,7 @@
       "source": "0x02131f68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State4",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateOrbit",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da5c"
@@ -1107,7 +1107,7 @@
       "source": "0x02131f6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State6",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateCross",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213da6c"
@@ -1117,7 +1117,7 @@
       "source": "0x02131f70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State5",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateWeave",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213daec"
@@ -1127,7 +1127,7 @@
       "source": "0x02131f74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State9",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateFallToGround",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db44"
@@ -1137,7 +1137,7 @@
       "source": "0x02131f78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State10",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSwing",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db3c"
@@ -1147,7 +1147,7 @@
       "source": "0x02131f7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State11",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateRiseHome",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db34"
@@ -1157,7 +1157,7 @@
       "source": "0x02131f80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State12",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateGather",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db2c"
@@ -1167,7 +1167,7 @@
       "source": "0x02131f84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State13",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateDropBalls",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db24"
@@ -1177,7 +1177,7 @@
       "source": "0x02131f88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Paddle_State14",
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateFlyAway",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213db1c"
@@ -1187,7 +1187,7 @@
       "source": "0x02131f8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Cup_State0",
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateInit",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dacc"
@@ -1197,7 +1197,7 @@
       "source": "0x02131f90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Cup_State1",
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateWait",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dac4"
@@ -1207,7 +1207,7 @@
       "source": "0x02131f94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Cup_State2",
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateHopLeft",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dabc"
@@ -1217,7 +1217,7 @@
       "source": "0x02131f98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Cup_State3",
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateHopRight",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213dab4"
@@ -1227,7 +1227,7 @@
       "source": "0x02131f9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "pmf_dScMgPachinko2_c_Cup_State4",
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateDecide",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213daac"

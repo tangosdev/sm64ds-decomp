@@ -173,14 +173,14 @@
       "address": "0x02142188",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x204; InitResources selects it through data_ov006_02142184"
+      "evidence": "model resource handle constructed with file ID 0x204; InitResources selects it through sJumpBackFile"
     },
     {
       "symbol": "gJumpBack01ModelFile",
       "address": "0x02142190",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x203; InitResources selects it through data_ov006_02142184"
+      "evidence": "model resource handle constructed with file ID 0x203; InitResources selects it through sJumpBackFile"
     },
     {
       "symbol": "@599",
@@ -523,7 +523,7 @@
     {
       "symbol": "_ZTV11dScMgJump_c",
       "disposition": "deadstrip-data",
-      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cbe4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213cbe4 is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213cbdc holds the offset-to-top 0 and 0x0213cbe0 holds 0x0213cb98, `&_ZTI11dScMgJump_c` -- and those two words lie outside the symbol's extent (they fall inside data_ov006_0213cbc8), so anchoring the comparison at the symbol leaves them uncompared; both were read out of extracted/dsd/arm9_overlays/ov006.bin by hand and hold exactly those values. The slots themselves are covered in full: the next symbol is pmf_dScMgJump2_c_State_Idle, so the _ZTV extent 0x0213cbe4-0x0213cc74 is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words. Slot 0 of that table reads 0x020ee690, which is InitResources -- the same address the key-function argument above rests on, confirmed from the cartridge rather than inferred.",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cbe4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213cbe4 is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213cbdc holds the offset-to-top 0 and 0x0213cbe0 holds 0x0213cb98, `&_ZTI11dScMgJump_c` -- and those two words lie outside the symbol's extent (they fall inside sJumpNcgByLanguage), so anchoring the comparison at the symbol leaves them uncompared; both were read out of extracted/dsd/arm9_overlays/ov006.bin by hand and hold exactly those values. The slots themselves are covered in full: the next symbol is pmf_dScMgJump2_c_State_Idle, so the _ZTV extent 0x0213cbe4-0x0213cc74 is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words. Slot 0 of that table reads 0x020ee690, which is InitResources -- the same address the key-function argument above rests on, confirmed from the cartridge rather than inferred.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213cbe4"
     }

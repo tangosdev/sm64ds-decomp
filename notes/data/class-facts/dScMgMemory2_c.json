@@ -48,7 +48,7 @@
     "last_slot_address": "0x0213d560",
     "end": "0x0213d564",
     "slots": 36,
-    "extent_evidence": "Two independent sources agree on 36. (1) relocs.txt has a relocation whose source is the word itself for every address from 0x0213d4d4 through 0x0213d560 inclusive, and none at 0x0213d564: (0x0213d560 - 0x0213d4d4) / 4 + 1 = 36. (2) tools/rtti_vtables.py --own dScMgMemory2_c reports 36 slots, base 36. The word at 0x0213d564 is named data_ov006_0213d564 in symbols.txt and is only ever LOADED FROM, by code at 0x020f820c, 0x020f8a14 and 0x020f8cf8 -- a following table, not a trailing slot, and there are no trailing nulls to qualify. Reading the extent from the next symbols.txt row happens to agree here (0x0213d564 - 0x0213d4d4 = 0x90 = 36 slots), but the relocation walk is what proves it.",
+    "extent_evidence": "Two independent sources agree on 36. (1) relocs.txt has a relocation whose source is the word itself for every address from 0x0213d4d4 through 0x0213d560 inclusive, and none at 0x0213d564: (0x0213d560 - 0x0213d4d4) / 4 + 1 = 36. (2) tools/rtti_vtables.py --own dScMgMemory2_c reports 36 slots, base 36. The word at 0x0213d564 is named sMCarloPickAllowed in symbols.txt and is only ever LOADED FROM, by code at 0x020f820c, 0x020f8a14 and 0x020f8cf8 -- a following table, not a trailing slot, and there are no trailing nulls to qualify. Reading the extent from the next symbols.txt row happens to agree here (0x0213d564 - 0x0213d4d4 = 0x90 = 36 slots), but the relocation walk is what proves it.",
     "entries": [
       {
         "slot": 0,

@@ -8,16 +8,13 @@
  * slots by calling func_ov002_020bad10, func_ov002_020baba8 and
  * func_ov002_020bac18 with their own file tables.
  *
- * The class declares no fields: 0x31e and 0x31f sit in dBgActor_c's tail
- * padding, and 0x320 and 0x321 are the leaves' mTimer and mEventBit.
+ * The class's four byte fields (mTurnDir and mState in dBgActor_c's tail
+ * padding, then mTimer and mEventBit) are set by func_ov002_020bad10 and run
+ * by func_ov002_020bac18; the leaves' own methods never name them.
  *
  * leftovers:
  * - The three helpers keep their ROM-address names: slots 0, 3 and 6 are pure
  *   virtual, and the leaves call the helpers directly.
- * - func_ov002_020bad10 and func_ov002_020bac18 reach 0x31e..0x321 through
- *   byte offsets, because this class has no fields there; the leaves own them.
- * - func_ov002_020bac18 keeps the LM/LMS/LMI launders; writing through a
- *   member changes what mwccarm CSEs.
  * - dBgW_KcMbg::SetFile stays mangled (Fix12<int> by value).
  * - func_020393d4 is a 4-byte store into the dBgW at +0x18; naming it belongs
  *   with dBgW in arm9.
@@ -118,46 +115,39 @@ s32 daObjSwdoor_c::Render()
 }
 
 /* func_ov002_020bac18, 0x020bac18, size 0xf8.
- * Per-frame shutter the leaves install in the null Behavior slot. The state
- * byte at 0x31f runs 0, 1, 2:
+ * Per-frame shutter the leaves install in the null Behavior slot. mState
+ * runs 0, 1, 2:
  *   0  wait for the event bit and for the timer to run out, then arm a
  *      0x40-frame timer, clear the 0x1 bit of mFlags and play sound 0x3f;
- *   1  turn mAngleY by 0x100 a frame (direction from 0x31e) until the timer
+ *   1  turn mAngleY by 0x100 a frame (direction from mTurnDir) until the timer
  *      runs out, then set the 0x1 bit of mFlags again;
  *   2  done. */
 // @symbol func_ov002_020bac18
 extern "C" {
 
-#define LM(p) ((u8*)(int)(p))
-#define LMS(p) ((short*)(int)(p))
-#define LMI(p) ((int*)(int)(p))
-
 int func_ov002_020bac18(daObjSwdoor_c *self)
 {
-    char *c = (char *)self;
-    u8 state = *(u8*)(c + 0x31f);
-
-    switch (state) {
+    switch (self->mState) {
     case 0:
-        if (Event::GetBit(*(u8*)(c+0x321)) != 0) {
-            if (DecIfAbove0_Byte((u8*)(c+0x320)) == 0) {
-                *(u8*)(c+0x320) = 0x40;
-                (*LM(c+0x31f))++;
-                *LMI(&self->mFlags) &= ~1;
+        if (Event::GetBit(self->mEventBit) != 0) {
+            if (DecIfAbove0_Byte(&self->mTimer) == 0) {
+                self->mTimer = 0x40;
+                self->mState++;
+                self->mFlags &= ~1;
                 Sound::PlayBank3(0x3f, self->mCamSpacePos);
             }
         }
         break;
     case 1:
-        if (DecIfAbove0_Byte((u8*)(c+0x320)) != 0) {
-            if (*(u8*)(c+0x31e) != 0) {
-                *LMS(&self->mAngleY) += 0x100;
+        if (DecIfAbove0_Byte(&self->mTimer) != 0) {
+            if (self->mTurnDir != 0) {
+                self->mAngleY += 0x100;
             } else {
-                *LMS(&self->mAngleY) -= 0x100;
+                self->mAngleY -= 0x100;
             }
         } else {
-            (*LM(c+0x31f))++;
-            *LMI(&self->mFlags) |= 1;
+            self->mState++;
+            self->mFlags |= 1;
         }
         break;
     case 2:
@@ -173,9 +163,8 @@ int func_ov002_020bac18(daObjSwdoor_c *self)
  * Resource setup both leaves call. The descriptor's model file goes to
  * Model::LoadFile, its collision file to dBgW_Kc::LoadFile, and its CLPS block
  * into SetFile; then the stock UpdatePosAndAngs hook and Enable. The four
- * bytes at 0x31e..0x321 are set last: bit 0 of param1 (the turn direction
- * func_ov002_020bac18 reads), the event bit from bits 1..5 of param1, the
- * state (0) and the start-up timer (5). */
+ * byte fields are set last: mTurnDir from bit 0 of param1, mEventBit from
+ * bits 1..5, mState 0 and the start-up mTimer 5. */
 // @symbol func_ov002_020bad10
 extern "C" {
 int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
@@ -189,10 +178,10 @@ int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
         &self->mClsnMat, 0x1000, self->mAngleY, descriptor->clps);
     func_020393d4(&self->mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
     self->mMeshCollider.Enable(self);
-    *(unsigned char *)((char *)self + 0x31e) = self->param1 & 1;
-    *(unsigned char *)((char *)self + 0x321) = (self->param1 >> 1) & 0x1f;
-    *(unsigned char *)((char *)self + 0x31f) = 0;
-    *(unsigned char *)((char *)self + 0x320) = 5;
+    self->mTurnDir = self->param1 & 1;
+    self->mEventBit = (self->param1 >> 1) & 0x1f;
+    self->mState = 0;
+    self->mTimer = 5;
     return 1;
 }
 }

@@ -10,11 +10,11 @@
  *
  * mReleaseDelay is how long the switch stays down once nothing is holding it.
  * CheckBall -- the ball-vs-switch proximity test -- is what presses
- * the switch: it sets the base's unk_031, arms this field with 0xa, starts the
+ * the switch: it sets the base's mTriggered, arms this field with 0xa, starts the
  * slot machine (StartSpin on mgr+0x4778) and plays sound 0x1a4.
- * SaveSnapshot then decrements it while positive and, only while unk_031 is
+ * SaveSnapshot then decrements it while positive and, only while mTriggered is
  * set, calls BallsClear, which returns 1 exactly when NO active ball
- * is within 0x12000 of the switch. Clear and drained to zero -> unk_031 is
+ * is within 0x12000 of the switch. Clear and drained to zero -> mTriggered is
  * cleared and the switch pops back out; a ball still near -> the field is
  * reloaded to 0xa, so the ten frames are counted from the last frame a ball
  * was on it, not from the press. RestoreInitial zeroes it, read exhaustively,
@@ -23,7 +23,7 @@
  * THIS CLASS ALSO TOUCHES THE BASE'S 0x31 BYTE, and does so through the
  * base's own member name in every access: SaveSnapshot/RestoreInitial read
  * and write it as a plain byte, and Update reads it as an ARRAY INDEX
- * (data_ov006_02137a9c[unk_031]) -- still a single-byte load, so the access
+ * (sSmartballPushSwitchSprites[mTriggered]) -- still a single-byte load, so the access
  * width matches the base's declared u8 and the name states exactly what the
  * ROM does. No raw cast is needed here (unlike wing_c/ana_c's 0x32).
  *

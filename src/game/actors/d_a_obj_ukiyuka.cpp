@@ -15,8 +15,8 @@
  *   the plain s16 member step differs by one word. (The old
  *   `(int)this + off` launders on it and on mPosY measured byte-neutral as
  *   member spellings.)
- * Leftover: (s64) mBobPhase / mBobAmplitude launders; a plain int mul
- *   size-DIFFs.
+ * Leftover: the (s64) launder on mBobPhase before the u16 table index; the
+ *   plain (u16) read is two instructions shorter.
  * Leftover: sine table data_02082214 (arm9).
  * Leftover: abstract class -- no factory, no g_profile row (S14).
  */
@@ -24,6 +24,7 @@
 #pragma defer_codegen off
 
 #include "daObjUkiyuka_c.h"
+#include "nitro/fx/fx.h"
 #include "SharedFilePtr.h"
 
 struct CLPS_Block;
@@ -112,7 +113,7 @@ s32 daObjUkiyuka_c::Behavior()
     *(u16 *)&mBobPhase += 0x100;
     {
         u16 h = (u16)((s64)mBobPhase);
-        mPosY -= (int)((((s64)mBobAmplitude * data_02082214[(h >> 4) * 2]) + 0x800) >> 0xc);
+        mPosY -= FX_MUL(mBobAmplitude, data_02082214[(h >> 4) * 2]);
     }
     {
         int d = mPosY - mRestY;

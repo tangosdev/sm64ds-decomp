@@ -8,6 +8,27 @@ extern void func_0205cfa4(char *self);
 extern void OS_SleepThread(char *self);
 extern int func_0205cf5c(char *self);
 
+/* The owner a request is queued on (NitroSDK FSArchive). */
+struct FsArchive {
+    unsigned char pad_00[0x10];
+    int mFlags;       /* 0x10 */
+    char mPending[4]; /* 0x14 -- the request list func_0205d8d8 appends to */
+    char *mCurrent;   /* 0x18 -- the request being run */
+    unsigned char pad_1c[0x2c];
+    void (*mCallback)(char *, int); /* 0x48 */
+    int mCallbackMask;              /* 0x4c */
+};
+
+/* A queued request (NitroSDK FSFile). */
+struct FsFile {
+    unsigned char pad_00[8];
+    FsArchive *mArchive; /* 0x08 */
+    int mStat;           /* 0x0c */
+    int mCommand;        /* 0x10 */
+    int mResult;         /* 0x14 */
+    char mQueue[4];      /* 0x18 -- the thread queue a waiter sleeps on */
+};
+
 /* The ROM materialises each of these flag tests as 0/1 before branching on it. */
 static inline int HasBits(int word, int bits) {
     return (word & bits) != 0;
@@ -16,41 +37,42 @@ static inline int HasBits(int word, int bits) {
 #pragma opt_loop_invariants off
 int func_0205cdf4(char *self, int arg1)
 {
-    char *list = *(char **)(self + 8);
+    FsFile *file = (FsFile *)self;
+    FsArchive *list = file->mArchive;
     unsigned int mask = 1 << arg1;
     unsigned int saved;
 
-    *(int *)(self + 0x10) = arg1;
-    *(int *)(self + 0x14) = 2;
-    *(int *)(self + 0xc) |= 1;
+    file->mCommand = arg1;
+    file->mResult = 2;
+    file->mStat |= 1;
     saved = _ZN3IRQ7DisableEv();
-    if (*(int *)(list + 0x10) & 0x80) {
+    if (list->mFlags & 0x80) {
         func_0205c788(self, 3);
         _ZN3IRQ7RestoreEj(saved);
         return 0;
     }
     if (mask & 0x1fc) {
-        *(int *)(self + 0xc) |= 4;
+        file->mStat |= 4;
     }
-    func_0205d8d8(self, list + 0x14);
-    if (!HasBits(*(int *)(list + 0x10), 0x10)) {
-        *(int *)(list + 0x10) |= 0x10;
+    func_0205d8d8(self, list->mPending);
+    if (!HasBits(list->mFlags, 0x10)) {
+        list->mFlags |= 0x10;
         _ZN3IRQ7RestoreEj(saved);
-        if (*(int *)(list + 0x4c) & 0x200) {
-            (*(void (**)(char *, int))(list + 0x48))(self, 9);
+        if (list->mCallbackMask & 0x200) {
+            list->mCallback(self, 9);
         }
-        if (!HasBits(*(int *)(self + 0xc), 4)) {
+        if (!HasBits(file->mStat, 4)) {
             func_0205cfa4(self);
             return 1;
         }
     } else {
-        if (!HasBits(*(int *)(self + 0xc), 4)) {
+        if (!HasBits(file->mStat, 4)) {
             _ZN3IRQ7RestoreEj(saved);
             return 1;
         }
         do {
-            OS_SleepThread(self + 0x18);
-        } while ((int)self != *(int *)(list + 0x18));
+            OS_SleepThread(file->mQueue);
+        } while (self != list->mCurrent);
         _ZN3IRQ7RestoreEj(saved);
     }
     return func_0205cf5c(self);

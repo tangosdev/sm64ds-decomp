@@ -6,9 +6,9 @@
  * so the file keeps the unit<addr> name. What the functions do, from their
  * bodies: the first group manages a table of 29 loaded files (Mg_FreeBannerFiles
  * frees them, Mg_LoadBannerFiles loads them by language, Banner_Init
- * decompresses one into a graphics slot and sets up an Elem to show it), and
- * the rest are the behavior and render handlers of Elem, the 0x134-byte record
- * of which gMgBanners holds three. An Elem draws its graphic as a
+ * decompresses one into a graphics slot and sets up an MgBanner to show it), and
+ * the rest are the behavior and render handlers of MgBanner, the 0x134-byte record
+ * of which gMgBanners holds three. An MgBanner draws its graphic as a
  * list of OAM records; its behavior moves it toward mTargetX/mTargetY or
  * animates it against mTimer.
  *
@@ -16,8 +16,8 @@
  * of the three destructor helpers (func_ov004_020b2c58, func_ov004_020b2c7c,
  * func_ov004_020b2c80) that __sinit_ov004_020b948c registers for the preceding
  * unit; those stay with dScMgBase_c. 0x020b4aa4 is the next function after
- * _ZN4ElemD1Ev, the last of the three destructor helpers
- * (_ZN4ElemC1Ev, __arraydtor$954, _ZN4ElemD1Ev) that
+ * _ZN8MgBannerD1Ev, the last of the three destructor helpers
+ * (_ZN8MgBannerC1Ev, __arraydtor$954, _ZN8MgBannerD1Ev) that
  * __sinit_ov004_020b955c registers for this unit's static array at
  * gMgBanners; __arraydtor$954 runs __cxa_vec_cleanup over it.
  * The unit emits one data object of its own, the anonymous initializer template
@@ -87,9 +87,9 @@
  *   0x020b4a40  Banner_SetupSlideFromBottom
  *   0x020b4a4c  Banner_UpdateSlideFromTop
  *   0x020b4a64  Banner_SetupSlideFromTop
- *   0x020b4a70  _ZN4ElemC1Ev
+ *   0x020b4a70  _ZN8MgBannerC1Ev
  *   0x020b4a7c  __arraydtor$954
- *   0x020b4aa0  _ZN4ElemD1Ev
+ *   0x020b4aa0  _ZN8MgBannerD1Ev
  */
 
 #pragma defer_codegen off
@@ -124,11 +124,11 @@ struct Obj {
 
 /* One of the three 0x134-byte records at gMgBanners: a graphic
    loaded from the file table and drawn as a list of OAM records. The class
-   name Elem is the one its constructor and destructor symbols carry; the
+   name MgBanner is the one its constructor and destructor symbols carry; the
    real class is not recovered. */
-struct Elem;
-typedef void (Elem::*ElemFn)();
-struct Elem {
+struct MgBanner;
+typedef void (MgBanner::*ElemFn)();
+struct MgBanner {
     ElemFn mBehavior;    /* 0x00 run by Banner_Update */
     ElemFn mRender;      /* 0x08 run by Banner_Draw; 0 draws plainly */
     s16 mX, mY;          /* 0x10 screen position, pixels */
@@ -146,8 +146,8 @@ struct Elem {
     s16 mArrived;        /* 0x32 set when mX reaches mTargetX
                             (Banner_UpdateSlideFromRight, Banner_UpdateSlideFromLeft) */
     u8 mOam[0x100];      /* 0x34 8-byte OAM records; 0xffff at +6 ends the list */
-    Elem();
-    ~Elem() {}
+    MgBanner();
+    ~MgBanner() {}
 };
 
 extern int ApproachLinear(int &, int, int);
@@ -175,17 +175,17 @@ void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(int a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
 void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
-void Banner_DrawPlain(Elem *e);
-void Banner_StartSpin(Elem *e);
-void Banner_StartWaveBurst(Elem *e);
+void Banner_DrawPlain(MgBanner *e);
+void Banner_StartSpin(MgBanner *e);
+void Banner_StartWaveBurst(MgBanner *e);
 }
 
 extern s16 data_02082214[];
 extern int data_0209e650;
 extern Obj *gMgScene;  /* local extern: through the Obj view above, the spelling the decl-agreement baseline records */
 extern S3 data_ov004_020bc27c;
-extern int data_ov004_020b9f54;
-static EntryTable data_ov004_020bc6e8 = { { { 0, 0 }, { 0x140, (int)&data_ov004_020b9f54 } } };
+extern int sMgMsgGiveUpSprites;
+static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};
 extern int data_ov006_021346bc;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
@@ -197,75 +197,74 @@ extern int pmf_Banner_DrawSpin[];
 extern int pmf_Banner_UpdateSpin[];
 extern int pmf_Banner_UpdatePressed_2[];
 extern unsigned char sMgBannerGfxSlotUsed[];
-extern int data_ov004_020bf3ec;
-extern int data_ov004_020bf3f0;
-extern int data_ov004_020bf3f4[2];
-extern int data_ov004_020bf3fc[2];
-extern void *data_ov004_020bf404[3];
-extern void *data_ov004_020bf410[3];
+extern int sBannerWaveFxPosGuard;
+extern int sBannerZoomFxPosGuard;
+extern int sBannerWaveFxPos[2];
+extern int sBannerZoomFxPos[2];
+extern void *sBannerZoomFxPosDtorRec[3];
+extern void *sBannerWaveFxPosDtorRec[3];
 extern PairW sBannerUpdateTable[];
 extern PairW sBannerSetupTable[];
 extern PairW sBannerDrawTable[];
 extern int sMgBannerFiles[];
 extern int sMgBannerSprites[];
 
-extern int data_ov004_020bc42c[];
-extern int data_ov004_020bc65c[];
-extern int data_ov004_020bc418[];
-extern int data_ov004_020bc648[];
-extern int data_ov004_020bc3c8[];
-extern int data_ov004_020bc5e4[];
-extern int data_ov004_020bc4f4[];
-extern int data_ov004_020bc300[];
-extern int data_ov004_020bc3dc[];
-extern int data_ov004_020bc5f8[];
-extern int data_ov004_020bc3f0[];
-extern int data_ov004_020bc60c[];
-extern int data_ov004_020bc404[];
-extern int data_ov004_020bc634[];
-extern int data_ov004_020bc3b4[];
-extern int data_ov004_020bc5bc[];
-extern int data_ov004_020bc468[];
-extern int data_ov004_020bc6ac[];
-extern int data_ov004_020bc454[];
-extern int data_ov004_020bc698[];
-extern int data_ov004_020bc378[];
-extern int data_ov004_020bc594[];
-extern int data_ov004_020bc620[];
-extern int data_ov004_020bc670[];
-extern int data_ov004_020bc440[];
-extern int data_ov004_020bc684[];
-extern int data_ov004_020bc5d0[];
-extern int data_ov004_020bc3a0[];
-extern int data_ov004_020bc47c[];
-extern int data_ov004_020bc288[];
-extern int data_ov004_020bc490[];
-extern int data_ov004_020bc29c[];
-extern int data_ov004_020bc580[];
-extern int data_ov004_020bc350[];
-extern int data_ov004_020bc4a4[];
-extern int data_ov004_020bc2b0[];
-extern int data_ov004_020bc4b8[];
-extern int data_ov004_020bc2c4[];
-extern int data_ov004_020bc4cc[];
-extern int data_ov004_020bc2d8[];
-extern int data_ov004_020bc4e0[];
-extern int data_ov004_020bc2ec[];
-extern int data_ov004_020bc38c[];
-extern int data_ov004_020bc508[];
-extern int data_ov004_020bc314[];
-extern int data_ov004_020bc51c[];
-extern int data_ov004_020bc328[];
-extern int data_ov004_020bc530[];
-extern int data_ov004_020bc6d4[];
-extern int data_ov004_020bc544[];
-extern int data_ov004_020bc6c0[];
-extern int data_ov004_020bc5a8[];
-extern int data_ov004_020bc33c[];
-extern int data_ov004_020bc558[];
-extern int data_ov004_020bc364[];
-extern int data_ov004_020bc56c[];
-
+extern int sMgMsgRetryNcgByLanguage[];
+extern int sMgMsgRetrySpritesByLanguage[];
+extern int sMgMsgQuitNcgByLanguage[];
+extern int sMgMsgQuitSpritesByLanguage[];
+extern int sMgMsgLevelClearNcgByLanguage[];
+extern int sMgMsgLevelClearSpritesByLanguage[];
+extern int sMgMsgGoalNcgByLanguage[];
+extern int sMgMsgGoalSpritesByLanguage[];
+extern int sMgMsgHiScoreNcgByLanguage[];
+extern int sMgMsgHiScoreSpritesByLanguage[];
+extern int sMgMsgPerfectNcgByLanguage[];
+extern int sMgMsgPerfectSpritesByLanguage[];
+extern int sMgMsgResultHiScoreNcgByLanguage[];
+extern int sMgMsgResultHiScoreSpritesByLanguage[];
+extern int sMgMsgGameOverNcgByLanguage[];
+extern int sMgMsgGameOverSpritesByLanguage[];
+extern int sMgMsgYouWinNcgByLanguage[];
+extern int sMgMsgYouWinSpritesByLanguage[];
+extern int sMgMsgTooBadNcgByLanguage[];
+extern int sMgMsgTooBadSpritesByLanguage[];
+extern int sMgMsgDrawNcgByLanguage[];
+extern int sMgMsgDrawSpritesByLanguage[];
+extern int sMgMsgStartNcgByLanguage[];
+extern int sMgMsgStartSpritesByLanguage[];
+extern int sMgMsgLevelNcgByLanguage[];
+extern int sMgMsgLevelSpritesByLanguage[];
+extern int sMgMsgTimeOverNcgByLanguage[];
+extern int sMgMsgTimeOverSpritesByLanguage[];
+extern int sMgMsgWhereNcgByLanguage[];
+extern int sMgMsgWhereSpritesByLanguage[];
+extern int sMgMsgLikeNcgByLanguage[];
+extern int sMgMsgLikeSpritesByLanguage[];
+extern int sMgMsgHateNcgByLanguage[];
+extern int sMgMsgHateSpritesByLanguage[];
+extern int sMgMsgLoveNcgByLanguage[];
+extern int sMgMsgLoveSpritesByLanguage[];
+extern int sMgMsgDislikeNcgByLanguage[];
+extern int sMgMsgDislikeSpritesByLanguage[];
+extern int sMgMsgEsperNcgByLanguage[];
+extern int sMgMsgEsperSpritesByLanguage[];
+extern int sMgMsgSuperEsperNcgByLanguage[];
+extern int sMgMsgSuperEsperSpritesByLanguage[];
+extern int sMgMsgNoPairNcgByLanguage[];
+extern int sMgMsgNoPairSpritesByLanguage[];
+extern int sMgMsgOnePairNcgByLanguage[];
+extern int sMgMsgOnePairSpritesByLanguage[];
+extern int sMgMsgTwoPairNcgByLanguage[];
+extern int sMgMsgTwoPairSpritesByLanguage[];
+extern int sMgMsgThreeCardNcgByLanguage[];
+extern int sMgMsgThreeCardSpritesByLanguage[];
+extern int sMgMsgFullHouseNcgByLanguage[];
+extern int sMgMsgFullHouseSpritesByLanguage[];
+extern int sMgMsgFourCardNcgByLanguage[];
+extern int sMgMsgFourCardSpritesByLanguage[];
+extern int sMgMsgFiveCardNcgByLanguage[];
+extern int sMgMsgFiveCardSpritesByLanguage[];
 
 // @symbol Mg_FreeBannerFiles
 extern "C" void Mg_FreeBannerFiles(void) {
@@ -289,65 +288,66 @@ extern "C" void Mg_LoadBannerFiles(void)
 
        It matters for exactly one entry. Every index except 1 is overwritten below
        before the loop reads it -- entry 1 is not, so its initial value is live, and
-       it was wrong. */
-    EntryTable entries = data_ov004_020bc6e8;
+       it was wrong. Entry 1 is GIVE UP (handle 0x140, msg_give_up_ncg): the one
+       banner with no per-language files. */
+    EntryTable entries = sMgBannerFileTemplate;
 
-    entries.e[0].id = data_ov004_020bc42c[GetGameLanguage()];
-    entries.e[0].ptr = data_ov004_020bc65c[GetGameLanguage()];
-    entries.e[2].id = data_ov004_020bc418[GetGameLanguage()];
-    entries.e[2].ptr = data_ov004_020bc648[GetGameLanguage()];
-    entries.e[3].id = data_ov004_020bc3c8[GetGameLanguage()];
-    entries.e[3].ptr = data_ov004_020bc5e4[GetGameLanguage()];
-    entries.e[4].id = data_ov004_020bc4f4[GetGameLanguage()];
-    entries.e[4].ptr = data_ov004_020bc300[GetGameLanguage()];
-    entries.e[5].id = data_ov004_020bc3dc[GetGameLanguage()];
-    entries.e[5].ptr = data_ov004_020bc5f8[GetGameLanguage()];
-    entries.e[6].id = data_ov004_020bc3f0[GetGameLanguage()];
-    entries.e[6].ptr = data_ov004_020bc60c[GetGameLanguage()];
-    entries.e[7].id = data_ov004_020bc404[GetGameLanguage()];
-    entries.e[7].ptr = data_ov004_020bc634[GetGameLanguage()];
-    entries.e[8].id = data_ov004_020bc3b4[GetGameLanguage()];
-    entries.e[8].ptr = data_ov004_020bc5bc[GetGameLanguage()];
-    entries.e[9].id = data_ov004_020bc468[GetGameLanguage()];
-    entries.e[9].ptr = data_ov004_020bc6ac[GetGameLanguage()];
-    entries.e[10].id = data_ov004_020bc454[GetGameLanguage()];
-    entries.e[10].ptr = data_ov004_020bc698[GetGameLanguage()];
-    entries.e[11].id = data_ov004_020bc378[GetGameLanguage()];
-    entries.e[11].ptr = data_ov004_020bc594[GetGameLanguage()];
-    entries.e[12].id = data_ov004_020bc620[GetGameLanguage()];
-    entries.e[12].ptr = data_ov004_020bc670[GetGameLanguage()];
-    entries.e[13].id = data_ov004_020bc440[GetGameLanguage()];
-    entries.e[13].ptr = data_ov004_020bc684[GetGameLanguage()];
-    entries.e[14].id = data_ov004_020bc5d0[GetGameLanguage()];
-    entries.e[14].ptr = data_ov004_020bc3a0[GetGameLanguage()];
-    entries.e[15].id = data_ov004_020bc47c[GetGameLanguage()];
-    entries.e[15].ptr = data_ov004_020bc288[GetGameLanguage()];
-    entries.e[16].id = data_ov004_020bc490[GetGameLanguage()];
-    entries.e[16].ptr = data_ov004_020bc29c[GetGameLanguage()];
-    entries.e[17].id = data_ov004_020bc580[GetGameLanguage()];
-    entries.e[17].ptr = data_ov004_020bc350[GetGameLanguage()];
-    entries.e[18].id = data_ov004_020bc4a4[GetGameLanguage()];
-    entries.e[18].ptr = data_ov004_020bc2b0[GetGameLanguage()];
-    entries.e[19].id = data_ov004_020bc4b8[GetGameLanguage()];
-    entries.e[19].ptr = data_ov004_020bc2c4[GetGameLanguage()];
-    entries.e[20].id = data_ov004_020bc4cc[GetGameLanguage()];
-    entries.e[20].ptr = data_ov004_020bc2d8[GetGameLanguage()];
-    entries.e[21].id = data_ov004_020bc4e0[GetGameLanguage()];
-    entries.e[21].ptr = data_ov004_020bc2ec[GetGameLanguage()];
-    entries.e[22].id = data_ov004_020bc38c[GetGameLanguage()];
-    entries.e[22].ptr = data_ov004_020bc508[GetGameLanguage()];
-    entries.e[23].id = data_ov004_020bc314[GetGameLanguage()];
-    entries.e[23].ptr = data_ov004_020bc51c[GetGameLanguage()];
-    entries.e[24].id = data_ov004_020bc328[GetGameLanguage()];
-    entries.e[24].ptr = data_ov004_020bc530[GetGameLanguage()];
-    entries.e[25].id = data_ov004_020bc6d4[GetGameLanguage()];
-    entries.e[25].ptr = data_ov004_020bc544[GetGameLanguage()];
-    entries.e[26].id = data_ov004_020bc6c0[GetGameLanguage()];
-    entries.e[26].ptr = data_ov004_020bc5a8[GetGameLanguage()];
-    entries.e[27].id = data_ov004_020bc33c[GetGameLanguage()];
-    entries.e[27].ptr = data_ov004_020bc558[GetGameLanguage()];
-    entries.e[28].id = data_ov004_020bc364[GetGameLanguage()];
-    entries.e[28].ptr = data_ov004_020bc56c[GetGameLanguage()];
+    entries.e[0].id = sMgMsgRetryNcgByLanguage[GetGameLanguage()];
+    entries.e[0].ptr = sMgMsgRetrySpritesByLanguage[GetGameLanguage()];
+    entries.e[2].id = sMgMsgQuitNcgByLanguage[GetGameLanguage()];
+    entries.e[2].ptr = sMgMsgQuitSpritesByLanguage[GetGameLanguage()];
+    entries.e[3].id = sMgMsgLevelClearNcgByLanguage[GetGameLanguage()];
+    entries.e[3].ptr = sMgMsgLevelClearSpritesByLanguage[GetGameLanguage()];
+    entries.e[4].id = sMgMsgGoalNcgByLanguage[GetGameLanguage()];
+    entries.e[4].ptr = sMgMsgGoalSpritesByLanguage[GetGameLanguage()];
+    entries.e[5].id = sMgMsgHiScoreNcgByLanguage[GetGameLanguage()];
+    entries.e[5].ptr = sMgMsgHiScoreSpritesByLanguage[GetGameLanguage()];
+    entries.e[6].id = sMgMsgPerfectNcgByLanguage[GetGameLanguage()];
+    entries.e[6].ptr = sMgMsgPerfectSpritesByLanguage[GetGameLanguage()];
+    entries.e[7].id = sMgMsgResultHiScoreNcgByLanguage[GetGameLanguage()];
+    entries.e[7].ptr = sMgMsgResultHiScoreSpritesByLanguage[GetGameLanguage()];
+    entries.e[8].id = sMgMsgGameOverNcgByLanguage[GetGameLanguage()];
+    entries.e[8].ptr = sMgMsgGameOverSpritesByLanguage[GetGameLanguage()];
+    entries.e[9].id = sMgMsgYouWinNcgByLanguage[GetGameLanguage()];
+    entries.e[9].ptr = sMgMsgYouWinSpritesByLanguage[GetGameLanguage()];
+    entries.e[10].id = sMgMsgTooBadNcgByLanguage[GetGameLanguage()];
+    entries.e[10].ptr = sMgMsgTooBadSpritesByLanguage[GetGameLanguage()];
+    entries.e[11].id = sMgMsgDrawNcgByLanguage[GetGameLanguage()];
+    entries.e[11].ptr = sMgMsgDrawSpritesByLanguage[GetGameLanguage()];
+    entries.e[12].id = sMgMsgStartNcgByLanguage[GetGameLanguage()];
+    entries.e[12].ptr = sMgMsgStartSpritesByLanguage[GetGameLanguage()];
+    entries.e[13].id = sMgMsgLevelNcgByLanguage[GetGameLanguage()];
+    entries.e[13].ptr = sMgMsgLevelSpritesByLanguage[GetGameLanguage()];
+    entries.e[14].id = sMgMsgTimeOverNcgByLanguage[GetGameLanguage()];
+    entries.e[14].ptr = sMgMsgTimeOverSpritesByLanguage[GetGameLanguage()];
+    entries.e[15].id = sMgMsgWhereNcgByLanguage[GetGameLanguage()];
+    entries.e[15].ptr = sMgMsgWhereSpritesByLanguage[GetGameLanguage()];
+    entries.e[16].id = sMgMsgLikeNcgByLanguage[GetGameLanguage()];
+    entries.e[16].ptr = sMgMsgLikeSpritesByLanguage[GetGameLanguage()];
+    entries.e[17].id = sMgMsgHateNcgByLanguage[GetGameLanguage()];
+    entries.e[17].ptr = sMgMsgHateSpritesByLanguage[GetGameLanguage()];
+    entries.e[18].id = sMgMsgLoveNcgByLanguage[GetGameLanguage()];
+    entries.e[18].ptr = sMgMsgLoveSpritesByLanguage[GetGameLanguage()];
+    entries.e[19].id = sMgMsgDislikeNcgByLanguage[GetGameLanguage()];
+    entries.e[19].ptr = sMgMsgDislikeSpritesByLanguage[GetGameLanguage()];
+    entries.e[20].id = sMgMsgEsperNcgByLanguage[GetGameLanguage()];
+    entries.e[20].ptr = sMgMsgEsperSpritesByLanguage[GetGameLanguage()];
+    entries.e[21].id = sMgMsgSuperEsperNcgByLanguage[GetGameLanguage()];
+    entries.e[21].ptr = sMgMsgSuperEsperSpritesByLanguage[GetGameLanguage()];
+    entries.e[22].id = sMgMsgNoPairNcgByLanguage[GetGameLanguage()];
+    entries.e[22].ptr = sMgMsgNoPairSpritesByLanguage[GetGameLanguage()];
+    entries.e[23].id = sMgMsgOnePairNcgByLanguage[GetGameLanguage()];
+    entries.e[23].ptr = sMgMsgOnePairSpritesByLanguage[GetGameLanguage()];
+    entries.e[24].id = sMgMsgTwoPairNcgByLanguage[GetGameLanguage()];
+    entries.e[24].ptr = sMgMsgTwoPairSpritesByLanguage[GetGameLanguage()];
+    entries.e[25].id = sMgMsgThreeCardNcgByLanguage[GetGameLanguage()];
+    entries.e[25].ptr = sMgMsgThreeCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[26].id = sMgMsgFullHouseNcgByLanguage[GetGameLanguage()];
+    entries.e[26].ptr = sMgMsgFullHouseSpritesByLanguage[GetGameLanguage()];
+    entries.e[27].id = sMgMsgFourCardNcgByLanguage[GetGameLanguage()];
+    entries.e[27].ptr = sMgMsgFourCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[28].id = sMgMsgFiveCardNcgByLanguage[GetGameLanguage()];
+    entries.e[28].ptr = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
 
     for (i = 0; i < 29; i++) {
         int t;
@@ -362,15 +362,14 @@ extern "C" void Mg_LoadBannerFiles(void)
 #pragma opt_strength_reduction on
 
 // @symbol Banner_Free
-extern "C" void Banner_Free(Elem *e)
-{
+extern "C" void Banner_Free(MgBanner *e) {
     e->mFileIndex = 0x1d;
     s16 idx = e->mGfxSlot;
     sMgBannerGfxSlotUsed[idx] = 0;
 }
 
 // @symbol Banner_Draw
-extern "C" void Banner_Draw(Elem *e) {
+extern "C" void Banner_Draw(MgBanner *e) {
     if (e->mFileIndex == 0x1d) return;
     if (e->mRender != 0) {
         (e->*(e->mRender))();
@@ -380,15 +379,15 @@ extern "C" void Banner_Draw(Elem *e) {
 }
 
 // @symbol Banner_Update
-extern "C" void Banner_Update(Elem *e) {
+extern "C" void Banner_Update(MgBanner *e) {
     if (e->mFileIndex == 0x1d) return;
     if (e->mBehavior == 0) return;
     (e->*(e->mBehavior))();
 }
 
 // @symbol Banner_Init
-extern "C" void Banner_Init(Elem *e, int file, short x, short y, int screen, int priority, short style)
-{
+extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen, int priority,
+                            short style) {
     int a, b;
 
     if (gMgScene->GetDisplayMode() == 2) {
@@ -502,43 +501,38 @@ extern "C" void Banner_Init(Elem *e, int file, short x, short y, int screen, int
 }
 
 // @symbol Banner_DrawLevelNumber
-extern "C" void Banner_DrawLevelNumber(Elem *e)
-{
-  int x;
-  int originX = e->mX;
-  int n;
-  s16 drawY;
-  /* the first OAM record's 9-bit signed x, made positive */
-  int oamX = (int) (((unsigned int) (*(int *)e->mOam << 7)) >> 0x17);
-  int w;
-  unsigned long left;
-  n = Mg_GetLevel() + 1;
-  if (oamX > 0x100)
-  {
-    oamX -= 0x200;
-  }
-  if (oamX < 0)
-  {
-    oamX = -oamX;
-  }
-  x = (x = (e->mX + oamX) + 0x10);
-  w = 0x10;
-  {
-    int p = 1;
-    while (p < n)
-    {
-      p *= 10;
-      w += 0x10;
+extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
+    int x;
+    int originX = e->mX;
+    int n;
+    s16 drawY;
+    /* the first OAM record's 9-bit signed x, made positive */
+    int oamX = (int)(((unsigned int)(*(int *)e->mOam << 7)) >> 0x17);
+    int w;
+    unsigned long left;
+    n = Mg_GetLevel() + 1;
+    if (oamX > 0x100) {
+        oamX -= 0x200;
     }
-
-  }
-  /* both draws shift left by w/2; w grows 0x10 per power of ten below n */
-  x = x - (w >> 1);
-  left = w >> 1;
-  left = originX - left;
-  Mg_RenderSpriteOn((int) e->mOam, left, e->mY, e->mScreen, e->mPriority);
-  drawY = e->mY;
-  Mg_DrawBigNumber(x, drawY, n, e->mScreen, e->mPriority, 2, 0);
+    if (oamX < 0) {
+        oamX = -oamX;
+    }
+    x = (x = (e->mX + oamX) + 0x10);
+    w = 0x10;
+    {
+        int p = 1;
+        while (p < n) {
+            p *= 10;
+            w += 0x10;
+        }
+    }
+    /* both draws shift left by w/2; w grows 0x10 per power of ten below n */
+    x = x - (w >> 1);
+    left = w >> 1;
+    left = originX - left;
+    Mg_RenderSpriteOn((int)e->mOam, left, e->mY, e->mScreen, e->mPriority);
+    drawY = e->mY;
+    Mg_DrawBigNumber(x, drawY, n, e->mScreen, e->mPriority, 2, 0);
 }
 
 // @symbol Banner_SetupNone
@@ -547,7 +541,7 @@ extern "C" void Banner_SetupNone(void)
 }
 
 // @symbol Banner_DrawSpin
-extern "C" void Banner_DrawSpin(Elem *e) {
+extern "C" void Banner_DrawSpin(MgBanner *e) {
     u8* el = e->mOam;
     int angle = (u16)e->mTimer;
     M m;
@@ -573,22 +567,22 @@ extern "C" void Banner_DrawSpin(Elem *e) {
 }
 
 // @symbol Banner_UpdateSpin
-extern "C" void Banner_UpdateSpin(Elem *e) {
+extern "C" void Banner_UpdateSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0;
     }
 }
 
 // @symbol Banner_StartSpin
-extern "C" void Banner_StartSpin(Elem *e){
-  e->mTimer=0;
-  e->mTimerEnd=0x27000;
-  *(W2*)&e->mBehavior=*(W2*)pmf_Banner_UpdateSpin;
-  *(W2*)&e->mRender=*(W2*)pmf_Banner_DrawSpin;
+extern "C" void Banner_StartSpin(MgBanner *e) {
+    e->mTimer = 0;
+    e->mTimerEnd = 0x27000;
+    *(W2 *)&e->mBehavior = *(W2 *)pmf_Banner_UpdateSpin;
+    *(W2 *)&e->mRender = *(W2 *)pmf_Banner_DrawSpin;
 }
 
 // @symbol Banner_UpdateDrop
-extern "C" void Banner_UpdateDrop(Elem *e){
+extern "C" void Banner_UpdateDrop(MgBanner *e) {
     if (e->mTimer < 0x30){
         *(unsigned *)&e->mTimer += 1;
         return;
@@ -599,13 +593,13 @@ extern "C" void Banner_UpdateDrop(Elem *e){
 }
 
 // @symbol Banner_SetupDrop
-extern "C" void Banner_SetupDrop(Elem *e) {
+extern "C" void Banner_SetupDrop(MgBanner *e) {
     e->mTimer = 0;
     e->mY = -(sMgTopScreenYOffset + 0x60);
 }
 
 // @symbol Banner_DrawWave
-extern "C" void Banner_DrawWave(Elem *e) {
+extern "C" void Banner_DrawWave(MgBanner *e) {
     u8* el = e->mOam;
     int x = e->mTimer >> 2;
     int t = 0x1000;
@@ -633,14 +627,14 @@ extern "C" void Banner_DrawWave(Elem *e) {
 }
 
 // @symbol Banner_UpdateWave
-extern "C" void Banner_UpdateWave(Elem *e) {
+extern "C" void Banner_UpdateWave(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0;
     }
 }
 
 // @symbol Banner_StartWaveBurst
-extern "C" void Banner_StartWaveBurst(Elem* e) {
+extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     int i;
     int angle;
     int boxA[2], boxB[2], boxC[2];
@@ -663,7 +657,7 @@ extern "C" void Banner_StartWaveBurst(Elem* e) {
     boxB[0] = 0; boxB[1] = -0x1800;
     boxC[0] = 0; boxC[1] = -0x4000;
 
-    flags = data_ov004_020bf3ec;
+    flags = sBannerWaveFxPosGuard;
 
     {
         int y12 = e->mY;
@@ -677,10 +671,11 @@ extern "C" void Banner_StartWaveBurst(Elem* e) {
     }
 
     if (flags == 0) {
-        data_ov004_020bf3f4[0] = 0;
-        data_ov004_020bf3f4[1] = 0xc0;
-        __register_global_object(data_ov004_020bf3f4, (void *)NullDestructor_0203d47c, data_ov004_020bf410);
-        data_ov004_020bf3ec = data_ov004_020bf3ec | 1;
+        sBannerWaveFxPos[0] = 0;
+        sBannerWaveFxPos[1] = 0xc0;
+        __register_global_object(sBannerWaveFxPos, (void *)NullDestructor_0203d47c,
+                                 sBannerWaveFxPosDtorRec);
+        sBannerWaveFxPosGuard = sBannerWaveFxPosGuard | 1;
     }
 
     for (i = 0; i < 0x20; i++) {
@@ -699,13 +694,13 @@ extern "C" void Banner_StartWaveBurst(Elem* e) {
         ang = ang + 0x5a;
         spawnAngle = (s16)ang;
 
-        Mg_SpawnFx(0, spawnAngle, outA, outB, data_ov004_020bf3f4);
+        Mg_SpawnFx(0, spawnAngle, outA, outB, sBannerWaveFxPos);
     }
 }
 
 // @symbol Banner_DrawSqueeze
 #pragma opt_propagation off
-extern "C" void Banner_DrawSqueeze(Elem* e) {
+extern "C" void Banner_DrawSqueeze(MgBanner *e) {
     int m, fd, t, v;
     unsigned short term;
     if (e->mTimer == 0) return;
@@ -738,8 +733,7 @@ extern "C" void Banner_DrawSqueeze(Elem* e) {
 #pragma opt_propagation on
 
 // @symbol Banner_UpdateFall
-extern "C" void Banner_UpdateFall(Elem *e)
-{
+extern "C" void Banner_UpdateFall(MgBanner *e) {
     ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
     if (ApproachLinear2(e->mY, e->mTargetY, 0x10) == 0)
         return;
@@ -747,15 +741,14 @@ extern "C" void Banner_UpdateFall(Elem *e)
 }
 
 // @symbol Banner_SetupFall
-extern "C" void Banner_SetupFall(Elem *e)
-{
+extern "C" void Banner_SetupFall(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 81920;
     e->mY = 96;
 }
 
 // @symbol Banner_DrawPopSpinA
-extern "C" void Banner_DrawPopSpinA(Elem *e) {
+extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
@@ -806,7 +799,7 @@ extern "C" void Banner_DrawPopSpinA(Elem *e) {
 }
 
 // @symbol Banner_DrawPopSpinB
-extern "C" void Banner_DrawPopSpinB(Elem *e) {
+extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
@@ -857,31 +850,29 @@ extern "C" void Banner_DrawPopSpinB(Elem *e) {
 }
 
 // @symbol Banner_UpdatePopSpin
-extern "C" void Banner_UpdatePopSpin(Elem *e) {
+extern "C" void Banner_UpdatePopSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 98304;
     }
 }
 
 // @symbol Banner_SetupPopSpin
-extern "C" void Banner_SetupPopSpin(Elem *e)
-{
+extern "C" void Banner_SetupPopSpin(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 159744;
 }
 
 // @symbol Banner_IsPressFinished
-extern "C" int Banner_IsPressFinished(Elem* e){
-  int* d = pmf_Banner_UpdatePressed_2;
-  int* o = (int*)&e->mBehavior;
-  if(o[0] == d[0] && (o[1] == d[1] || o[0] == 0) && e->mTimer == e->mTimerEnd)
-    return 1;
-  return 0;
+extern "C" int Banner_IsPressFinished(MgBanner *e) {
+    int *d = pmf_Banner_UpdatePressed_2;
+    int *o = (int *)&e->mBehavior;
+    if (o[0] == d[0] && (o[1] == d[1] || o[0] == 0) && e->mTimer == e->mTimerEnd)
+        return 1;
+    return 0;
 }
 
 // @symbol Banner_DrawPressed
-extern "C" void Banner_DrawPressed(Elem *e)
-{
+extern "C" void Banner_DrawPressed(MgBanner *e) {
     u8* el = e->mOam;
     int x = e->mTimer;
     int idx = (int)(((unsigned int)x << 15) >> 16) >> 4;
@@ -909,30 +900,30 @@ extern "C" void Banner_DrawPressed(Elem *e)
 }
 
 // @symbol Banner_UpdatePressed
-extern "C" void Banner_UpdatePressed(Elem *e) {
+extern "C" void Banner_UpdatePressed(MgBanner *e) {
     ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
 }
 
 // @symbol Banner_Press
-extern "C" void Banner_Press(Elem* e){
-  sMgBannerButtonsArmed = 0;
-  switch (e->mFileIndex) {
-  case 0:
-    func_02012790(0x62);
-    break;
-  case 1:
-  case 2:
-    func_02012790(0x63);
-    break;
-  }
-  e->mTimer = 0;
-  e->mTimerEnd = 0x10000;
-  *(W2*)&e->mBehavior = *(W2*)&pmf_Banner_UpdatePressed;
-  *(W2*)&e->mRender = *(W2*)&pmf_Banner_DrawPressed;
+extern "C" void Banner_Press(MgBanner *e) {
+    sMgBannerButtonsArmed = 0;
+    switch (e->mFileIndex) {
+    case 0:
+        func_02012790(0x62);
+        break;
+    case 1:
+    case 2:
+        func_02012790(0x63);
+        break;
+    }
+    e->mTimer = 0;
+    e->mTimerEnd = 0x10000;
+    *(W2 *)&e->mBehavior = *(W2 *)&pmf_Banner_UpdatePressed;
+    *(W2 *)&e->mRender = *(W2 *)&pmf_Banner_DrawPressed;
 }
 
 // @symbol Banner_DrawPlain
-extern "C" void Banner_DrawPlain(Elem *e) {
+extern "C" void Banner_DrawPlain(MgBanner *e) {
     Mg_RenderSpriteOn((int)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
     if (e->mFileIndex != 0 && e->mFileIndex != 1 && e->mFileIndex != 2)
         return;
@@ -940,14 +931,14 @@ extern "C" void Banner_DrawPlain(Elem *e) {
 }
 
 // @symbol Banner_SetupZoom
-extern "C" void Banner_SetupZoom(Elem *e) {
+extern "C" void Banner_SetupZoom(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = ((e->mOamCount + 1) << 2) + 0x1e << 0xc;
 }
 
 // @symbol Banner_DrawZoomA
 #pragma opt_propagation off
-extern "C" void Banner_DrawZoomA(Elem *e) {
+extern "C" void Banner_DrawZoomA(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
@@ -1016,7 +1007,7 @@ extern "C" void Banner_DrawZoomA(Elem *e) {
 
 // @symbol Banner_DrawZoomB
 #pragma opt_propagation off
-extern "C" void Banner_DrawZoomB(Elem *e) {
+extern "C" void Banner_DrawZoomB(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
@@ -1084,15 +1075,14 @@ extern "C" void Banner_DrawZoomB(Elem *e) {
 #pragma opt_propagation on
 
 // @symbol Banner_UpdateZoom
-extern "C" void Banner_UpdateZoom(Elem *e) {
+extern "C" void Banner_UpdateZoom(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 122880;
     }
 }
 
 // @symbol Banner_SetupZoomBurst
-extern "C" void Banner_SetupZoomBurst(Elem* e)
-{
+extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     int i;
     int boxA[2], boxB[2], boxC[2];
     int posA[2];
@@ -1112,7 +1102,7 @@ extern "C" void Banner_SetupZoomBurst(Elem* e)
     boxC[0] = 0;
     boxC[1] = -0x4000;
 
-    flags = data_ov004_020bf3f0;
+    flags = sBannerZoomFxPosGuard;
 
     {
         int y12 = e->mY;
@@ -1126,10 +1116,11 @@ extern "C" void Banner_SetupZoomBurst(Elem* e)
     }
 
     if (flags == 0) {
-        data_ov004_020bf3fc[0] = 0;
-        data_ov004_020bf3fc[1] = 0xc0;
-        __register_global_object(data_ov004_020bf3fc, (void*)NullDestructor_0203d47c, data_ov004_020bf404);
-        data_ov004_020bf3f0 = data_ov004_020bf3f0 | 1;
+        sBannerZoomFxPos[0] = 0;
+        sBannerZoomFxPos[1] = 0xc0;
+        __register_global_object(sBannerZoomFxPos, (void *)NullDestructor_0203d47c,
+                                 sBannerZoomFxPosDtorRec);
+        sBannerZoomFxPosGuard = sBannerZoomFxPosGuard | 1;
     }
 
     for (i = 0; i < 0x20; i++) {
@@ -1144,58 +1135,53 @@ extern "C" void Banner_SetupZoomBurst(Elem* e)
         ang = ang + 0x5a;
         spawnAngle = (s16)ang;
 
-        Mg_SpawnFx(0, spawnAngle, outA, outB, data_ov004_020bf3fc);
+        Mg_SpawnFx(0, spawnAngle, outA, outB, sBannerZoomFxPos);
     }
 }
 
 // @symbol Banner_UpdateSlideFromRight
-extern "C" void Banner_UpdateSlideFromRight(Elem *e) {
+extern "C" void Banner_UpdateSlideFromRight(MgBanner *e) {
     if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
         e->mArrived = 1;
 }
 
 // @symbol Banner_SetupSlideFromRight
-extern "C" void Banner_SetupSlideFromRight(Elem *e)
-{
+extern "C" void Banner_SetupSlideFromRight(MgBanner *e) {
     e->mX = 320;
 }
 
 // @symbol Banner_UpdateSlideFromLeft
-extern "C" void Banner_UpdateSlideFromLeft(Elem *e) {
+extern "C" void Banner_UpdateSlideFromLeft(MgBanner *e) {
     if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
         e->mArrived = 1;
 }
 
 // @symbol Banner_SetupSlideFromLeft
-extern "C" void Banner_SetupSlideFromLeft(Elem *e)
-{
+extern "C" void Banner_SetupSlideFromLeft(MgBanner *e) {
     e->mX = -0x40;
 }
 
 // @symbol Banner_UpdateSlideFromBottom
-extern "C" void Banner_UpdateSlideFromBottom(Elem *e) {
+extern "C" void Banner_UpdateSlideFromBottom(MgBanner *e) {
     ApproachLinear2(e->mY, e->mTargetY, 4);
 }
 
 // @symbol Banner_SetupSlideFromBottom
-extern "C" void Banner_SetupSlideFromBottom(Elem *e)
-{
+extern "C" void Banner_SetupSlideFromBottom(MgBanner *e) {
     e->mY = 200;
 }
 
 // @symbol Banner_UpdateSlideFromTop
-extern "C" void Banner_UpdateSlideFromTop(Elem *e) {
+extern "C" void Banner_UpdateSlideFromTop(MgBanner *e) {
     ApproachLinear2(e->mY, e->mTargetY, 4);
 }
 
 // @symbol Banner_SetupSlideFromTop
-extern "C" void Banner_SetupSlideFromTop(Elem *e)
-{
+extern "C" void Banner_SetupSlideFromTop(MgBanner *e) {
     e->mY = -8;
 }
 
-Elem::Elem()
-{
+MgBanner::MgBanner() {
     mFileIndex = 29;
 }
 
@@ -1213,33 +1199,44 @@ extern PairW pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_Upd
 extern PairW pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop;
 extern PairW pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA;
 extern PairW pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, pmf_Banner_DrawLevelNumber;
-extern int data_ov004_020b9e98, data_ov004_020b9e8c, data_ov004_020b9f2c;
-extern int data_ov004_020b9ea4, data_ov004_020b9fd8, data_ov004_020b9eb8, data_ov004_020b9f5c;
-extern int data_ov004_020ba010, data_ov004_020b9e90, data_ov004_020b9ed4, data_ov004_020b9ffc;
-extern int data_ov004_020b9f78, data_ov004_020b9fa0, data_ov004_020b9e7c, data_ov004_020b9ebc;
-extern int data_ov004_020b9ee4, data_ov004_020b9ea8, data_ov004_020b9ef0, data_ov004_020b9f7c;
-extern int data_ov004_020b9f0c, data_ov004_020b9e50, data_ov004_020b9e70, data_ov004_020b9f60;
-extern int data_ov004_020b9efc, data_ov004_020b9f88, data_ov004_020b9e78, data_ov004_020b9fc8;
-extern int data_ov004_020b9ee8;
+extern int sMgMsgRetrySpritesEnglish, sMgMsgQuitSpritesEnglish, sMgMsgLevelClearSpritesEnglish;
+extern int sMgMsgGoalSpritesEnglish, sMgMsgHiScoreSpritesEnglish, sMgMsgPerfectSpritesEnglish,
+    sMgMsgResultHiScoreSpritesEnglish;
+extern int sMgMsgGameOverSpritesEnglish, sMgMsgYouWinSpritesEnglish, sMgMsgTooBadSpritesEnglish,
+    sMgMsgDrawSpritesEnglish;
+extern int sMgMsgStartSpritesEnglish, sMgMsgLevelSpritesEnglish, sMgMsgTimeOverSpritesEnglish,
+    sMgMsgWhereSpritesEnglish;
+extern int sMgMsgLikeSpritesEnglish, sMgMsgHateSpritesEnglish, sMgMsgLoveSpritesEnglish,
+    sMgMsgDislikeSpritesEnglish;
+extern int sMgMsgEsperSpritesEnglish, sMgMsgSuperEsperSpritesEnglish, sMgMsgNoPairSpritesEnglish,
+    sMgMsgOnePairSpritesEnglish;
+extern int sMgMsgTwoPairSpritesEnglish, sMgMsgThreeCardSpritesEnglish,
+    sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish;
+extern int sMgMsgFiveCardSpritesEnglish;
 }
 
 namespace s20b955c {
 extern "C" {
-Elem gMgBanners[3];
+MgBanner gMgBanners[3];
 }
 }
 
 extern "C" {
-int sMgBannerSprites[29] = {
-    data_ov004_020b9e98, data_ov004_020b9f54, data_ov004_020b9e8c, data_ov004_020b9f2c,
-    data_ov004_020b9ea4, data_ov004_020b9fd8, data_ov004_020b9eb8, data_ov004_020b9f5c,
-    data_ov004_020ba010, data_ov004_020b9e90, data_ov004_020b9ed4, data_ov004_020b9ffc,
-    data_ov004_020b9f78, data_ov004_020b9fa0, data_ov004_020b9e7c, data_ov004_020b9ebc,
-    data_ov004_020b9ee4, data_ov004_020b9ea8, data_ov004_020b9ef0, data_ov004_020b9f7c,
-    data_ov004_020b9f0c, data_ov004_020b9e50, data_ov004_020b9e70, data_ov004_020b9f60,
-    data_ov004_020b9efc, data_ov004_020b9f88, data_ov004_020b9e78, data_ov004_020b9fc8,
-    data_ov004_020b9ee8
-};
+int sMgBannerSprites[29] = {sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
+                            sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,
+                            sMgMsgGoalSpritesEnglish,      sMgMsgHiScoreSpritesEnglish,
+                            sMgMsgPerfectSpritesEnglish,   sMgMsgResultHiScoreSpritesEnglish,
+                            sMgMsgGameOverSpritesEnglish,  sMgMsgYouWinSpritesEnglish,
+                            sMgMsgTooBadSpritesEnglish,    sMgMsgDrawSpritesEnglish,
+                            sMgMsgStartSpritesEnglish,     sMgMsgLevelSpritesEnglish,
+                            sMgMsgTimeOverSpritesEnglish,  sMgMsgWhereSpritesEnglish,
+                            sMgMsgLikeSpritesEnglish,      sMgMsgHateSpritesEnglish,
+                            sMgMsgLoveSpritesEnglish,      sMgMsgDislikeSpritesEnglish,
+                            sMgMsgEsperSpritesEnglish,     sMgMsgSuperEsperSpritesEnglish,
+                            sMgMsgNoPairSpritesEnglish,    sMgMsgOnePairSpritesEnglish,
+                            sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
+                            sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
+                            sMgMsgFiveCardSpritesEnglish};
 PairW sBannerSetupTable[13] = {
     data_02086b58, pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom, pmf_Banner_SetupSlideFromLeft,
     pmf_Banner_SetupSlideFromRight, pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom,

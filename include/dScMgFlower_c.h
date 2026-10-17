@@ -175,7 +175,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     s32 mHoldTimer;        /* 0x5fe4 -- StartRound counts it up to
                               0x15 and resets; above 0x14 means "held" */
     s32 mState;            /* 0x5fe8 -- 0 playing, 1 over */
-    s32 mFaceSprite;       /* 0x5fec -- index into data_ov006_0213ab94, the
+    s32 mFaceSprite;       /* 0x5fec -- index into sFlowerFaceSprites, the
                               flower's face */
     s32 mScore;            /* 0x5ff0 -- clamped to 9999 */
     u16 mBgScrollPhase;    /* 0x5ff4 -- += 0xc0 a frame; indexes the sine table

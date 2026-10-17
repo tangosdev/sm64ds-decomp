@@ -53,7 +53,7 @@ int func_02071d3c(int *self, struct S6 *src, int flag)
 
     state = func_02072d90(&buf);
 
-    for (;;) {
+    for (;; state = func_020729f4(&buf)) {
         switch (state) {
         case 12:
         {
@@ -62,9 +62,9 @@ int func_02071d3c(int *self, struct S6 *src, int flag)
             u8 *p = func_02071a50(cur + 5, &tmp.a);
             p = ReadSignedVarInt(p, &tmp.b);
             if (func_02072fcc(self[0], tmp.val, flag) == 0) {
-                break;
+                continue;
             }
-            goto L_return;
+            break;
         }
 
         case 15:
@@ -77,14 +77,14 @@ int func_02071d3c(int *self, struct S6 *src, int flag)
             if (func_02071f88((void *)self[0], &tmp.c) == 0) {
                 func_02071f1c((char *)self, (void *)src, (char *)&tmp.c, buf.p0.v[2]);
             }
-            break;
+            continue;
         }
 
         case 1:
         case 14:
         default:
             func_020731fc();
-            goto L_return;
+            break;
 
         case 0:
         case 2:
@@ -102,12 +102,10 @@ int func_02071d3c(int *self, struct S6 *src, int flag)
         case 17:
         case 18:
         case 19:
-            break;
+            continue;
         }
-
-        state = func_020729f4(&buf);
+        break;
     }
 
-L_return:
     return buf.p0.v[2];
 }

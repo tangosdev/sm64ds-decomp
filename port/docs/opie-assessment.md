@@ -166,7 +166,7 @@ side is the **stock NitroSDK sound stack over SDAT**:
 - `src/Snd_SendCommand.c` builds command records from a pool and dispatches them —
   NitroSDK's `SND` command-queue shape.
 - `src/func_0205b070.c` is `SND_FlushCommand` (DC-flush of 0x1800 = 256 × 0x18, then IPC
-  on **PXI tag 7** = sound). `src/IPCSend.c:34` is `PXI_SendWordByFifo` on `0x4000188`.
+  on **PXI tag 7** = sound). `IPCSend` in `src/engine/pxi/PXI_Fifo.cpp` is `PXI_SendWordByFifo` on `0x4000188`.
 - The data is SDAT: `symbols/verified.tsv` names `0x020a5bb8` as
   `_ZN5Sound8SDAT_RAM3PTRE`, and `Sound::InfoSequenceEntry::GetWithID` walks the SDAT
   INFO block. `roadmap.md:42` already says "SDAT / SSEQ playback."

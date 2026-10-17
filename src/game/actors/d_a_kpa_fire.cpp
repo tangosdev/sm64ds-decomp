@@ -28,7 +28,7 @@
  * inherited flat-field layout is not reconstructed here.
  *
  * leftovers:
- * - func_ov060_02116740, 02117624 and 021172c8 stay free functions with
+ * - func_ov060_02116740, 02117624 stay free functions with
  *   the char * / unsigned char * decl_common.h declares. Their bodies
  *   compile as C++; 02117624 uses a POD matrix view for its block copy.
  * - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight,
@@ -116,9 +116,6 @@ enum { SOUND_ID_MOUTH = 0x180 };
 
 extern "C" {
 /* This file's own helpers, defined further down. */
-extern void func_ov060_02116518(daKpaFire_c *self, u32 kind, int resize, int yOffset);
-extern void func_ov060_0211712c(daKpaFire_c *self);
-extern void func_ov060_021172e0(daKpaFire_c *self);
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
@@ -281,7 +278,7 @@ extern "C" void func_ov060_02117624(char *c) {
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(self, &self->mShadowModel, self->pad_32c, self->mShadowRadiusMul * self->mFireScale, 0x1e000, 0xf);
 }
 
-// @symbol func_ov060_0211747c
+// @symbol _ZN11daKpaFire_c19func_ov060_0211747cEv
 /* Variant 0 Behavior: ride Bowser's mouth.
  *
  * Looks up the daKpa_c by mKpaUniqueID; if it is gone, destroys this fire.
@@ -305,9 +302,7 @@ extern "C" void func_ov060_02117624(char *c) {
  * Bowser's position goes through v[] first (volatile, so the reads keep their
  * order). Yaw is the unsigned half of mAngleY. Frame count is the
  * dExtFrameCtrl_c inside mModelAnim. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_0211747c(daKpaFire_c *self)
-{
+void daKpaFire_c::func_ov060_0211747c() {
     daKpa_c *koopa;
     int n;
     int yaw;
@@ -320,9 +315,9 @@ void func_ov060_0211747c(daKpaFire_c *self)
     int fwd;
     int *kpaPos;
 
-    koopa = (daKpa_c *)dActor_c::FindWithID(self->mKpaUniqueID);
+    koopa = (daKpa_c *)dActor_c::FindWithID(this->mKpaUniqueID);
     if (koopa == 0) {
-        self->MarkForDestruction();
+        this->MarkForDestruction();
         return;
     }
 
@@ -349,29 +344,28 @@ void func_ov060_0211747c(daKpaFire_c *self)
 
     t += n * 5;
 
-    if (self->mSoundID != SOUND_ID_MOUTH)
-        self->mSoundHandle = 0;
-    self->mSoundID = SOUND_ID_MOUTH;
-    self->mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-        self->mSoundHandle, 3, self->mSoundID, &self->mCamSpacePosX, 0);
+    if (this->mSoundID != SOUND_ID_MOUTH)
+        this->mSoundHandle = 0;
+    this->mSoundID = SOUND_ID_MOUTH;
+    this->mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(this->mSoundHandle, 3, this->mSoundID,
+                                                           &this->mCamSpacePosX, 0);
 
     side = t[0];
     fwd = t[2] + 0x14;
-    self->mPosX = v[0] + (fwd * s0 + side * s1);
-    self->mPosY = v[1] + ((t[1] - 0x5a) << 12);
-    self->mPosZ = v[2] + (fwd * s1 - side * s0);
-    self->mPrevAngleX = (short)(t[4] + 0x818);
-    self->mPrevAngleY = (short)(t[3] + yaw - 0x4700);
+    this->mPosX = v[0] + (fwd * s0 + side * s1);
+    this->mPosY = v[1] + ((t[1] - 0x5a) << 12);
+    this->mPosZ = v[2] + (fwd * s1 - side * s0);
+    this->mPrevAngleX = (short)(t[4] + 0x818);
+    this->mPrevAngleY = (short)(t[3] + yaw - 0x4700);
 
     if (n & 1)
         return;
 
-    dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(5, 0), self->mPos, &self->mPrevAngle, self->mAreaId,
+    dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(5, 0), this->mPos, &this->mPrevAngle, this->mAreaId,
                     -1);
 }
-}
 
-// @symbol func_ov060_021172e0
+// @symbol _ZN11daKpaFire_c19func_ov060_021172e0Ev
 /* End of a variant 6/7 fire, called once its mFireScale has burnt down to 0 or
  * below: plays the one-shot particle PARTICLE_END_PUFF at the fire's position
  * and destroys the fire. Then, with a 2 in 10 chance (random >> 16, % 10 < 2),
@@ -383,18 +377,18 @@ void func_ov060_0211747c(daKpaFire_c *self)
  *     unlocked), sets the daKpa_c's mCapActorAlive to 1 if the spawn worked,
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
-extern "C" void func_ov060_021172e0(daKpaFire_c* self)
-{
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        PARTICLE_END_PUFF, *(Fix12i*)&self->mPosX, *(Fix12i*)&self->mPosY, *(Fix12i*)&self->mPosZ);
-    self->MarkForDestruction();
+void daKpaFire_c::func_ov060_021172e0() {
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(PARTICLE_END_PUFF, *(Fix12i *)&this->mPosX,
+                                                   *(Fix12i *)&this->mPosY,
+                                                   *(Fix12i *)&this->mPosZ);
+    this->MarkForDestruction();
 
     if ((((u32)RandomIntInternal(&data_0209e650[0]) >> 0x10) % 10) >= 2) {
         return;
     }
 
     {
-        Player* player = self->ClosestPlayer();
+        Player *player = this->ClosestPlayer();
         daKpa_c* koopa;
         if (player != 0 && player->param1 == 3 &&
             (koopa = (daKpa_c*)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
@@ -412,7 +406,7 @@ extern "C" void func_ov060_021172e0(daKpaFire_c* self)
             } while ((mask & (1 << idx)) == 0);
             {
                 dActor_c *spawned = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb,
-                                                    self->mPos, &self->mAngle, self->mAreaId, -1);
+                                                    this->mPos, &this->mAngle, this->mAreaId, -1);
                 if (spawned != 0) {
                     koopa->mCapActorAlive = 1;
                 }
@@ -422,7 +416,7 @@ extern "C" void func_ov060_021172e0(daKpaFire_c* self)
     }
 
     {
-        dActor_c *spawned = dActor_c::Spawn(ACTOR_COIN, 0, self->mPos, 0, self->mAreaId, -1);
+        dActor_c *spawned = dActor_c::Spawn(ACTOR_COIN, 0, this->mPos, 0, this->mAreaId, -1);
         if (spawned != 0) {
             spawned->unk_0a4 = 0;
             spawned->mVertSpeed = 0;
@@ -431,55 +425,46 @@ extern "C" void func_ov060_021172e0(daKpaFire_c* self)
     }
 }
 
-// @symbol func_ov060_021172c8
-/* 1 if more than n Behavior frames have passed (mFrameCount > n), else 0.
- * Keeps the unsigned char * parameter decl_common.h declares. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov060_021172c8(unsigned char *p, unsigned int n)
-{
-    return ((daKpaFire_c *)p)->mFrameCount > n;
-}
+// @symbol _ZN11daKpaFire_c19func_ov060_021172c8Ej
+/* 1 if more than n Behavior frames have passed (mFrameCount > n), else 0. */
+int daKpaFire_c::func_ov060_021172c8(unsigned int n) {
+    return mFrameCount > n;
 }
 
-// @symbol func_ov060_0211722c
+// @symbol _ZN11daKpaFire_c19func_ov060_0211722cEv
 /* Variant 6 init: random heading (16 random bits); vertical speed 30.0 units
  * with a 2 in 10 chance, else 10.0; horizontal speed 5.0 (0x5000); gravity
  * -1.0 (-0x1000) per frame per frame; mFireScale 1.0 plus a random 0..0xfff
  * (so from 1.0 to just under 2.0); shadow multiplier 0x10. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_0211722c(daKpaFire_c *self)
-{
+void daKpaFire_c::func_ov060_0211722c() {
     unsigned int r;
-    self->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 0x10);
+    this->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 0x10);
     r = (unsigned int)RandomIntInternal(&data_0209e650[0]) >> 0x10;
     if (r % 10 < 2)
-        self->mVertSpeed = 0x1e000;
+        this->mVertSpeed = 0x1e000;
     else
-        self->mVertSpeed = 0xa000;
-    self->mHorzSpeed = 0x5000;
-    self->mVertAccel = -0x1000;
-    self->mFireScale = (int)(((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16) & 0xfff) + 0x1000;
-    self->mShadowRadiusMul = 0x10;
-}
+        this->mVertSpeed = 0xa000;
+    this->mHorzSpeed = 0x5000;
+    this->mVertAccel = -0x1000;
+    this->mFireScale =
+        (int)(((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16) & 0xfff) + 0x1000;
+    this->mShadowRadiusMul = 0x10;
 }
 
-// @symbol func_ov060_021171e8
+// @symbol _ZN11daKpaFire_c19func_ov060_021171e8Ev
 /* Variant 7 init: random heading, vertical speed 10.0 units (0xa000), no
  * horizontal speed, mFireScale 6.0 (0x6000), shadow multiplier 0x10. Gravity
  * is left at the InitResources default. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_021171e8(daKpaFire_c *self)
-{
+void daKpaFire_c::func_ov060_021171e8() {
     unsigned int r = RandomIntInternal(data_0209e650);
-    self->mPrevAngleY = r >> 0x10;
-    self->mVertSpeed = 0xa000;
-    self->mHorzSpeed = 0;
-    self->mFireScale = 0x6000;
-    self->mShadowRadiusMul = 0x10;
-}
+    this->mPrevAngleY = r >> 0x10;
+    this->mVertSpeed = 0xa000;
+    this->mHorzSpeed = 0;
+    this->mFireScale = 0x6000;
+    this->mShadowRadiusMul = 0x10;
 }
 
-// @symbol func_ov060_0211712c
+// @symbol _ZN11daKpaFire_c19func_ov060_0211712cEv
 /* Sideways wobble, called by the variant 2 handler and the variant 6/7
  * handler. Forms a phase angle ((mTickCount + mPhaseOffset) & 0x3f) << 10 --
  * 64 steps of a full turn (0x10000) -- and nudges x and z by products of two
@@ -487,22 +472,23 @@ void func_ov060_021171e8(daKpaFire_c *self)
  *   x += table[2h]     * table[2p]
  *   z += table[2h + 1] * table[2p + 1]
  * with h = mPrevAngleY >> 4 (the heading, read unsigned) and p = phase >> 4. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_0211712c(daKpaFire_c *self)
-{
-    short phase = (short)(((self->mTickCount + self->mPhaseOffset) & 0x3f) << 10);
+void daKpaFire_c::func_ov060_0211712c() {
+    short phase = (short)(((this->mTickCount + this->mPhaseOffset) & 0x3f) << 10);
     int p = (unsigned short)phase >> 4;
-    int *px = &self->mPosX;
+    int *px = &this->mPosX;
     int *pz;
-    *px = *px + ((data_02082214[((int)*(unsigned short *)&self->mPrevAngleY >> 4) * 2]
-                  * data_02082214[p * 2]) << 2) / 0x1000;
-    pz = &self->mPosZ;
-    *pz = *pz + ((data_02082214[((int)*(unsigned short *)&self->mPrevAngleY >> 4) * 2 + 1]
-                  * data_02082214[p * 2 + 1]) << 2) / 0x1000;
-}
+    *px = *px + ((data_02082214[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2] *
+                  data_02082214[p * 2])
+                 << 2) /
+                    0x1000;
+    pz = &this->mPosZ;
+    *pz = *pz + ((data_02082214[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2 + 1] *
+                  data_02082214[p * 2 + 1])
+                 << 2) /
+                    0x1000;
 }
 
-// @symbol func_ov060_02116f90
+// @symbol _ZN11daKpaFire_c19func_ov060_02116f90Ev
 /* Variant 6 and 7 Behavior: a flame that falls, lands, burns down and bursts.
  *
  * Every frame it moves (UpdatePos), clamps its vertical speed to at least
@@ -520,58 +506,56 @@ void func_ov060_0211712c(daKpaFire_c *self)
  * offset 12 * scale), clears flags bit 0 (cylinder enabled), and once
  * mFrameCount exceeds mFireScale * 10 / 0x1000 + 5 it shrinks mFireScale by
  * 0x266 (about 0.15) per frame; at 0 or below it ends in func_ov060_021172e0. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_02116f90(daKpaFire_c *self) {
-    self->UpdatePos(0);
-    if (self->mVertSpeed < -0x4000)
-        self->mVertSpeed = -0x4000;
+void daKpaFire_c::func_ov060_02116f90() {
+    this->UpdatePos(0);
+    if (this->mVertSpeed < -0x4000)
+        this->mVertSpeed = -0x4000;
 
-    if (self->mLanded == 0) {
-        self->mParticleHandle = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            self->mParticleHandle, PARTICLE_FALLING, self->mPosX, self->mPosY + 0x37000, self->mPosZ, 0);
-        self->mdCcAc_c.flags |= 1;
-        func_ov060_0211712c(self);
-        if (self->mWithMeshClsn.IsOnGround()) {
-            self->mLanded++;
-            if (self->mVariant == 7) {
-                self->mFireScale = 0x6000;
+    if (this->mLanded == 0) {
+        this->mParticleHandle =
+            _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+                this->mParticleHandle, PARTICLE_FALLING, this->mPosX, this->mPosY + 0x37000,
+                this->mPosZ, 0);
+        this->mdCcAc_c.flags |= 1;
+        func_ov060_0211712c();
+        if (this->mWithMeshClsn.IsOnGround()) {
+            this->mLanded++;
+            if (this->mVariant == 7) {
+                this->mFireScale = 0x6000;
             } else {
-                self->mFireScale = ((u32)RandomIntInternal(&data_0209e650[0]) >> 16 & 0xfff) * 2 + 0x6000;
+                this->mFireScale =
+                    ((u32)RandomIntInternal(&data_0209e650[0]) >> 16 & 0xfff) * 2 + 0x6000;
             }
-            self->mHorzSpeed = 0;
-            self->mVertSpeed = 0;
-            self->mVertAccel = 0;
-            self->mParticleHandle2 = 0;
-            self->mParticleHandle = self->mParticleHandle2;
+            this->mHorzSpeed = 0;
+            this->mVertSpeed = 0;
+            this->mVertAccel = 0;
+            this->mParticleHandle2 = 0;
+            this->mParticleHandle = this->mParticleHandle2;
         }
     } else {
-        func_ov060_02116518(self, PARTICLE_LANDED_BURN, 1, self->mFireScale * 0xc);
-        self->mdCcAc_c.flags &= ~1;
-        if (self->mFrameCount > self->mFireScale * 0xa / 0x1000 + 5) {
-            self->mFireScale -= 0x266;
-            if (self->mFireScale <= 0)
-                func_ov060_021172e0(self);
+        func_ov060_02116518(PARTICLE_LANDED_BURN, 1, this->mFireScale * 0xc);
+        this->mdCcAc_c.flags &= ~1;
+        if (this->mFrameCount > this->mFireScale * 0xa / 0x1000 + 5) {
+            this->mFireScale -= 0x266;
+            if (this->mFireScale <= 0)
+                func_ov060_021172e0();
         }
     }
-    if (self->mPosY < 0)
-        self->MarkForDestruction();
-}
+    if (this->mPosY < 0)
+        this->MarkForDestruction();
 }
 
-// @symbol func_ov060_02116f74
+// @symbol _ZN11daKpaFire_c19func_ov060_02116f74Ev
 /* Variant 5 init: horizontal speed is stored as the raw integer 30 (not
  * 30.0 units; variant 5's handler multiplies it straight into the sine
  * table values), mFireScale 2.0 (8192 = 0x2000), shadow multiplier 16. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_02116f74(daKpaFire_c *self)
-{
-    self->mHorzSpeed = 30;
-    self->mFireScale = 8192;
-    self->mShadowRadiusMul = 16;
-}
+void daKpaFire_c::func_ov060_02116f74() {
+    this->mHorzSpeed = 30;
+    this->mFireScale = 8192;
+    this->mShadowRadiusMul = 16;
 }
 
-// @symbol func_ov060_02116d78
+// @symbol _ZN11daKpaFire_c19func_ov060_02116d78Ev
 /* Variant 5 Behavior: a spray flame that is thrown along a pitch and heading
  * (the words spawners leave in 0x92 and 0x94, which dActor_c names
  * mPrevAngleX/Y). It never calls UpdatePos; it moves itself by the three
@@ -587,85 +571,79 @@ void func_ov060_02116f74(daKpaFire_c *self)
  * collision reports ground it spawns a variant 6 fire with a 16 in 17 chance
  * (random >> 16, % 17 != 0) and destroys this one; after 60 frames
  * (mFrameCount >= 0x3c) it destroys itself as well. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_02116d78(daKpaFire_c *self)
-{
-    if (self->mFireScale < 0x5000) self->mFireScale += 0x255;
-    if (self->mPrevAngleX > 0x800) self->mPrevAngleX -= 0x200;
+void daKpaFire_c::func_ov060_02116d78() {
+    if (this->mFireScale < 0x5000)
+        this->mFireScale += 0x255;
+    if (this->mPrevAngleX > 0x800)
+        this->mPrevAngleX -= 0x200;
 
     {
-        int i0 = (*(unsigned short*)&self->mPrevAngleX) >> 4;
-        int i1 = (*(unsigned short*)&self->mPrevAngleY) >> 4;
+        int i0 = (*(unsigned short *)&this->mPrevAngleX) >> 4;
+        int i1 = (*(unsigned short *)&this->mPrevAngleY) >> 4;
         i0 = i0 * 2;
         i1 = i1 * 2 + 1;
         int s0 = data_02082214[i0];
-        int speed = self->mHorzSpeed;
+        int speed = this->mHorzSpeed;
         int s1 = data_02082214[i1];
-        self->unk_0a4 = (s1 * (speed * s0)) / 896;
+        this->unk_0a4 = (s1 * (speed * s0)) / 896;
     }
     {
-        int speed = self->mHorzSpeed;
-        int s0 = data_02082214[((*(unsigned short*)&self->mPrevAngleX)>>4)*2];
-        self->mVertSpeed = (-speed) * s0;
+        int speed = this->mHorzSpeed;
+        int s0 = data_02082214[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
+        this->mVertSpeed = (-speed) * s0;
     }
     {
-        int s0 = data_02082214[((*(unsigned short*)&self->mPrevAngleX)>>4)*2];
-        int s1 = data_02082214[((*(unsigned short*)&self->mPrevAngleY)>>4)*2];
-        int speed = self->mHorzSpeed;
-        self->unk_0ac = (s1 * ((-speed) * s0)) / 896;
+        int s0 = data_02082214[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
+        int s1 = data_02082214[((*(unsigned short *)&this->mPrevAngleY) >> 4) * 2];
+        int speed = this->mHorzSpeed;
+        this->unk_0ac = (s1 * ((-speed) * s0)) / 896;
     }
-    self->mPosX += self->unk_0a4;
-    self->mPosY += self->mVertSpeed;
-    self->mPosZ += self->unk_0ac;
+    this->mPosX += this->unk_0a4;
+    this->mPosY += this->mVertSpeed;
+    this->mPosZ += this->unk_0ac;
 
-    func_ov060_02116518(self, PARTICLE_SCALED_9A, 1, self->mFireScale * 0xc);
-    if (self->mWithMeshClsn.IsOnGround() != 0) {
+    func_ov060_02116518(PARTICLE_SCALED_9A, 1, this->mFireScale * 0xc);
+    if (this->mWithMeshClsn.IsOnGround() != 0) {
         int rnd = RandomIntInternal(&data_0209e650[0]);
         unsigned int roll = (unsigned int)rnd >> 16;
         if (roll % 17 != 0)
-            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), self->mPos, 0, self->mAreaId, -1);
-        self->MarkForDestruction();
+            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), this->mPos, 0, this->mAreaId, -1);
+        this->MarkForDestruction();
     }
-    if (self->mFrameCount < 0x3c) return;
-    self->MarkForDestruction();
-}
+    if (this->mFrameCount < 0x3c)
+        return;
+    this->MarkForDestruction();
 }
 
-// @symbol func_ov060_02116c68
+// @symbol _ZN11daKpaFire_c19func_ov060_02116c68Ev
 /* Variant 2 init: random heading (16 random bits) and phase; horizontal speed
  * random (r % 10 in 0.5-unit steps, up to 4.5, when mSubVariant is non-zero;
  * in 3.5-unit steps (0x3800), up to 31.5, when it is 0); vertical speed random 0..9
  * whole units; gravity -1.0 (-0x1000); terminal velocity from
  * data_ov060_0211934c[mSubVariant] (-8.0, -6.0, -6.0 for sub-variants 0..2);
  * mFireScale 2.0 (0x2000); shadow multiplier 0x10. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_02116c68(daKpaFire_c *self)
-{
+void daKpaFire_c::func_ov060_02116c68() {
     unsigned int r;
-    self->mPrevAngleY = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
-    if (self->mSubVariant != 0)
-    {
+    this->mPrevAngleY = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
+    if (this->mSubVariant != 0) {
         r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
-        self->mHorzSpeed = (int)((r % 10) << 0xc) >> 1;
-    }
-    else
-    {
+        this->mHorzSpeed = (int)((r % 10) << 0xc) >> 1;
+    } else {
         r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
-        self->mHorzSpeed = (int)((r % 10) * 0x7000) >> 1;
+        this->mHorzSpeed = (int)((r % 10) * 0x7000) >> 1;
     }
 
     r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
-    self->mVertSpeed = (r % 10) << 0xc;
-    self->mVertAccel = -0x1000;
+    this->mVertSpeed = (r % 10) << 0xc;
+    this->mVertAccel = -0x1000;
 
-    self->mPhaseOffset = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
-    self->mTerminalVelocity = data_ov060_0211934c[self->mSubVariant];
-    self->mFireScale = 0x2000;
-    self->mShadowRadiusMul = 0x10;
-}
+    this->mPhaseOffset = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
+    this->mTerminalVelocity = data_ov060_0211934c[this->mSubVariant];
+    this->mFireScale = 0x2000;
+    this->mShadowRadiusMul = 0x10;
 }
 
-// @symbol func_ov060_02116b68
+// @symbol _ZN11daKpaFire_c19func_ov060_02116b68Ev
 /* Variant 2 Behavior: a flame in flight. Shows the particle id that
  * data_ov060_02119358[mSubVariant] picks (0xa2, 0xa4, 0xa4 for sub-variants 0..2)
  * 70 units up (0x46000), unscaled; wobbles; destroys itself once mFrameCount
@@ -673,44 +651,39 @@ void func_ov060_02116c68(daKpaFire_c *self)
  * ground it spawns a variant 7 fire (mSubVariant 0) or a variant 3 fire
  * (otherwise) at its position and destroys itself; while still airborne it
  * destroys itself once its y is below 0. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_02116b68(daKpaFire_c *self)
-{
-    func_ov060_02116518(self, data_ov060_02119358[self->mSubVariant], 0, 0x46000);
-    func_ov060_0211712c(self);
-    if (func_ov060_021172c8((unsigned char *)self, 0x1c2))
-        self->MarkForDestruction();
-    self->UpdatePos(0);
-    if (self->mWithMeshClsn.IsOnGround()) {
-        if (self->mSubVariant == 0)
-            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(7, 0), self->mPos, 0, self->mAreaId, -1);
+void daKpaFire_c::func_ov060_02116b68() {
+    func_ov060_02116518(data_ov060_02119358[this->mSubVariant], 0, 0x46000);
+    func_ov060_0211712c();
+    if (this->func_ov060_021172c8(0x1c2))
+        this->MarkForDestruction();
+    this->UpdatePos(0);
+    if (this->mWithMeshClsn.IsOnGround()) {
+        if (this->mSubVariant == 0)
+            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(7, 0), this->mPos, 0, this->mAreaId, -1);
         else
-            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(3, 0), self->mPos, 0, self->mAreaId, -1);
-        self->MarkForDestruction();
+            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(3, 0), this->mPos, 0, this->mAreaId, -1);
+        this->MarkForDestruction();
     } else {
-        if (self->mPosY >= 0) return;
-        self->MarkForDestruction();
+        if (this->mPosY >= 0)
+            return;
+        this->MarkForDestruction();
     }
 }
-}
 
-// @symbol func_ov060_02116b18
+// @symbol _ZN11daKpaFire_c19func_ov060_02116b18Ev
 /* Variant 1 init: vertical speed 7.0 units (0x7000), horizontal speed 17.5
  * (0x11800), gravity +1.0 (0x1000, upward -- unlike the InitResources
  * default), mFireScale 2.0, random phase, shadow multiplier 0x10. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_02116b18(daKpaFire_c* self)
-{
-    self->mVertSpeed = 0x7000;
-    self->mHorzSpeed = 0x11800;
-    self->mFireScale = 0x2000;
-    self->mVertAccel = 0x1000;
-    self->mPhaseOffset = (unsigned int)RandomIntInternal(data_0209e650) >> 0x10;
-    self->mShadowRadiusMul = 0x10;
-}
+void daKpaFire_c::func_ov060_02116b18() {
+    this->mVertSpeed = 0x7000;
+    this->mHorzSpeed = 0x11800;
+    this->mFireScale = 0x2000;
+    this->mVertAccel = 0x1000;
+    this->mPhaseOffset = (unsigned int)RandomIntInternal(data_0209e650) >> 0x10;
+    this->mShadowRadiusMul = 0x10;
 }
 
-// @symbol func_ov060_021169f8
+// @symbol _ZN11daKpaFire_c19func_ov060_021169f8Ev
 /* Variant 1 Behavior: grows, then splits and vanishes. mFireScale grows by
  * 0x200 per frame while below 5.0 (0x5000); it moves (UpdatePos) and shows
  * PARTICLE_SCALED_9A at a 120 unit (0x78000) y offset. Once mFrameCount is
@@ -720,50 +693,45 @@ void func_ov060_02116b18(daKpaFire_c* self)
  * children get this fire's pitch/heading words as their spawn rotation and
  * their mFireScale is set after the spawn returns. Then it destroys itself.
  * Before frame 21 it only grows and moves. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_021169f8(daKpaFire_c* self)
-{
+void daKpaFire_c::func_ov060_021169f8() {
     int i;
     daKpaFire_c* child;
-    if (self->mFireScale < 0x5000) {
-        self->mFireScale += 0x200;
+    if (this->mFireScale < 0x5000) {
+        this->mFireScale += 0x200;
     }
-    self->UpdatePos(0);
-    func_ov060_02116518(self, PARTICLE_SCALED_9A, 1, 0x78000);
-    if (self->mFrameCount <= 0x14)
+    this->UpdatePos(0);
+    func_ov060_02116518(PARTICLE_SCALED_9A, 1, 0x78000);
+    if (this->mFrameCount <= 0x14)
         return;
-    if (self->mSubVariant == 0) {
+    if (this->mSubVariant == 0) {
         for (i = 0; i < 3; i++) {
-            child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(2, 0), self->mPos,
-                                                   &self->mPrevAngle, self->mAreaId, -1);
+            child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(2, 0), this->mPos,
+                                                   &this->mPrevAngle, this->mAreaId, -1);
             child->mFireScale = 0x5000;
         }
     } else {
-        child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(2, 1), self->mPos,
-                                               &self->mPrevAngle, self->mAreaId, -1);
+        child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(2, 1), this->mPos,
+                                               &this->mPrevAngle, this->mAreaId, -1);
         child->mFireScale = 0x8000;
-        child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(2, 2), self->mPos,
-                                               &self->mPrevAngle, self->mAreaId, -1);
+        child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(2, 2), this->mPos,
+                                               &this->mPrevAngle, this->mAreaId, -1);
         child->mFireScale = 0x8000;
     }
-    self->MarkForDestruction();
-}
+    this->MarkForDestruction();
 }
 
-// @symbol func_ov060_021169b0
+// @symbol _ZN11daKpaFire_c19func_ov060_021169b0Ev
 /* Variant 4 init. Vertical speed 30.0, horizontal speed 15.0, random
  * phase, SetLimMovFlag on the mesh collision, shadow multiplier 0x10. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_021169b0(daKpaFire_c* self) {
-    self->mVertSpeed = 0x1e000;
-    self->mHorzSpeed = 0xf000;
-    self->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16;
-    self->mWithMeshClsn.SetLimMovFlag();
-    self->mShadowRadiusMul = 0x10;
-}
+void daKpaFire_c::func_ov060_021169b0() {
+    this->mVertSpeed = 0x1e000;
+    this->mHorzSpeed = 0xf000;
+    this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16;
+    this->mWithMeshClsn.SetLimMovFlag();
+    this->mShadowRadiusMul = 0x10;
 }
 
-// @symbol func_ov060_021168c4
+// @symbol _ZN11daKpaFire_c19func_ov060_021168c4Ev
 /* Variant 4 Behavior: a bouncing flame that is called off near Bowser.
  *
  * On its first frame it finds the daKpa_c by actor id and remembers its
@@ -774,32 +742,31 @@ void func_ov060_021169b0(daKpaFire_c* self) {
  * mFrameCount exceeds 150 (0x96). It also destroys itself when Bowser is
  * still there, his hold state is idle, and he is within 150 units.
  */
-extern "C" void func_ov060_021168c4(daKpaFire_c* self)
-{
+void daKpaFire_c::func_ov060_021168c4() {
     daKpa_c* koopa;
-    if (self->mFrameCount == 0) {
+    if (this->mFrameCount == 0) {
         dActor_c* found = dActor_c::FindWithActorID(ACTOR_KOOPA, 0);
         koopa = (daKpa_c*)found;
-        self->mKpaUniqueID = koopa->uniqueID;
+        this->mKpaUniqueID = koopa->uniqueID;
     } else {
-        koopa = (daKpa_c*)dActor_c::FindWithID(self->mKpaUniqueID);
+        koopa = (daKpa_c *)dActor_c::FindWithID(this->mKpaUniqueID);
     }
-    if (self->mWithMeshClsn.JustHitGround() != 0) {
-        self->mVertSpeed = 0x1e000;
+    if (this->mWithMeshClsn.JustHitGround() != 0) {
+        this->mVertSpeed = 0x1e000;
     }
-    self->UpdatePos(0);
-    func_ov060_02116518(self, PARTICLE_VARIANT_4, 0, 0x32000);
-    if (func_ov060_021172c8((unsigned char*)self, 0x96) != 0) {
-        self->MarkForDestruction();
+    this->UpdatePos(0);
+    func_ov060_02116518(PARTICLE_VARIANT_4, 0, 0x32000);
+    if (this->func_ov060_021172c8(0x96) != 0) {
+        this->MarkForDestruction();
     }
     if (koopa == 0) return;
     if (koopa->mHoldState != 0) return;
-    if (Vec3_HorzDist(&self->mPos, &koopa->mPos) >= 0x96000)
+    if (Vec3_HorzDist(&this->mPos, &koopa->mPos) >= 0x96000)
         return;
-    self->MarkForDestruction();
+    this->MarkForDestruction();
 }
 
-// @symbol func_ov060_021167ec
+// @symbol _ZN11daKpaFire_c19func_ov060_021167ecEv
 /* Variant 3 Behavior: acts on its first frame only (mFrameCount 0; after that
  * it does nothing, and it also does nothing if there is no player). Aims at
  * the nearest player (heading = Vec3_HorzAngle to the player), sets mFireScale
@@ -808,44 +775,39 @@ extern "C" void func_ov060_021168c4(daKpaFire_c* self)
  * being a full turn) and mFireScale copied from this one, then destroys itself.
  * The children are spawned with no rotation and have their pitch/heading words
  * written afterwards. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_021167ec(daKpaFire_c* self)
-{
+void daKpaFire_c::func_ov060_021167ec() {
     dActor_c* player;
-    if (self->mFrameCount != 0) return;
-    player = self->ClosestPlayer();
+    if (this->mFrameCount != 0)
+        return;
+    player = this->ClosestPlayer();
     if (player == 0) return;
-    self->mPrevAngleY = Vec3_HorzAngle(&self->mPos, &player->mPos);
-    self->mFireScale = 0x5000;
+    this->mPrevAngleY = Vec3_HorzAngle(&this->mPos, &player->mPos);
+    this->mFireScale = 0x5000;
     {
         int i = 0;
         int ang = 0;
         do {
             daKpaFire_c *child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(4, 0),
-                                                                self->mPos, 0, self->mAreaId, -1);
-            short heading = self->mPrevAngleY + ang;
+                                                                this->mPos, 0, this->mAreaId, -1);
+            short heading = this->mPrevAngleY + ang;
             child->mPrevAngleX = 0;
             child->mPrevAngleY = heading;
             child->mPrevAngleZ = 0;
-            child->mFireScale = self->mFireScale;
+            child->mFireScale = this->mFireScale;
             i++;
             ang += 0x5555;
         } while (i < 3);
     }
-    self->MarkForDestruction();
-}
+    this->MarkForDestruction();
 }
 
-// @symbol func_ov060_021167c8
+// @symbol _ZN11daKpaFire_c19func_ov060_021167c8Ev
 /* Init shared by variants 0 and 3: cylinder flags bit 0 set (cylinder
  * disabled), mFireScale 2.0 (0x2000), shadow multiplier 0x10. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_021167c8(daKpaFire_c *self)
-{
-    self->mdCcAc_c.flags |= 1;
-    self->mFireScale = 0x2000;
-    self->mShadowRadiusMul = 0x10;
-}
+void daKpaFire_c::func_ov060_021167c8() {
+    this->mdCcAc_c.flags |= 1;
+    this->mFireScale = 0x2000;
+    this->mShadowRadiusMul = 0x10;
 }
 
 // @symbol func_ov060_02116740
@@ -872,7 +834,7 @@ void func_ov060_02116740(char* c)
 }
 }
 
-// @symbol func_ov060_02116518
+// @symbol _ZN11daKpaFire_c19func_ov060_02116518Ejii
 /* Particle helper. Keeps two particles alive at the fire's position, y raised
  * by yOffset (Fix12): `kind` in mParticleHandle and `kind + 1` in
  * mParticleHandle2 (each handle is passed back in, so a live particle is
@@ -885,55 +847,53 @@ void func_ov060_02116740(char* c)
  * 0x9a also writes the unnamed word at +0x44 and callbackVelocity from
  * mFireScale * 0x2800 and mFireScale * 0xa66.
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov060_02116518(daKpaFire_c* self, u32 kind, int resize, int yOffset)
-{
+void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
     Particle::System *sys;
 
     if (kind == 0xa2 || kind == 0xa4) {
-        self->mParticleHandle = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            self->mParticleHandle, kind, self->mPosX, self->mPosY + yOffset, self->mPosZ, 0);
+        this->mParticleHandle =
+            _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+                this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0);
     } else {
-        self->mParticleHandle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mParticleHandle, kind, self->mPosX, self->mPosY + yOffset, self->mPosZ, 0, 0);
+        this->mParticleHandle =
+            _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0, 0);
     }
 
-    if (self->mParticleHandle != 0 && resize != 0) {
-        sys = Particle::System::FromUniqueID(self->mParticleHandle);
-        if (self->mFireScale >= 0x8000) { sys->callbackScale = 0x7fff; } else { sys->callbackScale = (short)self->mFireScale; }
+    if (this->mParticleHandle != 0 && resize != 0) {
+        sys = Particle::System::FromUniqueID(this->mParticleHandle);
+        if (this->mFireScale >= 0x8000) {
+            sys->callbackScale = 0x7fff;
+        } else {
+            sys->callbackScale = (short)this->mFireScale;
+        }
 
         if (kind == PARTICLE_SCALED_9A) {
-            *(int *)((char *)sys + 0x44) = FX_MUL((self->mFireScale), 0x2800);
-            sys->callbackVelocity = (short)FX_MUL((self->mFireScale), 0xa66);
+            *(int *)((char *)sys + 0x44) = FX_MUL((this->mFireScale), 0x2800);
+            sys->callbackVelocity = (short)FX_MUL((this->mFireScale), 0xa66);
         }
     }
 
-    self->mParticleHandle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        self->mParticleHandle2, kind + 1, self->mPosX, self->mPosY + yOffset, self->mPosZ, 0, 0);
-    if (self->mParticleHandle2 == 0)
+    this->mParticleHandle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        this->mParticleHandle2, kind + 1, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0, 0);
+    if (this->mParticleHandle2 == 0)
         return;
     if (resize == 0)
         return;
 
-    sys = Particle::System::FromUniqueID(self->mParticleHandle2);
-    if (self->mFireScale >= 0x8000) { sys->callbackScale = 0x7fff; } else { sys->callbackScale = (short)self->mFireScale; }
+    sys = Particle::System::FromUniqueID(this->mParticleHandle2);
+    if (this->mFireScale >= 0x8000) {
+        sys->callbackScale = 0x7fff;
+    } else {
+        sys->callbackScale = (short)this->mFireScale;
+    }
 
     if (kind != PARTICLE_SCALED_9A)
         return;
 
-    *(int *)((char *)sys + 0x44) = FX_MUL((self->mFireScale), 0x2800);
-    sys->callbackVelocity = (short)FX_MUL((self->mFireScale), 0xa66);
+    *(int *)((char *)sys + 0x44) = FX_MUL((this->mFireScale), 0x2800);
+    sys->callbackVelocity = (short)FX_MUL((this->mFireScale), 0xa66);
 }
-}
-
-// @symbol _ZN11daKpaFire_cD1Ev
-// @symbol _ZN11daKpaFire_cD0Ev
-/* One definition emits D1, then D0, then a D2 the cartridge does not keep. */
-#pragma defer_codegen off
-daKpaFire_c::~daKpaFire_c()
-{
-}
-#pragma defer_codegen on
 
 /* ---- the static initializer's objects. __sinit_d_a_kpa_fire.cpp, emitted from
  * these definitions, copies the 16 .data PMF descriptors at 0x0211a734..
@@ -959,6 +919,17 @@ extern PMF data_ov060_0211a794;   /* func_ov060_0211747c (variant 0 Behavior) */
 extern PMF data_ov060_0211a79c;   /* func_ov060_021171e8 (variant 7 init) */
 extern PMF data_ov060_0211a7a4;   /* func_ov060_0211722c (variant 6 init) */
 extern PMF data_ov060_0211a7ac;   /* func_ov060_02116f74 (variant 5 init) */
+
+// @symbol _ZN11daKpaFire_cD1Ev
+// @symbol _ZN11daKpaFire_cD0Ev
+/* One definition emits D1, then D0, then a D2 the cartridge does not keep.
+ * The PMF declarations above stay between the last member function and the
+ * pragma: with a function body directly before it, the pragma takes effect
+ * early and mwccarm emits every deferred function ahead of the destructor,
+ * so D1/D0 no longer come first in .text as they do in the ROM. */
+#pragma defer_codegen off
+daKpaFire_c::~daKpaFire_c() {}
+#pragma defer_codegen on
 
 /* Behavior handler table (mVariant 0..7); one Entry{PMF} per slot. */
 extern "C" Entry data_ov060_0211afb4[8] = {

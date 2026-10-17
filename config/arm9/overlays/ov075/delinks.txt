@@ -14,15 +14,7 @@ src/game/stages/d_ent_obj.cpp:
 
 src/game/stages/d_s_entry.cpp:
     complete
-    .text start:0x02115ab8 end:0x02116128
-
-src/unnamed/ov075/func_ov075_02116128.cpp:
-    complete
-    .text start:0x02116128 end:0x0211621c
-
-src/unnamed/ov075/func_ov075_0211621c.c:
-    complete
-    .text start:0x0211621c end:0x021165b0
+    .text start:0x02115ab8 end:0x021165b0
 
 src/unnamed/ov075/func_ov075_021165b0.c:
     complete

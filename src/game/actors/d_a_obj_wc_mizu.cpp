@@ -32,7 +32,6 @@ enum d_a_obj_wc_mizu_AssetId {
  * deslop leftovers:
  * - TextureTransformer::SetFile / dBgW_KcMbg::SetFile 6az: InitResources
  *   passes Fix12<int> by value; the header method form size-DIFFs.
- * - Sound::PlayLong: Behavior's long water sound; Sound.h has no PlayLong.
  * - SharedFilePtr +4: InitResources' TextureTransformer::Prepare reads the
  *   BMD at daObjWc_Obj07_c_ModelFile +4 (words[1]); SharedFilePtr.h has no fields.
  *   The daObjWc_Obj07_c_* names are a stale symbols.txt attribution: this TU
@@ -41,9 +40,6 @@ enum d_a_obj_wc_mizu_AssetId {
  * - data_ov029_02112b2c / 02112fb8 / 02112fec WDW water-level / BTA / CLPS handles;
  *   this TU consumes them, overlay .data owns them.
  * - S14: g_profile_WC_MIZU stays outside the licensed .text.
- * - Behavior pointer forms at +0x340 / +0x60 / +0x342 / +0x74 / +0x124:
- *   named mTrueAreaID / mPosY += / mPhaseAngle / mCamSpacePosX /
- *   mMeshCollider.Enable CSE the field address (size-DIFF).
  * - common.h first (func_ov029_02112250 twelve-word Matrix4x3 copy).
  * - no Player.h.
  *
@@ -149,7 +145,7 @@ int daObjWc_Mizu_c::InitResources()
         &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov029_02112fec);
     mMeshCollider.Enable(this);
 
-    mTrueAreaID = (u8)mAreaId;
+    mTrueAreaID = mAreaId;
     mAreaId = -1;
     mPhaseAngle = 0;
 
@@ -166,46 +162,45 @@ int daObjWc_Mizu_c::Behavior()
 
     mAreaId = -1;
 
-    /* area id at 0x340: ROM does add r0,r4,#0x300; ldrsb r0,[r0,#0x40]
-       Named mTrueAreaID CSE the field address (size-DIFF). */
-    if (IsAreaShowing(*(s8 *)((u8 *)(((int)((u8 *)this) + 0x300)) + 0x40)) == 0) {
-        mAreaId = *(s8 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x40);
-        if (((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
-            ((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->Disable();
+    if (IsAreaShowing(mTrueAreaID) == 0) {
+        mAreaId = mTrueAreaID;
+        if (mMeshCollider.IsEnabled() != 0) {
+            mMeshCollider.Disable();
         }
     } else {
-        if (((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
-            ((dBgW *)(((u8 *)this) + 0x124))->Enable((dActor_c *)(((u8 *)this)));
+        if (mMeshCollider.IsEnabled() == 0) {
+            mMeshCollider.Enable(this);
         }
     }
 
     t = mTargetPosY;
     if (mPosY != t) {
         if (mPosY < t) {
-            /* Named mPosY += / mPosY = mPosY + CSE the field address (size-DIFF). */
-            int *p = (int *)(((int)((u8 *)this) + 0x60));
-            *p = *p + 0xa000;
+            /* Plain `mPosY += 0xa000` emits the same .text. The pointer locals
+               (these two and the mPhaseAngle one below) feed mwccarm's per-TU
+               @NNN counter, one number per named local: without them __sinit's
+               registration nodes come out @465/@466, not the @468/@469 the
+               manifest renames. */
+            s32 *p = &mPosY;
+            *p += 0xa000;
             if (mPosY > mTargetPosY)
                 mPosY = mTargetPosY;
         } else {
-            int *p = (int *)(((int)((u8 *)this) + 0x60));
-            *p = *p - 0xa000;
+            s32 *p = &mPosY;
+            *p -= 0xa000;
             if (mPosY < mTargetPosY)
                 mPosY = mTargetPosY;
         }
     }
 
     if (mPosY != mPrevPosY) {
-        /* +0x74 is mCamSpacePosX; named &mCamSpacePosX / mSoundID CSE (size-DIFF).
-           Sound.h has no PlayLong. */
-        mSoundID = Sound::PlayLong(*(unsigned *)((u8 *)&mSoundID), 3, 0x96, *(const Vector3 *)(((u8 *)this) + 0x74), 0);
+        mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, *(Vector3 *)&mCamSpacePosX, 0);
     }
 
     {
-        /* angle at 0x342: named mPhaseAngle store CSE (size-DIFF). */
-        s16 *q = (s16 *)(((int)((u8 *)this) + 0x342));
-        *q = (s16)(*q + 0x200);
-        i = *(u16 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x42) >> 4;
+        s16 *q = &mPhaseAngle;
+        *q += 0x200;
+        i = (u16)mPhaseAngle >> 4;
         mWaterHeight = (int)data_02082214[i * 2] * 0xf + mPosY;
     }
     data_0209f32c = mWaterHeight;

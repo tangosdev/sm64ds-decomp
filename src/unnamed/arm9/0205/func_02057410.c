@@ -82,7 +82,8 @@ int func_02057410(char *dst, int n, const char *fmt, int *args)
                     s8 fc = *++fmt;
                     switch (fc) {
                     case 0x2b:
-                        if (fmt[-1] != 0x20) goto flags_done;
+                        if (fmt[-1] != 0x20)
+                            break;
                         flags |= 2;
                         continue;
                     case 0x20:
@@ -94,11 +95,9 @@ int func_02057410(char *dst, int n, const char *fmt, int *args)
                     case 0x30:
                         flags |= 0x10;
                         continue;
-                    default:
-                        goto flags_done;
                     }
+                    break;
                 }
-            flags_done:
                 if (*fmt == 0x2a) {
                     int w;
                     fmt++;
@@ -151,6 +150,8 @@ int func_02057410(char *dst, int n, const char *fmt, int *args)
                 }
                 {
                     s8 cc = *fmt;
+                    /* num/xhex/dflt gotos kept: they are the shared integer, hex and
+                       invalid-spec tails, and the case bodies sit in ROM order */
                     switch (cc) {
                     case 0x6f:
                         pf[1] = eight;

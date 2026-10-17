@@ -117,24 +117,20 @@ void func_0204c304(Particle *self, u8 *mgr, List *freelist)
 
         {
         int mode = def->flags.mode;
-        if (mode == 0)
-            goto mode0;
-        if (mode == 1)
-            goto mode1;
-        if (mode == 2) {
+        switch (mode) {
+        case 0:
+            p->h36 = (u16)eB;
+            p->sh38 = (s16)eB;
+            break;
+        case 1:
+            p->h36 = self->h36;
+            p->sh38 = (s16)eA;
+            break;
+        case 2:
             p->h36 = self->h36;
             p->sh38 = self->sh38;
+            break;
         }
-        goto modedone;
-    mode0:
-        p->h36 = (u16)eB;
-        p->sh38 = (s16)eB;
-        goto modedone;
-    mode1:
-        p->h36 = self->h36;
-        p->sh38 = (s16)eA;
-    modedone:
-        ;
         }
 
         p->h2c = def->f6;

@@ -62,7 +62,6 @@ Vector3 &dCcPos_c::GetPos()
    dCcAc_c's slot reads through its owner pointer. */
 u32 dCcPos_c::GetOwnerID()
 {
-    (void)this;
     return 0;
 }
 

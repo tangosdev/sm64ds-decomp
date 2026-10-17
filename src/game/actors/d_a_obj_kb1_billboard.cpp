@@ -23,21 +23,8 @@ enum d_a_obj_kb1_billboard_AssetId {
 };
 
 #include "daObjKb1Billboard_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
-
-struct Kb1BillboardSpawnInfo {
-    daObjKb1Billboard_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char Kb1BillboardSpawnInfo_size_must_be_0x1c[
-    sizeof(Kb1BillboardSpawnInfo) == 0x1c ? 1 : -1];
 
 extern "C" {
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angY);
@@ -68,7 +55,7 @@ extern "C" daObjKb1Billboard_c *daObjKb1Billboard_c_classInit()
     return new daObjKb1Billboard_c();
 }
 
-extern "C" Kb1BillboardSpawnInfo g_profile_KB1_BILLBOARD = {
+extern "C" SpawnInfo<daObjKb1Billboard_c> g_profile_KB1_BILLBOARD = {
     daObjKb1Billboard_c_classInit,
     0x012d,
     0x00be,

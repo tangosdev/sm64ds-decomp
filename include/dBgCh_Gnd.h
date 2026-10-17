@@ -95,12 +95,7 @@ struct dBgCh_Gnd {
     Fix12i clsnY;           /* 0x044 */
     u8  hasClsn;            /* 0x048 */
     u8  pad_049[0x3];
-    Fix12i mProbeHeight;        /* 0x04c */
-
-#ifdef __cplusplus
-    /* methods */
-    void SetObjAndPos(const Vector3 & vec_, dActor_c * actor_);
-#endif
+    Fix12i mProbeHeight; /* 0x04c */
 };
 
 typedef struct dBgCh_Gnd dBgCh_Gnd;

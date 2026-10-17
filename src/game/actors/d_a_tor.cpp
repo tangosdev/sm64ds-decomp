@@ -17,8 +17,8 @@
  *   UpdateContinuous itself: the reloc points at the veneer symbol.
  * - The GetWallResult +4 in State1 is the unrecovered result struct's
  *   SurfaceInfo slot; dEnemyBase_c spells it the same way.
- * - State1 copies the player position through a raw (char*)player + 0x5c
- *   pointer: named mPosX/Y/Z loads come out one instruction shorter.
+ * - State1 copies the player position through an s32 pointer to mPosX:
+ *   three named mPosX/Y/Z loads come out one instruction shorter.
  * - unk_352 stays unnamed: zeroed by state 0 and read nowhere.
  */
 
@@ -168,9 +168,9 @@ void daTor_c::State1()
     if (player == 0)
         goto null_player;
 
-    /* Leftover: raw pointer copy -- named loads change codegen; see file header. */
+    /* One pointer, not three named loads: those change codegen; see file header. */
     {
-        s32 *pos = (s32 *)((char *)player + 0x5c);
+        s32 *pos = &((dActor_c *)player)->mPosX;
         playerPos.x = pos[0];
         playerPos.y = pos[1];
         playerPos.z = pos[2];

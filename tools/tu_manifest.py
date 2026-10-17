@@ -178,6 +178,154 @@ def describe(root=None):
         return root.as_posix()
 
 
+# Explicit compiler-local TEXT correspondence. These readers do no I/O and do
+# not establish retail byte correctness; callers retain their normal byte gates.
+_RENAME_NONTEXT_FIELDS = ("rodata", "init", "ctor", "data", "bss", "exception", "exceptix")
+_OWNED_FUNCTION_KEYS = {"module", "address", "size", "function_ordinal", "raw_type", "raw_binding"}
+
+
+def _rename_integer(value):
+    if isinstance(value, bool):
+        raise ValueError("boolean is not an integer fact")
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        return int(value, 0)
+    raise ValueError("integer fact required")
+
+
+def function_rename_registry_rows(text, module):
+    """All named homes, retaining duplicates and non-functions as refusals."""
+    rows = []
+    for line in text.splitlines():
+        match = re.match(r"^(\S+)\s+kind:(\S+)\s+addr:(0x[0-9a-fA-F]+)\b", line)
+        if not match:
+            continue
+        name, kind, address = match.groups()
+        size = re.search(r"(?:^|,)size=(0x[0-9a-fA-F]+|[0-9]+)(?:,|\))", kind)
+        rows.append({"symbol": name, "module": module, "address": int(address, 0),
+                     "size": int(size.group(1), 0) if size else None,
+                     "type": "STT_FUNC" if kind.startswith("function(") else "NON_FUNCTION"})
+    return rows
+
+
+def _owned_function_rename_errors(entry, row, symbols, sections, homes, mapping):
+    old, new = row["from"], row["to"]
+    fact = row.get("owned_function")
+    if not isinstance(fact, dict) or set(fact) != _OWNED_FUNCTION_KEYS:
+        return ["owned_function requires the exact module/address/size/ordinal/type/binding facts"]
+    try:
+        address = _rename_integer(fact["address"])
+        size = _rename_integer(fact["size"])
+        ordinal = _rename_integer(fact["function_ordinal"])
+        module = fact["module"]
+        if not isinstance(module, str) or not re.fullmatch(r"arm9|itcm|dtcm|ov[0-9]{3}", module):
+            raise ValueError("canonical module required")
+        if address < 0 or size <= 0 or ordinal < 0 or address + size > 0x100000000:
+            raise ValueError("invalid function extent/ordinal")
+        if module != entry.get("module") or fact["raw_type"] != "STT_FUNC" or fact["raw_binding"] != "STB_LOCAL":
+            raise ValueError("owned local STT_FUNC in the entry's exact module required")
+        functions = entry.get("functions", [])
+        matches = [f for f in functions if f.get("symbol") == new]
+        if len(matches) != 1:
+            raise ValueError("canonical function must occur exactly once")
+        target = matches[0]
+        if old in {f.get("symbol") for f in functions}:
+            raise ValueError("raw spelling is another configured canonical function")
+        if not isinstance(row.get("evidence"), str) or not row["evidence"].strip():
+            raise ValueError("owned function requires explicit nonempty evidence text")
+        if (_rename_integer(target.get("address")), _rename_integer(target.get("size")),
+                _rename_integer(target.get("ordinal"))) != (address, size, ordinal):
+            raise ValueError("canonical function address/size/ordinal differs")
+        if sum(_rename_integer(f.get("ordinal")) == ordinal for f in functions) != 1:
+            raise ValueError("canonical function ordinal is not unique")
+        for other in functions:
+            if other is target:
+                continue
+            lo, length = _rename_integer(other.get("address")), _rename_integer(other.get("size"))
+            if length <= 0 or max(address, lo) < min(address + size, lo + length):
+                raise ValueError("configured function extents overlap or are invalid")
+        text = [s for s in entry.get("sections", []) if s.get("name") == ".text"]
+        if len(text) != 1 or not (_rename_integer(text[0]["start"]) <= address and
+                                 address + size <= _rename_integer(text[0]["end"])):
+            raise ValueError("full function extent is not in the unique configured TEXT span")
+        expected = {"symbol": new, "module": module, "address": address, "size": size, "type": "STT_FUNC"}
+        if homes.get(new) != [expected]:
+            raise ValueError("canonical symbol requires one exact module/home/full-size function registry row")
+        # Function correspondences may not form chains/cycles. Existing non-text
+        # simultaneous @ overlaps are deliberately left to the original OI rules.
+        if old == new or new in mapping or any(k != old and v == old for k, v in mapping.items()):
+            raise ValueError("owned function correspondence overlaps another input/output")
+        if any(s["name"] == new for s in symbols):
+            raise ValueError("canonical function spelling already exists in input")
+        emitted = [s for s in symbols if s["name"] == old]
+        if len(emitted) != 1:
+            raise ValueError("emitted function must occur exactly once")
+        symbol = emitted[0]
+        if symbol["type"] != "STT_FUNC" or symbol["binding"] != "STB_LOCAL" or symbol["size"] != size:
+            raise ValueError("emitted function type/binding/full size differs")
+        section = sections.get(symbol["section"])
+        if section is None or section["type"] != "SHT_PROGBITS" or section["flags"] & 6 != 6:
+            raise ValueError("emitted function must be in allocated executable PROGBITS")
+        if symbol["value"] < 0 or symbol["value"] + size > section["size"]:
+            raise ValueError("emitted function exceeds its physical section")
+        for field in ("compiler_only_output", "externalized_output", "undefined_symbol_aliases"):
+            for policy in entry.get(field, []) or []:
+                if any(policy.get(k) in (old, new) for k in ("symbol", "canonical_symbol", "from", "to")):
+                    raise ValueError("owned function conflicts with drop/externalization/import policy")
+        return []
+    except (ValueError, TypeError, KeyError, AttributeError) as exc:
+        return [str(exc)]
+
+
+def defined_symbol_rename_plan(entry, symbols=(), sections=None, homes=None):
+    """One shared TB/RA admission rule; no rename, I/O, alias or home creation."""
+    rows = entry.get("defined_symbol_renames", [])
+    if rows is None:
+        rows = []
+    if not isinstance(rows, list):
+        return {}, [], ["defined_symbol_renames must be a list"]
+    owned = {r["symbol"] for field in _RENAME_NONTEXT_FIELDS
+             for r in (entry.get(field, []) if isinstance(entry.get(field, []), list) else [])
+             if isinstance(r, dict) and r.get("symbol")}
+    mapping, requested, reasons = {}, [], []
+    for ordinal, row in enumerate(rows):
+        label = f"defined_symbol_renames[{ordinal}]"
+        if not isinstance(row, dict):
+            reasons.append(f"{label} is not an object")
+            continue
+        missing = [key for key in ("from", "to", "evidence") if not row.get(key)]
+        if missing:
+            reasons.append(f"{label} is missing {missing}")
+            continue
+        old, new = str(row["from"]), str(row["to"])
+        if old in mapping:
+            reasons.append(f"duplicate defined symbol rename for {old}")
+            continue
+        if "owned_function" not in row and new not in owned:
+            reasons.append(f"{label} renames to {new}, which the manifest does not own")
+            continue
+        if "owned_function" in row and (not isinstance(row["from"], str) or not isinstance(row["to"], str) or new in owned):
+            reasons.append(f"{label} requires an unambiguous function-only target")
+            continue
+        mapping[old] = new
+        requested.append(dict(row))
+    if len(set(mapping.values())) != len(mapping):
+        reasons.append("canonical symbol aliases must be unique")
+    for row in requested:
+        if "owned_function" in row:
+            reasons.extend(f"owned function {row['from']}: {reason}" for reason in
+                           _owned_function_rename_errors(entry, row, symbols, sections or {}, homes or {}, mapping))
+    return mapping, requested, reasons
+
+
+def defined_function_preimage(entry, mapping):
+    """Exact input population for RA, from a frozen simultaneous name map."""
+    functions = {f["symbol"] for f in entry.get("functions", []) if isinstance(f, dict) and f.get("symbol")}
+    inverse = {new: old for old, new in mapping.items()}
+    return frozenset(inverse.get(name, name) for name in functions)
+
+
 if __name__ == "__main__":
     import argparse
     import sys

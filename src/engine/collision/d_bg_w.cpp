@@ -2,8 +2,10 @@
 /* leftovers:
  * The func_0203938c..020393d4 accessors and func_020396c0 / func_020396d0
  * stay free functions. The query TUs and the derived colliders call them
- * by address; they are not dBgW methods. Definitions stay in reverse
- * source order, so the setters and the constructor come first.
+ * by address; they are not dBgW methods. The int * ones keep that
+ * parameter type because the actor TUs that call them declare it so.
+ * Definitions stay in reverse source order, so the setters and the
+ * constructor come first.
  * ShouldPassThroughImpl keeps the int* view of CLPS and the unsigned char*
  * view of the query. data_020a0c80 is the 0x18-entry enabled-collider
  * table Enable fills and dScStage_c::ResetMeshColliders clears.
@@ -19,18 +21,22 @@
 #include "decl_common.h"
 
 extern "C" {
-extern void *data_020a0c80[];
+/* The enabled-collider table: Enable puts a collider in the first free
+   entry and records the index in slotIdx. The query TUs walk it. */
+extern dBgW *data_020a0c80[];
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int func_02037e38(unsigned int *p);
 }
 
 // @symbol func_020396d0
+/* Stores dBgW_Kc::unk_44 (+0x44), the sphere query's face-dot threshold. */
 extern "C" void func_020396d0(int *p, int v)
 {
     p[17] = v;
 }
 
 // @symbol func_020396c0
+/* Stores dBgW_Kc::unk_48 (+0x48), the edge-tolerance shift, clamped at 0. */
 extern "C" void func_020396c0(void *p, int v)
 {
     int *pi = (int *)p;
@@ -59,9 +65,9 @@ extern "C" void func_02039624(char *o)
     w->ownerUniqueID = -1;
     w->slotIdx = 0x18;
     w->beforeClsnCallback = 0;
-    w->unk_1c = 0;
-    w->unk_0c = -0x1000;
-    w->unk_10 = 0;
+    w->stoodOnCallback = 0;
+    w->clipRadius = -0x1000;
+    w->clipOffsetY = 0;
 }
 
 // @symbol _ZN4dBgW9Virtual08Ev
@@ -70,52 +76,63 @@ void dBgW::Virtual08()
 }
 
 // @symbol func_020395fc
-extern "C" void func_020395fc(dBgW *c, dActor_c *p)
-{
-    if (p == 0) {
-        c->owner = 0;
-        c->ownerUniqueID = -1;
+/* Binds the collider to its owning actor, or clears the binding. */
+extern "C" void func_020395fc(dBgW *collider, dActor_c *actor) {
+    if (actor == 0) {
+        collider->owner = 0;
+        collider->ownerUniqueID = -1;
     } else {
-        c->owner = p;
-        c->ownerUniqueID = p->uniqueID;
+        collider->owner = actor;
+        collider->ownerUniqueID = actor->uniqueID;
     }
 }
 
 // @symbol _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b
 bool dBgCh::ShouldPassThroughImpl(void *p, const CLPS &clps_, const dBgCh &bg_, bool flag)
 {
+    /* Each special surface asks whether the query detects its kind, through
+       dBgCh::mDetectFlags: a water surface (CLPS 0x20) needs the water bit
+       (2), CLPS bit 0x02000000 needs the toxic bit (8). A surface no rule
+       covers stops only queries that detect ordinary ground (bit 1). The
+       CLPS predicates and the flag tests are C helpers taking raw word and
+       byte views. */
     int *clps = (int *)&clps_;
     unsigned char *bg = (unsigned char *)&bg_;
-    int r4 = 0;
+    bool ruleApplies = false;
 
     if (SurfaceInfo_TestFlag0x20(clps)) {
-        r4 = 1;
-        if (func_0203547c(bg) == 0) return r4;
+        ruleApplies = true;
+        if (func_0203547c(bg) == 0)
+            return true;
     }
     if (func_02037e20(clps)) {
-        r4 = 1;
-        if (func_0203543c(bg) == 0) return r4;
+        ruleApplies = true;
+        if (func_0203543c(bg) == 0)
+            return true;
     }
     if (func_02037e2c(clps)) {
-        r4 = 1;
-        if (func_0203545c(bg) != 0) return r4;
+        ruleApplies = true;
+        if (func_0203545c(bg) != 0)
+            return true;
     }
     if (func_02037e14(clps)) {
-        r4 = 1;
-        if (func_0203545c(bg) == 0) return r4;
+        ruleApplies = true;
+        if (func_0203545c(bg) == 0)
+            return true;
     }
     if (func_02037e38((unsigned int *)clps) == 0x11) {
-        r4 = 1;
-        if (func_02035408(bg) != 0) return r4;
+        ruleApplies = true;
+        if (func_02035408(bg) != 0)
+            return true;
     }
-    if (flag != 0 && func_02037e38((unsigned int *)clps) == 0x14) {
-        r4 = 1;
-        if (func_020353d4(bg) != 0) return r4;
+    if (flag && func_02037e38((unsigned int *)clps) == 0x14) {
+        ruleApplies = true;
+        if (func_020353d4(bg) != 0)
+            return true;
     }
-    if (r4 == 0) {
-        if (func_020354b0(bg) == 0) return 1;
-    }
-    return 0;
+    if (!ruleApplies && func_020354b0(bg) == 0)
+        return true;
+    return false;
 }
 
 // @symbol _ZN4dBgW10DetectClsnER9dBgCh_Gnd
@@ -184,31 +201,32 @@ extern "C" void func_020393f0(dBgW *c)
 // @symbol _ZN4dBgW9IsEnabledEv
 int dBgW::IsEnabled()
 {
-    u8 v = slotIdx;
-    if (v != 0x18)
-        return 1;
-    return 0;
+    return slotIdx != 0x18;
 }
 
 // @symbol func_020393d4
+/* Sets beforeClsnCallback (+0x18). */
 extern "C" void func_020393d4(int *p, int v)
 {
     p[6] = v;
 }
 
 // @symbol func_020393cc
+/* Reads beforeClsnCallback (+0x18). */
 extern "C" int func_020393cc(int *p)
 {
     return p[6];
 }
 
 // @symbol func_020393c4
+/* Sets stoodOnCallback (+0x1c). */
 extern "C" void func_020393c4(int *p, int v)
 {
     p[7] = v;
 }
 
 // @symbol func_020393bc
+/* Reads stoodOnCallback (+0x1c). */
 extern "C" int func_020393bc(int *p)
 {
     return p[7];
@@ -227,24 +245,28 @@ extern "C" int func_020393ac(int *p)
 }
 
 // @symbol func_020393a4
+/* Sets clipRadius (+0x0c). */
 extern "C" void func_020393a4(int *p, int v)
 {
     p[3] = v;
 }
 
 // @symbol func_0203939c
+/* Reads clipRadius (+0x0c). */
 extern "C" int func_0203939c(int *p)
 {
     return p[3];
 }
 
 // @symbol func_02039394
+/* Sets clipOffsetY (+0x10). */
 extern "C" void func_02039394(int *p, int v)
 {
     p[4] = v;
 }
 
 // @symbol func_0203938c
+/* Reads clipOffsetY (+0x10). */
 extern "C" int func_0203938c(int *p)
 {
     return p[4];
@@ -255,13 +277,13 @@ void dBgW::UpdatePosWithTransform(dBgW &clsn, dActor_c *clsnActor,
                                               dBgPi &res, Vector3 &pos,
                                               Vector3_16 *motionAng, Vector3_16 *ang)
 {
-    Vector3 local;
-    local.x = pos.x;
-    local.y = pos.y;
-    local.z = pos.z;
-    if (clsn.TransformPos(local, pos) == 0)
+    Vector3 prevPos;
+    prevPos.x = pos.x;
+    prevPos.y = pos.y;
+    prevPos.z = pos.z;
+    /* The ROM still tests the result; nothing follows either way. */
+    if (!clsn.TransformPos(prevPos, pos))
         return;
-    return;
 }
 
 // @symbol _ZN4dBgW25UpdateAngsWithAngularVelYERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_
@@ -270,14 +292,10 @@ void dBgW::UpdateAngsWithAngularVelY(dBgW &clsn, dActor_c *clsnActor,
                                                  Vector3_16 *motionAng, Vector3_16 *ang)
 {
     int angY = clsn.GetAngularVelY();
-    if (ang) {
-        short *py = (short *)(&ang->y);
-        *py = *py + angY;
-    }
-    if (motionAng) {
-        short *py = (short *)(&motionAng->y);
-        *py = *py + angY;
-    }
+    if (ang)
+        ang->y += angY;
+    if (motionAng)
+        motionAng->y += angY;
 }
 
 // @symbol _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_
@@ -296,16 +314,9 @@ void dBgW::UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor,
 {
     Vector3 vel;
     clsn.GetVelocity(vel);
-    pos.x = pos.x + vel.x;
-    {
-        /* launder: the ROM re-reads through the materialized addresses */
-        int *py = (int *)(&pos.y);
-        *py = *py + vel.y;
-    }
-    {
-        int *pz = (int *)(&pos.z);
-        *pz = *pz + vel.z;
-    }
+    pos.x += vel.x;
+    pos.y += vel.y;
+    pos.z += vel.z;
 }
 
 // @symbol func_02039218
@@ -330,17 +341,13 @@ extern "C" void func_020391f0(void)
 // @symbol _ZN4dBgW6EnableEP8dActor_c
 int dBgW::Enable(dActor_c *actor)
 {
-    s32 i = 0;
-    for (;;) {
+    for (s32 i = 0; i < 0x18; i++) {
         if (data_020a0c80[i] == 0) {
             func_020395fc(this, actor);
             func_020393fc(this, i);
             data_020a0c80[i] = this;
             return 1;
         }
-        i++;
-        if (i >= 0x18)
-            break;
     }
     return 0;
 }

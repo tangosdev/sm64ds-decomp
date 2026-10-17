@@ -40,6 +40,7 @@ enum d_a_obj_hatena_switch_AssetId {
 };
 
 #include "daObjHatenaSwitch_c.h"
+#include "SpawnInfo.h"
 #include "Message.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
@@ -65,20 +66,6 @@ static inline int IsCrateActor(dActor_c *actor) {
 static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
-
-struct HatenaSwitchSpawnInfo {
-    daObjHatenaSwitch_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char HatenaSwitchSpawnInfo_size_must_be_0x1c[
-    sizeof(HatenaSwitchSpawnInfo) == 0x1c ? 1 : -1];
 
 /* SetAnim / SetFile / PlaySub / NewSimple are measured Fix12-by-value seams
  * (wall 6az). func_020393c4 is the dBgW+0x1c store; naming belongs with dBgW. */
@@ -150,7 +137,7 @@ extern "C" daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit()
 
 /* HATENA_SWITCH is the literal ROM registry ID. The g_profile spelling is a
  * lineage-supported reconstruction; historical alias QuestionSwitch_SpawnInfo. */
-extern "C" HatenaSwitchSpawnInfo g_profile_HATENA_SWITCH = {
+extern "C" SpawnInfo<daObjHatenaSwitch_c> g_profile_HATENA_SWITCH = {
     daObjHatenaSwitch_c_classInit,
     0x001a,
     0x0126,
@@ -158,9 +145,8 @@ extern "C" HatenaSwitchSpawnInfo g_profile_HATENA_SWITCH = {
     0x00100000,
     0x00200000,
     0x01000000,
-    0
+    0,
 };
-
 
 // @symbol _ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_
 void daObjHatenaSwitch_c::AfterClsnCallback(

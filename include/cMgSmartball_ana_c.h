@@ -9,19 +9,19 @@
  * WHAT THE ONE FIELD IS. mRespawnTimer is armed with 0x3c -- one second --
  * by Swallow, which SmartballBall_UpdatePhysics (the ball physics)
  * calls on this hole the frame a ball falls into it; the same call raises the
- * base's unk_031, awards the drop and plays the effect. SaveSnapshot opens
+ * base's mTriggered, awards the drop and plays the effect. SaveSnapshot opens
  * with the base's own SaveSnapshot body written out inline (same pattern as
  * every sibling), then ages the timer, and on the frame it reaches zero calls
  * dScMgSmartball_c::ServeNextBall on the manager -- which walks the ball table and puts
  * the first active ball that is not yet in play INTO play -- and sets the
  * base's unk_032. So the field is the delay between losing a ball down this
  * hole and being served the next one. Update reads it as exactly that: while
- * unk_031 is set it picks one of three warning sprites at the 0x28 and 0x14
+ * mTriggered is set it picks one of three warning sprites at the 0x28 and 0x14
  * thresholds, i.e. the countdown is shown to the player. RestoreInitial
  * zeroes it after calling the base's RestoreInitial.
  *
  * OFFSETS 0x31 AND 0x32 ARE NOT DECLARED HERE even though this class's own
- * functions touch them -- they belong to cMgSmartball_object_c (unk_031,
+ * functions touch them -- they belong to cMgSmartball_object_c (mTriggered,
  * unk_032), not to this class's 0x34+ region. Both are reached through the
  * base's member names, and every access here is a byte.
  *
@@ -46,8 +46,8 @@ struct cMgSmartball_ana_c : cMgSmartball_object_c {
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
 
-    /* Recovered helpers: HasBall reads the base's unk_031 (a ball has fallen
-       in); Swallow is the drop itself -- arms mRespawnTimer, raises unk_031,
+    /* Recovered helpers: HasBall reads the base's mTriggered (a ball has fallen
+       in); Swallow is the drop itself -- arms mRespawnTimer, raises mTriggered,
        and awards the 2000-point burst on the manager. */
     int  HasBall();
     void Swallow();

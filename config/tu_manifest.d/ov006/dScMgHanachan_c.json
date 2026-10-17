@@ -491,11 +491,11 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_02142018",
+      "symbol": "sWigglerSprites",
       "address": "0x02142018",
       "size": "0x2c",
       "binding": "STB_GLOBAL",
-      "evidence": "OamAttr* table OAM::Render indexes; the initializer copies five scalar attribute globals, two data_ov006_021375dc entries and every third entry of the vu32* ring data_ov006_02137560 into it"
+      "evidence": "OamAttr* table OAM::Render indexes; the initializer copies five scalar attribute globals, two sHanaBackgroundPartsB entries and every third entry of the vu32* ring sHanaBackgroundParts into it"
     }
   ],
   "symbol_binding_rewrites": [
@@ -518,7 +518,7 @@
       "source": "0x02130e7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02137560",
+      "symbol": "sHanaBackgroundParts",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02137560"
@@ -528,7 +528,7 @@
       "source": "0x02130e80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021375dc",
+      "symbol": "sHanaBackgroundPartsB",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021375dc"
@@ -588,7 +588,7 @@
       "source": "0x02130e98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142018",
+      "symbol": "sWigglerSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142018"
@@ -613,7 +613,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Wiggler_UpdateSway and the one that held Wiggler_Retarget; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold Wiggler_Retarget and the one that held Hana_PickUnused; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold Wiggler_Retarget and the one that held Hana_ChooseStarWiggler; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02141fd4' differs between the legacy file that used to hold Hana_PickUnused and the one that held Hana_ChooseStarWiggler; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sHanaPickedLow' differs between the legacy file that used to hold Hana_PickUnused and the one that held Hana_ChooseStarWiggler; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold Wiggler_Retarget and the one that held Hana_PickMoveKind; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0203d704' differs between the legacy file that used to hold Wiggler_StateMoveA and the one that held Wiggler_StepSegmentsA; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0203d704' differs between the legacy file that used to hold Wiggler_StateMoveA and the one that held Wiggler_StepSegmentsB; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
@@ -625,7 +625,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold Wiggler_Update and the one that held Wiggler_StepSegmentsC; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
     "Widening: the popup arrays sHanaStarPopup and sHanaPopups were declared several ways across the folded shards (three and four respectively). Each is declared once; sHanaPopups takes HanaPopup_Spawn's record type, because HanaPopup_Spawn DIFFs when it reaches the array through a cast, and the other functions cast to the record type their own shard used. Local tags are renamed per function (Ent_ea670, S_ea81c, E6_ea8e0, Vec2_ea914).",
     "Widening: Wiggler_Destroy is the wiggler array's element destructor and takes the element in r0. include/dScMgHanachan_c.h and include/decl_common.h declared it (void); the header now declares (void *self) and the conflicting decl_common.h line was removed. Its only other use, src/minigames/d_s_mg_hanachan.cpp, takes its address.",
-    "The file-scope OamAttr* table data_ov006_02142018 is defined in this TU, so mwcc emits __sinit_d_s_mg_hanachan_methods.cpp byte-identical to retail __sinit_ov006_02130df8 (0xa4, eight literal-pool relocations: the five scalar globals, data_ov006_021375dc, the vu32* ring data_ov006_02137560 and the table itself), plus the .ctor word at 0x021335a0. The handwritten src/unnamed/ov006/__sinit_ov006_02130df8.c is retired; its delinks row is absorbed and symbols.txt renames the pair __sinit_d_s_mg_hanachan_methods.cpp / .p__sinit_d_s_mg_hanachan_methods.cpp.",
+    "The file-scope OamAttr* table sWigglerSprites is defined in this TU, so mwcc emits __sinit_d_s_mg_hanachan_methods.cpp byte-identical to retail __sinit_ov006_02130df8 (0xa4, eight literal-pool relocations: the five scalar globals, sHanaBackgroundPartsB, the vu32* ring sHanaBackgroundParts and the table itself), plus the .ctor word at 0x021335a0. The handwritten src/unnamed/ov006/__sinit_ov006_02130df8.c is retired; its delinks row is absorbed and symbols.txt renames the pair __sinit_d_s_mg_hanachan_methods.cpp / .p__sinit_d_s_mg_hanachan_methods.cpp.",
     "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share."
   ],
   "verification": {

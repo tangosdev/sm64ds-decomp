@@ -32,8 +32,7 @@
  *     pointers; animation reads use those pointer members directly.
  *   - NewSimple keeps its scalar-ABI spelling (wall 6az).
  *   - func_ov062_0211ba84 retains its free-function state entry and C linkage;
- *     its calls and fields now use the class interfaces. Remaining raw offsets
- *     elsewhere include the +0xc8 word of the held actor (dActor_c leaves it unnamed).
+ *     its calls and fields now use the class interfaces.
  *     The held-cap byte uses daObjMarioCap_c::unk_403 after the star branch.
  *   - the two matrix members are 12-word arrays, not Matrix4x3; see the
  *     header.
@@ -638,9 +637,7 @@ void daJango_c::func_ov062_0211c6a8()
                 Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, -0x3000, -0x8000, -0x4000);
             }
             MulMat4x3Mat4x3(data_020a0e68, &mHeldMat, &mHeldMat);
-            /* dActor_c.h leaves the word at +0xc8 unnamed; the held actor reads it
-               as the matrix to draw with, and clears it when it lets go. */
-            *(void**)((char*)actor + 0xc8) = &mHeldMat;
+            actor->mCarryMatrix = (Matrix4x3 *)&mHeldMat;
         }
     }
 
@@ -1104,7 +1101,7 @@ int daJango_c::func_ov062_0211b930()
     if (mHeldActorID != 0 && (found = dActor_c::FindWithID(mHeldActorID)) != 0) {
         found->mVertAccel = -0x2000;
         found->mTerminalVelocity = -0x32000;
-        *(int *)((char *)found + 0xc8) = 0;
+        found->mCarryMatrix = 0;
         if (mCarriedItem == CARRIES_STAR) {
             ((fBase_c*)found)->MarkForDestruction();
             if (mSilverStarFlag != 2) {

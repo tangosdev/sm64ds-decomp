@@ -170,18 +170,15 @@ extern "C" int func_02044284(Obj *self, int flag) {
  * first. */
 // @symbol func_02044334
 extern "C" void func_02044334(Obj *self) {
-    short *ctr;
-
     if (self->arr == 0)
         return;
     if (self->state == 0)
         return;
-    ctr = (short *)(((int)self + 6));
-    *ctr = *ctr - 1;
+    self->idx--;
     if (self->idx < 0)
         return;
     do {
         self->m3(self->arr[self->idx]);
-        *ctr = *ctr - 1;
+        self->idx--;
     } while (self->idx >= 0);
 }

@@ -8,8 +8,8 @@
  */
 // leftovers: the three helpers keep address names (no ROM method evidence).
 // func_020706b0's alignment preamble and word-at-a-time copy stay as built
-// (even the no-op u64 mask colours two words). strcmp keeps its goto form
-// (compiler-shaped). Callers of func_0207037c sit in the same 0x0206 band,
+// (even the no-op u64 mask colours two words). strcmp keeps MSL's two
+// scalar_reload gotos. Callers of func_0207037c sit in the same 0x0206 band,
 // so nothing here belongs to a neighbour's file.
 #include "types.h"
 
@@ -136,68 +136,57 @@ int strcmp(const char *a, const char *b) {
 
     align_a = (unsigned int)a & 3;
     align_b = (unsigned int)b & 3;
-    if (align_b != align_a)
-        goto scalar_check;
+    if (align_b == align_a) {
+        if (align_a != 0) {
+            if (ca == 0)
+                return 0;
+            for (cnt = 3 - align_a; cnt != 0; cnt--) {
+                c3 = *(unsigned char *)(++a);
+                cb = *(unsigned char *)(++b);
+                diff = (int)c3 - (int)cb;
+                if (diff != 0)
+                    return diff;
+                if (c3 == 0)
+                    return 0;
+            }
+            ++a;
+            ++b;
+        }
 
-    if (align_a == 0)
-        goto word_setup;
+        wa = *(unsigned int *)a;
+        t = (wa + 0xfefefeff) & 0x80808080;
+        wb = *(unsigned int *)b;
+        /* scalar_reload gotos kept, as in MSL's strcmp: a while (t == 0) loop shrinks it
+           (0x12c) and break + retest grows it (0x13c) */
+        if (t != 0)
+            goto scalar_reload;
+        while (wa == wb) {
+            wa = *(unsigned int *)(a += 4);
+            wb = *(unsigned int *)(b += 4);
+            t = (wa + 0xfefefeff) & 0x80808080;
+            if (t != 0)
+                goto scalar_reload;
+        }
+        return (wa > wb) ? 1 : -1;
 
+    scalar_reload:
+        ca = *(unsigned char *)a;
+        cb = *(unsigned char *)b;
+        diff = (int)ca - (int)cb;
+        if (diff != 0)
+            return diff;
+    }
     if (ca == 0)
         return 0;
-    cnt = 3 - align_a;
-    if (cnt == 0)
-        goto align_incr;
-align_loop:
-    c3 = *(unsigned char *)(++a);
-    cb = *(unsigned char *)(++b);
-    diff = (int)c3 - (int)cb;
-    if (diff != 0)
-        return diff;
-    if (c3 == 0)
-        return 0;
-    if (--cnt != 0)
-        goto align_loop;
-align_incr:
-    ++a;
-    ++b;
-
-word_setup:
-    wa = *(unsigned int *)a;
-    t = (wa + 0xfefefeff) & 0x80808080;
-    wb = *(unsigned int *)b;
-    if (t != 0)
-        goto scalar_reload;
-    if (wa != wb)
-        goto final_cmp;
-word_loop:
-    wa = *(unsigned int *)(a += 4);
-    wb = *(unsigned int *)(b += 4);
-    t = (wa + 0xfefefeff) & 0x80808080;
-    if (t != 0)
-        goto scalar_reload;
-    if (wa == wb)
-        goto word_loop;
-final_cmp:
-    return (wa > wb) ? 1 : -1;
-
-scalar_reload:
-    ca = *(unsigned char *)a;
-    cb = *(unsigned char *)b;
-    diff = (int)ca - (int)cb;
-    if (diff != 0)
-        return diff;
-scalar_check:
-    if (ca == 0)
-        return 0;
-scalar_loop:
-    c3 = *(unsigned char *)(++a);
-    cb = *(unsigned char *)(++b);
-    diff = (int)c3 - (int)cb;
-    if (diff != 0)
-        return diff;
-    if (c3 == 0)
-        return 0;
-    goto scalar_loop;
+    for (;;) {
+        c3 = *(unsigned char *)(++a);
+        cb = *(unsigned char *)(++b);
+        diff = (int)c3 - (int)cb;
+        if (diff != 0)
+            return diff;
+        if (c3 == 0)
+            return 0;
+    }
 }
 }
 

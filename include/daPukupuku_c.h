@@ -37,7 +37,9 @@ struct daPukupuku_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;/* 0x110 */
     dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
-    u8  pad_370[0x4];
+    /* The current state record: enter PMF at +0, main PMF at +8.
+       func_ov090_021332e8 installs it and calls enter; Behavior calls main. */
+    PukuStatePMF *mState;               /* 0x370 */
     s32 mHomePosX;                      /* 0x374 */
     s32 mHomePosY;                      /* 0x378 */
     s32 mHomePosZ;                      /* 0x37c */
@@ -95,7 +97,8 @@ struct daPukupuku_c {
        checks. Was a u8 marker. [_ZN12daPukupuku_cD1Ev, now in src/game/actors/d_a_pukupuku.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x150 */
     u8  mModelAnim;            /* 0x30c */
-    u8  pad_30d[0x67];
+    u8 pad_30d[0x63];
+    void *mState;             /* 0x370 */
     s32 mHomePosX;            /* 0x374 */
     s32 mHomePosY;            /* 0x378 */
     s32 mHomePosZ;            /* 0x37c */

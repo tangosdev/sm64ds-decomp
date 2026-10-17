@@ -47,7 +47,7 @@ int func_020729f4(char *c)
     {
       continue;
     }
-    goto tail;
+    goto tail; /* kept: dispatching inside the loop instead re-lays the switch */
   }
 
   switch (op & 0x1f)

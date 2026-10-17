@@ -111,8 +111,7 @@
  *   AnimRec tables.
  *   dBgCh_Gnd stays a 0x50 stack blob: its C1/D1 only run on the airborne
  *   path (UpdateMatrix).
- *   The +0xc8 override-matrix pointer lives in dActor_c's pad_0c5, a header
- *   this class does not own (CAP_OVERRIDE_MATRIX); this file never sets it.
+ *   The carrier's matrix is dActor_c::mCarryMatrix; this file never sets it.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -208,13 +207,11 @@ struct Flags3eb {
  * (angle >> 4) * 2, one {sin, cos} pair of s16 per 16 angle units. */
 #define CAP_ANGLE(a) (*(u16 *)&(a))
 
-/* A Matrix4x3 pointer at +0xc8, inside dActor_c's pad_0c5 (a header this class
- * does not own). The actor carrying the cap sets it (daMky_c stores its
- * mCapMtx there for the cap it spawns); this file only tests it and clears it. While it is non-null,
- * UpdateMatrix copies it into the model matrix instead of building one,
- * and the ordinary pickup in CheckTouch is skipped unless mType is 0
- * (the vanish and metal touches above it still fire). */
-#define CAP_OVERRIDE_MATRIX(cap) (*(Matrix4x3 **)((char *)(cap) + 0xc8))
+/* mCarryMatrix: the actor carrying the cap sets it (daMky_c stores its
+ * mCapMtx there for the cap it spawns); this file only tests it and clears
+ * it. While it is non-null, UpdateMatrix copies it into the model matrix
+ * instead of building one, and the ordinary pickup in CheckTouch is skipped
+ * unless mType is 0 (the vanish and metal touches above it still fire). */
 
 /* Actor IDs (symbols/actor_debug_names.tsv). */
 enum {
@@ -743,8 +740,8 @@ void daObjMarioCap_c::UpdateMatrix()
         mAngleZ = mPrevAngleZ;
     }
 
-    if (CAP_OVERRIDE_MATRIX(this) != 0) {
-        mModelAnim.mat4x3 = *CAP_OVERRIDE_MATRIX(this);
+    if (mCarryMatrix != 0) {
+        mModelAnim.mat4x3 = *mCarryMatrix;
         return;
     }
 
@@ -838,7 +835,7 @@ int daObjMarioCap_c::InitWait()
  * cap's own area ID. */
 // @symbol _ZN15daObjMarioCap_c4WaitEv
 int daObjMarioCap_c::Wait() {
-    if (CAP_OVERRIDE_MATRIX(this) == 0 && !SaveData::HasPlayerLostCap()) {
+    if (mCarryMatrix == 0 && !SaveData::HasPlayerLostCap()) {
         if (CAP_TIMER(this) == 0 && mWithMeshClsn.IsOnGround()) {
             if (dActor_c::Spawn(kActorMarioCap, param1 | 0x12, mPos, (const Vector3_16 *)0, mAreaId,
                                 -1)) {
@@ -850,7 +847,7 @@ int daObjMarioCap_c::Wait() {
         }
         return 1;
     }
-    if (CAP_OVERRIDE_MATRIX(this) == 0) {
+    if (mCarryMatrix == 0) {
         _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0x32000, 0x32000, kClipFar, kClipFar);
     }
     CheckTouch();
@@ -898,7 +895,7 @@ int daObjMarioCap_c::InitTouchWait()
 // @symbol _ZN15daObjMarioCap_c9TouchWaitEv
 int daObjMarioCap_c::TouchWait()
 {
-    if (CAP_OVERRIDE_MATRIX(this) == 0)
+    if (mCarryMatrix == 0)
         CheckTouch();
     return 1;
 }
@@ -1121,7 +1118,7 @@ int daObjMarioCap_c::InitTaken()
     mVertAccel = 0;
     mTakenStep = 0;
     mBlinkHidden = 0;
-    CAP_OVERRIDE_MATRIX(this) = 0;
+    mCarryMatrix = 0;
     unk_403 = 1;
 
     /* (int)self + off is the MATCH form; mFlags &= / vulnFlags &= CSE. */
@@ -1179,7 +1176,7 @@ int daObjMarioCap_c::Taken() {
         return 1;
     }
 
-    CAP_OVERRIDE_MATRIX(this) = 0;
+    mCarryMatrix = 0;
 
     {
         s16 *q = &mPlayer->mAngleX;
@@ -1418,7 +1415,7 @@ void daObjMarioCap_c::CheckTouch()
         return;
     }
 
-    if (CAP_OVERRIDE_MATRIX(this) != 0) {
+    if (mCarryMatrix != 0) {
         if (state != 0) return;
     }
 

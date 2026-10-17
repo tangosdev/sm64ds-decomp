@@ -122,18 +122,18 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     /* mArray4 records: the 50 on-course objects, dispatched by the four
        sinit-built PMF tables at sSnowballBitStateTable/38/50/70 */
     void Bit_DrawAll();           /* render live mArray4 records */
-    void Bit_State2(int idx);    /* table 02143020 entry 2: cooldown tick */
-    void Bit_State1(int idx);    /* table 02143020 entry 1 */
-    void Bit_State0(int i);      /* table 02143020 entry 0 */
-    void BitA_State3(int idx);    /* table 02143070 entry 3 */
-    void BitA_State2(int i);      /* table 02143070 entry 2 */
-    void BitA_State1(int index);  /* table 02143070 entry 1 */
-    void BitA_State0(int i);      /* table 02143070 entry 0 */
+    void Bit_StateFallSlowDown(int idx);  /* table 02143020 entry 2: cooldown tick */
+    void Bit_StateFallSpeedUp(int idx);   /* table 02143020 entry 1 */
+    void Bit_StateFallStart(int i);       /* table 02143020 entry 0 */
+    void BitA_StateDriftStop(int idx);    /* table 02143070 entry 3 */
+    void BitA_StateDriftLeft(int i);      /* table 02143070 entry 2 */
+    void BitA_StateDriftRight(int index); /* table 02143070 entry 1 */
+    void BitA_StatePause(int i);          /* table 02143070 entry 0 */
     void Bit_RunKindA(int i);      /* table 02143038 entry 2: dispatches 02143070 + 02143020 on elem i */
-    void BitB_State3(int i);      /* table 02143050 entry 3 */
-    void BitB_State2(int idx);    /* table 02143050 entry 2 */
-    void BitB_State1(int index);  /* table 02143050 entry 1 */
-    void BitB_State0(int idx);    /* table 02143050 entry 0 */
+    void BitB_StateDriftStop(int i);      /* table 02143050 entry 3 */
+    void BitB_StateDriftLeft(int idx);    /* table 02143050 entry 2 */
+    void BitB_StateDriftRight(int index); /* table 02143050 entry 1 */
+    void BitB_StatePause(int idx);        /* table 02143050 entry 0 */
     void Bit_RunKindB(int idx);    /* table 02143038 entry 1: dispatches 02143050 on state */
     void Bit_PickKind(int idx);    /* table 02143038 entry 0 */
     void Bit_UpdateAll();           /* walk mArray4, dispatch table 02143038 */

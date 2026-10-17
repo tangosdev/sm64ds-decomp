@@ -17,7 +17,7 @@
  *
  * SLOT 2 IS A REAL OVERRIDE, NOT A VENEER: it calls the base's
  * RestoreInitial() (qualified -- see the .cpp) and then also zeroes its own
- * two fields plus the base's unk_031.
+ * two fields plus the base's mTriggered.
  *
  * THIS CLASS IS HALF THE EVIDENCE that 0x031 is a field and not padding. It
  * reads and writes that byte as a real toggle in all three overrides --
@@ -28,7 +28,7 @@
  * it u8 and every access here is a byte.
  *
  * mIdleTimer counts scans that find no target and wraps at 0x3c, flipping
- * unk_031; mActionTimer is set to 0x61 when a target IS found and then
+ * mTriggered; mActionTimer is set to 0x61 when a target IS found and then
  * counts back down, both spent by SaveSnapshot and read by Update to drive
  * a rotate/scale render while it is nonzero. Neither name is a claim about
  * what the original called them -- see cMgSmartball_object_c.h's own note on
@@ -49,7 +49,7 @@ struct cMgSmartball_pakkun_c : cMgSmartball_object_c {
 
     s32 mIdleTimer;   /* 0x034 -- SaveSnapshot increments it once per scan
                           that finds no target; at 0x3c it wraps to 0 and
-                          flips the base's unk_031 toggle. RestoreInitial
+                          flips the base's mTriggered toggle. RestoreInitial
                           zeroes it. */
     s32 mActionTimer; /* 0x038 -- SaveSnapshot sets it to 0x61 when a target
                           is found; while it is counting down (>0), each

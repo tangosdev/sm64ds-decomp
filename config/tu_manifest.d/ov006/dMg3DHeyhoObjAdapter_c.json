@@ -7,7 +7,7 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous run 0x020c4048..0x020c6f8c, 50 function(s): the 49 one-function shards 0x020c4060..0x020c6f70 plus the promoted one-function dMg3DHeyhoObjAdapter_c base constructor (C2) at 0x020c4048, which is the lowest word of the run. The tu_map unit 0x020c4060..0x020c762c straddled two already-promoted TUs; its upper part 0x020c6f8c..0x020c762c is now owned by dMgJump3DMario_c (widened downward in the preceding commit), and this TU is the remainder.",
-    "lower edge 0x020c4048: the Heyho adapter's C2 is the first function after the previous promoted TU's licensed run; its vtable/RTTI (ZTV 0x0213afd8, ZTS 0x0213afe4, ZTI 0x0213b000) sit immediately above the 8-byte pointer-to-member / struct tables 0x0213af18..0x0213afb8 that the shards in this run read (pmf_Heyho_Motion14..0213afb8), i.e. the run's .data rises with its text and ends at that RTTI.",
+    "lower edge 0x020c4048: the Heyho adapter's C2 is the first function after the previous promoted TU's licensed run; its vtable/RTTI (ZTV 0x0213afd8, ZTS 0x0213afe4, ZTI 0x0213b000) sit immediately above the 8-byte pointer-to-member / struct tables 0x0213af18..0x0213afb8 that the shards in this run read (pmf_Heyho_MotionPatrolBob..0213afb8), i.e. the run's .data rises with its text and ends at that RTTI.",
     "upper edge 0x020c6f8c: 0x020c6f8c is the first of dMgJump3DMario_c's front helpers (see that manifest's lower-edge evidence: its own .data starts 0x0213b008, .bss window starts 0x02140400, rodata 0x0212dddc), while every shard of this run references only .data 0x0213af18..0213afb8 and .bss up to 0x021403f4, all below those.",
     "class identity: this is dMg3DHeyhoObjAdapter_c's TU. It holds the class's base constructor (C2 at 0x020c4048) and licenses the class's complete-object constructor, vtable, type-name string and RTTI record as compiler_only_output rows (ROM homes ZTV 0x0213afd8, ZTS 0x0213afe4, ZTI 0x0213b000). The other 49 functions are the Heyho-minigame helper functions that sit in the same run; none is a member of another class.",
     "text-only fold: the shards' data (.data tables, bss globals) is not delinked into this TU; it stays in the module's unowned .data/.bss as with unit020c8a30."
@@ -155,175 +155,175 @@
       "ordinal": 16
     },
     {
-      "symbol": "Heyho_Motion11",
+      "symbol": "Heyho_MotionHitSpin",
       "address": "0x020c4e8c",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov006_020c4e8c.c",
       "ordinal": 17
     },
     {
-      "symbol": "Heyho_StartMotion11",
+      "symbol": "Heyho_StartMotionHitSpin",
       "address": "0x020c4f68",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c4f68.c",
       "ordinal": 18
     },
     {
-      "symbol": "Heyho_Motion1",
+      "symbol": "Heyho_MotionChase",
       "address": "0x020c4fa4",
       "size": "0x000003cc",
       "legacy_source": "src/func_ov006_020c4fa4.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "Heyho_StartMotion1",
+      "symbol": "Heyho_StartMotionChase",
       "address": "0x020c5370",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020c5370.c",
       "ordinal": 20
     },
     {
-      "symbol": "Heyho_Motion5",
+      "symbol": "Heyho_MotionCircleLower",
       "address": "0x020c53f8",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov006_020c53f8.c",
       "ordinal": 21
     },
     {
-      "symbol": "Heyho_StartMotion5",
+      "symbol": "Heyho_StartMotionCircleLower",
       "address": "0x020c54f4",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c54f4.c",
       "ordinal": 22
     },
     {
-      "symbol": "Heyho_Motion2",
+      "symbol": "Heyho_MotionCircleUpper",
       "address": "0x020c5530",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov006_020c5530.c",
       "ordinal": 23
     },
     {
-      "symbol": "Heyho_StartMotion2",
+      "symbol": "Heyho_StartMotionCircleUpper",
       "address": "0x020c561c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c561c.c",
       "ordinal": 24
     },
     {
-      "symbol": "Heyho_Motion6",
+      "symbol": "Heyho_MotionDiagonalMirror",
       "address": "0x020c5658",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov006_020c5658.c",
       "ordinal": 25
     },
     {
-      "symbol": "Heyho_StartMotion6",
+      "symbol": "Heyho_StartMotionDiagonalMirror",
       "address": "0x020c57d4",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_020c57d4.c",
       "ordinal": 26
     },
     {
-      "symbol": "Heyho_Motion4",
+      "symbol": "Heyho_MotionDiagonal",
       "address": "0x020c5928",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov006_020c5928.c",
       "ordinal": 27
     },
     {
-      "symbol": "Heyho_StartMotion4",
+      "symbol": "Heyho_StartMotionDiagonal",
       "address": "0x020c5aa4",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_020c5aa4.c",
       "ordinal": 28
     },
     {
-      "symbol": "Heyho_Motion7",
+      "symbol": "Heyho_MotionBounceInRange",
       "address": "0x020c5bf8",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov006_020c5bf8.c",
       "ordinal": 29
     },
     {
-      "symbol": "Heyho_StartMotion7",
+      "symbol": "Heyho_StartMotionBounceInRange",
       "address": "0x020c5cf4",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c5cf4.c",
       "ordinal": 30
     },
     {
-      "symbol": "Heyho_Motion9",
+      "symbol": "Heyho_MotionVShape",
       "address": "0x020c5d28",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov006_020c5d28.c",
       "ordinal": 31
     },
     {
-      "symbol": "Heyho_StartMotion9",
+      "symbol": "Heyho_StartMotionVShape",
       "address": "0x020c5ec8",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov006_020c5ec8.c",
       "ordinal": 32
     },
     {
-      "symbol": "Heyho_Motion0",
+      "symbol": "Heyho_MotionBounceNear",
       "address": "0x020c6088",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020c6088.c",
       "ordinal": 33
     },
     {
-      "symbol": "Heyho_StartMotion0",
+      "symbol": "Heyho_StartMotionBounceNear",
       "address": "0x020c6188",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c6188.c",
       "ordinal": 34
     },
     {
-      "symbol": "Heyho_Motion10",
+      "symbol": "Heyho_MotionBobVertical",
       "address": "0x020c61c4",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_020c61c4.c",
       "ordinal": 35
     },
     {
-      "symbol": "Heyho_StartMotion10",
+      "symbol": "Heyho_StartMotionBobVertical",
       "address": "0x020c6248",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c6248.c",
       "ordinal": 36
     },
     {
-      "symbol": "Heyho_Motion14",
+      "symbol": "Heyho_MotionPatrolBob",
       "address": "0x020c627c",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020c627c.c",
       "ordinal": 37
     },
     {
-      "symbol": "Heyho_StartMotion14",
+      "symbol": "Heyho_StartMotionPatrolBob",
       "address": "0x020c6348",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_020c6348.c",
       "ordinal": 38
     },
     {
-      "symbol": "Heyho_Motion12",
+      "symbol": "Heyho_MotionHover",
       "address": "0x020c6378",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020c6378.c",
       "ordinal": 39
     },
     {
-      "symbol": "Heyho_StartMotion12",
+      "symbol": "Heyho_StartMotionHover",
       "address": "0x020c63dc",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020c63dc.c",
       "ordinal": 40
     },
     {
-      "symbol": "Heyho_Motion13",
+      "symbol": "Heyho_MotionLeave",
       "address": "0x020c6400",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020c6400.c",
@@ -337,28 +337,28 @@
       "ordinal": 42
     },
     {
-      "symbol": "Heyho_Motion8",
+      "symbol": "Heyho_MotionRegroup",
       "address": "0x020c66bc",
       "size": "0x00000238",
       "legacy_source": "src/func_ov006_020c66bc.c",
       "ordinal": 43
     },
     {
-      "symbol": "Heyho_StartMotion8",
+      "symbol": "Heyho_StartMotionRegroup",
       "address": "0x020c68f4",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov006_020c68f4.c",
       "ordinal": 44
     },
     {
-      "symbol": "Heyho_Motion3",
+      "symbol": "Heyho_MotionFlyIn",
       "address": "0x020c6a9c",
       "size": "0x00000208",
       "legacy_source": "src/func_ov006_020c6a9c.c",
       "ordinal": 45
     },
     {
-      "symbol": "Heyho_StartMotion3",
+      "symbol": "Heyho_StartMotionFlyIn",
       "address": "0x020c6ca4",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov006_020c6ca4.c",

@@ -14,20 +14,20 @@ extern int TrmpLine_CleanupAll(void);
 extern int func_02017ab4(void);
 extern int sTrmpLines[];
 extern int data_ov006_021408cc[];
-extern int sTrmpItemModelFile[];
-extern int data_ov006_0214092c[];
-extern int data_ov006_02140858[];
-extern int data_ov006_02140944[];
-extern int data_ov006_02140848[];
-extern int data_ov006_02140950[];
+extern int sTrmpItemRingAModelFile[];
+extern int sTrmpItemRingAModelFileDtorRec[];
+extern int sTrmpItemRingBModelFile[];
+extern int sTrmpItemRingBModelFileDtorRec[];
+extern int sTrmpItemRingCModelFile[];
+extern int sTrmpItemRingCModelFileDtorRec[];
 
 void __sinit_ov006_0212fc7c(void){
     __cxa_vec_ctor(sTrmpLines, 4, 0x32c, (void *)TrmpLine_Reset, (void *)TrmpLine_Destroy);
     func_020731dc(0, (void *)TrmpLine_CleanupAll, data_ov006_021408cc);
-    func_02017acc(sTrmpItemModelFile, ASSET_RINGA_BMD);
-    func_020731dc(sTrmpItemModelFile, (void *)func_02017ab4, data_ov006_0214092c);
-    func_02017acc(data_ov006_02140858, ASSET_RINGB_BMD);
-    func_020731dc(data_ov006_02140858, (void *)func_02017ab4, data_ov006_02140944);
-    func_02017acc(data_ov006_02140848, ASSET_RINGC_BMD);
-    func_020731dc(data_ov006_02140848, (void *)func_02017ab4, data_ov006_02140950);
+    func_02017acc(sTrmpItemRingAModelFile, ASSET_RINGA_BMD);
+    func_020731dc(sTrmpItemRingAModelFile, (void *)func_02017ab4, sTrmpItemRingAModelFileDtorRec);
+    func_02017acc(sTrmpItemRingBModelFile, ASSET_RINGB_BMD);
+    func_020731dc(sTrmpItemRingBModelFile, (void *)func_02017ab4, sTrmpItemRingBModelFileDtorRec);
+    func_02017acc(sTrmpItemRingCModelFile, ASSET_RINGC_BMD);
+    func_020731dc(sTrmpItemRingCModelFile, (void *)func_02017ab4, sTrmpItemRingCModelFileDtorRec);
 }

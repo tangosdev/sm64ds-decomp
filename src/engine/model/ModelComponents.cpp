@@ -139,7 +139,7 @@ int InvMat4x3(int *a, int *b);
 void _ZN4CP1514FlushDataCacheEv(void);
 void func_02048234(int *out, int sa, int sb, int sc, int ax, int ay, int az, int tx, int ty, int tz);
 void MulMat4x3Mat4x3(const int *A, const int *B, int *dst);
-void func_02047218(void *a, void *b, void *out, int c);
+void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
 extern s16 data_02082214[];

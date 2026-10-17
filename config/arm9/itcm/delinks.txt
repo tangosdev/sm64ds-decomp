@@ -32,13 +32,9 @@ src/engine/collision/d_bg_w_kc_itcm.cpp:
     complete
     .text start:0x01ffb07c end:0x01ffd97c
 
-src/_ZN3IRQ20UserInterruptHandlerEv.cpp:
+src/IRQHandler.cpp:
     complete
-    .text start:0x01ffd97c end:0x01ffd9d4
-
-src/unnamed/arm9/01ff/func_01ffd9d4.c:
-    complete
-    .text start:0x01ffd9d4 end:0x01ffdb28
+    .text start:0x01ffd97c end:0x01ffdb28
 
 src/unnamed/arm9/01ff/func_01ffdb28.c:
     complete

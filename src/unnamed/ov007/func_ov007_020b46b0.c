@@ -153,7 +153,7 @@ void func_ov007_020b46b0(void* arg0, void* arg1)
                         }
                     }
                 }
-                goto done;
+                goto done; /* kept: an !armed test on HOLD (0x4a0) or an inline press helper re-lays it */
             }
         }
     }

@@ -251,7 +251,8 @@ void SolidHeapAllocator::Reset(u32 params)
  * expression instead of reusing `aligned`, and the `(long long)(int)`
  * round-trips are all register-pressure steering: they are how this recovered
  * source reproduces the ROM's scheduling under -O4,p. Tidying any of them
- * changes the bytes. */
+ * changes the bytes. That includes reading begin as `mFreeRegion.begin`,
+ * plainly or through the launder as `&mFreeRegion.begin`: both change it. */
 int SolidHeapAllocator::MemoryLeft(int align)
 {
     u32 a;

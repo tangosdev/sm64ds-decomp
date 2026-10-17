@@ -10,7 +10,7 @@
  *
  * Source order is ROM order, which `#pragma defer_codegen off` keeps; do not
  * reorder. The destructor is not virtual, so the first declared virtual
- * (Unk_020c76d8) is the key function and this file emits the vtable.
+ * (GetPos) is the key function and this file emits the vtable.
  *
  * Include common.h first: the mat4x3 copy in UpdateModelMatrix needs its
  * flat s32 m[12]; math/Matrix.h's nested form scalarizes the copy.
@@ -102,26 +102,26 @@ extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn_2;
 extern Jump3DState pmf_dMgJump3DMario_c_StateFallOut;
 
 /* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
-extern BCA_File **data_ov006_0213b098[];
+extern BCA_File **sJump3DAnimTable[];
 
 /* Tuning words, read as plain ints. */
-extern int data_ov006_0213b008;
-extern int data_ov006_0213b00c;
-extern int data_ov006_0213b014;
-extern int data_ov006_0213b010;
-extern int data_ov006_0213b018;
-extern int data_ov006_0213b01c;
-extern int data_ov006_02140428;
-extern int data_ov006_02140434;
+extern int sJump3DBounceVy;
+extern int sJump3DRiseVy;
+extern int sJump3DStartVx;
+extern int sJump3DFallSpeed;
+extern int sJump3DGravityStep;
+extern int sJump3DMoveSpeed;
+extern int sJump3DMariosLeft;
+extern int sJump3DRisenOutCount;
 
 /* The six anim files LoadResources loads. The destructor clears only
  * five of them; 0214041c survives in the ROM too. */
-extern BCA_File *data_ov006_02140408;
-extern BCA_File *data_ov006_0214040c;
-extern BCA_File *data_ov006_0214041c;
-extern BCA_File *data_ov006_02140424;
-extern BCA_File *data_ov006_0214042c;
-extern BCA_File *data_ov006_02140430;
+extern BCA_File *sJump3DAnimSdown;
+extern BCA_File *sJump3DAnimDoubleJump1;
+extern BCA_File *sJump3DAnimRollJump;
+extern BCA_File *sJump3DAnimWallJump;
+extern BCA_File *sJump3DAnimStruggle;
+extern BCA_File *sJump3DAnimJump;
 
 /* Six anim handles call SharedFilePtr::Construct. The model handle calls
    func_02017a24. The second word is the loaded file. */
@@ -138,30 +138,30 @@ struct Jump3DModelFilePtr : SharedFilePtr {
 typedef char Jump3DMarioAnimFilePtr_size[sizeof(Jump3DMarioAnimFilePtr) == 8 ? 1 : -1];
 typedef char Jump3DModelFilePtr_size[sizeof(Jump3DModelFilePtr) == 8 ? 1 : -1];
 
-extern Jump3DMarioAnimFilePtr data_ov006_02140438;
-extern Jump3DMarioAnimFilePtr data_ov006_02140440;
-extern Jump3DMarioAnimFilePtr data_ov006_02140448;
+extern Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile;
+extern Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile;
+extern Jump3DMarioAnimFilePtr sJump3DMarioStruggleAnimFile;
 extern Jump3DModelFilePtr gMarioModelMgModelFile;
-extern Jump3DMarioAnimFilePtr data_ov006_02140458;
-extern Jump3DMarioAnimFilePtr data_ov006_02140460;
-extern Jump3DMarioAnimFilePtr data_ov006_02140468;
+extern Jump3DMarioAnimFilePtr sJump3DMarioRollJumpAnimFile;
+extern Jump3DMarioAnimFilePtr sJump3DMarioJumpAnimFile;
+extern Jump3DMarioAnimFilePtr sJump3DMarioDoubleJump1AnimFile;
 
 /* The pool the minigame scenes hand in: count, base pointer, level, round
  * and the three player slots. */
-extern int data_ov006_02140410;
-extern int data_ov006_02140414;
+extern int sJump3DArrangeLevel;
+extern int sJump3DLayout;
 extern int sJump3DMarioCount;
-extern char *data_ov006_02140420;
+extern char *sJump3DMarioPool;
 extern char *sJumpAdapters[];
 extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
 extern u8  data_ov006_02140400;
-extern u16 data_ov006_02140404;
+extern u16 sJump3DSpinAngle;
 extern void *sMgMainCamera;
 extern void *sMgCurCamera;
 extern OamAttr *data_ov006_02134d1c;
-extern Vector3 data_ov006_0212ddd0;
-extern char data_ov006_0212dddc[];
+extern Vector3 sJump3DMarioScale;
+extern char sJump3DRoundLayouts[];
 
 // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern u8 gActivePlayerSlot;
@@ -193,12 +193,12 @@ extern "C" void Jump3D_SetTuning(int a)
     int b;
     if (a > 0x3000) a = 0x3000;
     b = func_020531a4(a);
-    data_ov006_0213b010 = FX_MUL(b, -0x2400);
-    data_ov006_0213b018 = FX_MUL(a, 0xe0);
-    data_ov006_0213b00c = FX_MUL(b, 0x4c00);
-    data_ov006_0213b01c = FX_MUL(b, 0x200);
-    data_ov006_0213b014 = FX_MUL(b, 0x180);
-    data_ov006_0213b008 = FX_MUL(b, 0x5000);
+    sJump3DFallSpeed = FX_MUL(b, -0x2400);
+    sJump3DGravityStep = FX_MUL(a, 0xe0);
+    sJump3DRiseVy = FX_MUL(b, 0x4c00);
+    sJump3DMoveSpeed = FX_MUL(b, 0x200);
+    sJump3DStartVx = FX_MUL(b, 0x180);
+    sJump3DBounceVy = FX_MUL(b, 0x5000);
 }
 
 // @symbol Jump3D_DrawAll
@@ -206,7 +206,7 @@ extern "C" void Jump3D_DrawAll(void)
 {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + i * 0xb8))->Draw();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + i * 0xb8))->Draw();
     }
     Puff_DrawAll();
 }
@@ -215,9 +215,9 @@ extern "C" void Jump3D_DrawAll(void)
 extern "C" void Jump3D_UpdateAll(void)
 {
     int i;
-    data_ov006_02140404 = data_ov006_02140404 + 0x800;
+    sJump3DSpinAngle = sJump3DSpinAngle + 0x800;
     for (i = 0; i < sJump3DMarioCount; i++) {
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + i * 0xb8))->Update();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + i * 0xb8))->Update();
     }
     Puff_UpdateAll();
 }
@@ -227,22 +227,22 @@ extern "C" void Jump3D_Arrange(u32 a0, u32 a1)
 {
     int i;
     int x;
-    data_ov006_02140410 = a0;
-    data_ov006_02140414 = a1;
+    sJump3DArrangeLevel = a0;
+    sJump3DLayout = a1;
     if (a0 < 5) {
         x = a0 * 0x140 + 0x1000;
     } else {
         x = (a0 % 5 + a0 / 5) * 0x280 + 0x1000;
     }
     Jump3D_SetTuning(x);
-    if ((u32)data_ov006_02140410 % 5 == 0) {
-        data_ov006_02140428 = sJump3DMarioCount;
+    if ((u32)sJump3DArrangeLevel % 5 == 0) {
+        sJump3DMariosLeft = sJump3DMarioCount;
     }
     for (i = 0; i < sJump3DMarioCount; i++) {
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + i * 0xb8))->HideAndIdle();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + i * 0xb8))->HideAndIdle();
     }
-    Puff_ClearAll(sJump3DMarioCount - data_ov006_02140428, 0);
-    data_ov006_02140434 = 0;
+    Puff_ClearAll(sJump3DMarioCount - sJump3DMariosLeft, 0);
+    sJump3DRisenOutCount = 0;
 }
 
 // @symbol Jump3D_DisableInput
@@ -254,7 +254,7 @@ extern "C" void Jump3D_EnableInput(void) { data_ov006_02140400 = 1; }
 // @symbol Jump3D_RestoreCount
 extern "C" void Jump3D_RestoreCount(void)
 {
-    ApproachLinear(data_ov006_02140428, sJump3DMarioCount, 1);
+    ApproachLinear(sJump3DMariosLeft, sJump3DMarioCount, 1);
 }
 
 // @symbol Jump3D_AllIdle
@@ -270,10 +270,10 @@ extern "C" int Jump3D_AllIdle(void)
 {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
-        int *v = (int *)(&((Jump3DEnt *)data_ov006_02140420)[i].x);
+        int *v = (int *)(&((Jump3DEnt *)sJump3DMarioPool)[i].x);
         volatile int *q = (volatile int *)pmf_dMgJump3DMario_c_StateIdle;
-        if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0]
-            || (v[1] != q[1] && ((Jump3DEnt *)data_ov006_02140420)[i].x != 0))
+        if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0] ||
+            (v[1] != q[1] && ((Jump3DEnt *)sJump3DMarioPool)[i].x != 0))
             return 0;
     }
     return 1;
@@ -285,14 +285,14 @@ extern "C" void Jump3D_SetLowGravity(void)
     int i;
     int off;
     i = 0;
-    data_ov006_0213b018 = 0x100;
-    data_ov006_0213b010 = -0x4800;
+    sJump3DGravityStep = 0x100;
+    sJump3DFallSpeed = -0x4800;
     if (sJump3DMarioCount <= 0)
         return;
     off = 0;
     do {
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + off))->StartFallOut();
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + off))->UpdateModelMatrix();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + off))->StartFallOut();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + off))->UpdateModelMatrix();
         i++;
         off += 0xb8;
     } while (i < sJump3DMarioCount);
@@ -304,7 +304,7 @@ extern "C" void Jump3D_StopGravity(void)
     int n = sJump3DMarioCount;
     int i = 0;
     int off;
-    data_ov006_0213b018 = 0;
+    sJump3DGravityStep = 0;
     if (n <= 0)
     {
         return;
@@ -312,8 +312,8 @@ extern "C" void Jump3D_StopGravity(void)
     off = 0;
     do
     {
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + off))->StartRiseOut();
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + off))->UpdateModelMatrix();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + off))->StartRiseOut();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + off))->UpdateModelMatrix();
         i++;
         off += 0xb8;
     } while (i < sJump3DMarioCount);
@@ -334,16 +334,16 @@ extern "C" void Jump3D_StartRoundLayout(void)
     eoff = 0;
     ooff = 0;
     do {
-        char *e = data_ov006_0212dddc + data_ov006_02140414 * 0x24 + eoff;
+        char *e = sJump3DRoundLayouts + sJump3DLayout * 0x24 + eoff;
         int word = *(int *)e;
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + ooff))->StartWindUp((short)word);
-        *(int *)(data_ov006_02140420 + ooff + 0x14) = *(int *)(e + 4);
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + ooff))->StartWindUp((short)word);
+        *(int *)(sJump3DMarioPool + ooff + 0x14) = *(int *)(e + 4);
         {
-            int s = data_ov006_0213b014;
+            int s = sJump3DStartVx;
             int c = *(int *)(e + 8);
-            *(int *)(data_ov006_02140420 + ooff + 0x20) = FX_MUL(s, c);
+            *(int *)(sJump3DMarioPool + ooff + 0x20) = FX_MUL(s, c);
         }
-        ((dMgJump3DMario_c *)(data_ov006_02140420 + ooff))->UpdateModelMatrix();
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + ooff))->UpdateModelMatrix();
         i++;
         eoff += 0xc;
         ooff += 0xb8;
@@ -356,32 +356,32 @@ extern "C" int Jump3D_InitPool(char *base, int count)
 {
     int i;
     int off;
-    data_ov006_02140420 = base;
+    sJump3DMarioPool = base;
     sJump3DMarioCount = count;
-    data_ov006_02140428 = count;
+    sJump3DMariosLeft = count;
     i = 0;
     if (count > 0) {
         off = i;
         do {
             char *q;
-            if (!((dMgJump3DMario_c *)(data_ov006_02140420 + off))->LoadResources()) return 0;
-            ((dMgJump3DMario_c *)(data_ov006_02140420 + off))->HideAndIdle();
-            ((dMgJump3DMario_c *)(data_ov006_02140420 + off))->UpdateModelMatrix();
-            q = data_ov006_02140420 + off;
+            if (!((dMgJump3DMario_c *)(sJump3DMarioPool + off))->LoadResources())
+                return 0;
+            ((dMgJump3DMario_c *)(sJump3DMarioPool + off))->HideAndIdle();
+            ((dMgJump3DMario_c *)(sJump3DMarioPool + off))->UpdateModelMatrix();
+            q = sJump3DMarioPool + off;
             if (i < 3)
                 sJumpAdapters[i] = q;
             i++;
             off += 0xb8;
         } while (i < sJump3DMarioCount);
     }
-    data_ov006_0213b010 = -0x1e00;
+    sJump3DFallSpeed = -0x1e00;
     return 1;
 }
 
-// @symbol _ZN16dMgJump3DMario_c12Unk_020c762cEv
-/* Vtable slot 2. */
-int dMgJump3DMario_c::Unk_020c762c()
-{
+// @symbol _ZN16dMgJump3DMario_c10IsLaunchedEv
+/* Vtable slot 2: 1 once Mario has left StateIdle and StateWindUp. */
+int dMgJump3DMario_c::IsLaunched() {
     int r = 0;
     int m = 1;
 
@@ -397,22 +397,17 @@ int dMgJump3DMario_c::Unk_020c762c()
     return r;
 }
 
-
-// @symbol _ZN16dMgJump3DMario_c12Unk_020c76d0Ev
+// @symbol _ZN16dMgJump3DMario_c11GetVelocityEv
 /* Vtable slot 1. */
-void *dMgJump3DMario_c::Unk_020c76d0()
-{
+void *dMgJump3DMario_c::GetVelocity() {
     return &mVel;
 }
 
-
-// @symbol _ZN16dMgJump3DMario_c12Unk_020c76d8Ev
+// @symbol _ZN16dMgJump3DMario_c6GetPosEv
 /* Vtable slot 0, and the key function. */
-void *dMgJump3DMario_c::Unk_020c76d8()
-{
+void *dMgJump3DMario_c::GetPos() {
     return &mPos;
 }
-
 
 // @symbol _ZN16dMgJump3DMario_c17UpdateModelMatrixEv
 /* Rebuilds the model matrix from mPos and mAngleY. */
@@ -440,12 +435,12 @@ void dMgJump3DMario_c::Draw()
     if (data_ov006_02140400 != 0) {
         Camera_ProjectToScreen16(sMgCurCamera, &mPos, screen);
 
-        angle = data_ov006_02140404;
+        angle = sJump3DSpinAngle;
         wave = data_02082214[(angle >> 4) * 2];
         screen[1] = screen[1] - (((wave << 2) + 0x30000) >> 12);
         scaleX = func_02053200((wave >> 2) + 0x1000);
 
-        angle = data_ov006_02140404;
+        angle = sJump3DSpinAngle;
         scaleY = -func_02053200((data_02082214[(angle >> 4) * 2 + 1] >> 2) + 0x1000);
 
         /* Zero it through `int *`: writing mtx.a..mtx.d instead costs 11 words
@@ -457,14 +452,14 @@ void dMgJump3DMario_c::Draw()
         OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, (Matrix2x2 *)&mtx);
     }
 
-    mModelAnim.Render(&data_ov006_0212ddd0);
+    mModelAnim.Render(&sJump3DMarioScale);
 }
 
 // @symbol _ZN16dMgJump3DMario_c6UpdateEv
 /* The per-frame update: gravity, integrate, dispatch mState. */
 void dMgJump3DMario_c::Update()
 {
-    ApproachLinear(mVel.y, data_ov006_0213b010, data_ov006_0213b018);
+    ApproachLinear(mVel.y, sJump3DFallSpeed, sJump3DGravityStep);
     AddVec3(&mPos, &mVel, &mPos);
     (this->*mState)();
     Camera_ProjectToScreen16(sMgMainCamera, &mPos, &mScreenX);
@@ -477,7 +472,7 @@ void dMgJump3DMario_c::StateDamp()
 {
     mTimer -= 1;
     if (mTimer == 0) {
-        ApproachLinear(data_ov006_02140428, 0, 1);
+        ApproachLinear(sJump3DMariosLeft, 0, 1);
         Sound::PlayBank2_2D(0x130);
         Puff_Spawn(mScreenX, 0xc0);
         EnterRespawn();
@@ -496,11 +491,11 @@ void dMgJump3DMario_c::StateDamp()
 // @symbol _ZN16dMgJump3DMario_c9EnterDampEv
 void dMgJump3DMario_c::EnterDamp()
 {
-    if (data_ov006_02140428 > 1)
+    if (sJump3DMariosLeft > 1)
         Sound::PlayBank2_2D(0x1ca);
     else
         Sound::PlayBank2_2D(0x1c9);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimStruggle, 0, kAnimSpeed, 0);
     mTimer = 0x28;
     mState = pmf_dMgJump3DMario_c_StateDamp;
 }
@@ -548,7 +543,7 @@ void dMgJump3DMario_c::StateHold()
     }
     if (mCommand == 1) {
         mCommand = 0;
-        mVel.y = data_ov006_0213b008;
+        mVel.y = sJump3DBounceVy;
         EnterHit();
     } else if (ApproachLinear2(mTimer, 0, 1)) {
         mCommand = 0;
@@ -585,7 +580,8 @@ void dMgJump3DMario_c::EnterHold()
         mVel.x = -mVel.x;
         mVel.y = -mVel.y;
     }
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_02140408, 0x40000000, kAnimSpeed, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimSdown, 0x40000000,
+                                                kAnimSpeed, 0);
     mModelAnim.dExtFrameCtrl_c::currFrame = 0;
     Sound_PlayBank1Panned(0, 6, mPos.x);
     mTimer = 0x20;
@@ -600,7 +596,7 @@ void dMgJump3DMario_c::StateMove()
 
     if (st == 1) {
         mCommand = 0;
-        mVel.y = data_ov006_0213b008;
+        mVel.y = sJump3DBounceVy;
         if (mAnimIdx != 0)
             mAnimIdx = 0;
         else
@@ -633,7 +629,7 @@ void dMgJump3DMario_c::StateMove()
                 if (t < 0) t = -t;
                 if (t < 0x26 && (int)y < kScreenYMax) {
                     int v[3];
-                    int *p = &data_ov006_0213b00c;
+                    int *p = &sJump3DRiseVy;
                     int t0 = (ax - 0x80) << 12;
                     int t1 = (-az) << 12;
                     v[0] = t0;
@@ -643,12 +639,13 @@ void dMgJump3DMario_c::StateMove()
                        (notes/experiments/jump3d-2711-statemove-volatile-store.md). */
                     *(volatile int *)&v[2] = 0;
                     mVel.y = *p;
-                    mVel.x = data_ov006_0213b01c * dx;
+                    mVel.x = sJump3DMoveSpeed * dx;
                     if (mAnimIdx != 0)
                         mAnimIdx = 0;
                     else
                         mAnimIdx = 1;
-                    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *data_ov006_0213b098[mAnimIdx], 0x40000000, kAnimSpeed, 0);
+                    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+                        &mModelAnim, *sJump3DAnimTable[mAnimIdx], 0x40000000, kAnimSpeed, 0);
                     mModelAnim.dExtFrameCtrl_c::currFrame = 0;
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xed, mPos.x << 3, mPos.y << 3, mPos.z << 3);
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xee, v[0] << 3, v[1] << 3, v[2] << 3);
@@ -672,7 +669,8 @@ void dMgJump3DMario_c::StateMove()
             mVel.x = -FX_MUL(mVel.x, 0xd00);
             if (mVel.y > 0) {
                 mAnimIdx = 2;
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *data_ov006_0213b098[mAnimIdx], 0x40000000, kAnimSpeed, 0);
+                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+                    &mModelAnim, *sJump3DAnimTable[mAnimIdx], 0x40000000, kAnimSpeed, 0);
                 mModelAnim.dExtFrameCtrl_c::currFrame = 0;
                 Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
             }
@@ -680,7 +678,8 @@ void dMgJump3DMario_c::StateMove()
             mVel.x = -FX_MUL(mVel.x, 0xd00);
             if (mVel.y > 0) {
                 mAnimIdx = 2;
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *data_ov006_0213b098[mAnimIdx], 0x40000000, kAnimSpeed, 0);
+                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+                    &mModelAnim, *sJump3DAnimTable[mAnimIdx], 0x40000000, kAnimSpeed, 0);
                 mModelAnim.dExtFrameCtrl_c::currFrame = 0;
                 Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
             }
@@ -722,7 +721,8 @@ void dMgJump3DMario_c::StartFallOut()
         mVel.x = 0;
         mVel.y = 0x2000;
         Sound::PlayBank2_2D(0x1c9);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimStruggle, 0, kAnimSpeed,
+                                                    0);
         mModelAnim.dExtFrameCtrl_c::currFrame = 0;
         mState = pmf_dMgJump3DMario_c_StateFallOut;
     }
@@ -731,8 +731,7 @@ void dMgJump3DMario_c::StartFallOut()
 // @symbol _ZN16dMgJump3DMario_c12StateRiseOutEv
 void dMgJump3DMario_c::StateRiseOut()
 {
-    if (mModelAnim.file == data_ov006_0214041c)
-    {
+    if (mModelAnim.file == sJump3DAnimRollJump) {
         if (mModelAnim.dExtFrameCtrl_c::WillHitFrame(0xc) ||
             mModelAnim.dExtFrameCtrl_c::WillHitFrame(0x18))
             D3D_PlaySeAtX(0x1b5, mPos.x);
@@ -740,7 +739,7 @@ void dMgJump3DMario_c::StateRiseOut()
     if (mPos.y <= 0x180000)
         return;
     mVel.y = 0;
-    data_ov006_02140434++;
+    sJump3DRisenOutCount++;
     HideAndIdle();
 }
 
@@ -749,8 +748,9 @@ void dMgJump3DMario_c::StateRiseOut()
 void dMgJump3DMario_c::StartRiseOut()
 {
     mVel.x = 0;
-    mVel.y = data_ov006_0213b00c;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
+    mVel.y = sJump3DRiseVy;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimRollJump, 0x40000000,
+                                                kAnimSpeed, 0);
     mModelAnim.dExtFrameCtrl_c::currFrame = 0;
     Sound::PlayBank2_2D(0x10f);
     func_02012718(0x1b5, mScreenX << 12);
@@ -760,7 +760,8 @@ void dMgJump3DMario_c::StartRiseOut()
 // @symbol _ZN16dMgJump3DMario_c8EnterHitEv
 void dMgJump3DMario_c::EnterHit()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimRollJump, 0x40000000,
+                                                kAnimSpeed, 0);
     mModelAnim.dExtFrameCtrl_c::currFrame = 0;
     if (mState == pmf_dMgJump3DMario_c_StateWindUp_2) {
         func_02012718(0x110, mScreenX << 12);
@@ -781,7 +782,7 @@ void dMgJump3DMario_c::StateBounce()
         return;
     }
 
-    if (mModelAnim.file == data_ov006_0214041c) {
+    if (mModelAnim.file == sJump3DAnimRollJump) {
         if (mModelAnim.dExtFrameCtrl_c::WillHitFrame(0xc) != 0 ||
             mModelAnim.dExtFrameCtrl_c::WillHitFrame(0x18) != 0)
             D3D_PlaySeAtX(0x1b5, mPos.x);
@@ -791,7 +792,8 @@ void dMgJump3DMario_c::StateBounce()
         mVel.x = -FX_MUL(mVel.x, 0xd00);
         if (mVel.y > 0) {
             mAnimIdx = 2;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *data_ov006_0213b098[mAnimIdx], 0x40000000, kAnimSpeed, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *sJump3DAnimTable[mAnimIdx],
+                                                        0x40000000, kAnimSpeed, 0);
             mModelAnim.dExtFrameCtrl_c::currFrame = 0;
             Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
         }
@@ -799,7 +801,8 @@ void dMgJump3DMario_c::StateBounce()
         mVel.x = -FX_MUL(mVel.x, 0xd00);
         if (mVel.y > 0) {
             mAnimIdx = 2;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *data_ov006_0213b098[mAnimIdx], 0x40000000, kAnimSpeed, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *sJump3DAnimTable[mAnimIdx],
+                                                        0x40000000, kAnimSpeed, 0);
             mModelAnim.dExtFrameCtrl_c::currFrame = 0;
             Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
         }
@@ -807,7 +810,7 @@ void dMgJump3DMario_c::StateBounce()
         u16 t = mCommand;
         if (t == 1) {
             mCommand = 0;
-            mVel.y = data_ov006_0213b008;
+            mVel.y = sJump3DBounceVy;
             EnterHit();
             return;
         }
@@ -842,7 +845,7 @@ void dMgJump3DMario_c::StateWindUp()
     mVisible = 1;
     mPos.y = 0;
     mVel.x = mVel.x << 1;
-    mVel.y = data_ov006_0213b00c;
+    mVel.y = sJump3DRiseVy;
     mCommand = 0;
     EnterHit();
 }
@@ -882,10 +885,11 @@ void dMgJump3DMario_c::StateRespawn()
         rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
         mPos.x = ((int)rnd - 0x800) * 0xc0;
         mVel.y = 0;
-        speed = data_ov006_0213b01c;
+        speed = sJump3DMoveSpeed;
         rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
         mVel.x = FX_MUL((((int)rnd - 0x800) << 1), speed);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_02140424, 0x40000000, kAnimSpeed, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimWallJump, 0x40000000,
+                                                    kAnimSpeed, 0);
         EnterMove();
         return;
     }
@@ -900,7 +904,8 @@ void dMgJump3DMario_c::EnterRespawn()
     mTimer = 0x3c;
     mPos.y = 0x100000;
     mVel.y = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_02140424, 0x40000000, kAnimSpeed, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimWallJump, 0x40000000,
+                                                kAnimSpeed, 0);
     mState = pmf_dMgJump3DMario_c_StateRespawn;
 }
 
@@ -917,12 +922,12 @@ int dMgJump3DMario_c::LoadResources()
     if (func_020179b4(&gMarioModelMgModelFile, &mModelAnim, 1) == 0)
         return 0;
 
-    data_ov006_02140430 = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov006_02140460);
-    data_ov006_0214040c = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov006_02140468);
-    data_ov006_0214041c = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov006_02140458);
-    data_ov006_02140424 = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov006_02140438);
-    data_ov006_02140408 = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov006_02140440);
-    data_ov006_0214042c = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov006_02140448);
+    sJump3DAnimJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioJumpAnimFile);
+    sJump3DAnimDoubleJump1 = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioDoubleJump1AnimFile);
+    sJump3DAnimRollJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioRollJumpAnimFile);
+    sJump3DAnimWallJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioWallJumpAnimFile);
+    sJump3DAnimSdown = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioSdownAnimFile);
+    sJump3DAnimStruggle = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioStruggleAnimFile);
 
     mAnimIdx = 0;
     if (sMgMainCamera != 0)
@@ -933,8 +938,8 @@ int dMgJump3DMario_c::LoadResources()
         func_02016a14(&mModelAnim, 0x7fff);
         func_02016a04(&mModelAnim, 0x210);
     }
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, data_ov006_02140430, 0x40000000, kAnimSpeed, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, sJump3DAnimJump, 0x40000000,
+                                                kAnimSpeed, 0);
 
     HideAndIdle();
     return 1;
@@ -944,17 +949,17 @@ int dMgJump3DMario_c::LoadResources()
 dMgJump3DMario_c::~dMgJump3DMario_c()
 {
     gMarioModelMgModelFile.Release();
-    data_ov006_02140460.Release();
-    data_ov006_02140468.Release();
-    data_ov006_02140458.Release();
-    data_ov006_02140438.Release();
-    data_ov006_02140440.Release();
-    data_ov006_02140448.Release();
-    data_ov006_02140430 = 0;
-    data_ov006_0214040c = 0;
-    data_ov006_02140424 = 0;
-    data_ov006_02140408 = 0;
-    data_ov006_0214042c = 0;
+    sJump3DMarioJumpAnimFile.Release();
+    sJump3DMarioDoubleJump1AnimFile.Release();
+    sJump3DMarioRollJumpAnimFile.Release();
+    sJump3DMarioWallJumpAnimFile.Release();
+    sJump3DMarioSdownAnimFile.Release();
+    sJump3DMarioStruggleAnimFile.Release();
+    sJump3DAnimJump = 0;
+    sJump3DAnimDoubleJump1 = 0;
+    sJump3DAnimWallJump = 0;
+    sJump3DAnimSdown = 0;
+    sJump3DAnimStruggle = 0;
 }
 
 
@@ -965,10 +970,10 @@ dMgJump3DMario_c::dMgJump3DMario_c()
 {
 }
 
-Jump3DMarioAnimFilePtr data_ov006_02140460(32888);
-Jump3DMarioAnimFilePtr data_ov006_02140468(32797);
-Jump3DMarioAnimFilePtr data_ov006_02140458(32910);
-Jump3DMarioAnimFilePtr data_ov006_02140438(32958);
-Jump3DMarioAnimFilePtr data_ov006_02140440(32914);
-Jump3DMarioAnimFilePtr data_ov006_02140448(32932);
+Jump3DMarioAnimFilePtr sJump3DMarioJumpAnimFile(32888);
+Jump3DMarioAnimFilePtr sJump3DMarioDoubleJump1AnimFile(32797);
+Jump3DMarioAnimFilePtr sJump3DMarioRollJumpAnimFile(32910);
+Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile(32958);
+Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile(32914);
+Jump3DMarioAnimFilePtr sJump3DMarioStruggleAnimFile(32932);
 Jump3DModelFilePtr gMarioModelMgModelFile(534);

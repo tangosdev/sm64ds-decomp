@@ -16,7 +16,7 @@
  *   (the base leaves those slots pure virtual). Naming belongs in ov002.
  *   The setup helper loads data_ov014_021145c4 slot 0 with Model::LoadFile,
  *   slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, and writes
- *   mTimer / mEventBit from param1.
+ *   daObjSwdoor_c's four byte fields from param1.
  * Leftover: data_ov014_021145c4 is overlay data; this TU is text-only so
  *   the table stays an extern. g_profile_SWITCHDOOR is the same.
  */

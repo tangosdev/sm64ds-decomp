@@ -1,15 +1,28 @@
 extern void _ZN4CP1514FlushDataCacheEjj(unsigned int addr, unsigned int size);
 
+/* NitroSDK SND_DestroyWaveArc: unlink every SNDWaveArcLink that still points
+ * at this wave archive, clearing each link and flushing it so the ARM7 sees
+ * the change. Field names follow the SDK's SNDWaveArc/SNDWaveArcLink. */
+typedef struct SNDWaveArcLink {
+    void *waveArc;               /* 0x00 */
+    struct SNDWaveArcLink *next; /* 0x04 */
+} SNDWaveArcLink;
+
+typedef struct SNDWaveArc {
+    char pad_00[0x18];       /* fileHeader, blockHeader */
+    SNDWaveArcLink *topLink; /* 0x18 */
+} SNDWaveArc;
+
 void func_0205b6b0(void *thiz)
 {
-    int *node = *(int **)((char *)thiz + 0x18);
-    if (node == 0)
+    SNDWaveArcLink *link = ((SNDWaveArc *)thiz)->topLink;
+    if (link == 0)
         return;
     do {
-        int *next = (int *)node[1];
-        node[0] = 0;
-        node[1] = 0;
-        _ZN4CP1514FlushDataCacheEjj((unsigned int)node, 8);
-        node = next;
-    } while (node != 0);
+        SNDWaveArcLink *next = link->next;
+        link->waveArc = 0;
+        link->next = 0;
+        _ZN4CP1514FlushDataCacheEjj((unsigned int)link, 8);
+        link = next;
+    } while (link != 0);
 }

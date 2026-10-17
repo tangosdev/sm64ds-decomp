@@ -15,7 +15,7 @@
  *   (the base leaves those slots pure virtual). Naming belongs in ov002.
  *   The setup helper loads data_ov021_021148d0 slot 0 with Model::LoadFile,
  *   slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, and writes
- *   mTimer / mEventBit from param1.
+ *   daObjSwdoor_c's four byte fields from param1.
  * Leftover: data_ov021_021148d0 is overlay data; this TU is text-only so
  *   the table stays an extern. g_profile_CV_SHUTTER is the same.
  * Leftover: IsClsnInRange stays mangled (by-value Fix12<int>, wall 6az).

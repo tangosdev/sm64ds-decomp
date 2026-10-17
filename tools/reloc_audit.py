@@ -47,6 +47,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import match as M          # noqa: E402
 import relocs as R         # noqa: E402
+import tu_manifest as TUM  # noqa: E402
 # reverify_corpus is imported lazily inside winning_object(): it pulls in the ROM
 # and compile harness, and importing it at top level would create a cycle for
 # gate code (match/reverify) that wants only the pure checker below.
@@ -219,6 +220,40 @@ def object_reloc_dests(obj, func, name_index, vt_form="raw"):
     return dests, size
 
 
+def function_rename_homes():
+    """Full unique-home facts, never the best-effort first-match name index."""
+    homes = {}
+    for path, module in R.module_universe():
+        for row in TUM.function_rename_registry_rows(path.read_text(encoding="utf-8"), R.normalize_module(module)):
+            homes.setdefault(row["symbol"], []).append(row)
+    return homes
+
+
+def validated_defined_symbol_rename_plan(obj, entry, homes=None):
+    """Shared pure admission plus this route's explicit ELF/registry read inputs."""
+    rows = entry.get("defined_symbol_renames") or []
+    needs_function = isinstance(rows, list) and any(isinstance(r, dict) and "owned_function" in r for r in rows)
+    if not needs_function:
+        return TUM.defined_symbol_rename_plan(entry)
+    try:
+        elf = ELFFile(io.BytesIO(obj))
+        if elf.elfclass != 32 or not elf.little_endian or elf["e_machine"] != "EM_ARM" or elf["e_type"] != "ET_REL":
+            return {}, [], ["owned function rename requires an ARM32 little-endian relocatable object"]
+        table = elf.get_section_by_name(".symtab")
+        if table is None:
+            return {}, [], ["owned function rename requires a symbol table"]
+        symbols = [{"ordinal": i, "name": s.name, "type": s["st_info"]["type"],
+                    "binding": s["st_info"]["bind"], "size": s["st_size"],
+                    "value": s["st_value"], "section": s["st_shndx"]}
+                   for i, s in enumerate(table.iter_symbols())]
+        sections = {i: {"type": s["sh_type"], "flags": s["sh_flags"], "size": s["sh_size"]}
+                    for i, s in enumerate(elf.iter_sections())}
+        return TUM.defined_symbol_rename_plan(entry, symbols, sections,
+                                            function_rename_homes() if homes is None else homes)
+    except (ValueError, TypeError, KeyError, OSError) as exc:
+        return {}, [], [f"owned function rename inputs refused: {exc}"]
+
+
 _RENAME_POLICIES = None
 
 
@@ -238,7 +273,10 @@ def _defined_symbol_rename_policies():
             funcs = frozenset(row["symbol"] for row in entry.get("functions") or []
                               if isinstance(row, dict) and row.get("symbol"))
             if mapping and funcs:
-                policies.append((funcs, mapping))
+                if any(isinstance(row, dict) and "owned_function" in row for row in rows):
+                    policies.append((funcs, mapping, entry))
+                else:
+                    policies.append((funcs, mapping))
         _RENAME_POLICIES = policies
     return _RENAME_POLICIES
 
@@ -264,11 +302,23 @@ def _with_manifest_renames(obj):
                    if s.name and s["st_shndx"] != "SHN_UNDEF"}
     except Exception:                                             # noqa: BLE001
         return obj
-    for funcs, mapping in policies:
-        if funcs <= defined and set(mapping) <= defined:
-            import objisolate as OI
-            out, _plan = OI.rename_defined_symbols(obj, mapping)
-            return obj if out is None else out
+    for policy in policies:
+        funcs, mapping = policy[:2]
+        if len(policy) == 3:
+            entry = policy[2]
+            expected = TUM.defined_function_preimage(entry, mapping)
+            # A canonical object passes through unchanged; TB deliberately still
+            # refuses missing raw source names when explicitly asked to prepare it.
+            if not expected <= defined or not set(mapping) <= defined:
+                continue
+            checked_mapping, _requested, reasons = validated_defined_symbol_rename_plan(obj, entry)
+            if reasons or checked_mapping != mapping:
+                return obj
+        elif not funcs <= defined or not set(mapping) <= defined:
+            continue
+        import objisolate as OI
+        out, _plan = OI.rename_defined_symbols(obj, mapping)
+        return obj if out is None else out
     return obj
 
 

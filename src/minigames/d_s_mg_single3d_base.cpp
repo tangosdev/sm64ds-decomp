@@ -13,7 +13,7 @@
  * - Ov004_LoadFile keeps its local declaration: its own definition
  *   is still declared without the argument and result.
  * - The ov004 registry words stay raw: sMgTopScreenYOffset and the
- *   file-id table data_ov006_0213e42c name no struct this TU can see.
+ *   file-id table sSingle3DCommonNcgByLanguage name no struct this TU can see.
  *   sMgGraphCallback keeps the int[] spelling: the typed
  *   dScMgBase_c::graphCallback_c form matches (9/9 still MATCH) but trips
  *   the decl ratchet against src/minigames/d_s_mg_d3d_base.cpp's banked int[],
@@ -68,7 +68,7 @@ extern u8 data_0209d45c;
 extern u32 data_020a0db0;
 extern int sMgTopScreenYOffset;
 extern int sMgGraphCallback[];
-extern int data_ov006_0213e42c[];
+extern int sSingle3DCommonNcgByLanguage[];
 extern int data_0208ee44;
 extern void **data_0209d4a8;
 }
@@ -98,7 +98,7 @@ void dScMgSingle3DBase_c::InitEngines()
     REG_DISPCNT &= ~0x300010u;
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(8);
-    fileData = Ov004_LoadFile(data_ov006_0213e42c[GetGameLanguage()]);
+    fileData = Ov004_LoadFile(sSingle3DCommonNcgByLanguage[GetGameLanguage()]);
     /* Each split `dst += 0x4000` keeps the ROM's mov and add pair; a single
      * constant becomes a literal-pool load. */
     {

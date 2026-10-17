@@ -92,12 +92,12 @@ extern u16 data_ov004_020bca60[];
 extern int GetGameLanguage(void);
 /* Writes the icon center, half extents, touch kind, and clears the blink. */
 extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
-extern short data_ov004_020bfe74[];
-extern short data_ov004_020bfe76[];
-extern short data_ov004_020bfe88[];
-extern short data_ov004_020bfe8a[];
-extern short data_ov004_020bfe9c[];
-extern short data_ov004_020bfe9e[];
+extern short sPsOptIconPosA[];
+extern short sPsOptIconPosAY[];
+extern short sPsOptIconPosB[];
+extern short sPsOptIconPosBY[];
+extern short sPsOptStylePos[];
+extern short sPsOptStylePosY[];
 int TouchArea_Update(void *icon, int touch);
 /* Toggles mOn, drops mReady, and reloads mBlink from the icon's +0x18. */
 void func_ov001_020ab3f0(void *icon);
@@ -131,11 +131,11 @@ dMgPsOpt_c::dMgPsOpt_c()
     PsOpt_PlaceIcon(&mIcons[kIconSoundPrev], kStyleSoundPrev, 0, 0x64, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconSoundNext], kStyleSoundNext, 0, 0xf4, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconSoundLabel], kStyleSoundLabel, 0,
-        data_ov004_020bfe74[GetGameLanguage() * 2] + 0x18, 0x38);
+                    sPsOptIconPosA[GetGameLanguage() * 2] + 0x18, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconLightOn], kStyleLight, 0, 0x8c, 0x68);
     PsOpt_PlaceIcon(&mIcons[kIconLightOff], kStyleLight, 0, 0xcc, 0x68);
     PsOpt_PlaceIcon(&mIcons[kIconLightLabel], kStyleLightLabel, 0,
-        data_ov004_020bfe88[GetGameLanguage() * 2] + 0x18, 0x68);
+                    sPsOptIconPosB[GetGameLanguage() * 2] + 0x18, 0x68);
     PsOpt_PlaceIcon(&mIcons[kIconBack], kStyleBack, 0, 0x80, 0xa8);
 
     /* The ROM stores the full count and then clears it. Both stores stay. */
@@ -342,19 +342,16 @@ extern "C" void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int va
     if (style == kStyleSoundLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        func_ov001_020ab5b0((char *)icon, kind, x, y,
-                            HALF_AT(data_ov004_020bfe74, lang),
-                            HALF_AT(data_ov004_020bfe76, lang2));
+        func_ov001_020ab5b0((char *)icon, kind, x, y, HALF_AT(sPsOptIconPosA, lang),
+                            HALF_AT(sPsOptIconPosAY, lang2));
     } else if (style == kStyleLightLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        func_ov001_020ab5b0((char *)icon, kind, x, y,
-                            HALF_AT(data_ov004_020bfe88, lang),
-                            HALF_AT(data_ov004_020bfe8a, lang2));
+        func_ov001_020ab5b0((char *)icon, kind, x, y, HALF_AT(sPsOptIconPosB, lang),
+                            HALF_AT(sPsOptIconPosBY, lang2));
     } else {
-        func_ov001_020ab5b0((char *)icon, kind, x, y,
-                            HALF_AT(data_ov004_020bfe9c, style),
-                            HALF_AT(data_ov004_020bfe9e, style));
+        func_ov001_020ab5b0((char *)icon, kind, x, y, HALF_AT(sPsOptStylePos, style),
+                            HALF_AT(sPsOptStylePosY, style));
     }
 }
 

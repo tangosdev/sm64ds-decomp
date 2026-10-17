@@ -2530,12 +2530,12 @@ void daStar_c::func_ov002_020e84ec() {
     if (mKind == KIND_8) {
         Vec3_Asr(&v, &mPos, 3);
         Matrix4x3_FromTranslation(&mModelAnim1.mat4x3, v.x, v.y, v.z);
-    } else if (*(void**)((char *)this + 0xc8) != 0) {
+    } else if (mCarryMatrix != 0) {
         /* M48 overlay: the class headers above switch Matrix4x3 to the
          * structured math/Matrix.h spelling, whose struct-copy codegen
          * differs from the flat 12-word copy this shard proved. M48 is the
          * same 12 words; proven byte-identical in isolation. */
-        *(struct M48*)&mModelAnim1.mat4x3 = *(struct M48*)(*(char**)((char *)this + 0xc8));
+        *(struct M48 *)&mModelAnim1.mat4x3 = *(struct M48 *)mCarryMatrix;
     } else if (!mBits.noSpin) {
         ang = (s16 *)&mAngleY;
         t = *ang + 0xc00;

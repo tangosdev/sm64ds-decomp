@@ -44,7 +44,11 @@ struct daShark_c : dEnemyBase_c {
        at +8 through it. */
     s32 mState;                       /* 0x370 */
     Vector3 mClsnOffset;              /* 0x374 */
-    u8  pad_380[0x8];
+    u8 pad_380[0x4];
+    /* Which of the three hurt-cylinder offsets is live: 0 centred, 1 at
+       +0x8c000 z, 2 at -0x8c000 z. func_ov090_02133710 steps it 0, 1, 2, 0
+       each frame. */
+    s32 mSwingPhase;                  /* 0x384 */
     s32 mPathID;                      /* 0x388 */
     s32 mPathNodeCount;               /* 0x38c */
     s32 mPathNodeIdx;                 /* 0x390 */
@@ -123,7 +127,8 @@ struct daShark_c {
     s32 mClsnOffsetX;            /* 0x374 */
     s32 mClsnOffsetY;            /* 0x378 */
     s32 mClsnOffsetZ;            /* 0x37c */
-    u8  pad_380[0x8];
+    u8 pad_380[0x4];
+    s32 mSwingPhase;        /* 0x384 */
     s32 mPathID;            /* 0x388 */
     s32 mPathNodeCount;            /* 0x38c */
     s32 mPathNodeIdx;            /* 0x390 */

@@ -40,6 +40,7 @@
 #include "types.h"
 #include "common.h"
 #include "daMky_c.h"
+#include "nitro/fx/fx.h"
 #include "SharedFilePtr.h"
 #include "decl_SaveData.h"
 #include "dBgCh_Gnd.h"
@@ -393,8 +394,7 @@ void daMky_c::func_ov030_02111f6c(dBgCh_Actr *w) {
         Vector3 n;
         static_cast<const dBgPi *>(w->GetFloorResult())->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = (int)(((long long)n.x * this->unk_0a4 + 0x800) >> 0xc) +
-                    (int)(((long long)n.z * this->unk_0ac + 0x800) >> 0xc);
+            int s = FX_MUL(n.x, this->unk_0a4) + FX_MUL(n.z, this->unk_0ac);
             this->mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
         }
     }
@@ -734,7 +734,6 @@ int daMky_c::EnterState7()
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef short s16;
-    typedef long long s64;
     extern short data_02082214[];
     extern void *gMonkeyJumpStAnimationFile[];
   u8 *new_var;
@@ -746,7 +745,6 @@ int daMky_c::EnterState7()
   u16 ang;
   s16 s;
   int mul = 0x4b000;
-  int rnd = 0x800;
   mFlags &= ~0x80000;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000, 0);
   this->mHorzSpeed = 0xa000;
@@ -771,11 +769,11 @@ int daMky_c::EnterState7()
   }
   ang = (u16)this->mAngleY;
   s = data_02082214[(ang >> 4) * 2];
-  *pos = (*pos) + ((int) ((((((s64) s) * mul) + rnd) >> 1) >> 11));
+  *pos = (*pos) + FX_MUL(s, mul);
   *py = (*py) + 0x50000;
   ang = (u16)this->mAngleY;
   s = data_02082214[((ang >> 4) * 2) + 1];
-  *pz = (*pz) + ((int) (((((s64) s) * mul) + rnd) >> 12));
+  *pz = (*pz) + FX_MUL(s, mul);
   other = this->mPlayer;
   {
     int oy = other->mPosY;

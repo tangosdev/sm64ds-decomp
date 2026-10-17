@@ -82,35 +82,16 @@ void func_ov007_020b5bf0(char *arg0)
             char *obj = *(char **)(*(char **)(*(char **)data_ov007_0210342c + 0x28));
             s16 v = *(s16 *)(*(char **)(r7 + 4));
 
-            if (v != 2) goto L_1bc;
-            if (typeField == 9) goto L_set;
-            if (typeField != 0xc) goto L_1a8;
-            if (*(u8 *)(obj + 9) != 0) goto L_set;
-        L_1a8:
-            if (typeField != 0xd) goto L_1bc;
-            if (*(u8 *)(obj + 9) == 0) goto L_set;
-        L_1bc:
-            if (typeField != 0xc) goto L_1d0;
-            if (*(u8 *)(obj + 9) == 0) goto L_set;
-        L_1d0:
-            if (typeField != 0xd) goto L_1f4;
-            if (*(u8 *)(obj + 9) == 0) goto L_1f4;
-        L_set:
-            {
+            if ((v == 2 && (typeField == 9 || (typeField == 0xc && *(u8 *)(obj + 9) != 0) ||
+                            (typeField == 0xd && *(u8 *)(obj + 9) == 0))) ||
+                (typeField == 0xc && *(u8 *)(obj + 9) == 0) ||
+                (typeField == 0xd && *(u8 *)(obj + 9) != 0)) {
                 char *m4 = *(char **)(arg0 + 4);
                 *(u16 *)(m4 + 0x70) = *(u16 *)(m4 + 0xc);
+            } else if (v != 2 && (typeField == 9 || (typeField == 0xc && *(u8 *)(obj + 9) != 0) ||
+                                  (typeField == 0xd && *(u8 *)(obj + 9) == 0))) {
+                *(u16 *)(*(char **)(arg0 + 4) + 0x70) = 0;
             }
-            break;
-        L_1f4:
-            if (v == 2) break;
-            if (typeField == 9) goto L_zero;
-            if (typeField != 0xc) goto L_218;
-            if (*(u8 *)(obj + 9) != 0) goto L_zero;
-        L_218:
-            if (typeField != 0xd) break;
-            if (*(u8 *)(obj + 9) != 0) break;
-        L_zero:
-            *(u16 *)(*(char **)(arg0 + 4) + 0x70) = 0;
             break;
         }
         case 3:

@@ -10,7 +10,7 @@
  * dMgJump3DMario_c : dMg3DHeyhoObjAdapter_c. The base is abstract (all three
  * vtable slots null) and this class is its only derived class. The destructor
  * is not virtual, so the key function is the first declared virtual,
- * Unk_020c76d8, and src/minigames/d_mg_jump3d_mario.cpp emits the vtable.
+ * GetPos, and src/minigames/d_mg_jump3d_mario.cpp emits the vtable.
  *
  * There is no factory: the owning scenes hold `dMgJump3DMario_c mPlayers[3]`
  * (dScMgJump_c +0x506c, dScMgJump2_c +0x500c) and array-construct it. The base
@@ -44,9 +44,9 @@ struct dMg3DHeyhoObjAdapter_c {
     dMg3DHeyhoObjAdapter_c();
     ~dMg3DHeyhoObjAdapter_c() {}
 
-    virtual void *Unk_020c76d8() = 0; /* slot 0 -- returns &mPos */
-    virtual void *Unk_020c76d0() = 0; /* slot 1 -- returns &mVel */
-    virtual int Unk_020c762c() = 0;   /* slot 2 -- 0 while idle-ish, 1 once live */
+    virtual void *GetPos() = 0;      /* slot 0 -- returns &mPos */
+    virtual void *GetVelocity() = 0; /* slot 1 -- returns &mVel */
+    virtual int IsLaunched() = 0;    /* slot 2 -- 0 in StateIdle or StateWindUp, 1 once launched */
 
     Jump3DVec mAnchor;      /* 0x04 -- the point EnterHold measures mPos against; written by the owning scene, never in this TU */
     u16 mCommand;           /* 0x10 -- the scene's command: 1 = hit, 2 = hold; consumed (cleared) by the State* handlers. The one field the base ctor touches */
@@ -95,9 +95,9 @@ struct dMgJump3DMario_c : dMg3DHeyhoObjAdapter_c {
     dMgJump3DMario_c();
     ~dMgJump3DMario_c();
 
-    virtual void *Unk_020c76d8(); /* slot 0 */
-    virtual void *Unk_020c76d0(); /* slot 1 */
-    virtual int Unk_020c762c();   /* slot 2 */
+    virtual void *GetPos();      /* slot 0 */
+    virtual void *GetVelocity(); /* slot 1 */
+    virtual int IsLaunched();    /* slot 2 */
 
     void UpdateModelMatrix(); /* 0x020c76e0 */
     void Draw(); /* 0x020c7734 */

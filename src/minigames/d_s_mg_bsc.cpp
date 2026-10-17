@@ -62,10 +62,10 @@ extern void Dealer_PlayLose(void* c);
 extern void Mg_SubmitScore(int self);
 extern void Mg_SetSharedState(int v);
 extern void Mg_SaveRecordPair(int a, int b);
-extern int data_ov006_0213fd44[];
+extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern int RandomIntInternal(int* seed);
-extern void Dealer_StartDeal(char* c, int unused, short a2, int a3);
+extern void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
 extern int data_0209e650;
 extern "C" void FreeGfxSlotsById(int arg);
 extern "C" void MgCoins_Reset(void);
@@ -132,7 +132,7 @@ s32 dScMgBSC_c::InitResources()
     int fh;
     data_0209d45c[0] = 0x11;
     LoadCard2SubBg3();
-    LoadCompressedFileAt(data_ov006_0213fe78[GetGameLanguage()], (void *)0x6600000);
+    LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
     fh = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);
     GXS::LoadOBJPltt((void *)fh, 0, 0x100);
     Deallocate((void *)fh);
@@ -169,14 +169,11 @@ s32 dScMgBSC_c::Render()
     if (mState >= 1) {
         for (i = 0; i < 2; i++) {
             if (mCardFrame[i] < 3) {
-                Hud_RenderSprite(data_ov006_0213fe8c[mCardFrame[i]],
-                                    mCardPos[i].x >> 12,
-                                    mCardPos[i].y >> 12, -1, -1);
+                Hud_RenderSprite(sBscCardSprites[mCardFrame[i]], mCardPos[i].x >> 12,
+                                 mCardPos[i].y >> 12, -1, -1);
             } else {
-                Hud_RenderSprite(
-                    data_ov006_0213fe8c[mCardFrame[i] + mCardValue[i] * 2],
-                    mCardPos[i].x >> 12,
-                    mCardPos[i].y >> 12, -1, -1);
+                Hud_RenderSprite(sBscCardSprites[mCardFrame[i] + mCardValue[i] * 2],
+                                 mCardPos[i].x >> 12, mCardPos[i].y >> 12, -1, -1);
             }
         }
     }
@@ -285,7 +282,7 @@ void dScMgBSC_c::StateDealCards()
     mOtherCard = 0;
     mChosenCard = 1;
     mDealCount = 0;
-    Dealer_StartDeal((char *)&mShared, 3, 2, (int)&mDealCount);
+    Dealer_StartShuffle((char *)&mShared, 3, 2, (int)&mDealCount);
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -298,7 +295,7 @@ void dScMgBSC_c::StateDealCards()
 
 // @symbol _ZN10dScMgBSC_c13StateWaitDealEv
 /* State 1: slides each card to its lane (x toward
- * data_ov006_0213fd44, y toward 0x60000). mDealCount is re-read every pass
+ * sBscLaneX, y toward 0x60000). mDealCount is re-read every pass
  * because the animation helper counts it down. Moves on once both cards
  * are in place. */
 void dScMgBSC_c::StateWaitDeal()
@@ -319,16 +316,15 @@ void dScMgBSC_c::StateWaitDeal()
   xp = (char *)&mCardPos[0].x;
   yp = (char *)&mCardPos[0].y;
   do {
-    if (Math_Function_0203b14c((int *)xp, data_ov006_0213fd44[i], 0x800, 0x10000, 0x200) == 0)
-      xArrived = 1;
-    else
-      xArrived = 0;
+      if (Math_Function_0203b14c((int *)xp, sBscLaneX[i], 0x800, 0x10000, 0x200) == 0)
+          xArrived = 1;
+      else
+          xArrived = 0;
 
-    if (Math_Function_0203b14c((int *)yp, 0x60000, 0x800, 0x10000, 0x200) == 0)
-    {
-      if (xArrived != 0)
-        arrived++;
-    }
+      if (Math_Function_0203b14c((int *)yp, 0x60000, 0x800, 0x10000, 0x200) == 0) {
+          if (xArrived != 0)
+              arrived++;
+      }
     xp += 8;
     yp += 8;
     i++;
@@ -356,7 +352,7 @@ void dScMgBSC_c::StateChooseCard()
     for (lane = 0; lane < 2; lane++) {
         unsigned char idx = *(volatile unsigned char *)&gActivePlayerSlot;
         unsigned char *touch = &gTouchHeld[(unsigned int)idx * 4];
-        int dx = (int)touch[2] - (data_ov006_0213fd44[lane] >> 12);
+        int dx = (int)touch[2] - (sBscLaneX[lane] >> 12);
         int dy = (int)touch[3] - 0x60;
         if (dx < -0x10) continue;
         if (dx > 0x10) continue;

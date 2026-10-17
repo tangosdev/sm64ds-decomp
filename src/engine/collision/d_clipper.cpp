@@ -14,8 +14,8 @@
  *
  * leftovers:
  * - ClipSphere and TransformAndClip are names inferred from their operations.
- * - ClipSphere's opt_propagation off pair and goto-shaped body are
- *   the matched form; dClipper_EmitDeletingDestructor/EmitDestructor
+ * - ClipSphere's opt_propagation off pair and its materialized 0/1
+ *   outside/ok locals are the matched form; dClipper_EmitDeletingDestructor/EmitDestructor
  *   are uncalled stubs that force D0 then D1 out of the inline
  *   destructor (ROM order).
  */
@@ -33,6 +33,12 @@ void NormalizeVec3(Vector3 *src, Vector3 *dst);
 int _ZN4cstd4fdivEii(int a, int b);
 }
 extern short data_02082214[];
+
+/* Signed distance of (x, y, z) from a frustum side plane, each product rounded to Fix12. */
+static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y, long long z) {
+    return (int)((z * n.z + 0x800) >> 12) +
+           ((int)((x * n.x + 0x800) >> 12) + (int)((y * n.y + 0x800) >> 12));
+}
 
 #pragma opt_propagation off
 // @symbol _ZN8dClipper10ClipSphereER7Vector3iPh
@@ -54,40 +60,37 @@ int dClipper::ClipSphere(Vector3 &v, Fix12i radius, u8 *hint) {
         long long d;
 
         negZ = -v.z;
-        if (negZ < this->mNearZ - radius)
-            goto fail1;
-        if (negZ > this->mFarZ + radius)
-            goto fail1;
-
-        first = *hint & 3;
-        x = v.x;
-        c = radius;
-        dot = ((long long)v.x * this->mPlaneNormals[first].x +
-               (long long)v.y * this->mPlaneNormals[first].y +
-               (long long)v.z * this->mPlaneNormals[first].z + 0x800) >>
-              12;
-        outside = 0;
-        if (c < dot) outside = 1;
-        if (outside == 0)
-        {
-            i = (first + 1) & 3;
-            y = (int)*(unsigned int *)&v.y;
-            z = (int)*(unsigned int *)&v.z;
-            zero = 0;
-            one = 1;
-            do {
-                d = (z * this->mPlaneNormals[i].z +
-                     (x * this->mPlaneNormals[i].x + y * this->mPlaneNormals[i].y) + 0x800) >>
-                    12;
-                ok = d <= c ? one : zero;
-                if (ok == 0) goto failstore;
-                i = (i + 1) & 3;
-            } while (i != first);
-            return negZ;
-        failstore:
-            *hint = (u8)i;
+        if (negZ >= this->mNearZ - radius && negZ <= this->mFarZ + radius) {
+            first = *hint & 3;
+            x = v.x;
+            c = radius;
+            dot = ((long long)v.x * this->mPlaneNormals[first].x +
+                   (long long)v.y * this->mPlaneNormals[first].y +
+                   (long long)v.z * this->mPlaneNormals[first].z + 0x800) >>
+                  12;
+            /* outside and ok stay materialized 0/1 values: testing dot <= c directly
+               shrinks it (0x46c), and testing d > c in the loop shrinks it to 0x45c */
+            outside = c < dot;
+            if (outside == 0) {
+                i = (first + 1) & 3;
+                y = (int)*(unsigned int *)&v.y;
+                z = (int)*(unsigned int *)&v.z;
+                zero = 0;
+                one = 1;
+                for (;;) {
+                    d = (z * this->mPlaneNormals[i].z +
+                         (x * this->mPlaneNormals[i].x + y * this->mPlaneNormals[i].y) + 0x800) >>
+                        12;
+                    ok = d <= c ? one : zero;
+                    if (ok == 0)
+                        break;
+                    i = (i + 1) & 3;
+                    if (i == first)
+                        return negZ;
+                }
+                *hint = (u8)i;
+            }
         }
-    fail1:
         return 0x7FFFFFFF;
     }
     else
@@ -95,35 +98,16 @@ int dClipper::ClipSphere(Vector3 &v, Fix12i radius, u8 *hint) {
         int negZ;
 
         negZ = -v.z;
-        if (negZ < this->mNearZ - radius)
-            goto fail2;
-        if (negZ > this->mFarZ + radius)
-            goto fail2;
-
-        if (FX_MUL(v.z, this->mPlaneNormals[0].z) +
-                (FX_MUL(v.x, this->mPlaneNormals[0].x) + FX_MUL(v.y, this->mPlaneNormals[0].y)) >
-            radius)
-            goto fail2;
-
-        {
+        if (negZ >= this->mNearZ - radius && negZ <= this->mFarZ + radius &&
+            FX_MUL(v.z, this->mPlaneNormals[0].z) + (FX_MUL(v.x, this->mPlaneNormals[0].x) +
+                                                     FX_MUL(v.y, this->mPlaneNormals[0].y)) <=
+                radius) {
             long long x = v.x, y = v.y, z = v.z;
-            if ((int)((z * this->mPlaneNormals[1].z + 0x800) >> 12) +
-                    ((int)((x * this->mPlaneNormals[1].x + 0x800) >> 12) +
-                     (int)((y * this->mPlaneNormals[1].y + 0x800) >> 12)) >
-                radius)
-                goto fail2;
-            if ((int)((z * this->mPlaneNormals[2].z + 0x800) >> 12) +
-                    ((int)((x * this->mPlaneNormals[2].x + 0x800) >> 12) +
-                     (int)((y * this->mPlaneNormals[2].y + 0x800) >> 12)) >
-                radius)
-                goto fail2;
-            if ((int)((z * this->mPlaneNormals[3].z + 0x800) >> 12) +
-                    ((int)((x * this->mPlaneNormals[3].x + 0x800) >> 12) +
-                     (int)((y * this->mPlaneNormals[3].y + 0x800) >> 12)) <=
-                radius)
+            if (PlaneDistance(this->mPlaneNormals[1], x, y, z) <= radius &&
+                PlaneDistance(this->mPlaneNormals[2], x, y, z) <= radius &&
+                PlaneDistance(this->mPlaneNormals[3], x, y, z) <= radius)
                 return negZ;
         }
-    fail2:
         return 0x7FFFFFFF;
     }
 }

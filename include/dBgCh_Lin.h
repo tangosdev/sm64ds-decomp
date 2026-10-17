@@ -75,8 +75,8 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
        Proven three ways, all matched code:
          C1            constructs it -- _ZN8dM3dGSphC1Ev(thiz + 0x64) stores
                        _ZTV8dM3dGSph
-         D1            destroys it   -- dM3dGSph::~dM3dGSph(&self->unk_064)
-         SetObjAndLine fills it      -- mBoundSphere.Set(&midpoint,
+         D1            destroys it   -- the member's ~dM3dGSph
+         SetObjAndLine fills it      -- mBoundSphere.Set(midpoint,
                        (clsnDist >> 1) + 0x1000)
        and dBgCh_Lin::DetectClsn culls candidate colliders against it, reading
        the centre at 0x68 and the radius at 0x74. dM3dGSph is 0x14, so this

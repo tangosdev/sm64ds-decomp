@@ -19,8 +19,23 @@ extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern Entry3 data_02086f58[];
 
+/* File-local view of dCamera_c (include/dCamera_c.h is C++): the fields this
+ * helper touches. */
+typedef struct {
+    char pad_000[0x80];
+    Vector3 lookAt; /* 0x080 */
+    Vector3 pos;    /* 0x08c */
+    /* func_020089f8 copies mTargetPlayer->mPos here every frame. */
+    Vector3 mTargetPos; /* 0x098 */
+    char pad_0a4[0xb0];
+    int mFlags; /* 0x154 */
+    char pad_158[0x24];
+    short mAngleY; /* 0x17c */
+} CameraView;
+
 void func_0200b798(char *self, short *a1, int arg2)
 {
+    CameraView *cam = (CameraView *)self;
     dBgCh_Gnd ray;
     Vector3 pos;
     Vector3 v1;
@@ -56,8 +71,8 @@ void func_0200b798(char *self, short *a1, int arg2)
 
     sum = arg2 + pos.y;
     {
-        int sz = *(int *)(self + 0xa0);
-        int sx = *(int *)(self + 0x98);
+        int sz = cam->mTargetPos.z;
+        int sx = cam->mTargetPos.x;
         int dz = sz - pos.z;
         int dx = sx - pos.x;
         int dy = sum - pos.y;
@@ -75,34 +90,34 @@ void func_0200b798(char *self, short *a1, int arg2)
         v2.y += 0x220000 - len;
     }
 
-    Vec3_Sub(&v3, &v2, (Vector3 *)(self + 0x80));
+    Vec3_Sub(&v3, &v2, &cam->lookAt);
     v1.x = v3.x;
     v1.y = v3.y;
     v1.z = v3.z;
     len = LenVec3(&v1);
 
     limit = e->a;
-    if (*(int *)(self + 0x154) & 0xc00) limit = e->b;
+    if (cam->mFlags & 0xc00)
+        limit = e->b;
 
     if (len > limit) {
         scale = _ZN4cstd4fdivEii(limit, len);
         Vec3_MulScalarInPlace((int *)&v1, scale);
-        Vec3_Add(&v4, (Vector3 *)(self + 0x80), &v1);
+        Vec3_Add(&v4, &cam->lookAt, &v1);
         v2.x = v4.x;
         v2.y = v4.y;
         v2.z = v4.z;
     }
 
-    if (*(int *)(self + 0x154) & 4) {
-        *(int *)(self + 0x8c) = v2.x;
-        *(int *)(self + 0x90) = v2.y;
-        *(int *)(self + 0x94) = v2.z;
+    if (cam->mFlags & 4) {
+        cam->pos.x = v2.x;
+        cam->pos.y = v2.y;
+        cam->pos.z = v2.z;
     } else {
-        func_020092c4((int)self, (Vector3 *)(self + 0x8c), &v2);
+        func_020092c4((int)self, &cam->pos, &v2);
     }
 
-    *(short *)(self + 0x17c) =
-        Vec3_HorzAngle((Vector3 *)(self + 0x80), (Vector3 *)(self + 0x8c));
+    cam->mAngleY = Vec3_HorzAngle(&cam->lookAt, &cam->pos);
 
     _ZN9dBgCh_GndD1Ev(&ray);
 }

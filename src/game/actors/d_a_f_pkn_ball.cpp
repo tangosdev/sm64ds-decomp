@@ -301,7 +301,7 @@ int daFPknBall_c::Behavior() {
                 if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
                     /* Knocked away from the hitter: a short hop into death state 8. */
                     mFlags &= ~0x10000001;
-                    mPrevAngleY = Vec3_HorzAngle((char*)hitActor + 0x5c, &mPosX);
+                    mPrevAngleY = Vec3_HorzAngle(&((dActor_c *)hitActor)->mPosX, &mPosX);
                     mHorzSpeed = 0xa000;
                     mVertSpeed = 0x28000;
                     mDeathTimer = 0x1e;

@@ -21,6 +21,10 @@ extern unsigned char data_0209b474;
 extern short data_0209d504;
 extern unsigned char data_0209d4f4;
 
+static inline int IsSkipRequested(void) {
+    return (func_0203da3c() != 0 || data_0209f1d8 != 0) ? 1 : 0;
+}
+
 void func_02019ac4(void)
 {
     int skip;
@@ -29,14 +33,12 @@ void func_02019ac4(void)
     int closed;
     unsigned int t;
 
-    if (func_0203da3c() != 0 || data_0209f1d8 != 0)
-        skip = 1;
-    else
-        skip = 0;
+    skip = IsSkipRequested();
     lid = *(unsigned short *)0x027fffa8;
     closed = (int)(lid & 0x8000) >> 15;
     t = data_0209fc68;
     delta = data_0208ee44;
+    /* materialized compare kept: if (t == 6) or an inline predicate drops 3 insns */
     t = t == 6;
     if (t != false)
         data_0208ee48 = 0;
@@ -51,9 +53,7 @@ void func_02019ac4(void)
     }
     if (data_0209d4ec == 1) {
         short tv = data_0209d504;
-        if (tv > 0)
-            goto dec1;
-        {
+        if (tv <= 0) {
             if (data_0208ee48 != 0) {
                 int arg;
                 if (func_0203d974() != 0) {
@@ -68,21 +68,17 @@ void func_02019ac4(void)
                 data_0209d504 = 0;
             }
             data_0209d4ec = 2;
+        } else {
+            data_0209d504 = tv - delta;
         }
-        goto st2;
-    dec1:
-        data_0209d504 = tv - delta;
     }
-st2:
     if (data_0209d4ec == 2) {
         if (closed == 0) {
             func_02019dfc();
             data_0209d4ec = 6;
         } else {
             short tv = data_0209d504;
-            if (tv > 0)
-                goto dec2;
-            {
+            if (tv <= 0) {
                 if (data_0209d4f4 == 0) {
                     func_02011dc0();
                     data_0209d4f4 = 1;
@@ -90,13 +86,11 @@ st2:
                 if (skip != 0)
                     func_0205f66c(0);
                 data_0209d4ec = 3;
+            } else {
+                data_0209d504 = tv - delta;
             }
-            goto st3;
-        dec2:
-            data_0209d504 = tv - delta;
         }
     }
-st3:
     if (data_0209d4ec == 3) {
         if (skip == 0) {
             func_02019ed0();
@@ -119,9 +113,7 @@ st3:
     }
     if (data_0209d4ec == 5) {
         short tv = data_0209d504;
-        if (tv > 0)
-            goto dec5;
-        {
+        if (tv <= 0) {
             if (data_0208ee48 != 0) {
                 int arg;
                 if (func_0203d974() != 0) {
@@ -136,12 +128,10 @@ st3:
                 data_0209d504 = 0;
             }
             data_0209d4ec = 6;
+        } else {
+            data_0209d504 = tv - delta;
         }
-        goto st6;
-    dec5:
-        data_0209d504 = tv - delta;
     }
-st6:
     if (data_0209d4ec == 6) {
         short tv = data_0209d504;
         if (tv <= 0) {

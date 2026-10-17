@@ -38,18 +38,18 @@ enum d_s_mg_jump2_AssetId {
 #include "decl_common.h"
 #include "Particle__System.h"
 
-/* The list link at the head of each Elem. Its two methods link `this` into
+/* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
-struct Node {
-    struct Node* next;
+struct Jump2PopupLink {
+    struct Jump2PopupLink *next;
     void Link();   /* push */
     void Unlink();   /* remove */
 };
 
 /* The 0x24-byte entries of mArray3, read back from what the functions below
  * do with them. Local because nothing names the type yet. */
-struct Elem {
-    struct Elem *next;      /* 0x00 -- the live list */
+struct Jump2Popup {
+    struct Jump2Popup *next; /* 0x00 -- the live list */
     int   x, y;             /* 0x04 -- 20.12 position */
     int   targetX, targetY; /* 0x0c */
     int   speedX, speedY;   /* 0x14 */
@@ -117,14 +117,14 @@ struct Jump2ModelFile : SharedFilePtr {
 };
 
 extern Jump2ModelFile gOV006JumpBack01ModelFile; /* model file 0x203 */
-extern Jump2ModelFile data_ov006_021421c4; /* model file 0x204 */
+extern Jump2ModelFile sJump2Back02ModelFile;     /* model file 0x204 */
 
 extern "C" {
 extern void func_0203d630(int* p, int m);
-extern struct Node *sJump2PopupList;
+extern struct Jump2PopupLink *sJump2PopupList;
 extern int sJump2PopupCount;
-extern struct Elem *sJump2Popups;
-extern void *data_ov006_021421b8;
+extern struct Jump2Popup *sJump2Popups;
+extern void *sJump2BackFile;
 void Mg_CommitRecords(void);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int GetGameLanguage(void);
@@ -145,9 +145,9 @@ extern struct G2 pmf_dScMgJump2_c_State_Idle;
 extern struct G2 pmf_dScMgJump2_c_State_End;
 extern void Heyho_SettleAll(void);
 extern void Jump3D_SetTuning(int a);
-extern int data_ov006_02140304;
+extern int sHeyhoUnsettledCount;
 extern int sHeyhoCount;
-extern int data_ov006_02140428;
+extern int sJump3DMariosLeft;
 extern struct G2 pmf_dScMgJump2_c_State_Play;
 extern void Jump3D_StartRoundLayout(void);
 extern struct G2 pmf_dScMgJump2_c_State_Result;
@@ -254,7 +254,7 @@ s32 dScMgJump2_c::InitResources()
     s32 fov;
     void *bmdFile;
 
-    tiles = LoadFile(data_ov006_0213cce0[GetGameLanguage()]);
+    tiles = LoadFile(sJump2NcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_JUMP_NCL_BIN);
     DecompressLZ16(tiles, 0x6400000);
     GX::LoadOBJPltt((const void *)palette, 0, 0x80);
@@ -290,12 +290,12 @@ s32 dScMgJump2_c::InitResources()
 
     Jump2Popup_InitPool((int)mArray3, 0x10);
 
-    data_ov006_02140314 = 1;
+    sHeyhoScorePopups = 1;
     if (Jump3D_InitPool(mPlayers, 3) == 0)
         return 0;
 
-    data_ov006_021421b8 = &data_ov006_021421c4;
-    bmdFile = Model::LoadFile(*(SharedFilePtr *)&data_ov006_021421c4);
+    sJump2BackFile = &sJump2Back02ModelFile;
+    bmdFile = Model::LoadFile(*(SharedFilePtr *)&sJump2Back02ModelFile);
 
     if (((Model *)mModel)->SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
@@ -360,7 +360,7 @@ void dScMgJump2_c::State_Play()
         *acc -= 0x1000;
 
     done = 0;
-    mode = data_ov006_02140304;
+    mode = sHeyhoUnsettledCount;
     switch (mode) {
     case 0:
         done = 1;
@@ -381,7 +381,7 @@ void dScMgJump2_c::State_Play()
         break;
     }
 
-    if (done != 0 && data_ov006_02140304 < sHeyhoCount) {
+    if (done != 0 && sHeyhoUnsettledCount < sHeyhoCount) {
         int value;
         s16 countdown;
         Heyho_SettleAll();
@@ -415,7 +415,7 @@ void dScMgJump2_c::State_Play()
         Mg_SubmitScore(sJumpComboCount);
     }
 
-    if (data_ov006_02140428 != 0)
+    if (sJump3DMariosLeft != 0)
         return;
     BeginEnd();
 }
@@ -539,7 +539,7 @@ s32 dScMgJump2_c::Render()
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
     *(struct M48 *)&((Model *)mModel)->mat4x3 = *(struct M48 *)&data_020a0e68;
 
-    scale = *(struct S3 *)&data_ov006_0213ccb0;
+    scale = *(struct S3 *)&sJump2RenderScale;
 
     {
         int *obj = (int *)(mModel + 8);
@@ -557,13 +557,14 @@ s32 dScMgJump2_c::Render()
 
     if (mDrawSubScreen == 1) {
         x = 0x6e;
-        count = data_ov006_02140428;
+        count = sJump3DMariosLeft;
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)data_ov006_0213cccc[idx][1], (void *)x, 0xc, (void *)0);
+                DrawOamSprite((void *)sJump2TextSpritesByLanguage[idx][1], (void *)x, 0xc,
+                              (void *)0);
             } else {
-                RenderOamMainScreen(data_ov006_02134cf8, x, 0xc, -1, -1);
+                RenderOamMainScreen(sJumpLifeIconSprite, x, 0xc, -1, -1);
             }
             x += 0x12;
         }
@@ -573,19 +574,19 @@ s32 dScMgJump2_c::Render()
 }
 
 // @symbol _ZN12dScMgJump2_c16CleanupResourcesEv
-/* Slot 3. data_ov006_021421b8 points at the model's file handle; it is
+/* Slot 3. sJump2BackFile points at the model's file handle; it is
  * released and cleared. */
 s32 dScMgJump2_c::CleanupResources()
 {
-    ((SharedFilePtr *)data_ov006_021421b8)->Release();
-    data_ov006_021421b8 = 0;
+    ((SharedFilePtr *)sJump2BackFile)->Release();
+    sJump2BackFile = 0;
     Mg_CommitRecords();
     return 1;
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_InitPool(int table, int count){
-    sJump2Popups = (struct Elem *)table;
+    sJump2Popups = (struct Jump2Popup *)table;
     sJump2PopupCount = count;
     data_ov006_021421b4 = 0;
 }
@@ -621,7 +622,7 @@ void Jump2Popup_UpdateAll(void)
     if (i < sJump2PopupCount) {
         int offset = 0;
         do {
-            ((Elem *)((char *)sJump2Popups + offset))->Tick();
+            ((Jump2Popup *)((char *)sJump2Popups + offset))->Tick();
             i++;
             offset += 0x24;
         } while (i < sJump2PopupCount);
@@ -634,26 +635,26 @@ void Jump2Popup_DrawAll(void) {
     void *node = sJump2PopupList;
     if (node == 0) return;
     do {
-        ((Elem *)node)->DrawNumber();
+        ((Jump2Popup *)node)->DrawNumber();
         node = *(void **)node;
     } while (node != 0);
 }
 }
 
-// @symbol _ZN4Node4LinkEv
-void Node::Link(){
+// @symbol _ZN14Jump2PopupLink4LinkEv
+void Jump2PopupLink::Link() {
     *(void **)this = sJump2PopupList;
     sJump2PopupList = this;
 }
 
-// @symbol _ZN4Node6UnlinkEv
-void Node::Unlink() {
-    struct Node *prev = sJump2PopupList;
+// @symbol _ZN14Jump2PopupLink6UnlinkEv
+void Jump2PopupLink::Unlink() {
+    struct Jump2PopupLink *prev = sJump2PopupList;
     if (prev == this) {
         sJump2PopupList = this->next;
         return;
     }
-    struct Node* cur = prev->next;
+    struct Jump2PopupLink *cur = prev->next;
     while (cur) {
         if (cur == this) {
             prev->next = this->next;
@@ -664,9 +665,8 @@ void Node::Unlink() {
     }
 }
 
-// @symbol _ZN4Elem5SpawnEiii
-void Elem::Spawn(int startX, int startY, int spriteId)
-{
+// @symbol _ZN10Jump2Popup5SpawnEiii
+void Jump2Popup::Spawn(int startX, int startY, int spriteId) {
     x = startX;
     y = startY;
     speedX = 0;
@@ -687,14 +687,14 @@ done:
     life = 0x80;
     active = 1;
     sprite = (short)spriteId;
-    ((Node *)this)->Link();
+    ((Jump2PopupLink *)this)->Link();
 }
 
-// @symbol _ZN4Elem4TickEv
-void Elem::Tick() {
+// @symbol _ZN10Jump2Popup4TickEv
+void Jump2Popup::Tick() {
     if (active == 0) return;
     if (ApproachLinear2(life, 0, 1) != 0) {
-        ((Node *)this)->Unlink();
+        ((Jump2PopupLink *)this)->Unlink();
         active = 0;
     }
     ApproachLinear(x, targetX, speedX);
@@ -702,9 +702,8 @@ void Elem::Tick() {
     func_0203d630(&speedX, 0xf00);
 }
 
-// @symbol _ZN4Elem10DrawNumberEv
-void Elem::DrawNumber()
-{
+// @symbol _ZN10Jump2Popup10DrawNumberEv
+void Jump2Popup::DrawNumber() {
     if (active == 0) return;
     Mg_DrawBigNumber(x >> 12, y >> 12,
                         sprite, -1, -1, 0, data_ov006_021421b4);
@@ -727,4 +726,4 @@ void Jump2Popup_ElemDtor(void *object)
  * Definition order is the retail initializer's construction order: the
  * 0x203 model handle, then the 0x204 model handle. */
 Jump2ModelFile gOV006JumpBack01ModelFile(ASSET_JUMP_BACK01_BMD);
-Jump2ModelFile data_ov006_021421c4(ASSET_JUMP_BACK02_BMD);
+Jump2ModelFile sJump2Back02ModelFile(ASSET_JUMP_BACK02_BMD);

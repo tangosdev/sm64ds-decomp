@@ -107,6 +107,25 @@ struct daKpaFire_c : dEnemyBase_c {
     int CleanupResources();
     int Render();
     int Behavior();
+
+    void func_ov060_0211747c(); /* variant 0 handler */
+    void func_ov060_021172e0(); /* variant 6/7 handler */
+    int func_ov060_021172c8(unsigned int n);
+    void func_ov060_0211722c();
+    void func_ov060_021171e8();
+    void func_ov060_0211712c();
+    void func_ov060_02116f90();
+    void func_ov060_02116f74();
+    void func_ov060_02116d78();
+    void func_ov060_02116c68();
+    void func_ov060_02116b68();
+    void func_ov060_02116b18();
+    void func_ov060_021169f8();
+    void func_ov060_021169b0();
+    void func_ov060_021168c4();
+    void func_ov060_021167ec();
+    void func_ov060_021167c8();
+    void func_ov060_02116518(u32 kind, int resize, int yOffset);
 };
 
 #ifndef SM64DS_PLATFORM_PC

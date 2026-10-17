@@ -10,9 +10,10 @@
 //     2004/b56. The header declaration is the real one; callers use it.
 //   - func_020353b0 stays a free extern: the shared dBgCh-side bind helper is
 //     owned by its own shard and called by the Gnd/Lin query TUs as well.
-//   - unk_0fc/unk_100/unk_104 stay unnamed: all that is evidenced is a score
-//     at +0x100 selecting a three-word payload starting at +0xfc (see the
-//     class header).
+//   - unk_0ec and unk_0fc/unk_100/unk_104 keep their unk_ spellings: their
+//     roles (wall-rejection half extent; floor normal) are documented in the
+//     class header, and the rename has to move with their users in
+//     d_bg_w_kc_itcm.cpp, d_bg_w_kc_mbg*.cpp and d_bg_ch_actr.cpp.
 #include "dBgCh_SphCrr.h"
 
 extern "C" {
@@ -48,7 +49,7 @@ extern "C" void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c
 }
 
 /* Reset the whole query state: bounds, every flag bit, the base record and
-   all three result slots, then the +0xfc payload (score back to -0x1000). */
+   all three result slots, then the floor normal (Y back to -0x1000). */
 // @symbol _ZN12dBgCh_SphCrr13func_02037b5cEv
 void dBgCh_SphCrr::func_02037b5c()
 {
@@ -60,7 +61,7 @@ void dBgCh_SphCrr::func_02037b5c()
     flags &= ~2;
     flags &= ~0x20;
     flags &= ~0x40;
-    ((dBgPi &)*this).Reset();
+    dBgPi::Reset();
     mClsnResult1.Reset();
     mClsnResult2.Reset();
     mClsnResult3.Reset();
@@ -69,7 +70,7 @@ void dBgCh_SphCrr::func_02037b5c()
     unk_104 = 0;
 }
 
-/* Clear the displacement and the broad-phase box the scan accumulates. */
+/* Clear the displacement and the push-out range the scan accumulates. */
 // @symbol _ZN12dBgCh_SphCrr13func_02037b1cEv
 void dBgCh_SphCrr::func_02037b1c()
 {
@@ -79,7 +80,7 @@ void dBgCh_SphCrr::func_02037b1c()
     aabbMin.z = aabbMax.z = 0;
 }
 
-/* Grow the broad-phase box so it covers both of a hit's corner points. */
+/* Widen the push-out range to cover a scan's lowest and highest pushes. */
 // @symbol _ZN12dBgCh_SphCrr13func_02037a6cEiiiiii
 void dBgCh_SphCrr::func_02037a6c(s32 minX, s32 minY, s32 minZ, s32 maxX, s32 maxY, s32 maxZ)
 {
@@ -97,7 +98,7 @@ void dBgCh_SphCrr::func_02037a6c(s32 minX, s32 minY, s32 minZ, s32 maxX, s32 max
     if (aabbMax.z < maxZ) aabbMax.z = maxZ;
 }
 
-/* Commit the accumulated box into the displacement the actor moves by. */
+/* Commit the accumulated range into the displacement the actor moves by. */
 // @symbol _ZN12dBgCh_SphCrr13func_02037a38Ev
 void dBgCh_SphCrr::func_02037a38()
 {
@@ -155,13 +156,12 @@ void dBgCh_SphCrr::func_02037968(int i, int clsnID, dActor_c *owner, dBgW *colli
     mClsnResult3.SetCollider(i, clsnID, owner, collider);
 }
 
-/* Copy the three-word payload the winning scan selected at +0xfc. */
+/* Save the selected floor normal; the collision scan compares Y first. */
 // @symbol _ZN12dBgCh_SphCrr13func_0203794cEPKi
-void dBgCh_SphCrr::func_0203794c(const s32 *payload)
-{
-    unk_0fc = payload[0];
-    unk_100 = payload[1];
-    unk_104 = payload[2];
+void dBgCh_SphCrr::func_0203794c(const s32 *normal) {
+    unk_0fc = normal[0];
+    unk_100 = normal[1];
+    unk_104 = normal[2];
 }
 
 /* Merge another query's flag byte, dropping its hit-result bits (0x1c). */
@@ -177,19 +177,21 @@ dBgPi *dBgCh_SphCrr::GetFloorResult()
     return &mClsnResult1;
 }
 
+/* Copy a whole hit record into one result slot. The CLPS is copied through
+   a u64 view: a plain struct assignment interleaves its two words with the
+   stores, the ROM loads both first. */
 // @symbol _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi
-void dBgCh_SphCrr::SetFloorResult(const dBgPi &src_)
-{
+void dBgCh_SphCrr::SetFloorResult(const dBgPi &result) {
     *reinterpret_cast<u64 *>(&mClsnResult1.surface.clps) =
-        *reinterpret_cast<const u64 *>(&src_.surface.clps);
-    mClsnResult1.surface.normal.x = src_.surface.normal.x;
-    mClsnResult1.surface.normal.y = src_.surface.normal.y;
-    mClsnResult1.surface.normal.z = src_.surface.normal.z;
-    mClsnResult1.triangleID = src_.triangleID;
-    mClsnResult1.colliderIdx = src_.colliderIdx;
-    mClsnResult1.clsnID = src_.clsnID;
-    mClsnResult1.owner = src_.owner;
-    mClsnResult1.collider = src_.collider;
+        *reinterpret_cast<const u64 *>(&result.surface.clps);
+    mClsnResult1.surface.normal.x = result.surface.normal.x;
+    mClsnResult1.surface.normal.y = result.surface.normal.y;
+    mClsnResult1.surface.normal.z = result.surface.normal.z;
+    mClsnResult1.triangleID = result.triangleID;
+    mClsnResult1.colliderIdx = result.colliderIdx;
+    mClsnResult1.clsnID = result.clsnID;
+    mClsnResult1.owner = result.owner;
+    mClsnResult1.collider = result.collider;
 }
 
 // @symbol _ZN12dBgCh_SphCrr13GetWallResultEv
@@ -199,18 +201,17 @@ dBgPi *dBgCh_SphCrr::GetWallResult()
 }
 
 // @symbol _ZN12dBgCh_SphCrr13SetWallResultERK5dBgPi
-void dBgCh_SphCrr::SetWallResult(const dBgPi &src_)
-{
+void dBgCh_SphCrr::SetWallResult(const dBgPi &result) {
     *reinterpret_cast<u64 *>(&mClsnResult2.surface.clps) =
-        *reinterpret_cast<const u64 *>(&src_.surface.clps);
-    mClsnResult2.surface.normal.x = src_.surface.normal.x;
-    mClsnResult2.surface.normal.y = src_.surface.normal.y;
-    mClsnResult2.surface.normal.z = src_.surface.normal.z;
-    mClsnResult2.triangleID = src_.triangleID;
-    mClsnResult2.colliderIdx = src_.colliderIdx;
-    mClsnResult2.clsnID = src_.clsnID;
-    mClsnResult2.owner = src_.owner;
-    mClsnResult2.collider = src_.collider;
+        *reinterpret_cast<const u64 *>(&result.surface.clps);
+    mClsnResult2.surface.normal.x = result.surface.normal.x;
+    mClsnResult2.surface.normal.y = result.surface.normal.y;
+    mClsnResult2.surface.normal.z = result.surface.normal.z;
+    mClsnResult2.triangleID = result.triangleID;
+    mClsnResult2.colliderIdx = result.colliderIdx;
+    mClsnResult2.clsnID = result.clsnID;
+    mClsnResult2.owner = result.owner;
+    mClsnResult2.collider = result.collider;
 }
 
 // @symbol _ZN12dBgCh_SphCrr14GetUnderResultEv
@@ -220,16 +221,15 @@ dBgPi *dBgCh_SphCrr::GetUnderResult()
 }
 
 // @symbol _ZN12dBgCh_SphCrr14SetUnderResultERK5dBgPi
-void dBgCh_SphCrr::SetUnderResult(const dBgPi &src_)
-{
+void dBgCh_SphCrr::SetUnderResult(const dBgPi &result) {
     *reinterpret_cast<u64 *>(&mClsnResult3.surface.clps) =
-        *reinterpret_cast<const u64 *>(&src_.surface.clps);
-    mClsnResult3.surface.normal.x = src_.surface.normal.x;
-    mClsnResult3.surface.normal.y = src_.surface.normal.y;
-    mClsnResult3.surface.normal.z = src_.surface.normal.z;
-    mClsnResult3.triangleID = src_.triangleID;
-    mClsnResult3.colliderIdx = src_.colliderIdx;
-    mClsnResult3.clsnID = src_.clsnID;
-    mClsnResult3.owner = src_.owner;
-    mClsnResult3.collider = src_.collider;
+        *reinterpret_cast<const u64 *>(&result.surface.clps);
+    mClsnResult3.surface.normal.x = result.surface.normal.x;
+    mClsnResult3.surface.normal.y = result.surface.normal.y;
+    mClsnResult3.surface.normal.z = result.surface.normal.z;
+    mClsnResult3.triangleID = result.triangleID;
+    mClsnResult3.colliderIdx = result.colliderIdx;
+    mClsnResult3.clsnID = result.clsnID;
+    mClsnResult3.owner = result.owner;
+    mClsnResult3.collider = result.collider;
 }

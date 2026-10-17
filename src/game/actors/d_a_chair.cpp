@@ -1,39 +1,36 @@
 //cpp
-/* Big Boo's Haunt haunted chair (CHAIR 326), ov020.
+/* BBH haunted chair (CHAIR 326), ov020 .text 0x02112938..0x021134e4.
+ * State0 arms off the Mad Piano within 300 units. State1 rattles, then
+ * tips (State3) or hops (State2). State2 launches at the player and
+ * breaks on the ground or a wrong-facing wall. State3 rocks one tilt
+ * angle toward its target.
  *
- * State0 looks up actor 0xf9 (PIANO) and, within 300 units, stores its
- * uniqueID. State1 rattles, then tips (State3) or hops (State2). State2
- * launches at the player and breaks on the ground or on a wall faced the
- * wrong way. State3 rocks mAngleX or mAngleZ toward mTargetAngle.
- *
- * RTTI ov020:0x021149d8. common.h comes before daChair_c.h so
- * IDENTITY_MATRIX4X3 copies as twelve s32 words into mShadowMat.
+ * InitResources is the key function, so this TU emits the vtable (RTTI
+ * _ZTS 0x021149d8, _ZTV 0x02114a14); both destructor variants are
+ * inline. common.h comes before daChair_c.h so the shadow-matrix copy
+ * stays twelve words. opt_common_subs off holds ApproachStateValue.
  */
 // leftovers:
 // - dCcAcPos_c::Init, dBgCh_Actr::Init, DropShadowRadHeight,
-//   Particle::System::NewSimple and Player::Hurt stay scalar externs. The
-//   header Fix12<int> forms pool constants (InitResources and UpdateModel
-//   grew .rodata). dBgCh_Actr::Init's header spells Fix12i, which mangles
-//   as int, not 5Fix12IiE.
-// - GetWallResult has no dBgCh_Actr method. This TU's State2 reads the
-//   result's SurfaceInfo at +4; CopyNormalTo is the real method.
-// - Behavior calls dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc), not
-//   UpdateContinuous.
-// - func_0201267c is the bank-3 player just after Sound::PlayBank3
-//   (0x02012664). func_0200f760 sets the cylinder movement bit from the
-//   closest player's vanish flag. Neither has a header name.
-// - cstd::atan2's symbol is 5Fix12IiE. A scalar namespace declaration
-//   would mangle as ii. State2 calls it for the launch and the wall normal.
-// - State2 copies the player's position through a plain Vec3;
-//   player->mPosX by name changes that function's size.
-// - State2 compares mStateTimer and mActionTimer through a view based at
-//   this+0x300. mAngleY += 0x2710 changes State2's size; the int-cast form
-//   matches.
-// - unk_0a4 and unk_0ac stay the base header's names (lateral velocity
-//   beside mVertSpeed).
-// - g_profile_CHAIR is not in this TU. data_ov020_02114af0 is the model
-//   handle.
-
+//   Particle::System::NewSimple, Player::Hurt and cstd::atan2 stay scalar
+//   externs. The header Fix12<int> forms pool constants (InitResources
+//   and UpdateModel grew .rodata). dBgCh_Actr::Init's header spells
+//   Fix12i, which mangles as int, not 5Fix12IiE; a scalar cstd::atan2
+//   declaration would mangle as ii.
+// - The ROM calls dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc), not
+//   UpdateContinuous. func_0200f760 (cylinder movement bit from the
+//   vanish flag) and func_0201267c (bank-3 player, one past
+//   Sound::PlayBank3) have no header names.
+// - GetWallResult is the member; the +4 SurfaceInfo and the CopyNormalTo
+//   reference pun stay. Vec3 POD twins (player copy, diff, normal, hurt
+//   pos): a Vector3 local emits its destructor call. player->mPosX by
+//   name changes State2's size.
+// - ST reads mStateTimer/mActionTimer through this+0x300, and the
+//   halfword increments use the int-cast form; the member forms change
+//   sizes.
+// - unk_0a4/unk_0ac keep the base header's names (lateral velocity
+//   beside mVertSpeed). g_profile_CHAIR is not in this TU.
+//   data_ov020_02114af0 is the model handle.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daChair_c_AssetId {
@@ -76,6 +73,23 @@ typedef struct {
 } State300;
 
 #define ST ((State300 *)((char *)this + 0x300))
+
+/* Actor IDs from the ROM's actor table. */
+enum ChairActorId {
+    kPianoActorId = 0xf9, /* Mad Piano; State0 arms off it */
+    kPlayerActorId = 0xbf,
+};
+
+/* Sound IDs, named by the state that plays them. */
+enum ChairSfxId {
+    kSfxWobble = 0x5f, /* State1: chair rocks the other way */
+    kSfxWindup = 0x5c, /* State2: wind-up ends */
+    kSfxHop = 0x5d,    /* State2: hop timer expires, aims at the player */
+};
+
+/* Index of an unsigned 16-bit angle into data_02082214, the sin/cos
+ * table: one s16 sin, s16 cos pair per 16 angle units. */
+#define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
 extern "C" {
 void func_0200f760(void *self, void *cyl);
@@ -221,8 +235,8 @@ void daChair_c::State0()
     mStateValue0 = 0;
     mStateValue1 = 0;
     mStateValue2 = 0;
-    /* 0xf9 is PIANO (249). The chair arms off the Mad Piano. */
-    piano = dActor_c::FindWithActorID(0xf9, 0);
+    /* The chair arms off the Mad Piano. */
+    piano = dActor_c::FindWithActorID(kPianoActorId, 0);
     mTargetID = 0;
     if (piano == 0)
         return;
@@ -292,7 +306,7 @@ void daChair_c::State1()
         if (mAngleX >= 0) {
             wobble = -4;
         } else {
-            func_0201267c(0x5f, &mCamSpacePosX);
+            func_0201267c(kSfxWobble, &mCamSpacePosX);
             wobble = 4;
         }
         /* int-cast address. */
@@ -335,7 +349,7 @@ void daChair_c::State2()
         ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
         ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
         if (ST->counter == 0x46)
-            func_0201267c(0x5c, &mCamSpacePosX);
+            func_0201267c(kSfxWindup, &mCamSpacePosX);
     } else {
         if (ST->timer != 0) {
             (*(u16 *)((int)&mActionTimer))--;
@@ -345,7 +359,7 @@ void daChair_c::State2()
                 Vec3 playerPos;
                 Vec3 diff;
                 s32 reach;
-                func_0201267c(0x5d, &mCamSpacePosX);
+                func_0201267c(kSfxHop, &mCamSpacePosX);
                 player = ClosestPlayer();
                 if (player == 0)
                     return;
@@ -359,12 +373,11 @@ void daChair_c::State2()
                 mPrevAngleY = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
                 mPrevAngleX = _ZN4cstd5atan2E5Fix12IiES1_(
                                   diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
-                /* unk_0a4 / unk_0ac: lateral velocity beside mVertSpeed.
-                 * Unsigned table index; mPrevAngleX/Y are s16. */
-                reach = FX_MUL(data_02082214[((*(u16 *)&mPrevAngleX) >> 4) * 2 + 1], 0x32000);
-                unk_0a4 = FX_MUL(reach, data_02082214[((*(u16 *)&mPrevAngleY) >> 4) * 2]);
-                mVertSpeed = FX_MUL(data_02082214[((*(u16 *)&mPrevAngleX) >> 4) * 2], -0x32000);
-                unk_0ac = FX_MUL(reach, data_02082214[((*(u16 *)&mPrevAngleY) >> 4) * 2 + 1]);
+                /* unk_0a4 / unk_0ac: lateral velocity beside mVertSpeed. */
+                reach = FX_MUL(data_02082214[SINCOS_INDEX(mPrevAngleX) + 1], 0x32000);
+                unk_0a4 = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY)]);
+                mVertSpeed = FX_MUL(data_02082214[SINCOS_INDEX(mPrevAngleX)], -0x32000);
+                unk_0ac = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY) + 1]);
             } else {
                 if (ST->timer > 0x14) {
                     /* (int)&mAngleY. mAngleY += 0x2710 changes the code size. */
@@ -377,8 +390,7 @@ void daChair_c::State2()
             } else if (mWithMeshClsn.IsOnWall() != 0) {
                 void *wall = mWithMeshClsn.GetWallResult();
                 Vec3 normal;
-                ((SurfaceInfo *)((char *)wall + 4))->CopyNormalTo(
-                    *(Vector3 *)&normal);
+                ((SurfaceInfo *)((char *)wall + 4))->CopyNormalTo((Vector3 &)normal);
                 if (GetSubtraction(mPrevAngleY,
                         _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z))
                     > 0x4000)
@@ -398,8 +410,8 @@ void daChair_c::State2()
         actor = dActor_c::FindWithID(id);
         if (actor == 0)
             return;
-        /* 0xbf is PLAYER (191). */
-        isPlayer = (int)(actor->actorID == 0xbf);
+        /* Direct comparison drops the ROM's store-then-load. */
+        isPlayer = (int)(actor->actorID == kPlayerActorId);
         if (isPlayer == 0)
             return;
         isPlayer = ((Player *)actor)->mIsVanish;
@@ -440,9 +452,7 @@ void daChair_c::State3()
         mClsnOffset.x = 0;
         mClsnOffset.y = 0;
         mClsnOffset.z = offset;
-        goto place;
     }
-place:
     if (wrapped >= 0x4000) {
         s16 past = (s16)(wrapped - 0x4000);
         s16 tip = data_02082214[((u16)past >> 4) * 2];

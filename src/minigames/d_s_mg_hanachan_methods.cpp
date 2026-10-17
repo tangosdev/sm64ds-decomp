@@ -31,7 +31,7 @@
  *   HanaPopup_Spawn, HanaPopup_ClearAll).
  * - the popup at sHanaStarPopup is read through raw byte
  *   offsets, and StarPopup_Update reaches its +0xc byte through a
- *   separate symbol, data_ov006_02141ff0.
+ *   separate symbol, sHanaStarPopups.
  * - Wiggler_DrawTarget repeats Wiggler_DrawField's segment
  *   walk with its own point type, Vec2_ea914, whose trivial destructor
  *   is part of the match.
@@ -254,10 +254,10 @@ extern void Hana_StateNoneB(void);
 extern void Hana_LoadBackground(void);
 
 extern short data_02082214[];
-extern void* data_ov006_02142018[];
-extern void* data_ov006_021375c0[];
+extern void *sWigglerSprites[];
+extern void *sHanaWigglerTargetSprites[];
 extern int pmf_Wiggler_StateWait_2[];
-extern void* data_ov006_021375a0[];
+extern void *sHanaWigglerFieldSprites[];
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int b, void* attr, int x, int y, int a, int c, int f, int g);
 extern int pmf_Wiggler_TurnTowardAim_2[];
 extern int pmf_Wiggler_TurnTowardAim_8[];
@@ -277,9 +277,9 @@ extern struct P2 pmf_Wiggler_StateMoveB;
 extern struct P2 pmf_Wiggler_StateWait;
 extern int pmf_Wiggler_StateWait_4[];
 extern int pmf_Wiggler_StateHold[];
-extern short data_ov006_02141fd0;
-extern unsigned short data_ov006_02141fdc[];
-extern unsigned short data_ov006_02141ff8[];
+extern short sHanaPickedCount;
+extern unsigned short sHanaPickedIds[];
+extern unsigned short sHanaUsedIds[];
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern Vec2i pmf_Wiggler_CheckOffLeftA;
 extern struct Words2 pmf_Wiggler_MoveBounce_2;
@@ -305,8 +305,8 @@ extern void func_02012790(int a);
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
 extern struct Pair pmf_dScMgHanachan_c_Phase_Play_2;
-extern s16 data_ov006_0212e80c[];
-extern volatile int data_ov006_0212e820[];
+extern s16 sHanaRoundPatterns[];
+extern volatile int sHanaFieldWigglerCounts[];
 extern Pair pmf_dScMgHanachan_c_Phase_WaitIntro;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
@@ -325,12 +325,12 @@ extern int RandomIntInternal(int *seed);
 /* data_0209e650 is the RNG state: one file spelled it int[] and passed it bare,
    the rest spelled it int and passed &.  Scalar wins; the address is the same. */
 extern int data_0209e650;
-/* data_ov006_02141fd4 is only read where it is unsigned and only written as a
+/* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */
-extern unsigned short data_ov006_02141fd4;
-/* data_ov006_02141fd8: Phase_SetupRound spelled it volatile and only ever
+extern unsigned short sHanaPickedLow;
+/* sHanaRoundPattern: Phase_SetupRound spelled it volatile and only ever
    stores to it (never re-reads), so the plain spelling emits the same strh. */
-extern s16 data_ov006_02141fd8;
+extern s16 sHanaRoundPattern;
 /* LoadFile returns the buffer; one file typed it int and casts at each use. */
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -414,7 +414,8 @@ extern "C" void StarPopup_Draw(void)
     x = ((int *)sHanaStarPopup)[0] >> 12;
     y = new_var[1] >> 12;
     r = GetGameLanguage();
-    Mg_RenderSubSpriteMtx(*((void **)(((char *)data_ov006_0213ca9c[r]) + 0x34)), x - 8, y, 0);
+    Mg_RenderSubSpriteMtx(*((void **)(((char *)sHanaTextSpritesByLanguage[r]) + 0x34)), x - 8, y,
+                          0);
     Mg_RenderSubSpriteMtx(*((void **)(sMgDigitSprites + 0x64)), x + 8, y, 0);
 }
 
@@ -428,7 +429,7 @@ typedef struct {
     u8 t;
     u8 pad[0x13];
 } Timer20;
-extern "C" Timer20 data_ov006_02141ff0[];
+extern "C" Timer20 sHanaStarPopups[];
 
 extern "C" void StarPopup_Update(char *arg)
 {
@@ -446,10 +447,10 @@ extern "C" void StarPopup_Update(char *arg)
             *(int *)(((int)f + 8)) -= 0x100;
             if (*(u8 *)(f + 0xc) != 0) {
                 int v;
-                data_ov006_02141ff0[i].t--;
-                v = data_ov006_02141ff0[i].t;
+                sHanaStarPopups[i].t--;
+                v = sHanaStarPopups[i].t;
                 if (v < 0)
-                    data_ov006_02141ff0[i].t = 0;
+                    sHanaStarPopups[i].t = 0;
                 return;
             }
             *(u8 *)(f + 0xc) = 0x40;
@@ -457,10 +458,10 @@ extern "C" void StarPopup_Update(char *arg)
         } else if (ph == 1) {
             if (*(u8 *)(f + 0xc) != 0) {
                 int v;
-                data_ov006_02141ff0[i].t--;
-                v = data_ov006_02141ff0[i].t;
+                sHanaStarPopups[i].t--;
+                v = sHanaStarPopups[i].t;
                 if (v < 0)
-                    data_ov006_02141ff0[i].t = 0;
+                    sHanaStarPopups[i].t = 0;
                 return;
             }
             *(u8 *)(f + 0x10) = 0;
@@ -540,7 +541,7 @@ extern "C" void HanaPopup_DrawAll(void)
             int sb = e->x >> 12;
             int r8 = e->y >> 12;
             int idx = GetGameLanguage();
-            void *obj = data_ov006_0213ca9c[idx];
+            void *obj = sHanaTextSpritesByLanguage[idx];
             Mg_RenderSubSpriteMtx(*(void **)((char *)obj + 0x38), sb - 0x10, r8, a);
             Mg_RenderSubSpriteMtx(*(void **)(sMgDigitSprites + 0xa4), sb, r8, b);
             Mg_RenderSubSpriteMtx(*(void **)(sMgDigitSprites + 0xa0), sb + 0x10, r8, c);
@@ -698,8 +699,8 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
         px = pos.y >> 12;
         py = pos.x >> 12;
         a2i = Wiggler_GetFlag(self, i);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(0, data_ov006_02142018[a2i],
-            py, px, res, -1, 0x1000, (u16)rot);
+        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(0, sWigglerSprites[a2i], py, px, res, -1, 0x1000,
+                                                (u16)rot);
         if (i == 0) {
             if (*(u8 *)(self + 0x94) != 0) {
                 if (Wiggler_IsStarVisible(self) != 0) {
@@ -708,8 +709,8 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
                     func_0203d388((int *)&vb, rot);
                     vb.x = vb.x + pos.x;
                     vb.y = vb.y + pos.y;
-                    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(0, data_ov006_021375c0[0],
-                        vb.x >> 12, vb.y >> 12, -1, -1,
+                    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
+                        0, sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12, -1, -1,
                         func_02053200((data_02082214[((u16)ang >> 4) * 2] >> 2) + 0xc00), (u16)rot);
                 }
             }
@@ -761,7 +762,7 @@ void Wiggler_DrawField(void *arg) {
             }
         }
 
-        if (data_ov006_0213c958 >= 6) {
+        if (sHanaFieldWigglerCount >= 6) {
             rot = (short)(rot & 0xfc00);
         }
         func_0203d680(&s.vout, &s.va, data_02082214[((unsigned short)(ang << 1) >> 4) * 2]);
@@ -773,10 +774,8 @@ void Wiggler_DrawField(void *arg) {
         py = s.pos.x >> 12;
         _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
             1,
-            data_ov006_02142018[(a2i = Wiggler_GetFlag(raw, i), (t.urot = (unsigned short)rot), a2i)],
-            py, px,
-            t.res, -1, 0x1000,
-            t.urot);
+            sWigglerSprites[(a2i = Wiggler_GetFlag(raw, i), (t.urot = (unsigned short)rot), a2i)],
+            py, px, t.res, -1, 0x1000, t.urot);
 
         if (i == 0) {
             if (*(unsigned char*)(raw + 0x94) != 0 && *(int*)(raw + 0x48) > 0) {
@@ -792,10 +791,9 @@ void Wiggler_DrawField(void *arg) {
                     scale = 0x1000;
                 else
                     scale = func_02053200((data_02082214[((unsigned short)ang >> 4) * 2] >> 2) + 0xc00);
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
-                    1, data_ov006_021375c0[fp2],
-                    s.vb.x >> 12, s.vb.y >> 12,
-                    -1, -1, scale, t.urot);
+                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, sHanaWigglerTargetSprites[fp2],
+                                                        s.vb.x >> 12, s.vb.y >> 12, -1, -1, scale,
+                                                        t.urot);
             } else if (*(int*)raw == pmf_Wiggler_StateWait_2[0]) {
                 if ((*(int*)(raw + 4) == pmf_Wiggler_StateWait_2[1] || *(int*)raw == 0) &&
                     *(short*)(raw + 0x90) > 0x1a && *(short*)(raw + 0x90) < 0x30) {
@@ -811,9 +809,8 @@ void Wiggler_DrawField(void *arg) {
                     s.vc.x += s.pos.x;
                     s.vc.y += s.pos.y;
                     _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
-                        1, data_ov006_021375a0[idx],
-                        s.vc.x >> 12, s.vc.y >> 12,
-                        -1, -1, 0x1000, (unsigned short)(short)(rot & 0xf800));
+                        1, sHanaWigglerFieldSprites[idx], s.vc.x >> 12, s.vc.y >> 12, -1, -1,
+                        0x1000, (unsigned short)(short)(rot & 0xf800));
                 }
             }
         }
@@ -1264,25 +1261,27 @@ int Hana_PickUnused(int n, int mask)
     int i;
     int found = 0;
 
-    for (i = 0; i < data_ov006_02141fd0; i++) {
-        if (n == data_ov006_02141fdc[i]) {
+    for (i = 0; i < sHanaPickedCount; i++) {
+        if (n == sHanaPickedIds[i]) {
             found = 1;
             break;
         }
     }
 
     v = (unsigned short)(mask & RandomIntInternal(&data_0209e650));
-    if (found) v = data_ov006_02141fd4 | (unsigned short)(v & 0xf0);
+    if (found)
+        v = sHanaPickedLow | (unsigned short)(v & 0xf0);
 
     for (i = 0; i < n; i++) {
-        if (v == data_ov006_02141ff8[i]) {
+        if (v == sHanaUsedIds[i]) {
             v = (unsigned short)(mask & RandomIntInternal(&data_0209e650));
-            if (found) v = data_ov006_02141fd4 | (unsigned short)(v & 0xf0);
+            if (found)
+                v = sHanaPickedLow | (unsigned short)(v & 0xf0);
             i = -1;
         }
     }
 
-    data_ov006_02141ff8[n] = v;
+    sHanaUsedIds[n] = v;
     return v;
 }
 }
@@ -1292,16 +1291,21 @@ extern "C" {
 void Hana_ChooseStarWiggler(int count)
 {
     int i, j;
-    data_ov006_02141fd4 = (short)(RandomIntInternal(&data_0209e650) & 0xf);
-    data_ov006_02141fd0 = (short)count;
+    sHanaPickedLow = (short)(RandomIntInternal(&data_0209e650) & 0xf);
+    sHanaPickedCount = (short)count;
     for (i = 0; i < count; i++) {
         int r = RandomIntInternal(&data_0209e650);
-        data_ov006_02141fdc[i] = (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) * data_ov006_0213c958) >> 0xc);
+        sHanaPickedIds[i] = (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
+                                                   sHanaFieldWigglerCount) >>
+                                             0xc);
         j = 0;
         while (j < i) {
-            if (data_ov006_02141fdc[j] == data_ov006_02141fdc[i]) {
+            if (sHanaPickedIds[j] == sHanaPickedIds[i]) {
                 r = RandomIntInternal(&data_0209e650);
-                data_ov006_02141fdc[i] = (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) * data_ov006_0213c958) >> 0xc);
+                sHanaPickedIds[i] =
+                    (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
+                                           sHanaFieldWigglerCount) >>
+                                     0xc);
                 j = 0;
             } else {
                 j++;
@@ -1541,7 +1545,7 @@ void Wiggler_StartPathA(Obj *self, int n)
 
     self->speed = 0xa00;
     self->speedTarget = 0xa00;
-    g1 = data_ov006_0213c958 / 3 - 1;
+    g1 = sHanaFieldWigglerCount / 3 - 1;
 
     rA = cstd::fdiv(a << 12, g1 << 12);
     rB = cstd::fdiv((g1 - a) << 12, g1 << 12);
@@ -1702,7 +1706,7 @@ void Wiggler_StartPathB(char* raw, int idx)
     *(int*)(raw + 0x40) = 0xa00;
     *(int*)(raw + 0x44) = 0xa00;
 
-    n1 = data_ov006_0213c958 - 1;
+    n1 = sHanaFieldWigglerCount - 1;
     A = cstd::fdiv(idx << 12, n1 << 12);
     B = cstd::fdiv((n1 - idx) << 12, n1 << 12);
 
@@ -1772,7 +1776,7 @@ void Wiggler_StartPathC(struct C* c, int param)
     c->speed = 0;
     c->speedTarget = 0;
 
-    m = data_ov006_0213c958 - 1;
+    m = sHanaFieldWigglerCount - 1;
     r1 = cstd::fdiv(param << 12, m << 12);
     r2 = cstd::fdiv((m - param) << 12, m << 12);
     k = (m - 2) * 8;
@@ -1842,7 +1846,7 @@ void Hana_SpawnWigglers(char *raw, int arg1, int arg2)
 
     o->color = (short)Hana_PickUnused(arg1, 0xff);
 
-    switch (data_ov006_02141fd8) {
+    switch (sHanaRoundPattern) {
     case 0:
         Wiggler_StartPathC((struct C *)raw, arg1);
         return;
@@ -1888,13 +1892,13 @@ s32 dScMgHanachan_c::Render()
         if (p->v[0] == g->v[0]) {
             if (p->v[1] == g->v[1] || mPhaseFn == 0) {
                 i = 0;
-                if (data_ov006_0213c958 > 0) {
+                if (sHanaFieldWigglerCount > 0) {
                     arr = raw + 0x4678;
                     do {
                         Wiggler_DrawField(arr);
                         i++;
                         arr += 0x98;
-                    } while (i < data_ov006_0213c958);
+                    } while (i < sHanaFieldWigglerCount);
                 }
                 goto tail;
             }
@@ -1918,13 +1922,13 @@ s32 dScMgHanachan_c::Render()
                 goto tail;
             count_loop:
                 i = 0;
-                if (data_ov006_0213c958 > 0) {
+                if (sHanaFieldWigglerCount > 0) {
                     arr = raw + 0x4678;
                     do {
                         Wiggler_DrawField(arr);
                         i++;
                         arr += 0x98;
-                    } while (i < data_ov006_0213c958);
+                    } while (i < sHanaFieldWigglerCount);
                 }
                 goto tail;
             }
@@ -1948,7 +1952,7 @@ tail:
         Pair *g = &pmf_dScMgHanachan_c_Phase_WaitIntro_2;
         if (!(p->v[0] == g->v[0] && (p->v[1] == g->v[1] || mPhaseFn == 0))) {
             int idx = GetGameLanguage();
-            void *e = data_ov006_0213ca9c[idx];
+            void *e = sHanaTextSpritesByLanguage[idx];
             void *f = *(void **)((char *)e + 0xc);
             DrawOamSprite(f, 0x80, 0x10, 0);
             Mg_DrawNumberRotated(0x80, 0x28, (void *)mTimeLeft, 1, -1, 0x800, 0);
@@ -1964,23 +1968,23 @@ tail:
 s32 dScMgHanachan_c::Behavior()
 {
 
-    data_ov006_02141fcc = data_ov006_02141fcc + 0x800;
+    sHanaSpinAngle = sHanaSpinAngle + 0x800;
     (((CB *)this)->*(*(PMF *)&mPhaseFn))();
     int i = 0;
-    if (data_ov006_0213c958 > 0) {
+    if (sHanaFieldWigglerCount > 0) {
         Thing *base = (Thing *)mWiggler;
         do {
             Wiggler_Move((char *)&base[i]);
             i++;
-        } while (i < data_ov006_0213c958);
+        } while (i < sHanaFieldWigglerCount);
     }
     int j = 0;
-    if (data_ov006_0213c958 > 0) {
+    if (sHanaFieldWigglerCount > 0) {
         Thing *base = (Thing *)mWiggler;
         do {
             Wiggler_UpdateSway((char *)&base[j]);
             j++;
-        } while (j < data_ov006_0213c958);
+        } while (j < sHanaFieldWigglerCount);
     }
     HanaPopup_UpdateAll();
     StarPopup_Update((char *)&mTimeLeft);
@@ -2093,13 +2097,13 @@ void dScMgHanachan_c::BeginResult()
 {
     char *raw = (char *)this;
     int i = 0;
-    if (i < data_ov006_0213c958) {
+    if (i < sHanaFieldWigglerCount) {
         char *p = raw;
         do {
             *(unsigned char *)(p + 0x4000 + 0x70a) = 0;
             i++;
             p += 0x98;
-        } while (i < data_ov006_0213c958);
+        } while (i < sHanaFieldWigglerCount);
     }
     if (mHit != 0)
         mPhaseTimer = 0xb4;
@@ -2146,7 +2150,7 @@ void dScMgHanachan_c::Phase_Play()
                 Sound::PlayBank2_2D(0x1ef);
             else
                 Sound::PlayBank2_2D(0x1ee);
-            if (data_ov006_02141fd8 == 0)
+            if (sHanaRoundPattern == 0)
                 vec[0] -= 0x28000;
             StarPopup_Start(vec[0], vec[1]);
             BeginResult();
@@ -2159,8 +2163,7 @@ void dScMgHanachan_c::Phase_Play()
             int i = 0;
             Thing *ptr;
 
-            if (data_ov006_0213c958 > 0)
-            {
+            if (sHanaFieldWigglerCount > 0) {
                 ptr = (Thing *)s->mWiggler;
                 do
                 {
@@ -2172,8 +2175,7 @@ void dScMgHanachan_c::Phase_Play()
                     }
                     i++;
                     ptr++;
-                }
-                while (i < data_ov006_0213c958);
+                } while (i < sHanaFieldWigglerCount);
             }
 
             if (found != -1)
@@ -2192,8 +2194,7 @@ void dScMgHanachan_c::Phase_Play()
 
                 {
                     j = 0;
-                    if (data_ov006_0213c958 > 0)
-                    {
+                    if (sHanaFieldWigglerCount > 0) {
                         ptr2 = (Thing *)s->mWiggler;
                         do
                         {
@@ -2203,8 +2204,7 @@ void dScMgHanachan_c::Phase_Play()
                             Wiggler_Retarget((struct ObjB *)ptr2, func_0203d5dc((const V2 *)vec, &a));
                             j++;
                             ptr2++;
-                        }
-                        while (j < data_ov006_0213c958);
+                        } while (j < sHanaFieldWigglerCount);
                     }
                 }
 
@@ -2214,7 +2214,7 @@ void dScMgHanachan_c::Phase_Play()
                     vec[2] = s3->x;
                     vec[3] = s3->y;
                 }
-                if (data_ov006_02141fd8 == 0)
+                if (sHanaRoundPattern == 0)
                     vec[2] -= 0x28000;
                 HanaPopup_Spawn(vec[2], vec[3]);
 
@@ -2278,16 +2278,16 @@ void dScMgHanachan_c::Phase_SetupRound()
     char *raw = (char *)this;
     if ((s32)self->mLevel < 0xa) {
         int bc = (s32)self->mLevel;
-        data_ov006_02141fd8 = data_ov006_0212e80c[bc];
-        data_ov006_0213c958 = data_ov006_0212e820[bc];
+        sHanaRoundPattern = sHanaRoundPatterns[bc];
+        sHanaFieldWigglerCount = sHanaFieldWigglerCounts[bc];
     } else {
         int ret = Hana_PickMoveKind();
-        data_ov006_02141fd8 = ret;
+        sHanaRoundPattern = ret;
         if (ret == 3) {
-            data_ov006_0213c958 = 0xf;
+            sHanaFieldWigglerCount = 0xf;
         } else {
             unsigned int rnd = RandomIntInternal(&data_0209e650) & 0x7fffffff;
-            data_ov006_0213c958 = ((int)(rnd >> 19) * 3 >> 12) + 3;
+            sHanaFieldWigglerCount = ((int)(rnd >> 19) * 3 >> 12) + 3;
         }
     }
 
@@ -2298,19 +2298,19 @@ void dScMgHanachan_c::Phase_SetupRound()
 
     {
         int i = 0;
-        if (data_ov006_0213c958 > 0) {
+        if (sHanaFieldWigglerCount > 0) {
             Thing *p = (Thing *)((dScMgHanachan_c *)raw)->mWiggler;
             do {
                 Hana_SpawnWigglers((char *)p, i, (s32)self->mLevel);
                 i++;
                 p++;
-            } while (i < data_ov006_0213c958);
+            } while (i < sHanaFieldWigglerCount);
         }
     }
 
     {
         unsigned int rnd = RandomIntInternal(&data_0209e650) & 0x7fffffff;
-        int k = (int)(rnd >> 19) * data_ov006_0213c958 >> 12;
+        int k = (int)(rnd >> 19) * sHanaFieldWigglerCount >> 12;
         dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
         s->mTarget = (char *)((Thing *)s->mWiggler + k);
         ((C *)s->mTarget)->decoy = 0;
@@ -2371,18 +2371,18 @@ s32 dScMgHanachan_c::InitResources()
     obj->unkAC = obj->unkA8;
     Mg_SetTopScreenYOffset(0x20);
     obj->v18(-1);
-    *data_ov006_02137560[0] = (*data_ov006_02137560[0] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[1] = (*data_ov006_02137560[1] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[2] = (*data_ov006_02137560[2] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[3] = (*data_ov006_02137560[3] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[4] = (*data_ov006_02137560[4] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[5] = (*data_ov006_02137560[5] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[6] = (*data_ov006_02137560[6] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[7] = (*data_ov006_02137560[7] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[8] = (*data_ov006_02137560[8] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[9] = (*data_ov006_02137560[9] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[10] = (*data_ov006_02137560[10] & 0xc1fffcff) | 0x100;
-    *data_ov006_02137560[11] = (*data_ov006_02137560[11] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[0] = (*sHanaBackgroundParts[0] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[1] = (*sHanaBackgroundParts[1] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[2] = (*sHanaBackgroundParts[2] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[3] = (*sHanaBackgroundParts[3] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[4] = (*sHanaBackgroundParts[4] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[5] = (*sHanaBackgroundParts[5] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[6] = (*sHanaBackgroundParts[6] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[7] = (*sHanaBackgroundParts[7] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[8] = (*sHanaBackgroundParts[8] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[9] = (*sHanaBackgroundParts[9] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[10] = (*sHanaBackgroundParts[10] & 0xc1fffcff) | 0x100;
+    *sHanaBackgroundParts[11] = (*sHanaBackgroundParts[11] & 0xc1fffcff) | 0x100;
     return 1;
 }
 
@@ -2424,22 +2424,28 @@ void Hana_LoadBackground(void){
 }
 
 /* The OamAttr* table OAM::Render indexes: the five scalar attributes, the
- * two data_ov006_021375dc entries, then every third pointer out of the
- * vu32* ring data_ov006_02137560. Non-constant initializers, so the
+ * two sHanaBackgroundPartsB entries, then every third pointer out of the
+ * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
 extern void* data_ov006_021374b8;
 extern void* data_ov006_021374c4;
 extern void* data_ov006_021374ac;
 extern void* data_ov006_021374e8;
 extern void* data_ov006_021374f4;
-extern void* data_ov006_021375dc[];
+extern void *sHanaBackgroundPartsB[];
 
-void* data_ov006_02142018[11] = {
-    data_ov006_021374b8, data_ov006_021374c4, data_ov006_021374ac,
-    data_ov006_021374e8, data_ov006_021374f4,
-    data_ov006_021375dc[0], data_ov006_021375dc[1],
-    (void*)data_ov006_02137560[0], (void*)data_ov006_02137560[3],
-    (void*)data_ov006_02137560[6], (void*)data_ov006_02137560[9],
+void *sWigglerSprites[11] = {
+    data_ov006_021374b8,
+    data_ov006_021374c4,
+    data_ov006_021374ac,
+    data_ov006_021374e8,
+    data_ov006_021374f4,
+    sHanaBackgroundPartsB[0],
+    sHanaBackgroundPartsB[1],
+    (void *)sHanaBackgroundParts[0],
+    (void *)sHanaBackgroundParts[3],
+    (void *)sHanaBackgroundParts[6],
+    (void *)sHanaBackgroundParts[9],
 };
 }
 

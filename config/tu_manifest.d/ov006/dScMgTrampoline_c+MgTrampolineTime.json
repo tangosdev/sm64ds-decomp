@@ -82,21 +82,21 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN4Desc6RenderEv",
+      "symbol": "_ZN14TrmpScorePopup6RenderEv",
       "address": "0x02120a64",
       "size": "0x00000054",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN4Desc6UpdateEv",
+      "symbol": "_ZN14TrmpScorePopup6UpdateEv",
       "address": "0x02120ab8",
       "size": "0x00000078",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN4Desc5SpawnEii",
+      "symbol": "_ZN14TrmpScorePopup5SpawnEii",
       "address": "0x02120b30",
       "size": "0x0000004c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
@@ -378,7 +378,7 @@
       "evidence": "compiler-emitted single-inheritance RTTI matches retail and points to the ROM-proven dScMgD3DBase_c type"
     },
     {
-      "symbol": "data_ov006_0213fadc",
+      "symbol": "sTrmpNcgByLanguage",
       "address": "0x0213fadc",
       "size": "0x14",
       "evidence": "five-word resource identifier table; all constants match retail"
@@ -390,13 +390,13 @@
       "evidence": "compiler-emitted ROM-proven class type-name string matches retail"
     },
     {
-      "symbol": "data_ov006_0213fb04",
+      "symbol": "sTrmpTextSpritesByLanguage",
       "address": "0x0213fb04",
       "size": "0x14",
       "evidence": "five-entry TU-local pointer table; every relocation destination matches the OV006 configuration"
     },
     {
-      "symbol": "data_ov006_0213fb18",
+      "symbol": "sTrmpPuffXByLanguage",
       "address": "0x0213fb18",
       "size": "0x14",
       "evidence": "five-entry TU-local pointer table; every relocation destination matches the OV006 configuration"
@@ -506,7 +506,7 @@
       "source": "0x0213fb04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021373a4",
+      "symbol": "sMgTextSpritesEnglish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021373a4"
@@ -516,7 +516,7 @@
       "source": "0x0213fb08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021373fc",
+      "symbol": "sMgTextSpritesSpanish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021373fc"
@@ -526,7 +526,7 @@
       "source": "0x0213fb0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213734c",
+      "symbol": "sMgTextSpritesFrench",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213734c"
@@ -536,7 +536,7 @@
       "source": "0x0213fb10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021372f4",
+      "symbol": "sMgTextSpritesGerman",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021372f4"
@@ -546,7 +546,7 @@
       "source": "0x0213fb14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02137454",
+      "symbol": "sMgTextSpritesItalian",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02137454"
@@ -556,7 +556,7 @@
       "source": "0x0213fb18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d40",
+      "symbol": "sTrmpPuffEnglish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d40"
@@ -566,7 +566,7 @@
       "source": "0x0213fb1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d4c",
+      "symbol": "sTrmpPuffSpanish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d4c"
@@ -576,7 +576,7 @@
       "source": "0x0213fb20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d58",
+      "symbol": "sTrmpPuffFrench",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d58"
@@ -586,7 +586,7 @@
       "source": "0x0213fb24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d34",
+      "symbol": "sTrmpPuffGerman",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d34"
@@ -596,7 +596,7 @@
       "source": "0x0213fb28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d28",
+      "symbol": "sTrmpPuffItalian",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d28"
@@ -1014,8 +1014,8 @@
     "tubuild create warning: CONFLICT: extern declaration 'Mg_DrawLine' differs between the legacy file that used to hold func_ov006_0212157c and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_020126e8' differs between the legacy file that used to hold func_ov006_0212157c and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_02012468' differs between the legacy file that used to hold func_ov006_0212157c and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_0212e044' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_0212e048' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'sTrmpStartTouchX' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'sTrmpStartTouchY' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c6RenderEv and the one that held _ZN17dScMgTrampoline_c11CanEndStateEi; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN4cstd4fdivEii' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held _ZN17dScMgTrampoline_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'data_0209d45c' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c16OnGraphCallback2Ev and the one that held _ZN17dScMgTrampoline_c13InitResourcesEv; kept the first, the other is commented out for review",

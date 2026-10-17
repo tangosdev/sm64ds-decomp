@@ -9,7 +9,7 @@
     "The whole dScMgBomroom_c linker unit, 0x020d5a54..0x020d9574, 80 functions, as build/tu_map.json (tools/tu_map.py) calls it: from D1 (0x020d5a54) through InitResources (0x020d9244, 0x330). The previous delinks entry, src/minigames/d_s_mg_amida.cpp, ends at 0x020d5a54 with dScMgAmida_c's own helper AmidaPiece_ElemCtor, and the next one, src/d_s_mg_bomroom.cpp (dScMgBomroom_c_classInit, 0x020d9574..0x020d95a4), is followed by the promoted src/minigames/d_s_mg_card.cpp at 0x020d95a4, so the unit is bounded by another class below and by its own factory above. The factory keeps its own file and is not folded here.",
     "class label(s): dScMgBomroom_c (_ZTI14dScMgBomroom_c at 0x0213bafc, _ZTS14dScMgBomroom_c at 0x0213bb38, _ZTV14dScMgBomroom_c address point 0x0213bbb4).",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "Every member of the unit carried a `complete` delinks entry before this widen, so the unit has no hole: the three functions the first 41-function promotion stopped at (_ZN14dScMgBomroom_c12TopDoor_DrawEv, _ZN14dScMgBomroom_c11Bomb_State5Ei, _ZN14dScMgBomroom_c11Bomb_State0Ei) had since been matched as shards and fold in unchanged.",
+    "Every member of the unit carried a `complete` delinks entry before this widen, so the unit has no hole: the three functions the first 41-function promotion stopped at (_ZN14dScMgBomroom_c12TopDoor_DrawEv, _ZN14dScMgBomroom_c15Bomb_StateInPenEi, _ZN14dScMgBomroom_c17Bomb_StateWaitingEi) had since been matched as shards and fold in unchanged.",
     "PRAGMA LEVER, measured at the 41-function promotion: all 11 pragma brackets inside 0x020d5eb8..0x020d7c4c move bytes, and none is inert. Deleting the pragmas outright is 30/41; keeping the brackets but deleting `#pragma defer_codegen off` is 30/41 with the IDENTICAL 11-member DIFF set; keeping defer_codegen off but deleting the brackets is also 30/41 with the same set; removing any single bracket costs exactly its own member. The six brackets the widen adds (_ZN14dScMgBomroom_c16Marker_UpdateAllEv, _020d7f5c, _020d836c, _020d8408, _020d89c4, _020d8cc4) carry each shard's own file-global pragma around its one function; the full unit verifies 80/80 with them.",
     "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this unit, dScMgBomroom_c_classInit (0x020d9574, size 0x30, formerly src/d_s_mg_bomroom.cpp), abuts its .text end with no gap and is now inside it; the next ov006 delinks entry, src/minigames/d_s_mg_card.cpp, starts exactly at its end 0x020d95a4. It is this class's factory: it calls fBase_c::operator new(0x6300) -- sizeof(dScMgBomroom_c) -- runs dScMgBase_c's C2 and stores _ZTV14dScMgBomroom_c (0x0213bbb4), the vtable this TU emits as its key-function owner, and it is the MG_BOMROOM registry profile's factory. Written last as \return new dScMgBomroom_c; because defer_codegen off emits .text in source order."
   ],
@@ -365,84 +365,84 @@
       "ordinal": 48
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c10Bomb_Roam4Ev",
+      "symbol": "_ZN14dScMgBomroom_c17BombMarch_LinedUpEv",
       "address": "0x020d7778",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d7778.c",
       "ordinal": 49
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c10Bomb_Roam3Ei",
+      "symbol": "_ZN14dScMgBomroom_c16BombMarch_ToLineEi",
       "address": "0x020d777c",
       "size": "0x000001dc",
       "legacy_source": "src/func_ov006_020d777c.c",
       "ordinal": 50
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c10Bomb_Roam2Ev",
+      "symbol": "_ZN14dScMgBomroom_c19BombMarch_OffscreenEv",
       "address": "0x020d7958",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d7958.c",
       "ordinal": 51
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c10Bomb_Roam1Ei",
+      "symbol": "_ZN14dScMgBomroom_c14BombMarch_ExitEi",
       "address": "0x020d795c",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020d795c.c",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c10Bomb_Roam0Ei",
+      "symbol": "_ZN14dScMgBomroom_c16BombMarch_ToGateEi",
       "address": "0x020d7a84",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov006_020d7a84.c",
       "ordinal": 53
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c11Bomb_State6Ei",
+      "symbol": "_ZN14dScMgBomroom_c15Bomb_StateMarchEi",
       "address": "0x020d7c00",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov006_020d7c00.cpp",
       "ordinal": 54
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c11Bomb_State5Ei",
+      "symbol": "_ZN14dScMgBomroom_c15Bomb_StateInPenEi",
       "address": "0x020d7c4c",
       "size": "0x00000230",
       "legacy_source": "src/func_ov006_020d7c4c.cpp",
       "ordinal": 55
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c11Bomb_State4Ei",
+      "symbol": "_ZN14dScMgBomroom_c19Bomb_StateExplodingEi",
       "address": "0x020d7e7c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020d7e7c.c",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c11Bomb_State3Ei",
+      "symbol": "_ZN14dScMgBomroom_c20Bomb_StateChainDelayEi",
       "address": "0x020d7edc",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020d7edc.c",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c11Bomb_State2Ei",
+      "symbol": "_ZN14dScMgBomroom_c14Bomb_StateHeldEi",
       "address": "0x020d7f5c",
       "size": "0x00000210",
       "legacy_source": "src/func_ov006_020d7f5c.c",
       "ordinal": 58
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c11Bomb_State1Ei",
+      "symbol": "_ZN14dScMgBomroom_c14Bomb_StateWalkEi",
       "address": "0x020d816c",
       "size": "0x000001b8",
       "legacy_source": "src/func_ov006_020d816c.c",
       "ordinal": 59
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c11Bomb_State0Ei",
+      "symbol": "_ZN14dScMgBomroom_c17Bomb_StateWaitingEi",
       "address": "0x020d8324",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020d8324.c",
@@ -477,14 +477,14 @@
       "ordinal": 64
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c15Round_SubState3Ev",
+      "symbol": "_ZN14dScMgBomroom_c15RoundEnd_FinishEv",
       "address": "0x020d89c4",
       "size": "0x00000134",
       "legacy_source": "src/func_ov006_020d89c4.c",
       "ordinal": 65
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c15Round_SubState2Ev",
+      "symbol": "_ZN14dScMgBomroom_c14RoundEnd_TallyEv",
       "address": "0x020d8af8",
       "size": "0x00000190",
       "legacy_source": "src/func_ov006_020d8af8.c",
@@ -498,49 +498,49 @@
       "ordinal": 67
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c15Round_SubState1Ev",
+      "symbol": "_ZN14dScMgBomroom_c20RoundEnd_WaitLinedUpEv",
       "address": "0x020d8cc4",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_020d8cc4.cpp",
       "ordinal": 68
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c15Round_SubState0Ev",
+      "symbol": "_ZN14dScMgBomroom_c19RoundEnd_StartMarchEv",
       "address": "0x020d8d84",
       "size": "0x000001b0",
       "legacy_source": "src/func_ov006_020d8d84.c",
       "ordinal": 69
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c12Round_State4Ev",
+      "symbol": "_ZN14dScMgBomroom_c19Round_StateGameOverEv",
       "address": "0x020d8f34",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020d8f34.c",
       "ordinal": 70
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c12Round_State3Ev",
+      "symbol": "_ZN14dScMgBomroom_c14Round_StateEndEv",
       "address": "0x020d8f98",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020d8f98.cpp",
       "ordinal": 71
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c12Round_State2Ev",
+      "symbol": "_ZN14dScMgBomroom_c15Round_StatePlayEv",
       "address": "0x020d8ff4",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020d8ff4.c",
       "ordinal": 72
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c12Round_State1Ev",
+      "symbol": "_ZN14dScMgBomroom_c16Round_StateStartEv",
       "address": "0x020d9020",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020d9020.c",
       "ordinal": 73
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c12Round_State0Ev",
+      "symbol": "_ZN14dScMgBomroom_c16Round_StateSetupEv",
       "address": "0x020d904c",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_020d904c.c",
@@ -676,11 +676,11 @@
     }
   ],
   "notes": [
-    "Widened from the 41-helper span 0x020d5eb8..0x020d7c4c to the whole unit. The folded files were _ZN14dScMgBomroom_cD1Ev.cpp and _D0Ev.cpp, the 12 helpers from _ZN14dScMgBomroom_c13DrawRoundOverEv to _ZN14dScMgBomroom_c12TopDoor_DrawEv, the 21 helpers from _ZN14dScMgBomroom_c11Bomb_State5Ei to _ZN14dScMgBomroom_c10ResetRoundEv, and the OnYoshiTryEat, Render, Behavior and InitResources files; attribution.json keeps each one's credit through a path#symbol override.",
+    "Widened from the 41-helper span 0x020d5eb8..0x020d7c4c to the whole unit. The folded files were _ZN14dScMgBomroom_cD1Ev.cpp and _D0Ev.cpp, the 12 helpers from _ZN14dScMgBomroom_c13DrawRoundOverEv to _ZN14dScMgBomroom_c12TopDoor_DrawEv, the 21 helpers from _ZN14dScMgBomroom_c15Bomb_StateInPenEi to _ZN14dScMgBomroom_c10ResetRoundEv, and the OnYoshiTryEat, Render, Behavior and InitResources files; attribution.json keeps each one's credit through a path#symbol override.",
     "Written ROM-ASCENDING because `#pragma defer_codegen off` makes CodeWarrior emit each definition as it is encountered rather than in reverse source order. With the out-of-line destructor first in the file it emits D1, D0 at ordinals 0 and 1, and the homeless D2 is dispositioned deadstrip.",
     "include/decl_common.h declares several of this TU's members. Those declared `void f(void*)` are defined with that spelling and cast to the recovered type on the first line, which is byte-neutral; call sites that reach a member defined with a typed parameter (_ZN14dScMgBomroom_c15PenGate_HideAllEv, _020d669c, _020d5dd4, _020d65c8, _020d6278, _020d5fec) cast at the call. _ZN14dScMgBomroom_c13DrawRemainingEv was declared `int f()` there -- decl_headers.py had read a legacy shard's K&R forward declaration -- and is corrected to `void f(void*)`. _ZN14dScMgBomroom_c12TopDoor_DrawEv was declared `void f()`, which C++ reads as taking no arguments and which conflicts with its `char *` definition here; that declaration is removed, since this file is its only caller. Bomroom_DrawScore keeps decl_common.h's `void f(void)`: it takes no argument, and Render calls it without one (the retired Render file passed `this`, which the callee never read; bytes are unchanged).",
-    "Each member keeps its own legacy shadow types, suffixed with the member's address (S_604c, Obj_6098, PMF_6278, Ent_816c, Work_893c, ...) so that the shards' independently-invented `S`/`C`/`Rec`/`Obj`/`Work`/`Ent`/`Entry` tags coexist. Members derived from .c shards had their `this` parameter renamed to `self_` -- a C++ keyword in the merged TU. The .c shards' `_ZN5Sound12PlayBank2_2DEj` calls are spelled Sound::PlayBank2_2D through include/Sound.h, and _ZN14dScMgBomroom_c12Round_State2Ev, recovered as returning the result of a void function through K&R declarations, is void.",
-    "The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_5fec, C_6278, C_65c8, C_7c00, C_836c, C_91b0) are load-bearing: they are the representation the tables at sBomroomTopDoorStateTable..data_ov006_02141730 are filled with, and completing a struct changes the pointer-to-member representation mwcc emits."
+    "Each member keeps its own legacy shadow types, suffixed with the member's address (S_604c, Obj_6098, PMF_6278, Ent_816c, Work_893c, ...) so that the shards' independently-invented `S`/`C`/`Rec`/`Obj`/`Work`/`Ent`/`Entry` tags coexist. Members derived from .c shards had their `this` parameter renamed to `self_` -- a C++ keyword in the merged TU. The .c shards' `_ZN5Sound12PlayBank2_2DEj` calls are spelled Sound::PlayBank2_2D through include/Sound.h, and _ZN14dScMgBomroom_c15Round_StatePlayEv, recovered as returning the result of a void function through K&R declarations, is void.",
+    "The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_5fec, C_6278, C_65c8, C_7c00, C_836c, C_91b0) are load-bearing: they are the representation the tables at sBomroomTopDoorStateTable..sBomroomBombStateTable are filled with, and completing a struct changes the pointer-to-member representation mwcc emits."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

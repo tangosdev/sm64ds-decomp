@@ -86,13 +86,13 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     void InitDisplay();      /* ov006 0x0212231c -- loads BG/OBJ screens */
     void InitBrush(int layer); /* ov006 0x02120f18 -- fills the stroke layer */
     s16  GetDoorSide();        /* ov006 0x02121768 */
-    void SetDoorSide(short v); /* ov006 0x02121750 -- mirrors pick to data_ov006_02140538 */
+    void SetDoorSide(short v); /* ov006 0x02121750 -- mirrors pick to sTrmpGoalRow */
 
     u32 mState[2];          /* 0x5004 -- raw eight-byte State encoding; a
                                typed global PMF emits a non-ROM __sinit */
     u8  mArray1[0x340];     /* 0x500c -- 4 * 0xd0; StatePlay launches one */
     u8  mArray2[0x984];     /* 0x534c -- 3 * 0x32c, elem dtor TrmpLine_Destroy */
-    u8  mArray3[0xb4];      /* 0x5cd0 -- 5 * 0x24 floating scores (Desc) */
+    u8 mArray3[0xb4];       /* 0x5cd0 -- 5 * 0x24 floating scores (TrmpScorePopup) */
     dScMgTrampoline_DoorMark mDoorMark; /* 0x5d84 */
     int mTimer;             /* 0x5d90 -- countdown gating state transitions */
     s32 mScrollY;           /* 0x5d94 -- approached toward mScrollTargetY by 2 a

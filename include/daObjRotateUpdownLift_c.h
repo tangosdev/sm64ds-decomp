@@ -55,8 +55,7 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     s32 mPlatform1;            /* 0x39c */
     u8  mIsDead;            /* 0x3a0 */
     u8  pad_3a1[0x1];
-    u8  mPitchBase;            /* 0x3a2 */
-    u8  pad_3a3[0x1];
+    s16 mPitchBase;            /* 0x3a2 */
     s16 mPitchStep;            /* 0x3a4 */
     u8  pad_3a6[0x2];
 
@@ -144,8 +143,7 @@ struct daObjRotateUpdownLift_c {
     s32 mPlatform1;            /* 0x39c */
     u8  mIsDead;            /* 0x3a0 */
     u8  pad_3a1[0x1];
-    u8  mPitchBase;            /* 0x3a2 */
-    u8  pad_3a3[0x1];
+    s16 mPitchBase;            /* 0x3a2 */
     s16 mPitchStep;            /* 0x3a4 */
 };
 

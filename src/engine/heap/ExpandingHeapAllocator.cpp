@@ -558,10 +558,10 @@ u32 ExpandingHeapAllocator::GetNodeID()
  * each block back into an allocator->Deallocate(ptr) call. */
 void *ExpandingHeapAllocator::DeallocateAll(DeallocationFunction fn, u32 ctx)
 {
-    void *node = *(void **)((char *)this + 0x2c);
+    MemoryNode *node = mUsedFirstNode;
     if (!node) return node;
     do {
-        void *next = ((MemoryNode *)node)->next;
+        MemoryNode *next = node->next;
         fn((char *)node + 0x10, this, ctx);
         node = next;
     } while (node);

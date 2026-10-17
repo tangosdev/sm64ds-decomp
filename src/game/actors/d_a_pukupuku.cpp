@@ -178,7 +178,7 @@ int daPukupuku_c::Behavior()
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     UpdatePos(&mdCcAcPos_c);
     {
-        PukuMainView *q = *(PukuMainView **)pad_370;
+        PukuMainView *q = (PukuMainView *)mState;
         if (q->main != 0)
             (((dEnemyBase_c *)this)->*(q->main))();
     }
@@ -236,8 +236,8 @@ void func_ov090_02133338(char *c) {
 struct PukuStateC { char pad[0x370]; PukuStatePMF *pp; };
 int daPukupuku_c::func_ov090_021332e8(PukuStatePMF *p)
 {
-    *(PukuStatePMF **)((char *)this + 0x370) = p;
-    PukuStatePMF *q = *(PukuStatePMF **)((char *)this + 0x370);
+    mState = p;
+    PukuStatePMF *q = mState;
     if (*q == 0)
         return 1;
     return (((PukuStateC *)this)->**q)();

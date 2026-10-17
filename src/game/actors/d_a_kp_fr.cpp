@@ -22,7 +22,8 @@
  *   math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes it.
  *   Fix12i[3] locals instead of Vector3, which declares its own
  *   destructor.
- *   The (long long) smull in func_ov070_02121d50 is the matching form.
+ *   FX_MUL's 64-bit product (one smull) in func_ov070_02121d50 is the
+ *   matching form.
  *   func_ov070_02121d50 calls dBgCh_Actr_UpdateContinuous_Veneer, as the
  *   ROM does, not UpdateContinuous.
  *
@@ -41,6 +42,7 @@
 //   triples live on the shared dActor_c header, which has not named them yet
 //   (same header work as the linelift2 leaf below).
 #include "daKpFr_c.h"
+#include "nitro/fx/fx.h"
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
@@ -252,7 +254,7 @@ void daKpFr_c::func_ov070_02121e14() {
 // @symbol _ZN8daKpFr_c19func_ov070_02121d50EPv
 /* GetFloorResult is not declared in the shared header yet; keep only that
  * proven typed ABI seam. ROM calls the UpdateContinuous veneer, not the
- * method. (long long) smull is the addressing form the ROM uses. */
+ * method. FX_MUL's 64-bit product is the smull the ROM uses. */
 namespace cstd { int fdiv(int a, int b); }
 
 extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* c);
@@ -264,8 +266,8 @@ void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     if (clsn->IsOnGround()) {
         ((dBgPi *)clsn->GetFloorResult())->surface.CopyNormalTo(*(Vector3 *)normal);
         if (normal[1] != 0) {
-            int a = (int)(((long long)normal[0] * unk_0a4 + 0x800) >> 12);
-            int b = (int)(((long long)normal[2] * unk_0ac + 0x800) >> 12);
+            int a = FX_MUL(normal[0], unk_0a4);
+            int b = FX_MUL(normal[2], unk_0ac);
             mVertSpeed = -(cstd::fdiv(a + b, normal[1]) + 0x8000);
         }
     }

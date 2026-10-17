@@ -33,11 +33,11 @@ struct dScMgBomroom_Bomb {
     u8 type;        /* +0x34 -- anim row; picks frame time/count and sfx */
     u8 frame;       /* +0x35 */
     u8 color;       /* +0x36 -- 0/1; also picks which pen box it bounces in */
-    u8 state;       /* +0x37 -- 5 = settled; indexes data_ov006_02141730 */
+    u8 state;       /* +0x37 -- 5 = settled; indexes sBomroomBombStateTable */
     u8 active;      /* +0x38 */
     u8 visible;     /* +0x39 -- DrawBombs skips the bomb while 0 */
     u8 pen;         /* +0x3a -- which blast marked it; 0 = was loose */
-    u8 substate;    /* +0x3b -- indexes data_ov006_02141708 */
+    u8 substate;    /* +0x3b -- indexes sBomroomBombMarchTable */
     u8 lineSlot;    /* +0x3c -- line-up slot: row = slot / 10, column = slot % 10 */
     u8 exploded;    /* +0x3d -- set when the bomb goes off */
     u8 overPen;     /* +0x3e -- held over its own pen; sound 0x1e4 on entry */
@@ -72,7 +72,7 @@ struct dScMgBomroom_c : dScMgBase_c {
 
     /* scene helpers -- the PMF targets of the seven sinit state tables
        (data_ov006_02141660/680/6c0/6e0/708/730 and the raw {fptr,adj} pairs at
-       data_ov006_021416a0) plus the per-frame and round bookkeeping they call. */
+       sBomroomRoundEndTable) plus the per-frame and round bookkeeping they call. */
     void DrawRoundOver();
     void SetRoundOver();
     void UpdateBg2Lift();
@@ -119,32 +119,32 @@ struct dScMgBomroom_c : dScMgBase_c {
     void Bomb_PushApart(int index);
     void DrawBombs();
     void CheckColorComplete();
-    void Bomb_Roam4();
-    void Bomb_Roam3(int index);
-    void Bomb_Roam2();
-    void Bomb_Roam1(int index);
-    void Bomb_Roam0(int index);
-    void Bomb_State6(int index);
-    void Bomb_State5(int idx);
-    void Bomb_State4(int i);
-    void Bomb_State3(int idx);
-    void Bomb_State2(int idx);
-    void Bomb_State1(int idx);
-    void Bomb_State0(int i);
+    void BombMarch_LinedUp();
+    void BombMarch_ToLine(int index);
+    void BombMarch_Offscreen();
+    void BombMarch_Exit(int index);
+    void BombMarch_ToGate(int index);
+    void Bomb_StateMarch(int index);
+    void Bomb_StateInPen(int idx);
+    void Bomb_StateExploding(int i);
+    void Bomb_StateChainDelay(int idx);
+    void Bomb_StateHeld(int idx);
+    void Bomb_StateWalk(int idx);
+    void Bomb_StateWaiting(int i);
     void UpdateBombs();
     void SpawnBombs();
     void HideExplodedBombs();
     void ClearBombs();
-    void Round_SubState3();
-    void Round_SubState2();
+    void RoundEnd_Finish();
+    void RoundEnd_Tally();
     int AnyBombMarching();
-    void Round_SubState1();
-    void Round_SubState0();
-    void Round_State4();
-    void Round_State3();
-    void Round_State2();
-    void Round_State1();
-    void Round_State0();
+    void RoundEnd_WaitLinedUp();
+    void RoundEnd_StartMarch();
+    void Round_StateGameOver();
+    void Round_StateEnd();
+    void Round_StatePlay();
+    void Round_StateStart();
+    void Round_StateSetup();
     void ResetRound();
 
     dScMgBomroom_Bomb mBombs[0x70]; /* 0x4660 -- 0x70 x 0x40 */
@@ -162,7 +162,7 @@ struct dScMgBomroom_c : dScMgBase_c {
     dScMgBomroom_Slot mTopDoor;        /* 0x62a0 */
     dScMgBomroom_Slot mMarkers[2];     /* 0x62b0 */
     s32 mSceneState;    /* 0x62d0 -- round state; 3 once a picked bomb has gone off */
-    s32 mSubState;      /* 0x62d4 -- index into the data_ov006_021416a0 {fptr,adj} pairs */
+    s32 mSubState;      /* 0x62d4 -- index into the sBomroomRoundEndTable {fptr,adj} pairs */
     s32 mSpawnCount;    /* 0x62d8 -- bombs dropped so far; picks the spawn step */
     s32 mBg2Y;          /* 0x62dc -- BG2 scroll offset, Fix12 */
     u16 mTallyDelay;    /* 0x62e0 -- 0x10 frames between mStateTimer and the tally */

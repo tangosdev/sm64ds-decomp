@@ -85,18 +85,18 @@ struct dScMgCurling_c : dScMgBase_c {
     virtual void StartRound(int arg);               /* slot 18 */
 
     void Bit_DrawAll();   /* renders the falling bits */
-    void Bit_State2(int index);
-    void Bit_State1(int index);
-    void Bit_State0(int index);
-    void BitA_State3(int index);
-    void BitA_State2(int index);
-    void BitA_State1(int index);
-    void BitA_State0(int index);
+    void Bit_StateFallSlowDown(int index);
+    void Bit_StateFallSpeedUp(int index);
+    void Bit_StateFallStart(int index);
+    void BitA_StateDriftStop(int index);
+    void BitA_StateDriftLeft(int index);
+    void BitA_StateDriftRight(int index);
+    void BitA_StatePause(int index);
     void Bit_RunKindA(int index);
-    void BitB_State3(int index);
-    void BitB_State2(int index);
-    void BitB_State1(int index);
-    void BitB_State0(int idx);
+    void BitB_StateDriftStop(int index);
+    void BitB_StateDriftLeft(int index);
+    void BitB_StateDriftRight(int index);
+    void BitB_StatePause(int idx);
     void Bit_RunKindB(int idx);
     void Bit_PickKind(int idx);
     void Bit_UpdateAll();

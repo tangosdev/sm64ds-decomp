@@ -11,7 +11,7 @@
  *
  * comment leftovers: a few spellings must stay raw because the typed form
  * changes codegen (each was measured -- the DIFF size is in parentheses):
- * - BitB_State2 / BitB_State1 keep the `bits + 0x47NN +
+ * - BitB_StateDriftLeft / BitB_StateDriftRight keep the `bits + 0x47NN +
  *   off` spelling; mBit[index] reschedules them (0ff0 also sits under
  *   inline_depth(0)).
  * - Popup_UpdateAll / 020e1680 / 020e3078 / 020e3388 sit under
@@ -120,25 +120,25 @@ extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c,
 
 extern int  data_0209d4b8;
 extern s16  data_02082214[];
-extern unsigned char data_ov006_0212e450[];
-extern unsigned char data_ov006_0212e454[];
-extern u8   data_ov006_0212e458[];
-extern int  data_ov006_0212e460[];
-extern int  data_ov006_0212e468[];
-extern int  data_ov006_0213a5e0[];
-extern int  data_ov006_0213c264;
-extern int  data_ov006_0213c2ac;
-extern int  data_ov006_0213c2e4[];
+extern unsigned char sCurlingBitAStates[];
+extern unsigned char sCurlingBitBStates[];
+extern u8 sCurlingScoreDelays[];
+extern int sCurlingBitKinds[];
+extern int sCurlingStonesLeftX[];
+extern int sCurlingBitSprites[];
+extern int sCurlingStoneLeftSprite;
+extern int sCurlingStoneLeftShadowSprite;
+extern int sCurlingAimMarkerSprites[];
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
-extern char data_ov006_0213c394;
-extern char data_ov006_0213c3b4;
-extern int  data_ov006_0212e478[];
-extern int  data_ov006_0212e48c[];
-extern int  data_ov006_0212e4a0[];
-extern int  data_ov006_0212e4b4[];
-extern int  data_ov006_0212e4c8[];
-extern int  data_ov006_0212e4dc[];
+extern char sCurlingMgDirPath;
+extern char sCurlingBgCurling2NcgPath;
+extern int sCurlingSlideZoneEdges[];
+extern int sCurlingSlideShiftLeft[];
+extern int sCurlingSlideShiftRight[];
+extern int sCurlingSlideMinLeft[];
+extern int sCurlingSlideMinRight[];
+extern int sCurlingHouseSpots[];
 
 /* The six state tables, filled at startup by the ov006 static init. */
 extern PMF0 sCurlingAimTable[];
@@ -164,17 +164,17 @@ extern PMF0 pmf_dScMgCurling_c_Aim_Swing;
 extern PMF pmf_dScMgCurling_c_Bit_PickKind;
 extern PMF pmf_dScMgCurling_c_Bit_RunKindB;
 extern PMF pmf_dScMgCurling_c_Bit_RunKindA;
-extern PMF pmf_dScMgCurling_c_BitB_State0;
-extern PMF pmf_dScMgCurling_c_BitB_State1;
-extern PMF pmf_dScMgCurling_c_BitB_State2;
-extern PMF pmf_dScMgCurling_c_BitB_State3;
-extern PMF pmf_dScMgCurling_c_BitA_State0;
-extern PMF pmf_dScMgCurling_c_BitA_State1;
-extern PMF pmf_dScMgCurling_c_BitA_State2;
-extern PMF pmf_dScMgCurling_c_BitA_State3;
-extern PMF pmf_dScMgCurling_c_Bit_State0;
-extern PMF pmf_dScMgCurling_c_Bit_State1;
-extern PMF pmf_dScMgCurling_c_Bit_State2;
+extern PMF pmf_dScMgCurling_c_BitB_StatePause;
+extern PMF pmf_dScMgCurling_c_BitB_StateDriftRight;
+extern PMF pmf_dScMgCurling_c_BitB_StateDriftLeft;
+extern PMF pmf_dScMgCurling_c_BitB_StateDriftStop;
+extern PMF pmf_dScMgCurling_c_BitA_StatePause;
+extern PMF pmf_dScMgCurling_c_BitA_StateDriftRight;
+extern PMF pmf_dScMgCurling_c_BitA_StateDriftLeft;
+extern PMF pmf_dScMgCurling_c_BitA_StateDriftStop;
+extern PMF pmf_dScMgCurling_c_Bit_StateFallStart;
+extern PMF pmf_dScMgCurling_c_Bit_StateFallSpeedUp;
+extern PMF pmf_dScMgCurling_c_Bit_StateFallSlowDown;
 
 }  /* extern "C" */
 
@@ -196,15 +196,14 @@ void dScMgCurling_c::Bit_DrawAll()
         if (mBit[i].shown) {
             int x = mBit[i].x >> 0xc;
             int y = mBit[i].y >> 0xc;
-            Mg_RenderSubSpriteMtx(data_ov006_0213a5e0[mBit[i].texA], x, y, 0);
-            DrawOamSprite(data_ov006_0213a5e0[mBit[i].texB], x, y, 0);
+            Mg_RenderSubSpriteMtx(sCurlingBitSprites[mBit[i].texA], x, y, 0);
+            DrawOamSprite(sCurlingBitSprites[mBit[i].texB], x, y, 0);
         }
     }
 }
 
-// @symbol _ZN14dScMgCurling_c10Bit_State2Ei
-void dScMgCurling_c::Bit_State2(int index)
-{
+// @symbol _ZN14dScMgCurling_c21Bit_StateFallSlowDownEi
+void dScMgCurling_c::Bit_StateFallSlowDown(int index) {
     if (mBit[index].wait2 != 0) {
         short *p = (short *)&mBit[index].wait2;
         *p = (short)(*(unsigned short *)p - 1);
@@ -220,9 +219,8 @@ void dScMgCurling_c::Bit_State2(int index)
     }
 }
 
-// @symbol _ZN14dScMgCurling_c10Bit_State1Ei
-void dScMgCurling_c::Bit_State1(int index)
-{
+// @symbol _ZN14dScMgCurling_c20Bit_StateFallSpeedUpEi
+void dScMgCurling_c::Bit_StateFallSpeedUp(int index) {
     if (mBit[index].vyCap > mBit[index].vy) {
         mBit[index].vy += 0x10;
         if (mBit[index].vyCap > mBit[index].vy)
@@ -237,22 +235,20 @@ void dScMgCurling_c::Bit_State1(int index)
     }
 }
 
-// @symbol _ZN14dScMgCurling_c10Bit_State0Ei
-void dScMgCurling_c::Bit_State0(int index)
-{
-  unsigned int roll;
-  mBit[index].vy = 0;
-  roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-  mBit[index].vyCap = (((roll << 4) >> 15) << 4) + 0x300;
-  mBit[index].state2 = 1;
-  roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-  roll = ((roll << 5) >> 15) + 0x20;
-  (s16&)mBit[index].wait2 = (unsigned char)roll;
+// @symbol _ZN14dScMgCurling_c18Bit_StateFallStartEi
+void dScMgCurling_c::Bit_StateFallStart(int index) {
+    unsigned int roll;
+    mBit[index].vy = 0;
+    roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    mBit[index].vyCap = (((roll << 4) >> 15) << 4) + 0x300;
+    mBit[index].state2 = 1;
+    roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((roll << 5) >> 15) + 0x20;
+    (s16 &)mBit[index].wait2 = (unsigned char)roll;
 }
 
-// @symbol _ZN14dScMgCurling_c11BitA_State3Ei
-void dScMgCurling_c::BitA_State3(int index)
-{
+// @symbol _ZN14dScMgCurling_c19BitA_StateDriftStopEi
+void dScMgCurling_c::BitA_StateDriftStop(int index) {
     mBit[index].x = mBit[index].x + mBit[index].vx;
     mBit[index].y = mBit[index].y + mBit[index].vy;
     if (mBit[index].wait != 0) {
@@ -273,9 +269,8 @@ void dScMgCurling_c::BitA_State3(int index)
     mBit[index].state = 0;
 }
 
-// @symbol _ZN14dScMgCurling_c11BitA_State2Ei
-void dScMgCurling_c::BitA_State2(int index)
-{
+// @symbol _ZN14dScMgCurling_c19BitA_StateDriftLeftEi
+void dScMgCurling_c::BitA_StateDriftLeft(int index) {
     unsigned short timer;
 
     mBit[index].x = mBit[index].x + mBit[index].vx;
@@ -306,9 +301,8 @@ void dScMgCurling_c::BitA_State2(int index)
     mBit[index].timer = (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf) + 0x20);
 }
 
-// @symbol _ZN14dScMgCurling_c11BitA_State1Ei
-void dScMgCurling_c::BitA_State1(int index)
-{
+// @symbol _ZN14dScMgCurling_c20BitA_StateDriftRightEi
+void dScMgCurling_c::BitA_StateDriftRight(int index) {
     unsigned short timer;
 
     mBit[index].x += mBit[index].vx;
@@ -340,16 +334,18 @@ void dScMgCurling_c::BitA_State1(int index)
     (s16&)mBit[index].timer = (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 & 0xff;
 }
 
-// @symbol _ZN14dScMgCurling_c11BitA_State0Ei
-void dScMgCurling_c::BitA_State0(int index)
-{
+// @symbol _ZN14dScMgCurling_c15BitA_StatePauseEi
+void dScMgCurling_c::BitA_StatePause(int index) {
     if (mBit[index].wait != 0) {
         mBit[index].wait = mBit[index].wait - 1;
         if ((s16&)mBit[index].wait < 0) (s16&)mBit[index].wait = 0;
         return;
     }
     mBit[index].vx = 0;
-    mBit[index].state = data_ov006_0212e450[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1 >> 15];
+    mBit[index].state =
+        sCurlingBitAStates[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                               << 1 >>
+                           15];
     mBit[index].wait = (short)(unsigned char)((0x10 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf);
     mBit[index].timer = (short)(unsigned char)(((0x40 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf) + 0x60);
 }
@@ -364,9 +360,8 @@ void dScMgCurling_c::Bit_RunKindA(int index)
     (self->*sCurlingBitStateTable[state2])(index);
 }
 
-// @symbol _ZN14dScMgCurling_c11BitB_State3Ei
-void dScMgCurling_c::BitB_State3(int index)
-{
+// @symbol _ZN14dScMgCurling_c19BitB_StateDriftStopEi
+void dScMgCurling_c::BitB_StateDriftStop(int index) {
     int *x = &mBit[index].x;
     int *vx = &mBit[index].vx;
     int *y = &mBit[index].y;
@@ -383,9 +378,8 @@ void dScMgCurling_c::BitB_State3(int index)
     }
 }
 
-// @symbol _ZN14dScMgCurling_c11BitB_State2Ei
-void dScMgCurling_c::BitB_State2(int index)
-{
+// @symbol _ZN14dScMgCurling_c19BitB_StateDriftLeftEi
+void dScMgCurling_c::BitB_StateDriftLeft(int index) {
     int off = index * 0x24;
 
     mBit[index].x += mBit[index].vx;
@@ -424,9 +418,8 @@ void dScMgCurling_c::BitB_State2(int index)
 
 #pragma push
 #pragma inline_depth(0)
-// @symbol _ZN14dScMgCurling_c11BitB_State1Ei
-void dScMgCurling_c::BitB_State1(int index)
-{
+// @symbol _ZN14dScMgCurling_c20BitB_StateDriftRightEi
+void dScMgCurling_c::BitB_StateDriftRight(int index) {
     int off = index * 0x24;
 
     mBit[index].x += mBit[index].vx;
@@ -464,9 +457,8 @@ void dScMgCurling_c::BitB_State1(int index)
 #pragma pop
 }
 
-// @symbol _ZN14dScMgCurling_c11BitB_State0Ei
-void dScMgCurling_c::BitB_State0(int idx)
-{
+// @symbol _ZN14dScMgCurling_c15BitB_StatePauseEi
+void dScMgCurling_c::BitB_StatePause(int idx) {
     unsigned short wait;
     short left;
     unsigned int roll;
@@ -481,7 +473,7 @@ void dScMgCurling_c::BitB_State0(int idx)
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
     mBit[idx].vy = (int)(((roll << 5) >> 15) << 4) + 0x600;
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-    mBit[idx].state = data_ov006_0212e454[(roll << 1) >> 15];
+    mBit[idx].state = sCurlingBitBStates[(roll << 1) >> 15];
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
     (s16&)mBit[idx].wait = (unsigned char)((roll << 4) >> 15);
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
@@ -504,7 +496,7 @@ void dScMgCurling_c::Bit_PickKind(int idx)
     int k = 0;
     unsigned pick = ((roll >> 16) & 0x7fff) << 3 >> 0xf;
     if (pick == 5) k = 1;
-    mBit[idx].kind = data_ov006_0212e460[k];
+    mBit[idx].kind = sCurlingBitKinds[k];
     mBit[idx].state = 0;
 }
 #pragma pop
@@ -652,7 +644,7 @@ void dScMgCurling_c::ScoreStones()
         }
     }
 
-    delay = &data_ov006_0212e458[slot];
+    delay = &sCurlingScoreDelays[slot];
     stone = raw;
     for (i = 0; i < 5; i++, stone += 0x2c) {
         int dx, dz, dist, top;
@@ -700,7 +692,7 @@ void dScMgCurling_c::DrawAimMarker()
   if(mAimShown==0) return;
   int x=mAimX;
   int y=mAimY;
-  Mg_RenderSpriteBoth((int)data_ov006_0213c2e4,(x>>12)-0x20,(y>>12)-8,-1,0);
+  Mg_RenderSpriteBoth((int)sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
 #pragma push
@@ -886,17 +878,17 @@ void dScMgCurling_c::DrawStonesLeft()
         if (mStone[i].dealt == 0) continue;
         x = mStone[i].x >> 12;
         y = mStone[i].y >> 12;
-        RenderOamBothScreens(&data_ov006_0213c264, x, y, -1, 1, 0);
-        RenderOamBothScreens(&data_ov006_0213c2ac, x, y + 8, -1, 2, 0);
+        RenderOamBothScreens(&sCurlingStoneLeftSprite, x, y, -1, 1, 0);
+        RenderOamBothScreens(&sCurlingStoneLeftShadowSprite, x, y + 8, -1, 2, 0);
     }
     remaining = 5 - mThrown;
     if (remaining < 0) remaining = 0;
     j = 0;
     if (remaining > 0) {
         for (; j < remaining; j++) {
-            int slotX = data_ov006_0212e468[j];
-            RenderOamBothScreens(&data_ov006_0213c264, slotX, 0xb0, -1, 1, 0);
-            RenderOamBothScreens(&data_ov006_0213c2ac, slotX, 0xb8, -1, 2, 0);
+            int slotX = sCurlingStonesLeftX[j];
+            RenderOamBothScreens(&sCurlingStoneLeftSprite, slotX, 0xb0, -1, 1, 0);
+            RenderOamBothScreens(&sCurlingStoneLeftShadowSprite, slotX, 0xb8, -1, 2, 0);
         }
     }
 }
@@ -1166,7 +1158,7 @@ void dScMgCurling_c::Stone_Collide(int idx)
 /* Stone idx while it slides. Moves it by its velocity, adds the spin to
  * the angle, bounces it off the four walls (with a sound), then takes
  * friction off the speed: a base of speed/512 (at least 0x1c), more in the
- * five bands below the house from the data_ov006_0212e478 tables, and a
+ * five bands below the house from the sCurlingSlideZoneEdges tables, and a
  * steeper rate while the stone still travels upward above -0x20. At zero
  * speed the stone stops (state 2). The collision and spin helpers run, and
  * the slide sound at 0x467c is retuned to the speed. */
@@ -1235,16 +1227,16 @@ void dScMgCurling_c::Stone_Slide(int idx)
     if (v <= 0x1c)
         v = 0x1c;
     for (i2 = 0, sbv = *p664 >> 12; i2 < 5; i2++) {
-        if (sbv <= -(data_ov006_0212e478[i2] + 0x20)) {
+        if (sbv <= -(sCurlingSlideZoneEdges[i2] + 0x20)) {
             s = data_02082214[(*pang >> 4) * 2];
             if (s < 0) {
-                v = zi >> data_ov006_0212e48c[i2];
-                if (v < data_ov006_0212e4b4[i2])
-                    v = data_ov006_0212e4b4[i2];
+                v = zi >> sCurlingSlideShiftLeft[i2];
+                if (v < sCurlingSlideMinLeft[i2])
+                    v = sCurlingSlideMinLeft[i2];
             } else if (s > 0) {
-                v = zi >> data_ov006_0212e4a0[i2];
-                if (v < data_ov006_0212e4c8[i2])
-                    v = data_ov006_0212e4c8[i2];
+                v = zi >> sCurlingSlideShiftRight[i2];
+                if (v < sCurlingSlideMinRight[i2])
+                    v = sCurlingSlideMinRight[i2];
             }
             break;
         }
@@ -1502,7 +1494,7 @@ void dScMgCurling_c::Scene_StartRound()
 // @symbol _ZN14dScMgCurling_c9PickHouseEv
 /* Picks the house (0x4e9c): a fresh random one of three that differs from
  * the last, or the first one when the slot still holds its 0xff reset.
- * The house centre comes from data_ov006_0212e4dc and its background from
+ * The house centre comes from sCurlingHouseSpots and its background from
  * one of three files. */
 void dScMgCurling_c::PickHouse()
 {
@@ -1518,8 +1510,8 @@ void dScMgCurling_c::PickHouse()
         }
         mHouse = m;
     }
-    mHouseX = data_ov006_0212e4dc[mHouse * 2] << 12;
-    mHouseY = (data_ov006_0212e4dc[mHouse * 2 + 1] - 0xe0) << 12;
+    mHouseX = sCurlingHouseSpots[mHouse * 2] << 12;
+    mHouseY = (sCurlingHouseSpots[mHouse * 2 + 1] - 0xe0) << 12;
     if (mHouse == 0) {
         file = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NSC_BIN);
     } else if (mHouse == 1) {
@@ -1635,8 +1627,8 @@ s32 dScMgCurling_c::Behavior()
  * palettes and the house, then starts the first round with a 0x40 delay. */
 s32 dScMgCurling_c::InitResources()
 {
-    char *a = Ov004_LoadFileByPath(&data_ov006_0213c394);
-    char *b = Ov004_LoadFileByPath(&data_ov006_0213c3b4);
+    char *a = Ov004_LoadFileByPath(&sCurlingMgDirPath);
+    char *b = Ov004_LoadFileByPath(&sCurlingBgCurling2NcgPath);
     void *f;
 
     if (a == 0 || b == 0) return 0;
@@ -1736,19 +1728,19 @@ PMF sCurlingBitKindTable[3] = {
     pmf_dScMgCurling_c_Bit_RunKindA,
 };
 Entry sCurlingBitBStateTable[4] = {
-    {pmf_dScMgCurling_c_BitB_State0},
-    {pmf_dScMgCurling_c_BitB_State1},
-    {pmf_dScMgCurling_c_BitB_State2},
-    {pmf_dScMgCurling_c_BitB_State3},
+    {pmf_dScMgCurling_c_BitB_StatePause},
+    {pmf_dScMgCurling_c_BitB_StateDriftRight},
+    {pmf_dScMgCurling_c_BitB_StateDriftLeft},
+    {pmf_dScMgCurling_c_BitB_StateDriftStop},
 };
 PMF sCurlingBitAStateTable[4] = {
-    pmf_dScMgCurling_c_BitA_State0,
-    pmf_dScMgCurling_c_BitA_State1,
-    pmf_dScMgCurling_c_BitA_State2,
-    pmf_dScMgCurling_c_BitA_State3,
+    pmf_dScMgCurling_c_BitA_StatePause,
+    pmf_dScMgCurling_c_BitA_StateDriftRight,
+    pmf_dScMgCurling_c_BitA_StateDriftLeft,
+    pmf_dScMgCurling_c_BitA_StateDriftStop,
 };
 PMF sCurlingBitStateTable[3] = {
-    pmf_dScMgCurling_c_Bit_State0,
-    pmf_dScMgCurling_c_Bit_State1,
-    pmf_dScMgCurling_c_Bit_State2,
+    pmf_dScMgCurling_c_Bit_StateFallStart,
+    pmf_dScMgCurling_c_Bit_StateFallSpeedUp,
+    pmf_dScMgCurling_c_Bit_StateFallSlowDown,
 };

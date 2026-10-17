@@ -33,27 +33,11 @@ enum daObjCtMecha05_c_AssetId {
 
 #include "common.h"
 #include "daObjCtMecha05_c.h"
+#include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
-
-/* Actor/process profile descriptor at ov065:0x0211d290. Field roles are
- * recovered from fBase_c/dActor_c consumers; exact original member spellings
- * are not preserved. */
-struct CtMecha05SpawnInfo {
-    daObjCtMecha05_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char CtMecha05SpawnInfo_size_must_be_0x1c[
-    sizeof(CtMecha05SpawnInfo) == 0x1c ? 1 : -1];
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x5c2, collision file 0x5c3). mwcc emits
@@ -113,9 +97,9 @@ extern CLPS_Block data_ov035_02112258;
 }
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
- * lineage-supported reconstruction. */
+ * lineage-supported reconstruction. The descriptor is at ov065:0x0211d290. */
 extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit();
-extern "C" CtMecha05SpawnInfo g_profile_CT_MECHA05 = {
+extern "C" SpawnInfo<daObjCtMecha05_c> g_profile_CT_MECHA05 = {
     daObjCtMecha05_c_classInit,
     0x0071,
     0x00ec,

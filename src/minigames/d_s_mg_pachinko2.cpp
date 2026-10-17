@@ -118,7 +118,7 @@ struct Obj68c {
     struct E68c arr[3];
 };
 
-/* Paddle_State10's view of the same records. */
+/* Paddle_StateSwing's view of the same records. */
 struct Sub {
     /* 0x00 */ s32 unk00;
     /* 0x04 */ s32 unk04;
@@ -218,29 +218,29 @@ extern int  data_0209d4b8;
 extern u8   data_0209d45c;
 extern u8   data_0209d454;
 extern s16  data_02082214[];
-extern int  data_ov006_02136b80[];
-extern int  data_ov006_02136bd4[];
-extern int  data_ov006_0213386c;
-extern int  data_ov006_021389ec;
-extern int  data_ov006_02138d08[];
-extern u8   data_ov006_0212ebac[];
-extern u8   data_ov006_0212ebb0[];
-extern unsigned char data_ov006_0212ebb4[];
-extern unsigned char data_ov006_0212ebb8[];
-extern u8   data_ov006_0212ebc0[];
-extern u8   data_ov006_0212ebc8[];
-extern unsigned char data_ov006_0212ebd8[];
-extern unsigned char data_ov006_0212ebe0[];
-extern int  data_ov006_0212ec08[];
-extern int  data_ov006_0212ec30[];
-extern int  data_ov006_0212ec80[];
-extern unsigned short data_ov006_0212ecac[];
-extern s32  data_ov006_0212ecbc[];
-extern s32  data_ov006_0212ecd4[];
-extern unsigned short *data_ov006_0213daa4[];
-extern int *data_ov006_0213db6c[];
-extern int *data_ov006_0213db84[];
-extern int *data_ov006_0213db9c[];
+extern int sPachinkoPipeSprites[];
+extern int sPachinko2SparkSprites[];
+extern int sPachinko2PaddleSprite;
+extern int sPachinko2BallSprite;
+extern int sPachinko2BallCountSprites[];
+extern u8 sPachinko2CupHopRightStartFrames[];
+extern u8 sPachinko2CupHopLeftStartFrames[];
+extern unsigned char sPachinko2BallWalkOffSprites[];
+extern unsigned char sPachinko2PaddleCountPerLanes[];
+extern u8 sPachinko2CupHopLeftFrames[];
+extern u8 sPachinko2CupHopRightFrames[];
+extern unsigned char sPachinko2CupWaitFrames[];
+extern unsigned char sPachinko2CupWaitTimes[];
+extern int sPachinko2CupX[];
+extern int sPachinko2CrossRowY[];
+extern int sPachinko2PaddleFlyAwayVX[];
+extern unsigned short sPachinko2CupWaitTimesAlt[];
+extern s32 sPachinko2CupRightStops[];
+extern s32 sPachinko2CupLeftStops[];
+extern unsigned short *sPachinko2CupWaitFramesPerCup[];
+extern int *sPachinko2PaddleDescendLimits[];
+extern int *sPachinko2PaddleSweepLimits[];
+extern int *sPachinko2PaddleGatherTargets[];
 extern int  data_ov006_0213dbbc[];
 
 /* The three pointer-to-member tables the helpers dispatch through. */
@@ -250,34 +250,34 @@ extern PMF sPachinko2PaddleStateTable[];
 
 /* The ROM {code pointer, adjustment} records the three tables copy from
    (unlicensed .data), grouped by destination table in retail copy order. */
-extern PMF pmf_dScMgPachinko2_c_Ball_State0;
-extern PMF pmf_dScMgPachinko2_c_Ball_State1;
-extern PMF pmf_dScMgPachinko2_c_Ball_State2;
-extern PMF pmf_dScMgPachinko2_c_Ball_State3;
-extern PMF pmf_dScMgPachinko2_c_Ball_State4;
-extern PMF pmf_dScMgPachinko2_c_Ball_State5;
-extern PMF pmf_dScMgPachinko2_c_Ball_State6;
-extern PMF pmf_dScMgPachinko2_c_Ball_State7;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State0;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State1;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State2;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State3;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State4;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State5;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State6;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State7;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State8;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State9;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State10;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State11;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State12;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State13;
-extern PMF pmf_dScMgPachinko2_c_Paddle_State14;
-extern PMF pmf_dScMgPachinko2_c_Cup_State0;
-extern PMF pmf_dScMgPachinko2_c_Cup_State1;
-extern PMF pmf_dScMgPachinko2_c_Cup_State2;
-extern PMF pmf_dScMgPachinko2_c_Cup_State3;
-extern PMF pmf_dScMgPachinko2_c_Cup_State4;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateWaitGrab;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateAim;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateFlying;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateTumble;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateHop;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateWalkOff;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateRemove;
+extern PMF pmf_dScMgPachinko2_c_Ball_StateScored;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateSpawn;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateDescend;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateSweep;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateBoxLoop;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateOrbit;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateWeave;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateCross;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StatePause;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateKnockedDown;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateFallToGround;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateSwing;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateRiseHome;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateGather;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateDropBalls;
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateFlyAway;
+extern PMF pmf_dScMgPachinko2_c_Cup_StateInit;
+extern PMF pmf_dScMgPachinko2_c_Cup_StateWait;
+extern PMF pmf_dScMgPachinko2_c_Cup_StateHopLeft;
+extern PMF pmf_dScMgPachinko2_c_Cup_StateHopRight;
+extern PMF pmf_dScMgPachinko2_c_Cup_StateDecide;
 
 }  /* extern "C" */
 
@@ -296,8 +296,8 @@ void dScMgPachinko2_c::CupSlot_DrawAll()
     int i;
     for (i = 0; i < 2; i++) {
         if (o->arr[i].flag) {
-            Mg_RenderSpriteBoth((void *)data_ov006_02136b80[o->arr[i].idx],
-                                o->arr[i].x >> 12, o->arr[i].y >> 12, -1, 2);
+            Mg_RenderSpriteBoth((void *)sPachinkoPipeSprites[o->arr[i].idx], o->arr[i].x >> 12,
+                                o->arr[i].y >> 12, -1, 2);
         }
     }
 }
@@ -361,11 +361,10 @@ void dScMgPachinko2_c::Cup_PickTarget(int k)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c10Cup_State4Ei
+// @symbol _ZN16dScMgPachinko2_c15Cup_StateDecideEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Cup_State4(int n)
-{
+void dScMgPachinko2_c::Cup_StateDecide(int n) {
     unsigned int r;
     int flag;
 
@@ -446,11 +445,10 @@ void dScMgPachinko2_c::Cup_State4(int n)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c10Cup_State3Ei
+// @symbol _ZN16dScMgPachinko2_c17Cup_StateHopRightEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Cup_State3(int i)
-{
+void dScMgPachinko2_c::Cup_StateHopRight(int i) {
     int v;
 
     if (mCups[i].phase == 1) {
@@ -472,7 +470,7 @@ void dScMgPachinko2_c::Cup_State3(int i)
             mCups[i].phase = 2;
             return;
         }
-        mCups[i].frame = data_ov006_0212ebac[mCups[i].animStep];
+        mCups[i].frame = sPachinko2CupHopRightStartFrames[mCups[i].animStep];
         return;
     }
 
@@ -482,16 +480,15 @@ void dScMgPachinko2_c::Cup_State3(int i)
         mCups[i].animStep++;
         if (mCups[i].animStep >= 6)
             mCups[i].animStep = 0;
-        mCups[i].frame = data_ov006_0212ebc8[mCups[i].animStep];
+        mCups[i].frame = sPachinko2CupHopRightFrames[mCups[i].animStep];
     }
 
     mCups[i].x = mCups[i].x + mCups[i].vx;
     v = mCups[i].x >> 0xc;
 
     if (mCups[i].phase == 2) {
-        if (v >= data_ov006_0212ecbc[i + 4]) {
-            mCups[i].x =
-                data_ov006_0212ecbc[i + 4] << 0xc;
+        if (v >= sPachinko2CupRightStops[i + 4]) {
+            mCups[i].x = sPachinko2CupRightStops[i + 4] << 0xc;
             mCups[i].vx = 0;
             mCups[i].phase = 0;
             mCups[i].state = 0;
@@ -499,7 +496,7 @@ void dScMgPachinko2_c::Cup_State3(int i)
         }
     }
 
-    if (v >= data_ov006_0212ecbc[i + 2]) {
+    if (v >= sPachinko2CupRightStops[i + 2]) {
         if (mCups[i].vx >= 0x800) {
             mCups[i].vx = mCups[i].vx - 0x80;
         }
@@ -507,23 +504,22 @@ void dScMgPachinko2_c::Cup_State3(int i)
         mCups[i].vx = mCups[i].vx + 0x80;
     }
 
-    if (v < data_ov006_0212ecbc[i])
+    if (v < sPachinko2CupRightStops[i])
         return;
 
-    mCups[i].x = data_ov006_0212ecbc[i] << 0xc;
+    mCups[i].x = sPachinko2CupRightStops[i] << 0xc;
     mCups[i].vx = -0x1000;
     mCups[i].phase++;
     mCups[i].timer = 0;
     mCups[i].animStep = 0;
-    mCups[i].frame = data_ov006_0212ebac[0];
+    mCups[i].frame = sPachinko2CupHopRightStartFrames[0];
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c10Cup_State2Ei
+// @symbol _ZN16dScMgPachinko2_c16Cup_StateHopLeftEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Cup_State2(int i)
-{
+void dScMgPachinko2_c::Cup_StateHopLeft(int i) {
     int v;
 
     if (mCups[i].phase == 1) {
@@ -545,7 +541,7 @@ void dScMgPachinko2_c::Cup_State2(int i)
             mCups[i].phase = 2;
             return;
         }
-        mCups[i].frame = data_ov006_0212ebb0[mCups[i].animStep];
+        mCups[i].frame = sPachinko2CupHopLeftStartFrames[mCups[i].animStep];
         return;
     }
 
@@ -555,16 +551,15 @@ void dScMgPachinko2_c::Cup_State2(int i)
         mCups[i].animStep++;
         if (mCups[i].animStep >= 6)
             mCups[i].animStep = 0;
-        mCups[i].frame = data_ov006_0212ebc0[mCups[i].animStep];
+        mCups[i].frame = sPachinko2CupHopLeftFrames[mCups[i].animStep];
     }
 
     mCups[i].x = mCups[i].x + mCups[i].vx;
     v = mCups[i].x >> 0xc;
 
     if (mCups[i].phase == 2) {
-        if (v <= data_ov006_0212ecd4[i + 4]) {
-            mCups[i].x =
-                data_ov006_0212ecd4[i + 4] << 0xc;
+        if (v <= sPachinko2CupLeftStops[i + 4]) {
+            mCups[i].x = sPachinko2CupLeftStops[i + 4] << 0xc;
             mCups[i].vx = 0;
             mCups[i].phase = 0;
             mCups[i].state = 0;
@@ -572,7 +567,7 @@ void dScMgPachinko2_c::Cup_State2(int i)
         }
     }
 
-    if (v <= data_ov006_0212ecd4[i + 2]) {
+    if (v <= sPachinko2CupLeftStops[i + 2]) {
         if (mCups[i].vx <= -0x800) {
             mCups[i].vx = mCups[i].vx + 0x80;
         }
@@ -580,26 +575,25 @@ void dScMgPachinko2_c::Cup_State2(int i)
         mCups[i].vx = mCups[i].vx - 0x80;
     }
 
-    if (v > data_ov006_0212ecd4[i])
+    if (v > sPachinko2CupLeftStops[i])
         return;
 
-    mCups[i].x = data_ov006_0212ecd4[i] << 0xc;
+    mCups[i].x = sPachinko2CupLeftStops[i] << 0xc;
     mCups[i].vx = 0x1000;
     mCups[i].phase++;
     mCups[i].timer = 0;
     mCups[i].animStep = 0;
-    mCups[i].frame = data_ov006_0212ebb0[0];
+    mCups[i].frame = sPachinko2CupHopLeftStartFrames[0];
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c10Cup_State1Ei
+// @symbol _ZN16dScMgPachinko2_c13Cup_StateWaitEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Cup_State1(int k)
-{
+void dScMgPachinko2_c::Cup_StateWait(int k) {
     if (mCups[k].armed != 0) {
         mCups[k].timer++;
-        if (mCups[k].timer >= data_ov006_0212ebe0[mCups[k].animStep]) {
+        if (mCups[k].timer >= sPachinko2CupWaitTimes[mCups[k].animStep]) {
             mCups[k].timer = 0;
             mCups[k].animStep++;
             if (mCups[k].animStep >= 8) {
@@ -612,25 +606,25 @@ void dScMgPachinko2_c::Cup_State1(int k)
                 mCups[k].hops--;
             }
         }
-        mCups[k].frame = data_ov006_0212ebd8[mCups[k].animStep];
+        mCups[k].frame = sPachinko2CupWaitFrames[mCups[k].animStep];
     } else {
         mCups[k].timer++;
-        if ((unsigned int)mCups[k].timer >= (unsigned int)data_ov006_0212ecac[mCups[k].animStep]) {
+        if ((unsigned int)mCups[k].timer >=
+            (unsigned int)sPachinko2CupWaitTimesAlt[mCups[k].animStep]) {
             mCups[k].timer = 0;
             mCups[k].animStep++;
             if (mCups[k].animStep >= 7) {
                 mCups[k].animStep = 0;
             }
-            mCups[k].frame = data_ov006_0213daa4[k][mCups[k].animStep];
+            mCups[k].frame = sPachinko2CupWaitFramesPerCup[k][mCups[k].animStep];
         }
         Cup_PickTarget(k);
     }
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c10Cup_State0Ei
-void dScMgPachinko2_c::Cup_State0(int i)
-{
+// @symbol _ZN16dScMgPachinko2_c13Cup_StateInitEi
+void dScMgPachinko2_c::Cup_StateInit(int i) {
     char *base = (char *)this;
   char *p;
   *((base + (i << 5)) + 0x5637) = 0x10;
@@ -669,7 +663,7 @@ void dScMgPachinko2_c::Cup_ShowAll()
         mCups[i].frame = 0;
         mCups[i].animStep = 0;
         mCups[i].dir = 0;
-        mCups[i].x = data_ov006_0212ec08[i] << 12;
+        mCups[i].x = sPachinko2CupX[i] << 12;
         mCups[i].y = 0x68000;
     }
 }
@@ -783,10 +777,8 @@ void dScMgPachinko2_c::Spark_DrawAll()
     for(i=0;i<0x10;i++){
         if(*(unsigned char*)(c+0x5000+0x334) != 0){
             Mg_RenderSpriteBoth(
-                (void *)data_ov006_02136bd4[*(unsigned char*)(c+0x5000+0x335)],
-                *(int*)(c+0x5000+0x320) >> 12,
-                *(int*)(c+0x5000+0x324) >> 12,
-                -1, -1);
+                (void *)sPachinko2SparkSprites[*(unsigned char *)(c + 0x5000 + 0x335)],
+                *(int *)(c + 0x5000 + 0x320) >> 12, *(int *)(c + 0x5000 + 0x324) >> 12, -1, -1);
         }
         c += 0x18;
     }
@@ -907,11 +899,8 @@ void dScMgPachinko2_c::Paddle_DrawAll()
     int i;
     for(i=0;i<3;i++){
         if(o->arr[i].flag){
-            Mg_RenderSpriteBoth(
-                (void *)data_ov006_0213386c,
-                o->arr[i].x >> 12,
-                o->arr[i].y >> 12,
-                -1, -1);
+            Mg_RenderSpriteBoth((void *)sPachinko2PaddleSprite, o->arr[i].x >> 12,
+                                o->arr[i].y >> 12, -1, -1);
         }
     }
 }
@@ -1039,11 +1028,10 @@ void dScMgPachinko2_c::Paddle_CheckBallHits(int idx)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c14Paddle_State14Ei
+// @symbol _ZN16dScMgPachinko2_c19Paddle_StateFlyAwayEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State14(int i)
-{
+void dScMgPachinko2_c::Paddle_StateFlyAway(int i) {
     int v;
     u8 state;
 
@@ -1052,7 +1040,7 @@ void dScMgPachinko2_c::Paddle_State14(int i)
         if ((short)mPaddles[i].timer > 0)
             return;
         mPaddles[i].vy = 0;
-        mPaddles[i].vx = data_ov006_0212ec80[i];
+        mPaddles[i].vx = sPachinko2PaddleFlyAwayVX[i];
         mPaddles[i].dir = i;
         return;
     }
@@ -1077,9 +1065,8 @@ void dScMgPachinko2_c::Paddle_State14(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c14Paddle_State13Ei
-void dScMgPachinko2_c::Paddle_State13(int idx)
-{
+// @symbol _ZN16dScMgPachinko2_c21Paddle_StateDropBallsEi
+void dScMgPachinko2_c::Paddle_StateDropBalls(int idx) {
 
     if (mPaddles[idx].timer != 0) {
         mPaddles[idx].timer -= 1;
@@ -1100,11 +1087,10 @@ void dScMgPachinko2_c::Paddle_State13(int idx)
     }
 }
 
-// @symbol _ZN16dScMgPachinko2_c14Paddle_State12Ei
+// @symbol _ZN16dScMgPachinko2_c18Paddle_StateGatherEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State12(int i)
-{
+void dScMgPachinko2_c::Paddle_StateGather(int i) {
     int b = i << 6;
 
     if (mPaddles[i].timer != 0) {
@@ -1115,7 +1101,7 @@ void dScMgPachinko2_c::Paddle_State12(int i)
     }
 
     {
-        int r4 = data_ov006_0213db9c[mLaneConfig][i];
+        int r4 = sPachinko2PaddleGatherTargets[mLaneConfig][i];
         int ax = 0x80 - (mPaddles[i].x >> 12);
         int y_raw = mPaddles[i].y;
 
@@ -1162,9 +1148,8 @@ void dScMgPachinko2_c::Paddle_State12(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c14Paddle_State11Ei
-void dScMgPachinko2_c::Paddle_State11(int idx)
-{
+// @symbol _ZN16dScMgPachinko2_c20Paddle_StateRiseHomeEi
+void dScMgPachinko2_c::Paddle_StateRiseHome(int idx) {
     char *base = (char *)this;
   char *r3 = base + (idx * 0x40);
   if ((*((unsigned short *) (r3 + 0x5292))) != 0)
@@ -1188,9 +1173,8 @@ void dScMgPachinko2_c::Paddle_State11(int idx)
   *((int *) ((r3 + 0x5000) + 0x26c)) = *((int *) ((r3 + 0x5000) + 0x288));
 }
 
-// @symbol _ZN16dScMgPachinko2_c14Paddle_State10Ei
-void dScMgPachinko2_c::Paddle_State10(int idx)
-{
+// @symbol _ZN16dScMgPachinko2_c17Paddle_StateSwingEi
+void dScMgPachinko2_c::Paddle_StateSwing(int idx) {
     struct Obje3c *obj = (struct Obje3c *)this;
     obj->sub[idx].unk00 += obj->sub[idx].unk08;
 
@@ -1225,11 +1209,10 @@ void dScMgPachinko2_c::Paddle_State10(int idx)
     obj->sub[idx].unk08 = 0;
 }
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State9Ei
+// @symbol _ZN16dScMgPachinko2_c24Paddle_StateFallToGroundEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State9(int i)
-{
+void dScMgPachinko2_c::Paddle_StateFallToGround(int i) {
     int d;
     mPaddles[i].y += mPaddles[i].vy;
     d = mPaddles[i].y >> 12;
@@ -1251,11 +1234,10 @@ void dScMgPachinko2_c::Paddle_State9(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State8Ei
+// @symbol _ZN16dScMgPachinko2_c23Paddle_StateKnockedDownEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State8(int i)
-{
+void dScMgPachinko2_c::Paddle_StateKnockedDown(int i) {
     int d;
     mPaddles[i].y += mPaddles[i].vy;
     d = (mPaddles[i].y - mPaddles[i].homeY) >> 12;
@@ -1303,11 +1285,10 @@ void dScMgPachinko2_c::Paddle_Hit(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State7Ei
+// @symbol _ZN16dScMgPachinko2_c17Paddle_StatePauseEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State7(int i)
-{
+void dScMgPachinko2_c::Paddle_StatePause(int i) {
     mPaddles[i].sound = Sound_PlayIfNotActive(mPaddles[i].sound, 2, 0x198, 0);
 
     if (mPaddles[i].timer != 0) {
@@ -1324,11 +1305,10 @@ void dScMgPachinko2_c::Paddle_State7(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State6Ei
+// @symbol _ZN16dScMgPachinko2_c17Paddle_StateCrossEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State6(int i)
-{
+void dScMgPachinko2_c::Paddle_StateCross(int i) {
     int v1;
     int v2;
     u8 state;
@@ -1366,14 +1346,14 @@ void dScMgPachinko2_c::Paddle_State6(int i)
             if (mPaddles[i].vx <= 0xc00)
                 mPaddles[i].vx += 0x20;
             if (i == 0) {
-                if (v2 != data_ov006_0212ec30[i]) {
+                if (v2 != sPachinko2CrossRowY[i]) {
                     if (mPaddles[i].vy >= -0xc00)
                         mPaddles[i].vy -= 0x30;
                 } else {
                     mPaddles[i].vy = 0;
                 }
             } else {
-                if (v2 != data_ov006_0212ec30[i]) {
+                if (v2 != sPachinko2CrossRowY[i]) {
                     if (mPaddles[i].vy <= 0xc00)
                         mPaddles[i].vy += 0x30;
                 } else {
@@ -1403,14 +1383,14 @@ void dScMgPachinko2_c::Paddle_State6(int i)
             if (mPaddles[i].vx >= -0xc00)
                 mPaddles[i].vx -= 0x20;
             if (i == 0) {
-                if (v2 != data_ov006_0212ec30[i]) {
+                if (v2 != sPachinko2CrossRowY[i]) {
                     if (mPaddles[i].vy >= -0xc00)
                         mPaddles[i].vy -= 0x30;
                 } else {
                     mPaddles[i].vy = 0;
                 }
             } else {
-                if (v2 != data_ov006_0212ec30[i]) {
+                if (v2 != sPachinko2CrossRowY[i]) {
                     if (mPaddles[i].vy <= 0xc00)
                         mPaddles[i].vy += 0x30;
                 } else {
@@ -1424,11 +1404,10 @@ void dScMgPachinko2_c::Paddle_State6(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State5Ei
+// @symbol _ZN16dScMgPachinko2_c17Paddle_StateWeaveEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State5(int i)
-{
+void dScMgPachinko2_c::Paddle_StateWeave(int i) {
     int v;
     u8 flag;
 
@@ -1494,11 +1473,10 @@ void dScMgPachinko2_c::Paddle_State5(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State4Ei
+// @symbol _ZN16dScMgPachinko2_c17Paddle_StateOrbitEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State4(int i)
-{
+void dScMgPachinko2_c::Paddle_StateOrbit(int i) {
     char *c = (char *)this;
     {
         unsigned short angle = *(unsigned short *)(c + (i << 6) + 0x5200 + 0x90);
@@ -1522,11 +1500,10 @@ void dScMgPachinko2_c::Paddle_State4(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State3Ei
+// @symbol _ZN16dScMgPachinko2_c19Paddle_StateBoxLoopEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State3(int i)
-{
+void dScMgPachinko2_c::Paddle_StateBoxLoop(int i) {
     int v;
     u8 state;
 
@@ -1613,11 +1590,10 @@ void dScMgPachinko2_c::Paddle_State3(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State2Ei
+// @symbol _ZN16dScMgPachinko2_c17Paddle_StateSweepEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State2(int i)
-{
+void dScMgPachinko2_c::Paddle_StateSweep(int i) {
     int v;
     u8 flag;
 
@@ -1631,7 +1607,7 @@ void dScMgPachinko2_c::Paddle_State2(int i)
                 mPaddles[i].vx -= 8;
         } else {
             int idx = mLaneConfig;
-            if (mPaddles[i].vx <= data_ov006_0213db84[idx][i])
+            if (mPaddles[i].vx <= sPachinko2PaddleSweepLimits[idx][i])
                 mPaddles[i].vx += 0x80;
         }
         if (v >= 0xe0) {
@@ -1649,7 +1625,7 @@ void dScMgPachinko2_c::Paddle_State2(int i)
                 mPaddles[i].vx += 8;
         } else {
             int idx = mLaneConfig;
-            if (mPaddles[i].vx >= -data_ov006_0213db84[idx][i])
+            if (mPaddles[i].vx >= -sPachinko2PaddleSweepLimits[idx][i])
                 mPaddles[i].vx -= 0x80;
         }
         if (v <= 0x20) {
@@ -1667,16 +1643,15 @@ void dScMgPachinko2_c::Paddle_State2(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State1Ei
+// @symbol _ZN16dScMgPachinko2_c19Paddle_StateDescendEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State1(int i)
-{
+void dScMgPachinko2_c::Paddle_StateDescend(int i) {
     char *p = (char *)this;
     int limit;
 
     mPaddles[i].y += mPaddles[i].vy;
-    limit = data_ov006_0213db6c[mLaneConfig][i];
+    limit = sPachinko2PaddleDescendLimits[mLaneConfig][i];
 
     if ((mPaddles[i].y >> 12) >= limit) {
         mPaddles[i].y = limit << 12;
@@ -1730,15 +1705,14 @@ void dScMgPachinko2_c::Paddle_State1(int i)
         mPaddles[i].vy -= 0x20;
     }
 
-    Paddle_State2(i);
+    Paddle_StateSweep(i);
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c13Paddle_State0Ei
+// @symbol _ZN16dScMgPachinko2_c17Paddle_StateSpawnEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Paddle_State0(int idx)
-{
+void dScMgPachinko2_c::Paddle_StateSpawn(int idx) {
     char *c = (char *)this;
     char *slot;
     char *ip;
@@ -1843,7 +1817,7 @@ void dScMgPachinko2_c::Paddle_UpdateAll()
 void dScMgPachinko2_c::Paddle_SpawnForLanes()
 {
     char *c = (char *)this;
-    int n = data_ov006_0212ebb8[mLaneConfig];
+    int n = sPachinko2PaddleCountPerLanes[mLaneConfig];
     int i = 0;
     if (n <= 0) return;
     do {
@@ -2186,10 +2160,10 @@ void dScMgPachinko2_c::Ball_DrawAll()
             unsigned char t = mBalls[i].sprite;
             int y = mBalls[i].y >> 12;
             if (t != 0) {
-                Mg_RenderSpriteBoth((void *)data_ov006_02138d08[t - 1], x, y, -1, -1);
+                Mg_RenderSpriteBoth((void *)sPachinko2BallCountSprites[t - 1], x, y, -1, -1);
             } else {
-                Mg_RenderSpriteBothScaled(data_ov006_021389ec, x, y, -1, -1, 0x1000,
-                                    *(unsigned short *)(p + i * 64 + 0x4690));
+                Mg_RenderSpriteBothScaled(sPachinko2BallSprite, x, y, -1, -1, 0x1000,
+                                          *(unsigned short *)(p + i * 64 + 0x4690));
             }
         }
     }
@@ -2225,9 +2199,8 @@ void dScMgPachinko2_c::StartCountdown()
     }
 }
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State0Ei
-void dScMgPachinko2_c::Ball_State0(int arg1)
-{
+// @symbol _ZN16dScMgPachinko2_c18Ball_StateWaitGrabEi
+void dScMgPachinko2_c::Ball_StateWaitGrab(int arg1) {
     char *base = (char *)this;
     u8 idx;
     int off;
@@ -2256,7 +2229,7 @@ void dScMgPachinko2_c::Ball_State0(int arg1)
     DrawAimLine();
 }
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State1Ei
+// @symbol _ZN16dScMgPachinko2_c13Ball_StateAimEi
 /* dScMgPachinko2_c ball i under a live pen record: while the pen is down the
    ball follows the pen (x/y = pen + held offset, clamped to the field, offset
    re-derived); on release it aims the ball at (0x80, 0x20) and launches it.
@@ -2266,8 +2239,7 @@ void dScMgPachinko2_c::Ball_State0(int arg1)
    arrays 18 div (the y read sinks past the x store), both pointer reads 7 div
    (r3/r6 colouring); only this pairing reproduces the ROM's literal hoisting
    and load order at both sites. */
-void dScMgPachinko2_c::Ball_State1(int i)
-{
+void dScMgPachinko2_c::Ball_StateAim(int i) {
     int idx = gActivePlayerSlot;
     int off = idx * 4;
 
@@ -2366,11 +2338,10 @@ void dScMgPachinko2_c::Ball_State1(int i)
     DrawAimLine();
 }
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State2Ei
+// @symbol _ZN16dScMgPachinko2_c16Ball_StateFlyingEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Ball_State2(int i)
-{
+void dScMgPachinko2_c::Ball_StateFlying(int i) {
     char *c = (char *)this;
     int idx;
     int velX, velY;
@@ -2455,11 +2426,10 @@ void dScMgPachinko2_c::Ball_State2(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State3Ei
+// @symbol _ZN16dScMgPachinko2_c16Ball_StateTumbleEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Ball_State3(int i)
-{
+void dScMgPachinko2_c::Ball_StateTumble(int i) {
     char *o = (char *)this;
     int v660, v664, t660;
     *(int *)((char *)(((int)o + 0x4660)) + i * 0x40) += mBalls[i].vx;
@@ -2481,11 +2451,10 @@ void dScMgPachinko2_c::Ball_State3(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State4Ei
+// @symbol _ZN16dScMgPachinko2_c13Ball_StateHopEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Ball_State4(int i)
-{
+void dScMgPachinko2_c::Ball_StateHop(int i) {
     char *c = (char *)this;
     int old;
     int v;
@@ -2528,11 +2497,10 @@ void dScMgPachinko2_c::Ball_State4(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State5Ei
+// @symbol _ZN16dScMgPachinko2_c17Ball_StateWalkOffEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Ball_State5(int i)
-{
+void dScMgPachinko2_c::Ball_StateWalkOff(int i) {
     char *c = (char *)this;
     *(unsigned short *)(c + 0x4696 + (i << 6)) += 1;
 
@@ -2545,7 +2513,7 @@ void dScMgPachinko2_c::Ball_State5(int i)
 
     {
         unsigned char idx = mBalls[i].animStep;
-        mBalls[i].sprite = data_ov006_0212ebb4[idx];
+        mBalls[i].sprite = sPachinko2BallWalkOffSprites[idx];
         if (mBalls[i].facingRight != 0)
             mBalls[i].sprite += 4;
     }
@@ -2562,18 +2530,16 @@ void dScMgPachinko2_c::Ball_State5(int i)
 }
 #pragma pop
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State6Ei
-void dScMgPachinko2_c::Ball_State6(int idx)
-{
+// @symbol _ZN16dScMgPachinko2_c16Ball_StateRemoveEi
+void dScMgPachinko2_c::Ball_StateRemove(int idx) {
     mBalls[idx].active = 0;
     mBalls[idx].visible = 0;
 }
 
-// @symbol _ZN16dScMgPachinko2_c11Ball_State7Ei
+// @symbol _ZN16dScMgPachinko2_c16Ball_StateScoredEi
 #pragma push
 #pragma opt_common_subs off
-void dScMgPachinko2_c::Ball_State7(int i)
-{
+void dScMgPachinko2_c::Ball_StateScored(int i) {
     char *c = (char *)this;
     mBalls[i].x += mBalls[i].vx;
     mBalls[i].y += mBalls[i].vy;
@@ -2908,23 +2874,23 @@ extern "C" int *dScMgPachinko2_c_classInit(void)
    __sinit_d_s_mg_pachinko2.cpp from these definitions, copying the ROM
    .data records. */
 Entry sPachinko2BallStateTable[8] = {
-    {pmf_dScMgPachinko2_c_Ball_State0}, {pmf_dScMgPachinko2_c_Ball_State1},
-    {pmf_dScMgPachinko2_c_Ball_State2}, {pmf_dScMgPachinko2_c_Ball_State3},
-    {pmf_dScMgPachinko2_c_Ball_State4}, {pmf_dScMgPachinko2_c_Ball_State5},
-    {pmf_dScMgPachinko2_c_Ball_State6}, {pmf_dScMgPachinko2_c_Ball_State7},
+    {pmf_dScMgPachinko2_c_Ball_StateWaitGrab}, {pmf_dScMgPachinko2_c_Ball_StateAim},
+    {pmf_dScMgPachinko2_c_Ball_StateFlying},   {pmf_dScMgPachinko2_c_Ball_StateTumble},
+    {pmf_dScMgPachinko2_c_Ball_StateHop},      {pmf_dScMgPachinko2_c_Ball_StateWalkOff},
+    {pmf_dScMgPachinko2_c_Ball_StateRemove},   {pmf_dScMgPachinko2_c_Ball_StateScored},
 };
 PMF sPachinko2PaddleStateTable[15] = {
-    pmf_dScMgPachinko2_c_Paddle_State0,  pmf_dScMgPachinko2_c_Paddle_State1,
-    pmf_dScMgPachinko2_c_Paddle_State2,  pmf_dScMgPachinko2_c_Paddle_State3,
-    pmf_dScMgPachinko2_c_Paddle_State4,  pmf_dScMgPachinko2_c_Paddle_State5,
-    pmf_dScMgPachinko2_c_Paddle_State6,  pmf_dScMgPachinko2_c_Paddle_State7,
-    pmf_dScMgPachinko2_c_Paddle_State8,  pmf_dScMgPachinko2_c_Paddle_State9,
-    pmf_dScMgPachinko2_c_Paddle_State10, pmf_dScMgPachinko2_c_Paddle_State11,
-    pmf_dScMgPachinko2_c_Paddle_State12, pmf_dScMgPachinko2_c_Paddle_State13,
-    pmf_dScMgPachinko2_c_Paddle_State14,
+    pmf_dScMgPachinko2_c_Paddle_StateSpawn,       pmf_dScMgPachinko2_c_Paddle_StateDescend,
+    pmf_dScMgPachinko2_c_Paddle_StateSweep,       pmf_dScMgPachinko2_c_Paddle_StateBoxLoop,
+    pmf_dScMgPachinko2_c_Paddle_StateOrbit,       pmf_dScMgPachinko2_c_Paddle_StateWeave,
+    pmf_dScMgPachinko2_c_Paddle_StateCross,       pmf_dScMgPachinko2_c_Paddle_StatePause,
+    pmf_dScMgPachinko2_c_Paddle_StateKnockedDown, pmf_dScMgPachinko2_c_Paddle_StateFallToGround,
+    pmf_dScMgPachinko2_c_Paddle_StateSwing,       pmf_dScMgPachinko2_c_Paddle_StateRiseHome,
+    pmf_dScMgPachinko2_c_Paddle_StateGather,      pmf_dScMgPachinko2_c_Paddle_StateDropBalls,
+    pmf_dScMgPachinko2_c_Paddle_StateFlyAway,
 };
 Entry sPachinko2CupStateTable[5] = {
-    {pmf_dScMgPachinko2_c_Cup_State0}, {pmf_dScMgPachinko2_c_Cup_State1},
-    {pmf_dScMgPachinko2_c_Cup_State2}, {pmf_dScMgPachinko2_c_Cup_State3},
-    {pmf_dScMgPachinko2_c_Cup_State4},
+    {pmf_dScMgPachinko2_c_Cup_StateInit},    {pmf_dScMgPachinko2_c_Cup_StateWait},
+    {pmf_dScMgPachinko2_c_Cup_StateHopLeft}, {pmf_dScMgPachinko2_c_Cup_StateHopRight},
+    {pmf_dScMgPachinko2_c_Cup_StateDecide},
 };

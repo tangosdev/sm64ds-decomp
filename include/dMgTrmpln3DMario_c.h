@@ -27,7 +27,7 @@ struct dMgTrmpln3DMario_c {
     s16 mRotY;              /* 0x4a */
     u8 pad_4c[0x2];         /* 0x4c */
     s16 mScreenPos[2];      /* 0x4e -- Camera_ProjectToScreen16 output */
-    s16 mHeightRow;         /* 0x52 -- row of the height table data_ov006_021405c8 */
+    s16 mHeightRow;         /* 0x52 -- row of the height table sTrmpRowHeights */
     s32 mParticleId;        /* 0x54 -- Particle::System unique ID */
     s32 mAnim;              /* 0x58 -- anim number; also the bank-1 voice */
     u8 pad_5c[0x4];         /* 0x5c */

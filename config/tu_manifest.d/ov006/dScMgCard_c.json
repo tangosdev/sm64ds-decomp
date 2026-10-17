@@ -305,11 +305,11 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_02141774",
+      "symbol": "sCardObjSprites",
       "address": "0x02141774",
       "size": "0x3c",
       "binding": "STB_GLOBAL",
-      "evidence": "sprite-pointer table the card Render bodies index by card kind through data_ov006_0213bd64; filled at load time from sMgCardSprites because its elements are not constant"
+      "evidence": "sprite-pointer table the card Render bodies index by card kind through sCardFaceSprites; filled at load time from sMgCardSprites because its elements are not constant"
     }
   ],
   "notes": [
@@ -839,7 +839,7 @@
       "source": "0x02130148",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02141774",
+      "symbol": "sCardObjSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02141774"

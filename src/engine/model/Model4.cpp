@@ -107,9 +107,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
     const struct Table *t = (const struct Table *)tbl;
     u32 count = t->count;
     u32 i = 0;
-    if (i >= count)
-        goto not_found;
-    {
+    if (i < count) {
         struct Entry *entry = t->entries;
         while (1)
         {
@@ -121,7 +119,6 @@ extern "C" int func_02046590(const void *tbl, const char *name)
                 break;
         }
     }
-not_found:
     Crash();
     return -1;
 }

@@ -101,7 +101,7 @@ struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
     s16 mRoundState;                  /* 0x5928 -- the round's step; Behavior switches on it */
     s16 mTimer;                       /* 0x592a -- step timer (ApproachLinear2 to 0) */
     u8  pad_592c[0x2];      /* 0x592c */
-    s16 mDealCount;         /* 0x592e -- cards dealt so far; Dealer_StartDeal counts it */
+    s16 mDealCount;         /* 0x592e -- cards dealt so far; Dealer_StartShuffle counts it */
 
     /* --- this class's own vtable overrides, defined out of line under their
        own mangled names. Each re-uses a slot fBase_c already holds rather

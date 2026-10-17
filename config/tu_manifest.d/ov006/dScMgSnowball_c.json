@@ -223,49 +223,49 @@
       "ordinal": 25
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c10Bit_State2Ei",
+      "symbol": "_ZN15dScMgSnowball_c21Bit_StateFallSlowDownEi",
       "address": "0x0212972c",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_0212972c.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c10Bit_State1Ei",
+      "symbol": "_ZN15dScMgSnowball_c20Bit_StateFallSpeedUpEi",
       "address": "0x021297c0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_021297c0.c",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c10Bit_State0Ei",
+      "symbol": "_ZN15dScMgSnowball_c18Bit_StateFallStartEi",
       "address": "0x02129894",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_02129894.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State3Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitA_StateDriftStopEi",
       "address": "0x0212992c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov006_0212992c.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State2Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitA_StateDriftLeftEi",
       "address": "0x02129a34",
       "size": "0x00000140",
       "legacy_source": "src/func_ov006_02129a34.c",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State1Ei",
+      "symbol": "_ZN15dScMgSnowball_c20BitA_StateDriftRightEi",
       "address": "0x02129b74",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_02129b74.c",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State0Ei",
+      "symbol": "_ZN15dScMgSnowball_c15BitA_StatePauseEi",
       "address": "0x02129cb0",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_02129cb0.c",
@@ -279,28 +279,28 @@
       "ordinal": 33
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State3Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitB_StateDriftStopEi",
       "address": "0x02129e28",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_02129e28.c",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State2Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitB_StateDriftLeftEi",
       "address": "0x02129eec",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_02129eec.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State1Ei",
+      "symbol": "_ZN15dScMgSnowball_c20BitB_StateDriftRightEi",
       "address": "0x0212a000",
       "size": "0x00000110",
       "legacy_source": "src/func_ov006_0212a000.c",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State0Ei",
+      "symbol": "_ZN15dScMgSnowball_c15BitB_StatePauseEi",
       "address": "0x0212a110",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_0212a110.c",
@@ -348,28 +348,28 @@
       "address": "0x0213ff58",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitA_State3, copied into sSnowballBitAStateTable"
+      "evidence": "PMF descriptor for BitA_StateDriftStop, copied into sSnowballBitAStateTable"
     },
     {
       "symbol": "@2728",
       "address": "0x0213ff60",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitA_State2, copied into sSnowballBitAStateTable"
+      "evidence": "PMF descriptor for BitA_StateDriftLeft, copied into sSnowballBitAStateTable"
     },
     {
       "symbol": "@2726",
       "address": "0x0213ff68",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitA_State1, copied into sSnowballBitAStateTable"
+      "evidence": "PMF descriptor for BitA_StateDriftRight, copied into sSnowballBitAStateTable"
     },
     {
       "symbol": "@2722",
       "address": "0x0213ff70",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitB_State3, copied into sSnowballBitBStateTable"
+      "evidence": "PMF descriptor for BitB_StateDriftStop, copied into sSnowballBitBStateTable"
     },
     {
       "symbol": "@2723",
@@ -383,7 +383,7 @@
       "address": "0x0213ff80",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitB_State2, copied into sSnowballBitBStateTable"
+      "evidence": "PMF descriptor for BitB_StateDriftLeft, copied into sSnowballBitBStateTable"
     },
     {
       "symbol": "@2725",
@@ -397,28 +397,28 @@
       "address": "0x0213ff90",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitB_State0, copied into sSnowballBitBStateTable; mwcc numbers it @2716, which ov002 already uses, so the manifest renames it to @2725"
+      "evidence": "PMF descriptor for BitB_StatePause, copied into sSnowballBitBStateTable; mwcc numbers it @2716, which ov002 already uses, so the manifest renames it to @2725"
     },
     {
       "symbol": "@2721",
       "address": "0x0213ff98",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitB_State1, copied into sSnowballBitBStateTable; mwcc numbers it @2718, which ov002 already uses, so the manifest renames it to @2727"
+      "evidence": "PMF descriptor for BitB_StateDriftRight, copied into sSnowballBitBStateTable; mwcc numbers it @2718, which ov002 already uses, so the manifest renames it to @2727"
     },
     {
       "symbol": "@2724",
       "address": "0x0213ffa0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for BitA_State0, copied into sSnowballBitAStateTable"
+      "evidence": "PMF descriptor for BitA_StatePause, copied into sSnowballBitAStateTable"
     },
     {
       "symbol": "@2734",
       "address": "0x0213ffa8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for Bit_State1, copied into sSnowballBitStateTable"
+      "evidence": "PMF descriptor for Bit_StateFallSpeedUp, copied into sSnowballBitStateTable"
     },
     {
       "symbol": "@2727",
@@ -439,14 +439,14 @@
       "address": "0x0213ffc0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for Bit_State2, copied into sSnowballBitStateTable"
+      "evidence": "PMF descriptor for Bit_StateFallSlowDown, copied into sSnowballBitStateTable"
     },
     {
       "symbol": "@2732",
       "address": "0x0213ffc8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF descriptor for Bit_State0, copied into sSnowballBitStateTable"
+      "evidence": "PMF descriptor for Bit_StateFallStart, copied into sSnowballBitStateTable"
     }
   ],
   "bss": [
@@ -840,7 +840,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov006",
       "canonical_address": "0x0214000c",
-      "reason": "The vtable this TU is the key function for. dScMgSnowball_c declares its destructor out of line and this file is the only definition, so mwccarm anchors the vague-linkage group here. ROM home ov006:0x0214000c (config/arm9/overlays/ov006/symbols.txt); the next configured symbol is data_ov006_0214009c, so the cartridge copy is 0x90 while this object emits 0x98 -- the two extra words are the trailing null slots the cartridge table drops. D1/D0 and the class's own overrides odr-use this copy for their vptr stores; production isolation rebinds those relocations to the ROM home and deadstrips the duplicate."
+      "reason": "The vtable this TU is the key function for. dScMgSnowball_c declares its destructor out of line and this file is the only definition, so mwccarm anchors the vague-linkage group here. ROM home ov006:0x0214000c (config/arm9/overlays/ov006/symbols.txt); the next configured symbol is sSnowballBgNclPath, so the cartridge copy is 0x90 while this object emits 0x98 -- the two extra words are the trailing null slots the cartridge table drops. D1/D0 and the class's own overrides odr-use this copy for their vptr stores; production isolation rebinds those relocations to the ROM home and deadstrips the duplicate."
     },
     {
       "symbol": "_ZTI15dScMgSnowball_c",
@@ -1318,7 +1318,7 @@
       "source": "0x0213ff58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State3Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitA_StateDriftStopEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212992c"
@@ -1328,7 +1328,7 @@
       "source": "0x0213ff60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State2Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitA_StateDriftLeftEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02129a34"
@@ -1338,7 +1338,7 @@
       "source": "0x0213ff68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State1Ei",
+      "symbol": "_ZN15dScMgSnowball_c20BitA_StateDriftRightEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02129b74"
@@ -1348,7 +1348,7 @@
       "source": "0x0213ff70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State3Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitB_StateDriftStopEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02129e28"
@@ -1368,7 +1368,7 @@
       "source": "0x0213ff80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State2Ei",
+      "symbol": "_ZN15dScMgSnowball_c19BitB_StateDriftLeftEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02129eec"
@@ -1388,7 +1388,7 @@
       "source": "0x0213ff90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State0Ei",
+      "symbol": "_ZN15dScMgSnowball_c15BitB_StatePauseEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212a110"
@@ -1398,7 +1398,7 @@
       "source": "0x0213ff98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitB_State1Ei",
+      "symbol": "_ZN15dScMgSnowball_c20BitB_StateDriftRightEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212a000"
@@ -1408,7 +1408,7 @@
       "source": "0x0213ffa0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c11BitA_State0Ei",
+      "symbol": "_ZN15dScMgSnowball_c15BitA_StatePauseEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02129cb0"
@@ -1418,7 +1418,7 @@
       "source": "0x0213ffa8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c10Bit_State1Ei",
+      "symbol": "_ZN15dScMgSnowball_c20Bit_StateFallSpeedUpEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021297c0"
@@ -1448,7 +1448,7 @@
       "source": "0x0213ffc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c10Bit_State2Ei",
+      "symbol": "_ZN15dScMgSnowball_c21Bit_StateFallSlowDownEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212972c"
@@ -1458,7 +1458,7 @@
       "source": "0x0213ffc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dScMgSnowball_c10Bit_State0Ei",
+      "symbol": "_ZN15dScMgSnowball_c18Bit_StateFallStartEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02129894"

@@ -356,7 +356,7 @@
   ],
   "data": [
     {
-      "symbol": "data_ov006_0213fbc4",
+      "symbol": "sTrmp2TouchBlocked",
       "address": "0x0213fbc4",
       "size": "0x4",
       "evidence": "TU-local initialized state; referenced only by dScMgTrampoline2_c text and begins exactly where the preceding dScMgTrampoline_c vtable storage ends"
@@ -398,7 +398,7 @@
       "evidence": "eight-byte dScMgTrampoline2_c PMF descriptor targeting the byte-verified StateResults member"
     },
     {
-      "symbol": "data_ov006_0213fbf8",
+      "symbol": "sTrmp2SpinnerSpeeds",
       "address": "0x0213fbf8",
       "size": "0xc",
       "evidence": "three-word Trampoline Terror tuning table; all three constants match retail"
@@ -410,25 +410,25 @@
       "evidence": "compiler-emitted single-inheritance RTTI matches retail and points to the ROM-proven dScMgD3DBase_c type"
     },
     {
-      "symbol": "data_ov006_0213fc10",
+      "symbol": "sTrmp2ScoreGates",
       "address": "0x0213fc10",
       "size": "0x10",
       "evidence": "four-word score threshold table; all constants match retail"
     },
     {
-      "symbol": "data_ov006_0213fc20",
+      "symbol": "sTrmp2PuffXByLanguage",
       "address": "0x0213fc20",
       "size": "0x14",
       "evidence": "five-entry TU-local pointer table; every relocation destination matches the OV006 configuration"
     },
     {
-      "symbol": "data_ov006_0213fc34",
+      "symbol": "sTrmp2NcgByLanguage",
       "address": "0x0213fc34",
       "size": "0x14",
       "evidence": "five-word resource identifier table; all constants match retail"
     },
     {
-      "symbol": "data_ov006_0213fc48",
+      "symbol": "sTrmp2TextSpritesByLanguage",
       "address": "0x0213fc48",
       "size": "0x14",
       "evidence": "five-entry TU-local pointer table; every relocation destination matches the OV006 configuration"
@@ -748,7 +748,7 @@
       "source": "0x0213fc20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d40",
+      "symbol": "sTrmpPuffEnglish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d40"
@@ -758,7 +758,7 @@
       "source": "0x0213fc24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d4c",
+      "symbol": "sTrmpPuffSpanish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d4c"
@@ -768,7 +768,7 @@
       "source": "0x0213fc28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d58",
+      "symbol": "sTrmpPuffFrench",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d58"
@@ -778,7 +778,7 @@
       "source": "0x0213fc2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d34",
+      "symbol": "sTrmpPuffGerman",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d34"
@@ -788,7 +788,7 @@
       "source": "0x0213fc30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02134d28",
+      "symbol": "sTrmpPuffItalian",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134d28"
@@ -798,7 +798,7 @@
       "source": "0x0213fc48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021373a4",
+      "symbol": "sMgTextSpritesEnglish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021373a4"
@@ -808,7 +808,7 @@
       "source": "0x0213fc4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021373fc",
+      "symbol": "sMgTextSpritesSpanish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021373fc"
@@ -818,7 +818,7 @@
       "source": "0x0213fc50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213734c",
+      "symbol": "sMgTextSpritesFrench",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213734c"
@@ -828,7 +828,7 @@
       "source": "0x0213fc54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021372f4",
+      "symbol": "sMgTextSpritesGerman",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021372f4"
@@ -838,7 +838,7 @@
       "source": "0x0213fc58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02137454",
+      "symbol": "sMgTextSpritesItalian",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02137454"
@@ -1238,7 +1238,7 @@
       "source": "0x0213325c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142f80",
+      "symbol": "sTrmp2StarModelFile",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142f80"
@@ -1331,7 +1331,7 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov006_02142f80",
+      "symbol": "sTrmp2StarModelFile",
       "address": "0x02142f80",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1363,7 +1363,7 @@
     "tubuild create warning: CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_HideAll; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_InitAll; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_LoadAll; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142f80' differs between the legacy file that used to hold Trmp2Spinner_SetModel and the one that held Trmp2Spinner_Destruct; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'sTrmp2StarModelFile' differs between the legacy file that used to hold Trmp2Spinner_SetModel and the one that held Trmp2Spinner_Destruct; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN2G213GetBG2CharPtrEv' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_02122e20; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_02054efc' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_02122e20; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_02054ea8' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_02122e20; kept the first, the other is commented out for review",
@@ -1381,7 +1381,7 @@
     "tubuild create warning: CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_02012468' differs between the legacy file that used to hold func_ov006_02123938 and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Mg_DrawLine' differs between the legacy file that used to hold func_ov006_02123938 and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_0212e048' differs between the legacy file that used to hold func_ov006_02124088 and the one that held func_ov006_02124228; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'sTrmpStartTouchY' differs between the legacy file that used to hold func_ov006_02124088 and the one that held func_ov006_02124228; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held _ZN18dScMgTrampoline2_c11CanEndStateEi; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held _ZN18dScMgTrampoline2_c10StartRoundEi; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held _ZN18dScMgTrampoline2_c10StartRoundEi; kept the first, the other is commented out for review",
@@ -1547,7 +1547,7 @@
             "anchors": {
               "5": [
                 {
-                  "symbol": "data_ov006_0213fbc4",
+                  "symbol": "sTrmp2TouchBlocked",
                   "address": 34864068,
                   "sectionBase": 34864068
                 }
@@ -1603,35 +1603,35 @@
               ],
               "31": [
                 {
-                  "symbol": "data_ov006_0213fbf8",
+                  "symbol": "sTrmp2SpinnerSpeeds",
                   "address": 34864120,
                   "sectionBase": 34864120
                 }
               ],
               "37": [
                 {
-                  "symbol": "data_ov006_0213fc10",
+                  "symbol": "sTrmp2ScoreGates",
                   "address": 34864144,
                   "sectionBase": 34864144
                 }
               ],
               "39": [
                 {
-                  "symbol": "data_ov006_0213fc20",
+                  "symbol": "sTrmp2PuffXByLanguage",
                   "address": 34864160,
                   "sectionBase": 34864160
                 }
               ],
               "41": [
                 {
-                  "symbol": "data_ov006_0213fc34",
+                  "symbol": "sTrmp2NcgByLanguage",
                   "address": 34864180,
                   "sectionBase": 34864180
                 }
               ],
               "42": [
                 {
-                  "symbol": "data_ov006_0213fc48",
+                  "symbol": "sTrmp2TextSpritesByLanguage",
                   "address": 34864200,
                   "sectionBase": 34864200
                 }
@@ -1701,7 +1701,7 @@
             "anchors": {
               "12": [
                 {
-                  "symbol": "data_ov006_02142f80",
+                  "symbol": "sTrmp2StarModelFile",
                   "address": 34877312,
                   "sectionBase": 34877312
                 }
@@ -2201,7 +2201,7 @@
             "differences": [
               "defined symbol TrmpItem_Construct: production ('STB_GLOBAL', 'STT_FUNC', 0, 96, '.text', 96) vs derived None",
               "live: production [('.text', 96, 4, 6), ('.text', 396, 4, 6)] vs derived [('.text', 396, 4, 6)]",
-              "undefReferenced: production ['_ZN11dScMgBase_cC2Ev', '_ZN6Player29TryExitCharacterDoorWithIntroEv', '_ZN7fBase_cnwEj', '_ZN8Particle10SysTrackerC1Ev', '_ZTV14dScMgD3DBase_c', '_ZTV18dScMgTrampoline2_c', 'func_020733a8', 'Trmp2Mario_Destruct', 'TrmpLine_Destroy', 'TrmpLine_Reset', 'Jump2Popup_ElemDtor', 'Jump2Popup_ElemCtor', 'Trmp_Nothing', 'Trmp_Nothing2', 'Trmp2_DestructJumperModels', 'Trmp2Spinner_Destruct', 'Trmp2Spinner_Construct'] vs derived ['_ZN11dScMgBase_cC2Ev', '_ZN6Player29TryExitCharacterDoorWithIntroEv', '_ZN7fBase_cnwEj', '_ZN8Particle10SysTrackerC1Ev', '_ZTV14dScMgD3DBase_c', '_ZTV18dScMgTrampoline2_c', 'func_020733a8', 'Trmp2Mario_Destruct', 'TrmpLine_Destroy', 'TrmpLine_Reset', 'Jump2Popup_ElemDtor', 'Jump2Popup_ElemCtor', 'Trmp_Nothing', 'Trmp_Nothing2', 'Trmp2_DestructJumperModels', 'Trmp2Spinner_Destruct', 'Trmp2Spinner_Construct', 'TrmpItem_Construct']"
+              "undefReferenced: production ['_ZN11dScMgBase_cC2Ev', 'Trmp2Mario_Construct', '_ZN7fBase_cnwEj', '_ZN8Particle10SysTrackerC1Ev', '_ZTV14dScMgD3DBase_c', '_ZTV18dScMgTrampoline2_c', 'func_020733a8', 'Trmp2Mario_Destruct', 'TrmpLine_Destroy', 'TrmpLine_Reset', 'Jump2Popup_ElemDtor', 'Jump2Popup_ElemCtor', 'Trmp_Nothing', 'Trmp_Nothing2', 'Trmp2_DestructJumperModels', 'Trmp2Spinner_Destruct', 'Trmp2Spinner_Construct'] vs derived ['_ZN11dScMgBase_cC2Ev', 'Trmp2Mario_Construct', '_ZN7fBase_cnwEj', '_ZN8Particle10SysTrackerC1Ev', '_ZTV14dScMgD3DBase_c', '_ZTV18dScMgTrampoline2_c', 'func_020733a8', 'Trmp2Mario_Destruct', 'TrmpLine_Destroy', 'TrmpLine_Reset', 'Jump2Popup_ElemDtor', 'Jump2Popup_ElemCtor', 'Trmp_Nothing', 'Trmp_Nothing2', 'Trmp2_DestructJumperModels', 'Trmp2Spinner_Destruct', 'Trmp2Spinner_Construct', 'TrmpItem_Construct']"
             ],
             "symbolBindingRewrites": null
           },

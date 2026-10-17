@@ -27,8 +27,6 @@
  *   (0x104 -> 0x10c). The ROM calls func_0201267c.
  * - Assigning mMeshCollider.beforeClsnCallback is -4 bytes in
  *   InitResources (0x1c8 -> 0x1c4). The ROM calls func_020393d4.
- * - mStepIndex = mStepIndex + 1 is ldrb [this, #0x3d9] and drops the pooled
- *   add. func_ov027_02111a28 0x104 -> 0xf8.
  * - Naming mModelAnim.currFrame and .file in func_ov027_02111a28 reorders
  *   6 words (the straight-walk file loads after the frame). c+0x378 /
  *   c+0x380 and the ternary stay.
@@ -339,10 +337,14 @@ int daPgDfdr_c::func_ov027_02111a28()
 {
     int distLeft = mDistanceLeft;
     if (distLeft == 0) {
-        /* 0x3d9 is mStepIndex. Named ++ is ldrb [this, #0x3d9] and drops the
-           pooled add (this function 0x104 -> 0xf8). */
-        unsigned char *step = (unsigned char *)((int)this + 0x3d9);
-        *step = *step + 1;
+        /* Plain `mStepIndex++` emits the same .text (`mStepIndex =
+           mStepIndex + 1` does not: it folds into ldrb [this, #0x3d9] and
+           drops the pooled add, 0x104 -> 0xf8). The pointer local feeds
+           mwccarm's per-TU @NNN counter, one number per named local: without
+           it __sinit's registration nodes come out @763..@768, not the
+           @764..@769 the manifest renames. */
+        u8 *step = &mStepIndex;
+        (*step)++;
         if (mStepIndex >= kStepCount) mStepIndex = 0;
         func_ov027_02111d70(kStateTurn);
         return 1;

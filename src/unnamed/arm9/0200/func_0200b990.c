@@ -15,8 +15,26 @@ extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin *rc);
 extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern signed char data_0209f2f8;
 
+/* File-local views (the class headers are C++): only the fields this helper
+ * touches. Camera names follow include/dCamera_c.h; the player's follow
+ * include/dActor_c.h. */
+typedef struct {
+    u8 pad_000[0x8e];
+    s16 mAngleY; /* 0x08e */
+} PlayerView;
+
+typedef struct {
+    u8 pad_000[0x80];
+    V3 lookAt; /* 0x080 */
+    u8 pad_08c[0x84];
+    PlayerView *mTargetPlayer; /* 0x110 */
+    u8 pad_114[0x68];
+    s16 mAngleY; /* 0x17c */
+} CameraView;
+
 void func_0200b990(char *self, char *arg1, int arg2)
 {
+    CameraView *cam = (CameraView *)self;
     V3 v;
     s16 angle;
     u8 b0, b1;
@@ -31,7 +49,7 @@ void func_0200b990(char *self, char *arg1, int arg2)
         v.y = sy;
         v.z = sz;
     }
-    angle = Vec3_HorzAngle(&v, (V3 *)(self + 0x80));
+    angle = Vec3_HorzAngle(&v, &cam->lookAt);
 
     rate = 8;
     b0 = *(u8 *)(arg1 + 0);
@@ -44,10 +62,10 @@ void func_0200b990(char *self, char *arg1, int arg2)
                 V3 lineB;
                 _ZN9dBgCh_LinC1Ev(&rc);
                 func_0200897c(self, &rc);
-                lineB.y = *(int *)(self + 0x84);
+                lineB.y = cam->lookAt.y;
                 lineB.x = v.x;
                 lineB.z = v.z;
-                _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc, (V3 *)(self + 0x80), &lineB, 0);
+                _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc, &cam->lookAt, &lineB, 0);
                 if (_ZN9dBgCh_Lin10DetectClsnEv(&rc) != 0) {
                     V3 normal;
                     s16 a2;
@@ -67,8 +85,8 @@ void func_0200b990(char *self, char *arg1, int arg2)
     }
 
     {
-        char *ptr = *(char **)(self + 0x110);
-        s16 target = *(s16 *)(ptr + 0x8e);
+        PlayerView *ptr = cam->mTargetPlayer;
+        s16 target = ptr->mAngleY;
         s16 diff = (s16)(angle - target);
         if (diff < 0) {
             angle -= step;
@@ -79,6 +97,6 @@ void func_0200b990(char *self, char *arg1, int arg2)
 
     {
         int fixmul = FX_MUL(arg2, rate);
-        _Z14ApproachLinearRsss((s16 *)(self + 0x17c), angle, (s16)fixmul);
+        _Z14ApproachLinearRsss(&cam->mAngleY, angle, (s16)fixmul);
     }
 }

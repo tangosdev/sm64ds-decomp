@@ -12,8 +12,6 @@
  *   InitResources walk segment rows through char* bases. Indexing
  *   mSegmentPos[seg] / &mModelAnims[i].mat4x3 changes those sizes, and
  *   UpdateSegments' NormalizeVec3IfNonZero relocation moves with them.
- * - data_0209f318 + 0x154 and the camera words func_020092c4 takes at
- *   +0x80 / +0x8c are not this class's fields.
  * - SharedFilePtr has no fields, so the loaded BCA/BTP stays the word at +4.
  * - func_ov002_020c51d0 is ov002's. ModelAnim::SetAnim, TextureSequence::SetFile,
  *   dCcAcPos_c::Init, dBgCh_Actr::Init, Player::Hurt and Particle::System::New
@@ -519,7 +517,7 @@ void daHanachan_c::StateMoveStartMain()
                         mVertAccel = -0x4000;
                     }
                 }
-                *(int *)((char *)data_0209f318 + 0x154) &= ~8;
+                ((dCamera_c *)data_0209f318)->mFlags &= ~8;
                 mDriveCamera = 0;
                 SetState(4);
             }
@@ -1082,7 +1080,7 @@ int daHanachan_c::Behavior()
     }
 
     if (mDriveCamera != 0) {
-        void *cam = data_0209f318;
+        dCamera_c *cam = (dCamera_c *)data_0209f318;
         camA.x = 0; camA.y = 0x80000; camA.z = 0;
         camB.x = 0; camB.y = 0x80000; camB.z = 0x1f4000;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
@@ -1094,8 +1092,8 @@ int daHanachan_c::Behavior()
         MulVec3Mat4x3(&camB, data_020a0e68, &scratch);
         Vec3_Add(&t1, &mPosX, &scratch);
         camB = t1;
-        func_020092c4(cam, (char *)cam + 0x80, &camA);
-        func_020092c4(cam, (char *)cam + 0x8c, &camB);
+        func_020092c4(cam, &cam->lookAt, &camA);
+        func_020092c4(cam, &cam->pos, &camB);
     }
 
     return 1;

@@ -36,8 +36,9 @@
 #define REG_DB_BG2PD      (*(volatile u16 *)0x04001026)
 #define REG_DB_BG3PD      (*(volatile u16 *)0x04001036)
 
-/* The 2D registers GX_Init clears: engine A from BG0CNT up to (not including)
-   MASTER_BRIGHT, engine B from its DISPCNT up to its MASTER_BRIGHT. */
+/* The 2D registers GX_Init clears: engine A 0x60 bytes from BG0CNT, up to
+   (not including) DISP_MMEM_FIFO at 0x04000068; engine B 0x70 bytes from
+   its DISPCNT, through (including) its MASTER_BRIGHT at 0x0400106c. */
 #define REG_BG0CNT_ADDR   ((void *)0x04000008)
 #define REG_DB_DISPCNT_ADDR ((void *)0x04001000)
 

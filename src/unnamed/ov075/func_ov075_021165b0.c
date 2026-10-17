@@ -116,16 +116,9 @@ void func_ov075_021165b0(char *self)
     pb = data_0209b2ec;
     i = 0;
     do {
-        if (*pc == 0) {
-            goto store0;
-        }
-        if (*pb < b) {
-            goto store0;
-        }
-        if (b != 0) {
+        if (*pc != 0 && *pb >= b && b != 0) {
             *(u8 *)(self + i + 0x27c) = 1;
         } else {
-        store0:
             *(u8 *)(self + i + 0x27c) = 0;
         }
         i = i + 1;

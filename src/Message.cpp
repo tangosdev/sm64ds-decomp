@@ -19,11 +19,15 @@
  *   header method matches the unsigned return these calls use.
  * - Address-named helpers stay address-named. The ROM has no English name
  *   for them.
+ * - dScStage_c::UpdateMessage, the stage's per-frame message driver, opens
+ *   the file: it is first by address (0x0201cb7c).
  */
 
 #pragma defer_codegen off
 #include "types.h"
 #include "Message.h"
+#include "SaveData.h"
+#include "dScStage_c.h"
 
 struct StarEntry {
     int m0;
@@ -88,6 +92,7 @@ extern int data_0209caa0[3];
 extern s32 data_0209fc48;
 extern s8 data_02092110;
 extern u32 data_0209b454;
+extern s32 data_0208ee44;
 
 extern u32 _ZN3G2S13GetBG0CharPtrEv(void);
 extern u32 _ZN3G2S12GetBG0ScrPtrEv(void);
@@ -127,6 +132,7 @@ extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, int a, int b);
    in r0; a u16 parameter (the member's real signature) would emit uxth. */
 extern void _ZN7Message11DisplayTextEt(void *self);
 
+void func_0201cd08(int arg);
 void func_0201cebc(short a0);
 void func_0201cfb8(int arg0);
 void LoadControllerModeText(int param0);
@@ -141,6 +147,74 @@ void func_0201ef50(int arg);
 void func_0201f108(void);
 void func_0201f138(void);
 void func_0201f32c(int arg0);
+}
+
+// @symbol _ZN10dScStage_c13UpdateMessageEv
+void dScStage_c::UpdateMessage() {
+    if (data_0209d660 == 0)
+        return;
+
+    if (Message::UpdateWindow()) {
+        if (data_0209d654 == 0) {
+            Message::Update();
+            return;
+        }
+
+        if (data_0209d6d4 == 0x295) {
+            if (data_0209d67c == 0x3c) {
+                SaveData::SaveCurrentFile();
+            }
+            if (data_0209d67c != 0) {
+                data_0209d67c -= data_0208ee44;
+                if (data_0209d67c == 0) {
+                    data_0209d670 = 1;
+                }
+            }
+            return;
+        }
+
+        if (data_0209d67c != 0) {
+            data_0209d67c -= data_0208ee44;
+            if (data_0209d67c == 0) {
+                data_0209d670 = 1;
+            }
+        }
+        return;
+    }
+
+    if (data_0209d654 != 0) {
+        if (data_0209d660 != 0)
+            return;
+        if (data_0209d6d4 != 0x295) {
+            data_0209d654 = 0;
+            return;
+        }
+        Message::DisplaySaving(0x296);
+    }
+}
+
+// @symbol func_0201cd08
+extern "C" void func_0201cd08(int arg) {
+    volatile int li;
+    volatile unsigned short ls;
+    int p, s;
+    data_0209d660 = 0;
+    func_0201eaac();
+    data_0209d668 = 1;
+    data_0209d6a8 = 0;
+    p = _ZN3G2S13GetBG0CharPtrEv() + 0x4000;
+    li = 0;
+    MultiStore_Int(li, (int *)p, 0x2000);
+    s = _ZN3G2S12GetBG0ScrPtrEv();
+    ls = 0x2ff;
+    MultiStore16(ls, (char *)s, 0x800);
+    data_0209d6d4 = (s16)arg;
+    func_0201d418(data_0209d6d4 == 0x29a ? 0x105 : 0xc5, 0xb0);
+    data_0209d6d4 = 0x293;
+    data_0209d6a8 = data_0209d6a8 << 1;
+    Message_DrawCenteredLine(0x285, 0xa);
+    data_0209d6d4 = data_0209d6d4 + 1;
+    Message_DrawCenteredLine(0x291, 0xa);
 }
 
 // @symbol _ZN7Message21DisplaySaveStatusTextEt

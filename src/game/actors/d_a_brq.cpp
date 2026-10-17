@@ -38,6 +38,8 @@
 
 #include "common.h"
 #include "daBrq_c.h"
+#include "nitro/fx/fx.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
 /* Inferred eight-byte resource-family ABI views, not recovered original
@@ -86,20 +88,6 @@ daBrq_c::State data_ov070_02123668[3] = {
 
 Vector3 data_ov070_0212365c(0, -0x28000, 0);
 
-struct BrqSpawnInfo {
-    daBrq_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char BrqSpawnInfo_size_must_be_0x1c[
-    sizeof(BrqSpawnInfo) == 0x1c ? 1 : -1];
-
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */
 static inline int IsPlayerActor(dActor_c *actor) {
@@ -112,7 +100,7 @@ extern "C" daBrq_c *daBrq_c_classInit()
     return new daBrq_c();
 }
 
-extern "C" BrqSpawnInfo g_profile_BIRIKYU = {
+extern "C" SpawnInfo<daBrq_c> g_profile_BIRIKYU = {
     daBrq_c_classInit,
     0x010a,
     0x007d,
@@ -347,17 +335,17 @@ s32 daBrq_c::UpdateActiveState()
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
         int sinv = data_02082214[idx * 2];
-        mCylinderOffset.x = (int)(((s64)orbitRadius * sinv + 0x800) >> 0xc);
+        mCylinderOffset.x = FX_MUL(orbitRadius, sinv);
     }
     {
         int idx = ((unsigned short)mOrbitAngle) >> 4;
         int sinv = data_02082214[idx * 2];
-        mCylinderOffset.y = (int)(((s64)0x14000 * sinv + 0x800) >> 0xc);
+        mCylinderOffset.y = FX_MUL(0x14000, sinv);
     }
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
         int cosv = data_02082214[idx * 2 + 1];
-        mCylinderOffset.z = (int)(((s64)orbitRadius * cosv + 0x800) >> 0xc);
+        mCylinderOffset.z = FX_MUL(orbitRadius, cosv);
     }
 
     AddVec3(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
@@ -367,7 +355,7 @@ s32 daBrq_c::UpdateActiveState()
     {
         int idx = ((unsigned short)mSpinAngle) >> 4;
         int sinv = data_02082214[idx * 2];
-        int scale = (int)(((s64)0x555 * sinv + 0x800) >> 0xc) + 0x800;
+        int scale = FX_MUL(0x555, sinv) + 0x800;
         mScaleX = scale;
         mScaleY = scale;
         mScaleZ = scale;

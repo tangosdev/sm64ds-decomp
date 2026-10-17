@@ -17,9 +17,7 @@
  * back on their spawn node through func_ov091_02130fac.
  *
  * Nodes 4..7 set mPitchStep to 0x2000; every other node clears it. The
- * pitch base at 0x3a2 is a halfword (the header's u8 mPitchBase plus the
- * following pad byte). The shadow bobs with sin(mAngleX) and scales with
- * the height above mGroundY.
+ * shadow bobs with sin(mAngleX) and scales with the height above mGroundY.
  *
  * #pragma defer_codegen off lays .text down in source order. The out-of-line
  * destructor emits D1 then D0. The two registry factories abut the rest of
@@ -437,8 +435,7 @@ int daObjRotateUpdownLift_c::Behavior()
     span = LenVec3(&edge);
     dist = LenVec3(&remain);
     along = cstd::fdiv(span - dist, span);
-    /* 0x3a2 is a halfword. mPitchBase in the header is only the low byte. */
-    mAngleX = (s16)(*(s16 *)((char *)this + 0x3a2) + (s16)FX_MUL(mPitchStep, along));
+    mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
         Vec3_Add(&snapped, &mBasePosX, &cur);
@@ -449,7 +446,7 @@ int daObjRotateUpdownLift_c::Behavior()
            is a pool add. The step is the halfword at this+0x300+0xa4. One
            base for both grows the function. */
         {
-            s16 *pitch = (s16 *)&mPitchBase;
+            s16 *pitch = &mPitchBase;
             s16 *stepAt = (s16 *)((char *)this + 0x300);
             arrived = 1;
             *pitch = (s16)(*pitch + *(s16 *)((char *)stepAt + 0xa4));

@@ -14,9 +14,14 @@ extern void func_02030a78(void);
 extern void func_02012790(int x);
 extern void func_02030aa4(int arg);
 
+static inline unsigned IsMode6(char *self) {
+    /* materialized: returning the comparison directly shrinks the caller (0x15c) */
+    unsigned dok = (*(u16 *)(self + 0xc) == 6);
+    return dok;
+}
+
 void func_ov075_02117c0c(char* self)
 {
-    unsigned dok;
     int id;
 
     id = func_0203da9c();
@@ -24,15 +29,12 @@ void func_ov075_02117c0c(char* self)
         (func_ov075_02116d9c((int)self, id) != 0 && *(u8*)(self + 0x281) == 0)) {
         *(u8*)(self + 0xa4) = 0;
         func_ov001_020ab41c(self + 0x70);
-        if (func_0203d9b4() == 0) goto DIFF_ELSE;
-        dok = (*(u16*)(self + 0xc) == 6);
-        if (!dok) goto DIFF_ELSE;
-        func_ov075_0211a148(self, (int)&data_ov075_0211d8e8, 0x14);
-        goto DIFF_DONE;
-DIFF_ELSE:
-        func_02030a78();
-        func_ov075_0211a148(self, (int)&data_ov075_0211d930, 0x14);
-DIFF_DONE:
+        if (func_0203d9b4() != 0 && IsMode6(self)) {
+            func_ov075_0211a148(self, (int)&data_ov075_0211d8e8, 0x14);
+        } else {
+            func_02030a78();
+            func_ov075_0211a148(self, (int)&data_ov075_0211d930, 0x14);
+        }
         func_02012790(0x63);
         return;
     }
@@ -44,8 +46,7 @@ DIFF_DONE:
     }
     *(u8*)(self + 0x80) = 0;
     func_ov001_020ab41c(self + 0x94);
-    dok = (*(u16*)(self + 0xc) == 6);
-    if (dok) {
+    if (IsMode6(self)) {
         func_ov075_0211a148(self, (int)&data_ov075_0211d888, 0x14);
         func_02030aa4(3);
     } else {

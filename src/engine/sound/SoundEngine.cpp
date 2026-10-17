@@ -78,6 +78,7 @@ typedef struct {
     char pad2[4];             
 } IndexEntry;
 typedef signed char s8;
+/* A linear ramp: f0 start, f4 target, f8 step, fc step count (func_02052458). */
 struct Obj2 { int f0; int f4; int f8; int fc; };
 struct Elem {
     int first;   
@@ -141,7 +142,24 @@ struct SolidHeapWithIter {
     u16 nhi_offset;        
 };
 struct TwoInt { int a, b; };
-struct data_020a5bb8_t { char pad[0x7c]; struct Hdr84 *f7c; };
+/* The sound archive data_020a5bb8 points at, opened by func_02050f34.
+   0x00..0x30 is the archive file's own header, read from offset 0; its
+   (offset, size) pairs locate the blocks func_02050d54 loads. */
+struct data_020a5bb8_t {
+    /* 0x00 */ char pad_00[0x10];
+    /* 0x10 */ int unk80Offset;
+    /* 0x14 */ int unk80Size;
+    /* 0x18 */ int infoOffset;
+    /* 0x1c */ int infoSize;
+    /* 0x20 */ int fileTableOffset;
+    /* 0x24 */ int fileTableSize;
+    /* 0x28 */ char pad_28[8];
+    /* 0x30 */ char file[0x44];         /* NitroSDK FSFile */
+    /* 0x74 */ struct TwoInt fileId;    /* filled from the path by func_0205d644 */
+    /* 0x7c */ struct Hdr84 *fileTable; /* per-file records (func_020509b0, func_020509d8) */
+    /* 0x80 */ void *unk80;             /* loaded only when func_02050d54's flag is set */
+    /* 0x84 */ void *info;              /* the Info*Entry::GetWithID tables */
+};
 struct Hdr84 {
     char pad[8];
     int count;
@@ -196,13 +214,19 @@ struct Outer {
 struct Obj1 { char pad[0x2c]; void *p; void *q; };
 struct Obj0 { char pad[0xc]; int flag : 1; };
 struct C {
-    char pad0[0xc];
-    int fc;
-    char pad10[0x10];
-    int f20;
-    char pad24[4];
-    int f28;
-    int f2c;
+    /* 0x00 */ char pad0[8];
+    /* 0x08 */ int unk8;    /* passed through to callback */
+    /* 0x0c */ int fc;      /* bit 0: on data_020a552c, bit 1: timer started */
+    /* 0x10 */ int bufSize; /* split into blockCount blocks */
+    /* 0x14 */ int blockCount;
+    /* 0x18 */ FP callback; /* called by func_0204fce8 once per block */
+    /* 0x1c */ int unk1c;   /* passed through to callback */
+    /* 0x20 */ int f20;     /* current block, wraps at blockCount */
+    /* 0x24 */ int volume;  /* func_0204fe5c: plus each channel's data_020a5578 entry */
+    /* 0x28 */ int f28;     /* alarm number from func_0204f0d8 */
+    /* 0x2c */ int f2c;     /* first argument to func_0205ac28 / func_0205abb8 */
+    /* 0x30 */ int chanCount;
+    /* 0x34 */ unsigned char chans[1]; /* chanCount channel numbers */
 };
 struct E
 {
@@ -214,11 +238,21 @@ struct LL {
   int hi;
 };
 struct E1 {
-    unsigned char pad[0x2c];
-    unsigned char f2c;
-    unsigned char pad2[0xf];
-    unsigned char f3c;
-    unsigned char pad3[7];
+    /* 0x00 */ unsigned char pad[0x1c];
+    /* 0x1c */ struct Obj2 fade;      /* volume ramp, 0x7f00 when reset */
+    /* 0x2c */ unsigned char f2c;     /* 0 free, 1 started, 2 fading out */
+    /* 0x2d */ unsigned char started; /* set once cmdTag has finished */
+    /* 0x2e */ unsigned char unk2e;   /* last value sent with func_0205ad6c */
+    /* 0x2f */ unsigned char pad_2f;
+    /* 0x30 */ void *cmdTag; /* func_0205afb4(), polled with func_0205af78 */
+    /* 0x34 */ unsigned short unk34;
+    /* 0x36 */ unsigned char pad_36[6];
+    /* 0x3c */ unsigned char f3c; /* player number */
+    /* 0x3d */ unsigned char pad_3d;
+    /* 0x3e */ short lastVolume;    /* last value sent with func_0205ad3c */
+    /* 0x40 */ unsigned char unk40; /* 0..0x7f, indexes data_02086384 */
+    /* 0x41 */ unsigned char unk41; /* 0..0x7f, indexes data_02086384 */
+    /* 0x42 */ unsigned char pad_42[2];
 };
 struct E2 {
     unsigned char a[0xc];
@@ -240,14 +274,17 @@ struct Inner83 {
     short h3a;
 };
 struct HeapObj {
-    HeapAllocator* unk0;
-    HeapAllocator* heap;
-    HeapAllocator* unk8;
+    /* 0x00 */ HeapAllocator *unk0;
+    /* 0x04 */ HeapAllocator *heap;
+    /* 0x08 */ HeapAllocator *unk8;
+    /* 0x0c */ char pad_0c[0x20];
+    /* 0x2c */ u8 state; /* 0 once released */
 };
 struct S82 {
-    char pad0[0x54];
-    unsigned char *f54;
-    unsigned char *f58;
+    /* 0x00 */ char pad0[0x50];    /* NitroSDK FSArchive */
+    /* 0x50 */ char *narc;         /* the file func_0204ef9c checked for 'NARC' */
+    /* 0x54 */ unsigned char *f54; /* its FATB block */
+    /* 0x58 */ unsigned char *f58; /* its FIMG data */
 };
 struct Pair { void* a; u32 idx; };
 struct HeapAllocator_205212c {
@@ -255,12 +292,15 @@ struct HeapAllocator_205212c {
     void *owner_8;    
 };
 struct Obj_205212c {
-    char pad0[0x50];
-    u32 u50;           
-    char pad1[0xf0 - 0x54];
-    u32 uf0;           
-    char pad2[0x114 - 0xf4];
-    int *u114;         
+    /* 0x000 */ char pad0[0x44];
+    /* 0x044 */ char file[0xc]; /* NitroSDK FSFile; u50 is its stat word */
+    /* 0x050 */ u32 u50;
+    /* 0x054 */ char pad1[0xf0 - 0x54];
+    /* 0x0f0 */ u32 uf0;
+    /* 0x0f4 */ char pad2[0x100 - 0xf4];
+    /* 0x100 */ int useCount; /* func_020520dc releases on the last drop */
+    /* 0x104 */ char pad3[0x114 - 0x104];
+    /* 0x114 */ int *u114;
 };
 struct Elem_2051f1c { u8 pad0[4]; u16 f4; u8 pad6[2]; u8 f8; u8 f9; };
 struct Bank_205179c { int f0; u16 f4; };
@@ -300,7 +340,12 @@ struct HeapAllocator_204f400 {
     char pad[0x3d];
     unsigned char sortKey; 
 };
-struct Elem_204f278 { char pad[0x1c]; };
+struct Elem_204f278 {
+    /* 0x00 */ char pad_00[8];
+    /* 0x08 */ int *heap;       /* func_0205130c's heap, freed by func_020512f0 */
+    /* 0x0c */ int *owner;      /* claimant; its word 2 points back here */
+    /* 0x10 */ int playerIndex; /* data_020a4d6c slot whose list holds this */
+};
 typedef struct Node Node;
 
 extern "C" {
@@ -401,7 +446,7 @@ extern int func_0205d644(void *out_file_id, const char *path);
 extern int func_0204eda4(int r0, char* a, u32 idx);
 extern int func_0204ede8(struct S82 *o, unsigned int i);
 extern int func_0204ee10(void *thiz);
-extern int func_0204ee40(void *self, char *name, char *p);
+extern int func_0204ee40(struct S82 *self, char *name, char *p);
 extern int func_0204ef9c(void* p);
 extern void func_0204efe0(s8 levelID);
 extern void func_0204effc(void);
@@ -414,18 +459,18 @@ extern int func_0204f138(unsigned int mask);
 extern void func_0204f15c(void *node);
 extern int func_0204f194(unsigned int a);
 extern void func_0204f1e8(void);
-extern void func_0204f214(char* thiz, int b);
-extern void func_0204f278(char *thiz);
+extern void func_0204f214(HeapAllocator_204f460 *thiz, int b);
+extern void func_0204f278(Elem_204f278 *thiz);
 extern void func_0204f2d4(HeapObj* obj);
 extern char* func_0204f364(int key);
 extern void func_0204f3e0(unsigned char *c);
 extern void func_0204f400(HeapAllocator_204f400* self);
 extern void func_0204f460(NestedHeapIterator* self, HeapAllocator_204f460* node);
-extern void func_0204f4bc(char* obj);
+extern void func_0204f4bc(struct E1 *obj);
 extern void* func_0204f504(int index, void* unk);
-extern void func_0204f558(unsigned char* self, int val);
+extern void func_0204f558(struct E1 *self, int val);
 extern void func_0204f5a0(u8 *thiz, int arg1);
-extern int func_0204f600(void *thiz, int seqData, int seqOffset, int bank);
+extern int func_0204f600(struct E1 *thiz, int seqData, int seqOffset, int bank);
 extern void func_0204f630(void);
 extern void *func_0204f63c(void **p, int idx, int r7);
 extern void func_0204f6f8(struct Inner83 **o, short a, short b);
@@ -449,12 +494,12 @@ extern int func_0204fa2c(int *p, int fade);
 extern int func_0204fa3c(int owner, void *b, u32 c);
 extern void func_0204fafc(void);
 extern void func_0204fc40(void);
-extern void func_0204fce8(int *thiz, void *arg);
-extern void func_0204fda4(char* c);
-extern void func_0204fde8(char* obj);
+extern void func_0204fce8(struct C *thiz, void *arg);
+extern void func_0204fda4(struct C *c);
+extern void func_0204fde8(struct C *obj);
 extern void func_0204fe5c(char *obj, int arg1);
 extern void func_0204fed0(struct C *c);
-extern void func_0204ff48(char *p);
+extern void func_0204ff48(struct C *p);
 extern void func_0204ff9c(struct Obj0 *o);
 extern void func_0204ffcc(char *self);
 extern void func_02050008(struct Obj1 *o);
@@ -483,17 +528,17 @@ extern int func_02050c14(unsigned int id);
 extern void *func_02050cdc(int a, int idx);
 extern int func_02050d2c(void);
 extern int func_02050d3c(int v);
-extern int func_02050d54(char *obj, void *owner, int flag);
-extern void func_02050f34(char *self, int a1, int a2, int a3);
+extern int func_02050d54(data_020a5bb8_t *obj, void *owner, int flag);
+extern void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3);
 extern void func_02050fb0(void);
 extern s32 func_02050fd4(struct Obj_2050fd4 *self);
 extern s32 func_02051024(struct SolidHeapWithIter* self, void* allocator);
 extern int func_02051064(int a);
 extern u32 func_02051074(SolidHeapAllocator **pHeap);
-extern void func_020510a4(int *thiz, int n);
+extern void func_020510a4(HeapOwner *thiz, int n);
 extern s32 func_0205117c(struct SolidHeapWithIter* self);
 extern void *func_020511d4(HeapOwner *owner, u32 elemSize, u32 param2, u32 param3, u32 param4);
-extern void func_02051244(int *thiz);
+extern void func_02051244(HeapOwner *thiz);
 extern void func_020512f0(int *p);
 extern void *func_0205130c(unsigned int addr, unsigned int size);
 extern void func_020513a8(char *a, int b, int c, int d);
@@ -521,7 +566,7 @@ extern int func_02051f1c(void *a0, u32 a1, int a2);
 extern int func_02051fb4(void *thiz, unsigned int id);
 extern int func_02052008(int arg);
 extern void func_020520a4(HeapAllocator *node);
-extern void func_020520dc(char *self);
+extern void func_020520dc(Obj_205212c *self);
 extern void func_0205212c(Obj_205212c *self);
 extern void func_02052208(void *obj);
 extern void func_02052234(void);
@@ -566,8 +611,9 @@ extern "C" int func_02052458(int *p) {
 // @symbol func_02052438
 extern "C" void func_02052438(char *self)
 {
-    if (*(int *)(self + 8) < *(int *)(self + 0xc)) {
-        *(int *)(self + 8) += 1;
+    struct Obj2 *ramp = (struct Obj2 *)self;
+    if (ramp->f8 < ramp->fc) {
+        ramp->f8 += 1;
     }
 }
 
@@ -652,7 +698,7 @@ extern "C" void func_02052234(void){
 
 // @symbol func_02052208
 extern "C" void func_02052208(void *obj) {
-    int v = *(int *)((char *)obj + 0xf0);
+    int v = ((Obj_205212c *)obj)->uf0;
     if ((v << 30) >> 31) ((void(*)(void *o))func_0204ff9c)(obj);
     ((void(*)(void *o))func_0205212c)(obj);
 }
@@ -666,7 +712,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
     ((void(*)(void *self))func_020520dc)(self);
     int b = (int)((self->u50 & 0x10) != 0);
     if (b != 0) {
-        ((void(*)(void *p))FS_CloseFile)((char*)self + 0x44);
+        ((void (*)(void *p))FS_CloseFile)(self->file);
     }
     u32 irq = IRQ::Disable();
     HeapAllocator_205212c *node = (HeapAllocator_205212c*)((HeapAllocator_205212c*)(data_020a5bc8.Next(0)));
@@ -679,21 +725,20 @@ extern "C" void func_0205212c(Obj_205212c *self) {
         node = next;
     }
     IRQ::Restore(irq);
-    u32 *p = (u32*)(((int)self + 0xf0));
+    u32 *p = &self->uf0;
     *p &= ~1u;
     *p &= ~4u;
     *p &= ~2u;
 }
 
 // @symbol func_020520dc
-extern "C" void func_020520dc(char *self)
-{
-    if (*(int *)(self + 0x100) == 0)
+extern "C" void func_020520dc(Obj_205212c *self) {
+    if (self->useCount == 0)
         return;
 
-    *(int *)(self + 0x100) -= 1;
+    self->useCount -= 1;
 
-    if (*(int *)(self + 0x100) != 0)
+    if (self->useCount != 0)
         return;
 
     func_02050008((struct Obj1 *)self);
@@ -1161,11 +1206,10 @@ extern "C" void func_020512f0(int *p) {
 }
 
 // @symbol func_02051244
-extern "C" void func_02051244(int *thiz)
-{
+extern "C" void func_02051244(HeapOwner *thiz) {
     struct Node *r7;
     struct Node *r6;
-    r7 = (struct Node*)(((NestedHeapIterator*)((char*)thiz + 4))->Previous(0));
+    r7 = (struct Node *)(thiz->iter.Previous(0));
     if (r7 == 0) goto end;
     do {
         r6 = (struct Node*)(((NestedHeapIterator*)(r7))->Previous(0));
@@ -1175,11 +1219,11 @@ extern "C" void func_02051244(int *thiz)
             }
             r6 = (struct Node*)(((NestedHeapIterator*)(r7))->Previous((HeapAllocator*)(r6)));
         }
-        ((NestedHeapIterator*)((char*)thiz + 4))->Remove((HeapAllocator*)(r7));
-        r7 = (struct Node*)(((NestedHeapIterator*)((char*)thiz + 4))->Previous(0));
+        thiz->iter.Remove((HeapAllocator *)(r7));
+        r7 = (struct Node *)(thiz->iter.Previous(0));
     } while (r7 != 0);
 end:
-    ((SolidHeapAllocator*)(thiz[0]))->Reset(3);
+    ((SolidHeapAllocator *)(thiz->heap))->Reset(3);
     func_02050fb0();
     ((void(*)(void *thiz))func_02050fd4)(thiz);
 }
@@ -1220,8 +1264,7 @@ extern "C" s32 func_0205117c(struct SolidHeapWithIter* self)
 }
 
 // @symbol func_020510a4
-extern "C" void func_020510a4(int *thiz, int n)
-{
+extern "C" void func_020510a4(HeapOwner *thiz, int n) {
     struct Node *a;
     struct Node *first;
 
@@ -1230,9 +1273,9 @@ extern "C" void func_020510a4(int *thiz, int n)
         func_02051244(thiz);
         return;
     }
-    if (n < *(unsigned short *)((char *)thiz + 0xc)) {
+    if (n < thiz->iter.mCount) {
         do {
-            first = (struct Node*)(((NestedHeapIterator*)((char *)thiz + 4))->Previous(0));
+            first = (struct Node *)(thiz->iter.Previous(0));
             a = (struct Node*)(((NestedHeapIterator*)(first))->Previous((HeapAllocator*)(a)));
             while (a != 0) {
                 if (a->fc != 0) {
@@ -1240,12 +1283,12 @@ extern "C" void func_020510a4(int *thiz, int n)
                 }
                 a = (struct Node*)(((NestedHeapIterator*)(first))->Previous((HeapAllocator*)(a)));
             }
-            ((NestedHeapIterator*)((char *)thiz + 4))->Remove((HeapAllocator*)(first));
-        } while (n < *(unsigned short *)((char *)thiz + 0xc));
+            thiz->iter.Remove((HeapAllocator *)(first));
+        } while (n < thiz->iter.mCount);
     }
-    ((SolidHeapAllocator*)(thiz[0]))->LoadState(n);
+    ((SolidHeapAllocator *)(thiz->heap))->LoadState(n);
     func_02050fb0();
-    ((SolidHeapAllocator*)(thiz[0]))->SaveState(*(unsigned short *)((char *)thiz + 0xc));
+    ((SolidHeapAllocator *)(thiz->heap))->SaveState(thiz->iter.mCount);
     ((void(*)(void *thiz))func_02050fd4)(thiz);
 }
 
@@ -1298,42 +1341,58 @@ extern "C" void func_02050fb0(void)
 }
 
 // @symbol func_02050f34
-extern "C" void func_02050f34(char *self, int a1, int a2, int a3)
-{
-    *(int *)(self + 0x84) = 0;
-    *(int *)(self + 0x7c) = 0;
-    *(int *)(self + 0x80) = 0;
-    ((int(*)(void *p, int b))func_0205d644)(self + 0x74, a1);
-    FS_InitFile(self + 0x30);
-    ((void(*)(void *p, struct TwoInt v))func_0205d568)(self + 0x30, *(struct TwoInt *)(self + 0x74));
-    ((void(*)(void *dst, void *src, int n))FS_ReadFile)(self + 0x30, self, 0x30);
+extern "C" void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3) {
+    self->info = 0;
+    self->fileTable = 0;
+    self->unk80 = 0;
+    ((int (*)(void *p, int b))func_0205d644)(&self->fileId, a1);
+    FS_InitFile(self->file);
+    ((void (*)(void *p, struct TwoInt v))func_0205d568)(self->file, self->fileId);
+    ((void (*)(void *dst, void *src, int n))FS_ReadFile)(self->file, self, 0x30);
     if (a2 != 0)
         ((void(*)(void *self, int a, int b))func_02050d54)(self, a2, a3);
-    data_020a5bb8 = self;
+    data_020a5bb8 = (char *)self;
 }
 
 // @symbol func_02050d54
-extern "C" int func_02050d54(char *obj, void *owner, int flag) {
+extern "C" int func_02050d54(data_020a5bb8_t *obj, void *owner, int flag) {
     unsigned int sz;
     int r;
-    *(void **)(obj + 0x84) = ((void *(*)(void *owner, unsigned int elemSize, void *cb, void *obj, unsigned int p4))func_020511d4)(owner, *(unsigned int *)(obj + 0x1c), (void *)func_02050988, obj, 0);
-    if (*(void **)(obj + 0x84) == 0) return 0;
-    *(void **)(obj + 0x7c) = ((void *(*)(void *owner, unsigned int elemSize, void *cb, void *obj, unsigned int p4))func_020511d4)(owner, *(unsigned int *)(obj + 0x24), (void *)func_0205097c, obj, 0);
-    if (*(void **)(obj + 0x7c) == 0) return 0;
-    if (flag != 0 && (sz = *(unsigned int *)(obj + 0x14)) != 0) {
-        *(void **)(obj + 0x80) = ((void *(*)(void *owner, unsigned int elemSize, void *cb, void *obj, unsigned int p4))func_020511d4)(owner, sz, (void *)func_02050970, obj, 0);
-        if (*(void **)(obj + 0x80) == 0) return 0;
+    obj->info = ((void *(*)(void *owner, unsigned int elemSize, void *cb, void *obj,
+                            unsigned int p4))func_020511d4)(owner, obj->infoSize,
+                                                            (void *)func_02050988, obj, 0);
+    if (obj->info == 0)
+        return 0;
+    obj->fileTable = (struct Hdr84 *)((void *(*)(void *owner, unsigned int elemSize, void *cb,
+                                                 void *obj, unsigned int p4))func_020511d4)(
+        owner, obj->fileTableSize, (void *)func_0205097c, obj, 0);
+    if (obj->fileTable == 0)
+        return 0;
+    if (flag != 0 && (sz = obj->unk80Size) != 0) {
+        obj->unk80 =
+            ((void *(*)(void *owner, unsigned int elemSize, void *cb, void *obj,
+                        unsigned int p4))func_020511d4)(owner, sz, (void *)func_02050970, obj, 0);
+        if (obj->unk80 == 0)
+            return 0;
     }
-    if (func_0205d368((void *)(obj + 0x30), *(int *)(obj + 0x18), 0) == 0) return 0;
-    r = ((int(*)(void *o, int a, int b))FS_ReadFile)((void *)(obj + 0x30), *(int *)(obj + 0x84), *(int *)(obj + 0x1c));
-    if (r != *(int *)(obj + 0x1c)) return 0;
-    if (func_0205d368((void *)(obj + 0x30), *(int *)(obj + 0x20), 0) == 0) return 0;
-    r = ((int(*)(void *o, int a, int b))FS_ReadFile)((void *)(obj + 0x30), *(int *)(obj + 0x7c), *(int *)(obj + 0x24));
-    if (r != *(int *)(obj + 0x24)) return 0;
-    if (flag != 0 && *(int *)(obj + 0x14) != 0) {
-        if (func_0205d368((void *)(obj + 0x30), *(int *)(obj + 0x10), 0) == 0) return 0;
-        r = ((int(*)(void *o, int a, int b))FS_ReadFile)((void *)(obj + 0x30), *(int *)(obj + 0x80), *(int *)(obj + 0x14));
-        if (r != *(int *)(obj + 0x14)) return 0;
+    if (func_0205d368(obj->file, obj->infoOffset, 0) == 0)
+        return 0;
+    r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->info, obj->infoSize);
+    if (r != obj->infoSize)
+        return 0;
+    if (func_0205d368(obj->file, obj->fileTableOffset, 0) == 0)
+        return 0;
+    r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->fileTable,
+                                                      obj->fileTableSize);
+    if (r != obj->fileTableSize)
+        return 0;
+    if (flag != 0 && obj->unk80Size != 0) {
+        if (func_0205d368(obj->file, obj->unk80Offset, 0) == 0)
+            return 0;
+        r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->unk80,
+                                                          obj->unk80Size);
+        if (r != obj->unk80Size)
+            return 0;
     }
     return 1;
 }
@@ -1455,7 +1514,7 @@ extern "C" int func_02050a84(unsigned int id)
 
 // @symbol func_02050a5c
 extern "C" int func_02050a5c(unsigned int i) {
-    struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->f7c;
+    struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->fileTable;
     if (i >= (unsigned int)h->count) return 0;
     return *(int *)((char *)h + i * 16 + 0x10);
 }
@@ -1484,7 +1543,7 @@ extern "C" int func_020509d8(unsigned int idx, int a1, unsigned int len, unsigne
 
 // @symbol func_020509b0
 extern "C" int func_020509b0(unsigned int i) {
-    struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->f7c;
+    struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->fileTable;
     if (i >= (unsigned int)h->count) return 0;
     return *(int *)((char *)h + i * 16 + 0x14);
 }
@@ -1783,8 +1842,9 @@ extern "C" void func_02050008(struct Obj1 *o) {
 // @symbol func_0204ffcc
 extern "C" void func_0204ffcc(char *self)
 {
-    ((void(*)(void *a, int b, int c, int d))func_0205ac28)(*(void **)(self + 0x2c), 0, 1 << *(int *)(self + 0x28), 0);
-    *(int *)(self + 0xc) |= 2;
+    struct C *c = (struct C *)self;
+    ((void (*)(int a, int b, int c, int d))func_0205ac28)(c->f2c, 0, 1 << c->f28, 0);
+    c->fc |= 2;
 }
 
 // @symbol func_0204ff9c
@@ -1795,9 +1855,10 @@ extern "C" void func_0204ff9c(struct Obj0 *o) {
 }
 
 // @symbol func_0204ff48
-extern "C" void func_0204ff48(char *p) {
-    if (!((*(int *)(p + 0xc) << 30) >> 31)) return;
-    func_0205abb8(*(int *)(p + 0x2c), 0, 1 << *(int *)(p + 0x28), 0);
+extern "C" void func_0204ff48(struct C *p) {
+    if (!((p->fc << 30) >> 31))
+        return;
+    func_0205abb8(p->f2c, 0, 1 << p->f28, 0);
     void *x = func_0205afb4();
     ((void(*)(int))func_0205b070)(1);
     ((void(*)(unsigned))func_0205afe0)((unsigned)x);
@@ -1817,72 +1878,65 @@ extern "C" void func_0204fed0(struct C *c) {
 // @symbol func_0204fe5c
 extern "C" void func_0204fe5c(char *obj, int arg1)
 {
-  unsigned char new_var;
-  int i = 0;
-  *((int *) (obj + 0x24)) = arg1;
-  if ((*((int *) (obj + 0x30))) > 0)
-  {
-    if (1)
-    {
+    struct C *c = (struct C *)obj;
+    unsigned char new_var;
+    int i = 0;
+    c->volume = arg1;
+    if (c->chanCount > 0) {
+        if (1) {
+        }
+        do {
+            unsigned char idx = new_var = c->chans[i];
+            int r = ((int (*)(int arg))func_0205b63c)(c->volume + data_020a5578[idx].field4);
+            func_0205aa68((void *)(1 << idx), r & 0xff, r >> 8);
+            i++;
+        } while (i < c->chanCount);
     }
-    do
-    {
-      unsigned char idx = new_var = *((unsigned char *) ((obj + 0x34) + i));
-      int r = ((int(*)(int arg))func_0205b63c)((*((int *) (obj + 0x24))) + data_020a5578[idx].field4);
-      func_0205aa68((void *) (1 << idx), r & 0xff, r >> 8);
-      i++;
-    }
-    while (i < (*((int *) (obj + 0x30))));
-  }
 }
 
 // @symbol func_0204fde8
-extern "C" void func_0204fde8(char* obj) {
-    if ((int)(*(int*)(obj + 0xc) << 0x1e) >> 0x1f) {
+extern "C" void func_0204fde8(struct C *obj) {
+    if ((int)(obj->fc << 0x1e) >> 0x1f) {
         void* p;
-        int* flags = (int*)(((int)obj + 0xc));
-        func_0205abb8(*(int*)(obj + 0x2c), 0, 1 << *(int*)(obj + 0x28), 0);
+        int *flags = &obj->fc;
+        func_0205abb8(obj->f2c, 0, 1 << obj->f28, 0);
         *flags &= ~2;
         p = ((void*(*)(void))func_0205afb4)();
         ((void(*)(int a))func_0205b070)(1);
         ((void(*)(void* p))func_0205afe0)(p);
     }
-    ((void(*)(char* obj))func_0204fda4)(obj);
+    ((void (*)(struct C *obj))func_0204fda4)(obj);
 }
 
 // @symbol func_0204fda4
-extern "C" void func_0204fda4(char* c)
-{
+extern "C" void func_0204fda4(struct C *c) {
     int* p;
-    func_0204f0b8(*(unsigned int*)(c + 0x28));
+    func_0204f0b8(c->f28);
     ((NestedHeapIterator*)&data_020a552c)->Remove((HeapAllocator*)(c));
-    p = (int*)(c + 0xc);
+    p = &c->fc;
     *p &= ~1;
     *p &= ~2;
 }
 
 // @symbol func_0204fce8
-extern "C" void func_0204fce8(int *thiz, void *arg)
-{
-  int new_var;
-  int i;
-  int *pcount;
-  unsigned char *p = (unsigned char *) thiz;
-  int q = ((int(*)(unsigned int a, unsigned int b))__aeabi_uidiv)(thiz[4], thiz[5]);
-  int scaled = q * thiz[8];
-  for (i = 0; i < thiz[0xc]; i++)
-  {
-    new_var = ((LL*)data_020a5578)[(p + i)[0x34]].lo;
-    data_020a5538[i] = new_var + scaled;
-  }
+extern "C" void func_0204fce8(struct C *thiz, void *arg) {
+    int new_var;
+    int i;
+    int *pcount;
+    int q =
+        ((int (*)(unsigned int a, unsigned int b))__aeabi_uidiv)(thiz->bufSize, thiz->blockCount);
+    int scaled = q * thiz->f20;
+    for (i = 0; i < thiz->chanCount; i++) {
+        new_var = ((LL *)data_020a5578)[thiz->chans[i]].lo;
+        data_020a5538[i] = new_var + scaled;
+    }
 
-  ((FP) thiz[6])(arg, thiz[0xc], data_020a5538, q, thiz[2], thiz[7]);
-  pcount = (int *) (((int) thiz + 0x20));
-  (*pcount)++;
-  if (thiz[8] >= thiz[5])
-  {
-    thiz[8] = 0;
-  }
+    thiz->callback(arg, thiz->chanCount, data_020a5538, q, thiz->unk8, thiz->unk1c);
+    pcount = &thiz->f20;
+    (*pcount)++;
+    if (thiz->f20 >= thiz->blockCount) {
+        thiz->f20 = 0;
+    }
 }
 
 // @symbol func_0204fc40
@@ -2113,37 +2167,39 @@ extern "C" void func_0204f630(void) {
 }
 
 // @symbol func_0204f600
-extern "C" int func_0204f600(void *thiz, int seqData, int seqOffset, int bank)
-{
-    func_0205adc4((void *)*(u8 *)((char *)thiz + 0x3c), seqData, seqOffset, bank);
+extern "C" int func_0204f600(struct E1 *thiz, int seqData, int seqOffset, int bank) {
+    func_0205adc4((void *)thiz->f3c, seqData, seqOffset, bank);
     ((void(*)(void *thiz))func_0204f4bc)(thiz);
-    *(void **)((char *)thiz + 0x30) = func_0205afb4();
-    *(u8 *)((char *)thiz + 0x2c) = 1;
+    thiz->cmdTag = func_0205afb4();
+    thiz->f2c = 1;
     return 1;
 }
 
 // @symbol func_0204f5a0
 extern "C" void func_0204f5a0(u8 *thiz, int arg1)
 {
+    struct E1 *e = (struct E1 *)thiz;
     if (thiz == 0)
         return;
-    if (thiz[0x2c] == 0)
+    if (e->f2c == 0)
         return;
     if (arg1 == 0) {
         ((void(*)(void *c))func_0204f3e0)(thiz);
         return;
     }
-    func_02052494((struct Obj2 *)(thiz + 0x1c), 0, arg1);
+    func_02052494(&e->fade, 0, arg1);
     ((void(*)(void *o, int a))func_0204f214)(thiz, 0);
-    thiz[0x2c] = 2;
+    e->f2c = 2;
 }
 
 // @symbol func_0204f558
-extern "C" void func_0204f558(unsigned char* self, int val){
-  if (self == 0) return;
-  if (val == *(unsigned char*)(self + 0x2e)) return;
-  ((void(*)(int a, int b))func_0205ad6c)(*(unsigned char*)(self + 0x3c), val);
-  *(unsigned char*)(self + 0x2e) = (unsigned char)val;
+extern "C" void func_0204f558(struct E1 *self, int val) {
+    if (self == 0)
+        return;
+    if (val == self->unk2e)
+        return;
+    ((void (*)(int a, int b))func_0205ad6c)(self->f3c, val);
+    self->unk2e = (unsigned char)val;
 }
 
 // @symbol func_0204f504
@@ -2159,15 +2215,15 @@ extern "C" void* func_0204f504(int index, void* unk) {
 }
 
 // @symbol func_0204f4bc
-extern "C" void func_0204f4bc(char* obj){
-  *(unsigned char*)(obj + 0x2e) = 0;
-  *(unsigned char*)(obj + 0x2d) = 0;
-  *(unsigned short*)(obj + 0x34) = 0;
-  *(unsigned short*)(obj + 0x3e) = 0;
-  *(unsigned char*)(obj + 0x40) = 0x7f;
-  *(unsigned char*)(obj + 0x41) = 0x7f;
-  ((void(*)(void* p))func_020524c4)(obj + 0x1c);
-  ((void(*)(void* o, int a, int b))func_02052494)(obj + 0x1c, 0x7f00, 1);
+extern "C" void func_0204f4bc(struct E1 *obj) {
+    obj->unk2e = 0;
+    obj->started = 0;
+    obj->unk34 = 0;
+    obj->lastVolume = 0;
+    obj->unk40 = 0x7f;
+    obj->unk41 = 0x7f;
+    ((void (*)(void *p))func_020524c4)(&obj->fade);
+    ((void (*)(void *o, int a, int b))func_02052494)(&obj->fade, 0x7f00, 1);
 }
 
 // @symbol func_0204f460
@@ -2244,34 +2300,32 @@ extern "C" void func_0204f2d4(HeapObj* obj) {
     }
     ((NestedHeapIterator*)(((HeapAllocator*)&data_020a4d60)))->Remove((HeapAllocator*)obj);
     ((NestedHeapIterator*)(((HeapAllocator*)data_020a4d54)))->AddLast((HeapAllocator*)obj);
-    *(u8*)((u8*)obj + 0x2c) = 0;
+    obj->state = 0;
 }
 
 // @symbol func_0204f278
-extern "C" void func_0204f278(char *thiz)
-{
-    int *p = *(int **)(thiz + 8);
+extern "C" void func_0204f278(Elem_204f278 *thiz) {
+    int *p = thiz->heap;
     if (p == 0) return;
     func_020512f0(p);
-    int *q = *(int **)(thiz + 0xc);
+    int *q = thiz->owner;
     if (q != 0) {
         q[2] = 0;
         return;
     }
-    int idx = *(int *)(thiz + 0x10);
+    int idx = thiz->playerIndex;
     ((NestedHeapIterator*)((HeapAllocator *)((char *)&data_020a4d6c[idx] + 0xc)))->Remove((HeapAllocator*)(thiz));
 }
 
 // @symbol func_0204f214
-extern "C" void func_0204f214(char* thiz, int b)
-{
-    void* node = *(void**)(thiz + 4);
+extern "C" void func_0204f214(HeapAllocator_204f460 *thiz, int b) {
+    void *node = thiz->owner;
     if (node != 0) {
         ((NestedHeapIterator*)(node))->Remove((HeapAllocator*)(thiz));
-        *(void**)(thiz + 4) = 0;
+        thiz->owner = 0;
     }
     ((NestedHeapIterator*)(((char*)&data_020a4d60)))->Remove((HeapAllocator*)(thiz));
-    *(unsigned char*)(thiz + 0x3d) = (unsigned char)b;
+    thiz->sortKey = (unsigned char)b;
     if (node != 0) {
         ((void(*)(void* node, void* self))func_0204f460)(node, thiz);
     }
@@ -2388,8 +2442,7 @@ extern "C" int func_0204ef9c(void* p) {
 }
 
 // @symbol func_0204ee40
-extern "C" int func_0204ee40(void *self, char *name, char *p)
-{
+extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     char *fatb;
     char *fntb;
     char *fimg;
@@ -2428,10 +2481,10 @@ extern "C" int func_0204ee40(void *self, char *name, char *p)
     }
 
     func_0205cd34(self);
-    *(char **)((char *)self + 0x50) = p;
-    *(char **)((char *)self + 0x54) = fatb;
+    self->narc = p;
+    self->f54 = (unsigned char *)fatb;
     fimg_off = fimg + 8;
-    *(char **)((char *)self + 0x58) = fimg_off;
+    self->f58 = (unsigned char *)fimg_off;
 
     if (func_0205cc80(self, (void *)(name),  (void *)((int(*)(const char *s))_ZN4cstd6strlenEPKc)(name)) == 0)
         return 0;

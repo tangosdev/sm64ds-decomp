@@ -34,22 +34,22 @@ extern dMgMCarlo2CardObj_c *sMCarlo2CardTail;
 extern dMgMCarlo2CardObj_c *sMCarlo2CardHead;
 extern dMgMCarlo2CardObj_c *sMCarlo2FirstPick;
 extern dMgMCarlo2CardObj_c *sMCarlo2SecondPick;
-extern dMgMCarlo2CardObj_c* data_ov006_02142578;
+extern dMgMCarlo2CardObj_c *sMCarlo2CardsTail;
 extern dMgMCarlo2CardObj_c *sMCarlo2Cards;
-extern s16 data_ov006_02142558;     /* frames left before the pair resolves  */
-extern s16 data_ov006_0214255c;     /* pieces still animating                */
-extern s16 data_ov006_02142560;     /* difficulty row into data_ov006_0212e97c */
-extern int sMCarlo2FaceCounts[];    /* per-face weights the picker draws from  */
+extern s16 sMCarlo2BoardDelay;   /* frames left before the pair resolves  */
+extern s16 sMCarlo2CardsMoving;  /* pieces still animating                */
+extern s16 sMCarlo2BoardStep;    /* difficulty row into sMCarlo2BoardRows */
+extern int sMCarlo2FaceCounts[]; /* per-face weights the picker draws from  */
 /* Twenty-three sprite words. The static initializer copies them out of
  * sMgCardSprites in this order; an in-order copy does not. */
 struct Carlo2SpriteWords {
     int a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22;
 };
 extern int sMgCardSprites[];
-extern Carlo2SpriteWords data_ov006_021425a8;
-extern unsigned short data_ov006_0213d770[];
-extern int data_ov006_0212e954[];   /* the starting weights                     */
-extern int data_ov006_0212e97c[][10]; /* per-difficulty weight top-ups          */
+extern Carlo2SpriteWords sMCarlo2CardSprites;
+extern unsigned short sMCarlo2CardFrameSprites[];
+extern int sMCarlo2StartFaceCounts[]; /* the starting weights                     */
+extern int sMCarlo2BoardRows[][10];   /* per-difficulty weight top-ups          */
 extern int data_0209e650[];
 extern int data_020a0db0;
 extern unsigned char data_0209d454;
@@ -68,7 +68,7 @@ void Mg_CommitRecords(void* t);
 void Mg_SubmitScore(int score);
 void LoadCard2SubBg3(void* c);
 void Camera_InitDealerView(void* c);
-void Dealer_StartDeal(char* t, int unused, short a2, void* a3);
+void Dealer_StartShuffle(char *t, int unused, short a2, void *a3);
 int  Dealer_IsIdle(void* t);
 void Dealer_Draw(void* t);
 void Dealer_Update(void* t);
@@ -124,7 +124,7 @@ s32 dScMgMCarlo2_c::InitResources()
     Mg_SetTopScreenYOffset(0x20);
     LoadCard2SubBg3(raw);
     lang = GetGameLanguage();
-    tiles = LoadFile(data_ov006_0213d744[lang]);
+    tiles = LoadFile(sMCarlo2CardNcgByLanguage[lang]);
     palette = LoadFile(0xbb);
     DecompressLZ16(tiles, 0x6400000);
     DecompressLZ16(tiles, 0x6600000);
@@ -154,10 +154,10 @@ void dScMgMCarlo2_c::StartRound(int /* arg */)
     char *raw = (char *)this;
 
     dScMgMCarlo2_c::SetupBoard(mArray);
-    data_ov006_0213d6fc = 0;
+    sMCarlo2PickAllowed = 0;
     mDealCount = 0;
     mShared.unk_1e6 = 1;
-    Dealer_StartDeal(raw + 0x4f38, 4, 4, raw + 0x592e);
+    Dealer_StartShuffle(raw + 0x4f38, 4, 4, raw + 0x592e);
     mShared.unk_01a = 1;
     mTimer = 0;
     Mg_SubmitScore(0);
@@ -240,15 +240,15 @@ s32 dScMgMCarlo2_c::Behavior()
     case 3:
         if (dScMgMCarlo2_c::BoardReady() == 0) {
             int dealt;
-            if (data_ov006_0213d6fc == 1)
-                data_ov006_0213d6fc = 0;
+            if (sMCarlo2PickAllowed == 1)
+                sMCarlo2PickAllowed = 0;
             dealt = sMCarlo2DealProgress >> 12;
-            if (data_ov006_0213d6f4 != 0 && dealt > 10 && dealt <= 18
-                && Dealer_IsIdle(raw + 0x4f38) != 0) {
+            if (sMCarlo2DeckSize != 0 && dealt > 10 && dealt <= 18 &&
+                Dealer_IsIdle(raw + 0x4f38) != 0) {
                 mDealCount = 0;
                 mShared.unk_1e6 = 0;
                 Dealer_StartReveal(raw + 0x4f38, 2, &mDealCount);
-                if (data_ov006_0213d6f4 == 2)
+                if (sMCarlo2DeckSize == 2)
                     mShared.unk_01a = 0;
             } else {
                 int lim = mDealCount + 0x12;
@@ -259,11 +259,11 @@ s32 dScMgMCarlo2_c::Behavior()
                 }
             }
         } else {
-            if (data_ov006_0213d6fc == 0) {
+            if (sMCarlo2PickAllowed == 0) {
                 if (dScMgMCarlo2_c::HasRemovablePair() != 0) {
-                    data_ov006_0213d6fc = 1;
+                    sMCarlo2PickAllowed = 1;
                 } else {
-                    if (data_ov006_0213d6f8 != 0) {
+                    if (sMCarlo2CardsWanted != 0) {
                         if (mShared.unk_01a == 1) {
                             mShared.unk_01a = 0;
                         } else if (Dealer_IsIdleAtRest(raw + 0x4f38) != 0) {
@@ -276,7 +276,7 @@ s32 dScMgMCarlo2_c::Behavior()
                             }
                         }
                     }
-                    data_ov006_0213d6fc = 0;
+                    sMCarlo2PickAllowed = 0;
                 }
             }
         }
@@ -290,7 +290,7 @@ s32 dScMgMCarlo2_c::Behavior()
 
 // @symbol _ZN14dScMgMCarlo2_c6RenderEv
 /* Slot 9. Draws the score, then the cards still moving, then the settled
- * ones. Both passes walk mPrev from data_ov006_02142578. */
+ * ones. Both passes walk mPrev from sMCarlo2CardsTail. */
 s32 dScMgMCarlo2_c::Render()
 {
     char *raw = (char *)this;
@@ -307,12 +307,12 @@ s32 dScMgMCarlo2_c::Render()
         score = 0x270f;
     Mg_DrawNumber(0xe8, 0x28, score, 1, -1, 0, 0);
 
-    RenderOamMainScreen(data_ov006_02133f18, 0xe8, 0x18, -1, -1);
+    RenderOamMainScreen(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 
     if (this->mRoundState == 5)
         Mg_DrawBlinkSprite(raw, 0xe0, 0xa0);
 
-    lifted = data_ov006_02142578;
+    lifted = sMCarlo2CardsTail;
     for (i = 0; i < 0x14; i++) {
         if (lifted == 0)
             break;
@@ -321,7 +321,7 @@ s32 dScMgMCarlo2_c::Render()
         lifted = lifted->mPrev;
     }
 
-    flat = data_ov006_02142578;
+    flat = sMCarlo2CardsTail;
     for (j = 0; j < 0x14; j++) {
         if (flat == 0)
             break;
@@ -352,7 +352,8 @@ void dMgMCarlo2CardObj_c::Init(int slot){
         mDealDelay = (short)(((slot % 5) << 1) + 1);
     }
     mLift = 0;
-    if (slot == 0x13) data_ov006_02142578 = this;
+    if (slot == 0x13)
+        sMCarlo2CardsTail = this;
     mVisible = 1;
     mXStep = 0;
     mYStep = 0;
@@ -371,18 +372,18 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
         return;
 
     if (mSlot >= 0x14) {
-        mX = (0x70 - ((data_ov006_0213d6f4 >> 2) << 1)) << 12;
+        mX = (0x70 - ((sMCarlo2DeckSize >> 2) << 1)) << 12;
         mY = -0x30000;
-        data_ov006_02142578 = this;
+        sMCarlo2CardsTail = this;
         mState = 1;
     } else if (mState == 0) {
-        mX = (0x70 - ((data_ov006_0213d6f4 >> 2) << 1)) << 12;
+        mX = (0x70 - ((sMCarlo2DeckSize >> 2) << 1)) << 12;
         mY = -0x30000;
         mState = 4;
-        data_ov006_0214255c++;
+        sMCarlo2CardsMoving++;
     } else {
         mState = 4;
-        data_ov006_0214255c++;
+        sMCarlo2CardsMoving++;
     }
 
     mTargetX = ((slot % 5) * 32 + 0x30) << 12;
@@ -438,7 +439,8 @@ int dMgMCarlo2CardObj_c::HitTest()
     int touching;
     int dx, dy;
 
-    if (data_ov006_0213d6fc == 0) return 0;
+    if (sMCarlo2PickAllowed == 0)
+        return 0;
     if (dScMgMCarlo2_c::BoardBusy() != 0) goto fail;
 
     idx = gActivePlayerSlot;
@@ -468,7 +470,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         }
         if (mDealDelay != 0)
             return;
-        data_ov006_0213d6f4--;
+        sMCarlo2DeckSize--;
         DealIn(slot);
         return;
     case 2:
@@ -486,7 +488,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         }
         if (IsPairWith(sMCarlo2FirstPick) != 0) {
             sMCarlo2SecondPick = this;
-            data_ov006_02142558 = 0x20;
+            sMCarlo2BoardDelay = 0x20;
             mState = 3;
             Sound::PlayBank2_2D(0x154);
             return;
@@ -516,7 +518,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         if (mLift != 0x4000)
             return;
         mState = 2;
-        ApproachLinear2(data_ov006_0214255c, 0, 1);
+        ApproachLinear2(sMCarlo2CardsMoving, 0, 1);
         mXStep = 0;
         mYStep = 0;
         return;
@@ -539,13 +541,9 @@ void dMgMCarlo2CardObj_c::Render()
     }
     {
         int idx = (mFace + 1) * 5 + (mLift >> 12);
-        unsigned short sprite = data_ov006_0213d770[idx];
-        Hud_RenderSprite(
-            (void*)((int*)&data_ov006_021425a8)[sprite],
-            (mX >> 12) + 0x18,
-            (mY >> 12) + 0x18,
-            -1,
-            -1);
+        unsigned short sprite = sMCarlo2CardFrameSprites[idx];
+        Hud_RenderSprite((void *)((int *)&sMCarlo2CardSprites)[sprite], (mX >> 12) + 0x18,
+                         (mY >> 12) + 0x18, -1, -1);
     }
 }
 
@@ -556,7 +554,7 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
         {
             s16 i = 0;
             do {
-                sMCarlo2FaceCounts[i] = data_ov006_0212e954[i];
+                sMCarlo2FaceCounts[i] = sMCarlo2StartFaceCounts[i];
                 i = i + 1;
             } while (i < 10);
         }
@@ -574,11 +572,11 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
         sMCarlo2CardHead = 0;
         sMCarlo2FirstPick = 0;
         sMCarlo2SecondPick = 0;
-        data_ov006_02142558 = 0;
-        data_ov006_0214255c = 0;
-        data_ov006_0213d6f8 = 0x28;
-        data_ov006_0213d6f4 = 0x28;
-        data_ov006_02142560 = 0;
+        sMCarlo2BoardDelay = 0;
+        sMCarlo2CardsMoving = 0;
+        sMCarlo2CardsWanted = 0x28;
+        sMCarlo2DeckSize = 0x28;
+        sMCarlo2BoardStep = 0;
         sMCarlo2Score = 0;
         sMCarlo2DealProgress = 0;
         {
@@ -625,9 +623,9 @@ int dScMgMCarlo2_c::HasRemovablePair()
 int dScMgMCarlo2_c::BoardBusy() {
     int ret = 1;
     int dealt = (sMCarlo2DealProgress << 4) >> 0x10;
-    int wanted = data_ov006_0213d6f8;
+    int wanted = sMCarlo2CardsWanted;
     if (wanted > 0x14) wanted = 0x14;
-    if (dealt == wanted && data_ov006_0214255c == 0) {
+    if (dealt == wanted && sMCarlo2CardsMoving == 0) {
         if (sMCarlo2FirstPick == 0 || sMCarlo2SecondPick == 0) {
             ret = 0;
         }
@@ -640,12 +638,12 @@ int dScMgMCarlo2_c::BoardBusy() {
 int dScMgMCarlo2_c::BoardReady() {
     int dealt = (sMCarlo2DealProgress << 4) >> 16;
     int ready = 0;
-    int wanted = data_ov006_0213d6f8;
+    int wanted = sMCarlo2CardsWanted;
 
     if (wanted > 0x14) {
         wanted = 0x14;
     }
-    if (dealt == wanted && data_ov006_0214255c == 0 &&
+    if (dealt == wanted && sMCarlo2CardsMoving == 0 &&
         (sMCarlo2FirstPick == 0 || sMCarlo2SecondPick == 0)) {
         ready = 1;
     }
@@ -693,8 +691,8 @@ void dScMgMCarlo2_c::UpdateBoard()
     dMgMCarlo2CardObj_c *head = sMCarlo2Cards;
 
     if (sMCarlo2FirstPick != 0 && sMCarlo2SecondPick != 0) {
-        data_ov006_02142558 -= 1;
-        if (data_ov006_02142558 == 0) {
+        sMCarlo2BoardDelay -= 1;
+        if (sMCarlo2BoardDelay == 0) {
             dMgMCarlo2CardObj_c* first;
             dMgMCarlo2CardObj_c* second;
             dMgMCarlo2CardObj_c* tail;
@@ -711,7 +709,8 @@ void dScMgMCarlo2_c::UpdateBoard()
                 sMCarlo2Cards = first->mNext;
             if (sMCarlo2CardHead == first)
                 sMCarlo2CardHead = first->mNext;
-            if (data_ov006_02142578 == first) data_ov006_02142578 = first->mPrev;
+            if (sMCarlo2CardsTail == first)
+                sMCarlo2CardsTail = first->mPrev;
             if (sMCarlo2CardTail == first)
                 sMCarlo2CardTail = first->mPrev;
             if (first->mPrev != 0) first->mPrev->mNext = first->mNext;
@@ -724,7 +723,8 @@ void dScMgMCarlo2_c::UpdateBoard()
                 sMCarlo2Cards = second->mNext;
             if (sMCarlo2CardHead == second)
                 sMCarlo2CardHead = second->mNext;
-            if (data_ov006_02142578 == second) data_ov006_02142578 = second->mPrev;
+            if (sMCarlo2CardsTail == second)
+                sMCarlo2CardsTail = second->mPrev;
             if (sMCarlo2CardTail == second)
                 sMCarlo2CardTail = second->mPrev;
             if (second->mPrev != 0) second->mPrev->mNext = second->mNext;
@@ -763,14 +763,14 @@ void dScMgMCarlo2_c::UpdateBoard()
             sMCarlo2SecondPick = 0;
             sMCarlo2FirstPick = 0;
             ApproachLinear2(sMCarlo2Score, 0x270f, 2);
-            ApproachLinear2(data_ov006_0213d6f8, 0, 2);
+            ApproachLinear2(sMCarlo2CardsWanted, 0, 2);
             Mg_SubmitScore(sMCarlo2Score);
 
-            if (data_ov006_0213d6f8 <= 0x14) {
+            if (sMCarlo2CardsWanted <= 0x14) {
                 {
                     int i = 0;
-                    s16 idx = *(volatile s16*)&data_ov006_02142560;
-                    int* row = (int*)((char*)data_ov006_0212e97c + idx * 0x28);
+                    s16 idx = *(volatile s16 *)&sMCarlo2BoardStep;
+                    int *row = (int *)((char *)sMCarlo2BoardRows + idx * 0x28);
                     do {
                         sMCarlo2FaceCounts[i] = sMCarlo2FaceCounts[i] + row[i];
                         i += 1;
@@ -785,7 +785,8 @@ void dScMgMCarlo2_c::UpdateBoard()
                                 sMCarlo2Cards = nxt;
                             if (sMCarlo2CardHead == p)
                                 sMCarlo2CardHead = p->mNext;
-                            if (data_ov006_02142578 == p) data_ov006_02142578 = p->mPrev;
+                            if (sMCarlo2CardsTail == p)
+                                sMCarlo2CardsTail = p->mPrev;
                             if (sMCarlo2CardTail == p)
                                 sMCarlo2CardTail = p->mPrev;
                             if (p->mPrev != 0) p->mPrev->mNext = p->mNext;
@@ -809,9 +810,9 @@ void dScMgMCarlo2_c::UpdateBoard()
                         } while (p != 0);
                     }
                 }
-                ApproachLinear2(data_ov006_02142560, 9, 1);
-                data_ov006_0213d6f4 += 0x14;
-                data_ov006_0213d6f8 += 0x14;
+                ApproachLinear2(sMCarlo2BoardStep, 9, 1);
+                sMCarlo2DeckSize += 0x14;
+                sMCarlo2CardsWanted += 0x14;
             }
         }
         {
@@ -827,7 +828,7 @@ void dScMgMCarlo2_c::UpdateBoard()
             } while (i < (sMCarlo2DealProgress >> 12));
         }
     } else {
-        int v = data_ov006_0213d6f8;
+        int v = sMCarlo2CardsWanted;
         if (v > 0x14) v = 0x14;
         ApproachLinear(sMCarlo2DealProgress, v << 12, 0x800);
         {
@@ -854,7 +855,7 @@ dMgMCarlo2CardObj_c::~dMgMCarlo2CardObj_c()
  * here makes the compiler emit both out of line in cartridge order. */
 
 /* Retail copy order is not address order. mwcc emits __sinit_d_s_mg_m_carlo2.cpp. */
-Carlo2SpriteWords data_ov006_021425a8 = {
+Carlo2SpriteWords sMCarlo2CardSprites = {
     sMgCardSprites[0],  sMgCardSprites[1],  sMgCardSprites[2],  sMgCardSprites[11],
     sMgCardSprites[12], sMgCardSprites[13], sMgCardSprites[14], sMgCardSprites[3],
     sMgCardSprites[4],  sMgCardSprites[5],  sMgCardSprites[6],  sMgCardSprites[9],

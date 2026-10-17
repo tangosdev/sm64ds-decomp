@@ -15,7 +15,7 @@ struct dScMgCoin_Coin {
     u8 visible;       /* 0x12 */
     u8 value;         /* 0x13 */
     u8 pad14;         /* 0x14 */
-    u8 collected;     /* 0x15 -- Phase_State2 ends the round once every valued
+    u8 collected;     /* 0x15 -- Phase_StatePlay ends the round once every valued
                          coin has it; the result screen prints value only while 0 */
     u8 bounces;       /* 0x16 */
     u8 pad17;         /* 0x17 */
@@ -54,9 +54,9 @@ typedef char dScMgCoin_Sparkle_size_must_be_0x18[sizeof(dScMgCoin_Sparkle) == 0x
 #endif
 
 /* The number that pops up over a coin that has just settled. */
-/* One of the 40 blocks that hop down the stages (Block_State1).
-   State 1 waits out delay (Block_State0), 2 has passed its own row,
-   4 has landed and scored (Block_State5). */
+/* One of the 40 blocks that hop down the stages (Block_StateHopDown).
+   State 1 waits out delay (Block_StateWaiting), 2 has passed its own row,
+   4 has landed and scored (Block_StateFallIn). */
 struct dScMgCoin_Block {
     s32 x;            /* 0x00 Fix12 */
     s32 y;            /* 0x04 */
@@ -118,7 +118,7 @@ struct dScMgCoin_Bouncer {
     u16 countdown;    /* 0x12 */
     u8 active;        /* 0x14 */
     u8 shown;         /* 0x15 */
-    u8 sprite;        /* 0x16 -- into data_ov006_02134b4c (Bag_Draw) */
+    u8 sprite;        /* 0x16 -- into sCoinBagSprites (Bag_Draw) */
     u8 state;         /* 0x17 */
     u8 bouncesLeft;   /* 0x18 */
     u8 stage;         /* 0x19 */
@@ -144,22 +144,22 @@ struct dScMgCoin_c : dScMgBase_c {
        .bss PMF tables (sCoinCoinStateTable / 021417c8 / 021417e8 /
        02141810 / 02141840), in ROM order. */
     void Bag_Draw();
-    void Bag_State3(int i);
-    void Bag_State2(int index);
-    void Bag_State1(int index);
+    void Bag_StateBounceDown(int i);
+    void Bag_StateParked(int index);
+    void Bag_StateRise(int index);
     void Bag_Release();
-    void Bag_State0();
+    void Bag_StateIdle();
     void Bag_Update();
     void Bag_Show();
     void Bag_Hide();
     void Caption_Finish();
     void Caption_Trigger();
     void Caption_Draw();
-    void Caption_State4(int index);
-    void Caption_State3(int index);
-    void Caption_State2(int index);
-    void Caption_State1(int index);
-    void Caption_State0(int index);
+    void Caption_StateLoop(int index);
+    void Caption_StateHidden(int index);
+    void Caption_StateBlink(int index);
+    void Caption_StateCountIn(int index);
+    void Caption_StateDelay(int index);
     void Caption_Update();
     void Caption_Show();
     void Caption_Reset();
@@ -175,30 +175,30 @@ struct dScMgCoin_c : dScMgBase_c {
     void DrawScoreRival();
     void Score_Update();
     void DrawCoinValues();
-    void Coin_State2();
-    void Coin_State1(int index);
-    void Coin_State0(int idx);
+    void Coin_StateSettled();
+    void Coin_StateHop(int index);
+    void Coin_StateWaitTouch(int idx);
     void Coin_UpdateAll();
     void LayOutCoins();
     void KickBlockUnderCoin(int id);
     void DrawBlocks();
-    void Block_State5(int i);
-    void Block_State4();
-    void Block_State3(int index);
-    void Block_State2(int i);
-    void Block_State1(int i);
-    void Block_State0(int i);
+    void Block_StateFallIn(int i);
+    void Block_StateResting();
+    void Block_StateDropOnCoin(int index);
+    void Block_StateWander(int i);
+    void Block_StateHopDown(int i);
+    void Block_StateWaiting(int i);
     void Block_ClampToWalls(int idx);
     void Block_UpdateAll();
     void Block_Animate(int index);
     void SpawnBlocks();
     void ResetRound();
-    void Phase_State5();
-    void Phase_State4();
-    void Phase_State3();
-    void Phase_State2();
-    void Phase_State1();
-    void Phase_State0();
+    void Phase_StateResult();
+    void Phase_StateScoreDelay();
+    void Phase_StateSettle();
+    void Phase_StatePlay();
+    void Phase_StateIntro();
+    void Phase_StateIdle();
 
     dScMgCoin_Block mBlocks[40];             /* 0x4660 */
     dScMgCoin_Coin mCoins[24];               /* 0x4ac0 */

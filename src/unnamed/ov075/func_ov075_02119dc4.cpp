@@ -43,10 +43,27 @@ extern int data_ov075_0211d930[];
 struct P2 { int a, b; };
 struct P2Copy { int words[2]; };
 
+/* The scene this runs on: dScEntry_c, whose header names 0x5c, 0x64 and
+ * 0x280 mBehaviorStep, mRenderStep and mIconCount. This file keeps the two
+ * steps as their two words. mEntObj is the dEntObj_c (actor 0x15a) the
+ * scene spawns; its byte 0xf44 is raised on the VS exit. mExitMask holds
+ * the bits cleared from data_0209d45c here; while it is non-zero the
+ * render step is reset too. */
+struct EntryScene {
+    u8 pad_00[0x50];
+    char *mEntObj; /* 0x050 */
+    u8 pad_054[8];
+    struct P2 mBehaviorStep; /* 0x05c */
+    struct P2 mRenderStep;   /* 0x064 */
+    u8 pad_06c[0x214];
+    u8 mIconCount; /* 0x280 */
+    u8 pad_281[6];
+    u8 mExitMask; /* 0x287 */
+};
+
 static inline int IsVsMode() { return data_0209fc68 == 6; }
 
-extern "C" void func_ov075_02119dc4(char *self, int arg)
-{
+extern "C" void func_ov075_02119dc4(EntryScene *self, int arg) {
     volatile struct P2 tmp;
     u8 mask;
     u8 *q;
@@ -69,10 +86,8 @@ extern "C" void func_ov075_02119dc4(char *self, int arg)
         struct P2 *p;
         int *ref;
         if ((st & 0x30) != 0 ||
-            ((p = (struct P2 *)(self + 0x5c)), (ref = data_ov075_0211d920),
-             p->a == ref[0] &&
-             (p->b == ref[1] ||
-              *(int *)(self + 0x5c) == 0))) {
+            ((p = &self->mBehaviorStep), (ref = data_ov075_0211d920),
+             p->a == ref[0] && (p->b == ref[1] || self->mBehaviorStep.a == 0))) {
             if (GetOwnerLanguage() == 3)
                 func_020338b0(0xa5, 0xb0, 0x15, -1);
             else
@@ -83,20 +98,20 @@ extern "C" void func_ov075_02119dc4(char *self, int arg)
         }
         tmp.a = data_02086b58[0];
         tmp.b = data_02086b58[1];
-        *(int *)(self + 0x5c) = data_02086b58[0];
-        *(int *)(self + 0x60) = data_02086b58[1];
-        data_0209d45c = data_0209d45c & ~*(u8 *)(self + 0x287);
-        if (*(u8 *)(self + 0x287)) {
+        self->mBehaviorStep.a = data_02086b58[0];
+        self->mBehaviorStep.b = data_02086b58[1];
+        data_0209d45c = data_0209d45c & ~self->mExitMask;
+        if (self->mExitMask) {
             int t0 = tmp.a;
             int t1 = tmp.b;
-            *(int *)(self + 0x64) = t0;
-            *(int *)(self + 0x68) = t1;
+            self->mRenderStep.a = t0;
+            self->mRenderStep.b = t1;
         }
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
         *(volatile u16 *)0x4001050 = 0;
         Sound::StopLoadedMusic_Layer1(4);
         func_02012790(0x123);
-        *(u8 *)(*(char **)(self + 0x50) + 0xf44) = 1;
+        self->mEntObj[0xf44] = 1;
     } else {
         func_ov075_02116028(data_ov075_0211d71c, 6);
         if ((func_0203d974() && data_0209fc5c == 0) ||
@@ -106,10 +121,10 @@ extern "C" void func_ov075_02119dc4(char *self, int arg)
             else
                 func_020338b0(0x125, 0xb0, 0x1a, -1);
             func_02030a78();
-            func_ov075_0211a148(self, (int)data_ov075_0211d930, 0xb4);
-            data_0209d45c = data_0209d45c & ~*(u8 *)(self + 0x287);
-            if (*(u8 *)(self + 0x287))
-                *(struct P2Copy *)(self + 0x64) = *(struct P2Copy *)data_02086b58;
+            func_ov075_0211a148((char *)self, (int)data_ov075_0211d930, 0xb4);
+            data_0209d45c = data_0209d45c & ~self->mExitMask;
+            if (self->mExitMask)
+                *(struct P2Copy *)&self->mRenderStep = *(struct P2Copy *)data_02086b58;
             G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
             func_02012790(0x12a);
         } else {
@@ -118,7 +133,7 @@ extern "C" void func_ov075_02119dc4(char *self, int arg)
                 if (st & bit) {
                     func_020338b0(0x125, 0xb0, 0x1c, (s8)(u8)i);
                     data_0209fc58 = data_0209fc58 & ~bit;
-                    func_ov075_0211a148(self, arg, 0x78);
+                    func_ov075_0211a148((char *)self, arg, 0x78);
                     func_02012790(0x12a);
                     break;
                 }
@@ -126,5 +141,5 @@ extern "C" void func_ov075_02119dc4(char *self, int arg)
         }
     }
     data_0209d454 = data_0209d454 | 5;
-    *(u8 *)(self + 0x280) = 0;
+    self->mIconCount = 0;
 }

@@ -11,16 +11,14 @@
  * this in turn. Overrides every slot except BeforeClsn (slot 9) and
  * GetSurfaceInfo (slot 3), both of which it inherits unchanged.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
- * include/ModelBase.h for the key-function rule and the objisolate exemption
- * to it. D0 and D2 stay C files.
+ * THE DESTRUCTOR IS DECLARED FIRST -- see include/ModelBase.h for the
+ * key-function rule. src/engine/collision/d_bg_w_kc_mbg.cpp defines it once
+ * and the TU keeps all five structor variants.
  *
- * SetFile and Transform keep extern-C free definitions for now: their
- * bodies are dominated by flat 12-word Matrix4x3 copies (the
- * Model::Virtual10 lesson) and belong to a later pass with a shared
- * flat-copy helper. Their declarations here are the real signatures
- * (SetFile's carries Fix12<int>, wall 6az, so its definition could not
- * be a method yet anyway).
+ * SetFile keeps an extern-C free definition: its mangled name carries
+ * Fix12<int> by value (wall 6az). Its declaration here is the real
+ * signature. SetFile and Transform copy matrices through a flat 12-word
+ * view (the Model::Virtual10 lesson).
  */
 
 #ifdef __cplusplus
@@ -39,7 +37,11 @@ struct dBgW_KcMbg : dBgW_Kc {
     s16 angVelY;               /* 0x116 */
     Vector3 pos;               /* 0x118 */
     Vector3 velocity;          /* 0x124 */
-    u32 unk_130;              /* 0x130 */
+    /* Set by func_020398fc. While set, Transform points dBgW_Kc's
+       face filter (unk_34/unk_35/unk_38/unk_44) along the collider's
+       horizontal velocity every frame. SetFile clears it. */
+    bool filterByMoveDir; /* 0x130 */
+    u8 pad_131[3];
     Matrix4x3 newScaledMat;    /* 0x134 */
     s32 invScale;               /* 0x164 - func_02053200(scale) */
     Matrix4x3 invScaledMat;    /* 0x168 */
@@ -52,9 +54,9 @@ struct dBgW_KcMbg : dBgW_Kc {
        0x01ffd920, the same one dBgW_Kc holds, so it is inherited. */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res); /* slot 5 */
-    virtual int DetectClsn(dBgCh_Gnd &ray);           /* slot 6 - free def */
-    virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - free def */
-    virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - free def */
+    virtual int DetectClsn(dBgCh_Gnd &ray);                  /* slot 6 */
+    virtual int DetectClsn(dBgCh_Lin &ray);                  /* slot 7 */
+    virtual int DetectClsn(dBgCh_SphCrr &sphere);            /* slot 8 */
     virtual int TransformPos(const Vector3 &pos, Vector3 &res); /* slot 10 */
     virtual s16 GetAngularVelY();                         /* slot 11 */
     virtual void GetVelocity(Vector3 &res);               /* slot 12 */
@@ -67,7 +69,7 @@ struct dBgW_KcMbg : dBgW_Kc {
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12<int> scale,
                  s16 angY, CLPS_Block &clps);             /* free def, wall 6az */
-    void Transform(const Matrix4x3 &mat, s16 angY);       /* free def for now */
+    void Transform(const Matrix4x3 &mat, s16 angY);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
@@ -115,7 +117,8 @@ struct dBgW_KcMbg {
     s16 angVelY;               /* 0x116 */
     Vector3 pos;               /* 0x118 */
     Vector3 velocity;          /* 0x124 */
-    u32 unk_130;               /* 0x130 */
+    u8 filterByMoveDir;        /* 0x130 */
+    u8 pad_131[3];
     Matrix4x3 newScaledMat;    /* 0x134 */
     s32 invScale;               /* 0x164 */
     Matrix4x3 invScaledMat;    /* 0x168 */

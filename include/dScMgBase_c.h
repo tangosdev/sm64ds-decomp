@@ -144,13 +144,13 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        reconstructed as void: the base does nothing, Cup and Sound forward
        to a void component helper, and 3DEsp and Teresa call the void
        FreeGfxSlotsById function. The recorded caller in
-       State17_Update discards the result. These bodies reproduce under
+       ResultsNewRecord_Update discards the result. These bodies reproduce under
        the coherent void declarations with 2004/b56; this does not recover
        the original return-type spelling. The separate dActor_c slot 20
        remains int. See issue #2492 for caller coverage and proof limits. */
     virtual void OnNewRecord();                          /* slot 20 */
     /* Slot 21 -- OnDealDone, a low-confidence name. Its one caller is
-       Dealer_StateDeal in unit020bfec0.cpp, the presenter model's
+       Dealer_StateShuffle in unit020bfec0.cpp, the presenter model's
        reaction animation, which calls it on the last repeat of that
        animation. The base is empty; BSC/Card branch on mHudScore, and the two Memory
        overrides forward a component of this scene. These bodies alone do
@@ -159,7 +159,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        Prior int/void experiments and separate slot-27/28 observations are
        retained in the original source history cited by issue #2492's handoff. */
     virtual void OnDealDone();                    /* slot 21 */
-/* Slot 22 -- OnGraphCallback1: graphCallback_c::GraphCallback1 forwards
+    /* Slot 22 -- OnGraphCallback1: graphCallback_c::GraphCallback1 forwards
    to it (slot 23 is GraphCallback0's, 24 GraphCallback2's, 25
    GraphCallback3's). When each runs, from the arm9 callers (the scene is
    the object at data_0209d4a8):
@@ -815,7 +815,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     virtual void PaintSquare(int cx, int cy, int colour, int size); /* slot 34 */
     /* Slot 35 -- IsAltVariant, the LAST slot of dScMgBase_c's own eighteen and the
        end of the 18-35 range.  With this declared the class emits its full
-       36-slot vtable from source, and dScMgAmida_c's Unk36 finally lands on 36
+       36-slot vtable from source, and dScMgAmida_c's IsVariant2 finally lands on 36
        where the ROM puts it.
        WHAT IT IS: a predicate on the scene's own spawn parameter.  The base
          body (ov004:0x020ad660, twenty bytes) is `return (param1 & 0xff) != 0`

@@ -1,9 +1,6 @@
 {
   "known": {
     "ARMMathLoadState": {
-      "src/unnamed/arm9/01ff/func_01ffd9d4.c": [
-        "arity:0"
-      ],
       "src/unnamed/ov007/func_ov007_020b6eb4.c": [
         "param:#1 ARMMathState *"
       ]
@@ -11,14 +8,6 @@
     "ARMMathSaveState": {
       "src/ARMSaveContext.c": [
         "arity:0"
-      ],
-      "src/unnamed/arm9/01ff/func_01ffd9d4.c": [
-        "arity:0"
-      ]
-    },
-    "ARMProcessorMode": {
-      "src/unnamed/arm9/0205/func_02057f54.c": [
-        "return:int"
       ]
     },
     "AddVec3": {
@@ -914,11 +903,6 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0206/func_020610fc.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int"
-      ],
       "src/unnamed/arm9/0206/func_0206a318.c": [
         "param:#1 int",
         "param:#2 void *",
@@ -929,7 +913,7 @@
       ]
     },
     "InvMat4x3": {
-      "src/_Z13CopyToViewMatPK9Matrix4x3.cpp": [
+      "src/engine/view/Graphics3D.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
         "return:void"
@@ -950,11 +934,6 @@
       "src/game/actors/d_a_snm_bth.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 const Matrix4x3 *",
-        "return:void"
-      ],
-      "src/unnamed/arm9/0200/func_0200f4f4.c": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
         "return:void"
       ],
       "src/unnamed/arm9/0204/func_02044efc.c": [
@@ -1821,10 +1800,6 @@
       "src/minigames/d_s_mg_snowball.cpp": [
         "param:#1 int"
       ],
-      "src/unnamed/arm9/0201/func_0201cd08.cpp": [
-        "param:#1 int",
-        "param:#2 int"
-      ],
       "src/unnamed/arm9/0204/func_02049c48.c": [
         "param:#3 unsigned int"
       ],
@@ -1854,9 +1829,6 @@
       "src/unnamed/arm9/0201/func_02017fd0.c": [
         "param:#1 unsigned int",
         "param:#3 unsigned int"
-      ],
-      "src/unnamed/arm9/0201/func_0201cd08.cpp": [
-        "param:#2 int"
       ]
     },
     "NoOpDestructor": {
@@ -6503,9 +6475,6 @@
       "src/minigames/d_s_mg_slots.cpp": [
         "return:char *"
       ],
-      "src/unnamed/arm9/0201/func_0201cd08.cpp": [
-        "return:int"
-      ],
       "src/unnamed/arm9/0203/func_02033bb8.c": [
         "return:int"
       ],
@@ -6611,9 +6580,6 @@
       ],
       "src/minigames/d_s_mg_slots.cpp": [
         "return:char *"
-      ],
-      "src/unnamed/arm9/0201/func_0201cd08.cpp": [
-        "return:int"
       ],
       "src/unnamed/arm9/0203/func_020316d8.c": [
         "return:void *"
@@ -6759,9 +6725,6 @@
       "include/decl_common.h": [
         "param:#5 int"
       ],
-      "src/Initialise3dGraphics.cpp": [
-        "param:#5 int"
-      ],
       "src/unnamed/ov007/func_ov007_020b6c54.c": [
         "param:#5 int"
       ],
@@ -6839,9 +6802,6 @@
       "src/unnamed/arm9/0204/func_0204175c.c": [
         "return:void"
       ],
-      "src/unnamed/arm9/0205/func_02056e4c.c": [
-        "return:void"
-      ],
       "src/unnamed/arm9/0205/func_02059788.c": [
         "return:void"
       ],
@@ -6851,13 +6811,7 @@
       "src/unnamed/arm9/0205/func_0205a358.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0205/func_0205bad8.c": [
-        "return:void"
-      ],
       "src/unnamed/arm9/0206/func_02060b64.c": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0206/func_02061138.c": [
         "return:void"
       ]
     },
@@ -6913,13 +6867,7 @@
       "src/unnamed/arm9/0205/func_0205a358.cpp": [
         "param:#2 void (*)(void)"
       ],
-      "src/unnamed/arm9/0205/func_0205bad8.c": [
-        "param:#2 void (*)(void)"
-      ],
       "src/unnamed/arm9/0206/func_02060b64.c": [
-        "param:#2 void (*)(void)"
-      ],
-      "src/unnamed/arm9/0206/func_02061138.c": [
         "param:#2 void (*)(void)"
       ],
       "src/IRQ2.cpp": [
@@ -7011,12 +6959,6 @@
       "src/DMAStartTransferFB.c": [
         "return:void"
       ],
-      "src/IPCSend.c": [
-        "return:void"
-      ],
-      "src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp": [
-        "return:void"
-      ],
       "src/unnamed/arm9/0201/func_0201a96c.c": [
         "return:void"
       ],
@@ -7106,12 +7048,6 @@
         "param:#1 int",
         "return:void"
       ],
-      "src/unnamed/arm9/0205/func_0205ba64.c": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0205/func_0205bad8.c": [
-        "return:void"
-      ],
       "src/unnamed/arm9/0205/func_0205c528.cpp": [
         "return:void"
       ],
@@ -7174,9 +7110,6 @@
       ],
       "src/unnamed/arm9/0206/func_02060b64.c": [
         "param:#1 int",
-        "return:void"
-      ],
-      "src/unnamed/arm9/0206/func_02061138.c": [
         "return:void"
       ],
       "src/unnamed/arm9/0206/func_02061c88.c": [
@@ -7386,16 +7319,6 @@
         "return:int"
       ]
     },
-    "_ZN4CP1510DisableMPUEv": {
-      "src/unnamed/arm9/0205/func_0205950c.c": [
-        "return:void"
-      ]
-    },
-    "_ZN4CP1510EnableDTCMEv": {
-      "src/engine/model/Model4.cpp": [
-        "return:void"
-      ]
-    },
     "_ZN4CP1527FlushAndInvalidateDataCacheEjj": {
       "src/minigames/d_s_mg_base.cpp": [
         "param:#1 void *"
@@ -7409,11 +7332,6 @@
       ],
       "src/unnamed/arm9/0204/func_020499bc.c": [
         "param:#1 void *"
-      ]
-    },
-    "_ZN4CP159EnableMPUEv": {
-      "src/unnamed/arm9/0205/func_0205950c.c": [
-        "return:void"
       ]
     },
     "_ZN5mHeap6Heap_t10ReallocateEPvj": {
@@ -8514,7 +8432,7 @@
         "param:#4 int"
       ]
     },
-    "_ZN6Player29TryExitCharacterDoorWithIntroEv": {
+    "Trmp2Mario_Construct": {
       "src/minigames/d_s_mg_trampoline2.cpp": [
         "arity:0",
         "return:void"
@@ -13490,20 +13408,12 @@
         "return:unsigned short []"
       ]
     },
-    "data_020a60c4": {
-      "src/_ZN3IRQ13DmaTimHandlerEj.cpp": [
-        "return:DmaEnt []"
-      ]
-    },
     "data_020a612c": {
       "src/unnamed/arm9/0205/func_02058308.c": [
         "return:void *"
       ]
     },
     "data_020a6134": {
-      "src/unnamed/arm9/01ff/func_01ffd9d4.c": [
-        "return:char"
-      ],
       "src/unnamed/arm9/0205/func_02057e48.c": [
         "return:IRQState"
       ],
@@ -13633,14 +13543,6 @@
     "data_020a7fc0": {
       "src/unnamed/arm9/0205/func_0205b358.c": [
         "return:void *"
-      ]
-    },
-    "data_020a7fc8": {
-      "src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp": [
-        "return:void (*[])(unsigned int, unsigned int, unsigned int)"
-      ],
-      "src/unnamed/arm9/0205/func_0205bad8.c": [
-        "return:unsigned int []"
       ]
     },
     "data_020a8048": {
@@ -13883,9 +13785,6 @@
       ]
     },
     "data_023c0000": {
-      "src/_ZN3IRQ13DmaTimHandlerEj.cpp": [
-        "return:unsigned int []"
-      ],
       "src/_ZN3IRQ13VBlankHandlerEv.cpp": [
         "return:char []"
       ],
@@ -15284,22 +15183,22 @@
         "return:unsigned short"
       ]
     },
-    "data_ov004_020bfe74": {
+    "sPsOptIconPosA": {
       "src/unnamed/ov004/__sinit_ov004_020b9b24.c": [
         "return:int"
       ]
     },
-    "data_ov004_020bfe88": {
+    "sPsOptIconPosB": {
       "src/unnamed/ov004/__sinit_ov004_020b9b24.c": [
         "return:int"
       ]
     },
-    "data_ov004_020bfe9c": {
+    "sPsOptStylePos": {
       "src/unnamed/ov004/__sinit_ov004_020b9b24.c": [
         "return:int"
       ]
     },
-    "data_ov006_02137560": {
+    "sHanaBackgroundParts": {
       "src/unnamed/ov006/__sinit_ov006_02130df8.c": [
         "return:int []"
       ]
@@ -15309,57 +15208,57 @@
         "return:char []"
       ]
     },
-    "data_ov006_0213ae00": {
+    "sPresenterLoseLoopTexAnim": {
       "src/minigames/unit020bfec0.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_0213ae18": {
+    "sPresenterSmileTexAnim": {
       "src/minigames/unit020bfec0.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_0213ae30": {
+    "sPresenterLoseTexAnim": {
       "src/minigames/unit020bfec0.cpp": [
         "return:void *"
       ]
     },
-    "data_ov006_0213ae48": {
+    "sPresenterIdleTexAnim": {
       "src/minigames/unit020bfec0.cpp": [
         "return:void *"
       ]
     },
-    "data_ov006_0213ae60": {
+    "sPresenterMissTexAnim": {
       "src/minigames/unit020bfec0.cpp": [
         "return:int []"
       ]
     },
-    "data_ov006_0213ae90": {
-      "src/minigames/unit020bfec0.cpp": [
-        "return:int"
-      ]
-    },
-    "data_ov006_0213aea8": {
+    "sPresenterCheerTexAnim": {
       "src/minigames/unit020bfec0.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_0213b0ec": {
+    "sPresenterMatchTexAnim": {
+      "src/minigames/unit020bfec0.cpp": [
+        "return:int"
+      ]
+    },
+    "sTrmp3DLives": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int []"
       ]
     },
-    "data_ov006_0213b0f0": {
+    "sTrmp2Lives": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int []"
       ]
     },
-    "data_ov006_0213b2c4": {
+    "sTrmp3DMarioOps": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int []"
       ]
     },
-    "data_ov006_0213b2e0": {
+    "sTrmp2MarioOps": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int []"
       ]
@@ -15379,7 +15278,7 @@
         "return:int []"
       ]
     },
-    "data_ov006_02140304": {
+    "sHeyhoUnsettledCount": {
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "return:int []"
       ]
@@ -15412,17 +15311,17 @@
         "return:struct Obj * []"
       ]
     },
-    "data_ov006_02140438": {
+    "sJump3DMarioWallJumpAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f52c.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140440": {
+    "sJump3DMarioSdownAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f52c.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140448": {
+    "sJump3DMarioStruggleAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f52c.c": [
         "return:int []"
       ]
@@ -15432,22 +15331,22 @@
         "return:int []"
       ]
     },
-    "data_ov006_02140458": {
+    "sJump3DMarioRollJumpAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f52c.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140460": {
+    "sJump3DMarioJumpAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f52c.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140468": {
+    "sJump3DMarioDoubleJump1AnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f52c.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140540": {
+    "sTrmpAnimStruggle": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int",
         "return:int []"
@@ -15466,7 +15365,7 @@
         "return:int"
       ]
     },
-    "data_ov006_0214054c": {
+    "sTrmpAnimRollJumpEnd": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
@@ -15483,43 +15382,43 @@
         "return:int"
       ]
     },
-    "data_ov006_0214055c": {
+    "sTrmpMariosOnLedges": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int []"
       ]
     },
-    "data_ov006_02140560": {
+    "sTrmpAnimDoubleJump1": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_02140564": {
+    "sTrmpAnimWalk": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int",
         "return:int []"
       ]
     },
-    "data_ov006_02140568": {
+    "sTrmpAnimTurnEnd": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_0214056c": {
+    "sTrmpAnimTurn": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_0214057c": {
+    "sTrmpAnimJumpEnd": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_02140580": {
+    "sTrmpAnimWallJump": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_02140590": {
+    "sTrmpAnimJump": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
@@ -15538,7 +15437,7 @@
         "return:void *"
       ]
     },
-    "data_ov006_021405a0": {
+    "sTrmpAnimDoubleJump2": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
@@ -15556,95 +15455,95 @@
         "return:int []"
       ]
     },
-    "data_ov006_021405c0": {
+    "sTrmpAnimHangUp": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int *",
         "return:void *"
       ]
     },
-    "data_ov006_021405c4": {
+    "sTrmpAnimSdown": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]
     },
-    "data_ov006_021405c8": {
+    "sTrmpRowHeights": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int",
         "return:void *",
         "return:void * []"
       ]
     },
-    "data_ov006_021405d0": {
+    "sTrmpMarioDoubleJump1AnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_021405d8": {
+    "sTrmpMarioRollJumpAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_021405e0": {
+    "sTrmpMarioTurnAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_021405e8": {
+    "sTrmpMarioDoubleJump2AnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_021405f0": {
+    "sTrmpMarioWalkAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_021405f8": {
+    "sTrmpMarioModelFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140600": {
+    "sTrmpMarioJumpEndAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140608": {
+    "sTrmpMarioJumpAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140610": {
+    "sTrmpMarioTurnEndAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140618": {
+    "sTrmpMarioHangUpAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140620": {
+    "sTrmpMarioStruggleAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140628": {
+    "sTrmpMarioWallJumpAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140630": {
+    "sTrmpMarioSdownAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140638": {
+    "sTrmpMarioRollJumpEndAnimFile": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:int []"
       ]
     },
-    "data_ov006_02140778": {
+    "sTrmpGoalSlots": {
       "src/unnamed/ov006/__sinit_ov006_0212f6b4.c": [
         "return:V3"
       ]
@@ -15660,17 +15559,17 @@
         "return:int []"
       ]
     },
-    "data_ov006_02140848": {
+    "sTrmpItemRingCModelFile": {
       "src/minigames/unit020cd744.cpp": [
         "return:data_t"
       ]
     },
-    "sTrmpItemModelFile": {
+    "sTrmpItemRingAModelFile": {
       "src/minigames/unit020cd744.cpp": [
         "return:data_t"
       ]
     },
-    "data_ov006_02140858": {
+    "sTrmpItemRingBModelFile": {
       "src/minigames/unit020cd744.cpp": [
         "return:data_t"
       ]
@@ -15730,12 +15629,12 @@
         "return:char *"
       ]
     },
-    "data_ov006_02142018": {
+    "sWigglerSprites": {
       "src/unnamed/ov006/__sinit_ov006_02130df8.c": [
         "return:int []"
       ]
     },
-    "data_ov006_021421c4": {
+    "sJump2Back02ModelFile": {
       "src/unnamed/ov006/__sinit_ov006_02130f00.c": [
         "return:int []"
       ]
@@ -15760,7 +15659,7 @@
         "return:Ent []"
       ]
     },
-    "data_ov006_0214236c": {
+    "sMemoryCardSprites": {
       "src/unnamed/ov006/__sinit_ov006_021311c8.c": [
         "return:int []"
       ]
@@ -15785,7 +15684,7 @@
         "return:Dst10_2142440"
       ]
     },
-    "data_ov006_02142490": {
+    "sMemory2CardSprites": {
       "src/unnamed/ov006/__sinit_ov006_021314e4.c": [
         "return:int []"
       ]
@@ -15860,7 +15759,7 @@
         "return:Ent []"
       ]
     },
-    "data_ov006_02142f80": {
+    "sTrmp2StarModelFile": {
       "src/unnamed/ov006/__sinit_ov006_0213322c.c": [
         "return:int []"
       ]
@@ -23611,7 +23510,7 @@
       ]
     },
     "func_02045e2c": {
-      "src/unnamed/arm9/0201/func_020162a4.c": [
+      "src/engine/model/ModelAnim2.cpp": [
         "param:#4 int"
       ]
     },
@@ -25314,11 +25213,6 @@
     "func_02060f60": {
       "src/unnamed/arm9/0206/func_020607e8.c": [
         "return:void"
-      ]
-    },
-    "func_020610fc": {
-      "src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp": [
-        "return:int"
       ]
     },
     "func_02061128": {
@@ -27156,12 +27050,12 @@
         "param:#3 void *"
       ]
     },
-    "Dealer_StartCollect": {
+    "Dealer_StartDeal": {
       "src/minigames/d_s_mg_card.cpp": [
         "param:#3 void *"
       ]
     },
-    "Dealer_StartDeal": {
+    "Dealer_StartShuffle": {
       "src/minigames/d_s_mg_m_carlo2.cpp": [
         "param:#4 void *"
       ]
@@ -27243,32 +27137,32 @@
         "param:#1 struct Obj *"
       ]
     },
-    "Heyho_StartMotion11": {
+    "Heyho_StartMotionHitSpin": {
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "param:#1 Self *"
       ]
     },
-    "Heyho_StartMotion6": {
+    "Heyho_StartMotionDiagonalMirror": {
       "include/decl_common.h": [
         "param:#1 char *"
       ]
     },
-    "Heyho_StartMotion4": {
+    "Heyho_StartMotionDiagonal": {
       "include/decl_common.h": [
         "param:#1 char *"
       ]
     },
-    "Heyho_StartMotion7": {
+    "Heyho_StartMotionBounceInRange": {
       "include/decl_common.h": [
         "param:#1 char *"
       ]
     },
-    "Heyho_StartMotion10": {
+    "Heyho_StartMotionBobVertical": {
       "include/decl_common.h": [
         "param:#1 char *"
       ]
     },
-    "Heyho_StartMotion14": {
+    "Heyho_StartMotionPatrolBob": {
       "include/decl_common.h": [
         "param:#1 char *"
       ]
@@ -27290,7 +27184,7 @@
         "return:void *"
       ]
     },
-    "Trmp2Mario_EnterState1": {
+    "Trmp2Mario_EnterBounce": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "arity:2"
       ]
@@ -27325,12 +27219,12 @@
         "param:#1 void *"
       ]
     },
-    "Trmp3DMario_PickIdleAnim": {
+    "Trmp3DMario_JumpOff": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "param:#1 int *"
       ]
     },
-    "Trmp3DMario_EnterState12": {
+    "Trmp3DMario_EnterOffstage": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
       ]

@@ -46,6 +46,7 @@
 #include "dClipper.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "SpawnInfo.h"
 
 struct BMD_File;
 struct BTP_File;
@@ -1128,14 +1129,12 @@ EntObjAnimationFileHandle data_ov075_0211d41c(0x8078);
 EntObjTextureSequenceFileHandle data_ov075_0211d40c(0x804f);
 EntObjTextureSequenceFileHandle data_ov075_0211d3dc(0x804e);
 
-/* Registry profile payload for the entry-stage object. */
-struct EntObjSpawnInfo {
-    dEntObj_c *(*classInit)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-};
-extern "C" EntObjSpawnInfo g_profile_ENTRY_OBJECT = {
-    dEntObj_c_classInit, 0x015a, 0x015a
+/* The entry-stage object's base profile: the factory, then the same priority
+   in both halfwords. */
+extern "C" BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
+    dEntObj_c_classInit,
+    0x015a,
+    0x015a,
 };
 
 /* The two per-figure dispatch tables: ten movement handlers for mMoveState,

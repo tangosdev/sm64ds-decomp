@@ -3,10 +3,7 @@ extern int func_0205dc60(void *t);
 
 int func_0205dc0c(int a, int b) {
     char buf[0x24];
-    if (func_0205df40(buf, a, b)) {
-        if (func_0205dc60(buf)) goto ret1;
-    }
-    return 0;
-ret1:
+    if (!func_0205df40(buf, a, b) || !func_0205dc60(buf))
+        return 0;
     return 1;
 }

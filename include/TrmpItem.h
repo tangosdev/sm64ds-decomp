@@ -3,7 +3,8 @@
 
 #include "types.h"
 
-/* TrmpItem, one of Trampoline2's floating items: the 0x1d0-byte record the
+/* TrmpItem, one of Trampoline2's floating rings (its three models are
+ * ASSET_RINGA/B/C_BMD, sTrmpItemRing*ModelFile): the 0x1d0-byte record the
  * TrmpItem_* helpers in src/minigames/unit020cd744.cpp spawn, move and draw
  * (the scene builds ten). The name is coined. A layout view only: the helpers
  * are free functions over a char* record and read it through their TRMPITEM()
@@ -30,7 +31,7 @@ struct TrmpItem {
     u16 mPhase;           /* 0x09a -- the sway and hover motions' phase */
     u8 mAlpha;            /* 0x09c -- opacity, applied in TrmpItem_UpdateMatrix */
     u8 pad_09d[0x3];      /* 0x09d */
-    u8 mModels[3][0x50];  /* 0x0a0 -- three Models, one per variant */
+    u8 mModels[3][0x50];  /* 0x0a0 -- three Models: rings A, B and C */
     void *mModel;         /* 0x190 -- the variant drawn */
     u8 mTexAnim[0x14];    /* 0x194 -- a TextureTransformer */
     u8 pad_1a8[0x28];     /* 0x1a8 */

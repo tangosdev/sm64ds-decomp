@@ -35,11 +35,11 @@
  *
  * THE NINE-BYTE CELL ARRAY STRADDLES THE BASE BOUNDARY, and that is the one
  * thing about this class C++ cannot say. It runs 0x31..0x39; the base ends at
- * 0x34, so its first THREE elements are the base's unk_031/unk_032/unk_033
+ * 0x34, so its first THREE elements are the base's mTriggered/unk_032/unk_033
  * and only the last six are ours. A member cannot begin inside the base, and
  * widening the base to swallow it would change cMgSmartball_object_c's size
  * for its other ten children. So only the tail is declared (mCellsTail[6]) and
- * the array is indexed as `(&unk_031)[i]` -- pointer arithmetic off the
+ * the array is indexed as `(&mTriggered)[i]` -- pointer arithmetic off the
  * base's first cell byte, walking through unk_032/unk_033 and into
  * mCellsTail[6]. That spelling is not a stylistic pick: it is the only one of
  * six measured that reproduces. `((u8 *)this)[0x31 + i]` compiles a
@@ -77,10 +77,10 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
     void ClaimCell(int idx);
     static void ShuffleCells();
 
-    u8  mCellsTail[6]; /* 0x034-0x039 -- the TAIL of a 9-element per-cell CLAIMED
+    u8 mCellsTail[6]; /* 0x034-0x039 -- the TAIL of a 9-element per-cell CLAIMED
                         flag array that BEGINS AT 0x31, inside the base (1 = a
                         ball has flipped this cell). Never indexed through this
-                        name: the whole array is reached as (&unk_031)[i],
+                        name: the whole array is reached as (&mTriggered)[i],
                         because a member cannot straddle the base boundary.
                         Declared only so the layout below sits at the right
                         offsets. cMgSmartball_board_c::ClaimCell models the same nine bytes

@@ -2,6 +2,14 @@
   "schema": 1,
   "exceptions": [
     {
+      "path": "src/engine/view/Graphics3D.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3",
+      "count": 2,
+      "reason": "G3i::PerspectiveW_ takes six Fix12<int> by value, and include/G3i.h deliberately leaves it undeclared for that reason (the by-value Fix12 ABI wall). Initialise3dGraphics calls it once to load the default perspective; the second occurrence is the extern \"C\" declaration. Follow-up: retire it with the other Fix12-by-value walls once a Fix12 spelling that passes in registers exists.",
+      "evidence": "include/G3i.h header comment (PerspectiveW_ is NOT declared here); carried verbatim from src/Initialise3dGraphics.cpp on main, which this PR folds; arm9/Graphics3D 4/4 TEXT-VERIFIED"
+    },
+    {
       "path": "src/game/stages/d_s_star_sel_methods.cpp",
       "rule": "handspelled-member",
       "match": "_ZN2G212GetBG2ScrPtrEv",
@@ -248,6 +256,70 @@
       "count": 9,
       "reason": "OAM::Render's scaled overload takes two Fix12<int> by value, and include/OAM.h deliberately leaves the by-value Fix12 overloads out: a method with that parameter homes r0-r3 to the stack, which the ROM callers do not. Message::Update calls it eight times to draw the choice cursor and the next-page arrow; the ninth occurrence is the extern \"C\" declaration. Follow-up: retire it together with the other Fix12-by-value walls once a Fix12 spelling that passes in registers exists.",
       "evidence": "include/OAM.h header comment (by-value Fix12 overloads not declared); carried verbatim from src/_ZN7Message6UpdateEv.cpp on main (9 occurrences), which this PR folds; arm9/Message2 13/13 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2S13GetBG0CharPtrEv",
+      "count": 14,
+      "reason": "No header declares G2S's BG pointer getters; they are defined in src/engine/gx/G2.cpp as unsigned-returning members of namespace G2S, and Message.cpp's leftover note already keeps every one of its calls to them mangled for that reason. Follow-up: give G2S a header and convert all of this file's calls together.",
+      "evidence": "src/Message.cpp header leftover note (G2S BG pointer getters stay mangled); the count caps the whole file: its existing calls plus one carried verbatim from src/unnamed/arm9/0201/func_0201cd08.cpp, which this PR folds; arm9/Message 32/32 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2S12GetBG0ScrPtrEv",
+      "count": 13,
+      "reason": "No header declares G2S's BG pointer getters; they are defined in src/engine/gx/G2.cpp as unsigned-returning members of namespace G2S, and Message.cpp's leftover note already keeps every one of its calls to them mangled for that reason. Follow-up: give G2S a header and convert all of this file's calls together.",
+      "evidence": "src/Message.cpp header leftover note (G2S BG pointer getters stay mangled); the count caps the whole file: its existing calls plus one carried verbatim from src/unnamed/arm9/0201/func_0201cd08.cpp, which this PR folds; arm9/Message 32/32 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2G212GetBG1ScrPtrEv",
+      "count": 2,
+      "reason": "Inherited BG1-screen-map binding from absorbed helper 02116128; no shared G2 function header exists. Retained partial interface reconstruction, not a measured compiler wall. Follow-up: recover the shared G2 interface and prove its consumers.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+      "count": 5,
+      "reason": "Inherited OAM Render binding from absorbed helper 0211621c. The Fix12-by-value overload is intentionally absent from OAM.h because its class ABI changes calls (wall 6az). Follow-up: resolve that ABI with consumer byte proof before replacing the word arguments.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
+      "count": 4,
+      "reason": "Existing and absorbed OAM scaled Render calls retain the measured Fix12-by-value ABI bridge (OAM.h, wall 6az). Follow-up: resolve that ABI across consumers before replacing the integer arguments.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(data_0209ee90+0x1d4",
+      "count": 1,
+      "reason": "Inherited score field access in absorbed helper 0211621c; ROM loads the base score at offset 0x1d4 then adds the per-player delta. The cross-overlay global layout is not yet reconstructed. Follow-up: recover its owning arm9 type and verify all consumers before substituting a shared field.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/engine/model/ModelAnim2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c12SetAnimationEti5Fix12IiEt",
+      "count": 2,
+      "reason": "Func_020162C4 calls dExtFrameCtrl_c::SetAnimation, which takes Fix12<int> speed by value; a by-value Fix12 argument costs the caller too (wall 6az, notes/mwccarm-codegen.md, CORRECTED 2026-09-23). One occurrence is the local extern \"C\" declaration, one the call. The same bridge is already used by ModelAnim.cpp and BlendModelAnim.cpp. Follow-up: rename SetAnimation to its scalar mangling across its callers, or retire it with the other Fix12-by-value walls.",
+      "evidence": "Measured on 2004/b56 at arm9 0x020162c4 (target 0x5c): calling otherAnim.SetAnimation(..., *(Fix12<int> *)&speed, ...) through dExtFrameCtrl_c.h gives 0x70; the extern \"C\" scalar call reproduces 0x5c. arm9/ModelAnim2 4/4 TEXT-VERIFIED and LINK-VERIFIED."
+    },
+    {
+      "path": "src/engine/model/ModelAnim2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt",
+      "count": 1,
+      "reason": "Definition of ModelAnim2::Func_020162C4 under its existing Fix12<int> mangling, as an extern \"C\" function with a scalar speed (wall 6az): the body reads speed twice, and a class-typed parameter is homed per use. include/ModelAnim2.h carries the real member declaration. Follow-up: rename the symbol to its scalar mangling _ZN10ModelAnim213Func_020162C4Ejiit, which matches as a real member, once Player.cpp's four extern call sites move to the member call.",
+      "evidence": "Measured on 2004/b56 at arm9 0x020162c4 (target 0x5c): a real member with Fix12<int> speed gives 0x6c; a real member with Fix12i speed (mangles _ZN10ModelAnim213Func_020162C4Ejiit) reproduces 0x5c exactly; the extern \"C\" definition reproduces 0x5c. Carried from the absorbed one-function source."
     }
   ]
 }

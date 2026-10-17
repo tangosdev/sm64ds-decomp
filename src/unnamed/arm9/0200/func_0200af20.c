@@ -15,9 +15,26 @@ extern short Vec3_HorzAngle(struct Vector3 *v0, struct Vector3 *v1);
 /* local extern: dClipper::Func_020156DC takes a by-value Fix12<int> (the Fix12 wall), so it stays spelled out with scalar arguments. */
 extern void _ZN8dClipper13Func_020156DCEitii(void *self, int a, int b, int c, int d);
 
+/* File-local view of dCamera_c (include/dCamera_c.h is C++): the fields this
+ * helper touches. */
+typedef struct {
+    u8 pad_000[0x98];
+    /* func_020089f8 copies mTargetPlayer->mPos here every frame. */
+    struct Vector3 mTargetPos; /* 0x098 */
+    u8 pad_0a4[0x54];
+    s32 mAspect; /* 0x0f8 */
+    s32 mNear;   /* 0x0fc */
+    s32 mFar;    /* 0x100 */
+    u8 pad_104[0x44];
+    struct Vector3 *mFixedViewPos; /* 0x148 */
+    u8 pad_14c[0x8];
+    u32 mFlags; /* 0x154 */
+} CameraView;
+
 void func_0200af20(char *c, struct Vector3 *v1, struct Vector3 *v2, short *out)
 {
-    struct Vector3 *f = *(struct Vector3 **)(c + 0x148);
+    CameraView *cam = (CameraView *)c;
+    struct Vector3 *f = cam->mFixedViewPos;
     int *b;
     unsigned short ang;
     int idx;
@@ -33,7 +50,7 @@ void func_0200af20(char *c, struct Vector3 *v1, struct Vector3 *v2, short *out)
         if (g == 6) {
             b = data_02086f38;
         } else if (g == 0x15) {
-            if (*(int *)(c + 0x9c) < 0)
+            if (cam->mTargetPos.y < 0)
                 return;
             b = data_02086f48;
         }
@@ -41,16 +58,16 @@ void func_0200af20(char *c, struct Vector3 *v1, struct Vector3 *v2, short *out)
 
     z = f->z;
     y = f->y;
-    y = y + *(int *)(c + 0x9c);
+    y = y + cam->mTargetPos.y;
     v1->x = f->x;
     v1->y = y >> 1;
     v1->z = z;
-    ang = Vec3_HorzAngle(v1, (struct Vector3 *)(c + 0x98));
+    ang = Vec3_HorzAngle(v1, &cam->mTargetPos);
     idx = (ang >> 4) * 2;
 
-    v2->y = *(int *)(c + 0x9c) + 0x8f7690;
-    v2->x = *(int *)(c + 0x98) + FX_MUL(data_02082214[idx], 0x15a6f80);
-    v2->z = *(int *)(c + 0xa0) + FX_MUL(data_02082214[idx + 1], 0x15a6f80);
+    v2->y = cam->mTargetPos.y + 0x8f7690;
+    v2->x = cam->mTargetPos.x + FX_MUL(data_02082214[idx], 0x15a6f80);
+    v2->z = cam->mTargetPos.z + FX_MUL(data_02082214[idx + 1], 0x15a6f80);
 
     if (b != 0) {
         {
@@ -78,6 +95,6 @@ void func_0200af20(char *c, struct Vector3 *v1, struct Vector3 *v2, short *out)
     }
 
     *out = 0xe38;
-    _ZN8dClipper13Func_020156DCEitii(data_0209f43c, *(int *)(c + 0xf8), *out, *(int *)(c + 0xfc), *(int *)(c + 0x100));
-    *(int *)(int)(c + 0x154) &= ~1;
+    _ZN8dClipper13Func_020156DCEitii(data_0209f43c, cam->mAspect, *out, cam->mNear, cam->mFar);
+    cam->mFlags &= ~1;
 }

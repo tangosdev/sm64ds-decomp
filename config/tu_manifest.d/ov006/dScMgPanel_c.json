@@ -114,21 +114,21 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Shake_State2Ei",
+      "symbol": "_ZN12dScMgPanel_c18Shake_StateLoseTryEi",
       "address": "0x02104920",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_02104920.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Shake_State1Ei",
+      "symbol": "_ZN12dScMgPanel_c16Shake_StateShakeEi",
       "address": "0x02104a10",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_02104a10.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Shake_State0Ei",
+      "symbol": "_ZN12dScMgPanel_c15Shake_StateIdleEi",
       "address": "0x02104ac0",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_02104ac0.c",
@@ -163,21 +163,21 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN12dScMgPanel_c13Banner_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c16Banner_StateIdleEv",
       "address": "0x02104bac",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_02104bac.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN12dScMgPanel_c13Banner_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c18Banner_StateSettleEv",
       "address": "0x02104bb0",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_02104bb0.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12dScMgPanel_c13Banner_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c17Banner_StatePopUpEv",
       "address": "0x02104c08",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_02104c08.c",
@@ -240,35 +240,35 @@
       "ordinal": 27
     },
     {
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State4Ev",
+      "symbol": "_ZN12dScMgPanel_c19IntroCard_StateDoneEv",
       "address": "0x02104ec8",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_02104ec8.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State3Ev",
+      "symbol": "_ZN12dScMgPanel_c23IntroCard_StateSlideOutEv",
       "address": "0x02104ecc",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_02104ecc.cpp",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c19IntroCard_StateHoldEv",
       "address": "0x02104fb4",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_02104fb4.c",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c22IntroCard_StateSlideInEv",
       "address": "0x0210500c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_0210500c.c",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c20IntroCard_StateStartEv",
       "address": "0x0210508c",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_0210508c.c",
@@ -296,35 +296,35 @@
       "ordinal": 35
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Input_State3Ev",
+      "symbol": "_ZN12dScMgPanel_c24Answer_StateFlipSolutionEv",
       "address": "0x021051dc",
       "size": "0x000001cc",
       "legacy_source": "src/func_ov006_021051dc.c",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Input_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c24Answer_StateFindSolutionEv",
       "address": "0x021053a8",
       "size": "0x000002c8",
       "legacy_source": "src/func_ov006_021053a8.cpp",
       "ordinal": 37
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Input_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c22Answer_StateResetBoardEv",
       "address": "0x02105670",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_02105670.c",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Input_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c22Answer_StateWaitButtonEv",
       "address": "0x02105730",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_02105730.c",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Input_UpdateEv",
+      "symbol": "_ZN12dScMgPanel_c13Answer_UpdateEv",
       "address": "0x021057f0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_021057f0.cpp",
@@ -429,84 +429,84 @@
       "ordinal": 54
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Panel_State3Ei",
+      "symbol": "_ZN12dScMgPanel_c15Panel_StateFallEi",
       "address": "0x02106910",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov006_02106910.c",
       "ordinal": 55
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Panel_State2Ei",
+      "symbol": "_ZN12dScMgPanel_c16Panel_StateBlinkEi",
       "address": "0x02106a08",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_02106a08.c",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Panel_State1Ei",
+      "symbol": "_ZN12dScMgPanel_c15Panel_StateFlipEi",
       "address": "0x02106aa8",
       "size": "0x00000104",
       "legacy_source": "src/func_ov006_02106aa8.c",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Panel_State0Ei",
+      "symbol": "_ZN12dScMgPanel_c15Panel_StateIdleEi",
       "address": "0x02106bac",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_02106bac.c",
       "ordinal": 58
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State7Ev",
+      "symbol": "_ZN12dScMgPanel_c19Scene_StateGameOverEv",
       "address": "0x02106bc0",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_02106bc0.c",
       "ordinal": 59
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State6Ev",
+      "symbol": "_ZN12dScMgPanel_c17Scene_StateResultEv",
       "address": "0x02106ca4",
       "size": "0x00000214",
       "legacy_source": "src/func_ov006_02106ca4.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State5Ev",
+      "symbol": "_ZN12dScMgPanel_c21Scene_StateShowAnswerEv",
       "address": "0x02106eb8",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_02106eb8.cpp",
       "ordinal": 61
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State4Ev",
+      "symbol": "_ZN12dScMgPanel_c17Scene_StateRewindEv",
       "address": "0x02106f44",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_02106f44.cpp",
       "ordinal": 62
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State3Ev",
+      "symbol": "_ZN12dScMgPanel_c21Scene_StateShowMissesEv",
       "address": "0x02106fdc",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_02106fdc.cpp",
       "ordinal": 63
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c15Scene_StatePlayEv",
       "address": "0x0210709c",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_0210709c.cpp",
       "ordinal": 64
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c16Scene_StateIntroEv",
       "address": "0x0210713c",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_0210713c.cpp",
       "ordinal": 65
     },
     {
-      "symbol": "_ZN12dScMgPanel_c12Scene_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c15Scene_StateInitEv",
       "address": "0x021071d4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_021071d4.c",
@@ -554,21 +554,21 @@
       "address": "0x0213dc4c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State1Ev, 0}, copied into sPanelSceneStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c16Scene_StateIntroEv, 0}, copied into sPanelSceneStateTable"
     },
     {
       "symbol": "@2240",
       "address": "0x0213dc54",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State3Ev, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2226, which arm9 already defines, so the manifest renames it to @8802"
+      "evidence": "PMF record {_ZN12dScMgPanel_c21Scene_StateShowMissesEv, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2226, which arm9 already defines, so the manifest renames it to @8802"
     },
     {
       "symbol": "@2238",
       "address": "0x0213dc5c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State2Ev, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2224, which arm9 already defines, so the manifest renames it to @8801"
+      "evidence": "PMF record {_ZN12dScMgPanel_c15Scene_StatePlayEv, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2224, which arm9 already defines, so the manifest renames it to @8801"
     },
     {
       "symbol": "g_profile_MG_PANEL",
@@ -582,35 +582,35 @@
       "address": "0x0213dc6c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State5Ev, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2230, which arm9 already defines, so the manifest renames it to @8804"
+      "evidence": "PMF record {_ZN12dScMgPanel_c21Scene_StateShowAnswerEv, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2230, which arm9 already defines, so the manifest renames it to @8804"
     },
     {
       "symbol": "@2242",
       "address": "0x0213dc74",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State4Ev, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2228, which arm9 already defines, so the manifest renames it to @8803"
+      "evidence": "PMF record {_ZN12dScMgPanel_c17Scene_StateRewindEv, 0}, copied into sPanelSceneStateTable; mwcc numbers it @2228, which arm9 already defines, so the manifest renames it to @8803"
     },
     {
       "symbol": "@8814",
       "address": "0x0213dc7c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c16IntroCard_State2Ev, 0}, copied into sPanelIntroCardStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c19IntroCard_StateHoldEv, 0}, copied into sPanelIntroCardStateTable"
     },
     {
       "symbol": "@2246",
       "address": "0x0213dc84",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State6Ev, 0}, copied into sPanelSceneStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c17Scene_StateResultEv, 0}, copied into sPanelSceneStateTable"
     },
     {
       "symbol": "@2276",
       "address": "0x0213dc8c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c13Banner_State0Ev, 0}, copied into sPanelBannerStateTable; mwcc numbers it @2262, which arm9 already defines, so the manifest renames it to @8805"
+      "evidence": "PMF record {_ZN12dScMgPanel_c17Banner_StatePopUpEv, 0}, copied into sPanelBannerStateTable; mwcc numbers it @2262, which arm9 already defines, so the manifest renames it to @8805"
     },
     {
       "symbol": "data_ov006_0213dc94",
@@ -624,133 +624,133 @@
       "address": "0x0213dc9c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Input_State3Ev, 0}, copied into sPanelInputStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c24Answer_StateFlipSolutionEv, 0}, copied into sPanelAnswerStateTable"
     },
     {
       "symbol": "@8815",
       "address": "0x0213dca4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c16IntroCard_State3Ev, 0}, copied into sPanelIntroCardStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c23IntroCard_StateSlideOutEv, 0}, copied into sPanelIntroCardStateTable"
     },
     {
       "symbol": "@2258",
       "address": "0x0213dcac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Input_State0Ev, 0}, copied into sPanelInputStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c22Answer_StateWaitButtonEv, 0}, copied into sPanelAnswerStateTable"
     },
     {
       "symbol": "@8816",
       "address": "0x0213dcb4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c16IntroCard_State4Ev, 0}, copied into sPanelIntroCardStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c19IntroCard_StateDoneEv, 0}, copied into sPanelIntroCardStateTable"
     },
     {
       "symbol": "@2282",
       "address": "0x0213dcbc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Shake_State0Ei, 0}, copied into sPanelShakeStateTable; mwcc numbers it @2268, which arm9 already defines, so the manifest renames it to @8808"
+      "evidence": "PMF record {_ZN12dScMgPanel_c15Shake_StateIdleEi, 0}, copied into sPanelShakeStateTable; mwcc numbers it @2268, which arm9 already defines, so the manifest renames it to @8808"
     },
     {
       "symbol": "@8813",
       "address": "0x0213dcc4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c16IntroCard_State1Ev, 0}, copied into sPanelIntroCardStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c22IntroCard_StateSlideInEv, 0}, copied into sPanelIntroCardStateTable"
     },
     {
       "symbol": "@2248",
       "address": "0x0213dccc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State7Ev, 0}, copied into sPanelSceneStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c19Scene_StateGameOverEv, 0}, copied into sPanelSceneStateTable"
     },
     {
       "symbol": "@8812",
       "address": "0x0213dcd4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c16IntroCard_State0Ev, 0}, copied into sPanelIntroCardStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c20IntroCard_StateStartEv, 0}, copied into sPanelIntroCardStateTable"
     },
     {
       "symbol": "@2260",
       "address": "0x0213dcdc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Input_State1Ev, 0}, copied into sPanelInputStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c22Answer_StateResetBoardEv, 0}, copied into sPanelAnswerStateTable"
     },
     {
       "symbol": "@2252",
       "address": "0x0213dce4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Panel_State1Ei, 0}, copied into sPanelPanelStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c15Panel_StateFlipEi, 0}, copied into sPanelPanelStateTable"
     },
     {
       "symbol": "@8810",
       "address": "0x0213dcec",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Input_State2Ev, 0}, copied into sPanelInputStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c24Answer_StateFindSolutionEv, 0}, copied into sPanelAnswerStateTable"
     },
     {
       "symbol": "@2284",
       "address": "0x0213dcf4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Shake_State1Ei, 0}, copied into sPanelShakeStateTable; mwcc numbers it @2270, which arm9 already defines, so the manifest renames it to @8809"
+      "evidence": "PMF record {_ZN12dScMgPanel_c16Shake_StateShakeEi, 0}, copied into sPanelShakeStateTable; mwcc numbers it @2270, which arm9 already defines, so the manifest renames it to @8809"
     },
     {
       "symbol": "@2254",
       "address": "0x0213dcfc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Panel_State2Ei, 0}, copied into sPanelPanelStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c16Panel_StateBlinkEi, 0}, copied into sPanelPanelStateTable"
     },
     {
       "symbol": "@2278",
       "address": "0x0213dd04",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c13Banner_State1Ev, 0}, copied into sPanelBannerStateTable; mwcc numbers it @2264, which arm9 already defines, so the manifest renames it to @8806"
+      "evidence": "PMF record {_ZN12dScMgPanel_c18Banner_StateSettleEv, 0}, copied into sPanelBannerStateTable; mwcc numbers it @2264, which arm9 already defines, so the manifest renames it to @8806"
     },
     {
       "symbol": "@2234",
       "address": "0x0213dd0c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Scene_State0Ev, 0}, copied into sPanelSceneStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c15Scene_StateInitEv, 0}, copied into sPanelSceneStateTable"
     },
     {
       "symbol": "@2250",
       "address": "0x0213dd14",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Panel_State0Ei, 0}, copied into sPanelPanelStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c15Panel_StateIdleEi, 0}, copied into sPanelPanelStateTable"
     },
     {
       "symbol": "@2256",
       "address": "0x0213dd1c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Panel_State3Ei, 0}, copied into sPanelPanelStateTable"
+      "evidence": "PMF record {_ZN12dScMgPanel_c15Panel_StateFallEi, 0}, copied into sPanelPanelStateTable"
     },
     {
       "symbol": "@2286",
       "address": "0x0213dd24",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c12Shake_State2Ei, 0}, copied into sPanelShakeStateTable; mwcc numbers it @2272, which arm9 already defines, so the manifest renames it to @8810"
+      "evidence": "PMF record {_ZN12dScMgPanel_c18Shake_StateLoseTryEi, 0}, copied into sPanelShakeStateTable; mwcc numbers it @2272, which arm9 already defines, so the manifest renames it to @8810"
     },
     {
       "symbol": "@2280",
       "address": "0x0213dd2c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgPanel_c13Banner_State2Ev, 0}, copied into sPanelBannerStateTable; mwcc numbers it @2266, which arm9 already defines, so the manifest renames it to @8807"
+      "evidence": "PMF record {_ZN12dScMgPanel_c16Banner_StateIdleEv, 0}, copied into sPanelBannerStateTable; mwcc numbers it @2266, which arm9 already defines, so the manifest renames it to @8807"
     }
   ],
   "bss": [
@@ -762,7 +762,7 @@
       "evidence": "PanelStateFnI table [3] (the shake states); the initializer copies three PMF records into it"
     },
     {
-      "symbol": "data_ov006_021427d4",
+      "symbol": "sPanelSprites",
       "address": "0x021427d4",
       "size": "0x18",
       "binding": "STB_GLOBAL",
@@ -783,7 +783,7 @@
       "evidence": "zero-initialised object inside this TU's contiguous .bss run; the pointer table word at 0x0213e08c refers to it"
     },
     {
-      "symbol": "sPanelInputStateTable",
+      "symbol": "sPanelAnswerStateTable",
       "address": "0x02142820",
       "size": "0x20",
       "binding": "STB_GLOBAL",
@@ -812,45 +812,45 @@
     }
   ],
   "notes": [
-    "SINIT FOLDED (fold/mg-sinits-b-1011): the retail static initializer __sinit_ov006_02131fa4 (.init 0x02131fa4-0x021322bc, ctor word 0x021335c8) is this TU's own __sinit_d_s_mg_panel.cpp. In .init link order it sits between __sinit_d_s_mg_pachinko2.cpp and __sinit_ov006_021322bc, exactly where this TU's .text sits between dScMgPachinko2_c and dScMgRoulette_c, and every global it writes (the six sprite handles at data_ov006_021427d4 and the seven pointer-to-member state tables at sPanelShakeStateTable..02142888) is read only by members of this file. The tables are now file-scope arrays of PanelStateFn / PanelStateFnI, so mwcc emits the initializer with the same 0x318 bytes and 36 relocations, and the 27 PMF records it copies from become this TU's .data at 0x0213dc4c-0x0213dd34, together with g_profile_MG_PANEL and data_ov006_0213dc94. The three empty state handlers 02104ac0, 02104bac and 02104ec8 became dScMgPanel_c members, because a pointer-to-member constant needs a member; include/dScMgPanel_c.h has no other consumer. Ten compiled @NNN records collide with arm9 names and are renamed to the free @8801-@8810 through defined_symbol_renames. Guided by lunavyqo's unmerged fold (sinit/ov006-panel, 44d9c4d4b6), re-derived on the methodized TU.",
+    "SINIT FOLDED (fold/mg-sinits-b-1011): the retail static initializer __sinit_ov006_02131fa4 (.init 0x02131fa4-0x021322bc, ctor word 0x021335c8) is this TU's own __sinit_d_s_mg_panel.cpp. In .init link order it sits between __sinit_d_s_mg_pachinko2.cpp and __sinit_ov006_021322bc, exactly where this TU's .text sits between dScMgPachinko2_c and dScMgRoulette_c, and every global it writes (the six sprite handles at sPanelSprites and the seven pointer-to-member state tables at sPanelShakeStateTable..02142888) is read only by members of this file. The tables are now file-scope arrays of PanelStateFn / PanelStateFnI, so mwcc emits the initializer with the same 0x318 bytes and 36 relocations, and the 27 PMF records it copies from become this TU's .data at 0x0213dc4c-0x0213dd34, together with g_profile_MG_PANEL and data_ov006_0213dc94. The three empty state handlers 02104ac0, 02104bac and 02104ec8 became dScMgPanel_c members, because a pointer-to-member constant needs a member; include/dScMgPanel_c.h has no other consumer. Ten compiled @NNN records collide with arm9 names and are renamed to the free @8801-@8810 through defined_symbol_renames. Guided by lunavyqo's unmerged fold (sinit/ov006-panel, 44d9c4d4b6), re-derived on the methodized TU.",
     "LINK DEFECT FOUND AND FIXED AT STAGE 4, and it is the reason ordinals 67-70 do not follow the block-scope rule the other 67 members do. As written by stages 2 and 3 this TU compiled, byte-matched 71/71, passed objisolate, passed reloc-destinations and passed the [4b] object audit -- and did not link. Every `func_ov006_*` member sits inside its own file-scope `extern \"C\" { }` region, so its block-scope `extern` declarations have C linkage and name the ROM symbol. A class member function cannot sit inside such a region, so the identical block-scope declarations in the four C++-named members had C++ LINKAGE: the object carried 41 mangled undefined symbols that do not exist in the image (`_Z8LoadFilei`, `_Z10DeallocatePv`, `_Z19func_ov006_021063a0Pv`, ...) and mwldarm aborted with 22 `Undefined`, all `Referenced from \"dScMgPanel_c::InitResources()\"`. mwccarm 2004/b56 rejects a block-scope `extern \"C\"` (measured: `Error: declarator expected`), so the repair is the shape dScMgTeresa_c and dScMgRoulette_c already use -- ONE file-scope `extern \"C\"` region carrying the 24 genuinely external ROM symbols those four members call, placed after ordinal 66 so the 67 members above it keep their own recovered spellings unchanged. The 13 declarations that named members OF THIS TU were deleted outright rather than moved: those symbols are now defined earlier in the same file, so the call binds to the definition, and three call sites took the definition's own pointer type (`DealPuzzle(this)` in ordinals 67 and 70, `(PanelObj_ab4 *)` in 68, `(PanelC_ac4 *)` in 69). One declaration, `func_02073244` in ordinal 69, was dead -- nothing in the body referenced it -- and was dropped. Data symbols were NOT touched and did not need to be: mwccarm leaves a file-scope variable's name unmangled in C++, which is why `data_0209d454`, `data_0209d45c` and `sPanelSceneStateTable` still sit at block scope. AFTER the repair: 71/71 MATCH unchanged, object audit order_ok true with {'LICENSED': 71} and zero refusals, 0 mangled undefined symbols left in the object, and `tools/rombuild.py -j 6` reaches `module fidelity: 106/106 exact, 100.000000%` with `ROM-build analysis: PASS`. NOTE FOR THE READER OF THE `linkcheck` BLOCK BELOW: its recorded `scratch-link-verified` was NOT reproducible on the source as shipped by stage 2 -- the same scratch pipeline, reached through rombuild's own BASELINE CONTROL, failed to link it. It is reproducible now.",
     "Hand-assembled from the 71 legacy shards; tools/tubuild.py create ran, and its generated preamble was DISCARDED WHOLE rather than repaired. At 71 members it carried the failure modes writer.md documents: two contradictory PMF typedefs, three incompatible `struct C` bodies (0x4692 pad / 0x4674 pad / derived from a 36-virtual base), two incompatible `Obj` typedefs, and data_0209d454 declared both as a scalar and as an array. The shipped file follows ov002/Player for the 67 `extern \"C\"` members: each keeps its own declarations inside its own body and nothing is canonicalised. The four C++-NAMED members (ordinals 67-70) cannot, because a class member function cannot sit inside an `extern \"C\"` region -- see the link note below.",
     "decl_common.h is deliberately NOT included, and this is a departure from the daDsnBase_c / daObjCtMecha03_c / dScMgTeresa_c precedent. It declares ten of this TU's own members and seven of the ten contradict the shard that defines them: Particle_UpdateAll and Shake_Update on the RETURN TYPE (`int` against the shards' `void`), and Particle_DrawAll, 02104b5c, 02104d44, 02104d94 and 02105ab4 on the parameter type (`void*` against `char*` or a shadow struct). Including it makes each of those an `illegal function overloading` error against a body that already matches byte-for-byte. ov002/Player, the largest promoted TU in the tree, excludes it for the same reason. The four class-method members that used to lean on it -- ordinals 67-70 -- carry the declarations they actually used, copied from decl_common.h, in one FILE-SCOPE `extern \"C\"` region placed after ordinal 66 so that none of the 67 members above can see it; their block-scope spelling did not link (see the link note below).",
-    "One member needed a source change the merge forced. include/dScMgBase_c.h:12 declares `extern \"C\" void *gMgScene;` at file scope, and ordinal 60 (Scene_State6) recovered the same ROM object as `char *`. The block-scope licence covers FUNCTIONS with C linkage, not a second declaration of one variable with a different type, so the shard's view is spelled as a reinterpreting read of the header's object -- `#define PANEL_BEB68 (*(char **)&gMgScene)` -- rather than a redeclaration. Same address, same load width, no extra local, and the member matches.",
+    "One member needed a source change the merge forced. include/dScMgBase_c.h:12 declares `extern \"C\" void *gMgScene;` at file scope, and ordinal 60 (Scene_StateResult) recovered the same ROM object as `char *`. The block-scope licence covers FUNCTIONS with C linkage, not a second declaration of one variable with a different type, so the shard's view is spelled as a reinterpreting read of the header's object -- `#define PANEL_BEB68 (*(char **)&gMgScene)` -- rather than a redeclaration. Same address, same load width, no extra local, and the member matches.",
     "Ordinals 0 and 1 are two shards of ONE C++ definition. src/_ZN12dScMgPanel_cD1Ev.cpp and src/_ZN12dScMgPanel_cD0Ev.cpp each spell `dScMgPanel_c::~dScMgPanel_c() {}`; merged, writing both would be a duplicate definition. The file carries the body once, under ordinal 0, and mwcc emits D1, D0 and a homeless D2 from it.",
     "Eight bracketed optimisation pragmas across three families, not the seven notes/data/tu-promotion-queue.tsv claims: opt_common_subs off on ordinals 3, 4, 6, 50 and 57; opt_strength_reduction off on 51 and 53; opt_propagation off on 60. `tools/tubuild.py inspect` prints 8 and a direct grep of the 71 shards finds the same eight files. Each keeps its own #pragma push / #pragma pop bracket, which binds positionally only because `#pragma defer_codegen off` is at the top of the file; with codegen deferred the state that binds is the state at end of file and the bracket is worth zero members. That pragma also emits .text in SOURCE order rather than reversed, which is why this file is written ROM-ascending -- one decision, not two.",
     "CONTROLS, measured at this revision on the shipped file, both required by notes/agents/roles/writer.md before claiming a pragma does anything. (A) Delete all eight pragma brackets outright, change nothing else: 67/71, and the four DIFFs are Particle_Spawn, 02106664, 021067a4 and 02106aa8. So four of the eight are load-bearing and the other four -- 02104354, 02104580, 021063a0, 02106ca4 -- are inert at plain -O4,p in this TU; they are kept because they are what the shards recovered and deleting them buys nothing. (B) Delete ONLY `#pragma defer_codegen off`, keep every bracket: 67/71 -- byte-identical to deleting the pragmas outright, because the bracket binds to nothing while codegen is deferred -- AND emission order inverts to \"70 ordinal pair(s) NOT in ROM order\", which linkcheck [4b/8] refuses. One pragma buys the bytes and the order together, exactly as writer.md predicts.",
     "The queue row's shard_count of 72 counts src/d_s_mg_panel.c (dScMgPanel_c_classInit); this promotion absorbs 71 shards, not 72.",
-    "tubuild create warning: RAW: src/func_ov006_02104a10.cpp (Shake_State1) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov006_021053a8.cpp (Input_State2) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_02104a10.cpp (Shake_StateShake) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_021053a8.cpp (Answer_StateFindSolution) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov006_021063a0.cpp (ScramblePanels) did not split (the definition is inside the extern \"C\" block opened on line 20, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov006_0210713c.cpp (Scene_State1) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_0210713c.cpp (Scene_StateIntro) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'SetBg2Offset' differs between the legacy file that used to hold Scroll_Update and the one that held Scroll_Stop; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'SetSubBg2Offset' differs between the legacy file that used to hold Scroll_Update and the one that held Scroll_Stop; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Scroll_Start and the one that held Shake_State2; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Scroll_Start and the one that held Shake_StateLoseTry; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_RenderSpriteBoth' differs between the legacy file that used to hold Particle_DrawAll and the one that held DrawHud; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Scroll_Start and the one that held IntroCard_State3; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Banner_Update' differs between the legacy file that used to hold Banner_Update and the one that held Input_Update; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Scroll_Start and the one that held IntroCard_StateSlideOut; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Banner_Update' differs between the legacy file that used to hold Banner_Update and the one that held Answer_Update; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Scroll_Start and the one that held UpdateMoves; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Scroll_Start and the one that held CheckSolved; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold Scroll_Start and the one that held UpdateTouch; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold Particle_Spawn and the one that held DealPuzzle; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ClearSlideFlag' differs between the legacy file that used to hold Scene_State7 and the one that held Scene_State6; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_SetSharedState' differs between the legacy file that used to hold Scene_State7 and the one that held Scene_State6; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'IntroCard_Update' differs between the legacy file that used to hold Scene_State6 and the one that held Scene_State3; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'IntroCard_Update' differs between the legacy file that used to hold Scene_State6 and the one that held Scene_State2; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'FreeGfxSlotsById' differs between the legacy file that used to hold IntroCard_State3 and the one that held _ZN12dScMgPanel_c10StartRoundEi; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'FreeGfxSlotsById' differs between the legacy file that used to hold IntroCard_State3 and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ClearSlideFlag' differs between the legacy file that used to hold Scene_StateGameOver and the one that held Scene_StateResult; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_SetSharedState' differs between the legacy file that used to hold Scene_StateGameOver and the one that held Scene_StateResult; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'IntroCard_Update' differs between the legacy file that used to hold Scene_StateResult and the one that held Scene_StateShowMisses; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'IntroCard_Update' differs between the legacy file that used to hold Scene_StateResult and the one that held Scene_StatePlay; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'FreeGfxSlotsById' differs between the legacy file that used to hold IntroCard_StateSlideOut and the one that held _ZN12dScMgPanel_c10StartRoundEi; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'FreeGfxSlotsById' differs between the legacy file that used to hold IntroCard_StateSlideOut and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ResetRound' differs between the legacy file that used to hold _ZN12dScMgPanel_c10StartRoundEi and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ScramblePanels' differs between the legacy file that used to hold _ZN12dScMgPanel_c10StartRoundEi and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DealPuzzle' differs between the legacy file that used to hold _ZN12dScMgPanel_c10StartRoundEi and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold Shake_State2 and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold Shake_StateLoseTry and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold Shake_Update and the one that held Banner_Update; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold Shake_Update and the one that held Input_Update; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold Shake_Update and the one that held Input_Update; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold Shake_Update and the one that held Answer_Update; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold Shake_Update and the one that held Answer_Update; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Obj') differs between the legacy file that used to hold DrawPanels and the one that held UpdateTouch; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold Shake_Update and the one that held Scene_State7; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold Shake_Update and the one that held Scene_State3; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged."
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold Shake_Update and the one that held Scene_StateGameOver; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold Shake_Update and the one that held Scene_StateShowMisses; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1651,7 +1651,7 @@
       "source": "0x02132234",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021427d4",
+      "symbol": "sPanelSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021427d4"
@@ -1811,7 +1811,7 @@
       "source": "0x02132274",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "sPanelInputStateTable",
+      "symbol": "sPanelAnswerStateTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142820"
@@ -1991,7 +1991,7 @@
       "source": "0x0213dc4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c16Scene_StateIntroEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0210713c"
@@ -2001,7 +2001,7 @@
       "source": "0x0213dc54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State3Ev",
+      "symbol": "_ZN12dScMgPanel_c21Scene_StateShowMissesEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106fdc"
@@ -2011,7 +2011,7 @@
       "source": "0x0213dc5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c15Scene_StatePlayEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0210709c"
@@ -2031,7 +2031,7 @@
       "source": "0x0213dc6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State5Ev",
+      "symbol": "_ZN12dScMgPanel_c21Scene_StateShowAnswerEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106eb8"
@@ -2041,7 +2041,7 @@
       "source": "0x0213dc74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State4Ev",
+      "symbol": "_ZN12dScMgPanel_c17Scene_StateRewindEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106f44"
@@ -2051,7 +2051,7 @@
       "source": "0x0213dc7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c19IntroCard_StateHoldEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104fb4"
@@ -2061,7 +2061,7 @@
       "source": "0x0213dc84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State6Ev",
+      "symbol": "_ZN12dScMgPanel_c17Scene_StateResultEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106ca4"
@@ -2071,7 +2071,7 @@
       "source": "0x0213dc8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c13Banner_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c17Banner_StatePopUpEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104c08"
@@ -2081,7 +2081,7 @@
       "source": "0x0213dc9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Input_State3Ev",
+      "symbol": "_ZN12dScMgPanel_c24Answer_StateFlipSolutionEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021051dc"
@@ -2091,7 +2091,7 @@
       "source": "0x0213dca4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State3Ev",
+      "symbol": "_ZN12dScMgPanel_c23IntroCard_StateSlideOutEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104ecc"
@@ -2101,7 +2101,7 @@
       "source": "0x0213dcac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Input_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c22Answer_StateWaitButtonEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02105730"
@@ -2111,7 +2111,7 @@
       "source": "0x0213dcb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State4Ev",
+      "symbol": "_ZN12dScMgPanel_c19IntroCard_StateDoneEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104ec8"
@@ -2121,7 +2121,7 @@
       "source": "0x0213dcbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Shake_State0Ei",
+      "symbol": "_ZN12dScMgPanel_c15Shake_StateIdleEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104ac0"
@@ -2131,7 +2131,7 @@
       "source": "0x0213dcc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c22IntroCard_StateSlideInEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0210500c"
@@ -2141,7 +2141,7 @@
       "source": "0x0213dccc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State7Ev",
+      "symbol": "_ZN12dScMgPanel_c19Scene_StateGameOverEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106bc0"
@@ -2151,7 +2151,7 @@
       "source": "0x0213dcd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c16IntroCard_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c20IntroCard_StateStartEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0210508c"
@@ -2161,7 +2161,7 @@
       "source": "0x0213dcdc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Input_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c22Answer_StateResetBoardEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02105670"
@@ -2171,7 +2171,7 @@
       "source": "0x0213dce4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Panel_State1Ei",
+      "symbol": "_ZN12dScMgPanel_c15Panel_StateFlipEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106aa8"
@@ -2181,7 +2181,7 @@
       "source": "0x0213dcec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Input_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c24Answer_StateFindSolutionEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021053a8"
@@ -2191,7 +2191,7 @@
       "source": "0x0213dcf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Shake_State1Ei",
+      "symbol": "_ZN12dScMgPanel_c16Shake_StateShakeEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104a10"
@@ -2201,7 +2201,7 @@
       "source": "0x0213dcfc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Panel_State2Ei",
+      "symbol": "_ZN12dScMgPanel_c16Panel_StateBlinkEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106a08"
@@ -2211,7 +2211,7 @@
       "source": "0x0213dd04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c13Banner_State1Ev",
+      "symbol": "_ZN12dScMgPanel_c18Banner_StateSettleEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104bb0"
@@ -2221,7 +2221,7 @@
       "source": "0x0213dd0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Scene_State0Ev",
+      "symbol": "_ZN12dScMgPanel_c15Scene_StateInitEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021071d4"
@@ -2231,7 +2231,7 @@
       "source": "0x0213dd14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Panel_State0Ei",
+      "symbol": "_ZN12dScMgPanel_c15Panel_StateIdleEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106bac"
@@ -2241,7 +2241,7 @@
       "source": "0x0213dd1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Panel_State3Ei",
+      "symbol": "_ZN12dScMgPanel_c15Panel_StateFallEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02106910"
@@ -2251,7 +2251,7 @@
       "source": "0x0213dd24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c12Shake_State2Ei",
+      "symbol": "_ZN12dScMgPanel_c18Shake_StateLoseTryEi",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104920"
@@ -2261,7 +2261,7 @@
       "source": "0x0213dd2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dScMgPanel_c13Banner_State2Ev",
+      "symbol": "_ZN12dScMgPanel_c16Banner_StateIdleEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02104bac"

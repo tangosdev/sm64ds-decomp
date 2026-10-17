@@ -49,30 +49,30 @@
    The three s32 pairs stay raw offsets: declaring them as s32 members makes
    the struct 4-aligned, and the pool's .bss section goes from 2-byte to
    4-byte alignment. */
-struct Ent {
+struct MgFx {
     char pad[0x1a];                     /* 0x00 mPos, 0x08 mVecA, 0x10 mVecB */
     s16 mTimer;                         /* 0x1a -- counts down to 0; 0 = free */
     s16 mDuration;                      /* 0x1c -- mTimer's starting value */
     s16 mState;                         /* 0x1e -- index into both PMF tables */
-    Ent() {}
-    ~Ent() {}
+    MgFx() {}
+    ~MgFx() {}
     void DrawFlyTo();
     void DrawSparkle();
     void UpdateFlyTo();
     void UpdateDrift();
 };
 
-typedef void (Ent::*EntPMF)();
+typedef void (MgFx::*EntPMF)();
 
 extern "C" {
 /* Static minigame base state: the graphCallback_c registry instance, the
-   Ent record pool, and the two PMF state tables the dispatchers call
+   MgFx record pool, and the two PMF state tables the dispatchers call
    through. Declaration order is the ROM's __sinit order. */
 dScMgBase_c::graphCallback_c sMgGraphCallback;
-Ent sMgFxPool[0x40];
-EntPMF sMgFxUpdateTable[2] = { &Ent::UpdateDrift, &Ent::UpdateFlyTo };
-EntPMF sMgFxDrawTable[2] = { &Ent::DrawSparkle, &Ent::DrawFlyTo };
-int data_ov004_020beba8[16];
+MgFx sMgFxPool[0x40];
+EntPMF sMgFxUpdateTable[2] = {&MgFx::UpdateDrift, &MgFx::UpdateFlyTo};
+EntPMF sMgFxDrawTable[2] = {&MgFx::DrawSparkle, &MgFx::DrawFlyTo};
+int sMgSparkleSprites[16];
 }
 
 /* Local view of the installed screen fader at data_0209f5bc (a dFader_c,
@@ -534,7 +534,7 @@ void *Ov004_LoadFileByPath(const char *path)
 }
 }
 
-// @symbol _ZN3Ent9DrawFlyToEv
+// @symbol _ZN4MgFx9DrawFlyToEv
 namespace s20adc80 {
 extern "C" {
 extern int GetGameLanguage(void);
@@ -543,39 +543,53 @@ extern int Mg_RenderSpriteOnNoMtx(int,int,int,long long);
 }
 /* State 1's draw: word 2 of the current language's entry in
    sMgSpriteTables, at mPos >> 12. */
-void Ent::DrawFlyTo(){
+void MgFx::DrawFlyTo() {
     int idx=s20adc80::GetGameLanguage();
     int *t=sMgSpriteTables[idx];
     s20adc80::Mg_RenderSpriteOnNoMtx(t[2], ((int*)this)[0]>>0xc, ((int*)this)[1]>>0xc, -1);
 }
 
-// @symbol _ZN3Ent11DrawSparkleEv
+// @symbol _ZN4MgFx11DrawSparkleEv
 namespace s20adcc8 {
 extern "C" {
 extern void Mg_RenderSpriteOnNoMtx(int a0,int a1,int a2,int a3,int a4);
-extern int data_ov004_020beb70;
+extern int sMgSparkleSpritesGuard;
 extern int data_ov004_020bea14[];
-extern int data_ov004_020beba8[];
+extern int sMgSparkleSprites[];
 }
 }
 /* State 0's draw. The first call builds the 16-entry frame table
-   data_ov004_020beba8 from five words at data_ov004_020bea14 (bit 0 of
-   data_ov004_020beb70 marks it built); the frame is picked by the low four
+   sMgSparkleSprites from five words at data_ov004_020bea14 (bit 0 of
+   sMgSparkleSpritesGuard marks it built); the frame is picked by the low four
    bits of mTimer. */
-void Ent::DrawSparkle(){
-  if((s20adcc8::data_ov004_020beb70 & 1) == 0){
-    int* s = s20adcc8::data_ov004_020bea14;
-    int* d = s20adcc8::data_ov004_020beba8;
-    d[0]=s[0];d[1]=s[0];d[2]=s[0];d[3]=s[0];d[4]=s[0];
-    d[5]=s[4];d[6]=s[4];d[7]=s[3];d[8]=s[2];d[9]=s[1];
-    d[10]=s[2];d[11]=s[2];d[12]=s[3];d[13]=s[4];d[14]=s[4];d[15]=s[0];
-    s20adcc8::data_ov004_020beb70 |= 1;
-  }
-  {
-    int idx=((int)mTimer)&0xf;
-    int x=*(int*)this>>0xc; int y=*(int*)((char*)this+4)>>0xc;
-    s20adcc8::Mg_RenderSpriteOnNoMtx(s20adcc8::data_ov004_020beba8[idx],x,y,-1,-1);
-  }
+void MgFx::DrawSparkle() {
+    if ((s20adcc8::sMgSparkleSpritesGuard & 1) == 0) {
+        int *s = s20adcc8::data_ov004_020bea14;
+        int *d = s20adcc8::sMgSparkleSprites;
+        d[0] = s[0];
+        d[1] = s[0];
+        d[2] = s[0];
+        d[3] = s[0];
+        d[4] = s[0];
+        d[5] = s[4];
+        d[6] = s[4];
+        d[7] = s[3];
+        d[8] = s[2];
+        d[9] = s[1];
+        d[10] = s[2];
+        d[11] = s[2];
+        d[12] = s[3];
+        d[13] = s[4];
+        d[14] = s[4];
+        d[15] = s[0];
+        s20adcc8::sMgSparkleSpritesGuard |= 1;
+    }
+    {
+        int idx = ((int)mTimer) & 0xf;
+        int x = *(int *)this >> 0xc;
+        int y = *(int *)((char *)this + 4) >> 0xc;
+        s20adcc8::Mg_RenderSpriteOnNoMtx(s20adcc8::sMgSparkleSprites[idx], x, y, -1, -1);
+    }
 }
 
 // @symbol Mg_DrawFx
@@ -583,13 +597,13 @@ namespace s20add88 {
 extern "C" {
 extern EntPMF sMgFxDrawTable[];
 /* Draws one record through its state's handler. */
-extern "C" void Mg_DrawFx(Ent *c) {
-  (c->*sMgFxDrawTable[c->mState])();
+extern "C" void Mg_DrawFx(MgFx *c) {
+    (c->*sMgFxDrawTable[c->mState])();
 }
 }
 }
 
-// @symbol _ZN3Ent11UpdateFlyToEv
+// @symbol _ZN4MgFx11UpdateFlyToEv
 namespace s20addcc {
 extern "C" {
 void Mg_GainCredits(void *c);
@@ -603,37 +617,35 @@ inline long long inline_fn(int arg0)
    the frame it reaches 0, then places mPos between the two vectors by the
    remaining fraction s = mTimer / mDuration: x = mVecA.x * s + mVecB.x * (1 - s),
    y = mVecB.y + s * s * (mVecA.y - mVecB.y), all Fix12. */
-void Ent::UpdateFlyTo()
-{
-  char *r5 = (char *)this;
-  using namespace s20addcc;
-  {
-  if (ApproachLinear2(mTimer, 0, 1))
-  {
-    Mg_GainCredits((void *) 1);
-  }
-  int a = mTimer;
-  int b = mDuration;
-  int s = cstd::fdiv(a << 0xc, b << 0xc);
-  int c3 = mDuration;
-  int c2 = mTimer;
-  int t = cstd::fdiv((c3 - c2) << 0xc, c3 << 0xc);
-  int v8 = *((int *) (r5 + 8));
-  int v10 = *((int *) (r5 + 0x10));
-  long long m1 = inline_fn(v8) * inline_fn(s);
-  long long m2 = inline_fn(v10) * inline_fn(t);
-  long long m3 = inline_fn(s) * inline_fn(s);
-  long long m4 = inline_fn((int) ((m3 + 0x800) >> 0xc)) * inline_fn((*((int *) (r5 + 0xc))) - (*((int *) (r5 + 0x14))));
-  *((int *) r5) = ((int) ((m1 + 0x800) >> 0xc)) + ((int) ((m2 + 0x800) >> 0xc));
-  *((int *) (r5 + 4)) = (*((int *) (r5 + 0x14))) + ((int) ((m4 + 0x800) >> 0xc));
-  }
+void MgFx::UpdateFlyTo() {
+    char *r5 = (char *)this;
+    using namespace s20addcc;
+    {
+        if (ApproachLinear2(mTimer, 0, 1)) {
+            Mg_GainCredits((void *)1);
+        }
+        int a = mTimer;
+        int b = mDuration;
+        int s = cstd::fdiv(a << 0xc, b << 0xc);
+        int c3 = mDuration;
+        int c2 = mTimer;
+        int t = cstd::fdiv((c3 - c2) << 0xc, c3 << 0xc);
+        int v8 = *((int *)(r5 + 8));
+        int v10 = *((int *)(r5 + 0x10));
+        long long m1 = inline_fn(v8) * inline_fn(s);
+        long long m2 = inline_fn(v10) * inline_fn(t);
+        long long m3 = inline_fn(s) * inline_fn(s);
+        long long m4 = inline_fn((int)((m3 + 0x800) >> 0xc)) *
+                       inline_fn((*((int *)(r5 + 0xc))) - (*((int *)(r5 + 0x14))));
+        *((int *)r5) = ((int)((m1 + 0x800) >> 0xc)) + ((int)((m2 + 0x800) >> 0xc));
+        *((int *)(r5 + 4)) = (*((int *)(r5 + 0x14))) + ((int)((m4 + 0x800) >> 0xc));
+    }
 }
 
-// @symbol _ZN3Ent11UpdateDriftEv
+// @symbol _ZN4MgFx11UpdateDriftEv
 /* State 0's update: counts mTimer down, passes mVecA to func_0203d630 with
    0xff8, then adds mVecB into mVecA and mVecA into mPos. */
-void Ent::UpdateDrift()
-{
+void MgFx::UpdateDrift() {
     char* c = (char*)this;
     ApproachLinear2(mTimer, 0, 1);
     func_0203d630((int*)(c + 8), 0xff8);
@@ -651,8 +663,8 @@ namespace s20adf2c {
 extern "C" {
 extern EntPMF sMgFxUpdateTable[];
 /* Updates one record through its state's handler. */
-extern "C" void Mg_UpdateFx(Ent *c) {
-  (c->*sMgFxUpdateTable[c->mState])();
+extern "C" void Mg_UpdateFx(MgFx *c) {
+    (c->*sMgFxUpdateTable[c->mState])();
 }
 }
 }
@@ -663,16 +675,16 @@ extern "C" {
 /* Fills record `c`. mDuration starts equal to mTimer; either vector may
    be omitted with a null pointer. */
 void Mg_InitFx(char *c, short state, short timer, int *pos, int *vecA, int *vecB){
-  Ent *e=(Ent*)c;
-  e->mState=state;
-  e->mTimer=timer;
-  e->mDuration=e->mTimer;
-  *(int*)(c)=pos[0];
-  *(int*)(c+4)=pos[1];
-  if(vecA){
-    *(int*)(c+8)=vecA[0];
-    *(int*)(c+0xc)=vecA[1];
-  }
+    MgFx *e = (MgFx *)c;
+    e->mState = state;
+    e->mTimer = timer;
+    e->mDuration = e->mTimer;
+    *(int *)(c) = pos[0];
+    *(int *)(c + 4) = pos[1];
+    if (vecA) {
+        *(int *)(c + 8) = vecA[0];
+        *(int *)(c + 0xc) = vecA[1];
+    }
   if(vecB){
     *(int*)(c+0x10)=vecB[0];
     *(int*)(c+0x14)=vecB[1];
@@ -1017,14 +1029,24 @@ extern void MultiCopy_Int(void* a, void* b, int n);
 }
 
 extern "C" {
-extern int data_ov004_020beb64;
+extern int sMgPaintWord;
 extern int sMgTopScreenYOffset;
 }
 }
 }
 
-void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size)
-{ using s20ae3b4::MultiCopy_Int; using s20ae3b4::_ZN2G213GetBG2CharPtrEv; using s20ae3b4::_ZN3G2S13GetBG0CharPtrEv; using s20ae3b4::_ZN3G2S13GetBG1CharPtrEv; using s20ae3b4::_ZN3G2S13GetBG2CharPtrEv; using s20ae3b4::_ZN3G2S13GetBG3CharPtrEv; using s20ae3b4::data_ov004_020beb64; using s20ae3b4::sMgTopScreenYOffset; using s20ae3b4::func_02054d88; using s20ae3b4::func_02054ea8; using s20ae3b4::func_02054efc;
+void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
+    using s20ae3b4::MultiCopy_Int;
+    using s20ae3b4::_ZN2G213GetBG2CharPtrEv;
+    using s20ae3b4::_ZN3G2S13GetBG0CharPtrEv;
+    using s20ae3b4::_ZN3G2S13GetBG1CharPtrEv;
+    using s20ae3b4::_ZN3G2S13GetBG2CharPtrEv;
+    using s20ae3b4::_ZN3G2S13GetBG3CharPtrEv;
+    using s20ae3b4::sMgPaintWord;
+    using s20ae3b4::sMgTopScreenYOffset;
+    using s20ae3b4::func_02054d88;
+    using s20ae3b4::func_02054ea8;
+    using s20ae3b4::func_02054efc;
     char *obj = (char *)this;
 
     int oi;
@@ -1088,10 +1110,10 @@ void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size)
                     }
                 }
                 cell = (int*)((char*)base + ((xx / 8 + (yy / 8) * 32) * 32) + ((yy & 7) * 4));
-                MultiCopy_Int(cell, &data_ov004_020beb64, four);
+                MultiCopy_Int(cell, &sMgPaintWord, four);
                 sh = (xx & 7) << 2;
-                data_ov004_020beb64 = (data_ov004_020beb64 & (-1 ^ (m << sh))) | (colour << sh);
-                MultiCopy_Int(&data_ov004_020beb64, cell, four);
+                sMgPaintWord = (sMgPaintWord & (-1 ^ (m << sh))) | (colour << sh);
+                MultiCopy_Int(&sMgPaintWord, cell, four);
             inc:;
             } while (++ci < size);
         }
@@ -1209,9 +1231,9 @@ int GetGameLanguage(void);
 void Mg_DrawSpriteList(void *self, int a1, int a2, int a3);
 }
 
-extern int *data_ov004_020bc020[];
-extern int *data_ov004_020bbfbc[];
-extern int *data_ov004_020bbfd0[];
+extern int *sMgMenuItem0SpritesByLanguage[];
+extern int *sMgMenuItem1SpritesByLanguage[];
+extern int *sMgMenuItem2SpritesByLanguage[];
 extern s16 data_02082214[];
 extern int data_ov006_021346bc;
 
@@ -1234,9 +1256,9 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
     if (scene->mTouchOptions.Draw() != 0)
         return;
 
-    extra[0] = *data_ov004_020bc020[GetGameLanguage()];
-    extra[1] = *data_ov004_020bbfbc[GetGameLanguage()];
-    extra[2] = *data_ov004_020bbfd0[GetGameLanguage()];
+    extra[0] = *sMgMenuItem0SpritesByLanguage[GetGameLanguage()];
+    extra[1] = *sMgMenuItem1SpritesByLanguage[GetGameLanguage()];
+    extra[2] = *sMgMenuItem2SpritesByLanguage[GetGameLanguage()];
 
     tbl[0] = &scene->mMenuItem0X;
     tbl[1] = &scene->mMenuItem1X;
@@ -1634,8 +1656,8 @@ int dScMgBase_c::SaveScreenForMenu()
     }
     _ZN4CP1527FlushAndInvalidateDataCacheEjj((void *)(c + 0x4228), 0x400);
 
-    _ZN2GX10LoadBGPlttEPKvjj((const void *)data_ov004_020bea28, 0x20, 0xa0);
-    _ZN3GXS10LoadBGPlttEPKvjj((const void *)data_ov004_020beac8, 0, 0x80);
+    _ZN2GX10LoadBGPlttEPKvjj((const void *)sMgMenuBgPltt, 0x20, 0xa0);
+    _ZN3GXS10LoadBGPlttEPKvjj((const void *)sMgMenuSubBgPltt, 0, 0x80);
 
     {
         volatile unsigned short tmp = 0;
@@ -1656,7 +1678,7 @@ int dScMgBase_c::SaveScreenForMenu()
         int *vram = vbase + 0x1800;
         MultiCopy_Int(vram, (int *)(c + 0x2228), 0x2000);
         int idx = GetGameLanguage();
-        DecompressLZ16(data_ov004_020bbf94[idx], vram);
+        DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
         _ZN4CP1527FlushAndInvalidateDataCacheEjj((void *)(c + 0x2228), 0x2000);
     }
 }
@@ -1709,14 +1731,14 @@ extern int _ZN3G2S13GetBG3CharPtrEv(void);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 
-extern char data_ov004_020b9468;
+extern char sMgBrushPalette;
 
 /* Sets up the brush that PaintSquare paints with. Stores `en` at +0x68 and
    the layer `mode` (0..3) at +0x6c, fills the first 0x300 screen entries of
    that sub-screen BG layer (and of the main-screen one when `en` is set)
    with tile numbers 0..0x2ff under palette `base`, zeroes 0x6000 bytes of
    the layer's character data, and loads the 0x20-byte palette
-   data_ov004_020b9468 into palette slot `base` on both screens. Any other
+   sMgBrushPalette into palette slot `base` on both screens. Any other
    mode returns at once. */
 void Mg_InitBrush(char* sb, char en, int mode, int base)
 {
@@ -1826,8 +1848,8 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
         return;
     }
 
-    _ZN2GX10LoadBGPlttEPKvjj(&data_ov004_020b9468, base << 5, 0x20);
-    _ZN3GXS10LoadBGPlttEPKvjj(&data_ov004_020b9468, base << 5, 0x20);
+    _ZN2GX10LoadBGPlttEPKvjj(&sMgBrushPalette, base << 5, 0x20);
+    _ZN3GXS10LoadBGPlttEPKvjj(&sMgBrushPalette, base << 5, 0x20);
 }
 }
 }
@@ -2347,7 +2369,7 @@ int dScMgBase_c::BeforeBehavior()
     {
         int j;
         char *p = (char *)sMgFxPool;
-        Ent *base = sMgFxPool;
+        MgFx *base = sMgFxPool;
         for (j = 0; j < 0x40; j++) {
             if (base[j].mTimer != 0)
                 Mg_UpdateFx(p);
@@ -2594,9 +2616,11 @@ int Mg_CheckBannerButton(int arg) {
 // @symbol Mg_ShowBanner
 namespace s20b0cac {
 extern "C" {
-struct Elem { char pad[0x134]; };
-extern struct Elem gMgBanners[];
-extern void Banner_Init(struct Elem *e, int c, int a1, int a2, int a3, int s1, short s2);
+struct MgBanner {
+    char pad[0x134];
+};
+extern struct MgBanner gMgBanners[];
+extern void Banner_Init(struct MgBanner *e, int c, int a1, int a2, int a3, int s1, short s2);
 /* Hands its arguments to Banner_Init for the first of the three
    records at gMgBanners whose word at +0x20 is 0x1d; does nothing
    when none is. */
@@ -3058,19 +3082,20 @@ extern "C" {
 s32 GetGameLanguage(void);
 int RenderOamMainScreen(int a, int b, int c, int d, int e);
 int Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
-extern int data_ov004_020b944c[];
-/* Draws a0, capped at data_ov004_020b944c[a1], right-aligned at (0xf4,
+extern int sMgCounterMaxByDigits[];
+/* Draws a0, capped at sMgCounterMaxByDigits[a1], right-aligned at (0xf4,
    0xc), and sprite word 4 to its left at an x that a1 sets. */
 void Mg_DrawTopRightCounter(int a0, int a1){
-  int lim = data_ov004_020b944c[a1];
-  int c = a0;
-  int r4 = 0xf4;
-  int i;
-  if (c >= lim) c = lim;
-  Mg_DrawNumber(0xf4, 0xc, c, 1, -1, 1, 0xa);
-  r4 = r4 - (0x44 - (6 - a1) * 8);
-  i = GetGameLanguage();
-  RenderOamMainScreen(sMgSpriteTables[i][4], r4, 0xc, -1, -1);
+    int lim = sMgCounterMaxByDigits[a1];
+    int c = a0;
+    int r4 = 0xf4;
+    int i;
+    if (c >= lim)
+        c = lim;
+    Mg_DrawNumber(0xf4, 0xc, c, 1, -1, 1, 0xa);
+    r4 = r4 - (0x44 - (6 - a1) * 8);
+    i = GetGameLanguage();
+    RenderOamMainScreen(sMgSpriteTables[i][4], r4, 0xc, -1, -1);
 }
 }
 }
@@ -3504,7 +3529,7 @@ extern "C" {
    shadows -- data_0209d45c for the main engine, data_0209d454 for the sub --
    initialised to 0x10, which is the value slots 30 and 31 later save, clear
    bits out of and restore.  A language-indexed character file (indexed by
-   GetGameLanguage into data_ov004_020bbfe4) is decompressed into BOTH engines'
+   GetGameLanguage into sMgStockCounterFiles) is decompressed into BOTH engines'
    BG char VRAM at 0x06404000 and 0x06604000, OBJ palette file 0xc3 is loaded
    into both, and the scene object is published into the global registry --
    sMgGraphCallback[1] = this, then data_0209d4a8 points at that registry.
@@ -3543,15 +3568,35 @@ extern void Mg_ResetOverlays(void);
 extern void FreeGfxSlotsById(int arg);
 extern int sMgTopScreenYOffset;
 extern u8 data_0209d45c;
-extern int data_ov004_020bbfe4[];
+extern int sMgStockCounterFiles[];
 extern u8 data_0209d454;
 extern void **data_0209d4a8;
 extern int data_0208ee44;
 }
 }
 
-void dScMgBase_c::InitEngines()
-{ using s20b265c::DecompressLZ16; using s20b265c::FreeGfxSlotsById; using s20b265c::GetGameLanguage; using s20b265c::Ov004_Deallocate; using s20b265c::_ZN2GX11LoadOBJPlttEPKvjj; using s20b265c::_ZN2GX12SetBankForBGEt; using s20b265c::_ZN2GX13SetBankForOBJEt; using s20b265c::_ZN2GX15SetBankForSubBGEt; using s20b265c::_ZN2GX16SetBankForSubOBJEt; using s20b265c::_ZN3GXS11LoadOBJPlttEPKvjj; using s20b265c::_ZN4CP1527FlushAndInvalidateDataCacheEjj; using s20b265c::data_0208ee44; using s20b265c::data_0209d454; using s20b265c::data_0209d45c; using s20b265c::data_0209d4a8; using s20b265c::data_ov004_020bbfe4; using s20b265c::sMgTopScreenYOffset; using s20b265c::Ov004_LoadFile; using s20b265c::Mg_ResetOverlays; using s20b265c::Mg_ResetBgOffsets; using s20b265c::Mg_DisableAllBanks;
+void dScMgBase_c::InitEngines() {
+    using s20b265c::DecompressLZ16;
+    using s20b265c::FreeGfxSlotsById;
+    using s20b265c::GetGameLanguage;
+    using s20b265c::Ov004_Deallocate;
+    using s20b265c::_ZN2GX11LoadOBJPlttEPKvjj;
+    using s20b265c::_ZN2GX12SetBankForBGEt;
+    using s20b265c::_ZN2GX13SetBankForOBJEt;
+    using s20b265c::_ZN2GX15SetBankForSubBGEt;
+    using s20b265c::_ZN2GX16SetBankForSubOBJEt;
+    using s20b265c::_ZN3GXS11LoadOBJPlttEPKvjj;
+    using s20b265c::_ZN4CP1527FlushAndInvalidateDataCacheEjj;
+    using s20b265c::data_0208ee44;
+    using s20b265c::data_0209d454;
+    using s20b265c::data_0209d45c;
+    using s20b265c::data_0209d4a8;
+    using s20b265c::sMgStockCounterFiles;
+    using s20b265c::sMgTopScreenYOffset;
+    using s20b265c::Ov004_LoadFile;
+    using s20b265c::Mg_ResetOverlays;
+    using s20b265c::Mg_ResetBgOffsets;
+    using s20b265c::Mg_DisableAllBanks;
     char *obj = (char *)this;
 
     void *p;
@@ -3573,7 +3618,7 @@ void dScMgBase_c::InitEngines()
     data_0209d45c = 0x10;
     _ZN2GX15SetBankForSubBGEt(4);
     _ZN2GX16SetBankForSubOBJEt(8);
-    p = Ov004_LoadFile(data_ov004_020bbfe4[GetGameLanguage()]);
+    p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
     {
         char *dst = (char *)0x6400000; dst += 0x4000;
         DecompressLZ16(p, dst);
@@ -3633,7 +3678,7 @@ void dScMgBase_c::InitMainScreenBg()
     SetBg1Offset(0, 0);
     data_0209d45c[0] &= ~2;
     f = GetGameLanguage();
-    LoadCompressedFileAt(data_ov004_020bbff8[f], (void *)func_02054ea8());
+    LoadCompressedFileAt(sMgPauseBgNcgByLanguage[f], (void *)func_02054ea8());
     LoadCompressedFileAt(0x67, _ZN2G212GetBG1ScrPtrEv());
 }
 
@@ -3674,7 +3719,7 @@ int dScMgBase_c::InitSubScreenBg()
     SetSubBg1Offset(0, 0);
     data_0209d454[0] &= ~2;
     f = GetGameLanguage();
-    LoadCompressedFileAt(data_ov004_020bc00c[f], (void *)_ZN3G2S13GetBG1CharPtrEv());
+    LoadCompressedFileAt(sMgOptionNcgByLanguage[f], (void *)_ZN3G2S13GetBG1CharPtrEv());
     LoadCompressedFileAt(0x5b, _ZN3G2S12GetBG1ScrPtrEv());
 }
 
@@ -3760,13 +3805,12 @@ extern "C" void Mg_CallStartRound(dScMgBase_c *scene, void *state)
 namespace s20b2adc {
 extern "C" {
 // @symbol _ZN11dScMgBase_cC2Ev
-extern short data_ov004_020bc070[];
+extern short sMgSceneKindByGame[];
 }
 }
 
-dScMgBase_c::dScMgBase_c()
-    : mRunDuringFade(0), unk_0c2(1)
-{ using s20b2adc::data_ov004_020bc070;
+dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
+    using s20b2adc::sMgSceneKindByGame;
     mMenuOpen = 0;
     mMenuScreenSaved = 0;
     mMenuDisabled = 0;
@@ -3775,7 +3819,7 @@ dScMgBase_c::dScMgBase_c()
     gMgScene = this;
     mLevel = *(u32 *)(gMgMenuRow + 0x30);
 
-    mSceneKind = data_ov004_020bc070[(param1 >> 16) & 0xff];
+    mSceneKind = sMgSceneKindByGame[(param1 >> 16) & 0xff];
     /* param1 &= 0xffff, through a char *: spelled with the member, either
        as &= or as a plain assignment, mwccarm forms the address this + 8
        in ip first and the constructor grows by 4 bytes. */

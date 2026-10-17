@@ -8,8 +8,27 @@ extern int func_ov007_020b7690(int i);
 extern int func_02053644(void *v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_02053380(void *a, void *b);
+
+/* The fields this file reads; func_ov007_020be9ac calls it with the same
+ * object (its b0/b1 bytes and +0x18 callback are not read here).
+ * mOwner is the animated object it tracks: its +0x98/+0x94 words gate the
+ * update below, and its first word leads (via +0xc) to the node `P` whose
+ * +0x24 position this follows. mYaw takes func_020538b8 (atan2) of P's
+ * +0x18 x/z; mPrevPos holds P's position from the last gated update, so
+ * `dd` is the motion since then. mSlot picks the element
+ * func_ov007_020b7690 returns. */
+typedef struct BoneFollower {
+    u8 pad_00[2];
+    u8 mSlot; /* 0x02 */
+    u8 pad_03;
+    char *mOwner;   /* 0x04 */
+    int mYaw;       /* 0x08 */
+    Vec3i mPrevPos; /* 0x0c */
+} BoneFollower;
+
 void func_ov007_020beb80(char *self) {
-    char *B = *(char **)(*(char **)(self + 4));
+    BoneFollower *f = (BoneFollower *)self;
+    char *B = *(char **)f->mOwner;
     char *P = *(char **)(B + 0xc);
     int *q = (int *)(int)(P + 0x18);
     int r;
@@ -20,16 +39,16 @@ void func_ov007_020beb80(char *self) {
     int sc;
     Vec3i *tp = (Vec3i *)(int)(P + 0x24);
     r = func_020538b8(q[0], q[2]);
-    dd.x = (short)(tp->x - *(int *)(self + 0xc));
-    dd.y = (short)(tp->y - *(int *)(self + 0x10));
-    dd.z = (short)(tp->z - *(int *)(self + 0x14));
-    if (*(int *)(*(char **)(self + 4) + 0x98) != 0) {
-        *(int *)(self + 8) = r;
-        *(Vec3i *)(self + 0xc) = *tp;
+    dd.x = (short)(tp->x - f->mPrevPos.x);
+    dd.y = (short)(tp->y - f->mPrevPos.y);
+    dd.z = (short)(tp->z - f->mPrevPos.z);
+    if (*(int *)(f->mOwner + 0x98) != 0) {
+        f->mYaw = r;
+        f->mPrevPos = *tp;
     }
-    e = (char *)func_ov007_020b7690(*(u8 *)(self + 2));
+    e = (char *)func_ov007_020b7690(f->mSlot);
     {
-        char *A = *(char **)(self + 4);
+        char *A = f->mOwner;
         if (*(int *)(A + 0x94) != 0 && (unsigned)*(*(int **)(A + 0x18)) <= 1) {
             vel = 0;
             frames = 0x1000;

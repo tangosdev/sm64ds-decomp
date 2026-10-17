@@ -29,6 +29,7 @@
 #pragma defer_codegen off
 
 #include "common.h"
+#include "nitro/fx/fx.h"
 #include "daCoin_c.h"
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
@@ -699,8 +700,8 @@ void daCoin_c::func_ov002_020b1cc0()
         return;
 
     if (normal.y != 0) {
-        int dotX = (int)(((long long)normal.x * unk_0a4 + 0x800) >> 12);
-        int dotZ = (int)(((long long)normal.z * unk_0ac + 0x800) >> 12);
+        int dotX = FX_MUL(normal.x, unk_0a4);
+        int dotZ = FX_MUL(normal.z, unk_0ac);
         mVertSpeed = -(_ZN4cstd4fdivEii(dotX + dotZ, normal.y) + 0x8000);
     }
 
