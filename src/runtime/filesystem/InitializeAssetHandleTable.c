@@ -14,13 +14,9 @@ extern void func_02018a40(unsigned handle, int fileId);
 extern int func_0201a9fc(int *timer);
 extern int func_0201a96c(int *timer, int suspended);
 
-enum {
-    ASSET_HANDLE_COUNT = 0x80a,
-    ASSET_LOOKUP_PRIORITY = 0x1f
-};
+enum { ASSET_HANDLE_COUNT = 0x80a, ASSET_LOOKUP_PRIORITY = 0x1f };
 
-void InitializeAssetHandleTable(void)
-{
+void InitializeAssetHandleTable(void) {
     /* Suspend the timer callback and allocate the zeroed file-ID table. */
     int savedTimerState = func_0201a9ec(&data_0209d574);
     func_02018a58(ASSET_HANDLE_COUNT);
