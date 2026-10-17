@@ -33,7 +33,7 @@ DEFAULT_CANDIDATES = REPO / "build" / "assets" / "rename-candidates.tsv"
 DEFAULT_LAYOUT_CANDIDATES = REPO / "build" / "assets" / "layout-candidates.tsv"
 
 # These two facts are independently visible in the target image and its matched
-# initializer, func_ov000_020aa420.  The path/pointer validation below turns a
+# initializer, InitializeAssetHandleTable.  The path/pointer validation below turns a
 # wrong-version ROM into a hard failure instead of a plausible-looking catalog.
 OV000_HANDLE_TABLE_ADDRESS = 0x020BD4B8
 OV000_HANDLE_COUNT = 0x80A

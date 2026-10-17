@@ -1,4 +1,4 @@
-func_ov000_020aa420 kind:function(arm,size=0xa8) addr:0x020aa420
+InitializeAssetHandleTable kind:function(arm,size=0xa8) addr:0x020aa420
 data_ov000_020aa4e0 kind:data(any) addr:0x020aa4e0
 data_ov000_020aa4f0 kind:data(any) addr:0x020aa4f0
 data_ov000_020aa500 kind:data(any) addr:0x020aa500

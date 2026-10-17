@@ -12174,7 +12174,7 @@
       "src/unnamed/arm9/0207/__sinit_02074e0c.c": [
         "return:int []"
       ],
-      "src/unnamed/ov000/func_ov000_020aa420.c": [
+      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "return:int"
       ]
     },
@@ -22208,7 +22208,7 @@
       ]
     },
     "func_02018a40": {
-      "src/unnamed/ov000/func_ov000_020aa420.c": [
+      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#2 int"
       ]
     },
@@ -22353,7 +22353,7 @@
       "src/unnamed/arm9/0201/func_0201ffcc.c": [
         "param:#1 char *"
       ],
-      "src/unnamed/ov000/func_ov000_020aa420.c": [
+      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#1 int *",
         "param:#2 int",
         "return:int"
@@ -22369,12 +22369,12 @@
       "src/unnamed/arm9/0201/func_0201fec8.c": [
         "return:int"
       ],
-      "src/unnamed/ov000/func_ov000_020aa420.c": [
+      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "return:int"
       ]
     },
     "func_0201a9fc": {
-      "src/unnamed/ov000/func_ov000_020aa420.c": [
+      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#1 int *",
         "return:int"
       ]
@@ -24366,12 +24366,12 @@
       ]
     },
     "func_02057e7c": {
-      "src/unnamed/ov000/func_ov000_020aa420.c": [
+      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#1 int"
       ]
     },
     "func_02057e84": {
-      "src/unnamed/ov000/func_ov000_020aa420.c": [
+      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#1 int"
       ]
     },
