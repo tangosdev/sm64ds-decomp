@@ -1,6 +1,6 @@
 /* daOnms_c, the rolling crush box (profile ONIMASU). The cartridge keeps no
  * field names, so all are coined; the ones marked coined were named here
- * from their uses in src/actors/daOnms_c.cpp. Offsets and widths are observed.
+ * from their uses in src/game/actors/d_a_onms.cpp. Offsets and widths are observed.
  *
  * param1's low two bits pick how it moves: 0..2 index data_ov092_02132294
  * for a canned sequence of moves, 3 makes it follow the path whose id is in
@@ -29,7 +29,7 @@
  * base, followed by dBgCh_Actr, dCcAcPos_c and PathPtr members at the
  * offsets daOnms_c_classInit constructs. */
 struct daOnms_c : dBgActor_c {
-    dActor_c *mPlayerActor;         /* 0x320 - player that knocked the box away */
+    dActor_c *mPlayerActor;         /* 0x320 - last player that hit the box */
     dBgCh_Actr mWithMeshClsn;       /* 0x324 */
     s16 mTumbleVelX;                /* 0x4e0 - added to mAngleX each frame */ /* coined */
     s16 mTumbleVelY;                /* 0x4e2 */ /* coined */

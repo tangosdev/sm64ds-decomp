@@ -10,7 +10,7 @@ This lane independently audits three rows ranked `high` by
 | --- | --- | --- | --- |
 | [__sinit_ov009_02112458](../src/unnamed/ov009/__sinit_ov009_02112458.c) | [ov009](../config/arm9/overlays/ov009/symbols.txt)/`daSBird_c` | **CONFIRMED** | Not promotion-ready: resource-family symbol names, four original PMF member names, and unlicensed vtable/RTTI output remain |
 | [__sinit_ov015_02112f9c](../src/game/actors/d_a_obj_bk_billboard.cpp) | [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBkBillboard_c` | **CONFIRMED**, folded | Folded into the TU as an intact-object initializer (`__sinit_d_a_obj_bk_billboard.cpp`); manifest is `config/tu_manifest.d/ov015/daObjBkBillboard_c.json` |
-| [__sinit_ov002_02101064](../src/actors/daObjMarioCap_c.cpp) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`daObjMarioCap_c` | **CONFIRMED**, folded | Folded into the TU as an intact-object initializer (`__sinit_daObjMarioCap_c.cpp`); manifest is `config/tu_manifest.d/ov002/daObjMarioCap_c.json` |
+| [__sinit_ov002_02101064](../src/game/actors/d_a_obj_mario_cap.cpp) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`daObjMarioCap_c` | **CONFIRMED**, folded | Folded into the TU as an intact-object initializer (`__sinit_d_a_obj_mario_cap.cpp`); manifest is `config/tu_manifest.d/ov002/daObjMarioCap_c.json` |
 
 All three committed initializer transcriptions pass strict matching and linked
 verification with `blind: 0`. More importantly, ordinary static C++ objects and
@@ -121,7 +121,7 @@ The initializer constructs asset 1416 with `func_02017acc` and registers
 
 This is initializer ordinal 0 of 7. [.p__sinit_ov015_02112f9c](../config/arm9/overlays/ov015/symbols.txt) at
 `0x02113410` points to it; the next word points to
-[__sinit_ov015_02112fdc](../src/actors/daObjBk_Botaosi_c.cpp), independently owned by daObjBk_Botaosi_c. The parallel
+[__sinit_ov015_02112fdc](../src/game/actors/d_a_obj_bk_botaosi.cpp), independently owned by daObjBk_Botaosi_c. The parallel
 TU config attributes daObjBkBillboard_c's `.init` (`0x02112f9c..0x02112fdc`),
 `.ctor` word, and exact BSS interval to its first text TU.
 
@@ -151,19 +151,19 @@ The thirteen 8-byte animation handles are:
 
 | Global | Asset ID in source order | Consumers beyond `InitResources` / `CleanupResources` |
 | --- | ---: | --- |
-| [data_ov002_0210de30](../src/actors/daObjMarioCap_c.cpp) | `0x8012` | `OnTurnIntoEgg`, `func_020b7330`, `func_020b74d0` |
-| [data_ov002_0210de38](../src/actors/daObjMarioCap_c.cpp) | `0x8013` | `func_020b74d0` |
-| [data_ov002_0210de50](../src/actors/daObjMarioCap_c.cpp) | `0x480` | none |
-| [data_ov002_0210de60](../src/actors/daObjMarioCap_c.cpp) | `0x47e` | none |
-| [data_ov002_0210de48](../src/actors/daObjMarioCap_c.cpp) | `0x47f` | none |
-| [data_ov002_0210de28](../src/actors/daObjMarioCap_c.cpp) | `0x478` | none |
-| [data_ov002_0210de08](../src/actors/daObjMarioCap_c.cpp) | `0x476` | none |
-| [data_ov002_0210de20](../src/actors/daObjMarioCap_c.cpp) | `0x47c` | none |
-| [data_ov002_0210de40](../src/actors/daObjMarioCap_c.cpp) | `0x479` | none |
-| [data_ov002_0210de10](../src/actors/daObjMarioCap_c.cpp) | `0x477` | none |
-| [data_ov002_0210de00](../src/actors/daObjMarioCap_c.cpp) | `0x47d` | none |
-| [data_ov002_0210de58](../src/actors/daObjMarioCap_c.cpp) | `0x47b` | `func_020b7330` |
-| [data_ov002_0210de18](../src/actors/daObjMarioCap_c.cpp) | `0x47a` | `func_020b7330` |
+| [data_ov002_0210de30](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x8012` | `OnTurnIntoEgg`, `func_020b7330`, `func_020b74d0` |
+| [data_ov002_0210de38](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x8013` | `func_020b74d0` |
+| [data_ov002_0210de50](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x480` | none |
+| [data_ov002_0210de60](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x47e` | none |
+| [data_ov002_0210de48](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x47f` | none |
+| [data_ov002_0210de28](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x478` | none |
+| [data_ov002_0210de08](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x476` | none |
+| [data_ov002_0210de20](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x47c` | none |
+| [data_ov002_0210de40](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x479` | none |
+| [data_ov002_0210de10](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x477` | none |
+| [data_ov002_0210de00](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x47d` | none |
+| [data_ov002_0210de58](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x47b` | `func_020b7330` |
+| [data_ov002_0210de18](../src/game/actors/d_a_obj_mario_cap.cpp) | `0x47a` | `func_020b7330` |
 
 Each is constructed through `_ZN13SharedFilePtr9ConstructEj`, registered through
 `func_020731dc`, and paired with `SharedFilePtr_Destruct_Anim`. Its matching
@@ -210,7 +210,7 @@ The target data/BSS shape is exact and contiguous:
 
 This is initializer ordinal 8 of 26. Its `.ctor` word at `0x021080f0` sits
 between the words for [__sinit_ov002_02100f84](../src/unnamed/ov002/__sinit_ov002_02100f84.c) (`daObjKurumajiku_c`) and
-[__sinit_ov002_02101478](../src/game/actors/daObjPushblock_c.cpp) (`daObjPushblock_c`). This ordering is corroborating only:
+[__sinit_ov002_02101478](../src/game/actors/d_a_obj_pushblock.cpp) (`daObjPushblock_c`). This ordering is corroborating only:
 [ov002](../config/arm9/overlays/ov002/symbols.txt) has 26 initializers but 71 candidate text TUs, so the ordinal partition
 correctly refuses to attribute `.init`, `.ctor`, data, or BSS. Several TUs that
 need no static initializer occur between those named owners.

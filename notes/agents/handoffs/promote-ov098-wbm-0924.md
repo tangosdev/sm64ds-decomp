@@ -56,7 +56,7 @@ This document describes this commit. The queue records its immutable output SHA.
   class header; ov098 [delinks.txt](../../../config/arm9/overlays/ov098/delinks.txt)
   and [symbols.txt](../../../config/arm9/overlays/ov098/symbols.txt); the new
   [manifest entry](../../../config/tu_manifest.d/ov098/daWbm_c.json); the
-  promoted [src/actors/daWbm_c.cpp](../../../src/actors/daWbm_c.cpp); and the
+  promoted [src/game/actors/d_a_wbm.cpp](../../../src/game/actors/d_a_wbm.cpp); and the
   fourteen one-function units it absorbs, all retired and all now defined in
   the promoted TU (the manifest's `legacy_source` fields keep the history):
   - the classInit factory `daWbm_c_classInit`;
@@ -104,7 +104,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - The factory is folded into the TU. It is contiguous with tu_map's run, ends
   at the module's .text end, and as `return (int *)new daWbm_c;` written first
   it emits last at its ROM address with a byte-exact synthesized constructor,
-  like the folded factories in `src/actors/daObjYajirusi_c.cpp`.
+  like the folded factories in `src/game/actors/d_a_obj_yajirusi.cpp`.
 - Compiler experiments, each re-verified 14/14 or measured to fail:
   - The TU includes `common.h` first so the flat Matrix4x3 spelling wins.
     With math/Matrix.h's {Matrix3x3, Vector3} spelling the two matrix copies
@@ -166,7 +166,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `config/match_provenance.jsonl` line 134 and `config/match_attempts.jsonl`
   line 629 (rows 610 and 625 name the same function) is deferred to
   integration (files held by promote-ov095-udlift-0923); the integrator
-  retargets it to `src/actors/daWbm_c.cpp`.
+  retargets it to `src/game/actors/d_a_wbm.cpp`.
 
 ## Proof
 
@@ -193,7 +193,7 @@ gates ran.
 - Every undefined symbol of `build/tu/ov098-daWbm_c/daWbm_c.o` resolves under
   its exact spelling in a config symbols.txt.
 - `python tools/tu_promote.py ov098/daWbm_c --dry-run`, then applied: 14
-  functions consolidated to src/actors/daWbm_c.cpp (the srcpath-expected
+  functions consolidated to src/game/actors/d_a_wbm.cpp (the srcpath-expected
   destination), 14 attribution overrides, 2 CONVERTED identities retained.
 - `python tools/tubuild.py linkcheck --baseline --module ov098 -j16 --clean`
   exit 0 (control refreshed).
@@ -205,7 +205,7 @@ gates ran.
 - `python tools/prepush_linkcheck.py --range 787633e5e7..HEAD` exit 0: the
   changed header fans out to the TU only; 14 checked, 14 VERIFIED, 0 warnings,
   0 blocking. `python tools/affected_src.py include/daWbm_c.h` lists only
-  src/actors/daWbm_c.cpp.
+  src/game/actors/d_a_wbm.cpp.
 - `python tools/check_header_offsets.py include/daWbm_c.h` exit 0: 15
   commented fields, 0 mismatched, 0 unparsed, spans 0x3cc.
 - `the old credit check` exit 0:
@@ -224,7 +224,7 @@ gates ran.
 - `python tools/check_dead_references.py` exit 0, after the docstring fix
   above.
 - `python tools/tiers_ratchet.py --check` exit 1: FAILED, pre-existing. The
-  only backslide is `src/actors/dScMgLuigi_c.cpp#_ZN12dScMgLuigi_c10ResetBoardEv`
+  only backslide is `src/minigames/d_s_mg_luigi.cpp#_ZN12dScMgLuigi_c10ResetBoardEv`
   (no_unk_field), a file this change does not touch; the same check at the
   input commit fails identically (current 3057 there, 3061 here). Nothing was
   banked; `--update` was not run.

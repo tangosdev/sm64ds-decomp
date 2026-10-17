@@ -104,7 +104,7 @@ void func_0205f300(int a0, unsigned int a1, int a2)
             r4 = 2;
             break;
         default:
-            goto crash;
+            goto crash; /* kept: default: Crash(); return; adds a branch (0x2c4) */
         }
         data_020a80cc.f34 |= 1 << bit;
         data_020a80cc.f36 &= ~(1 << bit);

@@ -20,9 +20,10 @@
  * - func_020393d4 / func_020393c4 / func_020393a4: InitResources stores
  *   dBgW::UpdatePosWithTransform and &func_ov029_02111e60 on mMeshCollider;
  *   Behavior clips at 0x250000; dBgW.h has no setter.
- * - Sound::PlayLong: Behavior recycles unk_324 at mCamSpacePosX; not in
- *   include/Sound.h.
- * - data_ov029_0211428c / 02114284 are this TU's BMD/KCL file handles;
+ * - Sound::PlayLong: Behavior recycles unk_324 at mCamSpacePosX. Sound.h
+ *   declares it, but including Sound.h renumbers this TU's @NNN temps, which
+ *   the manifest pins, so the mangled extern stays.
+ * - gWcObj05ModelFile / 02114284 are this TU's BMD/KCL file handles;
  *   data_ov029_0211306c the CLPS block stays unowned overlay data.
  * - func_ov029_02111e40 / 02111e60 stay placeholder labels (BeforeClsn
  *   veneer + player-id trigger). decl_common.h's `void(void)` view of
@@ -30,6 +31,12 @@
  * - S14: g_profile_WC_OBJ05 stays outside the licensed .text.
  * - common.h first (InitResources SetFile matrix argument).
  */
+
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wc_obj05_AssetId {
+    ASSET_WC_OBJ05_BMD = 0x06d3,
+    ASSET_WC_OBJ05_KCL = 0x06d4
+};
 
 #include "common.h"
 #include "daObjWc_Obj05_c.h"
@@ -62,8 +69,8 @@ void func_020393d4(void *p, void *v);
 void func_020393c4(void *p, void *v);
 void func_020393a4(int *p, int v);
 int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
-extern WcObj05ModelFilePtr data_ov029_0211428c;
-extern WcObj05CollisionFilePtr data_ov029_02114284;
+extern WcObj05ModelFilePtr gWcObj05ModelFile;
+extern WcObj05CollisionFilePtr gWcObj05CollisionFile;
 extern CLPS_Block data_ov029_0211306c;
 }
 
@@ -113,11 +120,11 @@ extern "C" void func_ov029_02111e40(char *a, char *b)
 // @symbol _ZN15daObjWc_Obj05_c13InitResourcesEv
 s32 daObjWc_Obj05_c::InitResources()
 {
-    BMD_File *f = (BMD_File *)Model::LoadFile(data_ov029_0211428c);
+    BMD_File *f = (BMD_File *)Model::LoadFile(gWcObj05ModelFile);
     mModel.SetFile(f, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    KCL_File *mc = (KCL_File *)dBgW_Kc::LoadFile(data_ov029_02114284);
+    KCL_File *mc = (KCL_File *)dBgW_Kc::LoadFile(gWcObj05CollisionFile);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, mc, &mClsnMat, 0x1000, mAngleY, data_ov029_0211306c);
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
@@ -218,8 +225,8 @@ s32 daObjWc_Obj05_c::CleanupResources()
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    data_ov029_0211428c.Release();
-    data_ov029_02114284.Release();
+    gWcObj05ModelFile.Release();
+    gWcObj05CollisionFile.Release();
     return 1;
 }
 // @symbol _ZN15daObjWc_Obj05_cD1Ev
@@ -229,5 +236,5 @@ s32 daObjWc_Obj05_c::CleanupResources()
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj05.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj05ModelFilePtr data_ov029_0211428c(0x6d3);
-WcObj05CollisionFilePtr data_ov029_02114284(0x6d4);
+WcObj05ModelFilePtr gWcObj05ModelFile(ASSET_WC_OBJ05_BMD);
+WcObj05CollisionFilePtr gWcObj05CollisionFile(ASSET_WC_OBJ05_KCL);

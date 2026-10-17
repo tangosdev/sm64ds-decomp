@@ -2,7 +2,7 @@
 
 - tested_commit: 019a7cc06 (cleanup-leftover-overlay-batch-2 at experiment time)
 - compiler: mwccarm 2004/b56 (tools/mwccarm/2004/b56/mwccarm.exe)
-- claim: `src/actors/daBakubaku_c.cpp:20-21` keeps
+- claim: `src/game/actors/d_a_bakubaku.cpp:20-21` keeps
   common.h first because the nested Matrix.h spelling scalarizes
   the 12-word mat4x3 / mShadowMat copies.
 - attempted_change (scratch-applied, then reverted):
@@ -17,7 +17,7 @@
 - command:
 
 ```text
-.venv/bin/python tools/match.py --c src/actors/daBakubaku_c.cpp \
+.venv/bin/python tools/match.py --c src/game/actors/d_a_bakubaku.cpp \
   --func func_ov032_02112044 --addr 0x02112044 --size 0xe0 \
   --version 2004/b56 --module ov032 --strict-relocs --brief
 ```

@@ -1,0 +1,275 @@
+{
+  "task": "enemy-coin-fields1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3839",
+  "base": "a159039b892ca45ca794d5e612ce15a971496768",
+  "source_checkpoint": "4d311b5611d3124b4f41bc2e7989f3845c70a4ef",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source_author": {
+    "model": "GPT-6 Astra",
+    "session": "codex-enemy-frontier-astra1014",
+    "actual_agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "harness_session_uuid": "01a12e6f-7ee1-7162-9a64-81145ed6b260",
+    "disclosure": "This actual agent authored both the earlier private candidate and this production source change. The root coordinator did not author it; independent acceptance remains for another actual agent."
+  },
+  "scope": [
+    "src/actors/dEnemyBase_c.cpp",
+    "notes/experiments/enemy-coin-fields1014.json"
+  ],
+  "change": "SpawnCoin uses a genuine dEnemyBase_c receiver and existing actor position, area, previous-angle and horizontal-speed fields instead of byte-offset casts. Existing unk_108 and unk_10a names remain pending semantic naming evidence.",
+  "source_completion": "partial",
+  "evidence_classification": {
+    "layout": "Existing headers declare the exact signed widths and offsets; no layout or declaration changed. The code still reads position z,y,x before filling Vector3, and preserves random calls, loop bounds, arithmetic and PoofDust order.",
+    "names": "All accessed field names are adopted repository names, not claims of recovered original identifiers. In particular unk_108 and unk_10a remain unknown-field names.",
+    "receiver_local": "Keeping the useful typed receiver local preserves compiler-local descriptor numbering. A private direct-this spelling emitted identical allocated bytes but renumbered descriptors, so it was not selected for this source-only scope."
+  },
+  "remaining_reconstruction": [
+    {
+      "id": "ENEMYBASE-PMF-FIRST",
+      "location": "src/actors/dEnemyBase_c.cpp: Aea30C and first dispatch table",
+      "disposition": "deferred",
+      "summary": "The file-local Aea30C receiver and address-named handlers remain. Its polymorphic-receiver scheduling claim is inherited commentary, not a newly established compiler impossibility."
+    },
+    {
+      "id": "ENEMYBASE-PMF-DEATH",
+      "location": "src/actors/dEnemyBase_c.cpp: EnemyDeathC and second dispatch table",
+      "disposition": "deferred",
+      "summary": "Five genuine dEnemyBase_c callback methods privately preserve all allocated bytes and relocations. Integration requires configured function renames plus 51 affected consumer manifest updates; reserved surfaces prevent inclusion in this task."
+    },
+    {
+      "id": "ENEMYBASE-RAW-ABI",
+      "location": "src/actors/dEnemyBase_c.cpp: existing leftovers block and other methods",
+      "disposition": "deferred",
+      "summary": "Other raw fields, address-derived names, the two-argument func_ov002_020ae5c8 boundary, fixed-point ABI spellings and UpdateKillByInvincibleChar stand-ins remain. Their historical barrier claims were not all re-probed. This task removes only SpawnCoin raw field access."
+    }
+  ],
+  "historical_findings": "The task has no declared predecessor review record. Existing file leftovers are explicitly carried as partial reconstruction above; no independent acceptance of those wider interfaces is inferred from matching bytes.",
+  "byte_proof": {
+    "source_sha256": "88160a3933835ccd2cb79149c12c4fc9f75f3eb4ed2d7a85f329d9b203d6729b",
+    "manifest_sha256": "88d2e12af4fdcaadf40df0c43ab1ee7e093b47b28375074b26cb520f0231178b",
+    "compiler": "2004/b56",
+    "raw_equal": true,
+    "raw_sha256": "6733fe33aa4c0cc411f31e753ed293c571d789f5bbaed22d43c69adc9c3b33a4",
+    "prepared_equal": true,
+    "prepared_sha256": "7797744f2008de03ecb3e01878793cff7c28505b4fb5f3e7b2c4d5f6e7047d4b",
+    "complete_graphs_equal": true,
+    "raw_relocations": 214,
+    "prepared_relocations": 169,
+    "owned_functions": 32,
+    "metadata_bytes": 219,
+    "metadata_relocations": 43
+  },
+  "complete_ownership": {
+    "retained_nonempty_allocated_sections": 52,
+    "retained_functions": 33,
+    "owned_function_bytes": 5980,
+    "generated_initializer_bytes": 420,
+    "ctor_bytes": 4,
+    "descriptor_bytes": 128,
+    "bss_bytes": 128,
+    "owned_nontext_relocations": 35,
+    "metadata_records": [
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "storage_address": "0x2086d70",
+        "bytes": 8,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "storage_address": "0x2086e60",
+        "bytes": 9,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "storage_address": "0x2086e54",
+        "bytes": 9,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "storage_address": "0x208e384",
+        "bytes": 10,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "module": "ov002",
+        "storage_address": "0x21081c0",
+        "bytes": 12,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "module": "ov002",
+        "storage_address": "0x21081cc",
+        "bytes": 15,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "storage_address": "0x208e390",
+        "bytes": 12,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "storage_address": "0x2086e78",
+        "bytes": 12,
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "symbol": "_ZTV12dEnemyBase_c",
+        "module": "ov002",
+        "storage_address": "0x21081dc",
+        "bytes": 132,
+        "blind": 0,
+        "diffs": []
+      }
+    ],
+    "method": "Ordinary rombuild _retarget/_isolate and tu_production.prepare_intact_object; unchanged manifest policies. Independently link complete raw RTTI/vtable storage including preambles against ROM; compare full raw/prepared ELF symbol, allocated-section and typed-relocation graphs against the base."
+  },
+  "checks": {
+    "prepush": {
+      "command": "python tools/prepush_linkcheck.py --range a159039b892ca45ca794d5e612ce15a971496768..4d311b5611d3124b4f41bc2e7989f3845c70a4ef --json build/enemy-gates/prepush.json",
+      "exit_code": 0,
+      "verified": 33,
+      "blind": 0,
+      "diffs": []
+    },
+    "decl": {
+      "command": "tools/check_decl_agreement.py --changed a159039b892ca45ca794d5e612ce15a971496768",
+      "exit_code": 0,
+      "log": "build/enemy-gates/decl.log"
+    },
+    "decl-global": {
+      "command": "tools/check_decl_agreement.py --check",
+      "exit_code": 0,
+      "log": "build/enemy-gates/decl-global.log"
+    },
+    "port": {
+      "command": "tools/port_refcheck.py",
+      "exit_code": 0,
+      "log": "build/enemy-gates/port.log"
+    },
+    "langmode": {
+      "command": "tools/langmode_audit.py --check langmode-baseline.json",
+      "exit_code": 0,
+      "log": "build/enemy-gates/langmode.log"
+    },
+    "conflicts": {
+      "command": "tools/check_tubuild_conflicts.py",
+      "exit_code": 0,
+      "log": "build/enemy-gates/conflicts.log"
+    },
+    "duplicates": {
+      "command": "tools/check_duplicate_sources.py",
+      "exit_code": 0,
+      "log": "build/enemy-gates/duplicates.log"
+    },
+    "drafts": {
+      "command": "tools/check_drafts_compile.py --quiet",
+      "exit_code": 0,
+      "log": "build/enemy-gates/drafts.log"
+    },
+    "rombuild": {
+      "command": "python tools/rombuild.py -j16 --profile stock --report-json build/enemy-gates/rombuild.json --data-json build/enemy-gates/romdata-full.json",
+      "exit_code": 0,
+      "status": "passed",
+      "modules_exact": 106,
+      "modules_checked": 106,
+      "source_built_functions": 11334,
+      "source_built_functions_reproducing": 11334,
+      "source_owned_data_claims": 331,
+      "source_owned_data_claims_reproducing": 331,
+      "source_owned_bss_claims": 239,
+      "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "intact_tu_verdict": "dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "log": "build/enemy-gates/rombuild.log"
+    }
+  },
+  "native_method_continuation": {
+    "private_root": "C:/tmp/sm64ds-enemy-frontier1014/build/cpp-frontier-astra1014",
+    "source": "native_death/dEnemyBase_c.cpp",
+    "private_header": "headers/dEnemyBase_c.h",
+    "proof": "production-summary.json and native_death/production-evidence.json",
+    "consumer_scope": "consumer-metadata-scope.json",
+    "full_header_fanout": 74,
+    "other_consumers_compiled": 73,
+    "other_consumers_allocated_bytes_and_semantic_relocations_equal": 73,
+    "consumer_manifests_needing_name_policy_updates": 51,
+    "reservation_snapshot": "1c2b1a87c4aac7a9a6dfa5d306157485a87740be",
+    "owners": {
+      "asset-readability1014": 37,
+      "manta-asset-ids1014": 1,
+      "pr2994-provenance-repair-0923": 1,
+      "cheep-native-state1013": 1,
+      "unreserved_manifests": 11
+    },
+    "additional_boundaries": [
+      "OV002 symbols/delinks are reserved by enemy-switch-tu-1003.",
+      "The rename ledger is reserved by tu-kpa3bg-0927.",
+      "dScMgBase also emits __arraydtor$333 instead of $328, requiring explicit function/config metadata changes.",
+      "Private callback proof is not a complete native-branch ROM build or Source acceptance. No new object-retarget policy is proposed."
+    ],
+    "next_action": "Coordinator obtains explicit resource handoffs, then a producer resumes the preserved five-method candidate and all affected metadata before independent verification."
+  },
+  "formal_acceptance": "Pending independent verifier. Producer proof establishes bytes and unchanged metadata, not complete class reconstruction.",
+  "publication": "No public branch push, PR or merge performed by this producer. Queue offer, when made, binds the final report-only descendant.",
+  "finalization": "The tested source checkpoint is immutable. The final descendant may add only this report; source/header/config/tool bytes must remain identical to the checkpoint.",
+  "artifacts": {
+    "build/enemy-gates/whole-proof.json": "d3579aab60e462ce2a895f331fdb2449a5deb06f1b22d387975303d21352ed63",
+    "build/enemy-gates/graphs.json": "f1c502d41fed56252473f4e720fc7df09fe297e4b95cfb5c68efd4e2028f3d0f",
+    "build/enemy-gates/candidate-production.json": "3c06fd6575cbc3aad4b39b95176fad63483e93dd8f3683d1549d0cb57b59cb3a",
+    "build/enemy-gates/prepush.json": "03a884378d6e570792f6c19090fc68d026e32ee580ef7717e77c712d911fd137",
+    "build/enemy-gates/static-summary.json": "a1e7880045432052ec22f8bbaf929c672b3c1aa4ba1043e8cb0d53e7b1cb6354",
+    "build/enemy-gates/rombuild.json": "439a42ec65484ce18f2c2ea9691fa6f0fd5f60d5ad1be16bb82543729eff3d27",
+    "build/enemy-gates/rombuild.log": "f9cf6fe6f43a0cec5c54c7b6077b3e2f1826e499ada30a760c5522b247119b9a",
+    "build/enemy-gates/romdata-full.json": "25295e2698db5810b2bbf7222279b269a719007fc50c186768d92eccfdc95d67"
+  },
+  "status": "producer-verified; independent acceptance pending",
+  "stock_control_advisory": {
+    "scope": "Unmodified production baseline pipeline; zero new symbol errors is the gate, not zero pre-existing symbol diagnostics.",
+    "missing_symbol_diagnostics": [
+      "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+      "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+      "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+    ],
+    "baseline_modules_exact": 106,
+    "baseline_rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+  },
+  "global_data_advisory": {
+    "verified_unique_symbols": 969,
+    "partial_unique_symbols": 1519,
+    "differing_unique_symbols": 1,
+    "unnamed_by_config": 21,
+    "record_count": 5282,
+    "differing_symbol": "_ZTV10dCcAcPos_c",
+    "differing_bytes": 4,
+    "unchanged_sources": [
+      "src/_ZN10dCcAcPos_cD1Ev.cpp",
+      "src/_ZN10dCcAcPos_cD0Ev.cpp"
+    ],
+    "scope": "These source/header/compiler inputs are unchanged from the base. This existing whole-tree advisory is outside the enemy TU. It is not represented as a clean whole-tree data result; all nine emitted enemy TU metadata records were separately verified in full."
+  }
+}

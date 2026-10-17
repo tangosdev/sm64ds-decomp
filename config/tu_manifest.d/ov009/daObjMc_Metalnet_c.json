@@ -431,12 +431,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@408",
+      "from": "@405",
       "to": "@400",
       "evidence": "compiler-local registration node; @394 is taken by ov032 daObjTdWater_c on pending branch sinit/ov032-tdwater, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@409",
+      "from": "@406",
       "to": "@401",
       "evidence": "compiler-local registration node; @395 is taken by ov032 daObjTdWater_c on pending branch sinit/ov032-tdwater, renamed to an unused fleet temp of equal length"
     }

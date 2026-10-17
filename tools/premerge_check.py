@@ -51,7 +51,7 @@ THIS IS NOT HYPOTHETICAL
 ------------------------
 Run by hand on 2026-08-29 against PR #2001: green on its own PR, clean-merging, no
 conflict. The merge result turned `converted-ratchet` RED, because
-`src/actors/ActorDerived.cpp` had landed in one of the sixteen commits the PR was
+`src/runtime/actor/ActorDerived.cpp` had landed in one of the sixteen commits the PR was
 behind. Neither side shows this. The PR's tree is green. Main is green. Only the
 tree that does not yet exist is red.
 

@@ -15,7 +15,7 @@
  * and disclosed in symbols/actor_renames.tsv.
  *
  * Shared table at 0x4f38 (mShared, 0x270 bytes), built by
- * func_ov006_020c1d80 and torn down by func_ov006_020c1c64 -- the same
+ * Dealer_Construct and torn down by Dealer_Destruct -- the same
  * pair dScMgCard_c, dScMgMCarlo2_c and dScMgRoulette_c use.
  */
 #ifndef DSCMGMEMORY_C_H
@@ -23,10 +23,10 @@
 
 #include "dScMgSingle3DBase_c.h"
 
-extern "C" int func_ov006_020c1c64(char *state);
+extern "C" int Dealer_Destruct(char *state);
 
 struct dMgMemorySharedState_c {
-    ~dMgMemorySharedState_c() { func_ov006_020c1c64((char *)this); }
+    ~dMgMemorySharedState_c() { Dealer_Destruct((char *)this); }
     u8 pad_000[0x1e6];
     s16 ready;       /* 0x1e6 -- set when a new Memory Match round starts */
     u8 pad_1e8[0x88];
@@ -85,9 +85,9 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     s32 InitResources();
     s32 Behavior();
     s32 Render();
-    virtual void OnYoshiTryEat(int arg);    /* slot 18 */
-    virtual int OnTurnIntoEgg(int mode);    /* slot 19 */
-    virtual void OnGroundPounded();         /* slot 21 */
+    virtual void StartRound(int arg);    /* slot 18 */
+    virtual int CanEndState(int mode);    /* slot 19 */
+    virtual void OnDealDone();         /* slot 21 */
 
     void DrawMessage();
     void DrawCursor();

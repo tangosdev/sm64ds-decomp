@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "task": "klepto-swoop-cpp1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+  "actor": "Klepto the condor",
+  "class": "daJango_c",
+  "state": "SWOOP",
+  "source": "src/actors/daJango_c.cpp",
+  "manifest": "config/tu_manifest.d/ov062/daJango_c.json",
+  "base_commit": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "symbol": "func_ov062_0211ba84",
+  "module": "ov062",
+  "address": "0x0211ba84",
+  "size": 464,
+  "change": "Compile SWOOP update as C++, use typed actor/player fields and native method calls, and preserve the retail block copy through a three-word array snapshot.",
+  "scope": "No shared headers, public symbols, source paths or production ownership ranges change; twelve generated-name mapping inputs change, canonical targets remain identical.",
+  "source_lf_sha256": "cd4b18fe3740a58cac74245c1ef2a535fc0806980355131e63fbc43f15787543",
+  "status": "Producer integrated production checks pass; independent final exact-head Source acceptance required before main-based PR.",
+  "producer_proof": {
+    "compiler": "2004/b56",
+    "text_functions": 24,
+    "initializer": 1,
+    "strict_verified": 25,
+    "blind": 0,
+    "diffs": 0,
+    "typed_function_relocations": 282,
+    "helper_relocations": 17,
+    "whole_normalized_elf_bytes": 25584,
+    "baseline_candidate_whole_elf_identical": true,
+    "owned_nontext": {
+      "ok": true,
+      "symbol_errors": [],
+      "sections": [
+        {
+          "name": ".init",
+          "bytes": 464,
+          "size_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "name": ".ctor",
+          "bytes": 4,
+          "size_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "name": ".data",
+          "bytes": 80,
+          "size_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "name": ".bss",
+          "bytes": 164,
+          "size_ok": true,
+          "bytes_ok": true
+        }
+      ]
+    },
+    "changed_temporary_inputs": 12,
+    "new_function_definitions": 0,
+    "new_compiler_output_policy": false,
+    "tooling_pr_dependency": false,
+    "pre_section_order_elf_sha256": "e3f9d03ece92ce6a71804a35816c6a5cf342fadf48431970cd1ed6a42ca62ab2",
+    "whole_prepared_elf_sha256": "3f3dd072461b42c420543ce16395ef23914adcbd91979dce81c4a44e485b7bc2",
+    "normalization_stages": [
+      "apply_compiler_only_policy",
+      "apply_externalized_output_policy",
+      "apply_defined_symbol_rename_policy",
+      "apply_undefined_symbol_alias_policy",
+      "apply_symbol_binding_policy",
+      "prepare_owned_nontext_section_order"
+    ],
+    "qualification": "The pre-order and complete ordinary prepared objects each reproduce their baseline exactly. Owned section ordering rebuilds ELF indices/string tables; strict function and owned-section checks use the post-order prepared object."
+  },
+  "anonymous_mapping": {
+    "@1129": "@1127",
+    "@1130": "@1128",
+    "@1131": "@1129",
+    "@1132": "@1130",
+    "@1134": "@1132",
+    "@1136": "@1134",
+    "@1138": "@1136",
+    "@1140": "@1138",
+    "@1142": "@1140",
+    "@1144": "@1142",
+    "@1146": "@1144",
+    "@1148": "@1146"
+  },
+  "remaining_work": [
+    "Existing free-function state entry and JangoFreeState descriptor remain; complete state/member interface reconstruction is tracked under issue3777.",
+    "Array snapshot views the contiguous player-position words through a local three-word layout type under the pinned compiler.",
+    "Existing scalar Fix12 ABI bridges and resource layout views elsewhere in the TU remain unchanged."
+  ],
+  "gates": {
+    "tested_source_commit": "f7df5714c08c498aea3936d798b8a99db9b9eb92",
+    "tested_base": "08b118098ecb7ce86b85f1215886a4618e268a86",
+    "raw_prepush": {
+      "checked": 25,
+      "verified": 24,
+      "warnings": [
+        {
+          "symbol": "__sinit_daJango_c.cpp",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "qualification": "Raw checks lack the local data-address policy; ordinary intact preparation resolves the initializer warning."
+    },
+    "declarations": {
+      "scoped_files": 23,
+      "inherited_disagreements": 457,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    },
+    "independent_preliminary": {
+      "prepared_checks": 25,
+      "blind": 0,
+      "diffs": 0,
+      "whole_prepared_elf_identical": true,
+      "unique_defined_names": 63,
+      "raw_defined_entries": 108,
+      "metadata_records_fully_verified": 11,
+      "metadata_bytes": 242,
+      "anonymous_symbols": 13,
+      "incoming_references": 13,
+      "outgoing_references": 9,
+      "qualification": "Checkpoint Source/manifest independently replicated under current-main tools; final immutable offer and full production acceptance pending."
+    },
+    "production_rom": {
+      "result": "PASS",
+      "functions_reproduced": 11332,
+      "mismatching_functions": 0,
+      "data_claims_reproduced": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "global_advisory": "969 verified,1519 partial,1 inherited differing,21 unnamed"
+    }
+  }
+}

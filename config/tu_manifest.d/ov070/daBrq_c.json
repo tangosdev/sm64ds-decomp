@@ -1,8 +1,8 @@
 {
   "id": "ov070/daBrq_c",
   "module": "ov070",
-  "source": "src/actors/daBrq_c.cpp",
-  "promoted_source": "src/actors/daBrq_c.cpp",
+  "source": "src/game/actors/d_a_brq.cpp",
+  "promoted_source": "src/game/actors/d_a_brq.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
@@ -21,6 +21,21 @@
       "name": ".data",
       "start": "0x0212323c",
       "end": "0x021232f4"
+    },
+    {
+      "name": ".init",
+      "start": "0x02122d80",
+      "end": "0x02122f30"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021230a8",
+      "end": "0x021230ac"
+    },
+    {
+      "name": ".bss",
+      "start": "0x021235ec",
+      "end": "0x02123698"
     }
   ],
   "functions": [
@@ -187,7 +202,99 @@
     }
   ],
   "rodata": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov070_021235ec",
+      "address": "0x021235ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact resource, Vector3 or three-row PMF table extent."
+    },
+    {
+      "symbol": "data_ov070_021235f4",
+      "address": "0x021235f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact resource, Vector3 or three-row PMF table extent."
+    },
+    {
+      "symbol": "data_ov070_021235fc",
+      "address": "0x021235fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact resource, Vector3 or three-row PMF table extent."
+    },
+    {
+      "symbol": "data_ov070_02123604",
+      "address": "0x02123604",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact resource, Vector3 or three-row PMF table extent."
+    },
+    {
+      "symbol": "data_ov070_0212360c",
+      "address": "0x0212360c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact resource, Vector3 or three-row PMF table extent."
+    },
+    {
+      "symbol": "@228",
+      "address": "0x02123614",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler destructor-registration node at its unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@229",
+      "address": "0x02123620",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler destructor-registration node at its unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@230",
+      "address": "0x0212362c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler destructor-registration node at its unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@232",
+      "address": "0x02123638",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler destructor-registration node at its unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@233",
+      "address": "0x02123644",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler destructor-registration node at its unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@234",
+      "address": "0x02123650",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler destructor-registration node at its unchanged retail initializer destination."
+    },
+    {
+      "symbol": "data_ov070_0212365c",
+      "address": "0x0212365c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact resource, Vector3 or three-row PMF table extent."
+    },
+    {
+      "symbol": "data_ov070_02123668",
+      "address": "0x02123668",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact resource, Vector3 or three-row PMF table extent."
+    }
+  ],
   "relocations": [
     {
       "section": ".data",
@@ -548,6 +655,356 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020100dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122d90",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122da0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122dac",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122dbc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122dc8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122dd8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122de4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122df4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122e00",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017934"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122e10",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122eb4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ec4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021235fc",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021235fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ecc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ed0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@228",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123614"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ed4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02123604",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123604"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122edc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@229",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123620"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021235f4",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021235f4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122eec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@230",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212362c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212360c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212360c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122ef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@232",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123638"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122efc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021235ec",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021235ec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201791c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@234",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123650"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02123668",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123668"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212320c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212320c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02123224",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123224"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02123214",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123214"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02123234",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123234"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212321c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212321c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212322c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212322c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212365c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212365c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7Vector3D1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020072c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122f2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@233",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123644"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021230a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_brq.cpp",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122d80"
     }
   ],
   "externalized_output": [
@@ -698,7 +1155,8 @@
     "daBrq_c_classInit and g_profile_BIRIKYU are reconstructed source-style names: SM64DS proves the daBrq_c RTTI identity, BIRIKYU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Amp_Spawn and Amp_SpawnInfo; readable private state-handler names remain inferred aliases.",
     "The inline destructor and InitResources key function naturally emit retail D1 then D0, type name, RTTI, vtable, and SpawnInfo without a retained D2 or forcing helper.",
     "daBrq_c_classInit is folded as return new daBrq_c(). Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size).",
-    "The deferred initializer at 0x02122d80, its .ctor word, PMF input table, resource globals, and state-table BSS remain separately enrolled for the next reconstruction phase."
+    "The deferred initializer at 0x02122d80, its .ctor word, PMF input table, resource globals, and state-table BSS remain separately enrolled for the next reconstruction phase.",
+    "Native initializer follow-up: five resource handles, three two-PMF state rows and one Vector3 replace the handwritten __sinit_ov070_02122d80.cpp. Local BrqModelResource/BrqAnimationFileResource/BrqTextureSequenceResource type names are inferred eight-byte ABI views, not recovered original class names; exact C1/D1 aliases target original helper destinations. Existing .data metadata ownership and vtable address-point proof are unchanged. Six typed ROM PMF descriptor imports stay ROM-owned. Existing Fix12/interface/layout bridges remain partial reconstruction."
   ],
   "compiler_only_output": [
     {
@@ -793,11 +1251,31 @@
           "end": "0x021232f4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02122d80",
+          "end": "0x02122f30",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021230a8",
+          "end": "0x021230ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x021235ec",
+          "end": "0x02123698",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 23
+          "LICENSED": 38
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -808,20 +1286,126 @@
           {
             "section": ".data",
             "original": [
-              7,
-              11,
-              17,
-              19
+              13,
+              16,
+              29,
+              32
             ],
             "desired": [
+              13,
+              16,
+              29,
+              32
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              72
+            ],
+            "desired": [
+              72
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              70
+            ],
+            "desired": [
+              70
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
               7,
+              8,
+              9,
+              10,
               11,
-              17,
-              19
+              18,
+              21,
+              22,
+              23,
+              24,
+              27,
+              28,
+              31
+            ],
+            "desired": [
+              11,
+              9,
+              7,
+              8,
+              10,
+              22,
+              24,
+              27,
+              28,
+              18,
+              21,
+              23,
+              31
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                8,
+                9,
+                10,
+                11,
+                18,
+                21,
+                22,
+                23,
+                24,
+                27,
+                28,
+                31
+              ],
+              "desired": [
+                11,
+                9,
+                7,
+                8,
+                10,
+                22,
+                24,
+                27,
+                28,
+                18,
+                21,
+                23,
+                31
+              ],
+              "slots": [
+                7,
+                8,
+                9,
+                10,
+                11,
+                18,
+                21,
+                22,
+                23,
+                24,
+                27,
+                28,
+                31
+              ]
+            }
+          ],
+          "symbolIndices": 13,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -856,5 +1440,156 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_d_a_brq.cpp",
+      "address": "0x02122d80",
+      "size": "0x1b0",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native five-handle construction, three PMF state rows and one Vector3 reproduce the 432-byte retail initializer."
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_brq.cpp",
+      "address": "0x021230a8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original constructor-table entry for this native initializer."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@411",
+      "to": "@228",
+      "evidence": "Compiler-local registration node at ov070:0x02123614; unique short configured label changes no bytes or relocations."
+    },
+    {
+      "from": "@412",
+      "to": "@229",
+      "evidence": "Compiler-local registration node at ov070:0x02123620; unique short configured label changes no bytes or relocations."
+    },
+    {
+      "from": "@413",
+      "to": "@230",
+      "evidence": "Compiler-local registration node at ov070:0x0212362c; unique short configured label changes no bytes or relocations."
+    },
+    {
+      "from": "@414",
+      "to": "@232",
+      "evidence": "Compiler-local registration node at ov070:0x02123638; unique short configured label changes no bytes or relocations."
+    },
+    {
+      "from": "@416",
+      "to": "@233",
+      "evidence": "Compiler-local registration node at ov070:0x02123644; unique short configured label changes no bytes or relocations."
+    },
+    {
+      "from": "@415",
+      "to": "@234",
+      "evidence": "Compiler-local registration node at ov070:0x02123650; unique short configured label changes no bytes or relocations."
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_brq.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    },
+    {
+      "symbol": ".p__sinit_d_a_brq.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    },
+    {
+      "symbol": "@228",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    },
+    {
+      "symbol": "@229",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    },
+    {
+      "symbol": "@230",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    },
+    {
+      "symbol": "@232",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    },
+    {
+      "symbol": "@233",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    },
+    {
+      "symbol": "@234",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned local symbol to the DSD global symbol surface; no storage or relocation changes."
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN16BrqModelResourceC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN16BrqModelResourceD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN26BrqTextureSequenceResourceC1Ej",
+      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017934",
+      "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN26BrqTextureSequenceResourceD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201791c",
+      "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN24BrqAnimationFileResourceC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN24BrqAnimationFileResourceD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "Native compiler destructor registration calls the original arm9 helper."
+    }
+  ]
 }

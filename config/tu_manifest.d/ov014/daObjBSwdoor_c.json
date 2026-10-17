@@ -87,14 +87,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov014_02114940",
+      "symbol": "gBAnaShutterCollisionFile",
       "address": "0x02114940",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 1444"
     },
     {
-      "symbol": "data_ov014_02114948",
+      "symbol": "gBAnaShutterModelFile",
       "address": "0x02114948",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -468,7 +468,7 @@
       "source": "0x021130f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov014_02114948",
+      "symbol": "gBAnaShutterModelFile",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x02114948"
@@ -498,7 +498,7 @@
       "source": "0x02113108",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov014_02114940",
+      "symbol": "gBAnaShutterCollisionFile",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x02114940"

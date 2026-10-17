@@ -33,7 +33,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Class/TU/symbol and module-qualified ROM scope: `daPkn_c`, [ov084](../../../config/arm9/overlays/ov084/symbols.txt). The class is a Piranha Plant enemy.
   `.text 0x0212eaf0..0x02130174`, 24 functions, folded into one translation unit at
-  `src/actors/daPkn_c.cpp`. This also opens [ov084](../../../config/arm9/overlays/ov084/symbols.txt), which had no manifest before.
+  `src/game/actors/d_a_pkn.cpp`. This also opens [ov084](../../../config/arm9/overlays/ov084/symbols.txt), which had no manifest before.
 - Reserved source/header/config surfaces actually touched: [ov084/delinks.txt](../../../config/arm9/overlays/ov084/delinks.txt)
   (24 per-function entries → one `complete` span), [ov084/symbols.txt](../../../config/arm9/overlays/ov084/symbols.txt) (8 member
   rows and one `_ZTV` row renamed; the duplicate coined `_ZTV` alias row dropped),

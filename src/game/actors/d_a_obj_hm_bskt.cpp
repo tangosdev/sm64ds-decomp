@@ -33,6 +33,12 @@
  * Leftover: inline destructor (out of line emits D0 before D1).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_hm_bskt_AssetId {
+    ASSET_HM_BASKET_BMD = 0x0618,
+    ASSET_HM_BASKET_KCL = 0x0619
+};
+
 #include "daObjHmBskt_c.h"
 #include "SharedFilePtr.h"
 
@@ -165,22 +171,19 @@ s32 daObjHmBskt_c::CleanupResources()
 // @symbol func_ov030_0211124c
 extern "C" int func_ov030_0211124c(char *c, char *mc)
 {
+    daObjHmBskt_c *self = (daObjHmBskt_c *)c;
     dBgCh_Actr_UpdateContinuous_Veneer(mc);
     int g = ((dBgCh_Actr *)mc)->IsOnGround();
     if (!g) return g;
-    ((fBase_c *)*(void **)(c + 0x4dc))->MarkForDestruction();
-    int px = *(int *)(c + 0x5c);
-    int pz = *(int *)(c + 0x64);
-    int py = *(int *)(c + 0x60) + 0x96000;
+    self->mStarActor->MarkForDestruction();
+    int px = self->mPosX;
+    int pz = self->mPosZ;
+    int py = self->mPosY + 0x96000;
     Vector3 p(px, py, pz);
-    dActor_c::Spawn(
-        0xb2, (unsigned char)((*(unsigned int *)(c + 8)) & 0xf) | 0x20, p, 0,
-        *(signed char *)(c + 0xcc), -1);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0xb, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0xd, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-    ((fBase_c *)c)->MarkForDestruction();
+    dActor_c::Spawn(0xb2, (unsigned char)(self->param1 & 0xf) | 0x20, p, 0, self->mAreaId, -1);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb, self->mPosX, self->mPosY, self->mPosZ);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd, self->mPosX, self->mPosY, self->mPosZ);
+    self->MarkForDestruction();
 }
 
 /* _ZN13daObjHmBskt_cD1Ev and _ZN13daObjHmBskt_cD0Ev are NOT WRITTEN HERE ON
@@ -191,5 +194,5 @@ extern "C" int func_ov030_0211124c(char *c, char *mc)
 /* The ROM's initializer constructs the model handle with file ID 1560 and
  * the collision handle with file ID 1561, registering a destructor node for
  * each. mwcc emits __sinit_d_a_obj_hm_bskt.cpp from these definitions. */
-HmBsktModelFilePtr data_ov030_02115c88(1560);
-HmBsktCollisionFilePtr data_ov030_02115c80(1561);
+HmBsktModelFilePtr data_ov030_02115c88(ASSET_HM_BASKET_BMD);
+HmBsktCollisionFilePtr data_ov030_02115c80(ASSET_HM_BASKET_KCL);

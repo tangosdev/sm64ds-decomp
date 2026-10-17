@@ -1,8 +1,8 @@
 {
   "id": "ov002/daFeather_c",
   "module": "ov002",
-  "source": "src/game/actors/daFeather_c/daFeather_c.cpp",
-  "promoted_source": "src/game/actors/daFeather_c/daFeather_c.cpp",
+  "source": "src/game/actors/d_a_feather.cpp",
+  "promoted_source": "src/game/actors/d_a_feather.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -83,8 +83,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold _ZN11daFeather_c8BehaviorEv and the one that held _ZN11daFeather_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Sub') differs between the legacy file that used to hold _ZN11daFeather_c6RenderEv and the one that held _ZN11daFeather_c13InitResourcesEv; kept the first, the other is commented out for review",
     "RENAMED: the tree called this class WingFeather (coined); the cartridge's RTTI spells it daFeather_c, so tools/class_rename.py renamed the TU, header, symbols and manifest to the ROM spelling. Same 11-char length either way, which is why the mismatch was invisible to length checks.",
-    "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src_tu/actors/daFeather_c.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
-    "PROMOTED: the eight one-function shards under src/game/actors/WingFeather/ are folded into src/game/actors/daFeather_c/daFeather_c.cpp (single delinks row 0x020b2ba0..0x020b3298). Genuine lifecycle source form: daFeather_c defines its virtual destructor inline in the class body and defines InitResources as the key function in this TU, so mwcc emits retail D1 then D0 and no D2. The factory is `return new daFeather_c()`; the leaf operator new(unsigned long) forwards to _ZN7fBase_cnwEj((unsigned)size). This TU's synthesized code references its own _ZTV11daFeather_c at 0x021088a8; the final linked bytes are identical.",
+    "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src_tu/actors/d_a_feather.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
+    "PROMOTED: the eight one-function shards under src/game/actors/WingFeather/ are folded into src/game/actors/d_a_feather.cpp (single delinks row 0x020b2ba0..0x020b3298). Genuine lifecycle source form: daFeather_c defines its virtual destructor inline in the class body and defines InitResources as the key function in this TU, so mwcc emits retail D1 then D0 and no D2. The factory is `return new daFeather_c()`; the leaf operator new(unsigned long) forwards to _ZN7fBase_cnwEj((unsigned)size). This TU's synthesized code references its own _ZTV11daFeather_c at 0x021088a8; the final linked bytes are identical.",
     "RTTI: the key-function-emitted _ZTI/_ZTS/_ZTV are licensed deadstrip-data (BBH-leaf shape, cf. ov063/daObjTh_Fall_Block_c): the ROM blobs at 0x02108868+ own the records, romdata_check proves this TU's copies (_ZTI VERIFIED, _ZTS 12/12 compared bytes equal, _ZTV all slots resolve), and the copies are discarded. g_profile_FEATHER (0x02108884) stays carved between them; the profile is not reconstructed here."
   ],
   "verification": {

@@ -102,7 +102,7 @@ struct daDsn_c : daDsnBase_c {
 
        In-class is load-bearing twice. It moves the ABI key function down to
        Behavior, the first declared virtual that is neither inline nor pure,
-       which src/actors/daDsn_c.cpp defines, so that TU emits _ZTV7daDsn_c. And
+       which src/game/actors/d_a_dsn.cpp defines, so that TU emits _ZTV7daDsn_c. And
        an out-of-line definition makes mwccarm emit D0 ahead of D1, the reverse
        of the cartridge (0x02132938 D1, 0x02132998 D0). */
     virtual ~daDsn_c() {}

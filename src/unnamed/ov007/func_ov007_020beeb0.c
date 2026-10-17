@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 #pragma opt_strength_reduction off
 typedef long long s64;
 typedef unsigned char u8;
@@ -40,7 +41,7 @@ void func_ov007_020beeb0(void)
             int s2 = *(short *)(base + 0x3e);
             int s1 = *(short *)(base + 0x3c);
             int d = _ZN4cstd3divEii(func_020531a4((s1 * s1 + s2 * s2) << 0xc), 0x1e);
-            int r2 = (int)(((s64)r6 * d + 0x800) >> 0xc);
+            int r2 = FX_MUL(r6, d);
             if (r2 >= 0x1000)
                 r2 = 0x1000;
             r6 = (int)(((s64)r2 * r2) >> 0xc);
@@ -79,10 +80,10 @@ void func_ov007_020beeb0(void)
             func_ov007_020c9a84(r8p, w + 0x28, w + 0x34, w + 0x36);
             w = *(char **)(r6p + 4);
             t = *(int *)(w + 0x28);
-            *(int *)(w + 0x28) = (int)(((s64)t * 0x64 + 0x800) >> 0xc);
+            *(int *)(w + 0x28) = FX_MUL(t, 0x64);
             w = *(char **)(r6p + 4);
             t = *(int *)(w + 0x2c);
-            *(int *)(w + 0x2c) = (int)(((s64)t * 0x64 + 0x800) >> 0xc);
+            *(int *)(w + 0x2c) = FX_MUL(t, 0x64);
         }
     }
 

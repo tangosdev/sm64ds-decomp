@@ -1,8 +1,8 @@
 {
   "id": "arm9/dBgCh_SphCrr",
   "module": "arm9",
-  "source": "src/engine/collision/dBgCh_SphCrr.cpp",
-  "promoted_source": "src/engine/collision/dBgCh_SphCrr.cpp",
+  "source": "src/engine/collision/d_bg_ch_sph_crr.cpp",
+  "promoted_source": "src/engine/collision/d_bg_ch_sph_crr.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
@@ -10,7 +10,7 @@
     "CONTIGUOUS AND EXHAUSTIVE: 0x0203782c..0x02037dc4 is covered by exactly 27 config/arm9/symbols.txt function symbols with no gap and no overlap, all carrying `complete` in config/arm9/delinks.txt with a .text section and nothing else. The run opens right after dBgCh_Lin's thunk tail and stops where func_02037dc4 begins a generic accessor shared by Player/dActor_c.",
     "CLASS IDENTITY FROM ROM RTTI: _ZTS12dBgCh_SphCrr sits at arm9 0x020992f8, _ZTI12dBgCh_SphCrr at 0x02099308, and the primary vtable _ZTV12dBgCh_SphCrr at 0x02099338, with the dBgPi and dM3dGSph secondary thunk blocks at 0x02099348/0x02099358 -- the RTTI edges list dBgCh @+0x00, dBgPi @+0x10, dM3dGSph @+0x38, matching the _ZThn16_ and _ZThn56_ destructor thunks this run emits.",
     "HELPERS ARE THIS TU'S OWN: every func_* in the run takes the SphCrr object as first argument and drives its evidenced fields -- the three result-record setters/getters (this+0x74/+0x9c/+0xc4, the floor/wall/underneath dBgPi records), the flag word at +0x70, the broad-phase box at +0x58..0x6c, the +0xfc payload triplet. External callers (dBgW_Kc*/dBgCh_Actr SphCrr queries) always pass a dBgCh_SphCrr.",
-    "NEIGHBOURS ARE OTHER SUBJECTS: below, func_0203782c's run opens the class's contiguous emission; above, func_02037dc4 (p+8) is called by Player.cpp and dActor_c::DetectRaycastClsn on non-SphCrr objects. The query half (DetectClsn + two registry scans at 0x02038824..0x02038ea4) lives in src/engine/collision/dBgCh_SphCrr_query.cpp.",
+    "NEIGHBOURS ARE OTHER SUBJECTS: below, func_0203782c's run opens the class's contiguous emission; above, func_02037dc4 (p+8) is called by Player.cpp and dActor_c::DetectRaycastClsn on non-SphCrr objects. The query half (DetectClsn + two registry scans at 0x02038824..0x02038ea4) lives in src/engine/collision/d_bg_ch_sph_crr_query.cpp.",
     "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order and the lifecycle group in its fixed order at the tail -- the ROM holds D0 (0x02037c40), D1 (0x02037cb0), C1 (0x02037d18), then the four secondary-base dtor thunks, exactly that layout from one dtor and one ctor definition at the head of the file."
   ],
   "sections": [
@@ -70,7 +70,7 @@
   "bss": [],
   "notes": [
     "Intact-object: this TU owns the class's RTTI+vtable band 0x020992f8..0x02099360 (ZTS, the __vmi _ZTI with its three base records, and the _ZTV carrying the dBgPi/dM3dGSph secondary thunk partitions). The eight inherited base-class RTTI copies emit as vague linkage and are externalized to their canonical cartridge homes.",
-    "func_02038ea4 (0x02038ea4..0x02038f44) is NOT part of this fold: its only caller (daMky_c) passes a dBgCh_Gnd local and it only touches the shared dBgPi base offset -- Gnd-family evidence, left as its own shard for the Gnd fold.",
+    "The slot-zero ground query at 0x02038ea4..0x02038f44 is excluded from this sphere-lifecycle fold. It is production-owned by d_bg_ch_sph_crr_query.cpp as the genuine dBgCh_Gnd::DetectClsnSlot0 member; daMky_c passes a real dBgCh_Gnd local and the query records the hit through its dBgPi base. DetectClsnSlot0 is an inferred descriptive name, not a recovered ROM identifier.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "functions": [

@@ -1,0 +1,238 @@
+{
+  "schema": 1,
+  "task_id": "collision-native-bases-current-main1014",
+  "candidate": "this commit",
+  "completion": "partial",
+  "formal_acceptance": false,
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+  "actual_composition_report_author": "Codex /root, codex-collision-native-current-main-root-producer1014",
+  "actual_cleanup_source_author": "Codex /root, codex-collision-native-bases-root-producer1014",
+  "accepted_input": "11507ad99b923b348789e6730c176650f26c1685",
+  "tested_current_base": "a39de06758ae08d506fad5b45b56742c932051da",
+  "normal_composition_checkpoint": "056c01e7102bfc759aac0690f927ca82fa55a0f4",
+  "reason": "PR3856 was externally merged at98c2aa6dfba5ae61fd7bbe4a3a316c2de438765c before the native additions were pushed. A guarded push stopped. Compose the already accepted additions with current main and publish a follow-up PR.",
+  "composition_proof": {
+    "composition": "056c01e7102bfc759aac0690f927ca82fa55a0f4",
+    "accepted_input": "11507ad99b923b348789e6730c176650f26c1685",
+    "tested_base": "a39de06758ae08d506fad5b45b56742c932051da",
+    "production_trees": {
+      "src": "58cb9219dc9249fc34f0ca67f1b15af861fab63f",
+      "include": "90e59154c130c09dd74cc0d773fe0770769c301e",
+      "config": "f282119e8d2942c4def64fb28bd94a49e3ee0e50",
+      "tools": "55122625b2b352a5f15ea21d3d9baf1fdd6859b4",
+      "port": "c6bd95e7eb59d61c892c4eb233e85115eb4bc28c"
+    },
+    "all_five_trees_literal_actual_full_build": true,
+    "actual_full_build_tested_commit": "8abda4fb29ec894fcd7f20e4807f46de05d853b9",
+    "imported_paths": [
+      "contributions.json"
+    ]
+  },
+  "source": "src/engine/collision/d_bg_ch_sph_crr_query.cpp",
+  "source_sha256": "268fd84db26e0727a9a37f1990bea78bd6727bd93993ff4f608b634d6e9bfd4e",
+  "accepted_native_report": {
+    "path": "notes/experiments/collision-query-native-bases1014.json",
+    "sha256": "908e9d4d059f558bc3778ad3a6985ebbf5b5d76caf77c7403f7085cb3adca235"
+  },
+  "focused_byte_proof": {
+    "functions": 57,
+    "diffs": 0,
+    "blind": 0,
+    "whole_raw_literal_equal": true,
+    "whole_ordinary_prepared_literal_equal": true,
+    "raw_sha256": "51d330c4e51706448fc5cc0439a2cd01e4b3d282ef2686eda6743c2b66cea1a8",
+    "prepared_sha256": "1f9fa2683d250b87419aae4af259053f275fb98c8e2c400797a3c067562a974e",
+    "raw_typed_refs": 167,
+    "prepared_typed_refs": 159,
+    "all_allocated_payloads_symbol_attributes_and_typed_edges": "literal equal",
+    "qualification": "Existing partitioned text-only preparation externalizes five incidental nontext sections totaling50bytes. Complete incidental output remains literal. This is not an intact metadata ownership claim.",
+    "artifact": "build/collision-query-native-bases1014/objects/proof.json",
+    "artifact_sha256": "370d39bdc6097e4e1d70db064287d82216ce29a79448f655a6bed73a38013c84"
+  },
+  "actual_full_build": {
+    "command": [
+      "python",
+      "tools/rombuild.py",
+      "-j16",
+      "--no-rom"
+    ],
+    "terminal": 0,
+    "tested_commit": "8abda4fb29ec894fcd7f20e4807f46de05d853b9",
+    "exact_modules": 106,
+    "reproducing_source_functions": 11334,
+    "mismatching_source_functions": 0,
+    "source_data_exact": 331,
+    "source_bss_claims": 239,
+    "new_symbol_errors": 0,
+    "inherited_baseline_symbol_errors": 9,
+    "intact_tu_gate": "PASS, storage aliases exact",
+    "global_data_advisories": {
+      "verified": 970,
+      "partial": 1519,
+      "differ": 1,
+      "unnamed": 21
+    },
+    "qualification": "Fresh actual invocation on the final native-object Source checkpoint, after the earlier five-base-call build. --no-rom does not request a new candidate NDS image. Existing global advisories remain.",
+    "artifacts": {
+      "rombuild-report.json": {
+        "path": "build/collision-query-native-bases1014/rombuild-report.json",
+        "sha256": "61906ec961e5d637ce47eb849b20a47035fec721f3b8ffb6751b03df895e19fe"
+      },
+      "baseline-linkcheck.json": {
+        "path": "build/collision-query-native-bases1014/baseline-linkcheck.json",
+        "sha256": "4e8dc083d6d7c432e7806d51c6c0a9ffaf775d966b1474f569c959365f73ef23"
+      },
+      "full-stock-ROM.log": {
+        "path": "build/collision-query-native-bases1014/full-stock-ROM.log",
+        "sha256": "cf8c7002921f4dba4a72ed659d9326508d04e8ab91e19b3bcc890759ae754357"
+      },
+      "full-stock-ROM.exit.txt": {
+        "path": "build/collision-query-native-bases1014/full-stock-ROM.exit.txt",
+        "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+      }
+    }
+  },
+  "full_build_binding": "No new global invocation for this composition. All five production trees are literally identical to the actual8abd full-build checkpoint; merging externally landed35dd and subsequent progress imported only contributions.json. The final report-only commit must retain those same trees. Fresh current-base57 prepush and static checks are separate below.",
+  "fresh_current_base_static_gates": [
+    {
+      "name": "declarations",
+      "command": [
+        "python",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "a39de06758ae08d506fad5b45b56742c932051da"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "port",
+      "command": [
+        "python",
+        "tools/port_refcheck.py"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "duplicates",
+      "command": [
+        "python",
+        "tools/check_duplicate_sources.py"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "deadrefs",
+      "command": [
+        "python",
+        "tools/check_dead_references.py"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "a39de06758ae08d506fad5b45b56742c932051da..HEAD"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "prepush",
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "a39de06758ae08d506fad5b45b56742c932051da..HEAD"
+      ],
+      "exit": 0
+    }
+  ],
+  "accepted_predecessor_review": {
+    "task": "collision-query-native-bases1014",
+    "commit": "11507ad99b923b348789e6730c176650f26c1685",
+    "stage": "verify",
+    "qualification": "Current finding dictionaries are copied from this exact accepted verification output, preserving earlier rejected attempts as historical records. They are not selected from the older rejection epochs."
+  },
+  "inherited_findings": {
+    "COLLISION-QUERY-PARTIAL-01": {
+      "disposition": "deferred",
+      "id": "COLLISION-QUERY-PARTIAL-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "kind": "reconstruction",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:position grouping in ground/line scans",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "reason": "Existing reconstruction gap retained with unchanged complete output; future scope is tracked on issue3854. Bounded direct-field failure is evidence for that attempted form only, not a universal compiler impossibility.",
+      "summary": "Position reads retain measured byte-offset grouping; Vec3 POD copy view and existing self-position integer-laundering remain."
+    },
+    "COLLISION-QUERY-PARTIAL-02": {
+      "disposition": "deferred",
+      "id": "COLLISION-QUERY-PARTIAL-02",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "kind": "reconstruction",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:PcAB/PcObj record views",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made.",
+      "summary": "PcAB/PcObj record reconstruction remains."
+    },
+    "COLLISION-QUERY-PARTIAL-03": {
+      "disposition": "deferred",
+      "id": "COLLISION-QUERY-PARTIAL-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "kind": "reconstruction",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:PFN / func_02038234",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made.",
+      "summary": "PFN and func_02038234 stored callback/extra-register contract remain unrecovered."
+    },
+    "COLLISION-QUERY-PARTIAL-04": {
+      "disposition": "deferred",
+      "id": "COLLISION-QUERY-PARTIAL-04",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "kind": "reconstruction",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:dBgPi::RecordHit calls",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made.",
+      "summary": "RecordHit raw int versus native s16 bridge remains."
+    },
+    "COLLISION-QUERY-PARTIAL-05": {
+      "disposition": "deferred",
+      "id": "COLLISION-QUERY-PARTIAL-05",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "kind": "reconstruction",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:address-named helpers",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made.",
+      "summary": "Address-named free helpers retain current public signatures; no complete class lifecycle reconstruction claimed."
+    },
+    "COLLISION-QUERY-PARTIAL-06": {
+      "disposition": "deferred",
+      "id": "COLLISION-QUERY-PARTIAL-06",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "kind": "reconstruction",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:Vec3_HorzDist / inherited actor-position views",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made.",
+      "summary": "Existing Vec3/Vector3 views and actor scalar-position to Vector3 storage boundary remain partial. This patch does not assert those three separate actor fields form an independently live Vector3 object or resolve the inherited alias/lifetime interface. New position reads use the complete actor byte representation to address the existing s32 subobjects."
+    },
+    "COLLISION-CURRENT9893-PRODUCER-PROVENANCE-01": {
+      "disposition": "fixed",
+      "id": "COLLISION-CURRENT9893-PRODUCER-PROVENANCE-01",
+      "kind": "provenance",
+      "location": "notes/experiments/collision-query-current9893-1014.json:actual_composition_report_producer",
+      "reason": "Independent verifier identified selection of an inherited producer session for the actual Root report writer. This report now names the actual current Root producer session directly; historical Source authors and rejected epoch remain preserved. Source and production policy are unchanged by this correction.",
+      "summary": "Current composition report incorrectly attributes the current Root report production to the prior actual Astra session codex-collision-current0d26-astra-producer1014."
+    },
+    "COLLISION-NATIVE-BASES-INHERITANCE-PROVENANCE-01": {
+      "disposition": "fixed",
+      "id": "COLLISION-NATIVE-BASES-INHERITANCE-PROVENANCE-01",
+      "kind": "provenance",
+      "location": "notes/experiments/collision-query-native-bases1014.json:inherited_findings.COLLISION-CURRENT9893-PRODUCER-PROVENANCE-01",
+      "reason": "Independent verification caught an older rejected finding state overwriting its later accepted fixed disposition during inherited-state selection. This report now copies all seven prior findings from the exact accepted predecessor verification of35dd, preserves the rejected epoch in queue history, and records this new repair separately. Source, compiler outputs and all five tested production trees are unchanged.",
+      "summary": "New report regresses an already-fixed predecessor provenance finding to unresolved by selecting an older rejected attempt."
+    }
+  },
+  "remaining_reconstruction": "All six inherited deferred findings remain. The ground-position integer round trip, plain-copy math seams, actor scalar grouping, record views, stored callbacks, scalar bridges and address-named helpers are not declared complete by this cleanup.",
+  "publication": "After distinct independent review of this exact final commit and current base, open the native-base/vector follow-up PR. Preserve all six deferred reconstruction findings. No merge."
+}

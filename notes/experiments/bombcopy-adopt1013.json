@@ -1,0 +1,205 @@
+{
+  "schema": 1,
+  "scope": "Initialize King Bob-omb vector snapshots directly",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2479",
+  "compiler": "2004/b56",
+  "source_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "production_source": "src/actors/daBombking_c.cpp",
+  "source_sha256": "0d76405091ebf1a8b686762028097df100fcff0b5ea58c5f1b581efc67260190",
+  "change": "Two cast-based array assignments become ordinary initialization of the existing12-byte Vec3 at their conditional point of use. The promotion_note now describes current intact-object ownership of four data records188B. No ownership or compiler-policy changes.",
+  "proof": {
+    "raw_entire_ELF_equal": true,
+    "production_entire_ELF_equal": true,
+    "normal_production_parity": true,
+    "raw_sha256": "be15a9a33cda8283d958fa9513b3d40708cac4eca3f3824930a9ab89b60b5d9e",
+    "prepared_sha256": "05c372a8d67f19f1cecbcd8824d831fe1ce3912489ef6fa7dba1a96ce65c6022",
+    "raw_bytes": 37312,
+    "prepared_bytes": 37312,
+    "strict_rows": 56,
+    "strict_functions": 52,
+    "strict_owned_storage_records": 4,
+    "blind": 0,
+    "diffs": [],
+    "bss_records": 0,
+    "bss_bytes": 0,
+    "raw_typed_refs": 482,
+    "prepared_typed_refs": 463,
+    "owned_nontext_typed_refs": 36,
+    "complete_metadata_records": 11,
+    "complete_metadata_bytes": 246,
+    "metadata": [
+      {
+        "symbol": "_ZTV12daBombking_c",
+        "module": "ov078",
+        "address": "0x2126e44",
+        "size": 132,
+        "exact": true,
+        "blind": 0,
+        "owned": true
+      },
+      {
+        "symbol": "_ZTI12daBombking_c",
+        "module": "ov078",
+        "address": "0x2126e0c",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": true
+      },
+      {
+        "symbol": "_ZTS12daBombking_c",
+        "module": "ov078",
+        "address": "0x2126e18",
+        "size": 15,
+        "exact": true,
+        "blind": 0,
+        "owned": true
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081c0",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081cc",
+        "size": 15,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "address": "0x208e390",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "address": "0x208e384",
+        "size": 10,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e78",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e54",
+        "size": 9,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "address": "0x2086d70",
+        "size": 8,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "address": "0x2086e60",
+        "size": 9,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      }
+    ],
+    "canonical_duplicates": [
+      {
+        "name": "_ZN7Vector3D1Ev",
+        "module": "arm9",
+        "addr": "0x020072c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ],
+    "overrides": [],
+    "strict_bytes": 12252
+  },
+  "remaining": "Split actor fields still require explicit source views; two other copy sites and scalar ABI/unknown handler boundaries remain. The current factory is already native new daBombking_c(); manual factory descriptions belong only to historical findings. This does not claim complete field/state reconstruction.",
+  "inherited_ids": [
+    "BKG-01",
+    "BKG-02",
+    "BKG-03",
+    "BKG-04",
+    "BKG-05",
+    "BKG-06",
+    "BKG-07",
+    "BKG-08",
+    "BKG-09",
+    "BKG-10",
+    "SNM-01",
+    "SNM-02",
+    "SNM-03",
+    "SNM-04",
+    "SNM-05",
+    "SNM-06"
+  ],
+  "historical_supersession": "BKG-02/BKG-04 IDs remain recorded; current ordinary intact-object proof owns the entire188-byte data range and complete vtable storage. Prior text-only explanations are historical.",
+  "full_ROM": {
+    "checkpoint": "82123ec0966d76fbe8743b30e0dcb1dfed02d3f5",
+    "modules_exact": 106,
+    "modules_total": 106,
+    "exit_code": 0,
+    "log": "build\\bombcopy-adopt1013\\full_rom.log",
+    "limits": "Full modules and owned storage exact. Pre-existing stock dsd missing ITCM symbols and one differing unenrolled ROM-data inventory entry remain distinct."
+  },
+  "committed_checks": {
+    "tested_commit": "82123ec0966d76fbe8743b30e0dcb1dfed02d3f5",
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\bombcopy-adopt1013\\full_rom.log"
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\bombcopy-adopt1013\\range.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\bombcopy-adopt1013\\port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\bombcopy-adopt1013\\langmode.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\bombcopy-adopt1013\\decl.log"
+      }
+    }
+  },
+  "stock_range": {
+    "checked": 52,
+    "verified": 52,
+    "warnings": [],
+    "blocking": 0
+  },
+  "binding": "This report-only descendant retains all src/include/config/tools/port trees from the tested full-ROM checkpoint. Independent final Source review is required separately."
+}

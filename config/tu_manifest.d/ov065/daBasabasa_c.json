@@ -1,15 +1,15 @@
 {
   "id": "ov065/daBasabasa_c",
   "module": "ov065",
-  "source": "src/actors/daBasabasa_c.cpp",
-  "promoted_source": "src/actors/daBasabasa_c.cpp",
+  "source": "src/game/actors/d_a_basabasa.cpp",
+  "promoted_source": "src/game/actors/d_a_basabasa.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2116f98..0x2117ee8, 21 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daBasabasa_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold (0930c): the BASABASA registry factory daBasabasa_c_classInit (0x02117ee8, 0x58) abuts this TU's former end 0x02117ee8 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range ends at 0x02117f40, where the daDossy_c TU (src/actors/daDossy_c.cpp) begins."
+    "classInit fold (0930c): the BASABASA registry factory daBasabasa_c_classInit (0x02117ee8, 0x58) abuts this TU's former end 0x02117ee8 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range ends at 0x02117f40, where the daDossy_c TU (src/game/actors/d_a_dossy.cpp) begins."
   ],
   "sections": [
     {
@@ -339,7 +339,7 @@
     }
   ],
   "notes": [
-    "Text span 0x02116f98..0x02117f40, 22 functions, class daBasabasa_c only: tu_map's 21-function run 0x02116f98..0x02117ee8 plus the zero-gap registry factory daBasabasa_c_classInit (0x02117ee8..0x02117f40). The next delinks entry, src/actors/daDossy_c.cpp, opens at 0x02117f40.",
+    "Text span 0x02116f98..0x02117f40, 22 functions, class daBasabasa_c only: tu_map's 21-function run 0x02116f98..0x02117ee8 plus the zero-gap registry factory daBasabasa_c_classInit (0x02117ee8..0x02117f40). The next delinks entry, src/game/actors/d_a_dossy.cpp, opens at 0x02117f40.",
     "Cartridge type string is 12daBasabasa_c: vtable 0x0211cca0 word at -4 is _ZTI12daBasabasa_c (0x0211cc60), typeinfo+4 is the string at 0x0211cc6c. The coined _ZTV5Swoop alias was deleted.",
     "One out-of-line destructor under #pragma defer_codegen off. D2 is homeless deadstrip. Vector3 D1 is the vague duplicate of arm9:0x020072c0. Vtable and the ancestor RTTI chain are deadstrip-data at their existing addresses.",
     "Nine functions are members under coined names, their ov065 symbols.txt rows renamed in place: SetState 0x02117944, ExecuteReturn 0x02117404, EnterReturn 0x021175b0, ExecuteChase 0x02117624, EnterChase 0x021176fc, ExecuteDrop 0x02117780, EnterDrop 0x021177e4, ExecutePerch 0x02117888, EnterPerch 0x021178fc. The .data member-pointer pairs at 0x0211cc20..0x0211cc60 reach the eight state bodies by address. func_ov065_0211704c and func_ov065_02117994 are members under those address names; the first argument is this.",
@@ -781,7 +781,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daBasabasa_c.cpp",
+      "symbol": "__sinit_d_a_basabasa.cpp",
       "address": "0x0211c2a8",
       "size": "0x198",
       "binding": "STB_GLOBAL",
@@ -790,7 +790,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daBasabasa_c.cpp",
+      "symbol": ".p__sinit_d_a_basabasa.cpp",
       "address": "0x0211cae4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -836,13 +836,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daBasabasa_c.cpp",
+      "symbol": "__sinit_d_a_basabasa.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daBasabasa_c.cpp",
+      "symbol": ".p__sinit_d_a_basabasa.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1226,7 +1226,7 @@
       "source": "0x0211cae4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daBasabasa_c.cpp",
+      "symbol": "__sinit_d_a_basabasa.cpp",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211c2a8"

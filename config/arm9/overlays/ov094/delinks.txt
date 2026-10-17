@@ -3,7 +3,7 @@
     .ctor       start:0x021369b8 end:0x021369bc kind:rodata align:4
     .data       start:0x021369c0 end:0x02136ae0 kind:data align:32
     .bss        start:0x02136ae0 end:0x02136b80 kind:bss align:32
-src/actors/daOwl_c.cpp:
+src/game/actors/d_a_owl.cpp:
     complete
     .text start:0x02135700 end:0x021367e8
     .init start:0x021367e8 end:0x021369b8

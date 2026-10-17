@@ -1,10 +1,10 @@
 /* class dScMgCurling_c : dScMgBase_c. Confirmed leaf -- no RTTI record
  * names it as a base (tools/rtti_extract.py). Its D1 (in
- * src/actors/dScMgCurling_c.cpp) writes only its own vtable then calls
+ * src/minigames/d_s_mg_curling.cpp) writes only its own vtable then calls
  * dScMgBase_c's D2 directly; no members here need explicit destruction.
  *
  * Fields below 0x4660 (dScMgBase_c's own asserted size) are INHERITED, not
- * dScMgCurling_c's own -- the old flat header's `unk_0a4` at 0x0a4 is
+ * dScMgCurling_c's own -- the old flat header's `mRunDuringFade` at 0x0a4 is
  * really dScMgBase_c's own field at that offset, misattributed by
  * tools/deepen_rtti.py's flat-struct generation (it doesn't know about
  * inheritance). SIZE NOT ASSERTED: a leaf, so nothing needs the number
@@ -75,60 +75,60 @@ typedef char dScMgCurling_bit_size_must_be_0x24[sizeof(struct dScMgCurling_bit) 
 
 struct dScMgCurling_c : dScMgBase_c {
     /* Declared, not defined inline -- a leaf, so nothing needs to inline
-       it; real body in src/actors/dScMgCurling_c.cpp, which is the whole
+       it; real body in src/minigames/d_s_mg_curling.cpp, which is the whole
        class. */
     virtual ~dScMgCurling_c();
 
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void StartRound(int arg);               /* slot 18 */
 
-    void func_ov006_020e0694();   /* renders the falling bits */
-    void func_ov006_020e071c(int index);
-    void func_ov006_020e07b0(int index);
-    void func_ov006_020e0884(int index);
-    void func_ov006_020e091c(int index);
-    void func_ov006_020e0a24(int index);
-    void func_ov006_020e0b64(int index);
-    void func_ov006_020e0ca0(int index);
-    void func_ov006_020e0d84(int index);
-    void func_ov006_020e0e18(int index);
-    void func_ov006_020e0edc(int index);
-    void func_ov006_020e0ff0(int index);
-    void func_ov006_020e1100(int idx);
-    void func_ov006_020e1214(int idx);
-    void func_ov006_020e1264(int idx);
-    void func_ov006_020e12d0();
-    void func_ov006_020e13a4();
-    void func_ov006_020e1554();   /* score popups */
-    void func_ov006_020e1608();
-    void func_ov006_020e1680();
-    void func_ov006_020e17f8();
-    void func_ov006_020e1854();   /* stylus handler for the aimed stone */
-    void func_ov006_020e1b54();
-    void func_ov006_020e1c68();
-    void func_ov006_020e1dc8(int idx);   /* stone separation */
-    void func_ov006_020e20bc(int idx);   /* stone collision */
-    void func_ov006_020e269c(int i);
-    void func_ov006_020e26f8(int i);     /* stone i while dragged */
-    void func_ov006_020e285c(int idx);
-    void func_ov006_020e2868(int idx);   /* stone idx while it slides */
-    void func_ov006_020e2c08(int idx);   /* releases stone idx */
-    void func_ov006_020e2dbc();   /* brings out the next stone */
-    void func_ov006_020e2eb8();   /* idle state */
-    void func_ov006_020e2ebc();   /* end state */
-    void func_ov006_020e2f78();   /* scoring state */
-    void func_ov006_020e3078();   /* playing state */
-    void func_ov006_020e3210();   /* starts a round */
-    void func_ov006_020e3250();   /* picks the house */
-    void func_ov006_020e3378();   /* marks the house unset */
-    void func_ov006_020e3388();   /* clears stones, popups and aim */
+    void Bit_DrawAll();   /* renders the falling bits */
+    void Bit_StateFallSlowDown(int index);
+    void Bit_StateFallSpeedUp(int index);
+    void Bit_StateFallStart(int index);
+    void BitA_StateDriftStop(int index);
+    void BitA_StateDriftLeft(int index);
+    void BitA_StateDriftRight(int index);
+    void BitA_StatePause(int index);
+    void Bit_RunKindA(int index);
+    void BitB_StateDriftStop(int index);
+    void BitB_StateDriftLeft(int index);
+    void BitB_StateDriftRight(int index);
+    void BitB_StatePause(int idx);
+    void Bit_RunKindB(int idx);
+    void Bit_PickKind(int idx);
+    void Bit_UpdateAll();
+    void Bit_InitAll();
+    void Popup_DrawAll();   /* score popups */
+    void Popup_UpdateAll();
+    void ScoreStones();
+    void DrawAimMarker();
+    void Aim_Swing();   /* stylus handler for the aimed stone */
+    void Aim_WaitTouch();
+    void DrawStonesLeft();
+    void SeparateStones(int idx);   /* stone separation */
+    void ResolveStoneCollision(int idx);   /* stone collision */
+    void SetStoneSpin(int i);
+    void Stone_Drag(int i);     /* stone i while dragged */
+    void Stone_Collide(int idx);
+    void Stone_Slide(int idx);   /* stone idx while it slides */
+    void Stone_WaitRelease(int idx);   /* releases stone idx */
+    void BringOutNextStone();   /* brings out the next stone */
+    void Scene_Idle();   /* idle state */
+    void Scene_End();   /* end state */
+    void Scene_Score();   /* scoring state */
+    void Scene_Play();   /* playing state */
+    void Scene_StartRound();   /* starts a round */
+    void PickHouse();   /* picks the house */
+    void ResetHouse();   /* marks the house unset */
+    void ClearStones();   /* clears stones, popups and aim */
 
     /* Slot 18 (one of dScMgBase_c's own undeclared new slots 18-35) is
        left unnamed here too, same reasoning as dScMgBase_c.h's own -- its
-       target (_ZN14dScMgCurling_c13OnYoshiTryEatEi, in
-       src/actors/dScMgCurling_c.cpp) had a "recovered name" of
+       target (_ZN14dScMgCurling_c10StartRoundEi, in
+       src/minigames/d_s_mg_curling.cpp) had a "recovered name" of
        OnYoshiTryEat_020e3470, which is wrong (same tree-wide mislabel
        documented in notes/dscene-c-siblings-census.md section 3): its
        body sets fields and calls helpers, nothing like a destructor. */

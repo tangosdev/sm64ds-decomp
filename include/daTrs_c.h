@@ -26,11 +26,11 @@
  * compiler would inline somewhere the ROM does not.
  *
  * ~daTrs_c() is declared here and defined once, out of line and first, in
- * src/actors/daTrs_c.cpp, the TU it shares with daTBasket_c and daTrsIcon_c.
+ * src/game/actors/d_a_trs.cpp, the TU it shares with daTBasket_c and daTrsIcon_c.
  * Under that file's `#pragma defer_codegen off` it emits D1 (0x02115ee0) and
  * D0 (0x02115f48) in ROM order; the extra D2 is licensed as homeless.
  *
- * This header has one consumer, src/actors/daTrs_c.cpp. Its member names are
+ * This header has one consumer, src/game/actors/d_a_trs.cpp. Its member names are
  * descriptive readings of how that file uses each field, not ROM names.
  */
 #ifndef DATRS_C_H
@@ -48,7 +48,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /* The flags halfword at 0x5d4. Named (not anonymous inline) so
    check_header_offsets can parse the member declaration. Bit N is the N-th
-   field; daTrs_c.cpp's TrsFlag enum spells the same bits as masks for the
+   field; d_a_trs.cpp's TrsFlag enum spells the same bits as masks for the
    sites that matched as a halfword read-modify-write. From the uses:
    limitZ (0x1): InitResources sets it when LEVEL_ID is 0xc, mPosX is 0xbb8000
        and mAreaId is 2. Behavior then keeps mPosZ >= -0x12c000, and with it
@@ -323,8 +323,8 @@ struct daTrs_c : dCapEnemy_c {
     void OnPendingDestroy();
     int  Render();
 
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
-       `return new daTrs_c()` then routes through the retail allocator. */
+    /* Existing leaf forwarding adapter: `return new daTrs_c()` routes
+       through the retail allocator. fBase_c also declares an adapter. */
     static void *operator new(unsigned long size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

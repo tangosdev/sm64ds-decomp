@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 #pragma opt_common_subs off
 typedef short s16;
 typedef long long s64;
@@ -47,13 +48,13 @@ void func_ov007_020c9c24(int *self, int arg1)
     scale = *(int *)((char *)ctx + 0x10);
     {
         int *d = *(int **)*(int **)*(int **)*(int **)((char *)self + 0x1c);
-        d[0] = (int)(((s64)r2v * scale + 0x800) >> 0xc);
+        d[0] = FX_MUL(r2v, scale);
     }
     {
         int *d;
         scale = *(int *)((char *)(int *)self[1] + 0x10);
         d = *(int **)*(int **)*(int **)*(int **)((char *)self + 0x1c);
-        d[1] = (int)(((s64)r1v * scale + 0x800) >> 0xc);
+        d[1] = FX_MUL(r1v, scale);
     }
 
     ctx = (int *)self[1];

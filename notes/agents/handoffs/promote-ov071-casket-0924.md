@@ -48,7 +48,7 @@ This document describes this commit. The queue records its immutable output SHA.
   header), [ov071 delinks.txt](../../../config/arm9/overlays/ov071/delinks.txt) and
   [symbols.txt](../../../config/arm9/overlays/ov071/symbols.txt), the new
   [manifest entry](../../../config/tu_manifest.d/ov071/daObjCasket_c.json), the promoted
-  [src/actors/daObjCasket_c.cpp](../../../src/actors/daObjCasket_c.cpp), `symbols/actor_renames.tsv`
+  [src/game/actors/d_a_obj_casket.cpp](../../../src/game/actors/d_a_obj_casket.cpp), `symbols/actor_renames.tsv`
   (the class_rename rows, rewritten in place), and these ledgers, each only in
   this class's own rows: `attribution.json` (14 overrides),
   `config/converted-baseline.json` (4 identities re-keyed),
@@ -67,7 +67,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ---
 - Retired, cited by symbol: the six `Coffin` members `Coffin::~Coffin` (D1
   and D0), `Coffin::InitResources`, `Coffin::Behavior`, `Coffin::Render` and
-  `Coffin::CleanupResources`; the seven helpers [func_ov071_02122080](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/actors/daObjCasket_c.cpp)), [func_ov071_021220c8](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c15St_StandUp_MainEv](../../../src/actors/daObjCasket_c.cpp)), [func_ov071_02122194](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c15St_StandUp_InitEv](../../../src/actors/daObjCasket_c.cpp)), [func_ov071_021221bc](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c12St_Wait_MainEv](../../../src/actors/daObjCasket_c.cpp)), [func_ov071_021223b0](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c12St_Wait_InitEv](../../../src/actors/daObjCasket_c.cpp)), [func_ov071_021223c8](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c8SetStateEi](../../../src/actors/daObjCasket_c.cpp)) and [func_ov071_02122414](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c8RunStateEv](../../../src/actors/daObjCasket_c.cpp)); and
+  `Coffin::CleanupResources`; the seven helpers [func_ov071_02122080](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/game/actors/d_a_obj_casket.cpp)), [func_ov071_021220c8](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c15St_StandUp_MainEv](../../../src/game/actors/d_a_obj_casket.cpp)), [func_ov071_02122194](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c15St_StandUp_InitEv](../../../src/game/actors/d_a_obj_casket.cpp)), [func_ov071_021221bc](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c12St_Wait_MainEv](../../../src/game/actors/d_a_obj_casket.cpp)), [func_ov071_021223b0](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c12St_Wait_InitEv](../../../src/game/actors/d_a_obj_casket.cpp)), [func_ov071_021223c8](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c8SetStateEi](../../../src/game/actors/d_a_obj_casket.cpp)) and [func_ov071_02122414](../../../config/tu_manifest.d/ov071/daObjCasket_c.json)(current [_ZN13daObjCasket_c8RunStateEv](../../../src/game/actors/d_a_obj_casket.cpp)); and
   the `classInit` factory `daObjCasket_c_classInit`. All fourteen are now in the
   promoted TU, the members under their `daObjCasket_c` names. The old class
   header was retired too, replaced by
@@ -103,8 +103,8 @@ This document describes this commit. The queue records its immutable output SHA.
   0x021221bc } and state 1 `STANDUP` is { 0x02122194, 0x021220c8 }.
 ---
 - Structural inference: the four state bodies and the two table helpers
-  `func_ov071_021223c8`(current [_ZN13daObjCasket_c8SetStateEi](../../../src/actors/daObjCasket_c.cpp)) enters a state through `init`, `func_ov071_02122414`(current [_ZN13daObjCasket_c8RunStateEv](../../../src/actors/daObjCasket_c.cpp) runs
-  `exec`) are `daObjCasket_c` methods called through the table. `func_ov071_02122080`(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/actors/daObjCasket_c.cpp))
+  `func_ov071_021223c8`(current [_ZN13daObjCasket_c8SetStateEi](../../../src/game/actors/d_a_obj_casket.cpp)) enters a state through `init`, `func_ov071_02122414`(current [_ZN13daObjCasket_c8RunStateEv](../../../src/game/actors/d_a_obj_casket.cpp) runs
+  `exec`) are `daObjCasket_c` methods called through the table. `func_ov071_02122080`(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/game/actors/d_a_obj_casket.cpp))
   writes the model matrix from the actor's angles and position.
 ---
 - Factory: folded. Its [delinks](../../../config/arm9/overlays/ov071/delinks.txt) entry abutted `InitResources` with a zero-byte gap,
@@ -120,7 +120,7 @@ This document describes this commit. The queue records its immutable output SHA.
   model-matrix update through a `Matrix4x3 &` local compiles to 0x54 against
   the ROM's 0x48, so it spells `casket->mModel.mat4x3` at each store; copying
   the closest player's position straight off `Player::mPosX..mPosZ` compiles
-  `func_ov071_021221bc`(current [_ZN13daObjCasket_c12St_Wait_MainEv](../../../src/actors/daObjCasket_c.cpp)) to 0x1f0 against 0x1f4, so the copy stays through a
+  `func_ov071_021221bc`(current [_ZN13daObjCasket_c12St_Wait_MainEv](../../../src/game/actors/d_a_obj_casket.cpp)) to 0x1f0 against 0x1f4, so the copy stays through a
   `Vector3` pointer, with a one-line note. The legacy factory seam also
   matches, but emits no `_ZN10dBgActor_cD2Ev`; the `new` form was kept and the
   helper licensed, as [ov002](../../../config/arm9/overlays/ov002/symbols.txt) `daObjBC_Switch_c` and [ov009](../../../config/arm9/overlays/ov009/symbols.txt) `daObjMcWater_c` do.
@@ -134,7 +134,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Genuine methods: `InitResources`, `Behavior`, `Render` and `CleanupResources` are
   real members; *D1* and *D0* come from the header's inline destructor; the
   factory is a plain `new`. The four state bodies, the two table helpers and
-  `func_ov071_02122080`(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/actors/daObjCasket_c.cpp)) remain `extern "C"` `func_ov071` helpers over
+  `func_ov071_02122080`(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/game/actors/d_a_obj_casket.cpp)) remain `extern "C"` `func_ov071` helpers over
   `daObjCasket_c *`; member spellings would coin seven mangled names, so that
   is left as separate work. ABI bridges: `dBgW_KcMbg::SetFile`,
   `dBgActor_c::IsClsnInRange` and `dActor_c::Earthquake` stay mangled externs
@@ -195,7 +195,7 @@ note changed after the byte and link gates ran.
 - Undefined-symbol audit of the emitted object: all 64 undefined symbols
   resolve under their exact spelling in config symbols.txt (0 unknown).
 - `python tools/tu_promote.py ov071/daObjCasket_c --dry-run`, then applied:
-  14 functions consolidated to [src/actors/daObjCasket_c.cpp](../../../src/actors/daObjCasket_c.cpp) (the
+  14 functions consolidated to [src/game/actors/d_a_obj_casket.cpp](../../../src/game/actors/d_a_obj_casket.cpp) (the
   srcpath-expected destination), 14 attribution overrides, 4 CONVERTED
   identities retained. The control was refreshed afterwards (exit 0).
 ---
@@ -214,10 +214,10 @@ note changed after the byte and link gates ran.
   first, 12 disagreements. Eleven are the legacy files' banked entries in a
   new place (AddVec3 and Vec3_Add `Vector3 *` against `Vec3 *`, SetFile's
   reference parameters, the Earthquake arity 3, and the two SharedFilePtr
-  data objects); their keys moved in place to src/actors/daObjCasket_c.cpp.
-  One is new: `include/decl_common.h` declares `func_ov071_02122080`(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/actors/daObjCasket_c.cpp))(char *)
+  data objects); their keys moved in place to src/game/actors/d_a_obj_casket.cpp.
+  One is new: `include/decl_common.h` declares `func_ov071_02122080`(current [_ZN13daObjCasket_c20UpdateModelTransformEv](../../../src/game/actors/d_a_obj_casket.cpp))(char *)
   and the definition now takes `daObjCasket_c *`. It was banked under that
-  symbol with the same shape as the existing `func_ov071_02122414`(current [_ZN13daObjCasket_c8RunStateEv](../../../src/actors/daObjCasket_c.cpp)) entry,
+  symbol with the same shape as the existing `func_ov071_02122414`(current [_ZN13daObjCasket_c8RunStateEv](../../../src/game/actors/d_a_obj_casket.cpp)) entry,
   because `decl_common.h` is held by another task. The retired files' other
   entries were dropped. After that `--changed` exits 0 with no new
   disagreements, and the tree-wide run also exits 0. The baseline was not
@@ -230,7 +230,7 @@ note changed after the byte and link gates ran.
 ---
 - `python tools/tiers_ratchet.py --check`: exit 1, baseline 2994, current
   3058 (+65 gained, -1 lost). The one loss is
-  `src/actors/dScMgLuigi_c.cpp#_ZN12dScMgLuigi_c10ResetBoardEv`, which this
+  `src/minigames/d_s_mg_luigi.cpp#_ZN12dScMgLuigi_c10ResetBoardEv`, which this
   change does not touch; the same check exits 1 with that same loss at the
   base (current 3057 there), so it is pre-existing; #3077 fixes it. The gain
   is not banked, for the integration lane. Re-run after the citation fix:

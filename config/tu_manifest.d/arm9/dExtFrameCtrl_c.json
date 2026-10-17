@@ -1,23 +1,24 @@
 {
   "id": "arm9/dExtFrameCtrl_c",
   "module": "arm9",
-  "source": "src/engine/animation/dExtFrameCtrl_c.cpp",
-  "promoted_source": "src/engine/animation/dExtFrameCtrl_c.cpp",
+  "source": "src/engine/animation/d_ext_frame_ctrl.cpp",
+  "promoted_source": "src/engine/animation/d_ext_frame_ctrl.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x02015a7c..0x02015cb4, 8 function(s), gapless in config/arm9/delinks.txt, every entry complete.",
-    "The run is the ordinary half of one class: dExtFrameCtrl_c's eight non-lifecycle methods (Copy, WillHitFrame, Finished, GetFlags, SetFlags, GetFrameCount, SetAnimation, Advance). dExtFrameCtrl_c is the tree's name for the ROM's dExtFrameCtrl_c root; notes/model-rtti-names.md recovers the family.",
-    "The run's ABI tail stays sharded: ~dExtFrameCtrl_c() is the key function, so a TU that defines it emits _ZTV/_ZTI/_ZTS under the coined '9Animation' spelling while the cartridge records spell '15dExtFrameCtrl_c'. A homeless emitted name resolves as a plain deadstrip, which the compiler-only policy refuses for RTTI/vtable records, so D2/D0/D1/C1/C2 (0x02015cb4..0x02015d38) keep their per-function sources until the class is renamed -- the licensed-range trim the daObjKuruma_c manifests already use.",
+    "contiguous linker run: 0x02015a7c..0x02015d38, 13 function(s), gapless in config/arm9/delinks.txt, every entry complete.",
+    "The run is the whole of one class: dExtFrameCtrl_c's eight ordinary methods (Copy, WillHitFrame, Finished, GetFlags, SetFlags, GetFrameCount, SetAnimation, Advance), then its destructor variants D2/D0/D1 and constructor variants C1/C2. notes/model-rtti-names.md recovers the family.",
+    "HISTORY (closed by the STRUCTOR FOLD below): the ABI tail used to stay sharded because a TU that defines ~dExtFrameCtrl_c() emits _ZTV/_ZTI/_ZTS, and under the coined '9Animation' spelling those names had no cartridge home. The class rename to the ROM's dExtFrameCtrl_c closed that.",
+    "STRUCTOR FOLD: D2 0x02015cb4, D0 0x02015cc4, D1 0x02015ce8, C1 0x02015cf8 and C2 0x02015d18 moved in from their per-function shards. One ~dExtFrameCtrl_c() and one dExtFrameCtrl_c() at the top of the file emit all five variants last, in ROM order. The key function now emits _ZTV15dExtFrameCtrl_c/_ZTI15dExtFrameCtrl_c/_ZTS15dExtFrameCtrl_c. Each has a cartridge home in arm9 .data among the model family's records (0x0208e7e4/0x0208e744/0x0208e84c), outside this text-only TU, so they are deadstrip-data rows checked by romdata_check.",
     "LoadFile (0x0201794c) and UpdateFileOffsets (0x020469ac) are dExtFrameCtrl_c members too, but they link in other neighbourhoods and keep their own shards; they are not part of this run.",
-    "The neighbour before the run, _ZN15TextureSequenceC1Ev ending at 0x02015a7c, is a TextureSequence constructor; the ABI tail's own shards continue the run to 0x02015d38 where _ZN11ShadowModel9RenderAllEv begins. Neither is an dExtFrameCtrl_c method licensed here.",
+    "The neighbour before the run, _ZN15TextureSequenceC1Ev ending at 0x02015a7c, is a TextureSequence constructor; _ZN11ShadowModel9RenderAllEv begins at 0x02015d38. Neither is a dExtFrameCtrl_c method licensed here.",
     "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02015a7c",
-      "end": "0x02015cb4"
+      "end": "0x02015d38"
     }
   ],
   "functions": [
@@ -76,29 +77,102 @@
       "size": "0x00000078",
       "legacy_source": "src/_ZN15dExtFrameCtrl_c7AdvanceEv.cpp",
       "ordinal": 7
+    },
+    {
+      "symbol": "_ZN15dExtFrameCtrl_cD2Ev",
+      "address": "0x02015cb4",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN15dExtFrameCtrl_cD2Ev.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN15dExtFrameCtrl_cD0Ev",
+      "address": "0x02015cc4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15dExtFrameCtrl_cD0Ev.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN15dExtFrameCtrl_cD1Ev",
+      "address": "0x02015ce8",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN15dExtFrameCtrl_cD1Ev.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN15dExtFrameCtrl_cC1Ev",
+      "address": "0x02015cf8",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN15dExtFrameCtrl_cC1Ev.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN15dExtFrameCtrl_cC2Ev",
+      "address": "0x02015d18",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN15dExtFrameCtrl_cC2Ev.cpp",
+      "ordinal": 12
     }
   ],
   "data": [],
   "bss": [],
   "notes": [
-    "Text-only. The class's _ZTV/_ZTI/_ZTS stay in the cartridge .data at 0x0208e744..0x0208e858, emitted and deadstripped by the legacy dtor shard exactly as before this fold.",
+    "Text-only. The class's _ZTV/_ZTI/_ZTS stay in the cartridge .data at 0x0208e744..0x0208e858; this TU's copies are deadstrip-data, compared against the cartridge by romdata_check and then discarded.",
     "mwccarm emits .text in reverse source order, so the file is ROM-descending.",
     "SetAnimation keeps a mangled extern-C definition at file scope: its declared signature passes Fix12<int> by value, and the wall 6az homes class-typed by-value parameters, so the member definition cannot be spelled without changing bytes (see the local extern note in the source)."
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV15dExtFrameCtrl_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own record. The TU defines dExtFrameCtrl_c's key function, the destructor (its first declared non-inline virtual), so mwcc emits the record as vague linkage. The cartridge keeps its canonical copy at arm9:0x0208e7e4, interleaved with the other model-family records and outside this TU's only licensed range (.text 0x02015a7c-0x02015d38). dsd delinks it from the cartridge independently, so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e7e4"
+    },
+    {
+      "symbol": "_ZTI15dExtFrameCtrl_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own record. The TU defines dExtFrameCtrl_c's key function, the destructor (its first declared non-inline virtual), so mwcc emits the record as vague linkage. The cartridge keeps its canonical copy at arm9:0x0208e744, interleaved with the other model-family records and outside this TU's only licensed range (.text 0x02015a7c-0x02015d38). dsd delinks it from the cartridge independently, so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e744"
+    },
+    {
+      "symbol": "_ZTS15dExtFrameCtrl_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own record. The TU defines dExtFrameCtrl_c's key function, the destructor (its first declared non-inline virtual), so mwcc emits the record as vague linkage. The cartridge keeps its canonical copy at arm9:0x0208e84c, interleaved with the other model-family records and outside this TU's only licensed range (.text 0x02015a7c-0x02015d38). dsd delinks it from the cartridge independently, so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e84c"
+    }
+  ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-dExtFrameCtrl_c/dExtFrameCtrl_c.o (gitignored)",
+    "object": "build/tu/arm9-dExtFrameCtrl_c/d_ext_frame_ctrl.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
+    "functions_matched": 13,
+    "functions_declared": 13,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "data": [
+        "_ZTV15dExtFrameCtrl_c",
+        "_ZTI15dExtFrameCtrl_c",
+        "_ZTS15dExtFrameCtrl_c"
+      ],
+      "dataExternalized": [
+        "_ZTI15dExtFrameCtrl_c",
+        "_ZTS15dExtFrameCtrl_c",
+        "_ZTV15dExtFrameCtrl_c"
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

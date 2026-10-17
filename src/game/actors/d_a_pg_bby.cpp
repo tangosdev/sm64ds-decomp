@@ -1,7 +1,7 @@
 //cpp
 /* leftovers:
  * - SetAnim, DropShadowRadHeight, IsTooFarAwayFromPlayer,
- *   dCcAc_c::Init, dBgCh_Actr::Init and dClipper::Func_02015560 stay
+ *   dCcAc_c::Init and dBgCh_Actr::Init stay
  *   mangled. Each takes Fix12<int> by value.
  * - The state table data_ov072_02122d6c, the carry offsets
  *   data_ov072_02122d3c and the file handles are built by
@@ -20,6 +20,9 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
+#include "dBgCh_Actr.h"
+#include "dClipper.h"
+#include "nitro/fx/fx.h"
 
 bool ApproachLinear(short &value, short target, short step);
 
@@ -36,7 +39,6 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, voi
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, int flags, int speed, unsigned int start);
 void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
     void *self, void *shadow, void *mtx, int radius, int height, unsigned int flags);
-int _ZN8dClipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void *m, void *v, Vector3 *a, int b, Vector3 *e);
 
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
@@ -45,16 +47,13 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void func_0201267c(unsigned int soundID, const Vector3 *pos);
 
-/* The dBgCh_Actr::UpdateContinuous call goes through a veneer, and the two
-   result getters are not declared by dBgCh_Actr.h. */
+/* The dBgCh_Actr::UpdateContinuous call goes through a veneer, which no
+   header declares. */
 void dBgCh_Actr_UpdateContinuous_Veneer(void *c);
-void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
-void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
-void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *surface, Vector3 &out);
 int _ZN4cstd4fdivEii(int a, int b);
 
 extern short data_02082214[];   /* sine/cosine table */
-extern int data_0209f43c[];
+extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 
 /* Overlay file handles: the BMD, and the five BCA handles through the
@@ -130,7 +129,7 @@ s32 daPgBby_c::Render()
     unsigned int f = mFlags;
     int b = ((f & 0x40000) != 0);
     if (b) return 1;
-    mModelAnim.Render((Vector3 *)&mScaleX);
+    mModelAnim.Render(&mScale);
     return 1;
 }
 
@@ -198,10 +197,10 @@ int daPgBby_c::func_ov072_02121a84()
     int frame;
 
     player = ClosestPlayer();
-    dist = Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&player->mPosX);
+    dist = Vec3_Dist(&mPos, &player->mPos);
     switch (mSubState) {
     case 0:
-        angle = (short)(Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&player->mPosX) + 0x8000);
+        angle = (short)(Vec3_HorzAngle(&mPos, &player->mPos) + 0x8000);
         ApproachLinear(mAngleY, angle, 0x514);
         mPrevAngleY = mAngleY;
         mHorzSpeed = 0x5000;
@@ -210,7 +209,7 @@ int daPgBby_c::func_ov072_02121a84()
         }
         break;
     case 1:
-        angle = Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&player->mPosX);
+        angle = Vec3_HorzAngle(&mPos, &player->mPos);
         ApproachLinear(mAngleY, angle, 0x514);
         mPrevAngleY = mAngleY;
         mHorzSpeed = 0x5000;
@@ -249,7 +248,7 @@ int daPgBby_c::func_ov072_02121a84()
     if ((int)mModelAnim.file == data_ov072_02122cbc[1]) {
         frame = (int)(((u32)mModelAnim.currFrame << 4) >> 16);
         if (frame == 9 || frame == 0x15) {
-            func_0201267c(0xf3, (Vector3 *)&mCamSpacePosX);
+            func_0201267c(0xf3, &mCamSpacePos);
         }
     }
     return 1;
@@ -337,7 +336,7 @@ int daPgBby_c::func_ov072_021217ac()
         from.x = x;
         from.y = aboveY;
         from.z = z;
-        DetectRaycastClsn(from, *(Vector3 *)&mPosX, true);
+        DetectRaycastClsn(from, mPos, true);
         mCarrier = 0;
         func_ov072_02121d50(0);
     }
@@ -347,7 +346,7 @@ animate:
     if (param1 == 0) {
         u32 frame = (u32)(mModelAnim.currFrame << 4) >> 16;
         if (frame == 0x10 || frame == 0x25) {
-            func_0201267c(0xf2, (Vector3 *)&mCamSpacePosX);
+            func_0201267c(0xf2, &mCamSpacePos);
         }
     }
     return 1;
@@ -369,12 +368,12 @@ int daPgBby_c::func_ov072_02121758()
    units from her. */
 int daPgBby_c::func_ov072_02121670()
 {
-    int dist = Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&mMother->mPosX);
+    int dist = Vec3_Dist(&mPos, &mMother->mPos);
     short tgt = mAngleY;
     if (dist > 0xdc000) {
-        tgt = Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mMother->mPosX);
+        tgt = Vec3_HorzAngle(&mPos, &mMother->mPos);
     } else if (dist < 0xc8000) {
-        tgt = (short)(Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mMother->mPosX) + 0x8000);
+        tgt = (short)(Vec3_HorzAngle(&mPos, &mMother->mPos) + 0x8000);
     }
     ApproachLinear(mAngleY, tgt, 0x2bc);
     mPrevAngleY = mAngleY;
@@ -388,7 +387,7 @@ int daPgBby_c::func_ov072_02121670()
     {
         int frame = (int)((unsigned)(mModelAnim.currFrame << 4) >> 16);
         if (frame == 9 || frame == 0x15) {
-            func_0201267c(0xf3, (Vector3 *)&mCamSpacePosX);
+            func_0201267c(0xf3, &mCamSpacePos);
         }
     }
     return 1;
@@ -429,7 +428,7 @@ int daPgBby_c::func_ov072_021214dc()
     case 1:
     {
         if (mCarrier->ShowMessage(*this, 0xb2, 0, 0, 0)) {
-            func_0201267c(0xf2, (Vector3 *)&mCamSpacePosX);
+            func_0201267c(0xf2, &mCamSpacePos);
             mSubState++;
         }
         int spat = (mFlags & 0x80000) != 0;
@@ -560,7 +559,6 @@ void daPgBby_c::func_ov072_021210c4()
     Vector3 v;
     int shadowHeight;
     int shadowRadius;
-    long long tmp;
 
     if (mCarrier && ((mFlags & 0x4000) ? 1 : 0) && *(int *)((char *)mCarrier + 0xc8)) {
         idx = 0;
@@ -595,8 +593,7 @@ void daPgBby_c::func_ov072_021210c4()
         if (ground.DetectClsn()) {
             shadowHeight = mPosY - ground.clsnY;
             if (shadowHeight < 0x1000) shadowHeight = 0x1000;
-            tmp = (long long)shadowHeight * 0x180 + 0x800;
-            shadowRadius = shadowRadius - (int)(tmp >> 12);
+            shadowRadius = shadowRadius - FX_MUL(shadowHeight, 0x180);
             if (shadowRadius < 0x1000) shadowRadius = 0x1000;
             if (shadowRadius > 0x5a000) shadowRadius = 0x5a000;
             shadowHeight = shadowHeight + 0x28000;
@@ -617,17 +614,15 @@ void daPgBby_c::func_ov072_02120fd4(dBgCh_Actr *clsn)
     if (b != 0) return;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4, floorNormal);
+        ((SurfaceInfo *)((char *)clsn->GetFloorResult() + 4))->CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
-            long long a = (long long)floorNormal.x * (long long)unk_0a4;
-            long long bb = (long long)floorNormal.z * (long long)unk_0ac;
-            int x = (int)((a + 0x800) >> 12);
-            int y = (int)((bb + 0x800) >> 12);
+            int x = FX_MUL(floorNormal.x, unk_0a4);
+            int y = FX_MUL(floorNormal.z, unk_0ac);
             mVertSpeed = -(_ZN4cstd4fdivEii(x + y, floorNormal.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4, wallNormal);
+        ((SurfaceInfo *)((char *)clsn->GetWallResult() + 4))->CopyNormalTo(wallNormal);
     }
 }
 
@@ -701,7 +696,7 @@ void daPgBby_c::func_ov072_02120ddc()
     dActor_c *mother = mMother;
     if (mother == 0)
         return;
-    if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&mother->mPosX) >= 0x190000)
+    if (Vec3_Dist(&mPos, &mother->mPos) >= 0x190000)
         return;
     func_ov072_02121d50(3);
 }
@@ -715,11 +710,13 @@ void daPgBby_c::func_ov072_02120d04()
     Vector3 tmp;
     if (mStateId == 3) return;
     if ((unsigned)mPosY > (unsigned)(-0x1800000)) {
-        if (Vec3_Dist((Vector3 *)&mSpawnPosX, (Vector3 *)&mPosX) < 0x190000) return;
+        if (Vec3_Dist((Vector3 *)&mSpawnPosX, &mPos) < 0x190000)
+            return;
         if (DecIfAbove0_Short(&mRespawnTimer) != 0) return;
     }
     Vec3_Asr(&tmp, (Vector3 *)&mSpawnPosX, 3);
-    if (_ZN8dClipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_((void *)data_0209f43c, &data_0209b3ec, &tmp, 0x1f400, &out) <= 0xc350000) return;
+    if (data_0209f43c.TransformAndClip(data_0209b3ec, tmp, 0x1f400, out) <= 0xc350000)
+        return;
     mPosX = mSpawnPosX;
     mPosY = mSpawnPosY;
     mPosZ = mSpawnPosZ;

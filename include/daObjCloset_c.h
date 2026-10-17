@@ -48,7 +48,7 @@
  * SM64DS RTTI names the implementation daObjCloset_c. The reconstructed factory
  * daObjCloset_c_classInit (0x02111688, historical alias RecRoomCupboard_Spawn)
  * installs this class's cartridge vtable and lives in
- * src/actors/daObjCloset_c.cpp alongside the rest of the class; the
+ * src/game/actors/d_a_obj_closet.cpp alongside the rest of the class; the
  * reconstructed profile global g_profile_PL_CLOSET (historical alias
  * RecRoomCupboard_SpawnInfo) is its registry descriptor.
  */

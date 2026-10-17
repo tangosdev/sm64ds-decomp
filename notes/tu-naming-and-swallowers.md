@@ -43,7 +43,7 @@ Game code was built with asserts stripped. So the derived filenames are a naming
 
 The prefix mapping does not settle acronym or numeric word boundaries. Candidates
 such as `d_s_mg_bsc.cpp`, `d_s_mg_m_carlo.cpp`,
-`d_s_mg_single3_d_base.cpp`, and `d_s_mg3_d_esp.cpp` are adopted mechanical
+`d_s_mg_single3d_base.cpp`, and `d_s_mg3_d_esp.cpp` are adopted mechanical
 spellings, not evidence for Nintendo's exact tokenization. A numeric family suffix
 such as `jump2` or `memory2` is likewise preserved from the ROM class identity;
 whether an original filename separated the number is unknown.

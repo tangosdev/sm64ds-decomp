@@ -17,6 +17,14 @@ struct Outer {
     int f4;
 };
 
+/* Bit 0x200 of f10 marks a request still in flight. The if/return body is
+   measured: `return (f10 & 0x200) != 0;' lets the loop guard get copied. */
+static inline int IsBusy(Obj *o) {
+    if (o->f10 & 0x200)
+        return 1;
+    return 0;
+}
+
 extern "C" void func_0205c528(Outer *thiz, int r1, int r7)
 {
     Obj *o = thiz->obj;
@@ -29,7 +37,7 @@ extern "C" void func_0205c528(Outer *thiz, int r1, int r7)
         break;
     case 6: {
         unsigned int saved = (unsigned int)_ZN3IRQ7DisableEv();
-        while ((o->f10 & 0x200) ? 1 : 0) {
+        while (IsBusy(o)) {
             OS_SleepThread(&o->fc);
         }
         _ZN3IRQ7RestoreEj(saved);

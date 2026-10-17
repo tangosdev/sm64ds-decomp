@@ -48,7 +48,7 @@
     "last_slot_address": "0x0213d560",
     "end": "0x0213d564",
     "slots": 36,
-    "extent_evidence": "Two independent sources agree on 36. (1) relocs.txt has a relocation whose source is the word itself for every address from 0x0213d4d4 through 0x0213d560 inclusive, and none at 0x0213d564: (0x0213d560 - 0x0213d4d4) / 4 + 1 = 36. (2) tools/rtti_vtables.py --own dScMgMemory2_c reports 36 slots, base 36. The word at 0x0213d564 is named data_ov006_0213d564 in symbols.txt and is only ever LOADED FROM, by code at 0x020f820c, 0x020f8a14 and 0x020f8cf8 -- a following table, not a trailing slot, and there are no trailing nulls to qualify. Reading the extent from the next symbols.txt row happens to agree here (0x0213d564 - 0x0213d4d4 = 0x90 = 36 slots), but the relocation walk is what proves it.",
+    "extent_evidence": "Two independent sources agree on 36. (1) relocs.txt has a relocation whose source is the word itself for every address from 0x0213d4d4 through 0x0213d560 inclusive, and none at 0x0213d564: (0x0213d560 - 0x0213d4d4) / 4 + 1 = 36. (2) tools/rtti_vtables.py --own dScMgMemory2_c reports 36 slots, base 36. The word at 0x0213d564 is named sMCarloPickAllowed in symbols.txt and is only ever LOADED FROM, by code at 0x020f820c, 0x020f8a14 and 0x020f8cf8 -- a following table, not a trailing slot, and there are no trailing nulls to qualify. Reading the extent from the next symbols.txt row happens to agree here (0x0213d564 - 0x0213d4d4 = 0x90 = 36 slots), but the relocation walk is what proves it.",
     "entries": [
       {
         "slot": 0,
@@ -181,126 +181,126 @@
         "slot_address": "0x0213d51c",
         "target": "0x020f7394",
         "module": "ov006",
-        "name": "dScMgMemory2_c::OnYoshiTryEat"
+        "name": "dScMgMemory2_c::StartRound"
       },
       {
         "slot": 19,
         "slot_address": "0x0213d520",
         "target": "0x020f7320",
         "module": "ov006",
-        "name": "dScMgMemory2_c::OnTurnIntoEgg"
+        "name": "dScMgMemory2_c::CanEndState"
       },
       {
         "slot": 20,
         "slot_address": "0x0213d524",
         "target": "0x020b2990",
         "module": "ov004",
-        "name": "dScMgBase_c::Virtual50"
+        "name": "dScMgBase_c::OnNewRecord"
       },
       {
         "slot": 21,
         "slot_address": "0x0213d528",
         "target": "0x020f730c",
         "module": "ov006",
-        "name": "dScMgMemory2_c::OnGroundPounded"
+        "name": "dScMgMemory2_c::OnDealDone"
       },
       {
         "slot": 22,
         "slot_address": "0x0213d52c",
         "target": "0x020ae198",
         "module": "ov004",
-        "name": "dScMgBase_c::OnAttacked1"
+        "name": "dScMgBase_c::OnGraphCallback1"
       },
       {
         "slot": 23,
         "slot_address": "0x0213d530",
         "target": "0x020ae1a0",
         "module": "ov004",
-        "name": "dScMgBase_c::OnAttacked2"
+        "name": "dScMgBase_c::OnGraphCallback0"
       },
       {
         "slot": 24,
         "slot_address": "0x0213d534",
         "target": "0x020ae140",
         "module": "ov004",
-        "name": "dScMgBase_c::OnKicked"
+        "name": "dScMgBase_c::OnGraphCallback2"
       },
       {
         "slot": 25,
         "slot_address": "0x0213d538",
         "target": "0x020ae128",
         "module": "ov004",
-        "name": "dScMgBase_c::OnPushed"
+        "name": "dScMgBase_c::OnGraphCallback3"
       },
       {
         "slot": 26,
         "slot_address": "0x0213d53c",
         "target": "0x0210a600",
         "module": "ov006",
-        "name": "dScMgSingle3DBase_c::OnHitByCannonBlastedChar"
+        "name": "dScMgSingle3DBase_c::GetDisplayMode"
       },
       {
         "slot": 27,
         "slot_address": "0x0213d540",
         "target": "0x020af27c",
         "module": "ov004",
-        "name": "dScMgBase_c::OnHitByMegaChar"
+        "name": "dScMgBase_c::OpenMenu"
       },
       {
         "slot": 28,
         "slot_address": "0x0213d544",
         "target": "0x020af04c",
         "module": "ov004",
-        "name": "dScMgBase_c::OnHitFromUnderneath"
+        "name": "dScMgBase_c::CloseMenu"
       },
       {
         "slot": 29,
         "slot_address": "0x0213d548",
         "target": "0x020af094",
         "module": "ov004",
-        "name": "dScMgBase_c::OnAimedAtWithEgg"
+        "name": "dScMgBase_c::SaveScreenForMenu"
       },
       {
         "slot": 30,
         "slot_address": "0x0213d54c",
         "target": "0x020aeed8",
         "module": "ov004",
-        "name": "dScMgBase_c::OnAimedAtWithEggReturnVec"
+        "name": "dScMgBase_c::RestoreScreenFromMenu"
       },
       {
         "slot": 31,
         "slot_address": "0x0213d550",
         "target": "0x020b2880",
         "module": "ov004",
-        "name": "dScMgBase_c::Virtual7C"
+        "name": "dScMgBase_c::InitSubScreenBg"
       },
       {
         "slot": 32,
         "slot_address": "0x0213d554",
         "target": "0x020b27f4",
         "module": "ov004",
-        "name": "dScMgBase_c::Virtual80"
+        "name": "dScMgBase_c::InitMainScreenBg"
       },
       {
         "slot": 33,
         "slot_address": "0x0213d558",
         "target": "0x0210a708",
         "module": "ov006",
-        "name": "dScMgSingle3DBase_c::Virtual84"
+        "name": "dScMgSingle3DBase_c::InitEngines"
       },
       {
         "slot": 34,
         "slot_address": "0x0213d55c",
         "target": "0x020ae3b4",
         "module": "ov004",
-        "name": "dScMgBase_c::Virtual88"
+        "name": "dScMgBase_c::PaintSquare"
       },
       {
         "slot": 35,
         "slot_address": "0x0213d560",
         "target": "0x020ad660",
         "module": "ov004",
-        "name": "dScMgBase_c::Virtual8C"
+        "name": "dScMgBase_c::IsAltVariant"
       }
     ]
   },
@@ -332,7 +332,7 @@
       "address": "0x020f5564",
       "end": "0x020f55b8",
       "name": "D1 destructor",
-      "body": "Destroys the 0x270-byte shared table at this+0x4f38 through func_ov006_020c1c64, stores vptr (int)&_ZTV14dScMgMemory2_c[2], destroys the inherited Particle::SysTracker, then calls _ZN11dScMgBase_cD2Ev at 0x020b29c0."
+      "body": "Destroys the 0x270-byte shared table at this+0x4f38 through Dealer_Destruct, stores vptr (int)&_ZTV14dScMgMemory2_c[2], destroys the inherited Particle::SysTracker, then calls _ZN11dScMgBase_cD2Ev at 0x020b29c0."
     },
     {
       "slot": 17,
@@ -392,7 +392,7 @@
       "offset": "0x4f38",
       "width": "0x0270",
       "name": "mShared",
-      "evidence": "Both destructors call func_ov006_020c1c64 with this+0x4f38, and four sibling dScMgSingle3DBase_c scenes carry the same 0x270 table. NEITHER dScMgMemory_c NOR dScMgMemory2_c reads inside it, so no field of it is named."
+      "evidence": "Both destructors call Dealer_Destruct with this+0x4f38, and four sibling dScMgSingle3DBase_c scenes carry the same 0x270 table. NEITHER dScMgMemory_c NOR dScMgMemory2_c reads inside it, so no field of it is named."
     },
     {
       "offset": "0x51a8",

@@ -113,7 +113,7 @@ struct daBmb_c : dEnemyBase_c {
        With the destructor inline, OnYoshiTryEat becomes the first out-of-line
        virtual this class declares -- the key function -- so the vtable and the
        RTTI group land in the translation unit that defines it,
-       src/actors/daBmb_c.cpp. */
+       src/game/actors/d_a_bmb.cpp. */
     virtual ~daBmb_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */
@@ -131,7 +131,7 @@ struct daBmb_c : dEnemyBase_c {
        field to choose between them.  State1/3/4/5 are coined -- ov102 carries these
        addresses and no identifier -- so they claim the index and nothing more; what
        each arm does is written at its body.  Arm 0 stays a free function
-       (func_ov102_0214bf64): its body casts to Bmb_Bf64Obj, a different object.
+       (func_ov102_0214bf64), with this Bob-omb as its typed receiver.
        func_ov102_0214bd90 and func_ov102_0214b03c are methods; the address is the
        method name. */
     void State1();
@@ -141,8 +141,8 @@ struct daBmb_c : dEnemyBase_c {
     void func_ov102_0214bd90();
     void func_ov102_0214b03c();
 
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
-       `return new daBmb_c()` then routes through the retail allocator. */
+    /* Retained leaf size_t adapter to the retail unsigned-size allocator.
+       fBase_c also supplies this forwarding adapter. */
     static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

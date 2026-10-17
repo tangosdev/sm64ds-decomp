@@ -6,7 +6,7 @@ Independent reviewer: `kpa3_review`. Endpoint: push to existing PR #3227; no mer
 
 ## Scope and authorization
 
-Change [func_ov002_020d7430](../../../src/actors/Player.cpp) to take `Player&`, update its two source callers, and
+Change [func_ov002_020d7430](../../../src/game/player/Player.cpp) to take `Player&`, update its two source callers, and
 remove its obsolete char* declaration from include/decl_common.h. The user
 explicitly confirmed this exact prepared patch, including the scoped header edit
 while `jump-contract-repair-0918` reserves that header. That task's branch and
@@ -27,9 +27,9 @@ The prior handoff pr3227-player-caller.md records those inherited limitations.
 The prepared patch's three functions independently passed the pinned compiler's
 linked-byte probe before application: VERIFIED, diffs [], blind 0 for each:
 
-- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d6790](../../../src/actors/Player.cpp): 0x020d6790, size 0x208.
-- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d7430](../../../src/actors/Player.cpp): 0x020d7430, size 0xd4.
-- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [Player::St_YoshiPower_Main](../../../src/actors/Player.cpp): 0x020d7504, size 0x9cc.
+- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d6790](../../../src/game/player/Player.cpp): 0x020d6790, size 0x208.
+- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d7430](../../../src/game/player/Player.cpp): 0x020d7430, size 0xd4.
+- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [Player::St_YoshiPower_Main](../../../src/game/player/Player.cpp): 0x020d7504, size 0x9cc.
 
 Applied production declaration check:
 `python tools/check_decl_agreement.py --changed dbd94c7c483db1b6c5603c7ec2a680b46461643e`
@@ -56,7 +56,7 @@ Both warnings independently reproduce at input and candidate:
 
 - `_ZN9dScDSMT_c8BehaviorEv`: BLIND-2, diffs []; unresolved overlay_64 at +0x184
   and overlay_66 at +0x188, R_ARM_ABS32, addend 0.
-- [func_ov089_0213162c](../../../src/actors/daObjKey_c.cpp): BLIND-1, diffs []; unresolved data_02111b68 at +0x4e0,
+- [func_ov089_0213162c](../../../src/game/actors/d_a_obj_key.cpp): BLIND-1, diffs []; unresolved data_02111b68 at +0x4e0,
   R_ARM_ABS32, addend 0.
 
 All three edited functions independently return VERIFIED, diffs [], blind 0.

@@ -1,0 +1,139 @@
+{
+  "id": "arm9/fListNode",
+  "module": "arm9",
+  "source": "src/fListNode.cpp",
+  "promoted_source": "src/fListNode.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as under-segmented, so there is no tubuild create id here; every line below is hand-derived and checkable against config/arm9/symbols.txt, config/arm9/relocs.txt and the sources.",
+    "CONTIGUOUS RUN 0x020440e8..0x020443c8, 8 functions, tiling the span with no hole and no overlap (config/arm9/symbols.txt lines 1842-1849): _ZN11fLiNdBaPr_cD1Ev 0x1c, _ZN9fLiNdBa_cD1Ev 0x1c, func_02044120 0x9c, func_020441bc 0x10, func_020441cc 0x80, func_0204424c 0x38, func_02044284 0xb0, func_02044334 0x94.",
+    "BOTTOM EDGE: config/tu_manifest.d/arm9/ActorBase.json (promoted, src/runtime/actor/ActorBase.cpp) claims 0x020433b8..0x020440e8 and names 0x020440e8 as its upper stop. TOP EDGE: 0x020443c8 is _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3, the first function of the promoted arm9/ModelComponents TU, whose own boundary_evidence names func_02044334 as the object below it that stays out.",
+    "SHARED GLOBALS TIE THE RUN TOGETHER. Both destructors clear data_020a4b68 when it is `this` (relocs from 0x02044100 and 0x0204411c). func_02044120 stores the phase numbers 4,2,3,5,1,0 to data_02099f24 (reloc from 0x020441a4) around five list walks, through func_02043fdc (four arm_call relocs) and func_020441cc (0x02044188). func_020441bc returns data_02082178[i] (reloc from 0x020441c8); its only caller is the crash screen (0x020142fc, src/ShowCrashScreen.c), which calls it with data_02099f24 when that phase number is 1..5. So func_020441bc is the lookup for the phase numbers func_02044120 writes.",
+    "THE TOP THREE ARE ONE OBJECT. func_0204424c, func_02044284 and func_02044334 all work on the same vtable-carrying record (state s16 at +4, index s16 at +6, entry table at +8, virtual slots 2 and 3). func_0204424c calls func_02044284 (reloc 0x02044264). fBase_c's BeforeCleanupResources (0x02043bc0) calls func_0204424c and AfterCleanupResources (0x02043b74) calls func_02044334 on fBase_c's +0x48 member. Nothing in the ROM separates them from the frame-loop functions below; the only stop in either direction is the ModelComponents run.",
+    "MEDIUM, NOT HIGH: no RTTI, vtable or static initializer lands in this range. The cut against ActorBase rests on that TU's own recorded stop, not on a structural marker, and the run could in principle be two adjacent original files (list-node/frame-loop and the lifecycle-sequence trio). Nothing in the bytes distinguishes those cases, and the run compiles as one input byte for byte."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020440e8",
+      "end": "0x020443c8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN11fLiNdBaPr_cD1Ev",
+      "address": "0x020440e8",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN11fLiNdBaPr_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9fLiNdBa_cD1Ev",
+      "address": "0x02044104",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN9fLiNdBa_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_02044120",
+      "address": "0x02044120",
+      "size": "0x0000009c",
+      "legacy_source": "src/unnamed/arm9/0204/func_02044120.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_020441bc",
+      "address": "0x020441bc",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0204/func_020441bc.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_020441cc",
+      "address": "0x020441cc",
+      "size": "0x00000080",
+      "legacy_source": "src/unnamed/arm9/0204/func_020441cc.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_0204424c",
+      "address": "0x0204424c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_0204424c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_02044284",
+      "address": "0x02044284",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_02044284.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_02044334",
+      "address": "0x02044334",
+      "size": "0x00000094",
+      "legacy_source": "src/func_02044334.cpp",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN11fLiNdBaPr_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The out-of-line non-virtual destructor makes mwccarm emit a D2 twin beside D1. config/arm9/symbols.txt has no D2 row for fLiNdBaPr_c and no relocation targets one; every caller (fBase_c D2/D0 at 0x02043d5c..0x02043dd8) calls D1 at 0x020440e8. Plain deadstrip, as the retired single-function arm9/_ZN11fLiNdBaPr_cD1Ev entry already recorded."
+    },
+    {
+      "symbol": "_ZN9fLiNdBa_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. Same D2 twin for fLiNdBa_c. config/arm9/symbols.txt has no D2 row for fLiNdBa_c and every caller (0x020112e8, 0x02011334, 0x02011394) calls D1 at 0x02044104."
+    }
+  ],
+  "notes": [
+    "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main, so there was no candidate id. Shape copied from arm9/ActorBase, arm9/Model4 and arm9/Message2.",
+    "Supersedes the single-function entry arm9/_ZN11fLiNdBaPr_cD1Ev (0x020440e8..0x02044104), which claimed fLiNdBaPr_c::D1 was its own file. Its cited note (notes/mangled-fold-decisions.md) is not in the tree, and its argument -- the next function does the same thing to the same global -- is evidence for one file, not two. That entry is removed so the range has one owner.",
+    "pragma defer_codegen off for the whole file: definitions are written in ROM-ascending order. func_02044284 needs opt_common_subs off (as its legacy source did file-wide) while func_020441cc and func_02044334 need it on. Under default deferred codegen a push/pop around func_02044284 did not take effect (it differed) and a file-wide off broke the other two; with codegen not deferred, the push/pop scopes it to that one function and all 8 match.",
+    "data_020a4b68 is declared once as void *, the spelling ActorBase.cpp, ShowCrashScreen.c and the fLiNdBaPr_c shard used. The fLiNdBa_c shard's fLiNdBa_c * spelling is retired; the comparison against `this` converts implicitly and the bytes are unchanged.",
+    "The five process-list heads are declared int [] as ActorBase.cpp does, and passed bare. func_02044120.c spelled them int and passed &x; the relocations are the same addend-0 references. With this file the int [] spelling of data_020a4b6c becomes the plurality, so include/decl_common.h's plain int is banked in config/decl-agreement-baseline.json in place of ActorBase.cpp's.",
+    "The three helpers func_0204424c, func_02044284 and func_02044334 now share one local layout, Obj (the two legacy files each had their own Obj with the same field offsets). func_0204424c keeps its char * parameter because ActorBase.cpp and the port bridge declare it that way.",
+    "Function names stay as linker names (func_*). The roles in comments are read from the bytes; no original names are claimed."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-fListNode/fListNode.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN11fLiNdBaPr_cD2Ev",
+        "_ZN9fLiNdBa_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN11fLiNdBaPr_cD2Ev",
+        "_ZN9fLiNdBa_cD2Ev"
+      ],
+      "droppedSections": [
+        7,
+        8,
+        11,
+        12
+      ],
+      "data": [],
+      "dataExternalized": [],
+      "canonicalDuplicates": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

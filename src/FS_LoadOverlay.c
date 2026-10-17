@@ -8,12 +8,10 @@ int FS_LoadOverlay(int proc, int id) {
     char info[0x24];
     unsigned int ram;
     unsigned int sum;
-    if (func_02018c00(info, proc, id)) {
-        if (func_02018b64(info)) goto ok;
-    }
-    return 0;
-ok:
+    if (!func_02018c00(info, proc, id) || !func_02018b64(info))
+        return 0;
     ram = *(unsigned int *)(info + 4);
+    /* goto kept: an || guard around Crash() colours ram/sum differently (4 forms tried) */
     if (ram >= (unsigned int)func_ov001_020aa420) {
         sum = ram + *(unsigned int *)(info + 8);
         if (sum + *(unsigned int *)(info + 0xc) <= 0x214eaa0u)

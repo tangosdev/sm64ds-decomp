@@ -1,8 +1,8 @@
 {
   "id": "ov062/daJango_c",
   "module": "ov062",
-  "source": "src/actors/daJango_c.cpp",
-  "promoted_source": "src/actors/daJango_c.cpp",
+  "source": "src/game/actors/d_a_jango.cpp",
+  "promoted_source": "src/game/actors/d_a_jango.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -432,8 +432,9 @@
     "tubuild create warning: CONFLICT: local declaration ('struct', 'BlendModelAnim') differs between the legacy file that used to hold func_ov062_0211b880 and the one that held func_ov062_0211bc54; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov062_0211b2fc and the one that held func_ov062_0211c594; kept the first, the other is commented out for review",
     "fold-lane-D-0929: folded the daJango_c_classInit registry factory (0x0211ce80..0x0211ced8) into this already-promoted TU, widening the complete delinks.txt claim from 0x0211b248..0x0211ce80 to 0x0211b248..0x0211ced8. This TU's recorded tubuild conflict markers (/* TUBUILD CONFLICT ... */ comments) are untouched by the fold; tools/check_tubuild_conflicts.py ov062/daJango_c still reports every recorded conflict matching the source and every conflict in the source recorded. The loose one-function source hand-called fBase_c::operator new(1168) + the inherited dEnemyBase_c ctor + this class's vtable store + the five member subobjects in field order (two dCcAc_c, dBgCh_Actr, BlendModelAnim, dExtShadowModel_c); daJango_c has no user-declared constructor, so `new daJango_c()` reproduces the identical sequence with zero mangled calls. This TU has no `#pragma defer_codegen off` and is written in reverse-ROM source order (highest address first) so that mwccarm's reverse-of-source-order emission lands ROM-ascending; the classInit factory, now the highest address in the TU, is written first in source, ahead of OnAimedAtWithEgg. `tubuild.py verify` reports 24/24 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (daJango_c's destructor is inline in the header, not out-of-line, so `new daJango_c()` emits no homeless base-object-destructor helper here). Retired: src/d_a_jango.c (credited tangosdev, carried into attribution.json as a path#symbol override).",
-    "Static initializer folded: the JangoModelFile handle (file 0x348), the three JangoAnimationFilePtr handles (files 0x349, 0x34a, 0x34b), their destructor-registration nodes, the nine PMF descriptors plus the free-function pair and the five state records make mwcc emit __sinit_daJango_c.cpp itself (0x1d0, raw-byte-identical to retail __sinit_ov062_0211d6fc with the same relocation sites); the handwritten src/unnamed/ov062/__sinit_ov062_0211d6fc.c is retired. mwcc numbers two descriptors @1128/@517 per TU and the fleet already defines those names, so defined_symbol_renames carries them as @690/@692. SWOOP's update slot targets the free C function ba84, so its source is a JangoFreeState function-pointer/PMF pair, not a member descriptor. This fold does NOT license the .rodata tables, the RTTI chain, the g_profile_JANGO row or the vtable, which stay compiler-only deadstrip.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "Static initializer folded: the JangoModelFile handle (file 0x348), the three JangoAnimationFilePtr handles (files 0x349, 0x34a, 0x34b), their destructor-registration nodes, the nine PMF descriptors plus the free-function pair and the five state records make mwcc emit __sinit_d_a_jango.cpp itself (0x1d0, raw-byte-identical to retail __sinit_ov062_0211d6fc with the same relocation sites); the handwritten src/unnamed/ov062/__sinit_ov062_0211d6fc.c is retired. mwcc numbers two descriptors @1128/@517 per TU and the fleet already defines those names, so defined_symbol_renames carries them as @690/@692. SWOOP's update slot targets the free C-linkage function ba84, so its source is a JangoFreeState function-pointer/PMF pair, not a member descriptor. This fold does NOT license the .rodata tables, the RTTI chain, the g_profile_JANGO row or the vtable, which stay compiler-only deadstrip.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "SWOOP helper func_ov062_0211ba84 is now compiled as C++ with an array-backed position snapshot, native actor/player fields and native member calls. Its free-function entry and state descriptor remain unchanged. Explicit u16 narrowing of inherited mStateTimer preserves the retail ldrh zero test. Normal production policies need only the twelve compiler-local from-name updates; all configured target names and addresses are unchanged, and the normalized complete object is byte-identical to the prior C-island object."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -791,21 +792,21 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov062",
       "canonical_address": "0x0211dd20",
-      "reason": "The TU emits the cartridge type-name string. Text-only: deadstripped, data: []."
+      "reason": "The TU emits the cartridge type-name string. Metadata remains externalized under this existing policy; the ten owned data rows are PMF descriptors."
     },
     {
       "symbol": "_ZTI9daJango_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov062",
       "canonical_address": "0x0211dd2c",
-      "reason": "The TU emits the class single-inheritance RTTI. Text-only: deadstripped, data: []."
+      "reason": "The TU emits the class single-inheritance RTTI. Metadata remains externalized under this existing policy; the ten owned data rows are PMF descriptors."
     },
     {
       "symbol": "_ZTV9daJango_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov062",
       "canonical_address": "0x0211dd5c",
-      "reason": "The TU emits the complete class vtable. Text-only: deadstripped, data: []. The symbols.txt address point 0x0211dd5c is unchanged."
+      "reason": "The TU emits the complete class vtable. Metadata remains externalized under this existing policy; the ten owned data rows are PMF descriptors. The symbols.txt address point 0x0211dd5c is unchanged."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -867,7 +868,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daJango_c.cpp",
+      "symbol": "__sinit_d_a_jango.cpp",
       "address": "0x0211d6fc",
       "size": "0x1d0",
       "binding": "STB_GLOBAL",
@@ -876,7 +877,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daJango_c.cpp",
+      "symbol": ".p__sinit_d_a_jango.cpp",
       "address": "0x0211d8dc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -922,13 +923,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daJango_c.cpp",
+      "symbol": "__sinit_d_a_jango.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daJango_c.cpp",
+      "symbol": ".p__sinit_d_a_jango.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1348,7 +1349,7 @@
       "source": "0x0211d8dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daJango_c.cpp",
+      "symbol": "__sinit_d_a_jango.cpp",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211d6fc"
@@ -1456,69 +1457,69 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1129",
+      "from": "@1155",
       "to": "@1115",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1130",
+      "from": "@1156",
       "to": "@1116",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1131",
+      "from": "@1157",
       "to": "@1117",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1132",
+      "from": "@1158",
       "to": "@1118",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1134",
+      "from": "@1160",
       "to": "@1120",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1136",
+      "from": "@1162",
       "to": "@1122",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1138",
+      "from": "@1164",
       "to": "@1124",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1140",
+      "from": "@1166",
       "to": "@1126",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@531",
+      "from": "@558",
       "to": "@692",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1142",
+      "from": "@1168",
       "to": "@690",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1144",
+      "from": "@1170",
       "to": "@189",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1146",
+      "from": "@1172",
       "to": "@197",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1148",
+      "from": "@1174",
       "to": "@198",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     }
   ]
 }

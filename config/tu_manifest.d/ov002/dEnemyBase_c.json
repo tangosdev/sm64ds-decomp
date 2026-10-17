@@ -1,8 +1,8 @@
 {
   "id": "ov002/dEnemyBase_c",
   "module": "ov002",
-  "source": "src/actors/dEnemyBase_c.cpp",
-  "promoted_source": "src/actors/dEnemyBase_c.cpp",
+  "source": "src/runtime/actor/d_enemy_base.cpp",
+  "promoted_source": "src/runtime/actor/d_enemy_base.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x20ad660..0x20aedbc, 32 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): dEnemyBase_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "the compiler-generated __sinit_dEnemyBase_c.cpp is raw-byte-identical to retail __sinit_ov002_02100938 (0x1a4, eighteen ABS32 relocations). It copies sixteen pointer-to-member descriptors at 0x02108140..0x021081bf into the two PMF tables at 0x0210db80 and 0x0210dbc0. The ctor word at 0x021080d4 points at that initializer. See notes/sinit-ownership-pilot-ov002.md for the ownership proof."
+    "the compiler-generated __sinit_d_enemy_base.cpp is raw-byte-identical to retail __sinit_ov002_02100938 (0x1a4, eighteen ABS32 relocations). It copies sixteen pointer-to-member descriptors at 0x02108140..0x021081bf into the two PMF tables at 0x0210db80 and 0x0210dbc0. The ctor word at 0x021080d4 points at that initializer. See notes/sinit-ownership-pilot-ov002.md for the ownership proof."
   ],
   "sections": [
     {
@@ -483,7 +483,7 @@
     "Genuine lifecycle source form: dEnemyBase_c declares ~dEnemyBase_c as its first non-inline virtual and this TU defines it, so this TU owns the class's key function and the compiler emits the whole chain's vtable and typeinfo as vague-linkage passengers. One `~dEnemyBase_c()` definition emits D2, D0 and D1 -- ordinals 27, 28 and 29 -- in the cartridge's own order.",
     "_ZN12dEnemyBase_cC2Ev (ordinal 30) is written as a real constructor body, which is the form its legacy shard recovered and byte-matched. dEnemyBase_c.h DECLARES dEnemyBase_c() without defining it, so the base construction stays an out-of-line `bl` instead of being synthesised and inlined into the subclasses. One definition emits C1 and C2; the ROM keeps only C2, and the C1 this TU emits is licensed below as compiler-only output.",
     "Members are spelled over the real classes wherever the cartridge bytes allow it, and each claim below was measured, not assumed: ordinal 6 (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi) is a real dEnemyBase_c::IsGoingOffCliff method taking its two by-value Fix12i parameters as themselves over real dBgCh_Lin/dBgPi locals; ordinals 2 and 4 use types.h's Vector3 rather than a POD shadow of it; and ordinal 26 uses the real 0x14-byte SurfaceInfo from include/SurfaceInfo.h. All 31 functions still reproduce byte-for-byte with objisolate and reloc-destination checks clean.",
-    "The file-scope PMF tables data_ov002_0210db80 and data_ov002_0210dbc0 are defined in this TU as non-const arrays, so mwcc emits __sinit_dEnemyBase_c.cpp, the ctor word, and the sixteen anonymous pointer-to-member descriptors. The thirteen PMF targets became real member definitions: eight on the TU-local dispatch receiver struct Aea30C (the type the first table's PMF representation was already formed on, kept so the (c->*pmf) call codegen is unchanged) and five on dEnemyBase_c for the UpdateDeath table. The handwritten src/__sinit_ov002_02100938.c is retired.",
+    "The file-scope PMF tables data_ov002_0210db80 and data_ov002_0210dbc0 are defined in this TU as non-const arrays, so mwcc emits __sinit_d_enemy_base.cpp, the ctor word, and the sixteen anonymous pointer-to-member descriptors. The thirteen PMF targets became real member definitions: eight on the TU-local dispatch receiver struct Aea30C (the type the first table's PMF representation was already formed on, kept so the (c->*pmf) call codegen is unchanged) and five on dEnemyBase_c for the UpdateDeath table. The handwritten src/__sinit_ov002_02100938.c is retired.",
     "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control (EU ASMP dump; the divergent bytes are NDS container/packaging fields outside every module range). The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set (f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b), symbol inventory, and the five owned ranges matched.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, symbol inventory and the five owned ranges all equal the canonical records)."
   ],
@@ -881,7 +881,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_dEnemyBase_c.cpp",
+      "symbol": "__sinit_d_enemy_base.cpp",
       "address": "0x02100938",
       "size": "0x1a4",
       "binding": "STB_GLOBAL",
@@ -890,7 +890,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_dEnemyBase_c.cpp",
+      "symbol": ".p__sinit_d_enemy_base.cpp",
       "address": "0x021080d4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -899,13 +899,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_dEnemyBase_c.cpp",
+      "symbol": "__sinit_d_enemy_base.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_dEnemyBase_c.cpp",
+      "symbol": ".p__sinit_d_enemy_base.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1193,7 +1193,7 @@
       "source": "0x021080d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_dEnemyBase_c.cpp",
+      "symbol": "__sinit_d_enemy_base.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02100938"

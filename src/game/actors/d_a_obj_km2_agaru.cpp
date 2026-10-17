@@ -13,6 +13,12 @@
  * The aboard test is func_ov045_021114c8 / func_ov045_021114a8.
  * classInit is reconstructed. Retail does not store that spelling.
  */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km2_agaru_AssetId {
+    ASSET_KM2_AGARU_BMD = 0x065b,
+    ASSET_KM2_AGARU_KCL = 0x065c
+};
+
 #include "daObjKm2_Agaru_c.h"
 #include "SharedFilePtr.h"
 
@@ -168,5 +174,5 @@ s32 daObjKm2_Agaru_c::CleanupResources()
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_km2_agaru.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-AgaruModelFilePtr data_ov045_02113188(1627);
-AgaruCollisionFilePtr data_ov045_02113180(1628);
+AgaruModelFilePtr data_ov045_02113188(ASSET_KM2_AGARU_BMD);
+AgaruCollisionFilePtr data_ov045_02113180(ASSET_KM2_AGARU_KCL);

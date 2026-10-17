@@ -46,13 +46,13 @@ struct dClipper {
 #ifdef __cplusplus
     /* methods */
 
-    /* Inline, as the cartridge's D0-below-D1 order requires: dClipper.cpp
+    /* Inline, as the cartridge's D0-below-D1 order requires: d_clipper.cpp
        pulls the two variants out in that order. D1 restores this vptr; D0
        also takes the class-specific delete path below. No D2 in the image,
        since nothing derives from dClipper. */
     virtual ~dClipper() {}     /* slots 0 (D1), 1 (D0) */
 
-    /* Defined in src/engine/collision/dClipper.cpp. */
+    /* Defined in src/engine/collision/d_clipper.cpp. */
     dClipper();
 
     void Func_0201559C();
@@ -63,14 +63,12 @@ struct dClipper {
     void Func_020156DC(Fix12i aspectRatio, u16 fovAngle,
                        Fix12i nearZ, Fix12i farZ);
 
-    /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE)
-       are deliberately NOT definable as real methods -- see
-       notes/mwccarm-codegen.md 6az. CW homes class-typed by-value parameters
-       to the stack, costing +0x14, so these keep extern "C" definitions with
-       scalar args. A true-signature declaration for callers is fine and is
-       tracked separately. */
-    int  Func_020150E8(Vector3 &v, Fix12<int> clip, u8 *hint);
-    int Func_02015560(Matrix4x3 &mat, Vector3 &srcVec, Fix12<int> scale, Vector3 &dstVec);
+    /* Name inferred from the frustum-plane tests; no original name is known.
+       hint optionally caches the rejecting side plane. */
+    int ClipSphere(Vector3 &v, Fix12i radius, u8 *hint);
+    /* Name inferred from use: transform the position, then test the frustum
+       with a scalar fixed-point sphere radius. No original name is known. */
+    int TransformAndClip(Matrix4x3 &mat, Vector3 &srcVec, Fix12i radius, Vector3 &dstVec);
 
     /* D0 calls 0x0203cbcc, Memory::operator_delete2, rather than the global
        delete at 0x0203cbf0. Inline class lookup makes that choice exactly. */

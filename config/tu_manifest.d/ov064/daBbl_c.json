@@ -1,8 +1,8 @@
 {
   "id": "ov064/daBbl_c",
   "module": "ov064",
-  "source": "src/actors/daBbl_c.cpp",
-  "promoted_source": "src/actors/daBbl_c.cpp",
+  "source": "src/game/actors/d_a_bbl.cpp",
+  "promoted_source": "src/game/actors/d_a_bbl.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -136,10 +136,10 @@
       "ordinal": 13
     },
     {
-      "symbol": "__sinit_daBbl_c.cpp",
+      "symbol": "__sinit_d_a_bbl.cpp",
       "address": "0x0211b150",
       "size": "0x00000084",
-      "legacy_source": "src/actors/daBbl_c.cpp",
+      "legacy_source": "src/game/actors/d_a_bbl.cpp",
       "ordinal": 14
     }
   ],
@@ -436,7 +436,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daBbl_c.cpp",
+      "symbol": "__sinit_d_a_bbl.cpp",
       "address": "0x0211b150",
       "size": "0x84",
       "binding": "STB_GLOBAL",
@@ -445,7 +445,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daBbl_c.cpp",
+      "symbol": ".p__sinit_d_a_bbl.cpp",
       "address": "0x0211b740",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -454,13 +454,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daBbl_c.cpp",
+      "symbol": "__sinit_d_a_bbl.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits this local; DSD needs a global symbol at the retail address"
     },
     {
-      "symbol": ".p__sinit_daBbl_c.cpp",
+      "symbol": ".p__sinit_d_a_bbl.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits this local; DSD needs a global symbol at the retail address"
@@ -532,7 +532,7 @@
       "source": "0x0211b740",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daBbl_c.cpp",
+      "symbol": "__sinit_d_a_bbl.cpp",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211b150"

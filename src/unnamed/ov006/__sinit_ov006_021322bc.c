@@ -3,7 +3,7 @@ extern void NullDestructor_0203d47c(void);
 
 typedef struct { int a, b; } S8;
 
-extern S8 data_ov006_02142ab4;
+extern S8 sRouletteTiles;
 extern void* data_ov006_021429a8;
 extern S8 data_ov006_02142abc;
 extern void* data_ov006_021429c0;
@@ -80,9 +80,9 @@ extern void* data_ov006_0214299c;
 
 void __sinit_ov006_021322bc(void)
 {
-    data_ov006_02142ab4.a = 0x70000;
-    data_ov006_02142ab4.b = 0x24000;
-    func_020731dc(&data_ov006_02142ab4, (void*)&NullDestructor_0203d47c, (void**)&data_ov006_021429a8);
+    sRouletteTiles.a = 0x70000;
+    sRouletteTiles.b = 0x24000;
+    func_020731dc(&sRouletteTiles, (void *)&NullDestructor_0203d47c, (void **)&data_ov006_021429a8);
     { volatile S8* p = (volatile S8*)&data_ov006_02142abc; p->a = 0xa0000; p->b = 0x24000; }
     func_020731dc(&data_ov006_02142abc, (void*)&NullDestructor_0203d47c, (void**)&data_ov006_021429c0);
     { volatile S8* p = (volatile S8*)&data_ov006_02142ac4; p->a = 0xd0000; p->b = 0x24000; }

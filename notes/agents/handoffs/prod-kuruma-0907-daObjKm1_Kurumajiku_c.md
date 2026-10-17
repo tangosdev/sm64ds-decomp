@@ -94,7 +94,7 @@ at `0x02112368` holds `0x021114dc` in its first word.
 
 ### The name trap, resolved from the ROM
 
-The `daObjKurumajiku_c` D1 shard (since folded into `src/actors/daObjKurumajiku_c.cpp`) is a **different class and a different
+The `daObjKurumajiku_c` D1 shard (since folded into `src/game/actors/d_a_obj_kurumajiku.cpp`) is a **different class and a different
 overlay**. [config/arm9/overlays/ov002/symbols.txt](../../../config/arm9/overlays/ov002/symbols.txt) puts
 `_ZN17daObjKurumajiku_cD1Ev` at `0x020b6a3c` and [ov002/delinks.txt](../../../config/arm9/overlays/ov002/delinks.txt) owns its
 run; nothing of it lies in `0x021113fc..0x02111518`. It was not folded in.
@@ -126,14 +126,14 @@ data symbols against the cartridge through the compiler-only policy — see Proo
 
 ### The style oracle actually used
 
-The briefing looked for `daObjKm1_Ukishima_c` under the `src/actors/`
+The briefing looked for `daObjKm1_Ukishima_c` under the `src/game/actors/`
 directory, did not find it there, and concluded that what exists is a shard.
 **Both halves of that are wrong.** `src/game/actors/d_a_obj_km1_ukishima.cpp` is
 a genuinely promoted TU — [config/tu_manifest.d/ov043/daObjKm1_Ukishima_c.json](../../../config/tu_manifest.d/ov043/daObjKm1_Ukishima_c.json)
 reads `"status": "promoted"` with 7/7 functions matched and a full verification
 block. The [ov043](../../../config/arm9/overlays/ov043/symbols.txt) family simply lives in the `src/game/actors/` directory under
 snake-case `d_a_obj_km1_<name>.cpp` stems, not as `<Class>.cpp` under
-`src/actors/`.
+`src/game/actors/`.
 
 I used two better oracles than the briefing's fallbacks:
 
@@ -194,7 +194,7 @@ functions reproducing, **0 mismatching**; ROM sha256
 | site | cartridge evidence | resolves to |
 |---|---|---|
 | `CleanupResources` tail call | literal at `0x021114bc` | `0x020b6ac8` = [func_ov002_020b6ac8](../../../config/tu_manifest.d/ov002/daObjKurumajiku_c.json)(ROM Ordinal 3 used to assemble `daObjKurumajiku_c`) |
-| `InitResources` tail call | literal at `0x021114d4` | `0x020b6c54` = [func_ov002_020b6c54](../../../src/actors/daObjKurumajiku_c.cpp) |
+| `InitResources` tail call | literal at `0x021114d4` | `0x020b6c54` = [func_ov002_020b6c54](../../../src/game/actors/d_a_obj_kurumajiku.cpp) |
 | both resource methods, arg 1 | literals `0x021114c0` / `0x021114d8` | `0x02112344` = [data_ov043_02112344](../../../config/arm9/overlays/ov043/symbols.txt) |
 | `InitResources` arg 2 | `0x021114cc` = `mov r2, #0x88` | profile ID of `KM1_KURUMA`, the cart this axle drives |
 | `classInit` allocation | `0x021114e0` = `mov r0, #0x330` | class size, matching the RTTI-proven `0x330` |
@@ -332,7 +332,7 @@ speaking, not a defect:
 1. **The base was three commits stale.** Used the queue's `c9eb745e8`.
 2. **Output path — REPAIRED in the revise stage, and I was wrong to call it
    cosmetic.** The produce stage shipped the TU as
-   `daObjKm1_Kurumajiku_c.cpp` under `src/actors/`, because the task's
+   `daObjKm1_Kurumajiku_c.cpp` under `src/game/actors/`, because the task's
    `produces` declared that path and `classqueue_v2.publish` validates against it
    (`classqueue_v2.py:477`), so the queue's path was binding. I flagged the
    family inconsistency but judged it cosmetic. It is not: #1055 decided the
@@ -352,7 +352,7 @@ speaking, not a defect:
 
    The two classes that bound this run are its neighbours in the file as well as
    in the ROM. The old path filed it away from the family it was cut out of.
-   Note `src/actors/` still holds 39 other classes, so the migration is partial
+   Note `src/game/actors/` still holds 39 other classes, so the migration is partial
    and the wrong path looked plausible — but every [ov043](../../../config/arm9/overlays/ov043/symbols.txt) `km1` sibling was
    already in `src/game/actors/`, which settles it for this class.
 3. **`daObjKurumajiku_c` is the base, not merely a trap.** Recorded above.

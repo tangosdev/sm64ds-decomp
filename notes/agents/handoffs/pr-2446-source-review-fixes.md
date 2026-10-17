@@ -53,7 +53,7 @@ change was measured, including the real model calls and actual-class PMF receive
 - `python tools/tubuild.py --manifest build/bkg-manifest.d verify
   ov078/daBombking_c`: **52/52 MATCH**, clean isolation/relocation destinations,
   ROM-ascending emission order. The scratch manifest protects historical proof.
-- `python tools/romdata_check.py --files src/actors/daBombking_c.cpp`: five
+- `python tools/romdata_check.py --files src/game/actors/d_a_bombking.cpp`: five
   VERIFIED records (56 bytes), six PARTIAL records (172 equal bytes), no
   differing or unnamed records. These checks do not make the production TU own
   the class data that is still supplied from the cartridge.

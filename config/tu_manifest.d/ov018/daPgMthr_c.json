@@ -246,21 +246,21 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov018_02113be8",
+      "symbol": "gPenguinWait1TextureSequenceFile",
       "address": "0x02113be8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "texture-sequence file handle constructed with file ID 0x407"
     },
     {
-      "symbol": "data_ov018_02113bf0",
+      "symbol": "gPenguinWait1AnimationFile",
       "address": "0x02113bf0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x406"
     },
     {
-      "symbol": "data_ov018_02113bf8",
+      "symbol": "gPenguinAngryTextureSequenceFile",
       "address": "0x02113bf8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -274,7 +274,7 @@
       "evidence": "model file handle constructed with file ID 0x3fb"
     },
     {
-      "symbol": "data_ov018_02113c08",
+      "symbol": "gPenguinWalkAnimationFile",
       "address": "0x02113c08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -894,7 +894,7 @@
       "source": "0x02112dac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov018_02113bf0",
+      "symbol": "gPenguinWait1AnimationFile",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02113bf0"
@@ -924,7 +924,7 @@
       "source": "0x02112dbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov018_02113c08",
+      "symbol": "gPenguinWalkAnimationFile",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02113c08"
@@ -944,7 +944,7 @@
       "source": "0x02112dc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov018_02113bf8",
+      "symbol": "gPenguinAngryTextureSequenceFile",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02113bf8"
@@ -974,7 +974,7 @@
       "source": "0x02112dd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov018_02113be8",
+      "symbol": "gPenguinWait1TextureSequenceFile",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02113be8"
@@ -1253,57 +1253,57 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@840",
+      "from": "@838",
       "to": "@826",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@841",
+      "from": "@839",
       "to": "@733",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@842",
+      "from": "@840",
       "to": "@828",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@843",
+      "from": "@841",
       "to": "@734",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@844",
+      "from": "@842",
       "to": "@830",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@846",
+      "from": "@844",
       "to": "@832",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@848",
+      "from": "@846",
       "to": "@728",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@850",
+      "from": "@848",
       "to": "@729",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@852",
+      "from": "@850",
       "to": "@730",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@854",
+      "from": "@852",
       "to": "@731",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@856",
+      "from": "@854",
       "to": "@732",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

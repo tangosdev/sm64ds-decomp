@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgSlot1_c+dScMgSlot3_c",
   "module": "ov006",
-  "source": "src/actors/dScMgSlots.cpp",
-  "promoted_source": "src/actors/dScMgSlots.cpp",
+  "source": "src/minigames/d_s_mg_slots.cpp",
+  "promoted_source": "src/minigames/d_s_mg_slots.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -66,84 +66,84 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv",
+      "symbol": "_ZN12dScMgSlot3_c21RestoreScreenFromMenuEv",
       "address": "0x0210aa10",
       "size": "0x0000002c",
       "legacy_source": "src/_ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN12dScMgSlot3_c16OnAimedAtWithEggEv",
+      "symbol": "_ZN12dScMgSlot3_c17SaveScreenForMenuEv",
       "address": "0x0210aa3c",
       "size": "0x00000024",
       "legacy_source": "src/_ZN12dScMgSlot3_c16OnAimedAtWithEggEv.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN12dScMgSlot3_c9Virtual80Ev",
+      "symbol": "_ZN12dScMgSlot3_c16InitMainScreenBgEv",
       "address": "0x0210aa60",
       "size": "0x000000a8",
       "legacy_source": "src/_ZN12dScMgSlot3_c9Virtual80Ev.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_0210ab08",
+      "symbol": "Slot3_ReelDigits",
       "address": "0x0210ab08",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_0210ab08.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_0210ab90",
+      "symbol": "Slot3_StateDone",
       "address": "0x0210ab90",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0210ab90.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_0210ab94",
+      "symbol": "Slot3_StateGameOver",
       "address": "0x0210ab94",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_0210ab94.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_0210ac38",
+      "symbol": "Slot3_StateWait",
       "address": "0x0210ac38",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0210ac38.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_0210ac3c",
+      "symbol": "Slot3_StatePayout",
       "address": "0x0210ac3c",
       "size": "0x00000170",
       "legacy_source": "src/func_ov006_0210ac3c.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_0210adac",
+      "symbol": "Slot3_StateJudge",
       "address": "0x0210adac",
       "size": "0x000001b8",
       "legacy_source": "src/func_ov006_0210adac.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_0210af64",
+      "symbol": "Slot3_StateSpin",
       "address": "0x0210af64",
       "size": "0x00000298",
       "legacy_source": "src/func_ov006_0210af64.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_0210b1fc",
+      "symbol": "Slot3_StateIntro",
       "address": "0x0210b1fc",
       "size": "0x00000118",
       "legacy_source": "src/func_ov006_0210b1fc.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN12dScMgSlot3_c13OnYoshiTryEatEi",
+      "symbol": "_ZN12dScMgSlot3_c10StartRoundEi",
       "address": "0x0210b314",
       "size": "0x00000334",
       "legacy_source": "src/_ZN12dScMgSlot3_c13OnYoshiTryEatEi.cpp",
@@ -178,70 +178,70 @@
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_0210c180",
+      "symbol": "SlotLamp_Start",
       "address": "0x0210c180",
       "size": "0x00000028",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov006_0210c1a8",
+      "symbol": "SlotLamp_Tick",
       "address": "0x0210c1a8",
       "size": "0x00000060",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov006_0210c208",
+      "symbol": "SlotLamp_Clear",
       "address": "0x0210c208",
       "size": "0x00000010",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov006_0210c218",
+      "symbol": "SlotBlink_Start",
       "address": "0x0210c218",
       "size": "0x0000001c",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov006_0210c234",
+      "symbol": "SlotBlink_Draw",
       "address": "0x0210c234",
       "size": "0x00000044",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov006_0210c278",
+      "symbol": "SlotBlink_Tick",
       "address": "0x0210c278",
       "size": "0x00000038",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov006_0210c2b0",
+      "symbol": "SlotBlink_Clear",
       "address": "0x0210c2b0",
       "size": "0x00000010",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov006_0210c2c0",
+      "symbol": "SlotReel_SetSpeed",
       "address": "0x0210c2c0",
       "size": "0x00000014",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov006_0210c2d4",
+      "symbol": "SlotBet_OnTouch",
       "address": "0x0210c2d4",
       "size": "0x00000080",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "func_ov006_0210c354",
+      "symbol": "SlotBet_Reset",
       "address": "0x0210c354",
       "size": "0x00000020",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
@@ -262,42 +262,42 @@
       "ordinal": 31
     },
     {
-      "symbol": "func_ov006_0210c478",
+      "symbol": "SlotBet_Place",
       "address": "0x0210c478",
       "size": "0x00000040",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN12dScMgSlot1_c19OnHitFromUnderneathEv",
+      "symbol": "_ZN12dScMgSlot1_c9CloseMenuEv",
       "address": "0x0210c4b8",
       "size": "0x00000024",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN12dScMgSlot1_c15OnHitByMegaCharEv",
+      "symbol": "_ZN12dScMgSlot1_c8OpenMenuEv",
       "address": "0x0210c4dc",
       "size": "0x00000024",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 34
     },
     {
-      "symbol": "func_ov006_0210c500",
+      "symbol": "SlotReels_CheckStopped",
       "address": "0x0210c500",
       "size": "0x00000138",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov006_0210c638",
+      "symbol": "Slot1_InitHud",
       "address": "0x0210c638",
       "size": "0x0000003c",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN12dScMgSlot1_c13OnYoshiTryEatEi",
+      "symbol": "_ZN12dScMgSlot1_c10StartRoundEi",
       "address": "0x0210c674",
       "size": "0x0000004c",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
@@ -335,7 +335,7 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_02142bdc",
+      "symbol": "sSlot3StateTable",
       "address": "0x02142bdc",
       "size": "0x40",
       "binding": "STB_GLOBAL",
@@ -346,13 +346,13 @@
     "RESOLVED generated Obj alternates: removed the shared shadow class entirely. Slot3 state dispatch uses void (dScMgSlot3_c::*)() and mState; self-dispatch uses the real OnYoshiTryEat override. The eighteen existing Slot1 helpers/methods reuse their production bodies and typed betIcon_c interface.",
     "RESOLVED Sound/G2/local-layout alternates: Sound.h and OAM.h provide existing public interfaces; unused T4fe4 removed. SlotReels retains only the established private reel layout used by the accepted Slot1 helper. No shared header changed.",
     "RESOLVED declaration alternates: DecIfAbove0_Byte returns unsigned char and accepts unsigned char*; RandomIntInternal returns int and accepts int*; func_02012790 now agrees with its definition as unsigned int(unsigned int). Equivalent u8/unsigned char and redundant C-linkage spellings were consolidated. Existing Hud_RenderSprite, GetGameLanguage, Sound_PlayIfNotActive and helper declarations are unchanged.",
-    "RESOLVED data_ov006_0213e5ec conflict: use void**[] as in the current production Slot1 owner, with typed pointer indexing in Slot3 calls instead of byte-offset pointer casts. Existing data_0209d45c/data_0209d454 byte declarations are retained.",
-    "RESOLVED missing import: Slot3 InitResources writes data_ov004_020bc8b4, the configured data symbol at 0x020bc8b4, instead of the unresolved func_020bc8b4 spelling. The exact relocation destination is checked for its store; no config symbol alias is invented.",
+    "RESOLVED sSlotLangSprites conflict: use void**[] as in the current production Slot1 owner, with typed pointer indexing in Slot3 calls instead of byte-offset pointer casts. Existing data_0209d45c/data_0209d454 byte declarations are retained.",
+    "RESOLVED missing import: Slot3 InitResources writes sMgMainBannerY, the configured data symbol at 0x020bc8b4, instead of the unresolved func_020bc8b4 spelling. The exact relocation destination is checked for its store; no config symbol alias is invented.",
     "RETAINED measured LoadCompressedFileAt caller ABI: its definition uses u16, while this candidate preserves the existing int parameter declaration. Changing this declaration to u16 adds a narrowing operation in Slot3 Virtual80, changing its size and bytes. This declaration disagreement is not represented as fully reconstructed interface agreement; it needs a separate matching repair.",
     "RESOLVED non-text ownership: 21 compiler-emitted metadata symbols have explicit canonical homes outside this text-only unit. romdata_check reports 12 VERIFIED, 9 PARTIAL name strings, zero DIFFERS, zero UNNAMED and zero blind words. A direct LC.link_function comparison additionally proves all 552 emitted bytes including vtable preambles and string tails against their canonical ROM storage.",
     "RESOLVED emitted-vtable factory addresses: The Slot3 factory addresses its emitted class table at +8 bytes; the imported base table retains its configured address point.",
     "Both D2 variants remain explicit compiler-only deadstrip outputs with no configured ROM home. All 39 licensed ROM functions are emitted in ascending ROM order. Unnamed helper identities, opaque embedded fields and explicit factory construction remain reconstruction work; promotion is a production ownership claim, not complete original-source recovery.",
-    "Static initializer folded: the Slot3 state table data_ov006_02142bdc[8] moves out of the handwritten src/unnamed shard into src/actors/dScMgSlots.cpp, defined through the existing SlotState typedef and plain-copied from the eight ROM PMF constants in retail copy order (curling precedent). The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov006_02132894; no handles, no compiler temporaries, no renames. The .bss claim 0x02142bdc..0x02142c1c ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
+    "Static initializer folded: the Slot3 state table sSlot3StateTable[8] moves out of the handwritten src/unnamed shard into src/minigames/d_s_mg_slots.cpp, defined through the existing SlotState typedef and plain-copied from the eight ROM PMF constants in retail copy order (curling precedent). The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov006_02132894; no handles, no compiler temporaries, no renames. The .bss claim 0x02142bdc..0x02142c1c ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
     "FOLD 2026-10-12: Slot1 Behavior, InitResources and dScMgSlot1_c_classInit joined the TU as ordinals 39-41, appended in ascending ROM order after Render, before the static-init table. The factory's vptr stores take the object-relative &_ZTV...[2] form for the two vtables this TU emits (_ZTV12dScMgSlot1_c, _ZTVN12dScMgSlot1_c9betIcon_cE) and the configured-address form for ov001's _ZTV9dThIcon_c, exactly as the Slot3 factory does for its own and dScMgSingle3DBase_c's tables. func_02012718 is called through include/decl_common.h's (int, int) spelling instead of the shard's local (void *, int); the bytes are the same."
   ],
@@ -597,7 +597,7 @@
     {
       "symbol": "_ZN12dScMgSlot3_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "Homeless, and independently of the dScMgSlot1_c row above -- this is the second of the two classes this TU folds, and each one's destructor is its own definition. This TU carries the one out-of-line dScMgSlot3_c::~dScMgSlot3_c() definition, ROM ordinal 2, whose body is the single explicit func_ov006_020c21e4((char *)this + 0x4f38) call; mwccarm 2004/b56 emits D1, D0 and D2 from it. The cartridge keeps D1 at ov006:0x0210a954 and D0 at ov006:0x0210a9a8, both licensed here, and drops D2. dScMgSlot3_c is likewise a leaf: no edge in the ROM's RTTI graph names its typeinfo record ov006:0x0213e588 as a base, so its base-object destructor is never odr-used. No address in config/ names a D2 for this class -- relocs.load_symbol_homes() over all 106 symbols.txt returns 0 homes for the name, with the same positive controls as the row above. 0 configured homes, so plain deadstrip rather than deadstrip-duplicate. Emitted inside the leading structor group, ahead of ordinal 4, so the licensed run's ROM-ascending emission order is unaffected."
+      "reason": "Homeless, and independently of the dScMgSlot1_c row above -- this is the second of the two classes this TU folds, and each one's destructor is its own definition. This TU carries the one out-of-line dScMgSlot3_c::~dScMgSlot3_c() definition, ROM ordinal 2, whose body is the single explicit Mascot_Destruct((char *)this + 0x4f38) call; mwccarm 2004/b56 emits D1, D0 and D2 from it. The cartridge keeps D1 at ov006:0x0210a954 and D0 at ov006:0x0210a9a8, both licensed here, and drops D2. dScMgSlot3_c is likewise a leaf: no edge in the ROM's RTTI graph names its typeinfo record ov006:0x0213e588 as a base, so its base-object destructor is never odr-used. No address in config/ names a D2 for this class -- relocs.load_symbol_homes() over all 106 symbols.txt returns 0 homes for the name, with the same positive controls as the row above. 0 configured homes, so plain deadstrip rather than deadstrip-duplicate. Emitted inside the leading structor group, ahead of ordinal 4, so the licensed run's ROM-ascending emission order is unaffected."
     },
     {
       "symbol": "_ZTV12dScMgSlot1_c",
@@ -750,7 +750,7 @@
   "remaining_work": [],
   "init": [
     {
-      "symbol": "__sinit_dScMgSlots.cpp",
+      "symbol": "__sinit_d_s_mg_slots.cpp",
       "address": "0x02132894",
       "size": "0xdc",
       "binding": "STB_GLOBAL",
@@ -759,7 +759,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_dScMgSlots.cpp",
+      "symbol": ".p__sinit_d_s_mg_slots.cpp",
       "address": "0x021335d0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -768,13 +768,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_dScMgSlots.cpp",
+      "symbol": "__sinit_d_s_mg_slots.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_dScMgSlots.cpp",
+      "symbol": ".p__sinit_d_s_mg_slots.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -786,7 +786,7 @@
       "source": "0x021335d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_dScMgSlots.cpp",
+      "symbol": "__sinit_d_s_mg_slots.cpp",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02132894"
@@ -796,7 +796,7 @@
       "source": "0x0213294c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e520",
+      "symbol": "pmf_Slot3_StateIntro",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e520"
@@ -806,7 +806,7 @@
       "source": "0x02132950",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e530",
+      "symbol": "pmf_Slot3_StateSpin",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e530"
@@ -816,7 +816,7 @@
       "source": "0x02132954",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e4e0",
+      "symbol": "pmf_Slot3_StateJudge",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e4e0"
@@ -826,7 +826,7 @@
       "source": "0x02132958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e538",
+      "symbol": "pmf_Slot3_StatePayout",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e538"
@@ -836,7 +836,7 @@
       "source": "0x0213295c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e550",
+      "symbol": "pmf_Slot3_StatePayout_2",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e550"
@@ -846,7 +846,7 @@
       "source": "0x02132960",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e548",
+      "symbol": "pmf_Slot3_StateWait",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e548"
@@ -856,7 +856,7 @@
       "source": "0x02132964",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e580",
+      "symbol": "pmf_Slot3_StateGameOver",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e580"
@@ -866,7 +866,7 @@
       "source": "0x02132968",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213e578",
+      "symbol": "pmf_Slot3_StateDone",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213e578"
@@ -876,7 +876,7 @@
       "source": "0x0213296c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142bdc",
+      "symbol": "sSlot3StateTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142bdc"

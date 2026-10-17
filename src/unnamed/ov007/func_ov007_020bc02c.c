@@ -19,17 +19,8 @@ void func_ov007_020bc02c(char *c, void *other) {
         if (r3 != 0) {
             if (LS(r3 + 0xc) != -1) {
                 if (*(int*)(r3) == 0) {
-                    if (*(s16*)(r3 + 0xc) == -1)
-                        goto set_r4;
-                    {
-                        int x = *(u16*)(r3 + 0x12);
-                        int y = *(u16*)(r3 + 0x10);
-                        if (y == x - 1)
-                            goto skip_r4;
-                    }
-                set_r4:
-                    r4 = 1;
-                skip_r4:;
+                    if (*(s16 *)(r3 + 0xc) == -1 || *(u16 *)(r3 + 0x10) != *(u16 *)(r3 + 0x12) - 1)
+                        r4 = 1;
                 }
             }
         }

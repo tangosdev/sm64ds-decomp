@@ -7,7 +7,7 @@
     "start": "0x020d5a54",
     "end": "0x020d9574",
     "size": "0x3b20",
-    "partition": "80 functions. 79 have a legacy src/ file; func_ov006_020d7c4c (0x020d7c4c, 0x230) has none anywhere under src/ and no delinks.txt entry -- the cartridge's own bytes cover it. Six of this class's vtable slots are named methods (0 InitResources, 6 Behavior, 9 Render, 16 D1, 17 D0, 18 OnYoshiTryEat); the other 74 are file-local helpers reached only from inside the run."
+    "partition": "80 functions. 79 have a legacy src/ file; Bomb_State5 (0x020d7c4c, 0x230) has none anywhere under src/ and no delinks.txt entry -- the cartridge's own bytes cover it. Six of this class's vtable slots are named methods (0 InitResources, 6 Behavior, 9 Render, 16 D1, 17 D0, 18 OnYoshiTryEat); the other 74 are file-local helpers reached only from inside the run."
   },
   "rtti_name": "14dScMgBomroom_c",
   "rtti": {
@@ -51,7 +51,7 @@
     "storage_size": "0x98",
     "symbol_extent": "0x90",
     "slots": 36,
-    "extent_evidence": "THREE independent reads agree on 36 slots. (1) Relocation gap: config/arm9/overlays/ov006/relocs.txt has a relocated word at every 4-byte address from 0x0213bbb0 (the typeinfo header word) through 0x0213bc40 inclusive, with an 8-byte gap immediately before (last prior reloc 0x0213bba8) and an 8-byte gap immediately after (next reloc 0x0213bc48) -- 36 relocated slot words. (2) Next-symbol read: the following symbols.txt row is data_ov006_0213bc44, giving a symbol extent of 0x0213bc44 - 0x0213bbb4 = 0x90 = 36 slots. Here the naive read AGREES with the relocation gap, because this table carries no interior phantom symbol and no butted _ZTI; neither rule is sound alone (writer.md), so the agreement of the two is the evidence, not either one. (3) tools/rtti_vtables.py --own dScMgBomroom_c reports `36 slots (base 36)`, and romdata_check.check_object on src/_ZN14dScMgBomroom_cD1Ev.cpp -- the shard that owns the key function and therefore emits the table -- reports _ZTV14dScMgBomroom_c bytes 144, emitted 144, romExtent 144, blindWords 0, VERIFIED. 144 = 0x90 = 36 slots. Storage (0x0213bbac..0x0213bc44 = 0x98) and symbol extent from the address point (0x90) differ by the 8-byte offset-to-top + typeinfo preamble; the _ZTV symbol IS the address point.",
+    "extent_evidence": "THREE independent reads agree on 36 slots. (1) Relocation gap: config/arm9/overlays/ov006/relocs.txt has a relocated word at every 4-byte address from 0x0213bbb0 (the typeinfo header word) through 0x0213bc40 inclusive, with an 8-byte gap immediately before (last prior reloc 0x0213bba8) and an 8-byte gap immediately after (next reloc 0x0213bc48) -- 36 relocated slot words. (2) Next-symbol read: the following symbols.txt row is sCardDrawsLeft, giving a symbol extent of 0x0213bc44 - 0x0213bbb4 = 0x90 = 36 slots. Here the naive read AGREES with the relocation gap, because this table carries no interior phantom symbol and no butted _ZTI; neither rule is sound alone (writer.md), so the agreement of the two is the evidence, not either one. (3) tools/rtti_vtables.py --own dScMgBomroom_c reports `36 slots (base 36)`, and romdata_check.check_object on src/_ZN14dScMgBomroom_cD1Ev.cpp -- the shard that owns the key function and therefore emits the table -- reports _ZTV14dScMgBomroom_c bytes 144, emitted 144, romExtent 144, blindWords 0, VERIFIED. 144 = 0x90 = 36 slots. Storage (0x0213bbac..0x0213bc44 = 0x98) and symbol extent from the address point (0x90) differ by the 8-byte offset-to-top + typeinfo preamble; the _ZTV symbol IS the address point.",
     "entries": [
       {
         "slot": 0,
@@ -184,126 +184,126 @@
         "slot_address": "0x0213bbfc",
         "target": "0x020d9104",
         "module": "ov006",
-        "name": "_ZN14dScMgBomroom_c13OnYoshiTryEatEi"
+        "name": "_ZN14dScMgBomroom_c10StartRoundEi"
       },
       {
         "slot": 19,
         "slot_address": "0x0213bc00",
         "target": "0x020b2994",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c13OnTurnIntoEggEi"
+        "name": "_ZN11dScMgBase_c11CanEndStateEi"
       },
       {
         "slot": 20,
         "slot_address": "0x0213bc04",
         "target": "0x020b2990",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual50Ev"
+        "name": "_ZN11dScMgBase_c11OnNewRecordEv"
       },
       {
         "slot": 21,
         "slot_address": "0x0213bc08",
         "target": "0x020b298c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c15OnGroundPoundedEv"
+        "name": "_ZN11dScMgBase_c10OnDealDoneEv"
       },
       {
         "slot": 22,
         "slot_address": "0x0213bc0c",
         "target": "0x020ae198",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c11OnAttacked1Ev"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback1Ev"
       },
       {
         "slot": 23,
         "slot_address": "0x0213bc10",
         "target": "0x020ae1a0",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c11OnAttacked2Ev"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback0Ev"
       },
       {
         "slot": 24,
         "slot_address": "0x0213bc14",
         "target": "0x020ae140",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c8OnKickedEv"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback2Ev"
       },
       {
         "slot": 25,
         "slot_address": "0x0213bc18",
         "target": "0x020ae128",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c8OnPushedEv"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback3Ev"
       },
       {
         "slot": 26,
         "slot_address": "0x0213bc1c",
         "target": "0x020b04e0",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv"
+        "name": "_ZN11dScMgBase_c14GetDisplayModeEv"
       },
       {
         "slot": 27,
         "slot_address": "0x0213bc20",
         "target": "0x020af27c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c15OnHitByMegaCharEv"
+        "name": "_ZN11dScMgBase_c8OpenMenuEv"
       },
       {
         "slot": 28,
         "slot_address": "0x0213bc24",
         "target": "0x020af04c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c19OnHitFromUnderneathEv"
+        "name": "_ZN11dScMgBase_c9CloseMenuEv"
       },
       {
         "slot": 29,
         "slot_address": "0x0213bc28",
         "target": "0x020af094",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c16OnAimedAtWithEggEv"
+        "name": "_ZN11dScMgBase_c17SaveScreenForMenuEv"
       },
       {
         "slot": 30,
         "slot_address": "0x0213bc2c",
         "target": "0x020aeed8",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv"
+        "name": "_ZN11dScMgBase_c21RestoreScreenFromMenuEv"
       },
       {
         "slot": 31,
         "slot_address": "0x0213bc30",
         "target": "0x020b2880",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual7CEv"
+        "name": "_ZN11dScMgBase_c15InitSubScreenBgEv"
       },
       {
         "slot": 32,
         "slot_address": "0x0213bc34",
         "target": "0x020b27f4",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual80Ev"
+        "name": "_ZN11dScMgBase_c16InitMainScreenBgEv"
       },
       {
         "slot": 33,
         "slot_address": "0x0213bc38",
         "target": "0x020b265c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual84Ev"
+        "name": "_ZN11dScMgBase_c11InitEnginesEv"
       },
       {
         "slot": 34,
         "slot_address": "0x0213bc3c",
         "target": "0x020ae3b4",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual88Eiiii"
+        "name": "_ZN11dScMgBase_c11PaintSquareEiiii"
       },
       {
         "slot": 35,
         "slot_address": "0x0213bc40",
         "target": "0x020ad660",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual8CEv",
+        "name": "_ZN11dScMgBase_c12IsAltVariantEv",
         "note": "cross-overlay phantom hazard: 0x020ad660 also resolves to func_ov002_020ad660, _ZN10dScTitle_cD1Ev in ov003, func_ov007_020ad660 and data_ov000_020ad660. dScMgBase_c is this class's direct base and lives in ov004, so ov004's row applies."
       }
     ]
@@ -342,7 +342,7 @@
     },
     {
       "slot": 18,
-      "symbol": "_ZN14dScMgBomroom_c13OnYoshiTryEatEi",
+      "symbol": "_ZN14dScMgBomroom_c10StartRoundEi",
       "address": "0x020d9104",
       "size": "0x5c"
     }
@@ -353,7 +353,7 @@
     "d2_address": null,
     "order": "D1 below D0",
     "placement": "NOT DECIDED BY THIS PROMOTION -- the pair is outside the licensed range and its shards stay enrolled unchanged, out of line, exactly as they are on main.",
-    "evidence": "ov006 lays D1 at 0x020d5a54 and D0 at 0x020d5a78, and no D2 exists anywhere in the image. D1-below-D0 is the reproducible direction: an inline in-class destructor in mwccarm 2004/b56 emits D1 then D0. So a WHOLE promotion of this run would NOT be blocked by destructor order -- it is blocked by func_ov006_020d5e5c at ROM ordinal 13, which sits between the pair and the rest of the run and which no admissible source form reproduces (10-word pure register permutation). Slots 16 and 17 of the class vtable are the only references to either address in config/."
+    "evidence": "ov006 lays D1 at 0x020d5a54 and D0 at 0x020d5a78, and no D2 exists anywhere in the image. D1-below-D0 is the reproducible direction: an inline in-class destructor in mwccarm 2004/b56 emits D1 then D0. So a WHOLE promotion of this run would NOT be blocked by destructor order -- it is blocked by SlotB2_Draw at ROM ordinal 13, which sits between the pair and the rest of the run and which no admissible source form reproduces (10-word pure register permutation). Slots 16 and 17 of the class vtable are the only references to either address in config/."
   },
   "key_function": {
     "name": "~dScMgBomroom_c (D1/D0)",
@@ -378,8 +378,8 @@
     "Field layout below 0x4660: include/dScMgBomroom_c.h keeps 0x4660..0x62d0 as one pad and this promotion does not narrow it. The 41 folded members reach it only through raw offsets on a char* cast of the scene pointer, with per-member shadow structs whose field names are this tree's coinage.",
     "The 0x40-byte stride array at +0x4660 (112 entries, indexed `i << 6` throughout the run) has no ROM RTTI identity; its element type is spelled as a per-member shadow struct.",
     "The 0x10-byte stride array at +0x6200 (indexed `i << 4`) likewise has no ROM identity.",
-    "func_ov006_020d7c4c (0x230) is recovered by nobody: no src/ file, no delinks.txt entry, and config/match_attempts.jsonl records a best of 40 divergences from ~700 permuter iterations plus 40+ hand variants, described there as a residual pure register permutation.",
-    "func_ov006_020d5e5c and func_ov006_020d8324 are not recovered here either. 020d5e5c reaches a 10-word pure register permutation once its literal-pool folding is fixed -- the ROM keeps the scene pointer in r0 throughout, every admissible spelling tried puts it in r2. 020d8324 was not attacked.",
+    "Bomb_State5 (0x230) is recovered by nobody: no src/ file, no delinks.txt entry, and config/match_attempts.jsonl records a best of 40 divergences from ~700 permuter iterations plus 40+ hand variants, described there as a residual pure register permutation.",
+    "SlotB2_Draw and Bomb_State0 are not recovered here either. 020d5e5c reaches a 10-word pure register permutation once its literal-pool folding is fixed -- the ROM keeps the scene pointer in r0 throughout, every admissible spelling tried puts it in r2. 020d8324 was not attacked.",
     "Whether any of the 74 non-virtual functions in this run had external linkage in the original source: several are called from sibling shards INSIDE the run, none from outside it, but adjacency does not prove static versus external linkage.",
     "Source-style names for the inherited placeholder slots Virtual34, Virtual38, Virtual50, Virtual7C, Virtual80, Virtual84, Virtual88 and Virtual8C; their indices and targets are proved by the linked table, their names are this tree's coinage.",
     "Any vtable slot after 35: the relocated words end at 0x0213bc40 and there is no trailing null slot to preserve an otherwise unobservable declaration."

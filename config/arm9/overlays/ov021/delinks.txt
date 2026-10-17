@@ -4,11 +4,11 @@
     .ctor       start:0x02113734 end:0x02113740 kind:rodata align:4
     .data       start:0x02113760 end:0x021149a0 kind:data align:32
     .bss        start:0x021149a0 end:0x02114aa0 kind:bss align:32
-src/actors/daObjCvNewsLift_c.cpp:
+src/game/actors/d_a_obj_cv_news_lift.cpp:
     complete
     .text start:0x021111a0 end:0x021121e8
 
-src/actors/daGrock_c.cpp:
+src/game/actors/d_a_grock.cpp:
     complete
     .text start:0x021121e8 end:0x02112db4
     .init start:0x02113688 end:0x021136c8

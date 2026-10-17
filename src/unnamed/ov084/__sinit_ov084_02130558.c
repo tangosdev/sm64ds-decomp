@@ -1,3 +1,9 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov084_02130558_AssetId {
+    ASSET_RED_BOMBHEI_BMD = 0x02b9,
+    ASSET_RED_WAIT_BCA = 0x02ba
+};
+
 extern void func_02017acc();
 extern void func_020731dc();
 extern void _ZN13SharedFilePtr9ConstructEj();
@@ -28,9 +34,9 @@ extern struct Dst data_ov084_02130dc4;
 
 void __sinit_ov084_02130558(void)
 {
-    func_02017acc(data_ov084_02130da4, 0x2b9);
+    func_02017acc(data_ov084_02130da4, ASSET_RED_BOMBHEI_BMD);
     func_020731dc(data_ov084_02130da4, &func_02017ab4, data_ov084_02130dac);
-    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130d9c, 0x2ba);
+    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130d9c, ASSET_RED_WAIT_BCA);
     func_020731dc(data_ov084_02130d9c, &SharedFilePtr_Destruct_Anim, data_ov084_02130db8);
     data_ov084_02130dc4.p0 = data_ov084_021309dc;
     data_ov084_02130dc4.p1 = data_ov084_021309ec;

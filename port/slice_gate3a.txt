@@ -2,35 +2,25 @@
 # gate 2's allocator family (the smoke links slice_gate2.txt as well).
 # The OS arena underneath is port/hal/os_arena.cpp.
 
-src/_ZN4Heap13SetupRootHeapEv.cpp
 src/engine/heap/Heap.cpp
 src/engine/heap/SolidHeapAllocator.cpp
-src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.cpp
 src/engine/heap/ExpandingHeapAllocator.cpp
-src/_ZN4HeapC2EPvjPS_.cpp
-src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.cpp
 
 # The ExpandingHeap overrides (VAllocate, VDeallocate, VSizeof, VMemoryLeft,
 # VDestroy, VDeallocateAll, VIntact, VRescue, VReallocate,
 # VMaxAllocationUnitSize, VMaxAllocatableSize, VSetNodeID, VGetNodeID,
-# VResizeToFit), the SolidHeap/Heap members interleaved with them, and one
-# destructor definition per class now arrive with src/engine/heap/Heap.cpp
-# above rather than as one file per method. Not new host coverage that was
-# chosen -- MSVC EMITS THE VTABLE in the translation unit that defines the
-# constructor, and a vtable needs the ADDRESS of every slot, so the four
-# overrides once listed here were never a linkable subset. On the NDS each
-# of these files was its own object and the ROM's table is already built,
-# so nothing forced the question there. This is the whole class: Heap declares
-# fourteen pure virtuals and ExpandingHeap overrides all fourteen.
-
-# ONE destructor file per class, not the pair. src/_ZN4HeapD0Ev.cpp,
-# _ZN4HeapD1Ev.cpp and _ZN4HeapD2Ev.cpp each carry the SAME `Heap::~Heap() {}'
-# body -- that is the point of the D0/D1/D2 split, one definition delinked into
-# three ROM addresses -- and MSVC folds the variants into a single
-# ??1Heap@@UAE@XZ, so linking two of them is a duplicate-symbol error. D1 is
-# picked because it is the complete-object variant the host's own deleting
-# destructor calls. Same for ExpandingHeap. Same for SolidHeap: its C1 shard
-# (line 8) needs ??1SolidHeap@@UAE@XZ, which Heap.cpp does not define.
-src/_ZN4HeapD1Ev.cpp
-src/_ZN13ExpandingHeapD1Ev.cpp
-src/_ZN9SolidHeapD1Ev.cpp
+# VResizeToFit), the SolidHeap/Heap members interleaved with them, all three
+# classes' constructors and destructors, and SetupRootHeap now arrive with
+# src/engine/heap/Heap.cpp above rather than as one file per method. Not new
+# host coverage that was chosen -- MSVC EMITS THE VTABLE in the translation
+# unit that defines the constructor, and a vtable needs the ADDRESS of every
+# slot, so the four overrides once listed here were never a linkable subset.
+# On the NDS each of these files was its own object and the ROM's table is
+# already built, so nothing forced the question there. This is the whole
+# class: Heap declares fourteen pure virtuals and ExpandingHeap overrides all
+# fourteen.
+#
+# The destructors used to be one shard per D0/D1/D2 variant, each carrying
+# the same `~X() {}' body, and this slice had to pick exactly one per class:
+# MSVC folds the variants into a single ??1 symbol, so two shards were a
+# duplicate definition. The TU holds one definition per class now.

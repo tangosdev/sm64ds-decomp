@@ -105,7 +105,7 @@
       "mov r0,r4 ; pop {r4,lr} ; bx lr"
     ],
     "destructor_mirror": "_ZN10ScuttlebugD1Ev at 0x0211f000 stores the same literal 0x02122c2c (pool at 0x0211f044) and then destroys 0x194 -> _ZN10dBgCh_ActrD1Ev, 0x160 -> _ZN7dCcAc_cD1Ev, 0x138 -> _ZN11ShadowModelD1Ev, 0xd4 -> _ZN9ModelAnimD1Ev, then 0x020112c8 = _ZN8dActor_cD2Ev. Exactly reverse order, so all four member offsets and types are proven twice, from opposite ends.",
-    "D0_tail": "_ZN10ScuttlebugD0Ev at 0x0211f048 repeats the D1 body inline, then loads the heap pointer from the literal at 0x0211f0a0 = 0x020a0eac and calls 0x0203c1e8 = _ZN6Memory10DeallocateEPvP4Heap. There is no D2 for this class anywhere in ov071 -- a D1,D0 pair with no D2 is what mwccarm 2004/b56 emits for an INLINE destructor.",
+    "D0_tail": "_ZN10ScuttlebugD0Ev at 0x0211f048 repeats the D1 body inline, then loads the heap pointer from the literal at 0x0211f0a0 = 0x020a0eac and calls 0x0203c1e8 = _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE. There is no D2 for this class anywhere in ov071 -- a D1,D0 pair with no D2 is what mwccarm 2004/b56 emits for an INLINE destructor.",
     "vtable_emission_note": "With the destructor inline, the first non-inline virtual this class declares is OnYoshiTryEat at 0x0211f0a4, which lies inside the licensed run. That is the key function, and the TU defining it emits _ZTV/_ZTI/_ZTS."
   },
 

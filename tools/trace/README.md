@@ -12,6 +12,8 @@ Status: **Phase 0 spike** (attach + breakpoint + canary + register/mem dump).
   used to resolve a captured `lr` to a caller name.
 - `gdb_harness.py` — the Phase-0 spike runner. Breaks at always-resident arm9
   functions and validates the pipeline against ground truth.
+- `mg/` — the minigame play kit: a watcher for the shared minigame functions,
+  plus input and capture scripts for melonDS (`mg/README.md`).
 
 ## Prerequisites: melonDS GDB stub
 

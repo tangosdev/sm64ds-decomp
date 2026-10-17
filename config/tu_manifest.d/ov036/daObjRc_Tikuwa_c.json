@@ -1,8 +1,8 @@
 {
   "id": "ov036/daObjRc_Tikuwa_c",
   "module": "ov036",
-  "source": "src/actors/daObjRc_Tikuwa_c.cpp",
-  "promoted_source": "src/actors/daObjRc_Tikuwa_c.cpp",
+  "source": "src/game/actors/d_a_obj_rc_tikuwa.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_rc_tikuwa.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -104,24 +104,24 @@
       "ordinal": 9
     },
     {
-      "symbol": "__sinit_daObjRc_Tikuwa_c.cpp",
+      "symbol": "__sinit_d_a_obj_rc_tikuwa.cpp",
       "address": "0x021126c8",
       "size": "0x00000068",
-      "legacy_source": "src/actors/daObjRc_Tikuwa_c.cpp",
+      "legacy_source": "src/game/actors/d_a_obj_rc_tikuwa.cpp",
       "ordinal": 10
     }
   ],
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov036_02114084",
+      "symbol": "gRcTikuwaCollisionFile",
       "address": "0x02114084",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x6b0"
     },
     {
-      "symbol": "data_ov036_0211408c",
+      "symbol": "gRcTikuwaModelFile",
       "address": "0x0211408c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -147,7 +147,7 @@
     "Text-only. The destructor is the out-of-line key function under defer_codegen off, so this object also emits D2 and the RTTI/vtable group. Those are compiler-only; the ROM keeps the copies outside this .text run. The classInit factory at 0x02111cd8 is the next TU and is not absorbed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN10DonutBlock8BehaviorEv and the one that held _ZN10DonutBlock13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN10DonutBlock8BehaviorEv and the one that held _ZN10DonutBlock13InitResourcesEv; kept the first, the other is commented out for review",
-    "Folded __sinit_ov036_021126c8 into this TU. The model handle data_ov036_0211408c (file 0x6af) and the collision handle data_ov036_02114084 (file 0x6b0) are the two objects it constructs. No new data was added.",
+    "Folded __sinit_ov036_021126c8 into this TU. The model handle gRcTikuwaModelFile (file 0x6af) and the collision handle gRcTikuwaCollisionFile (file 0x6b0) are the two objects it constructs. No new data was added.",
     "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical."
   ],
   "compiler_only_output": [
@@ -471,7 +471,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjRc_Tikuwa_c.cpp",
+      "symbol": "__sinit_d_a_obj_rc_tikuwa.cpp",
       "address": "0x021126c8",
       "size": "0x68",
       "binding": "STB_GLOBAL",
@@ -480,7 +480,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjRc_Tikuwa_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_rc_tikuwa.cpp",
       "address": "0x021129e8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -533,7 +533,7 @@
       "source": "0x02112714",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_0211408c",
+      "symbol": "gRcTikuwaModelFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x0211408c"
@@ -563,7 +563,7 @@
       "source": "0x02112724",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_02114084",
+      "symbol": "gRcTikuwaCollisionFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x02114084"
@@ -593,7 +593,7 @@
       "source": "0x021129e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjRc_Tikuwa_c.cpp",
+      "symbol": "__sinit_d_a_obj_rc_tikuwa.cpp",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x021126c8"
@@ -650,13 +650,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjRc_Tikuwa_c.cpp",
+      "symbol": "__sinit_d_a_obj_rc_tikuwa.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjRc_Tikuwa_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_rc_tikuwa.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"

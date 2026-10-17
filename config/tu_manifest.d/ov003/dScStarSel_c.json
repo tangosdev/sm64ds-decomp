@@ -1,8 +1,8 @@
 {
   "id": "ov003/dScStarSel_c",
   "module": "ov003",
-  "source": "src/actors/dScStarSel_c.cpp",
-  "promoted_source": "src/actors/dScStarSel_c.cpp",
+  "source": "src/game/stages/d_s_star_sel_methods.cpp",
+  "promoted_source": "src/game/stages/d_s_star_sel_methods.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -14,14 +14,15 @@
     "BOUNDARY, left edge REFUTED at 0x020adc74 and CONFIRMED at 0x020addfc. config/tu_manifest.d/ov003/dScTitle_c.json states that func_ov003_020adc74 and func_ov003_020adcbc are shared because 'the dScStarSel_c run below 0x020addfc also uses' them. Measured today, that is false: ZERO relocations from anywhere in 0x020addfc..0x020b0580 point into 0x020adc74..0x020addfc. The census instead shows func_ov003_020adc74 with 45 inbound arm_calls -- one from func_ov003_020ad6ec (a dScTitle_c member) and 44 from ov006 -- making it a widely shared utility rather than any one class's member, and func_ov003_020adcbc with exactly one caller, also func_ov003_020ad6ec. Both stay separately enrolled and this TU's licensed .text starts at 0x020addfc.",
     "BOUNDARY, right edge of the RUN confirmed at 0x020b0580: dScStarSel_c_classInit is referenced exactly once, from g_profile_STAR_SELECT at ov003:0x020b16b4 (.data), abuts InitResources at 0x020b04f0 with a zero-byte gap, and both landed sibling TUs in this overlay fold their own classInit in.",
     "ABSTRACT-SLOT HAZARD DOES NOT APPLY. dScene_c leaves vtable slots 0 (InitResources) and 3 (CleanupResources) abstract, so a member pinned only by one of those slots can hide at a run's edge. Read directly out of extracted/overlays/overlay_0003.bin at the address point 0x020b1704: slot -1 is _ZTI12dScStarSel_c 0x020b16bc, slot 0 is 0x020af8a0 (the real InitResources) and slot 3 is 0x020af86c (the real CleanupResources). Both are inside the run and already labelled; 18 slots total; nothing is hidden.",
-    "LICENSED RANGE IS A SUBSET OF THE RUN, deliberately, and ONE thing sets its upper edge. _ZN12dScStarSel_c8BehaviorEv (0x020af038, 0x834 bytes) does not match under any configuration reached here and is left as its existing unenrolled draft. Because it sits in the MIDDLE of the run, the licensed .text cannot skip it: a delinks entry carries exactly one .text range (no entry anywhere in config/ carries two) so a licensed range must be contiguous. That caps the fold at 0x020af038 and splits the run in two -- eleven functions below Behavior, three above it (CleanupResources 0x34, InitResources 0xc50, dScStarSel_c_classInit 0x90). The three above all match; they are simply the smaller side and stay as their existing shards. The lower edge is the run's own left edge, 0x020addfc: the destructor pair D1 (0x020addfc) and D0 (0x020ade54) is folded in, under the out-of-line destructor + `#pragma defer_codegen off` + ROM-ascending source form (see the DESTRUCTOR FORM note). The licensed range is therefore the eleven functions from D1 up to Behavior: 0x020addfc..0x020af038, 0x123c bytes (4668).",
-    "WHY BEHAVIOR DOES NOT CLOSE: it is a released near-miss (see the near-miss bank record for ov003:0x020af038, which documents a 187-cell rank-by-type sweep, a 180-cell scratch sweep, two randomized product scans, a permuter run, a 40-cell pragma sweep and a cross-build sweep). Re-tested inside this fold, as a promotion is supposed to do, it did not close: the residual is 23 words, every one of them the same instruction with a different register number and no schedule change at all -- the bank's own r6/r7 swap at +0x248 plus a re-opened register-routing cluster at +0x210..+0x2ec. The fold is not the shape that fixes it. Closing it is the single blocker for the whole class: with Behavior's draft body in place, a scratch build of all fifteen functions with the inline-in-class destructor emits every function in exact ROM-ascending order with no D2, at 13/14."
+    "HISTORY, SUPERSEDED BY THE BEHAVIOR FOLD (last entry): LICENSED RANGE IS A SUBSET OF THE RUN, deliberately, and ONE thing sets its upper edge. _ZN12dScStarSel_c8BehaviorEv (0x020af038, 0x834 bytes) does not match under any configuration reached here and is left as its existing unenrolled draft. Because it sits in the MIDDLE of the run, the licensed .text cannot skip it: a delinks entry carries exactly one .text range (no entry anywhere in config/ carries two) so a licensed range must be contiguous. That caps the fold at 0x020af038 and splits the run in two -- eleven functions below Behavior, three above it (CleanupResources 0x34, InitResources 0xc50, dScStarSel_c_classInit 0x90). The three above all match; they are simply the smaller side and stay as their existing shards. The lower edge is the run's own left edge, 0x020addfc: the destructor pair D1 (0x020addfc) and D0 (0x020ade54) is folded in, under the out-of-line destructor + `#pragma defer_codegen off` + ROM-ascending source form (see the DESTRUCTOR FORM note). The licensed range is therefore the eleven functions from D1 up to Behavior: 0x020addfc..0x020af038, 0x123c bytes (4668).",
+    "HISTORY, SUPERSEDED BY THE BEHAVIOR FOLD (last entry): WHY BEHAVIOR DOES NOT CLOSE: it is a released near-miss (see the near-miss bank record for ov003:0x020af038, which documents a 187-cell rank-by-type sweep, a 180-cell scratch sweep, two randomized product scans, a permuter run, a 40-cell pragma sweep and a cross-build sweep). Re-tested inside this fold, as a promotion is supposed to do, it did not close: the residual is 23 words, every one of them the same instruction with a different register number and no schedule change at all -- the bank's own r6/r7 swap at +0x248 plus a re-opened register-routing cluster at +0x210..+0x2ec. The fold is not the shape that fixes it. Closing it is the single blocker for the whole class: with Behavior's draft body in place, a scratch build of all fifteen functions with the inline-in-class destructor emits every function in exact ROM-ascending order with no D2, at 13/14.",
+    "BEHAVIOR FOLD (EDGE 1 moved up from 0x020af038 to 0x020b0580, the run's own right edge): _ZN12dScStarSel_c8BehaviorEv now reproduces the cartridge under 2004/b56 and was enrolled as its own one-function source, so the one hole that split the run is closed. Behavior (0x020af038, 0x834), CleanupResources (0x020af86c, 0x34), InitResources (0x020af8a0, 0xc50) and dScStarSel_c_classInit (0x020b04f0, 0x90) are folded as ordinals 11..14, appended after Render in ROM-ascending order under the file's `#pragma defer_codegen off`; the licensed .text is now the whole run, 0x020addfc..0x020b0580, 15 functions. Retired: src/_ZN12dScStarSel_c8BehaviorEv.cpp, src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp, src/_ZN12dScStarSel_c13InitResourcesEv.cpp and src/game/stages/d_s_star_sel.cpp, whose four delinks entries merge into this TU's single .text claim."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020addfc",
-      "end": "0x020af038"
+      "end": "0x020b0580"
     }
   ],
   "functions": [
@@ -101,6 +102,34 @@
       "size": "0x00000944",
       "legacy_source": "src/_ZN12dScStarSel_c6RenderEv.cpp",
       "ordinal": 10
+    },
+    {
+      "symbol": "_ZN12dScStarSel_c8BehaviorEv",
+      "address": "0x020af038",
+      "size": "0x00000834",
+      "legacy_source": "src/_ZN12dScStarSel_c8BehaviorEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN12dScStarSel_c16CleanupResourcesEv",
+      "address": "0x020af86c",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN12dScStarSel_c13InitResourcesEv",
+      "address": "0x020af8a0",
+      "size": "0x00000c50",
+      "legacy_source": "src/_ZN12dScStarSel_c13InitResourcesEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "dScStarSel_c_classInit",
+      "address": "0x020b04f0",
+      "size": "0x00000090",
+      "legacy_source": "src/game/stages/d_s_star_sel.cpp",
+      "ordinal": 14
     }
   ],
   "data": [],
@@ -188,17 +217,18 @@
     "RESOLUTION of the create warnings above: every conflicting object got ONE file-scope spelling, chosen as the one the surviving call sites already hold -- data_02092110 and data_02092128 scalar, data_020a0e58 as u16[], data_020a0e5a as u16[][2], _ZN3OAM5TIMESE scalar, func_ov003_020ae1a4's first parameter char*. Each is the same address arithmetic written differently and none moves a byte; the u16[][2] choice was measured against the flat u16[i*2] form, which costs func_ov003_020ae358 seventeen words. The generator's shadow 'class Sound' was dropped in favour of include/Sound.h, then Sound.h itself was dropped when the members that used it left the file.",
     "PRAGMA: #pragma opt_strength_reduction off is file-global last-wins in mwccarm 2004/b56, not positional. Of the four cells of {opt_strength_reduction, opt_loop_invariants} x {on, off} this is the only one in which all of this TU's functions reproduce; both-default and loop-invariants-off each cost Render 0x10 bytes of frame. Bracketing the pragma around one member was tested and does nothing -- the last directive in the file wins for the whole file, and adding `#pragma defer_codegen off` does NOT make the brackets bind.",
     "DESTRUCTOR FORM, measured. The cartridge places D1 (0x020addfc) BELOW D0 (0x020ade54). Under deferred codegen an out-of-line destructor emits D2, D0, D1 -- the reverse of retail -- and `tubuild.py linkcheck` refused that object with 'licensed .text functions are not emitted in ROM address order'; that is why the first promotion of this class left D1/D0 as their own shards. An earlier revision of this note also recorded that `defer_codegen off` changed neither; that was measured without rewriting the file in ascending order, and it does not hold for the form this file now ships. Measured by the widen: out-of-line destructor (include/dScStarSel_c.h unchanged) + `#pragma defer_codegen off` above every function + the whole file rewritten ROM-ascending with the destructor first -> tubuild verify 11/11 MATCH, objisolate clean, reloc-destinations clean, all eleven in ROM-ascending section order, first try. The group emits D1, D0, D2; D2 is unreferenced and homeless and is licensed as deadstrip. This is the same cell ov006/dScMgFlower_c ships, another dScene_c child with D1 below D0. Because the destructor is the first declared non-inline virtual it is dScStarSel_c's key function, so this TU also emits _ZTV12dScStarSel_c and the typeinfo chain up to fBase_c; all nine are licensed deadstrip-data against their cartridge copies, which sit outside the licensed .text. The previously recorded alternative -- an inline in-class destructor, which only emits with InitResources in the same TU -- is no longer needed.",
-    "FOLLOW-UP, the moment Behavior closes: append Behavior, CleanupResources, InitResources and dScStarSel_c_classInit after Render in ROM-ascending order (this file already runs under `#pragma defer_codegen off`), extend the licensed .text to 0x020addfc..0x020b0580, retire the three shards and src/d_s_star_sel.cpp's claim, and re-run verify. The destructor form and the ten compiler_only_output rows are already in place; the header needs no change. Re-check the opt_strength_reduction cell for the new members, since the PRAGMA note's measurements predate them.",
-    "WIDEN (0x020adec0..0x020af038 -> 0x020addfc..0x020af038): folds _ZN12dScStarSel_cD1Ev and _ZN12dScStarSel_cD0Ev into this file and retires their one-function shards; the two delinks entries are merged into this TU's single .text claim. Behavior, CleanupResources, InitResources and dScStarSel_c_classInit stay out (see LICENSED RANGE above). tools/tubuild.py linkcheck has no route for an already-enrolled text-only TU (the enrolled-candidate path is intact-object only and refuses with 'intact production requires one .text claim and at least one non-text claim'), so the verification.linkcheck block below is the ORIGINAL 0x020adec0..0x020af038 promotion's record and was not refreshed; the widen's link proof is a full tools/rombuild.py build."
+    "DONE (BEHAVIOR FOLD, last boundary_evidence entry): FOLLOW-UP, the moment Behavior closes: append Behavior, CleanupResources, InitResources and dScStarSel_c_classInit after Render in ROM-ascending order (this file already runs under `#pragma defer_codegen off`), extend the licensed .text to 0x020addfc..0x020b0580, retire the three shards and src/game/stages/d_s_star_sel.cpp's claim, and re-run verify. The destructor form and the ten compiler_only_output rows are already in place; the header needs no change. Re-check the opt_strength_reduction cell for the new members, since the PRAGMA note's measurements predate them.",
+    "WIDEN (0x020adec0..0x020af038 -> 0x020addfc..0x020af038): folds _ZN12dScStarSel_cD1Ev and _ZN12dScStarSel_cD0Ev into this file and retires their one-function shards; the two delinks entries are merged into this TU's single .text claim. Behavior, CleanupResources, InitResources and dScStarSel_c_classInit stay out (see LICENSED RANGE above). tools/tubuild.py linkcheck has no route for an already-enrolled text-only TU (the enrolled-candidate path is intact-object only and refuses with 'intact production requires one .text claim and at least one non-text claim'), so the verification.linkcheck block below is the ORIGINAL 0x020adec0..0x020af038 promotion's record and was not refreshed; the widen's link proof is a full tools/rombuild.py build.",
+    "BEHAVIOR FOLD, source changes the fold forced, each verified by tools/tubuild.py verify (15/15 MATCH, objisolate clean, ROM-ascending): (a) Behavior read the touch tables through PlayerInput.h's flat u8[] spelling (gTouchHeld[idx * 4], a TouchRecord cast for the row); this file declares them u8[][4] for Render's record-view addressing, so Behavior now spells the same reads gTouchHeld[idx][0] and gTouchHeld[idx], and data_020a0e5a[slot * 2] as data_020a0e5a[slot][0]. Byte-identical. (b) InitResources' FH(p, o) was the UNSIGNED halfword view; this file's FH is signed, so its uses are spelled FU, the unsigned view Behavior brought. (c) InitResources' `#pragma opt_loop_invariants off` is bracketed by push/pop so it binds InitResources alone; under defer_codegen off the state at each definition is what binds. (d) CleanupResources' file-local `class Sound` stub is replaced by Sound.h. (e) The factory keeps the retired source's hand-built construction verbatim (see daPicGate_c's classInit note for why `new` cannot be used while the vtable label is the address point); its two vtable externs come from decl_common.h."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov003-dScStarSel_c/dScStarSel_c.o (gitignored)",
+    "object": "build/tu/ov003-dScStarSel_c/d_s_star_sel_methods.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 11,
-    "functions_declared": 11,
+    "functions_matched": 15,
+    "functions_declared": 15,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN12dScStarSel_cD2Ev"
@@ -209,20 +239,20 @@
       "droppedSections": [
         9,
         10,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
         36,
         37,
         38,
         39,
         40,
-        41
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
       ],
       "data": [
         "_ZTV12dScStarSel_c",
@@ -245,7 +275,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV12dScStarSel_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

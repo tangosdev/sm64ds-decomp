@@ -19,6 +19,12 @@
  * Leftover: g_profile_BK_UKISIMA lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_bk_ukisima_AssetId {
+    ASSET_BK_UKISIMA_BMD = 0x05a1,
+    ASSET_BK_UKISIMA_KCL = 0x05a2
+};
+
 #include "daObjBk_Ukisima_c.h"
 #include "SharedFilePtr.h"
 
@@ -77,5 +83,5 @@ s32 daObjBk_Ukisima_c::CleanupResources()
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_bk_ukisima.cpp. */
-UkisimaModelFilePtr data_ov015_02114aac(1441);
-UkisimaClsnFileHandle data_ov015_02114ab4(1442);
+UkisimaModelFilePtr gBkUkisimaModelFile(ASSET_BK_UKISIMA_BMD);
+UkisimaClsnFileHandle gBkUkisimaCollisionFile(ASSET_BK_UKISIMA_KCL);

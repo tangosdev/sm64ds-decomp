@@ -93,14 +93,14 @@ data_ov098_0213bf60 kind:data(any) addr:0x0213bf60
 data_ov098_0213bf64 kind:data(any) addr:0x0213bf64
 data_ov098_0213bf68 kind:data(any) addr:0x0213bf68
 data_ov098_0213bf90 kind:data(any) addr:0x0213bf90
-__sinit_ov098_0213bf9c kind:function(arm,size=0xbc) addr:0x0213bf9c
-__sinit_daObjBlockS_c.cpp kind:function(arm,size=0x1bc) addr:0x0213c058
+__sinit_d_a_obj_yajirusi.cpp kind:function(arm,size=0xbc) addr:0x0213bf9c
+__sinit_d_a_obj_block_s.cpp kind:function(arm,size=0x1bc) addr:0x0213c058
 __sinit_d_a_cnn.cpp kind:function(arm,size=0xa0) addr:0x0213c214
-__sinit_daWbm_c.cpp kind:function(arm,size=0x88) addr:0x0213c2b4
-.p__sinit_ov098_0213bf9c kind:data(word) addr:0x0213c33c
-.p__sinit_daObjBlockS_c.cpp kind:data(word) addr:0x0213c340
+__sinit_d_a_wbm.cpp kind:function(arm,size=0x88) addr:0x0213c2b4
+.p__sinit_d_a_obj_yajirusi.cpp kind:data(word) addr:0x0213c33c
+.p__sinit_d_a_obj_block_s.cpp kind:data(word) addr:0x0213c340
 .p__sinit_d_a_cnn.cpp kind:data(word) addr:0x0213c344
-.p__sinit_daWbm_c.cpp kind:data(word) addr:0x0213c348
+.p__sinit_d_a_wbm.cpp kind:data(word) addr:0x0213c348
 _ZTI15daObjYajirusi_c kind:data(any) addr:0x0213c360
 _ZTS15daObjYajirusi_c kind:data(any) addr:0x0213c36c
 data_ov098_0213c380 kind:data(any) addr:0x0213c380
@@ -149,16 +149,16 @@ _ZTI7daWbm_c kind:data(any) addr:0x0213c740
 g_profile_WATERBOMB kind:data(any) addr:0x0213c74c ambiguous
 _ZTV7daWbm_c kind:data(any) addr:0x0213c770
 data_ov098_0213c78c kind:data(any) addr:0x0213c78c ambiguous
-data_ov098_0213c800 kind:bss addr:0x0213c800
-data_ov098_0213c808 kind:bss addr:0x0213c808
-data_ov098_0213c810 kind:bss addr:0x0213c810
-data_ov098_0213c818 kind:bss addr:0x0213c818
-data_ov098_0213c820 kind:bss addr:0x0213c820
-data_ov098_0213c82c kind:bss addr:0x0213c82c
-data_ov098_0213c838 kind:bss addr:0x0213c838
-data_ov098_0213c844 kind:bss addr:0x0213c844
-data_ov098_0213c850 kind:bss addr:0x0213c850
-data_ov098_0213c858 kind:bss addr:0x0213c858
+gYajirusiLCollisionFile kind:bss addr:0x0213c800
+gYajirusiRModelFile kind:bss addr:0x0213c808
+gYajirusiLModelFile kind:bss addr:0x0213c810
+gYajirusiRCollisionFile kind:bss addr:0x0213c818
+@931 kind:bss addr:0x0213c820
+@937 kind:bss addr:0x0213c82c
+@933 kind:bss addr:0x0213c838
+@932 kind:bss addr:0x0213c844
+gBrokenBlockSModelFile kind:bss addr:0x0213c850
+gBrokenBlockSCollisionFile kind:bss addr:0x0213c858
 @1560 kind:bss addr:0x0213c860
 @1561 kind:bss addr:0x0213c86c
 data_ov098_0213c878 kind:bss addr:0x0213c878

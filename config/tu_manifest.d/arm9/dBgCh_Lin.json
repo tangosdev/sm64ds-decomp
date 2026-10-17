@@ -1,8 +1,8 @@
 {
   "id": "arm9/dBgCh_Lin",
   "module": "arm9",
-  "source": "src/engine/collision/dBgCh_Lin.cpp",
-  "promoted_source": "src/engine/collision/dBgCh_Lin.cpp",
+  "source": "src/engine/collision/d_bg_ch_lin.cpp",
+  "promoted_source": "src/engine/collision/d_bg_ch_lin.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",

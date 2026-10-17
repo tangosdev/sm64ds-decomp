@@ -256,7 +256,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daDossy_c.cpp",
+      "symbol": "__sinit_d_a_dossy.cpp",
       "address": "0x0211c440",
       "size": "0x220",
       "binding": "STB_GLOBAL",
@@ -265,7 +265,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daDossy_c.cpp",
+      "symbol": ".p__sinit_d_a_dossy.cpp",
       "address": "0x0211cae8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -281,28 +281,28 @@
       "evidence": "model resource handle constructed with file ID 0x2e9"
     },
     {
-      "symbol": "data_ov065_0211d728",
+      "symbol": "gDossyLegLCollisionFile",
       "address": "0x0211d728",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 0x2f0"
     },
     {
-      "symbol": "data_ov065_0211d730",
+      "symbol": "gDossyHeadCollisionFile",
       "address": "0x0211d730",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 0x2ed"
     },
     {
-      "symbol": "data_ov065_0211d738",
+      "symbol": "gDossyArmLCollisionFile",
       "address": "0x0211d738",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 0x2ea"
     },
     {
-      "symbol": "data_ov065_0211d740",
+      "symbol": "gDossyBodyCollisionFile",
       "address": "0x0211d740",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -316,21 +316,21 @@
       "evidence": "animation resource handle constructed with file ID 0x2ef"
     },
     {
-      "symbol": "data_ov065_0211d750",
+      "symbol": "gDossyArmRCollisionFile",
       "address": "0x0211d750",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 0x2eb"
     },
     {
-      "symbol": "data_ov065_0211d758",
+      "symbol": "gDossyNeckCollisionFile",
       "address": "0x0211d758",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 0x2f2"
     },
     {
-      "symbol": "data_ov065_0211d760",
+      "symbol": "gDossyLegRCollisionFile",
       "address": "0x0211d760",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -355,42 +355,42 @@
       "address": "0x0211d778",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov065_0211d750"
+      "evidence": "compiler-generated destructor-registration node for gDossyArmRCollisionFile"
     },
     {
       "symbol": "@1005",
       "address": "0x0211d784",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov065_0211d728"
+      "evidence": "compiler-generated destructor-registration node for gDossyLegLCollisionFile"
     },
     {
       "symbol": "@1006",
       "address": "0x0211d790",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov065_0211d760"
+      "evidence": "compiler-generated destructor-registration node for gDossyLegRCollisionFile"
     },
     {
       "symbol": "@1007",
       "address": "0x0211d79c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov065_0211d758"
+      "evidence": "compiler-generated destructor-registration node for gDossyNeckCollisionFile"
     },
     {
       "symbol": "@1008",
       "address": "0x0211d7a8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov065_0211d740"
+      "evidence": "compiler-generated destructor-registration node for gDossyBodyCollisionFile"
     },
     {
       "symbol": "@1009",
       "address": "0x0211d7b4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov065_0211d730"
+      "evidence": "compiler-generated destructor-registration node for gDossyHeadCollisionFile"
     },
     {
       "symbol": "@300",
@@ -425,7 +425,7 @@
       "address": "0x0211d7f0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov065_0211d738"
+      "evidence": "compiler-generated destructor-registration node for gDossyArmLCollisionFile"
     },
     {
       "symbol": "data_ov065_0211d7fc",
@@ -872,7 +872,7 @@
       "source": "0x0211c600",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d738",
+      "symbol": "gDossyArmLCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d738"
@@ -902,7 +902,7 @@
       "source": "0x0211c610",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d750",
+      "symbol": "gDossyArmRCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d750"
@@ -922,7 +922,7 @@
       "source": "0x0211c61c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d728",
+      "symbol": "gDossyLegLCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d728"
@@ -942,7 +942,7 @@
       "source": "0x0211c624",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d760",
+      "symbol": "gDossyLegRCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d760"
@@ -962,7 +962,7 @@
       "source": "0x0211c630",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d758",
+      "symbol": "gDossyNeckCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d758"
@@ -982,7 +982,7 @@
       "source": "0x0211c63c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d740",
+      "symbol": "gDossyBodyCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d740"
@@ -1002,7 +1002,7 @@
       "source": "0x0211c644",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d730",
+      "symbol": "gDossyHeadCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d730"
@@ -1062,7 +1062,7 @@
       "source": "0x0211cae8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daDossy_c.cpp",
+      "symbol": "__sinit_d_a_dossy.cpp",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211c440"
@@ -1151,13 +1151,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daDossy_c.cpp",
+      "symbol": "__sinit_d_a_dossy.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated static initializer is emitted local by mwcc but must be exposed as the configured .init destination at 0x0211c440"
     },
     {
-      "symbol": ".p__sinit_daDossy_c.cpp",
+      "symbol": ".p__sinit_d_a_dossy.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated ctor-table object is emitted local by mwcc but must be exposed as the configured .ctor destination at 0x0211cae8"
@@ -1628,8 +1628,8 @@
   },
   "id": "ov065/DorriePlatform+daDossyCap_c+daDossy_c",
   "module": "ov065",
-  "source": "src/actors/daDossy_c.cpp",
-  "promoted_source": "src/actors/daDossy_c.cpp",
+  "source": "src/game/actors/d_a_dossy.cpp",
+  "promoted_source": "src/game/actors/d_a_dossy.cpp",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2117f40..0x21196d8, 29 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -1640,74 +1640,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1013",
-      "to": "@300",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1014",
-      "to": "@1000",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1015",
-      "to": "@1001",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1016",
-      "to": "@1002",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
       "from": "@1017",
-      "to": "@1003",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@300",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1013 to @1017; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @300 ROM pin."
     },
     {
       "from": "@1018",
-      "to": "@1004",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1000",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1014 to @1018; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1000 ROM pin."
     },
     {
       "from": "@1019",
-      "to": "@1005",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1001",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1015 to @1019; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1001 ROM pin."
     },
     {
       "from": "@1020",
-      "to": "@1006",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1002",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1016 to @1020; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1002 ROM pin."
     },
     {
       "from": "@1021",
-      "to": "@1007",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1003",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1017 to @1021; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1003 ROM pin."
     },
     {
       "from": "@1022",
-      "to": "@1008",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1004",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1018 to @1022; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1004 ROM pin."
     },
     {
       "from": "@1023",
-      "to": "@1009",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1005",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1019 to @1023; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1005 ROM pin."
+    },
+    {
+      "from": "@1024",
+      "to": "@1006",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1020 to @1024; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1006 ROM pin."
     },
     {
       "from": "@1025",
-      "to": "@2700",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1007",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1021 to @1025; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1007 ROM pin."
+    },
+    {
+      "from": "@1026",
+      "to": "@1008",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1022 to @1026; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1008 ROM pin."
     },
     {
       "from": "@1027",
-      "to": "@2701",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1009",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1023 to @1027; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1009 ROM pin."
     },
     {
       "from": "@1029",
+      "to": "@2700",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1025 to @1029; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2700 ROM pin."
+    },
+    {
+      "from": "@1031",
+      "to": "@2701",
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1027 to @1031; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2701 ROM pin."
+    },
+    {
+      "from": "@1033",
       "to": "@2702",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1029 to @1033; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2702 ROM pin."
     }
   ]
 }

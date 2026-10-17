@@ -1,25 +1,33 @@
 //cpp
-/* arm9/Message -- the message-window display TU. 0x0201ce10..0x0201fcd4, 30 functions.
+/* Message window. The display entry points and the helpers that draw one
+ * line into a background.
  *
- * `#pragma defer_codegen off` gives source-order emission, so the file runs
- * ROM-ascending and the emitted .text does too. The optimization pragmas are
- * positional brackets per function -- under deferred codegen they would read
- * last-wins at end of file instead of per-function.
- *
- * The named entry points are real Message members (include/Message.h; all
- * static except Display). The address-named helpers and the two named C
- * helpers (LoadControllerModeText, Message_DrawCenteredLine) keep their
- * extern "C" spellings and names.
- *
- * All of these functions share one file-scope render state around
- * 0x0209d660 plus the star-entry table at data_0209d708, so every shard's
- * local externs collapse into the block below. data_0209d6f4 stays volatile:
- * DisplayCourseNameForStarSelect stores it twice back-to-back and both stores
- * must emit. */
+ * leftovers:
+ * - defer_codegen is off so this file emits in source order. The per-function
+ *   optimization pragmas are brackets; under deferred codegen they would be
+ *   last-wins for the whole file.
+ * - Display is the only Message method here that takes this. The others are
+ *   static and drive the globals around data_0209d660.
+ * - data_0209d6f4 is volatile. DisplayCourseNameForStarSelect stores it twice
+ *   in a row and both stores have to emit.
+ * - IsStarCollected, G2x::SetBlendBrightness and Message::DisplayText stay
+ *   local externs. The header spellings take s8 / u16 and those parameters
+ *   emit a narrow the ROM does not have. DisplayText must see this untruncated.
+ * - Sound::ChangeMusicVolume stays mangled. The second parameter is
+ *   Fix12<int> by value.
+ * - G2S::GetBG0CharPtr and the other BG pointer getters stay mangled. No
+ *   header method matches the unsigned return these calls use.
+ * - Address-named helpers stay address-named. The ROM has no English name
+ *   for them.
+ * - dScStage_c::UpdateMessage, the stage's per-frame message driver, opens
+ *   the file: it is first by address (0x0201cb7c).
+ */
 
 #pragma defer_codegen off
 #include "types.h"
 #include "Message.h"
+#include "SaveData.h"
+#include "dScStage_c.h"
 
 struct StarEntry {
     int m0;
@@ -84,6 +92,7 @@ extern int data_0209caa0[3];
 extern s32 data_0209fc48;
 extern s8 data_02092110;
 extern u32 data_0209b454;
+extern s32 data_0208ee44;
 
 extern u32 _ZN3G2S13GetBG0CharPtrEv(void);
 extern u32 _ZN3G2S12GetBG0ScrPtrEv(void);
@@ -110,8 +119,10 @@ extern void *func_02054ea8(void);
    parameter would emit a sign-extend of arg0 the ROM lacks. */
 extern int IsStarCollected(u32 a, u8 b);
 extern int SublevelToLevel(int a);
+/* local extern: byte-forced spelling -- calling Message::AddChar(char) makes
+   func_0201d850 narrow its arguments (4 words differ from the ROM).
+   Message2.cpp spells it the same way. */
 extern void _ZN7Message7AddCharEc(int c);
-extern void _ZN7Message6UpdateEv(void);
 extern int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, s32 b);
 /* local extern: byte-forced spelling -- the definition is
    (volatile u16*, u16, s16); u16/s16 parameters would emit an explicit narrow
@@ -121,6 +132,7 @@ extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, int a, int b);
    in r0; a u16 parameter (the member's real signature) would emit uxth. */
 extern void _ZN7Message11DisplayTextEt(void *self);
 
+void func_0201cd08(int arg);
 void func_0201cebc(short a0);
 void func_0201cfb8(int arg0);
 void LoadControllerModeText(int param0);
@@ -135,6 +147,74 @@ void func_0201ef50(int arg);
 void func_0201f108(void);
 void func_0201f138(void);
 void func_0201f32c(int arg0);
+}
+
+// @symbol _ZN10dScStage_c13UpdateMessageEv
+void dScStage_c::UpdateMessage() {
+    if (data_0209d660 == 0)
+        return;
+
+    if (Message::UpdateWindow()) {
+        if (data_0209d654 == 0) {
+            Message::Update();
+            return;
+        }
+
+        if (data_0209d6d4 == 0x295) {
+            if (data_0209d67c == 0x3c) {
+                SaveData::SaveCurrentFile();
+            }
+            if (data_0209d67c != 0) {
+                data_0209d67c -= data_0208ee44;
+                if (data_0209d67c == 0) {
+                    data_0209d670 = 1;
+                }
+            }
+            return;
+        }
+
+        if (data_0209d67c != 0) {
+            data_0209d67c -= data_0208ee44;
+            if (data_0209d67c == 0) {
+                data_0209d670 = 1;
+            }
+        }
+        return;
+    }
+
+    if (data_0209d654 != 0) {
+        if (data_0209d660 != 0)
+            return;
+        if (data_0209d6d4 != 0x295) {
+            data_0209d654 = 0;
+            return;
+        }
+        Message::DisplaySaving(0x296);
+    }
+}
+
+// @symbol func_0201cd08
+extern "C" void func_0201cd08(int arg) {
+    volatile int li;
+    volatile unsigned short ls;
+    int p, s;
+    data_0209d660 = 0;
+    func_0201eaac();
+    data_0209d668 = 1;
+    data_0209d6a8 = 0;
+    p = _ZN3G2S13GetBG0CharPtrEv() + 0x4000;
+    li = 0;
+    MultiStore_Int(li, (int *)p, 0x2000);
+    s = _ZN3G2S12GetBG0ScrPtrEv();
+    ls = 0x2ff;
+    MultiStore16(ls, (char *)s, 0x800);
+    data_0209d6d4 = (s16)arg;
+    func_0201d418(data_0209d6d4 == 0x29a ? 0x105 : 0xc5, 0xb0);
+    data_0209d6d4 = 0x293;
+    data_0209d6a8 = data_0209d6a8 << 1;
+    Message_DrawCenteredLine(0x285, 0xa);
+    data_0209d6d4 = data_0209d6d4 + 1;
+    Message_DrawCenteredLine(0x291, 0xa);
 }
 
 // @symbol _ZN7Message21DisplaySaveStatusTextEt
@@ -1104,7 +1184,7 @@ void Message::DisplaySaving(unsigned short n)
     }
 
     while (data_0209d6bc < 4)
-        _ZN7Message6UpdateEv();
+        Message::Update();
 
     {
         int b = data_0209d45c | 0x20;
@@ -1245,7 +1325,7 @@ extern "C" void func_0201f138(void)
 
     bcPtr = &data_0209d6bc;
     while (*bcPtr < 4) {
-        _ZN7Message6UpdateEv();
+        Message::Update();
     }
     SetBg3Offset(-0x11, -0x3c);
     data_0209d45c |= 8;
@@ -1414,7 +1494,7 @@ extern "C" void func_0201f32c(int arg0)
     t = data_0209d6bc;
     if (t < 4) {
         do {
-            _ZN7Message6UpdateEv();
+            Message::Update();
             t = data_0209d6bc;
         } while (t < 4);
     }

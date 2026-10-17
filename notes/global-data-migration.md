@@ -321,10 +321,10 @@ Examples:
 
 | Symbol | Address | Size | File |
 |--------|---------|------|------|
-| [data_ov002_0211114c](../config/arm9/overlays/ov002/symbols.txt) | 0x0211114c | 0x04 | `src/actors/dMap_c.cpp` |
-| [data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt) | 0x02114d4c | 0x0c | `src/actors/daMoray_c.cpp` |
-| [data_ov026_02113f4c](../config/arm9/overlays/ov026/symbols.txt) | 0x02113f4c | 0x0c | `src/actors/daWater_Suikomi_c.cpp` |
-| [data_ov006_02140518](../config/arm9/overlays/ov006/symbols.txt) | 0x02140518 | 0x20 | `src/actors/unit020c8a30.cpp` (func_ov006_020c8a30) |
+| [data_ov002_0211114c](../config/arm9/overlays/ov002/symbols.txt) | 0x0211114c | 0x04 | `src/ui/hud/d_map.cpp` |
+| [data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt) | 0x02114d4c | 0x0c | `src/game/actors/d_a_moray.cpp` |
+| [data_ov026_02113f4c](../config/arm9/overlays/ov026/symbols.txt) | 0x02113f4c | 0x0c | `src/game/actors/d_a_water_suikomi.cpp` |
+| [data_ov006_02140518](../config/arm9/overlays/ov006/symbols.txt) | 0x02140518 | 0x20 | `src/minigames/unit020c8a30.cpp` (func_ov006_020c8a30) |
 | [data_ov007_02103f98](../config/arm9/overlays/ov007/symbols.txt) | 0x02103f98 | 0x600 | [src/unnamed/ov007/func_ov007_020b8548.c](../src/unnamed/ov007/func_ov007_020b8548.c) |
 
 

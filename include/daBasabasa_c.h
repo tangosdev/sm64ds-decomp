@@ -22,7 +22,7 @@
  * SM64DS RTTI names the implementation daBasabasa_c. The factory
  * daBasabasa_c_classInit (historical alias Swoop_Spawn) constructs it for
  * the BASABASA registry profile; it is the last function of
- * src/actors/daBasabasa_c.cpp.
+ * src/game/actors/d_a_basabasa.cpp.
  */
 
 #include "dEnemyBase_c.h"

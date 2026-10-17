@@ -27,6 +27,12 @@
  * Leftover: inline destructor (out-of-line emits D0 before D1).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km1_ukishima_AssetId {
+    ASSET_KM1_UKISHIMA_BMD = 0x0659,
+    ASSET_KM1_UKISHIMA_KCL = 0x065a
+};
+
 #include "daObjKm1_Ukishima_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -175,5 +181,5 @@ s32 daObjKm1_Ukishima_c::CleanupResources()
 
 /* Source order is construction order: model file 1625, then the collision
  * file 1626. The compiler registers each destructor beside the object. */
-Km1UkishimaModelFilePtr data_ov043_021125e8(1625);
-Km1UkishimaClsnFilePtr data_ov043_021125e0(1626);
+Km1UkishimaModelFilePtr data_ov043_021125e8(ASSET_KM1_UKISHIMA_BMD);
+Km1UkishimaClsnFilePtr data_ov043_021125e0(ASSET_KM1_UKISHIMA_KCL);

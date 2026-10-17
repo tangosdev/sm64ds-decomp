@@ -1,6 +1,6 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 #pragma opt_propagation off
-typedef s32 fx32;
 
 #define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
 #define reg_G3_TEXPLTT_BASE   (*(volatile u32 *)0x040004ac)

@@ -17,8 +17,8 @@ int func_02061d30(int self, unsigned int idx)
     {
         u16 v = *(u16*)o;
         if (v == 7 || v == 9) {
-            if (idx < 1) goto ret6;
-            if (idx > 0xf) { ret6: return 6; }
+            if (idx < 1 || idx > 0xf)
+                return 6;
             _ZN4CP1519InvalidateDataCacheEjj((u32)o + 0x17e, 2);
             if ((*(u16*)((char*)*(int**)(h + 4) + 0x17e) & (1u << idx)) == 0) return 7;
         } else {

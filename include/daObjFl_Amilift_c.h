@@ -59,7 +59,7 @@ struct daObjFl_Amilift_c : dBgActor_c {
     void func_ov064_02117c24();
 
     /* mState values. The state handlers live in a three-entry table in ov064's
-       .data (see daObjFl_Amilift_c.cpp), indexed by mState. */
+       .data (see d_a_obj_fl_amilift.cpp), indexed by mState. */
     enum {
         STATE_WAIT = 0,       /* waits at the start for the player to stand on it */
         STATE_FORWARD = 1,    /* walking toward higher node indices */

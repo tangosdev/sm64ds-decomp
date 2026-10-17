@@ -44,12 +44,33 @@
  * section per function in the reverse of source order.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_btn_AssetId {
+    ASSET_BATTAN_BMD = 0x029c,
+    ASSET_BATTAN_KCL = 0x029d,
+    ASSET_BATTAN_ATTACK01_BCA = 0x029e,
+    ASSET_BATTAN_ATTACK02_BCA = 0x029f,
+    ASSET_BATTAN_RECOVER_BCA = 0x02a0,
+    ASSET_BATTAN_WALK_BCA = 0x02a1,
+    ASSET_BATTAN_WALKSTART_BCA = 0x02a2,
+    ASSET_BATTAN_KING_BMD = 0x02a3,
+    ASSET_BATTAN_KING_BTP = 0x02a4,
+    ASSET_BATTAN_KING_KCL = 0x02a5,
+    ASSET_BATTAN_KING_ATTACK01_BCA = 0x02a6,
+    ASSET_BATTAN_KING_ATTACK02_BCA = 0x02a7,
+    ASSET_BATTAN_KING_DAMAGE_BCA = 0x02a8,
+    ASSET_BATTAN_KING_RECOVER_BCA = 0x02a9,
+    ASSET_BATTAN_KING_WALK_BCA = 0x02aa,
+    ASSET_BATTAN_KING_WALKSTART_BCA = 0x02ab
+};
+
 #include "daBtn_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Message.h"
 #include "dCamera_c.h"
+#include "nitro/fx/fx.h"
 
 bool ApproachLinear(short &value, short target, short step);
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. It
@@ -68,11 +89,6 @@ struct CLPS_Block;
    bracket around the one function does not bind; file-wide it moves no
    other member. */
 #pragma opt_strength_reduction off
-
-/* A plain x/y/z triple. The helpers that came from C files build their
-   scratch vectors in this, not in Vector3: Vector3's inline destructor
-   gives a local its own stack home and moves the frame. */
-struct BtnVec { s32 x, y, z; };
 
 /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
    member through Vector3 and comes out longer. */
@@ -188,22 +204,22 @@ struct BtnCollisionFilePtr : SharedFilePtr {
 };
 
 // @symbol __sinit_d_a_btn.cpp
-BtnModelFilePtr         data_ov079_02128170(0x29c);   /* the plain Whomp's BMD */
-BtnModelFilePtr         data_ov079_02128168(0x2a3);   /* the king's BMD */
-BtnTextureSeqFileHandle data_ov079_02128178(0x2a4);   /* the king's face BTP */
-BtnAnimationFileHandle  data_ov079_02128188(0x29e);   /* the plain Whomp's BCAs */
-BtnAnimationFileHandle  data_ov079_02128180(0x29f);
-BtnAnimationFileHandle  data_ov079_02128190(0x2a0);
-BtnAnimationFileHandle  data_ov079_02128158(0x2a1);
-BtnAnimationFileHandle  data_ov079_02128160(0x2a2);
-BtnAnimationFileHandle  data_ov079_021281a0(0x2a6);   /* the king's BCAs */
-BtnAnimationFileHandle  data_ov079_02128140(0x2a7);
-BtnAnimationFileHandle  data_ov079_02128148(0x2a9);
-BtnAnimationFileHandle  data_ov079_02128150(0x2aa);
-BtnAnimationFileHandle  data_ov079_021281b8(0x2ab);
-BtnAnimationFileHandle  data_ov079_021281b0(0x2a8);
-BtnCollisionFilePtr     data_ov079_021281a8(0x29d);   /* the plain Whomp's KCL */
-BtnCollisionFilePtr     data_ov079_02128198(0x2a5);   /* the king's KCL */
+BtnModelFilePtr         data_ov079_02128170(ASSET_BATTAN_BMD);   /* the plain Whomp's BMD */
+BtnModelFilePtr         data_ov079_02128168(ASSET_BATTAN_KING_BMD);   /* the king's BMD */
+BtnTextureSeqFileHandle data_ov079_02128178(ASSET_BATTAN_KING_BTP);   /* the king's face BTP */
+BtnAnimationFileHandle  gBattanAttack01AnimationFile(ASSET_BATTAN_ATTACK01_BCA);   /* the plain Whomp's BCAs */
+BtnAnimationFileHandle  gBattanAttack02AnimationFile(ASSET_BATTAN_ATTACK02_BCA);
+BtnAnimationFileHandle  gBattanRecoverAnimationFile(ASSET_BATTAN_RECOVER_BCA);
+BtnAnimationFileHandle  gBattanWalkAnimationFile(ASSET_BATTAN_WALK_BCA);
+BtnAnimationFileHandle  gBattanWalkstartAnimationFile(ASSET_BATTAN_WALKSTART_BCA);
+BtnAnimationFileHandle  gBattanKingAttack01AnimationFile(ASSET_BATTAN_KING_ATTACK01_BCA);   /* the king's BCAs */
+BtnAnimationFileHandle  gBattanKingAttack02AnimationFile(ASSET_BATTAN_KING_ATTACK02_BCA);
+BtnAnimationFileHandle  gBattanKingRecoverAnimationFile(ASSET_BATTAN_KING_RECOVER_BCA);
+BtnAnimationFileHandle  gBattanKingWalkAnimationFile(ASSET_BATTAN_KING_WALK_BCA);
+BtnAnimationFileHandle  gBattanKingWalkstartAnimationFile(ASSET_BATTAN_KING_WALKSTART_BCA);
+BtnAnimationFileHandle  data_ov079_021281b0(ASSET_BATTAN_KING_DAMAGE_BCA);
+BtnCollisionFilePtr     gBattanCollisionFile(ASSET_BATTAN_KCL);   /* the plain Whomp's KCL */
+BtnCollisionFilePtr     gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL);   /* the king's KCL */
 
 /* The twelve state handler records live in .data (0x02127bc0..0x02127c28);
    the static initializer copies them into the table below, one member
@@ -624,15 +640,15 @@ void daBtn_c::func_ov079_021258fc()
     u8 idx;
     unsigned int q;
     void *walk;
-    unsigned int cur;
-    unsigned int want;
+    BCA_File *cur;
+    void *want;
     int lim;
 
     idx = mIsKing;
     q = mModelAnim.currFrame;
     walk = data_ov079_021275ec[((int)idx * 5) + 3];
-    cur = (unsigned int)mModelAnim.file;
-    want = (unsigned int)((BtnFileRef *)walk)->file;
+    cur = mModelAnim.file;
+    want = ((BtnFileRef *)walk)->file;
     frame = (unsigned short)(q >> 12);
 
     if (cur != want) {
@@ -670,7 +686,7 @@ void daBtn_c::func_ov079_021258fc()
             mHorzSpeed = 0x9000;
             mModelAnim.speed = data_ov079_021275dc[mIsKing];
         }
-        if ((int)mModelAnim.file == (int)((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
+        if (mModelAnim.file == ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
             if (mFrontDist < 0xc8000) {
                 mState = 3;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -681,7 +697,7 @@ void daBtn_c::func_ov079_021258fc()
         }
     }
 
-    if ((int)mModelAnim.file == (int)((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
+    if (mModelAnim.file == ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
         if (frame <= 7 || (frame >= 0x1e && frame <= 0x26)) {
             mHorzSpeed = 0;
             if (mStepPlayed == 0) {
@@ -706,7 +722,7 @@ void daBtn_c::func_ov079_021256d4()
 {
     Player *r;
 
-    if ((int)mModelAnim.file != (int)((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
+    if (mModelAnim.file != ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
         if (mModelAnim.Finished() != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
                 &mModelAnim,
@@ -791,7 +807,7 @@ void daBtn_c::func_ov079_021256d4()
 void daBtn_c::func_ov079_02125504()
 {
     unsigned int frame;
-    BtnVec v[2];
+    Vector3 v[2];
     s16 t;
     s32 px, pz;
 
@@ -799,13 +815,13 @@ void daBtn_c::func_ov079_02125504()
         unsigned int q;
         u8 i;
         BtnFileRef *e;
-        unsigned int cur;
-        unsigned int want;
+        BCA_File *cur;
+        void *want;
         i = mIsKing;
         q = mModelAnim.currFrame;
         e = (BtnFileRef *)data_ov079_021275ec[(int)i * 5 + 3];
-        cur = (unsigned int)mModelAnim.file;
-        want = (unsigned int)e->file;
+        cur = mModelAnim.file;
+        want = e->file;
         frame = (unsigned short)(q >> 12);
         if (cur != want)
             return;
@@ -963,8 +979,8 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
     /* v1/v2 are second copies of the player's position that the ROM stores
        too, and v2 is read back into w2. volatile is what keeps those stores
        and v2's reloads: without it the function shrinks 0x1d4 -> 0x1b0. */
-    volatile BtnVec v1, v2;
-    BtnVec w1, w2;
+    volatile Vector3 v1, v2;
+    Vector3 w1, w2;
     int eq = (int)(other->actorID == 0xbf);
     if (!eq) return;
     mTouched = 1;
@@ -978,10 +994,10 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
     }
     if (mCoinGiven != 0) return;
     if (mIsKing == 0) {
-        BtnVec* p;
+        const Vector3 *p;
         s32 x, y, z;
         if (DecIfAbove0_Byte(&mCoinsLeft) == 0) return;
-        p = (BtnVec*)&other->mPosX;
+        p = &other->mPos;
         x = p->x; v1.x = x;
         y = p->y; v1.y = y;
         z = p->z; v1.z = z;
@@ -991,11 +1007,11 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
         return;
     }
     {
-        BtnVec* p;
+        const Vector3 *p;
         s32 x, y, z;
         u32 t = mState;
         if (t - 1 > 1) return;
-        p = (BtnVec*)&other->mPosX;
+        p = &other->mPos;
         x = p->x; v2.x = x;
         y = p->y; v2.y = y;
         z = p->z; v2.z = z;
@@ -1242,12 +1258,12 @@ void daBtn_c::func_ov079_021249f0()
    burst, spawn its star (star mStarID, from 0x64000 above it) and go. */
 void daBtn_c::func_ov079_021246dc()
 {
-    BtnVec pos;
-    BtnVec starPos;
-    BtnVec v;
-    BtnVec v2;
-    BtnVec dp;
-    BtnVec dp2;
+    Vector3 pos;
+    Vector3 starPos;
+    Vector3 v;
+    Vector3 v2;
+    Vector3 dp;
+    Vector3 dp2;
 
     if (mIsKing != 0) {
         switch (mSubState) {
@@ -1262,7 +1278,7 @@ void daBtn_c::func_ov079_021246dc()
             {
                 int idx = mNearestPlayer;
                 Player *other = mPlayers[idx];
-                BtnVec *op = (BtnVec *)&other->mPosX;
+                Vector3 *op = &other->mPos;
                 unsigned short ang;
                 int i;
                 short mag = 0x10e;
@@ -1342,7 +1358,7 @@ void daBtn_c::func_ov079_02124638()
         {
             s32 amp = (s32)((t - 0x50) << 6);
             u16 ang = (u16)(s16)(t << 13);
-            mAngleX = (s16)(((s64)amp * data_02082214[(ang >> 4) * 2] + 0x800) >> 12);
+            mAngleX = (s16)FX_MUL(amp, data_02082214[(ang >> 4) * 2]);
         }
         return;
     }
@@ -1392,7 +1408,7 @@ void daBtn_c::func_ov079_02124530()
    from the clip centre). Returns 1 when the collider was left off. */
 int daBtn_c::func_ov079_021243e0(int range)
 {
-    BtnVec v;
+    Vector3 v;
     Player *player;
     int dist;
     int y;
@@ -1432,8 +1448,6 @@ int daBtn_c::func_ov079_021243e0(int range)
     return 0;
 }
 
-#define FX12(a,b) (int)(((long long)(a) * (int)(b) + 0x800) >> 12)
-
 // @symbol _ZN7daBtn_c19func_ov079_02124188Ev
 /* Pose the model from the actor (raised by mTipLift), read the first
    bone's rotation back into mBodyPitch/Yaw/Roll, and drop the shadow: its
@@ -1441,8 +1455,8 @@ int daBtn_c::func_ov079_021243e0(int range)
    to the body's heading. */
 void daBtn_c::func_ov079_02124188()
 {
-    BtnVec pos;
-    BtnVec asr;
+    Vector3 pos;
+    Vector3 asr;
     int shadowRad;
     int cosv;
     int sinComp;
@@ -1474,8 +1488,8 @@ void daBtn_c::func_ov079_02124188()
         shadowRad = cosv * 0xd2 + 0x64000;
     }
 
-    pos.x += FX12(sinComp, data_02082214[((unsigned short)mAngleY >> 4) << 1]);
-    pos.z += FX12(sinComp, data_02082214[(((unsigned short)mAngleY >> 4) << 1) + 1]);
+    pos.x += FX_MUL(sinComp, data_02082214[((unsigned short)mAngleY >> 4) << 1]);
+    pos.z += FX_MUL(sinComp, data_02082214[(((unsigned short)mAngleY >> 4) << 1) + 1]);
 
     Vec3_Asr(&asr, &pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
@@ -1496,8 +1510,6 @@ void daBtn_c::func_ov079_02124188()
     }
     return;
 }
-
-#undef FX12
 
 // @symbol _ZN7daBtn_c19func_ov079_02124008Ev
 /* Pose the collision mesh: the model's matrix turned by the body's bone
@@ -1549,7 +1561,7 @@ void daBtn_c::func_ov079_02123f34()
     int dist;
     int i;
     s16 angle;
-    BtnVec v;
+    Vector3 v;
 
     mTargetAngle = mPrevAngleY;
     minAngle = mPrevAngleY;
@@ -1557,10 +1569,10 @@ void daBtn_c::func_ov079_02123f34()
     minDist = 0x7fffffff;
     for (i = 0; i < 4; i++) {
         Player *player = mPlayers[i];
-        BtnVec* p;
+        const Vector3 *p;
         if (player == 0)
             continue;
-        p = (BtnVec*)&player->mPosX;
+        p = &player->mPos;
         v.x = p->x;
         v.y = p->y;
         v.z = p->z;
@@ -1624,13 +1636,12 @@ extern "C" void func_ov079_02123d4c(int* out, daBtn_c *self){
         } else {
             m = (s16)data_02082214[((unsigned short)self->mAngleX >> 4) * 2] * (s16)0xc8;
         }
-        out[0] = out[0] + (int)(((s64)m * data_02082214[((unsigned short)self->mAngleY >> 4) * 2] + 0x800) >> 12);
+        out[0] = out[0] + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2]);
         d = self->OnAimedAtWithEgg();
         {
-            int* p1 = (int*)(((int)out + 4));
-            int* p2 = (int*)(((int)out + 8));
-            *p1 = *p1 + d;
-            *p2 = *p2 + (int)(((s64)m * data_02082214[((unsigned short)self->mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
+            out[1] += d;
+            out[2] =
+                out[2] + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2 + 1]);
         }
     }
 }
@@ -1654,11 +1665,11 @@ int daBtn_c::func_ov079_02123bcc() {
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
     idx = (u16)(s16)ang >> 4; cosv = data_02082214[idx*2+1];
-    hc = (int)(((s64)dist * cosv + 0x800) >> 12);
+    hc = FX_MUL(dist, cosv);
     if (hc < 0) hc = -hc;
     if (hc <= 0x3c000) {
         sinv = data_02082214[idx*2];
-        hs = (int)(((s64)dist * sinv + 0x800) >> 12);
+        hs = FX_MUL(dist, sinv);
         if (hs < 0) hs = -hs;
         if (hs <= 0xe1000) {
             int vx, vy, vz;
@@ -1732,7 +1743,7 @@ int daBtn_c::func_ov079_02123a8c()
    for resuming. Nothing in the cartridge's relocations calls this. */
 void daBtn_c::func_ov079_02123804(dActor_c *other)
 {
-    BtnVec v;
+    Vector3 v;
     int idx;
     s16 cosv, sinv;
     int ang;
@@ -1792,7 +1803,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             mSavedSubState = mSubState;
         }
         {
-            BtnVec pos;
+            Vector3 pos;
             int* q = &other->mPosX;
             pos.x = q[0];
             pos.y = q[1];

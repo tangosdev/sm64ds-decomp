@@ -87,14 +87,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov052_02112680",
+      "symbol": "gEmmLogModelFile",
       "address": "0x02112680",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1507; Model::LoadFile reaches it through data_ov052_021124d4.model"
     },
     {
-      "symbol": "data_ov052_02112688",
+      "symbol": "gEmmLogCollisionFile",
       "address": "0x02112688",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -569,7 +569,7 @@
       "source": "0x02111bb0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov052_02112680",
+      "symbol": "gEmmLogModelFile",
       "addend": 0,
       "target_module": "ov052",
       "target_address": "0x02112680"
@@ -599,7 +599,7 @@
       "source": "0x02111bc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov052_02112688",
+      "symbol": "gEmmLogCollisionFile",
       "addend": 0,
       "target_module": "ov052",
       "target_address": "0x02112688"

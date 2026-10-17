@@ -4,13 +4,12 @@
 #include "types.h"
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN7daIbl_cD1Ev` destroys each member, and
+ * the class's own destructor `_ZN7daIbl_cD1Ev` destroys its nontrivial members, and
  * `daIbl_c_classInit` constructs the same types at the same offsets before
  * storing `_ZTV7daIbl_c`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
- * The members close on each other, which is what makes the layout a
- * reading rather than a guess:
+ * The following constructor/destructor calls witness these member layouts:
  *
  *     0x110 dBgCh_Actr               0x1bc   -> 0x2cc
  *     0x2cc Model                      0x50    -> 0x31c
@@ -18,14 +17,20 @@
  *     0x374 dCcAc_c         0x34    -> 0x3a8
  *     0x3f4 PathPtr                    0x8     -> 0x3fc
  *
- * THE FIFTH MEMBER HAS NO DESTRUCTOR, so only the factory witnesses it:
+ * PathPtr has no destructor, so only the factory witnesses that member:
  * daIbl_c_classInit constructs a PathPtr at 0x3f4 that the destructor
  * never destroys, PathPtr's being trivial. 0x3f4 + 8 is 0x3fc, exactly the
  * allocation literal -- the layout does not close without it. Reading only
  * the destructor leaves the class eight bytes short.
  *
+ * The draw-scale group at 0x3ac is separately inferred from the three scalar
+ * stores and the pointer passed to Model::Render. Its Vector3 type and name
+ * are reconstruction choices, not original spelling proved by RTTI. The empty
+ * Vector3 constructor/destructor adds real subobject lifetimes; unchanged
+ * emitted lifecycle code is checked separately from that source distinction.
+ *
  * Every function of the class reproduces, in one translation unit:
- * src/actors/daIbl_c.cpp is the whole linker unit 0x02141f04..0x021431c4,
+ * src/game/actors/d_a_ibl.cpp is the whole linker unit 0x02141f04..0x021431c4,
  * factory included.
  *
  * SIZE IS THE ROM'S OWN: `daIbl_c_classInit` calls
@@ -86,14 +91,11 @@ struct daIbl_c : dEnemyBase_c {
        slot back through mLiveBalls. InitResources zeroes it, so a spawner's own
        word stays 0. */
     daIbl_c                     *mDispenser;            /* 0x3a8 */
-    /* The scale Render hands to the model: it passes &mDrawScaleX as the scale
-       argument, where the rest of this family passes dActor_c's own &mScaleX.
-       InitResources writes 0x1000 (1.0) to all three, or 0x800 (0.5) in the one
-       level that uses the small ball. func_ov100_02142264 reads mDrawScaleX only,
-       for the shadow's size and offset. */
-    s32                          mDrawScaleX;           /* 0x3ac */
-    s32                          mDrawScaleY;           /* 0x3b0 */
-    s32                          mDrawScaleZ;           /* 0x3b4 */
+    /* Inferred draw-scale vector: Render passes this actual object to Model.
+       InitResources writes 0x1000 (1.0) or 0x800 (0.5) component by component
+       for drawn variants; the empty default constructor does not initialize it.
+       func_ov100_02142264 reads x for the shadow's size and offset. */
+    Vector3                      mDrawScale;            /* 0x3ac..0x3b7 */
     u8  pad_3b8[0x2];
     /* The heading from the ball to mNextNodePos: func_ov100_0214233c stores
        atan2(node.x - pos.x, node.z - pos.z) here on every call, the path

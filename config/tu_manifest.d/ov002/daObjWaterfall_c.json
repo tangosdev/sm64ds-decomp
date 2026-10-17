@@ -326,7 +326,7 @@
     },
     "moduleFidelityPassed": false,
     "symbolCheckNewVsBaseline": [],
-    "blocker": "fresh-main candidate and baseline scratch compilation both stop before candidate substitution on the same pre-existing unlicensed multi-symbol output in ActorBase_SceneNode.cpp and daObjPathLift_c.cpp; ordinary production rombuild independently passes 11087/11087 and 106/106",
+    "blocker": "fresh-main candidate and baseline scratch compilation both stop before candidate substitution on the same pre-existing unlicensed multi-symbol output in ActorBase_SceneNode.cpp and d_a_obj_path_lift.cpp; ordinary production rombuild independently passes 11087/11087 and 106/106",
     "rom": {
       "bytes": 0,
       "sha256": null,

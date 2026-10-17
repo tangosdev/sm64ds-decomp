@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "task_id": "dcc-notify1013",
+  "base_commit": "1d76f967993874f77af8de4d744e138eb3084cec",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3791",
+  "change": "Convert both collider notifier helpers to C++ with C linkage, use dActor_c::FindWithID and inherited actorID, and remove the local actor shadow and redundant declaration. Correct obsolete manifest prose without changing any production policy.",
+  "completion": "partial",
+  "source_sha256": "b10439581ecf9904ebb14dcd7f76007fb0ee76362f8893ef2e0327418669715b",
+  "constructs_tested": 7,
+  "bounded_experiment": "Four integer predicate forms reproduce the whole raw ELF. Tested bool and direct-guard forms emit 60 bytes rather than 72. This is not a compiler floor.",
+  "receiver": "Process passes dCc_c collider nodes. The existing Player notifier Arg view remains for hit flags and virtual GetPos; no unproved Player interface is introduced.",
+  "whole_object": {
+    "raw_identical": true,
+    "prepared_identical": true,
+    "raw_sha256": "b99117a284b0c095ff5413a258369ee20ea0e55278e358671b9ca3d358903de9",
+    "prepared_sha256": "03783d5c86e7d90612ffe250a4d72150f3ff7bb283a6a9d7e99d8974f58ca31f",
+    "strict_functions": 11,
+    "blind": 0,
+    "raw_typed_relocations": 28,
+    "prepared_typed_relocations": 22,
+    "metadata": [
+      {
+        "symbol": "_ZTS5dCc_c",
+        "address": "0x208e658",
+        "size": 7,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI5dCc_c",
+        "address": "0x208e660",
+        "size": 8,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTV5dCc_c",
+        "address": "0x208e6e4",
+        "size": 24,
+        "exact": true,
+        "blind": 0
+      }
+    ],
+    "metadata_bytes": 39,
+    "owned_init_data_bss": 0,
+    "production": "Normal text-only compiler_only_policies and _isolate, not intact-object preparation."
+  },
+  "remaining": [
+    {
+      "id": "dcc-notifier-arg-view",
+      "owner_task": "dcc-notify1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3791",
+      "description": "Existing Player notifier Arg scaffold and Process raw hitFlags accesses remain."
+    },
+    {
+      "id": "dcc-init-canonical-name",
+      "owner_task": "dcc-notify1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3791",
+      "description": "Fix12i is scalar. A native method emits the exact 24 retail bytes with symbol InitEiijj, differing from the enrolled InitE5Fix12IiES1_jj. Coherent symbol and caller migration remains; the previous 6az explanation was inapplicable."
+    }
+  ],
+  "tests": {
+    "port_references": 267,
+    "language_mode": "PASS root committed baseline",
+    "declaration_agreement": "PASS no new disagreements or header redeclarations",
+    "manifest": "Only notes[1] and notes[3] changed; all function, section, policy and verification keys remain unchanged."
+  },
+  "full_production": {
+    "command": "python tools/rombuild.py -j16 --no-rom",
+    "exit_code": 0,
+    "modules_exact": 106,
+    "modules_total": 106,
+    "functions_reproducing": 11332,
+    "functions_mismatching": 0,
+    "data_claims_reproducing": 331,
+    "bss_claims": 239,
+    "binding": "Terminal full-ROM and scoped/static checks ran at production_checkpoint on current main. This descendant changes the report only; code, headers, production config, tools and port trees are identical.",
+    "baseline_limits": "Baseline dsd symbol check reports pre-existing errors; zero new errors. Aggregate ROM-data inventory retains one differing unenrolled record."
+  },
+  "private_artifacts": [
+    "build/dcc-scout1013/whole-proof.json",
+    "build/dcc-scout1013/complete-graphs.json",
+    "build/dcc-scout1013/native-init-probe.json",
+    "build/dcc-notify1013/full-rom.log",
+    "build/final-static1013/results.json"
+  ],
+  "publication": "Independent exact-commit Source review follows; no merge.",
+  "initial_control_base": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "production_checkpoint": "6d8316e239fdd29da5c13b3f5ef791b3fd0c71df",
+  "current_main_validation": {
+    "tested_commit": "6d8316e239fdd29da5c13b3f5ef791b3fd0c71df",
+    "tested_base": "1d76f967993874f77af8de4d744e138eb3084cec",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\dcc-notify1013\\current-main-full_rom.log"
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\dcc-notify1013\\current-main-range.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\dcc-notify1013\\current-main-port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\dcc-notify1013\\current-main-langmode.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\dcc-notify1013\\current-main-decl.log"
+      }
+    }
+  }
+}

@@ -1,4 +1,14 @@
 //cpp
+/* Move a point toward another, in 3D and on the horizontal plane.
+ *
+ * leftovers:
+ * - Vec3, Vector3, V3 and Vec3_Fix12 are the same three ints. Vec3_Sub,
+ *   LenVec3 and SubVec3 take Vec3; Vec3_HorzLen takes Vector3; Vec3_Equal
+ *   takes V3; Vec3_MulScalar takes Vec3_Fix12. One struct makes those
+ *   calls disagree with the declarations they already have.
+ * - The divide stays _ZN4cstd4fdivEii. decl_common.h spells cstd_fdiv, which
+ *   is a different linker symbol.
+ */
 struct Vec3 { int x, y, z; };
 struct Vector3 { int x, y, z; };
 struct V3 { int x, y, z; };

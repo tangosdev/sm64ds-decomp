@@ -1,8 +1,8 @@
 {
   "id": "arm9/dBgW_KcMbg",
   "module": "arm9",
-  "source": "src/engine/collision/dBgW_KcMbg.cpp",
-  "promoted_source": "src/engine/collision/dBgW_KcMbg.cpp",
+  "source": "src/engine/collision/d_bg_w_kc_mbg.cpp",
+  "promoted_source": "src/engine/collision/d_bg_w_kc_mbg.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -174,7 +174,7 @@
     "Cartridge RTTI names the class dBgW_KcMbg (_ZTS10dBgW_KcMbg at arm9 0x0209941c, _ZTI at 0x02099410, vtable address point 0x02099434). The licensed run is .text 0x020398fc..0x0203a4dc (21 functions): the enable setter, the three trivial accessors, the DetectClsn overloads, the four matrix transform helpers, the triangle/normal readers, Transform, the Virtual08 stub, SetFile and the five lifecycle variants -- one TU the way the original engine file was almost certainly shaped.",
     "Deferred codegen emits D2,D0,D1 for the destructor and C1,C2 for the constructor in that fixed order, and plain members in reverse source order, so the promoted file defines ctor and dtor first and then walks the ROM run backwards. All five lifecycle variants are cartridge-retained here: derived class dBgW_KcMbgSclY constructs through C2/D2.",
     "func_020398fc and the four func_0203* transform helpers keep their func_ names. They are free workers called by raw address -- func_020398fc by actor TUs (Eyerok's mMeshCollider2), the helpers only inside this collider family -- not vtable slots, so there is no honest member name to give them.",
-    "SetFile and func_02039db8 parse under #pragma cplusplus off: only the C front end emits the 0x30-byte struct block move their Matrix4x3 copies need. Inside the region `struct dBgW_KcMbg` still resolves to the class's real members, so the C bodies read the same named fields the C++ members do.",
+    "SetFile and func_02039db8 now compile as C++ with C linkage. Existing RawMatrix4x3 copies retain the retail block moves; SetFile names its two matrices and up vector in a local aggregate. It retains the scalar free entry for the shared Fix12<int>-by-value signature pending native ABI reconstruction. The qualified dBgW_Kc::SetFile call uses the existing header declaration.",
     "#pragma opt_common_subs off wraps DetectClsn(dBgCh_SphCrr&) and nothing else: the six FMULs against `scale` are deliberately not CSE'd, and the pragma is restored before DetectClsn(dBgCh_Lin&) which was compiled without it."
   ],
   "compiler_only_output": [

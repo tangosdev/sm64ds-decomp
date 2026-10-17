@@ -1,0 +1,28 @@
+# Pinned executable: tools/requirements-style.txt. Preserve source token order.
+BasedOnStyle: LLVM
+Standard: Cpp03
+IndentWidth: 4
+AccessModifierOffset: -4
+ContinuationIndentWidth: 4
+UseTab: Never
+ColumnLimit: 100
+BreakBeforeBraces: Attach
+PointerAlignment: Right
+DerivePointerAlignment: false
+SortIncludes: Never
+IncludeBlocks: Preserve
+SortUsingDeclarations: Never
+ReflowComments: false
+FixNamespaceComments: false
+InsertBraces: false
+RemoveBracesLLVM: false
+RemoveParentheses: Leave
+RemoveSemicolon: false
+QualifierAlignment: Leave
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+# Macro spelling and literal boundaries can affect mwccarm output.
+SkipMacroDefinitionBody: true
+BreakStringLiterals: false

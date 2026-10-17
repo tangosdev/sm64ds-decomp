@@ -21,13 +21,12 @@
  * - Vec3_Sub / Vec3_HorzLen / LenVec3 / ApproachLinear: no shared header
  *   this TU can take without a campaign.
  * - data_02082214 sine table stays an extern s16[].
- * - &mPosX is a Vector3 pun for Vec3_Sub (same dActor_c campaign as the
- *   upper half).
  */
 
 #pragma defer_codegen off
 #include "daSBird_c.h"
 #include "common.h"
+#include "nitro/fx/fx.h"
 
 bool ApproachLinear(short &value, short target, short step);
 
@@ -70,7 +69,7 @@ void daSBird_c::func_ov009_02111234()
     Vector3 diff;
     if (mIsLeader) {
         Vector3 d1;
-        Vec3_Sub(&d1, &mTargetPos, (Vector3 *)&mPosX);
+        Vec3_Sub(&d1, &mTargetPos, &mPos);
         diff.x = d1.x;
         diff.y = d1.y;
         diff.z = d1.z;
@@ -79,7 +78,7 @@ void daSBird_c::func_ov009_02111234()
         mTargetYaw = _ZN4cstd5atan2E5Fix12IiES1_(diff.z, diff.x);
     } else {
         Vector3 d2;
-        Vec3_Sub(&d2, (Vector3 *)&f->mPosX, (Vector3 *)&mPosX);
+        Vec3_Sub(&d2, &f->mPos, &mPos);
         diff.x = d2.x;
         diff.y = d2.y;
         diff.z = d2.z;
@@ -105,12 +104,12 @@ void daSBird_c::func_ov009_02111234()
         u16 a = *(u16 *)&mPrevAngleX;
         s32 t = mFlySpeed;
         s16 s = data_02082214[((a >> 4) << 1) + 1];
-        mHorzSpeed = (s32)(((s64)t * s + 0x800) >> 12);
+        mHorzSpeed = FX_MUL(t, s);
     }
     {
         u16 a = *(u16 *)&mPrevAngleX;
         s32 t = mFlySpeed;
         s16 s = data_02082214[(a >> 4) << 1];
-        mVertSpeed = (s32)(((s64)t * s + 0x800) >> 12);
+        mVertSpeed = FX_MUL(t, s);
     }
 }

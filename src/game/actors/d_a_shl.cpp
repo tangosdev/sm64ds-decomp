@@ -587,8 +587,8 @@ void daShl_c::func_ov102_0214c84c()
                 if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
                     mSoundHandle = 0;
                 mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
-                mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                    mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
+                mSoundHandle =
+                    _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
                 return;
             }
             if (func_02037e38((unsigned int *)&ground.surface) == 1)
@@ -604,8 +604,8 @@ void daShl_c::func_ov102_0214c84c()
                     if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
                         mSoundHandle = 0;
                     mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
-                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                        mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
+                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID,
+                                                                     mCamSpacePos, 0);
                 }
                 else
                 {
@@ -618,16 +618,16 @@ void daShl_c::func_ov102_0214c84c()
                     if (mSoundID != 0x102)
                         mSoundHandle = 0;
                     mSoundID = 0x102;
-                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                        mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
+                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID,
+                                                                     mCamSpacePos, 0);
                 }
                 return;
             }
             if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
                 mSoundHandle = 0;
             mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
-            mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
+            mSoundHandle =
+                _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
         }
         else
         {

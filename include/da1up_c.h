@@ -54,7 +54,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
    InitResources and indexes the 14-element dispatch array Behavior calls. The
    enumerators name what each dispatched handler DOES, not what the original
    source called it -- no original name survives in the image. Each is spelled
-   out at its handler in src/actors/da1up_c.cpp.
+   out at its handler in src/game/actors/d_a_1up.cpp.
    Groups the code makes visible:
      5 / 7      stay hidden until mUnlockCount reaches 0, then pop out;
      6 / 8      invisible and stationary (mShown stays 0); touching them

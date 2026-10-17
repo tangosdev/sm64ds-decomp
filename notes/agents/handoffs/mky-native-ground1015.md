@@ -1,0 +1,24 @@
+# Monkey native ground-query continuation
+
+This candidate continues issue2410 on exact PR3905 input c039f325547d3636acce5b6e91ad556f48713d6f. It recovers the genuine dBgCh_Gnd::DetectClsnSlot0 member at arm9:0x02038ea4, size0xa0, and Monkey uses its real ground-query local. The name is inferred from reset/filter/single collider-table slot-zero tests, not a recovered ROM identifier. The algorithm, helper boundaries, virtual call, hit-record base and call order are preserved. The new nonvirtual declaration is last; no layout, vtable order, source order or header include order changes.
+
+Two local camera-pointer declarations now name dCamera_c and two existing casts are removed. Identity evidence is the Spawn(0x14c) assignment, CAMERA profile/factory/RTTI and existing Tree usage; no definition in d_camera.cpp is claimed. No shared header exports this global.
+
+Original function authors, ROM address/extent, production enrollment, legacy_source history and declaration baseline are unchanged. Only the measured unreferenced four-byte Monkey Bundle destructor changes963 to962; its previous admission reason remains an exact prefix before new evidence. The sphere-lifecycle manifest's exclusion note now names the production query owner truthfully.
+
+Private preview: both changed TUs pass105 strict checks on each side; other68 header consumers compile to literal equal whole raw ELF objects. Combined camera typing is literally equal to the query-only Monkey candidate. The only complete-object name mappings are the one canonical query rename and measured Bundle963-to962. Explicit c039 bridge covers494 identical headers and69 identical source blobs; the changed Eykn consumer is freshly equal on both sides. This is producer feasibility, not independent acceptance. Actual canonical production/static/full-ROM gates now pass as recorded below; exact-head independent Source and private CI remain separate.
+
+The task inherits50 findings from the accepted Monkey/Clipper continuation and corrected collision-native-bases-current-main1014 task, preserving its two fixed provenance dispositions and six deferred collision gaps. Existing query integer/POD position views, stored-callback contracts, raw helpers/RecordHit boundary, shared matrix and Actor alias views, other scalar APIs, asset lifecycles and global/initializer reconstruction remain partial. This slice does not close issue2410 or collision issue3854, advance2412, accept another producer's grouped Actor work, or authorize a merge.
+
+
+## Production proof
+
+Source freeze is9855c800e96e616a54b39f5cbfd7d9f7557244be; only these two evidence notes change afterward. Actual production compilation uses ordinary text-only policy for both TUs, not intact preparation. Query58 plus Monkey47 checks (including existing canonical Vector3 destructor duplicates) all return VERIFIED, blind0 and diffs[]. Both raw objects literally equal the measured preview after pinned changed-line formatting. The preliminary report was measured on candidate working files before commit and records c039 as the then-HEAD; the clean freeze bridge separately confirms all3271 source/header inputs are byte-unchanged at9855. Do not cite c039 as the candidate commit.
+
+All70 header consumers compile. The other68 have literal complete raw ELF equality against fresh controls using a complete private include tree, replacing only dBgCh_Gnd.h with the exact c039 base blob. Astra independently rebuilt both changed TUs/control (105strict per side) and all68 other pairs, audited all2601 generic tuples and3271 input bindings, and found no new blocker. Full ROM is producer-run; formal verification must audit its receipt and frozen inputs. No independent full-ROM rerun is claimed.
+
+Full ROM at9855 passes106/106 modules,11334/11334 functions,337/337 source-owned data claims,244 BSS claims/31044 NOBITS bytes,4395 stable tracked build inputs, no new symbol errors and no storage-alias errors. Report SHA2566402f9bb5b767841f2c659bdea202dfd4bd2d388e0dd98d0a263f1ce631a2c23.
+
+Header-expanded official verification covers70files and2601functions:2557VERIFIED plus44BLIND warnings, zero blocking failures. All44 warning files have independently confirmed literal unchanged whole objects; warnings are not counted as verified. Declaration agreement adds no disagreement or local header copy. Changed-source style is3files/0findings/0deferrals. Rename ledger3728live rows, port255references and dead-reference checks pass. Broader advisory metadata974verified/1552partial/1known difference/15unnamed remains distinct from exact owned-data acceptance. Companion experiment JSON records full report hashes and limits.
+
+The accepted queue will bind formal Source to this final immutable commit and exact c039 base, retaining all50 findings. No terminal private CI or merge acceptance is claimed by this handoff.

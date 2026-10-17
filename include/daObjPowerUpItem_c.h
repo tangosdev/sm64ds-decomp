@@ -50,26 +50,26 @@ struct daObjPowerUpItem_c : dActor_c {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks. */
     Model mCloseModel;            /* 0x0d4 -- SetFile'd from gPFlowerCloseModelFile */
     /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x124. [_ZN18daObjPowerUpItem_cD0Ev, now in src/actors/daObjPowerUpItem_c.cpp] */
+       Model's D1 at +0x124. [_ZN18daObjPowerUpItem_cD0Ev, now in src/game/actors/d_a_obj_power_up_item.cpp] */
     Model mOpenModel;            /* 0x124 -- SetFile'd from gPFlowerOpenModelFile */
     /* dExtShadowModel_c member, named by daObjPowerUpItem_c_classInit's own C1 call and the
        class's own destructor's D1 call at +0x174.
-       [daObjPowerUpItem_c_classInit, _ZN18daObjPowerUpItem_cD0Ev, now in src/actors/daObjPowerUpItem_c.cpp] */
+       [daObjPowerUpItem_c_classInit, _ZN18daObjPowerUpItem_cD0Ev, now in src/game/actors/d_a_obj_power_up_item.cpp] */
     dExtShadowModel_c mShadowModel;            /* 0x174 */
     Matrix4x3 mShadowMat;            /* 0x19c -- the open model's matrix, with Y set from mGroundY */
     /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x1cc. [_ZN18daObjPowerUpItem_cD0Ev, now in src/actors/daObjPowerUpItem_c.cpp] */
+       dCcAc_c's D1 at +0x1cc. [_ZN18daObjPowerUpItem_cD0Ev, now in src/game/actors/d_a_obj_power_up_item.cpp] */
     dCcAc_c mdCcAc_c;            /* 0x1cc */
     /* dBgCh_Actr member, named by the class's own destructor calling
-       dBgCh_Actr's D1 at +0x200. [_ZN18daObjPowerUpItem_cD0Ev, now in src/actors/daObjPowerUpItem_c.cpp] */
+       dBgCh_Actr's D1 at +0x200. [_ZN18daObjPowerUpItem_cD0Ev, now in src/game/actors/d_a_obj_power_up_item.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x200 */
     /* The ground height under the flower: InitResources raycasts a dBgCh_Gnd
        from (mPos with Y + 0x14000) and stores the hit height (+0x44 of the
        ground object), falling back to that probe Y when nothing is hit.
-       [_ZN18daObjPowerUpItem_c13InitResourcesEv, now in src/actors/daObjPowerUpItem_c.cpp] */
+       [_ZN18daObjPowerUpItem_c13InitResourcesEv, now in src/game/actors/d_a_obj_power_up_item.cpp] */
     s32 mGroundY;            /* 0x3bc */
     /* Render switches on it to pick which model to draw: 0 -> mCloseModel,
-       1 and 2 -> mOpenModel. [_ZN18daObjPowerUpItem_c6RenderEv, now in src/actors/daObjPowerUpItem_c.cpp] */
+       1 and 2 -> mOpenModel. [_ZN18daObjPowerUpItem_c6RenderEv, now in src/game/actors/d_a_obj_power_up_item.cpp] */
     s32 mState;            /* 0x3c0 */
     /* Particle effect handle: passed back into Particle::System::New as its
        first argument each frame, cleared to 0 when a state ends. */
@@ -80,7 +80,7 @@ struct daObjPowerUpItem_c : dActor_c {
     /* Seeded 0xb4 (180 frames, three seconds) in InitResources. Render skips
        drawing on odd values once it is below 0x2d, so the flower blinks through
        its last 45 frames -- the standard "about to disappear" tell.
-       [_ZN18daObjPowerUpItem_c13InitResourcesEv, _ZN18daObjPowerUpItem_c6RenderEv, now in src/actors/daObjPowerUpItem_c.cpp] */
+       [_ZN18daObjPowerUpItem_c13InitResourcesEv, _ZN18daObjPowerUpItem_c6RenderEv, now in src/game/actors/d_a_obj_power_up_item.cpp] */
     u8  mLifeTimer;            /* 0x3ca */
     /* Set to 0x1b when the pop starts; StateOpening counts it down. */
     u8  mWobbleTimer;            /* 0x3cb */

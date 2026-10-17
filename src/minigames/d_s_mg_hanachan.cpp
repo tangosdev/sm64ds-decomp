@@ -1,7 +1,7 @@
 //cpp
 /* Which Wiggler (MG_HANACHAN): the scene factory and the constructor for
  * the five 8-byte entries inside each of its fifteen 0x98-byte elements.
- * The scene's own methods are in src/actors/dScMgHanachan_c.cpp.
+ * The scene's own methods are in src/minigames/d_s_mg_hanachan_methods.cpp.
  *
  * leftovers:
  *   - dScMgHanachan_c has no constructor declared, so the factory builds
@@ -25,8 +25,8 @@ extern void NullDestructor_0203d47c(void);
 extern void func_0203d738(void);
 }
 
-// @symbol func_ov006_020ede80
-extern "C" void* func_ov006_020ede80(char* elem)
+// @symbol Wiggler_Construct
+extern "C" void* Wiggler_Construct(char* elem)
 {
     __cxa_vec_ctor(elem + 0x18, 5, 8, (void*)func_0203d738, (void*)NullDestructor_0203d47c);
     return elem;
@@ -38,7 +38,7 @@ extern "C" void *dScMgHanachan_c_classInit(void) {
     if (scene != 0) {
         _ZN11dScMgBase_cC2Ev(scene);
         *(int *)scene = (int)data_ov006_0213cab8;
-        __cxa_vec_ctor(scene + 0x4678, 0xf, 0x98, (void *)func_ov006_020ede80, (void *)func_ov006_020ea324);
+        __cxa_vec_ctor(scene + 0x4678, 0xf, 0x98, (void *)Wiggler_Construct, (void *)Wiggler_Destroy);
     }
     return scene;
 }

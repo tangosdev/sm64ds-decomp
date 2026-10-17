@@ -1,7 +1,7 @@
 /* daEykn_c: Mr. I, the eye that turns to watch a player and shoots at it.
  * Offsets and widths are pinned by the bytes. The names of the fields from
  * 0x1b4 on, and of the non-virtual methods, are coined from how
- * src/actors/daEykn_c.cpp uses them; the ROM records none of them. */
+ * src/game/actors/d_a_eykn.cpp uses them; the ROM records none of them. */
 #ifndef DAEYKN_C_H
 #define DAEYKN_C_H
 #include "types.h"

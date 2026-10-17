@@ -24,11 +24,11 @@
 #include "dBgCh_Actr.h"
 
 struct daWater_Hakidasi_c : dEnemyBase_c {
-    /* What mState points at. Behavior calls the handler at +0x08 through it and
-       nothing else in the tree reads the rest, so only that field is evidenced.
-       daPropeller_Heyho_Fire_c::State (include/daPropeller_Heyho_Fire_c.h) puts
-       its per-frame handler at the same +0x08; there an install helper also
-       calls an int-returning mInit at 0x00, which this file never reads. */
+    /* Behavior calls the handler at +0x08 through this view.
+       func_ov064_0211982c stores the state pointer and invokes the first
+       callback at +0x00 as int-returning through its TU-local PMF view.
+       State models only the +0x08 main callback; the original contracts
+       of the two callbacks remain unresolved. */
     struct State {
         u8  pad_00[0x8];
         void (daWater_Hakidasi_c::*mMain)();   /* 0x08 */
@@ -79,9 +79,9 @@ typedef char daWater_Hakidasi_c_size_must_be_0x378[sizeof(daWater_Hakidasi_c) ==
 
 #else
 
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
+/* Retained legacy flat C view.
+   The current production actor TU uses the C++ class above and defines
+   a real C++ destructor. */
 struct daWater_Hakidasi_c {
     u8  pad_000[0x8];
     u32 param1;            /* 0x008 */

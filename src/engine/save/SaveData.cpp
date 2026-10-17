@@ -1,4 +1,19 @@
 //cpp
+/* leftovers:
+ * - PlayerLoseCap keeps its raw word read-modify-write at byte 4: spelling it
+ *   as `->flags1` through a cast makes mwccarm materialise the field address
+ *   in a register first instead of the ROM's two direct `ldr [r0,#4]` hits.
+ *   The unsigned char cast is what stops the int array from scaling that 4.
+ * - SaveFile and ReadFileData keep their materialised-address forms: the
+ *   `int* p = ...; *p = *p | ...` two-step is what the ROM compiled. Folding
+ *   the offset into the store changes the instruction.
+ * - func_02013c84 stays `extern "C"` under its cartridge name: callers in
+ *   other TUs link it unmangled, and its body forwards to the member SaveFile.
+ * - func_02013e64 likewise: the save-block wipe is a free function, kept C.
+ * - func_0205a588 (SDK byte-fill) and CpuCopy8 (SDK unaligned copy) are asm
+ *   primitives declared `void(void)` at their definitions; the parameterised
+ *   local externs below are how callers spell them, as in every shard.
+ */
 /* arm9/SaveData -- the save-file manager: coin and star records, cannons,
  * character intros, cap-loss flags, file slots and the minigame block,
  * folded at .text 0x02013650..0x02013e80. The span also carries the free
@@ -27,25 +42,6 @@
  * addend 0x44. Byte 0x41 and the active-slot byte at 0x328 are read through
  * an unsigned char view. Where a named member was byte-neutral the source
  * uses it (CanPlayerHaveCap reads mCharacter, HasPlayerLostCap flags1).
- *
- * Still spelled this way:
- * - PlayerLoseCap keeps its raw word read-modify-write at byte 4:
- *   spelling it as `->flags1` through a cast makes mwccarm materialise the
- *   field address in a register first (add r3,r0,#4 / ldr r2,[r3]) instead of
- *   the ROM's two direct `ldr [r0,#4]` hits. The unsigned char cast is what
- *   stops the int array from scaling that 4.
- * - SaveFile and ReadFileData keep their materialised-address forms: the
- *   `int* p = ...; *p = *p | ...` two-step is what the ROM compiled (add then
- *   ldr/orr/str through the register). Folding the offset into the store
- *   changes the instruction -- the shards documented this against
- *   plan-cpp-language-mode.md Phase 6.
- * - func_02013c84 stays `extern "C"` under its cartridge name: callers in
- *   other TUs link it unmangled, and its body is a C-shaped helper that
- *   forwards to the member SaveFile.
- * - func_02013e64 likewise: the save-block wipe is a free function, kept C.
- * - func_0205a588 (SDK byte-fill) and CpuCopy8 (SDK unaligned copy) are asm
- *   primitives declared `void(void)` at their definitions; the parameterised
- *   local externs below are how callers spell them, as in every shard.
  */
 
 #include "SaveData.h"
@@ -74,12 +70,12 @@ extern "C" void func_02013e64(void)
 // @symbol _ZN8SaveData16EraseAllSaveDataEv
 u32 SaveData::EraseAllSaveData()
 {
-    u32 r4;
-    r4 = SaveData::EraseSaveFile(0, (char*)data_0209caa0);
-    r4 |= SaveData::EraseSaveFile(1, (char*)data_0209caa0);
-    r4 |= SaveData::EraseSaveFile(2, (char*)data_0209caa0);
+    u32 rc;
+    rc = SaveData::EraseSaveFile(0, (char*)data_0209caa0);
+    rc |= SaveData::EraseSaveFile(1, (char*)data_0209caa0);
+    rc |= SaveData::EraseSaveFile(2, (char*)data_0209caa0);
     SaveData::SetDefaultValuesMg((MinigameSaveData*)(data_0209caa0 + 0x11));
-    return r4 | SaveData::SaveMinigames((MinigameSaveData*)(data_0209caa0 + 0x11));
+    return rc | SaveData::SaveMinigames((MinigameSaveData*)(data_0209caa0 + 0x11));
 }
 
 // @symbol _ZN8SaveData16SetDefaultValuesEP12FileSaveData
@@ -95,16 +91,16 @@ void SaveData::SetDefaultValues(FileSaveData* fsd_)
 // @symbol _ZN8SaveData12ReadFileDataEjP12FileSaveData
 int SaveData::ReadFileData(u32 fileID, FileSaveData* dest)
 {
-    char* r5 = (char*)dest;
-    s32 result = SaveData::ReadDataFromCart(r5, 0x44, fileID);
+    char* buf = (char*)dest;
+    s32 result = SaveData::ReadDataFromCart(buf, 0x44, fileID);
     if (result) {
-        SaveData::SetDefaultValues((FileSaveData*)r5);
+        SaveData::SetDefaultValues((FileSaveData*)buf);
         if (result == 2)
             return 1;
         return 0;
     }
     {
-        int* p = (int*)(r5 + 0xc);
+        int* p = (int*)(buf + 0xc);
         *p = *p & *(int*)((char*)&data_0209caa0 + 0x48);
     }
     return 1;
@@ -288,15 +284,15 @@ extern "C" int func_020138dc(void)
 }
 
 // @symbol func_02013890
-extern "C" int func_02013890(int r0, int r1)
+extern "C" int func_02013890(int a, int b)
 {
-    if (r1 < 0) {
+    if (b < 0) {
         int f = data_0209caa0[3];
-        int m = 0xf << (r0 * 4);
+        int m = 0xf << (a * 4);
         return (f & m) == m;
     } else {
         int f = data_0209caa0[3];
-        return f & (1 << (r1 | (r0 << 2)));
+        return f & (1 << (b | (a << 2)));
     }
 }
 

@@ -1,3 +1,10 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov085_0212f2a8_AssetId {
+    ASSET_KINOPIO_BMD = 0x035c,
+    ASSET_KINOPIO_WAIT1_BCA = 0x035d,
+    ASSET_KINOPIO_WAIT2_BCA = 0x035e
+};
+
 extern int func_02017acc();
 extern void func_020731dc();
 extern int _ZN13SharedFilePtr9ConstructEj();
@@ -26,11 +33,11 @@ typedef struct {
 extern D data_ov085_0212fe88;
 
 void __sinit_ov085_0212f2a8(void) {
-    func_02017acc(data_ov085_02130480, 0x35c);
+    func_02017acc(data_ov085_02130480, ASSET_KINOPIO_BMD);
     func_020731dc(data_ov085_02130480, func_02017ab4, data_ov085_02130498);
-    _ZN13SharedFilePtr9ConstructEj(data_ov085_02130488, 0x35d);
+    _ZN13SharedFilePtr9ConstructEj(data_ov085_02130488, ASSET_KINOPIO_WAIT1_BCA);
     func_020731dc(data_ov085_02130488, SharedFilePtr_Destruct_Anim, data_ov085_021304a4);
-    _ZN13SharedFilePtr9ConstructEj(data_ov085_02130490, 0x35e);
+    _ZN13SharedFilePtr9ConstructEj(data_ov085_02130490, ASSET_KINOPIO_WAIT2_BCA);
     func_020731dc(data_ov085_02130490, SharedFilePtr_Destruct_Anim, data_ov085_021304b0);
     data_ov085_0212fe88.p0 = data_ov085_0212fe40;
     data_ov085_0212fe88.p1 = data_ov085_0212fe48;

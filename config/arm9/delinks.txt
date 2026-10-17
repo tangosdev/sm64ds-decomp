@@ -43,11 +43,11 @@ src/unnamed/arm9/0200/func_02005110.c:
     .text start:0x02005110 end:0x02005324
 
 
-src/actors/dScBoot_c.cpp:
+src/game/stages/d_s_boot_methods.cpp:
     complete
     .text start:0x02005324 end:0x02005d94
 
-src/actors/dCapEnemy_c_arm9.cpp:
+src/runtime/actor/d_cap_enemy_arm9.cpp:
     complete
     .text start:0x02005d94 end:0x0200651c
 
@@ -411,6 +411,10 @@ src/unnamed/arm9/0200/func_02009e50.c:
     complete
     .text start:0x02009e50 end:0x02009e70
 
+src/unnamed/arm9/0200/func_02009e70.cpp:
+    complete
+    .text start:0x02009e70 end:0x0200af0c
+
 src/unnamed/arm9/0200/func_0200af0c.c:
     complete
     .text start:0x0200af0c end:0x0200af20
@@ -439,7 +443,7 @@ src/unnamed/arm9/0200/func_0200bb28.c:
     complete
     .text start:0x0200bb28 end:0x0200bec4
 
-src/engine/view/dCamera_c.cpp:
+src/engine/view/d_camera.cpp:
     complete
     .text start:0x0200bec4 end:0x0200e494
 
@@ -547,23 +551,11 @@ src/unnamed/arm9/0200/func_0200f46c.c:
     complete
     .text start:0x0200f46c end:0x0200f470
 
-src/_Z13CopyToViewMatPK9Matrix4x3.cpp:
+src/engine/view/Graphics3D.cpp:
     complete
-    .text start:0x0200f470 end:0x0200f4b4
+    .text start:0x0200f470 end:0x0200f658
 
-src/unnamed/arm9/0200/func_0200f4b4.c:
-    complete
-    .text start:0x0200f4b4 end:0x0200f4f4
-
-src/unnamed/arm9/0200/func_0200f4f4.c:
-    complete
-    .text start:0x0200f4f4 end:0x0200f558
-
-src/Initialise3dGraphics.cpp:
-    complete
-    .text start:0x0200f558 end:0x0200f658
-
-src/actors/dActor_c.cpp:
+src/runtime/actor/d_actor.cpp:
     complete
     .text start:0x0200f658 end:0x020112c8
 
@@ -631,7 +623,7 @@ src/engine/save/SaveData.cpp:
     complete
     .text start:0x02013650 end:0x02013e80
 
-src/actors/ActorDerived.cpp:
+src/runtime/actor/ActorDerived.cpp:
     complete
     .text start:0x02013e80 end:0x02013f4c
 
@@ -668,11 +660,11 @@ src/nds_print.c:
     complete
     .text start:0x02014770 end:0x020147bc
 
-src/engine/collision/dCcPos_c.cpp:
+src/engine/collision/d_cc_pos.cpp:
     complete
     .text start:0x020147bc end:0x0201489c
 
-src/engine/collision/dCcAc_c.cpp:
+src/engine/collision/d_cc_ac.cpp:
     complete
     .text start:0x0201489c end:0x02014a34
 
@@ -688,11 +680,11 @@ src/_ZN10dCcAcPos_cC1Ev.cpp:
     complete
     .text start:0x02014a84 end:0x02014aa8
 
-src/engine/collision/dCc_c.cpp:
+src/engine/collision/d_cc.cpp:
     complete
     .text start:0x02014aa8 end:0x020150e8
 
-src/engine/collision/dClipper.cpp:
+src/engine/collision/d_clipper.cpp:
     complete
     .text start:0x020150e8 end:0x0201577c
 
@@ -708,35 +700,15 @@ src/engine/model/TextureSequence.cpp:
     complete
     .text start:0x0201597c end:0x02015a7c
 
-src/engine/animation/dExtFrameCtrl_c.cpp:
+src/engine/animation/d_ext_frame_ctrl.cpp:
     complete
-    .text start:0x02015a7c end:0x02015cb4
+    .text start:0x02015a7c end:0x02015d38
 
-src/_ZN15dExtFrameCtrl_cD2Ev.cpp:
-    complete
-    .text start:0x02015cb4 end:0x02015cc4
-
-src/_ZN15dExtFrameCtrl_cD0Ev.cpp:
-    complete
-    .text start:0x02015cc4 end:0x02015ce8
-
-src/_ZN15dExtFrameCtrl_cD1Ev.cpp:
-    complete
-    .text start:0x02015ce8 end:0x02015cf8
-
-src/_ZN15dExtFrameCtrl_cC1Ev.cpp:
-    complete
-    .text start:0x02015cf8 end:0x02015d18
-
-src/_ZN15dExtFrameCtrl_cC2Ev.cpp:
-    complete
-    .text start:0x02015d18 end:0x02015d38
-
-src/engine/model/dExtShadowModel_c.cpp:
+src/engine/model/d_ext_shadow_model.cpp:
     complete
     .text start:0x02015d38 end:0x0201609c
 
-src/engine/model/dExtCommonModel_c.cpp:
+src/engine/model/d_ext_common_model.cpp:
     complete
     .text start:0x0201609c end:0x02016254
 
@@ -928,122 +900,14 @@ src/_ZThn80_N10ModelAnim2D1Ev.cpp:
     complete
     .text start:0x020171b8 end:0x020171c8
 
-src/engine/fader/dFader_c.cpp:
+src/runtime/graphics/fader/d_fader.cpp:
     complete
     .text start:0x020171c8 end:0x0201787c
     .data start:0x0208ea50 end:0x0208eb54
 
-src/unnamed/arm9/0201/func_0201787c.c:
+src/SharedFilePtr.cpp:
     complete
-    .text start:0x0201787c end:0x020178b4
-
-src/unnamed/arm9/0201/func_020178b4.c:
-    complete
-    .text start:0x020178b4 end:0x020178cc
-
-src/unnamed/arm9/0201/func_020178cc.c:
-    complete
-    .text start:0x020178cc end:0x020178e4
-
-src/_ZN15TextureSequence8LoadFileER13SharedFilePtr.cpp:
-    complete
-    .text start:0x020178e4 end:0x0201791c
-
-src/SharedFilePtr_Destruct_TexSeq.c:
-    complete
-    .text start:0x0201791c end:0x02017934
-
-src/SharedFilePtr_Construct_TexSeq.c:
-    complete
-    .text start:0x02017934 end:0x0201794c
-
-src/_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr.cpp:
-    complete
-    .text start:0x0201794c end:0x02017984
-
-src/SharedFilePtr_Destruct_Anim.c:
-    complete
-    .text start:0x02017984 end:0x0201799c
-
-src/_ZN13SharedFilePtr9ConstructEj.cpp:
-    complete
-    .text start:0x0201799c end:0x020179b4
-
-src/unnamed/arm9/0201/func_020179b4.c:
-    complete
-    .text start:0x020179b4 end:0x02017a0c
-
-src/unnamed/arm9/0201/func_02017a0c.c:
-    complete
-    .text start:0x02017a0c end:0x02017a24
-
-src/unnamed/arm9/0201/func_02017a24.c:
-    complete
-    .text start:0x02017a24 end:0x02017a3c
-
-src/_ZN5Model8LoadFileER13SharedFilePtr.cpp:
-    complete
-    .text start:0x02017a3c end:0x02017a8c
-
-src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp:
-    complete
-    .text start:0x02017a8c end:0x02017a9c
-
-src/unnamed/arm9/0201/func_02017a9c.c:
-    complete
-    .text start:0x02017a9c end:0x02017ab4
-
-src/unnamed/arm9/0201/func_02017ab4.c:
-    complete
-    .text start:0x02017ab4 end:0x02017acc
-
-src/unnamed/arm9/0201/func_02017acc.c:
-    complete
-    .text start:0x02017acc end:0x02017ae4
-
-src/unnamed/arm9/0201/func_02017ae4.c:
-    complete
-    .text start:0x02017ae4 end:0x02017afc
-
-src/_ZN7dBgW_Kc8LoadFileER13SharedFilePtr.cpp:
-    complete
-    .text start:0x02017afc end:0x02017b34
-
-src/SharedFilePtr_Destruct_Clsn.c:
-    complete
-    .text start:0x02017b34 end:0x02017b4c
-
-src/unnamed/arm9/0201/func_02017b4c.c:
-    complete
-    .text start:0x02017b4c end:0x02017b64
-
-src/_ZN13SharedFilePtr7ReleaseEv.cpp:
-    complete
-    .text start:0x02017b64 end:0x02017bc4
-
-src/_ZN13SharedFilePtr8LoadFileEv.cpp:
-    complete
-    .text start:0x02017bc4 end:0x02017c24
-
-src/func_02017c24.c:
-    complete
-    .text start:0x02017c24 end:0x02017c54
-
-src/_ZN13SharedFilePtr4LoadEv.cpp:
-    complete
-    .text start:0x02017c54 end:0x02017e0c
-
-src/func_02017e0c.c:
-    complete
-    .text start:0x02017e0c end:0x02017e34
-
-src/unnamed/arm9/0201/func_02017e34.c:
-    complete
-    .text start:0x02017e34 end:0x02017e48
-
-src/unnamed/arm9/0201/func_02017e48.c:
-    complete
-    .text start:0x02017e48 end:0x02017e60
+    .text start:0x0201787c end:0x02017e60
 
 src/unnamed/arm9/0201/func_02017e60.c:
     complete
@@ -1225,7 +1089,7 @@ src/unnamed/arm9/0201/func_02018e68.c:
     complete
     .text start:0x02018e68 end:0x02018ea0
 
-src/engine/graph/dGraph_c_callback_c.cpp:
+src/engine/graph/d_graph_c_callback.cpp:
     complete
     .text start:0x02018ea0 end:0x02018ec0
 
@@ -1515,61 +1379,21 @@ src/unnamed/arm9/0201/func_0201aaec.c:
 
 src/Message2.cpp:
     complete
-    .text start:0x0201ab04 end:0x0201adfc
+    .text start:0x0201ab04 end:0x0201cb2c
 
-src/unnamed/arm9/0201/func_0201adfc.c:
-    complete
-    .text start:0x0201adfc end:0x0201b100
-
-src/unnamed/arm9/0201/func_0201b100.c:
-    complete
-    .text start:0x0201b100 end:0x0201b388
-
-src/unnamed/arm9/0201/func_0201b388.c:
-    complete
-    .text start:0x0201b388 end:0x0201b5a8
-
-src/_ZN7Message7AddCharEc.cpp:
-    complete
-    .text start:0x0201b5a8 end:0x0201b6f8
-
-src/unnamed/arm9/0201/func_0201b6f8.c:
-    complete
-    .text start:0x0201b6f8 end:0x0201b7cc
-
-src/unnamed/arm9/0201/func_0201b7cc.c:
-    complete
-    .text start:0x0201b7cc end:0x0201bbc8
-
-src/_ZN7Message12UpdateWindowEv.cpp:
-    complete
-    .text start:0x0201bbc8 end:0x0201c0b8
-
-src/_ZN7Message6UpdateEv.cpp:
-    complete
-    .text start:0x0201c0b8 end:0x0201cb2c
-
-src/engine/message/func_0201cb2c.c:
+src/ui/messages/func_0201cb2c.c:
     complete
     .text start:0x0201cb2c end:0x0201cb7c
 
-src/_ZN10dScStage_c13UpdateMessageEv.cpp:
-    complete
-    .text start:0x0201cb7c end:0x0201cd08
-
-src/unnamed/arm9/0201/func_0201cd08.cpp:
-    complete
-    .text start:0x0201cd08 end:0x0201ce10
-
 src/Message.cpp:
     complete
-    .text start:0x0201ce10 end:0x0201fcd4
+    .text start:0x0201cb7c end:0x0201fcd4
 
 src/LoadFont.cpp:
     complete
     .text start:0x0201fcd4 end:0x0201fe08
 
-src/engine/message/func_0201fe08.c:
+src/ui/messages/func_0201fe08.c:
     complete
     .text start:0x0201fe08 end:0x0201fec8
 
@@ -1689,7 +1513,7 @@ src/engine/particle/Particle_SysTracker_Contents.cpp:
     complete
     .text start:0x02021a04 end:0x02021e40
 
-src/engine/particle/dPa_c.cpp:
+src/engine/particle/d_pa.cpp:
     complete
     .text start:0x02021e40 end:0x020226d4
 
@@ -1729,448 +1553,28 @@ src/unnamed/arm9/0202/func_02023544.c:
     complete
     .text start:0x02023544 end:0x02023598
 
-src/d_s_boot.cpp:
+src/game/stages/d_s_boot.cpp:
     complete
     .text start:0x02023598 end:0x02023688
 
-src/actors/dScStage_c.cpp:
+src/game/stages/d_s_stage_methods.cpp:
     complete
-    .text start:0x02023688 end:0x02029408
-
-src/unnamed/arm9/0202/func_02029408.cpp:
-    complete
-    .text start:0x02029408 end:0x0202942c
-
-src/_ZN10dScStage_c7PS_InitEv.cpp:
-    complete
-    .text start:0x0202942c end:0x02029600
-
-src/unnamed/arm9/0202/func_02029600.c:
-    complete
-    .text start:0x02029600 end:0x02029654
-
-src/IsButtonInputValid.c:
-    complete
-    .text start:0x02029654 end:0x020297f4
-
-src/_ZN10dScStage_c14GraphCallback2Ev.cpp:
-    complete
-    .text start:0x020297f4 end:0x02029838
-
-src/_ZN10dScStage_c14GraphCallback1Ev.cpp:
-    complete
-    .text start:0x02029838 end:0x02029854
-
-src/UpdateMinimap.c:
-    complete
-    .text start:0x02029854 end:0x020298a0
-
-src/engine/fader/StartEntranceFaderWipe.cpp:
-    complete
-    .text start:0x020298a0 end:0x020298d8
-
-src/StartExitCharacterWipe.c:
-    complete
-    .text start:0x020298d8 end:0x020298fc
-
-src/engine/fader/StartExitFaderWipe.cpp:
-    complete
-    .text start:0x020298fc end:0x02029934
-
-src/unnamed/arm9/0202/FUN_02029934.cpp:
-    complete
-    .text start:0x02029934 end:0x02029980
-
-src/unnamed/arm9/0202/FUN_02029980.cpp:
-    complete
-    .text start:0x02029980 end:0x020299f4
-
-src/unnamed/arm9/0202/FUN_020299f4.cpp:
-    complete
-    .text start:0x020299f4 end:0x02029a68
-
-src/unnamed/arm9/0202/FUN_02029a68.c:
-    complete
-    .text start:0x02029a68 end:0x02029ab0
-
-src/unnamed/arm9/0202/FUN_02029ab0.c:
-    complete
-    .text start:0x02029ab0 end:0x02029b04
-
-src/EnterBigBoosHaunt.c:
-    complete
-    .text start:0x02029b04 end:0x02029b30
-
-src/KillPlayer.c:
-    complete
-    .text start:0x02029b30 end:0x02029b84
-
-src/HitDeathPlane.c:
-    complete
-    .text start:0x02029b84 end:0x02029bd4
-
-src/ExitLevel.c:
-    complete
-    .text start:0x02029bd4 end:0x02029bf4
-
-src/SetNextLevel.c:
-    complete
-    .text start:0x02029bf4 end:0x02029d1c
-
-src/SetNextStar.c:
-    complete
-    .text start:0x02029d1c end:0x02029dbc
-
-src/DeathTable_ClearBit.c:
-    complete
-    .text start:0x02029dbc end:0x02029e0c
-
-src/DeathTable_SetBit.c:
-    complete
-    .text start:0x02029e0c end:0x02029e58
-
-src/DeathTable_GetBit.c:
-    complete
-    .text start:0x02029e58 end:0x02029ea4
-
-src/Event.cpp:
-    complete
-    .text start:0x02029ea4 end:0x02029ef8
-
-src/_ZN10dScStage_c19RenderVsModeNewStarEv.cpp:
-    complete
-    .text start:0x02029ef8 end:0x0202a130
-
-src/unnamed/arm9/0202/FUN_0202a130.c:
-    complete
-    .text start:0x0202a130 end:0x0202a168
-
-src/_ZN10dScStage_c21RenderVsModeCountdownEv.cpp:
-    complete
-    .text start:0x0202a168 end:0x0202a55c
-
-src/NumVsStarsObtained.c:
-    complete
-    .text start:0x0202a55c end:0x0202a5ac
-
-src/GiveVsStars.c:
-    complete
-    .text start:0x0202a5ac end:0x0202a5c4
-
-src/_ZN10dScStage_c15IsPauseDisabledEv.cpp:
-    complete
-    .text start:0x0202a5c4 end:0x0202a608
-
-src/ClearSpikeBomb.c:
-    complete
-    .text start:0x0202a608 end:0x0202a628
-
-src/AddSpikeBomb.c:
-    complete
-    .text start:0x0202a628 end:0x0202a660
-
-src/SetStarMarker.c:
-    complete
-    .text start:0x0202a660 end:0x0202a67c
-
-src/OpenCannonInCurLevel.c:
-    complete
-    .text start:0x0202a67c end:0x0202a694
-
-src/IsCannonOpenInCurLevel.c:
-    complete
-    .text start:0x0202a694 end:0x0202a6ac
-
-src/CollectStarInCurLevel.c:
-    complete
-    .text start:0x0202a6ac end:0x0202a6c8
-
-src/IsStarCollectedInCurLevel.c:
-    complete
-    .text start:0x0202a6c8 end:0x0202a6e4
-
-src/NumRedCoins.c:
-    complete
-    .text start:0x0202a6e4 end:0x0202a734
-
-src/GiveRedCoins.c:
-    complete
-    .text start:0x0202a734 end:0x0202a770
-
-src/NumCoins.c:
-    complete
-    .text start:0x0202a770 end:0x0202a7b8
-
-src/GiveCoins.c:
-    complete
-    .text start:0x0202a7b8 end:0x0202a814
-
-src/GiveHealth.c:
-    complete
-    .text start:0x0202a814 end:0x0202a850
-
-src/unnamed/arm9/0202/func_0202a850.c:
-    complete
-    .text start:0x0202a850 end:0x0202a87c
-
-src/InitControllerMode.c:
-    complete
-    .text start:0x0202a87c end:0x0202a8b0
-
-src/SetControllerMode.c:
-    complete
-    .text start:0x0202a8b0 end:0x0202a8e0
-
-src/unnamed/arm9/0202/func_0202a8e0.c:
-    complete
-    .text start:0x0202a8e0 end:0x0202a93c
-
-src/_ZN10dScStage_c11GetSkyboxIDEv.cpp:
-    complete
-    .text start:0x0202a93c end:0x0202a958
-
-src/unnamed/arm9/0202/func_0202a958.c:
-    complete
-    .text start:0x0202a958 end:0x0202a96c
-
-src/unnamed/arm9/0202/func_0202a96c.c:
-    complete
-    .text start:0x0202a96c end:0x0202a980
-
-src/unnamed/arm9/0202/func_0202a980.c:
-    complete
-    .text start:0x0202a980 end:0x0202a994
-
-src/_Z23LoadMinimapChangeObjecti5Fix12IiEh.c:
-    complete
-    .text start:0x0202a994 end:0x0202aa2c
-
-src/HideArea.c:
-    complete
-    .text start:0x0202aa2c end:0x0202aa4c
-
-src/ShowArea.c:
-    complete
-    .text start:0x0202aa4c end:0x0202aa6c
-
-src/IsAreaShowing.c:
-    complete
-    .text start:0x0202aa6c end:0x0202aa88
-
-src/ChangeArea.c:
-    complete
-    .text start:0x0202aa88 end:0x0202aac0
-
-src/GiveLives.c:
-    complete
-    .text start:0x0202aac0 end:0x0202aaec
-
-src/LoadLevel.c:
-    complete
-    .text start:0x0202aaec end:0x0202acc0
-
-src/LoadLevelNoReturn.c:
-    complete
-    .text start:0x0202acc0 end:0x0202acfc
-
-src/SetPlayerGlobals.c:
-    complete
-    .text start:0x0202acfc end:0x0202ad78
-
-src/ExitMinigameMenu.c:
-    complete
-    .text start:0x0202ad78 end:0x0202adf4
-
-src/StartMinigameMenu.c:
-    complete
-    .text start:0x0202adf4 end:0x0202ae2c
-
-src/PrepareVsMode.c:
-    complete
-    .text start:0x0202ae2c end:0x0202ae74
-
-src/unnamed/arm9/0202/func_0202ae74.c:
-    complete
-    .text start:0x0202ae74 end:0x0202ae88
-
-src/StartFile.c:
-    complete
-    .text start:0x0202ae88 end:0x0202af08
-
-src/StartWithFarCamera.c:
-    complete
-    .text start:0x0202af08 end:0x0202af28
-
-src/GetStarCameraSetting.c:
-    complete
-    .text start:0x0202af28 end:0x0202af48
-
-src/GetMinimapScale.c:
-    complete
-    .text start:0x0202af48 end:0x0202af80
-
-src/unnamed/arm9/0202/func_0202af80.c:
-    complete
-    .text start:0x0202af80 end:0x0202af9c
-
-src/GetMinimapID.c:
-    complete
-    .text start:0x0202af9c end:0x0202b044
-
-src/unnamed/arm9/0202/func_0202b044.c:
-    complete
-    .text start:0x0202b044 end:0x0202b060
-
-src/unnamed/arm9/0202/func_0202b060.c:
-    complete
-    .text start:0x0202b060 end:0x0202b07c
-
-src/GetTeleportDestObj.c:
-    complete
-    .text start:0x0202b07c end:0x0202b090
-
-src/unnamed/arm9/0202/func_0202b090.c:
-    complete
-    .text start:0x0202b090 end:0x0202b0ac
-
-src/GetViewObj.c:
-    complete
-    .text start:0x0202b0ac end:0x0202b0c4
-
-src/unnamed/arm9/0202/func_0202b0c4.c:
-    complete
-    .text start:0x0202b0c4 end:0x0202b0e0
-
-src/unnamed/arm9/0202/func_0202b0e0.c:
-    complete
-    .text start:0x0202b0e0 end:0x0202b0fc
-
-src/_ZN10dScStage_c10LoadSkyboxEv.cpp:
-    complete
-    .text start:0x0202b0fc end:0x0202b164
-
-src/_ZN10dScStage_c22RenderModelTransparentEv.cpp:
-    complete
-    .text start:0x0202b164 end:0x0202b268
-
-src/_ZN10dScStage_c11RenderModelEv.cpp:
-    complete
-    .text start:0x0202b268 end:0x0202b3d8
-
-src/CopyTexPalFromLevelModel.c:
-    complete
-    .text start:0x0202b3d8 end:0x0202b534
-
-src/_ZN10dScStage_c23LoadTextureTransformersEv.cpp:
-    complete
-    .text start:0x0202b534 end:0x0202b5ec
-
-src/_ZN10dScStage_c9LoadModelEv.cpp:
-    complete
-    .text start:0x0202b5ec end:0x0202b67c
-
-src/_ZN10dScStage_c9RenderFogEv.cpp:
-    complete
-    .text start:0x0202b67c end:0x0202b710
-
-src/_ZN10dScStage_c7LoadFogEv.cpp:
-    complete
-    .text start:0x0202b710 end:0x0202b818
-
-src/_ZN10dScStage_c8CanPauseEv.cpp:
-    complete
-    .text start:0x0202b818 end:0x0202b8a0
-
-src/_ZN10dScStage_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x0202b8a0 end:0x0202b8a4
-
-src/_ZN10dScStage_c6RenderEv.cpp:
-    complete
-    .text start:0x0202b8a4 end:0x0202bbbc
-
-src/_ZN10dScStage_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0202bbbc end:0x0202c2ac
-
-src/_ZN10dScStage_c10CheckInputEv.cpp:
-    complete
-    .text start:0x0202c2ac end:0x0202c830
-
-src/_ZN3Fog4InitEt5Fix12IiES1_.cpp:
-    complete
-    .text start:0x0202c830 end:0x0202c8b8
-
-src/SetTouchScreenDelay.c:
-    complete
-    .text start:0x0202c8b8 end:0x0202c8f8
-
-src/ResetInput.c:
-    complete
-    .text start:0x0202c8f8 end:0x0202c9a8
-
-src/_ZN10dScStage_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0202c9a8 end:0x0202cc0c
-
-src/_ZN10dScStage_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0202cc0c end:0x0202d690
-
-src/_ZN10dScStage_c14LoadGraphics2DEbi.cpp:
-    complete
-    .text start:0x0202d690 end:0x0202ddc8
-
-src/_ZN10dScStage_c19BeforeInitResourcesEv.cpp:
-    complete
-    .text start:0x0202ddc8 end:0x0202ddd4
-
-src/IsLevelTinyHugeIslandOutside.c:
-    complete
-    .text start:0x0202ddd4 end:0x0202ddf4
-
-src/IsLevelInsideCastle.c:
-    complete
-    .text start:0x0202ddf4 end:0x0202de24
-
-src/GetSoundGroupID.c:
-    complete
-    .text start:0x0202de24 end:0x0202de64
-
-src/_Z19UnloadLevelOverlaysi.cpp:
-    complete
-    .text start:0x0202de64 end:0x0202deac
-
-src/unnamed/arm9/0202/func_0202deac.c:
-    complete
-    .text start:0x0202deac end:0x0202ded4
-
-src/_Z17LoadLevelOverlaysi.cpp:
-    complete
-    .text start:0x0202ded4 end:0x0202df70
-
-src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp:
-    complete
-    .text start:0x0202df70 end:0x0202e088
-
-src/d_s_stage.cpp:
-    complete
-    .text start:0x0202e088 end:0x0202e118
+    .text start:0x02023688 end:0x0202e118
 
 src/unnamed/arm9/0202/func_0202e118.c:
     complete
     .text start:0x0202e118 end:0x0202e140
 
-src/actors/dScene_c.cpp:
+src/game/stages/d_scene.cpp:
     complete
     .text start:0x0202e140 end:0x0202ec9c
 
-src/engine/fader/dWipe_c.cpp:
+src/runtime/graphics/fader/d_wipe.cpp:
     complete
     .text start:0x0202ec9c end:0x0202fc98
     .data start:0x020926d0 end:0x02092718
 
-src/engine/view/dView_c.cpp:
+src/engine/view/d_view.cpp:
     complete
     .text start:0x0202fc98 end:0x0202fd4c
 
@@ -2182,6 +1586,10 @@ src/Quaternion_FromVector3.c:
 src/Quaternion_SLerp.c:
     complete
     .text start:0x0202fef8 end:0x0202ffec
+
+src/unnamed/arm9/0202/func_0202ffec.c:
+    complete
+    .text start:0x0202ffec end:0x020301c4
 
 src/Matrix4x3_FromQuaternion.c:
     complete
@@ -2307,7 +1715,7 @@ src/Message3.cpp:
     complete
     .text start:0x02031b84 end:0x02034a78
 
-src/actors/dScMB_c.cpp:
+src/game/stages/d_s_mb.cpp:
     complete
     .text start:0x02034a78 end:0x02035354
 
@@ -2351,52 +1759,52 @@ src/func_0203543c.c:
     complete
     .text start:0x0203543c end:0x02035448
 
-src/engine/collision/dBgCh.cpp:
+src/engine/collision/d_bg_ch.cpp:
     complete
     .text start:0x02035448 end:0x0203553c
 
-src/engine/collision/dBgCh_Actr.cpp:
+src/engine/collision/d_bg_ch_actr.cpp:
     complete
     .text start:0x0203553c end:0x02037464
 
 
-src/engine/collision/dBgCh_Gnd.cpp:
+src/engine/collision/d_bg_ch_gnd.cpp:
     complete
     .text start:0x02037464 end:0x020375d0
     .data start:0x02099224 end:0x0209927c
 
-src/engine/collision/dBgCh_Lin.cpp:
+src/engine/collision/d_bg_ch_lin.cpp:
     complete
     .text start:0x020375d0 end:0x0203782c
     .data start:0x02099290 end:0x020992e4
 
-src/engine/collision/dBgCh_SphCrr.cpp:
+src/engine/collision/d_bg_ch_sph_crr.cpp:
     complete
     .text start:0x0203782c end:0x02037dc4
     .data start:0x020992f8 end:0x02099360
 
-src/engine/collision/dBgCh_SphCrr_query.cpp:
+src/engine/collision/d_bg_ch_sph_crr_query.cpp:
     complete
     .text start:0x02037dc4 end:0x02039140
 
-src/engine/collision/dBgW.cpp:
+src/engine/collision/d_bg_w.cpp:
     complete
     .text start:0x02039140 end:0x020396d8
     .data start:0x02099370 end:0x020993bc
 
-src/engine/collision/dBgW_Kc.cpp:
+src/engine/collision/d_bg_w_kc.cpp:
     complete
     .text start:0x020396d8 end:0x020398fc
 
-src/engine/collision/dBgW_KcMbg.cpp:
+src/engine/collision/d_bg_w_kc_mbg.cpp:
     complete
     .text start:0x020398fc end:0x0203a4dc
 
-src/engine/collision/dBgW_KcMbgSclY.cpp:
+src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp:
     complete
     .text start:0x0203a4dc end:0x0203abb0
 
-src/engine/collision/dM3dGSph.cpp:
+src/engine/collision/d_m3d_g_sph.cpp:
     complete
     .text start:0x0203abb0 end:0x0203ac80
 
@@ -2452,7 +1860,7 @@ src/unnamed/arm9/0203/func_0203b394.c:
     complete
     .text start:0x0203b394 end:0x0203b3c0
 
-src/actors/ActorBase_SceneNode.cpp:
+src/runtime/actor/ActorBase_SceneNode.cpp:
     complete
     .text start:0x0203b3c0 end:0x0203b4dc
 
@@ -2586,79 +1994,8 @@ src/Matrix4x3_ApplyInPlaceToTranslation.c:
 
 src/engine/heap/Heap.cpp:
     complete
-    .text start:0x0203c1b4 end:0x0203c970
-
-src/_ZN9SolidHeapD0Ev.cpp:
-    complete
-    .text start:0x0203c970 end:0x0203c99c
-
-src/_ZN9SolidHeapD1Ev.cpp:
-    complete
-    .text start:0x0203c99c end:0x0203c9c0
-
-src/_ZN13ExpandingHeapD0Ev.cpp:
-    complete
-    .text start:0x0203c9c0 end:0x0203c9ec
-
-src/_ZN13ExpandingHeapD1Ev.cpp:
-    complete
-    .text start:0x0203c9ec end:0x0203ca10
-
-src/_ZN4HeapD2Ev.cpp:
-    complete
-    .text start:0x0203ca10 end:0x0203ca20
-
-src/_ZN4HeapD0Ev.cpp:
-    complete
-    .text start:0x0203ca20 end:0x0203ca44
-
-src/_ZN4HeapD1Ev.cpp:
-    complete
-    .text start:0x0203ca44 end:0x0203ca54
-
-src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.cpp:
-    complete
-    .text start:0x0203ca54 end:0x0203ca80
-
-src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.cpp:
-    complete
-    .text start:0x0203ca80 end:0x0203caac
-
-src/_ZN4HeapC2EPvjPS_.cpp:
-    complete
-    .text start:0x0203caac end:0x0203cae8
-
-src/_ZN4Heap18InitializeRootHeapEv.cpp:
-    complete
-    .text start:0x0203cae8 end:0x0203cb04
-
-src/_ZN4Heap13SetupRootHeapEv.cpp:
-    complete
-    .text start:0x0203cb04 end:0x0203cbc0
-
-src/func_0203cbc0.c:
-    complete
-    .text start:0x0203cbc0 end:0x0203cbcc
-
-src/_ZN6Memory16operator_delete2EPv.cpp:
-    complete
-    .text start:0x0203cbcc end:0x0203cbd8
-
-src/_ZN6Memory13operator_new2Ej.cpp:
-    complete
-    .text start:0x0203cbd8 end:0x0203cbe4
-
-src/_Znwj.cpp:
-    complete
-    .text start:0x0203cbe4 end:0x0203cbf0
-
-src/_ZdlPv.cpp:
-    complete
-    .text start:0x0203cbf0 end:0x0203cc0c
-
-src/func_0203cc0c.c:
-    complete
-    .text start:0x0203cc0c end:0x0203cc28
+    .text start:0x0203c1b4 end:0x0203cc28
+    .data start:0x02099d28 end:0x02099e18
 
 src/unnamed/arm9/0203/func_0203cc28.c:
     complete
@@ -3360,41 +2697,13 @@ src/unnamed/arm9/0204/func_0204335c.c:
     complete
     .text start:0x0204335c end:0x020433b8
 
-src/actors/ActorBase.cpp:
+src/runtime/actor/ActorBase.cpp:
     complete
     .text start:0x020433b8 end:0x020440e8
 
-src/_ZN11fLiNdBaPr_cD1Ev.cpp:
+src/fListNode.cpp:
     complete
-    .text start:0x020440e8 end:0x02044104
-
-src/_ZN9fLiNdBa_cD1Ev.cpp:
-    complete
-    .text start:0x02044104 end:0x02044120
-
-src/unnamed/arm9/0204/func_02044120.c:
-    complete
-    .text start:0x02044120 end:0x020441bc
-
-src/unnamed/arm9/0204/func_020441bc.c:
-    complete
-    .text start:0x020441bc end:0x020441cc
-
-src/unnamed/arm9/0204/func_020441cc.cpp:
-    complete
-    .text start:0x020441cc end:0x0204424c
-
-src/func_0204424c.c:
-    complete
-    .text start:0x0204424c end:0x02044284
-
-src/func_02044284.cpp:
-    complete
-    .text start:0x02044284 end:0x02044334
-
-src/func_02044334.cpp:
-    complete
-    .text start:0x02044334 end:0x020443c8
+    .text start:0x020440e8 end:0x020443c8
 
 src/engine/model/ModelComponents.cpp:
     complete
@@ -3853,269 +3162,21 @@ src/unnamed/arm9/0205/func_02053a8c.c:
     complete
     .text start:0x02053a8c end:0x02053a90
 
-src/unnamed/arm9/0205/func_02053a90.c:
+src/engine/gx/GX_Init.cpp:
     complete
-    .text start:0x02053a90 end:0x02053abc
-
-src/_ZN3GXS15SetGraphicsModeEi.cpp:
-    complete
-    .text start:0x02053abc end:0x02053ad8
-
-src/_ZN2GX15SetGraphicsModeEiii.cpp:
-    complete
-    .text start:0x02053ad8 end:0x02053b4c
-
-src/_ZN2GX6DispOnEv.cpp:
-    complete
-    .text start:0x02053b4c end:0x02053b98
-
-src/unnamed/arm9/0205/func_02053b98.c:
-    complete
-    .text start:0x02053b98 end:0x02053be0
-
-src/unnamed/arm9/0205/func_02053be0.c:
-    complete
-    .text start:0x02053be0 end:0x02053c10
-
-src/unnamed/arm9/0205/func_02053c10.c:
-    complete
-    .text start:0x02053c10 end:0x02053c40
-
-src/func_02053c40.c:
-    complete
-    .text start:0x02053c40 end:0x02053d9c
+    .text start:0x02053a90 end:0x02053d9c
 
 src/unnamed/arm9/0205/func_02053d9c.c:
     complete
     .text start:0x02053d9c end:0x02053e1c
 
-src/unnamed/arm9/0205/func_02053e1c.c:
+src/engine/gx/GX_VramCnt.cpp:
     complete
-    .text start:0x02053e1c end:0x02053e34
+    .text start:0x02053e1c end:0x02054d38
 
-src/unnamed/arm9/0205/func_02053e34.c:
+src/engine/gx/G2.cpp:
     complete
-    .text start:0x02053e34 end:0x02053e4c
-
-src/unnamed/arm9/0205/func_02053e4c.c:
-    complete
-    .text start:0x02053e4c end:0x02053ea0
-
-src/unnamed/arm9/0205/func_02053ea0.c:
-    complete
-    .text start:0x02053ea0 end:0x02053eb0
-
-src/unnamed/arm9/0205/func_02053eb0.c:
-    complete
-    .text start:0x02053eb0 end:0x02053ec0
-
-src/unnamed/arm9/0205/func_02053ec0.c:
-    complete
-    .text start:0x02053ec0 end:0x02053ed0
-
-src/unnamed/arm9/0205/func_02053ed0.c:
-    complete
-    .text start:0x02053ed0 end:0x02053ee0
-
-src/unnamed/arm9/0205/func_02053ee0.c:
-    complete
-    .text start:0x02053ee0 end:0x02053f08
-
-src/unnamed/arm9/0205/func_02053f08.c:
-    complete
-    .text start:0x02053f08 end:0x02053f30
-
-src/unnamed/arm9/0205/func_02053f30.c:
-    complete
-    .text start:0x02053f30 end:0x02053f44
-
-src/unnamed/arm9/0205/func_02053f44.c:
-    complete
-    .text start:0x02053f44 end:0x02053f58
-
-src/unnamed/arm9/0205/func_02053f58.c:
-    complete
-    .text start:0x02053f58 end:0x02053f6c
-
-src/unnamed/arm9/0205/func_02053f6c.c:
-    complete
-    .text start:0x02053f6c end:0x02053f80
-
-src/unnamed/arm9/0205/func_02053f80.c:
-    complete
-    .text start:0x02053f80 end:0x02053f94
-
-src/unnamed/arm9/0205/func_02053f94.c:
-    complete
-    .text start:0x02053f94 end:0x02053fa8
-
-src/unnamed/arm9/0205/func_02053fa8.c:
-    complete
-    .text start:0x02053fa8 end:0x02053fbc
-
-src/unnamed/arm9/0205/func_02053fbc.c:
-    complete
-    .text start:0x02053fbc end:0x02053fe0
-
-src/unnamed/arm9/0205/func_02053fe0.c:
-    complete
-    .text start:0x02053fe0 end:0x02054004
-
-src/unnamed/arm9/0205/func_02054004.c:
-    complete
-    .text start:0x02054004 end:0x02054018
-
-src/unnamed/arm9/0205/func_02054018.c:
-    complete
-    .text start:0x02054018 end:0x0205402c
-
-src/DisableVramBanks.c:
-    complete
-    .text start:0x0205402c end:0x020540f0
-
-src/unnamed/arm9/0205/func_020540f0.c:
-    complete
-    .text start:0x020540f0 end:0x02054118
-
-src/unnamed/arm9/0205/func_02054118.c:
-    complete
-    .text start:0x02054118 end:0x02054140
-
-src/unnamed/arm9/0205/func_02054140.c:
-    complete
-    .text start:0x02054140 end:0x02054154
-
-src/unnamed/arm9/0205/func_02054154.c:
-    complete
-    .text start:0x02054154 end:0x02054168
-
-src/unnamed/arm9/0205/func_02054168.c:
-    complete
-    .text start:0x02054168 end:0x0205417c
-
-src/unnamed/arm9/0205/func_0205417c.c:
-    complete
-    .text start:0x0205417c end:0x02054190
-
-src/unnamed/arm9/0205/func_02054190.c:
-    complete
-    .text start:0x02054190 end:0x020541a4
-
-src/unnamed/arm9/0205/func_020541a4.c:
-    complete
-    .text start:0x020541a4 end:0x020541b8
-
-src/unnamed/arm9/0205/func_020541b8.c:
-    complete
-    .text start:0x020541b8 end:0x020541f0
-
-src/_ZN2GX23SetBankForSubOBJExtPlttEt.cpp:
-    complete
-    .text start:0x020541f0 end:0x0205427c
-
-src/_ZN2GX22SetBankForSubBGExtPlttEt.cpp:
-    complete
-    .text start:0x0205427c end:0x02054308
-
-src/_ZN2GX16SetBankForSubOBJEt.cpp:
-    complete
-    .text start:0x02054308 end:0x02054384
-
-src/_ZN2GX15SetBankForSubBGEt.cpp:
-    complete
-    .text start:0x02054384 end:0x02054430
-
-src/unnamed/arm9/0205/func_02054430.c:
-    complete
-    .text start:0x02054430 end:0x02054450
-
-src/_ZN2GX17SetBankForTexPlttEt.cpp:
-    complete
-    .text start:0x02054450 end:0x02054544
-
-src/_ZN2GX13SetBankForTexEt.cpp:
-    complete
-    .text start:0x02054544 end:0x02054748
-
-src/unnamed/arm9/0205/func_02054748.c:
-    complete
-    .text start:0x02054748 end:0x0205485c
-
-src/_ZN2GX13SetBankForOBJEt.cpp:
-    complete
-    .text start:0x0205485c end:0x020549c8
-
-src/_ZN2GX12SetBankForBGEt.cpp:
-    complete
-    .text start:0x020549c8 end:0x02054c80
-
-src/Vram__Map.c:
-    complete
-    .text start:0x02054c80 end:0x02054d38
-
-src/_ZN3G2S13GetBG3CharPtrEv.cpp:
-    complete
-    .text start:0x02054d38 end:0x02054d88
-
-src/unnamed/arm9/0205/func_02054d88.c:
-    complete
-    .text start:0x02054d88 end:0x02054de8
-
-src/_ZN3G2S13GetBG2CharPtrEv.cpp:
-    complete
-    .text start:0x02054de8 end:0x02054e30
-
-src/_ZN2G213GetBG2CharPtrEv.cpp:
-    complete
-    .text start:0x02054e30 end:0x02054e88
-
-src/_ZN3G2S13GetBG1CharPtrEv.cpp:
-    complete
-    .text start:0x02054e88 end:0x02054ea8
-
-src/unnamed/arm9/0205/func_02054ea8.c:
-    complete
-    .text start:0x02054ea8 end:0x02054edc
-
-src/_ZN3G2S13GetBG0CharPtrEv.cpp:
-    complete
-    .text start:0x02054edc end:0x02054efc
-
-src/unnamed/arm9/0205/func_02054efc.c:
-    complete
-    .text start:0x02054efc end:0x02054f30
-
-src/_ZN3G2S12GetBG3ScrPtrEv.cpp:
-    complete
-    .text start:0x02054f30 end:0x02054fb0
-
-src/_ZN2G212GetBG3ScrPtrEv.cpp:
-    complete
-    .text start:0x02054fb0 end:0x0205503c
-
-src/_ZN3G2S12GetBG2ScrPtrEv.cpp:
-    complete
-    .text start:0x0205503c end:0x020550bc
-
-src/_ZN2G212GetBG2ScrPtrEv.cpp:
-    complete
-    .text start:0x020550bc end:0x02055148
-
-src/_ZN3G2S12GetBG1ScrPtrEv.cpp:
-    complete
-    .text start:0x02055148 end:0x02055168
-
-src/_ZN2G212GetBG1ScrPtrEv.cpp:
-    complete
-    .text start:0x02055168 end:0x0205519c
-
-src/_ZN3G2S12GetBG0ScrPtrEv.cpp:
-    complete
-    .text start:0x0205519c end:0x020551bc
-
-src/_ZN2G212GetBG0ScrPtrEv.cpp:
-    complete
-    .text start:0x020551bc end:0x020551f0
+    .text start:0x02054d38 end:0x020551f0
 
 src/unnamed/arm9/0205/func_020551f0.c:
     complete
@@ -4189,81 +3250,9 @@ src/Copy48BytesFixed.c:
     complete
     .text start:0x02056c1c end:0x02056c40
 
-src/_ZN3IRQ19Tim3OverflowHandlerEv.cpp:
+src/IRQ.cpp:
     complete
-    .text start:0x02056c40 end:0x02056c50
-
-src/_ZN3IRQ19Tim2OverflowHandlerEv.cpp:
-    complete
-    .text start:0x02056c50 end:0x02056c60
-
-src/_ZN3IRQ19Tim1OverflowHandlerEv.cpp:
-    complete
-    .text start:0x02056c60 end:0x02056c70
-
-src/_ZN3IRQ19Tim0OverflowHandlerEv.cpp:
-    complete
-    .text start:0x02056c70 end:0x02056c80
-
-src/_ZN3IRQ11Dma3HandlerEv.cpp:
-    complete
-    .text start:0x02056c80 end:0x02056c90
-
-src/_ZN3IRQ11Dma2HandlerEv.cpp:
-    complete
-    .text start:0x02056c90 end:0x02056ca0
-
-src/_ZN3IRQ11Dma1HandlerEv.cpp:
-    complete
-    .text start:0x02056ca0 end:0x02056cb0
-
-src/_ZN3IRQ11Dma0HandlerEv.cpp:
-    complete
-    .text start:0x02056cb0 end:0x02056cc0
-
-src/_ZN3IRQ13DmaTimHandlerEj.cpp:
-    complete
-    .text start:0x02056cc0 end:0x02056d60
-
-src/_ZN3IRQ12EmptyHandlerEv.cpp:
-    complete
-    .text start:0x02056d60 end:0x02056d64
-
-src/_ZN3IRQ15ClearInterruptsEj.cpp:
-    complete
-    .text start:0x02056d64 end:0x02056d98
-
-src/_ZN3IRQ11DisableIRQsEj.cpp:
-    complete
-    .text start:0x02056d98 end:0x02056de0
-
-src/_ZN3IRQ10EnableIRQsEj.cpp:
-    complete
-    .text start:0x02056de0 end:0x02056e18
-
-src/_ZN3IRQ7SetIRQsEj.cpp:
-    complete
-    .text start:0x02056e18 end:0x02056e4c
-
-src/unnamed/arm9/0205/func_02056e4c.c:
-    complete
-    .text start:0x02056e4c end:0x02056e98
-
-src/unnamed/arm9/0205/func_02056e98.c:
-    complete
-    .text start:0x02056e98 end:0x02056ee4
-
-src/_ZN3IRQ13GetIRQHandlerEj.cpp:
-    complete
-    .text start:0x02056ee4 end:0x02056f70
-
-src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp:
-    complete
-    .text start:0x02056f70 end:0x02057000
-
-src/unnamed/arm9/0205/func_02057000.c:
-    complete
-    .text start:0x02057000 end:0x02057014
+    .text start:0x02056c40 end:0x02057014
 
 src/unnamed/arm9/0205/func_020570a8.c:
     complete
@@ -4498,8 +3487,28 @@ src/unnamed/arm9/0205/func_02058b9c.c:
     .text start:0x02058b9c end:0x02058bb0
 
 src/engine/cp15/CP15.cpp:
+    .text start:0x02058bb0 end:0x02058c84
     complete
-    .text start:0x02058bb0 end:0x02058df4
+
+src/unnamed/arm9/0205/func_02058c84.cpp:
+    .text start:0x02058c84 end:0x02058cd0
+    complete
+
+src/unnamed/arm9/0205/func_02058cd0.cpp:
+    .text start:0x02058cd0 end:0x02058d58
+    complete
+
+src/unnamed/arm9/0205/func_02058d58.cpp:
+    .text start:0x02058d58 end:0x02058d6c
+    complete
+
+src/unnamed/arm9/0205/func_02058d6c.cpp:
+    .text start:0x02058d6c end:0x02058d80
+    complete
+
+src/OS_GetInitArenaLo.cpp:
+    .text start:0x02058d80 end:0x02058df4
+    complete
 
 src/unnamed/arm9/0205/func_02058df4.c:
     complete
@@ -4545,21 +3554,13 @@ src/unnamed/arm9/0205/func_0205938c.c:
     complete
     .text start:0x0205938c end:0x020593a8
 
-src/_ZN4CP1510EnableDTCMEv.cpp:
+src/engine/cp15/CP15_TCM.cpp:
     complete
-    .text start:0x020593a8 end:0x020593b8
+    .text start:0x020593a8 end:0x020593cc
 
-src/_ZN4CP1518GetDTCMBaseAddressEv.cpp:
+src/engine/cp15/CP15_ProtectionUnit.cpp:
     complete
-    .text start:0x020593b8 end:0x020593cc
-
-src/_ZN4CP159EnableMPUEv.cpp:
-    complete
-    .text start:0x020593cc end:0x020593dc
-
-src/_ZN4CP1510DisableMPUEv.cpp:
-    complete
-    .text start:0x020593dc end:0x020593ec
+    .text start:0x020593cc end:0x020593ec
 
 src/_ZN4CP1514MPUDataRegion1Ej.cpp:
     complete
@@ -4637,17 +3638,13 @@ src/unnamed/arm9/0205/func_02059c18.c:
     complete
     .text start:0x02059c18 end:0x02059cb4
 
+src/unnamed/arm9/0205/func_02059cb4.cpp:
+    .text start:0x02059cb4 end:0x02059d08
+    complete
+
 src/IRQ3.cpp:
+    .text start:0x02059d08 end:0x02059d8c
     complete
-    .text start:0x02059cb4 end:0x02059d74
-
-src/ARMProcessorMode.c:
-    complete
-    .text start:0x02059d74 end:0x02059d80
-
-src/_ZN4CP1516WaitForInterruptEv.cpp:
-    complete
-    .text start:0x02059d80 end:0x02059d8c
 
 src/unnamed/arm9/0205/func_02059dd4.c:
     complete
@@ -4981,25 +3978,9 @@ src/unnamed/arm9/0205/func_0205b858.c:
     complete
     .text start:0x0205b858 end:0x0205b864
 
-src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp:
+src/engine/pxi/PXI_Fifo.cpp:
     complete
-    .text start:0x0205b864 end:0x0205b988
-
-src/IPCSend.c:
-    complete
-    .text start:0x0205b988 end:0x0205ba3c
-
-src/unnamed/arm9/0205/func_0205ba3c.c:
-    complete
-    .text start:0x0205ba3c end:0x0205ba64
-
-src/unnamed/arm9/0205/func_0205ba64.c:
-    complete
-    .text start:0x0205ba64 end:0x0205bad8
-
-src/unnamed/arm9/0205/func_0205bad8.c:
-    complete
-    .text start:0x0205bad8 end:0x0205bbdc
+    .text start:0x0205b864 end:0x0205bbdc
 
 src/unnamed/arm9/0205/func_0205bbdc.c:
     complete
@@ -5589,21 +4570,9 @@ src/unnamed/arm9/0206/func_02060f60.cpp:
     complete
     .text start:0x02060f60 end:0x020610ac
 
-src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp:
+src/engine/card/CARD_PullOut.cpp:
     complete
-    .text start:0x020610ac end:0x020610fc
-
-src/unnamed/arm9/0206/func_020610fc.c:
-    complete
-    .text start:0x020610fc end:0x02061128
-
-src/unnamed/arm9/0206/func_02061128.c:
-    complete
-    .text start:0x02061128 end:0x02061138
-
-src/unnamed/arm9/0206/func_02061138.c:
-    complete
-    .text start:0x02061138 end:0x0206116c
+    .text start:0x020610ac end:0x0206116c
 
 src/unnamed/arm9/0206/func_0206116c.c:
     complete
@@ -6832,4 +5801,3 @@ src/unnamed/arm9/0207/__sinit_02075150.c:
 src/unnamed/arm9/0207/__sinit_02075154.c:
     complete
     .init start:0x02075154 end:0x02075230
-

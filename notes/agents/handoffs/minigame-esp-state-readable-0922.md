@@ -6,7 +6,7 @@ Producer: `codex-minigame-esp-state-readable-0922`.
 
 ## Source change
 
-This commit replaces raw member offsets in [func_ov006_020e7f04](../../../src/actors/dMg3DEspAnimSet_c.cpp) with the
+This commit replaces raw member offsets in [func_ov006_020e7f04](../../../src/minigames/d_mg3d_esp_anim_set.cpp) with the
 existing `dMg3DEspModel_c` layout, native `Animation::WillHitFrame` calls and
 `Sound::PlayBank2_2D`. The guard field remains `unk_20c`: its meaning has not
 been recovered. The return contracts now follow the actual bool/unsigned

@@ -18,7 +18,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *
  * The 31-slot ROM vtable has the same extent as dActor_c and overrides only
  * slots 0, 6, 16, and 17. The original code TU is shared with daObjDlPyramid_c and
- * four daObjDlPyramid_c-only helpers: src/actors/daObjDlPyramid_c.cpp. */
+ * four daObjDlPyramid_c-only helpers: src/game/actors/d_a_obj_dl_pyramid.cpp. */
 struct daObjDlPyramidDummy_c : dActor_c {
     u8       pad_0d0[0x4];
     dCcAc_c  mCylinder;       /* 0x0d4 -- the tag's collision cylinder */

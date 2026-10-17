@@ -20,8 +20,6 @@
  *   dBgW::UpdatePosWithTransform and &func_ov029_021116e4 on mMeshCollider;
  *   dBgW.h has no setter.
  * - func_02012694: Behavior plays 0x17b at mCamSpacePosX.
- * - InitResources keeps (unsigned long long)((int)this + 0x94) for
- *   mPrevAngleY += 0x4000: `&mPrevAngleY` size-DIFFs.
  * - data_ov029_02114250 / 02114248 are this TU's BMD/KCL file handles;
  *   data_ov029_0211302c the CLPS block stays unowned overlay data.
  * - func_ov029_021116c4 / 021116e4 stay placeholder labels (BeforeClsn
@@ -30,6 +28,12 @@
  * - S14: g_profile_WC_OBJ02 stays outside the licensed .text.
  * - common.h first (InitResources SetFile matrix argument).
  */
+
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wc_obj02_AssetId {
+    ASSET_WC_OBJ02_BMD = 0x06ce,
+    ASSET_WC_OBJ02_KCL = 0x06cf
+};
 
 #include "common.h"
 #include "daObjWc_Obj02_c.h"
@@ -102,12 +106,12 @@ extern "C" int func_ov029_021116e4(void *a, void *b, void *c)
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-/* BeforeClsn helper: if the other actor's actorID (dActor_c+0x0c) is PLAYER
- * (0xbf), arm mTriggered. The unsigned char temporary is load-bearing. */
+/* BeforeClsn helper: if the other actor's actorID is PLAYER (0xbf), arm
+ * mTriggered. The unsigned char temporary is load-bearing. */
 // @symbol func_ov029_021116c4
 extern "C" void func_ov029_021116c4(char *a, char *b)
 {
-    unsigned char ok = *(unsigned short *)(b + 0xc) == 0xbf;
+    unsigned char ok = ((dActor_c *)b)->actorID == 0xbf;
     if (ok)
         ((daObjWc_Obj02_c *)a)->mTriggered = 1;
 }
@@ -129,19 +133,10 @@ int daObjWc_Obj02_c::InitResources()
             &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov029_0211302c);
     }
     {
-        /* MATCH: `&mPrevAngleY` size-DIFFs; (long long)(int) is the cartridge form. */
-        short *p = (short *)((unsigned long long)((int)this + 0x94));
-        short val = *p;
-        int *arg0_1 = (int *)&mMeshCollider;
-        int arg1_1 = (int)&dBgW::UpdatePosWithTransform;
-        *p = (short)(val + 0x4000);
-        func_020393d4(arg0_1, arg1_1);
+        mPrevAngleY += 0x4000;
+        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
     }
-    {
-        int *arg0_2 = (int *)&mMeshCollider;
-        int arg1_2 = (int)&func_ov029_021116e4;
-        func_020393c4(arg0_2, arg1_2);
-    }
+    func_020393c4((int *)&mMeshCollider, (int)&func_ov029_021116e4);
     mTravelDist = 0;
     mStateTimer = 0;
     mTriggered = 0;
@@ -158,49 +153,33 @@ int daObjWc_Obj02_c::Behavior()
     case 0:
         if (mTriggered != 0) {
             func_02012694(0x17b, &mCamSpacePosX);
-            {
-                u8 *p = &mState;
-                *p = *p + 1;
-            }
+            mState++;
         }
         mHorzSpeed = 0xa000;
         break;
     case 1:
     case 3:
         UpdatePos(0);
-        {
-            s32 *p = &mTravelDist;
-            *p = *p + mHorzSpeed;
-        }
+        mTravelDist += mHorzSpeed;
         if (mTravelDist >= 0x177000) {
             mTravelDist = 0;
-            {
-                u8 *p = &mState;
-                *p = *p + 1;
-            }
+            mState++;
             mStateTimer = 0;
         }
         break;
     case 2:
     case 4:
         if (mStateTimer >= 0x3c) {
-            {
-                s16 *p = &mPrevAngleY;
-                *p = *p + 0x8000;
-            }
+            mPrevAngleY += 0x8000;
             if (mState == 4) {
                 mState = 0;
             } else {
-                {
-                    u8 *p = &mState;
-                    *p = *p + 1;
-                }
+                mState++;
                 func_02012694(0x17b, &mCamSpacePosX);
             }
             mStateTimer = 0;
         } else {
-            u16 *p = &mStateTimer;
-            *p = *p + 1;
+            mStateTimer++;
         }
         break;
     }
@@ -241,5 +220,5 @@ int daObjWc_Obj02_c::CleanupResources()
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj02.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj02ModelFilePtr data_ov029_02114250(0x6ce);
-WcObj02CollisionFilePtr data_ov029_02114248(0x6cf);
+WcObj02ModelFilePtr data_ov029_02114250(ASSET_WC_OBJ02_BMD);
+WcObj02CollisionFilePtr data_ov029_02114248(ASSET_WC_OBJ02_KCL);

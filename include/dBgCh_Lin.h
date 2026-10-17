@@ -75,8 +75,8 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
        Proven three ways, all matched code:
          C1            constructs it -- _ZN8dM3dGSphC1Ev(thiz + 0x64) stores
                        _ZTV8dM3dGSph
-         D1            destroys it   -- dM3dGSph::~dM3dGSph(&self->unk_064)
-         SetObjAndLine fills it      -- mBoundSphere.Set(&midpoint,
+         D1            destroys it   -- the member's ~dM3dGSph
+         SetObjAndLine fills it      -- mBoundSphere.Set(midpoint,
                        (clsnDist >> 1) + 0x1000)
        and dBgCh_Lin::DetectClsn culls candidate colliders against it, reading
        the centre at 0x68 and the radius at 0x74. dM3dGSph is 0x14, so this
@@ -90,14 +90,14 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
        padding belongs to the holder and now lives in dBgCh_Actr.h. */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* Defined as real C++ in src/engine/collision/dBgCh_Lin.cpp. That TU
+    /* Defined as real C++ in src/engine/collision/d_bg_ch_lin.cpp. That TU
      * enrolls the compiler-emitted -0x10 adjustment thunks; objisolate
      * retains one ABI artifact per source and binds its vptr stores to ROM
      * data. Slots: primary D1/D0 at _ZTV9dBgCh_Lin, secondary D1/D0 at
      * VTable_dBgPi_dBgCh_LinThunk. */
     virtual ~dBgCh_Lin();
 
-    /* DECLARED, defined out of line in src/engine/collision/dBgCh_Lin.cpp as
+    /* DECLARED, defined out of line in src/engine/collision/d_bg_ch_lin.cpp as
      * real C++ -- complete-object context for every ROM caller, hence C1.
      */
     dBgCh_Lin();

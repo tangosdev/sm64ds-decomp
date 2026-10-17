@@ -69,7 +69,7 @@ After the base build, `build/src` and `build/tu` were copied aside, the fixed bu
 
 ### Positive control (not committed)
 
-`src/d_s_mg_pachinko2.c` was replaced in the worktree by the smallest C++ `new` factory, following `dScMgMemory2_c_classInit`. The `//cpp` marker compiles the `.c` file as C++, so no rename was needed:
+`src/minigames/d_s_mg_pachinko2.cpp` was replaced in the worktree by the smallest C++ `new` factory, following `dScMgMemory2_c_classInit`. The `//cpp` marker compiles the `.c` file as C++, so no rename was needed:
 
 ```cpp
 //cpp
@@ -88,6 +88,6 @@ Its object holds a single 0x34-byte `.text` with three relocations: `_ZN7fBase_c
 |---|---|---|
 | `python tools/rombuild.py -j8` with the base objisolate | 1 | addend stays 8. The strict stock control fails [ov006](../../../config/arm9/overlays/ov006/symbols.txt): 105 of 106 modules exact, one differing byte in `d_s_mg_pachinko2` (0x02104258, size 0x34). The word at 0x02104288 is 0x0213dbc4 where [ov006](../../../config/arm9/overlays/ov006/symbols.txt) has 0x0213dbbc. No ROM is built and the report has no `intactTuRom` |
 | `python tools/rombuild.py -j8` with the fix | 0 | addend 0, `intactTuRom.identical` true, 11,214 of 11,214 reproducing, 106 of 106 exact |
-| `git checkout HEAD -- src/d_s_mg_pachinko2.c`, then `python tools/rombuild.py -j8` | 0 | `git status` shows only the two tool files; the rebuilt `d_s_mg_pachinko2.o` is byte-identical to the base build's |
+| `git checkout HEAD -- src/minigames/d_s_mg_pachinko2.cpp`, then `python tools/rombuild.py -j8` | 0 | `git status` shows only the two tool files; the rebuilt `d_s_mg_pachinko2.o` is byte-identical to the base build's |
 
 Independent verification of this exact candidate is a separate acceptance gate.

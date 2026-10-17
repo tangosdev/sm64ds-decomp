@@ -24,7 +24,7 @@
 #include "dExtShadowModel_c.h"
 
 /* One figure on the entry stage. mMoveState and mAnimState index the two
- * pointer-to-member state tables in src/actors/dEntObj_c.cpp; the fields
+ * pointer-to-member state tables in src/game/stages/d_ent_obj.cpp; the fields
  * after them are named from what those states read and write. */
 struct UnknownVsPlayer {
     BlendModelAnim mModel;             /* 0x000 */

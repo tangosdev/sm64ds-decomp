@@ -90,10 +90,10 @@ data_ov077_02127230 kind:data(any) addr:0x02127230
 data_ov077_02127238 kind:data(any) addr:0x02127238
 __sinit_d_a_jgm.cpp kind:function(arm,size=0x25c) addr:0x02127240
 __sinit_ov077_0212749c kind:function(arm,size=0x160) addr:0x0212749c
-__sinit_daPopoi_c.cpp kind:function(arm,size=0x1d0) addr:0x021275fc
+__sinit_d_a_popoi.cpp kind:function(arm,size=0x1d0) addr:0x021275fc
 .p__sinit_d_a_jgm.cpp kind:data(word) addr:0x021277cc
 .p__sinit_ov077_0212749c kind:data(word) addr:0x021277d0
-.p__sinit_daPopoi_c.cpp kind:data(word) addr:0x021277d4
+.p__sinit_d_a_popoi.cpp kind:data(word) addr:0x021277d4
 data_ov077_021277e0 kind:data(any) addr:0x021277e0
 data_ov077_021277e8 kind:data(any) addr:0x021277e8
 data_ov077_021277f0 kind:data(any) addr:0x021277f0

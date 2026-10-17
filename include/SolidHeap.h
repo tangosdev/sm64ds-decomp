@@ -4,10 +4,9 @@
  *
  * class SolidHeap: 15 matched functions, 1 own field, 16 vtable slots.
  *
- * THE ROM'S NAME FOR THIS CLASS IS `mHeap::SolidHeap_t' (RTTI record at
- * arm9:0x02099cf8, mangled N5mHeap11SolidHeap_tE). The tree calls it SolidHeap
- * and every symbol is spelled that way; see include/Heap.h for why renaming is
- * not done piecemeal.
+ * THE CLASS IS `mHeap::SolidHeap_t', THE ROM'S OWN NAME (RTTI record at
+ * arm9:0x02099cf8, mangled N5mHeap11SolidHeap_tE). `SolidHeap' is a typedef
+ * kept for the tree's older spelling; see include/Heap.h.
  *
  * ==== IT DERIVES FROM Heap, AND IT DID NOT SAY SO ====
  *
@@ -21,7 +20,8 @@
  *     sixteen one for one: D1, D0, then the fourteen V* in Heap's slot order.
  *     Heap's own slots 2..15 are null, so Heap is abstract and these are its
  *     implementations, not incidental methods that happen to share names.
- *   - The constructor _ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator calls
+ *   - The constructor
+ *     _ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator calls
  *     Heap's constructor first and only then writes 0x14, which is exactly a
  *     base subobject followed by a derived field.
  *
@@ -42,8 +42,8 @@
  * so a mismatched override is a compile error rather than a silent second
  * opinion. Three fell out of that, all with ROM evidence:
  *
- *   VAllocate  was _ZN9SolidHeap9VAllocateEjj -- (u32, u32). Slot 3 is shared
- *              with _ZN13ExpandingHeap9VAllocateEji -- (u32, int) -- so they
+ *   VAllocate  was (u32, u32) -- the symbol then read ...SolidHeap9VAllocateEjj.
+ *              Slot 3 is shared with ExpandingHeap's VAllocate (u32, int), so they
  *              could not both be right. SolidHeapAllocator::Allocate
  *              (0x0204eb70), which this override tail-calls with r1/r2
  *              untouched, does `cmp r2,#0' then `blt' -- a SIGNED branch -- and
@@ -85,7 +85,9 @@ struct SolidHeap {
     SolidHeapAllocator* allocator;  /* 0x14 */
 };
 #else
-struct SolidHeap : Heap {
+namespace mHeap {
+
+struct SolidHeap_t : Heap_t {
     /* The one field of its own. Everything below 0x14 belongs to the base. */
     SolidHeapAllocator* allocator;  /* 0x14 -- fixed-size linear allocator; it
                                        lives inside the arena it manages, which
@@ -94,12 +96,12 @@ struct SolidHeap : Heap {
 
     /* The constructor's initializer list is the ROM body: construct Heap, then
        store the allocator pointer. CodeWarrior owns the intervening vptr store. */
-    SolidHeap(void* start, u32 size, Heap* root,
-              SolidHeapAllocator* allocator);
+    SolidHeap_t(void* start, u32 size, Heap_t* root,
+                SolidHeapAllocator* allocator);
 
     /* D1 and D0 are independently enrolled compiler-owned variants of this
        empty real destructor; Heap's teardown is generated, not hand-called. */
-    virtual ~SolidHeap();
+    virtual ~SolidHeap_t();
 
     virtual void  VDestroy();                       /*  2 */
     virtual void* VAllocate(u32 size, int align);   /*  3 */
@@ -116,6 +118,10 @@ struct SolidHeap : Heap {
     virtual u32   VGetNodeID();                     /* 14 */
     virtual u32   VResizeToFit();                   /* 15 */
 };
+
+} /* namespace mHeap */
+
+typedef mHeap::SolidHeap_t SolidHeap;
 #endif
 
 #endif

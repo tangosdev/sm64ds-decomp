@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjBlockItemTag_c",
   "module": "ov002",
-  "source": "src/actors/daObjBlockItemTag_c.cpp",
-  "promoted_source": "src/actors/daObjBlockItemTag_c.cpp",
+  "source": "src/game/actors/d_a_obj_block_item_tag.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_block_item_tag.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -171,7 +171,7 @@
       "address": "0x0210dd30",
       "size": "0x20",
       "binding": "STB_GLOBAL",
-      "evidence": "4-element daObjBlockItemTag_c member-function-pointer spawn table indexed by mActionIndex; populated by __sinit_daObjBlockItemTag_c.cpp"
+      "evidence": "4-element daObjBlockItemTag_c member-function-pointer spawn table indexed by mActionIndex; populated by __sinit_d_a_obj_block_item_tag.cpp"
     }
   ],
   "notes": [
@@ -496,7 +496,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjBlockItemTag_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_item_tag.cpp",
       "address": "0x02100e50",
       "size": "0x74",
       "binding": "STB_GLOBAL",
@@ -505,7 +505,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjBlockItemTag_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_block_item_tag.cpp",
       "address": "0x021080e4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -514,24 +514,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@799",
+      "from": "@802",
       "to": "@131",
-      "evidence": "compiler temporary .data image; mwcc numbers it @799 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "compiler temporary .data image; mwcc numbers it @802 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@801",
+      "from": "@804",
       "to": "@132",
-      "evidence": "compiler temporary .data image; mwcc numbers it @801 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "compiler temporary .data image; mwcc numbers it @804 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@803",
+      "from": "@806",
       "to": "@133",
-      "evidence": "compiler temporary .data image; mwcc numbers it @803 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "compiler temporary .data image; mwcc numbers it @806 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@805",
+      "from": "@808",
       "to": "@134",
-      "evidence": "compiler temporary .data image; mwcc numbers it @805 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "compiler temporary .data image; mwcc numbers it @808 per TU (the @NNN numbering shifted when cleanup added the daShl_c/daStar_c/daStarBase_c includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     }
   ],
   "relocations": [
@@ -630,7 +630,7 @@
       "source": "0x021080e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjBlockItemTag_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_item_tag.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02100e50"
@@ -638,13 +638,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjBlockItemTag_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_item_tag.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjBlockItemTag_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_block_item_tag.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"

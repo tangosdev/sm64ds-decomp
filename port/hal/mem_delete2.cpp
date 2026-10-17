@@ -9,9 +9,9 @@
 // hierarchies emits a reference to that exact string. On the NDS the mangled
 // string is the symbol and the ROM's own veneer at 0x0203cbcc answers it. MSVC
 // decorates it as a cdecl name that needs a real definition, and
-// src/_ZN6Memory16operator_delete2EPv.cpp cannot be it: that file is a migrated
-// C++ `namespace Memory' function, so MSVC gives it a different decoration, and
-// its body calls `extern "C" _ZdlPv', which no host runtime provides either.
+// src/engine/heap/Heap.cpp cannot provide it: it defines the function as a
+// migrated C++ `namespace Memory' function, which MSVC would decorate
+// differently, and it compiles that definition for the DS only.
 //
 // THE BODY IS WHAT THE ROM DOES. The ROM veneer is three words -- ldr ip / bx ip
 // / .word -- tail-calling _ZdlPv at 0x0203cbf0, the global operator delete. That

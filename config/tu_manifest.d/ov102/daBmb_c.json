@@ -1,8 +1,8 @@
 {
   "id": "ov102/daBmb_c",
   "module": "ov102",
-  "source": "src/actors/daBmb_c.cpp",
-  "promoted_source": "src/actors/daBmb_c.cpp",
+  "source": "src/game/actors/d_a_bmb.cpp",
+  "promoted_source": "src/game/actors/d_a_bmb.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

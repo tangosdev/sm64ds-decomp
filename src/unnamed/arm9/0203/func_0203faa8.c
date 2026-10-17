@@ -1,8 +1,9 @@
 /* func_0203faa8 at 0x0203faa8 (arm9), size 0xb4
  * Compiler mwccarm 1.2/sp2p3, flags:
  * -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
- * goto-pinned early-return: the ne-path must be textually first; plain ==/!= return
- * spellings canonicalize to moveq-first (see notes/mwccarm-codegen.md) */
+ * The ne-path must be textually first: plain ==/!= return spellings canonicalize to
+ * moveq-first (see notes/mwccarm-codegen.md); return r == 2, ?1:0, if/else and a
+ * switch were re-tried and differ, so the r == 2 arm is left empty. */
 typedef struct {
     char pad[0x14];
     unsigned short field_14;
@@ -33,9 +34,9 @@ int func_0203faa8(void)
         s0, flag,
         0, 0, 0, 0, 1);
 
-    if (r == 2)
-        goto yes;
-    return 0;
-yes:
+    if (r == 2) {
+    } else {
+        return 0;
+    }
     return 1;
 }

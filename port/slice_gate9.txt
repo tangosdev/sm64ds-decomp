@@ -5,34 +5,34 @@
 # daObjYajirusi_c is one production translation unit; the factory,
 # InitResources, CleanupResources, Behavior and Render this slice
 # used to name separately all live in it.
-src/actors/daObjYajirusi_c.cpp
+src/game/actors/d_a_obj_yajirusi.cpp
 # dBgActor_c is one production translation unit; the constructor,
 # UpdateClsnPosAndRot, UpdateModelPosAndRotY and IsClsnInRangeOnScreen
 # this slice used to name separately all live in it.
-src/actors/dBgActor_c.cpp
+src/runtime/actor/d_bg_actor.cpp
 # dActor_c is one production translation unit; SetRanges and ClosestPlayer
 # this slice used to name separately all live in it. The constructor keeps
 # its own files: the ROM's C1/C2 variant pair brackets Vector3s' vague-linkage
 # D1, so one member definition cannot tile the run.
-src/actors/dActor_c.cpp
+src/runtime/actor/d_actor.cpp
 src/_ZN8dActor_cC2Ev.cpp
 # SceneNode's constructor and Reset now share their production translation unit.
-src/actors/ActorBase_SceneNode.cpp
+src/runtime/actor/ActorBase_SceneNode.cpp
 # fBase_c is one production translation unit; operator new, the framework
 # hook virtuals and the helper at 0x02043810 this slice used to name
 # separately all live in it.
-src/actors/ActorBase.cpp
+src/runtime/actor/ActorBase.cpp
 # dExtShadowModel_c is one production translation unit; the constructor this slice
 # used to name separately lives in it with the rest of the class.
-src/engine/model/dExtShadowModel_c.cpp
+src/engine/model/d_ext_shadow_model.cpp
 # dBgW_KcMbg is one production translation unit; the constructor, SetFile,
 # the func_02039e* transform helpers and Transform this slice used to name
 # separately all live in it.
-src/engine/collision/dBgW_KcMbg.cpp
+src/engine/collision/d_bg_w_kc_mbg.cpp
 # dBgW is one production translation unit; the lifecycle pair,
 # Enable/Disable/IsEnabled, the slot-registry helpers and the func_020393*
 # accessors this slice used to name separately all live in it.
-src/engine/collision/dBgW.cpp
+src/engine/collision/d_bg_w.cpp
 src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp
 src/InvMat4x3.c
 # cstd is one production translation unit; the func_02053200 helper this slice
@@ -40,21 +40,21 @@ src/InvMat4x3.c
 src/cstd.cpp
 # dBgW_Kc is two production translation units, one per module; the C2
 # base-subobject ctor lives in the arm9 one.
-src/engine/collision/dBgW_Kc.cpp
+src/engine/collision/d_bg_w_kc.cpp
 src/func_0203b244.c
 src/LenVec3.c
 src/Matrix4x3_FromRotationY.c
 # The six func_01ffb0* flag/accessor helpers live in the ITCM half of the
 # dBgW_Kc production TU.
-src/engine/collision/dBgW_Kc_itcm.cpp
+src/engine/collision/d_bg_w_kc_itcm.cpp
 # The fBase_c framework hook virtuals are already covered above by
-# src/actors/ActorBase.cpp, the single translation unit that defines them.
+# src/runtime/actor/ActorBase.cpp, the single translation unit that defines them.
 src/func_0203b27c.c
-src/func_02044334.cpp
-src/func_0204424c.c
+# func_0204424c, func_02044284 and func_02044334 live in the fListNode
+# production translation unit.
+src/fListNode.cpp
 src/MulVec3Mat4x3.c
 src/func_0203b2ec.c
-src/func_02044284.cpp
 src/func_0203b20c.c
 
 # Virtuals the host now needs as real methods: migrating a constructor to
@@ -64,5 +64,5 @@ src/func_0203b20c.c
 # they were simply never sliced.
 
 # dBgW's non-virtual accessors are covered above by
-# src/engine/collision/dBgW.cpp, the single translation unit that defines
+# src/engine/collision/d_bg_w.cpp, the single translation unit that defines
 # the whole class.

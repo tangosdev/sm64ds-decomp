@@ -76,10 +76,10 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN4Heap24CreateSolidHeapAllocatorEPvjj",
+      "symbol": "_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj",
       "address": "0x0204ebc4",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN4Heap24CreateSolidHeapAllocatorEPvjj.cpp",
+      "legacy_source": "src/_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj.cpp",
       "ordinal": 8
     },
     {

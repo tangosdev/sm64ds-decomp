@@ -1,15 +1,15 @@
 {
   "id": "ov002/dBgActor_c",
   "module": "ov002",
-  "source": "src/actors/dBgActor_c.cpp",
-  "promoted_source": "src/actors/dBgActor_c.cpp",
+  "source": "src/runtime/actor/d_bg_actor.cpp",
+  "promoted_source": "src/runtime/actor/d_bg_actor.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20ee42c..0x20eea84, 11 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): dBgActor_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "COLLISION-EVENT FOLD (2026-10-09): the nine C-linkage helpers at 0x020eea84..0x020ef320 abut this TU's top with no gap and sit directly below src/actors/dPathLiftActor_c.cpp (0x020ef320). Each takes a mover's dBgCh_Actr, finds the actor owning the collider it hit (dActor_c::FindWithID of dBgPi::GetClsnID) and calls one dActor_c event slot on it, 21..28 (OnGroundPounded..OnHitFromUnderneath); the ninth, func_ov002_020eea84, hurts the player on a hit against actor 0x3a or 0x139. The owners being delivered to are the collider-owning level objects this class bases, so they are folded here, written first (highest address) per the file's reverse-order layout. They reference no TU-local data, so placement is by adjacency and subject; dPathLiftActor_c is the alternative home."
+    "COLLISION-EVENT FOLD (2026-10-09): the nine C-linkage helpers at 0x020eea84..0x020ef320 abut this TU's top with no gap and sit directly below src/runtime/actor/d_path_lift_actor.cpp (0x020ef320). Each takes a mover's dBgCh_Actr, finds the actor owning the collider it hit (dActor_c::FindWithID of dBgPi::GetClsnID) and calls one dActor_c event slot on it, 21..28 (OnGroundPounded..OnHitFromUnderneath); the ninth, func_ov002_020eea84, hurts the player on a hit against actor 0x3a or 0x139. The owners being delivered to are the collider-owning level objects this class bases, so they are folded here, written first (highest address) per the file's reverse-order layout. They reference no TU-local data, so placement is by adjacency and subject; dPathLiftActor_c is the alternative home."
   ],
   "sections": [
     {

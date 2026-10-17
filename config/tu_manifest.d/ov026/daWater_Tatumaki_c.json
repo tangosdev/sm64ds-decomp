@@ -1,8 +1,8 @@
 {
   "id": "ov026/daWater_Tatumaki_c",
   "module": "ov026",
-  "source": "src/actors/daWater_Tatumaki_c.cpp",
-  "promoted_source": "src/actors/daWater_Tatumaki_c.cpp",
+  "source": "src/game/actors/d_a_water_tatumaki.cpp",
+  "promoted_source": "src/game/actors/d_a_water_tatumaki.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,8 +10,8 @@
     "contiguous linker run: 0x2111aa0..0x21121bc, 13 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daWater_Tatumaki_c",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold: the daWater_Tatumaki_c_classInit registry factory (profile WATER_TATUMAKI, historical alias Whirlpool_Spawn), 0x021121bc..0x021121fc, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daWater_Tatumaki_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x02111aa0..0x021121fc, 14 functions, bounded above by daWater_Suikomi_c's first function at 0x021121fc (src/actors/daWater_Suikomi_c.cpp).",
-    "the compiler-generated __sinit_daWater_Tatumaki_c.cpp is byte-identical to retail __sinit_ov026_02112c94 (0xd4). It constructs the model handle at 0x02113f0c and the anim handle at 0x02113f04, then copies the four pointer-to-member descriptors at 0x02113cec..0x02113d0c into the state records at 0x02113f2c and 0x02113f3c. The ctor word at 0x02112db0 points at that initializer. Class RTTI, profile, and vtable stay outside this claim."
+    "classInit fold: the daWater_Tatumaki_c_classInit registry factory (profile WATER_TATUMAKI, historical alias Whirlpool_Spawn), 0x021121bc..0x021121fc, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daWater_Tatumaki_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x02111aa0..0x021121fc, 14 functions, bounded above by daWater_Suikomi_c's first function at 0x021121fc (src/game/actors/d_a_water_suikomi.cpp).",
+    "the compiler-generated __sinit_d_a_water_tatumaki.cpp is byte-identical to retail __sinit_ov026_02112c94 (0xd4). It constructs the model handle at 0x02113f0c and the anim handle at 0x02113f04, then copies the four pointer-to-member descriptors at 0x02113cec..0x02113d0c into the state records at 0x02113f2c and 0x02113f3c. The ctor word at 0x02112db0 points at that initializer. Class RTTI, profile, and vtable stay outside this claim."
   ],
   "sections": [
     {
@@ -142,7 +142,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daWater_Tatumaki_c.cpp",
+      "symbol": "__sinit_d_a_water_tatumaki.cpp",
       "address": "0x02112c94",
       "size": "0xd4",
       "binding": "STB_GLOBAL",
@@ -151,7 +151,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daWater_Tatumaki_c.cpp",
+      "symbol": ".p__sinit_d_a_water_tatumaki.cpp",
       "address": "0x02112db0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -190,14 +190,14 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov026_02113f04",
+      "symbol": "gWaterTatumakiAnimationFile",
       "address": "0x02113f04",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anim resource handle constructed with file ID 0x4a8"
     },
     {
-      "symbol": "data_ov026_02113f0c",
+      "symbol": "gWaterTatumakiModelFile",
       "address": "0x02113f0c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -271,13 +271,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daWater_Tatumaki_c.cpp",
+      "symbol": "__sinit_d_a_water_tatumaki.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daWater_Tatumaki_c.cpp",
+      "symbol": ".p__sinit_d_a_water_tatumaki.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -365,7 +365,7 @@
       "source": "0x02112d30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov026_02113f0c",
+      "symbol": "gWaterTatumakiModelFile",
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02113f0c"
@@ -395,7 +395,7 @@
       "source": "0x02112d40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov026_02113f04",
+      "symbol": "gWaterTatumakiAnimationFile",
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02113f04"
@@ -485,7 +485,7 @@
       "source": "0x02112db0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daWater_Tatumaki_c.cpp",
+      "symbol": "__sinit_d_a_water_tatumaki.cpp",
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02112c94"
@@ -532,7 +532,7 @@
     }
   ],
   "notes": [
-    "The file-scope model handle, anim handle, and two state records are defined in this TU. mwcc emits __sinit_daWater_Tatumaki_c.cpp, the ctor word, and four anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02113d0c, where _ZTI18daWater_Tatumaki_c begins.",
+    "The file-scope model handle, anim handle, and two state records are defined in this TU. mwcc emits __sinit_d_a_water_tatumaki.cpp, the ctor word, and four anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02113d0c, where _ZTI18daWater_Tatumaki_c begins.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111cb4; kept the first. Both returns are pointers; the merged file declares void* and casts to char* at the second call.",

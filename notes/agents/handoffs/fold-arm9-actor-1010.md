@@ -6,7 +6,7 @@
 97 functions. A link-verified staged source already sat at
 `src_tu/actors/Actor.cpp` (the pilot TU from
 `notes/tu-reconstruction-pilot-report.md`); this run promoted it to
-`src/actors/dActor_c.cpp`.
+`src/runtime/actor/d_actor.cpp`.
 
 Engine target -- allowed under the current sweep (Player remains
 excluded). Nothing else claims it: no live worktree, branch, or open PR.
@@ -35,7 +35,7 @@ restored shards re-emit it: `romdata_check` verifies `_ZTV8dActor_c`
 
 ## What landed
 
-- `src/actors/dActor_c.cpp`: the staged TU promoted in place, deslopped
+- `src/runtime/actor/d_actor.cpp`: the staged TU promoted in place, deslopped
   per current conventions -- `dActor_c::Spawn(...)` call sites now use the
   static member spelling instead of a local `extern "C"` alias; the three
   `dBgCh_LinPad`/`RaycastGroundPod` POD dodge declarations carry
@@ -55,10 +55,10 @@ restored shards re-emit it: `romdata_check` verifies `_ZTV8dActor_c`
   `attribution.json` carries `path#symbol` overrides for the consolidated
   functions (tangosdev, matching shard credit); `port/slice_gate9.txt`
   and the live comments in `include/daHanachan_c.h`,
-  `src/actors/daObjSwdoor_c.cpp`, `src/game/actors/d_a_sound_obj.cpp`,
-  `src/game/actors/daObjPushblock_c.cpp` point at the promoted file.
+  `src/game/actors/d_a_obj_swdoor.cpp`, `src/game/actors/d_a_sound_obj.cpp`,
+  `src/game/actors/d_a_obj_pushblock.cpp` point at the promoted file.
 - `config/converted-baseline.json`: banked member identities migrated to
-  `src/actors/dActor_c.cpp#symbol` keys; one member sits in
+  `src/runtime/actor/d_actor.cpp#symbol` keys; one member sits in
   `converted-backslide-exceptions.jsonl` with a reason (below).
 - `config/decl-agreement-baseline.json`: rows banked for every
   declaration another file (or this file's own reconciled externs) makes

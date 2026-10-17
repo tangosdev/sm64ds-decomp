@@ -4,13 +4,13 @@
   "source": "src/engine/cp15/CP15.cpp",
   "promoted_source": "src/engine/cp15/CP15.cpp",
   "status": "promoted",
-  "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x02058bb0..0x02058df4: seven CP15 cache primitives tile 0x02058bb0..0x02058c84 exactly (every one carries the _ZN4CP15* label), four compiled helpers continue to 0x02058d80, and OS_GetInitArenaLo closes the run at 0x02058df4 -- one object, no hole, no tail (recomputed from config/arm9/symbols.txt). Below, func_02058b9c ends at 0x02058bb0 (class change). Above, func_02058df4 stops the run: it reads the boot vectors func_00000000/func_00000600, which no linked object defines (its delinks entry was never complete and the sibling consumer func_02058308 is likewise inert), so folding it in breaks the ROM link -- the 0x02058df4..0x0205938c helpers and the 0x020593a8 DTCM/MPU band stay out. CP15::SystemSetup, CP15::WaitForInterrupt and the region-7 pair live in their own runs and are deliberately out of scope.",
+  "boundary_confidence": "medium",
+  "boundary_evidence": "Assembly-only compiler input 0x02058bb0..0x02058c84. The adjacent ordinary C helpers were separated for host compilation (issue #3877). This boundary is a production packaging decision, not proof of the original Nintendo translation unit.",
   "sections": [
     {
       "name": ".text",
       "start": "0x02058bb0",
-      "end": "0x02058df4"
+      "end": "0x02058c84"
     }
   ],
   "functions": [
@@ -62,44 +62,9 @@
       "size": "0x1c",
       "ordinal": 6,
       "legacy_source": "src/_ZN4CP1526InvalidateInstructionCacheEjj.cpp"
-    },
-    {
-      "symbol": "func_02058c84",
-      "address": "0x02058c84",
-      "size": "0x4c",
-      "ordinal": 7,
-      "legacy_source": "src/unnamed/arm9/0205/func_02058c84.c"
-    },
-    {
-      "symbol": "func_02058cd0",
-      "address": "0x02058cd0",
-      "size": "0x88",
-      "ordinal": 8,
-      "legacy_source": "src/unnamed/arm9/0205/func_02058cd0.c"
-    },
-    {
-      "symbol": "func_02058d58",
-      "address": "0x02058d58",
-      "size": "0x14",
-      "ordinal": 9,
-      "legacy_source": "src/unnamed/arm9/0205/func_02058d58.c"
-    },
-    {
-      "symbol": "func_02058d6c",
-      "address": "0x02058d6c",
-      "size": "0x14",
-      "ordinal": 10,
-      "legacy_source": "src/unnamed/arm9/0205/func_02058d6c.c"
-    },
-    {
-      "symbol": "OS_GetInitArenaLo",
-      "address": "0x02058d80",
-      "size": "0x74",
-      "ordinal": 11,
-      "legacy_source": "src/OS_GetInitArenaLo.c"
     }
   ],
-  "verification": {
+  "previous_verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
@@ -192,6 +157,32 @@
         "matchesStockRom": true
       },
       "linkerOutput": null
+    }
+  },
+  "previous_verification_base": "af21ea68d359d1aee18f3ff5a6ac51f7dfadc921",
+  "notes": [
+    "Ordinary C helpers now have standalone production inputs. previous_verification describes the unsplit TU at previous_verification_base; it is historical evidence only."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-CP15/CP15.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
     }
   }
 }

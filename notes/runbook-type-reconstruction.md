@@ -240,14 +240,14 @@ int *_ZN19daObjBlockItemTag_cD0Ev(int *t)
 {
     t[0] = (int)_ZTV19daObjBlockItemTag_c;
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
+    _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(t, data_020a0eac);
     return t;
 }
 ```
 
 `this` is an `int*`, members are array indices, the symbol name is spelled by hand.
 
-**Rung 3 -- migrated function** (`dFader_c::AdvanceInterp`, written as a one-function shard and since folded into `src/engine/fader/dFader_c.cpp`, done):
+**Rung 3 -- migrated function** (`dFader_c::AdvanceInterp`, written as a one-function shard and since folded into `src/runtime/graphics/fader/d_fader.cpp`, done):
 
 ```c
 //cpp
@@ -519,8 +519,8 @@ reaching a sibling function. Every one of them was written the same way:
 
 ```cpp
 extern "C" {
-extern void _ZN4Heap10DeallocateEPv(void);
-void _ZN4Heap11_DeallocateEPv(void) { _ZN4Heap10DeallocateEPv(); }
+extern void _ZN5mHeap6Heap_t10DeallocateEPv(void);
+void _ZN5mHeap6Heap_t11_DeallocateEPv(void) { _ZN5mHeap6Heap_t10DeallocateEPv(); }
 }
 ```
 

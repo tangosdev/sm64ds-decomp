@@ -67,7 +67,7 @@ struct daObjUkiyuka_c : dBgActor_c {
     virtual ~daObjUkiyuka_c() {}
 
     /* Slot 6, this class's own override, defined out of line in
-       src/actors/daObjUkiyuka_c.cpp. LAYOUT-NEUTRAL: it re-uses the
+       src/game/actors/d_a_obj_ukiyuka.cpp. LAYOUT-NEUTRAL: it re-uses the
        slot dBgActor_c already holds rather than appending one, and adds no
        field, so the 0x32c assert below is untouched.
 

@@ -444,7 +444,7 @@ PR2445_PATHS = [('M', 'attribution.json'),
  ('D', 'src/_ZN11SnowmanBody8SetStateEi.cpp'),
  ('D', 'src/_ZN11SnowmanBodyD0Ev.cpp'),
  ('D', 'src/_ZN11SnowmanBodyD1Ev.cpp'),
- ('A', 'src/actors/daBgSnmBdy_c.cpp'),
+ ('A', 'src/game/actors/d_a_bg_snm_bdy.cpp'),
  ('D', 'src/d_a_bg_snm_bdy.c'),
  ('M', 'symbols/actor_renames.tsv')]
 

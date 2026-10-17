@@ -1,0 +1,766 @@
+{
+  "schema": 1,
+  "task": "ibl-interface1013",
+  "base_commit": "ee8618f8233ab228954057e3ebe079fd2936c1b8",
+  "scope": "Iron Ball spawner real nearest-player and Spawn interfaces",
+  "source": "src/actors/daIbl_c.cpp",
+  "change": "Use ClosestPlayer() returning Player*, dActor_c::Spawn() returning daIbl_c*, and direct child mDispenser assignment; remove redundant raw C declarations.",
+  "production_ownership": "Existing16-function text-only promoted TU. No init/data/BSS claim, no new enrollment or policy. Complete emitted metadata is separately verified before externalization.",
+  "flat_boundaries": "Existing POD stack snapshot and borrowed inherited position/angle spans retained. Direct component snapshot spelling changes codegen; no compiler-wall claim is made. No extra Vector3 lifecycle is introduced.",
+  "proof": {
+    "base": "ee8618f8233ab228954057e3ebe079fd2936c1b8",
+    "raw_sha256": "34b085d2cc8152dde43cc901bbe11918ab4ff84e4b7c986e2497ba6bfade76b7",
+    "normal_sha256": "d40c3b765c8f5e425cdd69f938128fbfec257e43d5c84be7a140feac071ee7df",
+    "whole_raw_equal": true,
+    "whole_normal_equal": true,
+    "functions": [
+      {
+        "name": "_ZN7daIbl_cD1Ev",
+        "module": "ov100",
+        "addr": "0x02141f04",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_cD0Ev",
+        "module": "ov100",
+        "addr": "0x02141f4c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c16OnAimedAtWithEggEv",
+        "module": "ov100",
+        "addr": "0x02141fa8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_02141fb0Ev",
+        "module": "ov100",
+        "addr": "0x02141fb0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_02142130Ev",
+        "module": "ov100",
+        "addr": "0x02142130",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_02142264Ev",
+        "module": "ov100",
+        "addr": "0x02142264",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_0214233cEv",
+        "module": "ov100",
+        "addr": "0x0214233c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_021424c0Ev",
+        "module": "ov100",
+        "addr": "0x021424c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_0214272cEv",
+        "module": "ov100",
+        "addr": "0x0214272c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_02142918Ev",
+        "module": "ov100",
+        "addr": "0x02142918",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c19func_ov100_02142b90Ev",
+        "module": "ov100",
+        "addr": "0x02142b90",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c16CleanupResourcesEv",
+        "module": "ov100",
+        "addr": "0x02142d1c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c6RenderEv",
+        "module": "ov100",
+        "addr": "0x02142d5c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c8BehaviorEv",
+        "module": "ov100",
+        "addr": "0x02142d98",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c13InitResourcesEv",
+        "module": "ov100",
+        "addr": "0x02142de0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "daIbl_c_classInit",
+        "module": "ov100",
+        "addr": "0x0214316c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ],
+    "metadata": [
+      {
+        "name": "_ZTV7daIbl_c",
+        "module": "ov100",
+        "address": "0x2147f74",
+        "size": 132,
+        "typed_edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTI7daIbl_c",
+            "addr": 34897740,
+            "add": 0
+          },
+          {
+            "off": 68,
+            "type": 2,
+            "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+            "addr": 33830036,
+            "add": 0
+          },
+          {
+            "off": 64,
+            "type": 2,
+            "sym": "_ZN7fBase_c9Virtual38Ejj",
+            "addr": 33830044,
+            "add": 0
+          },
+          {
+            "off": 60,
+            "type": 2,
+            "sym": "_ZN7fBase_c9Virtual34Ejj",
+            "addr": 33830268,
+            "add": 0
+          },
+          {
+            "off": 56,
+            "type": 2,
+            "sym": "_ZN7fBase_c16OnPendingDestroyEv",
+            "addr": 33831616,
+            "add": 0
+          },
+          {
+            "off": 128,
+            "type": 2,
+            "sym": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+            "addr": 33620188,
+            "add": 0
+          },
+          {
+            "off": 120,
+            "type": 2,
+            "sym": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+            "addr": 33620268,
+            "add": 0
+          },
+          {
+            "off": 116,
+            "type": 2,
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "addr": 33620272,
+            "add": 0
+          },
+          {
+            "off": 112,
+            "type": 2,
+            "sym": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+            "addr": 33620276,
+            "add": 0
+          },
+          {
+            "off": 108,
+            "type": 2,
+            "sym": "_ZN8dActor_c8OnPushedERS_",
+            "addr": 33620280,
+            "add": 0
+          },
+          {
+            "off": 104,
+            "type": 2,
+            "sym": "_ZN8dActor_c8OnKickedERS_",
+            "addr": 33620284,
+            "add": 0
+          },
+          {
+            "off": 100,
+            "type": 2,
+            "sym": "_ZN8dActor_c11OnAttacked2ERS_",
+            "addr": 33620288,
+            "add": 0
+          },
+          {
+            "off": 96,
+            "type": 2,
+            "sym": "_ZN8dActor_c11OnAttacked1ERS_",
+            "addr": 33620292,
+            "add": 0
+          },
+          {
+            "off": 92,
+            "type": 2,
+            "sym": "_ZN8dActor_c15OnGroundPoundedERS_",
+            "addr": 33620296,
+            "add": 0
+          },
+          {
+            "off": 88,
+            "type": 2,
+            "sym": "_ZN8dActor_c9Virtual50Ev",
+            "addr": 33620300,
+            "add": 0
+          },
+          {
+            "off": 84,
+            "type": 2,
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "addr": 33620308,
+            "add": 0
+          },
+          {
+            "off": 80,
+            "type": 2,
+            "sym": "_ZN8dActor_c13OnYoshiTryEatEv",
+            "addr": 33620320,
+            "add": 0
+          },
+          {
+            "off": 52,
+            "type": 2,
+            "sym": "_ZN8dActor_c11AfterRenderEj",
+            "addr": 33623916,
+            "add": 0
+          },
+          {
+            "off": 48,
+            "type": 2,
+            "sym": "_ZN8dActor_c12BeforeRenderEv",
+            "addr": 33623928,
+            "add": 0
+          },
+          {
+            "off": 40,
+            "type": 2,
+            "sym": "_ZN8dActor_c13AfterBehaviorEj",
+            "addr": 33624008,
+            "add": 0
+          },
+          {
+            "off": 36,
+            "type": 2,
+            "sym": "_ZN8dActor_c14BeforeBehaviorEv",
+            "addr": 33624020,
+            "add": 0
+          },
+          {
+            "off": 28,
+            "type": 2,
+            "sym": "_ZN8dActor_c21AfterCleanupResourcesEj",
+            "addr": 33624596,
+            "add": 0
+          },
+          {
+            "off": 24,
+            "type": 2,
+            "sym": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+            "addr": 33624608,
+            "add": 0
+          },
+          {
+            "off": 16,
+            "type": 2,
+            "sym": "_ZN8dActor_c18AfterInitResourcesEj",
+            "addr": 33624644,
+            "add": 0
+          },
+          {
+            "off": 12,
+            "type": 2,
+            "sym": "_ZN8dActor_c19BeforeInitResourcesEv",
+            "addr": 33624680,
+            "add": 0
+          },
+          {
+            "off": 76,
+            "type": 2,
+            "sym": "_ZN7daIbl_cD0Ev",
+            "addr": 34873164,
+            "add": 0
+          },
+          {
+            "off": 44,
+            "type": 2,
+            "sym": "_ZN7daIbl_c6RenderEv",
+            "addr": 34876764,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZN7daIbl_c13InitResourcesEv",
+            "addr": 34876896,
+            "add": 0
+          },
+          {
+            "off": 20,
+            "type": 2,
+            "sym": "_ZN7daIbl_c16CleanupResourcesEv",
+            "addr": 34876700,
+            "add": 0
+          },
+          {
+            "off": 32,
+            "type": 2,
+            "sym": "_ZN7daIbl_c8BehaviorEv",
+            "addr": 34876824,
+            "add": 0
+          },
+          {
+            "off": 124,
+            "type": 2,
+            "sym": "_ZN7daIbl_c16OnAimedAtWithEggEv",
+            "addr": 34873256,
+            "add": 0
+          },
+          {
+            "off": 72,
+            "type": 2,
+            "sym": "_ZN7daIbl_cD1Ev",
+            "addr": 34873092,
+            "add": 0
+          }
+        ],
+        "blind": 0
+      },
+      {
+        "name": "_ZTI7daIbl_c",
+        "module": "ov100",
+        "address": "0x2147f4c",
+        "size": 12,
+        "typed_edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS7daIbl_c",
+            "addr": 34897728,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI12dEnemyBase_c",
+            "addr": 34636224,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind": 0
+      },
+      {
+        "name": "_ZTS7daIbl_c",
+        "module": "ov100",
+        "address": "0x2147f40",
+        "size": 9,
+        "typed_edges": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZTI12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081c0",
+        "size": 12,
+        "typed_edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS12dEnemyBase_c",
+            "addr": 34636236,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI8dActor_c",
+            "addr": 34136976,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind": 0
+      },
+      {
+        "name": "_ZTS12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081cc",
+        "size": 15,
+        "typed_edges": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZTI8dActor_c",
+        "module": "arm9",
+        "address": "0x208e390",
+        "size": 12,
+        "typed_edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS8dActor_c",
+            "addr": 34136964,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI7dBase_c",
+            "addr": 34107000,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind": 0
+      },
+      {
+        "name": "_ZTS8dActor_c",
+        "module": "arm9",
+        "address": "0x208e384",
+        "size": 10,
+        "typed_edges": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZTI7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e78",
+        "size": 12,
+        "typed_edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS7dBase_c",
+            "addr": 34106964,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI7fBase_c",
+            "addr": 34106736,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind": 0
+      },
+      {
+        "name": "_ZTS7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e54",
+        "size": 9,
+        "typed_edges": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZTI7fBase_c",
+        "module": "arm9",
+        "address": "0x2086d70",
+        "size": 8,
+        "typed_edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS7fBase_c",
+            "addr": 34106976,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi17__class_type_infoE",
+            "addr": 34187124,
+            "add": 0
+          }
+        ],
+        "blind": 0
+      },
+      {
+        "name": "_ZTS7fBase_c",
+        "module": "arm9",
+        "address": "0x2086e60",
+        "size": 9,
+        "typed_edges": [],
+        "blind": 0
+      }
+    ],
+    "raw_typed_refs": 192,
+    "normal_typed_refs": 140,
+    "normal_production_path": "Existing text-only _retarget/_isolate; not prepare_intact_object. No nontext ownership is added.",
+    "policy_changes": [],
+    "address_overrides": []
+  },
+  "inherited_findings": {
+    "NDT0922-01": {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    "NDT0922-02": {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    "NDT0922-03": {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    "RCV-PACKET-01": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    "RCV-PACKET-02": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    "RCV-PACKET-03": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    "RCV-PACKET-04": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    "RCV-SHADOW-01": {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    "RCV2908-01": {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    "RCV2908-02": {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    "RCV2908-03": {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    "RCV2908-04": {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    "STALE-ARRAY-RUNTIME-TEST": {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    }
+  },
+  "inherited_qualification": "Historical IDs outside this unchanged actor interface are preserved without claiming fresh reconstruction of their old scope.",
+  "remaining_reconstruction": [
+    "Existing PMF dispatch views, scalar Fix12 ABI calls and other raw actor views remain partial."
+  ],
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3812",
+  "remaining_owner": "codex-ibl-interface-producer1013 (root enemy-cleanup coordinator)",
+  "gates": {
+    "tested_commit": "808450c9737fba634da5f640779245b95e69875e",
+    "tested_base": "ee8618f8233ab228954057e3ebe079fd2936c1b8",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\ibl-interface1013\\full_rom.log",
+        "command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ]
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\ibl-interface1013\\range.log",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "ee8618f8233ab228954057e3ebe079fd2936c1b8..HEAD",
+          "--json",
+          "build\\ibl-interface1013\\range.json"
+        ]
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\ibl-interface1013\\port.log",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ]
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\ibl-interface1013\\langmode.log",
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "langmode-baseline.json"
+        ]
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\ibl-interface1013\\decl.log",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "ee8618f8233ab228954057e3ebe079fd2936c1b8"
+        ]
+      }
+    }
+  },
+  "stock_range": {
+    "checked": 16,
+    "verified": 16,
+    "blind": 0,
+    "blocking": 0
+  },
+  "full_rom_summary": {
+    "modules_exact": 106,
+    "source_functions": 11334,
+    "owned_data": 331,
+    "bss_records": 239,
+    "bss_bytes": 30164,
+    "qualification": "Baseline dsd symbol-name diagnostics and global advisory preexisting data differences retained; actual module/source fidelity is exact."
+  },
+  "final_binding": "Final report-only descendant retains exact src/include/config/tools/port trees of tested checkpoint; acceptance is bound to final immutable head.",
+  "report_correction": {
+    "finding": "IBL-INTERFACE-1013-REPORT",
+    "kind": "provenance",
+    "disposition": "fixed",
+    "reason": "Earlier re.search selected the baseline-control count5888. The final production summary is the last source-built functions section and independently agrees at11334. Source/config/include/tools/port and all actual tests remain unchanged.",
+    "observed_control_and_final_counts": [
+      5888,
+      11334
+    ]
+  }
+}

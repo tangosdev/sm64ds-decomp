@@ -1,12 +1,12 @@
 {
   "id": "ov002/daObjMarioCap_c",
   "module": "ov002",
-  "source": "src/actors/daObjMarioCap_c.cpp",
-  "promoted_source": "src/actors/daObjMarioCap_c.cpp",
+  "source": "src/game/actors/d_a_obj_mario_cap.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_mario_cap.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "The whole daObjMarioCap_c run of ov002 .text, 0x020b6f18..0x020b8bf0, 31 functions: the tools/tu_map.py linker run 0x020b6f18..0x020b8b98 (30 functions, D1 through InitResources) plus the zero-gap registry factory daObjMarioCap_c_classInit (0x020b8b98, 0x58), folded as `return new daObjMarioCap_c();` through the class's leaf operator new. The previous delinks entry, src/game/actors/d_a_obj_waterfall.cpp, ends at 0x020b6f18 and the next one, src/game/actors/daObjPushblock_c.cpp, starts at 0x020b8bf0, so the unit is bounded by other classes on both sides.",
+    "The whole daObjMarioCap_c run of ov002 .text, 0x020b6f18..0x020b8bf0, 31 functions: the tools/tu_map.py linker run 0x020b6f18..0x020b8b98 (30 functions, D1 through InitResources) plus the zero-gap registry factory daObjMarioCap_c_classInit (0x020b8b98, 0x58), folded as `return new daObjMarioCap_c();` through the class's leaf operator new. The previous delinks entry, src/game/actors/d_a_obj_waterfall.cpp, ends at 0x020b6f18 and the next one, src/game/actors/d_a_obj_pushblock.cpp, starts at 0x020b8bf0, so the unit is bounded by other classes on both sides.",
     "_ZN15daObjMarioCap_c13InitResourcesEv (0x020b86d0, 0x4c8) was held out of the earlier 29-function claim; its delinks block carried no complete marker. It reproduces 0x4c8 for 0x4c8 with the two `(u32)param1` read-side casts its body documents, so it is folded and the claim is one contiguous range again.",
     "ROM class identity: _ZTS15daObjMarioCap_c / _ZTI15daObjMarioCap_c / _ZTV15daObjMarioCap_c live in ov002 outside this .text range, so the route is text-only plus a compiler_only_output policy.",
     "destructor direction: the cartridge orders D1 (0x020b6f18) BELOW D0 (0x020b6f68) and carries no D2 -- the reproducible direction for an inline in-class destructor.",
@@ -1018,7 +1018,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daObjMarioCap_c.cpp",
+      "symbol": "__sinit_d_a_obj_mario_cap.cpp",
       "address": "0x02101064",
       "size": "0x414",
       "binding": "STB_GLOBAL",
@@ -1027,7 +1027,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjMarioCap_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_mario_cap.cpp",
       "address": "0x021080f0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1036,13 +1036,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjMarioCap_c.cpp",
+      "symbol": "__sinit_d_a_obj_mario_cap.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjMarioCap_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_mario_cap.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1956,74 +1956,74 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "__sinit_daObjMarioCap_c.cpp",
+      "symbol": "__sinit_d_a_obj_mario_cap.cpp",
       "target_module": "ov002",
       "target_address": "0x02101064"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1133",
+      "from": "@1131",
       "to": "@1119",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1134",
+      "from": "@1132",
       "to": "@2703",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1135",
+      "from": "@1133",
       "to": "@1121",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1136",
+      "from": "@1134",
       "to": "@2704",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1137",
+      "from": "@1135",
       "to": "@1123",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1138",
+      "from": "@1136",
       "to": "@2705",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1139",
+      "from": "@1137",
       "to": "@1125",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1140",
+      "from": "@1138",
       "to": "@2706",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1141",
+      "from": "@1139",
       "to": "@1127",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1142",
+      "from": "@1140",
       "to": "@2716",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1143",
+      "from": "@1141",
       "to": "@2717",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1144",
+      "from": "@1142",
       "to": "@2707",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1145",
+      "from": "@1143",
       "to": "@2718",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

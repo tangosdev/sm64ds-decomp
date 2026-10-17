@@ -39,7 +39,7 @@ a table row, as history. `config/dead-reference-baseline.json` is not changed.
   ov025 [delinks.txt](../../../config/arm9/overlays/ov025/delinks.txt) and
   [symbols.txt](../../../config/arm9/overlays/ov025/symbols.txt), the new
   [manifest entry](../../../config/tu_manifest.d/ov025/daObjDpBrock_c.json), the promoted
-  [src/actors/daObjDpBrock_c.cpp](../../../src/actors/daObjDpBrock_c.cpp), and these ledgers, which the
+  [src/game/actors/d_a_obj_dp_brock.cpp](../../../src/game/actors/d_a_obj_dp_brock.cpp), and these ledgers, which the
   integrator reconciles. Each edit is to this class's own rows, in place:
   `attribution.json` (9 overrides), `config/converted-baseline.json` (4
   identities re-keyed), `config/decl-agreement-baseline.json` (5 stale keys
@@ -74,9 +74,9 @@ a table row, as history. `config/dead-reference-baseline.json` is not changed.
   typeinfo pointer) through 0x02113990 (slot 31, `dBgActor_c::Kill`). So the
   vtable is 2 header words plus 32 slots, 0x88 bytes. The next word,
   0x02113994, is `_ZTI10daDpLift_c`.
-- Structural inference: [func_ov025_02111e30](../../../config/tu_manifest.d/ov025/daObjDpBrock_c.json)(current [_ZN14daObjDpBrock_c14UpdateModelPosAndRotYEv](../../../src/actors/daObjDpBrock_c.cpp)) puts the class's own model
+- Structural inference: [func_ov025_02111e30](../../../config/tu_manifest.d/ov025/daObjDpBrock_c.json)(current [_ZN14daObjDpBrock_c14UpdateModelPosAndRotYEv](../../../src/game/actors/d_a_obj_dp_brock.cpp)) puts the class's own model
   (mStepModel, 0x320) on the actor position scaled by 1/8, and
-  [func_ov025_02111dec](../../../config/tu_manifest.d/ov025/daObjDpBrock_c.json)(current [_ZN14daObjDpBrock_c23UpdateStepClsnPosAndRotEv](../../../src/actors/daObjDpBrock_c.cpp)) does the same for the collider matrix `mClsnMat2` (0x374)
+  [func_ov025_02111dec](../../../config/tu_manifest.d/ov025/daObjDpBrock_c.json)(current [_ZN14daObjDpBrock_c23UpdateStepClsnPosAndRotEv](../../../src/game/actors/d_a_obj_dp_brock.cpp)) does the same for the collider matrix `mClsnMat2` (0x374)
   and calls `dBgW_KcMbg::Transform`. These are the class's counterparts of
   dBgActor_c's `UpdateModelPosAndRotY` and `UpdateClsnPosAndRot`. mState 0 sinks
   and 1 rises, and each state flips after 100 frames.
@@ -135,7 +135,7 @@ a table row, as history. `config/dead-reference-baseline.json` is not changed.
 - Deferred: `symbols/profile_reconstruction_registry.json` still names the
   retired factory source as the DP_BROCK row's `current_factory_file`. The
   field is stale now that the factory lives in
-  [src/actors/daObjDpBrock_c.cpp](../../../src/actors/daObjDpBrock_c.cpp). That file is
+  [src/game/actors/d_a_obj_dp_brock.cpp](../../../src/game/actors/d_a_obj_dp_brock.cpp). That file is
   generated data outside this reservation, so it is not edited here; the fix
   belongs with its generator or a registry refresh. No gate reads the field.
 - No rows for the old mangled names exist in `config/match_provenance.jsonl`
@@ -164,7 +164,7 @@ static gates below were rerun on this commit.
   errors. It still fails on the 9 errors the baseline control also has, so
   that check is not green. The ROM sha256 d1506e90...c478e8 is IDENTICAL to
   the stock control.
-- `python tools/romdata_check.py --files src/actors/daObjDpBrock_c.cpp`:
+- `python tools/romdata_check.py --files src/game/actors/d_a_obj_dp_brock.cpp`:
   11 emitted data symbols, 6 VERIFIED (184 bytes, including
   `_ZTV14daObjDpBrock_c` 128 bytes and `_ZTI14daObjDpBrock_c`), 5 PARTIAL
   (the `_ZTS` strings), 0 DIFFERS.
@@ -183,12 +183,12 @@ static gates below were rerun on this commit.
   no broken markdown links. It exited 1 at the first checkpoint, before the
   prose fix.
 - `python tools/tiers_ratchet.py --check` exit 1: one backslide,
-  `src/actors/dScMgLuigi_c.cpp#_ZN12dScMgLuigi_c10ResetBoardEv` (No unk_
+  `src/minigames/d_s_mg_luigi.cpp#_ZN12dScMgLuigi_c10ResetBoardEv` (No unk_
   fields). This is pre-existing: the same command at the input commit also
   exits 1 with the same single lost member (+64 gained there, +65 here). This
   TU's four banked identities are retained and not listed as lost. Not
   `--update`d. Base evidence: a scratch checkout of 787633e5e7 run with the
-  same command exits 1, and `src/actors/dScMgLuigi_c.cpp` and its includes
+  same command exits 1, and `src/minigames/d_s_mg_luigi.cpp` and its includes
   are unchanged by this branch. The coordinator reports that #3077 fixes it on
   main.
 - `python tools/check_tubuild_conflicts.py` exit 0.

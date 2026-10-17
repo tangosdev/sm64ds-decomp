@@ -23,7 +23,14 @@
  *   text-only so the definition here is a deadstripped duplicate.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km2_ukishima_AssetId {
+    ASSET_KM2_UKISHIMA_BMD = 0x066b,
+    ASSET_KM2_UKISHIMA_KCL = 0x066c
+};
+
 #include "daObjKm2_Ukishima_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
 struct CLPS_Block;
@@ -58,22 +65,9 @@ int func_ov002_020b6584(daObjUkiyuka_c *self, ResourceDescriptor *descriptor,
                         Fix12i bobAmplitude);
 int func_ov002_020b6424(daObjUkiyuka_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov045_02112f08;
-extern UkishimaModelFilePtr data_ov045_02113200;     /* BMD, file 1643 */
-extern UkishimaCollisionFilePtr data_ov045_021131f8; /* KCL, file 1644 */
+extern UkishimaModelFilePtr gKm2UkishimaModelFile;     /* BMD, file 1643 */
+extern UkishimaCollisionFilePtr gKm2UkishimaCollisionFile; /* KCL, file 1644 */
 }
-
-struct UkishimaSpawnInfo {
-    daObjKm2_Ukishima_c *(*classInit)();
-    s16 executePriority; /* +4: also KM2_UKISHIMA registry id 0x0091 = 145 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char UkishimaSpawnInfo_size_must_be_0x1c[
-    sizeof(UkishimaSpawnInfo) == 0x1c ? 1 : -1];
 
 /* 20.12; the shared setup helper writes this to mBobAmplitude. */
 enum { kBobAmplitude = 0xf50 };
@@ -85,9 +79,9 @@ extern "C" daObjKm2_Ukishima_c *daObjKm2_Ukishima_c_classInit()
 }
 
 // @symbol g_profile_KM2_UKISHIMA
-extern "C" UkishimaSpawnInfo g_profile_KM2_UKISHIMA = {
+extern "C" SpawnInfo<daObjKm2_Ukishima_c> g_profile_KM2_UKISHIMA = {
     daObjKm2_Ukishima_c_classInit,
-    0x0091,
+    0x0091, /* KM2_UKISHIMA registry id 145 */
     0x00d8,
     2,
     0x00060000,
@@ -108,5 +102,5 @@ s32 daObjKm2_Ukishima_c::CleanupResources()
     return func_ov002_020b6424(this, &data_ov045_02112f08);
 }
 
-UkishimaModelFilePtr data_ov045_02113200(1643);
-UkishimaCollisionFilePtr data_ov045_021131f8(1644);
+UkishimaModelFilePtr gKm2UkishimaModelFile(ASSET_KM2_UKISHIMA_BMD);
+UkishimaCollisionFilePtr gKm2UkishimaCollisionFile(ASSET_KM2_UKISHIMA_KCL);

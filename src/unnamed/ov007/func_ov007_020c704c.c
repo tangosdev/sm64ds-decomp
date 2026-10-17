@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef long long s64;
 
 extern int func_020531a4(int a);
@@ -23,15 +24,14 @@ int func_ov007_020c704c(S *self, Vec3 *b, int r2arg, int r3arg, int radius)
 {
     int dx, dy, sum, spd, ratio;
     s64 sdx, sdy;
-    int *q;
 
     dx = b->x - self->p->x;
     dy = b->y - self->p->y;
-    sum = (int)(((s64)dx * dx + 0x800) >> 12) + (int)(((s64)dy * dy + 0x800) >> 12);
+    sum = FX_MUL(dx, dx) + FX_MUL(dy, dy);
     sdx = dx;
     sdy = dy;
 
-    if (sum <= (int)(((s64)radius * radius + 0x800) >> 12)) {
+    if (sum <= FX_MUL(radius, radius)) {
         self->f18 = 0;
         self->f14 = self->f18;
         self->f10 = self->f14;
@@ -42,14 +42,12 @@ int func_ov007_020c704c(S *self, Vec3 *b, int r2arg, int r3arg, int radius)
         return 2;
     }
 
-    if (sum <= (int)(((s64)r3arg * r3arg + 0x800) >> 12)) {
+    if (sum <= FX_MUL(r3arg, r3arg)) {
         spd = func_020531a4(sum);
         ratio = _ZN4cstd4fdivEii(r2arg, spd);
 
-        q = (int *)(int)((char *)self + 0x10);
-        *q = *q + (int)((ratio * sdx + 0x800) >> 12);
-        self = (S *)(int)((char *)self + 0x14);
-        *(int *)self = *(int *)self + (int)((ratio * sdy + 0x800) >> 12);
+        self->f10 += FX_MUL(ratio, sdx);
+        self->f14 += FX_MUL(ratio, sdy);
         return 1;
     }
     return 0;

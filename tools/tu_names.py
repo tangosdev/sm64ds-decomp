@@ -80,7 +80,11 @@ PREFIX = [
 
 
 def snake(s):
-    """CamelCase -> snake_case, preserving underscores already present."""
+    """CamelCase -> snake_case, preserving underscores already present.
+
+    `3D` and `1Up` are single tokens: dMg3DEspAnimSet -> d_mg3d_esp_anim_set, not
+    d_mg3_d_esp_anim_set."""
+    s = re.sub(r"(?<=\d)D(?=[A-Z])|(?<=1)Up(?![a-z])", lambda m: m.group(0).lower(), s)
     s = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", s)
     s = re.sub(r"(?<=[A-Z])(?=[A-Z][a-z])", "_", s)
     return re.sub(r"_+", "_", s).lower().strip("_")

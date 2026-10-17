@@ -199,8 +199,8 @@ data_ov014_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 data_ov014_021148b8 kind:data(any) addr:0x021148b8 ambiguous
 data_ov014_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov014_021148f0 kind:data(any) addr:0x021148f0 ambiguous
-data_ov014_02114940 kind:bss addr:0x02114940
-data_ov014_02114948 kind:bss addr:0x02114948
+gBAnaShutterCollisionFile kind:bss addr:0x02114940
+gBAnaShutterModelFile kind:bss addr:0x02114948
 @636 kind:bss addr:0x02114950
 @633 kind:bss addr:0x0211495c
 data_ov014_02114968 kind:bss addr:0x02114968

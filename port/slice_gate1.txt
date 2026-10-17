@@ -29,4 +29,4 @@ src/Timer.cpp
 # dFader_c hierarchy (real C++ with vtables -- host vtables are exactly what a
 # port wants, unlike the hybrid, which must reject them). One promoted TU; its
 # _MSC_VER guards host-compile exactly the non-hardware subset listed here.
-src/engine/fader/dFader_c.cpp
+src/runtime/graphics/fader/d_fader.cpp

@@ -4,7 +4,7 @@
     .ctor       start:0x021080d0 end:0x02108138 kind:rodata align:4
     .data       start:0x02108140 end:0x0210d9a0 kind:data align:32
     .bss        start:0x0210d9a0 end:0x021111a0 kind:bss align:32
-src/actors/dEnemyBase_c.cpp:
+src/runtime/actor/d_enemy_base.cpp:
     complete
     .text start:0x020ad660 end:0x020aedbc
     .init start:0x02100938 end:0x02100adc
@@ -12,11 +12,11 @@ src/actors/dEnemyBase_c.cpp:
     .data start:0x02108140 end:0x021081c0
     .bss start:0x0210db80 end:0x0210dc00
 
-src/actors/dCapEnemy_c.cpp:
+src/runtime/actor/d_cap_enemy.cpp:
     complete
     .text start:0x020aedbc end:0x020aee40
 
-src/actors/da1up_c.cpp:
+src/game/actors/d_a_1up.cpp:
     complete
     .text start:0x020aee40 end:0x020b05d0
     .init start:0x02100adc end:0x02100c50
@@ -24,7 +24,7 @@ src/actors/da1up_c.cpp:
     .data start:0x02108300 end:0x02108370
     .bss start:0x0210dc00 end:0x0210dc70
 
-src/actors/daBar_c.cpp:
+src/game/actors/d_a_bar.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0748
 
@@ -32,7 +32,7 @@ src/game/actors/d_a_cam_tag.cpp:
     complete
     .text start:0x020b0748 end:0x020b07f8
 
-src/actors/daChRoom_c.cpp:
+src/game/actors/d_a_ch_room.cpp:
     complete
     .text start:0x020b07f8 end:0x020b09b0
     .data start:0x021085b8 end:0x02108674
@@ -41,7 +41,7 @@ src/game/actors/d_a_ch_scene.cpp:
     complete
     .text start:0x020b09b0 end:0x020b0f54
 
-src/actors/daCoin_c.cpp:
+src/game/actors/d_a_coin.cpp:
     complete
     .text start:0x020b0f54 end:0x020b2ba0
     .init start:0x02100c50 end:0x02100d44
@@ -49,7 +49,7 @@ src/actors/daCoin_c.cpp:
     .data start:0x02108730 end:0x02108868
     .bss start:0x0210dc70 end:0x0210dcb8
 
-src/game/actors/daFeather_c/daFeather_c.cpp:
+src/game/actors/d_a_feather.cpp:
     complete
     .text start:0x020b2ba0 end:0x020b3298
 
@@ -57,14 +57,14 @@ src/game/actors/d_a_obj_abuku.cpp:
     complete
     .text start:0x020b3298 end:0x020b35a0
 
-src/actors/daObjBlockL_c.cpp:
+src/game/actors/d_a_obj_block_l.cpp:
     complete
     .text start:0x020b35a0 end:0x020b415c
     .init start:0x02100d44 end:0x02100e50
     .ctor start:0x021080e0 end:0x021080e4
     .bss start:0x0210dcb8 end:0x0210dd30
 
-src/actors/daObjBlockItemTag_c.cpp:
+src/game/actors/d_a_obj_block_item_tag.cpp:
     complete
     .text start:0x020b415c end:0x020b46a0
     .init start:0x02100e50 end:0x02100ec4
@@ -76,7 +76,7 @@ src/game/actors/d_a_obj_kinoko_tag.cpp:
     complete
     .text start:0x020b46a0 end:0x020b4a70
 
-src/actors/daObjDorifu_c.cpp:
+src/game/actors/d_a_obj_dorifu.cpp:
     complete
     .text start:0x020b4a70 end:0x020b4ed8
 
@@ -88,36 +88,36 @@ src/game/actors/d_a_obj_hatena_switch.cpp:
     .data start:0x02108e14 end:0x02108edc
     .bss start:0x0210dd50 end:0x0210dda0
 
-src/actors/daObjFire_c.cpp:
+src/game/actors/d_a_obj_fire.cpp:
     complete
     .text start:0x020b5734 end:0x020b5a18
     .data start:0x02108edc end:0x02108fb4
 
-src/actors/daObjFloatBoard_c.cpp:
+src/game/actors/d_a_obj_float_board.cpp:
     complete
     .text start:0x020b5a18 end:0x020b5fd8
 
-src/actors/daObjGuragura_c.cpp:
+src/game/actors/d_a_obj_guragura.cpp:
     complete
     .text start:0x020b5fd8 end:0x020b6388
 
-src/actors/daObjUkiyuka_c.cpp:
+src/game/actors/d_a_obj_ukiyuka.cpp:
     complete
     .text start:0x020b6388 end:0x020b660c
 
-src/actors/daObjKaitendai_c.cpp:
+src/game/actors/d_a_obj_kaitendai.cpp:
     complete
     .text start:0x020b660c end:0x020b6814
 
-src/actors/daObjKuruma_c.cpp:
+src/game/actors/d_a_obj_kuruma.cpp:
     complete
     .text start:0x020b6814 end:0x020b69e4
 
-src/actors/daObjKurumajiku_c.cpp:
+src/game/actors/d_a_obj_kurumajiku.cpp:
     complete
     .text start:0x020b69e4 end:0x020b6d28
 
-src/actors/daObjLava_c.cpp:
+src/game/actors/d_a_obj_lava.cpp:
     complete
     .text start:0x020b6d28 end:0x020b6e08
     .data start:0x021093a0 end:0x0210945c
@@ -126,28 +126,28 @@ src/game/actors/d_a_obj_waterfall.cpp:
     complete
     .text start:0x020b6e08 end:0x020b6f18
 
-src/actors/daObjMarioCap_c.cpp:
+src/game/actors/d_a_obj_mario_cap.cpp:
     complete
     .text start:0x020b6f18 end:0x020b8bf0
     .init start:0x02101064 end:0x02101478
     .ctor start:0x021080f0 end:0x021080f4
     .bss start:0x0210de00 end:0x0210df94
 
-src/game/actors/daObjPushblock_c.cpp:
+src/game/actors/d_a_obj_pushblock.cpp:
     complete
     .text start:0x020b8bf0 end:0x020b9148
     .init start:0x02101478 end:0x021014e4
     .ctor start:0x021080f4 end:0x021080f8
     .bss start:0x0210df94 end:0x0210dfbc
 
-src/actors/daObjPowerUpItem_c.cpp:
+src/game/actors/d_a_obj_power_up_item.cpp:
     complete
     .text start:0x020b9148 end:0x020b9e64
     .init start:0x021014e4 end:0x02101588
     .ctor start:0x021080f8 end:0x021080fc
     .data start:0x02109730 end:0x0210987c
 
-src/actors/daObjSwitch_c.cpp:
+src/game/actors/d_a_obj_switch.cpp:
     complete
     .text start:0x020b9e64 end:0x020bab0c
     .init start:0x02101588 end:0x02101738
@@ -155,11 +155,11 @@ src/actors/daObjSwitch_c.cpp:
     .data start:0x0210987c end:0x021098cc
     .bss start:0x0210dfbc end:0x0210e05c
 
-src/actors/daObjSwdoor_c.cpp:
+src/game/actors/d_a_obj_swdoor.cpp:
     complete
     .text start:0x020bab0c end:0x020badd0
 
-src/actors/daObjTatefuda_c.cpp:
+src/game/actors/d_a_obj_tatefuda.cpp:
     complete
     .text start:0x020badd0 end:0x020bc414
     .init start:0x02101738 end:0x02101894
@@ -174,7 +174,7 @@ src/game/actors/d_a_obj_wakame.cpp:
     .ctor start:0x02108104 end:0x02108108
     .bss start:0x0210e0d4 end:0x0210e0fc
 
-src/actors/daObjHeart_c.cpp:
+src/game/actors/d_a_obj_heart.cpp:
     complete
     .text start:0x020bc5e0 end:0x020bc8f4
     .init start:0x02101900 end:0x02101968
@@ -188,7 +188,7 @@ src/game/actors/d_a_obj_cannon_shutter.cpp:
     .ctor start:0x0210810c end:0x02108110
     .bss start:0x0210e124 end:0x0210e14c
 
-src/actors/Player.cpp:
+src/game/player/Player.cpp:
     complete
     .text start:0x020bccfc end:0x020e67a8
 
@@ -236,11 +236,11 @@ src/unnamed/ov002/func_ov002_020e6bb0.c:
     complete
     .text start:0x020e6bb0 end:0x020e6c0c
 
-src/d_a_ply.cpp:
+src/game/player/d_a_ply.cpp:
     complete
     .text start:0x020e6c0c end:0x020e6c40
 
-src/actors/daStar_c.cpp:
+src/game/actors/d_a_star.cpp:
     complete
     .text start:0x020e6c40 end:0x020ebe5c
     .init start:0x02106e40 end:0x02107118
@@ -248,19 +248,19 @@ src/actors/daStar_c.cpp:
     .data start:0x0210a990 end:0x0210aa00
     .bss start:0x02110924 end:0x02110a48
 
-src/actors/StarCamera_Spawn.cpp:
+src/game/actors/StarCamera_Spawn.cpp:
     complete
     .text start:0x020ebe5c end:0x020ebe8c
 
-src/d_a_star_base.c:
+src/game/actors/d_a_star_base.c:
     complete
     .text start:0x020ebe8c end:0x020ebed4
 
-src/d_a_star_silver_star.c:
+src/game/actors/d_a_star_silver_star.c:
     complete
     .text start:0x020ebed4 end:0x020ebf30
 
-src/d_a_star_star.c:
+src/game/actors/d_a_star_star.c:
     complete
     .text start:0x020ebf30 end:0x020ebf8c
 
@@ -272,7 +272,7 @@ src/game/actors/d_a_warpkun.cpp:
     complete
     .text start:0x020ec388 end:0x020ec56c
 
-src/actors/daYegg_c.cpp:
+src/game/actors/d_a_yegg.cpp:
     complete
     .text start:0x020ec56c end:0x020ee42c
     .init start:0x02107118 end:0x021071f4
@@ -280,11 +280,11 @@ src/actors/daYegg_c.cpp:
     .data start:0x0210ad38 end:0x0210ad78
     .bss start:0x02110a5c end:0x02110a9c
 
-src/actors/dBgActor_c.cpp:
+src/runtime/actor/d_bg_actor.cpp:
     complete
     .text start:0x020ee42c end:0x020ef320
 
-src/actors/dPathLiftActor_c.cpp:
+src/runtime/actor/d_path_lift_actor.cpp:
     complete
     .text start:0x020ef320 end:0x020effb8
     .init start:0x021071f4 end:0x02107298
@@ -307,7 +307,7 @@ src/unnamed/ov002/func_ov002_020f035c.c:
     complete
     .text start:0x020f035c end:0x020f03c4
 
-src/actors/daSCoin_c.cpp:
+src/game/actors/d_a_s_coin.cpp:
     complete
     .text start:0x020f03c4 end:0x020f0894
     .data start:0x0210aff4 end:0x0210b0ac
@@ -316,7 +316,7 @@ src/game/actors/d_a_obj_number.cpp:
     complete
     .text start:0x020f0894 end:0x020f0dd0
 
-src/actors/daObj1UpLogo_c.cpp:
+src/game/actors/d_a_obj1up_logo.cpp:
     complete
     .text start:0x020f0dd0 end:0x020f11b0
     .init start:0x02107298 end:0x02107304
@@ -338,11 +338,11 @@ src/game/actors/d_a_set_se.cpp:
     complete
     .text start:0x020f198c end:0x020f1bc4
 
-src/actors/daMugenBGM_c.cpp:
+src/game/actors/d_a_mugen_bgm.cpp:
     complete
     .text start:0x020f1bc4 end:0x020f1f70
 
-src/actors/daDemo_c.cpp:
+src/game/actors/d_a_demo.cpp:
     complete
     .text start:0x020f1f70 end:0x020f8838
     .data start:0x0210b940 end:0x0210b958
@@ -355,7 +355,7 @@ src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp:
     complete
     .text start:0x020f8848 end:0x020f8858
 
-src/actors/daFPknBall_c.cpp:
+src/game/actors/d_a_f_pkn_ball.cpp:
     complete
     .text start:0x020f8858 end:0x020f934c
 
@@ -363,23 +363,23 @@ src/game/actors/d_a_sound_obj.cpp:
     complete
     .text start:0x020f934c end:0x020f975c
 
-src/actors/dMap_c.cpp:
+src/ui/hud/d_map.cpp:
     complete
     .text start:0x020f975c end:0x020fb8f8
 
-src/actors/dMeter_c.cpp:
+src/ui/hud/d_meter.cpp:
     complete
     .text start:0x020fb8f8 end:0x020fe190
 
-src/stage/LevelObjects.cpp:
+src/game/stages/LevelObjects.cpp:
     complete
     .text start:0x020fe190 end:0x020fea4c
 
-src/actors/dM3dGLin.cpp:
+src/engine/collision/d_m3d_g_lin.cpp:
     complete
     .text start:0x020fea4c end:0x020feabc
 
-src/actors/daPropeller_Heyho_Fire_c.cpp:
+src/game/actors/d_a_propeller_heyho_fire.cpp:
     complete
     .text start:0x020feabc end:0x020ff014
     .init start:0x02108094 end:0x021080d0

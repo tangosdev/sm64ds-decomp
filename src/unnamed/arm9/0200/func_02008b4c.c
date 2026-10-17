@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef struct { int x, y, z; } Vec3;
 typedef struct { signed char flag, amt; short x, y, z; } Elem;
 
@@ -49,7 +50,7 @@ int func_02008b4c(void* a0, short* p1, int* p2, char* tbl) {
     {
         int d = hi - lo;
         m = *p2;
-        *p2 = lo + (int)(((long long)d * m + 0x800) >> 12) + m;
+        *p2 = lo + FX_MUL(d, m) + m;
     }
 
     if (*p2 >= 0x1000) {

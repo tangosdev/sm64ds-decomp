@@ -15,6 +15,14 @@
  * D1 is 0x0211260c and D0 is 0x02112650, both from the inline
  * destructor in daObjKi_Fune_c.h. InitResources is the key function.
  */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_ki_fune_AssetId {
+    ASSET_KI_FUNE_DOWN_A_BMD = 0x0639,
+    ASSET_KI_FUNE_DOWN_A_KCL = 0x063a,
+    ASSET_KI_FUNE_UP_BMD = 0x063b,
+    ASSET_KI_FUNE_UP_KCL = 0x063c
+};
+
 #include "daObjKi_Fune_c.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
@@ -48,6 +56,11 @@ extern short data_02082214[];
 extern unsigned char data_0209f220;
 }
 
+/* Actor 0x39 is the rocking hull, which uses model/collision index 0. */
+static inline int IsRockingHull(daObjKi_Fune_c *ship) {
+    return ship->actorID == 0x39;
+}
+
 // @symbol daObjKi_Fune_c_classInit_KI_FUNE
 extern "C" daObjKi_Fune_c *daObjKi_Fune_c_classInit_KI_FUNE()
 {
@@ -66,11 +79,10 @@ int daObjKi_Fune_c::InitResources()
     void* clpsBlocks[2];
     unsigned int idx;
     void* file;
-    int isModel0;
     clpsBlocks[0] = data_ov016_021149d4[0];
     clpsBlocks[1] = data_ov016_021149d4[1];
-    isModel0 = (int)(actorID == 0x39);
-    if (isModel0 != 0) mModelIndex = 0;
+    if (IsRockingHull(this))
+        mModelIndex = 0;
     else mModelIndex = 1;
     idx = mModelIndex;
     file = Model::LoadFile(*(SharedFilePtr *)data_ov016_021136e4[idx]);
@@ -86,14 +98,12 @@ int daObjKi_Fune_c::InitResources()
     mMeshCollider.Enable(this);
     mSoundHandle = 0;
     unk_328 = 0;
-    if (data_0209f220 > 1) {
-        if (IsStarCollected(SublevelToLevel(8), 1) != 0) {
-            if (mModelIndex == 0) goto ret1;
+    if (data_0209f220 > 1 && IsStarCollected(SublevelToLevel(8), 1) != 0) {
+        if (mModelIndex != 0)
             return 0;
-        }
+    } else if (mModelIndex == 0) {
+        return 0;
     }
-    if (mModelIndex == 0) return 0;
-ret1:
     return 1;
 }
 
@@ -108,7 +118,7 @@ int daObjKi_Fune_c::Behavior()
         *(s16 *)&mBobAngle += 0xda;
         mAngleX = (s16)((data_02082214[(mBobAngle >> 4) * 2] << 0xa) >> 0xc);
         if (DistToCPlayer() < 0xbb8000) {
-            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, *(Vector3*)&mCamSpacePosX, 0);
+            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }
         func_ov016_021126a8();
         UpdateClsnPosAndRot();
@@ -143,7 +153,7 @@ void daObjKi_Fune_c::func_ov016_021126a8()
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_ki_fune.cpp. */
-KiFuneModelFilePtr data_ov016_02114dd4(1595);
-KiFuneModelFilePtr data_ov016_02114de4(1593);
-KiFuneClsnFileHandle data_ov016_02114ddc(1596);
-KiFuneClsnFileHandle data_ov016_02114dcc(1594);
+KiFuneModelFilePtr gKiFuneUpModelFile(ASSET_KI_FUNE_UP_BMD);
+KiFuneModelFilePtr gKiFuneDownAModelFile(ASSET_KI_FUNE_DOWN_A_BMD);
+KiFuneClsnFileHandle gKiFuneUpCollisionFile(ASSET_KI_FUNE_UP_KCL);
+KiFuneClsnFileHandle gKiFuneDownACollisionFile(ASSET_KI_FUNE_DOWN_A_KCL);

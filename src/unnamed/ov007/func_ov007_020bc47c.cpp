@@ -1,7 +1,6 @@
 //cpp
-struct BMD_File;
+#include "Model.h"
 
-extern "C" void _ZN5Model13LoadTexAndPalER8BMD_File(struct BMD_File *f);
 extern "C" void func_020462d0(void *a, void *b, int c);
 extern "C" void func_020462b4(int *p, int v);
 extern "C" void func_ov007_020bc434(void *c);
@@ -12,7 +11,7 @@ extern "C" void func_ov007_020bc47c(void *thiz)
     unsigned char *m = *(unsigned char **)c;
 
     if ((*(int *)(c + 0x9c) & 8) == 0) {
-        _ZN5Model13LoadTexAndPalER8BMD_File(*(struct BMD_File **)m);
+        Model::LoadTexAndPal(**(BMD_File **)m);
     }
     func_020462d0(m, *(void **)m, *(int *)(c + 4));
     if ((*(int *)(c + 0x9c) & 4) != 0) {

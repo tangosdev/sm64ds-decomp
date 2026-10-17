@@ -124,7 +124,7 @@ an earlier "~670" was a regex artifact, see the appendix).
 - **3 files** — `func_0204af3c.c`, `func_ov007_020c1448.c`, `func_ov007_020ca86c.c` —
   define *any* named `G3_`/`GX_`/`G2_` inline. Not "overwhelmingly." Three.
 - The norm is a bare store, sometimes not even volatile:
-  `*(volatile int *)0x4000440 = 2;` (func_ov006_020d09e0 in `src/actors/unit020cd744.cpp`),
+  `*(volatile int *)0x4000440 = 2;` (func_ov006_020d09e0 in `src/minigames/unit020cd744.cpp`),
   `src/game/actors/d_a_pic_gate.cpp:541`.
 
 So "the decomp has incidentally done most of the API-recovery a port needs" was the
@@ -166,7 +166,7 @@ side is the **stock NitroSDK sound stack over SDAT**:
 - `src/Snd_SendCommand.c` builds command records from a pool and dispatches them —
   NitroSDK's `SND` command-queue shape.
 - `src/func_0205b070.c` is `SND_FlushCommand` (DC-flush of 0x1800 = 256 × 0x18, then IPC
-  on **PXI tag 7** = sound). `src/IPCSend.c:34` is `PXI_SendWordByFifo` on `0x4000188`.
+  on **PXI tag 7** = sound). `IPCSend` in `src/engine/pxi/PXI_Fifo.cpp` is `PXI_SendWordByFifo` on `0x4000188`.
 - The data is SDAT: `symbols/verified.tsv` names `0x020a5bb8` as
   `_ZN5Sound8SDAT_RAM3PTRE`, and `Sound::InfoSequenceEntry::GetWithID` walks the SDAT
   INFO block. `roadmap.md:42` already says "SDAT / SSEQ playback."

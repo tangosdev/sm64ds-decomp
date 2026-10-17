@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjLava_c",
   "module": "ov002",
-  "source": "src/actors/daObjLava_c.cpp",
-  "promoted_source": "src/actors/daObjLava_c.cpp",
+  "source": "src/game/actors/d_a_obj_lava.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_lava.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

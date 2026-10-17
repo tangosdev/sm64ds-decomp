@@ -1,8 +1,8 @@
 {
   "id": "ov032/daBakubaku_c",
   "module": "ov032",
-  "source": "src/actors/daBakubaku_c.cpp",
-  "promoted_source": "src/actors/daBakubaku_c.cpp",
+  "source": "src/game/actors/d_a_bakubaku.cpp",
+  "promoted_source": "src/game/actors/d_a_bakubaku.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -211,7 +211,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daBakubaku_c.cpp",
+      "symbol": "__sinit_d_a_bakubaku.cpp",
       "address": "0x02112c10",
       "size": "0x1ac",
       "binding": "STB_GLOBAL",
@@ -220,7 +220,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daBakubaku_c.cpp",
+      "symbol": ".p__sinit_d_a_bakubaku.cpp",
       "address": "0x02112e94",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -341,7 +341,7 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov032_02113a40",
+      "symbol": "gBakubakuModelFile",
       "address": "0x02113a40",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -457,13 +457,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daBakubaku_c.cpp",
+      "symbol": "__sinit_d_a_bakubaku.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated static initializer emits local; the configured ROM symbol uses global binding"
     },
     {
-      "symbol": ".p__sinit_daBakubaku_c.cpp",
+      "symbol": ".p__sinit_d_a_bakubaku.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word emits local; the configured ROM symbol uses global binding"
@@ -625,7 +625,7 @@
       "source": "0x02112d54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov032_02113a40",
+      "symbol": "gBakubakuModelFile",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x02113a40"
@@ -855,7 +855,7 @@
       "source": "0x02112e94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daBakubaku_c.cpp",
+      "symbol": "__sinit_d_a_bakubaku.cpp",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x02112c10"
@@ -1791,67 +1791,67 @@
     {
       "from": "@849",
       "to": "@834",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@850",
       "to": "@836",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@851",
       "to": "@838",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@853",
       "to": "@840",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@855",
       "to": "@842",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@857",
       "to": "@844",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@859",
       "to": "@846",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@861",
       "to": "@847",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@863",
       "to": "@33",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@865",
       "to": "@34",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@867",
       "to": "@35",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@869",
       "to": "@36",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     },
     {
       "from": "@871",
       "to": "@37",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged."
     }
   ]
 }

@@ -1,14 +1,14 @@
 {
   "id": "ov066/Eyerok",
   "module": "ov066",
-  "source": "src/actors/Eyerok.cpp",
-  "promoted_source": "src/actors/Eyerok.cpp",
+  "source": "src/game/actors/d_a_iwante.cpp",
+  "promoted_source": "src/game/actors/d_a_iwante.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x0211603c..0x0211a418, 62 function(s). Extended over three zero-gap neighbours past the old right edge 0x0211a2e4: func_ov066_0211a2e4, its arg-shifting veneer func_ov066_0211a35c, and the factory daIwante_c_classInit. tu_map cuts before them because the first two carry no class name. They are this class's, not new ones: the veneer is installed as a dBgW callback by seven places in this very TU (func_020393c4(..., (void *)func_ov066_0211a35c)), and the factory installs _ZTV6Eyerok, which is this unit's vtable. The module's sinit starts at 0x0211a418.",
     "class label(s): Eyerok (ROM RTTI name daIwante_c -- _ZTI10daIwante_c/_ZTS10daIwante_c at ov066:0x0211ad24/0x0211ad30; `Eyerok` is a coined name already spelled into every function symbol of this run in config/arm9/overlays/ov066/symbols.txt, and a text-only promotion does not repoint symbols.txt)",
-    "static initializer fold: __sinit_Eyerok.cpp is raw-byte-identical to retail __sinit_ov066_0211a418 at 0x0211a418..0x0211abc0 (0x7a8, 149 relocation sites) plus the .ctor word at 0x0211abc0; the initializer's 22 resource handles and 19 state descriptors and the 38 pointer-to-member records they copy from are defined in this TU (the handles via four SharedFilePtr subclasses whose constructor and destructor symbols alias the ROM's per-kind entry points). The handwritten transcription src/__sinit_ov066_0211a418.c is deleted."
+    "static initializer fold: __sinit_d_a_iwante.cpp is raw-byte-identical to retail __sinit_ov066_0211a418 at 0x0211a418..0x0211abc0 (0x7a8, 149 relocation sites) plus the .ctor word at 0x0211abc0; the initializer's 22 resource handles and 19 state descriptors and the 38 pointer-to-member records they copy from are defined in this TU (the handles via four SharedFilePtr subclasses whose constructor and destructor symbols alias the ROM's per-kind entry points). The handwritten transcription src/__sinit_ov066_0211a418.c is deleted."
   ],
   "sections": [
     {
@@ -1049,7 +1049,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block' differs between the legacy file that used to hold func_ov066_021166c8 and the one that held _ZN6Eyerok13InitResourcesEv; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_020393d4' differs between the legacy file that used to hold func_ov066_021166c8 and the one that held _ZN6Eyerok13InitResourcesEv; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_020393c4' differs between the legacy file that used to hold func_ov066_021166c8 and the one that held _ZN6Eyerok13InitResourcesEv; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
-    "Static initializer fold: the 22 file-scope resource handles (3 model, 10 animation, 4 texture-sequence, 5 collision), the 19 state descriptors and the 38 pointer-to-member records are defined in this TU. mwcc emits __sinit_Eyerok.cpp (0x0211a418..0x0211abc0), the ctor word, and 22 anonymous destructor-registration nodes. Class RTTI and the vtables stay externalized. The handwritten src/__sinit_ov066_0211a418.c is retired.",
+    "Static initializer fold: the 22 file-scope resource handles (3 model, 10 animation, 4 texture-sequence, 5 collision), the 19 state descriptors and the 38 pointer-to-member records are defined in this TU. mwcc emits __sinit_d_a_iwante.cpp (0x0211a418..0x0211abc0), the ctor word, and 22 anonymous destructor-registration nodes. Class RTTI and the vtables stay externalized. The handwritten src/__sinit_ov066_0211a418.c is retired.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
@@ -1567,13 +1567,31 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov066",
       "canonical_address": "0x0211ad64",
-      "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. symbols.txt names the address point 0x0211ad64; the licensed spans cover only .text/.init/.ctor/.bss. The class carries the ROM's daIwante_c spelling, so no _ZTI/_ZTS records accompany it: the TU compiles with #pragma RTTI off."
+      "reason": "The out-of-line destructor emits the vtable for the coined Eyerok class; retail RTTI names daIwante_c. RTTI off suppresses _ZTI/_ZTS and emits a zero typeinfo preamble word where retail holds 0x0211ad24. All 128 slot bytes (32 entries) match. This unchanged policy externalizes the unowned table to the retail address point ov066:0x0211ad64; licensed spans remain .text/.init/.ctor/.bss."
+    },
+    {
+      "symbol": "_ZN7Vector3C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "Native Eyerok construction uses the actual Vector3 mDustPos[20] array at +0x4dc, stride12. Retail factory +0xa0 names func_0203d384 as its constructor callback and +0x98 names Vector3D1 at arm9:0x020072c0; the native D1 tears down that same array. The complete emitted Vector3C1 body is the exact4-byte retail callback and contains no relocations; the existing canonical-duplicate policy proves it before externalizing this spelling."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Native Eyerok construction emits this inline lifecycle helper in its own private function section. It has no configured ROM home and no incoming relocation anywhere in the complete emitted object, including unnamed section references. The standard objisolate deadstrip predicate proves exclusive section ownership and no surviving references; no empty-body equivalence or alias is used. Header ownership: dBgActor_c inline destructor and Matrix4x3 members in dBgActor_c/Eyerok. Accepted same-symbol precedents: ov002/daObjTatefuda_c and arm9/dBgW_KcMbg (Matrix4x3)."
+    },
+    {
+      "symbol": "_ZN9Matrix4x3D1Ev",
+      "disposition": "deadstrip",
+      "reason": "Native Eyerok construction emits this inline lifecycle helper in its own private function section. It has no configured ROM home and no incoming relocation anywhere in the complete emitted object, including unnamed section references. The standard objisolate deadstrip predicate proves exclusive section ownership and no surviving references; no empty-body equivalence or alias is used. Header ownership: dBgActor_c inline destructor and Matrix4x3 members in dBgActor_c/Eyerok. Accepted same-symbol precedents: ov002/daObjTatefuda_c and arm9/dBgW_KcMbg (Matrix4x3)."
     }
   ],
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_Eyerok.cpp",
+      "symbol": "__sinit_d_a_iwante.cpp",
       "address": "0x0211a418",
       "size": "0x7a8",
       "binding": "STB_GLOBAL",
@@ -1582,7 +1600,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_Eyerok.cpp",
+      "symbol": ".p__sinit_d_a_iwante.cpp",
       "address": "0x0211abc0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1656,13 +1674,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_Eyerok.cpp",
+      "symbol": "__sinit_d_a_iwante.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_Eyerok.cpp",
+      "symbol": ".p__sinit_d_a_iwante.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -3296,10 +3314,122 @@
       "source": "0x0211abc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_Eyerok.cpp",
+      "symbol": "__sinit_d_a_iwante.cpp",
       "addend": 0,
       "target_module": "ov066",
       "target_address": "0x0211a418"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@2147",
+      "to": "@2176",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aec4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9e4 (offset 0x5cc), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2179 to @2146; canonical @2176 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2148",
+      "to": "@2177",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211afb4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9f0 (offset 0x5d8), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2180 to @2147; canonical @2177 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2149",
+      "to": "@2178",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aed0: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9fc (offset 0x5e4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2181 to @2148; canonical @2178 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2150",
+      "to": "@2179",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aedc: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa0c (offset 0x5f4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2182 to @2149; canonical @2179 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2151",
+      "to": "@2180",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aee8: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa18 (offset 0x600), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2183 to @2150; canonical @2180 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2152",
+      "to": "@2181",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aef4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa24 (offset 0x60c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2184 to @2151; canonical @2181 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2153",
+      "to": "@2182",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af00: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa2c (offset 0x614), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2185 to @2152; canonical @2182 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2154",
+      "to": "@2183",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af0c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa34 (offset 0x61c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2186 to @2153; canonical @2183 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2155",
+      "to": "@2184",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af18: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa40 (offset 0x628), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2187 to @2154; canonical @2184 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2156",
+      "to": "@2185",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af24: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa4c (offset 0x634), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2188 to @2155; canonical @2185 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2157",
+      "to": "@2186",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af30: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa54 (offset 0x63c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2189 to @2156; canonical @2186 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2158",
+      "to": "@2187",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af3c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa60 (offset 0x648), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2190 to @2157; canonical @2187 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2159",
+      "to": "@2188",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af48: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa6c (offset 0x654), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2191 to @2158; canonical @2188 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2160",
+      "to": "@2189",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af54: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa7c (offset 0x664), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2192 to @2159; canonical @2189 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2161",
+      "to": "@2190",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af60: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa84 (offset 0x66c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2193 to @2160; canonical @2190 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2162",
+      "to": "@2191",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af6c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa90 (offset 0x678), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2194 to @2161; canonical @2191 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2163",
+      "to": "@2192",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af78: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa9c (offset 0x684), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2195 to @2162; canonical @2192 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2164",
+      "to": "@2193",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af84: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aaac (offset 0x694), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2196 to @2163; canonical @2193 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2165",
+      "to": "@2194",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af90: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aab8 (offset 0x6a0), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2197 to @2164; canonical @2194 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2166",
+      "to": "@2195",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af9c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aac0 (offset 0x6a8), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2198 to @2165; canonical @2195 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2167",
+      "to": "@2196",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211afa8: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aacc (offset 0x6b4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2199 to @2166; canonical @2196 unchanged; ELF symbol and section indices may shift."
+    },
+    {
+      "from": "@2168",
+      "to": "@2197",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211afc0: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aad8 (offset 0x6c0), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2200 to @2167; canonical @2197 unchanged; ELF symbol and section indices may shift."
     }
   ]
 }

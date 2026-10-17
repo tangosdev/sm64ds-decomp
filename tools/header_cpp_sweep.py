@@ -19,7 +19,7 @@ from the header) wearing three different disguises:
 
     dScene_c.h                 Bool BeforeInitResources();
                                ^ lifted from a `typedef int Bool;` that is file-local
-                                 to the BeforeInitResources source, now in src/actors/dScene_c.cpp
+                                 to the BeforeInitResources source, now in src/game/stages/d_scene.cpp
 
 None was found by a gate. Each was found by migrating a method, which compiles the block
 for the first time -- so the cost of finding them was one slice each. This tool finds

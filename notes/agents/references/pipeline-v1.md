@@ -20,7 +20,7 @@ conversation.
 | stage | role | consumes | produces |
 |---|---|---|---|
 | 1 | `scout` | the ROM | `notes/data/class-facts/<Class>.json` |
-| 2 | `writer` | the facts file | one `src/actors/<Class>.cpp`, its manifest, and the bookkeeping below |
+| 2 | `writer` | the facts file | one `src/game/<dir>/<file>.cpp`, its manifest, and the bookkeeping below |
 | 3 | `humanizer` | the written source | a revised source that reads like 2004 EAD C++ |
 | 3b | `writer` again | the humanized source | as many members as byte-match allows turned into real `<Class>::` methods |
 | 4 | `builder` | the revised source | green byte gates, then a PR |
@@ -59,7 +59,7 @@ role file asked for any. The result, measured on `origin/main` from each manifes
 
 Every one of those is `promoted`, and every queue and coverage metric counts them
 equally. A TU of thirty `extern "C" func_ovNNN_*(char *self)` free functions in
-`src/actors/<Class>.cpp` is a **merged file, not a reconstructed class** -- and the
+`src/game/<dir>/<file>.cpp` is a **merged file, not a reconstructed class** -- and the
 goal is writing the classes back.
 
 **The ruling: convert as far as byte-match allows.** `dScMgMemory2_c` is the proof

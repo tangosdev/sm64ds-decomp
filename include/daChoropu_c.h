@@ -93,11 +93,11 @@ enum {
 };
 
 struct daChoropu_c : dActor_c {
-    u8  pad_0d0[0x4];                 /* untouched by any function in daChoropu_c.cpp */
+    u8  pad_0d0[0x4];                 /* untouched by any function in d_a_choropu.cpp */
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build checks. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x138. [_ZN11daChoropu_cD0Ev, now in src/actors/daChoropu_c.cpp] */
+       dCcAc_c's D1 at +0x138. [_ZN11daChoropu_cD0Ev, now in src/game/actors/d_a_choropu.cpp] */
     dCcAc_c mdCcAc_c;            /* 0x138 -- its height (+0x8) is rewritten every frame by Emerge and Leap */
     u32 mPartnerIDs[4];     /* 0x16c -- unique IDs of the other daChoropu_c with the same mGroupId (filled by Setup) */
     s32 mState;             /* 0x17c -- row of the state table, daChoropu_ST_* */

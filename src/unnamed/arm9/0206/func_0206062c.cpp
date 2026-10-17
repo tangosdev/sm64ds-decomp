@@ -1,29 +1,48 @@
 //cpp
 extern "C" {
-extern void CpuCopy8(int dst, int src, unsigned int n);
+extern void CpuCopy8(int src, int dst, unsigned int n);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
 extern void _ZN4CP1516DrainWriteBufferEv(void);
 extern int func_02060f60(void *o, int a, int b);
 extern void func_0206081c(void *o);
 
-void func_0206062c(char *self) {
-    char *e0 = self + 0xe0;
+/* The request block each chunk is handed over in (NitroSDK CARDiCommandArg). */
+struct ChunkRequest {
+    unsigned char pad_00[0xc];
+    int mSrc;          /* 0x0c */
+    int mDst;          /* 0x10 */
+    unsigned int mLen; /* 0x14 */
+};
+
+/* The chunked backup writer's state (NitroSDK CARDiCommon). */
+struct ChunkWriter {
+    ChunkRequest *mRequest; /* 0x00 */
+    unsigned char pad_04[0x14];
+    int mSrc;                /* 0x18 */
+    int mDst;                /* 0x1c */
+    unsigned int mRemaining; /* 0x20 */
+    unsigned char pad_24[0xbc];
+    char mBuffer[0x100]; /* 0xe0 */
+};
+
+void func_0206062c(ChunkWriter *self) {
+    char *buf = self->mBuffer;
     do {
-        unsigned int n = *(unsigned int*)(self + 0x20);
-        int dst = *(int*)(self + 0x18);
+        unsigned int n = self->mRemaining;
+        int src = self->mSrc;
         if (n > 0x100) n = 0x100;
-        CpuCopy8(dst, (int)e0, n);
-        _ZN4CP1527FlushAndInvalidateDataCacheEjj((unsigned int)e0, n);
+        CpuCopy8(src, (int)buf, n);
+        _ZN4CP1527FlushAndInvalidateDataCacheEjj((unsigned int)buf, n);
         _ZN4CP1516DrainWriteBufferEv();
-        *(int*)(*(char**)self + 0xc) = (int)e0;
-        *(int*)(*(char**)self + 0x10) = *(int*)(self + 0x1c);
-        *(int*)(*(char**)self + 0x14) = n;
+        self->mRequest->mSrc = (int)buf;
+        self->mRequest->mDst = self->mDst;
+        self->mRequest->mLen = n;
         if (func_02060f60(self, 8, 0xa) == 0) break;
         if (func_02060f60(self, 9, 1) == 0) break;
-        *(int*)(self + 0x18) += n;
-        *(int*)(self + 0x1c) += n;
-        *(int*)(self + 0x20) -= n;
-    } while (*(int*)(self + 0x20) != 0);
+        self->mSrc += n;
+        self->mDst += n;
+        self->mRemaining -= n;
+    } while (self->mRemaining != 0);
     func_0206081c(self);
 }
 }

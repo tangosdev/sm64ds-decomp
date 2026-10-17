@@ -13,7 +13,7 @@
  * destructor pair is what gets migrated first. There is nothing to migrate
  * here but real methods, and no operator delete is involved.
  *
- * CONSTRUCTED BY func_ov006_0211474c, which is this class's C1/C2 in all
+ * CONSTRUCTED BY cMgSmartball_object_c_Construct, which is this class's C1/C2 in all
  * but name: it writes this vtable and then every field below. It is left as
  * a free function -- this tree has migrated zero constructors (langmode
  * audit: "C1: UNPROVEN, 0 migrated"), and proving that route is its own
@@ -121,7 +121,9 @@ struct cMgSmartball_object_c {
        correctly with a cast, and misstates none of them. Every caller reaches
        these bytes by raw cast today, so this is byte-free -- but a future
        caller that wants the 16-bit angle must cast, not add a name. */
-    u8  unk_031;      /* 0x031 -- a 0/1 flag; 11 files read or write it. Also
+    u8 mTriggered;    /* 0x031 -- raised when the object is triggered: a ball
+                          dropped in (ana), a hit (ball), a press (pushswitch), a
+                          launch (spring), the piranha's toggle (pakkun). Also
                           the first cell of cMgSmartball_board_c's nine-byte
                           cell array. */
     u8  unk_032;      /* 0x032 -- low byte of the wing/propeller angle, an

@@ -22,7 +22,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Class, TU, symbol and module-qualified ROM scope: `ov021/daObjCvNewsLift_c`, ov021 `.text`
   `[0x021111a0, 0x021121e8)`, 19 functions.
-- Reserved surfaces actually touched: `src/actors/daObjCvNewsLift_c.cpp`, `include/daObjCvNewsLift_c.h`,
+- Reserved surfaces actually touched: `src/game/actors/d_a_obj_cv_news_lift.cpp`, `include/daObjCvNewsLift_c.h`,
   `config/arm9/overlays/ov021/symbols.txt` (12 rows renamed in place),
   `config/tu_manifest.d/ov021/daObjCvNewsLift_c.json` (12 symbol fields plus two evidence notes, the
   FOLD note and the UpdateModelTransforms note) and
@@ -46,7 +46,7 @@ This document describes this commit. The queue records its immutable output SHA.
   rows carry (for example `daObjTbox_c::UpdateModelTransform` and `daObjC1Peach_c::UpdateModelTransform`),
   pluralised because it writes five model matrices.
 - Compiler experiments and measured barriers (pinned mwccarm 2004/b56,
-  `python tools/match.py --c src/actors/daObjCvNewsLift_c.cpp --func <symbol> --addr <addr> --size <size> --version 2004/b56 --module ov021 --strict-relocs --brief`;
+  `python tools/match.py --c src/game/actors/d_a_obj_cv_news_lift.cpp --func <symbol> --addr <addr> --size <size> --version 2004/b56 --module ov021 --strict-relocs --brief`;
   the committed form is MATCH in each case). These sizes were measured in round 1 and not re-run in
   round 2, which changed no source:
   - `mMeshCollider.SetFile(file, mClsnMat, scale, mAngleY, clps)` and the matching platform-loop
@@ -95,7 +95,7 @@ All findings below are reconstruction findings. Owner of each deferred one: the 
   objects and tables stay `data_ov021_*` rows owned by `__sinit_ov021_02113500` (R7).
 - Attribution preserved through each rename: the 12 overrides were re-keyed to the new symbols
   with the same credit.
-- Residue in `src/actors/daObjCvNewsLift_c.cpp` (matching lines, base to this commit): lines 528 to
+- Residue in `src/game/actors/d_a_obj_cv_news_lift.cpp` (matching lines, base to this commit): lines 528 to
   521, `unk_` 1 to 0, `func_` 50 to 9, `extern "C"` 14 to 2, `_ZN` 7 to 20. Of the 13 added `_ZN`
   lines, 12 are new marker lines (4 to 16) and one is the comment citing
   `_ZN13SharedFilePtr4LoadEv`, so the other `_ZN` lines go from 3 to 4: the `dBgW_KcMbg::SetFile`
@@ -104,7 +104,7 @@ All findings below are reconstruction findings. Owner of each deferred one: the 
   `extern "C"` lines are the C-linkage declaration block and the factory definition. The header
   goes from 0 to 1 `func_` line, a comment naming `func_020393c4`.
 - Counting conventions: each count is a line count, not an occurrence count. Lines are
-  `git show <rev>:src/actors/daObjCvNewsLift_c.cpp | wc -l`; each residue is
+  `git show <rev>:src/game/actors/d_a_obj_cv_news_lift.cpp | wc -l`; each residue is
   `git show <rev>:<path> | grep -c -F '<text>'` with the literal texts `unk_`, `func_`, `extern "C"` and
   `_ZN`, run with `MSYS_NO_PATHCONV=1`, where `<rev>` is `7423f8d73f` or this commit. Marker lines are
   the `_ZN` lines that are symbol-marker comments.
@@ -127,7 +127,7 @@ Round 2 changed only this handoff and one manifest note; no source, header or co
 - `git diff --name-only 7423f8d73f..HEAD` lists six paths: `attribution.json`,
   `config/arm9/overlays/ov021/symbols.txt`, `config/tu_manifest.d/ov021/daObjCvNewsLift_c.json`,
   `include/daObjCvNewsLift_c.h`, `notes/agents/handoffs/readable-ov021-newslift-0925.md` and
-  `src/actors/daObjCvNewsLift_c.cpp`.
+  `src/game/actors/d_a_obj_cv_news_lift.cpp`.
 
 ## Proof
 

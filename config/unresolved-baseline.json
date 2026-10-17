@@ -136,7 +136,7 @@
    ]
   },
   "ov004:0x020b2cb8": {
-   "name": "func_ov004_020b2cb8",
+   "name": "Mg_LoadBannerFiles",
    "missing": [
     "@7"
    ]
@@ -149,7 +149,7 @@
    ]
   },
   "ov006:0x020c0a48": {
-   "name": "func_ov006_020c0a48",
+   "name": "MascotWalker_Construct",
    "missing": [
     "g0",
     "g1",
@@ -157,7 +157,7 @@
    ]
   },
   "ov006:0x020c221c": {
-   "name": "func_ov006_020c221c",
+   "name": "Mascot_Construct",
    "missing": [
     "g0",
     "g1"

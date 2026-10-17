@@ -25,10 +25,10 @@
  * members: the offset is a runtime value the layout cannot spell.
  *
  * deslop leftovers:
- * - The u16-pun writes on mCount (`*(unsigned short *)...` forms) stay
- *   verbatim where a plain `mCount += 1' changes the emitted bytes.
- * - Init keeps its recovered new_var/deref scaffolding; each piece is
- *   load-bearing under -O4,p.
+ * - Init keeps its recovered new_var/double-add scaffolding (the link slot
+ *   is formed twice, once into new_var and once inline); the u16 puns on
+ *   mCount and mLinkOffset it used to carry measured byte-neutral as plain
+ *   member spellings and are gone.
  * - func_0204df54 calls the ctor by its mangled spelling: the explicit
  *   `_ZN18NestedHeapIteratorC1Ej' on &mChildren is the matched ABI seam --
  *   the body registers child lists on an already-built object, so the
@@ -116,12 +116,12 @@ void NestedHeapIterator::Init(HeapAllocator * a_)
 {
     char * a = (char *)a_;
 
-  char *new_var = a + (*((unsigned short *) ((char *)&mLinkOffset)));
-  *((int *) ((a + (*((unsigned short *) ((char *)&mLinkOffset)))) + 4)) = 0;
-  *((int *) new_var) = 0;
-  *((int *) ((char *)this)) = (int) a;
-  *((int *) ((char *)&mLast)) = (int) a;
-  *(unsigned short *)((char *)&mCount) += 1;
+    char *new_var = a + mLinkOffset;
+    *((int *)((a + mLinkOffset) + 4)) = 0;
+    *((int *)new_var) = 0;
+    mFirst = (HeapAllocator *)a;
+    mLast = (HeapAllocator *)a;
+    mCount += 1;
 }
 
 // @symbol _ZN18NestedHeapIterator7AddLastEP13HeapAllocator
@@ -129,7 +129,10 @@ void NestedHeapIterator::AddLast(HeapAllocator * a_)
 {
     char * a = (char *)a_;
 
-    if (*(int *)((char *)this) == 0) { ((NestedHeapIterator *)(((char *)this)))->Init((HeapAllocator *)a); return; }
+    if (mFirst == 0) {
+        Init((HeapAllocator *)a);
+        return;
+    }
     {
         unsigned short link_off = mLinkOffset;
         int last = (int)mLast;
@@ -139,29 +142,27 @@ void NestedHeapIterator::AddLast(HeapAllocator * a_)
         last = (int)mLast;
         *(int *)((char *)last + link_off + 4) = (int)a;
         mLast = (HeapAllocator*)a;
-        *(unsigned short *)(int)((char *)&mCount) += 1;
+        mCount += 1;
     }
 }
 
 // @symbol _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator
-#define AT(p, off) ((void *)(int)((char *)(p) + (off)))
-
 void NestedHeapIterator::AddFirst(HeapAllocator * a_)
 {
     char* a = (char*)a_;
 
-    if (*(char**)((char*)this) == 0) { ((NestedHeapIterator *)(((char*)this)))->Init((HeapAllocator *)a); return; }
+    if (mFirst == 0) {
+        Init((HeapAllocator *)a);
+        return;
+    }
     {
         int* pa = (int*)(a + mLinkOffset);
         pa[0] = 0;
-        pa[1] = *(int*)((char*)this);
+        pa[1] = (int)mFirst;
     }
-    *(int*)(*(char**)((char*)this) + mLinkOffset) = (int)a;
-    *(char**)((char*)this) = a;
-    {
-        unsigned short* cnt = (unsigned short*)AT(((char*)this), 8);
-        *cnt = *cnt + 1;
-    }
+    *(int *)((char *)mFirst + mLinkOffset) = (int)a;
+    mFirst = (HeapAllocator *)a;
+    mCount += 1;
 }
 
 // @symbol _ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_
@@ -174,7 +175,7 @@ void NestedHeapIterator::AddAt(HeapAllocator *at_, HeapAllocator *node_)
         AddLast(node_);
         return;
     }
-    if ((char *)at_ == *(char **)this) {
+    if (at_ == mFirst) {
         AddFirst(node_);
         return;
     }
@@ -186,7 +187,7 @@ void NestedHeapIterator::AddAt(HeapAllocator *at_, HeapAllocator *node_)
         *(char **)(nlink + 4) = (char *)at_;
         *(char **)(prev + off + 4) = (char *)node_;
         *(char **)((char *)at_ + mLinkOffset) = (char *)node_;
-        *(unsigned short *)&mCount += 1;
+        mCount += 1;
     }
 }
 
@@ -219,9 +220,10 @@ int NestedHeapIterator::Next(HeapAllocator * h_)
 {
     char* h = (char*)h_;
 
-  if (h == 0) return *(int*)((char*)this);
-  unsigned short off = mLinkOffset;
-  return *(int*)(h+off+4);
+    if (h == 0)
+        return (int)mFirst;
+    unsigned short off = mLinkOffset;
+    return *(int *)(h + off + 4);
 }
 
 // @symbol _ZN18NestedHeapIterator8PreviousEP13HeapAllocator

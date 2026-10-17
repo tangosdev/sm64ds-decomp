@@ -3,7 +3,7 @@
 typedef int s32;
 typedef short s16;
 typedef struct { s32 x; s32 y; } Vec2i;
-/* Wiggler view used by func_ov006_020ec4dc. Same 0x98 object as struct C. */
+/* Wiggler view used by Wiggler_StartPathA. Same 0x98 object as struct C. */
 typedef struct Obj {
     Vec2i state;       /* 0x00 */
     Vec2i saved;       /* 0x08 */

@@ -1,8 +1,8 @@
 {
   "id": "ov034/daHanachan_c",
   "module": "ov034",
-  "source": "src/actors/daHanachan_c.cpp",
-  "promoted_source": "src/actors/daHanachan_c.cpp",
+  "source": "src/game/actors/d_a_hanachan.cpp",
+  "promoted_source": "src/game/actors/d_a_hanachan.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,8 @@
     "contiguous linker run: 0x21111a0..0x21136a4, 34 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daHanachan_c",
     "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold: the daHanachan_c_classInit registry factory (profile HANACHAN, historical alias Wiggler_Spawn), 0x021136a4..0x02113820, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded at the end of the file (defer_codegen off, source order) as the loose file's hand-built sequence: fBase_c operator new, dEnemyBase_c C2, vtable store &_ZTV12daHanachan_c[2], eight __cxa_vec_ctor calls, dBgCh_Actr C1. `return new daHanachan_c();` was measured first and does not reproduce it (999 words differ, first wrong relocation _ZN15TextureSequenceC1Ev): types.h's Vector3 and Vector3s have no user-declared constructor, so `new` skips the per-element func_0203d384/func_0203d73c construction the ROM performs. The unit is now 0x021111a0..0x02113820, 35 functions, bounded above by the end of ov034 .text at 0x02113820."
+    "classInit fold (historical, superseded by the next entry): the daHanachan_c_classInit registry factory (profile HANACHAN, historical alias Wiggler_Spawn), 0x021136a4..0x02113820, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. It was folded at the end of the file as the loose file's hand-built construction sequence, because `return new daHanachan_c();` did not reproduce it while types.h's Vector3 and Vector3s had no user-declared constructor. The unit is 0x021111a0..0x02113820, 35 functions, bounded above by the end of ov034 .text at 0x02113820.",
+    "Native registry factory: daHanachan_c_classInit at ov034:0x021136a4..0x02113820 uses return new daHanachan_c. Vector3s declares its default constructor in types.h and defines it inline in Vector3s.h, included by the native factory and the three existing constructor callers. This preserves the 0x8e8 allocation and member construction order. The two Vector3[5] arrays retain stride 12 and original callback func_0203d384; Vector3s mSegmentRot[5] at 0x444 retains stride 6 and original callback func_0203d73c, with unchanged destructor callbacks. Both emitted constructors are individually verified exact canonical duplicates. Removing obsolete factory ABI declarations preserves all 35 compiler temporary pins. Whole-consumer compile/object comparison finds no changes outside the three recorded constructor callers; the only additional temporary-pin changes are the 14 Dossy source pins."
   ],
   "sections": [
     {
@@ -297,245 +298,245 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov034_02114620",
+      "symbol": "gHanachanHeadDamageAnimationFile",
       "address": "0x2114620",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x320"
     },
     {
-      "symbol": "data_ov034_02114628",
+      "symbol": "gHanachanBody04WalkEndAnimationFile",
       "address": "0x2114628",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x31c"
     },
     {
-      "symbol": "data_ov034_02114630",
+      "symbol": "gHanachanBody01WaitAnimationFile",
       "address": "0x2114630",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x305"
     },
     {
-      "symbol": "data_ov034_02114638",
+      "symbol": "gHanachanBody04WaitAnimationFile",
       "address": "0x2114638",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x31a"
     },
     {
-      "symbol": "data_ov034_02114640",
+      "symbol": "gHanachanBody01DamageAnimationFile",
       "address": "0x2114640",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x304"
     },
     {
-      "symbol": "data_ov034_02114648",
+      "symbol": "gHanachanBody01WalkStartAnimationFile",
       "address": "0x2114648",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x308"
     },
     {
-      "symbol": "data_ov034_02114650",
+      "symbol": "gHanachanHeadWalkEndAnimationFile",
       "address": "0x2114650",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x323"
     },
     {
-      "symbol": "data_ov034_02114658",
+      "symbol": "gHanachanBody03DamageAnimationFile",
       "address": "0x2114658",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x312"
     },
     {
-      "symbol": "data_ov034_02114660",
+      "symbol": "gHanachanHeadModelFile",
       "address": "0x2114660",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x31e"
     },
     {
-      "symbol": "data_ov034_02114668",
+      "symbol": "gHanachanBody04WalkStartAnimationFile",
       "address": "0x2114668",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x31d"
     },
     {
-      "symbol": "data_ov034_02114670",
+      "symbol": "gHanachanBody02ModelFile",
       "address": "0x2114670",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x309"
     },
     {
-      "symbol": "data_ov034_02114678",
+      "symbol": "gHanachanBody01WalkEndAnimationFile",
       "address": "0x2114678",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x307"
     },
     {
-      "symbol": "data_ov034_02114680",
+      "symbol": "gHanachanBody03WalkEndAnimationFile",
       "address": "0x2114680",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x315"
     },
     {
-      "symbol": "data_ov034_02114688",
+      "symbol": "gHanachanBody01ModelFile",
       "address": "0x2114688",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x302"
     },
     {
-      "symbol": "data_ov034_02114690",
+      "symbol": "gHanachanBody02TextureSequenceFile",
       "address": "0x2114690",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "texture-sequence resource handle constructed with file ID 0x30a"
     },
     {
-      "symbol": "data_ov034_02114698",
+      "symbol": "gHanachanBody02WaitAnimationFile",
       "address": "0x2114698",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x30c"
     },
     {
-      "symbol": "data_ov034_021146a0",
+      "symbol": "gHanachanBody04WalkAnimationFile",
       "address": "0x21146a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x31b"
     },
     {
-      "symbol": "data_ov034_021146a8",
+      "symbol": "gHanachanBody02DamageAnimationFile",
       "address": "0x21146a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x30b"
     },
     {
-      "symbol": "data_ov034_021146b0",
+      "symbol": "gHanachanBody02WalkAnimationFile",
       "address": "0x21146b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x30d"
     },
     {
-      "symbol": "data_ov034_021146b8",
+      "symbol": "gHanachanHeadWalkAnimationFile",
       "address": "0x21146b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x322"
     },
     {
-      "symbol": "data_ov034_021146c0",
+      "symbol": "gHanachanBody03TextureSequenceFile",
       "address": "0x21146c0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "texture-sequence resource handle constructed with file ID 0x311"
     },
     {
-      "symbol": "data_ov034_021146c8",
+      "symbol": "gHanachanBody03WalkAnimationFile",
       "address": "0x21146c8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x314"
     },
     {
-      "symbol": "data_ov034_021146d0",
+      "symbol": "gHanachanHeadWalkStartAnimationFile",
       "address": "0x21146d0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x324"
     },
     {
-      "symbol": "data_ov034_021146d8",
+      "symbol": "gHanachanBody02WalkStartAnimationFile",
       "address": "0x21146d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x30f"
     },
     {
-      "symbol": "data_ov034_021146e0",
+      "symbol": "gHanachanBody03WalkStartAnimationFile",
       "address": "0x21146e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x316"
     },
     {
-      "symbol": "data_ov034_021146e8",
+      "symbol": "gHanachanBody04DamageAnimationFile",
       "address": "0x21146e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x319"
     },
     {
-      "symbol": "data_ov034_021146f0",
+      "symbol": "gHanachanBody03ModelFile",
       "address": "0x21146f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x310"
     },
     {
-      "symbol": "data_ov034_021146f8",
+      "symbol": "gHanachanBody02WalkEndAnimationFile",
       "address": "0x21146f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x30e"
     },
     {
-      "symbol": "data_ov034_02114700",
+      "symbol": "gHanachanBody04ModelFile",
       "address": "0x2114700",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x317"
     },
     {
-      "symbol": "data_ov034_02114708",
+      "symbol": "gHanachanBody01TextureSequenceFile",
       "address": "0x2114708",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "texture-sequence resource handle constructed with file ID 0x303"
     },
     {
-      "symbol": "data_ov034_02114710",
+      "symbol": "gHanachanHeadWaitAnimationFile",
       "address": "0x2114710",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x321"
     },
     {
-      "symbol": "data_ov034_02114718",
+      "symbol": "gHanachanBody03WaitAnimationFile",
       "address": "0x2114718",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x313"
     },
     {
-      "symbol": "data_ov034_02114720",
+      "symbol": "gHanachanBody04TextureSequenceFile",
       "address": "0x2114720",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "texture-sequence resource handle constructed with file ID 0x318"
     },
     {
-      "symbol": "data_ov034_02114728",
+      "symbol": "gHanachanBody01WalkAnimationFile",
       "address": "0x2114728",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x306"
     },
     {
-      "symbol": "data_ov034_02114730",
+      "symbol": "gHanachanHeadTextureSequenceFile",
       "address": "0x2114730",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1521,11 +1522,27 @@
       "canonical_module": "ov034",
       "canonical_address": "0x021144bc",
       "reason": "vtable, anchored by the out-of-line destructor. The word at 0x021144b8 is _ZTI12daHanachan_c. Homes at ov034:0x021144bc."
+    },
+    {
+      "symbol": "_ZN7Vector3C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "Vector3 mSegmentPos[5] and mSegmentScale[5], stride 12, original constructor func_0203d384 and destructor _ZN7Vector3D1Ev"
+    },
+    {
+      "symbol": "_ZN8Vector3sC1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d73c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d73c",
+      "reason": "Vector3s mSegmentRot[5] at 0x444, stride 6, original constructor func_0203d73c and destructor _ZN8Vector3sD1Ev"
     }
   ],
   "init": [
     {
-      "symbol": "__sinit_daHanachan_c.cpp",
+      "symbol": "__sinit_d_a_hanachan.cpp",
       "address": "0x021138ec",
       "size": "0x78c",
       "binding": "STB_GLOBAL",
@@ -1534,7 +1551,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daHanachan_c.cpp",
+      "symbol": ".p__sinit_d_a_hanachan.cpp",
       "address": "0x02114078",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1594,13 +1611,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daHanachan_c.cpp",
+      "symbol": "__sinit_d_a_hanachan.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daHanachan_c.cpp",
+      "symbol": ".p__sinit_d_a_hanachan.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1932,7 +1949,7 @@
       "source": "0x2114078",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daHanachan_c.cpp",
+      "symbol": "__sinit_d_a_hanachan.cpp",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21138ec"
@@ -2642,7 +2659,7 @@
       "source": "0x2113e90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114660",
+      "symbol": "gHanachanHeadModelFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114660"
@@ -2672,7 +2689,7 @@
       "source": "0x2113ea0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114688",
+      "symbol": "gHanachanBody01ModelFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114688"
@@ -2692,7 +2709,7 @@
       "source": "0x2113eac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114670",
+      "symbol": "gHanachanBody02ModelFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114670"
@@ -2712,7 +2729,7 @@
       "source": "0x2113eb8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146f0",
+      "symbol": "gHanachanBody03ModelFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146f0"
@@ -2732,7 +2749,7 @@
       "source": "0x2113ec0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114700",
+      "symbol": "gHanachanBody04ModelFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114700"
@@ -2752,7 +2769,7 @@
       "source": "0x2113ecc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146b8",
+      "symbol": "gHanachanHeadWalkAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146b8"
@@ -2782,7 +2799,7 @@
       "source": "0x2113edc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114728",
+      "symbol": "gHanachanBody01WalkAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114728"
@@ -2802,7 +2819,7 @@
       "source": "0x2113ee8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146b0",
+      "symbol": "gHanachanBody02WalkAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146b0"
@@ -2822,7 +2839,7 @@
       "source": "0x2113ef4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146c8",
+      "symbol": "gHanachanBody03WalkAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146c8"
@@ -2842,7 +2859,7 @@
       "source": "0x2113efc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146a0",
+      "symbol": "gHanachanBody04WalkAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146a0"
@@ -2862,7 +2879,7 @@
       "source": "0x2113f08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146d0",
+      "symbol": "gHanachanHeadWalkStartAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146d0"
@@ -2882,7 +2899,7 @@
       "source": "0x2113f10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114648",
+      "symbol": "gHanachanBody01WalkStartAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114648"
@@ -2902,7 +2919,7 @@
       "source": "0x2113f18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146d8",
+      "symbol": "gHanachanBody02WalkStartAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146d8"
@@ -2922,7 +2939,7 @@
       "source": "0x2113f24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146e0",
+      "symbol": "gHanachanBody03WalkStartAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146e0"
@@ -2942,7 +2959,7 @@
       "source": "0x2113f30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114668",
+      "symbol": "gHanachanBody04WalkStartAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114668"
@@ -2962,7 +2979,7 @@
       "source": "0x2113f3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114650",
+      "symbol": "gHanachanHeadWalkEndAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114650"
@@ -2982,7 +2999,7 @@
       "source": "0x2113f48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114678",
+      "symbol": "gHanachanBody01WalkEndAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114678"
@@ -3002,7 +3019,7 @@
       "source": "0x2113f54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146f8",
+      "symbol": "gHanachanBody02WalkEndAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146f8"
@@ -3022,7 +3039,7 @@
       "source": "0x2113f60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114680",
+      "symbol": "gHanachanBody03WalkEndAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114680"
@@ -3042,7 +3059,7 @@
       "source": "0x2113f6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114628",
+      "symbol": "gHanachanBody04WalkEndAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114628"
@@ -3062,7 +3079,7 @@
       "source": "0x2113f74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114710",
+      "symbol": "gHanachanHeadWaitAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114710"
@@ -3082,7 +3099,7 @@
       "source": "0x2113f80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114630",
+      "symbol": "gHanachanBody01WaitAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114630"
@@ -3102,7 +3119,7 @@
       "source": "0x2113f8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114698",
+      "symbol": "gHanachanBody02WaitAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114698"
@@ -3122,7 +3139,7 @@
       "source": "0x2113f94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114718",
+      "symbol": "gHanachanBody03WaitAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114718"
@@ -3142,7 +3159,7 @@
       "source": "0x2113fa0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114638",
+      "symbol": "gHanachanBody04WaitAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114638"
@@ -3162,7 +3179,7 @@
       "source": "0x2113fac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114620",
+      "symbol": "gHanachanHeadDamageAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114620"
@@ -3182,7 +3199,7 @@
       "source": "0x2113fb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114640",
+      "symbol": "gHanachanBody01DamageAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114640"
@@ -3202,7 +3219,7 @@
       "source": "0x2113fbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146a8",
+      "symbol": "gHanachanBody02DamageAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146a8"
@@ -3222,7 +3239,7 @@
       "source": "0x2113fc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114658",
+      "symbol": "gHanachanBody03DamageAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114658"
@@ -3242,7 +3259,7 @@
       "source": "0x2113fd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146e8",
+      "symbol": "gHanachanBody04DamageAnimationFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146e8"
@@ -3262,7 +3279,7 @@
       "source": "0x2113fe0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114730",
+      "symbol": "gHanachanHeadTextureSequenceFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114730"
@@ -3292,7 +3309,7 @@
       "source": "0x2113ff0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114708",
+      "symbol": "gHanachanBody01TextureSequenceFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114708"
@@ -3312,7 +3329,7 @@
       "source": "0x2113ffc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114690",
+      "symbol": "gHanachanBody02TextureSequenceFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114690"
@@ -3332,7 +3349,7 @@
       "source": "0x2114008",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021146c0",
+      "symbol": "gHanachanBody03TextureSequenceFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x21146c0"
@@ -3352,7 +3369,7 @@
       "source": "0x2114014",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114720",
+      "symbol": "gHanachanBody04TextureSequenceFile",
       "addend": 0,
       "target_module": "ov034",
       "target_address": "0x2114720"

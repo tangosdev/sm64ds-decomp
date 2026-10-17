@@ -30,20 +30,22 @@
  *   names; the handles keep data_ov043_* names as well.
  */
 
-#include "daObjKm1_Dorifu_c.h"
-
-struct DorifuSpawnInfo {
-    daObjKm1_Dorifu_c *(*classInit)();
-    s16 executePriority; /* +4: also KM1_DORIFU registry id 0x0086 = 134 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km1_dorifu_AssetId {
+    ASSET_KM1_DORIFU0_BMD = 0x0649,
+    ASSET_KM1_DORIFU0_KCL = 0x064a,
+    ASSET_KM1_DORIFU1_BMD = 0x064b,
+    ASSET_KM1_DORIFU1_KCL = 0x064c,
+    ASSET_KM1_DORIFU2_BMD = 0x064d,
+    ASSET_KM1_DORIFU2_KCL = 0x064e,
+    ASSET_KM1_DORIFU3_BMD = 0x064f,
+    ASSET_KM1_DORIFU3_KCL = 0x0650,
+    ASSET_KM1_DORIFU4_BMD = 0x0651,
+    ASSET_KM1_DORIFU4_KCL = 0x0652
 };
-typedef char DorifuSpawnInfo_size_must_be_0x1c[
-    sizeof(DorifuSpawnInfo) == 0x1c ? 1 : -1];
+
+#include "daObjKm1_Dorifu_c.h"
+#include "SpawnInfo.h"
 
 struct DorifuModelFilePtr : SharedFilePtr {
     u32 words[2];
@@ -84,9 +86,9 @@ extern "C" daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit()
 }
 
 // @symbol g_profile_KM1_DORIFU
-extern "C" DorifuSpawnInfo g_profile_KM1_DORIFU = {
+extern "C" SpawnInfo<daObjKm1_Dorifu_c> g_profile_KM1_DORIFU = {
     daObjKm1_Dorifu_c_classInit,
-    0x0086,
+    0x0086, /* KM1_DORIFU registry id 134 */
     0x00af,
     0,
     0x00500000,
@@ -118,13 +120,13 @@ s32 daObjKm1_Dorifu_c::CleanupResources()
 /* Order is the retail initializer: models 0x649/0x64b/0x64d/0x64f/0x651,
  * then collisions 0x64a/0x64c/0x64e/0x650/0x652. mwcc emits
  * __sinit_d_a_obj_km1_dorifu.cpp from these ten definitions. */
-DorifuModelFilePtr data_ov043_021126a0(0x649);
-DorifuModelFilePtr data_ov043_02112680(0x64b);
-DorifuModelFilePtr data_ov043_02112668(0x64d);
-DorifuModelFilePtr data_ov043_02112688(0x64f);
-DorifuModelFilePtr data_ov043_02112690(0x651);
-DorifuCollisionFilePtr data_ov043_02112678(0x64a);
-DorifuCollisionFilePtr data_ov043_02112658(0x64c);
-DorifuCollisionFilePtr data_ov043_02112670(0x64e);
-DorifuCollisionFilePtr data_ov043_02112698(0x650);
-DorifuCollisionFilePtr data_ov043_02112660(0x652);
+DorifuModelFilePtr data_ov043_021126a0(ASSET_KM1_DORIFU0_BMD);
+DorifuModelFilePtr data_ov043_02112680(ASSET_KM1_DORIFU1_BMD);
+DorifuModelFilePtr data_ov043_02112668(ASSET_KM1_DORIFU2_BMD);
+DorifuModelFilePtr data_ov043_02112688(ASSET_KM1_DORIFU3_BMD);
+DorifuModelFilePtr data_ov043_02112690(ASSET_KM1_DORIFU4_BMD);
+DorifuCollisionFilePtr data_ov043_02112678(ASSET_KM1_DORIFU0_KCL);
+DorifuCollisionFilePtr data_ov043_02112658(ASSET_KM1_DORIFU1_KCL);
+DorifuCollisionFilePtr data_ov043_02112670(ASSET_KM1_DORIFU2_KCL);
+DorifuCollisionFilePtr data_ov043_02112698(ASSET_KM1_DORIFU3_KCL);
+DorifuCollisionFilePtr data_ov043_02112660(ASSET_KM1_DORIFU4_KCL);

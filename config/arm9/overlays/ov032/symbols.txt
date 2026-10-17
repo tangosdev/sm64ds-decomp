@@ -56,10 +56,10 @@ data_ov032_02112ba8 kind:data(any) addr:0x02112ba8 ambiguous
 data_ov032_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov032_02112bec kind:data(any) addr:0x02112bec ambiguous
 data_ov032_02112c08 kind:data(any) addr:0x02112c08 ambiguous
-__sinit_daBakubaku_c.cpp kind:function(arm,size=0x1ac) addr:0x02112c10
+__sinit_d_a_bakubaku.cpp kind:function(arm,size=0x1ac) addr:0x02112c10
 __sinit_d_a_obj_td_futa.cpp kind:function(arm,size=0x6c) addr:0x02112dbc
 __sinit_d_a_obj_td_water.cpp kind:function(arm,size=0x6c) addr:0x02112e28
-.p__sinit_daBakubaku_c.cpp kind:data(word) addr:0x02112e94
+.p__sinit_d_a_bakubaku.cpp kind:data(word) addr:0x02112e94
 .p__sinit_d_a_obj_td_futa.cpp kind:data(word) addr:0x02112e98
 .p__sinit_d_a_obj_td_water.cpp kind:data(word) addr:0x02112e9c
 data_ov032_02112ec0 kind:data(any) addr:0x02112ec0
@@ -142,7 +142,7 @@ _ZTV14daObjTdWater_c kind:data(any) addr:0x021139a4
 data_ov032_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 data_ov032_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov032_02113a00 kind:data(any) addr:0x02113a00 ambiguous
-data_ov032_02113a40 kind:bss addr:0x02113a40
+gBakubakuModelFile kind:bss addr:0x02113a40
 data_ov032_02113a48 kind:bss addr:0x02113a48
 data_ov032_02113a50 kind:bss addr:0x02113a50
 @838 kind:bss addr:0x02113a58

@@ -16,7 +16,8 @@
  * - dBgW_KcMbg::SetFile stays mangled (Fix12<int> by value, wall 6az)
  * - TrapVector3 POD locals; Vector3's empty destructor would add an
  *   unrelated helper to this TU
- * - InitResources mAngleY uses (int)this+0x8e (named member CSE/size-DIFF)
+ * - InitResources adds to mAngleY through a pointer local (plain
+ *   `mAngleY += 0x8000` CSE/size-DIFFs)
  * - func_020393c4 stores dBgW+0x1c (no setter)
  * - data_ov010_02112d08 / 02112d00 are this file's resource handles;
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
@@ -25,10 +26,18 @@
  * - func_ov010_02111984 three-argument C ABI collider adapter
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_c1_trap_AssetId {
+    ASSET_C1_TRAP_BMD = 0x05af,
+    ASSET_C1_TRAP_KCL = 0x05b0
+};
+
 #include "daObjC1_Trap_c.h"
+#include "SpawnInfo.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "nitro/fx/fx.h"
 
 /* The two copied position locals must stay POD. The shared Vector3 has an
  * empty destructor, which would add an unrelated compiler helper to this TU. */
@@ -37,20 +46,6 @@ struct TrapVector3 {
     s32 y;
     s32 z;
 };
-
-struct TrapSpawnInfo {
-    daObjC1_Trap_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
-};
-
-typedef char TrapSpawnInfo_size_must_be_0x1c[
-    sizeof(TrapSpawnInfo) == 0x1c ? 1 : -1];
 
 typedef void (daObjC1_Trap_c::*TrapState)();
 
@@ -123,7 +118,7 @@ extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit()
     return new daObjC1_Trap_c();
 }
 
-extern "C" TrapSpawnInfo g_profile_C1_TRAP = {
+extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
     daObjC1_Trap_c_classInit,
     0x0024,
     0x0143,
@@ -188,8 +183,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other)
     distance = Vec3_HorzDist(&spawnerPos, &otherPos);
     index = (u16)relativeAngle >> 4;
     projection = data_02082214[index * 2];
-    projectedDistance =
-        (s32)(((s64)distance * projection + 0x800) >> 12);
+    projectedDistance = FX_MUL(distance, projection);
     if (projectedDistance < 0x10e000)
         spawner->mTrapActive = 1;
 }
@@ -224,9 +218,7 @@ int daObjC1_Trap_c::InitResources()
         position.x = x;
         position.y = y;
         position.z = z;
-        spawned = dActor_c::Spawn(
-            0x24, 0, *(const Vector3 *)&position,
-            (const Vector3_16 *)&mAngleX, mAreaId, -1);
+        spawned = dActor_c::Spawn(0x24, 0, *(const Vector3 *)&position, &mAngle, mAreaId, -1);
         ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
 
         index = ((int)(u16)mAngleY >> 4) * 2;
@@ -238,9 +230,7 @@ int daObjC1_Trap_c::InitResources()
         position.x = x;
         position.y = y;
         position.z = z;
-        spawned = dActor_c::Spawn(
-            0x24, 1, *(const Vector3 *)&position,
-            (const Vector3_16 *)&mAngleX, mAreaId, -1);
+        spawned = dActor_c::Spawn(0x24, 1, *(const Vector3 *)&position, &mAngle, mAreaId, -1);
         ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
         return 1;
     }
@@ -259,9 +249,9 @@ int daObjC1_Trap_c::InitResources()
     mState = 0;
 
     if ((param1 & 0xff) == 1) {
-        /* Named `mAngleY = mAngleY + 0x8000` size-DIFFs InitResources
-         * (addressing shape / CSE). Keep the MATCH form. */
-        s16 *angleY = (s16 *)((int)this + 0x8e);
+        /* Named `mAngleY += 0x8000` size-DIFFs InitResources (addressing
+         * shape / CSE); the pointer local keeps the ROM form. */
+        s16 *angleY = &mAngleY;
         *angleY = *angleY + 0x8000;
     }
     return 1;
@@ -315,8 +305,8 @@ void daObjC1_Trap_c::UpdateModelTransform()
     int cosY = data_02082214[angleY * 2 + 1];
     int sinY = data_02082214[angleY * 2];
     int radius = sinZ * 5;
-    int offsetX = (int)(((s64)radius * cosY + 0x800) >> 12);
-    int offsetZ = (int)(((s64)radius * sinY + 0x800) >> 12);
+    int offsetX = FX_MUL(radius, cosY);
+    int offsetZ = FX_MUL(radius, sinY);
     int x = (mPosX - offsetX) >> 3;
     int y = mPosY >> 3;
     int z = (mPosZ + offsetZ) >> 3;
@@ -372,7 +362,7 @@ void daObjC1_Trap_c::State0()
     if (!spawner || !spawner->mTrapActive)
         return;
     mState = 1;
-    Sound::PlayBank3(0xe, *(Vector3 *)&mCamSpacePosX);
+    Sound::PlayBank3(0xe, mCamSpacePos);
 }
 
 // @symbol _ZN14daObjC1_Trap_c6State1Ev
@@ -425,8 +415,8 @@ void daObjC1_Trap_c::State4()
  * InitResources-owned vtable: D1 at 0x021111a0, D0 at 0x021111ec. */
 
 /* mwcc copies these descriptors in __sinit_d_a_obj_c1_trap.cpp. */
-TrapModelFilePtr data_ov010_02112d08(0x5af);
-TrapCollisionFilePtr data_ov010_02112d00(0x5b0);
+TrapModelFilePtr data_ov010_02112d08(ASSET_C1_TRAP_BMD);
+TrapCollisionFilePtr data_ov010_02112d00(ASSET_C1_TRAP_KCL);
 TrapStateRec data_ov010_02112d28 = {
     &daObjC1_Trap_c::State0,
     &daObjC1_Trap_c::State1,

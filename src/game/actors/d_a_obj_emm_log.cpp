@@ -25,9 +25,16 @@
  * Leftover: g_profile_EMM_LOG lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_emm_log_AssetId {
+    ASSET_EMM_LOG_BMD = 0x05e3,
+    ASSET_EMM_LOG_KCL = 0x05e4
+};
+
 #include "daObjEmmLog_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "nitro/fx/fx.h"
 
 struct daObjEmmLog_c_Resources {
     SharedFilePtr *model;
@@ -99,7 +106,7 @@ s32 daObjEmmLog_c::Behavior()
 
     int idx = (u16)mBobPhase >> 4;
     int s = *(short *)((char *)data_02082214 + (idx << 2));
-    int m = (int)(((long long)mBobAmplitude * s + 0x800) >> 12);
+    int m = FX_MUL(mBobAmplitude, s);
     mPosY = mBasePosY + m;
 
     mBobPhase += 0x200;
@@ -134,5 +141,5 @@ s32 daObjEmmLog_c::CleanupResources()
 
 /* The log's model and collision file handles; data_ov052_021124d4.model
  * and .collision point at them. */
-EmmLogModelFilePtr data_ov052_02112680(1507);
-EmmLogCollisionFilePtr data_ov052_02112688(1508);
+EmmLogModelFilePtr gEmmLogModelFile(ASSET_EMM_LOG_BMD);
+EmmLogCollisionFilePtr gEmmLogCollisionFile(ASSET_EMM_LOG_KCL);

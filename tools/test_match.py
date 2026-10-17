@@ -87,5 +87,79 @@ class ResolveCppFlags(unittest.TestCase):
         self.assertNotIn("-Cpp_exceptions", match.DEFAULT_FLAGS)
 
 
+
+class MemoizeCompiles(unittest.TestCase):
+    """match.memoize_compiles, with the compiler itself stubbed out.
+
+    pr_linkcheck turns this on so a TU owning hundreds of functions compiles once rather
+    than once per symbol. What has to hold: off by default (other callers edit headers
+    between compiles), a hit only for the same source bytes and compile inputs, the
+    basename kept in the key, and a timeout never remembered as an answer.
+    """
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.tmp = pathlib.Path(self._tmp.name)
+        (self.tmp / "mw" / "v1").mkdir(parents=True)
+        (self.tmp / "mw" / "v1" / "mwccarm.exe").write_bytes(b"")
+        self.calls = []
+        self.answer = b"OBJ"
+        saved = (match.MW, match._compile_c_uncached, match._COMPILE_MEMO)
+        self.addCleanup(self._restore, saved)
+        match.MW = self.tmp / "mw"
+        match._compile_c_uncached = self._fake
+
+    def _restore(self, saved):
+        match.MW, match._compile_c_uncached, match._COMPILE_MEMO = saved
+
+    def _fake(self, cfile, exe, version, flags, search):
+        self.calls.append(pathlib.Path(cfile).name)
+        return self.answer
+
+    def src(self, name, text, sub="a"):
+        d = self.tmp / sub
+        d.mkdir(exist_ok=True)
+        p = d / name
+        p.write_text(text, encoding="utf-8")
+        return p
+
+    def test_off_by_default(self):
+        match.memoize_compiles(False)
+        f = self.src("x.cpp", "int f;")
+        match.compile_c(f, "v1", "-O4")
+        match.compile_c(f, "v1", "-O4")
+        self.assertEqual(len(self.calls), 2)
+
+    def test_same_bytes_in_a_fresh_temp_copy_is_a_hit(self):
+        # reloc_audit.winning_object writes a new temp copy per symbol; that must hit.
+        match.memoize_compiles()
+        a = match.compile_c(self.src("x.cpp", "int f;", "t1"), "v1", "-O4")
+        b = match.compile_c(self.src("x.cpp", "int f;", "t2"), "v1", "-O4")
+        self.assertEqual((a, b), (b"OBJ", b"OBJ"))
+        self.assertEqual(len(self.calls), 1)
+
+    def test_changed_bytes_name_version_or_flags_miss(self):
+        match.memoize_compiles()
+        match.compile_c(self.src("x.cpp", "int f;"), "v1", "-O4")
+        match.compile_c(self.src("x.cpp", "int g;"), "v1", "-O4")
+        match.compile_c(self.src("y.cpp", "int g;"), "v1", "-O4")  # __sinit_<name>
+        match.compile_c(self.src("y.cpp", "int g;"), "v1", "-O2")
+        self.assertEqual(len(self.calls), 4)
+
+    def test_failure_is_remembered_but_timeout_is_not(self):
+        match.memoize_compiles()
+        f = self.src("x.cpp", "int f;")
+        self.answer = None
+        match.compile_c(f, "v1", "-O4")
+        match.compile_c(f, "v1", "-O4")
+        self.assertEqual(len(self.calls), 1)
+        g = self.src("z.cpp", "int z;")
+        self.answer = match._TIMED_OUT
+        self.assertIsNone(match.compile_c(g, "v1", "-O4"))
+        self.assertIsNone(match.compile_c(g, "v1", "-O4"))
+        self.assertEqual(len(self.calls), 3)
+
+
 if __name__ == "__main__":
     unittest.main()

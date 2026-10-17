@@ -1,8 +1,8 @@
 {
   "id": "ov001/dCapIcon_c",
   "module": "ov001",
-  "source": "src/actors/dCapIcon_c.cpp",
-  "promoted_source": "src/actors/dCapIcon_c.cpp",
+  "source": "src/ui/hud/d_cap_icon.cpp",
+  "promoted_source": "src/ui/hud/d_cap_icon.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

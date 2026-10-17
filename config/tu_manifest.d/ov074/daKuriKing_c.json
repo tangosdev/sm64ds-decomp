@@ -1,8 +1,8 @@
 {
   "id": "ov074/daKuriKing_c",
   "module": "ov074",
-  "source": "src/actors/daKuriKing_c.cpp",
-  "promoted_source": "src/actors/daKuriKing_c.cpp",
+  "source": "src/game/actors/d_a_kuri_king.cpp",
+  "promoted_source": "src/game/actors/d_a_kuri_king.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -10,7 +10,7 @@
     "class label(s): daKuriKing_c. ROM RTTI _ZTI12daKuriKing_c at ov074:0x02122e30, _ZTS12daKuriKing_c at 0x02122e3c, vtable at ov074:0x02122eb8. Renamed here from the tree's coined `Goomboss`; the factory symbols already carried the cartridge's spelling.",
     "the former hole is closed: func_ov074_02121380 (0x02121380, size 0x374) was a banked near-miss at 11 divergent words under the free-function spelling; as member-form code walking mCylClsnPos[i] / mdCc_cs[i+1] it is byte-exact, so the contiguous run could be claimed end to end.",
     "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok (module-wide).",
-    "static-initializer fold: the compiler-generated __sinit_daKuriKing_c.cpp is byte-identical to retail __sinit_ov074_02122978 (0x3f8, match.py strict-relocs MATCH). It constructs the fourteen resource handles (model file 917, texture-sequence file 912, twelve animation files) with destructor registrations, then copies the eighteen 8-byte descriptors (fifteen member PMFs the compiler materializes as temporaries, three free-stub unions) into the nine-entry BSS state table at 0x021230f8 in slot order. The ctor word at 0x02122d70 points at that initializer. The handwritten src/unnamed/ov074/__sinit_ov074_02122978.c is retired.",
+    "static-initializer fold: the compiler-generated __sinit_d_a_kuri_king.cpp is byte-identical to retail __sinit_ov074_02122978 (0x3f8, match.py strict-relocs MATCH). It constructs the fourteen resource handles (model file 917, texture-sequence file 912, twelve animation files) with destructor registrations, then copies the eighteen 8-byte descriptors (fifteen member PMFs the compiler materializes as temporaries, three free-stub unions) into the nine-entry BSS state table at 0x021230f8 in slot order. The ctor word at 0x02122d70 points at that initializer. The handwritten src/unnamed/ov074/__sinit_ov074_02122978.c is retired.",
     "CLASSINIT TAIL FOLD (2026-10-10): the run 0x02122764..0x0212290c (daKuriKing_c_classInit_KURIKING_VANISH 0xd4, daKuriKing_c_classInit_KURIKING 0xd4) abuts this TU's old .text end (0x02122764) with no gap and is now inside it; it runs to the end of ov074 .text (0x0212290c). Membership: both factories call fBase_c::operator new(0x610) = sizeof(daKuriKing_c), run dEnemyBase_c's base constructor, store the vptr _ZTV12daKuriKing_c (ov074:0x02122eb8, the vtable this TU emits) and construct exactly the members this class declares (dCcAcPos_c[4] @0x110, ModelAnim @0x210, dExtShadowModel_c[3] @0x274, Vector3[3] @0x3ac, MaterialChanger, TextureSequence, TextureTransformer, dBgCh_Actr @0x40c); KURIKING_VANISH and KURIKING are the two registry profiles of the one class. Both factories now use native `return new daKuriKing_c;` construction. The compiler-generated Vector3 array callback is byte-identical to the original arm9:0x0203d384 callback; its dedicated four-byte relocation-free body is externalized under the canonical duplicate policy. All three mCylClsnPos elements retain stride 12 and the Vector3 destructor callback. Appended last in the file, KURIKING_VANISH first (this TU emits .text in source order under #pragma defer_codegen off)."
   ],
   "sections": [
@@ -429,7 +429,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daKuriKing_c.cpp",
+      "symbol": "__sinit_d_a_kuri_king.cpp",
       "address": "0x02122978",
       "size": "0x3f8",
       "binding": "STB_GLOBAL",
@@ -438,7 +438,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daKuriKing_c.cpp",
+      "symbol": ".p__sinit_d_a_kuri_king.cpp",
       "address": "0x02122d70",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -589,70 +589,70 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov074_02122fe0",
+      "symbol": "gKurikingWalkEndAnimationFile",
       "address": "0x02122fe0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 923 (0x39b)"
     },
     {
-      "symbol": "data_ov074_02122fe8",
+      "symbol": "gKurikingWalkStartAnimationFile",
       "address": "0x02122fe8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 924 (0x39c)"
     },
     {
-      "symbol": "data_ov074_02122ff0",
+      "symbol": "gKurikingDownStartAnimationFile",
       "address": "0x02122ff0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 916 (0x394)"
     },
     {
-      "symbol": "data_ov074_02122ff8",
+      "symbol": "gKurikingSerchWaitAnimationFile",
       "address": "0x02122ff8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 918 (0x396)"
     },
     {
-      "symbol": "data_ov074_02123000",
+      "symbol": "gKurikingModelModelFile",
       "address": "0x02123000",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 917 (0x395)"
     },
     {
-      "symbol": "data_ov074_02123008",
+      "symbol": "gKurikingDamageBAnimationFile",
       "address": "0x02123008",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 913 (0x391)"
     },
     {
-      "symbol": "data_ov074_02123010",
+      "symbol": "gKurikingSpawnAnimationFile",
       "address": "0x02123010",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 919 (0x397)"
     },
     {
-      "symbol": "data_ov074_02123018",
+      "symbol": "gKurikingDamageFAnimationFile",
       "address": "0x02123018",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 914 (0x392)"
     },
     {
-      "symbol": "data_ov074_02123020",
+      "symbol": "gKurikingWalkAnimationFile",
       "address": "0x02123020",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 922 (0x39a)"
     },
     {
-      "symbol": "data_ov074_02123028",
+      "symbol": "gKurikingTurnAnimationFile",
       "address": "0x02123028",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -666,21 +666,21 @@
       "evidence": "animation file handle constructed with file ID 921 (0x399)"
     },
     {
-      "symbol": "data_ov074_02123038",
+      "symbol": "gKurikingAngerAnimationFile",
       "address": "0x02123038",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 911 (0x38f)"
     },
     {
-      "symbol": "data_ov074_02123040",
+      "symbol": "gKurikingAngerTextureSequenceFile",
       "address": "0x02123040",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "texture-sequence file handle constructed with file ID 912 (0x390)"
     },
     {
-      "symbol": "data_ov074_02123048",
+      "symbol": "gKurikingDownAnimationFile",
       "address": "0x02123048",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -794,160 +794,160 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@675",
-      "to": "@661",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@676",
-      "to": "@662",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
       "from": "@677",
-      "to": "@663",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@661",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@678",
-      "to": "@664",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@662",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@679",
-      "to": "@665",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@663",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@680",
-      "to": "@666",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@664",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@681",
-      "to": "@667",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@665",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@682",
-      "to": "@668",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@666",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@683",
-      "to": "@669",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@667",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@684",
-      "to": "@670",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@687",
-      "to": "@673",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@688",
-      "to": "@674",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@689",
-      "to": "@79",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@668",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@685",
-      "to": "@988",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@669",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@686",
+      "to": "@670",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+    },
+    {
+      "from": "@689",
+      "to": "@673",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+    },
+    {
+      "from": "@690",
+      "to": "@674",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+    },
+    {
+      "from": "@691",
+      "to": "@79",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+    },
+    {
+      "from": "@687",
+      "to": "@988",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+    },
+    {
+      "from": "@688",
       "to": "@989",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@2113",
-      "to": "@2061",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@2114",
-      "to": "@2062",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2115",
-      "to": "@2063",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2061",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2116",
-      "to": "@2064",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2062",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2117",
-      "to": "@2065",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2063",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2118",
-      "to": "@2066",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2064",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2119",
-      "to": "@2067",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2065",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2120",
-      "to": "@2068",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2066",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2121",
-      "to": "@2069",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2067",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2122",
-      "to": "@2070",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2068",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2123",
-      "to": "@2071",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2069",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2124",
-      "to": "@2072",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2070",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2125",
-      "to": "@2073",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2071",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     },
     {
       "from": "@2126",
+      "to": "@2072",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+    },
+    {
+      "from": "@2127",
+      "to": "@2073",
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+    },
+    {
+      "from": "@2128",
       "to": "@2074",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daKuriKing_c.cpp",
+      "symbol": "__sinit_d_a_kuri_king.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daKuriKing_c.cpp",
+      "symbol": ".p__sinit_d_a_kuri_king.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1413,7 +1413,7 @@
       "source": "0x02122c80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123000",
+      "symbol": "gKurikingModelModelFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123000"
@@ -1443,7 +1443,7 @@
       "source": "0x02122c90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123040",
+      "symbol": "gKurikingAngerTextureSequenceFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123040"
@@ -1473,7 +1473,7 @@
       "source": "0x02122c9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123038",
+      "symbol": "gKurikingAngerAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123038"
@@ -1503,7 +1503,7 @@
       "source": "0x02122cac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123008",
+      "symbol": "gKurikingDamageBAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123008"
@@ -1523,7 +1523,7 @@
       "source": "0x02122cb8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123018",
+      "symbol": "gKurikingDamageFAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123018"
@@ -1543,7 +1543,7 @@
       "source": "0x02122cc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02122ff0",
+      "symbol": "gKurikingDownStartAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122ff0"
@@ -1563,7 +1563,7 @@
       "source": "0x02122ccc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123048",
+      "symbol": "gKurikingDownAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123048"
@@ -1583,7 +1583,7 @@
       "source": "0x02122cd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02122ff8",
+      "symbol": "gKurikingSerchWaitAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122ff8"
@@ -1603,7 +1603,7 @@
       "source": "0x02122ce4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123028",
+      "symbol": "gKurikingTurnAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123028"
@@ -1643,7 +1643,7 @@
       "source": "0x02122cf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123020",
+      "symbol": "gKurikingWalkAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123020"
@@ -1663,7 +1663,7 @@
       "source": "0x02122d04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02122fe0",
+      "symbol": "gKurikingWalkEndAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122fe0"
@@ -1683,7 +1683,7 @@
       "source": "0x02122d10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02122fe8",
+      "symbol": "gKurikingWalkStartAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122fe8"
@@ -1703,7 +1703,7 @@
       "source": "0x02122d18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov074_02123010",
+      "symbol": "gKurikingSpawnAnimationFile",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02123010"
@@ -1913,7 +1913,7 @@
       "source": "0x02122d70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daKuriKing_c.cpp",
+      "symbol": "__sinit_d_a_kuri_king.cpp",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122978"
@@ -2217,14 +2217,14 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov074_02121a4c and the one that held _ZN12daKuriKing_c13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210da30' differs between the legacy file that used to hold _ZN12daKuriKing_c16CleanupResourcesEv and the one that held _ZN12daKuriKing_c13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130cf8' differs between the legacy file that used to hold _ZN12daKuriKing_c16CleanupResourcesEv and the one that held _ZN12daKuriKing_c13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov074_02123040' differs between the legacy file that used to hold _ZN12daKuriKing_c16CleanupResourcesEv and the one that held _ZN12daKuriKing_c13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov074_02123000' differs between the legacy file that used to hold _ZN12daKuriKing_c16CleanupResourcesEv and the one that held _ZN12daKuriKing_c13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKurikingAngerTextureSequenceFile' differs between the legacy file that used to hold _ZN12daKuriKing_c16CleanupResourcesEv and the one that held _ZN12daKuriKing_c13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKurikingModelModelFile' differs between the legacy file that used to hold _ZN12daKuriKing_c16CleanupResourcesEv and the one that held _ZN12daKuriKing_c13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130cf8' differs between the legacy file that used to hold _ZN12daKuriKing_c16CleanupResourcesEv and the one that held func_ov074_0212229c; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15MaterialChanger6UpdateER15ModelComponents' differs between the legacy file that used to hold _ZN12daKuriKing_c6RenderEv and the one that held func_ov074_021222e0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov074_02121270 and the one that held func_ov074_021222e0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021207b8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_02120bb8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
-    "Static-initializer fold: src/unnamed/ov074/__sinit_ov074_02122978.c is retired; its fourteen handles, fourteen registration nodes, eighteen descriptors, two parameter arrays and the state table are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. tubuild verify: 53/53 MATCH, objisolate clean, reloc-destinations clean. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_daKuriKing_c.cpp. The TU's own _ZTI/_ZTS/_ZTV stay externalized; this claim stops at 0x02122e24, where _ZTI12daKuriKing_c begins, and the BSS claim stops at the section end 0x021231a0: the table itself ends at 0x02123188 and carries 0x18 of alignment fill because dsd sizes the trailing symbol to the section end and the intact tooling requires the licensed rows to tile the claim."
+    "Static-initializer fold: src/unnamed/ov074/__sinit_ov074_02122978.c is retired; its fourteen handles, fourteen registration nodes, eighteen descriptors, two parameter arrays and the state table are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. tubuild verify: 53/53 MATCH, objisolate clean, reloc-destinations clean. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_kuri_king.cpp. The TU's own _ZTI/_ZTS/_ZTV stay externalized; this claim stops at 0x02122e24, where _ZTI12daKuriKing_c begins, and the BSS claim stops at the section end 0x021231a0: the table itself ends at 0x02123188 and carries 0x18 of alignment fill because dsd sizes the trailing symbol to the section end and the intact tooling requires the licensed rows to tile the claim."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

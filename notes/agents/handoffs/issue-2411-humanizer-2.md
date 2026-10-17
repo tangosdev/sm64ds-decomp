@@ -145,8 +145,8 @@ either way; only the narration was wrong.
   | row | old cell | refreshed | source file | lines base → here |
   |---|---|---|---|---|
   | `Crate` | 1431 | **1427** | `src/_ZN5Crate13OnTurnIntoEggER6Player.cpp` | 42 → 38 |
-  | `Coin` | 1148 | **1147** | `Coin::OnTurnIntoEgg` (since folded into `src/actors/daCoin_c.cpp`) | 24 → 23 |
-  | `daGmch_c` | 1119 | **1120** | `src/actors/daGmch_c.cpp` | 1119 → 1120 |
+  | `Coin` | 1148 | **1147** | `Coin::OnTurnIntoEgg` (since folded into `src/game/actors/d_a_coin.cpp`) | 24 → 23 |
+  | `daGmch_c` | 1119 | **1120** | `src/game/actors/d_a_gmch.cpp` | 1119 → 1120 |
 
   Each row delta matches its file delta exactly, so these three are this
   branch's to move. `daKing_Donketu_c` (1992 → **1993**) and `Player`

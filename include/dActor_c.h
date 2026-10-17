@@ -3,6 +3,15 @@
 
 #include "types.h"
 
+/* The s16 vector, complete here because mAngle/mPrevAngle below hold one by
+   value. Guarded exactly as common.h and dBgW.h guard their copies. */
+#ifndef VECTOR3_16_DEFINED
+#define VECTOR3_16_DEFINED
+struct Vector3_16 {
+    s16 x, y, z;
+};
+#endif
+
 #ifdef __cplusplus
 #include "dBase_c.h"
 #include "fListNode.h"
@@ -33,7 +42,6 @@
 
 struct Player;
 struct Vector3;
-struct Vector3_16;
 struct dCc_c;
 /* Only ever named through a pointer below; the definition lives in common.h /
    math/Matrix.h, which this header deliberately does not pull in. */
@@ -48,7 +56,7 @@ struct dExtShadowModel_c;
    Heap*, but two incompatible extern "C" declarations of one name in a single TU
    are rejected as "illegal function overloading" -- that cost 105 files their
    eligibility when it was tried. Fix it in decl_common.h or not at all. */
-extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
 extern "C" void *data_020a0eac;
 
 struct dActor_c : dBase_c {
@@ -56,24 +64,63 @@ struct dActor_c : dBase_c {
        constructor appends this node, the destructor unlinks it, and Next() walks
        the next link and reads its owner to get back to the actor. */
     fLiNdBa_c mActorListNode; /* 0x050 -- owner is always `this` */
-    s32 mPosX;              /* 0x05c */
-    s32 mPosY;              /* 0x060 */
-    s32 mPosZ;              /* 0x064 */
-    s32 mPrevPosX;          /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
-    s32 mPrevPosY;          /* 0x06c */
-    s32 mPrevPosZ;          /* 0x070 */
-    s32 mCamSpacePosX;      /* 0x074 */
-    s32 mCamSpacePosY;      /* 0x078 */
-    s32 mCamSpacePosZ;      /* 0x07c */
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    s16 mPrevAngleX;        /* 0x092 */
-    s16 mPrevAngleY;        /* 0x094 */
-    s16 mPrevAngleZ;        /* 0x096 */
+    /* Each triple below is also one vector: mPos is mPosX/Y/Z, mAngle is
+       mAngleX/Y/Z, and so on. Both spellings name the same storage. New code
+       should prefer the vector member (`&mPos`, not `(Vector3 *)&mPosX`); the
+       scalar names stay so the thousands of existing references need not churn.
+
+       THESE OVERLAYS ARE NOT FREE, AND THEY ARE PAID FOR BELOW. mwcc numbers
+       its @NNN temporaries from one per-TU counter, and every unnamed struct
+       or union draws two numbers from it: four per overlay, 24 for the six.
+       Unpaid, that renumbers the pinned @NNN symbols of every TU including
+       this header. A named parameter in a member declaration draws one, so
+       24 parameter names further down are left off and the counter ends this
+       header exactly where it did before the overlays. Naming or unnaming a
+       parameter in this class, or adding an overlay, moves every consumer's
+       @NNN: keep the books balanced.
+
+       Vector3 has a constructor, so mwcc warns "unions cannot have nontrivial
+       class members" here; the warning is expected. Nothing is constructed
+       through these, but the constructor's TU now also emits unused empty
+       destructors for the four Vector3 unions. For the port (C++11 and
+       later), a nontrivial union member also deletes dActor_c's implicit
+       copy constructor and copy assignment; nothing copies an actor. */
+    union {
+        struct {
+            s32 mPosX, mPosY, mPosZ;
+        };
+        Vector3 mPos; /* 0x05c */
+    };
+    union {
+        struct {
+            s32 mPrevPosX, mPrevPosY, mPrevPosZ;
+        };
+        Vector3 mPrevPos; /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
+    };
+    union {
+        struct {
+            s32 mCamSpacePosX, mCamSpacePosY, mCamSpacePosZ;
+        };
+        Vector3 mCamSpacePos; /* 0x074 */
+    };
+    union {
+        struct {
+            s32 mScaleX, mScaleY, mScaleZ;
+        };
+        Vector3 mScale; /* 0x080 */
+    };
+    union {
+        struct {
+            s16 mAngleX, mAngleY, mAngleZ;
+        };
+        Vector3_16 mAngle; /* 0x08c */
+    };
+    union {
+        struct {
+            s16 mPrevAngleX, mPrevAngleY, mPrevAngleZ;
+        };
+        Vector3_16 mPrevAngle; /* 0x092 */
+    };
     s32 mHorzSpeed;         /* 0x098 */
     s32 mVertAccel;         /* 0x09c -- fix12, negative (gravity) */
     s32 mTerminalVelocity;  /* 0x0a0 -- fix12, negative */
@@ -112,7 +159,9 @@ struct dActor_c : dBase_c {
     s32 mClipDistance;      /* 0x0bc -- past this the actor is off screen AND far away */
     s32 mFarDistance;       /* 0x0c0 -- past this it is merely far away */
     u8  mClipResult;        /* 0x0c4 -- written by the dClipper */
-    u8  pad_0c5[0x7];
+    /* Pointer alignment leaves 0x0c5..0x0c7 unused. Shared by carried actors
+       and attached objects; zero selects the actor's own model matrix. */
+    struct Matrix4x3 *mCarryMatrix; /* 0x0c8 */
     s8  mAreaId;            /* 0x0cc -- negative means "not area-bound" */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce -- index into the already-killed bitmap */
@@ -129,6 +178,17 @@ struct dActor_c : dBase_c {
        function, so no TU gains a vtable from this. */
     dActor_c();
 
+    /* The 24 unnamed parameters in this class, each left off because a name
+       would cost an @NNN number that the vector overlays above spend instead:
+         Player & / dActor_c &: slots 19 and 21-28, BumpedUnderneathByPlayer,
+           JumpedOnByPlayer's Player, GivePlayerCoins;
+         dCc_c & / dCc_c *: FindEgg, FindExplosionActor, MakeVanishLuigiWork,
+           JumpedOnByPlayer, UpdatePos, UpdatePosWithOnlySpeed;
+         dExtShadowModel_c &: DropShadowScaleXYZ, DropShadowRadHeight;
+         dust position: PoofDustAt, DisappearPoofDustAt, TriplePoofDustAt,
+           HugeLandingDustAt (LandingDustAt's `pos` was already named).
+       Naming one, or unnaming another, moves every consumer's @NNN. */
+
     /* --- overrides of inherited slots. Each takes its base's index. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
     virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */
@@ -141,20 +201,20 @@ struct dActor_c : dBase_c {
 
     /* --- new slots, 18..30, in declaration order. Do not reorder. --- */
     virtual int  OnYoshiTryEat();                      /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player);        /* slot 19 */
+    virtual void OnTurnIntoEgg(Player &);              /* slot 19 */
     virtual int  Virtual50();                          /* slot 20 -- vtable+0x50 */
     /* Slots 21, 24 and 27 return void, NOT int. Nothing in the tree reads them,
        so only an override with early returns can tell the difference -- and one
        of each does, allocating registers differently under `int` even with r0
        untouched. Measured, not assumed; see notes/actor-core-provenance.md 9. */
-    virtual void OnGroundPounded(dActor_c &other);        /* slot 21 */
-    virtual int  OnAttacked1(dActor_c &other);            /* slot 22 */
-    virtual int  OnAttacked2(dActor_c &other);            /* slot 23 */
-    virtual void OnKicked(dActor_c &other);               /* slot 24 */
-    virtual int  OnPushed(dActor_c &other);               /* slot 25 */
-    virtual int  OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
-    virtual void OnHitByMegaChar(Player &player);      /* slot 27 */
-    virtual int  OnHitFromUnderneath(dActor_c &other);    /* slot 28 */
+    virtual void OnGroundPounded(dActor_c &);          /* slot 21 */
+    virtual int OnAttacked1(dActor_c &);               /* slot 22 */
+    virtual int OnAttacked2(dActor_c &);               /* slot 23 */
+    virtual void OnKicked(dActor_c &);                 /* slot 24 */
+    virtual int OnPushed(dActor_c &);                  /* slot 25 */
+    virtual int OnHitByCannonBlastedChar(dActor_c &);  /* slot 26 */
+    virtual void OnHitByMegaChar(Player &);            /* slot 27 */
+    virtual int OnHitFromUnderneath(dActor_c &);       /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
     /* Returns a Vector3 by value, and the ROM says so: 0x020100dc writes x/y/z
        through r0 and reads every field off r1, the AAPCS indirect-return shape.
@@ -185,7 +245,7 @@ struct dActor_c : dBase_c {
 
     /* Integrates mHorzSpeed along mAngleY and applies gravity. */
     void UpdatePosWithHorzSpeedAndAng();
-    int  BumpedUnderneathByPlayer(Player &player);
+    int BumpedUnderneathByPlayer(Player &);
     int  GetSubtraction(short a, short b);
 
     /* Rebuilds the scratch matrix at 0x020a0e68 from the carrying player's hand
@@ -201,12 +261,12 @@ struct dActor_c : dBase_c {
 
        UpdatePos takes a POINTER where the rest take references; the mangled name
        says P5dCc_c, not R. */
-    dActor_c *FindEgg(dCc_c &clsn);               /* hitFlags 0x2000 */
-    dActor_c *FindExplosionActor(dCc_c &clsn);    /* hitFlags 0x4000 */
-    void   MakeVanishLuigiWork(dCc_c &clsn);
-    int    JumpedOnByPlayer(dCc_c &clsn, Player &player);
-    void   UpdatePos(dCc_c *clsn);
-    void   UpdatePosWithOnlySpeed(dCc_c *clsn);
+    dActor_c *FindEgg(dCc_c &);            /* hitFlags 0x2000 */
+    dActor_c *FindExplosionActor(dCc_c &); /* hitFlags 0x4000 */
+    void MakeVanishLuigiWork(dCc_c &);
+    int JumpedOnByPlayer(dCc_c &, Player &);
+    void UpdatePos(dCc_c *);
+    void UpdatePosWithOnlySpeed(dCc_c *);
 
     /* The dust group: an `...At` worker taking a position, and a no-argument
        wrapper that copies this actor's own position into a stack Vector3 and
@@ -218,14 +278,14 @@ struct dActor_c : dBase_c {
        One side of each pair carries the wrong adjective; these are imported
        names and nothing in the bytes says which side. Deliberately not renamed. */
     void PoofDust();
-    void PoofDustAt(const Vector3 &pos);            /* particles 0x122, 0x123 */
+    void PoofDustAt(const Vector3 &); /* particles 0x122, 0x123 */
     void SmallPoofDust();
-    void DisappearPoofDustAt(const Vector3 &pos);   /* particles 0x127, 0x128 */
+    void DisappearPoofDustAt(const Vector3 &); /* particles 0x127, 0x128 */
     void TriplePoofDust();
-    void TriplePoofDustAt(const Vector3 &pos);      /* particles 0x124..0x126 */
+    void TriplePoofDustAt(const Vector3 &); /* particles 0x124..0x126 */
     void LandingDust(bool doRaycast);
     void HugeLandingDust(bool doRaycast);
-    void HugeLandingDustAt(Vector3 &pos, bool doRaycast);  /* particle 0xb2 */
+    void HugeLandingDustAt(Vector3 &, bool doRaycast);     /* particle 0xb2 */
     void LandingDustAt(Vector3 &pos, bool doRaycast);      /* particle 0xb1 */
 
     /* The death table: actors already killed, so they do not respawn. All three
@@ -257,7 +317,7 @@ struct dActor_c : dBase_c {
        has to say both. */
     dActor_c *SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
                        u16 delay, dActor_c *owner);
-    void   GivePlayerCoins(Player &player, u8 count, u32 coinKind);
+    void GivePlayerCoins(Player &, u8 count, u32 coinKind);
     dActor_c *ClosestWithActorID(u32 actorID);
 
     /* areaID and deathTableID are s8/s16 and the symbol must say so: the body
@@ -273,20 +333,19 @@ struct dActor_c : dBase_c {
                         Fix12<int> horzSpeed, Fix12<int> unk35c, u32 param1);
     bool IsPlayerInRange(Fix12<int> posX, Fix12<int> posY, Fix12<int> posZ,
                           s32 maxDist);
-    void DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix,
-                             Fix12<int> scaleX, Fix12<int> scaleY,
-                             Fix12<int> scaleZ, u32 opacity);
+    void DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12<int> scaleX,
+                            Fix12<int> scaleY, Fix12<int> scaleZ, u32 opacity);
     s16  ReflectAngle(Fix12<int> normalX, Fix12<int> normalZ, s16 angToReflect);
     void SpawnCoins(const Vector3 &pos, u32 count, Fix12<int> spread, s16 angle);
-    void DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix,
-                              Fix12<int> radius, Fix12<int> depth, u32 opacity);
+    void DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12<int> radius,
+                             Fix12<int> depth, u32 opacity);
 
     /* INLINE, AND ON THIS CLASS RATHER THAN A BASE -- both are load-bearing.
        CW builds D0 (slot 17) as "run the destructor, then call operator delete",
        and inlines it only when it is found in the class itself or its IMMEDIATE
        base. Without this every dActor_c-derived D0 calls the global _ZdlPv,
        which exists nowhere in this image, and comes out short. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
 };
 
 #else
@@ -310,24 +369,43 @@ struct dActor_c {
     void *mListPrev;        /* 0x050 */
     void *mListNext;        /* 0x054 */
     struct dActor_c *mListOwner; /* 0x058 */
-    s32 mPosX;              /* 0x05c */
-    s32 mPosY;
-    s32 mPosZ;
-    s32 mPrevPosX;          /* 0x068 */
-    s32 mPrevPosY;
-    s32 mPrevPosZ;
-    s32 mCamSpacePosX;      /* 0x074 */
-    s32 mCamSpacePosY;
-    s32 mCamSpacePosZ;
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;
-    s32 mScaleZ;
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    s16 mPrevAngleX;        /* 0x092 */
-    s16 mPrevAngleY;        /* 0x094 */
-    s16 mPrevAngleZ;        /* 0x096 */
+    /* The same vector overlays as the C++ layout above. */
+    union {
+        struct {
+            s32 mPosX, mPosY, mPosZ;
+        };
+        Vector3 mPos; /* 0x05c */
+    };
+    union {
+        struct {
+            s32 mPrevPosX, mPrevPosY, mPrevPosZ;
+        };
+        Vector3 mPrevPos; /* 0x068 */
+    };
+    union {
+        struct {
+            s32 mCamSpacePosX, mCamSpacePosY, mCamSpacePosZ;
+        };
+        Vector3 mCamSpacePos; /* 0x074 */
+    };
+    union {
+        struct {
+            s32 mScaleX, mScaleY, mScaleZ;
+        };
+        Vector3 mScale; /* 0x080 */
+    };
+    union {
+        struct {
+            s16 mAngleX, mAngleY, mAngleZ;
+        };
+        struct Vector3_16 mAngle; /* 0x08c */
+    };
+    union {
+        struct {
+            s16 mPrevAngleX, mPrevAngleY, mPrevAngleZ;
+        };
+        struct Vector3_16 mPrevAngle; /* 0x092 */
+    };
     s32 mHorzSpeed;         /* 0x098 */
     s32 mVertAccel;         /* 0x09c */
     s32 mTerminalVelocity;  /* 0x0a0 */
@@ -340,7 +418,9 @@ struct dActor_c {
     s32 mClipDistance;      /* 0x0bc */
     s32 mFarDistance;       /* 0x0c0 */
     u8  mClipResult;        /* 0x0c4 */
-    u8  pad_0c5[0x7];
+    /* Pointer alignment leaves 0x0c5..0x0c7 unused. Shared by carried actors
+       and attached objects; zero selects the actor's own model matrix. */
+    struct Matrix4x3 *mCarryMatrix; /* 0x0c8 */
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce */

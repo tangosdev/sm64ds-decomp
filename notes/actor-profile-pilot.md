@@ -258,7 +258,9 @@ the sole class-initializing candidate for `MG_CURLING_J`.
 ## Answers
 
 1. **Is `SpawnInfo` functioning as a profile?** Yes, as the 0x1c actor-profile
-   descriptor.  A separate 0x08 base/scene-profile form also exists.
+   descriptor.  A separate 0x08 base/scene-profile form also exists; the project
+   type for it is `BaseSpawnInfo<T>` (`include/SpawnInfo.h`), a decomp name like
+   `SpawnInfo` itself.
 2. **Is `g_profile_<ROM_ID>` consistent?** Yes across the 20-row pilot, with unique
    ROM IDs across all 391 entries.  The ten overlay-multiplexed pointers are now
    assigned by RTTI name correspondence, which lifts the recommendation to all 391

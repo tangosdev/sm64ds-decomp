@@ -34,7 +34,7 @@ WHY BACKSLIDE-ONLY, AND NOT A COUNT. Two reasons, and the second is the importan
 
 A PATH CAN LEAVE WITHOUT ANYTHING BEING LOST. The one legitimate way is a TU
 promotion: `tubuild.py` consolidates N per-symbol `src/_ZN....cpp` files into the one
-`src/actors/<Class>.cpp` the original translation unit was, and git records N deletions plus
+`src/game/<dir>/<file>.cpp` the original translation unit was, and git records N deletions plus
 one addition. A set ratchet reads all N as `GONE`. Measured on PR #1882
 (`tu/inline-dtor-order`, f3223b816), 90 of 90 backslid paths were exactly that and
 none was a deletion, which is a report no one can read.
@@ -48,7 +48,7 @@ decides whether that move cost anything:
   * if the absorbing source's enrolled members each pass all five, that is NOT a
     backslide -- the same readable code is simply scored under member identities;
   * if any member does not, that IS a backslide and still fails. The message names the
-    exact member and criterion, e.g. "src/actors/<Class>.cpp#<symbol> fails: Calls things
+    exact member and criterion, e.g. "src/game/<dir>/<file>.cpp#<symbol> fails: Calls things
     by real names, not mangled _Z".
 
 WHICH MODE YOU SEE THAT IN IS NOT OBVIOUS, SO IT IS WRITTEN DOWN. Both arms belong to
@@ -296,7 +296,7 @@ def promoted_moves(root=None):
 
     A TU promotion is the one way a banked path legitimately stops existing without
     anything being deleted. `tubuild.py` consolidates N per-symbol `src/_ZN....cpp`
-    files into the single `src/actors/<Class>.cpp` the original translation unit was, and
+    files into the single `src/game/<dir>/<file>.cpp` the original translation unit was, and
     git records that as N deletions plus one addition -- so every one of the N banked
     paths reads to a set ratchet exactly like a file someone threw away. Measured on
     PR #1882 (`tu/inline-dtor-order`, f3223b816): 90 of 90 backslid paths were TU
@@ -1176,7 +1176,7 @@ def report_orphans(orphans, moves, exceptions_path, tracked, scores, ownership,
               "\n"
               "  ORDER IS THE WHOLE REMEDY: REWRITE FIRST, THEN RE-RUN. Measured on\n"
               "  src/_ZN7dBase_cD1Ev.cpp, whose target is\n"
-              "  src/actors/ActorDerived.cpp#_ZN7dBase_cD1Ev on a destination that\n"
+              "  src/runtime/actor/ActorDerived.cpp#_ZN7dBase_cD1Ev on a destination that\n"
               "  fails. Bank it first and `--update --reason` exits 0 and writes the\n"
               "  false REMOVED row against the legacy path. Rewrite the baseline\n"
               "  entry onto the target first and the next --check exits 0 outright:\n"

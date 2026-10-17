@@ -1,0 +1,799 @@
+{
+  "schema": 1,
+  "task": "wanwan-native-local-vectors1015",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813",
+  "candidate": "This commit; immutable output is recorded by the coordination queue.",
+  "status": "Producer-verified candidate; independent Source and byte acceptance is the next stage.",
+  "source_checkpoint": "9e03b9cb8b72733d2cbac6ceb576d1db9d52afc3",
+  "base_commit": "4137ccfae3598f603c0f655dc07666f55a10b227",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "producer_session": "codex-wanwan-native-local-vectors-root1015",
+  "assistance": [
+    {
+      "agent": "cpp_frontier_astra1014",
+      "role": "Six ignored bounds-safe loop experiments; no tracked Source edits."
+    },
+    {
+      "agent": "fbase_delivery_fresh",
+      "role": "Bounded Source-quality assessment, no Source authorship or Chomp compilation."
+    },
+    {
+      "agent": "scene_producer_recovery",
+      "role": "Read-only bounds preflight; formal independent verifier after the immutable offer."
+    }
+  ],
+  "predecessor_tasks": [
+    "wanwan-native1013",
+    "wanwan-current1013",
+    "wanwan-restack1013"
+  ],
+  "changes": [
+    "Replace all 20 local vector stand-ins with the existing genuine Vector3 type across the forward-chain, backward-chain, blend, and contact helpers.",
+    "Replace six WanwanVec pointer declarations with Vector3 views of the actual seven-element mLinkPos and mLinkDelta arrays; remove the local POD twin.",
+    "Use an unsigned 32-bit address cursor for the backward traversal and convert to Vector3* only at valid element addresses 6 through 0. The last integer decrement is never converted to a pointer.",
+    "Agree the existing Player::Hurt scalar bridge with its current definition: int return, void* position, u8 trailing flags. Arguments and discarded result remain the same. This does not recover the original by-value Fix12 ABI."
+  ],
+  "scope": {
+    "source": "src/game/actors/d_a_wanwan.cpp",
+    "source_sha256": "609543da178475d46c9e81a3ee9a7e7756fe472e9920eada3539ce1c1c787719",
+    "manifest_sha256": "a9d3c28d0eb147775fcb1ab6bb1ca9a8d0a718c26518e15ea77243a99899ae2b",
+    "manifest_changed": false,
+    "shared_headers_changed": false,
+    "production_enrollment_changed": false,
+    "functions": [
+      {
+        "symbol": "func_ov014_02112114",
+        "address": "0x02112114",
+        "size": "0x000001c8",
+        "legacy_source": "src/func_ov014_02112114.c",
+        "ordinal": 19
+      },
+      {
+        "symbol": "func_ov014_021122dc",
+        "address": "0x021122dc",
+        "size": "0x00000090",
+        "legacy_source": "src/func_ov014_021122dc.c",
+        "ordinal": 20
+      },
+      {
+        "symbol": "func_ov014_0211236c",
+        "address": "0x0211236c",
+        "size": "0x000001a0",
+        "legacy_source": "src/func_ov014_0211236c.c",
+        "ordinal": 21
+      },
+      {
+        "symbol": "func_ov014_0211250c",
+        "address": "0x0211250c",
+        "size": "0x0000027c",
+        "legacy_source": "src/func_ov014_0211250c.c",
+        "ordinal": 22
+      }
+    ],
+    "existing_layout": "mLinkPos[7] at +0x524 and mLinkDelta[7] at +0x578 are actual Vector3 subobjects. Actor mPosX/Y/Z remain separate scalar fields; no Vector3 object is invented there.",
+    "attribution": "Original address-based function-authors entries and earlier reconstruction credits are untouched. No function rename or file move."
+  },
+  "bounds_and_remaining_representation_boundary": {
+    "valid_accesses": "Each body converts the cursor for mLinkPos[i], i=6..0. target is prevpos at i=6 and cur+1 at i=5..0, which addresses elements 6..1. Every read/write uses actual array or local Vector3 objects.",
+    "terminal_update": "After i=0 the u32 cursor becomes actor+0x518. The loop exits with i=-1 before another conversion. No pointer to that address is formed or dereferenced; sizeof(*cur) is unevaluated.",
+    "target_contract": "Pointer/integer conversions rely on the pinned DS flat 32-bit address representation. This is implementation-defined target C++, not portable array traversal or a 64-bit host claim.",
+    "source_plausibility": "A localized measured representation bridge remains. The result is not claimed to uniquely recover the original source spelling or complete native reconstruction.",
+    "discarded_diagnostic": "An earlier byte-matching address step converted the dead terminal address to a pointer and did not satisfy the literal task contract. It was superseded by the integer-only induction. A corrupted diagnostic comment was never copied into tracked Source.",
+    "alternatives": "One-past/indexed/guarded forms and 11 exit/induction/Astra alternatives are preserved below. The indexed form is valid Source but emits 420 bytes; the guarded-break and short-circuit forms emit 416 bytes with five differing instruction words. These are measured alternatives, not a compiler impossibility proof."
+  },
+  "reconstruction_dimensions": {
+    "methods": "Existing genuine daWanwan_c methods and native new/delete lifecycle remain. The four targeted helpers retain their existing C linkage, names, and ABI.",
+    "fields": "Twenty real local objects and six native array views improve the previous shadow-vector representation. Flat actor position and other inherited raw views remain partial.",
+    "lifecycle_storage_metadata": "Factory, destructor, resource wrappers, PMF/state table, initializer, all owned sections and complete emitted RTTI/vtable preambles are unchanged.",
+    "remaining": "Scalar Fix12 interfaces, resource wrappers, PMF/state views, flat position interfaces, and the explicit target-address cursor remain partial under issue 3813. This PR does not close that issue."
+  },
+  "whole_object_proof": {
+    "compiler": "2004/b56 with existing build_pin.flags_for(source); no flag, pragma, policy, ASM, volatile or artificial-effect change.",
+    "owned_code_checks": 30,
+    "canonical_Vector3_callbacks": 2,
+    "separate_ctor_and_state_storage_checks": 2,
+    "blind_relocations": 0,
+    "differences": 0,
+    "raw_relocation_records": 288,
+    "prepared_relocation_records": 242,
+    "metadata_records": 11,
+    "metadata_bytes": 244,
+    "bss_records": 8,
+    "bss_bytes": 80,
+    "raw_sha256": "133696dab6cb3acfe9e2a630eaa7555e2ec65b3e01887c543d95fc88ac8aa3d1",
+    "prepared_sha256": "0f049b0953b7f30964072d51791e14e6a6c3116817c77d86f177f7a5229cc142",
+    "raw_object_is_literal_baseline": true,
+    "prepared_object_is_literal_baseline": true,
+    "complete_graph_comparison": {
+      "raw_graph": true,
+      "prepared_graph": true,
+      "owned": true,
+      "metadata": true,
+      "bss": true,
+      "callbacks": true,
+      "strict": true
+    },
+    "qualification": "30 function/init checks plus 2 canonical callbacks are code checks. The ctor word and 120-byte state array are 2 additional storage checks; they are not counted as code. BSS is 8 NOBITS records totaling 80 bytes. All 11 emitted metadata payloads, including full vtable preambles, total 244 bytes.",
+    "proof": {
+      "path": "build/wanwan-native-local-vectors1015/accepted-induction/proof.json",
+      "sha256": "9def6ff35e325ab42560ded8fde81b72610fa257570f8a7b4ca0eb6cf417de69"
+    },
+    "comparison": {
+      "path": "build/wanwan-native-local-vectors1015/accepted-induction/complete-comparison.json",
+      "sha256": "283ea69d04984e8ebe1f54c32b3924c1bad4f35d998db949365bd7c404d3df63"
+    }
+  },
+  "gates": {
+    "production_rombuild": {
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 304.751177072525,
+      "log": {
+        "path": "build/wanwan-native-local-vectors1015/accepted-induction/rombuild.log",
+        "sha256": "7e93a965874d4937dfd5f718e60c2011d34d6b1ee311057ccbbfd030f446b1a7"
+      },
+      "exact_modules": 106,
+      "reproducing_source_functions": 11334,
+      "mismatching_source_functions": 0,
+      "reproducing_complete_data_claims": 331,
+      "bss_claims": 239,
+      "qualification": "Actual full production build at the base plus this Source; all 106 modules are exact, zero new symbol errors and storage aliases exact. The scratch ROM-gap control reports pre-existing missing configured symbol names separately. The broader ROM-data inventory still reports 970 verified, 1519 partial, 1 differing and 21 unnamed records; this is not a claim that every data reconstruction is complete. Chomp raw and prepared objects are entirely baseline-identical."
+    },
+    "prepush_linkcheck": {
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "4137ccfae3598f603c0f655dc07666f55a10b227..HEAD"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 20.550995349884033,
+      "log": {
+        "path": "build/wanwan-native-local-vectors1015/accepted-induction/prepush.log",
+        "sha256": "0e61b39186c93a7d2ef556202f9d5352f5534a7183bb825182b0ead5552b7f5d"
+      },
+      "qualification": "30 checked, 28 VERIFIED, 2 nonblocking BLIND warnings for factory/init canonical names. Complete prepared-object checks above separately resolve all destinations with zero blind relocations; this gate alone is not all-zero coverage."
+    },
+    "declaration_agreement": "PASS: one changed Source defining 29 symbols; ten inherited disagreements remain, no new disagreement or local header redeclaration. Global diagnostic contains 17 unparsed declarators; no universal ABI recovery claim.",
+    "port_refcheck": "PASS: 267 references resolve; no host build/runtime claim.",
+    "dead_references": "PASS: no new prose/code dead references or broken Markdown links; no baseline rewritten.",
+    "rename_ledger": "PASS: 3655 live mangled/vtable rows and chains agree; 797 coined rows remain outside this checker scope.",
+    "duplicate_sources": "PASS: 2804 stems, none doubled.",
+    "whitespace": "git diff --check PASS.",
+    "language_mode": "Official ratchet against existing origin/chaos-data baseline PASS; native Source remains C++. No baseline edit.",
+    "legacy_tubuild_verify": "Baseline and draft legacy tubuild verify commands return 1 for the already-unlicensed init plus four registration BSS symbols. This is preserved as a legacy whole-TU admission diagnostic, not called a pass. Actual production intact-object policies and the complete independent linking checks are used above.",
+    "private_ci": "Not yet run for this candidate. Independent exact-commit Source/byte acceptance and then PR publication remain."
+  },
+  "negative_controls": [
+    {
+      "variant": "native-vectors-onepast",
+      "bytes": 416,
+      "raw_object": {
+        "path": "build/wanwan-native-local-vectors1015/native-vectors-onepast/ordinary-0.o",
+        "sha256": "551197dd5f54b1c9005e105b4d30ea05bafb5080c9cb1f816516eb63534d312d"
+      }
+    },
+    {
+      "variant": "native-vectors-indexed",
+      "bytes": 420,
+      "raw_object": {
+        "path": "build/wanwan-native-local-vectors1015/native-vectors-indexed/ordinary-0.o",
+        "sha256": "3c87406f6fb33e16956199dd8e93f22566ae46edd95672feb32396e9bf0247b5"
+      }
+    },
+    {
+      "variant": "native-vectors-guarded-break",
+      "bytes": 416,
+      "raw_object": {
+        "path": "build/wanwan-native-local-vectors1015/native-vectors-guarded-break/ordinary-0.o",
+        "sha256": "0f7efabad6571e4610c77073c492d885317b18b81032cf7f8674a7caf2f57bcd"
+      }
+    },
+    {
+      "variant": "return_after_decrement",
+      "function_bytes": 416,
+      "differing_words": 5,
+      "verdict": "WRONG",
+      "blind": 0,
+      "typed_edges_equal": true,
+      "source_sha256": "f784b02536b728607c972e931b0be8ff306ed3e6ae329bf9ab07b7444f280f67",
+      "raw_sha256": "0f7efabad6571e4610c77073c492d885317b18b81032cf7f8674a7caf2f57bcd"
+    },
+    {
+      "variant": "return_at_zero",
+      "function_bytes": 420,
+      "differing_words": null,
+      "verdict": "WRONG",
+      "blind": 0,
+      "typed_edges_equal": false,
+      "source_sha256": "cc777b3b604195ff7a97eca44fe1bac36c3c7dea0863d54e8d229aea03460538",
+      "raw_sha256": "589e511918f42c65e763aeb5e3653b4ec86d5b4d51622ce639fce4dee31b61e4"
+    },
+    {
+      "variant": "seeded_index",
+      "function_bytes": 432,
+      "differing_words": null,
+      "verdict": "WRONG",
+      "blind": 0,
+      "typed_edges_equal": false,
+      "source_sha256": "e79e4ea32c4393e31311d1d005ee1e2bd158bc419eb7b936974fc12e41c8922b",
+      "raw_sha256": "d8386a03d14902c3afdf5d13482d5cee27253ffe9811a4d59e20600f913d73f2"
+    },
+    {
+      "variant": "separate_cursor",
+      "function_bytes": 416,
+      "differing_words": 33,
+      "verdict": "WRONG",
+      "blind": 0,
+      "typed_edges_equal": true,
+      "source_sha256": "5e1aa5baaf95abd7025dc1f2e80277918af755d7a1935b716d0b1b8f4913d8ad",
+      "raw_sha256": "76e780c191a67bdefbdb34e5912fb8f2df2db491980e48a558ce510fee7110bf"
+    },
+    {
+      "variant": "seeded_cursor",
+      "function_bytes": 420,
+      "differing_words": null,
+      "verdict": "WRONG",
+      "blind": 0,
+      "typed_edges_equal": false,
+      "source_sha256": "fbdefa8f583e90c88512f6a0e49e6fe21a6c732de2b6774b4d778aac6b96950b",
+      "raw_sha256": "cff2042f0a02bf5732be1a3117f34a6590f3d10ec13dabf2dd4c5ef34e15ee50"
+    },
+    {
+      "variant": "end-index",
+      "bounds": "end is element6; subtraction0..6 produces elements6..0; i becomes-1 only after final access.",
+      "source_sha256": "0bb737e283b7af718bee6e73f3ad966de32fb3d739c60a51440f6da3a6af828a",
+      "object_sha256": "47606686b72a186e4dfbcb25a984ae40042683e01f2526d9dad1c7eb11633d21",
+      "target_size": 424,
+      "target_raw_diff_words": 86,
+      "target_typed_refs_equal": false,
+      "other_function_changes": [],
+      "version": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off"
+    },
+    {
+      "variant": "guarded-do",
+      "bounds": "decrement only when another valid element exists; final cur stays element0.",
+      "source_sha256": "84a6744d78d2693c215472c8c7d3df15cd912d126734cad2c7f1903a7da5d69b",
+      "object_sha256": "79f420578fa3db4a19c96ec0e75784fa7cd0cac4cb8ebc4bf6d457ab7216e722",
+      "target_size": 420,
+      "target_raw_diff_words": 14,
+      "target_typed_refs_equal": false,
+      "other_function_changes": [
+        "__sinit_d_a_wanwan.cpp"
+      ],
+      "version": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off"
+    },
+    {
+      "variant": "anchored-index",
+      "bounds": "base element6 plus offset0..-6; no pointer evaluated for i=-1.",
+      "source_sha256": "d71defd30604e4a34ee4a645d8fa644469bd904a76b7e490a664605e4ba335d7",
+      "object_sha256": "2ff23e9c7c2a3fc10462d93c03be38d9ec1117ceaeb606f30c15a3482f0d2d4b",
+      "target_size": 424,
+      "target_raw_diff_words": 98,
+      "target_typed_refs_equal": false,
+      "other_function_changes": [
+        "__sinit_d_a_wanwan.cpp"
+      ],
+      "version": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off"
+    },
+    {
+      "variant": "lagged-cursor",
+      "bounds": "next ranges onepast7..element1 before subtraction; final assignment next=element0; no next subtraction afterward.",
+      "source_sha256": "3a1d314fe30d8d223876d38ac9fd50167d0f67694d8c97cca3de7ca703c2afe9",
+      "object_sha256": "5c909e82e82000539447049f4dbd1c0990ded9234f2dd667efa065ede76bb0f2",
+      "target_size": 416,
+      "target_raw_diff_words": 65,
+      "target_typed_refs_equal": false,
+      "other_function_changes": [],
+      "version": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off"
+    },
+    {
+      "variant": "short-circuit-continuation",
+      "bounds": "short circuit prevents decrement at final i=-1; all body pointers element6..0.",
+      "source_sha256": "97ce756d0d51cd80dd1ed1e0eb62f7259ebcc37379c2f555b5680721cc2baa56",
+      "object_sha256": "0f7efabad6571e4610c77073c492d885317b18b81032cf7f8674a7caf2f57bcd",
+      "target_size": 416,
+      "target_raw_diff_words": 5,
+      "target_typed_refs_equal": true,
+      "other_function_changes": [],
+      "version": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off"
+    },
+    {
+      "variant": "bounded-step",
+      "bounds": "step1 only for element6..1; element0 subtracts0; all pointer arithmetic remains in array.",
+      "source_sha256": "373d01996388b1eed54cd5eb7c43c0d395b8b7db611a736f6dd56f9e6510d9d9",
+      "object_sha256": "ee80243033ad2d4511e82a4f1fdb2064882e01b86ef9f13c17ca3a9d451e8498",
+      "target_size": 432,
+      "target_raw_diff_words": 86,
+      "target_typed_refs_equal": false,
+      "other_function_changes": [
+        "__sinit_d_a_wanwan.cpp"
+      ],
+      "version": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off"
+    }
+  ],
+  "negative_control_packets": [
+    {
+      "path": "build/wanwan-native-local-vectors1015/defined-exits/results.json",
+      "sha256": "1ad15325e21568ec98ccea69b4b0ef63835b6a59120f1f7fc240a14ad4db0aab"
+    },
+    {
+      "path": "build/wanwan-native-local-vectors1015/defined-induction/results.json",
+      "sha256": "4bb34766950f9e303379558cd9258a630f3b978fcd659cdbd3a3db80fb4821b2"
+    },
+    {
+      "path": "build/wanwan-native-local-vectors1015/astra-loop/HANDOFF.json",
+      "sha256": "d96a3b4ecfb3050eff0124ef7c65401f6e9139d285d2097271d5f9cfe60dd51e"
+    }
+  ],
+  "inherited_findings": {
+    "BASE-PROV01": {
+      "disposition": "fixed",
+      "id": "BASE-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgBase_c.h:109",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Minigame/actor distinction, current slot21 description and last observed field are corrected."
+    },
+    "BASE-PROV02": {
+      "disposition": "fixed",
+      "id": "BASE-PROV02",
+      "kind": "provenance",
+      "location": "include/dScMgBase_c.h:158",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Repeated false hierarchy comparisons and dangling removed-table references are corrected."
+    },
+    "CUP-01": {
+      "disposition": "fixed",
+      "id": "CUP-01",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:508",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Both fake Obj self-call views were replaced with real inherited virtual calls."
+    },
+    "CUP-02": {
+      "disposition": "fixed",
+      "id": "CUP-02",
+      "kind": "provenance",
+      "location": "include/dScMgCup_c.h:71; src/actors/dScMgCup_c.cpp:1048",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Actual PMF receiver, seven own slots and inferred names are accurately described."
+    },
+    "CUP-03": {
+      "disposition": "deferred",
+      "id": "CUP-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:77; include/dScMgCup_c.h:96",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Typed Cup fields, component/tail storage and helper interfaces remain partly reconstructed."
+    },
+    "CUP-03-P": {
+      "disposition": "fixed",
+      "id": "CUP-03-P",
+      "kind": "provenance",
+      "location": "include/dScMgCup_c.h:26",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Live component and tail extents are accurately bounded as observations."
+    },
+    "CUP-04": {
+      "disposition": "fixed",
+      "id": "CUP-04",
+      "kind": "correctness",
+      "location": "src/actors/dScMgCup_c.cpp:377",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Every incoming epilogue path initializes cup."
+    },
+    "CUP-05": {
+      "disposition": "fixed",
+      "id": "CUP-05",
+      "kind": "correctness",
+      "location": "include/dScMgBase_c.h:132; five minigame Virtual50 definitions",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Five minigame declarations/definitions coherently return void; two helper views now match their actual void definition."
+    },
+    "CUP-06": {
+      "disposition": "deferred",
+      "id": "CUP-06",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:1168",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Manual factory/lifecycle, raw components/arrays and address-named helpers remain partial."
+    },
+    "CUP-07": {
+      "disposition": "fixed",
+      "id": "CUP-07",
+      "kind": "provenance",
+      "location": "src/actors/dScMgCup_c.cpp; include/dScMgCup_c.h; config/tu_manifest.d/ov006/dScMgCup_c.json:notes",
+      "reason": "The approved bounded source comments now distinguish measured alternatives from universal compiler requirements, no longer call extern-C helpers file-local, and remove obsolete Render linkage instructions. Existing header layout and historical manifest experiments are preserved; no claim that the unlanded owner full reconstruction was adopted.",
+      "summary": "Current source prose no longer describes obsolete shadow views or universal raw-address requirements."
+    },
+    "CUP-08": {
+      "disposition": "fixed",
+      "id": "CUP-08",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov006/dScMgCup_c.json:compiler_only_output",
+      "reason": "Fresh complete-range ownership audit finds zero source owners at all13 canonical addresses. Changed exactlyten manifest reason strings to ROM-supplied/no complete source owner; every address, symbol, disposition, ordering and other manifest value is unchanged. Raw Cup metadata remains7 VERIFIED/6 PARTIAL.",
+      "summary": "Canonical RTTI/type-name copies were falsely called independently source-enrolled."
+    },
+    "CUP-09": {
+      "disposition": "deferred",
+      "id": "CUP-09",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "include/dScMgCup_c.h:CupPosition; src/actors/dScMgCup_c.cpp:member accesses and InitResources",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Replace the whole-object Obj6e view and measured raw member accesses with actual class storage."
+    },
+    "LUI2876-01": {
+      "disposition": "fixed",
+      "id": "LUI2876-01",
+      "kind": "provenance",
+      "location": "src/actors/dScMgLuigi_c.cpp:2; integration handoff",
+      "reason": "The former invented change-count summary is removed. Current source describes gameplay, owned span and remaining storage/source-form limits; final committed handoff accurately distinguishes native-factory output from the historical literal-factory control. Public PR wording has not yet been updated and is not asserted reviewed; root must carry this exact accepted scope into its publication.",
+      "summary": "Change narrative must describe the actual source delta."
+    },
+    "LUI2876-02": {
+      "disposition": "compiler_constraint",
+      "evidence": {
+        "artifact_commit": "e0baffe52d6a5fac61e446e6704647a762508589",
+        "artifact_path": "notes/experiments/pr2876-source-repair-0920.json",
+        "attempted_change": "Direct named timer arithmetic in UpdateReward/TickTimer/AddPenalty and CheckTouch named scalar substitutions; recursively reconstruct exact committed patches and parent variants.",
+        "command": "match.compile_c(variant_path, \"2004/b56\", recorded_flags), then objisolate.derive and linkcheck for every licensed function; final-head independent rerun: python -B build/luigi_final_probes.py direct_timer_reward direct_timer_timer direct_timer_penalty check_touch_unk_5456 check_touch_unk_5459 check_touch_unk_545a",
+        "compiler": "2004/b56",
+        "log": "notes/experiments/pr2876-source-repair-0920.json variants luigi-probes-round2/{UpdateReward_constant,TickTimer_constant,AddPenalty_constant} and luigi-probes-round4/CheckTouch_{unk_5456,unk_5459,unk_545a}; own build/luigi-final/probes/additional-results.json",
+        "result": "Measured timer instruction differences with unchanged552/208/188-byte sizes; CheckTouch600->604 for each of5456/5459/545a. Successful alternatives retained.",
+        "tested_commit": "6300fa4281c9ecd2b0078c3ea6113116cc98049a"
+      },
+      "id": "LUI2876-02",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp: UpdateReward, StartReward, DrawTimer, TickTimer, AddPenalty, CheckTouch",
+      "reason": "Inspected all63 committed variant recipes and their source hashes; successful ordinary positions, timer addresses and scalar accesses are adopted. Independently repeated eight bounded negatives on the final head: direct signed timer arithmetic changes one instruction each at+0x1cc/+0x50/+0x74; each individual CheckTouch named scalar substitution changes600 to604 bytes. Earlier signed-fill-contaminated and malformed-insertion variants are explicitly excluded. These are constraints on the recorded alternatives, not universal compiler impossibility.",
+      "summary": "Originally asserted source-form failures needed reproducible per-site evidence."
+    },
+    "LUI2876-03": {
+      "disposition": "fixed",
+      "id": "LUI2876-03",
+      "kind": "correctness",
+      "location": "src/actors/dScMgLuigi_c.cpp: engine declarations, sound calls, Render and InitResources",
+      "reason": "Sound calls use the actual namespace declarations; IRQ calls use IRQ.h; unsigned audio return and input, matrix pointer and void drawing contracts are inspected against definitions. Actual tested main includes accepted Memory four-register void drawing veneer, unsigned-halfword fill and real component constructor declarations. Own final source compiles and71 strict instances pass. This is the concrete repaired interface population, not a declaration-ratchet claim that all inherited integer-address or scalar/aggregate representations in the repository are original or uniquely typed.",
+      "summary": "Return, matrix, drawing and fill interfaces must agree with concrete definitions and callers."
+    },
+    "LUI2876-04": {
+      "disposition": "compiler_constraint",
+      "evidence": {
+        "artifact_commit": "e0baffe52d6a5fac61e446e6704647a762508589",
+        "artifact_path": "notes/experiments/pr2876-source-repair-0920.json",
+        "attempted_change": "Remove volatile from the one ChooseTarget tile temporary and two InitResources tile-fill temporaries without omitting loop work or changing the real unsigned fill API.",
+        "command": "Reconstruct luigi-probes-round3/ordinary_choose and ordinary_fill from the committed parent recipes, compile with match.compile_c(...,\"2004/b56\",recorded_flags), isolate and linkcheck. Independent final rerun: python -B build/luigi_final_probes.py plain_choose_target plain_init_fill",
+        "compiler": "2004/b56",
+        "log": "notes/experiments/pr2876-source-repair-0920.json variants luigi-probes-round3/ordinary_choose and luigi-probes-round3/ordinary_fill; own build/luigi-final-probes.log and build/luigi-final/probes/additional-results.json",
+        "result": "ChooseTarget loses8 bytes; InitResources loses16 bytes. These specific ordinary-u16 alternatives fail expected-size checks; all other function bodies remain unchanged.",
+        "tested_commit": "6300fa4281c9ecd2b0078c3ea6113116cc98049a"
+      },
+      "id": "LUI2876-04",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp: PMF dispatch, WrapPicture, ChooseTarget, InitResources",
+      "reason": "All six dispatch sites now use actual dScMgLuigi_c member-function pointers; StateCatch uses the genuine virtual OnYoshiTryEat and WrapPicture uses actual position members. Own sinit compile and ROM inspection account for all23 zero-adjustment PMF records in five tables. Two artificial volatile member writes were removed. The three remaining non-MMIO volatile u16 stack locals have valid bounded negatives: ordinary ChooseTarget local360->352; two ordinary InitResources fill locals928->912. Remaining curtain/reward record views and ResetBoard layout are explicitly outside this correction; no full-class completion or blanket layout barrier is claimed.",
+      "summary": "Fake receiver hosts and ordinary halfword temporaries require genuine forms or measured limits."
+    },
+    "LUI2876-05": {
+      "disposition": "fixed",
+      "id": "LUI2876-05",
+      "kind": "provenance",
+      "location": "notes/data/tu-promotion-queue.tsv: dScMgLuigi_c and dScMgFlower_c rows",
+      "reason": "Fresh RTTI extraction, vtable mapping, tu_map and queue_audit.Tree.measure give Luigi1source/2314lines/58functions and Flower2sources/871lines/10functions. Flower has9 functions in the changed TU and the adjacent classInit factory in its second source. Only these two rows changed; Luigi sibling/parent is dScMgBase_c. The raw root intermediate queue-accounting.json still says2325 for Luigi; it is superseded by the committed row, final context measurement and this independent mapper result. Historical pragma estimate remains explicitly explained by the manifest, not represented as a fresh count.",
+      "summary": "Queue line/source counts and Luigi parent must reflect the final source."
+    },
+    "LUI2876-06": {
+      "disposition": "fixed",
+      "id": "LUI2876-06",
+      "kind": "correctness",
+      "location": "src/actors/dScMgLuigi_c.cpp: IrisStop; include/IRQ.h",
+      "reason": "Both calls use IRQ::DisableIRQs and IRQ::SetIRQHandler from the existing header, removing hand-mangled void-return declarations. The ignored return is the previous mask, not a void callee. Own final strict IrisStop and entire scene output pass.",
+      "summary": "IrisStop must use the actual u32 IRQ::DisableIRQs return contract and handler API."
+    },
+    "LUI2876-07": {
+      "disposition": "fixed",
+      "id": "LUI2876-07",
+      "kind": "correctness",
+      "location": "src/func_ov004_020adc74.c; src/func_020182bc.c; src/func_020182ec.c; src/Ov004_Deallocate.c; Luigi and Flower callers",
+      "reason": "The outer two loader wrappers accept const char* and return the real buffer; the two-word file ID crosses020182bc/020182ec by value. The retained variadic suffix is consistent with the existing modeled interface, not a unique original-arity claim. The deallocator forwards void* to actual Deallocate(void*); Luigi keeps its archive buffer as void*, and Flower explicitly converts its eight int-held allocated addresses. Independently inspected the declaration/caller census and downstream file-ID register flow; own six complete objects and71 relocated instances pass. The inherited downstream scalar/aggregate declaration disagreement at02018dc4 remains visible and ABI-equivalent for this ARM register flow; it is not concealed by a baseline edit.",
+      "summary": "Loader and deallocator forwarding must preserve real arguments and returned buffers."
+    },
+    "LUI2876-08": {
+      "disposition": "fixed",
+      "id": "LUI2876-08",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov006/dScMgLuigi_c.json: historical merge/conflict notes; source linkage/callback comments",
+      "reason": "The five repaired manifest notes distinguish historical assembly from real current PMF/member calls, and current source describes the free IRQ callback without prohibiting static members. The generic historical full-object proof is explicitly limited to its repair stage; native factory proof now distinguishes relocation/import change. I checked the retained BeginCatch warning: it says the forward declaration was present and the function is now a member, while CheckTouch actually retains its real-class cast at1388. My preliminary no-cast concern was incorrect and withdrawn. No fake-host necessity claim remains accepted.",
+      "summary": "Manifest and source comments must not present removed fake hosts or bridges as current requirements."
+    },
+    "LUI2876-09": {
+      "disposition": "fixed",
+      "id": "LUI2876-09",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp:2310; include/dScMgBase_c.h; src/_ZN11dScMgBase_cC2Ev.cpp",
+      "reason": "Actual body is return (int *)new dScMgLuigi_c with unused manual allocation/C2/data-vtable imports removed. Own final factory stays52 bytes, invokes real base C2 atov004020b2adc and installs the same canonical0213cf10 vtable address point. I independently compiled real base C2 and confirmed fBase C2, dMgState C1 and dMgPsOpt C1 calls remain. No synthetic or omitted component initializers. Final raw ELF36712 differs from old36744 only in symbol/relocation metadata; all58 raw function bodies are unchanged and all relocated outputs/metadata/order/policies pass.",
+      "summary": "Ordinary complete scene construction matches the literal factory."
+    },
+    "LUI2876-10": {
+      "disposition": "fixed",
+      "id": "LUI2876-10",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp:1298",
+      "reason": "Final method writes mVelX[idx]=0 and mVelY[idx]=0 with no raw pointer locals. This matches the independently proposed source form and final strict24-byte retail body. Final factory and StopPicture changes coexist without emitted-output regression.",
+      "summary": "StopPicture has a matching ordinary field form."
+    },
+    "LUI2876-11": {
+      "disposition": "fixed",
+      "id": "LUI2876-11",
+      "kind": "reconstruction",
+      "location": "include/dScMgLuigi_c.h:83; src/actors/dScMgLuigi_c.cpp: UpdateIris and Behavior",
+      "reason": "Two observed u8 iris bytes occupy47f4/47f5, two padding bytes remain47f6, existing arrays keep their offsets, and the existing4f78 state field is named mState. Initializers and state transitions establish setup/place/play/catch meanings. The compile-time sizeof0x545c assertion passes; own header-offset and converted ratchet checks pass with no baseline edits. All58 function bodies remain identical, so this repairs source form without changing game behavior.",
+      "summary": "Genuine PMF dispatch exposed two previously banked converted criteria."
+    },
+    "MEM2875-01": {
+      "disposition": "fixed",
+      "id": "MEM2875-01",
+      "kind": "provenance",
+      "location": "src/actors/dScMgMemory2_c.cpp:95-100; PR body",
+      "reason": "Source and final PR body describe the actual field,helper and genuine factory changes without invented alias/field claims.",
+      "summary": "New change summary overstates the actual field/alias edits."
+    },
+    "MEM2875-02": {
+      "disposition": "compiler_constraint",
+      "evidence": {
+        "artifact_commit": "5f0dadb73a6d1c339cd88249e7e1573e9d75a43d",
+        "artifact_path": "notes/experiments/pr2875-source-repair-0920.json",
+        "attempted_change": "Exact ordinary member/indexed/pointer-walk alternatives preserved with recursive parent patches in the40-variant artifact; accepted ordinary forms are already adopted. Excludes malformed inputs and the superseded incomplete factory.",
+        "command": "Use artifact reproduction.variant_recipe: reconstruct each source by its parent_variant patch, verify source_sha256, match.compile_c with recorded2004/b56 flags, then objisolate.derive and linkcheck each module-qualified manifest symbol.",
+        "compiler": "2004/b56",
+        "log": "notes/experiments/pr2875-source-repair-0920.json variants[]; independent exact-source replay audit build/reviewer-0919/pr2875-rnk-final-audit.json",
+        "result": "Retained equivalent method alternatives change the emitted bytes/schedule or size; successful PlayerDrop/JudgePair/CardMove/indexed UpdateCards and ResultTurnCards plus scalar changes were adopted. Complete ordinary factory now passes and is not a constraint.",
+        "tested_commit": "e8599a26b2bd3f4d6873c088bc0ce4265b790207"
+      },
+      "id": "MEM2875-02",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgMemory2_c.cpp:102-109",
+      "reason": "I inspected and reconstructed all40 committed variant sources and verified their source hashes. Matching named/indexed forms are adopted. The remaining DrawCards, RoundWaitDeal, RoundReadyCards, ShuffleCards, ResetGame and ResultWait alternatives have concrete pinned negative outcomes. Malformed probes and the semantically incomplete64-byte factory probe are excluded. This is a bounded constraint on those exact equivalent forms, not a claim that cleaner C++ is impossible.",
+      "summary": "Eleven retained-method compiler constraints lack a durable, exact reproducible experiment record."
+    },
+    "MEM2875-03": {
+      "disposition": "fixed",
+      "id": "MEM2875-03",
+      "kind": "correctness",
+      "location": "src/actors/dScMgMemory2_c.cpp:123,189,193,209",
+      "reason": "Sound,shared four-register drawing veneer and unsigned halfword-fill contracts agree across repaired definitions/callers. Unchanged helper source blobs retain their independently tested proof; complete current consumer and ROM checks pass.",
+      "summary": "Existing reconstructed call contracts disagree with their actual definitions."
+    },
+    "MEM2875-04": {
+      "disposition": "fixed",
+      "id": "MEM2875-04",
+      "kind": "provenance",
+      "location": "src/actors/dScMgMemory2_c.cpp:294-310",
+      "reason": "Current source/manifest now describe real automatic component lifetimes and ordinary scene new. Old incomplete64-byte construction remains historical and is expressly excluded from compiler-constraint evidence.",
+      "summary": "Destructor commentary claims an explicit raw-offset shared-state destruction that is no longer present."
+    },
+    "MEM2875-05": {
+      "disposition": "fixed",
+      "id": "MEM2875-05",
+      "kind": "provenance",
+      "location": "notes/data/tu-promotion-queue.tsv: dScMgMemory2_c row",
+      "reason": "Final authoritative queue row is one source/1531lines/52functions,all promoted. Every unrelated row remains unchanged.",
+      "summary": "Source-only edit leaves total_lines at1683 while the TU now has1693 lines."
+    },
+    "MEM2875-06": {
+      "disposition": "fixed",
+      "evidence": "pr2875-independent-contract-probes.json: all three separate ordinary corrections produce the identical 7e9a029d complete object and all52 functions VERIFIED, zero differences/blind. Build-only alternatives; no candidate edits.",
+      "families": [
+        {
+          "candidate": "int(void*)",
+          "definition": "src/func_ov006_020c19d0.cpp:12: void(char*) updates state and returns no value",
+          "probe": "update_void",
+          "required": "Use actual void(char*) declaration; the only call already passes char*.",
+          "symbol": "func_ov006_020c19d0"
+        },
+        {
+          "candidate": "void(void*)",
+          "definition": "src/func_ov006_020c1d80.c:7: int(char*) explicitly returns (int)t after constructing shared state",
+          "probe": "constructor_actual_return",
+          "required": "Use actual legacy int(char*) declaration here. This acknowledges a returned receiver encoded by the existing definition; it does not claim the receiver is semantically numeric or reconstruct a new class.",
+          "symbol": "func_ov006_020c1d80"
+        },
+        {
+          "candidate": "OnYoshiTryEat casts void(void) to void(*)(void*) and calls with o; InitResources already calls the genuine no-argument form.",
+          "definition": "src/func_ov004_020b66d4.c:18: void(void), resets globals and does not read a receiver",
+          "probe": "ordinary_reset_call",
+          "required": "Call func_ov004_020b66d4() directly; no extra unused parameter or shared callee edit is needed.",
+          "symbol": "func_ov004_020b66d4"
+        }
+      ],
+      "id": "MEM2875-06",
+      "kind": "correctness",
+      "location": "src/actors/dScMgMemory2_c.cpp:140,156,1430",
+      "reason": "Actual helper declarations use void(char*) and legacy int(char*); reset uses its genuine zero-argument call. Shared constructor now owns the latter declaration/call.",
+      "summary": "Two remaining return contracts and one incompatible function-pointer call disagree with actual implementations."
+    },
+    "MEM2875-07": {
+      "disposition": "fixed",
+      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. Player data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
+      "id": "MEM2875-07",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov006/dScMgMemory2_c.json notes[0]; source comments preceding OnGroundPounded/OnTurnIntoEgg/OnYoshiTryEat",
+      "reason": "Stale C-linkage comments removed and typed table claims qualified to actual main/result/round/card arrays,with player ownership recorded separately.",
+      "required": "Qualify the first note to distinguish typed main/result/round/card arrays from player-table ownership proven by sinit. Remove stale tu_create comments saying real C++ method definitions were given explicit C linkage. Preserve actual method bodies and the second ownership note.",
+      "summary": "Remaining narration claims typed player PMF use and explicit C linkage not present in this source."
+    },
+    "MEM2875-08": {
+      "disposition": "fixed",
+      "id": "MEM2875-08",
+      "kind": "reconstruction",
+      "location": "include/dScMgMemory2_c.h; include/dScMgSingle3DBase_c.h; src/actors/dScMgMemory2_c.cpp; config/tu_manifest.d/ov006/dScMgMemory2_c.json",
+      "reason": "Independently compiled exact final source:52/52 strict, all13 complete metadata records exact, order unchanged. Ordinary new invokes both tracker and shared-state construction. I checked both extra lifecycle symbols have no ROM homes and no surviving references under the exact deadstrip policies; raw-object identity to the old factory is expressly not claimed.",
+      "repair": "Declare existing tracker constructor and inline shared-state initialization, then use ordinary scene new; license only the two proven unreferenced compiler-emitted destructor bodies under existing policy.",
+      "summary": "Ordinary factory was blocked by two missing genuine member constructor declarations, not by an equivalent-source compiler constraint."
+    },
+    "SCMG2877-01": {
+      "disposition": "fixed",
+      "id": "SCMG2877-01",
+      "kind": "provenance",
+      "location": "src/actors/dScMgCup_c.cpp:1032",
+      "reason": "Actual Render subscript now uses existing unk_5440[k]. The final complete Cup object equals the original author control, and all32 bodies remain strict VERIFIED. The false comment is removed.",
+      "summary": "The newly edited Render comment incorrectly claims that unk_5440[k] breaks matching."
+    },
+    "SCMG2877-02": {
+      "disposition": "fixed",
+      "id": "SCMG2877-02",
+      "kind": "provenance",
+      "location": "src/actors/dScMgRoulette_c.cpp:13; src/actors/dScMgCup_c.cpp:5,18-44",
+      "reason": "Cup/Roulette comments accurately describe address-named helpers without inferring unrecovered linkage/memberness. Token comparison proves Roulette is comment-only and Cup has only the approved one-expression change; all five complete objects remain identical.",
+      "summary": "Inherited banners overclaim helper linkage and universal compiler constraints; the new field edits also leave Cup only-mState prose stale."
+    },
+    "SOUND-PROV01": {
+      "disposition": "fixed",
+      "id": "SOUND-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgSound_c.h:10; src/actors/dScMgSound_c.cpp:145",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Component extent, live state, call count, PMF entry, source spelling and helper address descriptions are corrected."
+    },
+    "SOUND-RECON01": {
+      "disposition": "deferred",
+      "id": "SOUND-RECON01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgSound_c.cpp:239",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Counterfeit receiver/PMF views, manual decoders, raw arrays and empty-condition scaffolding remain inherited reconstruction."
+    },
+    "TERESA-PROV01": {
+      "disposition": "fixed",
+      "id": "TERESA-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgTeresa_c.h:6",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Own slot18 and current slot34 member status are accurately listed."
+    },
+    "WANWAN-NATIVE-001": {
+      "disposition": "fixed",
+      "id": "WANWAN-NATIVE-001",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_wanwan.cpp:daWanwan_c_classInit",
+      "reason": "Native new preserves the complete240B factory, actual four member arrays and the existing180B native destructor. Vector3 arrays at+524/+578 usecount7/stride12 with the paired actual destructor; complete4B ctor anddtor independently verify. Removes11 factory-only externs and obsolete failed-source prose.",
+      "summary": "Construct the complete actor through its existing genuine class."
+    },
+    "WANWAN-NATIVE-002": {
+      "disposition": "fixed",
+      "id": "WANWAN-NATIVE-002",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov014/daWanwan_c.json:compiler_only_output,defined_symbol_renames,notes",
+      "reason": "Uses existing canonical Vector3C1->func0203d384 handling justified by actual arrays and complete callbacks. Raw registration inputs@1166..1169 mapto unchanged canonical@1165..1168 via identical initializer ABS32 offsets and12B/alignment4NOBITS records. Whole owned body/edge and complete metadata proof pass; no range or destination change.",
+      "summary": "Bind the real constructor duplicate and measured compiler registration inputs."
+    },
+    "WANWAN-NATIVE-003": {
+      "disposition": "deferred",
+      "id": "WANWAN-NATIVE-003",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_wanwan.cpp:scalar imports",
+      "owner": "codex-chainedchomp-restack-coordinator1013",
+      "reason": "Animation, collision, shadow, player hurt and atan2 scalar bridges are inherited and unchanged; this factory reconstruction does not establish native by-value ABI equivalence.",
+      "summary": "Scalar by-value Fix12 boundaries remain partial."
+    },
+    "WANWAN-NATIVE-004": {
+      "disposition": "deferred",
+      "id": "WANWAN-NATIVE-004",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_wanwan.cpp:resource handles and state descriptors",
+      "owner": "codex-chainedchomp-restack-coordinator1013",
+      "reason": "Two-word resource handle views, existing aliases and address-named PMF/state records remain; no file-pointer layout or handler rename is claimed.",
+      "summary": "Resource and state interfaces remain partially reconstructed."
+    },
+    "WANWAN-NATIVE-005": {
+      "disposition": "deferred",
+      "id": "WANWAN-NATIVE-005",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_wanwan.cpp:link/actor pointer walks and namespaced helpers",
+      "owner": "codex-chainedchomp-restack-coordinator1013",
+      "reason": "Existing actor/vector walking views and namespaced three-argument interface survive unchanged; native factory completion is not whole-class completion.",
+      "summary": "Inherited pointer views and call interfaces remain partial."
+    },
+    "WANWAN-CURRENT-001": {
+      "disposition": "fixed",
+      "id": "WANWAN-CURRENT-001",
+      "kind": "provenance",
+      "location": "notes/experiments/wanwan-current1013.json:composition and current-header proof",
+      "reason": "Merged the reviewed three-file offer onto exact5cbff56. Recompiled baseline and unchanged native Source with actual current include/types.h and production tools; all full raw/prepared objects match the prior measured objects. Fresh32strict/8BSS80B/11metadata244B and complete callbacks pass. No assumptions from old header-tree identity substitute for this rebuild.",
+      "summary": "Revalidate actual current-main composition after upstream tool and header merges."
+    },
+    "WANWAN-RESTACK-001": {
+      "disposition": "fixed",
+      "id": "WANWAN-RESTACK-001",
+      "kind": "provenance",
+      "location": "notes/experiments/wanwan-restack1013.json:actual-base composition and gates",
+      "reason": "Merged accepted9cb438fa onto actualb2e98467 after unrelated upstream PR3810. Source and manifest blobs remain identical; actual include tree and focused ov014/ARM9 inputs are equal, and fresh actual-base compilation independently reproduces complete raw/prepared objects,32 strict rows,8BSS80B and11complete metadata244B. Prior5c report is explicitly historical, not substituted for this base proof.",
+      "summary": "Repair published PR ancestry through a scoped actual-main restack."
+    }
+  },
+  "current_scope_updates_to_inherited_findings": {
+    "WANWAN-NATIVE-003": "Still deferred and partial. The Hurt scalar declaration now agrees with the current definition; native by-value Fix12 reconstruction is not established.",
+    "WANWAN-NATIVE-004": "Still deferred and partial. Resources and PMF/state representations are outside this Source change.",
+    "WANWAN-NATIVE-005": "Still deferred and partial. Twenty local vector stand-ins and six array views are repaired, but flat actor position/helper boundaries and target-address induction remain explicit."
+  },
+  "new_findings": [
+    {
+      "id": "WANWAN-LOCAL-VECTORS-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_wanwan.cpp:four vector helpers",
+      "summary": "Use actual Vector3 locals and actual array-element views.",
+      "reason": "All 20 locals and six pointer declarations are replaced; fake WanwanVec is removed; entire raw and prepared objects are baseline-identical."
+    },
+    {
+      "id": "WANWAN-LOCAL-VECTORS-002",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_wanwan.cpp:func_ov014_0211236c",
+      "summary": "Do not form a pointer before the mLinkPos array.",
+      "reason": "Only valid elements 6..0 are converted to pointers. The final integer-only cursor update is never converted or accessed."
+    },
+    {
+      "id": "WANWAN-LOCAL-VECTORS-003",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_wanwan.cpp:func_ov014_0211236c target-address cursor",
+      "summary": "Retain the explicit 32-bit representation boundary.",
+      "reason": "The pinned flat-address mapping is implementation-defined; a portable iterator or unique original Source spelling is not proved. Measured cleaner loop alternatives remain preserved.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813",
+      "owner": "codex-enemy-root-coordinator1015"
+    },
+    {
+      "id": "WANWAN-HURT-DECL-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_wanwan.cpp:Player::Hurt scalar declaration",
+      "summary": "Agree the existing scalar bridge with its current definition.",
+      "reason": "int return and u8 trailing flags agree; same constant arguments and whole object retained. Native Fix12 interface remains under inherited finding WANWAN-NATIVE-003."
+    }
+  ],
+  "next_action": "Independent verifier claims the immutable offered commit, reviews the literal changed files and all findings, recompiles and checks actual bytes/relocations/metadata under the pinned policy. Then independent integrator checks current composition, publishes the authorized PR and waits for exact-head validation. No merge is authorized."
+}

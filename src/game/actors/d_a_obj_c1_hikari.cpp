@@ -20,14 +20,18 @@
  *   InitResources passes 0xf0000 / 0x8c000 / 0x4800002)
  * - HikariVec3 POD locals; Vector3's empty destructor would add
  *   _ZN7Vector3D1Ev to this TU
- * - (Vector3 *)&mPosX; dActor_c has no Pos() on this branch (S18)
- * - data_ov010_02112d50 is the model SharedFilePtr this Init LoadFile's,
+ * - gC1HikariModelFile is the model SharedFilePtr this Init LoadFile's,
  *   defined at the end of this file (constructed as file ID 1453)
  * - data_0209caa0[1] & 0x80000000; this Init is the consumer, no recovered
  *   name for that save-flag bit
  * - Sound::PlaySmallSecretSound stays TU-local; Sound.h has no declaration
  * - S14 no g_profile_C1_HIKARI (sinit / data outside this .text)
  */
+
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_c1_hikari_AssetId {
+    ASSET_C1_HIKARI_BMD = 0x05ad
+};
 
 #include "daObjC1Hikari_c.h"
 #include "Message.h"
@@ -70,7 +74,7 @@ extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 
 extern Matrix4x3 data_020a0e68;
 /* Defined at the end of this file so its constructor does not enter .text. */
-extern C1HikariModelFilePtr data_ov010_02112d50;
+extern C1HikariModelFilePtr gC1HikariModelFile;
 extern int data_0209caa0[];
 }
 
@@ -100,14 +104,14 @@ extern "C" daObjC1Hikari_c *daObjC1Hikari_c_classInit()
 // @symbol _ZN15daObjC1Hikari_c13InitResourcesEv
 int daObjC1Hikari_c::InitResources()
 {
-    Model::LoadFile(data_ov010_02112d50);
+    Model::LoadFile(gC1HikariModelFile);
     if (NumStars() < 0xe)
         return 0;
     if (data_0209caa0[1] & 0x80000000)
         return 0;
-    mModel.SetFile((BMD_File *)data_ov010_02112d50.file, 1, 0x13);
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mCylinder, this, (const Vector3 *)&mPosX, 0xf0000, 0x8c000, 0x4800002, 0);
+    mModel.SetFile((BMD_File *)gC1HikariModelFile.file, 1, 0x13);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mCylinder, this, &mPos, 0xf0000,
+                                                            0x8c000, 0x4800002, 0);
     UpdateModelTransform();
     return 1;
 }
@@ -157,7 +161,7 @@ int daObjC1Hikari_c::Behavior()
                 if (b) {
                     HikariVec3 *op = (HikariVec3 *)&o->mPosX;
                     hv = *op;
-                    if (AngleDiff(Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&hv), mAngleY) < 0x4000) {
+                    if (AngleDiff(Vec3_HorzAngle(&mPos, (const Vector3 *)&hv), mAngleY) < 0x4000) {
                         if (((Player *)o)->mSurfaceType == 0xd) {
                             if (((Player *)o)->StartTalk(*this, false)) {
                                 mTalkPlayer = o;
@@ -198,7 +202,7 @@ int daObjC1Hikari_c::Render()
 // @symbol _ZN15daObjC1Hikari_c16CleanupResourcesEv
 int daObjC1Hikari_c::CleanupResources()
 {
-    data_ov010_02112d50.Release();
+    gC1HikariModelFile.Release();
     return 1;
 }
 
@@ -215,4 +219,4 @@ void daObjC1Hikari_c::UpdateModelTransform()
  * registers its destructor; the registration node is a compiler
  * temporary. */
 // @symbol __sinit_d_a_obj_c1_hikari.cpp
-C1HikariModelFilePtr data_ov010_02112d50(1453);
+C1HikariModelFilePtr gC1HikariModelFile(ASSET_C1_HIKARI_BMD);

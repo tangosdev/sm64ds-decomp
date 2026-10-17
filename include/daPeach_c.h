@@ -39,7 +39,13 @@ struct daPeach_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;           /* 0x0194 */
 
     typedef int (daPeach_c::*StateFunc)();
-    StateFunc *mStateFuncs;             /* 0x0350 */
+    /* One row of the sinit-built table: the 8-byte init PMF, then the
+       8-byte per-frame behavior PMF. */
+    struct StateEntry {
+        StateFunc init;
+        StateFunc behavior;
+    };
+    StateEntry *mState;                 /* 0x0350 */
     s32 mStateValue;                    /* 0x0354 */
     u32 unk_358;                        /* 0x0358 */
     Player *mTalkPlayer;                /* 0x035c */

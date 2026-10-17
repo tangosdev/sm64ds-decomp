@@ -1,8 +1,8 @@
 {
   "id": "ov073/daObjEwbIce_c",
   "module": "ov073",
-  "source": "src/actors/daObjEwbIce_c.cpp",
-  "promoted_source": "src/actors/daObjEwbIce_c.cpp",
+  "source": "src/game/actors/d_a_obj_ewb_ice.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ewb_ice.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -185,7 +185,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjEwbIce_c.cpp",
+      "symbol": "__sinit_d_a_obj_ewb_ice.cpp",
       "address": "0x02122d48",
       "size": "0x1ec",
       "binding": "STB_GLOBAL",
@@ -194,7 +194,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjEwbIce_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ewb_ice.cpp",
       "address": "0x02122f38",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -204,42 +204,42 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov073_02123428",
+      "symbol": "gEwbIceAModelFile",
       "address": "0x02123428",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x5e7"
     },
     {
-      "symbol": "data_ov073_02123430",
+      "symbol": "gEwbIceBModelFile",
       "address": "0x02123430",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x5e9"
     },
     {
-      "symbol": "data_ov073_02123438",
+      "symbol": "gEwbIceCCollisionFile",
       "address": "0x02123438",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x5ec"
     },
     {
-      "symbol": "data_ov073_02123440",
+      "symbol": "gEwbIceCModelFile",
       "address": "0x02123440",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x5eb"
     },
     {
-      "symbol": "data_ov073_02123448",
+      "symbol": "gEwbIceACollisionFile",
       "address": "0x02123448",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x5e8"
     },
     {
-      "symbol": "data_ov073_02123450",
+      "symbol": "gEwbIceBCollisionFile",
       "address": "0x02123450",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -355,13 +355,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjEwbIce_c.cpp",
+      "symbol": "__sinit_d_a_obj_ewb_ice.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjEwbIce_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ewb_ice.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -561,7 +561,7 @@
       "source": "0x02122eb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123428",
+      "symbol": "gEwbIceAModelFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123428"
@@ -591,7 +591,7 @@
       "source": "0x02122ec4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123430",
+      "symbol": "gEwbIceBModelFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123430"
@@ -611,7 +611,7 @@
       "source": "0x02122ed0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123440",
+      "symbol": "gEwbIceCModelFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123440"
@@ -631,7 +631,7 @@
       "source": "0x02122edc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123448",
+      "symbol": "gEwbIceACollisionFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123448"
@@ -661,7 +661,7 @@
       "source": "0x02122eec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123450",
+      "symbol": "gEwbIceBCollisionFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123450"
@@ -681,7 +681,7 @@
       "source": "0x02122ef8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123438",
+      "symbol": "gEwbIceCCollisionFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123438"
@@ -821,7 +821,7 @@
       "source": "0x02122f38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjEwbIce_c.cpp",
+      "symbol": "__sinit_d_a_obj_ewb_ice.cpp",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02122d48"

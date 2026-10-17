@@ -1,8 +1,8 @@
 {
   "id": "ov002/LevelObjects",
   "module": "ov002",
-  "source": "src/stage/LevelObjects.cpp",
-  "promoted_source": "src/stage/LevelObjects.cpp",
+  "source": "src/game/stages/LevelObjects.cpp",
+  "promoted_source": "src/game/stages/LevelObjects.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -353,7 +353,7 @@
   },
   "notes": [
     "Pilot #2 for notes/translation-unit-reconstruction-plan.md section 18. Report: notes/tu-reconstruction-pilot-2-report.md. Deliberately the opposite shape from pilot #1 (ov045/daObjKm2_Ami_Bou_c): no class, therefore no destructor group and no vtable/RTTI, which is what this round exists to isolate.",
-    "All seventeen functions reproduce their ROM bytes when compiled together, and the whole 0x020fe190..0x020fea4c range reproduces when linked from that single object. The seventeen legacy one-function sources under src/ have now been replaced by one `complete` delinks entry for src/stage/LevelObjects.cpp.",
+    "All seventeen functions reproduce their ROM bytes when compiled together, and the whole 0x020fe190..0x020fea4c range reproduces when linked from that single object. The seventeen legacy one-function sources under src/ have now been replaced by one `complete` delinks entry for src/game/stages/LevelObjects.cpp.",
     "SEVENTEEN functions, not the plan's 'approximately 5-15'. The evidence puts the boundary where it is; splitting it to hit the count would have been an invented cut.",
     "Consolidation forced FOUR declaration conflicts that per-file compilation had been hiding, where pilot #1 found none: data_0209caa0's element type (int[] vs u8[]), data_0209f5c0's type (ActorBase* vs void*), Actor::Spawn's spelling (real static method vs hand-spelled extern \"C\" alias, with four mutually inconsistent copies of the alias), and func_0203accc's ARITY (decl_common.h's 1 argument vs a local 3-argument declaration -- the one no cast could reconcile). All four resolutions are byte-free; see the report.",
     "Promotion history: this entry was refused for a long time because the compiled object defines two vague-linkage Vector3 destructors the manifest did not license. Both have a single configured cartridge home owned by an enrolled `complete` source, and both bodies are the identical 4-byte `bx lr`, so they are now declared deadstrip-duplicate rather than left unlicensed. The whole-range scratch link and the stock-identical full ROM are both recorded above. The .data dispatch table at ov002:0x0210cbb8 is still NOT claimed -- it stays in the retail-gap contribution exactly as it was before promotion -- so this promotion is .text-only."

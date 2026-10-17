@@ -436,7 +436,7 @@ class MovedDefinitionTests(unittest.TestCase):
     def test_a_symbol_moved_under_an_at_symbol_marker_is_found(self):
         """A merged TU names each definition with `// @symbol`; that is the identity."""
         def tree(t):
-            t.write("src/actors/daBmb_c.cpp",
+            t.write("src/game/actors/d_a_bmb.cpp",
                     "// @symbol _ZN7daBmb_c8BehaviorEv\n"
                     "void daBmb_Behavior(void *p)\n{\n    (void)p;\n}\n")
             t.write("src/caller.cpp",
@@ -2200,13 +2200,13 @@ class RealTreeStaticMemberTests(unittest.TestCase):
     """The live fixture: `dBase_c::Spawn` and its non-static sibling, same file.
 
     `include/dBase_c.h` declares `Spawn` static and `AfterInitResources` virtual, and
-    `src/actors/ActorDerived.cpp` defines both out of line with an `@symbol` marker
+    `src/runtime/actor/ActorDerived.cpp` defines both out of line with an `@symbol` marker
     over each. One must lose its `this` and the other must keep it, which no
     whole-file switch can satisfy.
     """
 
     def setUp(self):
-        for rel in ("include/dBase_c.h", "src/actors/ActorDerived.cpp"):
+        for rel in ("include/dBase_c.h", "src/runtime/actor/ActorDerived.cpp"):
             if not (REPO / rel).exists():
                 self.skipTest("%s is not in this tree" % rel)
         self.index = CDA.static_member_index(REPO)
@@ -2218,7 +2218,7 @@ class RealTreeStaticMemberTests(unittest.TestCase):
                          CDA.INSTANCE_MEMBER)
 
     def test_the_real_definitions_split_the_right_way(self):
-        rel = "src/actors/ActorDerived.cpp"
+        rel = "src/runtime/actor/ActorDerived.cpp"
         _d, defs, _u = CDA.parse_file(
             rel, (REPO / rel).read_text(encoding="utf-8", errors="replace"),
             CDA.scalar_typedefs(REPO), self.index)
@@ -2371,7 +2371,7 @@ class NativeDestructorTests(unittest.TestCase):
             ("dBgPi", "dBgPiLoc *", "src/_ZN10dBgCh_Actr22UpdateContinuousNoLavaEv.cpp"),
             ("dBgPi", "dBgPiRaw *", "src/game/actors/d_a_pg_mthr.cpp"),
             ("dBgCh_Gnd", "RG *", "src/func_ov002_020b94c4.c"),
-            ("dBgCh_Gnd", "char *", "src/actors/daObjMarioCap_c.cpp"),
+            ("dBgCh_Gnd", "char *", "src/game/actors/d_a_obj_mario_cap.cpp"),
         )
         for owner, receiver, path in examples:
             symbol = "_ZN%d%sD1Ev" % (len(owner), owner)
@@ -2640,7 +2640,7 @@ class NativeConstructorAndWrapperTests(unittest.TestCase):
 
     def test_real_constructor_and_force_wrapper_fixtures(self):
         examples = (("src/engine/model/Model.cpp", "_ZN5ModelC1Ev", "Model"),
-                    ("src/_ZN10dScEntry_c6icon_cC1Ev.cpp", "_ZN10dScEntry_c6icon_cC1Ev", "dScEntry_c::icon_c"))
+                    ("src/game/stages/d_s_entry_methods.cpp", "_ZN10dScEntry_c6icon_cC1Ev", "dScEntry_c::icon_c"))
         for rel, symbol, owner in examples:
             with self.subTest(path=rel):
                 text = (REPO / rel).read_text(encoding="utf-8")

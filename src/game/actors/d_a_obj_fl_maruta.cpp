@@ -80,6 +80,13 @@ extern daObj_volcanoCannon_c::StateFunc data_ov022_02114424;
 extern int _ZTV15daObjFlMaruta_c[];
 extern int _ZTV13daObjMaruta_c[];
 
+/* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
+ * off screen. This int-returning predicate is what makes the ROM
+ * materialize 0/1 before testing it. */
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 #pragma defer_codegen off
 
 // @symbol _ZN15daObjFlMaruta_cD1Ev
@@ -217,12 +224,9 @@ int daObj_volcanoCannon_c::Behavior()
     UpdatePos(&mCylinderClsn);
     mCylinderClsn.Clear();
     mCylinderClsn.Update();
-    {
-        int b = (int)((mFlags & 8) != 0);
-        if (b == 0) {
-            mParticleID = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                mParticleID, 0x129, mPosX, mPosY, mPosZ, 0);
-        }
+    if (!IsOffScreen(this)) {
+        mParticleID = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+            mParticleID, 0x129, mPosX, mPosY, mPosZ, 0);
     }
     return 1;
 }

@@ -1,0 +1,822 @@
+{
+  "schema": 1,
+  "task": "bakubaku-native-local-vectors1015",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3806",
+  "candidate": "This commit; immutable output is recorded by the coordination queue.",
+  "status": "Current e209 producer composition and required formatting repair proved; fresh independent exact acceptance pending.",
+  "completion": "partial",
+  "source_checkpoint": "a7e210bc72d2d7adc3a192968fb48177f6ca201f",
+  "registered_input_commit": "40dfd83ba134be0600730b58f3261f04441632d8",
+  "base_commit": "e209dacfaaa95cb5490637ff053d62182689bebe",
+  "tooling_workflow_commit": "40dfd83ba134be0600730b58f3261f04441632d8",
+  "source_review_policy_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "producer_session": "codex-bakubaku-currentf6-astra-producer1015",
+  "source_author": {
+    "session": "codex-bakubaku-native-vectors-astra-producer1015",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "label": "codex-enemy-frontier-astra1014"
+  },
+  "scope": {
+    "source": "src/game/actors/d_a_bakubaku.cpp",
+    "manifest": "config/tu_manifest.d/ov032/daBakubaku_c.json",
+    "report": "notes/experiments/bakubaku-native-local-vectors1015.json",
+    "changed_methods": [
+      "02111e24",
+      "02111830",
+      "02111620",
+      "021113fc"
+    ],
+    "native_local_count": 10,
+    "native_local_distribution": {
+      "Wander": 2,
+      "Dive": 5,
+      "Surface": 3
+    },
+    "headers_global_names_ledger_credit_enrollment_unchanged": "No owned changes; current upstream changes preserved.",
+    "source_physical_sha256": "4ce1f008d9ae3821f684878af8a00ab1b233e1d7aa1b77b5aa16601d77f77491",
+    "source_git_lf_sha256": "4ce1f008d9ae3821f684878af8a00ab1b233e1d7aa1b77b5aa16601d77f77491",
+    "manifest_physical_sha256": "3c99cece94f817f61e7197d0e19fdef6b590ca398c37723af91c9fd365326c7a",
+    "manifest_git_lf_sha256": "3c99cece94f817f61e7197d0e19fdef6b590ca398c37723af91c9fd365326c7a",
+    "registered_read_inputs": 56,
+    "changed_read_inputs": [
+      "attribution.json",
+      "config/arm9/symbols.txt",
+      "function-authors.json",
+      "include/Player.h",
+      "include/dActor_c.h",
+      "include/dEnemyBase_c.h",
+      "include/dExtFrameCtrl_c.h",
+      "include/fBase_c.h",
+      "src/game/actors/d_a_bakubaku.cpp",
+      "tools/tubuild.py"
+    ],
+    "actual_source_measurement": {
+      "module": "ov032",
+      "start": "0x21111a0",
+      "end": "0x21124a8",
+      "absorbed": [
+        "daBakubaku_c_classInit"
+      ],
+      "run_functions": 24,
+      "src_files": 1,
+      "total_lines": 808,
+      "unmatched": 0,
+      "no_legacy_source": 0,
+      "sourceless": [],
+      "not_in_delinks": 0,
+      "orphans": [],
+      "pragma_files": 0,
+      "all_promoted": true
+    }
+  },
+  "whole_object_proof": {
+    "compiler": "2004/b56, unchanged official flags and ordinary intact-object preparation",
+    "text_functions": 24,
+    "text_diffs": 0,
+    "text_blind": 0,
+    "raw_bytes": 21864,
+    "baseline_raw_sha256": "3c822d3fa18e9ad9936bc9d1b3c5a271ce11420c88442aeea91629aeeb2367f7",
+    "candidate_raw_sha256": "bdd46218bacc2941ecc0044a61bdb722adf88ea83a82c2e9e8eb2d9e303c7751",
+    "raw_literal_equal": false,
+    "raw_correspondence": "Exact13 temporary-name bijection from actual same-index symbols; all103 section headers and payloads,197 full symbol entries/multiplicities,269 typed edges/addends/incidence unchanged except those proven name strings. No section, symbol, helper or edge added or removed.",
+    "raw_name_bijection": {
+      "@861": "@853",
+      "@873": "@865",
+      "@875": "@867",
+      "@877": "@869",
+      "@869": "@861",
+      "@867": "@859",
+      "@863": "@855",
+      "@865": "@857",
+      "@879": "@871",
+      "@871": "@863",
+      "@859": "@851",
+      "@857": "@849",
+      "@858": "@850"
+    },
+    "ordinary_prepared_literal_equal": true,
+    "ordinary_prepared_sha256": "599d3a2e617c94516270f3a3e8946c1692bea74e34b757c7220d26b5cbae3afd",
+    "ordinary_prepared_references": 258,
+    "metadata": {
+      "records": [
+        {
+          "symbol": "_ZTI12dEnemyBase_c",
+          "size": 12,
+          "section_size": 12
+        },
+        {
+          "symbol": "_ZTI12daBakubaku_c",
+          "size": 12,
+          "section_size": 12
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "size": 12,
+          "section_size": 12
+        },
+        {
+          "symbol": "_ZTI7fBase_c",
+          "size": 8,
+          "section_size": 8
+        },
+        {
+          "symbol": "_ZTI8dActor_c",
+          "size": 12,
+          "section_size": 12
+        },
+        {
+          "symbol": "_ZTS12dEnemyBase_c",
+          "size": 15,
+          "section_size": 15
+        },
+        {
+          "symbol": "_ZTS12daBakubaku_c",
+          "size": 15,
+          "section_size": 15
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "size": 9,
+          "section_size": 9
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "size": 9,
+          "section_size": 9
+        },
+        {
+          "symbol": "_ZTS8dActor_c",
+          "size": 10,
+          "section_size": 10
+        },
+        {
+          "symbol": "_ZTV12daBakubaku_c",
+          "size": 132,
+          "section_size": 132
+        }
+      ],
+      "payload_bytes": 246,
+      "full_sections_bytes": 246
+    },
+    "owned_storage": [
+      {
+        "section": ".init",
+        "size": 428,
+        "references": 29,
+        "blind": 0,
+        "linked_sha256": "ded15a4c8c217b440e97e71fb021de9ef26c69ab92ca24064ae4e50c349b94cf"
+      },
+      {
+        "section": ".ctor",
+        "size": 4,
+        "references": 1,
+        "blind": 0,
+        "linked_sha256": "73b449957942b3aabc5b03413ffc393fc1ff378be0ad68cf16a5c6e5c3f101ad"
+      },
+      {
+        "section": ".data",
+        "size": 292,
+        "references": 46,
+        "blind": 0,
+        "linked_sha256": "4d2f6817667109dc348ac62be86aa1729e446265da29cd091ee127c9497301cb"
+      },
+      {
+        "section": ".bss",
+        "size": 140,
+        "references": 0,
+        "blind": null,
+        "linked_sha256": null
+      }
+    ],
+    "canonical_imports": {
+      "records": 8,
+      "bytes": 87,
+      "all_full_payloads_and_typed_references_verified": true
+    },
+    "callback": "Existing duplicate Vector3D1 body and canonical destination verify; ordinary policy unchanged.",
+    "manifest_changes": [
+      {
+        "index": 0,
+        "old_from": "@849",
+        "new_from": "@857",
+        "to": "@834"
+      },
+      {
+        "index": 1,
+        "old_from": "@850",
+        "new_from": "@858",
+        "to": "@836"
+      },
+      {
+        "index": 2,
+        "old_from": "@851",
+        "new_from": "@859",
+        "to": "@838"
+      },
+      {
+        "index": 3,
+        "old_from": "@853",
+        "new_from": "@861",
+        "to": "@840"
+      },
+      {
+        "index": 4,
+        "old_from": "@855",
+        "new_from": "@863",
+        "to": "@842"
+      },
+      {
+        "index": 5,
+        "old_from": "@857",
+        "new_from": "@865",
+        "to": "@844"
+      },
+      {
+        "index": 6,
+        "old_from": "@859",
+        "new_from": "@867",
+        "to": "@846"
+      },
+      {
+        "index": 7,
+        "old_from": "@861",
+        "new_from": "@869",
+        "to": "@847"
+      },
+      {
+        "index": 8,
+        "old_from": "@863",
+        "new_from": "@871",
+        "to": "@33"
+      },
+      {
+        "index": 9,
+        "old_from": "@865",
+        "new_from": "@873",
+        "to": "@34"
+      },
+      {
+        "index": 10,
+        "old_from": "@867",
+        "new_from": "@875",
+        "to": "@35"
+      },
+      {
+        "index": 11,
+        "old_from": "@869",
+        "new_from": "@877",
+        "to": "@36"
+      },
+      {
+        "index": 12,
+        "old_from": "@871",
+        "new_from": "@879",
+        "to": "@37"
+      }
+    ],
+    "manifest_limits": "Only13 existing from-name inputs and their evidence text changed. All canonical to names, addresses, ownership, helper dispositions, undefined aliases and other policy fields are literal.",
+    "current_main_control": "Exact e209 Source and its real manifest compiled against current shared headers; no guessed input maps.",
+    "final_formatter_objects_literal_to_tested_candidate": true,
+    "current_complete_comparison_sha256": "42516f89463f3bc35707e4ab1b31fea45bb55c397bfe25aacee0eaa3cf274cd8"
+  },
+  "gates": {
+    "rom": {
+      "base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+      "source_checkpoint": "0daae67849cc03ff0f1b8e690153c860cfa97413",
+      "gates": [
+        {
+          "name": "rombuild",
+          "command": [
+            "python",
+            "tools/rombuild.py",
+            "-j16",
+            "--no-rom",
+            "--report-json",
+            "build\\bakubaku-native-local-vectors1015\\currente209\\rombuild.json",
+            "--data-json",
+            "build\\bakubaku-native-local-vectors1015\\currente209\\romdata-full.json"
+          ],
+          "exit_code": 0,
+          "seconds": 336.07,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209\\rombuild.log",
+          "log_sha256": "70da67ce4e86559a8079a93616b893a31e9ac413cd4d63eb0bec66ced06afbbb"
+        }
+      ]
+    },
+    "static": {
+      "base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+      "source_checkpoint": "a7e210bc72d2d7adc3a192968fb48177f6ca201f",
+      "gates": [
+        {
+          "name": "prepush",
+          "command": [
+            "python",
+            "tools/prepush_linkcheck.py",
+            "--range",
+            "e209dacfaaa95cb5490637ff053d62182689bebe..HEAD",
+            "--json",
+            "build\\bakubaku-native-local-vectors1015\\currente209-style\\prepush.json"
+          ],
+          "exit_code": 0,
+          "seconds": 18.9,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\prepush.log",
+          "log_sha256": "87c631b7c95dd5461f64edcf81bd6e12c633ba93b4465066c90a7cedd58a8d9e"
+        },
+        {
+          "name": "decl-scoped",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--changed",
+            "e209dacfaaa95cb5490637ff053d62182689bebe"
+          ],
+          "exit_code": 0,
+          "seconds": 9.72,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\decl-scoped.log",
+          "log_sha256": "2ad1a78e56083158a4fdd01c27e3a158e355b339e4e0c2f5ac49173d8c7f4588"
+        },
+        {
+          "name": "decl-global",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--check"
+          ],
+          "exit_code": 0,
+          "seconds": 7.65,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\decl-global.log",
+          "log_sha256": "cf553a0098d5acc814e7caa3cb9ea13e1c7e09fba9d9cbe226633457d54a91d7"
+        },
+        {
+          "name": "port",
+          "command": [
+            "python",
+            "tools/port_refcheck.py"
+          ],
+          "exit_code": 0,
+          "seconds": 1.59,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\port.log",
+          "log_sha256": "552f7df2ae653d9bfd6daa0c514eb313355ac1c3eac23b687b177888ddefcfc9"
+        },
+        {
+          "name": "langmode",
+          "command": [
+            "python",
+            "tools/langmode_audit.py",
+            "--check",
+            "build\\bakubaku-native-local-vectors1015\\currente209-style\\langmode-baseline.json"
+          ],
+          "exit_code": 0,
+          "seconds": 11.48,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\langmode.log",
+          "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+        },
+        {
+          "name": "tu-conflicts",
+          "command": [
+            "python",
+            "tools/check_tubuild_conflicts.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.32,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\tu-conflicts.log",
+          "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521"
+        },
+        {
+          "name": "duplicates",
+          "command": [
+            "python",
+            "tools/check_duplicate_sources.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.37,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\duplicates.log",
+          "log_sha256": "47d18edd39c568729bc51edd15776a6971fec1f32b626e5ce9b63e28b4d25145"
+        },
+        {
+          "name": "drafts",
+          "command": [
+            "python",
+            "tools/check_drafts_compile.py",
+            "--quiet"
+          ],
+          "exit_code": 0,
+          "seconds": 1.01,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\drafts.log",
+          "log_sha256": "4eaa535d055ed5087222e0edd0bd5b993d5867d936e408203180cd0e578d5f99"
+        },
+        {
+          "name": "diff-check",
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "e209dacfaaa95cb5490637ff053d62182689bebe..HEAD"
+          ],
+          "exit_code": 0,
+          "seconds": 0.05,
+          "log": "build\\bakubaku-native-local-vectors1015\\currente209-style\\diff-check.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "source_style": {
+      "exit_code": 0,
+      "files_checked": 1,
+      "findings": 0,
+      "deferrals": 0,
+      "report_sha256": "6d75ce3abe79481a6d02ac7070be923f066951c6e4fa1a0893df9a1f31319a29"
+    },
+    "full_build_summary": [
+      "source-built functions: 5,819  (1,187,876 / 2,238,108 code bytes, 53.08%)",
+      "reproducing: 5,819",
+      "mismatching: 0",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "ROM-build analysis: PASS",
+      "intact TU gates: dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+      "reproducing: 11,334",
+      "mismatching: 0",
+      "source-owned data claims: 332  (reproducing 332, mismatching 0)",
+      "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "ROM-build analysis: PASS"
+    ],
+    "global_data_advisory": {
+      "verified": 974,
+      "partial": 1521,
+      "differs": 1,
+      "unnamed": 15
+    },
+    "qualifications": [
+      "Actual full336.07s at 0daae67849cc03ff0f1b8e690153c860cfa97413; final formatting checkpoint a7e210bc72d2d7adc3a192968fb48177f6ca201f transfers it through literal entire RAW/prepared objects, identical preprocessing tokens and all other tracked input blobs.",
+      "Generic prepush24verified plus initializerBLIND8 warning remains. Complete724B owned initialized storage and76typedreferences positively match retail0blind; BSS140 ownership remains exact.",
+      "RAW is not literal to main control: exact13-name graph bijection proves all103 section attributes/payloads,197symbols and269typededges. Prepared objects are literal with258references.",
+      "Inherited9 baseline symbol errors and broader data advisories remain; no universal zero-debt claim. --no-rom does not emit a candidate ROM file.",
+      "All9 prior effective finding dictionaries retained; no new function match, class promotion or full144/shared-interface completion claim."
+    ],
+    "actual_generic_prepush": {
+      "checked": 25,
+      "verified": 24,
+      "warnings": [
+        {
+          "name": "__sinit_d_a_bakubaku.cpp",
+          "verdict": "BLIND-8",
+          "blind": 8
+        }
+      ]
+    }
+  },
+  "historical_provenance": {
+    "accepted_findings_preserved_exact": 5,
+    "accepted_epochs": [
+      {
+        "task": "bakubaku-handles1013",
+        "stage": "produce",
+        "session": "codex-bakubaku-handles1013-producer",
+        "commit": "27ea1d57dbddb69f798bc8bffef577b03357db85",
+        "accepted_by": "codex-bakubaku-verifier1013-camerapass"
+      },
+      {
+        "task": "bakubaku-handles1013",
+        "stage": "verify",
+        "session": "codex-bakubaku-verifier1013-camerapass",
+        "commit": "27ea1d57dbddb69f798bc8bffef577b03357db85",
+        "accepted_by": null
+      },
+      {
+        "task": "asset-readability1014",
+        "stage": "produce",
+        "session": "codex-asset-readability1014",
+        "commit": "1f7db6acddd5d500a402dac57cf7954bcd0a3e25",
+        "accepted_by": "codex-asset-original-independent-verifier1014"
+      },
+      {
+        "task": "asset-readability1014",
+        "stage": "verify",
+        "session": "codex-asset-original-independent-verifier1014",
+        "commit": "1f7db6acddd5d500a402dac57cf7954bcd0a3e25",
+        "accepted_by": null
+      }
+    ],
+    "address_credits_preserved_exact": {
+      "ov032:0x021111a0": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_cD1Ev"
+      },
+      "ov032:0x021111f0": {
+        "author": "tangosdev",
+        "name": "_ZN12daBakubaku_cD0Ev"
+      },
+      "ov032:0x02111254": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111254Ev"
+      },
+      "ov032:0x02111350": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111350Ev"
+      },
+      "ov032:0x021113fc": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_021113fcEv"
+      },
+      "ov032:0x02111620": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111620Ev"
+      },
+      "ov032:0x02111814": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111814Ev"
+      },
+      "ov032:0x02111830": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111830Ev"
+      },
+      "ov032:0x02111b50": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111b50Ev"
+      },
+      "ov032:0x02111b9c": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111b9cEv"
+      },
+      "ov032:0x02111d58": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111d58Ev"
+      },
+      "ov032:0x02111d7c": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111d7cEv"
+      },
+      "ov032:0x02111dd8": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111dd8Ev"
+      },
+      "ov032:0x02111e24": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111e24Ev"
+      },
+      "ov032:0x02111f9c": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111f9cEv"
+      },
+      "ov032:0x02111ff4": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02111ff4EPv"
+      },
+      "ov032:0x02112044": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c19func_ov032_02112044Ev"
+      },
+      "ov032:0x02112124": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c16CleanupResourcesEv"
+      },
+      "ov032:0x02112160": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c16OnPendingDestroyEv"
+      },
+      "ov032:0x02112164": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c6RenderEv"
+      },
+      "ov032:0x021121b4": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c8BehaviorEv"
+      },
+      "ov032:0x021122dc": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c13InitResourcesEv"
+      },
+      "ov032:0x02112444": {
+        "author": "github-actions[bot]",
+        "name": "_ZN12daBakubaku_c16OnAimedAtWithEggEv"
+      },
+      "ov032:0x0211244c": {
+        "author": "github-actions[bot]",
+        "name": "daBakubaku_c_classInit"
+      }
+    },
+    "complete_credit_git_blobs": {
+      "function-authors.json": {
+        "git_sha256": "aacde5d11c6a54ef881be8bc1c74d5daff5883cdf551298bfb71e35545796b5e",
+        "physical_sha256": "34e8a673a6851b2fc7bdd088bd21f4c7e9308592ff93eb29499dd597dde7095d",
+        "git_blob": "4708f481bc61ec669ffc853cc36e7d80b01b0e61"
+      },
+      "attribution.json": {
+        "git_sha256": "d89ea07bf8ec987d79c830ca90ea397497f55b7f07ba996a8900beab23f2f367",
+        "physical_sha256": "fb25b93cea07bb1df0201a8a975ac2553588559b32a90080a22cee69b7dc510a",
+        "git_blob": "93977170e29e906e0b655ad6b38568e189d80f88"
+      }
+    },
+    "credit_policy": "No new match, credit, method-count or TU-promotion claim."
+  },
+  "findings": [
+    {
+      "disposition": "fixed",
+      "id": "BAKUBAKU-HANDLE-FIELDS-001",
+      "kind": "reconstruction",
+      "location": "src/actors/daBakubaku_c.cpp:67",
+      "reason": "Both actual handle subclasses measure 8 bytes with u16 ID at0, u8 reference count at2 and pointer at4. Twelve freshly compiled canonical helper Sources verify the constructor, load, release and destructor paths. Five animation reads use the actual typed handle filePtr. Destructor chains record the ID; separate actor cleanup releases the three handles. Whole object and lifecycle edges are unchanged.",
+      "summary": "Replace the false s32-ID BcaHandle view and anonymous words with measured handle fields."
+    },
+    {
+      "disposition": "deferred",
+      "id": "BAKUBAKU-LIFECYCLE-002",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3806",
+      "kind": "reconstruction",
+      "location": "src/actors/daBakubaku_c.cpp:71",
+      "owner": "codex-bakubaku-handles1013-coordinator",
+      "reason": "The measured local fields are sound, but original shared class ownership and native constructor/destructor definitions are not reconstructed here. Existing manifest aliases and registrations are unchanged and fully verified. A coherent shared-header/helper migration remains future work; this review does not certify the local wrapper names as original.",
+      "summary": "Local handle subclasses retain declared-only lifecycle aliases and a fieldless shared base."
+    },
+    {
+      "disposition": "deferred",
+      "id": "BAKUBAKU-SCALAR-003",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3806",
+      "kind": "reconstruction",
+      "location": "src/actors/daBakubaku_c.cpp:127",
+      "owner": "codex-bakubaku-handles1013-coordinator",
+      "reason": "The five changed SetAnim calls preserve their scalar arguments and actual callee. Native shared interfaces and their inferred symbol spellings need separate caller-side proof. Existing broad compiler-limitation comments are outside this change and are not accepted as a universal floor or recovered original ABI.",
+      "summary": "SetAnim, collision initialization, shadow and Hurt interfaces retain scalar ABI bridges."
+    },
+    {
+      "disposition": "deferred",
+      "id": "BAKUBAKU-VIEWS-004",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3806",
+      "kind": "reconstruction",
+      "location": "src/actors/daBakubaku_c.cpp:91",
+      "owner": "codex-bakubaku-handles1013-coordinator",
+      "reason": "BakuVec3 globals, split actor positions, common.h flat matrices and StateFn read-back still represent inherited reconstruction views. Their initialization/storage and emitted accesses are unchanged; consolidating their actual owning types remains separate work under this issue.",
+      "summary": "Flat vector, matrix and PMF views remain partial reconstruction."
+    },
+    {
+      "disposition": "deferred",
+      "id": "ASSET-NAMING-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "Source naming scope and existing actor/interface reconstruction",
+      "owner": "Original asset coordinator and subsequently claimed C++ reconstruction producers",
+      "reason": "Accepted partial readability scope; no class completion, original identifier, full declaration agreement or193warning relocation claim. Exact complete-object and module proofs independently preserve behavior.",
+      "summary": "Remaining reserved/encoded asset candidates and existing class/ABI/raw-field reconstruction debts are outside this evidenced naming slice."
+    },
+    {
+      "id": "BAKUBAKU-NATIVE-LOCALS-1015",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_bakubaku.cpp:02111e24/02111830/02111620",
+      "summary": "Ten automatic vector stand-ins become actual Vector3 objects across all three movement methods.",
+      "reason": "Wander has two vectors, Dive has five, Surface has three. The splash workspace becomes three named objects reflecting its position, forward offset and rotated offset roles; no original variable names or array spelling are claimed. Every component is assigned before use and duplicate Z stores, initialization order, calls and values remain. New C++ object lifetimes are real; complete emitted lifecycle/cleanup and ordinary object bytes are unchanged. Surface snapshots actual Player scalar subobjects through a character view of the enclosing object, not a fabricated vector or cross-member scalar array."
+    },
+    {
+      "id": "BAKUBAKU-CONTACT-CONTRACT-1015",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_bakubaku.cpp:021113fc and Hurt declaration",
+      "summary": "Both contact paths check the actual dActor_c actorID before the Player cast; the local Hurt declaration agrees with its current definition.",
+      "reason": "The declaration is int(Player*,void*,u32,int,u8,u8,u8); all seven arguments and discarded result remain. Existing collision-owner validity assumptions are unchanged; no null branch is introduced. The current header native Fix12<int> by-value call remains pending. Configured mangled text does not prove original type spelling or uniquely prove u8."
+    },
+    {
+      "id": "BAKUBAKU-PROVENANCE-1015",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_bakubaku.cpp:leftovers and local extern comments",
+      "summary": "Source prose now distinguishes measured emitted output from unresolved shared reconstruction.",
+      "reason": "Removed the false no-Hurt-header claim and universal compiler/lifetime assertions for local vectors. The remaining scalar ABI, flat matrix/position and state read-back boundaries are described as pending reconstruction. Existing input-name mappings now describe the actual final compiler emission; no new canonical home or helper policy is introduced."
+    },
+    {
+      "id": "BAKUBAKU-REMAINING-BOUNDARIES-1015",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_bakubaku.cpp shared fields, helpers, resource handles and state installer",
+      "summary": "Shared scalar/vector/matrix/PMF and handle lifecycle interfaces remain partial under issue3806.",
+      "reason": "The new Player representation bridge retains verified offsets0x5c/0x60/0x64. Other inherited casts over flat actor/spawn/target positions, the target-copy scalar walk in02111254, common.h Matrix4x3 aggregate copies, unsigned timer views, StateFn read-back and local resource lifecycle aliases remain unchanged. BakuVec3 static globals retain their existing storage ownership. Native Fix12 calls and shared helper prototype unification remain separate; this is not full class or original-source recovery.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3806",
+      "owner": "codex-bakubaku-native-vectors-root-coordinator1015",
+      "next_action": "Continue the separately scoped shared type/interface/state reconstruction with current full consumer proof; preserve the documented boundaries until then."
+    }
+  ],
+  "preserved_diagnostics": [
+    "The first full native candidate with direct Player named loads made Surface496B rather than500B; its exact body diff and disassembly remain. The object-representation scalar bridge restores500B. No compiler impossibility claim follows.",
+    "Ordinary preparation correctly rejected stale input names before normalization. An intermediate private mapping generator used sequential text replacements and produced duplicate inputs; ordinary preparation rejected it. Correct simultaneous mappings from the immutable baseline passed the complete graph and normal preparation proofs.",
+    "The first raw-name diagnostic used the earlier six-step counter shift and failed; the final two pointer locals yield the measured eight-step shift. Both epochs are retained."
+  ],
+  "evidence": {
+    "canary.json": "de612ef0f21fd1407975953c6a54c464f3a8f9c43841643cac22a8259d257760",
+    "input-bindings.json": "d42d5fed483fbad34cb7d972523fd2fef1a6aa4cf34011b4a48500bd76d44858",
+    "complete-comparison.json": "5019b0d11f56a53ebd7da79551636e84fb00b71444eacceecae860c1a51ebd2c",
+    "metadata-inventory.json": "77b0036d7f46d121e005177150ff2a79a1d2a94ef979759c391bb780ff10a0e3",
+    "actual-source-measurement.json": "cc32df15017fe3f3020e6d96f8c9b4709542f6a3a615bfd6cbbf684ee7446387",
+    "accepted-findings.json": "8a40df62acb3901f4d937fe1a9f3c40f2b5d97018bde775e9e9803a0328ecf76",
+    "accepted-lineage.json": "61d6f4f732bf383e30dd5df15854be334679ea11a28aaef0df681e2cffe77541",
+    "address-credits.json": "47797623cf90fa6e8bba055b099459ce59370a1a9f0314e1ade919ac2d69dead",
+    "current-main/gate-results-static.json": "c2d75f8cbd68c5ada5a5c3dd6c18ecf848ef6ec326294b6e06a97f0332f1e879",
+    "current-main/gate-results-rom.json": "6dc1ffcae4e9454690d53650216a3732d6f806e236c92756b04c475164f0d9cc",
+    "current-main/rombuild.json": "784fc02e0fb301f698937a66f2aeec61a86ff9d44e8d4bd09e6e7f43ebb38d35",
+    "current-main/romdata-full.json": "5b74f58aabb986a876f4dfd41860ced95de73d4521c513d7c3bb47ee901e5052",
+    "current-main/prepush.json": "487c529f65bcf08bc50d5c7689cf2aa446aef5651e00cccd76778e2539616d03",
+    "current-main/composition-bindings.json": "8d1896885fc74f4408cce21b11ab5f4bff231a47dbeb7cd1c7f1cabfcac6fd1f",
+    "current-main/focused-binding.json": "6ed80d7ac67154809fc7b255c492b5af514bac4519f69ca23f0e38a9700ec8c0",
+    "boundary-source-evidence.json": "5075ec63e34c531c24c1872f7a74c805e2690bef75d09da2e8af55b965c6423b",
+    "baseline/bakubaku/proof.json": "614f3ce23cbf690c344388e82e5d9fff3ddf1c794f332f6a9975496f0252b48c",
+    "current-main-final/bakubaku/proof.json": "af99c5971c22f483622655023ed64fdfe9368d9b4cad39d25857c6ca4991360d",
+    "current-main-final/bakubaku/preparation.json": "35b0e514a180541e944a6a3a463c9691b357ce81ec6d217872998da8125ea3b6",
+    "native-named/body-comparison.json": "6c9a53052881a8ca1c6cac5dde60551a4dcaa21e831bc88d219c2c23c8bac9aa",
+    "native-named/surface.dis": "81872134e740dd1f1c3d3341c94f899ef22511bf38e8e17e0828ac68a6e232da",
+    "native-scalar-boundary/raw-correspondence-v2.json": "f7caa73749bb392f54a7afba9e94a407c4d99e2b9e2de755a12b127033091dfe",
+    "current50bf/composition-bindings.json": "48d6e71a8af4d346c77c3112177110168951d326350e585e51e3fb48f8048040",
+    "current50bf/focused-binding.json": "877b6fb1d5c1e69273b8d2c8896921fa2b4bfd9fea70a5ab81aecb0470b8f010",
+    "current50bf/gate-results-rom.json": "cc2950deddc7898ae9f0531fabb301d102e8b894e49d91136877990492083192",
+    "current50bf/gate-results-static.json": "a1918f3a6fd3a24864ffe4b21d10ce198f1287767d7a7d32df0de82e414fdc18",
+    "current50bf/rombuild.json": "784fc02e0fb301f698937a66f2aeec61a86ff9d44e8d4bd09e6e7f43ebb38d35",
+    "current50bf/romdata-full.json": "ed487c78806bba5db6f7e8c57a3684ed62f9a991b96434780620c1d92e9a5abb",
+    "current50bf/prepush.json": "487c529f65bcf08bc50d5c7689cf2aa446aef5651e00cccd76778e2539616d03",
+    "current50bf/bakubaku/proof.json": "25a5aa16d5474d739850a76c062185928dd92b7dd3cbf48d7be7422c3d5ba4e2",
+    "currente209/merge-binding.json": "2308850cf451db5d3412e9ebedf7d96da7edae5e8ab0cb44c3269c92c1b3c324",
+    "currente209/gate-results-rom.json": "49b0a701b54c85b07706ab2c9446a467b1b777113370215c33395893ca725f8c",
+    "currente209/gate-results-static.json": "f5b9191fdd6b0e42c281bfba9f4d2695aa6f9e0cea8dcb4f119c628953100da2",
+    "currente209/rombuild.json": "0114c5533792b181527e4a10dc781d20e2f06c7f37765bbc08afff1a2997cc50",
+    "currente209/rombuild.log": "70da67ce4e86559a8079a93616b893a31e9ac413cd4d63eb0bec66ced06afbbb",
+    "currente209/romdata-full.json": "469e7bbb880e51537c0e020e73af86e5ffd1898cafa9402dab43207b7f98c06e",
+    "currente209/complete-comparison.json": "42516f89463f3bc35707e4ab1b31fea45bb55c397bfe25aacee0eaa3cf274cd8",
+    "currente209/bakubaku/proof.json": "80e20b0ea5cf6d09bf7ea9e9e11032a2fa79ef33690228526c7236c532d7b14f",
+    "currente209-style/composition-bindings.json": "ebbb3e8e299a8fd4b9748dc88a9161b4e2fa5fced38fca59d358835b529b2b9c",
+    "currente209-style/format-object-binding.json": "fbd53a9a0a5a31cc17e00a3094bee1afb03f4aa5b8359e5dd2086310444de897",
+    "currente209-style/format-proof-final.json": "8c9a1c8f402a23cee3fac0d738b92413c14b973b01a4626c57d7e0d3bafa4d97",
+    "currente209-style/initial-source-style.json": "3d83039ef659c93de03739e3b84ee3b87ad38e075fb653641edbbc8f4e051f88",
+    "currente209-style/source-style-final.json": "6d75ce3abe79481a6d02ac7070be923f066951c6e4fa1a0893df9a1f31319a29",
+    "currente209-style/actual-source-measurement.json": "e6598f4ac604e7cc1ddf6ab95df9b5fd2a473902a122547b639b317ba58e03db",
+    "currente209-style/gate-results-static.json": "59d7fbef282f76969c3957eec274fa9291bb6f47c8d6b7829b8b53a3fd88db63",
+    "currente209-style/prepush.json": "487c529f65bcf08bc50d5c7689cf2aa446aef5651e00cccd76778e2539616d03",
+    "currente209-style/bakubaku/proof.json": "1cf0baa6dc2502979e1ec7dce95132f318529d42101f6fd20be8682cf04697df"
+  },
+  "current_main_check": {
+    "head": "e209dacfaaa95cb5490637ff053d62182689bebe",
+    "tested_source_base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+    "delta": [],
+    "five_production_trees_literal": {
+      "src": "252d666ec58b81ba918ece300c038dfb3240d663",
+      "include": "1c2768be4f1602d9397aecd3f091a3401b1d83c2",
+      "config": "e01b1c58be821ff871650976ecae4cbc18b9fc6b",
+      "tools": "d0416fda09a9f4c1494d389cb5f78624236544b0",
+      "port": "2d129b0bfa636a2d708375f3452813e8bec39a56"
+    },
+    "checked_at_utc": "2026-10-15T20:56:06.285064+00:00"
+  },
+  "future_composition": "The retained full144 packet includes this manifest. Future composition must preserve these accepted from-name changes and rederive any later emission counters, not overwrite with the older manifest snapshot.",
+  "composition": {
+    "rework_input": "3791d42d9ba5f46dda9c6e667db939ae016266ec",
+    "current_source_base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+    "full_build_source_checkpoint": "0daae67849cc03ff0f1b8e690153c860cfa97413",
+    "final_source_checkpoint": "a7e210bc72d2d7adc3a192968fb48177f6ca201f",
+    "merge_parents": [
+      "6d4106ed8308cbd6f676d818dbc54962b121e338",
+      "e209dacfaaa95cb5490637ff053d62182689bebe"
+    ],
+    "required_inputs": {
+      "total": 56,
+      "changed_since_f6": [
+        "attribution.json",
+        "config/arm9/symbols.txt",
+        "function-authors.json",
+        "include/Player.h",
+        "include/dActor_c.h",
+        "include/dEnemyBase_c.h",
+        "include/dExtFrameCtrl_c.h",
+        "include/fBase_c.h",
+        "src/game/actors/d_a_bakubaku.cpp",
+        "tools/tubuild.py"
+      ]
+    },
+    "all9_finding_dictionaries_literal": true,
+    "fresh_current_full_build": true,
+    "formatting_transfer": {
+      "source_tree_literal": false,
+      "all_other_tracked_files_literal": true,
+      "four_dependency_trees_literal": {
+        "include": "1c2768be4f1602d9397aecd3f091a3401b1d83c2",
+        "config": "44806268272738bd518441037e0a67e4ad900498",
+        "tools": "d0416fda09a9f4c1494d389cb5f78624236544b0",
+        "port": "2d129b0bfa636a2d708375f3452813e8bec39a56"
+      },
+      "preprocessing_tokens_literal": true,
+      "fresh_whole_raw_prepared_literal": true,
+      "full_invocation_repeated_after_format": false,
+      "format_binding_sha256": "fbd53a9a0a5a31cc17e00a3094bee1afb03f4aa5b8359e5dd2086310444de897"
+    },
+    "historical_50bf_report_commit": "3791d42d9ba5f46dda9c6e667db939ae016266ec",
+    "historical_f6_full_gate_sha256": "7707e5c2d51e5e973775126ebd56abe66922f7c0a6bc3a1371aff8222f1409dd",
+    "limits": "Actual f6 full288.43s remains historical. Current shared headers and canonical names required fresh current control/candidate objects and combined full336.07s. The subsequent pinned formatter repair changes only identical preprocessing-token whitespace: fresh complete raw and ordinary prepared objects remain literal, all other tracked inputs unchanged. This transfers the actual current full result; it is not a new global invocation or full Source-tree equality."
+  },
+  "not_claimed": [
+    "Independent Source/byte acceptance",
+    "Complete original class/layout/signature reconstruction",
+    "Completion of full144, nativeYegg3/shared308, Heap, Chomp20 or remaining ARM7 work",
+    "Public push/PR/validation/merge"
+  ],
+  "report_author": {
+    "session": "codex-bakubaku-currentf6-astra-producer1015",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "label": "codex-enemy-frontier-astra1014"
+  }
+}

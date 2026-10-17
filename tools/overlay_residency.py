@@ -147,8 +147,8 @@ _SINGLE_CONFIG = {s: not any(conflict(a, b) for a in ts for b in ts if a < b)
 def _level_tables():
     """The three tables `LoadLevelOverlays` and `LoadOrUnloadObjectOverlays` read.
 
-    src/_Z17LoadLevelOverlaysi.cpp        ov = data_020758c8[level]
-    src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp
+    LoadLevelOverlays(int)                ov = data_020758c8[level]
+    LoadOrUnloadObjectOverlays(fn, idx)
                                           fn(data_02075804[i].t[data_02075998[idx][i]])
 
     data_02075804 is 7 groups of 7 overlay ids and each group is exactly one tier of

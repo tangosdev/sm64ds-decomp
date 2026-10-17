@@ -15,7 +15,7 @@ This document describes this commit. The queue records its immutable output SHA.
   There is no accepted input: the rescued branch was NOT merged (a trial merge of
   `origin/main` into it produced 40 conflicts and was abandoned). Its content for
   these three classes was re-derived file by file on top of main, and one of its
-  commits, `8ba4d118d` "Enroll [func_ov002_020f051c](../../../src/actors/daSCoin_c.cpp) (ROM ordinal 3 used to assemble `daSCoin_c.cpp` ) by compiling it as C++", was
+  commits, `8ba4d118d` "Enroll [func_ov002_020f051c](../../../src/game/actors/d_a_s_coin.cpp) (ROM ordinal 3 used to assemble `daSCoin_c.cpp` ) by compiling it as C++", was
   cherry-picked with `-x`. `cpp/promote-da-obj-lava` is untouched on the remote
   and must not be deleted: it still holds the other 14 classes. Its head is
   `118aee137` (re-confirmed with `gh pr view 2231` and
@@ -30,8 +30,8 @@ This document describes this commit. The queue records its immutable output SHA.
   keeping both sides with main's rows first. Workflow/tool revision
   `d7e28406933497ff40150f9b912efe64666a00b2`.
 - Separate evidence commits and required artifacts in this commit: no separate
-  evidence commit. dScStage_c artifacts: `src/actors/daObjLava_c.cpp`,
-  `src/actors/daObjFire_c.cpp`, `src/actors/daSCoin_c.cpp`, their headers in
+  evidence commit. dScStage_c artifacts: `src/game/actors/d_a_obj_lava.cpp`,
+  `src/game/actors/d_a_obj_fire.cpp`, `src/game/actors/d_a_s_coin.cpp`, their headers in
   `include/`, and the three promoted manifests under
   [config/tu_manifest.d/ov002/](../../../config/tu_manifest.d/ov002/).
 - Next action, responsible role and blockers: independent verification of this
@@ -64,7 +64,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Reserved source/header/config surfaces actually touched:
   [config/arm9/overlays/ov002/symbols.txt](../../../config/arm9/overlays/ov002/symbols.txt) (renames only: the coined
   `PoppingLavaBubbles`/`BlueFlame` rows become the RTTI names,
-  `func_ov002_020b6d84` becomes [_ZN11daObjLava_c8BehaviorEv](../../../src/actors/daObjLava_c.cpp)(ROM Ordinal 3 used for assembling `daObjLava_c.cpp`); the duplicate
+  `func_ov002_020b6d84` becomes [_ZN11daObjLava_c8BehaviorEv](../../../src/game/actors/d_a_obj_lava.cpp)(ROM Ordinal 3 used for assembling `daObjLava_c.cpp`); the duplicate
   coined `_ZTV9BlueFlame` alias row is DELETED; no row is added),
   [config/arm9/overlays/ov002/delinks.txt](../../../config/arm9/overlays/ov002/delinks.txt) (three intact-object splices written by
   `tu_promote.py`), `include/decl_common.h` (the duplicate
@@ -77,7 +77,7 @@ This document describes this commit. The queue records its immutable output SHA.
   citation repointed), [config/tu_manifest.d/ov002/daObjHatenaSwitch_c.json](../../../config/tu_manifest.d/ov002/daObjHatenaSwitch_c.json)
   (prose neighbour name only). Legacy one-function shards and the two coined
   headers are removed. The cherry-picked commit turned the C shard of
-  [func_ov002_020f051c](../../../src/actors/dScMgCoin_c.cpp) into a C++ one (its first source build); the scoin
+  [func_ov002_020f051c](../../../src/minigames/d_s_mg_coin.cpp) into a C++ one (its first source build); the scoin
   promotion then folded that shard into the TU, so no shard file remains.
 - ROM observations: `_ZTS11daObjLava_c` at [ov002](../../../config/arm9/overlays/ov002/symbols.txt):0x021093ac and
   `_ZTS11daObjFire_c` at [ov002](../../../config/arm9/overlays/ov002/symbols.txt):0x02108ee8 are the ROM's own class names, so the
@@ -147,7 +147,7 @@ quoted verdict; nothing here is inherited from PR #2231's own manifests or logs.
   - `python tools/tubuild.py verify ov002/<id>` for the three ids: 5/5, 8/8 and
     9/9 MATCH, `objisolate clean`, `reloc-destinations clean`, emission order as
     expected -> TEXT-VERIFIED each.
-  - `python tools/linkcheck.py --name <sym> --c src/actors/<Class>.cpp --module
+  - `python tools/linkcheck.py --name <sym> --c src/game/<dir>/<file>.cpp --module
     ov002 --addr ... --size ...` for all 22 functions (addresses and sizes from
     the manifests): 22 VERIFIED, 0 BLIND, 0 WRONG, 0 NO-REPRO
     (`build/lc-symbols.txt`). `prepush_linkcheck` cannot see promoted TUs
@@ -173,8 +173,8 @@ quoted verdict; nothing here is inherited from PR #2231's own manifests or logs.
     this tree; the tool ran to completion. Caveat the tool itself prints: `dsd
     check symbols --fail` has 9 pre-existing errors that the stock control also
     has (0 new) -- that check is not green and is not reported as green here.
-  - `python tools/romdata_check.py --files src/actors/daObjLava_c.cpp
-    src/actors/daObjFire_c.cpp src/actors/daSCoin_c.cpp`: 19 data symbols,
+  - `python tools/romdata_check.py --files src/game/actors/d_a_obj_lava.cpp
+    src/game/actors/d_a_obj_fire.cpp src/game/actors/d_a_s_coin.cpp`: 19 data symbols,
     `VERIFIED 13 (552 bytes)`, `PARTIAL 6 (56 bytes equal)`, `DIFFERS 0`,
     `UNNAMED 0`. All 13 `_ZTI`/`_ZTV`/`g_profile_*` records are VERIFIED. The
     six PARTIALs are the NUL-terminated `_ZTS` strings (`_ZTS11daObjLava_c`,

@@ -75,14 +75,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov045_02113200",
+      "symbol": "gKm2UkishimaModelFile",
       "address": "0x02113200",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1643; InitResources loads the BMD through it and CleanupResources releases it"
     },
     {
-      "symbol": "data_ov045_021131f8",
+      "symbol": "gKm2UkishimaCollisionFile",
       "address": "0x021131f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -603,7 +603,7 @@
       "source": "0x02112338",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov045_02113200",
+      "symbol": "gKm2UkishimaModelFile",
       "addend": 0,
       "target_module": "ov045",
       "target_address": "0x02113200"
@@ -633,7 +633,7 @@
       "source": "0x02112348",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov045_021131f8",
+      "symbol": "gKm2UkishimaCollisionFile",
       "addend": 0,
       "target_module": "ov045",
       "target_address": "0x021131f8"

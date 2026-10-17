@@ -1,8 +1,8 @@
 {
   "id": "arm9/dPa_c",
   "module": "arm9",
-  "source": "src/engine/particle/dPa_c.cpp",
-  "promoted_source": "src/engine/particle/dPa_c.cpp",
+  "source": "src/engine/particle/d_pa.cpp",
+  "promoted_source": "src/engine/particle/d_pa.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

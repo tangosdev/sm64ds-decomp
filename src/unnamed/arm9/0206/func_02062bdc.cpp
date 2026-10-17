@@ -19,19 +19,15 @@ extern "C" void func_02062bdc(struct M *m)
 {
     void *base = m->f1c;
     if (m->f2 == 0) {
-        if (m->f4 == 7) goto L7;
-        if (m->f4 == 9) goto L9;
-        if (m->f4 != 0x15) return;
-        func_02062990(base, m->f12, m->fc);
-        func_020627e8(base, 0);
-        return;
-
-    L7:
-        func_020627e8(base, 0);
-        return;
-
-    L9:
-        {
+        switch (m->f4) {
+        case 0x15:
+            func_02062990(base, m->f12, m->fc);
+            func_020627e8(base, 0);
+            return;
+        case 7:
+            func_020627e8(base, 0);
+            return;
+        case 9: {
             unsigned short mask = (unsigned short)(1 << m->f12);
             unsigned int saved = IRQ::Disable();
             unsigned short b408 = *(unsigned short *)((char *)base + 0x408);
@@ -42,8 +38,11 @@ extern "C" void func_02062bdc(struct M *m)
             }
             IRQ::Restore(saved);
             func_020627e8(base, 0);
-            if (*(unsigned short *)((char *)base + 0x418) != 1) return;
-            func_020627e8(base, 0);
+            if (*(unsigned short *)((char *)base + 0x418) == 1)
+                func_020627e8(base, 0);
+            return;
+        }
+        default:
             return;
         }
     }

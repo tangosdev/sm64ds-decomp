@@ -44,11 +44,14 @@ struct daMenbo_c : dEnemyBase_c {
     s32                          unk_374;               /* 0x374 */
     s32                          unk_378;               /* 0x378 */
     s32                          unk_37c;               /* 0x37c */
-    u8  pad_380[0x14];
+    u8 pad_380[0x10];
+    /* Loops of the current anim: idle, patrol and water chase count it up
+       and leave the state past a threshold. */
+    s32 mAnimLoops;                                     /* 0x390 */
     u16                          unk_394;               /* 0x394 */
     u16                          unk_396;               /* 0x396 */
     u16                          unk_398;               /* 0x398 */
-    u16                          unk_39a;               /* 0x39a */
+    u16 mTargetAngleY;                                  /* 0x39a */
     u8                           unk_39c;               /* 0x39c */
     u8  pad_39d[0x4];
     u8                           unk_3a1;               /* 0x3a1 */

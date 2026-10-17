@@ -28,8 +28,6 @@
  *   BattanVector3: a local Vector3 would emit vague-linkage ~Vector3.
  *   common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so the
  *   translation stays m[9]/m[10]/m[11].
- *   *(Vector3 *)&mCamSpacePosX: a Vector3 member at 0x074 is a dActor_c
- *   change, not this leaf's.
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
  * notes/mwccarm-codegen.md 6az; the header method form changes the code
@@ -61,27 +59,21 @@
 // - No Player.h / dCamera_c.h here. The leaf operator new stays until the
 //   fBase_c size_t overload work lands.
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_fm_battan_AssetId {
+    ASSET_FM_BATTAN_BMD = 0x0616,
+    ASSET_FM_BATTAN_KCL = 0x0617
+};
+
 #include "daObjFm_Battan_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "nitro/fx/fx.h"
 
 /* A local Vector3 value would make mwccarm emit its vague-linkage destructor.
  * These calls only require the three-word ABI value, so keep that value POD. */
 struct BattanVector3 { s32 x, y, z; };
-
-struct BattanSpawnInfo {
-    daObjFm_Battan_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char BattanSpawnInfo_size_must_be_0x1c[
-    sizeof(BattanSpawnInfo) == 0x1c ? 1 : -1];
 
 extern "C" {
 extern char data_ov064_0211ba4c[];
@@ -130,8 +122,8 @@ struct BattanCollisionFilePtr : SharedFilePtr {
 extern "C" BattanModelFilePtr data_ov023_02112088;
 extern "C" BattanCollisionFilePtr data_ov023_02112080;
 
-BattanModelFilePtr data_ov023_02112088(1558);
-BattanCollisionFilePtr data_ov023_02112080(1559);
+BattanModelFilePtr data_ov023_02112088(ASSET_FM_BATTAN_BMD);
+BattanCollisionFilePtr data_ov023_02112080(ASSET_FM_BATTAN_KCL);
 
 
 // @symbol daObjFm_Battan_c_classInit
@@ -145,7 +137,7 @@ extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit()
     return new daObjFm_Battan_c();
 }
 
-extern "C" BattanSpawnInfo g_profile_FM_BATTAN = {
+extern "C" SpawnInfo<daObjFm_Battan_c> g_profile_FM_BATTAN = {
     daObjFm_Battan_c_classInit,
     0x0054,
     0x0124,
@@ -191,7 +183,7 @@ int daObjFm_Battan_c::Behavior()
     case 0:
         if (DistToCPlayer() < 0x3e8000) {
             mState++;
-            Sound::PlayBank3(0x43, *(Vector3 *)&mCamSpacePosX);
+            Sound::PlayBank3(0x43, mCamSpacePos);
         }
         break;
 
@@ -217,12 +209,12 @@ int daObjFm_Battan_c::Behavior()
             /* MEASURED: by-value Fix12<int> (notes/mwccarm-codegen.md 6az). */
             _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
                 this, &pos, 0x04000000);
-            Sound::PlayBank3(0x44, *(Vector3 *)&mCamSpacePosX);
+            Sound::PlayBank3(0x44, mCamSpacePos);
 
             sinY = data_02082214[((u16)mAngleY >> 4) * 2];
-            offset.x = (s32)(((s64)sinY * -0x190000 + 0x800) >> 12);
+            offset.x = FX_MUL(sinY, -0x190000);
             cosY = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
-            offset.z = (s32)(((s64)cosY * -0x190000 + 0x800) >> 12);
+            offset.z = FX_MUL(cosY, -0x190000);
             AddVec3(&offset, (BattanVector3 *)&mPosX, &offset);
 
             dustPos.x = offset.x;
@@ -237,7 +229,7 @@ int daObjFm_Battan_c::Behavior()
         if (mStateTimer >= 0x3c) {
             mAngVelX = 0x80;
             mState++;
-            Sound::PlayBank3(0x45, *(Vector3 *)&mCamSpacePosX);
+            Sound::PlayBank3(0x45, mCamSpacePos);
         } else {
             mStateTimer++;
         }
@@ -300,7 +292,7 @@ int daObjFm_Battan_c::UpdateShadow()
 {
     int tableIndex = (u16)mAngleX >> 4;
     int sinX = data_02082214[tableIndex * 2];
-    int depth = (s32)(((s64)sinX * 0x49c000 + 0x800) >> 12);
+    int depth = FX_MUL(sinX, 0x49c000);
 
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
     mShadowMat.m[9] = mPosX >> 3;

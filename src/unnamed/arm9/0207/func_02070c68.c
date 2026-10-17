@@ -31,42 +31,48 @@ void func_02070c68(char *out, double x)
 
     t1 = v;
 
-    if ((((int *)&t1)[1] & 0x7ff00000) != 0) {
-        if ((((int *)&t1)[1] & 0x7ff00000) == 0x7ff00000) {
-            if ((((int *)&t1)[1] & 0xfffff) != 0) goto n1;
-            if (((int *)&t1)[0] == 0) goto i1;
-        n1: cls = 1; goto d1;
-        i1: cls = 2; goto d1;
-        }
-    } else {
-        if ((((int *)&t1)[1] & 0xfffff) != 0) goto s1;
-        if (((int *)&t1)[0] == 0) goto z1;
-    s1: cls = 5; goto d1;
-    z1: cls = 3; goto d1;
+    /* fpclassify, open-coded: an inline helper's temporaries would take
+       frame slots after mm and reorder the stack. */
+    switch (((int *)&t1)[1] & 0x7ff00000) {
+    case 0x7ff00000:
+        if ((((int *)&t1)[1] & 0xfffff) != 0 || ((int *)&t1)[0] != 0)
+            cls = 1;
+        else
+            cls = 2;
+        break;
+    case 0:
+        if ((((int *)&t1)[1] & 0xfffff) != 0 || ((int *)&t1)[0] != 0)
+            cls = 5;
+        else
+            cls = 3;
+        break;
+    default:
+        cls = 4;
+        break;
     }
-    cls = 4;
-d1:
     if (cls <= 2) {
         out[0] = neg;
         *(short *)(out + 2) = 0;
         out[4] = 1;
 
         t2 = x;
-        if ((((int *)&t2)[1] & 0x7ff00000) != 0) {
-            if ((((int *)&t2)[1] & 0x7ff00000) == 0x7ff00000) {
-                if ((((int *)&t2)[1] & 0xfffff) != 0) goto n2;
-                if (((int *)&t2)[0] == 0) goto i2;
-            n2: cls2 = 1; goto d2;
-            i2: cls2 = 2; goto d2;
-            }
-        } else {
-            if ((((int *)&t2)[1] & 0xfffff) != 0) goto s2;
-            if (((int *)&t2)[0] == 0) goto z2;
-        s2: cls2 = 5; goto d2;
-        z2: cls2 = 3; goto d2;
+        switch (((int *)&t2)[1] & 0x7ff00000) {
+        case 0x7ff00000:
+            if ((((int *)&t2)[1] & 0xfffff) != 0 || ((int *)&t2)[0] != 0)
+                cls2 = 1;
+            else
+                cls2 = 2;
+            break;
+        case 0:
+            if ((((int *)&t2)[1] & 0xfffff) != 0 || ((int *)&t2)[0] != 0)
+                cls2 = 5;
+            else
+                cls2 = 3;
+            break;
+        default:
+            cls2 = 4;
+            break;
         }
-        cls2 = 4;
-    d2:
         out[5] = (cls2 == 1) ? 0x4e : 0x49;
     } else {
         double m;

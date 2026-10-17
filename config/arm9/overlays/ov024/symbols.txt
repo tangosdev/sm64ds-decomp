@@ -91,8 +91,8 @@ data_ov024_02112570 kind:data(any) addr:0x02112570 ambiguous
 data_ov024_02112590 kind:data(any) addr:0x02112590 ambiguous
 data_ov024_021125cc kind:data(any) addr:0x021125cc ambiguous
 data_ov024_02112610 kind:data(any) addr:0x02112610 ambiguous
-__sinit_daObjDlPyramid_c.cpp kind:function(arm,size=0x6c) addr:0x02112808
-.p__sinit_daObjDlPyramid_c.cpp kind:data(word) addr:0x02112874
+__sinit_d_a_obj_dl_pyramid.cpp kind:function(arm,size=0x6c) addr:0x02112808
+.p__sinit_d_a_obj_dl_pyramid.cpp kind:data(word) addr:0x02112874
 data_ov024_02112880 kind:data(any) addr:0x02112880
 data_ov024_02112884 kind:data(any) addr:0x02112884
 data_ov024_02112888 kind:data(any) addr:0x02112888
@@ -189,8 +189,8 @@ data_ov024_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 data_ov024_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov024_021138fc kind:data(any) addr:0x021138fc ambiguous
 data_ov024_02113934 kind:data(any) addr:0x02113934 ambiguous
-data_ov024_02113960 kind:bss addr:0x02113960
-data_ov024_02113968 kind:bss addr:0x02113968
+gDlPyramidCollisionFile kind:bss addr:0x02113960
+gDlPyramidModelFile kind:bss addr:0x02113968
 @593 kind:bss addr:0x02113970
 @594 kind:bss addr:0x0211397c
 data_ov024_02113988 kind:bss addr:0x02113988 ambiguous

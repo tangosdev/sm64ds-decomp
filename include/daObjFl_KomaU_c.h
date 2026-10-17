@@ -35,7 +35,7 @@ struct daObjFl_KomaU_c : dBgActor_c {
     u32 mParticleID[2][8]; /* 0x320, 0x340 */
     dCcPos_c mColliders[8]; /* 0x360 */
 
-    /* Out of line in daObjFl_KomaU_c.cpp: the key function, so that TU emits
+    /* Out of line in d_a_obj_fl_koma_u.cpp: the key function, so that TU emits
      * _ZTV/_ZTI/_ZTS15daObjFl_KomaU_c. */
     virtual ~daObjFl_KomaU_c();
 

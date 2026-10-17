@@ -27,6 +27,13 @@ struct Message {
        mangled name: `Et` is u16, `Eta` is (u16, s8). */
     static void PrepareTalk();
     static void EndTalk();
+    /* The parameter is unnamed on purpose. In mwccarm a named parameter in a
+       class-scope declaration takes a number from the counter that names the
+       compiler's @NNN temporaries, so naming it would renumber every TU
+       that includes this header, and the TU manifests pin those numbers. */
+    static void AddChar(char);
+    static int UpdateWindow();
+    static void Update();
     static void ResetAllGlobals();
     static void DisplaySaveMenuText(u16 msgID);
     static void DisplayLevelClearText(u16 msgID, s8 course);

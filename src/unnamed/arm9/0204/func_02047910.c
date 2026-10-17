@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 struct Vec3
 {
   int x;
@@ -27,18 +28,16 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
   vb.z = m1[5];
   la = LenVec3(&va);
   lb = LenVec3(&vb);
-  len = la + (int) ((((long long) t) * (lb - la) + 0x800) >> 12);
-  vy.x = va.x + (int) ((((long long) t) * (vb.x - va.x) + 0x800) >> 12);
-  vy.y = va.y + (int) ((((long long) t) * (vb.y - va.y) + 0x800) >> 12);
-  vy.z = va.z + (int) ((((long long) t) * (vb.z - va.z) + 0x800) >> 12);
-  if ((int) ((((long long) vy.x) * vy.x + 0x800) >> 12)
-      + (int) ((((long long) vy.y) * vy.y + 0x800) >> 12)
-      + (int) ((((long long) vy.z) * vy.z + 0x800) >> 12) == 0)
-    return;
+  len = la + FX_MUL(t, (lb - la));
+  vy.x = va.x + FX_MUL(t, (vb.x - va.x));
+  vy.y = va.y + FX_MUL(t, (vb.y - va.y));
+  vy.z = va.z + FX_MUL(t, (vb.z - va.z));
+  if (FX_MUL(vy.x, vy.x) + FX_MUL(vy.y, vy.y) + FX_MUL(vy.z, vy.z) == 0)
+      return;
   NormalizeVec3(&vy, &vy);
-  dst[3] = (int) ((((long long) vy.x) * len + 0x800) >> 12);
-  dst[4] = (int) ((((long long) vy.y) * len + 0x800) >> 12);
-  dst[5] = (int) ((((long long) vy.z) * len + 0x800) >> 12);
+  dst[3] = FX_MUL(vy.x, len);
+  dst[4] = FX_MUL(vy.y, len);
+  dst[5] = FX_MUL(vy.z, len);
 
   va.x = m0[0];
   va.y = m0[1];
@@ -48,18 +47,16 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
   vb.z = m1[2];
   la = LenVec3(&va);
   lb = LenVec3(&vb);
-  len = la + (int) ((((long long) t) * (lb - la) + 0x800) >> 12);
-  vx.x = va.x + (int) ((((long long) t) * (vb.x - va.x) + 0x800) >> 12);
-  vx.y = va.y + (int) ((((long long) t) * (vb.y - va.y) + 0x800) >> 12);
-  vx.z = va.z + (int) ((((long long) t) * (vb.z - va.z) + 0x800) >> 12);
-  if ((int) ((((long long) vx.x) * vx.x + 0x800) >> 12)
-      + (int) ((((long long) vx.y) * vx.y + 0x800) >> 12)
-      + (int) ((((long long) vx.z) * vx.z + 0x800) >> 12) == 0)
-    return;
+  len = la + FX_MUL(t, (lb - la));
+  vx.x = va.x + FX_MUL(t, (vb.x - va.x));
+  vx.y = va.y + FX_MUL(t, (vb.y - va.y));
+  vx.z = va.z + FX_MUL(t, (vb.z - va.z));
+  if (FX_MUL(vx.x, vx.x) + FX_MUL(vx.y, vx.y) + FX_MUL(vx.z, vx.z) == 0)
+      return;
   NormalizeVec3(&vx, &vx);
-  dst[0] = (int) ((((long long) vx.x) * len + 0x800) >> 12);
-  dst[1] = (int) ((((long long) vx.y) * len + 0x800) >> 12);
-  dst[2] = (int) ((((long long) vx.z) * len + 0x800) >> 12);
+  dst[0] = FX_MUL(vx.x, len);
+  dst[1] = FX_MUL(vx.y, len);
+  dst[2] = FX_MUL(vx.z, len);
 
   va.x = m0[6];
   va.y = m0[7];
@@ -69,42 +66,30 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
   vb.z = m1[8];
   la = LenVec3(&va);
   lb = LenVec3(&vb);
-  len = la + (int) ((((long long) t) * (lb - la) + 0x800) >> 12);
-  vz.x = va.x + (int) ((((long long) t) * (vb.x - va.x) + 0x800) >> 12);
-  vz.y = va.y + (int) ((((long long) t) * (vb.y - va.y) + 0x800) >> 12);
-  vz.z = va.z + (int) ((((long long) t) * (vb.z - va.z) + 0x800) >> 12);
-  if ((int) ((((long long) vz.x) * vz.x + 0x800) >> 12)
-      + (int) ((((long long) vz.y) * vz.y + 0x800) >> 12)
-      + (int) ((((long long) vz.z) * vz.z + 0x800) >> 12) == 0)
-    return;
+  len = la + FX_MUL(t, (lb - la));
+  vz.x = va.x + FX_MUL(t, (vb.x - va.x));
+  vz.y = va.y + FX_MUL(t, (vb.y - va.y));
+  vz.z = va.z + FX_MUL(t, (vb.z - va.z));
+  if (FX_MUL(vz.x, vz.x) + FX_MUL(vz.y, vz.y) + FX_MUL(vz.z, vz.z) == 0)
+      return;
 
-  vx.x = (int) ((((long long) vy.y) * (vz.z - vy.z) + 0x800) >> 12)
-       - (int) ((((long long) vy.z) * (vz.y - vy.y) + 0x800) >> 12);
-  vx.y = (int) ((((long long) vy.z) * (vz.x - vy.x) + 0x800) >> 12)
-       - (int) ((((long long) vy.x) * (vz.z - vy.z) + 0x800) >> 12);
-  vx.z = (int) ((((long long) vy.x) * (vz.y - vy.y) + 0x800) >> 12)
-       - (int) ((((long long) vy.y) * (vz.x - vy.x) + 0x800) >> 12);
-  if ((int) ((((long long) vx.x) * vx.x + 0x800) >> 12)
-      + (int) ((((long long) vx.y) * vx.y + 0x800) >> 12)
-      + (int) ((((long long) vx.z) * vx.z + 0x800) >> 12) == 0)
-    return;
-  vz.x = (int) ((((long long) vx.y) * (vy.z - vx.z) + 0x800) >> 12)
-       - (int) ((((long long) vx.z) * (vy.y - vx.y) + 0x800) >> 12);
-  vz.y = (int) ((((long long) vx.z) * (vy.x - vx.x) + 0x800) >> 12)
-       - (int) ((((long long) vx.x) * (vy.z - vx.z) + 0x800) >> 12);
-  vz.z = (int) ((((long long) vx.x) * (vy.y - vx.y) + 0x800) >> 12)
-       - (int) ((((long long) vx.y) * (vy.x - vx.x) + 0x800) >> 12);
-  if ((int) ((((long long) vz.x) * vz.x + 0x800) >> 12)
-      + (int) ((((long long) vz.y) * vz.y + 0x800) >> 12)
-      + (int) ((((long long) vz.z) * vz.z + 0x800) >> 12) == 0)
-    return;
+  vx.x = FX_MUL(vy.y, (vz.z - vy.z)) - FX_MUL(vy.z, (vz.y - vy.y));
+  vx.y = FX_MUL(vy.z, (vz.x - vy.x)) - FX_MUL(vy.x, (vz.z - vy.z));
+  vx.z = FX_MUL(vy.x, (vz.y - vy.y)) - FX_MUL(vy.y, (vz.x - vy.x));
+  if (FX_MUL(vx.x, vx.x) + FX_MUL(vx.y, vx.y) + FX_MUL(vx.z, vx.z) == 0)
+      return;
+  vz.x = FX_MUL(vx.y, (vy.z - vx.z)) - FX_MUL(vx.z, (vy.y - vx.y));
+  vz.y = FX_MUL(vx.z, (vy.x - vx.x)) - FX_MUL(vx.x, (vy.z - vx.z));
+  vz.z = FX_MUL(vx.x, (vy.y - vx.y)) - FX_MUL(vx.y, (vy.x - vx.x));
+  if (FX_MUL(vz.x, vz.x) + FX_MUL(vz.y, vz.y) + FX_MUL(vz.z, vz.z) == 0)
+      return;
 
   NormalizeVec3(&vz, &vz);
-  dst[6] = (int) ((((long long) vz.x) * len + 0x800) >> 12);
-  dst[7] = (int) ((((long long) vz.y) * len + 0x800) >> 12);
-  dst[8] = (int) ((((long long) vz.z) * len + 0x800) >> 12);
+  dst[6] = FX_MUL(vz.x, len);
+  dst[7] = FX_MUL(vz.y, len);
+  dst[8] = FX_MUL(vz.z, len);
 
-  dst[9] = m0[9] + (int) ((((long long) t) * (m1[9] - m0[9]) + 0x800) >> 12);
-  dst[10] = m0[10] + (int) ((((long long) t) * (m1[10] - m0[10]) + 0x800) >> 12);
-  dst[11] = m0[11] + (int) ((((long long) t) * (m1[11] - m0[11]) + 0x800) >> 12);
+  dst[9] = m0[9] + FX_MUL(t, (m1[9] - m0[9]));
+  dst[10] = m0[10] + FX_MUL(t, (m1[10] - m0[10]));
+  dst[11] = m0[11] + FX_MUL(t, (m1[11] - m0[11]));
 }

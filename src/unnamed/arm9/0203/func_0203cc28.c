@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef short s16;
 typedef long long s64;
 
@@ -10,6 +11,6 @@ void func_0203cc28(int *p, int angle)
     int s = data_02082214[a * 2 + 1];
     int x = p[0];
     int z = p[1];
-    p[0] = (int)(((s64)s * x + 0x800) >> 12) - (int)(((s64)c * z + 0x800) >> 12);
-    p[1] = (int)(((s64)c * x + 0x800) >> 12) + (int)(((s64)s * z + 0x800) >> 12);
+    p[0] = FX_MUL(s, x) - FX_MUL(c, z);
+    p[1] = FX_MUL(c, x) + FX_MUL(s, z);
 }

@@ -432,6 +432,18 @@ if(MSVC)
     target_compile_options(smoke_actor PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
+# src/SharedFilePtr.cpp (slice 3b) holds the X::LoadFile(SharedFilePtr&)
+# members of Model, dExtFrameCtrl_c and dBgW_Kc, which call UpdateFileOffsets
+# members only the gate-4b and gate-8 slices carry. The file compiles them on
+# the host only where these say the slice that resolves them is linked.
+foreach(sfp_target IN ITEMS smoke_model smoke_frames smoke_soak smoke_clsn
+        smoke_modelanim smoke_oam smoke_soak_anim smoke_anim smoke_actor)
+    target_compile_definitions(${sfp_target} PRIVATE SM64DS_PORT_GATE4B)
+endforeach()
+foreach(sfp_target IN ITEMS smoke_clsn smoke_actor)
+    target_compile_definitions(${sfp_target} PRIVATE SM64DS_PORT_GATE8)
+endforeach()
+
 if(BUILD_TESTING)
     set(PORT_SMOKE_TARGETS
         smoke

@@ -35,7 +35,7 @@ struct daGmch_c : dActor_c {
        [InitResources, UpdateDrawMatrices] */
     Matrix4x3 mMatrix;      /* 0x3a0 */
     /* Copy of mPosX/Y/Z taken once in InitResources.
-       [_ZN8daGmch_c13InitResourcesEv, now in src/actors/daGmch_c.cpp] */
+       [_ZN8daGmch_c13InitResourcesEv, now in src/game/actors/d_a_gmch.cpp] */
     s32 mSpawnPosX;            /* 0x3d0 */
     s32 mSpawnPosY;            /* 0x3d4 */
     s32 mSpawnPosZ;            /* 0x3d8 */
@@ -64,7 +64,7 @@ struct daGmch_c : dActor_c {
     /* Set to 1 by InitResources. Render draws the animated model when this
        is above 1 and the static model when it is at or below 0x1f, so both
        draw for 2..0x1f and only the animated model draws above 0x1f.
-       [_ZN8daGmch_c13InitResourcesEv, _ZN8daGmch_c6RenderEv, now in src/actors/daGmch_c.cpp] */
+       [_ZN8daGmch_c13InitResourcesEv, _ZN8daGmch_c6RenderEv, now in src/game/actors/d_a_gmch.cpp] */
     /* UpdateState0 also reaches this offset as an `int *` through
        ApproachLinear2, so the four bytes 0x3f0..0x3f3 are read and written as
        one word there and as three separate bytes everywhere else.
@@ -140,7 +140,7 @@ struct daGmch_c : dActor_c {
     void CheckPlayerContact();       /* 0x02126758 */
     /* void* (EPv) is a reconstruction choice; the original parameter type
        and pointer/reference spelling are not recovered from the body. */
-    int  ApplySlopeToVertSpeed(void *clsn); /* 0x02126950 */
+    void ApplySlopeToVertSpeed(void *clsn); /* 0x02126950 */
     void UpdateDrawMatrices();       /* 0x02126a20 */
 
     int Behavior();

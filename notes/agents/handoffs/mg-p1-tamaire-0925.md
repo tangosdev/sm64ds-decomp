@@ -32,11 +32,11 @@ first readability pass: mechanical themes only, no new names, no symbol renames.
 - `Render` includes `include/decl_common.h`, which declares its eight helpers with the same
   `(void*)` parameter, and drops its duplicate local block and the stale comment that said
   the header used empty parameter lists.
-- `OnYoshiTryEat` drops a duplicate declaration of [func_ov006_02103bfc](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 68).
+- `OnYoshiTryEat` drops a duplicate declaration of [func_ov006_02103bfc](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 68).
 - Comments in the six method files and the class header now state what the code does, in
   short form. Each shape the compiler forces carries one short comment naming what it
   forces.
-- The factory `src/d_s_mg_pachinko2.c` is unchanged (R11, R12).
+- The factory `src/minigames/d_s_mg_pachinko2.cpp` is unchanged (R11, R12).
 
 Reserved surfaces touched: the six method files, `include/dScMgPachinko2_c.h` (comments
 only) and this handoff. [config/arm9/overlays/ov006/delinks.txt](../../../config/arm9/overlays/ov006/delinks.txt) and the factory path were
@@ -60,7 +60,7 @@ reserved for the theme-4 move, which did not land.
   Local `namespace` declarations compile to an identical object (see Theme results).
 - **R5, fixed.** `Render`'s local helper declarations duplicated `include/decl_common.h` and
   its comment misdescribed that header.
-- **R6, fixed.** `OnYoshiTryEat` redeclared [func_ov006_02103bfc](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 68) exactly as
+- **R6, fixed.** `OnYoshiTryEat` redeclared [func_ov006_02103bfc](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 68) exactly as
   `include/decl_common.h` does.
 - **R7, deferred (codegen-forced).** `OnYoshiTryEat` reads `unk_0bc` through a const view
   `ro`. Re-measured: `unk_0bc = unk_0bc + 1` grows the function from 0x6c to 0x70 bytes.
@@ -81,7 +81,7 @@ reserved for the theme-4 move, which did not land.
   `new dScMgPachinko2_c` emits exactly that call. The brief leaves the factory as it is
   when theme 4 does not land, so the banner waits for the pass that moves the factory.
 - **R13, deferred (theme 8).** `Behavior` cannot include `include/decl_common.h`: its local
-  declarations of [func_ov006_02100084](../../../src/actors/dScMgPachinko_c.cpp)(ROM Ordinal 13), [func_ov006_021024e0](../../../src/actors/dScMgPachinko_c.cpp)(ROM Ordinal 45), [func_ov006_020fffec](../../../src/actors/dScMgPachinko_c.cpp)(ROM Ordinal 11) and
+  declarations of [func_ov006_02100084](../../../src/minigames/d_s_mg_pachinko.cpp)(ROM Ordinal 13), [func_ov006_021024e0](../../../src/minigames/d_s_mg_pachinko.cpp)(ROM Ordinal 45), [func_ov006_020fffec](../../../src/minigames/d_s_mg_pachinko.cpp)(ROM Ordinal 11) and
   [func_ov004_020b0a54](../../../src/minigames/d_s_mg_base.cpp)(ROM Ordinal 17) take `void *`, and the header's take `char *` or `int`. mwccarm
   rejects the include with "illegal function overloading" on those four lines. The call
   `func_ov004_020b0a54((void *)0x10)` keeps its cast for the same reason.
@@ -132,7 +132,7 @@ cartridge dump. The commit after it adds only this file.
 - **Baseline, before any edit.** `python tools/rombuild.py -j8 --no-rom`: exit 0,
   7,069 enrolled sources, all compiled (0 reused), 11,214 of 11,214 source-built functions
   reproducing, 0 mismatching, 106 of 106 modules exact. The seven batch objects, and later
-  the header's other consumer [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 60), were copied aside as the base.
+  the header's other consumer [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 60), were copied aside as the base.
 - **Per-edit loop.** After each of six steps (`Behavior`, `InitResources`, `Render`,
   `OnYoshiTryEat`, the two destructor comments, the header) `python tools/rombuild.py -j8
   --no-rom` exited 0 with 11,214 of 11,214 reproducing and 106 of 106 modules exact, and
@@ -140,7 +140,7 @@ cartridge dump. The commit after it adds only this file.
   Each step was also compared object against object; every step was identical.
 - **No tubuild verify.** This batch has no TU; its sources are one-function files.
 - **Object comparison** (pyelftools, base against candidate, the build's objects): all
-  eight objects (six methods, the factory, [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)) are identical in every
+  eight objects (six methods, the factory, [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)) are identical in every
   section's bytes, in relocations by (offset, type, symbol, addend), and in defined and
   undefined symbol sets. The object files are also identical as whole files: each
   candidate SHA256 equals its base, for example `8ef99cfc...a6ac15` for `Behavior` and
@@ -197,7 +197,7 @@ count rises where raw offsets became the header's `unk_` field names.
 | `src/_ZN16dScMgPachinko2_c8BehaviorEv.cpp` | 73 to 71 | 36 to 36 | 0 to 7 | 1 to 1 | 1 to 1 | 0 to 0 | 1 to 0 |
 | `src/_ZN16dScMgPachinko2_cD0Ev.cpp` | 9 to 7 | 0 to 0 | 0 to 0 | 1 to 1 | 0 to 0 | 0 to 0 | 0 to 0 |
 | `src/_ZN16dScMgPachinko2_cD1Ev.cpp` | 10 to 7 | 0 to 0 | 0 to 0 | 1 to 1 | 0 to 0 | 0 to 0 | 0 to 0 |
-| `src/d_s_mg_pachinko2.c` | 27 to 27 | 0 to 0 | 0 to 0 | 2 to 2 | 0 to 0 | 0 to 0 | 0 to 0 |
+| `src/minigames/d_s_mg_pachinko2.cpp` | 27 to 27 | 0 to 0 | 0 to 0 | 2 to 2 | 0 to 0 | 0 to 0 | 0 to 0 |
 | `include/dScMgPachinko2_c.h` | 71 to 66 | 2 to 2 | 10 to 10 | 0 to 0 | 2 to 0 | 0 to 0 | 0 to 0 |
 
 ## Changed paths

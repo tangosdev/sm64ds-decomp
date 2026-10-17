@@ -192,7 +192,7 @@
       "slot": 17
     },
     "emission_order": "D1 first at 0x02126504, then D0 at 0x02126554, and they are the FIRST two functions of the text run.",
-    "shape": "D0 does NOT call D1 -- it inlines D1's whole body and then deletes. Both store the vtable address point 0x02128c04 into this+0, then destroy the five members in reverse construction order, then call _ZN8dActor_cD2Ev (0x020112c8). D0 additionally loads a Heap* from [0x020a0eac] and tail-calls _ZN6Memory10DeallocateEPvP4Heap (0x0203c1e8).",
+    "shape": "D0 does NOT call D1 -- it inlines D1's whole body and then deletes. Both store the vtable address point 0x02128c04 into this+0, then destroy the five members in reverse construction order, then call _ZN8dActor_cD2Ev (0x020112c8). D0 additionally loads a Heap* from [0x020a0eac] and tail-calls _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE (0x0203c1e8).",
     "member_destruction_order": "0x1e4 _ZN10dBgCh_ActrD1Ev, 0x1b0 _ZN7dCcAc_cD1Ev, 0x188 _ZN11ShadowModelD1Ev, 0x138 _ZN5ModelD1Ev, 0xd4 _ZN9ModelAnimD1Ev -- exactly the reverse of the factory's construction order, which is the second independent witness for the field layout."
   },
   "size": "0x3f4",

@@ -24,9 +24,9 @@
 #include "dScMgD3DBase_c.h"
 
 extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void *func_ov006_020ccfc8(void);
-extern "C" void func_ov006_020d1008(void);
-extern "C" void func_ov006_02120938(void);
+extern "C" void *Trmp3DMario_Destruct(void);
+extern "C" void TrmpLine_Destroy(void);
+extern "C" void Trmp_Nothing(void);
 
 /* The flashing mark on the lit door, 0xc bytes at 0x5d84. */
 struct dScMgTrampoline_DoorMark {
@@ -36,7 +36,7 @@ struct dScMgTrampoline_DoorMark {
     s32 shown;          /* 0x08 -- toggles with timer / 10 */
 
     void Init();               /* ov006 0x02120a54 -- the factory's clear */
-    void Hide();               /* ov006 0x02120a44 -- OnYoshiTryEat's reset */
+    void Hide();               /* ov006 0x02120a44 -- StartRound's reset */
     void Show(int side);       /* ov006 0x02120a18 -- starts the blink */
     void Update();             /* ov006 0x021209ac -- ticks it */
     void Render(int scrollY);  /* ov006 0x0212093c -- draws it when shown */
@@ -50,21 +50,21 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        A virtual destructor is still reached through the vtable, not inlined
        into callers. */
     virtual ~dScMgTrampoline_c() {
-        __cxa_vec_cleanup(mArray3, 5, 0x24, (void *)func_ov006_02120938);
-        __cxa_vec_cleanup(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
-        __cxa_vec_cleanup(mArray1, 4, 0xd0, (void *)func_ov006_020ccfc8);
+        __cxa_vec_cleanup(mArray3, 5, 0x24, (void *)Trmp_Nothing);
+        __cxa_vec_cleanup(mArray2, 3, 0x32c, (void *)TrmpLine_Destroy);
+        __cxa_vec_cleanup(mArray1, 4, 0xd0, (void *)Trmp3DMario_Destruct);
     }
 
     virtual s32 InitResources();     /* slot 0 */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021212e0 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x021214f8 */
     virtual s32 Render();            /* slot 9 -- ov006 0x021212fc */
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
-    virtual int  OnAttacked2();                        /* slot 23 */
-    virtual int  OnKicked();                           /* slot 24 */
-    virtual int  OnPushed();                           /* slot 25 */
-    virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
+    virtual void StartRound(int arg);               /* slot 18 */
+    virtual int  CanEndState(int mode);              /* slot 19 */
+    virtual int  OnGraphCallback0();                        /* slot 23 */
+    virtual int  OnGraphCallback2();                           /* slot 24 */
+    virtual int  OnGraphCallback3();                           /* slot 25 */
+    virtual void PaintSquare(int cx, int cy, int colour, int size); /* slot 34 */
 
     /* State callbacks stored in mState. The PMF descriptors at
        ov006:0x0213faa0..0x0213fad0 show these are no-argument members of
@@ -86,13 +86,13 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     void InitDisplay();      /* ov006 0x0212231c -- loads BG/OBJ screens */
     void InitBrush(int layer); /* ov006 0x02120f18 -- fills the stroke layer */
     s16  GetDoorSide();        /* ov006 0x02121768 */
-    void SetDoorSide(short v); /* ov006 0x02121750 -- mirrors pick to data_ov006_02140538 */
+    void SetDoorSide(short v); /* ov006 0x02121750 -- mirrors pick to sTrmpGoalRow */
 
     u32 mState[2];          /* 0x5004 -- raw eight-byte State encoding; a
                                typed global PMF emits a non-ROM __sinit */
     u8  mArray1[0x340];     /* 0x500c -- 4 * 0xd0; StatePlay launches one */
-    u8  mArray2[0x984];     /* 0x534c -- 3 * 0x32c, elem dtor func_ov006_020d1008 */
-    u8  mArray3[0xb4];      /* 0x5cd0 -- 5 * 0x24 floating scores (Desc) */
+    u8  mArray2[0x984];     /* 0x534c -- 3 * 0x32c, elem dtor TrmpLine_Destroy */
+    u8 mArray3[0xb4];       /* 0x5cd0 -- 5 * 0x24 floating scores (TrmpScorePopup) */
     dScMgTrampoline_DoorMark mDoorMark; /* 0x5d84 */
     int mTimer;             /* 0x5d90 -- countdown gating state transitions */
     s32 mScrollY;           /* 0x5d94 -- approached toward mScrollTargetY by 2 a
@@ -122,7 +122,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     s16 mRoundOver;         /* 0x5dc2 -- set once results clear the screen;
                                Render then skips the playfield */
     u8  mTouching;          /* 0x5dc4 -- a drag is in progress */
-    u8  mTouchReleased;     /* 0x5dc5 -- set on the release edge; OnAttacked2
+    u8  mTouchReleased;     /* 0x5dc5 -- set on the release edge; OnGraphCallback0
                                consumes and clears it after the swipe test */
     u8  pad_5dc6[0x2];      /* 0x5dc6 -- rounds up to the 0x5dc8 boundary */
 };

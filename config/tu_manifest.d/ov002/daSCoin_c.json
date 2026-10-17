@@ -1,8 +1,8 @@
 {
   "id": "ov002/daSCoin_c",
   "module": "ov002",
-  "source": "src/actors/daSCoin_c.cpp",
-  "promoted_source": "src/actors/daSCoin_c.cpp",
+  "source": "src/game/actors/d_a_s_coin.cpp",
+  "promoted_source": "src/game/actors/d_a_s_coin.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

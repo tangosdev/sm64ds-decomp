@@ -89,7 +89,7 @@ struct dScMgLuigi_c : dScMgBase_c {
     virtual void AfterCleanupResources(u32 vfSuccess); /* slot 5 */
     virtual s32 Behavior();               /* slot 6 */
     virtual s32 Render();                 /* slot 9 */
-    virtual void OnYoshiTryEat(int arg);  /* slot 18 */
+    virtual void StartRound(int arg);  /* slot 18 */
 
     /* Non-virtual members, in ROM address order. Each is a member because a
        zero-adjustment pointer-to-member record in ov006 .data names it (the

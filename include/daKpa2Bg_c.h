@@ -16,7 +16,7 @@
  * vtable is gone, and so is the coined `_ZTV18BowserFireSeaArena` line that named
  * 0x0211a8b0 in ov060's symbols.txt.
  *
- * src/actors/daKpa2Bg_c.cpp licenses 0x02117980..0x02117d1c (D1 through
+ * src/game/actors/d_a_kpa2_bg.cpp licenses 0x02117980..0x02117d1c (D1 through
  * InitResources, then daKpa2Bg_c_classInit at 0x02117cdc).
  * InitResources' CLPS pointer is data_ov046_021115bc: of the three daKpa_c level
  * overlays resident with ov060, only ov046's bytes there are a CLPS block
@@ -110,7 +110,7 @@ struct daKpa2Bg_c {
     u8  pad_090[0x44];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [src/actors/daKpa2Bg_c.cpp] */
+       checks. Was a u8 marker. [src/game/actors/d_a_kpa2_bg.cpp] */
     Model mModel1;            /* 0x0d4 */
     dBgW_KcMbg mMovingMeshCollider1;    /* 0x124 */
     u8  pad_2ec[0x32];

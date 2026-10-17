@@ -33,7 +33,7 @@
 struct dFdColor_c : dFdBrightness_c {
     /* 0x0c. Only its zero/non-zero-ness is observed here: AdvanceFade picks a
        blend step of +0x10 when it is set and -0x10 when it is clear. What
-       writes it is dScene_c::StartSceneFade in src/actors/dScene_c.cpp, whose parameter is
+       writes it is dScene_c::StartSceneFade in src/game/stages/d_scene.cpp, whose parameter is
        the fade colour -- which is also the name the upstream reference header
        gives this field, so it is named for that now. */
     u16 color;

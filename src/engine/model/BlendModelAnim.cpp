@@ -13,6 +13,7 @@
    discard. Written back-to-front: mwccarm emits .text in reverse source
    order under default deferred codegen. */
 #include "BlendModelAnim.h"
+#include "Memory.h"
 
 extern "C" {
 /* local extern: no header declares it; blends verts toward the old pose in
@@ -27,9 +28,6 @@ void func_020462b4(int *data, int buf);
 /* defined below -- DoSetFile's tail; it sits between UpdateVerts and
    DoSetFile in the ROM and DoSetFile is its only caller here */
 int func_020165c4(BlendModelAnim *self, char *file);
-/* local extern: decl_common.h's copy is the same mangled spelling; no
-   namespace-Memory header declares operator_new2 */
-void *_ZN6Memory13operator_new2Ej(u32 size);
 /* SetAnim below and its SetAnimation call keep their mangled spellings:
    wall 6az (notes/mwccarm-codegen.md) homes class-typed by-value
    parameters that a body reads, and the real signature carries
@@ -64,7 +62,7 @@ int BlendModelAnim::DoSetFile(char *file, int a, int b)
 // @symbol func_020165c4
 extern "C" int func_020165c4(BlendModelAnim *self, char *file)
 {
-    self->unk_6c = _ZN6Memory13operator_new2Ej(func_020462bc((int *)file));
+    self->unk_6c = Memory::operator_new2(func_020462bc((int *)file));
     void *p = self->unk_6c;
     if (p == 0) return 0;
     func_020462b4((int *)&self->data, (int)p);

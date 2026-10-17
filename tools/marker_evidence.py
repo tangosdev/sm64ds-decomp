@@ -710,7 +710,7 @@ def scan_local_layout(code, cls, origin, path):
     Named by class, not by path, on purpose: check_dead_references resolves any
     `a/b`-shaped token in prose as a live repo-rooted reference, and the file
     this came from is a per-symbol one -- those die on rename AND on TU
-    promotion, which folds them into src/actors/<Class>.cpp.
+    promotion, which folds them into the class's one TU under src/game/.
     """
     texts = EH.find_struct_texts(code)
     if cls not in texts:

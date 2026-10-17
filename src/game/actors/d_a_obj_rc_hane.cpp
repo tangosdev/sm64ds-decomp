@@ -69,6 +69,11 @@
  * data_ov036_02114070 as a bare char[], which contradicts the SharedFilePtr
  * this TU (and the cartridge) actually uses. Everything this file needs from
  * it is declared explicitly below. */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_rc_hane_AssetId {
+    ASSET_RC_HANE_BMD = 0x06a6
+};
+
 #include "common.h"
 #include "daObjRc_Hane_c.h"
 #include "Model.h"
@@ -204,7 +209,7 @@ s32 daObjRc_Hane_c::Behavior()
        the low bits either way. */
     if (mPlaySound != 0) {
         if (mFrame == 0x40) {
-            Sound::PlayBank3(0x75, *(const Vector3 *)&mCamSpacePosX);
+            Sound::PlayBank3(0x75, mCamSpacePos);
             mFrame = 0;
         }
     }
@@ -281,4 +286,4 @@ s32 daObjRc_Hane_c::CleanupResources()
  */
 
 /* File 1702. The compiler registers func_02017ab4 beside the object. */
-RcHaneModelFilePtr data_ov036_02114070(1702);
+RcHaneModelFilePtr data_ov036_02114070(ASSET_RC_HANE_BMD);

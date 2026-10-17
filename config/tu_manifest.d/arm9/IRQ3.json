@@ -4,73 +4,74 @@
   "source": "src/IRQ3.cpp",
   "promoted_source": "src/IRQ3.cpp",
   "status": "promoted",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "contiguous linker run: 0x02059cb4..0x02059d74, 6 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
-    "TOP EDGE: func_02059c18 (0x02059c18..0x02059cb4) ends exactly where the run begins -- an unattributed helper outside the IRQ CPSR family. BOTTOM EDGE: ARMProcessorMode (0x02059d74..0x02059d80) begins exactly where the run ends -- processor-mode setup, not an IRQ primitive.",
-    "NAMESPACE-LOCAL COMPLETE: the run is every IRQ CPSR primitive (Enable/Disable/Restore/DisableAll/RestoreAll) plus the IRQ-state init helper below them; the other `_ZN3IRQ*` functions live in separate runs (e.g. the run at 0x02056c40) -- a TU claims one contiguous .text span, so they cannot fold here."
-  ],
+  "boundary_confidence": "medium",
+  "boundary_evidence": "Assembly-only compiler input 0x02059d08..0x02059d8c: the SDK os_system.c CPU-state primitives (OS_EnableIrq/DisableIrq/RestoreIrq, the IRQ+FIQ pair, OS_GetProcMode as ARMProcessorMode, OS_Halt as CP15::WaitForInterrupt). The adjacent ordinary C helpers were separated for host compilation (issue #3877). Bottom edge 0x02059d8c is func_02059d8c (OS_SpinWait, subs/bhs carry loop), an unenrolled asm hatch (notes/archive/func_02059d8c-asm-origin.md), followed by the register-clobbering zero-fill func_02059d98; both stay out. This boundary is a production packaging decision, not proof of the original Nintendo translation unit.",
   "sections": [
     {
       "name": ".text",
-      "start": "0x02059cb4",
-      "end": "0x02059d74"
+      "start": "0x02059d08",
+      "end": "0x02059d8c"
     }
   ],
   "functions": [
-    {
-      "symbol": "func_02059cb4",
-      "address": "0x02059cb4",
-      "size": "0x00000054",
-      "legacy_source": "src/unnamed/arm9/0205/func_02059cb4.c",
-      "ordinal": 0
-    },
     {
       "symbol": "_ZN3IRQ6EnableEv",
       "address": "0x02059d08",
       "size": "0x00000014",
       "legacy_source": "src/_ZN3IRQ6EnableEv.cpp",
-      "ordinal": 1
+      "ordinal": 0
     },
     {
       "symbol": "_ZN3IRQ7DisableEv",
       "address": "0x02059d1c",
       "size": "0x00000014",
       "legacy_source": "src/_ZN3IRQ7DisableEv.cpp",
-      "ordinal": 2
+      "ordinal": 1
     },
     {
       "symbol": "_ZN3IRQ7RestoreEj",
       "address": "0x02059d30",
       "size": "0x00000018",
       "legacy_source": "src/_ZN3IRQ7RestoreEj.cpp",
-      "ordinal": 3
+      "ordinal": 2
     },
     {
       "symbol": "_ZN3IRQ10DisableAllEv",
       "address": "0x02059d48",
       "size": "0x00000014",
       "legacy_source": "src/_ZN3IRQ10DisableAllEv.cpp",
-      "ordinal": 4
+      "ordinal": 3
     },
     {
       "symbol": "_ZN3IRQ10RestoreAllEj",
       "address": "0x02059d5c",
       "size": "0x00000018",
       "legacy_source": "src/_ZN3IRQ10RestoreAllEj.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "ARMProcessorMode",
+      "address": "0x02059d74",
+      "size": "0x0000000c",
+      "legacy_source": "src/ARMProcessorMode.c",
       "ordinal": 5
+    },
+    {
+      "symbol": "_ZN4CP1516WaitForInterruptEv",
+      "address": "0x02059d80",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN4CP1516WaitForInterruptEv.cpp",
+      "ordinal": 6
     }
   ],
   "data": [],
   "bss": [],
   "compiler_only_output": [],
   "notes": [
-    "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
-    "IRQ CPSR primitives plus the IRQ-state init helper. The file name is the tree class name plus the numeric suffix style already used in the tree, per Juan 2026-10-11 (night-queue new-file job E13).",
-    "`#pragma defer_codegen off` makes mwccarm emit .text in source order: without it the hand-asm primitives emit eagerly while the C helper flushes at the end of the TU, so no source order reproduces the ROM order. The definitions run ROM-ascending and the address-named helper keeps C linkage under its existing name at its address position.",
-    "The address-named helper keeps C linkage under its existing name at its address position. The combined TU verifies under the default 2004/b56 pin, like the shards did."
+    "Ordinary C helpers now have standalone production inputs. previous_verification describes the unsplit TU at previous_verification_base; it is historical evidence only.",
+    "LOWER EXTENSION (2026-10-16): ARMProcessorMode (0x02059d74) and CP15::WaitForInterrupt (0x02059d80) folded in; both are hand-asm CPU-state primitives with no C helper to separate."
   ],
-  "verification": {
+  "previous_verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
@@ -163,6 +164,29 @@
         "matchesStockRom": true
       },
       "linkerOutput": null
+    }
+  },
+  "previous_verification_base": "af21ea68d359d1aee18f3ff5a6ac51f7dfadc921",
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-IRQ3/IRQ3.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
     }
   }
 }

@@ -11,7 +11,7 @@
     "class label(s): daObjFlMaruta_c (spelled daObjFlMaruta_c in this tree), daObj_volcanoCannon_c",
     "the two classes interleave and so cannot be separate translation units: daObjFlMaruta_c's vtable at ov022 0x021143a4 owns slot 32 -> 0x021126ac and slot 34 -> 0x02112710, both of which sit between daObj_volcanoCannon_c's D0 at 0x02112610 and its ChangeState at 0x02112790. A translation unit is a contiguous address run, so the two runs overlap and neither class can be carved out alone.",
     "build/tu_map.json cuts a TU boundary at 0x021125e0 that this fold does not honour. That cut is an artifact of the class being known under two spellings: tu_map's union-find over overlapping class spans compares the vtable name _ZTV15daObjFlMaruta_c against the RTTI name daObjFlMaruta_c as if they were two classes, so it never merges the two runs.",
-    "the preceding TU, src/game/actors/daObjFl_Fall_Block_c.cpp, is already promoted and ends at 0x02112498, which fixes this TU's lower bound",
+    "the preceding TU, src/game/actors/d_a_obj_fl_fall_block.cpp, is already promoted and ends at 0x02112498, which fixes this TU's lower bound",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
   ],
   "sections": [

@@ -23,7 +23,7 @@
  *     mActive          0x32a
  *     mTouchedKoopa    0x32b  set by func_ov060_021183cc when the other actor is 0x117
  *
- * src/actors/daKpa3Bg_c.cpp licenses 0x02117d1c..0x02118438: D1 through
+ * src/game/actors/d_a_kpa3_bg.cpp licenses 0x02117d1c..0x02118438: D1 through
  * InitResources, then func_ov060_021183cc, its collider veneer
  * func_ov060_021183f4 and daKpa3Bg_c_classInit at 0x02118408. The factory
  * (historical alias BowserSkyPlatform_Spawn) installs _ZTV10daKpa3Bg_c for

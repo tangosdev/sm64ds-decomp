@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step)
 {
     int cur = *ptr;
@@ -5,7 +6,7 @@ int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step)
     int d;
     if (cur != target) {
         int diff = target - cur;
-        v = (int)(((long long)diff * rate + 0x800) >> 12);
+        v = FX_MUL(diff, rate);
         if (v >= step || v <= -step) {
             if (v > limit) v = limit;
             if (v < -limit) v = -limit;

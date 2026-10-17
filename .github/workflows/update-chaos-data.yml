@@ -26,6 +26,15 @@ on:
       # percentage and must republish. The LINKED stamp needs no line of its own:
       # config/** already covers config/port_linkage.json.
       - "tools/tiers.py"
+      # demangle.py decides `class` on every record and the real_name criterion of CONVERTED.
+      - "tools/demangle.py"
+      - "tools/treemap.py"
+      - "tools/tu_treemap.py"
+      - "tools/tu_treemap.html"
+      - "tools/tu_manifest.py"
+      - "tools/rombuild_check.py"
+      - "tools/relocs.py"
+      - ".github/workflows/update-chaos-data.yml"
       - "function-authors.json"
       # include/** and tools/langmode_audit.py are here for the langmode re-bank below,
       # which reads both; neither feeds chaos-db. The baseline itself is not listed
@@ -157,19 +166,21 @@ jobs:
         run: python tools/tiers.py --write-readme --from-db _chaos_data/chaos-db.json
       - name: Regenerate treemap (README SVG + Pages HTML)
         run: python tools/treemap.py --from-db _chaos_data/chaos-db.json --out docs/index.html --svg docs/progress-treemap.svg
+      - name: Regenerate recovered TU treemap
+        run: python tools/tu_treemap.py --from-db _chaos_data/chaos-db.json --out docs/tu-treemap.html
       - name: Commit progress refresh if changed
         # README bar + treemap + contributions in ONE commit, to keep the #github channel
         # from filling with a separate refresh commit per generated file.
         # safe from retrigger loops: no workflow watches README.md, docs/**, or contributions.json
         # on push. config/** is the one watched path here, which is what [skip ci] covers.
         run: |
-          if git diff --quiet -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
+          if git diff --quiet -- README.md docs/index.html docs/tu-treemap.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
             echo "progress unchanged"; exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           base=$(git rev-parse HEAD)
-          git add README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl
+          git add README.md docs/index.html docs/tu-treemap.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl
           # [skip ci] is load-bearing since the push moved to a deploy key. A GITHUB_TOKEN
           # push never triggers workflows, so this commit used to be inert; a deploy-key
           # push is an ordinary push and does trigger them. Without the marker this commit
@@ -185,7 +196,7 @@ jobs:
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
             git fetch -q origin main
-            if ! git diff --quiet "$base" FETCH_HEAD -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
+            if ! git diff --quiet "$base" FETCH_HEAD -- README.md docs/index.html docs/tu-treemap.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
               echo "another refresh already landed these files - standing down"; exit 0
             fi
             echo "main moved under the refresh push - retrying (attempt $attempt)"

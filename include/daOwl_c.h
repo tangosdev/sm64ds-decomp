@@ -6,7 +6,7 @@
 /* The owl actor (ROM RTTI name daOwl_c, registry profile OWL). It hovers near
  * a perch, talks to the player when approached, and afterwards can pick the
  * player up and carry it (the carry state pins the actor to the rider's
- * matrix). Five states drive it; see the table in daOwl_c.cpp.
+ * matrix). Five states drive it; see the table in d_a_owl.cpp.
  *
  * Derives from dEnemyBase_c, and the class's own destructor is what proves it:
  * `_ZN7daOwl_cD1Ev` stores this vtable, destroys the four members below in
@@ -71,7 +71,7 @@ struct daOwl_c : dEnemyBase_c {
     s32 mAnchorZ;                     /* 0x3e0 */
     u8  mOpacity;                     /* 0x3e4 -- 0..0x1f, passed to ApplyOpacity */
     u8  pad_3e5[3];
-    s32 unk_3e8;                      /* 0x3e8 -- per-state scratch, see daOwl_c.cpp */
+    s32 unk_3e8;                      /* 0x3e8 -- per-state scratch, see d_a_owl.cpp */
     s16 mWanderAngleY;                /* 0x3ec -- heading the hover state steers to */
     u8  pad_3ee[2];
     Fix12i mAnimSpeed;                /* 0x3f0 -- copied into mModelAnim.speed */

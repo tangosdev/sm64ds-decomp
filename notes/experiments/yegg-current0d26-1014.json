@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "task_id": "yegg-current0d26-composition1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3847",
+  "candidate": "this commit",
+  "completion": "partial",
+  "formal_acceptance": false,
+  "actual_composition_producer": "Codex /root, codex-yegg-current0d26-root-producer1014",
+  "actual_four_field_source_author": "Codex /root, codex-yegg-coin-fields-root-producer1014",
+  "protocol_ancestral_base": "92ad0fdcf0639c56181648c022a8a1d2659ade74",
+  "tested_current_base": "0d26d45d7d579f3db3a6d554f73589737149349b",
+  "accepted_input": "0675025a442441bc91bf73c62d850e83246217de",
+  "mechanical_merge_checkpoint": "d5f7d1a615677f54a2834136182e2dc85071a980",
+  "change": "Compose already accepted Yegg with current main after external Menbo merge. Add only this evidence report; preserve exact Yegg Source, manifest, matching credit and prior reports.",
+  "composition_proof": {
+    "head": "d5f7d1a615677f54a2834136182e2dc85071a980",
+    "source_input": "0675025a442441bc91bf73c62d850e83246217de",
+    "protocol_ancestral_base": "92ad0fdcf0639c56181648c022a8a1d2659ade74",
+    "tested_current_base": "0d26d45d7d579f3db3a6d554f73589737149349b",
+    "imported_main_paths_exact": [
+      "config/tu_manifest.d/ov090/daMenbo_c.json",
+      "notes/agents/handoffs/pr2994-provenance-repair-0923.md",
+      "src/game/actors/d_a_menbo.cpp"
+    ],
+    "all_other_tracked_blobs_literal_prior": true,
+    "yegg_source_manifest_literal_accepted0675": true,
+    "include_tools_port_trees_literal": true,
+    "fresh_menbo_raw_normal_literal_prior_control": true,
+    "menbo_raw_sha256": "e3eead17c51a61bfc0e9c7cc8a3bbe8b73b0e4428292bc309cb2818ae2c748e2",
+    "menbo_normal_sha256": "ba4f36d1f61139054818722238cf30dc9265ed52787f58d1754533d73ea9d4b6",
+    "accepted_yegg_raw_sha256": "4de153a42bbcbff442d2c18fe506070a6e1bae7dfc93db59930a9b4105f51cc6",
+    "accepted_yegg_normal_sha256": "33fd40a6f29cb17567214b6aca43e0919276042e0b93fd0b191ca9ed32c66620",
+    "actual_full_build_source_checkpoint": "ce13e453168718de1aa8b2bdfe7b8bbf22cd038c",
+    "full_build_transfer": "Previous actual106/11334 build at ce13; all later build inputs unchanged except Menbo Source/MF prose. Fresh complete Menbo RAW and ordinary object are literal; same physical pool, metadata and typed references. Menbo import exact externally merged currentmain. No new full global build claimed.",
+    "production_trees": {
+      "src": "e80a88bb5c6ff98cb9d8f3ccd4da764a9eb4c47a",
+      "include": "d996ee1a84869ec357c253949d092d7e275c80a4",
+      "config": "3b8276660aeaf6eb0b83ffa19c3c45e67d6b1794",
+      "tools": "fe80573092c00318ea9a7230c9ab65eb1165f76d",
+      "port": "e8de3a79dcca33cce401d217cc28703313c8539b"
+    }
+  },
+  "composition_proof_sha256": "e51a9f9ecd944dc31e352888972d7f79afb58bebfd534c613fa47392f8f4c8e2",
+  "accepted_yegg_evidence": {
+    "task": "yegg-coin-fields1014",
+    "commit": "0675025a442441bc91bf73c62d850e83246217de",
+    "independent_reviewer": "codex-yegg-coin-fields-independent-fresh1014",
+    "functions": 34,
+    "different_words": 0,
+    "blind_relocations": 0,
+    "canonical_metadata_records": 11,
+    "canonical_metadata_bytes": 241,
+    "canonical_metadata_references": 46,
+    "source_manifest_and_dependencies_literal": true,
+    "qualification": "Existing immutable independent acceptance applies to unchanged Yegg input. A new independent current-composition review is still required."
+  },
+  "full_build_qualification": "Previous actual106/11334 build at ce13; all later build inputs unchanged except Menbo Source/MF prose. Fresh complete Menbo RAW and ordinary object are literal; same physical pool, metadata and typed references. Menbo import exact externally merged currentmain. No new full global build claimed.",
+  "inherited_findings": {
+    "YEGG-GROUND-PROVENANCE-01": {
+      "disposition": "fixed",
+      "id": "YEGG-GROUND-PROVENANCE-01",
+      "kind": "provenance",
+      "location": "src/actors/daYegg_c.cpp:57",
+      "reason": "Independent preflight flagged the stale clause before immutable Source checkpoint. Exact294789d/b934 Source removes that clause and explicitly describes real ground lifetime/clsnY and reconstructed actor-interface identifiers. Current Source/report preserve remaining raw offsets rather than presenting entire class complete.",
+      "summary": "Private combined candidate still described the replaced ground clsnY field access as a raw+0x44 read."
+    },
+    "YEGG-RECONSTRUCTION-01": {
+      "disposition": "deferred",
+      "id": "YEGG-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3847",
+      "kind": "reconstruction",
+      "location": "src/actors/daYegg_c.cpp and include/daYegg_c.h",
+      "owner": "codex-yegg-readable-producer1014 and codex-yegg-readable-coordinator1014 reconstruction followup",
+      "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, Player+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free Player-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
+      "summary": "Yegg remains a partial reconstructed class despite three genuine interface/lifetime replacements and intact owned TU storage."
+    }
+  },
+  "source_reconstruction": "Four spawned-coin stores addressed; broader YEGG-RECONSTRUCTION-01 remains deferred/partial as inherited. No new original-name, ABI or complete-class claim.",
+  "final_report_binding": "Final report-only commit must retain all five production trees shown in composition_proof. Exact queue output and tested base are recorded by the supported publication protocol.",
+  "publication": "After distinct actual independent review, update existing PR3851 normally and check its live Source guard. No merge."
+}

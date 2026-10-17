@@ -12,12 +12,11 @@
  * destructor is at 16/17, NOT 0/1, and vtable+0x40 (which AfterCleanupResources
  * dispatches through) is that D1 destructor, not OnPendingDestroy at slot 12.
  *
- * InitResources is declared here but src/actors/ActorBase.cpp
- * deliberately defines it as an extern "C" free function, because a class's
- * first non-inline virtual is its key function and CW emits the vtable into
- * whichever TU defines it -- colliding with the copy the module's gap object
- * supplies from ROM. Do not "fix" that file into a real method, and do not
- * remove this declaration: removing it deletes slot 0 and shifts all 18.
+ * InitResources is the key function defined in src/runtime/actor/ActorBase.cpp.
+ * Its native definition emits the class RTTI, name and complete vtable.
+ * The ActorBase manifest verifies that metadata before externalizing it to
+ * the existing canonical ROM storage. Keep this declaration in slot 0:
+ * removing it would shift the other seventeen slots.
  *   0x02043444  is the real start: _ZN7fBase_cnwEj, this class's own
  *               operator new (size 0x50, discussed further down this file).
  *               The old 0x02043494 began at OnHeapCreated and excluded it.
@@ -43,11 +42,11 @@
    exactly as include/decl_common.h and include/dActor_c.h spell them -- the
    honest Heap* second parameter would put two incompatible extern "C"
    declarations of one name in a single TU, which mwcc rejects. */
-extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
 extern "C" void *data_020a0eac;
 /* ROM body of fBase_c::operator new(unsigned) — mangled _ZN7fBase_cnwEj.
    CW will not accept that signature as an in-class operator new (first
-   parameter is not size_t). Defined in src/actors/ActorBase.cpp. */
+   parameter is not size_t). Defined in src/runtime/actor/ActorBase.cpp. */
 extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct fBase_c {
@@ -174,7 +173,7 @@ struct fBase_c {
        This inline overload reaches only fBase_c and dBase_c --
        CW inlines it from the class itself or its IMMEDIATE base -- which is why
        include/dActor_c.h carries its own copy. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
 };
 
 #else

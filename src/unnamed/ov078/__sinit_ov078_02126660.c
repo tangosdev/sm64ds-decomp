@@ -1,3 +1,20 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov078_02126660_AssetId {
+    ASSET_BOMBKING_DAMAGE_BCA = 0x02bb,
+    ASSET_BOMBKING_GETUP_BCA = 0x02bc,
+    ASSET_BOMBKING_JUMP_BCA = 0x02bd,
+    ASSET_BOMBKING_JUMPED_BCA = 0x02be,
+    ASSET_BOMBKING_LIFT_BCA = 0x02bf,
+    ASSET_BOMBKING_START_BCA = 0x02c0,
+    ASSET_BOMBKING_STRUGGLE_BCA = 0x02c1,
+    ASSET_BOMBKING_THROW_BCA = 0x02c2,
+    ASSET_BOMBKING_WAIT1_BCA = 0x02c3,
+    ASSET_BOMBKING_WAIT2_BCA = 0x02c4,
+    ASSET_BOMBKING_WALK1_BCA = 0x02c5,
+    ASSET_BOMBKING_WALK2_BCA = 0x02c6,
+    ASSET_BOMB_KING_BMD = 0x02c7
+};
+
 extern int func_02017acc(void*, int);
 extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
@@ -98,31 +115,31 @@ extern struct P2 data_ov078_02126d58;
 
 void __sinit_ov078_02126660(void)
 {
-    func_02017acc(&data_ov078_02126f38, 0x2c7);
+    func_02017acc(&data_ov078_02126f38, ASSET_BOMB_KING_BMD);
     func_020731dc(&data_ov078_02126f38, (void*)&func_02017ab4, (void**)&data_ov078_02126f48);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f00, 0x2bc);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f00, ASSET_BOMBKING_GETUP_BCA);
     func_020731dc(&data_ov078_02126f00, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f54);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f20, 0x2bb);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f20, ASSET_BOMBKING_DAMAGE_BCA);
     func_020731dc(&data_ov078_02126f20, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f60);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f10, 0x2bd);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f10, ASSET_BOMBKING_JUMP_BCA);
     func_020731dc(&data_ov078_02126f10, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f6c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f08, 0x2be);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f08, ASSET_BOMBKING_JUMPED_BCA);
     func_020731dc(&data_ov078_02126f08, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f78);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f18, 0x2bf);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f18, ASSET_BOMBKING_LIFT_BCA);
     func_020731dc(&data_ov078_02126f18, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f84);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ee0, 0x2c1);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ee0, ASSET_BOMBKING_STRUGGLE_BCA);
     func_020731dc(&data_ov078_02126ee0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f90);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ef0, 0x2c2);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ef0, ASSET_BOMBKING_THROW_BCA);
     func_020731dc(&data_ov078_02126ef0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f9c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f40, 0x2c3);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f40, ASSET_BOMBKING_WAIT1_BCA);
     func_020731dc(&data_ov078_02126f40, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fa8);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f30, 0x2c4);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f30, ASSET_BOMBKING_WAIT2_BCA);
     func_020731dc(&data_ov078_02126f30, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fb4);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ee8, 0x2c5);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ee8, ASSET_BOMBKING_WALK1_BCA);
     func_020731dc(&data_ov078_02126ee8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fc0);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f28, 0x2c6);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f28, ASSET_BOMBKING_WALK2_BCA);
     func_020731dc(&data_ov078_02126f28, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fcc);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ef8, 0x2c0);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ef8, ASSET_BOMBKING_START_BCA);
     func_020731dc(&data_ov078_02126ef8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fd8);
 
     data_ov078_0212711c.x = 0x2c000;

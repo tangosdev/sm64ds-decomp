@@ -1,14 +1,14 @@
 {
   "id": "ov006/unit020cd744",
   "module": "ov006",
-  "source": "src/actors/unit020cd744.cpp",
-  "promoted_source": "src/actors/unit020cd744.cpp",
+  "source": "src/minigames/unit020cd744.cpp",
+  "promoted_source": "src/minigames/unit020cd744.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "Lower edge 0x020cd744: the previous linker unit (tu_map) is the promoted dMgTrmpln2Mario_c TU, whose .text ends exactly there.",
     "Upper edge 0x020d1018: the next function is _ZN12dScMgAmida_cD1Ev, the first member of the promoted dScMgAmida_c TU, enrolled at src/_ZN12dScMgAmida_cD1Ev.cpp; tu_map ends this unit there.",
-    "59 functions, contiguous, every one a one-function shard that byte-matched on its own (func_ov006_020cf2fc last, 2026-10-02); no gaps inside 0x020cd744..0x020d1018.",
+    "59 functions, contiguous, every one a one-function shard that byte-matched on its own (TrmpLine_Draw last, 2026-10-02); no gaps inside 0x020cd744..0x020d1018.",
     "Data is not exclusive to this unit: the run reads the Mario TU's globals at 0x021405a8..0x021405b4 and the score words 0x02140818/0x02140828/0x02140830 that d_s_mg_trampoline2 also uses, plus its own bss 0x02140808..0x0214095c and the four 0x32c-byte slots at 0x02140990 (function-local statics with guard words and Vector3 destructor nodes), the texture handles 0x02140814/0x02140844, and rodata/data words in 0x0212e060..0x0212e0f0 and 0x0213b2f4..0x0213b414. Shared globals do not move the .text edge, so the unit is folded text only.",
     "No RTTI, vtable or sinit record separates this run into smaller units, so interior boundaries are unproven and it is folded as the whole tu_map unit, text only."
   ],
@@ -21,413 +21,413 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov006_020cd744",
+      "symbol": "TrmpItem_GrowScale",
       "address": "0x020cd744",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_020cd744.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov006_020cd7b8",
+      "symbol": "TrmpItem_ProjectToScreen",
       "address": "0x020cd7b8",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_020cd7b8.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_020cd864",
+      "symbol": "TrmpItem_MotionSpinHover",
       "address": "0x020cd864",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020cd864.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020cd98c",
+      "symbol": "TrmpItem_SetMotionSpinHover",
       "address": "0x020cd98c",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cd98c.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020cd9b0",
+      "symbol": "TrmpItem_MotionSpinDrift",
       "address": "0x020cd9b0",
       "size": "0x00000120",
       "legacy_source": "src/func_ov006_020cd9b0.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020cdad0",
+      "symbol": "TrmpItem_SetMotionSpinDrift",
       "address": "0x020cdad0",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020cdad0.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020cdaec",
+      "symbol": "TrmpItem_MotionSpinSway",
       "address": "0x020cdaec",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020cdaec.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020cdc14",
+      "symbol": "TrmpItem_SetMotionSpinSway",
       "address": "0x020cdc14",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cdc14.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020cdc38",
+      "symbol": "TrmpItem_MotionHover",
       "address": "0x020cdc38",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_020cdc38.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020cdc68",
+      "symbol": "TrmpItem_SetMotionHover",
       "address": "0x020cdc68",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cdc68.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020cdc8c",
+      "symbol": "TrmpItem_MotionSway",
       "address": "0x020cdc8c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020cdc8c.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020cdce4",
+      "symbol": "TrmpItem_SetMotionSway",
       "address": "0x020cdce4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cdce4.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020cdd08",
+      "symbol": "TrmpItem_MotionSpin",
       "address": "0x020cdd08",
       "size": "0x00000120",
       "legacy_source": "src/func_ov006_020cdd08.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020cde28",
+      "symbol": "TrmpItem_SetMotionSpin",
       "address": "0x020cde28",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cde28.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_020cde4c",
+      "symbol": "TrmpItem_MotionBob",
       "address": "0x020cde4c",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_020cde4c.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020cde7c",
+      "symbol": "TrmpItem_SetMotionBob",
       "address": "0x020cde7c",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cde7c.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov006_020cdea0",
+      "symbol": "TrmpItem_MotionPatrol",
       "address": "0x020cdea0",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov006_020cdea0.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020cdeec",
+      "symbol": "TrmpItem_SetMotionPatrol",
       "address": "0x020cdeec",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_020cdeec.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov006_020cdf1c",
+      "symbol": "TrmpItem_MotionStill",
       "address": "0x020cdf1c",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020cdf1c.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_020cdf20",
+      "symbol": "TrmpItem_SetMotionStill",
       "address": "0x020cdf20",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020cdf20.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020cdf3c",
+      "symbol": "TrmpItem_StateAppear",
       "address": "0x020cdf3c",
       "size": "0x00000170",
       "legacy_source": "src/func_ov006_020cdf3c.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov006_020ce0ac",
+      "symbol": "TrmpItem_StartAppear",
       "address": "0x020ce0ac",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020ce0ac.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov006_020ce108",
+      "symbol": "TrmpItem_ReflectOffLine",
       "address": "0x020ce108",
       "size": "0x00000364",
       "legacy_source": "src/func_ov006_020ce108.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov006_020ce46c",
+      "symbol": "TrmpItem_UpdateWithJumper",
       "address": "0x020ce46c",
       "size": "0x00000208",
       "legacy_source": "src/func_ov006_020ce46c.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov006_020ce674",
+      "symbol": "TrmpItem_HitTest2D",
       "address": "0x020ce674",
       "size": "0x0000022c",
       "legacy_source": "src/func_ov006_020ce674.c",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov006_020ce8a0",
+      "symbol": "TrmpItem_ProjectOnLine",
       "address": "0x020ce8a0",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020ce8a0.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov006_020ce988",
+      "symbol": "TrmpItem_UpdateMatrix",
       "address": "0x020ce988",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_020ce988.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov006_020cea2c",
+      "symbol": "TrmpItem_Update",
       "address": "0x020cea2c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020cea2c.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov006_020ceabc",
+      "symbol": "TrmpItem_Init",
       "address": "0x020ceabc",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov006_020ceabc.c",
       "ordinal": 28
     },
     {
-      "symbol": "func_ov006_020cecb4",
+      "symbol": "TrmpItem_Hide",
       "address": "0x020cecb4",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020cecb4.c",
       "ordinal": 29
     },
     {
-      "symbol": "func_ov006_020cecc0",
+      "symbol": "TrmpItem_Load",
       "address": "0x020cecc0",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020cecc0.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "func_ov006_020ced84",
+      "symbol": "TrmpItem_UpdateMatricesAll",
       "address": "0x020ced84",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020ced84.c",
       "ordinal": 31
     },
     {
-      "symbol": "func_ov006_020cedf0",
+      "symbol": "TrmpItem_UpdateAll",
       "address": "0x020cedf0",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020cedf0.c",
       "ordinal": 32
     },
     {
-      "symbol": "func_ov006_020cee5c",
+      "symbol": "TrmpItem_HideAll",
       "address": "0x020cee5c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020cee5c.c",
       "ordinal": 33
     },
     {
-      "symbol": "func_ov006_020ceedc",
+      "symbol": "TrmpItem_ReleaseFiles",
       "address": "0x020ceedc",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020ceedc.c",
       "ordinal": 34
     },
     {
-      "symbol": "func_ov006_020cef14",
+      "symbol": "TrmpItem_LoadAll",
       "address": "0x020cef14",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020cef14.c",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov006_020cefa4",
+      "symbol": "TrmpItem_Spawn",
       "address": "0x020cefa4",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020cefa4.c",
       "ordinal": 36
     },
     {
-      "symbol": "func_ov006_020cf040",
+      "symbol": "TrmpLine_PointDistance",
       "address": "0x020cf040",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020cf040.c",
       "ordinal": 37
     },
     {
-      "symbol": "func_ov006_020cf124",
+      "symbol": "TrmpLine_ComputeNormals",
       "address": "0x020cf124",
       "size": "0x000001d8",
       "legacy_source": "src/func_ov006_020cf124.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_ov006_020cf2fc",
+      "symbol": "TrmpLine_Draw",
       "address": "0x020cf2fc",
       "size": "0x0000045c",
       "legacy_source": "src/func_ov006_020cf2fc.c",
       "ordinal": 39
     },
     {
-      "symbol": "func_ov006_020cf758",
+      "symbol": "TrmpLine_Update",
       "address": "0x020cf758",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020cf758.cpp",
       "ordinal": 40
     },
     {
-      "symbol": "func_ov006_020cf790",
+      "symbol": "TrmpLine_StateFade",
       "address": "0x020cf790",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_020cf790.c",
       "ordinal": 41
     },
     {
-      "symbol": "func_ov006_020cf804",
+      "symbol": "TrmpLine_SetStateFade",
       "address": "0x020cf804",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020cf804.c",
       "ordinal": 42
     },
     {
-      "symbol": "func_ov006_020cf820",
+      "symbol": "TrmpLine_StateSettle",
       "address": "0x020cf820",
       "size": "0x00000208",
       "legacy_source": "src/func_ov006_020cf820.c",
       "ordinal": 43
     },
     {
-      "symbol": "func_ov006_020cfa28",
+      "symbol": "TrmpLine_SetStateSettle",
       "address": "0x020cfa28",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020cfa28.c",
       "ordinal": 44
     },
     {
-      "symbol": "func_ov006_020cfa44",
+      "symbol": "TrmpLine_StateFlex",
       "address": "0x020cfa44",
       "size": "0x00000214",
       "legacy_source": "src/func_ov006_020cfa44.c",
       "ordinal": 45
     },
     {
-      "symbol": "func_ov006_020cfc58",
+      "symbol": "TrmpLine_SetStateFlex",
       "address": "0x020cfc58",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020cfc58.c",
       "ordinal": 46
     },
     {
-      "symbol": "func_ov006_020cfc74",
+      "symbol": "TrmpLine_PushJumper",
       "address": "0x020cfc74",
       "size": "0x0000056c",
       "legacy_source": "src/func_ov006_020cfc74.c",
       "ordinal": 47
     },
     {
-      "symbol": "func_ov006_020d01e0",
+      "symbol": "TrmpLine_Build",
       "address": "0x020d01e0",
       "size": "0x00000800",
       "legacy_source": "src/func_ov006_020d01e0.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "func_ov006_020d09e0",
+      "symbol": "TrmpLine_DrawAll",
       "address": "0x020d09e0",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov006_020d09e0.c",
       "ordinal": 49
     },
     {
-      "symbol": "func_ov006_020d0ac0",
+      "symbol": "TrmpLine_UpdateAll",
       "address": "0x020d0ac0",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020d0ac0.c",
       "ordinal": 50
     },
     {
-      "symbol": "func_ov006_020d0b04",
+      "symbol": "TrmpLine_ClearAll",
       "address": "0x020d0b04",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020d0b04.c",
       "ordinal": 51
     },
     {
-      "symbol": "func_ov006_020d0b2c",
+      "symbol": "TrmpLine_LoadTextures",
       "address": "0x020d0b2c",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov006_020d0b2c.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "func_ov006_020d0b78",
+      "symbol": "TrmpLine_CreateStartLineT2",
       "address": "0x020d0b78",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020d0b78.c",
       "ordinal": 53
     },
     {
-      "symbol": "func_ov006_020d0bd8",
+      "symbol": "TrmpLine_CreateStartLineT1",
       "address": "0x020d0bd8",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020d0bd8.c",
       "ordinal": 54
     },
     {
-      "symbol": "func_ov006_020d0c38",
+      "symbol": "TrmpLine_Create",
       "address": "0x020d0c38",
       "size": "0x000003ac",
       "legacy_source": "src/func_ov006_020d0c38.c",
       "ordinal": 55
     },
     {
-      "symbol": "func_ov006_020d0fe4",
+      "symbol": "TrmpLine_CleanupAll",
       "address": "0x020d0fe4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020d0fe4.c",
       "ordinal": 56
     },
     {
-      "symbol": "func_ov006_020d1008",
+      "symbol": "TrmpLine_Destroy",
       "address": "0x020d1008",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d1008.c",
       "ordinal": 57
     },
     {
-      "symbol": "func_ov006_020d100c",
+      "symbol": "TrmpLine_Reset",
       "address": "0x020d100c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020d100c.c",
@@ -438,7 +438,7 @@
   "bss": [],
   "notes": [
     "Text-only fold of the whole 0x020cd744..0x020d1018 linker unit; data and bss stay in the ROM image.",
-    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy. func_ov006_020d01e0's frame needs a second four-byte type with a declared destructor (Spare4, local to its namespace block), whose empty destructor is emitted with vague linkage and deadstripped."
+    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy. TrmpLine_Build's frame needs a second four-byte type with a declared destructor (Spare4, local to its namespace block), whose empty destructor is emitted with vague linkage and deadstripped."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -478,12 +478,12 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so this TU re-emits it with vague linkage for the Vector3 locals in func_ov006_020cd864, func_ov006_020cdaec, func_ov006_020ce108, func_ov006_020cfc74 and func_ov006_020d01e0. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN7Vector3D1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so this TU re-emits it with vague linkage for the Vector3 locals in TrmpItem_MotionSpinHover, TrmpItem_MotionSpinSway, TrmpItem_ReflectOffLine, TrmpLine_PushJumper and TrmpLine_Build. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN7Vector3D1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZN9s020d01e06Spare4D1Ev",
       "disposition": "deadstrip",
-      "reason": "func_ov006_020d01e0 reserves one of its two never-written stack slots through a local four-byte type with a declared empty destructor (Spare4 in its namespace block), so mwccarm emits a 4-byte vague-linkage D1 for it beside the licensed text. The cartridge has no copy and no relocation references it."
+      "reason": "TrmpLine_Build reserves one of its two never-written stack slots through a local four-byte type with a declared empty destructor (Spare4 in its namespace block), so mwccarm emits a 4-byte vague-linkage D1 for it beside the licensed text. The cartridge has no copy and no relocation references it."
     }
   ]
 }

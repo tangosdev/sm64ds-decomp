@@ -1,0 +1,758 @@
+{
+  "task": "manta-interfaces1014",
+  "base": "efd33df972c9475494a18548d0248454c0e2668f",
+  "producer": "01a135f6-ffe2-7f12-a948-096399c6745c",
+  "actual_author_thread": "01a135f6-ffe2-7f12-a948-096399c6745c",
+  "coordinator": "codex-manta-interfaces-coordinator1014",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+  "source": "src/actors/daManta_c.cpp",
+  "manifest": "config/tu_manifest.d/ov090/daManta_c.json",
+  "scope": [
+    "src/actors/daManta_c.cpp",
+    "config/tu_manifest.d/ov090/daManta_c.json",
+    "notes/experiments/manta-interfaces1014.json"
+  ],
+  "source_completion": "partial",
+  "change": "Recover two local resource handle layouts and use the typed animation payload directly; remove duplicate MantaFileWord; correct construction/destruction and current ownership prose.",
+  "inherited_findings": [
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-01",
+      "kind": "correctness",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:48",
+      "reason": "This reviewer inspected the complete InitResources body, Animation.h and Animation::LoadFile definition: the shared method and definition both return char*. Model::LoadFile returns void*, while ModelBase::SetFile takes BMD_File*; the explicit conversion respects those implemented interfaces. No local false void-return Animation alias remains. Fresh exact-base complete-object comparison and strict relocated bytes pass.",
+      "summary": "Animation loader call now uses the shared char-pointer return contract."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-02",
+      "kind": "reconstruction",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:44; src/_ZN8MantaRay8BehaviorEv.cpp:88",
+      "reason": "This reviewer inspected both complete methods and the actual Model, ModelBase, Animation, dActor_c and dCc_c declarations/definitions. Model::LoadFile, Animation::LoadFile, mModelAnim.SetFile, UpdatePosWithOnlySpeed and mdCcAcPos_c.Clear/Update use existing member interfaces. Six unnecessary manually mangled aliases are removed. Both functions remain byte-identical, with all 38 relocation slots verified. The separate Init bridge is explicitly retained under finding04.",
+      "summary": "Six unnecessary manually mangled loader/model/movement/collision declarations are removed."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PATHPTR-2729-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "src/_ZN8MantaRay8BehaviorEv.cpp:24-26,48-51",
+      "owner": "codex-integrator-0918",
+      "reason": "Behavior still declares the invented C3 member-pointer owner and padded Obj callback view, and reinterprets the byte field unk_370 as state storage. This reviewer inspected the unchanged MantaRay header, Behavior and func_ov090_02132ac4 definition. Recovering coherent state/member-pointer ownership needs a separately owned reconstruction, not a local cast rename. Explicitly accepted as partial scope under live open issue2750, owner codex-integrator-0918. No measured compiler impossibility is claimed; the Shark observations remain outside this two-method acceptance.",
+      "summary": "Invented C3/Obj callback views and untyped state storage remain in Manta Behavior."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PATHPTR-2729-04",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:30,50-52,56,67-68,74-76; src/_ZN8MantaRay8BehaviorEv.cpp:61-65,72-73,81",
+      "owner": "codex-integrator-0918",
+      "reason": "This reviewer inspected PathPtr signatures, dActor_c position/speed scalar fields and the actual dCcAcPos_c::Init interface/bridge definition. The integer path/node views, scalar-vector overlays and collision Init bridge remain unchanged. They are explicitly accepted as bounded partial reconstruction under live open issue2750, owner codex-integrator-0918, whose scope requires real-declaration experiments and separate shared-header consumer proof. Chomp and other original PR2729 observations are not closed. This disposition does not defer any of the concrete return-contract findings01/05/06.",
+      "summary": "Raw path/node reinterpretations, scalar-field vector views, and collision initialization bridge remain."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-05",
+      "kind": "correctness",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:31; src/func_ov090_02132ac4.cpp:4",
+      "reason": "InitResources now declares func_ov090_02132ac4 with int return. This reviewer inspected its actual definition, which returns 1 or the state callback result. Fresh candidate and base6a complete objects are identical and the 432-byte caller strictly verifies. The opaque state parameter reconstruction remains separately identified by finding03.",
+      "summary": "State-initialization helper declaration now returns int, agreeing with its definition."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-06",
+      "kind": "correctness",
+      "location": "src/_ZN8MantaRay8BehaviorEv.cpp:41; src/_Z14ApproachLinearRsss.cpp:2",
+      "reason": "Behavior now declares ApproachLinear(short&, short, short) with int return. This reviewer inspected the definition, which returns 0/1, and checked the neighboring func_ov090_02132b14 char* and vector-angle const Vector3* definitions. Their corrected scalar/return contracts retain exact complete-object and relocation proof. Remaining pointer/layout views stay explicitly partial under findings03/04.",
+      "summary": "ApproachLinear short-reference overload declaration now returns int, agreeing with its definition."
+    }
+  ],
+  "findings": [
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-01",
+      "kind": "correctness",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:48",
+      "reason": "This reviewer inspected the complete InitResources body, Animation.h and Animation::LoadFile definition: the shared method and definition both return char*. Model::LoadFile returns void*, while ModelBase::SetFile takes BMD_File*; the explicit conversion respects those implemented interfaces. No local false void-return Animation alias remains. Fresh exact-base complete-object comparison and strict relocated bytes pass.",
+      "summary": "Animation loader call now uses the shared char-pointer return contract."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-02",
+      "kind": "reconstruction",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:44; src/_ZN8MantaRay8BehaviorEv.cpp:88",
+      "reason": "This reviewer inspected both complete methods and the actual Model, ModelBase, Animation, dActor_c and dCc_c declarations/definitions. Model::LoadFile, Animation::LoadFile, mModelAnim.SetFile, UpdatePosWithOnlySpeed and mdCcAcPos_c.Clear/Update use existing member interfaces. Six unnecessary manually mangled aliases are removed. Both functions remain byte-identical, with all 38 relocation slots verified. The separate Init bridge is explicitly retained under finding04.",
+      "summary": "Six unnecessary manually mangled loader/model/movement/collision declarations are removed."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PATHPTR-2729-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "src/_ZN8MantaRay8BehaviorEv.cpp:24-26,48-51",
+      "owner": "codex-integrator-0918",
+      "reason": "Behavior still declares the invented C3 member-pointer owner and padded Obj callback view, and reinterprets the byte field unk_370 as state storage. This reviewer inspected the unchanged MantaRay header, Behavior and func_ov090_02132ac4 definition. Recovering coherent state/member-pointer ownership needs a separately owned reconstruction, not a local cast rename. Explicitly accepted as partial scope under live open issue2750, owner codex-integrator-0918. No measured compiler impossibility is claimed; the Shark observations remain outside this two-method acceptance.",
+      "summary": "Invented C3/Obj callback views and untyped state storage remain in Manta Behavior."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PATHPTR-2729-04",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:30,50-52,56,67-68,74-76; src/_ZN8MantaRay8BehaviorEv.cpp:61-65,72-73,81",
+      "owner": "codex-integrator-0918",
+      "reason": "This reviewer inspected PathPtr signatures, dActor_c position/speed scalar fields and the actual dCcAcPos_c::Init interface/bridge definition. The integer path/node views, scalar-vector overlays and collision Init bridge remain unchanged. They are explicitly accepted as bounded partial reconstruction under live open issue2750, owner codex-integrator-0918, whose scope requires real-declaration experiments and separate shared-header consumer proof. Chomp and other original PR2729 observations are not closed. This disposition does not defer any of the concrete return-contract findings01/05/06.",
+      "summary": "Raw path/node reinterpretations, scalar-field vector views, and collision initialization bridge remain."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-05",
+      "kind": "correctness",
+      "location": "src/_ZN8MantaRay13InitResourcesEv.cpp:31; src/func_ov090_02132ac4.cpp:4",
+      "reason": "InitResources now declares func_ov090_02132ac4 with int return. This reviewer inspected its actual definition, which returns 1 or the state callback result. Fresh candidate and base6a complete objects are identical and the 432-byte caller strictly verifies. The opaque state parameter reconstruction remains separately identified by finding03.",
+      "summary": "State-initialization helper declaration now returns int, agreeing with its definition."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PATHPTR-2729-06",
+      "kind": "correctness",
+      "location": "src/_ZN8MantaRay8BehaviorEv.cpp:41; src/_Z14ApproachLinearRsss.cpp:2",
+      "reason": "Behavior now declares ApproachLinear(short&, short, short) with int return. This reviewer inspected the definition, which returns 0/1, and checked the neighboring func_ov090_02132b14 char* and vector-angle const Vector3* definitions. Their corrected scalar/return contracts retain exact complete-object and relocation proof. Remaining pointer/layout views stay explicitly partial under findings03/04.",
+      "summary": "ApproachLinear short-reference overload declaration now returns int, agreeing with its definition."
+    },
+    {
+      "id": "MANTA-FIELDS-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/actors/daManta_c.cpp:50-70,243",
+      "summary": "Two opaque resource wrappers and duplicate animation-file view hide measured local fields.",
+      "reason": "Both local wrappers now expose u16 fileID, u8 numRefs, one alignment byte and typed BMD_File/BCA_File payload at+4. func_02017e0c stores exactly those widths; loaders and SetFile/SetAnim consumers establish payloads. Model::LoadFile returns void*, with the existing explicit BMD_File conversion retained. No shared base-layout claim or header edit."
+    },
+    {
+      "id": "MANTA-PROV-002",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/actors/daManta_c.cpp:48-70",
+      "summary": "The removed MantaFileWord comment incorrectly attributed a loaded pointer to Construct.",
+      "reason": "Construct delegates to func_02017e0c, which zeros+4/+2 then stores the converted u16 ID; SharedFilePtr::Load writes the payload later. Candidate comment also distinguishes registered destructors recording IDs through func_02017e34 from actor CleanupResources releasing the two files."
+    },
+    {
+      "id": "MANTA-MANIFEST-003",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/tu_manifest.d/ov090/daManta_c.json#boundary_evidence[2],compiler_only_output",
+      "summary": "Current boundary and metadata reasons still described a separate factory and text-only ownership.",
+      "reason": "Prose now identifies the absorbed thirteenth factory and intact initializer/ctor/PMF-data/BSS ownership while retaining canonical externalization of metadata. No disposition, alias, destination, span, enrollment or lifecycle policy changed."
+    },
+    {
+      "id": "MANTA-RING-004",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/actors/daManta_c.cpp#daManta_c::func_ov090_021327e4",
+      "summary": "The selected-ring comparison still uses integer/pointer arithmetic despite named member fields.",
+      "reason": "Eight bounded typed load-order/reference/address/index models are preserved. Seven628-byte candidates differ6 words at+174..188; one differs12 at+15c..188. The named form swaps index/hit registers and load order before cmp. These measurements do not prove a universal constraint; further work should explain typed memory dependencies without dummy declarations or changed logic. Final Source keeps the exact established sequence.",
+      "owner": "codex-manta-interfaces-coordinator1014",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750"
+    },
+    {
+      "id": "MANTA-ABI-005",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/actors/daManta_c.cpp#scalar externs,Behavior,func_ov090_02132b14",
+      "summary": "Scalar Fixed12 ABI bridges and flat vector/matrix/path/speed views remain partial.",
+      "reason": "SetAnim, collision Init and Player::Hurt scalar seams, decl_common Matrix4x3, field-vector casts, path reinterpretations and inherited speed reload are outside this two-handle reconstruction. Existing native methods and ROM storage are preserved; no newly proven compiler exemption is asserted.",
+      "owner": "codex-manta-interfaces-coordinator1014",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750"
+    },
+    {
+      "id": "MANTA-LIFECYCLE-006",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/actors/daManta_c.cpp#MantaModelFilePtr,MantaAnimationFilePtr",
+      "summary": "Local wrapper names and five canonical lifecycle/registration aliases remain reconstructed boundaries.",
+      "reason": "The eight-byte local layout and exact callback destinations are measured, but these local names are not claimed to be original shared classes. Constructor/destructor aliases and registration graph are unchanged; replacing the shared resource class requires a separate truthful multi-consumer reconstruction.",
+      "owner": "codex-manta-interfaces-coordinator1014",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750"
+    }
+  ],
+  "historical_scope": "The six PATHPTR-2729 dictionaries are preserved verbatim from accepted manta-composition6-review-0918. Their original Manta/Shark/Chomp and pre-promotion file scope is historical. Later main already has a typed MantaState and native callbacks; this continuation does not silently close their other scopes or rewrite their reasons. PATHPTR-2729-05 remains fixed.",
+  "lineage": {
+    "accepted_predecessor": "manta-composition6-review-0918",
+    "accepted_commit": "e741d4f6e16696ea9f5ec26625eaeaf42b8f4ee2",
+    "all_related_task_records_preserved": true,
+    "actual_contributing_sessions": [
+      "claude-prod-fold-D-0929",
+      "codex-integrator-0918",
+      "codex-review-integrate-0917"
+    ],
+    "source_git_history": [
+      "20a8ca7d43741a88368891b3b6c51e3377e525dc lunavyqo <60808132+lunavyqo@users.noreply.github.com> Record why the manta keeps its ring compare and the flat matrix.",
+      "39c75fddc219f9641e676b91f74409da3de12bed Lunavyqo <60808132+lunavyqo@users.noreply.github.com> Fold the ov090 manta static initializer into daManta_c.cpp. (#3608)",
+      "4ff9f02533abb84ff1269aa6fe503a64c036f9bc Lunavyqo <60808132+lunavyqo@users.noreply.github.com> Merge pull request #3561 from tangosdev/deslop/ov064-waterring-1006",
+      "156e4f011cccacc281db98359a7940bf3c2caa6e lunavyqo <60808132+lunavyqo@users.noreply.github.com> Deslop ov064/daWater_Ring_c: methodize the seven state helpers, name the fields",
+      "ea7efda84ad8c066ffc184caffc59e2e22d6ec30 lunavyqo <60808132+lunavyqo@users.noreply.github.com> Rename Animation to the ROM type name dExtFrameCtrl_c.",
+      "98017c4a4935c2ef8b6f3f58f0fccbfcd78e7ce8 lunavyqo <60808132+lunavyqo@users.noreply.github.com> Clean ov090/daManta_c.",
+      "4998eb253a7d5aa0e7bcbdcbea2f2c5526897f12 andrewboudreau <andrewboudreau@gmail.com> Merge origin/main into tu/fold-classinit-0929",
+      "3a6b300c98c2e58786c046e746b3fcd6e17c7ae1 andrewboudreau <andrewboudreau@gmail.com> Fold daManta_c's classInit factory into its TU (ov090)",
+      "83cee95a704d417ad06a857ab5afab3d5d2f3486 andrewboudreau <andrewboudreau@gmail.com> Tidy daManta_c: no goto in the ring-scoring state, named clamp locals; drop a stale path citation in the RotateUpdownLift header",
+      "a47511fd362d2e4774e1834207aa19c8582ba441 Andrew <andrewboudreau@gmail.com> Give ApproachLinear its real bool(short&, short, short) signature tree-wide (#3292)",
+      "fba117745815b27eb3fa6b4f355b4fd42c1b7342 Lunavyqo <60808132+lunavyqo@users.noreply.github.com> Clean ov090/daManta_c (#3276)",
+      "320c863dff13ca07322f5aa919f7d053e77e18dd Andrew <andrewboudreau@gmail.com> Call header-declared methods by name in promoted TUs (batch 2) (#3156)",
+      "18fca3681098d6aa9395f07feaeb187777169987 Andrew <andrewboudreau@gmail.com> Declare data_ov002_0210d9a8 as SharedFilePtr in daManta_c and its casting callers (#3129)",
+      "ec93b2ac8d6a26fa75e2592aa1719dd788bfb49c Lunavyqo <60808132+lunavyqo@users.noreply.github.com> Promote ov090/daManta_c (#3117)"
+    ],
+    "scout_actual_thread": "01a135f6-ffe2-7f12-a948-096399c6745c",
+    "scout_label": "codex-manta-native-scout1014",
+    "followup_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750"
+  },
+  "verification": {
+    "status": "All frozen current-base production gates terminal0; independent Source review remains required.",
+    "canary": {
+      "source": "src/actors/dMgTrmpln2Mario_c.cpp",
+      "result": [
+        true,
+        "2004/b56"
+      ]
+    },
+    "whole": {
+      "baseline": {
+        "strict": 17,
+        "bss_records": 5,
+        "bss_bytes": 56,
+        "metadata_records": 11,
+        "metadata_bytes": 242,
+        "raw_refs": 150,
+        "prepared_refs": 99,
+        "raw_sha256": "002b6e88feefb16b9eb3e6184fb59b153246d145fefb999f6b1a71dbb4694d0a",
+        "prepared_sha256": "6d9b33600b4d5c8ae38a4552fe36eb03a73457f1ae86270d0eafe482c8cc307b"
+      },
+      "candidate": {
+        "strict": 17,
+        "bss_records": 5,
+        "bss_bytes": 56,
+        "metadata_records": 11,
+        "metadata_bytes": 242,
+        "raw_refs": 150,
+        "prepared_refs": 99,
+        "raw_sha256": "e9db3a98c1fac6b8c6d66b3a6c1a4fcd947bad3b8a5d71614ceddf79ec3a61f6",
+        "prepared_sha256": "6d9b33600b4d5c8ae38a4552fe36eb03a73457f1ae86270d0eafe482c8cc307b"
+      },
+      "complete_owned_bodies_edges_equal": true,
+      "complete_metadata_equal": true,
+      "ordinary_preparation": true,
+      "raw_container_equal": false,
+      "prepared_container_equal": true,
+      "base": "efd33df972c9475494a18548d0248454c0e2668f",
+      "full_rom_run": false
+    },
+    "invariants": {
+      "manifest_production_fields_unchanged_except_four_from_names": true,
+      "canonical_aliases_policies_destinations_ownership_unchanged": true,
+      "complete_raw_graph_equal_after_exact_four_names": true,
+      "complete_prepared_graph_equal": true,
+      "actual_candidate_normal_on_disk_policy": true,
+      "baseline_control_policy": "Exact base manifest saved before adoption; candidate uses actual current rombuild.intact_tu_policies without override."
+    },
+    "storage": {
+      "baseline": [
+        {
+          "record": {
+            "symbol": "data_ov090_02134524",
+            "address": "0x02134524",
+            "size": "0x8",
+            "evidence": "model resource handle constructed with file ID 0x39d"
+          },
+          "size": 8,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "data_ov090_0213452c",
+            "address": "0x0213452c",
+            "size": "0x8",
+            "evidence": "anim resource handle constructed with file ID 0x39e"
+          },
+          "size": 8,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "@766",
+            "address": "0x02134534",
+            "size": "0xc",
+            "binding": "STB_GLOBAL",
+            "evidence": "compiler-generated model resource destructor-registration node"
+          },
+          "size": 12,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "@767",
+            "address": "0x02134540",
+            "size": "0xc",
+            "binding": "STB_GLOBAL",
+            "evidence": "compiler-generated anim resource destructor-registration node"
+          },
+          "size": 12,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "data_ov090_0213454c",
+            "address": "0x0213454c",
+            "size": "0x10",
+            "binding": "STB_GLOBAL",
+            "evidence": "the state record InitResources installs; the initializer copies the two descriptors into it"
+          },
+          "size": 16,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        }
+      ],
+      "candidate": [
+        {
+          "record": {
+            "symbol": "data_ov090_02134524",
+            "address": "0x02134524",
+            "size": "0x8",
+            "evidence": "model resource handle constructed with file ID 0x39d"
+          },
+          "size": 8,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "data_ov090_0213452c",
+            "address": "0x0213452c",
+            "size": "0x8",
+            "evidence": "anim resource handle constructed with file ID 0x39e"
+          },
+          "size": 8,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "@766",
+            "address": "0x02134534",
+            "size": "0xc",
+            "binding": "STB_GLOBAL",
+            "evidence": "compiler-generated model resource destructor-registration node"
+          },
+          "size": 12,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "@767",
+            "address": "0x02134540",
+            "size": "0xc",
+            "binding": "STB_GLOBAL",
+            "evidence": "compiler-generated anim resource destructor-registration node"
+          },
+          "size": 12,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "data_ov090_0213454c",
+            "address": "0x0213454c",
+            "size": "0x10",
+            "binding": "STB_GLOBAL",
+            "evidence": "the state record InitResources installs; the initializer copies the two descriptors into it"
+          },
+          "size": 16,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        }
+      ]
+    },
+    "gates": {
+      "full-rom": {
+        "command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ],
+        "exit_code": 0,
+        "seconds": 451.23597025871277,
+        "base": "efd33df972c9475494a18548d0248454c0e2668f",
+        "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+        "log": "build/manta-interfaces1014/full-rom.log",
+        "log_sha256": "86e7dfd82eaf9f09c54b84e3d867fa201beceac9ee48a4809dafccc3709a69d4"
+      },
+      "stock": {
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "efd33df972c9475494a18548d0248454c0e2668f..850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+          "--json",
+          "build/manta-interfaces1014/stock-results.json"
+        ],
+        "exit_code": 0,
+        "seconds": 13.642257690429688,
+        "base": "efd33df972c9475494a18548d0248454c0e2668f",
+        "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+        "log": "build/manta-interfaces1014/stock.log",
+        "log_sha256": "bd2d0381cd8329b8148b8af33e1aaaca3851c6a4f2f66d27f20e39d758482f5a"
+      },
+      "decl": {
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "efd33df972c9475494a18548d0248454c0e2668f"
+        ],
+        "exit_code": 0,
+        "seconds": 13.191756248474121,
+        "base": "efd33df972c9475494a18548d0248454c0e2668f",
+        "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+        "log": "build/manta-interfaces1014/decl.log",
+        "log_sha256": "f20899fd1a73b896138b94c69732c19cea2dccd8e37e55746ca680b95005f2e3"
+      },
+      "port": {
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.92647123336792,
+        "base": "efd33df972c9475494a18548d0248454c0e2668f",
+        "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+        "log": "build/manta-interfaces1014/port.log",
+        "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+      },
+      "langmode": {
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "seconds": 15.203598260879517,
+        "base": "efd33df972c9475494a18548d0248454c0e2668f",
+        "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+        "log": "build/manta-interfaces1014/langmode.log",
+        "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+      },
+      "conflicts": {
+        "command": [
+          "python",
+          "tools/check_tubuild_conflicts.py"
+        ],
+        "exit_code": 0,
+        "seconds": 0.37306952476501465,
+        "base": "efd33df972c9475494a18548d0248454c0e2668f",
+        "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+        "log": "build/manta-interfaces1014/conflicts.log",
+        "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521"
+      }
+    },
+    "stock_summary": {
+      "checked": 14,
+      "verified": 13,
+      "warnings": 1,
+      "blocking": 0,
+      "controls": {
+        "raw_initializer_controls": {
+          "baseline": {
+            "name": "__sinit_daManta_c.cpp",
+            "module": "ov090",
+            "addr": "0x02133ea8",
+            "verdict": "BLIND-6",
+            "diffs": [],
+            "blind": 6
+          },
+          "candidate": {
+            "name": "__sinit_daManta_c.cpp",
+            "module": "ov090",
+            "addr": "0x02133ea8",
+            "verdict": "BLIND-6",
+            "diffs": [],
+            "blind": 6
+          }
+        },
+        "qualification": "Official pre-isolation initializer warning after the standard manifest input renames is baseline-identical; ordinary full17-row proof separately checks initializer, ctor, owned data and all typed graph destinations with0blind."
+      },
+      "qualification": "Stock initializer BLIND6 is retained unchanged; normal complete17-row ownership proof separately proves every destination with0blind."
+    },
+    "final_production_analysis": {
+      "modules": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11334,
+        "compiledBytes": 2225480,
+        "sourceFunctions": 11334,
+        "sourceBytes": 2225480,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.43577343005789,
+        "reproducingFunctions": 11334,
+        "reproducingBytes": 2225480,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "intact_link_ok": true,
+      "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+      "base": "efd33df972c9475494a18548d0248454c0e2668f",
+      "report_sha256": "9186eb903fa847a71153db65ab88262e32bd1c0a17dcf09d6c897d4ac7dfe975",
+      "qualification": "Final actual production analysis for frozen checkpoint850c948 on baseefd33df, not baseline-control counts or a result on later main."
+    },
+    "full_rom_limits": {
+      "baseline_control": {
+        "symbol_check_passed": false,
+        "errors": [
+          "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+          "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+          "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+        ],
+        "qualification": "Pre-existing DSD symbol lookup failures are retained; baseline module exactness does not claim baseline symbol-check success."
+      },
+      "advisory_data_coverage": {
+        "verified_symbols": 969,
+        "partial_symbols": 1519,
+        "differing_symbols": 1,
+        "unnamed_by_config": 21,
+        "object_records": 5282
+      },
+      "qualification": "Global advisory object-data inventory is separate from complete claimed production data ownership and exact-module proof. --no-rom does not claim a newly assembled final cartridge image.",
+      "module_composition": {
+        "moduleBytes": 3049600,
+        "codeBytes": 2238108,
+        "dataBytes": 811492,
+        "sourceDataBytes": 13020,
+        "unownedDataBytes": 798472,
+        "retailGapCodeBytes": 12628,
+        "retailGapBytes": 811100,
+        "retailGapBytesOfModulePercent": 26.59693074501574,
+        "sourceBytes": 2225480,
+        "sourceBytesOfModulePercent": 72.97612801678909,
+        "dataBytesVerified": 48968,
+        "sourceDataBytesOfModulePercent": 0.42694123819517316,
+        "dataBytesOfModulePercent": 26.609784889821615
+      }
+    }
+  },
+  "name_map": {
+    "names": {
+      "@790": "@789",
+      "@791": "@790",
+      "@793": "@792",
+      "@795": "@794"
+    },
+    "all_other_symbol_attributes_and_sections_equal": true
+  },
+  "private_ring_models": [
+    {
+      "label": "01_direct",
+      "size": 628,
+      "masked_diagnostic_words": 6,
+      "first_diffs": [
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    },
+    {
+      "label": "02_hit_first",
+      "size": 628,
+      "masked_diagnostic_words": 6,
+      "first_diffs": [
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    },
+    {
+      "label": "03_address_then_hit",
+      "size": 628,
+      "masked_diagnostic_words": 6,
+      "first_diffs": [
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    },
+    {
+      "label": "04_reference_then_hit",
+      "size": 628,
+      "masked_diagnostic_words": 6,
+      "first_diffs": [
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    },
+    {
+      "label": "05_index_then_hit",
+      "size": 628,
+      "masked_diagnostic_words": 6,
+      "first_diffs": [
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    },
+    {
+      "label": "06_destructive_index",
+      "size": 628,
+      "masked_diagnostic_words": 6,
+      "first_diffs": [
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    },
+    {
+      "label": "07_base_and_index",
+      "size": 628,
+      "masked_diagnostic_words": 12,
+      "first_diffs": [
+        "0x15c",
+        "0x160",
+        "0x164",
+        "0x168",
+        "0x16c",
+        "0x170",
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    },
+    {
+      "label": "08_hit_then_address",
+      "size": 628,
+      "masked_diagnostic_words": 6,
+      "first_diffs": [
+        "0x174",
+        "0x178",
+        "0x17c",
+        "0x180",
+        "0x184",
+        "0x188"
+      ],
+      "body_equal": false,
+      "object_equal": false
+    }
+  ],
+  "source_sha256": "17dea85e01fe0ddb17dc1d69d864902912bccab249e5d1c1096a80b93c343e9b",
+  "manifest_sha256": "5be897cecf9811a1266c9cf54941c85fa1c11f1b99137714ce526ff76f5457a3",
+  "preserved_boundaries": [
+    "No shared header/ledger edits.",
+    "All five lifecycle aliases, canonical destinations, owned spans and compiler-only dispositions unchanged.",
+    "Only four anonymous input spellings and manifest prose change.",
+    "Full-ROM and official stock/scoped gates passed at the recorded checkpoint; independent Source acceptance remains required."
+  ],
+  "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+  "report_only_binding": {
+    "checkpoint": "850c948a7f3c4676f0fa44ae92afab9bbb55352e",
+    "production_trees": {
+      "src": "8f4e3e00b8c33dbcb1056021aab81aacab874edd",
+      "include": "c79a00fb061e7ba1710053ccfe5ee542cdc6914c",
+      "config": "677a5c919a2ee87fd9e64fc7720ac94502320939",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "rule": "The final report-only descendant must preserve all five production trees exactly."
+  },
+  "artifacts": {
+    "proof.json": "83589a65bc19b5cca5b8448b9a620d8c49e49d7527cbaf4e95268e69607a4513",
+    "invariants.json": "86f7072f9a331731742653476aca2f98e896d3250a25a9ff797a089c9de83733",
+    "storage.json": "f5d80bdc874c9d2caf544613b5ba90634ef3d113e9b1ac6a35710663db25e087",
+    "name-map.json": "71831a57b59c326a945d0345f3fc128df31d8fe96fcc590900787f0189134abe",
+    "ring-results.json": "89ef3013fda7cb6a6502d4606e57b2c887bd2d41ef627087f1c3f4c61cfdfecb",
+    "ring-window.txt": "700d1e3fa38542b90cb030d25bcc8982ea6ec2c7a85ed80b996ffec24b4ce313",
+    "stock-warning-controls.json": "a5c962d75dc2a825da014bc4ed445e8cc941cac96681efeab3bffd7972f81e95",
+    "full-rom-report.json": "9186eb903fa847a71153db65ab88262e32bd1c0a17dcf09d6c897d4ac7dfe975",
+    "baseline-control.json": "f4d356a61af369708a0b36dc62ea467970044f37d3062d75ac073dba45856bd4",
+    "candidate/complete-graphs.json": "93e0ccbaf1e601fa84eaba964caf3773bf7b68c6f23806e48071a772eb69aeb2",
+    "candidate/metadata.json": "db8fa9a6b577f8b9fcacb2298977e07fdcbcda41242374015b175f496d89e956",
+    "candidate/strict.json": "92fc0179879f7e00e41c00e05f199432daba889da604f9ca6c0615293d761e90",
+    "baseline/complete-graphs.json": "8fb3b83a0829ee14a5e8903d16135f82cbe23fb0edb7145075558d7a18529985",
+    "baseline/metadata.json": "db8fa9a6b577f8b9fcacb2298977e07fdcbcda41242374015b175f496d89e956",
+    "baseline/strict.json": "92fc0179879f7e00e41c00e05f199432daba889da604f9ca6c0615293d761e90"
+  },
+  "publication": "No producer offer, Source push, PR or merge yet; coordinator serializes offer and independent acceptance before public publication."
+}

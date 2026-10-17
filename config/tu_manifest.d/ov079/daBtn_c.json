@@ -290,35 +290,35 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov079_02128140",
+      "symbol": "gBattanKingAttack02AnimationFile",
       "address": "0x02128140",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the king's BCA resource handle constructed with file ID 0x2a7"
     },
     {
-      "symbol": "data_ov079_02128148",
+      "symbol": "gBattanKingRecoverAnimationFile",
       "address": "0x02128148",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the king's BCA resource handle constructed with file ID 0x2a9"
     },
     {
-      "symbol": "data_ov079_02128150",
+      "symbol": "gBattanKingWalkAnimationFile",
       "address": "0x02128150",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the king's BCA resource handle constructed with file ID 0x2aa"
     },
     {
-      "symbol": "data_ov079_02128158",
+      "symbol": "gBattanWalkAnimationFile",
       "address": "0x02128158",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the plain Whomp's BCA resource handle constructed with file ID 0x2a1"
     },
     {
-      "symbol": "data_ov079_02128160",
+      "symbol": "gBattanWalkstartAnimationFile",
       "address": "0x02128160",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -346,42 +346,42 @@
       "evidence": "the king's face BTP resource handle constructed with file ID 0x2a4"
     },
     {
-      "symbol": "data_ov079_02128180",
+      "symbol": "gBattanAttack02AnimationFile",
       "address": "0x02128180",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the plain Whomp's BCA resource handle constructed with file ID 0x29f"
     },
     {
-      "symbol": "data_ov079_02128188",
+      "symbol": "gBattanAttack01AnimationFile",
       "address": "0x02128188",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the plain Whomp's BCA resource handle constructed with file ID 0x29e"
     },
     {
-      "symbol": "data_ov079_02128190",
+      "symbol": "gBattanRecoverAnimationFile",
       "address": "0x02128190",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the plain Whomp's BCA resource handle constructed with file ID 0x2a0"
     },
     {
-      "symbol": "data_ov079_02128198",
+      "symbol": "gBattanKingCollisionFile",
       "address": "0x02128198",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the king's KCL resource handle constructed with file ID 0x2a5"
     },
     {
-      "symbol": "data_ov079_021281a0",
+      "symbol": "gBattanKingAttack01AnimationFile",
       "address": "0x021281a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the king's BCA resource handle constructed with file ID 0x2a6"
     },
     {
-      "symbol": "data_ov079_021281a8",
+      "symbol": "gBattanCollisionFile",
       "address": "0x021281a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -395,7 +395,7 @@
       "evidence": "the king's BCA resource handle constructed with file ID 0x2a8"
     },
     {
-      "symbol": "data_ov079_021281b8",
+      "symbol": "gBattanKingWalkstartAnimationFile",
       "address": "0x021281b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1592,7 +1592,7 @@
       "source": "0x2127904",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128188",
+      "symbol": "gBattanAttack01AnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128188"
@@ -1622,7 +1622,7 @@
       "source": "0x2127914",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128180",
+      "symbol": "gBattanAttack02AnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128180"
@@ -1642,7 +1642,7 @@
       "source": "0x2127920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128190",
+      "symbol": "gBattanRecoverAnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128190"
@@ -1662,7 +1662,7 @@
       "source": "0x2127928",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128158",
+      "symbol": "gBattanWalkAnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128158"
@@ -1682,7 +1682,7 @@
       "source": "0x2127934",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128160",
+      "symbol": "gBattanWalkstartAnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128160"
@@ -1702,7 +1702,7 @@
       "source": "0x2127940",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_021281a0",
+      "symbol": "gBattanKingAttack01AnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021281a0"
@@ -1722,7 +1722,7 @@
       "source": "0x212794c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128140",
+      "symbol": "gBattanKingAttack02AnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128140"
@@ -1742,7 +1742,7 @@
       "source": "0x2127958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128148",
+      "symbol": "gBattanKingRecoverAnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128148"
@@ -1762,7 +1762,7 @@
       "source": "0x2127964",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128150",
+      "symbol": "gBattanKingWalkAnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128150"
@@ -1782,7 +1782,7 @@
       "source": "0x2127970",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_021281b8",
+      "symbol": "gBattanKingWalkstartAnimationFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021281b8"
@@ -1822,7 +1822,7 @@
       "source": "0x2127984",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_021281a8",
+      "symbol": "gBattanCollisionFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021281a8"
@@ -1852,7 +1852,7 @@
       "source": "0x2127994",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov079_02128198",
+      "symbol": "gBattanKingCollisionFile",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02128198"

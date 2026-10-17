@@ -1,19 +1,27 @@
 //cpp
 /* Sound -- the game's public sound API and the state block behind it.
- * include/Sound.h models the namespace; the ROM linker run
- * 0x02011654..0x02013548 carries the whole module: the 16-bucket sound-object
- * registry at data_0209b53c (find/alloc/free/sweep helpers), the voice-group
- * loaders, the banked Play wrappers, the music-layer state machine, and the
+ *
+ * Run 0x02011654..0x02013548: the 16-bucket sound-object registry at
+ * data_0209b53c (find/alloc/link/unlink/sweep), the voice-group loaders,
+ * the banked Play wrappers, the music-layer state machine, and the boot
  * init and per-frame update entry points func_020133bc/func_020132d8.
+ * include/Sound.h models the namespace.
  *
- * Deferred codegen emits definitions in reverse source order, so the file
- * opens with the tail helpers and closes on the registry internals.
- *
- * Sound::Play and Sound::Play2D are declared void by their definitions but
- * some callers harvest r0 -- call sites that consume a result keep the
- * extern "C" mangled spelling, which is not type-checked across the seam.
- * PlaySub and ChangeMusicVolume carry `5Fix12IiE' in their mangled names,
- * which no type in this tree produces; they keep their literal symbol names.
+ * leftovers:
+ * - Sound::Play and Sound::Play2D are defined void; callers that harvest r0
+ *   keep the mangled spelling (the same return-split the shards carried).
+ * - PlaySub and ChangeMusicVolume keep their literal mangled names:
+ *   `5Fix12IiE' is unproducible (the Fix12 wall, see include/Sound.h).
+ * - Sound_PlayIfNotActive calls func_0201186c through an int-arity pointer:
+ *   the def takes short #4 and the site passes d untruncated.
+ * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
+ *   unknown load-bearing status.
+ * - The registry entry helpers (func_02011b38 and its two wrappers,
+ *   func_02011aa0, func_02011a28) still address a node's +4 short and +8
+ *   sound handle raw; the table-side alloc/link/unlink/find sites use the
+ *   typed SndRegTable view below.
+ * - func_02013078 reads the player object raw (+0x706 flag byte, +0x60 word);
+ *   Player.h is out of scope for this TU.
  */
 #include "types.h"
 #include "Sound.h"
@@ -169,18 +177,20 @@ extern "C" SoundPlayerDefault data_0208e448[10]; /* 0x0208e448 */
  * of 0x14-byte nodes at +0x8, and 16 hash-bucket heads at +0x508 chaining the
  * live entries by id&0xf. */
 typedef struct SndRegEntry {
-    int field_0;                 /* unique id; 0 marks a free slot */
+    int id;                        /* unique id; 0 marks a free slot */
     unsigned char pad4[2];
-    unsigned char field_6;       /* in-use flag checked by the sweeps */
-    unsigned char pad7[0xd];
+    unsigned char inUse;           /* in-use flag checked by the sweeps */
+    unsigned char pad7[5];
+    struct SndRegEntry *prev; /* 0x0c - bucket chain, toward the head */
+    struct SndRegEntry *next; /* 0x10 - bucket chain, away from the head */
 } SndRegEntry;
 
 typedef struct SndRegTable {
     int counter;                 /* 0x00 - handed out as the unique id */
-    unsigned char field_4;       /* 0x04 - round-robin cursor into entries */
+    unsigned char cursor;        /* 0x04 - round-robin cursor into entries */
     unsigned char pad5[3];
     SndRegEntry entries[0x40];   /* 0x08 */
-    void *buckets[16];           /* 0x508 - chain heads by id&0xf */
+    SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 } SndRegTable;
 
 namespace Sound {
@@ -284,11 +294,11 @@ void UnpauseMusic(void)
 {
     signed char s = data_0209f2f8;
     if (s == 2 || s == 5 || s == 4 || s == 0x32) {
-        signed char lr = data_0208e420;
-        if (lr < 0) return;
-        data_0208e42c = lr;
-        signed char ip = data_0208e424;
-        data_0209b470 = ip;
+        signed char saved = data_0208e420;
+        if (saved < 0) return;
+        data_0208e42c = saved;
+        signed char saved2 = data_0208e424;
+        data_0209b470 = saved2;
         data_0208e420 = -1;
         return;
     }
@@ -359,36 +369,31 @@ extern "C" bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, 
 {
     int x;
     if (c == 0) {
-        if (e) goto end;
+        if (!e) {
+            x = data_0208e430;
+            if ((x >= 0 && x != (int)a) ||
+                (data_0209b49c == 0 && data_0208e42c == (int)b && data_0209b490 == (int)(b << 12)))
+                return true;
+        }
+    } else {
         x = data_0208e430;
-        if (x >= 0 && x != (int)a) goto ret1;
-        if (data_0209b49c != 0) goto end;
-        if (data_0208e42c != (int)b) goto end;
-        if (data_0209b490 != (int)(b << 12)) goto end;
-ret1:
-        return true;
+        if (x < 0 || e) {
+            if (x != (int)a) {
+                data_0208e430 = a;
+                if (a != 0x35 && a != 0x36) {
+                    if (a != 0x2e)
+                        data_0209b49c = c & 0xff;
+                }
+                func_02011dcc(data_0209b4b0, a);
+            }
+        } else if (x != (int)a) {
+            return false;
+        }
     }
-    x = data_0208e430;
-    if (x >= 0) {
-        if (!e) goto ld4;
-    }
-    if (x == (int)a) goto end;
-    data_0208e430 = a;
-    if (a != 0x35 && a != 0x36) {
-        if (a != 0x2e) data_0209b49c = c & 0xff;
-    }
-    func_02011dcc(data_0209b4b0, a);
-    goto end;
-ld4:
-    if (x != (int)a) return false;
-end:
     data_0208e42c = (signed char)b;
     data_0209b470 = (signed char)c;
     data_0209b494 = d;
-    if (data_0209b490 != (int)(b << 12)) goto ret0;
-    if (data_0209b49c == (int)(c << 12)) return true;
-ret0:
-    return false;
+    return data_0209b490 == (int)(b << 12) && data_0209b49c == (int)(c << 12);
 }
 
 namespace Sound {
@@ -1010,11 +1015,11 @@ extern "C" void func_02011a5c(void *vc)
     int i;
     SndRegEntry *p = c->entries;
     do {
-        p->field_0 = 0;
+        p->id = 0;
         p++;
     } while (p != c->entries + 0x40);
     c->counter = 0;
-    c->field_4 = 0;
+    c->cursor = 0;
     for (i = 0; i < 16; i++) c->buckets[i] = 0;
 }
 
@@ -1036,12 +1041,12 @@ extern "C" void func_020119c8(void *vbase)
     SndRegEntry *e = base->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
-        if (e->field_0) {
-            if (e->field_6 == 1) {
-                e->field_6 = 0;
+        if (e->id) {
+            if (e->inUse == 1) {
+                e->inUse = 0;
             } else {
                 func_02011654((char *)base, (char *)e);
-                base->field_4 = (unsigned char)i;
+                base->cursor = (unsigned char)i;
             }
         }
         e++;
@@ -1055,10 +1060,10 @@ extern "C" void func_02011974(void *vbase)
     SndRegEntry *e = base->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
-        if (e->field_0) {
-            e->field_6 = 0;
+        if (e->id) {
+            e->inUse = 0;
             func_02011654((char *)base, (char *)e);
-            base->field_4 = (unsigned char)i;
+            base->cursor = (unsigned char)i;
         }
         e++;
     }
@@ -1068,12 +1073,13 @@ extern "C" void func_02011974(void *vbase)
 extern "C" void *func_02011934(char *table, int id)
 {
     if (id == 0) return 0;
+    SndRegTable *reg = (SndRegTable *)table;
     int idx = id & 0xf;
-    char *base = table + (idx << 2);
-    char *node = *(char **)(base + 0x508);
+    SndRegEntry *node = reg->buckets[idx];
     while (node) {
-        if (id == *(int *)node) return node;
-        node = *(char **)(node + 0x10);
+        if (id == node->id)
+            return node;
+        node = node->next;
     }
     return 0;
 }
@@ -1081,18 +1087,19 @@ extern "C" void *func_02011934(char *table, int id)
 // @symbol func_0201186c
 extern "C" int func_0201186c(char *thiz, int a1, int a2, short a3)
 {
+    SndRegTable *reg = (SndRegTable *)thiz;
     int i = 0;
     do {
-        if (*(int *)(thiz + *(u8 *)(thiz + 4) * 0x14 + 8) == 0) {
-            *(int *)thiz += 1;
-            if (*(int *)thiz == 0) {
-                *(int *)thiz += 1;
+        if (reg->entries[reg->cursor].id == 0) {
+            reg->counter += 1;
+            if (reg->counter == 0) {
+                reg->counter += 1;
             }
-            func_02011b38(thiz + 8 + *(u8 *)(thiz + 4) * 0x14, *(int *)thiz, a1, a2, a3);
-            func_02011698(thiz, thiz + 8 + *(u8 *)(thiz + 4) * 0x14);
-            return *(int *)thiz;
+            func_02011b38(&reg->entries[reg->cursor], reg->counter, a1, a2, a3);
+            func_02011698(thiz, (char *)&reg->entries[reg->cursor]);
+            return reg->counter;
         }
-        *(u8 *)(thiz + 4) = (*(u8 *)(thiz + 4) + 1) % 0x40;
+        reg->cursor = (reg->cursor + 1) % 0x40;
     } while (++i < 0x40);
     return 0;
 }
@@ -1100,16 +1107,18 @@ extern "C" int func_0201186c(char *thiz, int a1, int a2, short a3)
 // @symbol func_0201179c
 extern "C" int func_0201179c(char *thiz, int a1, int a2, int a3, short s1)
 {
+    SndRegTable *reg = (SndRegTable *)thiz;
     int i;
     for (i = 0; i < 0x40; i++) {
-        if (*(int *)(thiz + *(u8 *)(thiz + 4) * 0x14 + 8) == 0) {
-            *(int *)thiz += 1;
-            if (*(int *)thiz == 0) *(int *)thiz += 1;
-            func_02011af8(thiz + 8 + *(u8 *)(thiz + 4) * 0x14, *(int *)thiz, a1, a2, a3, s1);
-            func_02011698(thiz, thiz + 8 + *(u8 *)(thiz + 4) * 0x14);
-            return *(int *)thiz;
+        if (reg->entries[reg->cursor].id == 0) {
+            reg->counter += 1;
+            if (reg->counter == 0)
+                reg->counter += 1;
+            func_02011af8(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s1);
+            func_02011698(thiz, (char *)&reg->entries[reg->cursor]);
+            return reg->counter;
         }
-        *(u8 *)(thiz + 4) = (*(u8 *)(thiz + 4) + 1) % 0x40;
+        reg->cursor = (reg->cursor + 1) % 0x40;
     }
     return 0;
 }
@@ -1117,16 +1126,18 @@ extern "C" int func_0201179c(char *thiz, int a1, int a2, int a3, short s1)
 // @symbol func_020116c4
 extern "C" int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1)
 {
+    SndRegTable *reg = (SndRegTable *)c;
     int i;
     for (i = 0; i < 0x40; i++) {
-        if (*(int *)(c + (u8)c[4] * 0x14 + 8) == 0) {
-            *(int *)c = *(int *)c + 1;
-            if (*(int *)c == 0) *(int *)c = *(int *)c + 1;
-            func_02011ac4(c + 8 + (u8)c[4] * 0x14, *(int *)c, a1, a2, a3, s0, s1);
-            func_02011698(c, c + 8 + (u8)c[4] * 0x14);
-            return *(int *)c;
+        if (reg->entries[reg->cursor].id == 0) {
+            reg->counter = reg->counter + 1;
+            if (reg->counter == 0)
+                reg->counter = reg->counter + 1;
+            func_02011ac4(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s0, s1);
+            func_02011698(c, (char *)&reg->entries[reg->cursor]);
+            return reg->counter;
         }
-        c[4] = (u8)(((u8)c[4] + 1) % 0x40);
+        reg->cursor = (u8)((reg->cursor + 1) % 0x40);
     }
     return 0;
 }
@@ -1134,31 +1145,34 @@ extern "C" int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1)
 // @symbol func_02011698
 extern "C" void func_02011698(char *table, char *n)
 {
-    int idx = (*(int *)n) & 0xf;
-    char *base = table + (idx << 2);
-    char *head = *(char **)(base + 0x508);
+    SndRegTable *reg = (SndRegTable *)table;
+    SndRegEntry *e = (SndRegEntry *)n;
+    int idx = e->id & 0xf;
+    SndRegEntry *head = reg->buckets[idx];
     if (head == 0) {
-        *(char **)(base + 0x508) = n;
+        reg->buckets[idx] = e;
     } else {
-        *(char **)(head + 0xc) = n;
-        *(char **)(n + 0x10) = *(char **)(base + 0x508);
-        *(char **)(base + 0x508) = n;
+        head->prev = e;
+        e->next = reg->buckets[idx];
+        reg->buckets[idx] = e;
     }
 }
 
 // @symbol func_02011654
 extern "C" int func_02011654(char *table, char *n)
 {
-    void *prev = *(void **)(n + 0xc);
-    void *next = *(void **)(n + 0x10);
+    SndRegTable *reg = (SndRegTable *)table;
+    SndRegEntry *e = (SndRegEntry *)n;
+    SndRegEntry *prev = e->prev;
+    SndRegEntry *next = e->next;
     if (prev == 0) {
-        int idx = (*(int *)n) & 0xf;
-        *(void **)(table + (idx << 2) + 0x508) = next;
+        int idx = e->id & 0xf;
+        reg->buckets[idx] = next;
     } else {
-        *(void **)((char *)prev + 0x10) = next;
+        prev->next = next;
     }
     if (next) {
-        *(void **)((char *)next + 0xc) = prev;
+        next->prev = prev;
     }
     return func_02011aa0(n);
 }

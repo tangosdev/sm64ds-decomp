@@ -22,7 +22,7 @@
 # 0x020ad524/0x020ad560 -- addresses past arm9's .bss that only the ov000/ov001
 # symbols.txt rows define (data_ov000_*). Spelling the references by their
 # overlay names lets the link resolve them; both now live folded in
-# src/engine/model/dExtShadowModel_c.cpp, which also keeps their old arm9
+# src/engine/model/d_ext_shadow_model.cpp, which also keeps their old arm9
 # data_020ad524/data_020ad560 spellings out of the source.
 
 # --- linked cleanly but produced the wrong bytes (dsd check modules) ---

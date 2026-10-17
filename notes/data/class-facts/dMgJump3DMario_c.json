@@ -46,7 +46,7 @@
   "base_chain": {
     "chain": ["dMgJump3DMario_c", "dMg3DHeyhoObjAdapter_c"],
     "length": 2,
-    "chain_terminates_evidence": "_ZTI22dMg3DHeyhoObjAdapter_c at 0x0213b000 is only 8 bytes (the next symbol, data_ov006_0213b008, starts at 0x0213b008) and its vptr word is 0x0209a774 = _ZTVN3abi17__class_type_infoE, the ROOT __class_type_info with NO base word. The chain is exactly two classes, proven from the cartridge rather than from build/rtti.json's edge list.",
+    "chain_terminates_evidence": "_ZTI22dMg3DHeyhoObjAdapter_c at 0x0213b000 is only 8 bytes (the next symbol, sJump3DBounceVy, starts at 0x0213b008) and its vptr word is 0x0209a774 = _ZTVN3abi17__class_type_infoE, the ROOT __class_type_info with NO base word. The chain is exactly two classes, proven from the cartridge rather than from build/rtti.json's edge list.",
     "edges": [
       {"derived": "dMgJump3DMario_c", "base": "dMg3DHeyhoObjAdapter_c", "derived_key": "ov006:0x0213b0a4", "base_key": "ov006:0x0213b000", "offset": 0, "resolved_by": "own_module"}
     ],
@@ -77,7 +77,7 @@
       {"slot": 1, "address": "0x0213b0d0", "target": "0x020c76d0"},
       {"slot": 2, "address": "0x0213b0d4", "target": "0x020c762c"}
     ],
-    "extent_evidence": "Corroborated four ways. (a) The next symbols.txt row after the address point is data_ov006_0213b0d8 at 0x0213b0d8, and there is NO interior phantom symbol inside the table to truncate a romdata_check extent lookup. (b) The unbroken relocation run in config/arm9/overlays/ov006/relocs.txt covers 0x0213b0c8 (the typeinfo word) through 0x0213b0d4 and stops there. (c) The word at 0x0213b0d8 is 0x02134b6c, which is inside ov006 .data (>= 0x02133600), not a code address, so it cannot be a fourth slot. (d) MEASURED: a probe TU compiled with the pinned mwccarm 2004/b56 emits _ZTV16dMgJump3DMario_c at size 0x14, exactly the storage extent above. There are no trailing null slots hiding a further declaration.",
+    "extent_evidence": "Corroborated four ways. (a) The next symbols.txt row after the address point is sPuffSprites at 0x0213b0d8, and there is NO interior phantom symbol inside the table to truncate a romdata_check extent lookup. (b) The unbroken relocation run in config/arm9/overlays/ov006/relocs.txt covers 0x0213b0c8 (the typeinfo word) through 0x0213b0d4 and stops there. (c) The word at 0x0213b0d8 is 0x02134b6c, which is inside ov006 .data (>= 0x02133600), not a code address, so it cannot be a fourth slot. (d) MEASURED: a probe TU compiled with the pinned mwccarm 2004/b56 emits _ZTV16dMgJump3DMario_c at size 0x14, exactly the storage extent above. There are no trailing null slots hiding a further declaration.",
     "address_point_evidence": "The constructor at 0x020c8a04 loads the literal 0x0213b0cc from its own pool at 0x020c8a2c and stores it at [this]. The _ZTV symbol IS the address point; the two header words sit at -8 and -4."
   },
 
@@ -100,7 +100,7 @@
      "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d8Ev",
      "name": "Unk_020c76d8 (address-derived placeholder)",
      "body": "add r0, r0, #0x14; bx lr",
-     "note": "Returns &this[0x14], which func_ov006_020c7860 and func_ov006_020c7ba4 both treat as a Vector3. Base slot is PURE (null in _ZTV22dMg3DHeyhoObjAdapter_c), so there is no inherited name to take."},
+     "note": "Returns &this[0x14], which Update and func_ov006_020c7ba4 both treat as a Vector3. Base slot is PURE (null in _ZTV22dMg3DHeyhoObjAdapter_c), so there is no inherited name to take."},
     {"slot": 1, "address": "0x020c76d0", "size": "0x8",
      "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d0Ev",
      "name": "Unk_020c76d0 (address-derived placeholder)",
@@ -125,7 +125,7 @@
     "factory_count": 0,
     "boundary_confidence": "medium",
     "evidence": "build/tu_map.json ov006 unit 3 is exactly 0x020c762c..0x020c8a30 with 28 functions and the single class label dMgJump3DMario_c. queue_audit.py adds nothing: there is no <Class>_classInit / <Class>_Spawn neighbour to absorb (this class is not a profile actor; it is an array member of dScMgJump_c and dScMgJump2_c). shard_count 28 and total_lines 820 in notes/data/tu-promotion-queue.tsv both reproduce exactly on this base.",
-    "boundary_caveat": "tu_map cuts on symbol NAME, and only five of the 28 symbols carry the class name (the three virtuals plus D1/C1). Everything between them is swept in because it lies between two labelled symbols; the neighbours are excluded only because nothing labels THEM. Both neighbours abut with ZERO gap: func_ov006_020c7574 ends exactly at 0x020c762c and func_ov006_020c8a30 starts exactly at 0x020c8a30. See `original_tu_extent_unproven` in `unproven`."
+    "boundary_caveat": "tu_map cuts on symbol NAME, and only five of the 28 symbols carry the class name (the three virtuals plus D1/C1). Everything between them is swept in because it lies between two labelled symbols; the neighbours are excluded only because nothing labels THEM. Both neighbours abut with ZERO gap: Jump3D_InitPool ends exactly at 0x020c762c and Puff_DrawAll starts exactly at 0x020c8a30. See `original_tu_extent_unproven` in `unproven`."
   },
 
   "run_segments": {
@@ -140,9 +140,9 @@
     {"ordinal": 0,  "symbol": "_ZN16dMgJump3DMario_c12Unk_020c762cEv", "address": "0x020c762c", "size": "0xa4",  "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c762cEv.cpp", "role": "virtual slot 2", "renameable": true,  "reached_by": ["vtable slot 2"]},
     {"ordinal": 1,  "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d0Ev", "address": "0x020c76d0", "size": "0x8",   "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c76d0Ev.cpp", "role": "virtual slot 1", "renameable": true,  "reached_by": ["vtable slot 1"]},
     {"ordinal": 2,  "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d8Ev", "address": "0x020c76d8", "size": "0x8",   "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c76d8Ev.cpp", "role": "virtual slot 0 -- KEY FUNCTION", "renameable": true, "reached_by": ["vtable slot 0"]},
-    {"ordinal": 3,  "symbol": "func_ov006_020c76e0", "address": "0x020c76e0", "size": "0x54",  "legacy_source": "src/func_ov006_020c76e0.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7388.c @0x020c73e4", "BL src/func_ov006_020c7418.c @0x020c7460", "BL src/func_ov006_020c7490.c @0x020c7538", "BL src/func_ov006_020c7574.c @0x020c75d4", "BL in-run func_ov006_020c7860"]},
-    {"ordinal": 4,  "symbol": "func_ov006_020c7734", "address": "0x020c7734", "size": "0x12c", "legacy_source": "src/func_ov006_020c7734.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c70d0.c @0x020c70fc"]},
-    {"ordinal": 5,  "symbol": "func_ov006_020c7860", "address": "0x020c7860", "size": "0x8c",  "legacy_source": "src/func_ov006_020c7860.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c712c.c @0x020c7168"]},
+    {"ordinal": 3,  "symbol": "UpdateModelMatrix", "address": "0x020c76e0", "size": "0x54",  "legacy_source": "src/func_ov006_020c76e0.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7388.c @0x020c73e4", "BL src/func_ov006_020c7418.c @0x020c7460", "BL src/func_ov006_020c7490.c @0x020c7538", "BL src/func_ov006_020c7574.c @0x020c75d4", "BL in-run Update"]},
+    {"ordinal": 4,  "symbol": "Draw", "address": "0x020c7734", "size": "0x12c", "legacy_source": "src/func_ov006_020c7734.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c70d0.c @0x020c70fc"]},
+    {"ordinal": 5,  "symbol": "Update", "address": "0x020c7860", "size": "0x8c",  "legacy_source": "src/func_ov006_020c7860.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c712c.c @0x020c7168"]},
     {"ordinal": 6,  "symbol": "func_ov006_020c78ec", "address": "0x020c78ec", "size": "0xbc",  "legacy_source": "src/func_ov006_020c78ec.cpp", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b030"]},
     {"ordinal": 7,  "symbol": "func_ov006_020c79a8", "address": "0x020c79a8", "size": "0x88",  "legacy_source": "src/func_ov006_020c79a8.cpp", "role": "member", "renameable": true, "reached_by": ["BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c7c68"]},
     {"ordinal": 8,  "symbol": "func_ov006_020c7a30", "address": "0x020c7a30", "size": "0x174", "legacy_source": "src/func_ov006_020c7a30.c", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b028"]},
@@ -150,19 +150,19 @@
     {"ordinal": 10, "symbol": "func_ov006_020c7c68", "address": "0x020c7c68", "size": "0x3c4", "legacy_source": "src/func_ov006_020c7c68.c", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b020", "BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c833c"]},
     {"ordinal": 11, "symbol": "func_ov006_020c802c", "address": "0x020c802c", "size": "0x1c",  "legacy_source": "src/func_ov006_020c802c.c", "role": "state setter", "renameable": true, "reached_by": ["BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c833c", "BL in-run func_ov006_020c8680"], "note": "Copies the 8-byte PMF constant at 0x0213b020 into this+0x3c / this+0x40. This is the `mState = &dMgJump3DMario_c::<0x020c7c68>` assignment, in the clear."},
     {"ordinal": 12, "symbol": "func_ov006_020c8048", "address": "0x020c8048", "size": "0x3c",  "legacy_source": "src/func_ov006_020c8048.c", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b090"]},
-    {"ordinal": 13, "symbol": "func_ov006_020c8084", "address": "0x020c8084", "size": "0xc8",  "legacy_source": "src/func_ov006_020c8084.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7388.c @0x020c73d8"]},
+    {"ordinal": 13, "symbol": "StartFallOut", "address": "0x020c8084", "size": "0xc8",  "legacy_source": "src/func_ov006_020c8084.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7388.c @0x020c73d8"]},
     {"ordinal": 14, "symbol": "func_ov006_020c814c", "address": "0x020c814c", "size": "0x94",  "legacy_source": "src/func_ov006_020c814c.cpp", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b080"]},
-    {"ordinal": 15, "symbol": "func_ov006_020c81e0", "address": "0x020c81e0", "size": "0x90",  "legacy_source": "src/func_ov006_020c81e0.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7418.c @0x020c7454"]},
+    {"ordinal": 15, "symbol": "StartRiseOut", "address": "0x020c81e0", "size": "0x90",  "legacy_source": "src/func_ov006_020c81e0.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7418.c @0x020c7454"]},
     {"ordinal": 16, "symbol": "func_ov006_020c8270", "address": "0x020c8270", "size": "0xcc",  "legacy_source": "src/func_ov006_020c8270.c", "role": "member", "renameable": true, "reached_by": ["BL in-run 020c7a30", "BL in-run 020c7c68", "BL in-run 020c833c", "BL in-run 020c85bc"]},
     {"ordinal": 17, "symbol": "func_ov006_020c833c", "address": "0x020c833c", "size": "0x264", "legacy_source": "src/func_ov006_020c833c.c", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b060 and 0x0213b078", "BL in-run func_ov006_020c7a30"]},
     {"ordinal": 18, "symbol": "func_ov006_020c85a0", "address": "0x020c85a0", "size": "0x1c",  "legacy_source": "src/func_ov006_020c85a0.c", "role": "member", "renameable": true, "reached_by": ["BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c7c68"]},
     {"ordinal": 19, "symbol": "func_ov006_020c85bc", "address": "0x020c85bc", "size": "0x70",  "legacy_source": "src/func_ov006_020c85bc.cpp", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b050, 0x0213b068, 0x0213b070"]},
-    {"ordinal": 20, "symbol": "func_ov006_020c862c", "address": "0x020c862c", "size": "0x20",  "legacy_source": "src/func_ov006_020c862c.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7490.c @0x020c74ec"]},
+    {"ordinal": 20, "symbol": "StartWindUp", "address": "0x020c862c", "size": "0x20",  "legacy_source": "src/func_ov006_020c862c.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7490.c @0x020c74ec"]},
     {"ordinal": 21, "symbol": "func_ov006_020c864c", "address": "0x020c864c", "size": "0xc",   "legacy_source": "src/func_ov006_020c864c.c", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b040, 0x0213b048, 0x0213b058"], "note": "0x0213b040 is the one PMF constant whose CONSUMER sits outside the run: src/func_ov006_020c7300.c loads it at 0x020c7384. That is a reference to the data symbol, not to this function's name, so the rename is still safe -- but it means an unpromoted shard installs one of this class's states."},
-    {"ordinal": 22, "symbol": "func_ov006_020c8658", "address": "0x020c8658", "size": "0x28",  "legacy_source": "src/func_ov006_020c8658.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c719c.c @0x020c7250", "BL src/func_ov006_020c7574.c @0x020c75c8", "BL in-run 020c8048", "BL in-run 020c8084", "BL in-run 020c814c", "BL in-run 020c87d0"]},
+    {"ordinal": 22, "symbol": "HideAndIdle", "address": "0x020c8658", "size": "0x28",  "legacy_source": "src/func_ov006_020c8658.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c719c.c @0x020c7250", "BL src/func_ov006_020c7574.c @0x020c75c8", "BL in-run 020c8048", "BL in-run 020c8084", "BL in-run 020c814c", "BL in-run 020c87d0"]},
     {"ordinal": 23, "symbol": "func_ov006_020c8680", "address": "0x020c8680", "size": "0xe8",  "legacy_source": "src/func_ov006_020c8680.c", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b038, 0x0213b088"]},
     {"ordinal": 24, "symbol": "func_ov006_020c8768", "address": "0x020c8768", "size": "0x68",  "legacy_source": "src/func_ov006_020c8768.c", "role": "member", "renameable": true, "reached_by": ["BL in-run func_ov006_020c78ec"]},
-    {"ordinal": 25, "symbol": "func_ov006_020c87d0", "address": "0x020c87d0", "size": "0x16c", "legacy_source": "src/func_ov006_020c87d0.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7574.c @0x020c75ac"]},
+    {"ordinal": 25, "symbol": "LoadResources", "address": "0x020c87d0", "size": "0x16c", "legacy_source": "src/func_ov006_020c87d0.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7574.c @0x020c75ac"]},
     {"ordinal": 26, "symbol": "_ZN16dMgJump3DMario_cD1Ev", "address": "0x020c893c", "size": "0xc8", "legacy_source": "src/_ZN16dMgJump3DMario_cD1Ev.cpp", "role": "destructor D1", "renameable": true, "reached_by": ["literal in dScMgJump_c_classInit 0x020eebd4", "literal in _ZN11dScMgJump_cD1Ev 0x020edf44", "literal in _ZN11dScMgJump_cD0Ev 0x020edfe8", "literal in dScMgJump2_c_classInit 0x020efbe4", "literal in _ZN12dScMgJump2_cD1Ev 0x020eec90", "literal in _ZN12dScMgJump2_cD0Ev 0x020eed54"]},
     {"ordinal": 27, "symbol": "_ZN16dMgJump3DMario_cC1Ev", "address": "0x020c8a04", "size": "0x2c", "legacy_source": "src/_ZN16dMgJump3DMario_cC1Ev.cpp", "role": "constructor C1", "renameable": true, "reached_by": ["literal in dScMgJump_c_classInit 0x020eebd8", "literal in dScMgJump2_c_classInit 0x020efbe8"]}
   ],
@@ -173,14 +173,14 @@
     "all_callers_are_plain_c_shards": true,
     "why_it_matters": "PIPELINE.md stage 3b converts as many members as byte-match allows into real dMgJump3DMario_c:: methods. These eight cannot be converted: each is called by name, with a BL, from a shard that is still a plain `.c` file. A C shard cannot name a C++ mangled member, so renaming any of these eight either breaks the caller's link or drags the caller into the promotion. They stay `extern \"C\" func_ov006_*`.",
     "members": [
-      {"member": "func_ov006_020c76e0", "sites": 4, "callers": ["src/func_ov006_020c7388.c", "src/func_ov006_020c7418.c", "src/func_ov006_020c7490.c", "src/func_ov006_020c7574.c"]},
-      {"member": "func_ov006_020c7734", "sites": 1, "callers": ["src/func_ov006_020c70d0.c"]},
-      {"member": "func_ov006_020c7860", "sites": 1, "callers": ["src/func_ov006_020c712c.c"]},
-      {"member": "func_ov006_020c8084", "sites": 1, "callers": ["src/func_ov006_020c7388.c"]},
-      {"member": "func_ov006_020c81e0", "sites": 1, "callers": ["src/func_ov006_020c7418.c"]},
-      {"member": "func_ov006_020c862c", "sites": 1, "callers": ["src/func_ov006_020c7490.c"]},
-      {"member": "func_ov006_020c8658", "sites": 2, "callers": ["src/func_ov006_020c719c.c", "src/func_ov006_020c7574.c"]},
-      {"member": "func_ov006_020c87d0", "sites": 1, "callers": ["src/func_ov006_020c7574.c"]}
+      {"member": "UpdateModelMatrix", "sites": 4, "callers": ["src/func_ov006_020c7388.c", "src/func_ov006_020c7418.c", "src/func_ov006_020c7490.c", "src/func_ov006_020c7574.c"]},
+      {"member": "Draw", "sites": 1, "callers": ["src/func_ov006_020c70d0.c"]},
+      {"member": "Update", "sites": 1, "callers": ["src/func_ov006_020c712c.c"]},
+      {"member": "StartFallOut", "sites": 1, "callers": ["src/func_ov006_020c7388.c"]},
+      {"member": "StartRiseOut", "sites": 1, "callers": ["src/func_ov006_020c7418.c"]},
+      {"member": "StartWindUp", "sites": 1, "callers": ["src/func_ov006_020c7490.c"]},
+      {"member": "HideAndIdle", "sites": 2, "callers": ["src/func_ov006_020c719c.c", "src/func_ov006_020c7574.c"]},
+      {"member": "LoadResources", "sites": 1, "callers": ["src/func_ov006_020c7574.c"]}
     ],
     "structors_referenced_from_outside": "D1 (six sites) and C1 (two sites) are referenced as literal-pool constants by the two owning scenes' classInit and destructors. Those already carry their mangled spellings and src/minigames/d_s_mg_jump2.cpp already declares them as `void _ZN16dMgJump3DMario_cD1Ev();` at lines 194-195, so no rename is involved.",
     "convertible_members": 15,
@@ -194,7 +194,7 @@
     "record_count": 15,
     "distinct_targets": 9,
     "record_span": "0x0213b020..0x0213b098",
-    "shape": "8-byte pointer-to-member-function constants: {code pointer, 0x00000000}. Each is its own symbol (data_ov006_0213b020, _0213b028, ... _0213b090) and each is loaded individually from one literal-pool site -- they are 15 separate constants, NOT an array.",
+    "shape": "8-byte pointer-to-member-function constants: {code pointer, 0x00000000}. Each is its own symbol (pmf_dMgJump3DMario_c_StateMove, _0213b028, ... _0213b090) and each is loaded individually from one literal-pool site -- they are 15 separate constants, NOT an array.",
     "proof_they_are_PMFs": "func_ov006_020c802c copies the record at 0x0213b020 word-for-word into this+0x3c and this+0x40, and vtable slot 2 (0x020c762c) compares this+0x3c/this+0x40 against the records at 0x0213b058 and 0x0213b070 using the mwccarm pointer-to-member equality shape (pointer compare, adjustment compare, null short-circuit).",
     "no_sinit": "Unlike dScMgCurling2_c these constants are NOT filled by a static initializer. They sit in initialized .data (ov006 .data is 0x02133600..0x021402e0) with the pointers already baked in, and no entry in ov006's 31-entry .ctor table at 0x0213356c..0x021335ec points anywhere inside the run. There is no sinit to simulate for this class, so the phantom-index hazard does not arise here.",
     "ownership": "config/arm9/overlays/ov006/delinks.txt claims only two .data blocks in the whole module (0x0213faa0..0x0213fbc4 and 0x0213fbc4..0x0213fd0c). 0x0213b020..0x0213b098 is unowned, so dsd delinks it straight from the cartridge and resolves each code word by looking up the NAME symbols.txt gives at the target address.",
@@ -204,17 +204,17 @@
       {"record": "0x0213b028", "target": "0x020c7a30", "target_symbol": "func_ov006_020c7a30", "consumer": "func_ov006_020c7ba4 @0x020c7c64"},
       {"record": "0x0213b030", "target": "0x020c78ec", "target_symbol": "func_ov006_020c78ec", "consumer": "func_ov006_020c79a8 @0x020c7a2c"},
       {"record": "0x0213b038", "target": "0x020c8680", "target_symbol": "func_ov006_020c8680", "consumer": "func_ov006_020c8768 @0x020c87cc"},
-      {"record": "0x0213b040", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "func_ov006_020c7300 @0x020c7384  (OUTSIDE the run)"},
-      {"record": "0x0213b048", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "func_ov006_020c8658 @0x020c867c"},
-      {"record": "0x0213b050", "target": "0x020c85bc", "target_symbol": "func_ov006_020c85bc", "consumer": "func_ov006_020c862c @0x020c8648"},
+      {"record": "0x0213b040", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "Jump3D_AllIdle @0x020c7384  (OUTSIDE the run)"},
+      {"record": "0x0213b048", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "HideAndIdle @0x020c867c"},
+      {"record": "0x0213b050", "target": "0x020c85bc", "target_symbol": "func_ov006_020c85bc", "consumer": "StartWindUp @0x020c8648"},
       {"record": "0x0213b058", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "_ZN16dMgJump3DMario_c12Unk_020c762cEv @0x020c76c8"},
       {"record": "0x0213b060", "target": "0x020c833c", "target_symbol": "func_ov006_020c833c", "consumer": "func_ov006_020c85a0 @0x020c85b8"},
       {"record": "0x0213b068", "target": "0x020c85bc", "target_symbol": "func_ov006_020c85bc", "consumer": "func_ov006_020c8270 @0x020c8330"},
       {"record": "0x0213b070", "target": "0x020c85bc", "target_symbol": "func_ov006_020c85bc", "consumer": "_ZN16dMgJump3DMario_c12Unk_020c762cEv @0x020c76cc"},
       {"record": "0x0213b078", "target": "0x020c833c", "target_symbol": "func_ov006_020c833c", "consumer": "func_ov006_020c8270 @0x020c8338"},
-      {"record": "0x0213b080", "target": "0x020c814c", "target_symbol": "func_ov006_020c814c", "consumer": "func_ov006_020c81e0 @0x020c826c"},
-      {"record": "0x0213b088", "target": "0x020c8680", "target_symbol": "func_ov006_020c8680", "consumer": "func_ov006_020c8084 @0x020c813c"},
-      {"record": "0x0213b090", "target": "0x020c8048", "target_symbol": "func_ov006_020c8048", "consumer": "func_ov006_020c8084 @0x020c8148"}
+      {"record": "0x0213b080", "target": "0x020c814c", "target_symbol": "func_ov006_020c814c", "consumer": "StartRiseOut @0x020c826c"},
+      {"record": "0x0213b088", "target": "0x020c8680", "target_symbol": "func_ov006_020c8680", "consumer": "StartFallOut @0x020c813c"},
+      {"record": "0x0213b090", "target": "0x020c8048", "target_symbol": "func_ov006_020c8048", "consumer": "StartFallOut @0x020c8148"}
     ],
     "targets_needing_rename_in_the_same_commit": [
       "func_ov006_020c78ec", "func_ov006_020c7a30", "func_ov006_020c7c68",
@@ -265,7 +265,7 @@
       {"symbol": "_ZN16dMgJump3DMario_cC2Ev",      "emitted_size": "0x2c on the probe", "disposition": "deadstrip", "canonical_module": null, "canonical_address": null, "note": "Homeless. The cartridge has only C1 (0x020c8a04); the class is a leaf so its base-object constructor is never called."},
       {"symbol": "_ZN22dMg3DHeyhoObjAdapter_cD2Ev","emitted_size": "0x10 on the probe", "disposition": "deadstrip", "canonical_module": null, "canonical_address": null, "note": "Homeless. The base's destructor is inline-empty in the header, so it is always inlined at its one call site (the tail of D1) and the ROM carries no out-of-line copy. mwcc emits one anyway."}
     ],
-    "residual_risk": "Two things could push the count above 10, neither visible in the ROM. (1) Every vague-linkage inline class the 23 helper bodies odr-use adds a row -- `_ZN7Vector3D1Ev` appears in 20 of the 150 promoted manifests for exactly this reason. TODAY the two helpers that touch vectors use SHADOW types: src/func_ov006_020c7860.cpp declares `struct Vector3` incomplete and only passes pointers, and src/func_ov006_020c7ba4.c has its own `typedef struct { int x, y, z; } Vec3`. Keeping those shadow spellings keeps the count at 10; adopting the real include/math/Vector3.h type adds a row. (2) A pointer-to-member typedef spelled over a COMPLETE class changes mwccarm's PMF representation -- src/actors/dScMgCurling2_c.cpp keeps `struct C;` incomplete on purpose. That is a codegen risk, not a compiler_only_output one, but it is the same family of decision."
+    "residual_risk": "Two things could push the count above 10, neither visible in the ROM. (1) Every vague-linkage inline class the 23 helper bodies odr-use adds a row -- `_ZN7Vector3D1Ev` appears in 20 of the 150 promoted manifests for exactly this reason. TODAY the two helpers that touch vectors use SHADOW types: src/func_ov006_020c7860.cpp declares `struct Vector3` incomplete and only passes pointers, and src/func_ov006_020c7ba4.c has its own `typedef struct { int x, y, z; } Vec3`. Keeping those shadow spellings keeps the count at 10; adopting the real include/math/Vector3.h type adds a row. (2) A pointer-to-member typedef spelled over a COMPLETE class changes mwccarm's PMF representation -- src/minigames/d_s_mg_curling2.cpp keeps `struct C;` incomplete on purpose. That is a codegen risk, not a compiler_only_output one, but it is the same family of decision."
   },
 
   "size": "0xb8",
@@ -356,10 +356,10 @@
 
   "sibling_oracles": {
     "queue_row": "dScMgSingle3DBase_c",
-    "why_that_row_is_a_weak_oracle": "dScMgSingle3DBase_c (config/tu_manifest.d/ov006/dScMgSingle3DBase_c.json, src/minigames/d_s_mg_single3_d_base.cpp) is an OLD-convention promotion under src/minigames/, does not use `#pragma defer_codegen off`, has a 5-class chain and 11 compiler_only_output rows, and its class hangs off dScMgBase_c. This class shares none of that.",
+    "why_that_row_is_a_weak_oracle": "dScMgSingle3DBase_c (config/tu_manifest.d/ov006/dScMgSingle3DBase_c.json, src/minigames/d_s_mg_single3d_base.cpp) is an OLD-convention promotion under src/minigames/, does not use `#pragma defer_codegen off`, has a 5-class chain and 11 compiler_only_output rows, and its class hangs off dScMgBase_c. This class shares none of that.",
     "better_oracles": [
-      "config/tu_manifest.d/ov006/dScMgCurling2_c.json + src/actors/dScMgCurling2_c.cpp (#2362) -- the closest structural match: unowned-.data PMF constants that dictate an in-commit rename, an out-of-line destructor with a homeless D2, `#pragma defer_codegen off`, and a manifest that spells out the extent argument for a vtable.",
-      "config/tu_manifest.d/ov006/dScMgMemory2_c.json + src/actors/dScMgMemory2_c.cpp -- the 51-of-52 conversion, the proof stage 3b works end to end.",
+      "config/tu_manifest.d/ov006/dScMgCurling2_c.json + src/minigames/d_s_mg_curling2.cpp (#2362) -- the closest structural match: unowned-.data PMF constants that dictate an in-commit rename, an out-of-line destructor with a homeless D2, `#pragma defer_codegen off`, and a manifest that spells out the extent argument for a vtable.",
+      "config/tu_manifest.d/ov006/dScMgMemory2_c.json + src/minigames/d_s_mg_memory2.cpp -- the 51-of-52 conversion, the proof stage 3b works end to end.",
       "src/minigames/d_s_mg_jump2.cpp -- not a shape oracle but the DOWNSTREAM consumer: it already declares this class's C1/D1 by their mangled spellings at lines 194-195 and constructs the mPlayers[3] array."
     ]
   },

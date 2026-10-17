@@ -1,8 +1,8 @@
 {
   "id": "ov002/dM3dGLin",
   "module": "ov002",
-  "source": "src/actors/dM3dGLin.cpp",
-  "promoted_source": "src/actors/dM3dGLin.cpp",
+  "source": "src/engine/collision/d_m3d_g_lin.cpp",
+  "promoted_source": "src/engine/collision/d_m3d_g_lin.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

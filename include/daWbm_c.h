@@ -33,7 +33,7 @@
  * five variant-2 fragments on its third landing or when it hits a player. 2
  * is a fragment at half scale. The per-variant roles
  * and the squash field names are inferred from the bodies in
- * src/actors/daWbm_c.cpp, not recovered names.
+ * src/game/actors/d_a_wbm.cpp, not recovered names.
  *
  * The reconstructed factory daWbm_c_classInit (historical alias
  * WaterBomb_Spawn) constructs it for the WATERBOMB registry profile.

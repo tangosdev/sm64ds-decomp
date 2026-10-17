@@ -147,7 +147,7 @@ struct daObjTatefuda_c : dBgActor_c {
        assert below is unaffected.
 
        It is also this class's KEY FUNCTION, the destructor above being inline,
-       so src/actors/daObjTatefuda_c.cpp emits _ZTV15daObjTatefuda_c, _ZTI15daObjTatefuda_c and the
+       so src/game/actors/d_a_obj_tatefuda.cpp emits _ZTV15daObjTatefuda_c, _ZTI15daObjTatefuda_c and the
        destructor variants alongside the one function it is bound to.
        objisolate.py reduces the object back to that one 0x74 .text before
        eligible.py and rombuild.py judge it -- checked, not assumed. */
@@ -172,8 +172,8 @@ struct daObjTatefuda_c : dBgActor_c {
        are the five enter/update pairs plus the two helpers IDLE's update
        calls, the respawn reset and the shadow-matrix rebuild.
        AttachToHolder and RebuildModelMatrix are declared in the .cpp and
-       stay free: their Matrix4x3 block copies scalarize under C++, so they
-       parse as C there. */
+       retain free C-linkage entry points. Both compile as C++ and use an
+       array-backed matrix view for their block copies. */
     void SetState(int state);
     void UpdateState();
     void InitIdle();  void Idle();

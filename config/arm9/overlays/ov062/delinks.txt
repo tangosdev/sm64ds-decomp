@@ -15,7 +15,7 @@ src/game/actors/d_a_nknk.cpp:
     .ctor start:0x0211d8d0 end:0x0211d8d4
     .bss start:0x0211df28 end:0x0211e004
 
-src/actors/daRNk_c.cpp:
+src/game/actors/d_a_r_nk.cpp:
     complete
     .text start:0x0211975c end:0x0211af38
     .init start:0x0211d4a0 end:0x0211d690
@@ -23,14 +23,14 @@ src/actors/daRNk_c.cpp:
     .data start:0x0211db30 end:0x0211db60
     .bss start:0x0211e004 end:0x0211e0d4
 
-src/actors/daRFlag_c.cpp:
+src/game/actors/d_a_r_flag.cpp:
     complete
     .text start:0x0211af38 end:0x0211b248
     .init start:0x0211d690 end:0x0211d6fc
     .ctor start:0x0211d8d8 end:0x0211d8dc
     .bss start:0x0211e0d4 end:0x0211e0fc
 
-src/actors/daJango_c.cpp:
+src/game/actors/d_a_jango.cpp:
     complete
     .text start:0x0211b248 end:0x0211ced8
     .init start:0x0211d6fc end:0x0211d8cc

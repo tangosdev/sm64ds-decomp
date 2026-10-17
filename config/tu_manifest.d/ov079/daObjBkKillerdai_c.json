@@ -1,15 +1,15 @@
 {
   "id": "ov079/daObjBkKillerdai_c",
   "module": "ov079",
-  "source": "src/actors/daObjBkKillerdai_c.cpp",
-  "promoted_source": "src/actors/daObjBkKillerdai_c.cpp",
+  "source": "src/game/actors/d_a_obj_bk_killerdai.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_bk_killerdai.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2126dbc..0x21271b4, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjBkKillerdai_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "fold-lane-D-0929: the daObjBkKillerdai_c_classInit registry factory abuts this TU's own range with no gap (src/d_a_obj_bk_killerdai.c ended exactly at 0x021271e4, the start of src/actors/daObjBk_Kabe_c.cpp, a different class) and no hole; tu_map never attributed it because it cuts on symbol name"
+    "fold-lane-D-0929: the daObjBkKillerdai_c_classInit registry factory abuts this TU's own range with no gap (src/d_a_obj_bk_killerdai.c ended exactly at 0x021271e4, the start of src/game/actors/d_a_obj_bk_kabe.cpp, a different class) and no hole; tu_map never attributed it because it cuts on symbol name"
   ],
   "sections": [
     {
@@ -91,7 +91,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov079_021282f0' differs between the legacy file that used to hold _ZN18daObjBkKillerdai_c16CleanupResourcesEv and the one that held _ZN18daObjBkKillerdai_c13InitResourcesEv; kept the first, the other is commented out for review",
     "fold branch tu/fold-highov-0921: 8/8 MATCH, objisolate clean, reloc-destinations clean -> text-verified. 13 UNLICENSED OUTPUT symbols (2 .text: _ZN18daObjBkKillerdai_cD2Ev, _ZN7Vector3D1Ev; 11 .data: the _ZTV/_ZTI/_ZTS group for daObjBkKillerdai_c and its ancestor chain). Key-function TU, .data RTTI emission expected; .data licensing NOT attempted here. Hand fixes over tubuild create: (1) removed the duplicate D0 destructor body; (2) data_ov079_02128300 and data_ov079_021282f0 are SharedFilePtr objects, not void* - Model::LoadFile takes SharedFilePtr&, so the more complete spelling was applied to the first declaration in place; (3) dropped the later duplicate 'extern int data_ov079_02127f64[]' in favour of the first-seen void*[] spelling; (4) dropped the legacy InitResources shard's local 'struct SharedFilePtr { int x; }', which shadowed the real include/SharedFilePtr.h class and broke the four .Release() calls - the TU only ever takes the address, so there is no size dependency. All byte-neutral.",
     "Promotion licenses those 13 as compiler_only_output: homeless D2 deadstrip, Vector3::~Vector3 deadstrip-duplicate at arm9:0x020072c0, and 11 deadstrip-data RTTI/vtable rows. Text span stays 0x02126dbc..0x021271b4. The factory at 0x021271b4 and FortressWall are not absorbed. g_profile_BK_KILLER_DAI sits between _ZTS and _ZTV, so this stays text-only.",
-    "fold-lane-D-0929: folded the daObjBkKillerdai_c_classInit registry factory (0x021271b4..0x021271e4) into this already-promoted TU, widening the complete delinks.txt claim from 0x02126dbc..0x021271b4 to 0x02126dbc..0x021271e4. The loose one-function source hand-called fBase_c::operator new(804) + the inherited dBgActor_c ctor + this class's vtable store; daObjBkKillerdai_c has no user-declared constructor, so `new daObjBkKillerdai_c()` reproduces the identical sequence with zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the factory appends after InitResources. `tubuild.py verify` reports 9/9 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, adding one new compiler_only_output deadstrip entry (_ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/actors/daObjHatenaBlock_c.cpp already documents and licenses). Retired: src/d_a_obj_bk_killerdai.c (credited tangosdev, carried into attribution.json as a path#symbol override)."
+    "fold-lane-D-0929: folded the daObjBkKillerdai_c_classInit registry factory (0x021271b4..0x021271e4) into this already-promoted TU, widening the complete delinks.txt claim from 0x02126dbc..0x021271b4 to 0x02126dbc..0x021271e4. The loose one-function source hand-called fBase_c::operator new(804) + the inherited dBgActor_c ctor + this class's vtable store; daObjBkKillerdai_c has no user-declared constructor, so `new daObjBkKillerdai_c()` reproduces the identical sequence with zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the factory appends after InitResources. `tubuild.py verify` reports 9/9 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, adding one new compiler_only_output deadstrip entry (_ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/game/actors/d_a_obj_hatena_block.cpp already documents and licenses). Retired: src/d_a_obj_bk_killerdai.c (credited tangosdev, carried into attribution.json as a path#symbol override)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -180,7 +180,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "fold-lane-D-0929: the classInit factory's `new daObjBkKillerdai_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct documented in src/actors/daObjHatenaBlock_c.cpp). No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
+      "reason": "fold-lane-D-0929: the classInit factory's `new daObjBkKillerdai_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct documented in src/game/actors/d_a_obj_hatena_block.cpp). No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",

@@ -1,7 +1,8 @@
+#include "nitro/fx/fx.h"
 void func_0204c0e8(int arg0, int arg1, int *m)
 {
-    int r3 = (int)((((long long)(0x1000 - arg1) * 0x555) + 0x800) >> 12);
-    int r5 = (int)((((long long)arg0 * 0x93d) + 0x800) >> 12);
+    int r3 = FX_MUL((0x1000 - arg1), 0x555);
+    int r5 = FX_MUL(arg0, 0x93d);
     int r1;
     int sum = r3 + r5;
     int dif = r3 - r5;

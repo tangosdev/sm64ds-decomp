@@ -1,8 +1,8 @@
 {
   "id": "ov060/daKpa2Bg_c",
   "module": "ov060",
-  "source": "src/actors/daKpa2Bg_c.cpp",
-  "promoted_source": "src/actors/daKpa2Bg_c.cpp",
+  "source": "src/game/actors/d_a_kpa2_bg.cpp",
+  "promoted_source": "src/game/actors/d_a_kpa2_bg.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "HISTORY: contiguous linker run: 0x2117980..0x2117cdc, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daKpa2Bg_c",
     "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-09): daKpa2Bg_c_classInit (0x02117cdc..0x02117d1c) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off and spelled `return new daKpa2Bg_c;` (operator new 0x570, dBgActor_c base ctor, _ZTV10daKpa2Bg_c vptr store, Model and dBgW_KcMbg member ctors -- the retired shard's hand-spelled sequence). It builds only this class, for the KOOPA2BG profile; the unit is 0x02117980..0x02117d1c, bounded above by src/actors/daKpa3Bg_c.cpp, which starts exactly at 0x02117d1c."
+    "CLASSINIT TAIL FOLD (2026-10-09): daKpa2Bg_c_classInit (0x02117cdc..0x02117d1c) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off and spelled `return new daKpa2Bg_c;` (operator new 0x570, dBgActor_c base ctor, _ZTV10daKpa2Bg_c vptr store, Model and dBgW_KcMbg member ctors -- the retired shard's hand-spelled sequence). It builds only this class, for the KOOPA2BG profile; the unit is 0x02117980..0x02117d1c, bounded above by src/game/actors/d_a_kpa3_bg.cpp, which starts exactly at 0x02117d1c."
   ],
   "sections": [
     {
@@ -463,7 +463,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daKpa2Bg_c.cpp",
+      "symbol": "__sinit_d_a_kpa2_bg.cpp",
       "address": "0x02119f94",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -472,7 +472,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daKpa2Bg_c.cpp",
+      "symbol": ".p__sinit_d_a_kpa2_bg.cpp",
       "address": "0x0211a4c4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -530,13 +530,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daKpa2Bg_c.cpp",
+      "symbol": "__sinit_d_a_kpa2_bg.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daKpa2Bg_c.cpp",
+      "symbol": ".p__sinit_d_a_kpa2_bg.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -660,7 +660,7 @@
       "source": "0x0211a4c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daKpa2Bg_c.cpp",
+      "symbol": "__sinit_d_a_kpa2_bg.cpp",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x02119f94"

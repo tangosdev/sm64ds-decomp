@@ -56,7 +56,7 @@
     "for_a_key_function_TU": 13,
     "derivation": "2 x (4 ancestors + self) + 1 vtable = 11 data rows, which romdata_check.check_object confirms exactly: compiling src/_ZN6EyerokD1Ev.cpp emits precisely those 11 data symbols and no others. +1 for _ZN7Vector3D1Ev, odr-used because the class holds Vector3 mDustPos[0x14] at 0x4dc and D1 tears it down with __destroy_arr(..., _ZN7Vector3D1Ev). +1 for _ZN4Vec4D1Ev, the implicit destructor of the file-local shadow struct `Vec4 { int a,b,c,d; ~Vec4(){} }` that ROM ordinal 50 declares. Total 13.",
     "for_this_partial_promotion": 2,
-    "why_it_differs": "src/actors/Eyerok.cpp claims ROM ordinals 25..58 only. The destructor pair (ordinals 0 and 1) stays in src/_ZN6EyerokD1Ev.cpp / src/_ZN6EyerokD0Ev.cpp, and include/Eyerok.h declares ~Eyerok() out of line, so the destructor -- the first and only virtual the header declares -- remains the key function and remains OUTSIDE this TU. A TU that does not own the key function emits no vtable and no typeinfo, so all 11 data rows disappear and only the two function rows remain. That is the whole reason this promotion's compiler_only_output is 2 and not 13.",
+    "why_it_differs": "src/game/actors/d_a_iwante.cpp claims ROM ordinals 25..58 only. The destructor pair (ordinals 0 and 1) stays in src/_ZN6EyerokD1Ev.cpp / src/_ZN6EyerokD0Ev.cpp, and include/Eyerok.h declares ~Eyerok() out of line, so the destructor -- the first and only virtual the header declares -- remains the key function and remains OUTSIDE this TU. A TU that does not own the key function emits no vtable and no typeinfo, so all 11 data rows disappear and only the two function rows remain. That is the whole reason this promotion's compiler_only_output is 2 and not 13.",
     "oracle_note": "ov066 had no sibling_oracle. These are the measured numbers for the next writer in this overlay: 5 ancestry levels, 11 data rows for a key-function TU, 13 with the two function rows, 2 for a non-key-function partial. The queue's compiler-only column for ov066 rows should be read as 13 (key-function) or 2 (not), never as a single number."
   },
   "overrides": [
@@ -115,11 +115,11 @@
     "as_shipped": "include/Eyerok.h is left UNCHANGED (destructor still out of line) because the D1/D0 shards are outside this partial claim and still define it out of line; inlining it in the header would be a duplicate definition. A later writer who can take the whole run should inline it, and should expect the 13-row compiler_only_output above at the same time."
   },
   "size": "0x874",
-  "size_evidence": "The factory daIwante_c_classInit (ov066:0x0211a370, size 0xa8) calls fBase_c::operator new(0x874) and then stores 0x0211ad64 (_ZTV6Eyerok) at [this]. include/Eyerok.h closes the field span on the same number. Builder correction: this entry previously named the factory's source as a file that does not exist -- it lived in src/d_a_iwante.cpp and is now folded into src/actors/Eyerok.cpp. tools/opnew_sizes.py agrees independently: 1 site, size 0x874, confidence inline_store, unambiguous, vtable 0x0211ad64.",
+  "size_evidence": "The factory daIwante_c_classInit (ov066:0x0211a370, size 0xa8) calls fBase_c::operator new(0x874) and then stores 0x0211ad64 (_ZTV6Eyerok) at [this]. include/Eyerok.h closes the field span on the same number. Builder correction: this entry previously named the factory's source as a file that does not exist -- it lived in src/d_a_iwante.cpp and is now folded into src/game/actors/d_a_iwante.cpp. tools/opnew_sizes.py agrees independently: 1 site, size 0x874, confidence inline_store, unambiguous, vtable 0x0211ad64.",
   "linker_run": {
     "range": "0x02115ee0..0x0211a418",
     "functions": 64,
-    "promoted": "62 functions in src/actors/Eyerok.cpp, 0x0211603c..0x0211a418",
+    "promoted": "62 functions in src/game/actors/d_a_iwante.cpp, 0x0211603c..0x0211a418",
     "dropped": "D1/D0 stay their own shards (0x02115ee0..0x0211603c): defining ~Eyerok in this TU would emit _ZTS6Eyerok RTTI the ROM does not carry (its RTTI is daIwante_c's)"
   },
   "unproven": [

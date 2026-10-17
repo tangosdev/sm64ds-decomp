@@ -38,7 +38,7 @@ extern "C" {
 extern int g_walk_dbg[16];
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
-void *_ZN4Heap13SetupRootHeapEv(void);
+void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 void *_ZN7dBgW_KcC1Ev(void *self);
 }
 
@@ -73,7 +73,7 @@ int main(void)
     PORT_INSTALL_FAULT_PROBE();
     setvbuf(stdout, NULL, _IONBF, 0);   /* crashes must not eat the trail */
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(_ZN5mHeap6Heap_t13SetupRootHeapEv() != NULL);
 
     /* the castle grounds KCL, handle 1941: real level floors
        (the piano's KCL turned out to be four wall prisms and nothing

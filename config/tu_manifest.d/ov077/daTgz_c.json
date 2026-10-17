@@ -1,8 +1,8 @@
 {
   "id": "ov077/daTgz_c",
   "module": "ov077",
-  "source": "src/actors/daTgz_c.cpp",
-  "promoted_source": "src/actors/daTgz_c.cpp",
+  "source": "src/game/actors/d_a_tgz.cpp",
+  "promoted_source": "src/game/actors/d_a_tgz.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -416,7 +416,7 @@
     {
       "symbol": "_ZN7daTgz_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "Homeless. src_tu/actors/daTgz_c.cpp carries a single out-of-line `daTgz_c::~daTgz_c()` and mwccarm emits the whole variant set from that one definition, but the cartridge carries only D1 (ov077:0x02124b64, size 0x50) and D0 (ov077:0x02124bb4, size 0x64) -- both licensed by this manifest as ordinals 0 and 1. Nothing in config/ names a D2 for this class: config/arm9/overlays/ov077/symbols.txt holds _ZN7daTgz_cD1Ev and _ZN7daTgz_cD0Ev rows and no third, and rombuild's symbol-home index resolves _ZN7daTgz_cD2Ev to no home at all. With no ROM home there are no cartridge bytes to compare it against, so this is a plain `deadstrip` and NOT a `deadstrip-duplicate`; production isolation discards the body. It is emitted beside the two licensed variants and does not disturb the licensed run."
+      "reason": "Homeless. src_tu/actors/d_a_tgz.cpp carries a single out-of-line `daTgz_c::~daTgz_c()` and mwccarm emits the whole variant set from that one definition, but the cartridge carries only D1 (ov077:0x02124b64, size 0x50) and D0 (ov077:0x02124bb4, size 0x64) -- both licensed by this manifest as ordinals 0 and 1. Nothing in config/ names a D2 for this class: config/arm9/overlays/ov077/symbols.txt holds _ZN7daTgz_cD1Ev and _ZN7daTgz_cD0Ev rows and no third, and rombuild's symbol-home index resolves _ZN7daTgz_cD2Ev to no home at all. With no ROM home there are no cartridge bytes to compare it against, so this is a plain `deadstrip` and NOT a `deadstrip-duplicate`; production isolation discards the body. It is emitted beside the two licensed variants and does not disturb the licensed run."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",

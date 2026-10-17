@@ -27,7 +27,7 @@ struct daObjKm2_Nobiru_c : dActor_c {
     Matrix4x3 mColliderTransform;       /* 0x128 */
     dBgW_KcMbgSclY mCollider;           /* 0x158 */
 
-    /* Out of line in daObjKm2_Nobiru_c.cpp: the key function, so that TU
+    /* Out of line in d_a_obj_km2_nobiru.cpp: the key function, so that TU
      * emits _ZTV/_ZTI/_ZTS17daObjKm2_Nobiru_c. */
     virtual ~daObjKm2_Nobiru_c();       /* slots 16, 17 */
 

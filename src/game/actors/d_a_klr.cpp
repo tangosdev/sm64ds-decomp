@@ -39,6 +39,7 @@
 #include "Player.h"
 #include "Sound.h"
 #include "dBgPi.h"
+#include "dBgCh_Actr.h"
 
 struct BMD_File;
 
@@ -66,8 +67,6 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     Player *self, const Vector3 *source, u32 damage, int speed, u8 a, u8 b,
     u8 c);
-
-void *_ZNK10dBgCh_Actr13GetWallResultEv(const dBgCh_Actr *self);
 
 void func_ov079_02126704(daKlr_c *self);
 }
@@ -140,10 +139,10 @@ s32 daKlr_c::Behavior()
             ((Player *)FindWithID(id))->IncMegaKillCount();
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, mPosX, mPosY, mPosZ);
             MarkForDestruction();
-            func_02012694(0x78, (Vector3 *)&mCamSpacePosX);
+            func_02012694(0x78, &mCamSpacePos);
         } else if (flags & 0x3c0) {
             mState = 1;
-            Sound::PlayBank0(0xb5, *(Vector3 *)&mCamSpacePosX);
+            Sound::PlayBank0(0xb5, mCamSpacePos);
         } else {
             dActor_c *o = FindWithID(id);
             if (o != 0) {
@@ -157,7 +156,7 @@ s32 daKlr_c::Behavior()
                         _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
                             (Player *)o, &pos, 3, 0xc000, 1, 0, 1);
                         mState = 1;
-                        Sound::PlayBank0(0xb5, *(Vector3 *)&mCamSpacePosX);
+                        Sound::PlayBank0(0xb5, mCamSpacePos);
                     }
                 }
             }
@@ -227,7 +226,7 @@ void daKlr_c::func_ov079_0212682c()
     this->UpdateWMClsn(this->mWallClsn, 0);
     this->mHorzSpeed = -0x1e000;
     this->UpdatePosWithHorzSpeedAndAng();
-    Vec3_Add(&nose, (Vector3 *)&this->mPosX, (Vector3 *)&this->unk_0a4);
+    Vec3_Add(&nose, &this->mPos, (Vector3 *)&this->unk_0a4);
     this->mSmokeTrailID = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         this->mSmokeTrailID, kSmokeParticle, nose.x, nose.y, nose.z, 0, 0);
     this->mHorzSpeed = 0x1e000;
@@ -235,7 +234,7 @@ void daKlr_c::func_ov079_0212682c()
         ApproachLinear(this->mPrevAngleY, this->HorzAngleToCPlayer(), 0x200);
     this->mAngleY = this->mPrevAngleY;
     if ((u16)this->mStateTimer == 50) {
-        func_0201267c(0xd4, (Vector3 *)&this->mCamSpacePosX);
+        func_0201267c(0xd4, &this->mCamSpacePos);
         this->mCylClsn.flags &= ~1;
     }
     {
@@ -243,7 +242,7 @@ void daKlr_c::func_ov079_0212682c()
         if ((u16)this->mStateTimer > 150)
             hit = 1;
         if (this->mWallClsn.IsOnWall() != 0) {
-            dBgPi *wall = (dBgPi *)_ZNK10dBgCh_Actr13GetWallResultEv(&this->mWallClsn);
+            dBgPi *wall = (dBgPi *)this->mWallClsn.GetWallResult();
             if (wall->GetClsnID() != (u32)-1) {
                 if (dActor_c::FindWithID(wall->GetClsnID()) != this->mLauncher)
                     hit = 1;
@@ -255,10 +254,10 @@ void daKlr_c::func_ov079_0212682c()
             return;
     }
     if ((u16)this->mStateTimer > 150) {
-        func_02012694(0x79, (Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x79, &this->mCamSpacePos);
         this->PoofDust();
     } else {
-        func_02012694(0x78, (Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x78, &this->mCamSpacePos);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, nose.x, nose.y, nose.z);
     }
     this->MarkForDestruction();
@@ -277,7 +276,7 @@ void daKlr_c::func_ov079_02126794()
     if ((u16)this->mStateTimer <= 90)
         return;
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, this->mPosX, this->mPosY, this->mPosZ);
-    func_02012694(0x78, (Vector3 *)&this->mCamSpacePosX);
+    func_02012694(0x78, &this->mCamSpacePos);
     this->MarkForDestruction();
 }
 

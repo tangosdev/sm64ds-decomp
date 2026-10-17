@@ -169,126 +169,126 @@
       {
         "slot": 18,
         "target": "0x020e6774",
-        "symbol": "_ZN15dScMgCurling2_c13OnYoshiTryEatEi",
+        "symbol": "_ZN15dScMgCurling2_c10StartRoundEi",
         "own_override": true,
         "base_target": "0x020b299c"
       },
       {
         "slot": 19,
         "target": "0x020b2994",
-        "symbol": "_ZN11dScMgBase_c13OnTurnIntoEggEi",
+        "symbol": "_ZN11dScMgBase_c11CanEndStateEi",
         "own_override": false,
         "base_target": "0x020b2994"
       },
       {
         "slot": 20,
         "target": "0x020b2990",
-        "symbol": "_ZN11dScMgBase_c9Virtual50Ev",
+        "symbol": "_ZN11dScMgBase_c11OnNewRecordEv",
         "own_override": false,
         "base_target": "0x020b2990"
       },
       {
         "slot": 21,
         "target": "0x020b298c",
-        "symbol": "_ZN11dScMgBase_c15OnGroundPoundedEv",
+        "symbol": "_ZN11dScMgBase_c10OnDealDoneEv",
         "own_override": false,
         "base_target": "0x020b298c"
       },
       {
         "slot": 22,
         "target": "0x020ae198",
-        "symbol": "_ZN11dScMgBase_c11OnAttacked1Ev",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback1Ev",
         "own_override": false,
         "base_target": "0x020ae198"
       },
       {
         "slot": 23,
         "target": "0x020ae1a0",
-        "symbol": "_ZN11dScMgBase_c11OnAttacked2Ev",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback0Ev",
         "own_override": false,
         "base_target": "0x020ae1a0"
       },
       {
         "slot": 24,
         "target": "0x020ae140",
-        "symbol": "_ZN11dScMgBase_c8OnKickedEv",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback2Ev",
         "own_override": false,
         "base_target": "0x020ae140"
       },
       {
         "slot": 25,
         "target": "0x020ae128",
-        "symbol": "_ZN11dScMgBase_c8OnPushedEv",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback3Ev",
         "own_override": false,
         "base_target": "0x020ae128"
       },
       {
         "slot": 26,
         "target": "0x020b04e0",
-        "symbol": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv",
+        "symbol": "_ZN11dScMgBase_c14GetDisplayModeEv",
         "own_override": false,
         "base_target": "0x020b04e0"
       },
       {
         "slot": 27,
         "target": "0x020af27c",
-        "symbol": "_ZN11dScMgBase_c15OnHitByMegaCharEv",
+        "symbol": "_ZN11dScMgBase_c8OpenMenuEv",
         "own_override": false,
         "base_target": "0x020af27c"
       },
       {
         "slot": 28,
         "target": "0x020af04c",
-        "symbol": "_ZN11dScMgBase_c19OnHitFromUnderneathEv",
+        "symbol": "_ZN11dScMgBase_c9CloseMenuEv",
         "own_override": false,
         "base_target": "0x020af04c"
       },
       {
         "slot": 29,
         "target": "0x020af094",
-        "symbol": "_ZN11dScMgBase_c16OnAimedAtWithEggEv",
+        "symbol": "_ZN11dScMgBase_c17SaveScreenForMenuEv",
         "own_override": false,
         "base_target": "0x020af094"
       },
       {
         "slot": 30,
         "target": "0x020aeed8",
-        "symbol": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv",
+        "symbol": "_ZN11dScMgBase_c21RestoreScreenFromMenuEv",
         "own_override": false,
         "base_target": "0x020aeed8"
       },
       {
         "slot": 31,
         "target": "0x020b2880",
-        "symbol": "_ZN11dScMgBase_c9Virtual7CEv",
+        "symbol": "_ZN11dScMgBase_c15InitSubScreenBgEv",
         "own_override": false,
         "base_target": "0x020b2880"
       },
       {
         "slot": 32,
         "target": "0x020b27f4",
-        "symbol": "_ZN11dScMgBase_c9Virtual80Ev",
+        "symbol": "_ZN11dScMgBase_c16InitMainScreenBgEv",
         "own_override": false,
         "base_target": "0x020b27f4"
       },
       {
         "slot": 33,
         "target": "0x020b265c",
-        "symbol": "_ZN11dScMgBase_c9Virtual84Ev",
+        "symbol": "_ZN11dScMgBase_c11InitEnginesEv",
         "own_override": false,
         "base_target": "0x020b265c"
       },
       {
         "slot": 34,
         "target": "0x020ae3b4",
-        "symbol": "_ZN11dScMgBase_c9Virtual88Eiiii",
+        "symbol": "_ZN11dScMgBase_c11PaintSquareEiiii",
         "own_override": false,
         "base_target": "0x020ae3b4"
       },
       {
         "slot": 35,
         "target": "0x020ad660",
-        "symbol": "_ZN11dScMgBase_c9Virtual8CEv",
+        "symbol": "_ZN11dScMgBase_c12IsAltVariantEv",
         "own_override": false,
         "base_target": "0x020ad660"
       }
@@ -328,7 +328,7 @@
         "slot": 18,
         "address": "0x020e6774",
         "size": "0x7c",
-        "symbol": "_ZN15dScMgCurling2_c13OnYoshiTryEatEi"
+        "symbol": "_ZN15dScMgCurling2_c10StartRoundEi"
       }
     ],
     "override_evidence": "Word-for-word diff of the 36-slot cartridge tables at ov006 0x0213c510 and ov004 0x020bc0c0 differs in exactly slots 0, 6, 9, 16, 17, 18, and all six targets lie inside the run. The other 30 slots are byte-identical to dScMgBase_c's and are named here from ov004/arm9 symbols.txt.",
@@ -583,7 +583,7 @@
       "kind": "direct-call helper; member-vs-free unproven"
     },
     {
-      "symbol": "func_ov006_020e5450",
+      "symbol": "Curling2_ResolveStoneCollision",
       "address": "0x020e5450",
       "size": "0x560",
       "direct_callers": [
@@ -785,7 +785,7 @@
       "size": "0x4",
       "type": "32-bit handle/value",
       "name": null,
-      "evidence": "InitResources stores the word returned by ov004 func_ov004_020adc1c at 0x020e6bac; OnYoshiTryEat repeats the word store at 0x020e67d8. The return type and original member name are unproven."
+      "evidence": "InitResources stores the word returned by ov004 Mg_GetTopRecord at 0x020e6bac; OnYoshiTryEat repeats the word store at 0x020e67d8. The return type and original member name are unproven."
     },
     {
       "offset": "0x55b4",
@@ -817,7 +817,7 @@
     }
   ],
   "unproven": [
-    "Whether func_ov006_020e5450 can be matched. The honest measurement is 191 divergent words of 344 at the exact size 0x560, which is what nearmiss/db.jsonl banks, with a byte-clean prologue; no matched source exists. An older config/match_attempts.jsonl row read 29, but it was scored over a 0x52c candidate against the 0x560 target and was a truncated verdict, not a divergence count; that field has been cleared.",
+    "Whether Curling2_ResolveStoneCollision can be matched. The honest measurement is 191 divergent words of 344 at the exact size 0x560, which is what nearmiss/db.jsonl banks, with a byte-clean prologue; no matched source exists. An older config/match_attempts.jsonl row read 29, but it was scored over a 0x52c candidate against the 0x560 target and was a truncated verdict, not a divergence count; that field has been cleared.",
     "Whether any of the five pragma directives is load-bearing. That is a delete-outright control the writer runs; nothing here measures it.",
     "The original identifiers and member-versus-file-local form of the 21 direct-call-only helpers. Direct calls preserve targets and arguments, not source-level linkage.",
     "The original names of the 25 nonvirtual member callbacks reached through the pointer-to-member records, and the gameplay semantics of the seven BSS destination arrays.",
@@ -923,7 +923,7 @@
       "start": "0x020e5450",
       "end": "0x020e59b0",
       "size": "0x560",
-      "symbol": "func_ov006_020e5450",
+      "symbol": "Curling2_ResolveStoneCollision",
       "reason": "no-legacy-source: no delinks.txt entry and no src/func_ov006_020e5450.c[pp]. The cartridge's own bytes cover it."
     }
   },
@@ -941,7 +941,7 @@
       "count": 1,
       "queue_says": 1,
       "verdict": "REAL and unchanged",
-      "function": "func_ov006_020e5450",
+      "function": "Curling2_ResolveStoneCollision",
       "address": "0x020e5450",
       "size": "0x560",
       "evidence": "Absent from config/arm9/overlays/ov006/delinks.txt (a 0x560 gap sits between src/func_ov006_020e513c.cpp ending at 0x020e5450 and src/func_ov006_020e59b0.c starting at 0x020e59b0) and there is no src/func_ov006_020e5450.c or .cpp."
@@ -1022,7 +1022,7 @@
   },
   "near_miss_bank": {
     "hole_function": {
-      "name": "func_ov006_020e5450",
+      "name": "Curling2_ResolveStoneCollision",
       "address": "0x020e5450",
       "size": "0x560",
       "attempts": 1,
@@ -1390,7 +1390,7 @@
   },
   "sibling_oracles": {
     "queue_row": "dScMgSingle3DBase_c",
-    "primary": "config/tu_manifest.d/ov006/dScMgTeresa_c.json + src/actors/dScMgTeresa_c.cpp, and config/tu_manifest.d/ov006/dScMgPanel_c.json + src/actors/dScMgPanel_c.cpp. The two freshest ov006 promotions (#2329, #2347), both out-of-line destructor + `#pragma defer_codegen off`, both on the live src/actors/<Class>.cpp convention, and both with the IDENTICAL 5-class ancestor chain to this one (<Class> -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c). Copy these.",
+    "primary": "config/tu_manifest.d/ov006/dScMgTeresa_c.json + src/minigames/d_s_mg_teresa.cpp, and config/tu_manifest.d/ov006/dScMgPanel_c.json + src/minigames/d_s_mg_panel.cpp. The two freshest ov006 promotions (#2329, #2347), both out-of-line destructor + `#pragma defer_codegen off`, both on the live src/actors/<Class>.cpp convention, and both with the IDENTICAL 5-class ancestor chain to this one (<Class> -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c). Copy these.",
     "exact_compiler_only_prediction": "dScMgTeresa_c and dScMgPanel_c each landed exactly 12 compiler_only_output entries: the 11-entry floor this class's identical chain also predicts, plus the deadstripped D2. A segment-A promotion of dScMgCurling2_c should land 12 as well.",
     "still_useful_from_memory": "src/minigames/d_s_mg_memory.cpp remains a readable worked example of the single-definition-emits-D1-and-D0 comment shape, but it is the ONE older src/minigames/ TU using the pragma and it follows the superseded layout convention. Read it for the prose, not for the file shape.",
     "for_a_partial": "config/tu_manifest.d/ov006/dScMgCoin_c.json -- promoted a 33-of-61 segment that EXCLUDED its key function and therefore carries compiler_only_output: 0 and a production_mode key. Also on the src/actors/ convention and also `defer_codegen off`.",

@@ -47,7 +47,7 @@ struct daWanwan2_c : dEnemyBase_c {
     dExtShadowModel_c         mShadowModel;       /* 0x640 -- the body's drop shadow */
     /* The current state: a pair of pointers-to-member (enter, execute) that
        func_ov100_02143b18 stores and calls and Behavior calls every frame --
-       see ChompState in src/actors/daWanwan2_c.cpp. */
+       see ChompState in src/game/actors/d_a_wanwan2.cpp. */
     void               *mStatePair;         /* 0x668 */
     u8  pad_66c[0x34];
     /* Counts how many times func_ov100_021437d4 has stepped the chain; the
@@ -65,7 +65,7 @@ struct daWanwan2_c : dEnemyBase_c {
        check) is not run. */
     u16 mHaltTimer;                         /* 0x6a6 */
     /* Counted down in Behavior, and the two sounds there play only while it is
-       zero. Nothing in daWanwan2_c.cpp sets it. */
+       zero. Nothing in d_a_wanwan2.cpp sets it. */
     u16 unk_6a8;                            /* 0x6a8 */
     u8  pad_6aa[0x2];
     s32 mPathID;                            /* 0x6ac -- param1's low byte (0xff reads as 0) */
@@ -78,15 +78,15 @@ struct daWanwan2_c : dEnemyBase_c {
     /* Latched by func_ov100_021435e8 once the actor it spawned at the last link
        is gone or has reached its state 5; after that it does nothing. */
     u8  mChainEndDone;                      /* 0x6c8 */
-    u8  unk_6c9;                            /* 0x6c9 -- InitResources sets 0x1f; not read in daWanwan2_c.cpp */
+    u8  unk_6c9;                            /* 0x6c9 -- InitResources sets 0x1f; not read in d_a_wanwan2.cpp */
     /* Frames until Behavior next spawns a COIN (in game mode 1); InitResources
        and Behavior set it to 200. */
     u16 mCoinTimer;                         /* 0x6ca */
-    s32 unk_6cc;                            /* 0x6cc -- InitResources sets 3; not read in daWanwan2_c.cpp */
+    s32 unk_6cc;                            /* 0x6cc -- InitResources sets 3; not read in d_a_wanwan2.cpp */
     /* uniqueID of the actor func_ov100_021435e8 spawned at the last link
        (0 = none: not spawned yet, or finished). */
     s32 mChainEndActorID;                   /* 0x6d0 */
-    s32 unk_6d4;                            /* 0x6d4 -- zeroed by InitResources; not read in daWanwan2_c.cpp */
+    s32 unk_6d4;                            /* 0x6d4 -- zeroed by InitResources; not read in d_a_wanwan2.cpp */
     /* The six chain links, by func_ov100_021437d4: the link positions, then each
        link's velocity: its movement in the latest chain step scaled by
        3000/4096 (for link 0, the movement from the anchor 250 units behind the

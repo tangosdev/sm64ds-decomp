@@ -1,8 +1,8 @@
 {
   "id": "ov064/daObjFl_Coin_c+daObjFl_Puzzle_c",
   "module": "ov064",
-  "source": "src/actors/daObjFl_Coin_c.cpp",
-  "promoted_source": "src/actors/daObjFl_Coin_c.cpp",
+  "source": "src/game/actors/d_a_obj_fl_coin.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_fl_coin.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "HISTORY: contiguous linker run: 0x2118b50..0x211929c, 21 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjFl_Coin_c, daObjFl_Puzzle_c",
     "module sinit corroboration: 11 sinit(s) / 11 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-09): the four one-function sources right of this run -- func_ov064_0211929c (0x20), func_ov064_021192bc (0x14), daObjFl_Coin_c_classInit (0x30) and daObjFl_Puzzle_c_classInit (0x30), 0x0211929c..0x02119330 -- abut its .text end with no gap and are now inside it. All four belong to this two-class TU: func_ov064_0211929c stores 1 to byte 0x338 of its first argument (daObjFl_Puzzle_c::mHadClsn, which the piece's Behavior reads) when the second argument's actor ID is 0xbf; func_ov064_021192bc is the collision callback this TU's daObjFl_Puzzle_c::InitResources installs in mMeshCollider and only forwards its last two arguments to func_ov064_0211929c (pooled long-call tail call); daObjFl_Coin_c_classInit allocates sizeof(daObjFl_Coin_c) (0xd8), runs dActor_c's base ctor and stores _ZTV14daObjFl_Coin_c; daObjFl_Puzzle_c_classInit allocates sizeof(daObjFl_Puzzle_c) (0x33c), runs dBgActor_c's base ctor and stores _ZTV16daObjFl_Puzzle_c. The next .text entry in ov064 delinks (src/actors/daWater_Hakidasi_c.cpp) starts exactly at 0x02119330. Written at the top of the file, Puzzle factory first, because the TU emits .text in reverse source order. The TU no longer includes decl_common.h: its only uses were the `int func_ov064_021192bc()` prototype, which C++ cannot overload with the three-argument definition, and data_ov064_0211c198, now declared locally with the header's exact type."
+    "CLASSINIT TAIL FOLD (2026-10-09): the four one-function sources right of this run -- func_ov064_0211929c (0x20), func_ov064_021192bc (0x14), daObjFl_Coin_c_classInit (0x30) and daObjFl_Puzzle_c_classInit (0x30), 0x0211929c..0x02119330 -- abut its .text end with no gap and are now inside it. All four belong to this two-class TU: func_ov064_0211929c stores 1 to byte 0x338 of its first argument (daObjFl_Puzzle_c::mHadClsn, which the piece's Behavior reads) when the second argument's actor ID is 0xbf; func_ov064_021192bc is the collision callback this TU's daObjFl_Puzzle_c::InitResources installs in mMeshCollider and only forwards its last two arguments to func_ov064_0211929c (pooled long-call tail call); daObjFl_Coin_c_classInit allocates sizeof(daObjFl_Coin_c) (0xd8), runs dActor_c's base ctor and stores _ZTV14daObjFl_Coin_c; daObjFl_Puzzle_c_classInit allocates sizeof(daObjFl_Puzzle_c) (0x33c), runs dBgActor_c's base ctor and stores _ZTV16daObjFl_Puzzle_c. The next .text entry in ov064 delinks (src/game/actors/d_a_water_hakidasi.cpp) starts exactly at 0x02119330. Written at the top of the file, Puzzle factory first, because the TU emits .text in reverse source order. The TU no longer includes decl_common.h: its only uses were the `int func_ov064_021192bc()` prototype, which C++ cannot overload with the three-argument definition, and data_ov064_0211c198, now declared locally with the header's exact type."
   ],
   "sections": [
     {
@@ -214,35 +214,35 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov064_0211c7d8",
+      "symbol": "gFl1408ModelFile",
       "address": "0x0211c7d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x608 (model)"
     },
     {
-      "symbol": "data_ov064_0211c7e0",
+      "symbol": "gFl1406ModelFile",
       "address": "0x0211c7e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x606 (model)"
     },
     {
-      "symbol": "data_ov064_0211c7e8",
+      "symbol": "gFl1402ModelFile",
       "address": "0x0211c7e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x602 (model)"
     },
     {
-      "symbol": "data_ov064_0211c7f0",
+      "symbol": "gFl1409ModelFile",
       "address": "0x0211c7f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x609 (model)"
     },
     {
-      "symbol": "data_ov064_0211c7f8",
+      "symbol": "gFl1411ModelFile",
       "address": "0x0211c7f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -256,63 +256,63 @@
       "evidence": "resource handle constructed with file ID 0x600 (collision)"
     },
     {
-      "symbol": "data_ov064_0211c808",
+      "symbol": "gFl1407ModelFile",
       "address": "0x0211c808",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x607 (model)"
     },
     {
-      "symbol": "data_ov064_0211c810",
+      "symbol": "gFl1400ModelFile",
       "address": "0x0211c810",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x5ff (model)"
     },
     {
-      "symbol": "data_ov064_0211c818",
+      "symbol": "gFl1401ModelFile",
       "address": "0x0211c818",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x601 (model)"
     },
     {
-      "symbol": "data_ov064_0211c820",
+      "symbol": "gFl1404ModelFile",
       "address": "0x0211c820",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x604 (model)"
     },
     {
-      "symbol": "data_ov064_0211c828",
+      "symbol": "gFl1410ModelFile",
       "address": "0x0211c828",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x60a (model)"
     },
     {
-      "symbol": "data_ov064_0211c830",
+      "symbol": "gFl1405ModelFile",
       "address": "0x0211c830",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x605 (model)"
     },
     {
-      "symbol": "data_ov064_0211c838",
+      "symbol": "gFl1412ModelFile",
       "address": "0x0211c838",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x60c (model)"
     },
     {
-      "symbol": "data_ov064_0211c840",
+      "symbol": "gFl1403ModelFile",
       "address": "0x0211c840",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "resource handle constructed with file ID 0x603 (model)"
     },
     {
-      "symbol": "data_ov064_0211c848",
+      "symbol": "gFl1413ModelFile",
       "address": "0x0211c848",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -948,7 +948,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjFl_Coin_c.cpp",
+      "symbol": "__sinit_d_a_obj_fl_coin.cpp",
       "address": "0x0211b1d4",
       "size": "0x00000308",
       "binding": "STB_GLOBAL",
@@ -957,7 +957,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjFl_Coin_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_fl_coin.cpp",
       "address": "0x0211b744",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1003,90 +1003,90 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@714",
+      "from": "@712",
       "to": "@1",
       "evidence": "emitted destructor-registration node name collides with the configured @700 on ov089 on main; @1 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@715",
+      "from": "@713",
       "to": "@2",
       "evidence": "emitted destructor-registration node name collides with the configured @701 on ov081 on main; @2 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@716",
+      "from": "@714",
       "to": "@3",
       "evidence": "emitted destructor-registration node name collides with the configured @702 on ov089 on main; @3 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@717",
+      "from": "@715",
       "to": "@4",
       "evidence": "emitted destructor-registration node name collides with the configured @703 on ov081 on main; @4 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@718",
+      "from": "@716",
       "to": "@5",
       "evidence": "emitted destructor-registration node name collides with the configured @704 on ov089 on main; @5 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@719",
+      "from": "@717",
       "to": "@6",
       "evidence": "emitted destructor-registration node name collides with the configured @705 on ov060 on main; @6 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@720",
+      "from": "@718",
       "to": "@7",
       "evidence": "emitted destructor-registration node name collides with the configured @706 on ov089 on main; @7 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@721",
+      "from": "@719",
       "to": "@8",
       "evidence": "emitted destructor-registration node name collides with the configured @707 on ov060 on main; @8 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@722",
+      "from": "@720",
       "to": "@9",
       "evidence": "emitted destructor-registration node name collides with the configured @708 on ov089 on main; @9 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@723",
+      "from": "@721",
       "to": "@10",
       "evidence": "emitted destructor-registration node name collides with the configured @709 on ov060 on main; @10 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@724",
+      "from": "@722",
       "to": "@11",
       "evidence": "emitted destructor-registration node name collides with the configured @710 on ov089 on main; @11 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@725",
+      "from": "@723",
       "to": "@12",
       "evidence": "emitted destructor-registration node name collides with the configured @711 on ov060 on main; @12 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@726",
+      "from": "@724",
       "to": "@13",
       "evidence": "emitted destructor-registration node name collides with the configured @712 on ov063 on main; @13 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@727",
+      "from": "@725",
       "to": "@14",
       "evidence": "emitted destructor-registration node name collides with the configured @713 on ov060 on main; @14 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@728",
+      "from": "@726",
       "to": "@15",
       "evidence": "emitted destructor-registration node name collides with the configured @714 on ov063 on main; @15 is unused everywhere and shorter than the original"
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjFl_Coin_c.cpp",
+      "symbol": "__sinit_d_a_obj_fl_coin.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjFl_Coin_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_fl_coin.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1488,7 +1488,7 @@
       "source": "0x0211b408",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c810",
+      "symbol": "gFl1400ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c810"
@@ -1518,7 +1518,7 @@
       "source": "0x0211b418",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c818",
+      "symbol": "gFl1401ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c818"
@@ -1538,7 +1538,7 @@
       "source": "0x0211b424",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c7e8",
+      "symbol": "gFl1402ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c7e8"
@@ -1558,7 +1558,7 @@
       "source": "0x0211b430",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c840",
+      "symbol": "gFl1403ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c840"
@@ -1578,7 +1578,7 @@
       "source": "0x0211b43c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c820",
+      "symbol": "gFl1404ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c820"
@@ -1598,7 +1598,7 @@
       "source": "0x0211b448",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c830",
+      "symbol": "gFl1405ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c830"
@@ -1618,7 +1618,7 @@
       "source": "0x0211b454",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c7e0",
+      "symbol": "gFl1406ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c7e0"
@@ -1638,7 +1638,7 @@
       "source": "0x0211b460",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c808",
+      "symbol": "gFl1407ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c808"
@@ -1658,7 +1658,7 @@
       "source": "0x0211b46c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c7d8",
+      "symbol": "gFl1408ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c7d8"
@@ -1678,7 +1678,7 @@
       "source": "0x0211b478",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c7f0",
+      "symbol": "gFl1409ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c7f0"
@@ -1698,7 +1698,7 @@
       "source": "0x0211b484",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c828",
+      "symbol": "gFl1410ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c828"
@@ -1718,7 +1718,7 @@
       "source": "0x0211b490",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c7f8",
+      "symbol": "gFl1411ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c7f8"
@@ -1738,7 +1738,7 @@
       "source": "0x0211b49c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c838",
+      "symbol": "gFl1412ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c838"
@@ -1758,7 +1758,7 @@
       "source": "0x0211b4a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c848",
+      "symbol": "gFl1413ModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c848"
@@ -1878,7 +1878,7 @@
       "source": "0x0211b744",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjFl_Coin_c.cpp",
+      "symbol": "__sinit_d_a_obj_fl_coin.cpp",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211b1d4"

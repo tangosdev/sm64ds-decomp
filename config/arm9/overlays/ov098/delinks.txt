@@ -4,18 +4,21 @@
     .ctor       start:0x0213c33c end:0x0213c34c kind:rodata align:4
     .data       start:0x0213c360 end:0x0213c800 kind:data align:32
     .bss        start:0x0213c800 end:0x0213c960 kind:bss align:32
-src/actors/daObjYajirusi_c.cpp:
+src/game/actors/d_a_obj_yajirusi.cpp:
     complete
     .text start:0x02137be0 end:0x02138040
+    .init start:0x0213bf9c end:0x0213c058
+    .ctor start:0x0213c33c end:0x0213c340
+    .bss start:0x0213c800 end:0x0213c850
 
-src/actors/daObjBlockS_c.cpp:
+src/game/actors/d_a_obj_block_s.cpp:
     complete
     .text start:0x02138040 end:0x02139f70
     .init start:0x0213c058 end:0x0213c214
     .ctor start:0x0213c340 end:0x0213c344
     .bss start:0x0213c850 end:0x0213c8e8
 
-src/actors/daObjFallBlock_c.cpp:
+src/game/actors/d_a_obj_fall_block.cpp:
     complete
     .text start:0x02139f70 end:0x0213a900
 
@@ -26,14 +29,9 @@ src/game/actors/d_a_cnn.cpp:
     .ctor start:0x0213c344 end:0x0213c348
     .bss start:0x0213c8e8 end:0x0213c91c
 
-src/actors/daWbm_c.cpp:
+src/game/actors/d_a_wbm.cpp:
     complete
     .text start:0x0213b47c end:0x0213bf60
     .init start:0x0213c2b4 end:0x0213c33c
     .ctor start:0x0213c348 end:0x0213c34c
     .bss start:0x0213c91c end:0x0213c948
-
-src/unnamed/ov098/__sinit_ov098_0213bf9c.c:
-    complete
-    .init start:0x0213bf9c end:0x0213c058
-

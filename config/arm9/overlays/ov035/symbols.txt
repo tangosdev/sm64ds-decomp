@@ -29,10 +29,10 @@ data_ov035_02111cc8 kind:data(any) addr:0x02111cc8 ambiguous
 data_ov035_02111d84 kind:data(any) addr:0x02111d84
 data_ov035_02111ef0 kind:data(any) addr:0x02111ef0
 data_ov035_02111ef4 kind:data(any) addr:0x02111ef4
-__sinit_daObjCtMecha10_c.cpp kind:function(arm,size=0xbc) addr:0x02111f04
-__sinit_daObjCtMecha11_c.cpp kind:function(arm,size=0x68) addr:0x02111fc0
-.p__sinit_daObjCtMecha10_c.cpp kind:data(word) addr:0x02112028
-.p__sinit_daObjCtMecha11_c.cpp kind:data(word) addr:0x0211202c
+__sinit_d_a_obj_ct_mecha10.cpp kind:function(arm,size=0xbc) addr:0x02111f04
+__sinit_d_a_obj_ct_mecha11.cpp kind:function(arm,size=0x68) addr:0x02111fc0
+.p__sinit_d_a_obj_ct_mecha10.cpp kind:data(word) addr:0x02112028
+.p__sinit_d_a_obj_ct_mecha11.cpp kind:data(word) addr:0x0211202c
 data_ov035_02112040 kind:data(any) addr:0x02112040
 data_ov035_02112044 kind:data(any) addr:0x02112044
 data_ov035_02112048 kind:data(any) addr:0x02112048
@@ -119,10 +119,10 @@ data_ov035_02112c18 kind:data(any) addr:0x02112c18 ambiguous
 data_ov035_02112c44 kind:data(any) addr:0x02112c44 ambiguous
 data_ov035_02112c4c kind:data(any) addr:0x02112c4c ambiguous
 data_ov035_02112c58 kind:data(any) addr:0x02112c58 ambiguous
-data_ov035_02112c60 kind:bss addr:0x02112c60
-data_ov035_02112c68 kind:bss addr:0x02112c68
-data_ov035_02112c70 kind:bss addr:0x02112c70
-data_ov035_02112c78 kind:bss addr:0x02112c78
+gCtMechaObj12sModelFile kind:bss addr:0x02112c60
+gCtMechaObj10CollisionFile kind:bss addr:0x02112c68
+gCtMechaObj12lModelFile kind:bss addr:0x02112c70
+gCtMechaObj10ModelFile kind:bss addr:0x02112c78
 @419 kind:bss addr:0x02112c80
 @422 kind:bss addr:0x02112c8c
 @421 kind:bss addr:0x02112c98

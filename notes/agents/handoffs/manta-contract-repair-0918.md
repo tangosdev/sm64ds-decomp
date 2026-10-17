@@ -67,7 +67,7 @@ At original main `c1b266f36554734dc19851f88e08025cf3d43a25` plus this repair:
 
 - `python tools/prepush_linkcheck.py --files` on the one-function shards of
   `_ZN9daManta_c13InitResourcesEv` and `_ZN9daManta_c8BehaviorEv` (both since
-  folded into `src/actors/daManta_c.cpp`), `--json build/manta-linkcheck.json`:
+  folded into `src/game/actors/d_a_manta.cpp`), `--json build/manta-linkcheck.json`:
   exit 0, both VERIFIED, no differing bytes or blind relocations.
 - `python tools/rombuild.py -j 16 --no-rom --report-json build/manta-rombuild.json`:
   exit 0, 106/106 exact modules, 11,206 reproducing functions, zero mismatches.
@@ -91,12 +91,12 @@ is required for this narrow change. Private PR validation remains pending.
 ## Independent review rework
 
 The first candidate was rejected for two additional retained return-contract
-errors. `PATHPTR-2729-05` identified that [func_ov090_02132ac4](../../../src/actors/daManta_c.cpp)(ROM Ordinal 5) returns `int`,
+errors. `PATHPTR-2729-05` identified that [func_ov090_02132ac4](../../../src/game/actors/d_a_manta.cpp)(ROM Ordinal 5) returns `int`,
 not `void`; `PATHPTR-2729-06` identified the same mistake for
 `ApproachLinear(short&, short, short)`. Both callers discard the return value,
 which is why byte equality alone did not reveal either incorrect declaration.
 This revision corrects both declarations to match their definitions. It also
-restores the `char*` parameter of [func_ov090_02132b14](../../../src/actors/daManta_c.cpp)(ROM Ordinal 6) and the const input
+restores the `char*` parameter of [func_ov090_02132b14](../../../src/game/actors/d_a_manta.cpp)(ROM Ordinal 6) and the const input
 pointers of the two vector-angle helpers. Fresh committed-candidate results
 belong to the separate rework verification evidence. The initial review and its
 findings remain in the queue history; the first candidate was not accepted.

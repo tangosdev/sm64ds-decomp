@@ -3,7 +3,7 @@
     .ctor       start:0x02111910 end:0x02111914 kind:rodata align:4
     .data       start:0x02111920 end:0x02111b60 kind:data align:32
     .bss        start:0x02111b60 end:0x02111b80 kind:bss align:32
-src/actors/daLuigi_c.cpp:
+src/game/actors/d_a_luigi.cpp:
     complete
     .text start:0x021111a0 end:0x021118d4
     .init start:0x021118d4 end:0x02111910

@@ -33,7 +33,7 @@ This document describes this commit. The queue records its immutable output SHA.
   pins no separate evidence commits. The scout facts for this class are
   committed on this branch at `notes/data/class-facts/Rabbit.json` (still under
   the retired coined name — see remaining work). The stage's required artifacts,
-  `src/actors/daMip_c.cpp` and [config/tu_manifest.d/ov085/daMip_c.json](../../../config/tu_manifest.d/ov085/daMip_c.json), are
+  `src/game/actors/d_a_mip.cpp` and [config/tu_manifest.d/ov085/daMip_c.json](../../../config/tu_manifest.d/ov085/daMip_c.json), are
   both present.
 - **Next action, responsible role and blockers:** independent verification of
   this commit by a session that is none of `prod-2414-0907`, `prod-2414b-0907`,
@@ -66,11 +66,11 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - **Class/TU/symbol and module-qualified ROM scope:** `daMip_c` in [ov085](../../../config/arm9/overlays/ov085/symbols.txt).
   `.text` `0x0212a6d4..0x0212cc88`, 32 functions, one translation unit at
-  `src/actors/daMip_c.cpp`. Class data in [ov085](../../../config/arm9/overlays/ov085/symbols.txt) at `0x021300bc` (typeinfo name),
+  `src/game/actors/d_a_mip.cpp`. Class data in [ov085](../../../config/arm9/overlays/ov085/symbols.txt) at `0x021300bc` (typeinfo name),
   `0x021300c8` (`__si_class_type_info`) and `0x021300f8` (31-slot vtable address
   point).
 - **Reserved source/header/config surfaces actually touched by *this* stage:**
-  `src/actors/daMip_c.cpp` and `include/daMip_c.h`. Nothing else. The reserved
+  `src/game/actors/d_a_mip.cpp` and `include/daMip_c.h`. Nothing else. The reserved
   [ov085 symbols.txt](../../../config/arm9/overlays/ov085/symbols.txt)/[delinks.txt](../../../config/arm9/overlays/ov085/delinks.txt), the TU manifest and the retired coined
   header were already in their final state at the accepted input.
 - **ROM observations:** unchanged from the accepted input and independently
@@ -82,7 +82,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `State*` functions, each of which is the target of an eight-byte
   pointer-to-member-function constant in `0x0213003c..0x021300bc`.
 - **Hypothesized names/filenames, explicitly not recovered facts:** the file
-  name `src/actors/daMip_c.cpp`; the factory spelling `daMip_c_classInit`; the
+  name `src/game/actors/d_a_mip.cpp`; the factory spelling `daMip_c_classInit`; the
   six coined helper names `TestWaterBelow`, `UpdateGrab`,
   `UpdateMatrixAndShadow`, `UpdateCarriedMatrix`, `UpdateMirrorShadow` and
   `RenderMirrorImage`, whose member-versus-file-local form the cartridge does
@@ -108,10 +108,10 @@ This document describes this commit. The queue records its immutable output SHA.
   document, and the immutable commit message of `5b683a9bd`, both assert that a
   natural `new daMip_c()` would select "the global `operator new`, which this
   image does not contain". That is false. `_Znwj` is present at arm9
-  `0x0203cbe4` in `config/arm9/symbols.txt`, and `src/_Znwj.cpp` defines it as a
+  `0x0203cbe4` in `config/arm9/symbols.txt`, and the tree defines it (now in `src/engine/heap/Heap.cpp`) as a
   tail-call veneer to `func_0203cc0c`. The commit message cannot be edited, so
   the error stays in this branch's history; this paragraph is the correction.
-  The real, measured barrier is the one `src/actors/Scuttlebug.cpp` states for
+  The real, measured barrier is the one `src/game/actors/d_a_spd.cpp` states for
   its own factory: natural `new` selects the **wrong allocator**. The cartridge
   factory allocates through `fBase_c::operator new`, and mwccarm 2004/b56
   rejects an in-class `operator new` declaration — `include/fBase_c.h:150`
@@ -152,7 +152,7 @@ This document describes this commit. The queue records its immutable output SHA.
   **This is the weakest dimension of the candidate, and a previous draft of
   this section understated it badly** by naming only seven pads, `mState`,
   `daMip_cSelf`, one `V3Blk` and "the [ov085](../../../config/arm9/overlays/ov085/symbols.txt) file statics". Measured over
-  `src/actors/daMip_c.cpp` at this commit, with comments stripped first, the
+  `src/game/actors/d_a_mip.cpp` at this commit, with comments stripped first, the
   actual remaining surface is:
 
   - **18 shadow-struct definitions naming 11 distinct types.** Sixteen are
@@ -299,7 +299,7 @@ against base `origin/main` `c4cace0ee05f2c0b3c6536665e981927ead132e2`.
   objisolate clean (relocation type and addend), reloc-destinations clean,
   emission order all 32 in ROM-ascending section order, compiler-only symbols an
   exact deadstrip — TEXT-VERIFIED.
-  `python tools/romdata_check.py --files src/actors/daMip_c.cpp` — exit 0: 6
+  `python tools/romdata_check.py --files src/game/actors/d_a_mip.cpp` — exit 0: 6
   VERIFIED / 5 PARTIAL / 0 DIFFERS / 0 UNNAMED, as detailed above.
   **Not available, and why:** `python tools/tubuild.py linkcheck ov085/daMip_c`
   exits 1 and does not run — `intact TU preparation refused: ov085/daMip_c:
@@ -308,7 +308,7 @@ against base `origin/main` `c4cace0ee05f2c0b3c6536665e981927ead132e2`.
   and is reproduced here rather than taken on trust.
 - **Shared-header consumer expansion:**
   `python tools/affected_src.py include/daMip_c.h` reports exactly one consumer,
-  `src/actors/daMip_c.cpp`; the only other file naming that header names it in
+  `src/game/actors/d_a_mip.cpp`; the only other file naming that header names it in
   prose. The header edit is therefore fully covered by the TU verification and
   by the full-ROM build, and the 932-source fan-out above is the wider expansion
   the branch's other header changes carry.

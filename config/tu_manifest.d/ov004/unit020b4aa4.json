@@ -1,14 +1,14 @@
 {
   "id": "ov004/unit020b4aa4",
   "module": "ov004",
-  "source": "src/actors/unit020b4aa4.cpp",
-  "promoted_source": "src/actors/unit020b4aa4.cpp",
+  "source": "src/minigames/unit020b4aa4.cpp",
+  "promoted_source": "src/minigames/unit020b4aa4.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous run 0x20b4aa4..0x20b67e8, 43 function(s), every one text-verified in this one compile. This is a SUB-RANGE of build/tu_map.json's unattributed ov004 unit 0x020b2c58..0x020b8714 (137 functions), which the map cannot cut because no class label falls inside it; the cuts here come from the ROM's own static-initializer records.",
     "start edge: __sinit_ov004_020b955c (.init 0x020b955c..0x020b9ad0) loads func_ov004_020b4a70, func_ov004_020b4a7c and func_ov004_020b4aa0 as destructor helpers for the preceding unit's statics; 0x020b4aa4 is the next function and its bss references (0x020bf9f8, 0x020bfa18) fall in this unit's bss window 0x020bf9e4..0x020bfa56, not the preceding unit's 0x020bf3e8..0x020bf648.",
-    "end edge: __sinit_ov004_020b9ad0 (.init 0x020b9ad0..0x020b9b24) loads func_ov004_020b67bc, func_ov004_020b67e0 and func_ov004_020b67e4 and the array data_ov004_020bfa34 / record data_ov004_020bfa28; func_ov004_020b67bc runs __cxa_vec_cleanup over data_ov004_020bfa34 (0x14 x 0x24) with func_ov004_020b67e0. The next function, func_ov004_020b67e8, reads data_ov004_020bc8a0, in the .data block that starts at 0x020bc850, past this unit's .data window 0x020bc7d0..0x020bc83c.",
+    "end edge: __sinit_ov004_020b9ad0 (.init 0x020b9ad0..0x020b9b24) loads MgCoins_Cleanup, Coin_Destroy and Coin_Construct and the array sMgCoins / record data_ov004_020bfa28; MgCoins_Cleanup runs __cxa_vec_cleanup over sMgCoins (0x14 x 0x24) with Coin_Destroy. The next function, Mg_SetNextBanner, reads sMgNextBanner, in the .data block that starts at 0x020bc850, past this unit's .data window 0x020bc7d0..0x020bc83c.",
     "no ROM RTTI or vtable record (build/rtti.json) falls in the range; no class label, so the unit<addr> name.",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide). Neither edge is corroborated by a class label."
   ],
@@ -21,301 +21,301 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov004_020b4aa4",
+      "symbol": "Coin_FlyToCounter",
       "address": "0x020b4aa4",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov004_020b4aa4.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov004_020b4b84",
+      "symbol": "Coin_PlacePayout",
       "address": "0x020b4b84",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4b84.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov004_020b4c30",
+      "symbol": "Coin_MoveThenRefund",
       "address": "0x020b4c30",
       "size": "0x00000094",
       "legacy_source": "src/func_ov004_020b4c30.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov004_020b4cc4",
+      "symbol": "Coin_Return",
       "address": "0x020b4cc4",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov004_020b4cc4.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov004_020b4d50",
+      "symbol": "Coin_RiseSpent",
       "address": "0x020b4d50",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4d50.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov004_020b4dfc",
+      "symbol": "Coin_MoveThenRiseSpent",
       "address": "0x020b4dfc",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b4dfc.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov004_020b4e78",
+      "symbol": "Coin_Spend",
       "address": "0x020b4e78",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov004_020b4e78.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov004_020b4f44",
+      "symbol": "Coin_Rise",
       "address": "0x020b4f44",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4f44.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov004_020b4ff0",
+      "symbol": "Coin_MoveThenRise",
       "address": "0x020b4ff0",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b4ff0.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov004_020b506c",
+      "symbol": "Coin_SendOff",
       "address": "0x020b506c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov004_020b506c.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov004_020b5108",
+      "symbol": "Coin_Launch",
       "address": "0x020b5108",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov004_020b5108.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov004_020b51e4",
+      "symbol": "Coin_Hide",
       "address": "0x020b51e4",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov004_020b51e4.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov004_020b51f0",
+      "symbol": "Coin_MoveThenBank",
       "address": "0x020b51f0",
       "size": "0x00000098",
       "legacy_source": "src/func_ov004_020b51f0.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov004_020b5288",
+      "symbol": "Coin_Move",
       "address": "0x020b5288",
       "size": "0x00000030",
       "legacy_source": "src/func_ov004_020b5288.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov004_020b52b8",
+      "symbol": "Coin_Draw",
       "address": "0x020b52b8",
       "size": "0x00000044",
       "legacy_source": "src/func_ov004_020b52b8.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov004_020b52fc",
+      "symbol": "Coin_Update",
       "address": "0x020b52fc",
       "size": "0x00000038",
       "legacy_source": "src/func_ov004_020b52fc.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov004_020b5334",
+      "symbol": "Coin_Reset",
       "address": "0x020b5334",
       "size": "0x00000034",
       "legacy_source": "src/func_ov004_020b5334.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov004_020b5368",
+      "symbol": "MgCoins_StepPayoutFinish",
       "address": "0x020b5368",
       "size": "0x00000088",
       "legacy_source": "src/func_ov004_020b5368.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov004_020b53f0",
+      "symbol": "MgCoins_StepPayoutNext",
       "address": "0x020b53f0",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov004_020b53f0.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov004_020b556c",
+      "symbol": "MgCoins_StepPayoutLayout",
       "address": "0x020b556c",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov004_020b556c.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov004_020b56c8",
+      "symbol": "MgCoins_StartPayout",
       "address": "0x020b56c8",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov004_020b56c8.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov004_020b5768",
+      "symbol": "MgCoins_StepRefund",
       "address": "0x020b5768",
       "size": "0x00000104",
       "legacy_source": "src/func_ov004_020b5768.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov004_020b586c",
+      "symbol": "MgCoins_StepSpendHold",
       "address": "0x020b586c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov004_020b586c.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov004_020b58c4",
+      "symbol": "MgCoins_StepSpend",
       "address": "0x020b58c4",
       "size": "0x00000190",
       "legacy_source": "src/func_ov004_020b58c4.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov004_020b5a54",
+      "symbol": "MgCoins_StepHoldThenFinish",
       "address": "0x020b5a54",
       "size": "0x00000058",
       "legacy_source": "src/func_ov004_020b5a54.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov004_020b5aac",
+      "symbol": "MgCoins_StepLoseOneMore",
       "address": "0x020b5aac",
       "size": "0x0000016c",
       "legacy_source": "src/func_ov004_020b5aac.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov004_020b5c18",
+      "symbol": "MgCoins_StepLose",
       "address": "0x020b5c18",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov004_020b5c18.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov004_020b5d74",
+      "symbol": "MgCoins_StartRefund",
       "address": "0x020b5d74",
       "size": "0x00000060",
       "legacy_source": "src/func_ov004_020b5d74.c",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov004_020b5dd4",
+      "symbol": "MgCoins_StartLoseOneMore",
       "address": "0x020b5dd4",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov004_020b5dd4.c",
       "ordinal": 28
     },
     {
-      "symbol": "func_ov004_020b5e40",
+      "symbol": "MgCoins_StartSpend",
       "address": "0x020b5e40",
       "size": "0x00000090",
       "legacy_source": "src/func_ov004_020b5e40.c",
       "ordinal": 29
     },
     {
-      "symbol": "func_ov004_020b5ed0",
+      "symbol": "MgCoins_StartLose",
       "address": "0x020b5ed0",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov004_020b5ed0.c",
       "ordinal": 30
     },
     {
-      "symbol": "func_ov004_020b5f6c",
+      "symbol": "MgCoins_StepLaunchQuick",
       "address": "0x020b5f6c",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov004_020b5f6c.cpp",
       "ordinal": 31
     },
     {
-      "symbol": "func_ov004_020b612c",
+      "symbol": "MgCoins_StepLaunch",
       "address": "0x020b612c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov004_020b612c.c",
       "ordinal": 32
     },
     {
-      "symbol": "func_ov004_020b6234",
+      "symbol": "MgCoins_AddBetCoin",
       "address": "0x020b6234",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov004_020b6234.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "func_ov004_020b6324",
+      "symbol": "MgCoins_RaiseBet",
       "address": "0x020b6324",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b6324.c",
       "ordinal": 34
     },
     {
-      "symbol": "func_ov004_020b63a0",
+      "symbol": "MgCoins_PlaceBet",
       "address": "0x020b63a0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov004_020b63a0.c",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov004_020b6430",
+      "symbol": "MgCoins_Draw",
       "address": "0x020b6430",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov004_020b6430.c",
       "ordinal": 36
     },
     {
-      "symbol": "func_ov004_020b653c",
+      "symbol": "MgCoins_DrawDelta",
       "address": "0x020b653c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov004_020b653c.c",
       "ordinal": 37
     },
     {
-      "symbol": "func_ov004_020b65e4",
+      "symbol": "MgCoins_Update",
       "address": "0x020b65e4",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov004_020b65e4.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_ov004_020b66d4",
+      "symbol": "MgCoins_Reset",
       "address": "0x020b66d4",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov004_020b66d4.c",
       "ordinal": 39
     },
     {
-      "symbol": "func_ov004_020b67bc",
+      "symbol": "MgCoins_Cleanup",
       "address": "0x020b67bc",
       "size": "0x00000024",
       "legacy_source": "src/func_ov004_020b67bc.c",
       "ordinal": 40
     },
     {
-      "symbol": "func_ov004_020b67e0",
+      "symbol": "Coin_Destroy",
       "address": "0x020b67e0",
       "size": "0x00000004",
       "legacy_source": "src/func_ov004_020b67e0.c",
       "ordinal": 41
     },
     {
-      "symbol": "func_ov004_020b67e4",
+      "symbol": "Coin_Construct",
       "address": "0x020b67e4",
       "size": "0x00000004",
       "legacy_source": "src/func_ov004_020b67e4.c",
@@ -326,7 +326,7 @@
   "bss": [],
   "notes": [
     "Text only: this unit's .data (0x020bc7d0..0x020bc83c) and .bss (0x020bf9e4..0x020bfa56) stay ROM-owned and are reached by extern, as the one-function sources did; __sinit_ov004_020b9ad0 stays its own enrolled source.",
-    "Folded from 43 one-function sources. The per-source extern declarations disagreed on type for a handful of symbols (data_ov004_020bfa20, data_ov004_020bfa34, data_ov004_020beb68, the ApproachLinear / Vec2_Sub spellings); the single declaration set in the unit source picks one type each and the bodies cast to match. ApproachLinear and ApproachLinear2 are declared as the C++ overloads (int&, int, int) and (short&, short, short), which mangle to the ROM's _Z14ApproachLinearRiii and _Z15ApproachLinear2Rsss.",
+    "Folded from 43 one-function sources. The per-source extern declarations disagreed on type for a handful of symbols (sMgCoinsStep, sMgCoins, gMgScene, the ApproachLinear / Vec2_Sub spellings); the single declaration set in the unit source picks one type each and the bodies cast to match. ApproachLinear and ApproachLinear2 are declared as the C++ overloads (int&, int, int) and (short&, short, short), which mangle to the ROM's _Z14ApproachLinearRiii and _Z15ApproachLinear2Rsss.",
     "Struct copies of the entry templates go through structs whose only member is an int[2]; plain {int a, b} structs scalarize under C++ and miss the ROM's block move by two words in eight functions."
   ],
   "verification": {

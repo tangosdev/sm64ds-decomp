@@ -101,7 +101,7 @@ byte-identical. The one-time exception was the simple callback's
 `SpawnParticles`, which opened `namespace Particle { ... }` — including
 `Particle.h` there made the struct name and the namespace name collide, so it
 kept a local shadow. That no longer holds: the function is now
-`src/engine/particle/dPa_c.cpp`,
+`src/engine/particle/d_pa.cpp`,
 a real `dPa_c::level_c::simpleCallback_c` method that opens no namespace,
 includes `Particle__System.h`, and reaches `data_0209ee74->mManager` by name.
 

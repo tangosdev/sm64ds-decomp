@@ -2669,7 +2669,7 @@ def test_definition_inside_a_namespace_or_extern_c_block_names_the_block():
     fixture keeps the Allman `namespace Memory` those wrappers used) and
     func_ov006_021063a0, whose shard put the
     definition inside `extern "C" {` -- that one is now ROM ordinal 50 of
-    src/actors/dScMgPanel_c.cpp, absorbed by the ov006/dScMgPanel_c promotion.
+    src/minigames/d_s_mg_panel.cpp, absorbed by the ov006/dScMgPanel_c promotion.
     tubuild has nowhere to put a block-scoped member, so
     it must refuse -- but the refusal has to name the block, or the message
     reads as "your file has no function in it" and sends a reader hunting."""

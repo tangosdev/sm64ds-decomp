@@ -79,13 +79,13 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov021_02114a64",
+      "symbol": "gCvShutterCollisionFile",
       "address": "0x02114a64",
       "size": "0x8",
       "evidence": "collision resource handle constructed with file ID 1498; the descriptor at data_ov021_021148d0 passes it to the ov002 shutter helpers"
     },
     {
-      "symbol": "data_ov021_02114a6c",
+      "symbol": "gCvShutterModelFile",
       "address": "0x02114a6c",
       "size": "0x8",
       "evidence": "model resource handle constructed with file ID 1497; the descriptor at data_ov021_021148d0 passes it to the ov002 shutter helpers"
@@ -580,7 +580,7 @@
       "source": "0x02113714",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov021_02114a6c",
+      "symbol": "gCvShutterModelFile",
       "addend": 0,
       "target_module": "ov021",
       "target_address": "0x02114a6c"
@@ -610,7 +610,7 @@
       "source": "0x02113724",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov021_02114a64",
+      "symbol": "gCvShutterCollisionFile",
       "addend": 0,
       "target_module": "ov021",
       "target_address": "0x02114a64"

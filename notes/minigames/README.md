@@ -45,7 +45,7 @@ fBase_c > dBase_c > dScene_c
 
 1. **Open the menu.** `StartMinigameMenu(flag)` stores `flag` and fades to scene 5, the menu.
    - [GUESS] The flag means "came from the castle rec room": the rec-room objects pass 1, and the title menu passes 0.
-2. **Pick a game.** `dScMiniGm_c` copies the chosen 0x34-byte row of its table into `data_0209b308`, then fades to that row's scene ID.
+2. **Pick a game.** `dScMiniGm_c` copies the chosen 0x34-byte row of its table into `gMgMenuRow`, then fades to that row's scene ID.
    - The table has 36 rows for 30 scene IDs [ROM]. Six games appear twice, with different parameters.
 3. **Load the game.** An ID in 0x169..0x186 loads ov006 (and with it ov004), and the profile's factory builds the scene.
 4. **Play.** The scene runs until a quit from the pause menu, or an end-of-game state, fades back to scene 5.
@@ -68,7 +68,7 @@ fBase_c > dBase_c > dScene_c
 
 **What each game implements.** Every game overrides the same core set [ROM: vtable walk]:
 - `InitResources`, `Behavior`, `Render` and its destructors
-- slot 18, which games call with -1, 3, 4 or 5, for example `OnYoshiTryEat(-1)`
+- slot 18, which games call with -1, 3, 4 or 5, for example `StartRound(-1)`
   - [GUESS] It resets or starts a round.
   - The name is a placeholder; see Names below. The base's slot-18 body is empty.
 
@@ -76,17 +76,17 @@ fBase_c > dBase_c > dScene_c
 
 - **Shared state machine.**
   - `mStateController` sits at `dScMgBase_c+0xcc`. Its type has no RTTI, so the name `dMgState_c` is the tree's own.
-  - It owns 20 states, entered through `func_ov004_020b0a54(n)`.
+  - It owns 20 states, entered through `Mg_SetSharedState(n)`.
   - [GUESS] The states run the common banners and jingles: ready, go, time up, results.
   - A game's own rules are a separate, game-local state table.
-- **Score.** `func_ov004_020adb1c(score)` submits a score:
+- **Score.** `Mg_SubmitScore(score)` submits a score:
   - It writes the live score to `+0x464c`.
   - The menu row's scoring mode decides the direction: mode 5 is lower-is-better, and every other mode is capped and higher-is-better.
   - A new session best is stored at `+0x4654`. If it also beats the record copy at `+0x4650`, that copy is updated and the new-record flag at `+0x465c` is set.
 - **Saved records.**
   - The scene's constructor loads the record copy from the save.
-  - At cleanup, `func_ov004_020ad940` writes it back into the save table, but only when the menu row's word `+0x10` is 0.
-  - Seven games (BSC, Card, Memory, Memory2, MCarlo, Roulette, Slot1) have that word set to 1. They save two values each through `func_ov004_020ad79c` instead. All but Roulette still submit through `func_ov004_020adb1c`.
+  - At cleanup, `Mg_RankSessionBest` writes it back into the save table, but only when the menu row's word `+0x10` is 0.
+  - Seven games (BSC, Card, Memory, Memory2, MCarlo, Roulette, Slot1) have that word set to 1. They save two values each through `Mg_SaveRecordPair` instead. All but Roulette still submit through `Mg_SubmitScore`.
 - **Input.**
   - `data_0209f5bc` is the installed screen fader.
   - Each of the four input slots (index `gActivePlayerSlot`) has a four-byte touch sample `{down, changed, x, y}` in `gTouchHeld`. A new touch is `down && changed`.
@@ -108,45 +108,45 @@ fBase_c > dBase_c > dScene_c
 
 | ID | Profile | Class | Base | Source |
 |---|---|---|---|---|
-| 0x169 | MG_CUP | dScMgCup_c | Single3D | `src/actors/dScMgCup_c.cpp` |
+| 0x169 | MG_CUP | dScMgCup_c | Single3D | `src/minigames/d_s_mg_cup.cpp` |
 | 0x16a | MG_MEMORY | dScMgMemory_c | Single3D | `src/minigames/d_s_mg_memory.cpp` |
-| 0x16b | MG_MEMORY_J | dScMgMemory2_c | Single3D | `src/actors/dScMgMemory2_c.cpp` |
-| 0x16c | MG_SLOT1 | dScMgSlot1_c | Base | `src/actors/dScMgSlots.cpp` (shared with Slot3) + 1 shard |
-| 0x16d | MG_SLOT3 | dScMgSlot3_c | Single3D | `src/actors/dScMgSlots.cpp` (shared with Slot1) |
-| 0x16e | MG_LUIGI | dScMgLuigi_c | Base | `src/actors/dScMgLuigi_c.cpp` |
-| 0x16f | MG_SOUND | dScMgSound_c | Single3D | `src/actors/dScMgSound_c.cpp` |
-| 0x170 | MG_PACHINKO | dScMgPachinko_c | Base | `src/actors/dScMgPachinko_c.cpp` + 4 shards |
+| 0x16b | MG_MEMORY_J | dScMgMemory2_c | Single3D | `src/minigames/d_s_mg_memory2.cpp` |
+| 0x16c | MG_SLOT1 | dScMgSlot1_c | Base | `src/minigames/d_s_mg_slots.cpp` (shared with Slot3) + 1 shard |
+| 0x16d | MG_SLOT3 | dScMgSlot3_c | Single3D | `src/minigames/d_s_mg_slots.cpp` (shared with Slot1) |
+| 0x16e | MG_LUIGI | dScMgLuigi_c | Base | `src/minigames/d_s_mg_luigi.cpp` |
+| 0x16f | MG_SOUND | dScMgSound_c | Single3D | `src/minigames/d_s_mg_sound.cpp` |
+| 0x170 | MG_PACHINKO | dScMgPachinko_c | Base | `src/minigames/d_s_mg_pachinko.cpp` + 4 shards |
 | 0x171 | MG_TAMAIRE | dScMgPachinko2_c | Base | 6 shards |
-| 0x172 | MG_BOMROOM | dScMgBomroom_c | Base | `src/actors/dScMgBomroom_c.cpp` + 6 shards |
-| 0x173 | MG_AMIDA | dScMgAmida_c | Base | `src/actors/dScMgAmida_c.cpp` + 6 shards |
-| 0x174 | MG_JUMP | dScMgJump_c | D3D | `src/actors/dScMgJump_c.cpp` + 1 shard |
+| 0x172 | MG_BOMROOM | dScMgBomroom_c | Base | `src/minigames/d_s_mg_bomroom.cpp` + 6 shards |
+| 0x173 | MG_AMIDA | dScMgAmida_c | Base | `src/minigames/d_s_mg_amida.cpp` + 6 shards |
+| 0x174 | MG_JUMP | dScMgJump_c | D3D | `src/minigames/d_s_mg_jump_methods.cpp` + 1 shard |
 | 0x175 | MG_JUMP2 | dScMgJump2_c | D3D | `src/minigames/d_s_mg_jump2.cpp` |
-| 0x176 | MG_CURLING | dScMgCurling_c | Base | `src/actors/dScMgCurling_c.cpp` + 4 shards |
-| 0x177 | MG_CURLING_J | dScMgCurling2_c | Base | `src/actors/dScMgCurling2_c.cpp` + 4 shards |
-| 0x178 | MG_SMARTBALL | dScMgSmartball_c | Base | `src/actors/dScMgSmartball_c.cpp` |
-| 0x179 | MG_SNOWBALL | dScMgSnowball_c | Single3D | `src/actors/dScMgSnowball_c.cpp` |
-| 0x17a | MG_COIN | dScMgCoin_c | Base | `src/actors/dScMgCoin_c.cpp` + 6 shards |
+| 0x176 | MG_CURLING | dScMgCurling_c | Base | `src/minigames/d_s_mg_curling.cpp` + 4 shards |
+| 0x177 | MG_CURLING_J | dScMgCurling2_c | Base | `src/minigames/d_s_mg_curling2.cpp` + 4 shards |
+| 0x178 | MG_SMARTBALL | dScMgSmartball_c | Base | `src/minigames/d_s_mg_smartball.cpp` |
+| 0x179 | MG_SNOWBALL | dScMgSnowball_c | Single3D | `src/minigames/d_s_mg_snowball.cpp` |
+| 0x17a | MG_COIN | dScMgCoin_c | Base | `src/minigames/d_s_mg_coin.cpp` + 6 shards |
 | 0x17b | MG_CARD | dScMgCard_c | Single3D | `src/minigames/d_s_mg_card.cpp` |
-| 0x17c | MG_PANEL | dScMgPanel_c | Base | `src/actors/dScMgPanel_c.cpp` |
+| 0x17c | MG_PANEL | dScMgPanel_c | Base | `src/minigames/d_s_mg_panel.cpp` |
 | 0x17d | MG_MCARLO | dScMgMCarlo_c | Single3D | `src/minigames/d_s_mg_m_carlo.cpp` |
 | 0x17e | MG_MCARLO2 | dScMgMCarlo2_c | Single3D | `src/minigames/d_s_mg_m_carlo2.cpp` |
-| 0x17f | MG_ROULETTE | dScMgRoulette_c | Single3D | `src/actors/dScMgRoulette_c.cpp` |
+| 0x17f | MG_ROULETTE | dScMgRoulette_c | Single3D | `src/minigames/d_s_mg_roulette_methods.cpp` |
 | 0x180 | MG_TRAMPOLINE | dScMgTrampoline_c | D3D | `src/minigames/d_s_mg_trampoline.cpp` |
 | 0x181 | MG_TRAMPOLINE2 | dScMgTrampoline2_c | D3D | `src/minigames/d_s_mg_trampoline2.cpp` |
-| 0x182 | MG_HANACHAN | dScMgHanachan_c | Base | `src/actors/dScMgHanachan_c.cpp` + 2 shards |
-| 0x183 | MG_TERESA | dScMgTeresa_c | Base | `src/actors/dScMgTeresa_c.cpp` + 6 shards |
+| 0x182 | MG_HANACHAN | dScMgHanachan_c | Base | `src/minigames/d_s_mg_hanachan_methods.cpp` + 2 shards |
+| 0x183 | MG_TERESA | dScMgTeresa_c | Base | `src/minigames/d_s_mg_teresa.cpp` + 6 shards |
 | 0x184 | MG_BS_CARD | dScMgBSC_c | Single3D | `src/minigames/d_s_mg_bsc.cpp` |
 | 0x185 | MG_3DESP | dScMg3DEsp_c | Single3D | 8 shards |
-| 0x186 | MG_FLOWER | dScMgFlower_c | Single3D | `src/actors/dScMgFlower_c.cpp` |
+| 0x186 | MG_FLOWER | dScMgFlower_c | Single3D | `src/minigames/d_s_mg_flower.cpp` |
 
 **The bases:**
 - `src/minigames/d_s_mg_base.cpp` (plus 26 `dScMgBase_c` shards)
-- `src/minigames/d_s_mg_single3_d_base.cpp`
-- `src/actors/dScMgD3DBase_c.cpp`
+- `src/minigames/d_s_mg_single3d_base.cpp`
+- `src/minigames/d_s_mg_d3d_base.cpp`
 
 **The shared ov004 runtime:**
-- `src/actors/dMgPsOpt_c.cpp`
-- `src/actors/dMgState_c.cpp`
+- `src/minigames/d_mg_ps_opt.cpp`
+- `src/minigames/d_mg_state.cpp`
 - `src/minigames/d_s_mg_base.cpp` (dScMgBase_c and the helpers beside it, 0x020ad660..0x020b2c58)
 
 ## Names: what is known
@@ -156,8 +156,7 @@ fBase_c > dBase_c > dScene_c
   - profile strings, scene IDs and class sizes
   - which vtable slots each class overrides
 - **Placeholders:**
-  - `dScMgBase_c` slots 18, 19 and 21-30 borrow `dActor_c` method names by slot index only, so `OnYoshiTryEat` does not mean Yoshi. See [notes/dScMgBase_c-slots-18-35.md](../dScMgBase_c-slots-18-35.md).
-  - Slots 20 and 31-35 are named after their vtable offset, for example `Virtual7C`.
+  - `dScMgBase_c` slots 18-35 carry names coined from their bodies and callers (2026-10-14). Slots 18-30 used to carry `dActor_c` method names borrowed by slot index only (`OnYoshiTryEat`, `OnAimedAtWithEgg`, ...), and slots 20 and 31-35 were named after their vtable offset (`Virtual50`, `Virtual7C`, ...). The old-to-new table and each name's confidence are in [names.md](names.md).
 - **Coined or inferred in this tree [CODE]:**
   - `dMgState_c`, the three shared-state block types, and many method and field names.
   - The markers are not uniform yet: some say "coined", some "inferred" or "reconstructed", and the `dScMgBase_c.h` field names carry none.
@@ -169,7 +168,6 @@ fBase_c > dBase_c > dScene_c
 
 - **Shared states:** what do the 20 shared states show? Callers most often enter 0x12, 5, 4, 0 and 0x10.
 - **Scoring modes:** what separate modes 0, 1 and 3? Mode 5 is Snowball's lower-is-better time.
-- **Duplicate rows:** are the six duplicated menu rows one game offered in two variants?
-- **Pause gate:** why does `BeforeBehavior` stop a game while `unk_462c` is set, or while `unk_0a4` is 0 and the fader is not at its start?
-- **Local mislabels:** `d_s_mg_base.cpp` and `dScMiniGm_c.cpp` still call the fader the "stylus owner", and `dScMiniGm_c.cpp` names the touch bytes `{pressed, held}`. A later pass should fix these comments.
+- **Duplicate rows (answered 2026-10-15):** the six duplicated menu rows are one game offered in two variants. The row's second word becomes `param1`, and its low byte is the variant that `IsAltVariant` reads (runtime-checks.md).
+- **Pause gate:** why does `BeforeBehavior` stop a game while `mMenuScreenSaved` is set, or while `mRunDuringFade` is 0 and the fader is not at its start?
 - **Slot 18:** what does it really do? Callers pass -1, 3, 4 and 5.

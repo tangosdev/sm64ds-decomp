@@ -33,8 +33,8 @@ identical to `8ee6e73d9b`'s (see Proof).
 |---|---|---|---|
 | TU-V1 | correctness | fixed | The comment on `struct C` claimed that completing it first changes the code. It now states only the measurement: completing `C` before the typedef, completing it as `{ int dummy; }`, or never completing it compiles to the same object. |
 | TU-V2 | correctness | fixed | The TU banner and the Layout line below said the header's offsets above 0x5260 are padding. Both now say what `include/dScMgPachinko2_c.h` declares: 0x5260..0x565f is the tail of `mBalls[0x40]`, which the helpers' views read as other records; `unk_5660`, `unk_566c` and `unk_566e` are named; only `pad_5664` and `pad_5670` are padding. |
-| TU-V3 | provenance | fixed | "score popups" came from the sibling class. The 0x5620 view is now [func_ov006_020ff47c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 2)'s view of the two 0x20-byte entries at 0x5620, with no role. |
-| TU-V4 | reconstruction | fixed | [func_ov006_02102f3c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 58) calls [func_ov006_02102864](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 52) directly. The two-argument function-pointer cast and the `arg1 = (int)e` store that only fed it are gone; each step alone and both together give the same object. |
+| TU-V3 | provenance | fixed | "score popups" came from the sibling class. The 0x5620 view is now [func_ov006_020ff47c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 2)'s view of the two 0x20-byte entries at 0x5620, with no role. |
+| TU-V4 | reconstruction | fixed | [func_ov006_02102f3c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 58) calls [func_ov006_02102864](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 52) directly. The two-argument function-pointer cast and the `arg1 = (int)e` store that only fed it are gone; each step alone and both together give the same object. |
 | TU-V5 | reconstruction | fixed | The rename and edit lists under "What changed and why" are complete: seven view renames, and every edit the fold made to a legacy body, marked forced or chosen, each chosen one with its measurement. |
 | TU-V6 | reconstruction | fixed | The out-of-line destructor is named below as a deliberate divergence from checklist item 7, with its measurement. |
 
@@ -43,7 +43,7 @@ readability pass 2, issue 3171):
 
 | ID | Disposition at `8ee6e73d9b` |
 |---|---|
-| TU-V7 (`include/decl_common.h` declares [func_ov006_021024e0](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 45) with an `int` parameter) | deferred |
+| TU-V7 (`include/decl_common.h` declares [func_ov006_021024e0](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 45) with an `int` parameter) | deferred |
 | TU-V8 (`mBalls[0x40]` overlaps records the helpers use; every ball loop stops at 0x30) | deferred |
 | TAMAIRE-R1, R2, R5, R6, R9, R10, R12, R13 | fixed |
 | TAMAIRE-R3, R4, R7, R8, R11, R14 | deferred |
@@ -57,7 +57,7 @@ readability pass 2, issue 3171):
   and `dScMgPachinko2_c_classInit`.
 - Manifest id [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPachinko2_c`; the inspect id carried
   `+dScMgPachinko_c` (see RTTI ownership). Promoted source
-  `src/actors/dScMgPachinko2_c.cpp`: tubuild's own guess for that id, the
+  `src/minigames/d_s_mg_pachinko2.cpp`: tubuild's own guess for that id, the
   first reserved candidate, accepted by tu_promote.
 - Form: ROM-ascending order under `#pragma defer_codegen off`. Each legacy
   body is carried as it was, apart from the edits listed below; the six
@@ -68,39 +68,39 @@ readability pass 2, issue 3171):
   `notes/tu-promotion-conventions.md` (destructor inline in the header and
   unmarked): the destructor stays declared in `include/dScMgPachinko2_c.h` and
   is defined out of line in the TU under two stacked symbol markers, as
-  `src/actors/dScMgPachinko_c.cpp` does. Measured: with
+  `src/minigames/d_s_mg_pachinko.cpp` does. Measured: with
   `virtual ~dScMgPachinko2_c() {}` in the header and no out-of-line
   definition, all 74 members still match and D2 disappears, but D1 and D0 come
   out after the last helper (sections 149 and 151, after the factory's 130),
   so the function order stops matching the ROM. Out of line they are sections
   5 and 7, first, as in the ROM.
 - View types renamed where two legacy files used one name. The first user
-  keeps the name (`Obj` and `E` in [func_ov006_020ff47c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 2), `Entry` in
-  [func_ov006_020fff84](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 10); each later one takes its helper's address as a
+  keeps the name (`Obj` and `E` in [func_ov006_020ff47c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 2), `Entry` in
+  [func_ov006_020fff84](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 10); each later one takes its helper's address as a
   suffix: `Obj4ec`, `Obj4c0`, `E68c`, `Obj68c`, `Obje3c`, `Entryd6c`,
   `Objd6c`.
 - Edits forced by one declaration per symbol in one C++ TU, all byte-neutral:
   - 44 casts at helper call sites, where the caller's legacy declaration
     differed from the helper's definition: `Behavior` 20, `Render` 8,
     `InitResources` 1 (`(int)this` becomes `(char *)this`),
-    [func_ov006_02100554](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 23) 3, [func_ov006_02102864](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 52) 6 (`(int)c`, since
-    [func_ov006_021027e4](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 51) takes an `int` first parameter), and one each in
-    [func_ov006_02100bac](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 30), [func_ov006_0210246c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 44), [func_ov006_0210258c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 47), [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 60), [func_ov006_02103608](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 62)
-    and [func_ov006_02103994](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 66). `Render`'s pass-1 form leaned on the `void *` spellings in
+    [func_ov006_02100554](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 23) 3, [func_ov006_02102864](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 52) 6 (`(int)c`, since
+    [func_ov006_021027e4](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 51) takes an `int` first parameter), and one each in
+    [func_ov006_02100bac](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 30), [func_ov006_0210246c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 44), [func_ov006_0210258c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 47), [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 60), [func_ov006_02103608](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 62)
+    and [func_ov006_02103994](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 66). `Render`'s pass-1 form leaned on the `void *` spellings in
     `include/decl_common.h`, which this TU cannot include because its helper
     spellings contradict the definitions.
   - 4 `(void *)` casts on the data word passed to [func_ov004_020afdd0](../../../src/minigames/d_s_mg_base.cpp),
-    whose one declaration takes `void *`: in [func_ov006_020ff47c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 2),
-    [func_ov006_02100314](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 17), [func_ov006_0210068c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 24) and [func_ov006_02102de4](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 56). The last three declared an `int`
-    first parameter; in [func_ov006_020ff47c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 2) the cast follows from
+    whose one declaration takes `void *`: in [func_ov006_020ff47c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 2),
+    [func_ov006_02100314](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 17), [func_ov006_0210068c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 24) and [func_ov006_02102de4](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 56). The last three declared an `int`
+    first parameter; in [func_ov006_020ff47c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 2) the cast follows from
     `data_ov006_02136b80` becoming `int []` (last bullet of this section).
-  - [data_020a0e40](../../../config/arm9/symbols.txt) is read as a scalar in [func_ov006_02102f3c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 58), which read
+  - [data_020a0e40](../../../config/arm9/symbols.txt) is read as a scalar in [func_ov006_02102f3c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 58), which read
     `data_020a0e40[0]` through a `u8 []` declaration. The TU declares it once
-    as `u8`, as [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 60) did; measured, the array declaration
-    does not compile at [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)'s two scalar reads.
-  - [func_ov006_021024e0](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 45)'s parameter, named `this` in its C source, is now
+    as `u8`, as [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 60) did; measured, the array declaration
+    does not compile at [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)'s two scalar reads.
+  - [func_ov006_021024e0](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 45)'s parameter, named `this` in its C source, is now
     `c`: `this` is a keyword in C++.
-  - [func_ov006_0210246c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 44)'s `class C { public: int dummy; }` merges into the
+  - [func_ov006_0210246c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 44)'s `class C { public: int dummy; }` merges into the
     one `struct C { char pad[1]; }`; per TU-V1 the choice of completion does
     not change the object.
   - The D1 and D0 files each defined the same empty destructor; the TU has
@@ -108,19 +108,19 @@ readability pass 2, issue 3171):
   - The factory's definition gains `extern "C"`: it has no forward
     declaration, and without it the name would be mangled.
 - Edits the fold chose, each measured neutral:
-  - 7 `_ZN5Sound12PlayBank2_2DEj` calls in 4 helpers ([func_ov006_0210076c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 27) 
-    2, [0210265c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 49) 3, [02102c3c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 53) 1, [02103ac0](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 67) 1) are spelled
-    `Sound::PlayBank2_2D`, the spelling [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 60) already used.
+  - 7 `_ZN5Sound12PlayBank2_2DEj` calls in 4 helpers ([func_ov006_0210076c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 27) 
+    2, [0210265c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 49) 3, [02102c3c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 53) 1, [02103ac0](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 67) 1) are spelled
+    `Sound::PlayBank2_2D`, the spelling [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 60) already used.
     Keeping the mangled `extern "C"` name next to the namespace declaration
     gives the same object.
-  - [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)'s `volatile` moved from its `data_020a0dea`
+  - [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)'s `volatile` moved from its `data_020a0dea`
     declaration to two use-site casts, so the TU's one declaration stays the
-    plain `u8 []` that [func_ov006_02102f3c](../../../src/actors/dScMgPachinko2_c.cpp) read. Declaring it `volatile`
+    plain `u8 []` that [func_ov006_02102f3c](../../../src/minigames/d_s_mg_pachinko2.cpp) read. Declaring it `volatile`
     once without the casts gives the same object.
   - The `.cpp` helpers' definitions drop their own `extern "C"`; the forward
     block gives every helper C linkage.
-  - [func_ov006_02102f3c](../../../src/actors/dScMgPachinko2_c.cpp) calls [func_ov006_02102864](../../../src/actors/dScMgPachinko2_c.cpp)(base)` directly (TU-V4).
-- [func_ov006_02100380](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 18): the C body DIFFs under `-lang c++` (0x9c bytes
+  - [func_ov006_02102f3c](../../../src/minigames/d_s_mg_pachinko2.cpp) calls [func_ov006_02102864](../../../src/minigames/d_s_mg_pachinko2.cpp)(base)` directly (TU-V4).
+- [func_ov006_02100380](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 18): the C body DIFFs under `-lang c++` (0x9c bytes
   against 0x88). The repeated `((View*)c)` casts let the compiler share
   addresses with the raw `c + 0x5330` and `c + 0x5335` increments. Hoisting
   the cast into one local, `View *v = (View*)c;`, restores the ROM code.
@@ -133,7 +133,7 @@ readability pass 2, issue 3171):
   argument (`Behavior` now passes `0x10` without a cast),
   [func_ov004_020b1a5c](../../../src/minigames/d_s_mg_base.cpp)'s `void` return (unused at its one call), and
   [data_ov006_02136b80](../../../config/arm9/overlays/ov006/symbols.txt) as `int []` with a `(void *)` cast at its use, as
-  `src/actors/dScMgPachinko_c.cpp` spells it.
+  `src/minigames/d_s_mg_pachinko.cpp` spells it.
 
 ## Pragma table
 
@@ -144,48 +144,48 @@ both in one bracket. Round 2 changed no bracket.
 
 | Member | Pragma | Bracket | Control (pragma deleted) |
 |---|---|---|---|
-| [func_ov006_020ff534](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 4) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_020ff534](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 4) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_020ff690](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 5) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_020ff8c8](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 6) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_020ffb54](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 7) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_020ffde4](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 8) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_020fff84](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 10) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_020fffec](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 11) | `opt_strength_reduction off` | own push and pop | 11 words change |
-| [func_ov006_021006f4](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 25) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_0210076c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 27) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_0210076c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 27) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_021009b8](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 28) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02100bac](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 30) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02100f7c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 33) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02101088](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 34) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02101148](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 35) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02101224](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 36) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_021012cc](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 37) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_021016ec](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 38) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_021019e0](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 39) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02101af0](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 40) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02101e88](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 41) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_021020c4](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 42) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02102274](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 43) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_021024e0](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 45) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_021027e4](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 51) | `opt_loop_invariants off` | own push and pop | 10 words change |
-| [func_ov006_02102864](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 52) | `opt_loop_invariants off` | own push and pop | size changes |
-| [func_ov006_02102864](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 52) | `opt_dead_assignments off` | own push and pop | 4 words change |
-| [func_ov006_02102c3c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 48) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_02102c3c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 53) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02102de4](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 56) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_02102e8c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 57) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_02103360](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 61) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02103608](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 62) | `opt_strength_reduction off` | not carried | no change: inert |
-| [func_ov006_02103608](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 62) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_0210371c](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 63) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02103870](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 64) | `opt_common_subs off` | own push and pop | size changes |
-| [func_ov006_02103994](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 66) | `opt_common_subs off` | own push and pop | 63 words change |
-| [func_ov006_02103ac0](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 67) | `opt_strength_reduction off` | own push and pop | size changes |
-| [func_ov006_02103bfc](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 68) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_020ff534](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 4) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_020ff534](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 4) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_020ff690](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 5) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_020ff8c8](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 6) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_020ffb54](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 7) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_020ffde4](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 8) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_020fff84](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 10) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_020fffec](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 11) | `opt_strength_reduction off` | own push and pop | 11 words change |
+| [func_ov006_021006f4](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 25) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_0210076c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 27) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_0210076c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 27) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_021009b8](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 28) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02100bac](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 30) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02100f7c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 33) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02101088](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 34) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02101148](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 35) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02101224](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 36) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_021012cc](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 37) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_021016ec](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 38) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_021019e0](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 39) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02101af0](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 40) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02101e88](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 41) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_021020c4](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 42) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02102274](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 43) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_021024e0](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 45) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_021027e4](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 51) | `opt_loop_invariants off` | own push and pop | 10 words change |
+| [func_ov006_02102864](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 52) | `opt_loop_invariants off` | own push and pop | size changes |
+| [func_ov006_02102864](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 52) | `opt_dead_assignments off` | own push and pop | 4 words change |
+| [func_ov006_02102c3c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 48) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_02102c3c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 53) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02102de4](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 56) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_02102e8c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 57) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_02103360](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 61) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02103608](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 62) | `opt_strength_reduction off` | not carried | no change: inert |
+| [func_ov006_02103608](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 62) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_0210371c](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 63) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02103870](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 64) | `opt_common_subs off` | own push and pop | size changes |
+| [func_ov006_02103994](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 66) | `opt_common_subs off` | own push and pop | 63 words change |
+| [func_ov006_02103ac0](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 67) | `opt_strength_reduction off` | own push and pop | size changes |
+| [func_ov006_02103bfc](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 68) | `opt_strength_reduction off` | own push and pop | size changes |
 
-[func_ov006_02103608](../../../src/actors/dScMgPachinko2_c.cpp)(ROM Ordinal 62) was re-checked with both of its pragmas deleted: its
+[func_ov006_02103608](../../../src/minigames/d_s_mg_pachinko2.cpp)(ROM Ordinal 62) was re-checked with both of its pragmas deleted: its
 size changes, so its remaining `opt_common_subs off` bracket stays proven.
 
 ## RTTI ownership
@@ -203,7 +203,7 @@ size changes, so its remaining `opt_common_subs off` bracket stays proven.
   That label reaches the inspect id only because rtti_vtables reads past the
   36 words of dScMgPachinko_c's vtable into the neighbouring
   g_profile_MG_TAMAIRE descriptor. That lands spurious slots 36 and 38 on
-  [func_ov006_021019e0](../../../src/actors/dScMgPachinko2_c.cpp) and [dScMgPachinko2_c_classInit](../../../src/actors/dScMgPachinko2_c.cpp);
+  [func_ov006_021019e0](../../../src/minigames/d_s_mg_pachinko2.cpp) and [dScMgPachinko2_c_classInit](../../../src/minigames/d_s_mg_pachinko2.cpp);
   `include/dScMgPachinko_c.h` already records both slots as spurious.
 - The factory stores the vtable address point through
   [data_ov006_0213dbbc](../../../config/arm9/overlays/ov006/symbols.txt), the same address as `_ZTV16dScMgPachinko2_c`.
@@ -213,7 +213,7 @@ size changes, so its remaining `opt_common_subs off` bracket stays proven.
 `tu_promote.py --dry-run` and the applied run agree:
 
 - 74 functions from 74 legacy sources go into
-  `src/actors/dScMgPachinko2_c.cpp`.
+  `src/minigames/d_s_mg_pachinko2.cpp`.
 - 74 attribution overrides are added.
 - 3 CONVERTED identities (D1, D0, `Render`) are re-keyed to the TU.
 - The [ov006 delinks](../../../config/arm9/overlays/ov006/delinks.txt) now hold one complete claim for the range, and srcpath
@@ -285,7 +285,7 @@ with this note in the working tree.
     each object identical, 74 of 74 (TU-V4);
   - the mangled Sound spelling kept, and `data_020a0dea` declared
     `volatile` without the casts: each object identical, 74 of 74 (TU-V5);
-  - `data_020a0e40` as `u8 []`: compile error at [func_ov006_02102fe8](../../../src/actors/dScMgPachinko2_c.cpp)
+  - `data_020a0e40` as `u8 []`: compile error at [func_ov006_02102fe8](../../../src/minigames/d_s_mg_pachinko2.cpp)
     (TU-V5);
   - destructor inline in a header copy, no out-of-line definition: 74 of 74,
     no D2, D1 and D0 at sections 149 and 151 against 5 and 7 (TU-V6).
@@ -312,7 +312,7 @@ with this note in the working tree.
 - `python tools/check_decl_agreement.py --changed 70f055a670` exit 0: no
   new disagreements, no new local redeclarations. The full run exits 0:
   14,592 disagreements, no new one.
-- `python tools/romdata_check.py --files src/actors/dScMgPachinko2_c.cpp --json build/romdata.json -j8`
+- `python tools/romdata_check.py --files src/minigames/d_s_mg_pachinko2.cpp --json build/romdata.json -j8`
   exit 0. Of 11 emitted symbols, 6 VERIFIED (`_ZTV16dScMgPachinko2_c`
   144 bytes, `_ZTI16dScMgPachinko2_c` and the four ancestor `_ZTI`), 5
   PARTIAL (the `_ZTS` strings), 0 DIFFERS.
@@ -345,7 +345,7 @@ with this note in the working tree.
 - `tubuild.py create` on the same id exit 0. Its output was reassembled by
   hand in ROM order with the pragmas restored.
 - `python tools/tubuild.py verify ov006/dScMgPachinko2_c`:
-  - the first round gave 73 of 74, with [func_ov006_02100380](../../../src/actors/dScMgPachinko2_c.cpp) diverging;
+  - the first round gave 73 of 74, with [func_ov006_02100380](../../../src/minigames/d_s_mg_pachinko2.cpp) diverging;
   - the final run exits 0: 74 of 74 MATCH, objisolate clean, reloc
     destinations clean, compiler-only exact deadstrip, TEXT-VERIFIED;
   - re-run after each later source edit, exit 0 each time.
@@ -374,7 +374,7 @@ with this note in the working tree.
   - the 23 rows keyed to retired sources were removed, and three rows were
     inserted in place under the TU path. Nothing was re-sorted or
     regenerated.
-- `python tools/romdata_check.py --files src/actors/dScMgPachinko2_c.cpp --json build/romdata.json`
+- `python tools/romdata_check.py --files src/minigames/d_s_mg_pachinko2.cpp --json build/romdata.json`
   exit 0. Of 11 emitted symbols:
   - 6 VERIFIED: `_ZTV16dScMgPachinko2_c` (144 bytes),
     `_ZTI16dScMgPachinko2_c` and the four ancestor `_ZTI`;

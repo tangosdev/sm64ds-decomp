@@ -120,7 +120,7 @@
       "evidence": "load-count InitResources increments; plain zero-initialized int with no constructor"
     },
     {
-      "symbol": "data_ov039_021118e4",
+      "symbol": "gOV039ObjKumoModelFile",
       "address": "0x021118e4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -210,7 +210,7 @@
       "source": "0x021113e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov039_021118e4",
+      "symbol": "gOV039ObjKumoModelFile",
       "addend": 0,
       "target_module": "ov039",
       "target_address": "0x021118e4"
@@ -253,7 +253,7 @@
     "PRAGMA MADE FILE-GLOBAL. The legacy _ZN5Cloud8BehaviorEv source carried `#pragma opt_propagation off` immediately above its body. That pragma is file-global last-wins in mwccarm 2004/b56, not positional, so in the merged TU it sits at the top of the file. Carried there it costs no other member a byte: all seven functions verify 7/7 MATCH with it in place, and Behavior DIFFs by 999 words without it.",
     "FOLD 2026-09-04. daObjKumo_c_classInit at 0x0211137c (historical alias Cloud_Spawn) was folded in from src/Cloud_Spawn.c. It is the OBJ_KUMO registry profile's factory and sits immediately after InitResources in the ROM's .text order, so it was always part of this TU; it was left outside only because the promotion predated the profile-reconstruction campaign. Folding it is what frees the d_a_obj_kumo stem, which tools/layout_check.py L2 would otherwise refuse to let the one-function source take. It keeps C linkage; its externs are restated in this TU's own extern \"C\" block rather than pulled in through decl_Actor.h / decl_ActorBase.h / decl_Model.h, and _ZTV11daObjKumo_c comes from the decl_common.h this TU already included. It compiles under this file's file-global `#pragma opt_propagation off` and still matches, as do the other seven.",
     "CLEANUP. Factory is `return new daObjKumo_c()`. Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. InitResources uses Model::LoadFile / ModelBase::SetFile; CleanupResources uses SharedFilePtr::Release; the C-ABI helper uses mModel.mat4x3 / mAngleY / mPosX. decl_common.h dropped (factory no longer names _ZTV). 8/8 MATCH, reloc-destinations PASS.",
-    "SINIT FOLD. This file defines the load-count int data_ov039_021118e0 and the model handle data_ov039_021118e4 as a SharedFilePtr-derived KumoModelFilePtr constructed with file ID 1141. mwcc emits __sinit_d_a_obj_kumo.cpp, the ctor word, and the @273 destructor-registration node. Class RTTI, profile, and vtable stay externalized. The handwritten src/__sinit_ov039_021113b4.c is retired."
+    "SINIT FOLD. This file defines the load-count int data_ov039_021118e0 and the model handle gOV039ObjKumoModelFile as a SharedFilePtr-derived KumoModelFilePtr constructed with file ID 1141. mwcc emits __sinit_d_a_obj_kumo.cpp, the ctor word, and the @273 destructor-registration node. Class RTTI, profile, and vtable stay externalized. The handwritten src/__sinit_ov039_021113b4.c is retired."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

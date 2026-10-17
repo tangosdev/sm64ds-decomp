@@ -1,0 +1,277 @@
+{
+  "task": "readable3-1015",
+  "base_commit": "40dfd83ba134be0600730b58f3261f04441632d8",
+  "compiler": "2004/b56",
+  "flags": "rombuild.CFLAGS with -lang c++",
+  "source_quality": "Two producer passes complete; broader reconstruction and independent review remain partial.",
+  "classes": [
+    {
+      "class_name": "daObjMaruta_c",
+      "issue": 3870,
+      "source": "src/game/actors/d_a_obj_maruta.cpp",
+      "source_blob": "6880473938685427b497d020c83fde2adc3a4cf0",
+      "queue_task": "d_a_obj_maruta-readable1015",
+      "ranges": [
+        "range:ov080:0x02126fbc:0x0212766c"
+      ],
+      "changed_functions": [
+        "func_ov080_0212714c",
+        "func_ov080_0212758c",
+        "func_ov080_02127658"
+      ],
+      "raw_object_baseline_sha256": "aefdef72f147d9e998485e3c53cf6e3a6c73368d62af8c66763459642988e322",
+      "raw_object_final_sha256": "947eb45d15e7042003cc1a74833e17cc586eed5bf3a390b9b32bf8e654eeec72",
+      "raw_object_identical": false,
+      "all_function_bytes_and_relocations_identical": true,
+      "allocated_sections_identical_except_empty_Vector3_destructor_position": true,
+      "production_prepared_sha256": "66e7ee09792a5422412427371c8af071e717b5efb3ff7a8cb7073ca623f28643",
+      "strict_linkcheck": {
+        "verified": 10,
+        "blind": 0,
+        "differing": 0,
+        "local_report": "build/readable3/final-object-linkcheck.json"
+      },
+      "accepted_experiments": [
+        "roll angular velocity member",
+        "sound timer member",
+        "hit timer address",
+        "pitch address",
+        "remove unused byte view",
+        "direct velocity increments",
+        "typed contact actor",
+        "typed contact position",
+        "typed contact boundary",
+        "native displacement vector production check",
+        "roll speed division",
+        "source review comments and scope"
+      ],
+      "retained_code_changing_experiments": [
+        {
+          "label": "contact position members",
+          "functions": {
+            "func_ov080_0212758c": [
+              204,
+              224
+            ]
+          }
+        },
+        {
+          "label": "direct flag and actor tests",
+          "functions": {
+            "func_ov080_0212714c": [
+              864,
+              840
+            ]
+          }
+        }
+      ],
+      "experiment_limit": "Exploratory declaration mistakes and superseded section-index-only differences are excluded; no failed spelling establishes a universal compiler constraint. Full local trials remain in build/readable3.",
+      "prepared_object_equals_actual_production_input": true
+    },
+    {
+      "class_name": "daPgRcer_c",
+      "issue": 3871,
+      "source": "src/game/actors/d_a_pg_rcer.cpp",
+      "source_blob": "07f26f8a119ded76757dbd63e5e8a6e3680ec16d",
+      "queue_task": "d_a_pg_rcer-readable1015",
+      "ranges": [
+        "range:ov019:0x021111a0:0x0211261c"
+      ],
+      "changed_functions": [
+        "_ZN10daPgRcer_c19func_ov019_0211131cEv",
+        "_ZN10daPgRcer_c19func_ov019_021113b0Ev",
+        "_ZN10daPgRcer_c19func_ov019_02112168Ev",
+        "func_ov019_0211140c",
+        "func_ov019_02111558",
+        "func_ov019_021117a8",
+        "func_ov019_0211197c",
+        "func_ov019_02111dec",
+        "func_ov019_02111fec"
+      ],
+      "raw_object_baseline_sha256": "b33467ffbb2a3c54cac3b997e448148f4372f02ad5653d7ea865eccb130e67f6",
+      "raw_object_final_sha256": "b33467ffbb2a3c54cac3b997e448148f4372f02ad5653d7ea865eccb130e67f6",
+      "raw_object_identical": true,
+      "all_function_bytes_and_relocations_identical": true,
+      "allocated_sections_identical_except_empty_Vector3_destructor_position": true,
+      "production_prepared_sha256": "82ebf4a1eb378e86b9e929ef2d552b696c1eab2205aa4a0598a64787ee3747c1",
+      "strict_linkcheck": {
+        "verified": 30,
+        "blind": 0,
+        "differing": 0,
+        "local_report": "build/readable3/final-object-linkcheck.json"
+      },
+      "accepted_experiments": [
+        "collision result methods",
+        "target angle member",
+        "action step member",
+        "typed player position view",
+        "native normal vectors",
+        "native sound interface",
+        "eliminate field macros",
+        "native approach definitions verified",
+        "native path and dialog vectors",
+        "implicit base references",
+        "source review comments"
+      ],
+      "retained_code_changing_experiments": [
+        {
+          "label": "player position members",
+          "functions": {
+            "func_ov019_0211197c": [
+              988,
+              980
+            ]
+          }
+        }
+      ],
+      "experiment_limit": "Exploratory declaration mistakes and superseded section-index-only differences are excluded; no failed spelling establishes a universal compiler constraint. Full local trials remain in build/readable3.",
+      "prepared_object_equals_actual_production_input": true
+    },
+    {
+      "class_name": "daBtn_c",
+      "issue": 3194,
+      "source": "src/game/actors/d_a_btn.cpp",
+      "source_blob": "97a0189904ce8bd2b36939dea252bf779c7ae7a4",
+      "queue_task": "d_a_btn-readable1015",
+      "ranges": [
+        "range:ov079:0x02123740:0x02126648",
+        "range:ov079:0x02127618:0x021279d4",
+        "range:ov079:0x02127b88:0x02127b8c",
+        "range:ov079:0x02128140:0x021282e0"
+      ],
+      "changed_functions": [
+        "_ZN7daBtn_c19func_ov079_02123804EP8dActor_c",
+        "_ZN7daBtn_c19func_ov079_02123f34Ev",
+        "_ZN7daBtn_c19func_ov079_02124188Ev",
+        "_ZN7daBtn_c19func_ov079_021243e0Ei",
+        "_ZN7daBtn_c19func_ov079_021246dcEv",
+        "_ZN7daBtn_c19func_ov079_02125058EP8dActor_c",
+        "_ZN7daBtn_c19func_ov079_02125504Ev",
+        "_ZN7daBtn_c19func_ov079_021256d4Ev",
+        "_ZN7daBtn_c19func_ov079_021258fcEv",
+        "func_ov079_02123d4c"
+      ],
+      "raw_object_baseline_sha256": "5f7742e480c919bcd0088ba722dedea0f576c1e64c5b2b59a011672259b86365",
+      "raw_object_final_sha256": "c20566526a9b465d104faccc57e51793269845202dda17f22ad21b79b64f7af7",
+      "raw_object_identical": false,
+      "all_function_bytes_and_relocations_identical": true,
+      "allocated_sections_identical_except_empty_Vector3_destructor_position": true,
+      "production_prepared_sha256": "af83131622d4aae817215d25d407e87af8b7fadcf455804200ae4f5e5eaf8c9a",
+      "strict_linkcheck": {
+        "verified": 37,
+        "blind": 0,
+        "differing": 0,
+        "local_report": "build/readable3/final-object-linkcheck.json"
+      },
+      "accepted_experiments": [
+        "output element addresses",
+        "pointer equality comparisons",
+        "native vectors _ZN7daBtn_c19func_ov079_02125504Ev",
+        "native vectors _ZN7daBtn_c19func_ov079_02125058EP8dActor_c",
+        "native vectors _ZN7daBtn_c19func_ov079_021246dcEv",
+        "native vectors _ZN7daBtn_c19func_ov079_021243e0Ei",
+        "native vectors _ZN7daBtn_c19func_ov079_02124188Ev",
+        "native vectors _ZN7daBtn_c19func_ov079_02123f34Ev",
+        "complete native vectors",
+        "typed animation comparison locals",
+        "direct output vector elements",
+        "source review and const borrowed views"
+      ],
+      "retained_code_changing_experiments": [
+        {
+          "label": "player fields _ZN7daBtn_c19func_ov079_02123f34Ev",
+          "functions": {
+            "_ZN7daBtn_c19func_ov079_02123f34Ev": [
+              212,
+              208
+            ]
+          }
+        }
+      ],
+      "experiment_limit": "Exploratory declaration mistakes and superseded section-index-only differences are excluded; no failed spelling establishes a universal compiler constraint. Full local trials remain in build/readable3.",
+      "prepared_object_equals_actual_production_input": true
+    }
+  ],
+  "validation": {
+    "prepush_linkcheck": {
+      "exit_code": 0,
+      "verified": 76,
+      "blind_initializer_relocations": 36,
+      "resolution": "Prepare the final fresh objects with the unchanged production isolation or intact-object policy, then strict linkcheck every enrolled function: 77 VERIFIED, zero blind words, zero differences. The Whomp initializer aliases and PMF literals are verified by the existing intact-object policy."
+    },
+    "declaration_agreement": {
+      "exit_code": 0,
+      "new_disagreements": 0,
+      "new_local_header_redeclarations": 0
+    },
+    "port_refcheck": {
+      "exit_code": 0,
+      "resolved": 267
+    },
+    "legacy_tubuild_verify": {
+      "exit_code": 1,
+      "scope": "36 text functions match, object isolation and relocation destinations clean; legacy verify does not apply intact-object ownership of Whomp initializer/local BSS and refuses those extras. Production preparation and full ROM build are the applicable gates."
+    },
+    "rombuild": {
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "exit_code": 0,
+      "status": "passed",
+      "modules": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "compiled_functions": 11334,
+      "mismatching_functions": 0,
+      "source_data_claims": 331,
+      "reproducing_data_claims": 331,
+      "source_bss_claims": 239,
+      "cache_reused": 2749,
+      "compiled_objects": 3,
+      "new_symbol_errors": [],
+      "baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "unrelated_differing_data_records": [
+        {
+          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        },
+        {
+          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        }
+      ],
+      "partial_data_symbols": 1519,
+      "unnamed_data_symbols": 21
+    }
+  },
+  "limits": [
+    "Existing names and layouts reused; no newly invented semantic global, field or method names.",
+    "Whomp bone bytes at offsets 0x1a/0x1c/0x1e remain within BMD_Bone padding. No shared layout assertion added.",
+    "SharedFilePtr has no common field layout: loaded-file views remain local.",
+    "Maruta and penguin text are enrolled; this sweep does not promote their metadata. Whomp retains its existing intact-object enrollment for text/init/ctor/BSS.",
+    "Legacy free helpers, Fix12 ABI bridges, Whomp matrix-copy and return-vector views remain.",
+    "Retained vector views reflect scalar actor position fields and measured grouped loads. Failed individual rewrites do not prove every alternative impossible.",
+    "No gameplay test, candidate NDS packaging, private PR acceptance or independent source acceptance is claimed."
+  ]
+}

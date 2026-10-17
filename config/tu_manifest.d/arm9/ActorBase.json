@@ -1,8 +1,8 @@
 {
   "id": "arm9/ActorBase",
   "module": "arm9",
-  "source": "src/actors/ActorBase.cpp",
-  "promoted_source": "src/actors/ActorBase.cpp",
+  "source": "src/runtime/actor/ActorBase.cpp",
+  "promoted_source": "src/runtime/actor/ActorBase.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -11,8 +11,8 @@
     "no foreign symbol inside the run: config/arm9/symbols.txt lists exactly 30 function symbols in [0x020433b8,0x020440e8) -- 23 with the _ZN7fBase_c prefix plus func_02043810, func_02043880, func_020433b8, func_02043f4c, func_02043f98, func_02043fdc and func_0204405c -- and nothing else. Both func_02043810 and func_02043880 are ENCLOSED by named members (func_02043810 sits between Virtual34 and MarkForDestruction, func_02043880 between MarkForDestruction and OnPendingDestroy), so no cut can exclude either without splitting the class's own run. Both also read the ActorBase layout directly: func_02043810 follows sceneNode (+0x14) to the owner back-pointer the constructor writes at its +0x10, and func_02043880 touches aliveState (0x0e), shouldBeKilled (0x0f), the flag byte (0x13) and both ProcessingListNodes (0x28, 0x38).",
     "the run is the class's WHOLE run, bar one nested-class outlier: grep of every config/**/symbols.txt in the image finds 25 _ZN7fBase_c* function symbols, 23 of them here and 2 elsewhere -- _ZN7fBase_c9SceneNode5ResetEv (0x0203b4ac) and _ZN7fBase_c9SceneNodeC1Ev (0x0203b4c4). Those two are the NESTED class ActorBase::SceneNode, not ActorBase, they are 0x8000 bytes away, and they sit immediately below _ZN4cstd5atan2E5Fix12IiES1_ inside the 0x0203b2xx-0x0203b4xx stretch that holds the very list primitives this run calls (func_0203b20c, func_0203b244, func_0203b27c, func_0203b3c0). They are a different TU and are deliberately NOT claimed here; see notes.",
     "DESTRUCTOR-VARIANT ORDER CORROBORATES THE SOURCE FORM. mwcc emits an out-of-line destructor definition as the fixed group D2,D0,D1 (notes/tu-reconstruction-pilot-report.md sec 3). This class has exactly that in the ROM -- 0x02043d48 D2, 0x02043d78 D0, 0x02043dbc D1, contiguous -- so the three were emitted together from one object, which is only possible if they shared a TU. Contrast ActorDerived, whose destructor is defined INLINE in the header: its vague-linkage copies come out D1-then-D0 with no D2 (0x02013e80, 0x02013ea4). Two classes, two source forms, both readable straight off the cartridge.",
-    "KEY-FUNCTION CONSISTENCY, and it is a NEGATIVE that had to hold: ActorBase's first declared virtual is InitResources (slot 0), so any TU defining it as a real method emits _ZTV7fBase_c and collides with the gap object's copy of the ROM vtable. This TU keeps it an extern \"C\" free function, and the compiled object emits NO .data section at all -- no _ZTV, no _ZTI, no _ZTS. That is the check that the 23 other members can be real C++ methods in one TU without the vtable following them.",
-    "VPTR ADDEND, from the cartridge: the literal pools of all three destructor variants hold exactly 0x02099edc (0x02043d74 -> 0x02099edc, 0x02043db4 -> 0x02099edc, 0x02043de8 -> 0x02099edc), which is config's `_ZTV7fBase_c`, i.e. the SLOT ARRAY. A real C++ ~ActorBase() would store mwcc's own _ZTV7fBase_c + 8 (that symbol names the vtable OBJECT, two words of Itanium preamble earlier) and, with the vtable external because of the line above, would land eight bytes high. This is why the three variants are spelled as extern \"C\" free functions here and not as one method.",
+    "Native InitResources is the key function. Its exact emitted RTTI, type name and complete vtable are verified and externalized through three standard deadstrip-data policies to existing canonical ROM storage; no new owned data or enrollment.",
+    "VPTR ADDEND. Native destructor and constructor raw references point eight bytes into complete emitted vtable storage. The ordinary compiler-only preparation externalizes the verified metadata and rebiases these references to the configured slot-array address 0x02099edc. All 30 retained function bodies and all 98 retained relocation records equal the native-destructor control. Raw and prepared ELF containers differ because key-function metadata and symbol entries are emitted; container identity is not claimed.",
     "static-initialiser attribution: NO HELP, stated rather than skipped. build/tu_map.json gives main 23 sinits / 23 .ctor entries with sinit_vs_tu 'ok' but corroborated=false, and nothing in this run touches dynamically-initialised static storage -- the object emits no .init and no .bss. This boundary rests on the contiguity, enclosure and destructor-group lines above, not on sinit counting."
   ],
   "sections": [
@@ -246,6 +246,27 @@
       "symbol": "_ZN7fBase_c7ManagerD1Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the inline Manager cleanup helper while lowering fBase_c's constructor; it has no configured ROM home and no surviving reference"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Native InitResources key-function emission: complete emitted metadata including vtable preamble and canonical references matches retail. Verify before externalizing to unchanged ROM storage outside this TU owned text.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Native InitResources key-function emission: complete emitted metadata including vtable preamble and canonical references matches retail. Verify before externalizing to unchanged ROM storage outside this TU owned text.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTV7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Native InitResources key-function emission: complete emitted metadata including vtable preamble and canonical references matches retail. Verify before externalizing to unchanged ROM storage outside this TU owned text.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099edc"
     }
   ],
   "notes": [

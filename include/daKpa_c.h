@@ -1,14 +1,14 @@
 /* Seeded from matched-function evidence by tools/gen_header.py, then given its
  * real base and real member types by hand.
  *
- * class daKpa_c: Bowser (ov060), who spawns his tail daKpaTail_c (actor ID 278). The behaviour lives in src/actors/daKpa_c.cpp.
+ * class daKpa_c: Bowser (ov060), who spawns his tail daKpaTail_c (actor ID 278). The behaviour lives in src/game/actors/d_a_kpa.cpp.
  *
  * Readability pass: members are named from how that file uses them; the C half
  * below repeats the field list for a C translation unit. State, hold-state,
  * condition-flag, actor-ID, sound and collider-flag numbers are the enums at the
- * top of daKpa_c.cpp. Fix12 values read 0x1000 = 1.0; angles 0x10000 = a full turn.
+ * top of d_a_kpa.cpp. Fix12 values read 0x1000 = 1.0; angles 0x10000 = a full turn.
  *
- * Leftover: unk_420 and unk_422 are written in daKpa_c.cpp and never read, so they
+ * Leftover: unk_420 and unk_422 are written in d_a_kpa.cpp and never read, so they
  * keep placeholder names; the dActor_c words at 0xa4 and 0xac that the file
  * touches are unnamed (they are dActor_c's own unk_0a4 / unk_0ac); the pad_ arrays
  * are bytes nothing in that file reads or writes.
@@ -113,19 +113,19 @@ struct daKpa_c : dActor_c {
     s16 mAngleToTarget;            /* 0x406 */
     s16 mAngleToCenter;       /* 0x408 -- angle from Bowser toward the world origin */
     u8  pad_40a[0x2];
-    s32 mState;            /* 0x40c -- see Bowser_State in daKpa_c.cpp */
-    s32 mHoldState;           /* 0x410 -- see Bowser_HoldState in daKpa_c.cpp */
+    s32 mState;            /* 0x40c -- see Bowser_State in d_a_kpa.cpp */
+    s32 mHoldState;           /* 0x410 -- see Bowser_HoldState in d_a_kpa.cpp */
     u8  mVariantID;            /* 0x414 -- param1 & 3: which of the three fights; 3 is treated as 0 */
     u8  mPickToggle;          /* 0x415 -- alternates between "choose an action" and "turn to face the target" */
     u8  mChooseJumpOnly;      /* 0x416 -- param1 bit 2; when set, the variant-2 idle pick chooses the jump state instead of calling func_ov060_021150d0 */
     u8  pad_417[0x1];
-    u32 mCondFlags;           /* 0x418 -- see Bowser_CondFlag in daKpa_c.cpp */
+    u32 mCondFlags;           /* 0x418 -- see Bowser_CondFlag in d_a_kpa.cpp */
     u8  mOpacity;            /* 0x41c -- 0..255, walked toward mTargetOpacity by 20 per frame */
     u8  mTargetOpacity;       /* 0x41d */
     s8  mHealth;              /* 0x41e -- hits left; set from a per-variant table (1, 1, 3) */
     u8  pad_41f[0x1];
-    u16 unk_420;              /* 0x420 -- zeroed at init, never read in daKpa_c.cpp */
-    u8  unk_422;              /* 0x422 -- set to 1 during the hurt hop and the defeat launch and cleared to 0 in the idle state; never read in daKpa_c.cpp */
+    u16 unk_420;              /* 0x420 -- zeroed at init, never read in d_a_kpa.cpp */
+    u8  unk_422;              /* 0x422 -- set to 1 during the hurt hop and the defeat launch and cleared to 0 in the idle state; never read in d_a_kpa.cpp */
     u8  mStep;                /* 0x423 -- step within the current state; reset on every state change */
     u8  mTalkStep;            /* 0x424 -- step of the intro conversation (func_ov060_02115518) */
     u8  mHoldStep;            /* 0x425 -- step of the held handler (mHoldState 1) */
@@ -166,7 +166,7 @@ struct daKpa_c : dActor_c {
     void func_ov060_02111cc0(int idx, int animFlags);
     int func_ov060_02111f08();
     void func_ov060_02112350();
-    void func_ov060_021123a0(int f);
+    void func_ov060_021123a0(int enable);
     void func_ov060_021123c8();
     void func_ov060_021123dc();
     void func_ov060_02112434();
@@ -175,7 +175,7 @@ struct daKpa_c : dActor_c {
     void func_ov060_021128c0();
     int func_ov060_02112ba8();
     void func_ov060_02112bfc();
-    void func_ov060_02112d48(int arg);
+    void func_ov060_02112d48(int tiltSpeed);
     void func_ov060_02112ddc();
     int func_ov060_02112ee0();
     int func_ov060_021130c0();
@@ -192,7 +192,7 @@ struct daKpa_c : dActor_c {
     int func_ov060_02113d20();
     void func_ov060_02113d8c();
     void func_ov060_02113fcc();
-    int func_ov060_02113ff4(unsigned short arg1, int arg2);
+    int func_ov060_02113ff4(unsigned short minFrames, int turnStep);
     void func_ov060_021140c0();
     void func_ov060_021142b4();
     void func_ov060_02114300();
@@ -221,7 +221,7 @@ struct daKpa_c : dActor_c {
     int func_ov060_02115744();
     void func_ov060_0211577c();
     bool Bowser_IsAnimAtLastFrame();
-    void func_ov060_02115a84(char* arg);
+    void func_ov060_02115a84(char* counter);
     void func_ov060_02115b0c();
 };
 
@@ -318,19 +318,19 @@ struct daKpa_c {
     s16 mAngleToTarget;            /* 0x406 */
     s16 mAngleToCenter;       /* 0x408 -- angle from Bowser toward the world origin */
     u8  pad_40a[0x2];
-    s32 mState;            /* 0x40c -- see Bowser_State in daKpa_c.cpp */
-    s32 mHoldState;           /* 0x410 -- see Bowser_HoldState in daKpa_c.cpp */
+    s32 mState;            /* 0x40c -- see Bowser_State in d_a_kpa.cpp */
+    s32 mHoldState;           /* 0x410 -- see Bowser_HoldState in d_a_kpa.cpp */
     u8  mVariantID;            /* 0x414 -- param1 & 3: which of the three fights; 3 is treated as 0 */
     u8  mPickToggle;          /* 0x415 -- alternates between "choose an action" and "turn to face the target" */
     u8  mChooseJumpOnly;      /* 0x416 -- param1 bit 2; when set, the variant-2 idle pick chooses the jump state instead of calling func_ov060_021150d0 */
     u8  pad_417[0x1];
-    u32 mCondFlags;           /* 0x418 -- see Bowser_CondFlag in daKpa_c.cpp */
+    u32 mCondFlags;           /* 0x418 -- see Bowser_CondFlag in d_a_kpa.cpp */
     u8  mOpacity;            /* 0x41c -- 0..255, walked toward mTargetOpacity by 20 per frame */
     u8  mTargetOpacity;       /* 0x41d */
     s8  mHealth;              /* 0x41e -- hits left; set from a per-variant table (1, 1, 3) */
     u8  pad_41f[0x1];
-    u16 unk_420;              /* 0x420 -- zeroed at init, never read in daKpa_c.cpp */
-    u8  unk_422;              /* 0x422 -- set to 1 during the hurt hop and the defeat launch and cleared to 0 in the idle state; never read in daKpa_c.cpp */
+    u16 unk_420;              /* 0x420 -- zeroed at init, never read in d_a_kpa.cpp */
+    u8  unk_422;              /* 0x422 -- set to 1 during the hurt hop and the defeat launch and cleared to 0 in the idle state; never read in d_a_kpa.cpp */
     u8  mStep;                /* 0x423 -- step within the current state; reset on every state change */
     u8  mTalkStep;            /* 0x424 -- step of the intro conversation (func_ov060_02115518) */
     u8  mHoldStep;            /* 0x425 -- step of the held handler (mHoldState 1) */

@@ -1,8 +1,8 @@
 {
   "id": "ov027/daObjSlIceBlock_c",
   "module": "ov027",
-  "source": "src/actors/daObjSlIceBlock_c.cpp",
-  "promoted_source": "src/actors/daObjSlIceBlock_c.cpp",
+  "source": "src/game/actors/d_a_obj_sl_ice_block.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_sl_ice_block.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -10,7 +10,7 @@
     "class label(s): daObjSlIceBlock_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "fold-lane-c-0929: two loose one-function registry factories, src/d_a_obj_sl_ice_block_sl_iceblock_shot.c (SL_ICEBLOCK_SHOT, 0x02111564..0x02111594) and src/d_a_obj_sl_ice_block_sl_iceblock.c (SL_ICEBLOCK, 0x02111594..0x021115c4), sit immediately after this TU's InitResources with no gap before the next class's TU (src/game/actors/d_a_i_donketu.cpp at 0x021115c4); folded in ROM order as `return new daObjSlIceBlock_c();` twice -- daObjSlIceBlock_c declares no constructor of its own, so the compiler-synthesized default constructor reproduces each loose file's hand-written fBase_c::operator new(812) + dBgActor_c::dBgActor_c() + vtable store sequence byte-for-byte.",
-    "the compiler-generated __sinit_daObjSlIceBlock_c.cpp is raw-byte-identical to retail __sinit_ov027_02112cb0 (0x6c, ten relocations): the model handle (asset 1713) then the collision handle (asset 1714), each constructed and destructor-registered. The ctor word at 0x02112fc4 points at that initializer."
+    "the compiler-generated __sinit_d_a_obj_sl_ice_block.cpp is raw-byte-identical to retail __sinit_ov027_02112cb0 (0x6c, ten relocations): the model handle (asset 1713) then the collision handle (asset 1714), each constructed and destructor-registered. The ctor word at 0x02112fc4 points at that initializer."
   ],
   "sections": [
     {
@@ -458,7 +458,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daObjSlIceBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_sl_ice_block.cpp",
       "address": "0x02112cb0",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -467,7 +467,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjSlIceBlock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_sl_ice_block.cpp",
       "address": "0x02112fc4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -513,13 +513,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjSlIceBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_sl_ice_block.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjSlIceBlock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_sl_ice_block.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -643,7 +643,7 @@
       "source": "0x02112fc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjSlIceBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_sl_ice_block.cpp",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02112cb0"
@@ -651,12 +651,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@685",
+      "from": "@700",
       "to": "@671",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@686",
+      "from": "@701",
       "to": "@672",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

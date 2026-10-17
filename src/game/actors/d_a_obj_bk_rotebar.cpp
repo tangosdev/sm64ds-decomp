@@ -27,6 +27,12 @@
  * Leftover: g_profile_BK_ROTEBAR lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_bk_rotebar_AssetId {
+    ASSET_BK_ROTEBAR_BMD = 0x059b,
+    ASSET_BK_ROTEBAR_KCL = 0x059c
+};
+
 #include "daObjBk_Rotebar_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -100,8 +106,7 @@ s32 daObjBk_Rotebar_c::Behavior()
     if (DecIfAbove0_Byte((unsigned char *)&mPauseTimer) == 0) {
         mPrevAngleY += 0x100;
         mAngleY = mPrevAngleY;
-        mTurnSound = Sound::PlayLong(mTurnSound, 3, 0x88,
-                                     *(Vector3 *)&mCamSpacePosX, 0);
+        mTurnSound = Sound::PlayLong(mTurnSound, 3, 0x88, mCamSpacePos, 0);
         if ((mPrevAngleY & 0x7fff) == 0)
             mPauseTimer = 0x3c;
     }
@@ -156,5 +161,5 @@ s32 daObjBk_Rotebar_c::CleanupResources()
 /* The ROM's initializer constructs the model handle with file ID 1435 and
  * the collision handle with file ID 1436, registering a destructor node for
  * each. mwcc emits __sinit_d_a_obj_bk_rotebar.cpp from these definitions. */
-BkRotebarModelFilePtr data_ov015_02114a8c(1435);
-BkRotebarCollisionFilePtr data_ov015_02114a84(1436);
+BkRotebarModelFilePtr data_ov015_02114a8c(ASSET_BK_ROTEBAR_BMD);
+BkRotebarCollisionFilePtr data_ov015_02114a84(ASSET_BK_ROTEBAR_KCL);

@@ -55,6 +55,8 @@ void func_0206655c(void *arg0, u32 arg1)
             return;
         cnt = 0;
         physIdx = *(u8 *)(data_020a9db8 + idx * 0x20 + 0x1554);
+        /* have/disp gotos kept: an inline session predicate grows it (0x554); only an
+           || chain assigning rec/p inside the condition matches */
         if (physIdx < 0x10) {
             rec = data_020a9db8 + physIdx * 0x5c4;
             if (*(u8 *)(rec + 0x1d4a) != 0) {

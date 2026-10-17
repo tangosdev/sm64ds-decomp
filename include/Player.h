@@ -180,8 +180,15 @@ struct Player : dActor_c {
     s32 mGrabbedByActor;            /* 0x35c */
     s32 mObjInMouth;            /* 0x360 */
     s32 mAttachedActor;            /* 0x364 */
-    u8  mTalkActor;            /* 0x368 */
-    u8  pad_369[0x7];
+    /* An actor pointer, not a byte: StartTalk stores its fBase_c& argument
+       here, St_Talk_Cleanup clears a bit in the pointee's +0xb0 (dActor_c's
+       mFlags), and every access in the ROM is a full word. */
+    fBase_c *mTalkActor; /* 0x368 */
+    /* The actor owning the surface func_ov002_020c607c's vertical line probe
+       hit: cleared at entry, then dActor_c::FindWithID(GetClsnID()) on a hit.
+       Its caller compares it across two probes to see whether both landed on
+       the same actor. */
+    dActor_c *mLineClsnActor; /* 0x36c */
     /* IsState compares this pointer for identity and nothing else:
        ldr r0,[r0,#0x370] / cmp r0,r1 / moveq #1 / movne #0. */
     State *mState;            /* 0x370 */
@@ -387,7 +394,10 @@ struct Player : dActor_c {
     u8  mStateArg;            /* 0x70c */
     u8  mIsFallScreaming;            /* 0x70d */
     u8  mSlideType;            /* 0x70e */
-    u8  pad_70f[0x1];
+    /* Set when func_ov002_020c231c snaps mPosY onto mGroundY on a class-1
+       floor; while set, the next call snaps again within the same 0xc8000
+       window. Cleared on every other exit. */
+    u8 mSnapToFloor;        /* 0x70f */
     u8  unk_710;            /* 0x710 */
     u8  pad_711[0x1];
     u8  mIsInAirState;            /* 0x712 */
@@ -400,7 +410,21 @@ struct Player : dActor_c {
     s8  mKeyModelId;            /* 0x719 */
     u8  mHasNoCap;            /* 0x71a */
     u8  mJumpedFromQuicksand;            /* 0x71b */
-    u8  pad_71c[0x5];
+    /* func_ov002_020c1234 sets this on mGroundSoundType 0xa/0xb; while it is
+       set, each call issues Sound::PlaySub(0x35, ...), and the first one that
+       succeeds on any other ground type clears it. */
+    u8 mGroundSubSoundActive; /* 0x71c */
+    /* func_ov002_020c133c's damage cadence: 0x40 after each Hurt, counted
+       down one per call while the hazard persists, cleared when it ends. */
+    u8 mDamageTickTimer; /* 0x71d */
+    /* A one-shot event sequence. func_ov002_020c43c4(id) latches the id
+       (once per save, via a bit in data_0209caa0[2]) and zeroes the step;
+       func_ov002_020c4188 then walks mEventStep 0..4, holding mEventWait
+       ticks before handing data_ov002_020ff26c[mEventId - 1] to
+       func_0201f32c. */
+    u8 mEventId;                /* 0x71e */
+    u8 mEventStep;              /* 0x71f */
+    u8 mEventWait;              /* 0x720 */
     u8  mSleepStage;            /* 0x721 */
     u8  unk_722;            /* 0x722 */
     u8  unk_723;            /* 0x723 */
@@ -411,7 +435,14 @@ struct Player : dActor_c {
     u8  unk_728;            /* 0x728 */
     u8  pad_729[0x13];
     u16 mCapFlags;            /* 0x73c */
-    u8  pad_73e[0x4];
+    /* Ticks left in the current mCapFlags phase. The cap-change update loads
+       it from a per-phase table, counts it down every frame, and advances
+       mCapFlags to the next phase when it reaches 0. */
+    u16 mCapTimer; /* 0x73e */
+    /* fx12 weight, 0..0x1000: raised by 0x199 a frame in cap phase 2,
+       lowered in phase 6, and passed every frame to func_ov002_020e6a78,
+       which runs Color_Interp over 0x20 palette entries with it. */
+    u16 mCapPaletteBlend;   /* 0x740 */
     u8  unk_742;            /* 0x742 */
     u8  unk_743;            /* 0x743 */
     /* 0x744..0x74c is a Vector3, not three bytes: five files cast it as one
@@ -664,6 +695,7 @@ struct Player : dActor_c {
     int St_Swim_Main();
     int St_SwingPlayer_Cleanup();
     int St_SwingPlayer_Init();
+    int St_SwingPlayer_Main();
     int St_Talk_Cleanup();
     int St_Talk_Init();
     int St_Talk_Main();
@@ -920,7 +952,7 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
  *     _ZN6Player16St_WallJump_InitEv had been attached to the ov006 copy (size
  *     0x5c), so that file decompiled unrelated ov006 code while claiming to be
  *     a Player method -- hence the nonsense offsets. It now names the ov002
- *     copy (size 0xb0), and the ov006 one is func_ov006_020e17f8 again.
+ *     copy (size 0xb0), and the ov006 one is DrawAimMarker again.
  *
  *     FOUR INDEPENDENT LINES OF EVIDENCE agreed, which is what made the move
  *     safe. (1) ov002/relocs.txt carries TWO `kind:load to:0x020e17f8

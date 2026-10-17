@@ -32,7 +32,7 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
   source, config, symbol or delink file this candidate reads or writes.
 - Separate evidence commits and required artifacts in this commit:
   no separate evidence commits. Required artifacts present:
-  `src/actors/daBgSnmBdy_c.cpp`, `include/daBgSnmBdy_c.h` and
+  `src/game/actors/d_a_bg_snm_bdy.cpp`, `include/daBgSnmBdy_c.h` and
   [config/tu_manifest.d/ov072/daBgSnmBdy_c.json](../../../config/tu_manifest.d/ov072/daBgSnmBdy_c.json).
 - Next action, responsible role and blockers:
   independent verification (verifier), then central sequencing. No PR was opened
@@ -106,7 +106,7 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
   `CallStateBehavior` the second.
 - Hypothesized names/filenames, explicitly not recovered facts:
   `daBgSnmBdy_c_classInit`, `g_profile_BIG_SNOWMAN_BODY` and the path
-  `src/actors/daBgSnmBdy_c.cpp` are reconstructed source-style spellings, not
+  `src/game/actors/d_a_bg_snm_bdy.cpp` are reconstructed source-style spellings, not
   recovered identifiers; the historical coined aliases were `SnowmanBody_Spawn`
   and `SnowmanBody_SpawnInfo`. `State<N>` and `InitState<N>` claim the PMF table
   INDEX and nothing more — the cartridge carries no descriptive identifier for any
@@ -122,7 +122,7 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
   the declaration, is the gap rule 1 names by name as the one #2055 left open,
   and this branch left it open too. The integration added it at both
   `include/daBgSnmBdy_c.h`'s declaration and the definition site in
-  `src/actors/daBgSnmBdy_c.cpp`; all three places carry it now.
+  `src/game/actors/d_a_bg_snm_bdy.cpp`; all three places carry it now.
 - Compiler experiments and measured barriers:
   three, all recorded because each changed the shape of the result.
   1. The first compile emitted a static initializer object and a
@@ -275,10 +275,10 @@ these exact trees; neither is a cached report from an earlier base.
 
 - Explicit function/consumer relocation checks:
   `python tools/pr_linkcheck.py --base 516a883c4 -j16 --fail` — exit 0. The two
-  changed headers fan out to 917 files, all checked. `src/actors/daBgSnmBdy_c.cpp`
+  changed headers fan out to 917 files, all checked. `src/game/actors/d_a_bg_snm_bdy.cpp`
   is VERIFIED on all 29 slots. Five files are not plain VERIFIED — one DRAFT
   (`_ZN12dScStarSel_c8BehaviorEv`) and four BLIND (`RollingIronBall`,
-  `daObjMarioCap_c`, `dScDSMT_c`, `func_ov089_0213162c`, since folded into [daObjKey_c.cpp](../../../src/actors/daObjKey_c.cpp)) — and every one of them is
+  `daObjMarioCap_c`, `dScDSMT_c`, `func_ov089_0213162c`, since folded into [daObjKey_c.cpp](../../../src/game/actors/d_a_obj_key.cpp)) — and every one of them is
   in a file and module this candidate does not touch.
   `python tools/prepush_linkcheck.py --range 516a883c4..HEAD` — exit 0, 914
   checked, 620 verified, 294 warnings, 0 blocking. Coverage limit: this class is
@@ -287,7 +287,7 @@ these exact trees; neither is a cached report from an earlier base.
   change; the relocation proof rests on `linkcheck.py` driven by symbol,
   `pr_linkcheck`, `tubuild.py verify` and the full-ROM link.
   `python tools/linkcheck.py --module ov072 --name <symbol> --addr <addr>
-  --size <size> --c src/actors/daBgSnmBdy_c.cpp`, run for each of the 29 members
+  --size <size> --c src/game/actors/d_a_bg_snm_bdy.cpp`, run for each of the 29 members
   — **29/29 VERIFIED, 0 otherwise.**
   A correction, because the first version of this document got it wrong and a
   wrong version would be read as a fact about the repository. `--name` used ALONE
@@ -310,7 +310,7 @@ these exact trees; neither is a cached report from an earlier base.
   --fail` fails on the same 9 pre-existing errors with 0 new and 0 resolved. The
   scratch ROM hashes to the stock sha256 above and is IDENTICAL to the tree's
   stock build.
-  `python tools/romdata_check.py --files src/actors/daBgSnmBdy_c.cpp` — exit 0.
+  `python tools/romdata_check.py --files src/game/actors/d_a_bg_snm_bdy.cpp` — exit 0.
   10 emitted data symbols: VERIFIED 6 (196 bytes) — `_ZTV12daBgSnmBdy_c` 124
   bytes, `_ZTI12daBgSnmBdy_c` 12, `g_profile_BIG_SNOWMAN_BODY` 28, plus the three
   inherited `_ZTI` records; PARTIAL 4 (36 bytes equal); DIFFERS 0; UNNAMED 0. The
@@ -366,7 +366,7 @@ these exact trees; neither is a cached report from an earlier base.
   `cpp_tu_state.py` exit 0.
   `config/converted-baseline.json` was audited by SHAPE, not arithmetic, because
   it merges silently: 10 whole-file rows under the retired per-shard names out, 10
-  `src/actors/daBgSnmBdy_c.cpp#…` member rows in, `count` unchanged at 2699.
+  `src/game/actors/d_a_bg_snm_bdy.cpp#…` member rows in, `count` unchanged at 2699.
 
 - Private validation, if run, and the exact PR head/base it tested:
   the private validator was NOT run — no PR was opened, as instructed. What WAS

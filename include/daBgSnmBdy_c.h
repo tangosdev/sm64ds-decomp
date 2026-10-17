@@ -64,7 +64,13 @@ struct daBgSnmBdy_c : dActor_c {
     u32 mPathNode;                      /* 0x388 */
 
     typedef int (daBgSnmBdy_c::*StateFunc)();
-    StateFunc *mStateFuncs;             /* 0x38c */
+    /* One row of the sinit-built table: the 8-byte init PMF, then the
+       8-byte per-frame behavior PMF. */
+    struct StateEntry {
+        StateFunc init;
+        StateFunc behavior;
+    };
+    StateEntry *mState;                 /* 0x38c */
     Player *mTalkPlayer;                /* 0x390 */
     s32 mStateValue;                    /* 0x394 */
     s32 mRadius;                        /* 0x398 */

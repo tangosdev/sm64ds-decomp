@@ -225,8 +225,8 @@ _ZTS15daObjWc_Obj04_c kind:data(any) addr:0x02114168
 g_profile_WC_OBJ04 kind:data(any) addr:0x0211417c ambiguous
 _ZTV15daObjWc_Obj04_c kind:data(any) addr:0x021141a0
 data_ov029_021141cc kind:data(any) addr:0x021141cc ambiguous
-data_ov029_02114220 kind:bss addr:0x02114220
-data_ov029_02114228 kind:bss addr:0x02114228
+gWcObj01ModelFile kind:bss addr:0x02114220
+gWcObj01CollisionFile kind:bss addr:0x02114228
 @80 kind:bss addr:0x02114230
 @81 kind:bss addr:0x0211423c
 data_ov029_02114248 kind:bss addr:0x02114248
@@ -235,16 +235,16 @@ data_ov029_02114250 kind:bss addr:0x02114250
 @138 kind:bss addr:0x02114264
 data_ov029_02114270 kind:bss addr:0x02114270
 @483 kind:bss addr:0x02114278
-data_ov029_02114284 kind:bss addr:0x02114284
-data_ov029_0211428c kind:bss addr:0x0211428c
+gWcObj05CollisionFile kind:bss addr:0x02114284
+gWcObj05ModelFile kind:bss addr:0x0211428c
 @441 kind:bss addr:0x02114294
 @440 kind:bss addr:0x021142a0
-data_ov029_021142ac kind:bss addr:0x021142ac
-data_ov029_021142b4 kind:bss addr:0x021142b4
+gWcObj06ModelFile kind:bss addr:0x021142ac
+gWcObj06CollisionFile kind:bss addr:0x021142b4
 @82 kind:bss addr:0x021142bc
 @83 kind:bss addr:0x021142c8
-data_ov029_021142d4 kind:bss addr:0x021142d4
-data_ov029_021142dc kind:bss addr:0x021142dc
+gWcObj07CollisionFile kind:bss addr:0x021142d4
+gWcObj07ModelFile kind:bss addr:0x021142dc
 @85 kind:bss addr:0x021142e4
 @84 kind:bss addr:0x021142f0
 daObjWc_Obj07_c_ModelFile kind:bss addr:0x021142fc

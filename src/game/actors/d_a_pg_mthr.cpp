@@ -17,9 +17,19 @@
  * the star, walks toward whoever still holds her own baby.
  * State pairs are data_ov018_02113c4c: stand, talk, follow.
  */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_pg_mthr_AssetId {
+    ASSET_PENGUIN_BMD = 0x03fb,
+    ASSET_PENGUIN_ANGRY_BTP = 0x03fd,
+    ASSET_PENGUIN_WAIT1_BCA = 0x0406,
+    ASSET_PENGUIN_WAIT1_BTP = 0x0407,
+    ASSET_PENGUIN_WALK_BCA = 0x0408
+};
+
 #include "common.h"
 #include "daPgMthr_c.h"
 #include "types.h"
+#include "nitro/fx/fx.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "TextureSequence.h"
@@ -28,6 +38,7 @@
 #include "SurfaceInfo.h"
 #include "dBgPi.h"
 #include "Player.h"
+#include "dBgCh_Actr.h"
 
 bool ApproachLinear(short &value, short target, short step);
 
@@ -117,14 +128,14 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mf, short angX);
 extern Matrix4x3 data_020a0e68;
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, int b, unsigned int c);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *, BTP_File &f, int a, int b, unsigned int c);
-extern PgMthrAnimFileResHandle data_ov018_02113c08;
-extern PgMthrTexSeqFileHandle data_ov018_02113bf8;
+extern PgMthrAnimFileResHandle gPenguinWalkAnimationFile;
+extern PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern dActor_c *func_ov018_021118fc(char *c);
-extern PgMthrTexSeqFileHandle data_ov018_02113be8;
-extern PgMthrAnimFileResHandle data_ov018_02113bf0;
+extern PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;
+extern PgMthrAnimFileResHandle gPenguinWait1AnimationFile;
 extern PgMthrState data_ov018_02113c4c[3];
 typedef void (daPgMthr_c::*PMF)();
 extern void func_ov018_02112398(daPgMthr_c *self);
@@ -247,9 +258,9 @@ extern "C" void func_ov018_0211235c(daPgMthr_c *self)
 /* State 0 enter. Idle anim, stopped, not talking. */
 int daPgMthr_c::func_ov018_021122ec()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&data_ov018_02113bf0)->filePtr, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&gPenguinWait1AnimationFile)->filePtr, 0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&data_ov018_02113be8)->filePtr, 0, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&gPenguinWait1TextureSequenceFile)->filePtr, 0, 0x1000, 0);
     mHorzSpeed = 0;
     mPlayer = 0;
     unk_37c = 0;
@@ -288,7 +299,7 @@ int daPgMthr_c::func_ov018_02112234()
 // @symbol _ZN10daPgMthr_c19func_ov018_021121dcEv
 int daPgMthr_c::func_ov018_021121dc()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&data_ov018_02113bf0)->filePtr, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&gPenguinWait1AnimationFile)->filePtr, 0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
     mTalkStep = 0;
     mTalkTimer = 0x3c;
@@ -311,8 +322,7 @@ int daPgMthr_c::func_ov018_02111fac()
         }
         break;
     case 1:
-        if (ApproachLinear(mAngleY,
-                Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mPlayer->mPosX), 0x514)) {
+        if (ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514)) {
             Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
             Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
@@ -339,7 +349,7 @@ int daPgMthr_c::func_ov018_02111fac()
                 mGaveStar = 1;
                 slot = (unsigned char)(param1 & 0xf);
                 starParam = (unsigned)slot | 0x40;
-                dActor_c::Spawn(ACTOR_POWER_STAR, starParam, *(Vector3 *)&mPosX, 0, mAreaId, -1);
+                dActor_c::Spawn(ACTOR_POWER_STAR, starParam, mPos, 0, mAreaId, -1);
             }
             mPlayer->DropActor();
             {
@@ -368,9 +378,9 @@ int daPgMthr_c::func_ov018_02111f1c()
     if (mPlayer == 0 && mGaveStar == 0)
         func_ov018_021123d0(0);
     mHorzSpeed = 0x5000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&data_ov018_02113c08)->filePtr, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&gPenguinWalkAnimationFile)->filePtr, 0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&data_ov018_02113bf8)->filePtr, 0, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&gPenguinAngryTextureSequenceFile)->filePtr, 0, 0x1000, 0);
     unk_37c = 2;
     return 1;
 }
@@ -378,8 +388,7 @@ int daPgMthr_c::func_ov018_02111f1c()
 // @symbol _ZN10daPgMthr_c19func_ov018_02111e28Ev
 int daPgMthr_c::func_ov018_02111e28()
 {
-    ApproachLinear(mAngleY,
-        Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mPlayer->mPosX), 0x514);
+    ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
     mPrevAngleY = mAngleY;
     UpdatePos(&mdCcAc_c);
     func_ov018_02111bf0((char *)this, &mWithMeshClsn);
@@ -392,7 +401,7 @@ int daPgMthr_c::func_ov018_02111e28()
         holding = (mPlayer->mObjInMouth != 0);
     else
         holding = (mPlayer->mHeldObj != 0);
-    if (holding == 0 || Vec3_Dist((Vector3 *)&mHomePosX, (Vector3 *)&mPlayer->mPosX) > HOME_RANGE) {
+    if (holding == 0 || Vec3_Dist((Vector3 *)&mHomePosX, &mPlayer->mPos) > HOME_RANGE) {
         mPlayer = 0;
         func_ov018_021123d0(0);
     }
@@ -434,9 +443,7 @@ struct dBgPiRaw {
     struct dBgPiRawBody info;
 };
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *w);
-void *_ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr *w);
 int _ZN4cstd4fdivEii(int a, int b);
-struct dBgPiRaw *_ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr *w);
 void _ZN5dBgPiD1Ev(struct dBgPiRaw *r);
 extern int data_02099368[];
 
@@ -448,16 +455,15 @@ void func_ov018_02111bf0(void *cv, void *wv)
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (w->IsOnGround() != 0) {
         Vector3 n;
-        dBgPi *floor = (dBgPi *)_ZNK10dBgCh_Actr14GetFloorResultEv(w);
+        dBgPi *floor = (dBgPi *)w->GetFloorResult();
         floor->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = (int)(((long long)n.x * self->unk_0a4 + 0x800) >> 0xc)
-                  + (int)(((long long)n.z * self->unk_0ac + 0x800) >> 0xc);
+            int s = FX_MUL(n.x, self->unk_0a4) + FX_MUL(n.z, self->unk_0ac);
             self->mVertSpeed = -(_ZN4cstd4fdivEii(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
-        struct dBgPiRaw *src = _ZNK10dBgCh_Actr13GetWallResultEv(w);
+        struct dBgPiRaw *src = (struct dBgPiRaw *)w->GetWallResult();
         struct dBgPiRaw cr;
         Vector3 wn;
         struct dBgPiRawBody *dst = &cr.info;
@@ -493,7 +499,7 @@ void daPgMthr_c::func_ov018_02111b3c()
 
     if (p == 0)
         return;
-    if (Vec3_Dist((Vector3 *)&mHomePosX, (Vector3 *)&p->mPosX) > HOME_RANGE)
+    if (Vec3_Dist((Vector3 *)&mHomePosX, &p->mPos) > HOME_RANGE)
         return;
     if (p->param1 == CHAR_YOSHI)
         held = (dActor_c *)p->mObjInMouth;
@@ -529,8 +535,8 @@ void daPgMthr_c::func_ov018_02111a48(char *b)
         return;
     who = (dActor_c *)b;
 
-    dist = Vec3_HorzDist((Vector3 *)&mPosX, (Vector3 *)&who->mPosX);
-    horzAngle = Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&who->mPosX);
+    dist = Vec3_HorzDist(&mPos, &who->mPos);
+    horzAngle = Vec3_HorzAngle(&mPos, &who->mPos);
 
     if (dist < LOOK_RANGE && AngleDiff(horzAngle, mAngleY) < 0x1400) {
         tz = who->mPosZ;
@@ -616,11 +622,11 @@ struct dActor_c *func_ov018_021118fc(char *c)
 /* File-scope objects __sinit_d_a_pg_mthr.cpp initializes: the five resource
    handles in construction order, then the three {enter, update} state pairs
    the dispatch helpers index by state. */
-PgMthrModelFileHandle data_ov018_02113c00(0x3fb);   /* model */
-PgMthrAnimFileResHandle data_ov018_02113bf0(0x406); /* stand/talk anim */
-PgMthrAnimFileResHandle data_ov018_02113c08(0x408); /* walk anim */
-PgMthrTexSeqFileHandle data_ov018_02113bf8(0x3fd);  /* walk texseq */
-PgMthrTexSeqFileHandle data_ov018_02113be8(0x407);  /* stand/talk texseq */
+PgMthrModelFileHandle data_ov018_02113c00(ASSET_PENGUIN_BMD);   /* model */
+PgMthrAnimFileResHandle gPenguinWait1AnimationFile(ASSET_PENGUIN_WAIT1_BCA); /* stand/talk anim */
+PgMthrAnimFileResHandle gPenguinWalkAnimationFile(ASSET_PENGUIN_WALK_BCA); /* walk anim */
+PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP);  /* walk texseq */
+PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP);  /* stand/talk texseq */
 
 PgMthrState data_ov018_02113c4c[3] = {
     { &daPgMthr_c::func_ov018_021122ec, &daPgMthr_c::func_ov018_02112234 }, /* stand */

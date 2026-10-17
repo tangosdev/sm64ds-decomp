@@ -1,0 +1,779 @@
+{
+  "task": "kpafire-native1013",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+  "coordinator": "codex-kpafire-native-coordinator1013",
+  "source_completion": "partial",
+  "summary": "Use existing native actor, collision and Player interfaces at 32 Bowser fire call sites and remove eight duplicate mangled declarations. Source-only continuation; no headers, manifest, ownership or policies change.",
+  "source": "src/actors/daKpaFire_c.cpp",
+  "source_sha256": "b1422ba0c990c5cd29e4f51e9e6e4b5c7e5021886905374f9b057fffd2566a2d",
+  "producer_sessions": [
+    "codex-kpafire-native-producer1013",
+    "01a135f6-ffe2-7f12-a948-096399c6745c",
+    "codex-bowserfire-cpp-producer1013"
+  ],
+  "scout_provenance": {
+    "actual_thread": "01a135f6-ffe2-7f12-a948-096399c6745c",
+    "agent": "/root/camera_valueweb_pass",
+    "parent_session": "01a12e6f-7ee1-7162-9a64-81145ed6b260",
+    "handoff_sha256": "f7c0cb580d19a29cb7813b7a94ca32109b681686e0fa0fd6feea6ef5007d47dd"
+  },
+  "native_call_sites": {
+    "_ZN8dActor_c13ClosestPlayerEv": 2,
+    "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as": 10,
+    "_ZN7fBase_c18MarkForDestructionEv": 10,
+    "_ZN8dActor_c9UpdatePosEP5dCc_c": 3,
+    "_ZNK10dBgCh_Actr10IsOnGroundEv": 3,
+    "_ZN8dActor_c15FindWithActorIDEjPS_": 1,
+    "_ZN8dActor_c10FindWithIDEj": 2,
+    "_ZN6Player4BurnEv": 1
+  },
+  "predecessor_tasks": [
+    "bowserfire-cpp1013"
+  ],
+  "inherited_findings": {
+    "BFCPP-001": {
+      "disposition": "fixed",
+      "id": "BFCPP-001",
+      "kind": "correctness",
+      "location": "src/actors/daKpaFire_c.cpp:23,60,255",
+      "reason": "Inspected final comments describing C++ bodies and the POD matrix view; no C-mode pragma remains.",
+      "summary": "Stale source comments described C parsing and a return to C++ after the helper."
+    },
+    "BFCPP-002": {
+      "disposition": "fixed",
+      "id": "BFCPP-002",
+      "kind": "correctness",
+      "location": "include/daKpaFire_c.h:52",
+      "reason": "Final header describes retained byte storage and a POD view under C++; comment-only change leaves both consumer objects identical.",
+      "summary": "The header justified byte storage by claiming this helper still parsed as C."
+    },
+    "BFCPP-003": {
+      "disposition": "deferred",
+      "id": "BFCPP-003",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+      "kind": "reconstruction",
+      "location": "src/actors/daKpaFire_c.cpp:23-43,275-282",
+      "owner": "andrewboudreau",
+      "reason": "Accepted narrow removal of an unnecessary C frontend region; existing unfinished interface/layout work is explicitly recorded rather than claimed complete.",
+      "summary": "Address-named C-linkage helpers, raw matrix/particle field views and scalar Fix12 ABI bridges remain."
+    }
+  },
+  "historical_scope_note": "BFCPP-001..003 are accepted predecessor findings retained verbatim, including their historical line numbers and reasons. The predecessor converted a C frontend island; this continuation replaces existing raw interface calls. Legacy BFCPP-003 follow-up owner andrewboudreau remains recorded; codex-kpafire-native-coordinator1013 owns current continuation follow-up under issue3762.",
+  "findings": [
+    {
+      "id": "KPFN-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/actors/daKpaFire_c.cpp",
+      "summary": "32 raw actor/player/collision calls now use existing native interfaces; eight duplicate declarations are removed.",
+      "reason": "The complete baseline and candidate raw and ordinary prepared ELF objects match; native return/argument declarations are reused directly."
+    },
+    {
+      "id": "KPFN-002",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/actors/daKpaFire_c.cpp",
+      "summary": "Flat base position and angle fields still require measured vector views at Spawn; state and particle/matrix views remain partial.",
+      "reason": "This scoped interface pass preserves existing field storage and does not infer a new shared class layout.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+      "owner": "codex-kpafire-native-coordinator1013"
+    },
+    {
+      "id": "KPFN-003",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/actors/daKpaFire_c.cpp",
+      "summary": "Address-named free C-linkage handlers and scalar fixed-point bridges remain.",
+      "reason": "No scalar ABI, shared declaration, policy or ownership changes are made; this is a partial reconstruction with native caller improvements.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+      "owner": "codex-kpafire-native-coordinator1013"
+    },
+    {
+      "id": "KPFN-004",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "notes/experiments/kpafire-native1013.json",
+      "summary": "Current-main ancestry repaired by composing actual607 while preserving historicalffb2 proof.",
+      "reason": "The changed TextureSequence header is actually consumed through Player.h; fresh current objects and complete metadata/storage/typed graphs are identical, and scoped current gates pass. Historical global build is not represented as current."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KPFN-PROV-001",
+      "kind": "provenance",
+      "location": "src/actors/daKpaFire_c.cpp:48-49,973,978; config/tu_manifest.d/ov060/daKpaFire_c.json: bss",
+      "reason": "The corrected banner identifies data_ov060_0211af74/0211afb4 as this TU's two eight-entry InitResources/Behavior PMF tables and separates external constants/profile. Actual definitions and manifest BSS records agree; fresh 29-row ordinary proof, complete 128-byte BSS and metadata checks pass, and full raw/prepared containers equal the prior current607 objects.",
+      "summary": "The banner incorrectly says the two owned PMF dispatch tables are not this translation unit data."
+    }
+  ],
+  "historical_ffb2_proof": {
+    "base_commit": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
+    "checkpoint": "511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b",
+    "canary": {
+      "source": "C:\\tmp\\sm64ds-kpafire-native1013\\src\\actors\\dMgTrmpln2Mario_c.cpp",
+      "result": [
+        true,
+        "2004/b56"
+      ]
+    },
+    "gates": {
+      "full-rom": {
+        "name": "full-rom",
+        "command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom",
+          "--report-json",
+          "build/kpafire-native1013/rom-report.json"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 281.1241295337677,
+        "log": "build/kpafire-native1013/full-rom.log",
+        "log_sha256": "f9f9e162a30802dd9bd9f158de9d6b9b3ff33cd419bc478ef67e2f962937b8ef",
+        "tested_commit": "511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b"
+      },
+      "range": {
+        "name": "range",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c..511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b",
+          "--json",
+          "build/kpafire-native1013/range-report.json"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 20.75738549232483,
+        "log": "build/kpafire-native1013/range.log",
+        "log_sha256": "fdc88a3b4a4d2f87b7df67e1f9f16223f5d0eeed82a7bce25dcbb1f3698e73af",
+        "tested_commit": "511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b"
+      },
+      "decl": {
+        "name": "decl",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 8.967855215072632,
+        "log": "build/kpafire-native1013/decl.log",
+        "log_sha256": "c958a5984241b2d7c28b221e4bf5b8ca8af31004ebd33617bf05cfe755be4b8b",
+        "tested_commit": "511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b"
+      },
+      "port": {
+        "name": "port",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.6845219135284424,
+        "log": "build/kpafire-native1013/port.log",
+        "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+        "tested_commit": "511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b"
+      },
+      "langmode": {
+        "name": "langmode",
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 10.915746450424194,
+        "log": "build/kpafire-native1013/langmode.log",
+        "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+        "tested_commit": "511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b"
+      }
+    },
+    "whole_proof": {
+      "baseline": {
+        "strict": 29,
+        "bss_records": 2,
+        "bss_bytes": 128,
+        "metadata_records": 11,
+        "metadata_bytes": 245,
+        "raw_refs": 197,
+        "prepared_refs": 146,
+        "raw_sha256": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+        "prepared_sha256": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6"
+      },
+      "candidate": {
+        "strict": 29,
+        "bss_records": 2,
+        "bss_bytes": 128,
+        "metadata_records": 11,
+        "metadata_bytes": 245,
+        "raw_refs": 197,
+        "prepared_refs": 146,
+        "raw_sha256": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+        "prepared_sha256": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6"
+      },
+      "complete_owned_bodies_edges_equal": true,
+      "complete_metadata_equal": true,
+      "ordinary_preparation": true,
+      "raw_container_equal": true,
+      "prepared_container_equal": true,
+      "base": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
+      "full_rom_run": true
+    },
+    "storage_proof": {
+      "baseline": [
+        {
+          "record": {
+            "symbol": "data_ov060_0211af74",
+            "address": "0x0211af74",
+            "size": "0x40",
+            "binding": "STB_GLOBAL",
+            "evidence": "InitResources ActorFn dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a75c/754/73c/74c/734/7ac/7a4/79c"
+          },
+          "size": 64,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "data_ov060_0211afb4",
+            "address": "0x0211afb4",
+            "size": "0x40",
+            "binding": "STB_GLOBAL",
+            "evidence": "Behavior Entry{PMF} dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a794/78c/76c/77c/764/774/744/784"
+          },
+          "size": 64,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        }
+      ],
+      "candidate": [
+        {
+          "record": {
+            "symbol": "data_ov060_0211af74",
+            "address": "0x0211af74",
+            "size": "0x40",
+            "binding": "STB_GLOBAL",
+            "evidence": "InitResources ActorFn dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a75c/754/73c/74c/734/7ac/7a4/79c"
+          },
+          "size": 64,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        },
+        {
+          "record": {
+            "symbol": "data_ov060_0211afb4",
+            "address": "0x0211afb4",
+            "size": "0x40",
+            "binding": "STB_GLOBAL",
+            "evidence": "Behavior Entry{PMF} dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a794/78c/76c/77c/764/774/744/784"
+          },
+          "size": 64,
+          "alignment": 4,
+          "offset": 0,
+          "binding": "STB_GLOBAL"
+        }
+      ]
+    },
+    "final_production_summary": {
+      "modules": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11334,
+        "compiledBytes": 2225480,
+        "sourceFunctions": 11334,
+        "sourceBytes": 2225480,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.43577343005789,
+        "reproducingFunctions": 11334,
+        "reproducingBytes": 2225480,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "intact_link_ok": true,
+      "origin": "Final production analysis, not baseline-control counts.",
+      "report_sha256": "6888059fba90cbf2d3bde511f5022ae3cb5c81185ce6d896f6c6d8f7d127b76f"
+    },
+    "stock_range_summary": {
+      "checked": 28,
+      "verified": 28,
+      "warnings": 0,
+      "blocking": 0,
+      "scope": "27 functions and initializer; ordinary whole ownership additionally proves ctor and complete metadata/storage."
+    },
+    "report_only_binding": {
+      "checkpoint": "511ac24e7b3770fd7ecf4a2b47dffa0a089c5b2b",
+      "production_trees": {
+        "src": "421bf0544c995822bd66d6b0330e2aa0891fc24e",
+        "include": "fdc69ac1ff6db68eafda1d937a288f9cbe020b7a",
+        "config": "1de3789f744de3982a2a6b4aceec2df003218f5f",
+        "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+        "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+      },
+      "rule": "Final report-only descendant must retain all five production tree IDs exactly."
+    },
+    "artifacts": {
+      "canary.json": "b4d4f12845d57aec4bc66321657341e6840bbc5fe216028ce0caa6603ded301a",
+      "whole.py": "2305d6ab1a2d2011e0bcd523371380e6bb801e389d22e785cc77fcb91548af22",
+      "proof.json": "a0455a796d992276b89cfa86ac62404a64f81fb025cb75dd4ef67e3e4da8e7fe",
+      "storage.json": "3e1632c8109d9bf48392640293a2f2aea4b7bd89d4fa712c0158c5de0150a30b",
+      "candidate/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "candidate/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+      "candidate/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+      "candidate/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+      "candidate/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96",
+      "baseline/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "baseline/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+      "baseline/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+      "baseline/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+      "baseline/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96",
+      "inherited-findings.json": "0b8ba318c64c7b3b8a7c7426c3d3d6237c9cb2d5f928add6f0a5977e35663860",
+      "scout-predecessor-tasks.json": "f38f1a521d427069fcc409974179f4061aca2b388b4c3161247bd2e1ef44fb46"
+    },
+    "production_gates_status": "All five gates terminal0; exact report-only offer requires independent Source and byte acceptance.",
+    "offer": "7e990419ca08bd9bdcad57baa1991ab250dac8da",
+    "qualification": "Historical complete global build on ffb2; not a current607 global build."
+  },
+  "base_commit": "607576acc557a318d5f813f8a0813bc86f03d140",
+  "checkpoint": "cfda2293469e053c19c1fcc79a77bf994a4e2779",
+  "canary": {
+    "source": "C:\\tmp\\sm64ds-kpafire-native1013\\src\\actors\\dMgTrmpln2Mario_c.cpp",
+    "result": [
+      true,
+      "2004/b56"
+    ]
+  },
+  "gates": {
+    "range": {
+      "name": "range",
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "607576acc557a318d5f813f8a0813bc86f03d140..cfda2293469e053c19c1fcc79a77bf994a4e2779",
+        "--json",
+        "build/kpafire-comment1013/range-report.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 18.103458166122437,
+      "log": "build/kpafire-comment1013/range.log",
+      "log_sha256": "fdc88a3b4a4d2f87b7df67e1f9f16223f5d0eeed82a7bce25dcbb1f3698e73af",
+      "tested_commit": "cfda2293469e053c19c1fcc79a77bf994a4e2779"
+    },
+    "decl": {
+      "name": "decl",
+      "command": [
+        "python",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "607576acc557a318d5f813f8a0813bc86f03d140"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.554882049560547,
+      "log": "build/kpafire-comment1013/decl.log",
+      "log_sha256": "a77fb46f24a156d194e14d80c5c02fc77b7189df231157217e5f00411d0e258e",
+      "tested_commit": "cfda2293469e053c19c1fcc79a77bf994a4e2779"
+    },
+    "port": {
+      "name": "port",
+      "command": [
+        "python",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.570547103881836,
+      "log": "build/kpafire-comment1013/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "tested_commit": "cfda2293469e053c19c1fcc79a77bf994a4e2779"
+    },
+    "langmode": {
+      "name": "langmode",
+      "command": [
+        "python",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 10.396229028701782,
+      "log": "build/kpafire-comment1013/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "tested_commit": "cfda2293469e053c19c1fcc79a77bf994a4e2779"
+    }
+  },
+  "whole_proof": {
+    "baseline": {
+      "strict": 29,
+      "bss_records": 2,
+      "bss_bytes": 128,
+      "metadata_records": 11,
+      "metadata_bytes": 245,
+      "raw_refs": 197,
+      "prepared_refs": 146,
+      "raw_sha256": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "prepared_sha256": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6"
+    },
+    "candidate": {
+      "strict": 29,
+      "bss_records": 2,
+      "bss_bytes": 128,
+      "metadata_records": 11,
+      "metadata_bytes": 245,
+      "raw_refs": 197,
+      "prepared_refs": 146,
+      "raw_sha256": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "prepared_sha256": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6"
+    },
+    "complete_owned_bodies_edges_equal": true,
+    "complete_metadata_equal": true,
+    "ordinary_preparation": true,
+    "raw_container_equal": true,
+    "prepared_container_equal": true,
+    "base": "607576acc557a318d5f813f8a0813bc86f03d140",
+    "full_rom_run": false
+  },
+  "storage_proof": {
+    "baseline": [
+      {
+        "record": {
+          "symbol": "data_ov060_0211af74",
+          "address": "0x0211af74",
+          "size": "0x40",
+          "binding": "STB_GLOBAL",
+          "evidence": "InitResources ActorFn dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a75c/754/73c/74c/734/7ac/7a4/79c"
+        },
+        "size": 64,
+        "alignment": 4,
+        "offset": 0,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "record": {
+          "symbol": "data_ov060_0211afb4",
+          "address": "0x0211afb4",
+          "size": "0x40",
+          "binding": "STB_GLOBAL",
+          "evidence": "Behavior Entry{PMF} dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a794/78c/76c/77c/764/774/744/784"
+        },
+        "size": 64,
+        "alignment": 4,
+        "offset": 0,
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "candidate": [
+      {
+        "record": {
+          "symbol": "data_ov060_0211af74",
+          "address": "0x0211af74",
+          "size": "0x40",
+          "binding": "STB_GLOBAL",
+          "evidence": "InitResources ActorFn dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a75c/754/73c/74c/734/7ac/7a4/79c"
+        },
+        "size": 64,
+        "alignment": 4,
+        "offset": 0,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "record": {
+          "symbol": "data_ov060_0211afb4",
+          "address": "0x0211afb4",
+          "size": "0x40",
+          "binding": "STB_GLOBAL",
+          "evidence": "Behavior Entry{PMF} dispatch table: eight void(dActor_c::*)() slots copied from the .data descriptors at 0x0211a794/78c/76c/77c/764/774/744/784"
+        },
+        "size": 64,
+        "alignment": 4,
+        "offset": 0,
+        "binding": "STB_GLOBAL"
+      }
+    ]
+  },
+  "stock_range_summary": {
+    "checked": 28,
+    "verified": 28,
+    "warnings": 0,
+    "blocking": 0,
+    "scope": "27 functions and initializer; ordinary whole ownership additionally proves ctor and complete metadata/storage."
+  },
+  "current_global_full_rom_run": false,
+  "current_context": {
+    "input_impact": {
+      "historical_base": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
+      "current_base": "607576acc557a318d5f813f8a0813bc86f03d140",
+      "unchanged_inputs": {
+        "src/actors/daKpaFire_c.cpp": {
+          "before": "184c2d630b7be0a2f281694fdc176758d2d88eee",
+          "current": "184c2d630b7be0a2f281694fdc176758d2d88eee"
+        },
+        "config/tu_manifest.d/ov060/daKpaFire_c.json": {
+          "before": "97052c8f868cc2c364e4a5bad366063fc902718f",
+          "current": "97052c8f868cc2c364e4a5bad366063fc902718f"
+        },
+        "config/arm9/overlays/ov060": {
+          "before": "9e46eba6238ad4c20836ddf1b99b247167c909e2",
+          "current": "9e46eba6238ad4c20836ddf1b99b247167c909e2"
+        },
+        "tools": {
+          "before": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+          "current": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec"
+        }
+      },
+      "changed_headers": [
+        {
+          "path": "include/TextureSequence.h",
+          "before": "9c61119c5d5b5467b9b2c81c2645eec22db0adb9",
+          "current": "dc35f608718ce03f9e0be91dcab71463d80b2be2",
+          "consumer_chain": [
+            "src/actors/daKpaFire_c.cpp includes Player.h",
+            "include/Player.h:32 includes TextureSequence.h"
+          ],
+          "change": "Three BTP_File field names and explanatory comments; actual header is consumed and fresh objects must be measured."
+        }
+      ],
+      "header_patch": "diff --git a/include/TextureSequence.h b/include/TextureSequence.h\nindex 9c61119c5d..dc35f60871 100644\n--- a/include/TextureSequence.h\n+++ b/include/TextureSequence.h\n@@ -41,20 +41,24 @@ struct ModelComponents;\n struct BMD_File;\n struct SharedFilePtr;\n \n-/* Only the header words UpdateFileOffsets touches are typed. */\n+/* Only the header words UpdateFileOffsets touches are typed. texRecords\n+   and palRecords are the name-lookup tables Prepare indexes -- 8-byte\n+   { s16 resourceId; u16 pad; char *name; } records per func_02046d50's\n+   Tbl view -- and seqRecords the 0xc-byte sequence table alongside them;\n+   each holds file-relative offsets that UpdateFileOffsets rebases. */\n struct BTP_File {\n     u16 unk_00;\n-    u16 numTexRecords;         /* 0x02 - 8-byte records at unk_04 */\n-    char *unk_04;              /* 0x04 - fixed up on load */\n-    u16 numPalRecords;         /* 0x08 - 8-byte records at unk_0c */\n+    u16 numTexRecords;         /* 0x02 - 8-byte records at texRecords */\n+    char *texRecords;          /* 0x04 - fixed up on load */\n+    u16 numPalRecords;         /* 0x08 - 8-byte records at palRecords */\n     u16 pad_0a;\n-    char *unk_0c;              /* 0x0c */\n+    char *palRecords;          /* 0x0c */\n     char *unk_10;              /* 0x10 */\n     char *unk_14;              /* 0x14 */\n     char *unk_18;              /* 0x18 */\n-    u16 numSeqRecords;         /* 0x1c - 0xc-byte records at unk_20; the ROM reads a halfword */\n+    u16 numSeqRecords;         /* 0x1c - 0xc-byte records at seqRecords; the ROM reads a halfword */\n     u16 pad_1e;\n-    char *unk_20;              /* 0x20 */\n+    char *seqRecords;          /* 0x20 */\n };\n struct TextureSequence : dExtFrameCtrl_c {\n     BTP_File *file;           /* 0x10 */\n",
+      "scope": "Actual current-main scoped object proof only; historical full-ROM remains bound to ffb2."
+    },
+    "complete_artifact_identity_to_historical": {
+      "baseline/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "baseline/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+      "baseline/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+      "baseline/owned-graphs.json": "7c03c5e363d265b3cd7063d97b60136558bf902d9daaf28ecb03475232c6c2f2",
+      "baseline/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+      "baseline/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96",
+      "candidate/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "candidate/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+      "candidate/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+      "candidate/owned-graphs.json": "7c03c5e363d265b3cd7063d97b60136558bf902d9daaf28ecb03475232c6c2f2",
+      "candidate/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+      "candidate/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96"
+    },
+    "scope": "Fresh actual607 compilation and ordinary ownership/link/metadata/storage proof, plus scoped gates. Complete raw/prepared containers are identical to the historical global-build objects. No current global full-ROM claim."
+  },
+  "report_only_binding": {
+    "checkpoint": "cfda2293469e053c19c1fcc79a77bf994a4e2779",
+    "production_trees": {
+      "src": "78466e62ee06747ef0f46209ade880cf9e42eb32",
+      "include": "7416241192710afe9e442343e2dfc840155ee7bb",
+      "config": "1de3789f744de3982a2a6b4aceec2df003218f5f",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "rule": "Final report-only descendant retains all five production trees."
+  },
+  "artifacts": {
+    "whole.py": "cd4d545b53a35559cdc369cde3f48b18c34aa870c4ec22fa694fddacf36c01cf",
+    "proof.json": "b3fc4ffcde29a4332a5e6541146f9531d7afdc90eb39736fee0d3dc4fa5c2738",
+    "storage.json": "3e1632c8109d9bf48392640293a2f2aea4b7bd89d4fa712c0158c5de0150a30b",
+    "previous-findings.json": "1ae7ed6b1481c3f196243f0f4b92dae6a907c9e0d0e80bda8d5ffcf6f4eab2f6",
+    "candidate/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+    "candidate/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+    "candidate/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+    "candidate/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+    "candidate/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96",
+    "baseline/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+    "baseline/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6"
+  },
+  "production_gates_status": "Comment-repaired current607 scoped gates terminal0 and whole-object identity proved; historicalffb2 global gate retained separately.",
+  "rework_findings_before_repair": {
+    "BFCPP-001": {
+      "disposition": "fixed",
+      "id": "BFCPP-001",
+      "kind": "correctness",
+      "location": "src/actors/daKpaFire_c.cpp:23,60,255",
+      "reason": "Inspected final comments describing C++ bodies and the POD matrix view; no C-mode pragma remains.",
+      "summary": "Stale source comments described C parsing and a return to C++ after the helper."
+    },
+    "BFCPP-002": {
+      "disposition": "fixed",
+      "id": "BFCPP-002",
+      "kind": "correctness",
+      "location": "include/daKpaFire_c.h:52",
+      "reason": "Final header describes retained byte storage and a POD view under C++; comment-only change leaves both consumer objects identical.",
+      "summary": "The header justified byte storage by claiming this helper still parsed as C."
+    },
+    "BFCPP-003": {
+      "disposition": "deferred",
+      "id": "BFCPP-003",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+      "kind": "reconstruction",
+      "location": "src/actors/daKpaFire_c.cpp:23-43,275-282",
+      "owner": "andrewboudreau",
+      "reason": "Accepted narrow removal of an unnecessary C frontend region; existing unfinished interface/layout work is explicitly recorded rather than claimed complete.",
+      "summary": "Address-named C-linkage helpers, raw matrix/particle field views and scalar Fix12 ABI bridges remain."
+    },
+    "KPFN-001": {
+      "disposition": "fixed",
+      "id": "KPFN-001",
+      "kind": "reconstruction",
+      "location": "src/actors/daKpaFire_c.cpp",
+      "reason": "The complete baseline and candidate raw and ordinary prepared ELF objects match; native return/argument declarations are reused directly.",
+      "summary": "32 raw actor/player/collision calls now use existing native interfaces; eight duplicate declarations are removed."
+    },
+    "KPFN-002": {
+      "disposition": "deferred",
+      "id": "KPFN-002",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+      "kind": "reconstruction",
+      "location": "src/actors/daKpaFire_c.cpp",
+      "owner": "codex-kpafire-native-coordinator1013",
+      "reason": "This scoped interface pass preserves existing field storage and does not infer a new shared class layout.",
+      "summary": "Flat base position and angle fields still require measured vector views at Spawn; state and particle/matrix views remain partial."
+    },
+    "KPFN-003": {
+      "disposition": "deferred",
+      "id": "KPFN-003",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+      "kind": "reconstruction",
+      "location": "src/actors/daKpaFire_c.cpp",
+      "owner": "codex-kpafire-native-coordinator1013",
+      "reason": "No scalar ABI, shared declaration, policy or ownership changes are made; this is a partial reconstruction with native caller improvements.",
+      "summary": "Address-named free C-linkage handlers and scalar fixed-point bridges remain."
+    },
+    "KPFN-004": {
+      "disposition": "fixed",
+      "id": "KPFN-004",
+      "kind": "correctness",
+      "location": "notes/experiments/kpafire-native1013.json",
+      "reason": "The changed TextureSequence header is actually consumed through Player.h; fresh current objects and complete metadata/storage/typed graphs are identical, and scoped current gates pass. Historical global build is not represented as current.",
+      "summary": "Current-main ancestry repaired by composing actual607 while preserving historicalffb2 proof."
+    },
+    "KPFN-PROV-001": {
+      "disposition": "unresolved",
+      "id": "KPFN-PROV-001",
+      "kind": "provenance",
+      "location": "src/actors/daKpaFire_c.cpp:48-49,973,978; config/tu_manifest.d/ov060/daKpaFire_c.json: bss",
+      "reason": "data_ov060_0211af74 and data_ov060_0211afb4 are defined as eight-entry tables in this Source and owned as two 64-byte BSS records in its manifest. Remove them from the external-data list or describe their TU ownership accurately. Must be fixed; not a deferred reconstruction boundary.",
+      "summary": "The banner incorrectly says the two owned PMF dispatch tables are not this translation unit data."
+    }
+  },
+  "previous_current607_offer": {
+    "head": "ab83e3d87cd0faed72bcb273ecda266fd6254f3c",
+    "checkpoint": "648c83e634e60b23255385bc6def55a25345da90",
+    "gates": {
+      "range": {
+        "name": "range",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "607576acc557a318d5f813f8a0813bc86f03d140..648c83e634e60b23255385bc6def55a25345da90",
+          "--json",
+          "build/kpafire-current1013/range-report.json"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 18.344070196151733,
+        "log": "build/kpafire-current1013/range.log",
+        "log_sha256": "fdc88a3b4a4d2f87b7df67e1f9f16223f5d0eeed82a7bce25dcbb1f3698e73af",
+        "tested_commit": "648c83e634e60b23255385bc6def55a25345da90"
+      },
+      "decl": {
+        "name": "decl",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "607576acc557a318d5f813f8a0813bc86f03d140"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 8.702959299087524,
+        "log": "build/kpafire-current1013/decl.log",
+        "log_sha256": "a77fb46f24a156d194e14d80c5c02fc77b7189df231157217e5f00411d0e258e",
+        "tested_commit": "648c83e634e60b23255385bc6def55a25345da90"
+      },
+      "port": {
+        "name": "port",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.584705114364624,
+        "log": "build/kpafire-current1013/port.log",
+        "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+        "tested_commit": "648c83e634e60b23255385bc6def55a25345da90"
+      },
+      "langmode": {
+        "name": "langmode",
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 10.438262939453125,
+        "log": "build/kpafire-current1013/langmode.log",
+        "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+        "tested_commit": "648c83e634e60b23255385bc6def55a25345da90"
+      }
+    },
+    "report_only_binding": {
+      "checkpoint": "648c83e634e60b23255385bc6def55a25345da90",
+      "production_trees": {
+        "src": "0611af83722136cdbbc14dcb71c9ae81912522a6",
+        "include": "7416241192710afe9e442343e2dfc840155ee7bb",
+        "config": "1de3789f744de3982a2a6b4aceec2df003218f5f",
+        "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+        "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+      },
+      "rule": "Final report-only descendant retains all five production trees."
+    },
+    "artifacts": {
+      "canary.json": "b4d4f12845d57aec4bc66321657341e6840bbc5fe216028ce0caa6603ded301a",
+      "whole.py": "2fbf8bd271bf55d73d6a8aa3836bb8a1fc8558547b62b7a7c262e421dfcc9639",
+      "proof.json": "b3fc4ffcde29a4332a5e6541146f9531d7afdc90eb39736fee0d3dc4fa5c2738",
+      "storage.json": "3e1632c8109d9bf48392640293a2f2aea4b7bd89d4fa712c0158c5de0150a30b",
+      "input-context.json": "5a58b00511bf37effc97249e0c9568d672a20936cc23308842805792b628ad22",
+      "all-previous-findings.json": "ace43e5657c4ea0ccd698d9379492abf7a4f5369b896ba1494b121cf56b35fce",
+      "candidate/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "candidate/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+      "candidate/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+      "candidate/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+      "candidate/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96",
+      "baseline/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "baseline/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6"
+    }
+  },
+  "comment_repair_proof": {
+    "complete_artifact_identity_to_previous_current": {
+      "baseline/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "baseline/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+      "baseline/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+      "baseline/owned-graphs.json": "7c03c5e363d265b3cd7063d97b60136558bf902d9daaf28ecb03475232c6c2f2",
+      "baseline/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+      "baseline/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96",
+      "candidate/raw.o": "7a9699a50701c21e5481017c9008c0f9173e64affcdeb0262275424672145cf2",
+      "candidate/prepared.o": "1f681e1d382264a8e3e3dd4ae45d092bd4d6fb797f48d3fded9377287bdc10e6",
+      "candidate/complete-graphs.json": "aa01e3444a84fdc985c4d7b21685ed61787b868fa95294b650b3b974b2edc976",
+      "candidate/owned-graphs.json": "7c03c5e363d265b3cd7063d97b60136558bf902d9daaf28ecb03475232c6c2f2",
+      "candidate/metadata.json": "a1e27f6301095325286cf1320bf36982a8643d89dd3b4ea8bd2e8bc5d97b572e",
+      "candidate/strict.json": "b52c144c55ca0f68b211a444bb37e3a65bb82cf9dd591adaad56d530a6358e96"
+    },
+    "scope": "Only the ownership comment changed; Source recompiled and all scoped gates refreshed. No global rebuild."
+  }
+}

@@ -5,7 +5,7 @@
  * dBgActor_c members.
  *
  * Field names below 0xc40 follow the arrays' types. The names from 0xc40 on
- * are inferred from how src/actors/daObjCvNewsLift_c.cpp uses each field;
+ * are inferred from how src/game/actors/d_a_obj_cv_news_lift.cpp uses each field;
  * the ROM keeps none of them. */
 #ifndef DAOBJCVNEWSLIFT_C_H
 #define DAOBJCVNEWSLIFT_C_H

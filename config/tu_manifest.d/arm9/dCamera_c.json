@@ -1,8 +1,8 @@
 {
   "id": "arm9/dCamera_c",
   "module": "arm9",
-  "source": "src/engine/view/dCamera_c.cpp",
-  "promoted_source": "src/engine/view/dCamera_c.cpp",
+  "source": "src/engine/view/d_camera.cpp",
+  "promoted_source": "src/engine/view/d_camera.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

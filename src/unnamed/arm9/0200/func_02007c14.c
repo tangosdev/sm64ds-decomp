@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 /* func_02007c14 @ 0x02007c14, size 0x88, ARM.
  * Builds an offset vector from a magnitude and an angle: takes a Fix12i
  * magnitude `mag` and an angle `ang`, looks up sin/cos in data_02082214, and
@@ -23,7 +24,7 @@ void func_02007c14(Vector3 *res, const Vector3 *trans, Fix12i mag,
     unsigned idx = (unsigned short)ang >> 4;
 
     v.x = 0;
-    v.y = (int)(((long long)mag * data_02082214[idx * 2] + 0x800) >> 12);
-    v.z = (int)(((long long)mag * data_02082214[idx * 2 + 1] + 0x800) >> 12);
+    v.y = FX_MUL(mag, data_02082214[idx * 2]);
+    v.z = FX_MUL(mag, data_02082214[idx * 2 + 1]);
     Vec3_RotateYAndTranslate(res, trans, angY, &v);
 }

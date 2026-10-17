@@ -2,8 +2,8 @@
 // @symbol func_ov002_020effb8
 /* recovered: shared common types */
 #include "common.h"
-#define FXMUL(a, b) ((s32)(u32)(((((long long)(a)) * (b)) + 0x800) >> 12))
-#define TERM(v, w) ((FXMUL(v, w) + 8) >> 4)
+#include "nitro/fx/fx.h"
+#define TERM(v, w) ((FX_MUL(v, w) + 8) >> 4)
 
 extern s32 Vec3_Equal(struct Vector3 *a, struct Vector3 *b);
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
@@ -25,12 +25,12 @@ void func_ov002_020effb8(struct Vector3 *out, s32 t, struct Vector3 *a, struct V
     if (t > 0x1000)
         t = 0x1000;
     t4 = t << 4;
-    t2 = FXMUL(t4, t);
+    t2 = FX_MUL(t4, t);
     u = 0x1000 - t;
-    t3 = FXMUL(t2, t);
+    t3 = FX_MUL(t2, t);
     u4 = u << 4;
-    u2 = FXMUL(u4, u);
-    u3 = FXMUL(u2, u);
+    u2 = FX_MUL(u4, u);
+    u3 = FX_MUL(u2, u);
     s0 = (t3 + 1) >> 1;
     w0 = _ZN4cstd4fdivEii(u3, 0x6000);
     w3 = _ZN4cstd4fdivEii(t3, 0x6000);

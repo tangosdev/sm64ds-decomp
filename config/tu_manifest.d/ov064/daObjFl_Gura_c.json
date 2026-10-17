@@ -75,14 +75,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov064_0211c768",
+      "symbol": "gFlGuraModelFile",
       "address": "0x0211c768",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1523"
     },
     {
-      "symbol": "data_ov064_0211c770",
+      "symbol": "gFlGuraCollisionFile",
       "address": "0x0211c770",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -572,7 +572,7 @@
       "source": "0x211b0c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c768",
+      "symbol": "gFlGuraModelFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c768"
@@ -602,7 +602,7 @@
       "source": "0x211b0d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov064_0211c770",
+      "symbol": "gFlGuraCollisionFile",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c770"

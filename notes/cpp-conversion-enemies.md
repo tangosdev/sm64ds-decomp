@@ -154,7 +154,7 @@ third parameter, migrated: matches first try.
 
 `KillByAttack` was on [ov004](../config/arm9/overlays/ov004/symbols.txt) 0x020aea30, whose body walks an 8-byte table to an 0xffff sentinel. The [ov002](../config/arm9/overlays/ov002/symbols.txt) function there dispatches a pointer-to-member from `data_ov002_0210db80[mDeathState - 1]`, and is what all 34 enemy-overlay call
 sites reach. Same arity shape: an unused fourth argument makes it match.
-Deliberately left as [func_ov002_020aea30](../src/actors/dEnemyBase_c.cpp) -- the name was coined against the
+Deliberately left as [func_ov002_020aea30](../src/runtime/actor/d_enemy_base.cpp) -- the name was coined against the
 wrong body, and inheriting it would repeat the mistake -- with the evidence
 recorded in the file for a naming pass.
 
@@ -183,7 +183,7 @@ daOts_c's out-of-line D1 shard was the only `extern "C"` definition left under a
 family class's mangled name, and its `_force_daOts_cD1` scaffold was the sanctioned
 way to force an out-of-line variant of a class-body-inline destructor. It was not a
 holdout and was not "fixed" -- it is gone for a different reason. The TU promotion
-folded all twenty-two of daOts_c's shards into `src/actors/daOts_c.cpp`, which owns
+folded all twenty-two of daOts_c's shards into `src/game/actors/d_a_ots.cpp`, which owns
 the class's key function (`CleanupResources`, vtable slot 3), and owning the key
 function emits the vtable and drags both destructor variants in by itself. A
 forcing scaffold is what a TU that does NOT own the key function needs; the merged
@@ -238,7 +238,7 @@ Eight are left untested:
 |1-4|5-8|
 |---|---|
 | `_ZN16daObjBC_Switch_c13InitResourcesEv`|  `_ZN13daObjNumber_c13InitResourcesEv`|
-|[func_ov002_020f6618](../src/actors/daDemo_c.cpp) |                   `func_ov006_020e6e78`|
-|`func_ov006_020e7fe8` |                   [func_ov060_02111cc0](../src/actors/daKpa_c.cpp)|
+|[func_ov002_020f6618](../src/game/actors/d_a_demo.cpp) |                   `func_ov006_020e6e78`|
+|`func_ov006_020e7fe8` |                   [func_ov060_02111cc0](../src/game/actors/d_a_kpa.cpp)|
 |`func_ov075_021143e4` |                    `func_ov075_02114ddc`|
 

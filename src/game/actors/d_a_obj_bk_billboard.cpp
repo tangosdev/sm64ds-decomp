@@ -20,6 +20,11 @@
  * Leftover: inline destructor (out-of-line emits D0 before D1).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_bk_billboard_AssetId {
+    ASSET_BK_BILLBORD_BMD = 0x0588
+};
+
 #include "daObjBkBillboard_c.h"
 #include "SharedFilePtr.h"
 
@@ -34,7 +39,7 @@ struct BkBillboardModelFilePtr : SharedFilePtr {
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
-extern BkBillboardModelFilePtr data_ov015_02114960;
+extern BkBillboardModelFilePtr gBkBillbordModelFile;
 void func_ov015_02111214(daObjBkBillboard_c *t);
 }
 
@@ -47,7 +52,7 @@ extern "C" daObjBkBillboard_c *daObjBkBillboard_c_classInit()
 // @symbol _ZN18daObjBkBillboard_c13InitResourcesEv
 s32 daObjBkBillboard_c::InitResources()
 {
-    void *file = Model::LoadFile(data_ov015_02114960);
+    void *file = Model::LoadFile(gBkBillbordModelFile);
     mModel.SetFile((BMD_File *)file, 1, -1);
     func_ov015_02111214(this);
     return 1;
@@ -63,7 +68,7 @@ s32 daObjBkBillboard_c::Render()
 // @symbol _ZN18daObjBkBillboard_c16CleanupResourcesEv
 s32 daObjBkBillboard_c::CleanupResources()
 {
-    data_ov015_02114960.Release();
+    gBkBillbordModelFile.Release();
     return 1;
 }
 
@@ -92,4 +97,4 @@ extern "C" void func_ov015_02111214(daObjBkBillboard_c *t)
 /* The ROM's initializer constructs the BMD handle with file ID 1416, then
  * registers its destructor with the node that follows it in .bss. mwcc
  * emits __sinit_d_a_obj_bk_billboard.cpp from this definition. */
-BkBillboardModelFilePtr data_ov015_02114960(1416);
+BkBillboardModelFilePtr gBkBillbordModelFile(ASSET_BK_BILLBORD_BMD);

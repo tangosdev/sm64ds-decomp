@@ -243,7 +243,7 @@ the `profile-lifecycle-crosswalk` docs branch (1). The fourth, `constitution-lan
 would have destroyed them. Its local tip went to
 `rescue/constitution-lane-local-9b129018` instead.
 
-One match had landed without its credit. [func_ov006_0212a764](../../src/actors/dScMgFlower_c.cpp)(ROM Ordinal 4 used for `dScMgFlower_c.cpp`, see [dScMgFlower_c.json](../../config/tu_manifest.d/ov006/dScMgFlower_c.json)) is on `main` and the
+One match had landed without its credit. [func_ov006_0212a764](../../src/minigames/d_s_mg_flower.cpp)(ROM Ordinal 4 used for `d_s_mg_flower.cpp`, see [dScMgFlower_c.json](../../config/tu_manifest.d/ov006/dScMgFlower_c.json)) is on `main` and the
 delinks route to it, but the winning attempt and its provenance row were sitting
 uncommitted in a working tree. Recovered in #2408, which was then closed as a
 duplicate of #2399 — the credit is banked either way.
@@ -300,7 +300,7 @@ still open on its own merits.
 Everything the approved train carried is on `main`, in this order: #2392
 (`fbd2b64e2`), #2425 (`abda09fdd`), #2372 (`81dd44ac8`), #2399 (`2c321f3e1`), #2373
 (`13853dedb`) and #2380 (`c48a1c027`, which is `main`'s tip as this was written).
-#2408 was closed as a duplicate of #2399 — the [func_ov006_0212a764](../../src/actors/dScMgFlower_c.cpp) attribution it
+#2408 was closed as a duplicate of #2399 — the [func_ov006_0212a764](../../src/minigames/d_s_mg_flower.cpp) attribution it
 carried is banked either way. Treat any sentence above about these PRs as history,
 not as a plan.
 

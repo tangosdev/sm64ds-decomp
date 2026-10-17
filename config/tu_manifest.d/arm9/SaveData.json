@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/save/SaveData.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x02013650..0x02013e80, the save-record half plus the file and minigame methods. Left edge begins where src/unnamed/arm9/0201/func_02013638.c ends (0x02013650); that helper stays outside. Right edge ends where src/actors/ActorDerived.cpp begins (0x02013e80). The absorbed run is SetCoinRecordIfHigher through func_02013944 (coin and star records, cannons, character intros) then the twelve SaveData file/minigame/cap methods and six free functions already in this TU. SaveData is non-polymorphic per include/SaveData.h: no vtable, no RTTI, all methods static.",
+  "boundary_evidence": "Contiguous .text span 0x02013650..0x02013e80, the save-record half plus the file and minigame methods. Left edge begins where src/unnamed/arm9/0201/func_02013638.c ends (0x02013650); that helper stays outside. Right edge ends where src/runtime/actor/ActorDerived.cpp begins (0x02013e80). The absorbed run is SetCoinRecordIfHigher through func_02013944 (coin and star records, cannons, character intros) then the twelve SaveData file/minigame/cap methods and six free functions already in this TU. SaveData is non-polymorphic per include/SaveData.h: no vtable, no RTTI, all methods static.",
   "sections": [
     {
       "name": ".text",

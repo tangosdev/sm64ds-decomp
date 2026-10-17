@@ -33,10 +33,10 @@ _ZN14daObjC1Peach_c13InitResourcesEv kind:function(arm,size=0x44) addr:0x02111fc
 daObjC1Peach_c_classInit kind:function(arm,size=0x38) addr:0x02112004
 __sinit_d_a_obj_c1_trap.cpp kind:function(arm,size=0xe0) addr:0x0211203c
 __sinit_d_a_obj_c1_hikari.cpp kind:function(arm,size=0x40) addr:0x0211211c
-__sinit_daObjC1Peach_c.cpp kind:function(arm,size=0x40) addr:0x0211215c
+__sinit_d_a_obj_c1_peach.cpp kind:function(arm,size=0x40) addr:0x0211215c
 .p__sinit_d_a_obj_c1_trap.cpp kind:data(word) addr:0x0211219c
 .p__sinit_d_a_obj_c1_hikari.cpp kind:data(word) addr:0x021121a0
-.p__sinit_daObjC1Peach_c.cpp kind:data(word) addr:0x021121a4
+.p__sinit_d_a_obj_c1_peach.cpp kind:data(word) addr:0x021121a4
 data_ov010_021121c0 kind:data(any) addr:0x021121c0
 data_ov010_021121c4 kind:data(any) addr:0x021121c4
 data_ov010_021121cc kind:data(any) addr:0x021121cc
@@ -143,8 +143,8 @@ data_ov010_02112d08 kind:bss addr:0x02112d08
 @744 kind:bss addr:0x02112d10
 @993 kind:bss addr:0x02112d1c
 data_ov010_02112d28 kind:bss addr:0x02112d28
-data_ov010_02112d50 kind:bss addr:0x02112d50
+gC1HikariModelFile kind:bss addr:0x02112d50
 @555 kind:bss addr:0x02112d58
-data_ov010_02112d64 kind:bss addr:0x02112d64
+gC1PeachModelFile kind:bss addr:0x02112d64
 @264 kind:bss addr:0x02112d6c
 data_ov010_02112d78 kind:bss addr:0x02112d78

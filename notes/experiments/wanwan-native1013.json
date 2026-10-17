@@ -1,0 +1,876 @@
+{
+  "schema": 1,
+  "task": "wanwan-native1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813",
+  "producer_session": "codex-chainedchomp-native-producer1013",
+  "producer_sessions": [
+    "andrewboudreau",
+    "andrewboudreau-pr2875",
+    "andrewboudreau-pr2876",
+    "andrewboudreau-pr2877",
+    "codex-chainedchomp-native-producer1013",
+    "codex-chainedchomp-native-scout1013",
+    "codex-cup-humanizer-producer-20260908-01",
+    "codex-cup-humanizer-producer-20260908-02",
+    "codex-cup-humanizer-producer-20260908-03",
+    "codex-humanizer-integrator-20260908",
+    "codex-integrator-0920",
+    "codex-luigi2876-repair-0920",
+    "codex-memory2875-repair-0920",
+    "codex-r2445-0910",
+    "codex-scenes-source-0920",
+    "inventory_remote"
+  ],
+  "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "dependency": "Accepted PR3793 objisolate rename-cycle implementation is present in this real tree. No private module overlay or tool edit is used.",
+  "current_main_target_inputs": {
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "fetched_main": "ee8618f8233ab228954057e3ebe079fd2936c1b8",
+    "equal_inputs": [
+      {
+        "path": "include",
+        "base_blob_or_tree": "19020e3fe0fd85c5c003b8e7f8f40c63325f511f",
+        "fetched_main_blob_or_tree": "19020e3fe0fd85c5c003b8e7f8f40c63325f511f",
+        "equal": true
+      },
+      {
+        "path": "src/game/actors/d_a_wanwan.cpp",
+        "base_blob_or_tree": "ff63306a284573d585c630e6a0b8bbab2f860d66",
+        "fetched_main_blob_or_tree": "ff63306a284573d585c630e6a0b8bbab2f860d66",
+        "equal": true
+      },
+      {
+        "path": "config/tu_manifest.d/ov014/daWanwan_c.json",
+        "base_blob_or_tree": "5c99d0ee39b6e33030c2b8a0d65325b4b5469e4a",
+        "fetched_main_blob_or_tree": "5c99d0ee39b6e33030c2b8a0d65325b4b5469e4a",
+        "equal": true
+      },
+      {
+        "path": "config/arm9/overlays/ov014",
+        "base_blob_or_tree": "3d0b28648d95a81ae5237edc0462ddb47a5c3f6a",
+        "fetched_main_blob_or_tree": "3d0b28648d95a81ae5237edc0462ddb47a5c3f6a",
+        "equal": true
+      },
+      {
+        "path": "config/arm9/symbols.txt",
+        "base_blob_or_tree": "1c3ad6d686a1a161e3d85475efc4444a2861c01b",
+        "fetched_main_blob_or_tree": "1c3ad6d686a1a161e3d85475efc4444a2861c01b",
+        "equal": true
+      },
+      {
+        "path": "config/arm9/relocs.txt",
+        "base_blob_or_tree": "15a88de8f0cc21830118b9657b2921ceb8c702cd",
+        "fetched_main_blob_or_tree": "15a88de8f0cc21830118b9657b2921ceb8c702cd",
+        "equal": true
+      }
+    ],
+    "limit": "Target Source, entire include tree, own manifest and ov014 configuration plus ARM9 symbol/relocation maps are identical. Full production validation runs on accepted Tool1c base, not a claim of full latest-main composition."
+  },
+  "source_sha256": "6d6c952543b7491943e07120b480cc3f2c6e8fe4099e407ab2496efa61fce5d0",
+  "manifest_sha256": "7a5f71c82afedb180d2762c73f60b81fc372fdf9615831ad12a38c4ea0020a50",
+  "whole_proof": {
+    "baseline": {
+      "strict": 32,
+      "bss_records": 8,
+      "bss_bytes": 80,
+      "metadata_records": 11,
+      "metadata_bytes": 244,
+      "raw_refs": 288,
+      "prepared_refs": 242,
+      "raw_sha256": "6eebf72aa4fbaaf2b811b7afc854fbf9a66d4002e4f3e8105d169c309a0b7202",
+      "prepared_sha256": "0f2b087c23824b89a91a61840c5eee66eb7029ad4743e547440eeb4d3831119c"
+    },
+    "candidate": {
+      "strict": 32,
+      "bss_records": 8,
+      "bss_bytes": 80,
+      "metadata_records": 11,
+      "metadata_bytes": 244,
+      "raw_refs": 288,
+      "prepared_refs": 242,
+      "raw_sha256": "383d53006120bac7575924365837758dfadd45a0aee5f66c5965404c94d55918",
+      "prepared_sha256": "0f049b0953b7f30964072d51791e14e6a6c3116817c77d86f177f7a5229cc142"
+    },
+    "complete_owned_bodies_edges_equal": true,
+    "complete_metadata_equal": true,
+    "ordinary_preparation": true,
+    "raw_container_equal": false,
+    "prepared_container_equal": false,
+    "base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "full_rom_run": true
+  },
+  "fresh_storage_callback_proof": {
+    "baseline": {
+      "bss": [
+        {
+          "symbol": "data_ov014_02114968",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114968"
+        },
+        {
+          "symbol": "data_ov014_02114970",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114970"
+        },
+        {
+          "symbol": "data_ov014_02114978",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114978"
+        },
+        {
+          "symbol": "data_ov014_02114980",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114980"
+        },
+        {
+          "symbol": "@1165",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114988"
+        },
+        {
+          "symbol": "@1166",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114994"
+        },
+        {
+          "symbol": "@1167",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x021149a0"
+        },
+        {
+          "symbol": "@1168",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x021149ac"
+        }
+      ],
+      "complete_callbacks": [
+        {
+          "name": "_ZN7Vector3D1Ev",
+          "module": "arm9",
+          "addr": "0x020072c0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ]
+    },
+    "candidate": {
+      "bss": [
+        {
+          "symbol": "data_ov014_02114968",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114968"
+        },
+        {
+          "symbol": "data_ov014_02114970",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114970"
+        },
+        {
+          "symbol": "data_ov014_02114978",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114978"
+        },
+        {
+          "symbol": "data_ov014_02114980",
+          "size": 8,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114980"
+        },
+        {
+          "symbol": "@1165",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114988"
+        },
+        {
+          "symbol": "@1166",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x02114994"
+        },
+        {
+          "symbol": "@1167",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x021149a0"
+        },
+        {
+          "symbol": "@1168",
+          "size": 12,
+          "alignment": 4,
+          "section_type": "SHT_NOBITS",
+          "address": "0x021149ac"
+        }
+      ],
+      "complete_callbacks": [
+        {
+          "name": "_ZN7Vector3D1Ev",
+          "module": "arm9",
+          "addr": "0x020072c0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7Vector3C1Ev",
+          "module": "arm9",
+          "addr": "0x0203d384",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ]
+    }
+  },
+  "scout_artifact_identity": true,
+  "registration_mapping": {
+    "@1179": {
+      "raw": "@1166",
+      "offset": "0x184"
+    },
+    "@1180": {
+      "raw": "@1167",
+      "offset": "0x190"
+    },
+    "@1181": {
+      "raw": "@1168",
+      "offset": "0x1a0"
+    },
+    "@1182": {
+      "raw": "@1169",
+      "offset": "0x1ac"
+    }
+  },
+  "metadata_extent": "All11records244B, including complete132Bvtable atov014:021147e4 (8-byte ABI preamble included).",
+  "completion": "partial",
+  "findings": [
+    {
+      "id": "WANWAN-NATIVE-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_wanwan.cpp:daWanwan_c_classInit",
+      "summary": "Construct the complete actor through its existing genuine class.",
+      "reason": "Native new preserves the complete240B factory, actual four member arrays and the existing180B native destructor. Vector3 arrays at+524/+578 usecount7/stride12 with the paired actual destructor; complete4B ctor anddtor independently verify. Removes11 factory-only externs and obsolete failed-source prose."
+    },
+    {
+      "id": "WANWAN-NATIVE-002",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/tu_manifest.d/ov014/daWanwan_c.json:compiler_only_output,defined_symbol_renames,notes",
+      "summary": "Bind the real constructor duplicate and measured compiler registration inputs.",
+      "reason": "Uses existing canonical Vector3C1->func0203d384 handling justified by actual arrays and complete callbacks. Raw registration inputs@1166..1169 mapto unchanged canonical@1165..1168 via identical initializer ABS32 offsets and12B/alignment4NOBITS records. Whole owned body/edge and complete metadata proof pass; no range or destination change."
+    },
+    {
+      "id": "WANWAN-NATIVE-003",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_wanwan.cpp:scalar imports",
+      "summary": "Scalar by-value Fix12 boundaries remain partial.",
+      "reason": "Animation, collision, shadow, player hurt and atan2 scalar bridges are inherited and unchanged; this factory reconstruction does not establish native by-value ABI equivalence.",
+      "owner": "codex-chainedchomp-native-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813"
+    },
+    {
+      "id": "WANWAN-NATIVE-004",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_wanwan.cpp:resource handles and state descriptors",
+      "summary": "Resource and state interfaces remain partially reconstructed.",
+      "reason": "Two-word resource handle views, existing aliases and address-named PMF/state records remain; no file-pointer layout or handler rename is claimed.",
+      "owner": "codex-chainedchomp-native-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813"
+    },
+    {
+      "id": "WANWAN-NATIVE-005",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_wanwan.cpp:link/actor pointer walks and namespaced helpers",
+      "summary": "Inherited pointer views and call interfaces remain partial.",
+      "reason": "Existing actor/vector walking views and namespaced three-argument interface survive unchanged; native factory completion is not whole-class completion.",
+      "owner": "codex-chainedchomp-native-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3813"
+    }
+  ],
+  "inherited_findings": {
+    "BASE-PROV01": {
+      "disposition": "fixed",
+      "id": "BASE-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgBase_c.h:109",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Minigame/actor distinction, current slot21 description and last observed field are corrected."
+    },
+    "BASE-PROV02": {
+      "disposition": "fixed",
+      "id": "BASE-PROV02",
+      "kind": "provenance",
+      "location": "include/dScMgBase_c.h:158",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Repeated false hierarchy comparisons and dangling removed-table references are corrected."
+    },
+    "CUP-01": {
+      "disposition": "fixed",
+      "id": "CUP-01",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:508",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Both fake Obj self-call views were replaced with real inherited virtual calls."
+    },
+    "CUP-02": {
+      "disposition": "fixed",
+      "id": "CUP-02",
+      "kind": "provenance",
+      "location": "include/dScMgCup_c.h:71; src/actors/dScMgCup_c.cpp:1048",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Actual PMF receiver, seven own slots and inferred names are accurately described."
+    },
+    "CUP-03": {
+      "disposition": "deferred",
+      "id": "CUP-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:77; include/dScMgCup_c.h:96",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Typed Cup fields, component/tail storage and helper interfaces remain partly reconstructed."
+    },
+    "CUP-03-P": {
+      "disposition": "fixed",
+      "id": "CUP-03-P",
+      "kind": "provenance",
+      "location": "include/dScMgCup_c.h:26",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Live component and tail extents are accurately bounded as observations."
+    },
+    "CUP-04": {
+      "disposition": "fixed",
+      "id": "CUP-04",
+      "kind": "correctness",
+      "location": "src/actors/dScMgCup_c.cpp:377",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Every incoming epilogue path initializes cup."
+    },
+    "CUP-05": {
+      "disposition": "fixed",
+      "id": "CUP-05",
+      "kind": "correctness",
+      "location": "include/dScMgBase_c.h:132; five minigame Virtual50 definitions",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Five minigame declarations/definitions coherently return void; two helper views now match their actual void definition."
+    },
+    "CUP-06": {
+      "disposition": "deferred",
+      "id": "CUP-06",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:1168",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Manual factory/lifecycle, raw components/arrays and address-named helpers remain partial."
+    },
+    "CUP-07": {
+      "disposition": "fixed",
+      "id": "CUP-07",
+      "kind": "provenance",
+      "location": "src/actors/dScMgCup_c.cpp; include/dScMgCup_c.h; config/tu_manifest.d/ov006/dScMgCup_c.json:notes",
+      "reason": "The approved bounded source comments now distinguish measured alternatives from universal compiler requirements, no longer call extern-C helpers file-local, and remove obsolete Render linkage instructions. Existing header layout and historical manifest experiments are preserved; no claim that the unlanded owner full reconstruction was adopted.",
+      "summary": "Current source prose no longer describes obsolete shadow views or universal raw-address requirements."
+    },
+    "CUP-08": {
+      "disposition": "fixed",
+      "id": "CUP-08",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov006/dScMgCup_c.json:compiler_only_output",
+      "reason": "Fresh complete-range ownership audit finds zero source owners at all13 canonical addresses. Changed exactlyten manifest reason strings to ROM-supplied/no complete source owner; every address, symbol, disposition, ordering and other manifest value is unchanged. Raw Cup metadata remains7 VERIFIED/6 PARTIAL.",
+      "summary": "Canonical RTTI/type-name copies were falsely called independently source-enrolled."
+    },
+    "CUP-09": {
+      "disposition": "deferred",
+      "id": "CUP-09",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "include/dScMgCup_c.h:CupPosition; src/actors/dScMgCup_c.cpp:member accesses and InitResources",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Replace the whole-object Obj6e view and measured raw member accesses with actual class storage."
+    },
+    "LUI2876-01": {
+      "disposition": "fixed",
+      "id": "LUI2876-01",
+      "kind": "provenance",
+      "location": "src/actors/dScMgLuigi_c.cpp:2; integration handoff",
+      "reason": "The former invented change-count summary is removed. Current source describes gameplay, owned span and remaining storage/source-form limits; final committed handoff accurately distinguishes native-factory output from the historical literal-factory control. Public PR wording has not yet been updated and is not asserted reviewed; root must carry this exact accepted scope into its publication.",
+      "summary": "Change narrative must describe the actual source delta."
+    },
+    "LUI2876-02": {
+      "disposition": "compiler_constraint",
+      "evidence": {
+        "artifact_commit": "e0baffe52d6a5fac61e446e6704647a762508589",
+        "artifact_path": "notes/experiments/pr2876-source-repair-0920.json",
+        "attempted_change": "Direct named timer arithmetic in UpdateReward/TickTimer/AddPenalty and CheckTouch named scalar substitutions; recursively reconstruct exact committed patches and parent variants.",
+        "command": "match.compile_c(variant_path, \"2004/b56\", recorded_flags), then objisolate.derive and linkcheck for every licensed function; final-head independent rerun: python -B build/luigi_final_probes.py direct_timer_reward direct_timer_timer direct_timer_penalty check_touch_unk_5456 check_touch_unk_5459 check_touch_unk_545a",
+        "compiler": "2004/b56",
+        "log": "notes/experiments/pr2876-source-repair-0920.json variants luigi-probes-round2/{UpdateReward_constant,TickTimer_constant,AddPenalty_constant} and luigi-probes-round4/CheckTouch_{unk_5456,unk_5459,unk_545a}; own build/luigi-final/probes/additional-results.json",
+        "result": "Measured timer instruction differences with unchanged552/208/188-byte sizes; CheckTouch600->604 for each of5456/5459/545a. Successful alternatives retained.",
+        "tested_commit": "6300fa4281c9ecd2b0078c3ea6113116cc98049a"
+      },
+      "id": "LUI2876-02",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp: UpdateReward, StartReward, DrawTimer, TickTimer, AddPenalty, CheckTouch",
+      "reason": "Inspected all63 committed variant recipes and their source hashes; successful ordinary positions, timer addresses and scalar accesses are adopted. Independently repeated eight bounded negatives on the final head: direct signed timer arithmetic changes one instruction each at+0x1cc/+0x50/+0x74; each individual CheckTouch named scalar substitution changes600 to604 bytes. Earlier signed-fill-contaminated and malformed-insertion variants are explicitly excluded. These are constraints on the recorded alternatives, not universal compiler impossibility.",
+      "summary": "Originally asserted source-form failures needed reproducible per-site evidence."
+    },
+    "LUI2876-03": {
+      "disposition": "fixed",
+      "id": "LUI2876-03",
+      "kind": "correctness",
+      "location": "src/actors/dScMgLuigi_c.cpp: engine declarations, sound calls, Render and InitResources",
+      "reason": "Sound calls use the actual namespace declarations; IRQ calls use IRQ.h; unsigned audio return and input, matrix pointer and void drawing contracts are inspected against definitions. Actual tested main includes accepted Memory four-register void drawing veneer, unsigned-halfword fill and real component constructor declarations. Own final source compiles and71 strict instances pass. This is the concrete repaired interface population, not a declaration-ratchet claim that all inherited integer-address or scalar/aggregate representations in the repository are original or uniquely typed.",
+      "summary": "Return, matrix, drawing and fill interfaces must agree with concrete definitions and callers."
+    },
+    "LUI2876-04": {
+      "disposition": "compiler_constraint",
+      "evidence": {
+        "artifact_commit": "e0baffe52d6a5fac61e446e6704647a762508589",
+        "artifact_path": "notes/experiments/pr2876-source-repair-0920.json",
+        "attempted_change": "Remove volatile from the one ChooseTarget tile temporary and two InitResources tile-fill temporaries without omitting loop work or changing the real unsigned fill API.",
+        "command": "Reconstruct luigi-probes-round3/ordinary_choose and ordinary_fill from the committed parent recipes, compile with match.compile_c(...,\"2004/b56\",recorded_flags), isolate and linkcheck. Independent final rerun: python -B build/luigi_final_probes.py plain_choose_target plain_init_fill",
+        "compiler": "2004/b56",
+        "log": "notes/experiments/pr2876-source-repair-0920.json variants luigi-probes-round3/ordinary_choose and luigi-probes-round3/ordinary_fill; own build/luigi-final-probes.log and build/luigi-final/probes/additional-results.json",
+        "result": "ChooseTarget loses8 bytes; InitResources loses16 bytes. These specific ordinary-u16 alternatives fail expected-size checks; all other function bodies remain unchanged.",
+        "tested_commit": "6300fa4281c9ecd2b0078c3ea6113116cc98049a"
+      },
+      "id": "LUI2876-04",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp: PMF dispatch, WrapPicture, ChooseTarget, InitResources",
+      "reason": "All six dispatch sites now use actual dScMgLuigi_c member-function pointers; StateCatch uses the genuine virtual OnYoshiTryEat and WrapPicture uses actual position members. Own sinit compile and ROM inspection account for all23 zero-adjustment PMF records in five tables. Two artificial volatile member writes were removed. The three remaining non-MMIO volatile u16 stack locals have valid bounded negatives: ordinary ChooseTarget local360->352; two ordinary InitResources fill locals928->912. Remaining curtain/reward record views and ResetBoard layout are explicitly outside this correction; no full-class completion or blanket layout barrier is claimed.",
+      "summary": "Fake receiver hosts and ordinary halfword temporaries require genuine forms or measured limits."
+    },
+    "LUI2876-05": {
+      "disposition": "fixed",
+      "id": "LUI2876-05",
+      "kind": "provenance",
+      "location": "notes/data/tu-promotion-queue.tsv: dScMgLuigi_c and dScMgFlower_c rows",
+      "reason": "Fresh RTTI extraction, vtable mapping, tu_map and queue_audit.Tree.measure give Luigi1source/2314lines/58functions and Flower2sources/871lines/10functions. Flower has9 functions in the changed TU and the adjacent classInit factory in its second source. Only these two rows changed; Luigi sibling/parent is dScMgBase_c. The raw root intermediate queue-accounting.json still says2325 for Luigi; it is superseded by the committed row, final context measurement and this independent mapper result. Historical pragma estimate remains explicitly explained by the manifest, not represented as a fresh count.",
+      "summary": "Queue line/source counts and Luigi parent must reflect the final source."
+    },
+    "LUI2876-06": {
+      "disposition": "fixed",
+      "id": "LUI2876-06",
+      "kind": "correctness",
+      "location": "src/actors/dScMgLuigi_c.cpp: IrisStop; include/IRQ.h",
+      "reason": "Both calls use IRQ::DisableIRQs and IRQ::SetIRQHandler from the existing header, removing hand-mangled void-return declarations. The ignored return is the previous mask, not a void callee. Own final strict IrisStop and entire scene output pass.",
+      "summary": "IrisStop must use the actual u32 IRQ::DisableIRQs return contract and handler API."
+    },
+    "LUI2876-07": {
+      "disposition": "fixed",
+      "id": "LUI2876-07",
+      "kind": "correctness",
+      "location": "src/func_ov004_020adc74.c; src/func_020182bc.c; src/func_020182ec.c; src/Ov004_Deallocate.c; Luigi and Flower callers",
+      "reason": "The outer two loader wrappers accept const char* and return the real buffer; the two-word file ID crosses020182bc/020182ec by value. The retained variadic suffix is consistent with the existing modeled interface, not a unique original-arity claim. The deallocator forwards void* to actual Deallocate(void*); Luigi keeps its archive buffer as void*, and Flower explicitly converts its eight int-held allocated addresses. Independently inspected the declaration/caller census and downstream file-ID register flow; own six complete objects and71 relocated instances pass. The inherited downstream scalar/aggregate declaration disagreement at02018dc4 remains visible and ABI-equivalent for this ARM register flow; it is not concealed by a baseline edit.",
+      "summary": "Loader and deallocator forwarding must preserve real arguments and returned buffers."
+    },
+    "LUI2876-08": {
+      "disposition": "fixed",
+      "id": "LUI2876-08",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov006/dScMgLuigi_c.json: historical merge/conflict notes; source linkage/callback comments",
+      "reason": "The five repaired manifest notes distinguish historical assembly from real current PMF/member calls, and current source describes the free IRQ callback without prohibiting static members. The generic historical full-object proof is explicitly limited to its repair stage; native factory proof now distinguishes relocation/import change. I checked the retained BeginCatch warning: it says the forward declaration was present and the function is now a member, while CheckTouch actually retains its real-class cast at1388. My preliminary no-cast concern was incorrect and withdrawn. No fake-host necessity claim remains accepted.",
+      "summary": "Manifest and source comments must not present removed fake hosts or bridges as current requirements."
+    },
+    "LUI2876-09": {
+      "disposition": "fixed",
+      "id": "LUI2876-09",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp:2310; include/dScMgBase_c.h; src/_ZN11dScMgBase_cC2Ev.cpp",
+      "reason": "Actual body is return (int *)new dScMgLuigi_c with unused manual allocation/C2/data-vtable imports removed. Own final factory stays52 bytes, invokes real base C2 atov004020b2adc and installs the same canonical0213cf10 vtable address point. I independently compiled real base C2 and confirmed fBase C2, dMgState C1 and dMgPsOpt C1 calls remain. No synthetic or omitted component initializers. Final raw ELF36712 differs from old36744 only in symbol/relocation metadata; all58 raw function bodies are unchanged and all relocated outputs/metadata/order/policies pass.",
+      "summary": "Ordinary complete scene construction matches the literal factory."
+    },
+    "LUI2876-10": {
+      "disposition": "fixed",
+      "id": "LUI2876-10",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgLuigi_c.cpp:1298",
+      "reason": "Final method writes mVelX[idx]=0 and mVelY[idx]=0 with no raw pointer locals. This matches the independently proposed source form and final strict24-byte retail body. Final factory and StopPicture changes coexist without emitted-output regression.",
+      "summary": "StopPicture has a matching ordinary field form."
+    },
+    "LUI2876-11": {
+      "disposition": "fixed",
+      "id": "LUI2876-11",
+      "kind": "reconstruction",
+      "location": "include/dScMgLuigi_c.h:83; src/actors/dScMgLuigi_c.cpp: UpdateIris and Behavior",
+      "reason": "Two observed u8 iris bytes occupy47f4/47f5, two padding bytes remain47f6, existing arrays keep their offsets, and the existing4f78 state field is named mState. Initializers and state transitions establish setup/place/play/catch meanings. The compile-time sizeof0x545c assertion passes; own header-offset and converted ratchet checks pass with no baseline edits. All58 function bodies remain identical, so this repairs source form without changing game behavior.",
+      "summary": "Genuine PMF dispatch exposed two previously banked converted criteria."
+    },
+    "MEM2875-01": {
+      "disposition": "fixed",
+      "id": "MEM2875-01",
+      "kind": "provenance",
+      "location": "src/actors/dScMgMemory2_c.cpp:95-100; PR body",
+      "reason": "Source and final PR body describe the actual field,helper and genuine factory changes without invented alias/field claims.",
+      "summary": "New change summary overstates the actual field/alias edits."
+    },
+    "MEM2875-02": {
+      "disposition": "compiler_constraint",
+      "evidence": {
+        "artifact_commit": "5f0dadb73a6d1c339cd88249e7e1573e9d75a43d",
+        "artifact_path": "notes/experiments/pr2875-source-repair-0920.json",
+        "attempted_change": "Exact ordinary member/indexed/pointer-walk alternatives preserved with recursive parent patches in the40-variant artifact; accepted ordinary forms are already adopted. Excludes malformed inputs and the superseded incomplete factory.",
+        "command": "Use artifact reproduction.variant_recipe: reconstruct each source by its parent_variant patch, verify source_sha256, match.compile_c with recorded2004/b56 flags, then objisolate.derive and linkcheck each module-qualified manifest symbol.",
+        "compiler": "2004/b56",
+        "log": "notes/experiments/pr2875-source-repair-0920.json variants[]; independent exact-source replay audit build/reviewer-0919/pr2875-rnk-final-audit.json",
+        "result": "Retained equivalent method alternatives change the emitted bytes/schedule or size; successful PlayerDrop/JudgePair/CardMove/indexed UpdateCards and ResultTurnCards plus scalar changes were adopted. Complete ordinary factory now passes and is not a constraint.",
+        "tested_commit": "e8599a26b2bd3f4d6873c088bc0ce4265b790207"
+      },
+      "id": "MEM2875-02",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgMemory2_c.cpp:102-109",
+      "reason": "I inspected and reconstructed all40 committed variant sources and verified their source hashes. Matching named/indexed forms are adopted. The remaining DrawCards, RoundWaitDeal, RoundReadyCards, ShuffleCards, ResetGame and ResultWait alternatives have concrete pinned negative outcomes. Malformed probes and the semantically incomplete64-byte factory probe are excluded. This is a bounded constraint on those exact equivalent forms, not a claim that cleaner C++ is impossible.",
+      "summary": "Eleven retained-method compiler constraints lack a durable, exact reproducible experiment record."
+    },
+    "MEM2875-03": {
+      "disposition": "fixed",
+      "id": "MEM2875-03",
+      "kind": "correctness",
+      "location": "src/actors/dScMgMemory2_c.cpp:123,189,193,209",
+      "reason": "Sound,shared four-register drawing veneer and unsigned halfword-fill contracts agree across repaired definitions/callers. Unchanged helper source blobs retain their independently tested proof; complete current consumer and ROM checks pass.",
+      "summary": "Existing reconstructed call contracts disagree with their actual definitions."
+    },
+    "MEM2875-04": {
+      "disposition": "fixed",
+      "id": "MEM2875-04",
+      "kind": "provenance",
+      "location": "src/actors/dScMgMemory2_c.cpp:294-310",
+      "reason": "Current source/manifest now describe real automatic component lifetimes and ordinary scene new. Old incomplete64-byte construction remains historical and is expressly excluded from compiler-constraint evidence.",
+      "summary": "Destructor commentary claims an explicit raw-offset shared-state destruction that is no longer present."
+    },
+    "MEM2875-05": {
+      "disposition": "fixed",
+      "id": "MEM2875-05",
+      "kind": "provenance",
+      "location": "notes/data/tu-promotion-queue.tsv: dScMgMemory2_c row",
+      "reason": "Final authoritative queue row is one source/1531lines/52functions,all promoted. Every unrelated row remains unchanged.",
+      "summary": "Source-only edit leaves total_lines at1683 while the TU now has1693 lines."
+    },
+    "MEM2875-06": {
+      "disposition": "fixed",
+      "evidence": "pr2875-independent-contract-probes.json: all three separate ordinary corrections produce the identical 7e9a029d complete object and all52 functions VERIFIED, zero differences/blind. Build-only alternatives; no candidate edits.",
+      "families": [
+        {
+          "candidate": "int(void*)",
+          "definition": "src/func_ov006_020c19d0.cpp:12: void(char*) updates state and returns no value",
+          "probe": "update_void",
+          "required": "Use actual void(char*) declaration; the only call already passes char*.",
+          "symbol": "func_ov006_020c19d0"
+        },
+        {
+          "candidate": "void(void*)",
+          "definition": "src/func_ov006_020c1d80.c:7: int(char*) explicitly returns (int)t after constructing shared state",
+          "probe": "constructor_actual_return",
+          "required": "Use actual legacy int(char*) declaration here. This acknowledges a returned receiver encoded by the existing definition; it does not claim the receiver is semantically numeric or reconstruct a new class.",
+          "symbol": "func_ov006_020c1d80"
+        },
+        {
+          "candidate": "OnYoshiTryEat casts void(void) to void(*)(void*) and calls with o; InitResources already calls the genuine no-argument form.",
+          "definition": "src/func_ov004_020b66d4.c:18: void(void), resets globals and does not read a receiver",
+          "probe": "ordinary_reset_call",
+          "required": "Call func_ov004_020b66d4() directly; no extra unused parameter or shared callee edit is needed.",
+          "symbol": "func_ov004_020b66d4"
+        }
+      ],
+      "id": "MEM2875-06",
+      "kind": "correctness",
+      "location": "src/actors/dScMgMemory2_c.cpp:140,156,1430",
+      "reason": "Actual helper declarations use void(char*) and legacy int(char*); reset uses its genuine zero-argument call. Shared constructor now owns the latter declaration/call.",
+      "summary": "Two remaining return contracts and one incompatible function-pointer call disagree with actual implementations."
+    },
+    "MEM2875-07": {
+      "disposition": "fixed",
+      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. Player data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
+      "id": "MEM2875-07",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov006/dScMgMemory2_c.json notes[0]; source comments preceding OnGroundPounded/OnTurnIntoEgg/OnYoshiTryEat",
+      "reason": "Stale C-linkage comments removed and typed table claims qualified to actual main/result/round/card arrays,with player ownership recorded separately.",
+      "required": "Qualify the first note to distinguish typed main/result/round/card arrays from player-table ownership proven by sinit. Remove stale tu_create comments saying real C++ method definitions were given explicit C linkage. Preserve actual method bodies and the second ownership note.",
+      "summary": "Remaining narration claims typed player PMF use and explicit C linkage not present in this source."
+    },
+    "MEM2875-08": {
+      "disposition": "fixed",
+      "id": "MEM2875-08",
+      "kind": "reconstruction",
+      "location": "include/dScMgMemory2_c.h; include/dScMgSingle3DBase_c.h; src/actors/dScMgMemory2_c.cpp; config/tu_manifest.d/ov006/dScMgMemory2_c.json",
+      "reason": "Independently compiled exact final source:52/52 strict, all13 complete metadata records exact, order unchanged. Ordinary new invokes both tracker and shared-state construction. I checked both extra lifecycle symbols have no ROM homes and no surviving references under the exact deadstrip policies; raw-object identity to the old factory is expressly not claimed.",
+      "repair": "Declare existing tracker constructor and inline shared-state initialization, then use ordinary scene new; license only the two proven unreferenced compiler-emitted destructor bodies under existing policy.",
+      "summary": "Ordinary factory was blocked by two missing genuine member constructor declarations, not by an equivalent-source compiler constraint."
+    },
+    "SCMG2877-01": {
+      "disposition": "fixed",
+      "id": "SCMG2877-01",
+      "kind": "provenance",
+      "location": "src/actors/dScMgCup_c.cpp:1032",
+      "reason": "Actual Render subscript now uses existing unk_5440[k]. The final complete Cup object equals the original author control, and all32 bodies remain strict VERIFIED. The false comment is removed.",
+      "summary": "The newly edited Render comment incorrectly claims that unk_5440[k] breaks matching."
+    },
+    "SCMG2877-02": {
+      "disposition": "fixed",
+      "id": "SCMG2877-02",
+      "kind": "provenance",
+      "location": "src/actors/dScMgRoulette_c.cpp:13; src/actors/dScMgCup_c.cpp:5,18-44",
+      "reason": "Cup/Roulette comments accurately describe address-named helpers without inferring unrecovered linkage/memberness. Token comparison proves Roulette is comment-only and Cup has only the approved one-expression change; all five complete objects remain identical.",
+      "summary": "Inherited banners overclaim helper linkage and universal compiler constraints; the new field edits also leave Cup only-mState prose stale."
+    },
+    "SOUND-PROV01": {
+      "disposition": "fixed",
+      "id": "SOUND-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgSound_c.h:10; src/actors/dScMgSound_c.cpp:145",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Component extent, live state, call count, PMF entry, source spelling and helper address descriptions are corrected."
+    },
+    "SOUND-RECON01": {
+      "disposition": "deferred",
+      "id": "SOUND-RECON01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgSound_c.cpp:239",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+      "summary": "Counterfeit receiver/PMF views, manual decoders, raw arrays and empty-condition scaffolding remain inherited reconstruction."
+    },
+    "TERESA-PROV01": {
+      "disposition": "fixed",
+      "id": "TERESA-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgTeresa_c.h:6",
+      "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it.",
+      "summary": "Own slot18 and current slot34 member status are accurately listed."
+    }
+  },
+  "historical_scope_note": "Only exact Chomp-scope queue predecessor found is cancelled broad interface repair pr2877-interface-repair-0921. Its 36 actual extracted findings all concern minigame/scenes, not this actor. They and all contributing sessions remain archived verbatim; no dedicated accepted Chomp finding is claimed, and adoption must explicitly account for this scope distinction.",
+  "predecessor_tasks": [
+    "pr2877-interface-repair-0921"
+  ],
+  "gates": {
+    "full-rom": {
+      "name": "full-rom",
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom",
+        "--report-json",
+        "build/wanwan-native1013/rom-report.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 321.38521671295166,
+      "log": "build/wanwan-native1013/full-rom.log",
+      "log_sha256": "c4ca4d440f2bb4e79f1cd69fe9f4ceae5125cfe51f957ca96192615c65fd2e9a",
+      "tested_commit": "fff825d4e4c85bfe2d500b26237663feac6173f1"
+    },
+    "range": {
+      "name": "range",
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19..fff825d4e4c85bfe2d500b26237663feac6173f1",
+        "--json",
+        "build/wanwan-native1013/range-report.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 23.44571852684021,
+      "log": "build/wanwan-native1013/range.log",
+      "log_sha256": "0e61b39186c93a7d2ef556202f9d5352f5534a7183bb825182b0ead5552b7f5d",
+      "tested_commit": "fff825d4e4c85bfe2d500b26237663feac6173f1"
+    },
+    "decl": {
+      "name": "decl",
+      "command": [
+        "python",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 11.589473009109497,
+      "log": "build/wanwan-native1013/decl.log",
+      "log_sha256": "6784e1957a824ef23b5193f0c7b2920e8d9813cd67012be82080a355b5e0bc21",
+      "tested_commit": "fff825d4e4c85bfe2d500b26237663feac6173f1"
+    },
+    "port": {
+      "name": "port",
+      "command": [
+        "python",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.7636799812316895,
+      "log": "build/wanwan-native1013/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "tested_commit": "fff825d4e4c85bfe2d500b26237663feac6173f1"
+    },
+    "langmode": {
+      "name": "langmode",
+      "command": [
+        "python",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.123000621795654,
+      "log": "build/wanwan-native1013/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "tested_commit": "fff825d4e4c85bfe2d500b26237663feac6173f1"
+    }
+  },
+  "status": "All production gates terminal0; offered for independent Source and byte review. Reconstruction remains partial under issue3813.",
+  "final_production_summary": {
+    "modules": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11332,
+      "compiledBytes": 2220756,
+      "sourceFunctions": 11332,
+      "sourceBytes": 2220756,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.22470229318692,
+      "reproducingFunctions": 11332,
+      "reproducingBytes": 2220756,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 331,
+      "sourceBssClaims": 239,
+      "sourceBssBytes": 30164,
+      "reproducingDataClaims": 331,
+      "reproducingDataClaimBytes": 13020,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "intact_link_ok": true,
+    "origin": "Final production analysis, not baseline-control counts.",
+    "report_sha256": "cd3f8108f0fc1bce6f0f9365ae88fe229cad2de32b655f89d2024e9832112799"
+  },
+  "stock_range_summary": {
+    "checked": 30,
+    "verified": 28,
+    "warnings": 2,
+    "blocking": 0,
+    "warning_controls": {
+      "baseline": [
+        {
+          "name": "daWanwan_c_classInit",
+          "module": "ov014",
+          "addr": "0x02112d1c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "__sinit_d_a_wanwan.cpp",
+          "module": "ov014",
+          "addr": "0x02113118",
+          "verdict": "BLIND-10",
+          "diffs": [],
+          "blind": 10
+        }
+      ],
+      "candidate": [
+        {
+          "name": "daWanwan_c_classInit",
+          "module": "ov014",
+          "addr": "0x02112d1c",
+          "verdict": "BLIND-1",
+          "diffs": [],
+          "blind": 1
+        },
+        {
+          "name": "__sinit_d_a_wanwan.cpp",
+          "module": "ov014",
+          "addr": "0x02113118",
+          "verdict": "BLIND-10",
+          "diffs": [],
+          "blind": 10
+        }
+      ],
+      "context": "Each control uses its own immutable manifest defined_symbol_renames with the unchanged stock isolation helper. Feeding baseline raw temporary names through candidate policy is not a valid baseline control."
+    },
+    "interpretation": "Stock per-function isolation reports the native constructor BLIND-1 and the inherited initializer BLIND-10. Exact baseline/candidate initializer controls use each revision own manifest and both yield BLIND-10. Actual normal whole preparation verifies factory, initializer, ctor and owned state table with zero blind edges. No stock verdict is suppressed or rewritten."
+  },
+  "checkpoint": "fff825d4e4c85bfe2d500b26237663feac6173f1",
+  "report_only_binding": {
+    "checkpoint": "fff825d4e4c85bfe2d500b26237663feac6173f1",
+    "production_trees": {
+      "src": "eb4b33c4aaf10591ead031f30d938e8bfa69aed7",
+      "include": "19020e3fe0fd85c5c003b8e7f8f40c63325f511f",
+      "config": "8f53eeb9d027b7e329688c01a953c01c23a27cc8",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "rule": "The final report-only descendant must retain all five production tree IDs exactly."
+  },
+  "artifacts": {
+    "whole.py": "a8c08be244326146d49ef416df2cb05a62a3724663b5596f438195321e9e5c5c",
+    "proof.json": "670a9281dc72ebf2e97845641c04721e51967e1e227324f3b70591b37d376908",
+    "storage-callback-proof.json": "693af332ab074af5744f3bc7e9abe03e3da717fbace9903ab33cb1918e050b35",
+    "current-main-target-inputs.json": "756e1d03840e317124b83c6ee7dc324e406e4abfc2ccba25940b548d33d7dbee",
+    "stock-warning-controls.json": "110c4df1902d5a84356662e9a1a4e84a23fc1de766402d58d659bc80d29987c7",
+    "candidate/raw.o": "383d53006120bac7575924365837758dfadd45a0aee5f66c5965404c94d55918",
+    "candidate/prepared.o": "0f049b0953b7f30964072d51791e14e6a6c3116817c77d86f177f7a5229cc142",
+    "candidate/complete-graphs.json": "92e90e36f7f2148d44fabf7fe0a01b9f3ab548cc30099ed9dca6492d6a9ba107",
+    "candidate/metadata.json": "ea24715ae7f724369d6e90f6f223a8ff2f30378eb1f06e02c99d9394d5b7c1eb",
+    "candidate/strict.json": "273281d37d9d493058967eee3d747405caed847bef47d6109c09408bf1967945",
+    "baseline/raw.o": "6eebf72aa4fbaaf2b811b7afc854fbf9a66d4002e4f3e8105d169c309a0b7202",
+    "baseline/prepared.o": "0f2b087c23824b89a91a61840c5eee66eb7029ad4743e547440eeb4d3831119c",
+    "baseline/complete-graphs.json": "1c6622db6a0f698c47788953a29e950937cbfa19939238772f48ef32088ed3c1",
+    "baseline/metadata.json": "ea24715ae7f724369d6e90f6f223a8ff2f30378eb1f06e02c99d9394d5b7c1eb",
+    "baseline/strict.json": "273281d37d9d493058967eee3d747405caed847bef47d6109c09408bf1967945",
+    "scout-predecessor-tasks.json": "ab4e4d53aee22cdc331dbae6bd2843f88cdfc12ba453c928537906a27fde8aa5",
+    "scout-predecessor-findings.json": "54f64cd45da769a5ee42288ca286796f944c07bf838b158459e0ee89813f95c1"
+  },
+  "historical_status": {
+    "classification": "Historical validation on pinned1c1b6279 base; not the current-main proof.",
+    "superseded_by": "notes/experiments/wanwan-current1013.json",
+    "current_base": "5cbff56df6b432c5b861198f968fc9f1c730aa4c",
+    "reason": "Upstream merged PR3793 and changed actual shared headers. Current continuation recompiles and validates the composed Source on that real base."
+  }
+}

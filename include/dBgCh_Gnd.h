@@ -50,7 +50,7 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
      * references to the ROM's existing tables. */
     virtual ~dBgCh_Gnd();
 
-    /* DECLARED, defined out of line in src/engine/collision/dBgCh_Gnd.cpp
+    /* DECLARED, defined out of line in src/engine/collision/d_bg_ch_gnd.cpp
      * as real C++ -- complete-object context for every ROM caller, hence C1.
      * The ROM kept no C2 sibling: nothing derives from dBgCh_Gnd.
      */
@@ -72,6 +72,8 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
     void GetClsnPos(Vector3 &res);
     void SetClsnPos(const Vector3 &pos);
     int DetectClsn();
+    /* Inferred name: query only collider-table slot zero. */
+    int DetectClsnSlot0();
 };
 
 /* Size is the flat span the .c branch spells below AND the stride the ~50
@@ -93,12 +95,7 @@ struct dBgCh_Gnd {
     Fix12i clsnY;           /* 0x044 */
     u8  hasClsn;            /* 0x048 */
     u8  pad_049[0x3];
-    Fix12i mProbeHeight;        /* 0x04c */
-
-#ifdef __cplusplus
-    /* methods */
-    void SetObjAndPos(const Vector3 & vec_, dActor_c * actor_);
-#endif
+    Fix12i mProbeHeight; /* 0x04c */
 };
 
 typedef struct dBgCh_Gnd dBgCh_Gnd;

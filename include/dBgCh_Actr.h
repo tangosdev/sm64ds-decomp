@@ -53,7 +53,7 @@ struct dActor_c;
  *
  * INFERRED, not pinned:
  *   - 0x12c / 0x130 receive Init's two Vector3_16 * parameters (the mangled
- *     name spells P10Vector3_16S5_). 0x12c is mSphereClsn.unk_10c; 0x130 is
+ *     name spells P10Vector3_16S5_). 0x12c is mSphereClsn.mMotionAngPtr; 0x130 is
  *     our own field, since sizeof(dBgCh_SphCrr) is pinned at 0x110. The FIELDS
  *     stay s32: whether they are pointer-typed is a separate question from
  *     what Init stores, and UpdateDiscreteNoLava passes them straight on to
@@ -89,17 +89,21 @@ struct dBgCh_Actr : dBgCh {
        constructions are synthesised, in exactly the ROM's order. Interior
        offsets that used to be spelled on this flat list moved home with
        their bytes: 0x6c was mSphereClsn.disp (+0x4c), 0x90 is
-       mSphereClsn.flags (+0x70), 0x128/0x12c are mSphereClsn.unk_108 /
-       .unk_10c. 0x130 stays ours -- sizeof(dBgCh_SphCrr) is pinned at
+       mSphereClsn.flags (+0x70), 0x128/0x12c are mSphereClsn.mScale /
+       .mMotionAngPtr. 0x130 stays ours -- sizeof(dBgCh_SphCrr) is pinned at
        0x110, so 0x130 falls outside the sub-object (include/dBgCh_SphCrr.h). */
     dBgCh_SphCrr mSphereClsn;   /* 0x020 - spans [0x20,0x130) */
-    s32 unk_130;                /* 0x130 - Init stores its Vector3_16 * arg 5 */
+    s32 mAngPtr; /* 0x130 - Init stores its Vector3_16 * arg 5; dBgW::BeforeClsn's `ang` */
     dBgCh_Lin mRaycastLine;     /* 0x134 - spans [0x134,0x1ac) */
-    u8 pad_1ac[0xc];            /* holder alignment/padding to 0x1b8 */
+    Vector3 mGroundNormal;      /* 0x1ac - func_02037318 copies mSphereClsn.unk_0fc..unk_104 here
+                                   on a grounded frame. That payload is the floor normal with
+                                   the largest y (dBgW_Kc's sphere query hands func_0203794c
+                                   `&sn` when sn.y beats it); func_020371fc snaps only when .y
+                                   is under 0xf20, i.e. on a slope. */
     Fix12i mScale;              /* 0x1b8 - (?) Init sets 0x1000 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* Defined out of line in src/engine/collision/dBgCh_Actr.cpp. Nothing
+    /* Defined out of line in src/engine/collision/d_bg_ch_actr.cpp. Nothing
        derives from this class, so D1 and D0 are the only variants emitted. */
     virtual ~dBgCh_Actr();    /* slots 0 (D1), 1 (D0) */
 
@@ -189,7 +193,7 @@ struct dBgCh_Actr {
     u8  pad_091[0x97];
     s32 mClsnScale;            /* 0x128 */
     s32 unk_12c;            /* 0x12c */
-    s32 unk_130;            /* 0x130 */
+    s32 mAngPtr;            /* 0x130 */
     u8  mRaycastLine;       /* 0x134 */
     u8  pad_135[0x83];
     s32 mScale;            /* 0x1b8 */

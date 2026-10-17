@@ -3,7 +3,7 @@
 ## Target
 
 ov002 `daObjFloatBoard_c` tail. The class's promoted TU
-(`src/actors/daObjFloatBoard_c.cpp`, manifest `ov002/daObjFloatBoard_c`)
+(`src/game/actors/d_a_obj_float_board.cpp`, manifest `ov002/daObjFloatBoard_c`)
 licensed 0x020b5ab4..0x020b5e58; the next three functions in the overlay
 were scattered shards owned by the same class:
 
@@ -25,7 +25,7 @@ the licensed span is now 0x020b5ab4..0x020b5fd8.
 
 ## What landed
 
-- `src/actors/daObjFloatBoard_c.cpp`: the three shards folded in as
+- `src/game/actors/d_a_obj_float_board.cpp`: the three shards folded in as
   `daObjFloatBoard_c::func_ov002_020b5e58(daObjFloatBoard_c_Resources *)`,
   `daObjFloatBoard_c::func_ov002_020b5f9c(dActor_c *)`, and free
   `extern "C" func_ov002_020b5fc4` (its address is stored as a raw

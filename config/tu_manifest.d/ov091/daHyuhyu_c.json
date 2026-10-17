@@ -919,17 +919,17 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@561",
+      "from": "@569",
       "to": "@547",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@562",
+      "from": "@570",
       "to": "@545",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@563",
+      "from": "@571",
       "to": "@549",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

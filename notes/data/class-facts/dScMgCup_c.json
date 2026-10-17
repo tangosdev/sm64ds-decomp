@@ -121,8 +121,8 @@
     {"slot": 9,  "address": "0x020e0068", "size": "0x19c", "name": "Render", "symbol": "_ZN10dScMgCup_c6RenderEv"},
     {"slot": 16, "address": "0x020de988", "size": "0x094", "name": "~dScMgCup_c [D1, complete-object]", "symbol": "_ZN10dScMgCup_cD1Ev"},
     {"slot": 17, "address": "0x020dea1c", "size": "0x0a8", "name": "~dScMgCup_c [D0, deleting]", "symbol": "_ZN10dScMgCup_cD0Ev"},
-    {"slot": 18, "address": "0x020dfeec", "size": "0x17c", "name": "OnYoshiTryEat", "symbol": "_ZN10dScMgCup_c13OnYoshiTryEatEi"},
-    {"slot": 20, "address": "0x020dfed4", "size": "0x018", "name": "Virtual50", "symbol": "_ZN10dScMgCup_c9Virtual50Ev"}
+    {"slot": 18, "address": "0x020dfeec", "size": "0x17c", "name": "OnYoshiTryEat", "symbol": "_ZN10dScMgCup_c10StartRoundEi"},
+    {"slot": 20, "address": "0x020dfed4", "size": "0x018", "name": "Virtual50", "symbol": "_ZN10dScMgCup_c11OnNewRecordEv"}
   ],
   "override_count": 7,
   "override_evidence": "tools/rtti_extract.py then tools/rtti_vtables.py --own dScMgCup_c, corroborated independently: a scan of every word in the ov006 image for values landing inside this TU's text run 0x020de988..0x020e0638 found exactly one data-word reference for each of the seven, and each of those seven addresses is the slot the tool named (D1 at 0x0213c194 = _ZTV+0x40 = slot 16; D0 0x0213c198 = slot 17; OnYoshiTryEat 0x0213c19c = slot 18; Virtual50 0x0213c1a4 = slot 20; Render 0x0213c178 = slot 9; Behavior 0x0213c16c = slot 6; InitResources 0x0213c154 = slot 0). Slot index is the identity, not the address.",
@@ -148,7 +148,7 @@
       "compared_against": ["config/tu_manifest.d/ov006/dScMgTeresa_c.json", "config/tu_manifest.d/ov006/dScMgBomroom_c.json"],
       "differences": [
         {"field": "status", "cup": "shadow", "siblings": "promoted"},
-        {"field": "source", "cup": "src_tu/minigames/d_s_mg_cup.cpp", "siblings": "src/actors/dScMgTeresa_c.cpp and src/actors/dScMgBomroom_c.cpp", "note": "OUTPUT CONVENTION. Both fresh siblings have source == promoted_source == src/actors/<Class>.cpp. dScMgCup_c still carries the OLD convention in BOTH fields: source in src_tu/, promoted_source pointing at src/minigames/d_s_mg_cup.cpp. Twelve older ov006 promotions use src/minigames/d_s_mg_*.cpp, so the old spelling is not wrong-and-unprecedented, it is simply stale. The writer must retarget promoted_source to src/actors/dScMgCup_c.cpp to match the live convention."},
+        {"field": "source", "cup": "src_tu/minigames/d_s_mg_cup.cpp", "siblings": "src/minigames/d_s_mg_teresa.cpp and src/minigames/d_s_mg_bomroom.cpp", "note": "OUTPUT CONVENTION. Both fresh siblings have source == promoted_source == src/actors/<Class>.cpp. dScMgCup_c still carries the OLD convention in BOTH fields: source in src_tu/, promoted_source pointing at src/minigames/d_s_mg_cup.cpp. Twelve older ov006 promotions use src/minigames/d_s_mg_*.cpp, so the old spelling is not wrong-and-unprecedented, it is simply stale. The writer must retarget promoted_source to src/minigames/d_s_mg_cup.cpp to match the live convention."},
         {"field": "verification.criteria.every_declared_function_bytes_match", "cup": "FAIL", "siblings": "PASS", "note": "THIS is the promotion blocker. Every other criterion is PASS on all three."},
         {"field": "verification.linkcheck", "cup": "absent", "siblings": "present", "note": "Teresa reads result 'scratch-link-verified', Bomroom reads 'link-verified'. linkcheck is stage 4's output and cannot exist before the bytes match, so its absence is a CONSEQUENCE of the byte failure, not a second independent blocker."},
         {"field": "externalized_output", "cup": "key absent", "siblings": "dScMgTeresa_c has `externalized_output: []`; dScMgBomroom_c does not have the key either", "note": "An EMPTY externalized_output is the promotable state. Cup has no key rather than an empty list, which is equivalent-by-absence, and its 13 RTTI/vtable rows sit in `compiler_only_output` with disposition 'deadstrip-data' - the licensed route - not in an externalized_output list. So this class is NOT on the non-promotable externalized route."},
@@ -240,7 +240,7 @@
       {"file": "src/func_ov006_020df28c.c", "maps_to": "_ZN10dScMgCup_c11StateResultEv @0x020df28c", "pragmas": ["opt_strength_reduction off"]},
       {"file": "src/func_ov006_020df3bc.c", "maps_to": "_ZN10dScMgCup_c11StateSelectEv @0x020df3bc", "pragmas": ["opt_common_subs off", "opt_strength_reduction off"]},
       {"file": "src/func_ov006_020df5b8.c", "maps_to": "_ZN10dScMgCup_c12StateShuffleEv @0x020df5b8 (the unmatched one)", "pragmas": ["opt_common_subs off"]},
-      {"file": "src/_ZN10dScMgCup_c13OnYoshiTryEatEi.cpp", "maps_to": "_ZN10dScMgCup_c13OnYoshiTryEatEi @0x020dfeec", "pragmas": ["opt_strength_reduction off", "opt_common_subs off"]},
+      {"file": "src/_ZN10dScMgCup_c13OnYoshiTryEatEi.cpp", "maps_to": "_ZN10dScMgCup_c10StartRoundEi @0x020dfeec", "pragmas": ["opt_strength_reduction off", "opt_common_subs off"]},
       {"file": "src/_ZN10dScMgCup_c8BehaviorEv.cpp", "maps_to": "_ZN10dScMgCup_c8BehaviorEv @0x020e0204", "pragmas": ["opt_strength_reduction off"]}
     ],
     "load_bearing": "NOT ASSESSED. Whether any of these seven is load-bearing is a control the writer runs, not a fact a scout can read. Note only that both families are file-global in mwccarm, which is why the existing reconstruction brackets each with #pragma push / #pragma pop; the existing src_tu file already does this at lines 599-636, 642-694, 713-880, 982-1039 and 1127-1151."
@@ -305,7 +305,7 @@
     {"offset": "0x53e8", "name": null, "type": "array[3] of 8 bytes (0x18 bytes total)", "proven": true, "evidence": "classInit: literal 0x000053e8 at 0x020e062c, `add r0, r4, r0`, `mov r1, #3` (count), `mov r2, #8` (element size), `ldr r3,[pc]` -> 0x0203d738, `str r1,[sp]` with r1 = 0x0203d47c, then `bl #0x20733a8`. Element ctor 0x0203d47c and dtor 0x0203d738 both live outside ov006. The manifest's boundary_evidence names this member too."},
     {"offset": "0x5400", "name": null, "proven": true, "type": "sub-object, at least 0x60 bytes (fields observed to +0x5e)", "evidence": "StateShuffle repeatedly computes `add rN, r4, #0x5400` and addresses fields off it. src_tu line 788 already models this as `char *state = c + 0x5400;`."},
     {"offset": "0x5408", "name": null, "type": "int", "proven": true, "evidence": "src_tu line 534 writes `*(int*)(a + 0x5408)`; the shard it came from is a byte-matched function."},
-    {"offset": "0x5430", "name": null, "type": "int", "proven": true, "evidence": "src_tu line 530 indexes data_ov006_0213c0a8 by `*(int*)(a + 0x5430)`; that shard byte-matches."},
+    {"offset": "0x5430", "name": null, "type": "int", "proven": true, "evidence": "src_tu line 530 indexes sCupHomePositions by `*(int*)(a + 0x5430)`; that shard byte-matches."},
     {"offset": "0x5458", "name": null, "type": "int", "proven": true, "evidence": "StateShuffle reads and writes `*(int*)(c + 0x5458)` as the first and last argument of func_02012468."},
     {"offset": "0x545c", "name": null, "type": "u16", "proven": true, "evidence": "ROM `ldrh rN, [rBase, #0x5c]` / `strh rN, [rBase, #0x5c]` off a base of this+0x5400, at 0x020df900, 0x020df9f8 and 0x020dfa08. Half-word, read and written, incremented by 0x8000 - an angle accumulator by shape, though the name is unproven."},
     {"offset": "0x545e", "name": null, "type": "s16", "proven": true, "evidence": "ROM `ldrsh r1, [rBase, #0x5e]` at 0x020df9c0 (SIGNED load, so the field is signed) and `strh r1, [rBase, #0x5e]` at 0x020df9f4 storing a negated value. Signed half-word, read and written."}
@@ -334,14 +334,14 @@
   "output_convention": {
     "live": "src/actors/<Class>.cpp",
     "evidence": "The two freshest ov006 promotions, dScMgTeresa_c and dScMgBomroom_c, both have source == promoted_source == src/actors/<Class>.cpp. Twelve older ov006 promotions use src/minigames/d_s_mg_*.cpp.",
-    "instruction": "The writer should target src/actors/dScMgCup_c.cpp and update BOTH `source` and `promoted_source` in the manifest. The current manifest's `promoted_source: src/minigames/d_s_mg_cup.cpp` is the stale convention.",
+    "instruction": "The writer should target src/minigames/d_s_mg_cup.cpp and update BOTH `source` and `promoted_source` in the manifest. The current manifest's `promoted_source: src/minigames/d_s_mg_cup.cpp` is the stale convention.",
     "derived_on": "773526f43"
   },
 
   "what_the_writer_should_do": [
     "This is NOT a gathering job. The gathering is done - 32 functions are already merged into src_tu/minigames/d_s_mg_cup.cpp and 31 byte-match. This is a one-function matching job.",
     "Work the StateShuffle diff at the source level, starting from the `char *state = c + 0x5400;` local at line 788 and the already-proven `(long long)(int)` launder idiom at line 730. Do not spend another round on opt_common_subs - it is already on and already ineffective here.",
-    "Retarget the output to src/actors/dScMgCup_c.cpp in both manifest fields.",
+    "Retarget the output to src/minigames/d_s_mg_cup.cpp in both manifest fields.",
     "Keep `data: []` / `bss: []`. Do not try to own the vtable.",
     "Do not touch notes/data/c-cpp-classification.tsv line 4460 by hand, even though it is wrong."
   ],

@@ -1,8 +1,8 @@
 {
   "id": "ov102/daObjSimpleBg_c",
   "module": "ov102",
-  "source": "src/actors/daObjSimpleBg_c.cpp",
-  "promoted_source": "src/actors/daObjSimpleBg_c.cpp",
+  "source": "src/game/actors/d_a_obj_simple_bg.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_simple_bg.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x2148a80..0x2148e9c, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjSimpleBg_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "fold-ov091-ov102-0929: the 6 classInit registry factories abut this TU's own range with no gap (src/d_a_obj_simple_bg_ki_iwa.c ended exactly at 0x02148fbc, where src/actors/daObjHatenaBlock_c.cpp -- a different class, the classInit-fold precedent, already folded -- begins) and no hole; tu_map never attributed them because it cuts on symbol name"
+    "fold-ov091-ov102-0929: the 6 classInit registry factories abut this TU's own range with no gap (src/d_a_obj_simple_bg_ki_iwa.c ended exactly at 0x02148fbc, where src/game/actors/d_a_obj_hatena_block.cpp -- a different class, the classInit-fold precedent, already folded -- begins) and no hole; tu_map never attributed them because it cuts on symbol name"
   ],
   "sections": [
     {
@@ -123,88 +123,88 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov102_0214e6e0",
+      "symbol": "gBkTowerCollisionFile",
       "address": "0x0214e6e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e6e8",
+      "symbol": "gKiHasiraDaiModelFile",
       "address": "0x0214e6e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e6f0",
+      "symbol": "gKiHasiraDaiCollisionFile",
       "address": "0x0214e6f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e6f8",
+      "symbol": "gObjDokanCollisionFile",
       "address": "0x0214e6f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e700",
+      "symbol": "gBkTowerModelFile",
       "address": "0x0214e700",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e708",
+      "symbol": "gMcDodaiCollisionFile",
       "address": "0x0214e708",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e710",
+      "symbol": "gKiIwaModelFile",
       "address": "0x0214e710",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e718",
+      "symbol": "gdaObjSimpleBgObjDokanModelFile",
       "address": "0x0214e718",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e720",
+      "symbol": "gMcHazadModelFile",
       "address": "0x0214e720",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e728",
+      "symbol": "gMcHazadCollisionFile",
       "address": "0x0214e728",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e730",
+      "symbol": "gMcDodaiModelFile",
       "address": "0x0214e730",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
-      "symbol": "data_ov102_0214e738",
+      "symbol": "gKiIwaCollisionFile",
       "address": "0x0214e738",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_simple_bg.cpp"
     },
     {
       "symbol": "@888",
@@ -294,8 +294,8 @@
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "fold branch tu/fold-highov-0921: 6/6 MATCH, objisolate clean, reloc-destinations clean -> text-verified. 12 UNLICENSED OUTPUT symbols (1 .text: _ZN15daObjSimpleBg_cD2Ev; 11 .data: the _ZTV/_ZTI/_ZTS group for daObjSimpleBg_c and its ancestor chain). Key-function TU, .data RTTI emission expected; .data licensing NOT attempted here. Hand fixes over tubuild create: (1) removed the duplicate D0 destructor body; (2) data_ov102_0214e188 and data_ov102_0214e18c were declared twice ('char[]' then 'void*[]'); kept the FIRST char[] spelling and deleted the later duplicates - the CleanupResources use sites do char arithmetic (data + n*0xc), which void*[] would have scaled 4x wrong, and every other use already casts to (char *) explicitly, so no use site needed changing. Byte-neutral.",
-    "fold-ov091-ov102-0929: folded the 6 daObjSimpleBg_c_classInit_* registry factories (0x02148e9c..0x02148fbc) into this already-promoted TU, widening the complete delinks.txt claim from 0x02148a80..0x02148e9c to 0x02148a80..0x02148fbc. Each loose one-function source called _ZN7fBase_cnwEj(800) + _ZN10dBgActor_cC2Ev(p) + a manual vtable store; every one is exactly `new daObjSimpleBg_c()` (no user-declared constructor, no member needing non-trivial init), which reproduces the same bytes with zero mangled calls. Source order: this TU keeps '#pragma defer_codegen off', so emission follows source order (ROM-ascending) rather than the reverse-source-order default that daObjHatenaBlock_c.cpp (the next class, immediately downstream at 0x02148fbc, already folded) uses -- the 6 factories therefore append after InitResources in ROM order (MC_HAZAD, MC_DODAI, DOKAN, BK_TOWER, KI_HASIRA_DAI, KI_IWA), not at the top of the file in reverse order the way that precedent's classInit block sits. No other source change. Historical aliases and per-profile provenance (RopeBarrier_Spawn/MC_HAZAD, CgStairs_Spawn/MC_DODAI, WarpPipe_Spawn/DOKAN, FortressTower_Spawn/BK_TOWER, RockTriangle_Spawn/KI_HASIRA_DAI, StaticRock_Spawn/KI_IWA) moved from the retired loose files into the TU's own header comment; attribution.json gained one path#symbol override per retired file, crediting the same author the file already carried. `tubuild.py verify` reports 12/12 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED (adding one new compiler_only_output deadstrip entry, _ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/actors/daObjHatenaBlock_c.cpp already documents and licenses, and the same byproduct fold-ov091-ov102-0929's sibling fold on daObjSimpleLift_c/ov091 also licensed). `tubuild.py linkcheck` refuses at [4/8] with 'intact production requires one .text claim and at least one non-text claim' -- this is NOT specific to this change: the identical refusal, with the identical message, reproduces against the unmodified, already-landed src/actors/daObjHatenaBlock_c.cpp control in this same worktree (also a text-only intact TU with no owned non-text claim, all RTTI externalized), and against ov091/daObjSimpleLift_c's own fold in the sibling class of this same task. tu_production.prepare_intact_object requires >=1 non-text manifest section claim for any TU carrying compiler_only_output, which this shape structurally cannot supply. `tubuild.py linkcheck --baseline` (the no-substitution control) passes clean. Full-ROM proof instead comes from `rombuild.py -j6` in the ordinary gate list.",
-    "Folded __sinit_ov102_0214d714 into this TU. mwcc emits __sinit_daObjSimpleBg_c.cpp for the six model handles (func_02017acc) and six collision handles (func_02017b4c). Registration nodes that clashed on origin/main were renamed @545->@953, @546->@896, @547->@892, @548->@888, @549->@883, @550->@879, @552->@868, @554->@864, @556->@859. @551, @596 and @595 were already unique. The handwritten src/unnamed/ov102/__sinit_ov102_0214d714.c is retired.",
+    "fold-ov091-ov102-0929: folded the 6 daObjSimpleBg_c_classInit_* registry factories (0x02148e9c..0x02148fbc) into this already-promoted TU, widening the complete delinks.txt claim from 0x02148a80..0x02148e9c to 0x02148a80..0x02148fbc. Each loose one-function source called _ZN7fBase_cnwEj(800) + _ZN10dBgActor_cC2Ev(p) + a manual vtable store; every one is exactly `new daObjSimpleBg_c()` (no user-declared constructor, no member needing non-trivial init), which reproduces the same bytes with zero mangled calls. Source order: this TU keeps '#pragma defer_codegen off', so emission follows source order (ROM-ascending) rather than the reverse-source-order default that d_a_obj_hatena_block.cpp (the next class, immediately downstream at 0x02148fbc, already folded) uses -- the 6 factories therefore append after InitResources in ROM order (MC_HAZAD, MC_DODAI, DOKAN, BK_TOWER, KI_HASIRA_DAI, KI_IWA), not at the top of the file in reverse order the way that precedent's classInit block sits. No other source change. Historical aliases and per-profile provenance (RopeBarrier_Spawn/MC_HAZAD, CgStairs_Spawn/MC_DODAI, WarpPipe_Spawn/DOKAN, FortressTower_Spawn/BK_TOWER, RockTriangle_Spawn/KI_HASIRA_DAI, StaticRock_Spawn/KI_IWA) moved from the retired loose files into the TU's own header comment; attribution.json gained one path#symbol override per retired file, crediting the same author the file already carried. `tubuild.py verify` reports 12/12 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED (adding one new compiler_only_output deadstrip entry, _ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/game/actors/d_a_obj_hatena_block.cpp already documents and licenses, and the same byproduct fold-ov091-ov102-0929's sibling fold on daObjSimpleLift_c/ov091 also licensed). `tubuild.py linkcheck` refuses at [4/8] with 'intact production requires one .text claim and at least one non-text claim' -- this is NOT specific to this change: the identical refusal, with the identical message, reproduces against the unmodified, already-landed src/game/actors/d_a_obj_hatena_block.cpp control in this same worktree (also a text-only intact TU with no owned non-text claim, all RTTI externalized), and against ov091/daObjSimpleLift_c's own fold in the sibling class of this same task. tu_production.prepare_intact_object requires >=1 non-text manifest section claim for any TU carrying compiler_only_output, which this shape structurally cannot supply. `tubuild.py linkcheck --baseline` (the no-substitution control) passes clean. Full-ROM proof instead comes from `rombuild.py -j6` in the ordinary gate list.",
+    "Folded __sinit_ov102_0214d714 into this TU. mwcc emits __sinit_d_a_obj_simple_bg.cpp for the six model handles (func_02017acc) and six collision handles (func_02017b4c). Registration nodes that clashed on origin/main were renamed @545->@953, @546->@896, @547->@892, @548->@888, @549->@883, @550->@879, @552->@868, @554->@864, @556->@859. @551, @596 and @595 were already unique. The handwritten src/unnamed/ov102/__sinit_ov102_0214d714.c is retired.",
     "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical."
   ],
   "compiler_only_output": [
@@ -384,7 +384,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "fold-ov091-ov102-0929: each classInit factory's `new daObjSimpleBg_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct documented in src/actors/daObjHatenaBlock_c.cpp and licensed identically by this task's sibling fold on ov091/daObjSimpleLift_c). No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
+      "reason": "fold-ov091-ov102-0929: each classInit factory's `new daObjSimpleBg_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct documented in src/game/actors/d_a_obj_hatena_block.cpp and licensed identically by this task's sibling fold on ov091/daObjSimpleLift_c). No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
     }
   ],
   "verification": {
@@ -719,7 +719,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjSimpleBg_c.cpp",
+      "symbol": "__sinit_d_a_obj_simple_bg.cpp",
       "address": "0x0214d714",
       "size": "0x1f4",
       "binding": "STB_GLOBAL",
@@ -728,11 +728,11 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjSimpleBg_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_simple_bg.cpp",
       "address": "0x0214e0a0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "ctor-table word pointing at __sinit_daObjSimpleBg_c.cpp"
+      "evidence": "ctor-table word pointing at __sinit_d_a_obj_simple_bg.cpp"
     }
   ],
   "undefined_symbol_aliases": [
@@ -774,75 +774,75 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@559",
+      "from": "@563",
       "to": "@953",
       "evidence": "mwcc numbers this registration node @545 per TU and another module already defines @545"
     },
     {
-      "from": "@560",
+      "from": "@564",
       "to": "@896",
       "evidence": "mwcc numbers this registration node @546 per TU and another module already defines @546"
     },
     {
-      "from": "@561",
+      "from": "@565",
       "to": "@892",
       "evidence": "mwcc numbers this registration node @547 per TU and another module already defines @547"
     },
     {
-      "from": "@562",
+      "from": "@566",
       "to": "@888",
       "evidence": "mwcc numbers this registration node @548 per TU and another module already defines @548"
     },
     {
-      "from": "@563",
+      "from": "@567",
       "to": "@883",
       "evidence": "mwcc numbers this registration node @549 per TU and another module already defines @549"
     },
     {
-      "from": "@564",
+      "from": "@568",
       "to": "@879",
       "evidence": "mwcc numbers this registration node @550 per TU and another module already defines @550"
     },
     {
-      "from": "@566",
+      "from": "@570",
       "to": "@868",
       "evidence": "mwcc numbers this registration node @552 per TU and another module already defines @552"
     },
     {
-      "from": "@568",
+      "from": "@572",
       "to": "@864",
       "evidence": "mwcc numbers this registration node @554 per TU and another module already defines @554"
     },
     {
-      "from": "@570",
+      "from": "@574",
       "to": "@859",
       "evidence": "mwcc numbers this registration node @556 per TU and another module already defines @556"
     },
     {
-      "from": "@567",
+      "from": "@571",
       "to": "@596",
       "evidence": "batch-5 atdup: @553 collides cross-module (temps are fleet-global); renumber to unused same-length @596"
     },
     {
-      "from": "@569",
+      "from": "@573",
       "to": "@595",
       "evidence": "batch-5 atdup: @555 collides cross-module (temps are fleet-global); renumber to unused same-length @595"
     },
     {
-      "from": "@565",
+      "from": "@569",
       "to": "@551",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @565 now; licensed under the existing pin @551"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @569 now; licensed under the existing pin @551"
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjSimpleBg_c.cpp",
+      "symbol": "__sinit_d_a_obj_simple_bg.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global at this address"
     },
     {
-      "symbol": ".p__sinit_daObjSimpleBg_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_simple_bg.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally"
@@ -1166,7 +1166,7 @@
       "source": "0x0214d878",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e710",
+      "symbol": "gKiIwaModelFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e710"
@@ -1196,7 +1196,7 @@
       "source": "0x0214d888",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e6e8",
+      "symbol": "gKiHasiraDaiModelFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e6e8"
@@ -1216,7 +1216,7 @@
       "source": "0x0214d894",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e700",
+      "symbol": "gBkTowerModelFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e700"
@@ -1236,7 +1236,7 @@
       "source": "0x0214d8a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e718",
+      "symbol": "gdaObjSimpleBgObjDokanModelFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e718"
@@ -1256,7 +1256,7 @@
       "source": "0x0214d8ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e730",
+      "symbol": "gMcDodaiModelFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e730"
@@ -1276,7 +1276,7 @@
       "source": "0x0214d8b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e720",
+      "symbol": "gMcHazadModelFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e720"
@@ -1296,7 +1296,7 @@
       "source": "0x0214d8c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e738",
+      "symbol": "gKiIwaCollisionFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e738"
@@ -1326,7 +1326,7 @@
       "source": "0x0214d8d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e6f0",
+      "symbol": "gKiHasiraDaiCollisionFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e6f0"
@@ -1346,7 +1346,7 @@
       "source": "0x0214d8dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e6e0",
+      "symbol": "gBkTowerCollisionFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e6e0"
@@ -1366,7 +1366,7 @@
       "source": "0x0214d8e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e6f8",
+      "symbol": "gObjDokanCollisionFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e6f8"
@@ -1386,7 +1386,7 @@
       "source": "0x0214d8f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e708",
+      "symbol": "gMcDodaiCollisionFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e708"
@@ -1406,7 +1406,7 @@
       "source": "0x0214d900",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov102_0214e728",
+      "symbol": "gMcHazadCollisionFile",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e728"
@@ -1426,7 +1426,7 @@
       "source": "0x0214e0a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjSimpleBg_c.cpp",
+      "symbol": "__sinit_d_a_obj_simple_bg.cpp",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214d714"

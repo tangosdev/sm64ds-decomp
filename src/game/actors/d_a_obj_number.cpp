@@ -22,15 +22,12 @@
  *   consumes the four handles; overlay .bss owns them. symbols.txt has
  *   no recovered name, so they are not coined.
  * - NumberPos: a local Vector3 would emit vague-linkage ~Vector3.
- * - Behavior rematerializes mVertSpeed/mPosY/mState through (char *)
- *   casts; the named `+=` / `++` form shrinks the body 0x174 -> 0x144.
  * - volatile mPosY / pos.z: a plain field read CSE's with the add/store
  *   above it (Particle::System::NewSimple and FromTranslation).
- * - owner+0x5c: FindWithID result overlaid as NumberPos; dActor_c has
- *   no Pos() in this tree.
- * - POWER_STAR (0xb2) +0x43c / +0x496: Render walks stars while
- *   data_0209b454 bit 0x4000000 is set. daStar_c.h has unk_43c; 0x496
- *   sits in that class's pad. This leaf does not name those fields.
+ * - The owner's position is read through a NumberPos overlay of its
+ *   mPosX/Y/Z; reading the three fields directly DIFFs Behavior.
+ * - Render's star walk keeps the `for (;;)` with a break: a `while`
+ *   on the FindWithActorID result DIFFs.
  * - func_ov002_020f0918 keeps its func_ name: not a vtable slot, and
  *   the only caller is arm9 dActor_c::SpawnNumber.
  * - Matrix4x3_FromTranslation stays the C helper (no class method).
@@ -38,6 +35,7 @@
  */
 
 #include "daObjNumber_c.h"
+#include "daStar_c.h"
 #include "SharedFilePtr.h"
 
 /* POD view used only to preserve the three-word position ABI without
@@ -143,26 +141,24 @@ s32 daObjNumber_c::Behavior()
     if (mDelay != 0)
         return 1;
 
-    /* Address rematerialization: `mVertSpeed += mVertAccel` / `mPosY +=`
-       / `mState++` shrink the body 0x174 -> 0x144. */
-    *(int *)((int)((char *)&mVertSpeed)) += mVertAccel;
+    mVertSpeed += mVertAccel;
     if (mVertSpeed < mTerminalVelocity)
         mVertSpeed = mTerminalVelocity;
-    *(int *)((int)((char *)&mPosY)) += mVertSpeed;
+    mPosY += mVertSpeed;
 
     switch (mState) {
     case 0:
         if (mPosY < mStartPosY) {
             mPosY = mStartPosY;
             mVertSpeed = 0xf000;
-            (*(u8 *)((int)((char *)&mState)))++;
+            mState++;
         }
         break;
     case 1:
         if (mPosY < mStartPosY) {
             /* volatile mPosY: a plain field read CSE's with the add above. */
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-                0xd2, mPosX, *(volatile int *)((char *)&mPosY), mPosZ);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, *(volatile int *)&mPosY,
+                                                           mPosZ);
             MarkForDestruction();
         }
         break;
@@ -174,9 +170,9 @@ s32 daObjNumber_c::Behavior()
     if (mOwnerUniqueID != 0) {
         dActor_c *other = FindWithID(mOwnerUniqueID);
         if (other != 0) {
-            /* owner+0x5c: dActor_c has no Pos() in this tree. NumberPos
-               overlay of mPosX/Y/Z; a Vector3 would emit ~Vector3. */
-            NumberPos *op = (NumberPos *)((int)((char *)other + 0x5c));
+            /* NumberPos overlay of the owner's mPosX/Y/Z; a Vector3
+               would emit ~Vector3. */
+            NumberPos *op = (NumberPos *)&other->mPosX;
             s32 oy;
             pos.x = op->x;
             pos.y = oy = op->y;
@@ -185,9 +181,8 @@ s32 daObjNumber_c::Behavior()
         }
     }
     /* volatile pos.z: a plain `pos.z >> 3` CSE's with the stores above. */
-    Matrix4x3_FromTranslation(
-        (void *)((char *)&mModel.mat4x3),
-        pos.x >> 3, pos.y >> 3, (*(volatile int *)&pos.z) >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3,
+                              (*(volatile int *)&pos.z) >> 3);
     return 1;
 }
 
@@ -196,14 +191,15 @@ s32 daObjNumber_c::Behavior()
 // @symbol _ZN13daObjNumber_c6RenderEv
 s32 daObjNumber_c::Render()
 {
+    /* While data_0209b454 bit 0x4000000 is set, a power star (0xb2) of
+       kind 6 at camera step 0x64 removes the popup. */
     if (data_0209b454 & 0x4000000) {
-        dActor_c *a = 0;
+        daStar_c *a = 0;
         u32 id = 0xb2;
         for (;;) {
-            if ((a = FindWithActorID(id, a)) == 0)
+            if ((a = (daStar_c *)FindWithActorID(id, a)) == 0)
                 break;
-            if (*(int *)((char *)a + 0x43c) == 6
-                && *(u16 *)((char *)a + 0x496) == 0x64) {
+            if (a->mKind == daStar_c::KIND_6 && a->mCamSeq == 0x64) {
                 MarkForDestruction();
                 return 1;
             }

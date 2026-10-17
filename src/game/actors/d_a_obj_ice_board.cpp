@@ -20,6 +20,12 @@
 //   shard's data_ov018_* labels for the same addresses are dropped from
 //   symbols.txt with their decl_common.h lines.
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_ice_board_AssetId {
+    ASSET_OBJ_ICE_BOARD_BMD = 0x0472,
+    ASSET_OBJ_ICE_BOARD_KCL = 0x0473
+};
+
 #include "daObjIceBoard_c.h"
 #include "Player.h"
 #include "Sound.h"
@@ -151,13 +157,10 @@ void daObjIceBoard_c::OnGroundPounded(dActor_c &other)
  * all, rather than loading the triple once into callee-saved registers.
  * Hoisting them into locals is one instruction shorter per call and does not
  * reproduce; naming the fields at each call site is what asks for the loads
- * the cartridge has.
- *
- * mCamSpacePos is read as a Vector3 through its first member, which is how
- * the rest of the tree spells that triple. */
+ * the cartridge has. */
 void daObjIceBoard_c::Kill()
 {
-    Sound::PlayBank3(0x41, *(Vector3 *)&mCamSpacePosX);
+    Sound::PlayBank3(0x41, mCamSpacePos);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x74, mPosX, mPosY, mPosZ);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x75, mPosX, mPosY, mPosZ);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x76, mPosX, mPosY, mPosZ);
@@ -196,5 +199,5 @@ void daObjIceBoard_c::OnHitByMegaChar(Player &player)
 
 /* Static-init globals (was the handwritten __sinit_ov018_02112e00 shard).
  * Definition order is the retail initializer construction order. */
-IceBoardModelFile daObjIceBoard_c_ModelFile(0x472);
-IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile(0x473);
+IceBoardModelFile daObjIceBoard_c_ModelFile(ASSET_OBJ_ICE_BOARD_BMD);
+IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile(ASSET_OBJ_ICE_BOARD_KCL);

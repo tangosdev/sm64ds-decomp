@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "issue": 2410,
+  "status": "production validated; exact-head independent Source and private CI pending",
+  "base_commit": "5fd54e39d307634d1580330ca5984163ff8c0906",
+  "source_preview": "C:\\tmp\\sm64ds-clipper-scalar1015\\build\\clipper-sphere-preview",
+  "preview_handoff_sha256": "1184c241f1dd67f30b18dc376a5d0137d73398a0418291a9c91c085d4bfa16fd",
+  "canonical_rename": {
+    "_ZN8dClipper13Func_020150E8ER7Vector35Fix12IiEPh": "_ZN8dClipper10ClipSphereER7Vector3iPh"
+  },
+  "method_size": 1144,
+  "name_provenance": "inferred from observed sphere/frustum tests; not recovered name",
+  "private_preview": {
+    "strict_checks_per_control_candidate": 342,
+    "complete_tus": 9,
+    "blind": 0,
+    "diffs": [],
+    "compiler_local_name_shifts": 0,
+    "canonical_rename_only": true
+  },
+  "ownership": {
+    "Actor_source": "Exact owner-frozen ce5f7b55e275f335dbb223fcaca6f905297a14e9 adopted without manual source edits",
+    "actual_Actor_producer": "codex-yegg-native-three-method-astra-producer1014",
+    "no_Actor_header_change": true,
+    "Actor_manifest_unchanged": true,
+    "owner_bounded_independent_handoff_sha256": "36d4adae612020646f882f5eed2c58e5bcfd5c468a25e0ee72f669a448c934d1",
+    "owner_bounded_independent_report_sha256": "9066fb1cd22dd4debb1b5f233238be97adcc2cb26209b6fcb1409f95a8eee8c0"
+  },
+  "current_main_preimage_evidence": {
+    "composition": "fe7f1868ec5714db783c0e1081a1a9a05df49a46",
+    "main": "d6edd59a6a476acfdf8325980be709d129313923",
+    "all10_preimages_literal": true,
+    "current_stack_ROM_report_sha256": "c52ae8cf69b3ec853613ac8e0bd8ec3cec8b947f6bc137c80055c70e8aee3861"
+  },
+  "debt_retained": [
+    "Actor scalar camera-position Vector3 view",
+    "Shared Matrix4x3 representation debt",
+    "ClipSphere arithmetic/casts/goto and propagation pragma",
+    "Other Monkey scalar APIs, shared asset lifecycles and native initializer/data ownership"
+  ],
+  "production_acceptance": {
+    "ROM": {
+      "head": "ef6e84604b58032b5ab07156dc8858014b8a7ab0",
+      "report_sha256": "47003a44e8cad6b64596e24e9cdcb8ad21784c912a5cad0688509fb2bcb28151",
+      "modules_exact": 106,
+      "modules_checked": 106,
+      "functions_reproduced": 11334,
+      "source_functions": 11334,
+      "owned_data_reproduced": 334,
+      "owned_data_claims": 334,
+      "bss_claims": 241,
+      "bss_bytes": 30644,
+      "stable_tracked_inputs": 4398,
+      "new_symbol_errors": [],
+      "storage_alias_errors": []
+    },
+    "strict_production": {
+      "complete_tus": 9,
+      "checks": 342,
+      "blind": 0,
+      "diffs": [],
+      "report_sha256": "189ff784ab01a879de1147e122bbcadb51368c6e275136c7709b8863f6bd8c04",
+      "intact_preparation_only": [
+        "src/game/actors/d_a_bg_snm_bdy.cpp",
+        "src/game/stages/d_ent_obj.cpp"
+      ]
+    },
+    "generic_expanded": {
+      "files": 9,
+      "functions": 333,
+      "verified": 332,
+      "warnings": 1,
+      "warning": "Known dEntObj initializer BLIND-47 in generic partition; actual production-prepared initializer strictly verified with zero blind relocations",
+      "blocking": 0
+    },
+    "independent_rebuilds": {
+      "control_and_candidate_checks_per_side": 342,
+      "callee_and_eight_consumer_review_report_sha256": "22f6518d6105ea53412e5875b25c23876da9d7f06e0468d38fd7cfd8bd5ba0c4",
+      "Actor_review_report_sha256": "8a3c23ae4a6eb14fc16e9b8c4526eddf0134dcabf25f21d65ca79c6e80da56c1",
+      "full_ROM_independently_rerun": false
+    },
+    "static_checks": {
+      "source_style_findings": 0,
+      "source_style_deferrals": 0,
+      "new_declaration_disagreements": 0,
+      "new_local_header_copies": 0,
+      "rename_ledger": "passed;3727live rows",
+      "port_references": "passed",
+      "new_dead_references": 0
+    }
+  },
+  "issue_complete": false,
+  "source_freeze": "ef6e84604b58032b5ab07156dc8858014b8a7ab0",
+  "current_main_compatibility": {
+    "main": "3c86630f5dfe821d39f09681fbc032fdefdb798b",
+    "composition": "5b1f3f92f709611233fb84edf7bc398c5b0f30d4",
+    "ROM": {
+      "head": "5b1f3f92f709611233fb84edf7bc398c5b0f30d4",
+      "report_sha256": "d1c53c7a8cdf54c200cb590e3a25e2416990e1b2ef8cc408a4238a3d9afd6ef1",
+      "modules_exact": 106,
+      "modules_checked": 106,
+      "functions_reproduced": 11334,
+      "source_functions": 11334,
+      "owned_data_reproduced": 336,
+      "owned_data_claims": 336,
+      "bss_claims": 243,
+      "bss_bytes": 30916,
+      "stable_tracked_inputs": 4396,
+      "new_symbol_errors": [],
+      "storage_alias_errors": []
+    },
+    "production_checks": 342,
+    "production_report_sha256": "5581358f59a914afe6e9a5da6d48d0311bc24400d3de966b91cc2f7f8f93b771",
+    "Actor_header_isolation": {
+      "consumers": 306,
+      "literal_raw_ELF_identical": 306,
+      "report_sha256": "c27e73945910a62071c57630e4174a262fd964893e24fcb3edfb8e316dfba026",
+      "scope": "Same actual composed source and native Clipper API on both sides; only Actor/Monkey headers replaced by current-main blobs in complete private include tree. Isolates header effect; not complete PR-patch comparison."
+    },
+    "formal_PR_base_acceptance": false
+  },
+  "prior_findings_retained": 42,
+  "compiler_local_name_shifts": 0
+}

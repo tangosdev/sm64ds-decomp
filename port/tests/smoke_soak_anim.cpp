@@ -29,7 +29,7 @@ void _ZN5ModelC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtrC *self);
-void *_ZN4Heap13SetupRootHeapEv(void);
+void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(void *c, void *bca, int frame);
 void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *c);
 extern Matrix4x3 data_0209b3ec;
@@ -129,7 +129,7 @@ static const char *dir_of(const char *p, char *buf)
 int main(int argc, char **argv)
 {
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    if (!_ZN4Heap13SetupRootHeapEv()) { fprintf(stderr, "no heap\n"); return 2; }
+    if (!_ZN5mHeap6Heap_t13SetupRootHeapEv()) { fprintf(stderr, "no heap\n"); return 2; }
     ident_fx(&data_0209b3ec);
 
     char path[512];

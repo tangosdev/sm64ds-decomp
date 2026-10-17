@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 extern int _ZN4cstd3divEii(int,int);
 extern short data_02082214[];
 void func_ov007_020ae454(char* c){
@@ -17,7 +18,7 @@ void func_ov007_020ae454(char* c){
     r = (unsigned short)r;
     int sv = data_02082214[(r>>4)<<1];
     int inv = 0x1000 - r4;
-    int prod = (int)(((long long)sv*inv + 0x800) >> 0xc);
+    int prod = FX_MUL(sv, inv);
     int e = *(short*)(*(int*)((char*)s+0x24) + 4);
     *(int*)((char*)s+0xc) = (e<<0xc) + (prod<<2);
   } else {

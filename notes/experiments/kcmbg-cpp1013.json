@@ -1,0 +1,393 @@
+{
+  "schema": 1,
+  "task_id": "kcmbg-cpp1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3801",
+  "base_commit": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "source_main": "1d76f967993874f77af8de4d744e138eb3084cec",
+  "source_policy": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "producer_sessions": [
+    "codex-kcmbg-adopt-producer1013",
+    "codex-kcmbg-scout1013",
+    "codex-bg-collision-independent1013"
+  ],
+  "predecessor_tasks": [
+    "five-cpp-cleanups-0919"
+  ],
+  "inherited_findings": "All predecessor finding IDs are inherited in the authoritative queue. KcMbg findings FIVE-CPP-0919-02 and -05 remain fixed in this promoted source; unrelated PowerFlower/render findings retain their prior disposition without new changes or broadened review claims.",
+  "change": "Remove the two remaining C-mode regions using C++ with C linkage. Name the genuine 108-byte scratch storage as two matrices plus up vector and call the existing qualified native base SetFile interface. Correct obsolete C-only manifest prose; no production policy changes.",
+  "completion": "partial",
+  "source_git_normalized_sha256": "5047c210cdcd52351612234fba76ef5af69d3e596681f7b4102380870dbbab98",
+  "whole_object": {
+    "raw_equal": true,
+    "ordinary_prepared_equal": true,
+    "raw_sha256": "f6ce9904ecb72b2b06fa8c3975efc0e2f865bebdcf25e05b832e1a92b406f05b",
+    "ordinary_sha256": "1c1a82b38b749334eac3ef34e2c72ae12742ffb645ad94ce59392c1eb1363683",
+    "strict_functions": 21,
+    "differences": 0,
+    "blind": 0,
+    "raw_relocations": 100,
+    "prepared_relocations": 78,
+    "metadata_records": 7,
+    "metadata_bytes": 120,
+    "metadata": [
+      {
+        "symbol": "_ZTV10dBgW_KcMbg",
+        "module": "arm9",
+        "address": "0x209942c",
+        "size": 60,
+        "blind": 0,
+        "full_bytes": "000000001094090270a4030244a40302dca1030220d9ff01c09e0302609e0302b89c0302709903023c9a030238940302309903022499030208990302",
+        "edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTI10dBgW_KcMbg",
+            "addr": 34182160,
+            "add": 0
+          },
+          {
+            "off": 44,
+            "type": 2,
+            "sym": "_ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_",
+            "addr": 33788984,
+            "add": 0
+          },
+          {
+            "off": 20,
+            "type": 2,
+            "sym": "_ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo",
+            "addr": 33544480,
+            "add": 0
+          },
+          {
+            "off": 12,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbgD0Ev",
+            "addr": 33793092,
+            "add": 0
+          },
+          {
+            "off": 56,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg11GetVelocityER7Vector3",
+            "addr": 33790216,
+            "add": 0
+          },
+          {
+            "off": 52,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg14GetAngularVelYEv",
+            "addr": 33790244,
+            "add": 0
+          },
+          {
+            "off": 48,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg12TransformPosERK7Vector3RS0_",
+            "addr": 33790256,
+            "add": 0
+          },
+          {
+            "off": 32,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+            "addr": 33791160,
+            "add": 0
+          },
+          {
+            "off": 36,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin",
+            "addr": 33790320,
+            "add": 0
+          },
+          {
+            "off": 40,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr",
+            "addr": 33790524,
+            "add": 0
+          },
+          {
+            "off": 28,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg17GetTriangleOriginEsR7Vector3",
+            "addr": 33791584,
+            "add": 0
+          },
+          {
+            "off": 24,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg9GetNormalEsR7Vector3",
+            "addr": 33791680,
+            "add": 0
+          },
+          {
+            "off": 16,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbg9Virtual08Ev",
+            "addr": 33792476,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZN10dBgW_KcMbgD1Ev",
+            "addr": 33793136,
+            "add": 0
+          }
+        ]
+      },
+      {
+        "symbol": "_ZTI10dBgW_KcMbg",
+        "module": "arm9",
+        "address": "0x2099410",
+        "size": 12,
+        "blind": 0,
+        "full_bytes": "64a709021c940902c8930902",
+        "edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS10dBgW_KcMbg",
+            "addr": 34182172,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI7dBgW_Kc",
+            "addr": 34182088,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ]
+      },
+      {
+        "symbol": "_ZTS10dBgW_KcMbg",
+        "module": "arm9",
+        "address": "0x209941c",
+        "size": 13,
+        "blind": 0,
+        "full_bytes": "3130644267575f4b634d626700",
+        "edges": []
+      },
+      {
+        "symbol": "_ZTI7dBgW_Kc",
+        "module": "arm9",
+        "address": "0x20993c8",
+        "size": 12,
+        "blind": 0,
+        "full_bytes": "64a70902bc93090278930902",
+        "edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS7dBgW_Kc",
+            "addr": 34182076,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI4dBgW",
+            "addr": 34182008,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ]
+      },
+      {
+        "symbol": "_ZTS7dBgW_Kc",
+        "module": "arm9",
+        "address": "0x20993bc",
+        "size": 9,
+        "blind": 0,
+        "full_bytes": "37644267575f4b6300",
+        "edges": []
+      },
+      {
+        "symbol": "_ZTI4dBgW",
+        "module": "arm9",
+        "address": "0x2099378",
+        "size": 8,
+        "blind": 0,
+        "full_bytes": "74a7090270930902",
+        "edges": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS4dBgW",
+            "addr": 34182000,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi17__class_type_infoE",
+            "addr": 34187124,
+            "add": 0
+          }
+        ]
+      },
+      {
+        "symbol": "_ZTS4dBgW",
+        "module": "arm9",
+        "address": "0x2099370",
+        "size": 6,
+        "blind": 0,
+        "full_bytes": "346442675700",
+        "edges": []
+      }
+    ],
+    "owned_init_data_bss": 0,
+    "temporary_overrides": [],
+    "normal_preparation": "Actual compiler_only_policies and _isolate; text-only intact-object preparation is rejected as expected.",
+    "resolver": "All 21 manifest symbols resolve to the adopted production TU."
+  },
+  "layout": {
+    "compiler": "2004/b56",
+    "probe": "Actual local aggregate declaration lifted into global scope in a private compile only",
+    "measurements": {
+      "sizeof(Scratch)": 108,
+      "(unsigned)&((Scratch*)0)->rotation": 0,
+      "(unsigned)&((Scratch*)0)->scaled": 48,
+      "(unsigned)&((Scratch*)0)->up": 96,
+      "sizeof(Matrix4x3)": 48,
+      "(unsigned)&((Matrix4x3*)0)->t": 36,
+      "sizeof(RawMatrix4x3)": 48,
+      "sizeof(RawVector3)": 12,
+      "(unsigned)&((dBgW_KcMbg*)0)->unk_28": 40,
+      "(unsigned)&((dBgW_KcMbg*)0)->unk_2c": 44,
+      "(unsigned)&((dBgW_KcMbg*)0)->unk_30": 48,
+      "(unsigned)&((dBgW_KcMbg*)0)->mat": 84,
+      "(unsigned)&((dBgW_KcMbg*)0)->unk_130": 304
+    },
+    "host_scope": "No host build claim"
+  },
+  "bounded_source_controls": {
+    "scout_helper_controls": 6,
+    "scout_setfile_controls": 5,
+    "native_matrix_initialization": "Helper grows from 96 to 124 bytes; existing flat copy in actual C++ keeps whole-object identity.",
+    "separate_named_scratch_locals": "SetFile remains 576 bytes but differs in 13 words; one genuine aggregate matches at 576 bytes.",
+    "scope": "Measured alternatives are not a compiler floor or proof of unique original local types."
+  },
+  "remaining": [
+    {
+      "id": "KCMBG-ABI-001",
+      "location": "src/engine/collision/dBgW_KcMbg.cpp:81",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-kcmbg-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3801",
+      "description": "The shared Fix12<int>-by-value SetFile and SetObjAndSphere signatures retain their existing scalar C-linkage boundaries. No native SetFile definition or original ABI typing is claimed."
+    },
+    {
+      "id": "KCMBG-FLATCOPY-002",
+      "location": "src/engine/collision/dBgW_KcMbg.cpp:55",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-kcmbg-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3801",
+      "description": "Existing RawMatrix4x3 and RawVector3 views preserve flat copies. The new Scratch aggregate names actual 48/48/12-byte objects, but does not establish the original local representation or complete native matrix copying."
+    },
+    {
+      "id": "KCMBG-SPLITAXIS-003",
+      "location": "src/engine/collision/dBgW_KcMbg.cpp:129",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-kcmbg-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3801",
+      "description": "Preferred-contact axis remains the documented Vector3 view of base fields at 0x28/0x2c/0x30; the enable byte remains a u8 view of unk_130."
+    },
+    {
+      "id": "KCMBG-HEADERDOC-004",
+      "location": "include/dBgW_KcMbg.h",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-kcmbg-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3801",
+      "description": "Pre-existing shared-header comments about Transform/lifecycle reconstruction need separate reserved cleanup; this local change does not edit or certify those stale statements."
+    }
+  ],
+  "production_gates": {
+    "state": "terminal pass",
+    "tested_commit": "3e67ddab3f9843884b75e200efb4dc0b355b9e99",
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "command": "python tools/rombuild.py -j16 --no-rom",
+    "exit_code": 0,
+    "modules_exact": 106,
+    "modules_total": 106,
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11332,
+      "compiledBytes": 2220756,
+      "sourceFunctions": 11332,
+      "sourceBytes": 2220756,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.22470229318692,
+      "reproducingFunctions": 11332,
+      "reproducingBytes": 2220756,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 331,
+      "sourceBssClaims": 239,
+      "sourceBssBytes": 30164,
+      "reproducingDataClaims": 331,
+      "reproducingDataClaimBytes": 13020,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "new_symbol_errors": 0,
+    "storage_alias_errors": 0,
+    "stock_range": {
+      "command": "python tools/prepush_linkcheck.py --range 1c1b6279ab77cd9ae0da481fccf5959cd30cfe19..3e67ddab3f9843884b75e200efb4dc0b355b9e99",
+      "exit_code": 0,
+      "checked": 21,
+      "verified": 21,
+      "warnings": 0,
+      "blocking": 0
+    },
+    "static_exit_codes": {
+      "langmode": 0,
+      "port": 0,
+      "decl": 0,
+      "diffcheck": 0
+    },
+    "declaration_scope": "110 files; 830 inherited disagreements; zero new disagreements or local header redeclarations.",
+    "port_references": 267,
+    "limits": [
+      "--no-rom compares linked modules; no newly produced final ROM image is claimed.",
+      "Fresh stock control retains inherited dsd symbol-check diagnostics; candidate adds none.",
+      "Advisory ROM-data inventory retains one differing unenrolled record; no complete data reconstruction claim."
+    ],
+    "report_binding": "This final report-only descendant preserves the tested source, include, config, tools and port trees. The immutable offer and independent review identify its exact final commit."
+  },
+  "publication": "Independent exact-head/base Source acceptance required before Root publishes the authorized PR; no merge.",
+  "production_checkpoint": "3e67ddab3f9843884b75e200efb4dc0b355b9e99",
+  "private_artifacts": [
+    "build/kcmbg-adopt1013/whole-proof.json",
+    "build/kcmbg-adopt1013/baseline-graphs.json",
+    "build/kcmbg-adopt1013/candidate-graphs.json",
+    "build/kcmbg-adopt1013/layout.json",
+    "build/kcmbg-adopt1013/rom-report.json",
+    "build/kcmbg-adopt1013/range.log",
+    "build/kcmbg-adopt1013/static-results.json",
+    "build/kcmbg-adopt1013/inherited-findings.json"
+  ]
+}

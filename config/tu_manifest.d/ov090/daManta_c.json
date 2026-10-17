@@ -1,18 +1,18 @@
 {
   "id": "ov090/daManta_c",
   "module": "ov090",
-  "source": "src/actors/daManta_c.cpp",
-  "promoted_source": "src/actors/daManta_c.cpp",
+  "source": "src/game/actors/d_a_manta.cpp",
+  "promoted_source": "src/game/actors/d_a_manta.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x0213269c..0x02132fe8, 12 function(s), all complete delinks with no hole. build/tu_map.json names the same run ov090/daManta_c+daMenbo_c because rtti_vtables.py reads the words at 0x021341e4 and 0x021341ec as extra daMenbo_c vtable slots. Those words are not slots: daMenbo_c's table is 31 slots and ends at 0x021341e4, and both words relocate to _ZN9daManta_c19func_ov090_021327e4Ev and _ZN9daManta_c19func_ov090_02132a58Ev in this run. No daMenbo_c function is in the span.",
     "class label: daManta_c. Cartridge type name at ov090:0x021341f4 is the bytes 9daManta_c.",
-    "daManta_c_classInit at 0x02132fe8..0x02133034 abuts this run and is left in src/d_a_manta.c.",
+    "daManta_c_classInit at 0x02132fe8..0x02133034 abuts the twelve-method run and is owned by this promoted TU, for thirteen functions total. The former standalone src/d_a_manta.c factory has been absorbed.",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, not narrowed to this TU).",
-    "fold-lane-D-0929: the daManta_c_classInit registry factory abuts this TU's own range with no gap (src/d_a_manta.c ended exactly at 0x02133034, the start of src/actors/daPukupuku_c.cpp, a different class) and no hole; tu_map never attributed it because it cuts on symbol name",
-    "the compiler-generated __sinit_daManta_c.cpp is byte-identical to retail __sinit_ov090_02133ea8 (0xa4). It constructs the model handle at 0x02134524 (file 0x39d) and the anim handle at 0x0213452c (file 0x39e), then copies the pointer-to-member descriptors at 0x021341ec and 0x021341e4 into the state record at 0x0213454c. The ctor word at 0x021340c8 points at that initializer."
+    "fold-lane-D-0929: the daManta_c_classInit registry factory abuts this TU's own range with no gap (src/d_a_manta.c ended exactly at 0x02133034, the start of src/game/actors/d_a_pukupuku.cpp, a different class) and no hole; tu_map never attributed it because it cuts on symbol name",
+    "the compiler-generated __sinit_d_a_manta.cpp is byte-identical to retail __sinit_ov090_02133ea8 (0xa4). It constructs the model handle at 0x02134524 (file 0x39d) and the anim handle at 0x0213452c (file 0x39e), then copies the pointer-to-member descriptors at 0x021341ec and 0x021341e4 into the state record at 0x0213454c. The ctor word at 0x021340c8 points at that initializer."
   ],
   "sections": [
     {
@@ -136,7 +136,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daManta_c.cpp",
+      "symbol": "__sinit_d_a_manta.cpp",
       "address": "0x02133ea8",
       "size": "0xa4",
       "binding": "STB_GLOBAL",
@@ -145,7 +145,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daManta_c.cpp",
+      "symbol": ".p__sinit_d_a_manta.cpp",
       "address": "0x021340c8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -242,13 +242,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daManta_c.cpp",
+      "symbol": "__sinit_d_a_manta.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daManta_c.cpp",
+      "symbol": ".p__sinit_d_a_manta.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -414,7 +414,7 @@
       "source": "0x021340c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daManta_c.cpp",
+      "symbol": "__sinit_d_a_manta.cpp",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02133ea8"
@@ -443,7 +443,7 @@
   "notes": [
     "Key function is the out-of-line destructor under #pragma defer_codegen off. Factory is outside the licensed range, so this TU does not instantiate daManta_c.",
     "fold-lane-D-0929: folded the daManta_c_classInit registry factory (0x02132fe8..0x02133034) into this already-promoted TU, widening the complete delinks.txt claim from 0x0213269c..0x02132fe8 to 0x0213269c..0x02133034. The loose one-function source hand-called fBase_c::operator new(1028) + the inherited dEnemyBase_c ctor + this class's vtable store + three member subobjects in field order (dCcAcPos_c, dBgCh_Actr, ModelAnim); daManta_c has no user-declared constructor, so `new daManta_c()` reproduces the identical sequence with zero mangled calls. This TU keeps #pragma defer_codegen off, so emission follows source order (ROM-ascending); the factory appends after InitResources. tools/tubuild.py verify reports 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (the existing _ZN9daManta_cD2Ev deadstrip row, from the out-of-line destructor, already covers the homeless base-object-destructor helper `return new` emits here). Retired: src/d_a_manta.c (credited tangosdev, carried into attribution.json as a path#symbol override).",
-    "The file-scope model handle, anim handle, and state record are defined in this TU. mwcc emits __sinit_daManta_c.cpp, the ctor word, the two anonymous pointer-to-member descriptors, and the two destructor-registration nodes. Class RTTI and the vtable stay externalized. The handwritten src/__sinit_ov090_02133ea8.c is retired.",
+    "The file-scope model handle, anim handle, and state record are defined in this TU. mwcc emits __sinit_d_a_manta.cpp, the ctor word, the two anonymous pointer-to-member descriptors, and the two destructor-registration nodes. Class RTTI and the vtable stay externalized. The handwritten src/__sinit_ov090_02133ea8.c is retired.",
     "Local scratch ROM matched this machine's baseline control. Recorded rom.sha256 is the fleet SHA from the arm9/dBgW.json local-worker note. Module set, symbol inventory, and the owned ranges matched."
   ],
   "verification": {
@@ -787,43 +787,43 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov090",
       "canonical_address": "0x0213420c",
-      "reason": "this class's __si_class_type_info, emitted because the out-of-line destructor is the key function. Homes at ov090:0x0213420c, outside the licensed .text."
+      "reason": "Compiler-emitted class typeinfo is externalized to its canonical ov090:0x0213420c bytes outside the TU-owned code, PMF data, initializer and BSS ranges."
     },
     {
       "symbol": "_ZTS9daManta_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov090",
       "canonical_address": "0x021341f4",
-      "reason": "type-name string. The overlay bytes at 0x021341f4 are 9daManta_c. Text-only; the ROM keeps the string."
+      "reason": "Compiler-emitted type-name string is externalized to its canonical ov090:0x021341f4 bytes. Intact-object ownership includes the initializer and its storage, while metadata remains canonical externalized output."
     },
     {
       "symbol": "_ZTV9daManta_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov090",
       "canonical_address": "0x0213423c",
-      "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Public address point ov090:0x0213423c. g_profile_MANTA sits between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
+      "reason": "Compiler-emitted vtable is externalized to the canonical table with public address point ov090:0x0213423c. The intact-object TU owns its code, initializer, ctor, PMF data and BSS; g_profile_MANTA remains separate."
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "@790",
+      "from": "@789",
       "to": "@766",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured local resource-field reconstruction changes compiler input @790 to @789; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged."
     },
     {
-      "from": "@791",
+      "from": "@790",
       "to": "@767",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured local resource-field reconstruction changes compiler input @791 to @790; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged."
     },
     {
-      "from": "@793",
+      "from": "@792",
       "to": "@769",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured local resource-field reconstruction changes compiler input @793 to @792; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged."
     },
     {
-      "from": "@795",
+      "from": "@794",
       "to": "@771",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured local resource-field reconstruction changes compiler input @795 to @794; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged."
     }
   ]
 }

@@ -10,7 +10,7 @@ extern char *data_ov007_02104ba0;
 extern void func_ov007_020bb4b0(void);
 extern int func_ov007_020c1da0(int);
 extern void func_ov007_020bfe4c(char *, int, int, int, int *);
-extern void func_ov007_020c5a6c(char *, int *, int);
+extern void func_ov007_020c5a6c(void *, int *, int);
 extern int _ZN4cstd3modEii(int, int);
 extern void func_ov007_020bdeb0(int);
 extern void func_ov007_020bbc08(int, int, int);

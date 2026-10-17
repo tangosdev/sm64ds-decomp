@@ -1,8 +1,8 @@
 {
   "id": "ov091/daObjRotateUpdownLift_c",
   "module": "ov091",
-  "source": "src/actors/daObjRotateUpdownLift_c.cpp",
-  "promoted_source": "src/actors/daObjRotateUpdownLift_c.cpp",
+  "source": "src/game/actors/d_a_obj_rotate_updown_lift.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_rotate_updown_lift.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -130,28 +130,28 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov091_02135440",
+      "symbol": "gHsUpdownLiftModelFile",
       "address": "0x02135440",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x61f"
     },
     {
-      "symbol": "data_ov091_02135448",
+      "symbol": "gObjUpdnliftModelFile",
       "address": "0x02135448",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x493"
     },
     {
-      "symbol": "data_ov091_02135450",
+      "symbol": "gObjUpdnliftCollisionFile",
       "address": "0x02135450",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x494"
     },
     {
-      "symbol": "data_ov091_02135458",
+      "symbol": "gHsUpdownLiftCollisionFile",
       "address": "0x02135458",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -196,7 +196,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov091_02131340' differs between the legacy file that used to hold _ZN23daObjRotateUpdownLift_c8BehaviorEv and the one that held _ZN23daObjRotateUpdownLift_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN23daObjRotateUpdownLift_c8BehaviorEv and the one that held _ZN23daObjRotateUpdownLift_c13InitResourcesEv; kept the first, the other is commented out for review",
     "classInit fold (0930c): both factories are folded in last, in ROM order (HS_UPDOWN_LIFT then UPDOWN_LIFT), under the file's `#pragma defer_codegen off`, each as `return new daObjRotateUpdownLift_c();`. Each retired one-function source hand-called fBase_c::operator new(936 = 0x3a8), dBgActor_c's C2 constructor, this class's vtable store and dExtShadowModel_c's C1 constructor at 0x320; daObjRotateUpdownLift_c has no user-declared constructor, so the synthesized one reproduces that sequence. The new-expression makes mwccarm emit _ZN10dBgActor_cD2Ev, licensed as a compiler_only_output deadstrip row. tubuild verify: 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_obj_rotate_updown_lift_hs_updown_lift.c and src/d_a_obj_rotate_updown_lift_updown_lift.c; their credit carries in attribution.json as path#symbol overrides.",
-    "Static initializer folded: the two RotateUpdownLiftModelFile handles (files 0x493/0x61f), the two RotateUpdownLiftCollisionFilePtr handles (files 0x494/0x620) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/actors/daObjRotateUpdownLift_c.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov091_02134524 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @1006/@1007/@1008/@1009 all clashed with the fleet and are renamed (@1006->@776, @1007->@659, @1008->@656, @1009->@639, skipping the in-flight ov095 seesaw @155). The .bss claim 0x02135440..0x02135490 ends exactly at the next symbol; no bound row is needed. The retired shard's converted-baseline row is dropped per the c62c3266 precedent.",
+    "Static initializer folded: the two RotateUpdownLiftModelFile handles (files 0x493/0x61f), the two RotateUpdownLiftCollisionFilePtr handles (files 0x494/0x620) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/game/actors/d_a_obj_rotate_updown_lift.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov091_02134524 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @1006/@1007/@1008/@1009 all clashed with the fleet and are renamed (@1006->@776, @1007->@659, @1008->@656, @1009->@639, skipping the in-flight ov095 seesaw @155). The .bss claim 0x02135440..0x02135490 ends exactly at the next symbol; no bound row is needed. The retired shard's converted-baseline row is dropped per the c62c3266 precedent.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
   "compiler_only_output": [
@@ -215,7 +215,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "classInit fold (0930c): each daObjRotateUpdownLift_c_classInit_* factory's `new daObjRotateUpdownLift_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/actors/daObjHatenaBlock_c.cpp). No configured ROM symbol of that name exists and nothing relocates to it once the licensed D1/D0 pair is retained."
+      "reason": "classInit fold (0930c): each daObjRotateUpdownLift_c_classInit_* factory's `new daObjRotateUpdownLift_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/game/actors/d_a_obj_hatena_block.cpp). No configured ROM symbol of that name exists and nothing relocates to it once the licensed D1/D0 pair is retained."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -550,7 +550,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjRotateUpdownLift_c.cpp",
+      "symbol": "__sinit_d_a_obj_rotate_updown_lift.cpp",
       "address": "0x02134524",
       "size": "0xb8",
       "binding": "STB_GLOBAL",
@@ -559,7 +559,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjRotateUpdownLift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_rotate_updown_lift.cpp",
       "address": "0x02134b68",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -627,13 +627,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjRotateUpdownLift_c.cpp",
+      "symbol": "__sinit_d_a_obj_rotate_updown_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjRotateUpdownLift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_rotate_updown_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -669,7 +669,7 @@
       "source": "0x02134b68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjRotateUpdownLift_c.cpp",
+      "symbol": "__sinit_d_a_obj_rotate_updown_lift.cpp",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02134524"
@@ -759,7 +759,7 @@
       "source": "0x021345a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135448",
+      "symbol": "gObjUpdnliftModelFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135448"
@@ -789,7 +789,7 @@
       "source": "0x021345b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135450",
+      "symbol": "gObjUpdnliftCollisionFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135450"
@@ -819,7 +819,7 @@
       "source": "0x021345c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135440",
+      "symbol": "gHsUpdownLiftModelFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135440"
@@ -839,7 +839,7 @@
       "source": "0x021345d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135458",
+      "symbol": "gHsUpdownLiftCollisionFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135458"

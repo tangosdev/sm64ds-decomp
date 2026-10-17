@@ -210,12 +210,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@410",
+      "from": "@413",
       "to": "@402",
       "evidence": "mwcc numbers this model registration node @396 per TU and ov072 already defines a global @396, so the scratch link would multiply-define it"
     },
     {
-      "from": "@411",
+      "from": "@414",
       "to": "@403",
       "evidence": "mwcc numbers this collision registration node @397 per TU and ov072 already defines a global @397, so the scratch link would multiply-define it"
     }

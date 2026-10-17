@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjHeart_c",
   "module": "ov002",
-  "source": "src/actors/daObjHeart_c.cpp",
-  "promoted_source": "src/actors/daObjHeart_c.cpp",
+  "source": "src/game/actors/d_a_obj_heart.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_heart.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
@@ -93,7 +93,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjHeart_c.cpp",
+      "symbol": "__sinit_d_a_obj_heart.cpp",
       "address": "0x02101900",
       "size": "0x68",
       "binding": "STB_GLOBAL",
@@ -102,7 +102,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjHeart_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_heart.cpp",
       "address": "0x02108108",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -142,13 +142,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjHeart_c.cpp",
+      "symbol": "__sinit_d_a_obj_heart.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjHeart_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_heart.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -272,7 +272,7 @@
       "source": "0x02108108",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjHeart_c.cpp",
+      "symbol": "__sinit_d_a_obj_heart.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02101900"
@@ -319,7 +319,7 @@
     "Cartridge RTTI name is daObjHeart_c (_ZTS12daObjHeart_c). The licensed run is the one .text span 0x020bc5e0..0x020bc8f4 (8 functions).",
     "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
     "InitResources keeps the mangled Fix12-by-value calls for ModelAnim::SetAnim and dCcAc_c::Init; the method form size-DIFFs that function.",
-    "Owns the module static initializer: HeartModelFilePtr/HeartAnimationFilePtr subclass SharedFilePtr so mwcc emits __sinit_daObjHeart_c.cpp (0x02101900, 0x68), the .ctor word at 0x02108108, and the @560/@561 destructor-registration nodes. The handwritten src/__sinit_ov002_02101900.c is retired.",
+    "Owns the module static initializer: HeartModelFilePtr/HeartAnimationFilePtr subclass SharedFilePtr so mwcc emits __sinit_d_a_obj_heart.cpp (0x02101900, 0x68), the .ctor word at 0x02108108, and the @560/@561 destructor-registration nodes. The handwritten src/__sinit_ov002_02101900.c is retired.",
     "rom.sha256 records the shared stock SHA the other intact manifests carry (S38); this worktree's dump rebuilds sha256 ddab9300 with all module bytes and symbols byte-identical -- the same machine-local variance the dsd check-symbols errors come from."
   ],
   "compiler_only_output": [

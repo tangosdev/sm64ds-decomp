@@ -76,7 +76,7 @@ struct dScMB_c : dScene_c {
 
     /* Not virtual. The global graph callback calls this on mOwner.
        The address stays the name. */
-    int func_02034d34();
+    void func_02034d34();
 };
 
 /* The GLOBAL callback object InitResources registers (data_020a0c68), not a

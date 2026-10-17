@@ -61,7 +61,7 @@ other required local checks. The complete shared-header range examined 1,968
 functions: 1,966 VERIFIED, two inherited warnings, zero blocking errors, and two
 existing NONMATCHING drafts skipped. Both warning functions are unchanged and not
 production-enrolled: `dScDSMT_c::Behavior` retains two unresolved overlay identifiers,
-and [func_ov089_0213162c](../../../src/actors/daObjKey_c.cpp) retains unresolved [data_02111b68](../../../config/arm9/symbols.txt). Their entire compiled
+and [func_ov089_0213162c](../../../src/game/actors/d_a_obj_key.cpp) retains unresolved [data_02111b68](../../../config/arm9/symbols.txt). Their entire compiled
 objects are identical to main. Independent comparison also freshly compiled all
 708 unchanged non-draft header consumers on both trees and found identical raw
 objects, allocated sections, definitions and relocations. These controls establish

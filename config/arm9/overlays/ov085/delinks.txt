@@ -8,32 +8,32 @@ src/game/actors/d_a_kinopio.cpp:
     complete
     .text start:0x02129020 end:0x02129d18
 
-src/actors/daPeach_c.cpp:
+src/game/actors/d_a_peach.cpp:
     complete
     .text start:0x02129d18 end:0x0212a6d4
 
-src/actors/daMip_c.cpp:
+src/game/actors/d_a_mip.cpp:
     complete
     .text start:0x0212a6d4 end:0x0212cc88
     .init start:0x0212f5ec end:0x0212f9bc
     .ctor start:0x0212fdf8 end:0x0212fdfc
     .bss start:0x021305ac end:0x0213071c
 
-src/actors/daObj_Mip_Key_c.cpp:
+src/game/actors/d_a_obj_mip_key.cpp:
     complete
     .text start:0x0212cc88 end:0x0212d528
     .init start:0x0212f9bc end:0x0212fa40
     .ctor start:0x0212fdfc end:0x0212fe00
     .bss start:0x0213071c end:0x0213073c
 
-src/actors/daC_Jugem_c.cpp:
+src/game/actors/d_a_c_jugem.cpp:
     complete
     .text start:0x0212d528 end:0x0212edac
     .init start:0x0212fa40 end:0x0212fdb0
     .ctor start:0x0212fe00 end:0x0212fe04
     .bss start:0x0213073c end:0x02130858
 
-src/actors/daObjKanban_c.cpp:
+src/game/actors/d_a_obj_kanban.cpp:
     complete
     .text start:0x0212edac end:0x0212f27c
     .init start:0x0212fdb0 end:0x0212fdf0

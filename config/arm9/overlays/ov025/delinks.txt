@@ -4,28 +4,28 @@
     .ctor       start:0x02112b18 end:0x02112b28 kind:rodata align:4
     .data       start:0x02112b40 end:0x02113a60 kind:data align:32
     .bss        start:0x02113a60 end:0x02113b00 kind:bss align:32
-src/actors/daDgr_c.cpp:
+src/game/actors/d_a_dgr.cpp:
     complete
     .text start:0x021111a0 end:0x021118c8
     .init start:0x02112970 end:0x021129dc
     .ctor start:0x02112b18 end:0x02112b1c
     .bss start:0x02113a60 end:0x02113a88
 
-src/actors/daDkk_c.cpp:
+src/game/actors/d_a_dkk.cpp:
     complete
     .text start:0x021118c8 end:0x02111d40
     .init start:0x021129dc end:0x02112a44
     .ctor start:0x02112b1c end:0x02112b20
     .bss start:0x02113a88 end:0x02113ab0
 
-src/actors/daObjDpBrock_c.cpp:
+src/game/actors/d_a_obj_dp_brock.cpp:
     complete
     .text start:0x02111d40 end:0x021120e4
     .init start:0x02112a44 end:0x02112aac
     .ctor start:0x02112b20 end:0x02112b24
     .bss start:0x02113ab0 end:0x02113ad8
 
-src/actors/daDpLift_c.cpp:
+src/game/actors/d_a_dp_lift.cpp:
     complete
     .text start:0x021120e4 end:0x02112654
     .init start:0x02112aac end:0x02112b18

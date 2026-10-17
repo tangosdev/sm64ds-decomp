@@ -40,6 +40,11 @@
  * - g_profile_CLOCK_HURIKO is overlay .data, not licensed to this TU.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_clock_huriko_AssetId {
+    ASSET_C2_HURIKO_BMD = 0x05b3
+};
+
 #include "daObjClockHuriko_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
@@ -117,7 +122,7 @@ s32 daObjClockHuriko_c::Behavior()
         *angleZ = (s16)(*angleZ + mAngSpeed);
         s16 speed = mAngSpeed;
         if (speed == 0x10 || speed == -0x10) {
-            Sound::PlayBank3(0x16, *(const Vector3 *)&mCamSpacePosX);
+            Sound::PlayBank3(0x16, mCamSpacePos);
         }
     }
     func_ov013_02111238(this);
@@ -174,4 +179,4 @@ s32 daObjClockHuriko_c::CleanupResources()
 
 /* File-scope object: the pendulum model's SharedFilePtr, the one
  * construction __sinit_d_a_obj_clock_huriko.cpp performs. */
-ClockHurikoModelFilePtr data_ov013_02112280(0x5b3);
+ClockHurikoModelFilePtr data_ov013_02112280(ASSET_C2_HURIKO_BMD);

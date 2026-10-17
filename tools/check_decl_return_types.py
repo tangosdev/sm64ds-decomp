@@ -175,7 +175,7 @@ def norm_type(t):
 # carrying a return type of its own:
 #
 #     include/decl_common.h    extern void func_0200c66c(void*, void*, int*, int*, int*);
-#     src/engine/view/dCamera_c.cpp   int func_0200c66c(char *self, ...) { ... return res; }
+#     src/engine/view/d_camera.cpp   int func_0200c66c(char *self, ...) { ... return res; }
 #
 # DECL_ROW above requires `_Z\w+`, so the join in check() cannot see a single
 # one of them: a row that says `void` over a body that returns a value has been
@@ -431,7 +431,7 @@ def definition_index(root):
     405 of these rows have no src/<name>.c: they were folded into a consolidated
     translation unit that kept its own filename, so
 
-        src/actors/Player.cpp   also defines func_ov002_020bf5e0
+        src/game/player/Player.cpp   also defines func_ov002_020bf5e0
 
     and a name-based lookup calls 290 of those bodies missing. One pass over
     src/ costs about 1.6 seconds on this tree and is the difference between
@@ -536,7 +536,7 @@ def check_plain_c(root=REPO):
                              f"{hpath}:{hline}"))
         hit = index.get(sym)
         if hit is None:
-            # Either the row is stale -- src/engine/message/func_0201fe08.c is
+            # Either the row is stale -- src/ui/messages/func_0201fe08.c is
             # the body, under the recovered name LoadMessageBankForLanguage --
             # or the function has no recovered source at all. Counted, not
             # guessed at, and split by whether the config still knows the name.

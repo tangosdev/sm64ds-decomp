@@ -3,7 +3,7 @@
     .ctor       start:0x021340c4 end:0x021340d4 kind:rodata align:4
     .data       start:0x021340e0 end:0x02134480 kind:data align:32
     .bss        start:0x02134480 end:0x021345e0 kind:bss align:32
-src/actors/daMenbo_c.cpp:
+src/game/actors/d_a_menbo.cpp:
     complete
     .text start:0x02130f00 end:0x0213269c
     .init start:0x02133ce8 end:0x02133ea8
@@ -11,7 +11,7 @@ src/actors/daMenbo_c.cpp:
     .data start:0x021340e0 end:0x02134120
     .bss start:0x02134480 end:0x02134524
 
-src/actors/daManta_c.cpp:
+src/game/actors/d_a_manta.cpp:
     complete
     .text start:0x0213269c end:0x02133034
     .init start:0x02133ea8 end:0x02133f4c
@@ -19,14 +19,14 @@ src/actors/daManta_c.cpp:
     .data start:0x021341e4 end:0x021341f4
     .bss start:0x02134524 end:0x0213455c
 
-src/actors/daPukupuku_c.cpp:
+src/game/actors/d_a_pukupuku.cpp:
     complete
     .text start:0x02133034 end:0x0213367c
     .init start:0x02133f4c end:0x02134020
     .ctor start:0x021340cc end:0x021340d0
     .bss start:0x0213455c end:0x021345a4
 
-src/actors/daShark_c.cpp:
+src/game/actors/d_a_shark.cpp:
     complete
     .text start:0x0213367c end:0x02133ce8
     .init start:0x02134020 end:0x021340c4

@@ -135,10 +135,20 @@ def rename_symbols(raw, aliases, defined):
 
     check = ELFFile(io.BytesIO(bytes(out))).get_section_by_name(".symtab")
     got = [sym.name for sym in check.iter_symbols()]
+    # A simultaneous rename can legitimately reuse another source's spelling.
+    # Validate every indexed name, including untouched symbols, instead of
+    # requiring each old spelling to disappear from the whole table.
+    expected = [sym.name for sym in syms]
     for row in rows:
-        if got[row["symbolIndex"]] != row["to"] or row["from"] in got:
+        expected[row["symbolIndex"]] = row["to"]
+    if len(got) != len(expected):
+        return None, {"renamed": rows, "error":
+                      "post-rewrite symbol count differs from indexed rename plan"}
+    for index, name in enumerate(expected):
+        if got[index] != name:
             return None, {"renamed": rows, "error":
-                          f"post-rewrite symbol verification failed for {row['from']}"}
+                          f"post-rewrite symbol verification failed at index {index}: "
+                          f"expected {name}, got {got[index]}"}
     return bytes(out), {"renamed": rows, "error": None}
 
 

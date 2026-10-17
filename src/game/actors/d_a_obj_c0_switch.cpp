@@ -49,6 +49,12 @@
 
 /* daObjC0_Switch_c.h FIRST: it pulls in dBgActor_c.h, which must reach
    common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_c0_switch_AssetId {
+    ASSET_C0_SWITCH_BMD = 0x05a9,
+    ASSET_C0_SWITCH_KCL = 0x05aa
+};
+
 #include "daObjC0_Switch_c.h"
 #include "SharedFilePtr.h"
 
@@ -184,17 +190,15 @@ void daObjC0_Switch_c::OnGroundPounded(dActor_c &other)
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mPressed = 1;
-    dActor_c *p = dActor_c::FindWithActorID(0x22, 0);
-    if (p == 0) return;
-check:
-    if (p != (dActor_c *)this) {
-        if (((daObjC0_Switch_c *)p)->mPressed) {
-            data_0209caa0[2] |= 0x80000;
+    for (dActor_c *p = dActor_c::FindWithActorID(0x22, 0); p != 0;
+         p = dActor_c::FindWithActorID(0x22, p)) {
+        if (p != (dActor_c *)this) {
+            if (((daObjC0_Switch_c *)p)->mPressed) {
+                data_0209caa0[2] |= 0x80000;
+            }
+            return;
         }
-        return;
     }
-    p = dActor_c::FindWithActorID(0x22, p);
-    if (p != 0) goto check;
 }
 // @symbol _ZN16daObjC0_Switch_cD1Ev
 // @symbol _ZN16daObjC0_Switch_cD0Ev
@@ -214,5 +218,5 @@ check:
 /* the vtable and tail-calls ~dBgActor_c, with no member teardown.              */
 /* -------------------------------------------------------------------------- */
 
-C0SwitchModelFilePtr data_ov012_021124a8(1449);
-C0SwitchCollisionFilePtr data_ov012_021124a0(1450);
+C0SwitchModelFilePtr data_ov012_021124a8(ASSET_C0_SWITCH_BMD);
+C0SwitchCollisionFilePtr data_ov012_021124a0(ASSET_C0_SWITCH_KCL);

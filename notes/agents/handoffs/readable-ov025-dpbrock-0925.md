@@ -14,8 +14,8 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `ov025/daObjDpBrock_c`, `src/actors/daObjDpBrock_c.cpp`, ov025 .text 0x02111d40..0x021120e4 (9 functions).
-- Reserved source/header/config surfaces actually touched: `src/actors/daObjDpBrock_c.cpp`, `include/daObjDpBrock_c.h`, `config/arm9/overlays/ov025/symbols.txt` (two rows renamed in place), `config/tu_manifest.d/ov025/daObjDpBrock_c.json` (two `symbol` fields and the notes that described the old helpers and the operator new leaf), and this class's two keys in the `attribution.json` ledger. `delinks.txt` holds only address ranges and needs no edit.
+- Class/TU/symbol and module-qualified ROM scope: `ov025/daObjDpBrock_c`, `src/game/actors/d_a_obj_dp_brock.cpp`, ov025 .text 0x02111d40..0x021120e4 (9 functions).
+- Reserved source/header/config surfaces actually touched: `src/game/actors/d_a_obj_dp_brock.cpp`, `include/daObjDpBrock_c.h`, `config/arm9/overlays/ov025/symbols.txt` (two rows renamed in place), `config/tu_manifest.d/ov025/daObjDpBrock_c.json` (two `symbol` fields and the notes that described the old helpers and the operator new leaf), and this class's two keys in the `attribution.json` ledger. `delinks.txt` holds only address ranges and needs no edit.
 - ROM observations: none new. The class identity and layout evidence is unchanged from the promotion.
 - Lineage evidence or structural inference: `func_ov025_02111dec` and `func_ov025_02111e30` take the object in r0 and are only called with it, from InitResources and Behavior. They are written as members. Nothing else in `src/` calls them; ov025 relocations reach them by address.
 - Hypothesized names/filenames, explicitly not recovered facts: `daObjDpBrock_c::UpdateStepClsnPosAndRot` (0x02111dec, symbol `_ZN14daObjDpBrock_c23UpdateStepClsnPosAndRotEv`) and `daObjDpBrock_c::UpdateStepModelPosAndRotY` (0x02111e30, symbol `_ZN14daObjDpBrock_c25UpdateStepModelPosAndRotYEv`) are coined names, after dBgActor_c's UpdateClsnPosAndRot and UpdateModelPosAndRotY, which do the same work for the inherited collider and model. The header says they are coined.
@@ -51,7 +51,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Attribution preserved through each move/rename: the two `attribution.json` keys follow the renamed symbols with the same author. the old credit check reports 0 changed and 0 lost.
 - Remaining agreed issue scope: DPB-F1, F3, F5, F6, F7 and F8 as in the table; F9 reported.
 
-Residue in `src/actors/daObjDpBrock_c.cpp`, counted as lines containing the token (the brief's convention):
+Residue in `src/game/actors/d_a_obj_dp_brock.cpp`, counted as lines containing the token (the brief's convention):
 
 | | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
 |---|---|---|---|---|---|
@@ -79,7 +79,7 @@ All commands were run in the worktree on source commit `3d236db5d3`, which this 
 | `python tools/queue_audit.py --check-promoted` | 0 | every row agrees with config/tu_manifest.d |
 | `python tools/check_src_tu_compiles.py` | 0 | 293/293 compile |
 | `python tools/port_refcheck.py` | 0 | 408 checked, all resolve |
-| `python tools/affected_src.py include/daObjDpBrock_c.h` | 0 | only `src/actors/daObjDpBrock_c.cpp` consumes it |
+| `python tools/affected_src.py include/daObjDpBrock_c.h` | 0 | only `src/game/actors/d_a_obj_dp_brock.cpp` consumes it |
 | `git diff 7423f8d73f..HEAD -- include/decl_common.h config/dead-reference-baseline.json config/decl-agreement-baseline.json` | 0 | empty |
 
 - Full-ROM build: see the rombuild row.

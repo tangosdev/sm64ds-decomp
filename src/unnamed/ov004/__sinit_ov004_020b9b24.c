@@ -1,17 +1,17 @@
 #pragma opt_common_subs off
 extern void func_020731dc(void *a, void *b, void *node);
 extern void NoOpDestructor(void);
-extern int data_ov004_020bfe74;
+extern int sPsOptIconPosA;
 extern int data_ov004_020bfe78;
 extern int data_ov004_020bfe7c;
 extern int data_ov004_020bfe80;
 extern int data_ov004_020bfe84;
-extern int data_ov004_020bfe88;
+extern int sPsOptIconPosB;
 extern int data_ov004_020bfe8c;
 extern int data_ov004_020bfe90;
 extern int data_ov004_020bfe94;
 extern int data_ov004_020bfe98;
-extern int data_ov004_020bfe9c;
+extern int sPsOptStylePos;
 extern int data_ov004_020bfea0;
 extern int data_ov004_020bfea4;
 extern int data_ov004_020bfea8;
@@ -39,10 +39,10 @@ extern char data_ov004_020bfdfc[];
 void __sinit_ov004_020b9b24(void)
 {
   short *p;
-  p = (short *) (&data_ov004_020bfe74);
-  ((short *) (&data_ov004_020bfe74))[0] = 0x20;
-  ((short *) (&data_ov004_020bfe74))[1] = 0x10;
-  func_020731dc((short *) (&data_ov004_020bfe74), (void *) NoOpDestructor, data_ov004_020bfe20);
+  p = (short *)(&sPsOptIconPosA);
+  ((short *)(&sPsOptIconPosA))[0] = 0x20;
+  ((short *)(&sPsOptIconPosA))[1] = 0x10;
+  func_020731dc((short *)(&sPsOptIconPosA), (void *)NoOpDestructor, data_ov004_020bfe20);
 
   p = (short *) (&data_ov004_020bfe78); p[0] = 0x20; p[1] = 0x10;
   func_020731dc(p, (void *) NoOpDestructor, data_ov004_020bfdd8);
@@ -57,9 +57,9 @@ void __sinit_ov004_020b9b24(void)
   {
     int sz = 0x30;
     int h = 0x10;
-    ((short *) (&data_ov004_020bfe88))[0] = (short)sz;
-    ((short *) (&data_ov004_020bfe88))[1] = (short)h;
-    func_020731dc((short *) (&data_ov004_020bfe88), (void *) NoOpDestructor, data_ov004_020bfe50);
+    ((short *)(&sPsOptIconPosB))[0] = (short)sz;
+    ((short *)(&sPsOptIconPosB))[1] = (short)h;
+    func_020731dc((short *)(&sPsOptIconPosB), (void *)NoOpDestructor, data_ov004_020bfe50);
   }
 
   p = (short *) (&data_ov004_020bfe8c); p[0] = 0x18; p[1] = 0x10;
@@ -74,9 +74,9 @@ void __sinit_ov004_020b9b24(void)
   {
     int sz = 0x3c;
     int h = 0x10;
-    ((short *) (&data_ov004_020bfe9c))[0] = (short)sz;
-    ((short *) (&data_ov004_020bfe9c))[1] = (short)h;
-    func_020731dc((short *) (&data_ov004_020bfe9c), (void *) NoOpDestructor, data_ov004_020bfe08);
+    ((short *)(&sPsOptStylePos))[0] = (short)sz;
+    ((short *)(&sPsOptStylePos))[1] = (short)h;
+    func_020731dc((short *)(&sPsOptStylePos), (void *)NoOpDestructor, data_ov004_020bfe08);
   }
 
   p = (short *) (&data_ov004_020bfea0); p[0] = 0x1c; p[1] = 0x10;

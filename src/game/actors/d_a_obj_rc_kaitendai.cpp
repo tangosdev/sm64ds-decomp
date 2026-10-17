@@ -20,6 +20,12 @@
  * Leftover: g_profile_RC_KAITEN lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_rc_kaitendai_AssetId {
+    ASSET_RC_KAITEN_BMD = 0x06a7,
+    ASSET_RC_KAITEN_KCL = 0x06a8
+};
+
 #include "daObjRc_Kaitendai_c.h"
 #include "SharedFilePtr.h"
 
@@ -86,5 +92,5 @@ s32 daObjRc_Kaitendai_c::CleanupResources()
 
 /* Static-init globals (was the handwritten __sinit_ov036_0211261c shard).
  * Definition order is the retail initializer's construction order. */
-RcKaitendaiModelFile data_ov036_02114050(0x6a7);
-RcKaitendaiCollisionFilePtr data_ov036_02114048(0x6a8);
+RcKaitendaiModelFile gRcKaitenModelFile(ASSET_RC_KAITEN_BMD);
+RcKaitendaiCollisionFilePtr gRcKaitenCollisionFile(ASSET_RC_KAITEN_KCL);

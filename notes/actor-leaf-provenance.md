@@ -29,7 +29,7 @@ cleanly and silently rebinds every unqualified use across the tree.
 
 Both `daMky_c::InitResources` and `daMky_c::Behavior` run the same block;
 only the first names its fields, the second still reaches them as raw
-`c + 0xNN` offsets. Both now live in `src/actors/daMky_c.cpp`, which
+`c + 0xNN` offsets. Both now live in `src/game/actors/d_a_mky.cpp`, which
 absorbed the class's 44 one-function shards.
 
 Deliberately left `unk_`: 0x380/0x384/0x388 (a second position triple, seeded
@@ -37,7 +37,7 @@ from `mPos` with `0x64000` added to Y right after -- no enrolled body reads it
 back, so what it is for is unevidenced); 0x3a8 (zeroed, never read); 0x3cb (set
 to 0x96, never read).
 
-## daDoor_c -- include/daDoor_c.h, src/actors/daDoor_c.cpp
+## daDoor_c -- include/daDoor_c.h, src/game/actors/d_a_door.cpp
 
 | offset | new name | evidence |
 | --- | --- | --- |
@@ -64,7 +64,7 @@ the rest, so the fifth collection can destroy the whole set from one place.
 | 0x111 | `mClsnDisabled` | nonzero suppresses the `dCcAc_c` member's per-frame `Update()`; its `Clear()` runs either way. |
 | 0x113 | `mDeathTimer` | counted down by `DecIfAbove0_Byte` at the top of `Behavior`; the frame it reaches 0 the coin runs [func_ov002_020f05f4](../config/arm9/overlays/ov002/symbols.txt) and marks itself for destruction. Zero means "not dying". |
 
-Sources: `src/actors/daSCoin_c.cpp` (`InitResources` and `Behavior`; the
+Sources: `src/game/actors/d_a_s_coin.cpp` (`InitResources` and `Behavior`; the
 class's one-function shards were folded into that TU when it was promoted).
 
 Deliberately left `unk_`: 0x10d (`param1 & 0xf`, written and never read);
@@ -75,7 +75,7 @@ Deliberately left `unk_`: 0x10d (`param1 & 0xf`, written and never read);
 
 The same daSanbo_c class (coined English name: Pokey) implements the head
 (`actorID` 0xf0) and each body segment (`actorID` 0xf1).
-`InitResources` in [src/actors/daSanbo_c.cpp](../src/actors/daSanbo_c.cpp)
+`InitResources` in [src/game/actors/d_a_sanbo.cpp](../src/game/actors/d_a_sanbo.cpp)
 branches on that all the way through.
 
 | offset | new name | evidence |
@@ -125,7 +125,7 @@ Deliberately left `unk_`: 0x410 (zeroed, never read).
 ## daGmch_c -- include/daGmch_c.h
 
 Scouted and named as `Moneybag`; renamed to the cartridge's own RTTI spelling
-when the TU was promoted. All 37 functions now live in `src/actors/daGmch_c.cpp`,
+when the TU was promoted. All 37 functions now live in `src/game/actors/d_a_gmch.cpp`,
 so the per-shard citations below are given as member names.
 
 | offset | new name | evidence |
@@ -145,19 +145,19 @@ so the per-shard citations below are given as member names.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3ab | `mSpawnFilter` | `param1` bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise. The same three-bit value `LoadObjects` compares against `data_0209f220` to decide whether an object belongs to the entrance the level was started from (`src/stage/LevelObjects.cpp`). A red coin claims a star-marker slot only when it matches (or `SublevelToLevel` is 0x13); a blue coin whose filter is under 8 clears bit 0 of `mCoinFlags`. |
-| 0x3ae | `mCoinFlags` | the flag byte `InitResources` (now in `src/actors/daCoin_c.cpp`) already documented as such: bit 0 gates `Render` outright, `Behavior` tests bits 0 and 1. Named `mCoinFlags` and NOT `mFlags`, which is `dActor_c`'s own field 0x0b0. |
+| 0x3ab | `mSpawnFilter` | `param1` bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise. The same three-bit value `LoadObjects` compares against `data_0209f220` to decide whether an object belongs to the entrance the level was started from (`src/game/stages/LevelObjects.cpp`). A red coin claims a star-marker slot only when it matches (or `SublevelToLevel` is 0x13); a blue coin whose filter is under 8 clears bit 0 of `mCoinFlags`. |
+| 0x3ae | `mCoinFlags` | the flag byte `InitResources` (now in `src/game/actors/d_a_coin.cpp`) already documented as such: bit 0 gates `Render` outright, `Behavior` tests bits 0 and 1. Named `mCoinFlags` and NOT `mFlags`, which is `dActor_c`'s own field 0x0b0. |
 
 The read-modify-write sites keep their raw `*(u8*)((int)c + 0x3ae)` spelling --
 that launder is measured and per-site, and the "FOUR SITES KEEP RAW OFFSETS"
-note in `daCoin_c::InitResources` (`src/actors/daCoin_c.cpp`) explains why.
+note in `daCoin_c::InitResources` (`src/game/actors/d_a_coin.cpp`) explains why.
 
 ## daObjPowerUpItem_c -- include/daObjPowerUpItem_c.h
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3bc | `mGroundY` | `src/actors/daObjPowerUpItem_c.cpp` raycasts a `dBgCh_Gnd` from `mPos` with Y + 0x14000 and stores the hit height (`ray + 0x44`), falling back to the probe's own Y when `DetectClsn` finds nothing. |
-| 0x3c0 | `mState` | `src/actors/daObjPowerUpItem_c.cpp` switches on it: 0 draws `mModel1`, 1 and 2 draw `mModel2`. |
+| 0x3bc | `mGroundY` | `src/game/actors/d_a_obj_power_up_item.cpp` raycasts a `dBgCh_Gnd` from `mPos` with Y + 0x14000 and stores the hit height (`ray + 0x44`), falling back to the probe's own Y when `DetectClsn` finds nothing. |
+| 0x3c0 | `mState` | `src/game/actors/d_a_obj_power_up_item.cpp` switches on it: 0 draws `mModel1`, 1 and 2 draw `mModel2`. |
 | 0x3ca | `mLifeTimer` | seeded 0xb4 (180 frames) in `InitResources`; `Render` skips drawing on odd values once it is below 0x2d, so the flower blinks through its last 45 frames. |
 
 ## daObjNumber_c -- include/daObjNumber_c.h
@@ -179,11 +179,11 @@ one up, and its parameter list is half the evidence here.
 Listed so the next reader does not repeat the search.
 
 - `daBttBk_c` (formerly `CrazedCrate`) 0x374: zeroed in `InitResources`. Once its
-  state-machine helpers were promoted into `src/actors/daBttBk_c.cpp` it turned out
+  state-machine helpers were promoted into `src/game/actors/d_a_btt_bk.cpp` it turned out
   to be read: `func_ov080_02124acc` stores the carrier actor there and
   `func_ov080_02124c3c`/`func_ov080_02124edc` read it.
 - `daChoropu_c` 0x17c/0x180..0x184/0x188 and the 16 bytes from 0x16c: all written
-  in `InitResources` in `src/actors/daChoropu_c.cpp` -- 0x180 is `param1 & 0xf`,
+  in `InitResources` in `src/game/actors/d_a_choropu.cpp` -- 0x180 is `param1 & 0xf`,
   0x182 is `(param1 >> 4) & 0xf`, 0x181 is 1 when 0x180 is 0 and `(param1 >> 8) & 1`
   otherwise. The ov080 TU promotion enrolled the readers, and three are now named
   from them: 0x16c `mPartnerIDs[4]` and 0x183 `mNumPartners` (filled from the
@@ -191,7 +191,7 @@ Listed so the next reader does not repeat the search.
   `func_ov080_02124360`), and 0x17c `mState` (the index into `Behavior`'s state
   table). 0x180..0x182, 0x184 and 0x188 are still `unk_`.
 - `daFRing_c` 0x214: zeroed in
-  `src/actors/daFRing_c.cpp` InitResources, and Behavior reads it as the shock frame.
+  `src/game/actors/d_a_f_ring.cpp` InitResources, and Behavior reads it as the shock frame.
 
 ## Three shapes that repeat across these leaves
 
@@ -219,7 +219,7 @@ Worth naming once here rather than thirteen times below.
 | 0x180 | `mHomeHorzDist` | `Vec3_HorzLen` of the spawn position -- how far out in XZ the bomb starts from the world origin. |
 | 0x184 | `mHomeYOffset` | the constant 0x2ee000; `mHomePosY` is raised by `mHomeYOffset >> 3` immediately after the home triple is copied. |
 
-Source: `src/actors/daKirai_c.cpp` (`daKirai_c::InitResources`). Both branches of the header
+Source: `src/game/actors/d_a_kirai.cpp` (`daKirai_c::InitResources`). Both branches of the header
 carry the rename.
 
 ## daObjHeart_c -- include/daObjHeart_c.h
@@ -240,7 +240,7 @@ The names are the reads in InitResources and Behavior.
 | 0x380 | `mParticle` | the particle-handle shape above, effect 0x4a. |
 | 0x384 | `mLifeTimer` | 0xb4 at init, counted down only while on the ground, destroys at 0, blinks below 0x2d. |
 
-Sources: `src/game/actors/daFeather_c/daFeather_c.cpp` (the 8 one-function
+Sources: `src/game/actors/d_a_feather.cpp` (the 8 one-function
 shards merged; the field evidence above now lives in
 `InitResources`/`Behavior`/`Render` there).
 
@@ -296,7 +296,7 @@ Source: `src/game/actors/d_a_krpa.cpp`.
 | 0x3d8 | `mState` | `Render` draws the still `Model` in states 0 and 4 and the `ModelAnim` otherwise; `Behavior` treats 1 (once on the ground), 4 and 5 as states that must keep running whatever the distance to the player. |
 | 0x3e9 | `mDespawnTimer` | 0x2c (44 frames) at init, counted down ONLY on the frames daTgz_c is too far from the player to behave, destroys at 0. Not a plain life timer -- being near the player refills nothing but stops the count. |
 
-Sources: `src/actors/daTgz_c.cpp`.
+Sources: `src/game/actors/d_a_tgz.cpp`.
 
 ## daESwitch_c -- include/EnemySwitchTag.h
 
@@ -318,7 +318,7 @@ Source: `daESwitch_c::InitResources` and `daESwitch_c::Behavior` in
 | --- | --- | --- |
 | 0x174 | `mCarrier` | the actor the cap is riding, a pointer spelt `s32`. `Behavior` returns immediately when it is null; otherwise it copies the cap position out of that actor 0x0d8 triple and its two angles out of that actor +0xe4 and `dActor_c::mAngleY`. |
 
-Source: `daDossyCap_c::Behavior` in `src/actors/daDossy_c.cpp`.
+Source: `daDossyCap_c::Behavior` in `src/game/actors/d_a_dossy.cpp`.
 
 ## Scuttlebug -- include/Scuttlebug.h
 
@@ -326,7 +326,7 @@ Source: `daDossyCap_c::Behavior` in `src/actors/daDossy_c.cpp`.
 | --- | --- | --- |
 | 0x3a8 | `mTimer` | counted down once per frame at the top of `Behavior` with `DecIfAbove0_Short` -- as a HALFWORD, though the generated header typed the slot `u8`. The result is discarded there, so the name says "a timer" and no more. The header now declares it `s16`, and `0x3aa` alongside it is a separate live `u8`, not padding. |
 
-Source: `src/actors/Scuttlebug.cpp`, which absorbed the one-function
+Source: `src/game/actors/d_a_spd.cpp`, which absorbed the one-function
 `Behavior` file when ov071/Scuttlebug was promoted into a single
 translation unit.
 
@@ -336,7 +336,7 @@ translation unit.
 | --- | --- | --- |
 | 0x108 | `mBowserUniqueID` | `Behavior` resolves it with `dActor_c::FindWithID` and parks the tail 0x8c units out from daKpa_c's position along his facing angle. The file already said so in prose. |
 
-Source: `src/actors/daKpa_c.cpp`.
+Source: `src/game/actors/d_a_kpa.cpp`.
 
 ## daRedBombhei_c -- include/daRedBombhei_c.h
 

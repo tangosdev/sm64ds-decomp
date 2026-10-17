@@ -4,7 +4,7 @@
     .ctor       start:0x0211a4bc end:0x0211a4d4 kind:rodata align:4
     .data       start:0x0211a4e0 end:0x0211abe0 kind:data align:32
     .bss        start:0x0211abe0 end:0x0211b240 kind:bss align:32
-src/actors/daKpa_c.cpp:
+src/game/actors/d_a_kpa.cpp:
     complete
     .text start:0x02111900 end:0x02116484
     .init start:0x021195dc end:0x02119df0
@@ -12,21 +12,21 @@ src/actors/daKpa_c.cpp:
     .data start:0x0211a4e8 end:0x0211a5c0
     .bss start:0x0211abe0 end:0x0211af74
 
-src/actors/daKpaFire_c.cpp:
+src/game/actors/d_a_kpa_fire.cpp:
     complete
     .text start:0x02116484 end:0x02117980
     .init start:0x02119df0 end:0x02119f94
     .ctor start:0x0211a4c0 end:0x0211a4c4
     .bss start:0x0211af74 end:0x0211aff4
 
-src/actors/daKpa2Bg_c.cpp:
+src/game/actors/d_a_kpa2_bg.cpp:
     complete
     .text start:0x02117980 end:0x02117d1c
     .init start:0x02119f94 end:0x0211a000
     .ctor start:0x0211a4c4 end:0x0211a4c8
     .bss start:0x0211aff4 end:0x0211b01c
 
-src/actors/daKpa3Bg_c.cpp:
+src/game/actors/d_a_kpa3_bg.cpp:
     complete
     .text start:0x02117d1c end:0x02118438
     .init start:0x0211a000 end:0x0211a388
@@ -34,7 +34,7 @@ src/actors/daKpa3Bg_c.cpp:
     .data start:0x0211a930 end:0x0211a948
     .bss start:0x0211b01c end:0x0211b1c4
 
-src/actors/daKirai_c.cpp:
+src/game/actors/d_a_kirai.cpp:
     complete
     .text start:0x02118438 end:0x02118cfc
     .init start:0x0211a388 end:0x0211a428
@@ -42,7 +42,7 @@ src/actors/daKirai_c.cpp:
     .data start:0x0211aa30 end:0x0211aa50
     .bss start:0x0211b1c4 end:0x0211b1f8
 
-src/actors/daFRing_c.cpp:
+src/game/actors/d_a_f_ring.cpp:
     complete
     .text start:0x02118cfc end:0x02119264
     .init start:0x0211a428 end:0x0211a4bc

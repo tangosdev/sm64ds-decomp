@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjFloatBoard_c",
   "module": "ov002",
-  "source": "src/actors/daObjFloatBoard_c.cpp",
-  "promoted_source": "src/actors/daObjFloatBoard_c.cpp",
+  "source": "src/game/actors/d_a_obj_float_board.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_float_board.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -10,7 +10,7 @@
     "class label(s): daObjFloatBoard_c",
     "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): the run's first two functions, _ZN17daObjFloatBoard_cD0Ev (0x020b5a18) and _ZN17daObjFloatBoard_cD1Ev (0x020b5a70), are DELIBERATELY NOT claimed: the cartridge orders them D0-before-D1, and mwccarm 2004/b56 emits the vague-linkage pair of an inline-in-class destructor D1-before-D0. The only source form that emits D0 first is an out-of-line definition, which would stop all three descendants inlining the vptr store the ROM shows them inlining (ov016 0x02112f3c/0x02112f9c/0x02112ff0 and ov029 0x021111e8/0x02111248/0x02111374 all load 0x02108fdc directly, and no instruction anywhere calls 0x020b5a18 or 0x020b5a70). Their two per-function entries stand and this object's copies are licensed as deadstrip-duplicate.",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)",
-    "DESTRUCTOR FOLD. The licensed run is now 0x020b5a18..0x020b5fd8 (10 functions), with _ZN17daObjFloatBoard_cD0Ev at 0x020b5a18 (size 0x58) and _ZN17daObjFloatBoard_cD1Ev at 0x020b5a70 (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 10/10 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
+    "DESTRUCTOR FOLD. The licensed run is now 0x020b5a18..0x020b5fd8 (10 functions), with _ZN17daObjFloatBoard_cD0Ev at 0x020b5a18 (size 0x58) and _ZN17daObjFloatBoard_cD1Ev at 0x020b5a70 (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/game/actors/d_a_obj_dorifu.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 10/10 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {

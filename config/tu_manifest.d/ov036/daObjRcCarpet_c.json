@@ -133,7 +133,7 @@
       "symbol": "data_ov036_02113f58",
       "address": "0x02113f58",
       "size": "0x0c",
-      "evidence": "typed resource-pointer table; all 12 bytes and relocations to data_ov036_021141a4, data_ov036_021141ac, and data_ov036_02112b28 match ov036"
+      "evidence": "typed resource-pointer table; all 12 bytes and relocations to gRcCarpetModelFile, gRcCarpetCollisionFile, and data_ov036_02112b28 match ov036"
     },
     {
       "symbol": "_ZTS15daObjRcCarpet_c",
@@ -178,19 +178,19 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov036_0211419c",
+      "symbol": "gRcCarpetWaitAnimationFile",
       "address": "0x0211419c",
       "size": "0x8",
       "evidence": "animation resource handle constructed with file ID 1689"
     },
     {
-      "symbol": "data_ov036_021141a4",
+      "symbol": "gRcCarpetModelFile",
       "address": "0x021141a4",
       "size": "0x8",
       "evidence": "model resource handle constructed with file ID 1687"
     },
     {
-      "symbol": "data_ov036_021141ac",
+      "symbol": "gRcCarpetCollisionFile",
       "address": "0x021141ac",
       "size": "0x8",
       "evidence": "collision resource handle constructed with file ID 1688"
@@ -366,7 +366,7 @@
       "source": "0x021129ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_021141a4",
+      "symbol": "gRcCarpetModelFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x021141a4"
@@ -396,7 +396,7 @@
       "source": "0x021129bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_0211419c",
+      "symbol": "gRcCarpetWaitAnimationFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x0211419c"
@@ -426,7 +426,7 @@
       "source": "0x021129cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_021141ac",
+      "symbol": "gRcCarpetCollisionFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x021141ac"
@@ -496,7 +496,7 @@
       "source": "0x02113f58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_021141a4",
+      "symbol": "gRcCarpetModelFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x021141a4"
@@ -506,7 +506,7 @@
       "source": "0x02113f5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_021141ac",
+      "symbol": "gRcCarpetCollisionFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x021141ac"

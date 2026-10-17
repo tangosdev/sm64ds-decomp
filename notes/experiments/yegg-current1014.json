@@ -1,0 +1,489 @@
+{
+  "schema": 1,
+  "task_id": "yegg-current-composition1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3847",
+  "status": "Current-base composition locally proved; independent exact-head/current-base Source review pending",
+  "completion": "partial",
+  "formal_acceptance": false,
+  "identity": {
+    "actual_current_producer_session": "codex-yegg-current-producer1014",
+    "actual_source_author_session": "codex-yegg-readable-producer1014",
+    "same_actual_agent": true,
+    "harness_agent": "Codex /root/scene_producer_recovery",
+    "role": "Original Yegg Source author and current-main composition producer, not independent reviewer",
+    "actual_lease_id": "9dbb2b61-f813-4dab-afda-f8ea05e99a4f",
+    "lease_id_is_not_model_session_uuid": true,
+    "producer_sessions": [
+      "claude-producer-0930d",
+      "codex-yegg-current-producer1014",
+      "codex-yegg-readable-producer1014"
+    ],
+    "inherited_findings": {
+      "YEGG-GROUND-PROVENANCE-01": {
+        "disposition": "fixed",
+        "id": "YEGG-GROUND-PROVENANCE-01",
+        "kind": "provenance",
+        "location": "src/actors/daYegg_c.cpp:57",
+        "reason": "Independent preflight flagged the stale clause before immutable Source checkpoint. Exact294789d/b934 Source removes that clause and explicitly describes real ground lifetime/clsnY and reconstructed actor-interface identifiers. Current Source/report preserve remaining raw offsets rather than presenting entire class complete.",
+        "summary": "Private combined candidate still described the replaced ground clsnY field access as a raw+0x44 read."
+      },
+      "YEGG-RECONSTRUCTION-01": {
+        "disposition": "deferred",
+        "id": "YEGG-RECONSTRUCTION-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3847",
+        "kind": "reconstruction",
+        "location": "src/actors/daYegg_c.cpp and include/daYegg_c.h",
+        "owner": "codex-yegg-readable-producer1014 and codex-yegg-readable-coordinator1014 reconstruction followup",
+        "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, Player+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free Player-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
+        "summary": "Yegg remains a partial reconstructed class despite three genuine interface/lifetime replacements and intact owned TU storage."
+      }
+    }
+  },
+  "binding": {
+    "merge_head": "47aa142379c685088e2cf9a2a87206b179672195",
+    "actual_parents": [
+      "b9345412e7a74b811b06b5d283bbcd54453bec87",
+      "0e2e4c63fa3e0530f542a8028febf5cffacd777e"
+    ],
+    "claimed_input": "b9345412e7a74b811b06b5d283bbcd54453bec87",
+    "protocol_ancestral_base": "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2",
+    "requested_tested_current_base": "0e2e4c63fa3e0530f542a8028febf5cffacd777e",
+    "same_yegg_inputs": {
+      "src/actors/daYegg_c.cpp": {
+        "git_blob": "4d2399162dede3d86db85e2925b602b313a32309",
+        "literal_same_original_candidate": true
+      },
+      "config/tu_manifest.d/ov002/daYegg_c.json": {
+        "git_blob": "d2e75872b91324c770ba0e4c2a094c1fd9f399be",
+        "literal_same_original_candidate": true
+      }
+    },
+    "five_trees": {
+      "src": "74115210ff63f1dc3e771aafd13fe1bc86cd80f3",
+      "include": "049157c9988dc6d8c484426f31a8a0e43a828457",
+      "config": "d110f4b7b83636005cf19e3499390e0619e31ed6",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "current_base_branch_difference": [
+      "config/tu_manifest.d/ov002/daYegg_c.json",
+      "notes/experiments/yegg-readable1014.json",
+      "src/actors/daYegg_c.cpp"
+    ],
+    "tracked_clean": true,
+    "tested_checkpoint": "47aa142379c685088e2cf9a2a87206b179672195",
+    "tested_five_trees": {
+      "src": "74115210ff63f1dc3e771aafd13fe1bc86cd80f3",
+      "include": "049157c9988dc6d8c484426f31a8a0e43a828457",
+      "config": "d110f4b7b83636005cf19e3499390e0619e31ed6",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "final_report_commit_binding": "Final report-only commit must preserve all five tested tree objects; durable binding is recorded after commit. No current acceptance is inferred from original Source acceptance.",
+    "prior_source_acceptance": {
+      "phase": "done",
+      "stage_index": 1,
+      "output_records": [
+        {
+          "stage": "produce",
+          "commit": "b9345412e7a74b811b06b5d283bbcd54453bec87",
+          "session": "codex-yegg-readable-producer1014",
+          "accepted_by": "codex-yegg-readable-independent-verifier1014"
+        },
+        {
+          "stage": "verify",
+          "commit": "b9345412e7a74b811b06b5d283bbcd54453bec87",
+          "session": "codex-yegg-readable-independent-verifier1014",
+          "accepted_by": null
+        }
+      ],
+      "findings": null
+    }
+  },
+  "source_scope": {
+    "source": "src/actors/daYegg_c.cpp",
+    "manifest": "config/tu_manifest.d/ov002/daYegg_c.json",
+    "current_report": "notes/experiments/yegg-current1014.json",
+    "new_source_or_manifest_edits": false,
+    "upstream_scope_limit": "Merge adopts upstream Asset/Hakidasi Source/config/header changes; no new authorship or independent Source acceptance of those classes is claimed here.",
+    "original_source_report": "notes/experiments/yegg-readable1014.json",
+    "matching_credit_in_current_scope": "Existing address-keyed matching credit unchanged by this continuation; upstream author provenance retained, not reassigned to this composer."
+  },
+  "source_evidence": {
+    "class_identity": "Existing daYegg_c RTTI length-prefixed class string and YOSHI_EGG registry profile; this slice adds no original-name inference.",
+    "virtual_receiver_contract": "dActor_c.h declares integer Virtual50 at slot20/+0x50 and Vector3 OnAimedAtWithEggReturnVec at slot30/+0x78. Preserve integer behavior rather than narrowing to bool. Current member identifiers are reconstructed, not recovered original method names.",
+    "ground_layout_lifetime": "Existing dBgCh_Gnd.h declares two real polymorphic bases and complete-object0x50 size, clsnY+0x44, constructor/destructor and typed methods. Actual target416B retains original guard, constructor point, reads and destructor schedule.",
+    "aggregate_return": "Target636B and all typed reference records match exactly; native Vector3 return has the same actual hidden-result/copy path here despite the removed custom-copy stand-in. No general claim about aggregate-return codegen elsewhere.",
+    "history": [
+      "ca232c8ef3 memberified24 self-first helpers",
+      "6c236e3939 folded the initializer",
+      "11817624cd adopted Player calls",
+      "notes/agents/handoffs/issue-2492-cup-source-review.md records the integer Virtual50/020edc28 actor-family contract"
+    ],
+    "independent_review_required": true,
+    "ground_provenance_finding": "Exact YEGG-GROUND-PROVENANCE-01 fixed dictionary inherited unchanged. Source removes obsolete raw+44 clause and records actual constructor after guard/vector preparation, clsnY and normal destruction; original names not recovered."
+  },
+  "object_proof": {
+    "status": "PRODUCTION focused compiler/object/relocation proof; Source judgment still requires another actual reviewer",
+    "claim_input": "b9345412e7a74b811b06b5d283bbcd54453bec87",
+    "tested_current_base": "0e2e4c63fa3e0530f542a8028febf5cffacd777e",
+    "tested_composition_checkpoint": "47aa142379c685088e2cf9a2a87206b179672195",
+    "compiler": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "canary": [
+      true,
+      "2004/b56"
+    ],
+    "source_sha256": "3c7e7786992ec03dbf8a28531f9be36358038aa68c95933ec26c3091fc61ae6a",
+    "manifest_sha256": "f4953e0bf6a666085fdd8107c3b547008304e5bff502e871fa111a1ac597abda",
+    "raw_sha256": "fae0ebdbbbc414f6720f22f1e61385cfa9564e49a1841d1ca817b9b65a5dad3c",
+    "prepared_sha256": "beec13f2ad3112592a96fb31254dfb6351306802db41076c722f3c449dc8f5f5",
+    "raw_ELF_literal_equal_combined_private_candidate": true,
+    "ordinary_prepared_ELF_literal_equal_original_control": true,
+    "strict_unique_function_count": 34,
+    "strict_unique_text_count": 33,
+    "total_function_bytes": 8092,
+    "typed_function_ref_count": 231,
+    "initializer_ref_count": 9,
+    "no_new_allocated_storage": true,
+    "retained_metadata_claims": "Owned8PMF/data64B + BSS64B + init220B + ctor4B;11canonicalRTTI/vtable records externalized by pre-existing compiler-only policy, not new Source-owned metadata.",
+    "actual_complete_raw_stats": {
+      "nonempty_allocated_sections": 57,
+      "allocated_bytes": 8541,
+      "nonexecutable_allocated_bytes": 373,
+      "all_allocated_relocation_count": 292
+    },
+    "actual_complete_prepared_stats": {
+      "nonempty_allocated_sections": 44,
+      "allocated_bytes": 8224,
+      "nonexecutable_allocated_bytes": 132,
+      "all_allocated_relocation_count": 240
+    },
+    "preexisting_canonical_externalized_metadata": {
+      "records": [
+        {
+          "symbol": "_ZTI12dEnemyBase_c",
+          "size": 12,
+          "relocation_count": 3
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "size": 12,
+          "relocation_count": 3
+        },
+        {
+          "symbol": "_ZTI7fBase_c",
+          "size": 8,
+          "relocation_count": 2
+        },
+        {
+          "symbol": "_ZTI8dActor_c",
+          "size": 12,
+          "relocation_count": 3
+        },
+        {
+          "symbol": "_ZTI8daYegg_c",
+          "size": 12,
+          "relocation_count": 3
+        },
+        {
+          "symbol": "_ZTS12dEnemyBase_c",
+          "size": 15,
+          "relocation_count": 0
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "size": 9,
+          "relocation_count": 0
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "size": 9,
+          "relocation_count": 0
+        },
+        {
+          "symbol": "_ZTS8dActor_c",
+          "size": 10,
+          "relocation_count": 0
+        },
+        {
+          "symbol": "_ZTS8daYegg_c",
+          "size": 10,
+          "relocation_count": 0
+        },
+        {
+          "symbol": "_ZTV8daYegg_c",
+          "size": 132,
+          "relocation_count": 32
+        }
+      ],
+      "unique_records": 11,
+      "bytes": 241,
+      "refs": 46,
+      "qualification": "Eleven already canonical RTTI/vtable records241B/46refs are externalized by the existing policy; no new owned metadata or new data externalization rule."
+    },
+    "owned_storage_count_qualification": "Four auxiliary manifest sections352B includes EXECUTABLE .init220B/9refs (already among34functions8092B), plus non-executable PMF.data64B/8refs, .ctor4B/1ref and .bss64B/0refs. Prepared non-executable storage132B, total allocated8224B, not352B of metadata.",
+    "all_unique_function_strict": "34 VERIFIED, 0 different words, 0 blind relocations",
+    "ordinary_production_policy": "Unchanged inherited intact/canonical metadata policy and existing eight compiler-temp from bindings; no policy edits in this continuation",
+    "byte_control_limit": "Entire raw object literal equal saved adopted candidate; prepared entire ELF literal equal original ROM-proved Source control. This establishes local byte/graph preservation, distinct from current whole-program gates and independent Source review."
+  },
+  "retained_auxiliary_sections": [
+    {
+      "section": ".init",
+      "start": "0x02107118",
+      "end": "0x021071f4",
+      "emittedBytes": 220,
+      "sizeOk": true,
+      "bytesOk": true,
+      "differingWords": 0,
+      "relocCount": 9
+    },
+    {
+      "section": ".ctor",
+      "start": "0x02108118",
+      "end": "0x0210811c",
+      "emittedBytes": 4,
+      "sizeOk": true,
+      "bytesOk": true,
+      "differingWords": 0,
+      "relocCount": 1
+    },
+    {
+      "section": ".data",
+      "start": "0x0210ad38",
+      "end": "0x0210ad78",
+      "emittedBytes": 64,
+      "sizeOk": true,
+      "bytesOk": true,
+      "differingWords": 0,
+      "relocCount": 8
+    },
+    {
+      "section": ".bss",
+      "start": "0x02110a5c",
+      "end": "0x02110a9c",
+      "emittedBytes": 64,
+      "sizeOk": true,
+      "bytesOk": true,
+      "differingWords": 0,
+      "relocCount": 0
+    }
+  ],
+  "remaining_reconstruction": [
+    "Existing scalar ABI spellings of Fix12-valued callees, including ModelAnim/collision initialization, shadow/particle helpers, SpawnCoins and Player::Hurt, remain unchanged and qualified; no class-valued universal compiler-wall assertion added.",
+    "The raw spawned-coin fields, DOSUN byte, Player+0xc8 word, floor-result+4 view, array-backed matrices/vectors and address-based helper identifiers remain partial.",
+    "The existing two externally called free Player-entry helpers and constructor/factory alias boundaries remain; this slice adds no fake method identity or new mangled helper.",
+    "No original source filename or method/field identifiers recovered by byte equality; Source judgment remains separate from ROM correctness."
+  ],
+  "next_action": "Another actual agent performs formal Source/current-base acceptance of exact final commit and literal resource/report coverage before coordinator public action.",
+  "validation": {
+    "all_eight_gates_actual_terminal0": true,
+    "gates": [
+      {
+        "name": "whitespace",
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "0e2e4c63fa3e0530f542a8028febf5cffacd777e..HEAD"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 0.058,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "port",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 1.674,
+        "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+      },
+      {
+        "name": "duplicate_sources",
+        "command": [
+          "python",
+          "tools/check_duplicate_sources.py"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 0.45,
+        "log_sha256": "3c7d30e74da563c3759d899256bc6d497413d6fac97b5d50dde941fb71d9727d"
+      },
+      {
+        "name": "rename_ledger",
+        "command": [
+          "python",
+          "tools/check_rename_ledger.py"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 0.101,
+        "log_sha256": "f8e4f26409a6cf7c024cdbc0f4b9afd5e99b2934b2ab390306fe8d8b29f3315e"
+      },
+      {
+        "name": "drafts",
+        "command": [
+          "python",
+          "tools/check_drafts_compile.py",
+          "--quiet"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 1.151,
+        "log_sha256": "032d4a79a183866789efb9ba9a7e244469a2bd2d75c3f4c85a73cbf86e71ef62"
+      },
+      {
+        "name": "declaration",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "0e2e4c63fa3e0530f542a8028febf5cffacd777e"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 8.999,
+        "log_sha256": "23e3f02d73761d150fa522a32350a0860b538b079a42a31bf9067ad49a2a3f31"
+      },
+      {
+        "name": "prepush",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "0e2e4c63fa3e0530f542a8028febf5cffacd777e..HEAD",
+          "--json",
+          "build\\yegg-current1014\\prepush-linkcheck.json"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 26.339,
+        "log_sha256": "4736c7f2f2c450b3d086f428fa286caea670a15a936d99a6f56f65fb97c98661"
+      },
+      {
+        "name": "full_rom",
+        "command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ],
+        "input_head": "47aa142379c685088e2cf9a2a87206b179672195",
+        "exit_code": 0,
+        "elapsed_seconds": 297.72,
+        "log_sha256": "77092d48594c34d0463b34fe29955e130a8b8d216b5e98cd7e3498218e3d3963"
+      }
+    ],
+    "prepush_summary": "34 checked,34 verified,0 warnings,0 blocking",
+    "declaration_summary": "7482 banked global disagreements,504 scoped files/4195 scoped disagreements; no new disagreements/local header declaration copies. Scope is actual current-base0e2e; no shared header edited by Yegg.",
+    "static_summary": "267 port references resolve;2804 Source stems unique;3655 live mangled/vtable ledger rows checked with797 live coined rows outside this check;21/21 drafts compile.",
+    "full_ROM": {
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 297.72,
+      "profile": "stock",
+      "status": "passed",
+      "analysis_passed": true,
+      "module_fidelity": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11334,
+        "compiledBytes": 2225480,
+        "sourceFunctions": 11334,
+        "sourceBytes": 2225480,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.43577343005789,
+        "reproducingFunctions": 11334,
+        "reproducingBytes": 2225480,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "intact_link_ok": true,
+      "actual_symbol_errors_equal_same_run_baseline": true,
+      "actual_baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "new_symbol_errors": [],
+      "storage_alias_errors": [],
+      "normal_ROM_image_stage": "Skipped by --no-rom; actual same-run scratch baseline built16MiB ROM.",
+      "global_data": {
+        "symbols": 2511,
+        "verified": 970,
+        "partial": 1519,
+        "differs": 1,
+        "unnamed": 21,
+        "totalRecords": 5285
+      },
+      "global_data_limit": "Actual global data summary includes partial/differing/unnamed records. These are not erased by module/function byte proof; this Yegg scope does not claim universal data acceptance."
+    }
+  },
+  "retained_canonical_metadata": {
+    "records": 11,
+    "bytes": 241,
+    "refs": 46,
+    "ownership": "Already externalized canonical RTTI/vtables under inherited policy, separate from retained PMF/initializer/ctor/BSS; no new canonical policy or storage."
+  },
+  "private_evidence": [
+    {
+      "path": "build/yegg-current1014/claim-terminal-summary.json",
+      "sha256": "5d1f3288848f622536f0e6b4091e49112e0609c1d244e929b2fc590e3a922058"
+    },
+    {
+      "path": "build/yegg-current1014/composition.json",
+      "sha256": "6381c1502ef41b3c746a68986952445bb4da7fe3586146d73e301a31cf05c08a"
+    },
+    {
+      "path": "build/yegg-current1014/production-focused-proof.json",
+      "sha256": "24344164a9063405743702a77fb91953fbdccd4307523d90e26ad714cd1003f3"
+    },
+    {
+      "path": "build/yegg-current1014/gate-results.json",
+      "sha256": "840cfca64235083d1da79ffc502b2728691c2dd06d0f86d8fbfcc1c990af5b0c"
+    },
+    {
+      "path": "build/yegg-current1014/rombuild-report.json",
+      "sha256": "42218f0a754fb9c78f1d5ab2e7ec0d03ac39e5c290f1961b8fb52d4fecb0df66"
+    },
+    {
+      "path": "build/yegg-current1014/prior-source-acceptance-summary.json",
+      "sha256": "e6fb133f19c4b1b7dc475f04de08dbe7be65750fb49693a0c679a542f2662a38"
+    }
+  ]
+}

@@ -1,0 +1,2195 @@
+{
+  "task_id": "klepto-resources1014",
+  "tested_base": "efd33df972c9475494a18548d0248454c0e2668f",
+  "scope": "Four measured local resource handles, seven direct animation payload reads and one guarded native cap-field read; partial daJango_c reconstruction.",
+  "author": {
+    "canonical_agent": "/root/chained_native_independent",
+    "model_provenance": "Astra high as assigned by coordinator",
+    "future_producer_session_label": "codex-klepto-interfaces-author1014",
+    "session_label_scope": "Actual claimed producer session for this author on klepto-resources1014; no historical session or thread UUID inferred."
+  },
+  "source_quality_completion": "partial",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+  "next_owner": "Klepto source producer and enemy reconstruction coordinator",
+  "private_scout_proof": {
+    "base": "efd33df972c9475494a18548d0248454c0e2668f",
+    "strict": 36,
+    "functions": 24,
+    "data": 10,
+    "bss_records": 13,
+    "bss_bytes": 164,
+    "metadata_records": 11,
+    "metadata_bytes": 242,
+    "raw_refs": 339,
+    "prepared_refs": 293,
+    "raw_sha256": "6b27377018affd044f04c0cd1a5229181eb722fcb63d9360a21a77426c12af01",
+    "prepared_sha256": "3f3dd072461b42c420543ce16395ef23914adcbd91979dce81c4a44e485b7bc2",
+    "global_full_rom_run": false
+  },
+  "private_scout_qualification": "Historical private candidate proof is now corroborated by actual tracked Source compilation and ordinary full-policy preparation at the tested checkpoint. Candidate author is not the independent verifier.",
+  "manifest_scope": {
+    "measured_from_names": 13,
+    "canonical_to_names_unchanged": true,
+    "mapping_evidence_prose_updates": 13,
+    "metadata_reason_prose_updates": 3,
+    "all_other_manifest_fields_identical": true
+  },
+  "remaining_partial_boundaries": [
+    "Two synthetic local resource wrappers, four lifecycle aliases and registrar alias remain; shared SharedFilePtr interface stays fieldless.",
+    "C-linkage SWOOP entry and PMF union/state pointer boundary remain.",
+    "Scalar Fix12 bridges, raw matrix/+0xc8 borrowed actor word access, two twelve-word matrix arrays and SwoopPositionWords view remain.",
+    "Unsigned timer narrowing, unnamed fields/methods and other raw accesses remain. No unique original source or complete class/host/shared layout recovery claimed."
+  ],
+  "source_findings": [
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KLEPTO-SWOOP-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+      "kind": "provenance",
+      "location": "notes/experiments/swoop-cpp1013.json:gates.production_rom.functions_reproduced",
+      "owner": "Klepto source producer",
+      "reason": "Producer corrected the tracked report in a descendant; independent review checks the11332 total against terminal full-ROM output and the literal final report.",
+      "summary": "Previously offered report recorded intermediate5886 rather than terminal11332 source functions."
+    },
+    {
+      "disposition": "deferred",
+      "id": "KLEPTO-SWOOP-002",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+      "kind": "reconstruction",
+      "location": "src/actors/daJango_c.cpp",
+      "owner": "Klepto source producer and enemy reconstruction coordinator",
+      "reason": "This scoped change removes the C-language island and replaces its raw field/member-call access with existing typed interfaces. The measured array-backed position snapshot and unsigned timer narrowing preserve retail code under2004/b56; they do not establish unique original source or complete class reconstruction.",
+      "summary": "Existing C-linkage state entry/PMF union boundary, local layout views, scalar Fix12 ABI bridges and other raw source remain partial."
+    },
+    {
+      "id": "KLEPTO-RESOURCE-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/actors/daJango_c.cpp: local file-handle wrappers and seven animation reads",
+      "summary": "Opaque handle words and the false two-BCA-pointer view obscure the actual resource payload contract.",
+      "reason": "Private candidate uses measured u16 fileID at0, u8 numRefs at2, explicit padding at3, and the model BMD/animation BCA pointer at4. Seven reads use the animation pointer member. Canonical constructor/destructor bodies, registration edges and cleanup ownership are verified; synthetic local wrappers remain a disclosed boundary.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+      "owner": "Klepto source producer and enemy reconstruction coordinator"
+    },
+    {
+      "id": "KLEPTO-CAP-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/actors/daJango_c.cpp: daJango_c::Behavior held-cap byte read",
+      "summary": "The guarded held-cap path uses a raw +0x403 byte access despite the existing cap class field.",
+      "reason": "Private candidate includes the existing cap header and reads unk_403 only after held-ID lookup, nonnull check and the non-star branch. All non-star nonzero held-ID stores follow cap creation; the star-to-nonstar transition clears that ID. Full function bytes and typed targets remain equal after measured compiler-name normalization.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+      "owner": "Klepto source producer and enemy reconstruction coordinator"
+    },
+    {
+      "id": "KLEPTO-PROV-001",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/actors/daJango_c.cpp and config/tu_manifest.d/ov062/daJango_c.json: resource/cap and metadata comments",
+      "summary": "Existing prose describes removed Data/cap views and incorrectly labels a manifest with ten owned PMF rows as data: [].",
+      "reason": "Private candidate describes the actual remaining local resource boundary, guarded cap member and existing metadata externalization. Model::LoadFile returns void* and dExtFrameCtrl::LoadFile returns char*; their BMD/BCA payloads do not alter those API signatures. No metadata policy or owned-data row changed.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+      "owner": "Klepto source producer and enemy reconstruction coordinator"
+    }
+  ],
+  "historical_finding_scope": [
+    {
+      "id": "NDT0922-01",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "NDT0922-02",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "NDT0922-03",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV2908-01",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV2908-02",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV2908-03",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV2908-04",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV-PACKET-01",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV-PACKET-02",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV-PACKET-03",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV-PACKET-04",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "RCV-SHADOW-01",
+      "historical_task": "native-destructor-repair-0922",
+      "historical_phase": "done",
+      "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+    },
+    {
+      "id": "KLEPTO-SWOOP-001",
+      "historical_task": "klepto-swoop-cpp1013",
+      "historical_phase": "done",
+      "historical_commit": "e7a7692e1f1112d09d63db6626ab994361e2a305",
+      "scope": "Prior Klepto SWOOP slice; fixed report count remains historical and remaining reconstruction boundary still applies."
+    },
+    {
+      "id": "KLEPTO-SWOOP-002",
+      "historical_task": "klepto-swoop-cpp1013",
+      "historical_phase": "done",
+      "historical_commit": "e7a7692e1f1112d09d63db6626ab994361e2a305",
+      "scope": "Prior Klepto SWOOP slice; fixed report count remains historical and remaining reconstruction boundary still applies."
+    }
+  ],
+  "prior_writer_lineage": [
+    {
+      "task": "native-destructor-repair-0922",
+      "phase": "done",
+      "base": "27ca0e1f322b9cdc538c6954c36ddba44066c683",
+      "head": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "actual_paths": [
+        "config/tu_manifest.d/ov062/daJango_c.json",
+        "src/actors/daJango_c.cpp"
+      ],
+      "producer_sessions": [
+        "codex-receiver-publication-0925"
+      ]
+    },
+    {
+      "task": "fold-lane-d-0929",
+      "phase": "cancelled",
+      "base": "f2957e08dec8afcf21e0e44637e6311bffb7833d",
+      "head": "3ec206ec534b554ad0e5385f4005a456c64d46e0",
+      "actual_paths": [
+        "config/tu_manifest.d/ov062/daJango_c.json",
+        "include/daJango_c.h",
+        "src/actors/daJango_c.cpp"
+      ],
+      "producer_sessions": [
+        "claude-prod-fold-D-0929"
+      ]
+    },
+    {
+      "task": "klepto-swoop-cpp1013",
+      "phase": "done",
+      "base": "08b118098ecb7ce86b85f1215886a4618e268a86",
+      "head": "e7a7692e1f1112d09d63db6626ab994361e2a305",
+      "actual_paths": [
+        "config/tu_manifest.d/ov062/daJango_c.json",
+        "src/actors/daJango_c.cpp"
+      ],
+      "producer_sessions": [
+        "codex-klepto-producer1013"
+      ]
+    }
+  ],
+  "actual_git_source_lineage_newest_first": [
+    {
+      "commit": "6b82f537900e1bdeaa3c9fa3077eaa2f04426cf4",
+      "author": "andrewboudreau",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-10-13T17:44:27-05:00",
+      "subject": "Apply review follow-ups to the 1013 batch (comments, notes, whitespace)"
+    },
+    {
+      "commit": "f7df5714c08c498aea3936d798b8a99db9b9eb92",
+      "author": "andrewboudreau",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-10-13T09:53:16-05:00",
+      "subject": "Compile Klepto SWOOP update as typed C++"
+    },
+    {
+      "commit": "3f575cea63ca141257b9f7256249a7fc95271601",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-10T01:31:50+03:00",
+      "subject": "Merge remote-tracking branch 'origin/main' into types/vector3-fix12i-ctor"
+    },
+    {
+      "commit": "16dd3cc91e888aaf1fb9a9d0664669f65bbfd6ba",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-09T23:14:40+03:00",
+      "subject": "types.h: add Vector3() and Vector3(Fix12i, Fix12i, Fix12i)"
+    },
+    {
+      "commit": "27e0cacb595c1c6f0a9f9351b6d2fe5b4fccbfd0",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-09T12:05:57+03:00",
+      "subject": "Fold the ov062 jango static initializer into daJango_c.cpp"
+    },
+    {
+      "commit": "2e08358ed1eaddbec5524e5b5603a80e8528f912",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-07T20:33:22+03:00",
+      "subject": "ov062/daJango_c: member-ify the 14 receiver helpers"
+    },
+    {
+      "commit": "bc9298bc7d942788b28b9335051164d04538c11f",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-06T23:53:08+03:00",
+      "subject": "deslop daObjMarioCap_c: methodize the state machine, name the handlers"
+    },
+    {
+      "commit": "ec46de5cff3229ad39036e63b5359e593aa203bc",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-06T17:34:58+03:00",
+      "subject": "Merge origin/main into fold/arm9-animation"
+    },
+    {
+      "commit": "1ba8c17b27cbe0b104ef1ff2c39561aeef2d75f5",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-05T21:00:45+03:00",
+      "subject": "Rename ShadowModel to the ROM type name dExtShadowModel_c."
+    },
+    {
+      "commit": "ea7efda84ad8c066ffc184caffc59e2e22d6ec30",
+      "author": "lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-10-05T21:00:30+03:00",
+      "subject": "Rename Animation to the ROM type name dExtFrameCtrl_c."
+    },
+    {
+      "commit": "59cb75360778cc965786c5725a3cb9849193e04c",
+      "author": "andrewboudreau",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-10-02T01:21:02-05:00",
+      "subject": "Readability pass on daJango_c (Klepto the condor), byte-neutral"
+    },
+    {
+      "commit": "6cf2ffb7a4b0a9df353eb1ddf26016515f0f9acb",
+      "author": "andrewboudreau",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-09-29T00:45:15-05:00",
+      "subject": "Fold daJango_c's classInit factory into its TU (ov062)"
+    },
+    {
+      "commit": "a47511fd362d2e4774e1834207aa19c8582ba441",
+      "author": "Andrew",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-09-28T07:50:33-05:00",
+      "subject": "Give ApproachLinear its real bool(short&, short, short) signature tree-wide (#3292)"
+    },
+    {
+      "commit": "d9618286491554909fbe8289d8ce918d375a176a",
+      "author": "Andrew",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-09-25T22:22:44-05:00",
+      "subject": "Correct lifecycle receiver and callback contracts (#3172)"
+    },
+    {
+      "commit": "f46aeb095eee6d100747cbbf323f0d57bd91491b",
+      "author": "Andrew",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-09-25T14:46:13-05:00",
+      "subject": "Call header-declared methods by name in promoted TUs (batch 1) (#3153)"
+    },
+    {
+      "commit": "8cb7cc81487fda9d48596d9f3f64402cc6346574",
+      "author": "Andrew",
+      "email": "andrewboudreau@gmail.com",
+      "date": "2026-09-23T08:55:26-05:00",
+      "subject": "Make 25 enemy actors read like source (two readability passes, byte-identical) (#3022)"
+    },
+    {
+      "commit": "6045581c3bbd2ad8d802b673fd502eb9e3e01c74",
+      "author": "Lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-09-23T04:06:49+03:00",
+      "subject": "ov062/daJango_c: klepto comments (#2981)"
+    },
+    {
+      "commit": "58061875505edc0e7f8f6b37084a5bcdce173b20",
+      "author": "Lunavyqo",
+      "email": "60808132+lunavyqo@users.noreply.github.com",
+      "date": "2026-09-22T06:42:09+03:00",
+      "subject": "Promote ov062/daJango_c and delete its 23 shard TUs (#2886)"
+    }
+  ],
+  "lifecycle": {
+    "canonical_functions": 7,
+    "canonical_strict_blind": 0,
+    "initializer_edges": 33,
+    "full_detail": "C:\\tmp\\sm64ds-klepto-scout1014\\build\\klepto-scout\\resource-cap\\lifecycle-proof.json",
+    "ownership": "Constructors initialize ID/refcount/file pointer; both destructors publish file ID without releasing. CleanupResources retains all four Release calls. No new lifecycle alias or ownership disposition."
+  },
+  "cap_identity": "Behavior cast occurs after lookup/null and non-star guard. Only cap creation stores nonzero held IDs outside star branch; silver-star transition clears ID. Existing cap class is actor269 and InitTaken writes existing u8 unk_403. No field renaming or guessed semantic type.",
+  "metadata_scope": "11 complete records242B, including full132B own vtable preamble and inherited RTTI chain. Existing externalization policies remain unchanged.",
+  "ownership_history": "Earlier idle klepto-interfaces1014 registration was cancelled as misrouted issue3169, without Source edits or lease. Current klepto-resources1014 correctly continues open3777. Historical task statuses remain unchanged.",
+  "tested_checkpoint": "3b27d18ba7055ac95442282f3aa99fba3d55b15d",
+  "production_component_proof": {
+    "strict": 36,
+    "functions": 24,
+    "data": 10,
+    "bss_records": 13,
+    "bss_bytes": 164,
+    "metadata_records": 11,
+    "metadata_bytes": 242,
+    "raw_refs": 339,
+    "prepared_refs": 293,
+    "raw_sha256": "6b27377018affd044f04c0cd1a5229181eb722fcb63d9360a21a77426c12af01",
+    "prepared_sha256": "3f3dd072461b42c420543ce16395ef23914adcbd91979dce81c4a44e485b7bc2",
+    "global_full_rom_run": false,
+    "tested_commit": "3b27d18ba7055ac95442282f3aa99fba3d55b15d"
+  },
+  "production_binding": {
+    "tested_commit": "3b27d18ba7055ac95442282f3aa99fba3d55b15d",
+    "tested_base": "efd33df972c9475494a18548d0248454c0e2668f",
+    "actual_source_sha256": "6e1bb47ef059f2f49ef9e13d94c14c1e8dd55f0b1d27dd10a630644477d19c3a",
+    "actual_manifest_sha256": "e4c189d1f13f56dd39415661ed696f8188649499ab7a3fa95f4fcba6e805cc1a",
+    "actual_raw_and_prepared_match_private_winner": true,
+    "actual_complete_owned_storage_metadata_graph_records_match_private_winner": true,
+    "base_raw_normalization_proof": "C:\\tmp\\sm64ds-klepto-scout1014\\build\\klepto-scout\\resource-cap\\graph-identity.json",
+    "baseline_complete_prepared_equal": true,
+    "manifest_only_authorized_names_and_prose": true,
+    "unchanged_dependency_tree_ids": {
+      "include": "c79a00fb061e7ba1710053ccfe5ee542cdc6914c",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "baseline_proof_directory": "C:\\tmp\\sm64ds-klepto-scout1014\\build\\klepto-scout\\baseline"
+  },
+  "gates": {
+    "full_current_rom": {
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit": 0,
+      "tested_checkpoint": "3b27d18ba7055ac95442282f3aa99fba3d55b15d",
+      "tested_base": "efd33df972c9475494a18548d0248454c0e2668f",
+      "module_fidelity": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11334,
+        "compiledBytes": 2225480,
+        "sourceFunctions": 11334,
+        "sourceBytes": 2225480,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.43577343005789,
+        "reproducingFunctions": 11334,
+        "reproducingBytes": 2225480,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "report_sha256": "c11f282964063bf2aa652b5a3b3efe0a16b25990f42912d03c98579cdba7b826",
+      "log_sha256": "6dc8730fcc7c012f3ceac6f8c6fb009d4c35d2e10f1083f63c78961f1a9b8a3d"
+    },
+    "literal_stock_range": {
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "efd33df972c9475494a18548d0248454c0e2668f..HEAD",
+        "--json",
+        "build\\klepto-resources1014\\stock.json"
+      ],
+      "exit": 0,
+      "checked": 25,
+      "verified": 24,
+      "warnings": [
+        {
+          "file": "src/actors/daJango_c.cpp",
+          "name": "__sinit_daJango_c.cpp",
+          "module": "ov062",
+          "addr": "0x211d6fc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "warning_closure": "Literal stock initializer BLIND-10 is retained as a warning. Actual complete464B initializer and4B ctor pass ordinary prepared strict verification with zero blind words; initializer has33 typed edges. All10 owned data rows are also strict verified."
+    },
+    "required_scoped_static": {
+      "declarations-scoped": {
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "efd33df972c9475494a18548d0248454c0e2668f"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 16.12,
+        "log": "build\\klepto-resources1014\\declarations-scoped.log"
+      },
+      "port": {
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 1.86,
+        "log": "build\\klepto-resources1014\\port.log"
+      },
+      "language": {
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "build\\klepto-resources1014\\langmode-baseline.json"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 16.17,
+        "log": "build\\klepto-resources1014\\language.log"
+      },
+      "conflicts": {
+        "command": [
+          "python",
+          "tools/check_tubuild_conflicts.py"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 0.44,
+        "log": "build\\klepto-resources1014\\conflicts.log"
+      },
+      "diff": {
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "efd33df972c9475494a18548d0248454c0e2668f..HEAD"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 0.06,
+        "log": "build\\klepto-resources1014\\diff.log"
+      }
+    },
+    "extra_global_declaration_diagnostic": {
+      "result": "FAILED",
+      "exit": 1,
+      "command": [
+        "python",
+        "tools/check_decl_agreement.py"
+      ],
+      "unchanged_efd_control_exit": 1,
+      "complete_disagreement_keys": 7499,
+      "complete_keys_equal": true,
+      "unbanked_dictionaries_equal": true,
+      "unbanked_findings": [
+        {
+          "symbol": "data_ov002_0210e8d0",
+          "kind": "return",
+          "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+          "line": 463,
+          "decl": "char []",
+          "got": "char []",
+          "want": "SharedFilePtr",
+          "basis": "plurality",
+          "ref_file": "src/actors/daLuigi_c.cpp",
+          "ref_line": 105,
+          "ref": "SharedFilePtr"
+        },
+        {
+          "symbol": "data_ov002_0210eb20",
+          "kind": "return",
+          "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+          "line": 537,
+          "decl": "char []",
+          "got": "char []",
+          "want": "SharedFilePtr",
+          "basis": "plurality",
+          "ref_file": "src/actors/daLuigi_c.cpp",
+          "ref_line": 103,
+          "ref": "SharedFilePtr"
+        },
+        {
+          "symbol": "data_ov002_0210ebb8",
+          "kind": "return",
+          "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+          "line": 556,
+          "decl": "char []",
+          "got": "char []",
+          "want": "SharedFilePtr",
+          "basis": "plurality",
+          "ref_file": "src/actors/daLuigi_c.cpp",
+          "ref_line": 102,
+          "ref": "SharedFilePtr"
+        },
+        {
+          "symbol": "data_ov002_0210ebd8",
+          "kind": "return",
+          "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+          "line": 560,
+          "decl": "char []",
+          "got": "char []",
+          "want": "SharedFilePtr",
+          "basis": "plurality",
+          "ref_file": "src/actors/daLuigi_c.cpp",
+          "ref_line": 106,
+          "ref": "SharedFilePtr"
+        }
+      ],
+      "new": [],
+      "removed": [],
+      "scope": "Four foreign ov002 initializer/Luigi contracts, separately repaired in reviewed prerequisitePR3829, which is not in this tested base. This failed extra gate is not called PASS; no baseline banking or foreign edits."
+    }
+  },
+  "rom_diagnostics": {
+    "intact_tu_link": {
+      "ok": true,
+      "modulesOk": true,
+      "moduleChecksumReplay": [],
+      "symbolsCommandOk": true,
+      "symbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "baselineSymbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "newSymbolErrors": [],
+      "storageAliases": [
+        {
+          "vtable": "_ZTV9dBgCh_Gnd",
+          "vtableMetadata": {
+            "address": 34181732,
+            "size": 16,
+            "binding": "STB_GLOBAL",
+            "type": "STT_OBJECT",
+            "visibility": "STV_DEFAULT",
+            "sectionIndex": 4,
+            "section": "ARM9"
+          },
+          "splitSymbols": {
+            "VTable_dBgPi_dBgCh_GndThunk": {
+              "address": 34181748,
+              "size": 8,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 4,
+              "section": "ARM9"
+            }
+          },
+          "baselineElfSha256": "785386a6011f3c06f4af34c5af486fc57cea54240dbe12324b7a2c0db2890103",
+          "exact": true
+        },
+        {
+          "vtable": "_ZTV9dBgCh_Lin",
+          "vtableMetadata": {
+            "address": 34181796,
+            "size": 16,
+            "binding": "STB_GLOBAL",
+            "type": "STT_OBJECT",
+            "visibility": "STV_DEFAULT",
+            "sectionIndex": 4,
+            "section": "ARM9"
+          },
+          "splitSymbols": {
+            "VTable_dBgPi_dBgCh_LinThunk": {
+              "address": 34181812,
+              "size": 8,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 4,
+              "section": "ARM9"
+            }
+          },
+          "baselineElfSha256": "785386a6011f3c06f4af34c5af486fc57cea54240dbe12324b7a2c0db2890103",
+          "exact": true
+        },
+        {
+          "vtable": "_ZTV12dBgCh_SphCrr",
+          "vtableMetadata": {
+            "address": 34181944,
+            "size": 16,
+            "binding": "STB_GLOBAL",
+            "type": "STT_OBJECT",
+            "visibility": "STV_DEFAULT",
+            "sectionIndex": 4,
+            "section": "ARM9"
+          },
+          "splitSymbols": {
+            "VTable_dBgPi_dBgCh_SphCrrThunk": {
+              "address": 34181960,
+              "size": 16,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 4,
+              "section": "ARM9"
+            },
+            "VTable_dM3dGSph_dBgCh_SphCrrThunk": {
+              "address": 34181976,
+              "size": 8,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 4,
+              "section": "ARM9"
+            }
+          },
+          "baselineElfSha256": "785386a6011f3c06f4af34c5af486fc57cea54240dbe12324b7a2c0db2890103",
+          "exact": true
+        },
+        {
+          "vtable": "_ZTV15daObjRcCarpet_c",
+          "vtableMetadata": {
+            "address": 34684828,
+            "size": 88,
+            "binding": "STB_GLOBAL",
+            "type": "STT_OBJECT",
+            "visibility": "STV_DEFAULT",
+            "sectionIndex": 77,
+            "section": "OV036"
+          },
+          "splitSymbols": {
+            "data_ov036_02113ff4": {
+              "address": 34684916,
+              "size": 28,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 77,
+              "section": "OV036"
+            },
+            "data_ov036_02114010": {
+              "address": 34684944,
+              "size": 16,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 77,
+              "section": "OV036"
+            }
+          },
+          "baselineElfSha256": "785386a6011f3c06f4af34c5af486fc57cea54240dbe12324b7a2c0db2890103",
+          "exact": true
+        },
+        {
+          "vtable": "_ZTV19daPropeller_Heyho_c",
+          "vtableMetadata": {
+            "address": 34746728,
+            "size": 28,
+            "binding": "STB_GLOBAL",
+            "type": "STT_OBJECT",
+            "visibility": "STV_DEFAULT",
+            "sectionIndex": 147,
+            "section": "OV070"
+          },
+          "splitSymbols": {
+            "data_ov070_02123184": {
+              "address": 34746756,
+              "size": 28,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 147,
+              "section": "OV070"
+            },
+            "data_ov070_021231a0": {
+              "address": 34746784,
+              "size": 68,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 147,
+              "section": "OV070"
+            }
+          },
+          "baselineElfSha256": "785386a6011f3c06f4af34c5af486fc57cea54240dbe12324b7a2c0db2890103",
+          "exact": true
+        }
+      ],
+      "storageAliasErrors": []
+    },
+    "advisory_rom_data": {
+      "symbols": 2510,
+      "verified": 969,
+      "partial": 1519,
+      "differs": 1,
+      "unnamed": 21,
+      "verifiedBytes": 48968,
+      "partialBytes": 8144,
+      "verifiedRecords": 2325,
+      "partialRecords": 2818,
+      "differsRecords": 2,
+      "unnamedRecords": 137,
+      "totalRecords": 5282
+    },
+    "advisory_differing": [
+      {
+        "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      },
+      {
+        "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      }
+    ],
+    "qualification": "Full-ROM module/source fidelity passes independently of advisory emitted-data coverage and preexisting baseline DSD symbol errors. The baseline control DSD --fail diagnostic remains FAILED and is retained with its actual error comparison; no universal all-diagnostics-PASS claim."
+  },
+  "metadata_detail": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "module": "arm9",
+      "address": "0x2086d70",
+      "size": 8,
+      "body": "74a70902606e0802",
+      "target": "74a70902606e0802",
+      "edges": [
+        {
+          "off": 4,
+          "type": 2,
+          "sym": "_ZTS7fBase_c",
+          "addr": 34106976,
+          "add": 0
+        },
+        {
+          "off": 0,
+          "type": 2,
+          "sym": "_ZTVN3abi17__class_type_infoE",
+          "addr": 34187124,
+          "add": 0
+        }
+      ],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "module": "arm9",
+      "address": "0x2086e60",
+      "size": 9,
+      "body": "3766426173655f6300",
+      "target": "3766426173655f6300",
+      "edges": [],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "module": "arm9",
+      "address": "0x2086e54",
+      "size": 9,
+      "body": "3764426173655f6300",
+      "target": "3764426173655f6300",
+      "edges": [],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "module": "arm9",
+      "address": "0x208e384",
+      "size": 10,
+      "body": "38644163746f725f6300",
+      "target": "38644163746f725f6300",
+      "edges": [],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTS9daJango_c",
+      "module": "ov062",
+      "address": "0x211dd20",
+      "size": 11,
+      "body": "3964614a616e676f5f6300",
+      "target": "3964614a616e676f5f6300",
+      "edges": [],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "module": "ov002",
+      "address": "0x21081c0",
+      "size": 12,
+      "body": "64a70902cc81100290e30802",
+      "target": "64a70902cc81100290e30802",
+      "edges": [
+        {
+          "off": 4,
+          "type": 2,
+          "sym": "_ZTS12dEnemyBase_c",
+          "addr": 34636236,
+          "add": 0
+        },
+        {
+          "off": 8,
+          "type": 2,
+          "sym": "_ZTI8dActor_c",
+          "addr": 34136976,
+          "add": 0
+        },
+        {
+          "off": 0,
+          "type": 2,
+          "sym": "_ZTVN3abi20__si_class_type_infoE",
+          "addr": 34187108,
+          "add": 0
+        }
+      ],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "module": "ov002",
+      "address": "0x21081cc",
+      "size": 15,
+      "body": "313264456e656d79426173655f6300",
+      "target": "313264456e656d79426173655f6300",
+      "edges": [],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "module": "arm9",
+      "address": "0x208e390",
+      "size": 12,
+      "body": "64a7090284e30802786e0802",
+      "target": "64a7090284e30802786e0802",
+      "edges": [
+        {
+          "off": 4,
+          "type": 2,
+          "sym": "_ZTS8dActor_c",
+          "addr": 34136964,
+          "add": 0
+        },
+        {
+          "off": 8,
+          "type": 2,
+          "sym": "_ZTI7dBase_c",
+          "addr": 34107000,
+          "add": 0
+        },
+        {
+          "off": 0,
+          "type": 2,
+          "sym": "_ZTVN3abi20__si_class_type_infoE",
+          "addr": 34187108,
+          "add": 0
+        }
+      ],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "module": "arm9",
+      "address": "0x2086e78",
+      "size": 12,
+      "body": "64a70902546e0802706d0802",
+      "target": "64a70902546e0802706d0802",
+      "edges": [
+        {
+          "off": 4,
+          "type": 2,
+          "sym": "_ZTS7dBase_c",
+          "addr": 34106964,
+          "add": 0
+        },
+        {
+          "off": 8,
+          "type": 2,
+          "sym": "_ZTI7fBase_c",
+          "addr": 34106736,
+          "add": 0
+        },
+        {
+          "off": 0,
+          "type": 2,
+          "sym": "_ZTVN3abi20__si_class_type_infoE",
+          "addr": 34187108,
+          "add": 0
+        }
+      ],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTI9daJango_c",
+      "module": "ov062",
+      "address": "0x211dd2c",
+      "size": 12,
+      "body": "64a7090220dd1102c0811002",
+      "target": "64a7090220dd1102c0811002",
+      "edges": [
+        {
+          "off": 4,
+          "type": 2,
+          "sym": "_ZTS9daJango_c",
+          "addr": 34725152,
+          "add": 0
+        },
+        {
+          "off": 8,
+          "type": 2,
+          "sym": "_ZTI12dEnemyBase_c",
+          "addr": 34636224,
+          "add": 0
+        },
+        {
+          "off": 0,
+          "type": 2,
+          "sym": "_ZTVN3abi20__si_class_type_infoE",
+          "addr": 34187108,
+          "add": 0
+        }
+      ],
+      "blind": {},
+      "complete_equal": true
+    },
+    {
+      "symbol": "_ZTV9daJango_c",
+      "module": "ov062",
+      "address": "0x211dd54",
+      "size": 132,
+      "body": "000000002cdd11024ccb11026812010244120102b0c8110220120102141201024cc91102d40f0102c80f010220c91102780f01026c0f01021cc911027c3504029c3404029434040248b2110298b2110260010102540101024c0101024801010244010102400101023c0101023801010234010102300101022c01010278ce1102dc000102",
+      "target": "000000002cdd11024ccb11026812010244120102b0c8110220120102141201024cc91102d40f0102c80f010220c91102780f01026c0f01021cc911027c3504029c3404029434040248b2110298b2110260010102540101024c0101024801010244010102400101023c0101023801010234010102300101022c01010278ce1102dc000102",
+      "edges": [
+        {
+          "off": 4,
+          "type": 2,
+          "sym": "_ZTI9daJango_c",
+          "addr": 34725164,
+          "add": 0
+        },
+        {
+          "off": 68,
+          "type": 2,
+          "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+          "addr": 33830036,
+          "add": 0
+        },
+        {
+          "off": 64,
+          "type": 2,
+          "sym": "_ZN7fBase_c9Virtual38Ejj",
+          "addr": 33830044,
+          "add": 0
+        },
+        {
+          "off": 60,
+          "type": 2,
+          "sym": "_ZN7fBase_c9Virtual34Ejj",
+          "addr": 33830268,
+          "add": 0
+        },
+        {
+          "off": 128,
+          "type": 2,
+          "sym": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+          "addr": 33620188,
+          "add": 0
+        },
+        {
+          "off": 120,
+          "type": 2,
+          "sym": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+          "addr": 33620268,
+          "add": 0
+        },
+        {
+          "off": 116,
+          "type": 2,
+          "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "addr": 33620272,
+          "add": 0
+        },
+        {
+          "off": 112,
+          "type": 2,
+          "sym": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+          "addr": 33620276,
+          "add": 0
+        },
+        {
+          "off": 108,
+          "type": 2,
+          "sym": "_ZN8dActor_c8OnPushedERS_",
+          "addr": 33620280,
+          "add": 0
+        },
+        {
+          "off": 104,
+          "type": 2,
+          "sym": "_ZN8dActor_c8OnKickedERS_",
+          "addr": 33620284,
+          "add": 0
+        },
+        {
+          "off": 100,
+          "type": 2,
+          "sym": "_ZN8dActor_c11OnAttacked2ERS_",
+          "addr": 33620288,
+          "add": 0
+        },
+        {
+          "off": 96,
+          "type": 2,
+          "sym": "_ZN8dActor_c11OnAttacked1ERS_",
+          "addr": 33620292,
+          "add": 0
+        },
+        {
+          "off": 92,
+          "type": 2,
+          "sym": "_ZN8dActor_c15OnGroundPoundedERS_",
+          "addr": 33620296,
+          "add": 0
+        },
+        {
+          "off": 88,
+          "type": 2,
+          "sym": "_ZN8dActor_c9Virtual50Ev",
+          "addr": 33620300,
+          "add": 0
+        },
+        {
+          "off": 84,
+          "type": 2,
+          "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "addr": 33620308,
+          "add": 0
+        },
+        {
+          "off": 80,
+          "type": 2,
+          "sym": "_ZN8dActor_c13OnYoshiTryEatEv",
+          "addr": 33620320,
+          "add": 0
+        },
+        {
+          "off": 52,
+          "type": 2,
+          "sym": "_ZN8dActor_c11AfterRenderEj",
+          "addr": 33623916,
+          "add": 0
+        },
+        {
+          "off": 48,
+          "type": 2,
+          "sym": "_ZN8dActor_c12BeforeRenderEv",
+          "addr": 33623928,
+          "add": 0
+        },
+        {
+          "off": 40,
+          "type": 2,
+          "sym": "_ZN8dActor_c13AfterBehaviorEj",
+          "addr": 33624008,
+          "add": 0
+        },
+        {
+          "off": 36,
+          "type": 2,
+          "sym": "_ZN8dActor_c14BeforeBehaviorEv",
+          "addr": 33624020,
+          "add": 0
+        },
+        {
+          "off": 28,
+          "type": 2,
+          "sym": "_ZN8dActor_c21AfterCleanupResourcesEj",
+          "addr": 33624596,
+          "add": 0
+        },
+        {
+          "off": 24,
+          "type": 2,
+          "sym": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+          "addr": 33624608,
+          "add": 0
+        },
+        {
+          "off": 16,
+          "type": 2,
+          "sym": "_ZN8dActor_c18AfterInitResourcesEj",
+          "addr": 33624644,
+          "add": 0
+        },
+        {
+          "off": 12,
+          "type": 2,
+          "sym": "_ZN8dActor_c19BeforeInitResourcesEv",
+          "addr": 33624680,
+          "add": 0
+        },
+        {
+          "off": 76,
+          "type": 2,
+          "sym": "_ZN9daJango_cD0Ev",
+          "addr": 34714264,
+          "add": 0
+        },
+        {
+          "off": 44,
+          "type": 2,
+          "sym": "_ZN9daJango_c6RenderEv",
+          "addr": 34720032,
+          "add": 0
+        },
+        {
+          "off": 56,
+          "type": 2,
+          "sym": "_ZN9daJango_c16OnPendingDestroyEv",
+          "addr": 34720028,
+          "add": 0
+        },
+        {
+          "off": 8,
+          "type": 2,
+          "sym": "_ZN9daJango_c13InitResourcesEv",
+          "addr": 34720588,
+          "add": 0
+        },
+        {
+          "off": 20,
+          "type": 2,
+          "sym": "_ZN9daJango_c16CleanupResourcesEv",
+          "addr": 34719920,
+          "add": 0
+        },
+        {
+          "off": 32,
+          "type": 2,
+          "sym": "_ZN9daJango_c8BehaviorEv",
+          "addr": 34720076,
+          "add": 0
+        },
+        {
+          "off": 124,
+          "type": 2,
+          "sym": "_ZN9daJango_c16OnAimedAtWithEggEv",
+          "addr": 34721400,
+          "add": 0
+        },
+        {
+          "off": 72,
+          "type": 2,
+          "sym": "_ZN9daJango_cD1Ev",
+          "addr": 34714184,
+          "add": 0
+        }
+      ],
+      "blind": {},
+      "complete_equal": true
+    }
+  ],
+  "resource_lifecycle_proof": {
+    "canonical_bodies": [
+      {
+        "symbol": "func_02017acc",
+        "source": "C:\\tmp\\sm64ds-klepto-interfaces1014\\src\\unnamed\\arm9\\0201\\func_02017acc.c",
+        "size": 24,
+        "strict": {
+          "name": "func_02017acc",
+          "module": "arm9",
+          "addr": "0x02017acc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "body": "10402de90040a0e1000000eb0400a0e11040bde81eff2fe1",
+        "edges": [
+          {
+            "off": 8,
+            "type": 1,
+            "sym": "func_02017e48",
+            "addr": 33652296,
+            "add": -8
+          }
+        ]
+      },
+      {
+        "symbol": "func_02017ab4",
+        "source": "C:\\tmp\\sm64ds-klepto-interfaces1014\\src\\unnamed\\arm9\\0201\\func_02017ab4.c",
+        "size": 24,
+        "strict": {
+          "name": "func_02017ab4",
+          "module": "arm9",
+          "addr": "0x02017ab4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "body": "10402de90040a0e1000000eb0400a0e11040bde81eff2fe1",
+        "edges": [
+          {
+            "off": 8,
+            "type": 1,
+            "sym": "func_02017e34",
+            "addr": 33652276,
+            "add": -8
+          }
+        ]
+      },
+      {
+        "symbol": "_ZN13SharedFilePtr9ConstructEj",
+        "source": "C:\\tmp\\sm64ds-klepto-interfaces1014\\src\\_ZN13SharedFilePtr9ConstructEj.cpp",
+        "size": 24,
+        "strict": {
+          "name": "_ZN13SharedFilePtr9ConstructEj",
+          "module": "arm9",
+          "addr": "0x0201799c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "body": "10402de90040a0e1000000eb0400a0e11040bde81eff2fe1",
+        "edges": [
+          {
+            "off": 8,
+            "type": 1,
+            "sym": "func_02017e48",
+            "addr": 33652296,
+            "add": -8
+          }
+        ]
+      },
+      {
+        "symbol": "SharedFilePtr_Destruct_Anim",
+        "source": "C:\\tmp\\sm64ds-klepto-interfaces1014\\src\\SharedFilePtr_Destruct_Anim.c",
+        "size": 24,
+        "strict": {
+          "name": "SharedFilePtr_Destruct_Anim",
+          "module": "arm9",
+          "addr": "0x02017984",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "body": "10402de90040a0e1000000eb0400a0e11040bde81eff2fe1",
+        "edges": [
+          {
+            "off": 8,
+            "type": 1,
+            "sym": "func_02017e34",
+            "addr": 33652276,
+            "add": -8
+          }
+        ]
+      },
+      {
+        "symbol": "func_02017e48",
+        "source": "C:\\tmp\\sm64ds-klepto-interfaces1014\\src\\unnamed\\arm9\\0201\\func_02017e48.c",
+        "size": 24,
+        "strict": {
+          "name": "func_02017e48",
+          "module": "arm9",
+          "addr": "0x02017e48",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "body": "10402de90040a0e1000000eb0400a0e11040bde81eff2fe1",
+        "edges": [
+          {
+            "off": 8,
+            "type": 1,
+            "sym": "func_02017e0c",
+            "addr": 33652236,
+            "add": -8
+          }
+        ]
+      },
+      {
+        "symbol": "func_02017e0c",
+        "source": "C:\\tmp\\sm64ds-klepto-interfaces1014\\src\\func_02017e0c.c",
+        "size": 40,
+        "strict": {
+          "name": "func_02017e0c",
+          "module": "arm9",
+          "addr": "0x02017e0c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "body": "10402de90040a0e10020a0e3042084e50100a0e10220c4e5000000ebb000c4e11040bde81eff2fe1",
+        "edges": [
+          {
+            "off": 24,
+            "type": 1,
+            "sym": "func_02018a24",
+            "addr": 33655332,
+            "add": -8
+          }
+        ]
+      },
+      {
+        "symbol": "func_02017e34",
+        "source": "C:\\tmp\\sm64ds-klepto-interfaces1014\\src\\unnamed\\arm9\\0201\\func_02017e34.c",
+        "size": 20,
+        "strict": {
+          "name": "func_02017e34",
+          "module": "arm9",
+          "addr": "0x02017e34",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "body": "b020d0e104109fe5002081e51eff2fe100000000",
+        "edges": [
+          {
+            "off": 16,
+            "type": 2,
+            "sym": "data_0209d3bc",
+            "addr": 34198460,
+            "add": 0
+          }
+        ]
+      }
+    ],
+    "initializer": {
+      "symbol": "__sinit_daJango_c.cpp",
+      "body": "00402de904d04de250019fe5d21fa0e3000000eb44019fe544119fe544219fe5000000eb40019fe540119fe5000000eb34019fe538119fe538219fe5000000eb34019fe534119fe5000000eb28019fe51c119fe528219fe5000000eb24019fe524119fe5000000eb18019fe500119fe518219fe5000000eb14219fe514119fe514019fe5003091e5041091e5003082e5041082e5001090e5040090e5081082e50c0082e5f4209fe5f4109fe5f4009fe5003091e5041091e5003082e5041082e5001090e5040090e5081082e50c0082e5d4209fe5d4109fe5d4009fe5003091e5041091e5003082e5041082e5001090e5040090e5081082e50c0082e5b4209fe5b4109fe5b4009fe5003091e5041091e5003082e5041082e5001090e5040090e5081082e50c0082e594209fe594109fe594009fe5003091e5041091e5003082e5041082e5001090e5040090e5081082e50c0082e504d08de20040bde81eff2fe100000000000000000000000000000000490300000000000000000000000000004a03000000000000000000004b03000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "edges": [
+        {
+          "off": 16,
+          "type": 1,
+          "sym": "func_02017acc",
+          "addr": 33651404,
+          "add": -8
+        },
+        {
+          "off": 32,
+          "type": 1,
+          "sym": "func_020731dc",
+          "addr": 34025948,
+          "add": -8
+        },
+        {
+          "off": 44,
+          "type": 1,
+          "sym": "_ZN13SharedFilePtr9ConstructEj",
+          "addr": 33651100,
+          "add": -8
+        },
+        {
+          "off": 60,
+          "type": 1,
+          "sym": "func_020731dc",
+          "addr": 34025948,
+          "add": -8
+        },
+        {
+          "off": 72,
+          "type": 1,
+          "sym": "_ZN13SharedFilePtr9ConstructEj",
+          "addr": 33651100,
+          "add": -8
+        },
+        {
+          "off": 88,
+          "type": 1,
+          "sym": "func_020731dc",
+          "addr": 34025948,
+          "add": -8
+        },
+        {
+          "off": 100,
+          "type": 1,
+          "sym": "_ZN13SharedFilePtr9ConstructEj",
+          "addr": 33651100,
+          "add": -8
+        },
+        {
+          "off": 116,
+          "type": 1,
+          "sym": "func_020731dc",
+          "addr": 34025948,
+          "add": -8
+        },
+        {
+          "off": 352,
+          "type": 2,
+          "sym": "data_ov062_0211e0fc",
+          "addr": 34726140,
+          "add": 0
+        },
+        {
+          "off": 356,
+          "type": 2,
+          "sym": "func_02017ab4",
+          "addr": 33651380,
+          "add": 0
+        },
+        {
+          "off": 360,
+          "type": 2,
+          "sym": "@1115",
+          "addr": 34726196,
+          "add": 0
+        },
+        {
+          "off": 364,
+          "type": 2,
+          "sym": "data_ov062_0211e114",
+          "addr": 34726164,
+          "add": 0
+        },
+        {
+          "off": 372,
+          "type": 2,
+          "sym": "SharedFilePtr_Destruct_Anim",
+          "addr": 33651076,
+          "add": 0
+        },
+        {
+          "off": 376,
+          "type": 2,
+          "sym": "@1116",
+          "addr": 34726208,
+          "add": 0
+        },
+        {
+          "off": 380,
+          "type": 2,
+          "sym": "data_ov062_0211e10c",
+          "addr": 34726156,
+          "add": 0
+        },
+        {
+          "off": 388,
+          "type": 2,
+          "sym": "@1117",
+          "addr": 34726184,
+          "add": 0
+        },
+        {
+          "off": 392,
+          "type": 2,
+          "sym": "data_ov062_0211e104",
+          "addr": 34726148,
+          "add": 0
+        },
+        {
+          "off": 400,
+          "type": 2,
+          "sym": "@1118",
+          "addr": 34726172,
+          "add": 0
+        },
+        {
+          "off": 404,
+          "type": 2,
+          "sym": "data_ov062_0211e15c",
+          "addr": 34726236,
+          "add": 0
+        },
+        {
+          "off": 408,
+          "type": 2,
+          "sym": "@1120",
+          "addr": 34725080,
+          "add": 0
+        },
+        {
+          "off": 412,
+          "type": 2,
+          "sym": "@1122",
+          "addr": 34725104,
+          "add": 0
+        },
+        {
+          "off": 416,
+          "type": 2,
+          "sym": "data_ov062_0211e17c",
+          "addr": 34726268,
+          "add": 0
+        },
+        {
+          "off": 420,
+          "type": 2,
+          "sym": "@1124",
+          "addr": 34725136,
+          "add": 0
+        },
+        {
+          "off": 424,
+          "type": 2,
+          "sym": "@1126",
+          "addr": 34725088,
+          "add": 0
+        },
+        {
+          "off": 428,
+          "type": 2,
+          "sym": "data_ov062_0211e18c",
+          "addr": 34726284,
+          "add": 0
+        },
+        {
+          "off": 432,
+          "type": 2,
+          "sym": "@692",
+          "addr": 34725112,
+          "add": 0
+        },
+        {
+          "off": 436,
+          "type": 2,
+          "sym": "data_ov062_0211dcd0",
+          "addr": 34725072,
+          "add": 0
+        },
+        {
+          "off": 440,
+          "type": 2,
+          "sym": "data_ov062_0211e14c",
+          "addr": 34726220,
+          "add": 0
+        },
+        {
+          "off": 444,
+          "type": 2,
+          "sym": "@690",
+          "addr": 34725144,
+          "add": 0
+        },
+        {
+          "off": 448,
+          "type": 2,
+          "sym": "@189",
+          "addr": 34725120,
+          "add": 0
+        },
+        {
+          "off": 452,
+          "type": 2,
+          "sym": "data_ov062_0211e16c",
+          "addr": 34726252,
+          "add": 0
+        },
+        {
+          "off": 456,
+          "type": 2,
+          "sym": "@197",
+          "addr": 34725096,
+          "add": 0
+        },
+        {
+          "off": 460,
+          "type": 2,
+          "sym": "@198",
+          "addr": 34725128,
+          "add": 0
+        }
+      ]
+    },
+    "ctor": {
+      "symbol": ".p__sinit_daJango_c.cpp",
+      "body": "00000000",
+      "edges": [
+        {
+          "off": 0,
+          "type": 2,
+          "sym": "__sinit_daJango_c.cpp",
+          "addr": 34723580,
+          "add": 0
+        }
+      ]
+    },
+    "aliases": [
+      {
+        "symbol": "_ZN14JangoModelFileC1Ej",
+        "canonical_symbol": "func_02017acc",
+        "canonical_module": "arm9",
+        "canonical_address": "0x02017acc",
+        "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+      },
+      {
+        "symbol": "_ZN14JangoModelFileD1Ev",
+        "canonical_symbol": "func_02017ab4",
+        "canonical_module": "arm9",
+        "canonical_address": "0x02017ab4",
+        "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
+      },
+      {
+        "symbol": "_ZN21JangoAnimationFilePtrC1Ej",
+        "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+        "canonical_module": "arm9",
+        "canonical_address": "0x0201799c",
+        "evidence": "retail initializer call destination and the animation wrapper constructor's exact PC24 relocation"
+      },
+      {
+        "symbol": "_ZN21JangoAnimationFilePtrD1Ev",
+        "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+        "canonical_module": "arm9",
+        "canonical_address": "0x02017984",
+        "evidence": "retail destructor registration destination and the animation wrapper destructor's exact ABS32 relocation"
+      },
+      {
+        "symbol": "__register_global_object",
+        "canonical_symbol": "func_020731dc",
+        "canonical_module": "arm9",
+        "canonical_address": "0x020731dc",
+        "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
+      }
+    ],
+    "lifetime": "Four static8Balign4 handles constructed model0x348 thenanimations349/34a/34b. Model C1/D1 pair targets02017acc/02017ab4; animations Construct/Destruct_Anim. Three ctor wrappers forward to byte/u16/pointer initialization. Both destruction callbacks only publish u16fileID through02017e34; CleanupResources performs Release. Normal alias policies unchanged.",
+    "source_identity": "BMD pointer refers actual model payload though Model::LoadFile returns void*. BCA pointer refers animation payload though dExtFrameCtrl::LoadFile returns char*. No API return type changed.",
+    "private_final_preparation_equal": true
+  },
+  "measured_registration_name_graph": {
+    "complete_normalized_raw_symbols_bodies_sections_edges_equal": true,
+    "normalization": {
+      "@1127": "@1154",
+      "@1128": "@1155",
+      "@1129": "@1156",
+      "@1130": "@1157",
+      "@1132": "@1159",
+      "@1134": "@1161",
+      "@1136": "@1163",
+      "@1138": "@1165",
+      "@531": "@558",
+      "@1140": "@1167",
+      "@1142": "@1169",
+      "@1144": "@1171",
+      "@1146": "@1173"
+    },
+    "raw_refs": 339,
+    "nodes": [
+      {
+        "old": "@1127",
+        "new": "@1154",
+        "size": 12,
+        "section": 46,
+        "section_type": "SHT_NOBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 360,
+            "type": 2,
+            "symbol": "@1154"
+          }
+        ],
+        "outgoing": []
+      },
+      {
+        "old": "@1128",
+        "new": "@1155",
+        "size": 12,
+        "section": 38,
+        "section_type": "SHT_NOBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 376,
+            "type": 2,
+            "symbol": "@1155"
+          }
+        ],
+        "outgoing": []
+      },
+      {
+        "old": "@1129",
+        "new": "@1156",
+        "size": 12,
+        "section": 37,
+        "section_type": "SHT_NOBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 388,
+            "type": 2,
+            "symbol": "@1156"
+          }
+        ],
+        "outgoing": []
+      },
+      {
+        "old": "@1130",
+        "new": "@1157",
+        "size": 12,
+        "section": 39,
+        "section_type": "SHT_NOBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 400,
+            "type": 2,
+            "symbol": "@1157"
+          }
+        ],
+        "outgoing": []
+      },
+      {
+        "old": "@1132",
+        "new": "@1159",
+        "size": 8,
+        "section": 25,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 408,
+            "type": 2,
+            "symbol": "@1159"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 25,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211c594Ev"
+          }
+        ]
+      },
+      {
+        "old": "@1134",
+        "new": "@1161",
+        "size": 8,
+        "section": 27,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 412,
+            "type": 2,
+            "symbol": "@1161"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 27,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211c2f4Ev"
+          }
+        ]
+      },
+      {
+        "old": "@1136",
+        "new": "@1163",
+        "size": 8,
+        "section": 13,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 420,
+            "type": 2,
+            "symbol": "@1163"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 13,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211c218Ev"
+          }
+        ]
+      },
+      {
+        "old": "@1138",
+        "new": "@1165",
+        "size": 8,
+        "section": 9,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 424,
+            "type": 2,
+            "symbol": "@1165"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 9,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211bd10Ev"
+          }
+        ]
+      },
+      {
+        "old": "@531",
+        "new": "@558",
+        "size": 8,
+        "section": 29,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 432,
+            "type": 2,
+            "symbol": "@558"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 29,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211bc54Ev"
+          }
+        ]
+      },
+      {
+        "old": "@1140",
+        "new": "@1167",
+        "size": 8,
+        "section": 5,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 444,
+            "type": 2,
+            "symbol": "@1167"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 5,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211b930Ev"
+          }
+        ]
+      },
+      {
+        "old": "@1142",
+        "new": "@1169",
+        "size": 8,
+        "section": 15,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 448,
+            "type": 2,
+            "symbol": "@1169"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 15,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211b8d8Ev"
+          }
+        ]
+      },
+      {
+        "old": "@1144",
+        "new": "@1171",
+        "size": 8,
+        "section": 7,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 456,
+            "type": 2,
+            "symbol": "@1171"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 7,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211b880Ev"
+          }
+        ]
+      },
+      {
+        "old": "@1146",
+        "new": "@1173",
+        "size": 8,
+        "section": 19,
+        "section_type": "SHT_PROGBITS",
+        "alignment": 4,
+        "incoming": [
+          {
+            "section": 102,
+            "offset": 460,
+            "type": 2,
+            "symbol": "@1173"
+          }
+        ],
+        "outgoing": [
+          {
+            "section": 19,
+            "offset": 0,
+            "type": 2,
+            "symbol": "_ZN9daJango_c19func_ov062_0211b800Ev"
+          }
+        ]
+      }
+    ]
+  },
+  "historical_finding_supersession": {
+    "earlier_rejection": {
+      "disposition": "blocking",
+      "id": "KLEPTO-SWOOP-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+      "kind": "provenance",
+      "location": "notes/experiments/swoop-cpp1013.json:gates.production_rom.functions_reproduced",
+      "owner": "Klepto source producer",
+      "reason": "Producer confirmed its regex selected the first progress occurrence rather than the completed ROM-build summary. This falsely describes the measured gate; source and manifest proof otherwise pass.",
+      "summary": "Production report records intermediate 5886 functions instead of terminal 11332."
+    },
+    "accepted_commit": "e7a7692e1f1112d09d63db6626ab994361e2a305",
+    "accepted_finding": {
+      "disposition": "fixed",
+      "id": "KLEPTO-SWOOP-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3777",
+      "kind": "provenance",
+      "location": "notes/experiments/swoop-cpp1013.json:gates.production_rom.functions_reproduced",
+      "owner": "Klepto source producer",
+      "reason": "Producer corrected the tracked report in a descendant; independent review checks the11332 total against terminal full-ROM output and the literal final report.",
+      "summary": "Previously offered report recorded intermediate5886 rather than terminal11332 source functions."
+    },
+    "report_matches_accepted": true,
+    "predecessor_task": "klepto-swoop-cpp1013",
+    "current_task_inherited_snapshot": "Retains earlier blocking dictionary; not a fresh unresolved Klepto defect. Later accepted predecessor output is authoritative for the current disposition, with both dictionaries preserved here.",
+    "rejected_commit": "821e8aadcfb29de95e804271cb1258cd42fe8ecd",
+    "rejected_at": "2026-10-13T15:02:25.360840+00:00",
+    "rejected_by": "astra-klepto-independent1013",
+    "accepted_at": "2026-10-13T15:08:08.847916+00:00",
+    "accepted_stage": "verify",
+    "accepted_session": "astra-klepto-independent1013-recheck",
+    "accepted_is_descendant": true,
+    "changed_paths_between_rejected_and_accepted": [
+      "notes/experiments/swoop-cpp1013.json"
+    ],
+    "source_and_manifest_unchanged_between_historical_attempts": true,
+    "selection_basis": "Explicit chronological rejected attempt then accepted verify output at pinned descendant, not previous_findings iteration order."
+  },
+  "finding_retention_qualification": "15 latest accepted historical dictionaries and3 fresh fixed findings are preserved. The current task snapshot retains an earlier blocking KLEPTO-SWOOP-001; both rejected and accepted dictionaries and immutable chronological pins are recorded explicitly. No claim that all15 match the stale task snapshot verbatim.",
+  "required_proof_artifact_hashes": {
+    "raw.o": "6b27377018affd044f04c0cd1a5229181eb722fcb63d9360a21a77426c12af01",
+    "prepared.o": "3f3dd072461b42c420543ce16395ef23914adcbd91979dce81c4a44e485b7bc2",
+    "strict.json": "6239f083c160e3758ac01f04b36c6ad4bcb7a0d0ba72e65aa804adb6ea896c03",
+    "bss.json": "12fa1b2f71b708a8c3ddcaacacaa460bfcb90f01c1271269dd71d539818f6ec0",
+    "owned.json": "cb09e9192608eb0c73cf615237730cf93096e6263d727bb974d916221c8d4229",
+    "metadata.json": "6694817b2158bc942dc3d063149dfb4e320f1569b50b0ebd23171baa19c273e7",
+    "graphs.json": "4403a981548006dc23190f325692bc76d602bfc72f4efc5ab288542c684ae9a0",
+    "lifecycle-proof.json": "5f91bed442a6d310f06b80d6a5f8b41bcafde944f70a0153ebcb3b97ec213830"
+  }
+}

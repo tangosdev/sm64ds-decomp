@@ -10,7 +10,7 @@ typedef unsigned int u32;
 
 struct HeapS;
 extern "C" {
-HeapS *_ZN4Heap13SetupRootHeapEv(void);
+HeapS *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 int func_02058ea0(void *);
 int func_02058eb4(void *);
 }
@@ -29,7 +29,7 @@ static u32 lcg(void) { return lcg_state = lcg_state * 1664525u + 1013904223u; }
 
 int main(void)
 {
-    HeapS *root = _ZN4Heap13SetupRootHeapEv();
+    HeapS *root = _ZN5mHeap6Heap_t13SetupRootHeapEv();
     CHECK(root != NULL);
     char *arena_lo = (char *)(size_t)func_02058ea0(0);
     char *arena_hi = (char *)(size_t)func_02058eb4(0);

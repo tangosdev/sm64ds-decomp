@@ -1,0 +1,780 @@
+{
+  "task": "bmb-native1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2413",
+  "base": "607576acc557a318d5f813f8a0813bc86f03d140",
+  "producer": "codex-bmb-native-producer1013",
+  "candidate_author": {
+    "agent": "/root/ibl_interface_independent",
+    "thread": "01a13751-2d56-7901-a14d-9543eb0dbf2e"
+  },
+  "status": "Producer verification complete; independent Source review required.",
+  "scope": [
+    "src/actors/daBmb_c.cpp",
+    "include/daBmb_c.h (comments only)",
+    "notes/experiments/bmb-native1013.json"
+  ],
+  "changes": [
+    "Replace the state-zero shadow with actual daBmb_c fields and typed Player access.",
+    "Use native ClosestPlayer and explicitly qualified frame-controller Advance calls in states 0, 1 and 3.",
+    "Repair the three inaccurate identity/factory/allocator comments without changing header declarations."
+  ],
+  "historical_lineage": {
+    "actual_bobomb_task": "issue-2413",
+    "actual_producer": "prod-2413-0907",
+    "producer_output": "123ea08645d12a52f43a5cdc70b6c019ac1301dd",
+    "stable_inherited_finding_ids": [
+      "onturnintoegg-src-tu-redeclaration",
+      "handoff-matching-headers-claim-false",
+      "da1up-reconstruction-debt-disclosed",
+      "dead-references-koopa-plus-truncation",
+      "queue-rows-stale-from-branch-edits",
+      "queue-audit-residue-miscited-as-preexisting"
+    ],
+    "historical_review_preserved": [
+      {
+        "abi_bridges_not_counted_by_handoff": "mangled-name extern declarations (ABI bridges): 17 distinct at file scope, 29 distinct at block scope (6 inside daBmb_c_classInit alone), and 285 byte-offset accesses. The handoff counts free functions but not these bridges; carry as remaining work on the issue.",
+        "attribution": "reviewed: the 32-row table is correct and complete against validate_merge and prepush_attribution",
+        "methods": "13 of 35 are daBmb_c:: methods (11 out-of-line + D1/D0 from the inline dtor); daBmb_c_classInit keeps C linkage; 21 func_ov102_* free functions (counted from definitions). 3 shadow types (Bmb_Vec3, Bmb_Bf64Obj, Bmb_VBase). SCOPE block verified in source: func_0200fc44 declared with 4 params at line 689 (bd90) and 3 at line 1645 (aa18). Cross-module callers verified from src and ledgers: 0x0214ad14 <- ov002 (EnemySpawner::Behavior)/ov078; 0x0214ae1c <- ov014 (d_a_wanwan)/ov098; 0x0214b384 <- ov078.",
+        "remaining_work": [
+          "19 NAMING-blocked free functions (3 cross-module)",
+          "2 SCOPE-blocked state arms (func_ov102_0214bf64, func_ov102_0214bd90)",
+          "3 shadow types; ~285 raw byte-offset accesses in the free-function half",
+          "46 distinct mangled-name ABI bridge declarations across file and block scope",
+          "attribution.json path#symbol overrides for 32 symbols (integration lane)",
+          "the original-source-base record 2ab05bae is not mentioned in the handoff (only b2bd6a32); documentation only"
+        ],
+        "result": "pass"
+      }
+    ],
+    "qualification": "Correction to the initial artifact-only audit: issue-2411-humanizer-2 contains actual Bob-omb OnTurnIntoEgg int-to-void changes in its history, not merely a reservation. The final revise artifact list records only that revision, not the full task. Preserve all six findings with their original scope: five fixed historical findings and deferred da1up reconstruction debt, which remains OneUp debt and is not a Bob-omb defect. issue2413 remains the Bob-omb reconstruction producer. Historical source counts are not current counts; reviewers are not credited as source authors.",
+    "proposed_predecessor_tasks": [
+      "issue-2413",
+      "issue-2411-humanizer-2"
+    ],
+    "broader_contract_actual_source_commit": "b9339491fc6c4153715f6e26b596cd5478be5ffa",
+    "broader_contract_git_authorship": "commit b9339491fc6c4153715f6e26b596cd5478be5ffa\nAuthor:     andrewboudreau <andrewboudreau@gmail.com>\nAuthorDate: Mon Sep 7 15:18:33 2026 -0500\nCommit:     andrewboudreau <andrewboudreau@gmail.com>\nCommitDate: Mon Sep 7 15:18:33 2026 -0500\n\n    Correct actor egg-turn hooks and forwarding helpers to void\n",
+    "broader_contract_source_diff": "diff --git a/include/daBmb_c.h b/include/daBmb_c.h\nindex 421802fe26..0ba99d33e3 100644\n--- a/include/daBmb_c.h\n+++ b/include/daBmb_c.h\n@@ -114,7 +114,7 @@ struct daBmb_c : dEnemyBase_c {\n     virtual ~daBmb_c() {}\n \n     virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */\n-    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */\n+    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */\n     virtual s32   OnAimedAtWithEgg();      /* slot 29 */\n \n     int Behavior();\ndiff --git a/src/actors/daBmb_c.cpp b/src/actors/daBmb_c.cpp\nindex 8b1153765c..2c181f139b 100644\n--- a/src/actors/daBmb_c.cpp\n+++ b/src/actors/daBmb_c.cpp\n@@ -1470,7 +1470,7 @@ void func_ov102_0214ae1c(void *cv) {\n  * ======================================================================== */\n \n // @symbol _ZN7daBmb_c13OnTurnIntoEggER6Player\n-int daBmb_c::OnTurnIntoEgg(Player &player)\n+void daBmb_c::OnTurnIntoEgg(Player &player)\n {\n     if (unk_108 == 1) {\n         Sound::PlayBank3(0x11, *(Vector3 *)&mCamSpacePosX);\n",
+    "earlier_incorrect_inference_preserved": "Initial scout note excluded issue2411-humanizer2 based only on latest produced-artifact paths; actual base-to-output Source/header diff and b9339491 disprove that inference. This corrected terminal handoff supersedes it.",
+    "actual_writer_lineage": {
+      "git_log": [
+        "11817624cd47d439a8ec5998f6b23a9ccd81f59e lunavyqo Player ov002 020d2f24-020db8d8: rewrite 14 helpers as Player members",
+        "69c35e06da0bba77911cd88d33323ea6842fee93 lunavyqo Restore main folds dropped by the merge: dExtShadowModel_c, BlendModelAnim, GXS.",
+        "1ba8c17b27cbe0b104ef1ff2c39561aeef2d75f5 lunavyqo Rename ShadowModel to the ROM type name dExtShadowModel_c.",
+        "ea7efda84ad8c066ffc184caffc59e2e22d6ec30 lunavyqo Rename Animation to the ROM type name dExtFrameCtrl_c.",
+        "b8b4e8eb3080c52d346a185ef81224aab5cffe77 andrewboudreau Define daBmb_c's launch-speed tables and end its .data claim at the vtable",
+        "678feadd70eb69535f8ac46dda383903fde4f738 andrewboudreau Use the retail words for the BOMBHEI and KURIBO profiles",
+        "033352af2818c88cf8980db4b62ee8a4e2ba5090 lunavyqo Fold g_profile_BOMBHEI into ov102/daBmb_c (S14, S36)",
+        "a47511fd362d2e4774e1834207aa19c8582ba441 Andrew Give ApproachLinear its real bool(short&, short, short) signature tree-wide (#3292)",
+        "b6be2da9a0fd76fb64b930b5ac81e49ef7e60f7a andrewboudreau Call daBmb_c's two remaining callees through the file-scope prototypes",
+        "94121b048230c8ea346138a3f295bb2ee67e59c7 lunavyqo Make daBmb_c func_ov helpers methods.",
+        "1e39a6eafbd4b897c3b1dfe292b9cee9eef36ed1 lunavyqo Name daBmb_c fields from the bodies that use them.",
+        "0d3cb68a4911fac5628b72041b105a29c1ebebd2 Andrew Call header-declared methods by name in promoted TUs (batch 5) (#3145)",
+        "8cb7cc81487fda9d48596d9f3f64402cc6346574 Andrew Make 25 enemy actors read like source (two readability passes, byte-identical) (#3022)",
+        "7d5ecfe95578b98994672a0809363dcfc97e82c5 Andrew Rename ov102 QuestionBlock to its ROM RTTI name daObjHatenaBlock_c (#2805)",
+        "3fb9112674857aeadc7f594b4b5669315343567d Andrew Declare the Sound namespace in a header instead of per file (#2727)",
+        "cb4aabbfa827a850231dfd6ef35b22e74aa07e5e lunavyqo Cleanup ov102/daBmb_c: Bob-omb",
+        "60cc996d038b7c2d0948da033940faa19f1d2536 Tango Give three TUs one spelling per shared symbol and lift two local types",
+        "ce0eb39e2142a8d2bf0123a04fccb51ca98c3c8f Andrew Promote ov002/da1up_c under the ROM RTTI name and correct the actor OnTurnIntoEgg(Player&) contract to void (#2512)",
+        "0033367fbfbe53e3da3a2784f197204026d95846 Andrew ov102: promote daBmb_c into one C++ TU under the cartridge's own RTTI name (#2434)"
+      ],
+      "function_author_counts": {
+        "tangosdev": 27,
+        "andrewboudreau": 3,
+        "lunavyqo": 3,
+        "ruspecial": 1,
+        "aitddlabs": 1
+      },
+      "function_authors": {
+        "_ZN7daBmb_cD1Ev": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_cD1Ev"
+        },
+        "_ZN7daBmb_cD0Ev": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_cD0Ev"
+        },
+        "_ZN7daBmb_c16OnAimedAtWithEggEv": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c16OnAimedAtWithEggEv"
+        },
+        "func_ov102_0214aa18": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214aa18"
+        },
+        "func_ov102_0214ab1c": {
+          "author": "andrewboudreau",
+          "name": "func_ov102_0214ab1c"
+        },
+        "func_ov102_0214ad14": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214ad14"
+        },
+        "func_ov102_0214ad40": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214ad40"
+        },
+        "_ZN7daBmb_c13OnTurnIntoEggER6Player": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c13OnTurnIntoEggER6Player"
+        },
+        "func_ov102_0214ae1c": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214ae1c"
+        },
+        "_ZN7daBmb_c19func_ov102_0214b03cEv": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c19func_ov102_0214b03cEv"
+        },
+        "func_ov102_0214b128": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214b128"
+        },
+        "func_ov102_0214b248": {
+          "author": "lunavyqo",
+          "name": "func_ov102_0214b248"
+        },
+        "func_ov102_0214b384": {
+          "author": "ruspecial",
+          "name": "func_ov102_0214b384"
+        },
+        "func_ov102_0214b3b8": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214b3b8"
+        },
+        "func_ov102_0214b3f0": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214b3f0"
+        },
+        "func_ov102_0214b444": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214b444"
+        },
+        "func_ov102_0214b53c": {
+          "author": "lunavyqo",
+          "name": "func_ov102_0214b53c"
+        },
+        "func_ov102_0214b988": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214b988"
+        },
+        "_ZN7daBmb_c6State5Ev": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c6State5Ev"
+        },
+        "func_ov102_0214baa0": {
+          "author": "aitddlabs",
+          "name": "func_ov102_0214baa0"
+        },
+        "_ZN7daBmb_c6State4Ev": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c6State4Ev"
+        },
+        "func_ov102_0214bc20": {
+          "author": "andrewboudreau",
+          "name": "func_ov102_0214bc20"
+        },
+        "_ZN7daBmb_c6State3Ev": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c6State3Ev"
+        },
+        "func_ov102_0214bd20": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214bd20"
+        },
+        "_ZN7daBmb_c19func_ov102_0214bd90Ev": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c19func_ov102_0214bd90Ev"
+        },
+        "_ZN7daBmb_c6State1Ev": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c6State1Ev"
+        },
+        "func_ov102_0214beb4": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214beb4"
+        },
+        "func_ov102_0214bf64": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214bf64"
+        },
+        "func_ov102_0214c0b8": {
+          "author": "tangosdev",
+          "name": "func_ov102_0214c0b8"
+        },
+        "_ZN7daBmb_c16CleanupResourcesEv": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c16CleanupResourcesEv"
+        },
+        "_ZN7daBmb_c6RenderEv": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c6RenderEv"
+        },
+        "_ZN7daBmb_c8BehaviorEv": {
+          "author": "lunavyqo",
+          "name": "_ZN7daBmb_c8BehaviorEv"
+        },
+        "_ZN7daBmb_c13InitResourcesEv": {
+          "author": "tangosdev",
+          "name": "_ZN7daBmb_c13InitResourcesEv"
+        },
+        "_ZN7daBmb_c13OnYoshiTryEatEv": {
+          "author": "andrewboudreau",
+          "name": "_ZN7daBmb_c13OnYoshiTryEatEv"
+        },
+        "daBmb_c_classInit": {
+          "author": "tangosdev",
+          "name": "daBmb_c_classInit"
+        }
+      },
+      "humanizer_actual_contribution": {
+        "task": "issue-2411-humanizer-2",
+        "input_commit": "19df96cc21d5e2a87a97a22d4de67191319505bd",
+        "output_commit": "9c03a19a7480548cac5aad7fa9fa53405cb2fe2c",
+        "source_commit": "b9339491fc6c4153715f6e26b596cd5478be5ffa",
+        "git_author": "andrewboudreau",
+        "changed_paths": [
+          "include/daBmb_c.h",
+          "src/actors/daBmb_c.cpp"
+        ],
+        "diff_artifact": "build/bmb-independent/historical-bobomb-contribution.patch",
+        "diff_sha256": "ba7279efedc8a33a3932ff53876bf886d37b5441cb6c9fe61d694031b447c925",
+        "change": "Exactly header and definition return type int->void for daBmb_c::OnTurnIntoEgg(Player&). Manifest unchanged.",
+        "current_main_landing": "ce0eb39e2142a8d2bf0123a04fccb51ca98c3c8f (#2512)",
+        "session_qualification": "Task history includes11sessions, but this does not establish that each wrote Bobomb. b933 occurred during original codex-humanizer-oneup-20260907-01 producer lease; later producer sessions supplied revisions. Preserve history distinct from exact commit authorship."
+      }
+    }
+  },
+  "historical_findings": [
+    {
+      "disposition": "fixed",
+      "id": "onturnintoegg-src-tu-redeclaration",
+      "kind": "correctness",
+      "location": "src_tu/actors/Actor.cpp:1140, src_tu/actors/Koopa+KoopaSmall.cpp:347, src_tu/actors/Lakitu.cpp:88, src_tu/actors/Spiny.cpp:88",
+      "reason": "Re-checked at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried on the verifier's word. All four definitions read void <Class>::OnTurnIntoEgg(Player &player) at exactly the cited lines, and the base declaration in include/dActor_c.h:144 reads virtual void OnTurnIntoEgg(Player &player); slot 19. A tree-wide grep for 'int OnTurnIntoEgg' returns exactly one hit, include/dScMgMemory_c.h:76 virtual int OnTurnIntoEgg(int mode);, which is the separate minigame (int) hierarchy the handoff explicitly keeps as int on the strength of 14 observed ov004 calls that consume the result -- a different overload, not a survivor of this repair. The objective test is compilation, since a redeclaration cannot compile: premerge_check ran the src-tu-refs gate on the merge tree and it passes on both sides, and check_src_tu_compiles is reported by the verifier at 170/170. Disposition unchanged: fixed.",
+      "summary": "Four byte-verified promoted translation units still defined OnTurnIntoEgg(Player&) as int after the header contract moved to void, so the whole-tree compile rejected them as redeclarations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "handoff-matching-headers-claim-false",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md:58-69",
+      "reason": "Re-read the section in the tree at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. The phrase survives only inside an explicit retraction: the text names the earlier claim as wrong, says a whole-tree compile falsified it, and gives the measured readings (exit 1 at 156/160 on candidate 848da2bb8, exit 0 at 159/159 on task base 26f54f8fc), then names the four src_tu definitions that were still int. No unretracted assertion of matching headers exists anywhere in the file. Disposition unchanged: fixed.",
+      "summary": "An earlier revision claimed the overrides returned void with matching headers; a whole-tree compile falsified it."
+    },
+    {
+      "disposition": "deferred",
+      "id": "da1up-reconstruction-debt-disclosed",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2505",
+      "kind": "reconstruction",
+      "location": "src/actors/da1up_c.cpp, include/da1up_c.h",
+      "owner": "fleet-0907-prod-oneup-0908",
+      "reason": "Re-read both files at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c and the disclosure is intact and specific, not a blanket disclaimer. include/da1up_c.h opens by separating what the cartridge proves from what the project invented: the type-name string 7da1up_c at 0x02108370 and _ZTI7da1up_c at 0x0210837c are ROM-attested, ONEUPKINOKO and SCALEUP_KINOKO are ROM ASCII in arm9's actor debug-name table, while the member names and signatures, the classInit and g_profile_ affixes and EVERY field name are marked as reconstructed, with mStateTimer carrying an inline coined-name marker and the tail fields and base extent named as inferences. src/actors/da1up_c.cpp restates the same split, and the handoff's closing paragraph enumerates the remaining debt (eight native definitions emitting nine method symbols, 27 free-function bodies, the opaque PMF holder, the local ModelCache view, raw offsets, destructor/vtable/RTTI and initializer ownership unchanged) and refuses to count the live timer and Model call as method conversions. Deferral is legitimate for kind reconstruction, the review completion is partial as that requires, and the debt has a named owner and its own repository issue. Disposition unchanged: deferred.",
+      "summary": "da1up_c retains substantial unrecovered reconstruction: coined field names, an opaque PMF holder, a local ModelCache view, raw offsets and other ABI parameter views."
+    },
+    {
+      "disposition": "fixed",
+      "id": "dead-references-koopa-plus-truncation",
+      "kind": "correctness",
+      "location": "config/dead-reference-baseline.json, notes/agents/handoffs/issue-2411-humanizer-2.md:68",
+      "reason": "Every element reproduced independently on the MERGE TREE at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0. (1) python tools/check_dead_references.py exits 0 on the merge tree and 0 on the base control, exit codes captured directly to files and never through a pipe. (2) The branch-level diff of config/dead-reference-baseline.json adds exactly ONE entry -- file notes/agents/handoffs/issue-2411-humanizer-2.md, ref src_tu/actors/Koopa -- and removes none. (3) The tool was not weakened: the branch-level git diff over tools/ is entirely EMPTY, so check_dead_references.py is byte-identical to main's. (4) The regex really cannot express the path: PATH_RE's character class is [A-Za-z0-9_.-] with no plus sign, and git ls-files shows exactly 8 tracked files carrying a plus, three of them under src_tu/. (5) The precedent is real: the baseline already carries (notes/actor-leaf-provenance.md, src_tu/actors/EnemySpawner), the identical truncation of src_tu/actors/EnemySpawner+EnemySwitchTag.cpp. RESIDUAL IMPRECISION, disclosed rather than raised as a separate finding: the handoff and the verifier's own reason call that precedent one entry above the new pair; the file sorts by (file, ref) and the precedent is at index 1 while the new entry is at index 12, so it is eleven entries above, not one. The substantive claim (a direct precedent of the identical shape exists in this same file) is true and was verified; only the positional adjective is wrong, it moves no number and changes no verdict, and a provenance finding cannot be deferred under source_review, so raising it would demand a commit this verify-mode stage is forbidden to make. Recorded here so a later writer can correct the word. Disposition unchanged: fixed.",
+      "summary": "check_dead_references PATH_RE cannot express + in a filename, so the handoff's citation of src_tu/actors/Koopa+KoopaSmall.cpp truncated to a path not in the tree and the gate went red."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-rows-stale-from-branch-edits",
+      "kind": "correctness",
+      "location": "notes/data/tu-promotion-queue.tsv, rows Crate / Coin / daGmch_c (plus da1up_c)",
+      "reason": "Measured on both trees rather than inferred. On the merge tree at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0, python tools/queue_audit.py --check exits 0 and prints 'queue agrees with the tree' -- 0 rows disagreeing. On the base control at bdcb1df7d3d071ab46d79e6538fec176efa78780 the same command exits 1 with 'total_lines: 2 row(s) disagree with the tree'. The --check form was used deliberately: the bare invocation exits 0 while printing the same disagreement line, and it was run here on the red base to confirm that trap still bites (bare exit 0 on a red base). The two base rows were named by running --write on the base control and reading the diff: ChiefChilly 1992 to 1993 and Player 26798 to 26799, then restored with git checkout -- and git status --porcelain confirmed empty. So the merge tree is green exactly where main alone is red, which is the fixed outcome, confirmed and not assumed. Disposition unchanged: fixed.",
+      "summary": "The branch's own edits to src/ files left queue total_lines cells stale, and an earlier revision wrote them off as pre-existing on main."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-audit-residue-miscited-as-preexisting",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, the queue-rows bullet",
+      "reason": "Re-read the bullet at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. It now retracts the earlier claim in terms, says plainly that it was wrong for three of the five, gives the per-row table (Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120) with each row delta matched to its source-file line delta, and keeps only ChiefChilly and Player as pre-existing -- which the base control independently confirms are exactly the two rows main is red on. ONE RESIDUAL IMPRECISION, settled here as clearing without a new finding. The bullet attributes the ChiefChilly/Player staleness to main's 9b8cb8add editing include/ChiefChilly.h and include/Player.h. That is the wrong half of the commit: queue_audit derives total_lines by summing lines over the delinks-resolved source paths of the row's range, which are src/ paths only, and no include/ path appears in config/arm9/delinks.txt, so a header edit cannot move the cell. The same commit 9b8cb8add also edited src/_ZN11ChiefChillyD1Ev.cpp and src/_ZN6PlayerD1Ev.cpp, and those are what moved the numbers: measured with git show 9b8cb8add^:<path> piped to wc -l against git show 9b8cb8add:<path>, 22 to 23 and 35 to 36, which are exactly the +1 deltas the two rows need. The commit attribution and the direction of responsibility are therefore both correct and independently verified; 9b8cb8add is an ancestor of both bdcb1df7d and the branch's merge-base c52f63ca5, so it is genuinely main's. Only the named mechanism is wrong. It moves no number, changes no gate verdict and does not affect this branch's attribution, and under source_review a provenance finding may not be deferred, so raising it would require a corrective commit that mode verify forbids -- converting a wrong noun into a hard publish refusal. It clears as-is and is recorded here so the next writer touching this bullet fixes the sentence. Disposition unchanged: fixed.",
+      "summary": "The handoff attributed all five stale queue rows to main; three were the branch's own."
+    }
+  ],
+  "historical_scope_qualification": "The six inherited findings retain their historical dispositions. The deferred da1up reconstruction finding belongs to OneUp issue2505, not Bob-omb. The broader egg-turn task changed Bob-omb Source/header int to void; historical counts and experiments are not current acceptance.",
+  "findings": [
+    {
+      "id": "BMB-AUDIT-PROV-001",
+      "kind": "provenance",
+      "location": "src/actors/daBmb_c.cpp:21-22; include/daBmb_c.h:133-134",
+      "summary": "State-zero shadow is falsely described as a different object.",
+      "disposition": "fixed",
+      "owner": "codex-bmb-native-producer1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2413",
+      "reason": "Source and header now identify the state-zero receiver as the actual Bob-omb; the shadow was removed and fields use daBmb_c.",
+      "independent_baseline_evidence": "daBmb_c::func_ov102_0214b03c passes this directly to func_ov102_0214bf64 in case0 (Source1217). Every Bmb_Bf64Obj field aligns to inherited dActor or daBmb members, including mChasePlayer0x38c,mState0x3dc and ModelAnim frame base0x350. A distinct C++ shadow spelling does not establish distinct runtime identity.",
+      "historical_required_action": "Repair in claimed producer scope with independent actual-source proof; reviewer has not authored a patch."
+    },
+    {
+      "id": "BMB-AUDIT-PROV-002",
+      "kind": "provenance",
+      "location": "src/actors/daBmb_c.cpp:145-153",
+      "summary": "Factory comment contradicts its correct reconstructed-name qualification.",
+      "disposition": "fixed",
+      "owner": "codex-bmb-native-producer1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2413",
+      "reason": "Factory prose distinguishes the current C-linkage registry binding from the unrecovered original spelling.",
+      "independent_baseline_evidence": "C LINKAGE IS LOAD-BEARING -- the ROM symbol is the bare name claims original spelling. Same block correctly says classInit comes from later EAD lineage and exact original spelling is not preserved. Describe required current binding separately from cartridge RTTI identity.",
+      "historical_required_action": "Repair in claimed producer scope with independent actual-source proof; reviewer has not authored a patch."
+    },
+    {
+      "id": "BMB-AUDIT-PROV-003",
+      "kind": "provenance",
+      "location": "include/daBmb_c.h allocator comment; src/actors/daBmb_c.cpp:148",
+      "summary": "Allocator adapter prose awaits an adapter that is already present.",
+      "disposition": "fixed",
+      "owner": "codex-bmb-native-producer1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2413",
+      "reason": "Source and header acknowledge the existing fBase_c allocator adapter while retaining the leaf adapter.",
+      "independent_baseline_evidence": "include/fBase_c.h167 defines the size_t forwarding operator new. Existing local adapter may be retained, but its stated pending dependency is stale; no code deletion is required merely to repair prose.",
+      "historical_required_action": "Repair in claimed producer scope with independent actual-source proof; reviewer has not authored a patch."
+    },
+    {
+      "id": "BMB-AUDIT-PARTIAL-001",
+      "kind": "reconstruction",
+      "location": "src/actors/daBmb_c.cpp",
+      "summary": "Remaining raw/free helper reconstruction is partial after removal of the state-zero shadow.",
+      "disposition": "deferred",
+      "required_action": "Retain as partial with explicit issue2413 and an assigned continuation owner; do not assert new universal compiler constraints.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2413",
+      "owner": "codex-bmb-native-producer1013",
+      "reason": "State-zero shadow and duplicate ClosestPlayer declaration are removed. Native symbol counts remain 15 members/20 free among 35 functions. Scalar borrowed Vector3 views, position snapshot, raw carrier/PMF/ABI interfaces, Fix12 seams and other unnamed helpers remain. Historical memberization/linkage probes do not establish a universal compiler constraint.",
+      "independent_baseline_evidence": "Actual baseline has15native member symbols and20free symbols among35functions, not the older historical21free count. Bmb_Bf64Obj/Bmb_Vec3, raw offsets and matrix/scalar vector views, carrier-specific fields, block-local ABI declarations and scalar Fix12 seams remain. State0 source-scope/link-failure prose records an old experiment; it is not a proof native fields or a future reconciled member form cannot work."
+    },
+    {
+      "id": "BMB-AUDIT-PARTIAL-002",
+      "kind": "reconstruction",
+      "location": "src/actors/daBmb_c.cpp:func_ov102_0214bc20 and codegen-sensitive state helpers",
+      "summary": "Table-domain and retained codegen-sensitive forms remain distinct unfinished scope.",
+      "disposition": "deferred",
+      "required_action": "Retain as partial with explicit issue2413 and an assigned continuation owner; do not assert new universal compiler constraints.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2413",
+      "owner": "codex-bmb-native-producer1013",
+      "reason": "The two 16-byte launch tables, index-four path and unestablished runtime reachability remain unchanged. Volatile pins, carrier views and measured pragmas remain; no speculative clamp or table enlargement.",
+      "independent_baseline_evidence": "Two owned16Blaunch tables are copied to stack before an index-four path; historical issue2413 records that runtime reachability was not established. Do not enlarge/clamp them speculatively. Volatile pins, raw second-base views and inherited measured pragmas/forms remain outside the baseline proof of byte identity."
+    }
+  ],
+  "verification": {
+    "whole_object": {
+      "base": "607576acc557a318d5f813f8a0813bc86f03d140",
+      "source": "src/actors/daBmb_c.cpp",
+      "compiled_source": "src/actors/daBmb_c.cpp",
+      "manifest": "config/tu_manifest.d/ov102/daBmb_c.json",
+      "header_noncomment_identity": true,
+      "manifest_and_policies_unchanged": true,
+      "complete_raw_elf_identical": true,
+      "complete_ordinary_prepared_elf_identical": true,
+      "raw_sha256": "e5e75a0c31e39ef8ae386d1e4066fcda4de93ea809f43b1047c1ee017dc50b6e",
+      "prepared_sha256": "df7b22b9297fc9fa731b006f4725da1a3d1f5667615e9f0e33ad7042b4b55789",
+      "strict_rows": 41,
+      "functions": 35,
+      "data_records": 6,
+      "owned_data_bytes": 213,
+      "bss_records": 0,
+      "raw_edges": 277,
+      "prepared_edges": 266,
+      "metadata": [
+        {
+          "symbol": "_ZTI7fBase_c",
+          "module": "arm9",
+          "address": "0x2086d70",
+          "bytes": 8,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "module": "arm9",
+          "address": "0x2086e60",
+          "bytes": 9,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "module": "arm9",
+          "address": "0x2086e54",
+          "bytes": 9,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTS7daBmb_c",
+          "module": "ov102",
+          "address": "0x214e4fc",
+          "bytes": 9,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTS8dActor_c",
+          "module": "arm9",
+          "address": "0x208e384",
+          "bytes": 10,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "module": "arm9",
+          "address": "0x2086e78",
+          "bytes": 12,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTI12dEnemyBase_c",
+          "module": "ov002",
+          "address": "0x21081c0",
+          "bytes": 12,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTS12dEnemyBase_c",
+          "module": "ov002",
+          "address": "0x21081cc",
+          "bytes": 15,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTI8dActor_c",
+          "module": "arm9",
+          "address": "0x208e390",
+          "bytes": 12,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTI7daBmb_c",
+          "module": "ov102",
+          "address": "0x214e508",
+          "bytes": 12,
+          "blind": 0,
+          "diff_offsets": []
+        },
+        {
+          "symbol": "_ZTV7daBmb_c",
+          "module": "ov102",
+          "address": "0x214e550",
+          "bytes": 132,
+          "blind": 0,
+          "diff_offsets": []
+        }
+      ],
+      "metadata_bytes": 240,
+      "actual_production_functions": [
+        "rombuild._retarget",
+        "rombuild._isolate",
+        "tu_production.prepare_intact_object"
+      ],
+      "private_tool_override": false,
+      "blind": 0,
+      "diffs": []
+    },
+    "storage": {
+      "ownedBefore": [
+        {
+          "section": ".data",
+          "start": "0x0214e4fc",
+          "end": "0x0214e5d4",
+          "emittedBytes": 216,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 36
+        }
+      ],
+      "ownedAfter": [
+        {
+          "section": ".data",
+          "start": "0x0214e4fc",
+          "end": "0x0214e5d4",
+          "emittedBytes": 216,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 36
+        }
+      ],
+      "data_record_payload_bytes": 213,
+      "complete_data_claim_bytes": 216,
+      "owned_bss_bytes": 0,
+      "owned_initializers": 0,
+      "owned_ctors": 0,
+      "owned_vtable_bytes_including_preamble": 132,
+      "owned_vtable_address_point_bytes": 124,
+      "owned_data_absolute_edges": 36,
+      "all_complete_emissions_licensed": true,
+      "policies": {
+        "requested": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "deadstripped": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "droppedSections": [
+          5,
+          6,
+          7,
+          8,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          19,
+          33
+        ],
+        "data": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTI7dBase_c",
+          "_ZTS7dBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS8dActor_c",
+          "_ZTI12dEnemyBase_c",
+          "_ZTS12dEnemyBase_c"
+        ],
+        "dataExternalized": [
+          "_ZTI12dEnemyBase_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c"
+        ],
+        "canonicalDuplicates": []
+      }
+    },
+    "header_comment_identity": {
+      "base": "607576acc557a318d5f813f8a0813bc86f03d140",
+      "header": "include/daBmb_c.h",
+      "noncomment_text_identical": true
+    },
+    "actual_header_consumers": [
+      {
+        "source": "src/actors/daBmb_c.cpp",
+        "compiler": "2004/b56",
+        "raw_sha256": "e5e75a0c31e39ef8ae386d1e4066fcda4de93ea809f43b1047c1ee017dc50b6e",
+        "complete_raw_identical": true
+      },
+      {
+        "source": "src/actors/daBombking_c.cpp",
+        "compiler": "2004/b56",
+        "raw_sha256": "be15a9a33cda8283d958fa9513b3d40708cac4eca3f3824930a9ab89b60b5d9e",
+        "complete_raw_identical": true
+      }
+    ],
+    "retained_lifecycle": {
+      "name": "_ZN7Vector3D1Ev",
+      "module": "arm9",
+      "addr": "0x020072c0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "stock": {
+      "exit_code": 0,
+      "log": "build/bmb-native1013/stock.log",
+      "log_sha256": "b049417a4fe91f3f47d751da7abd3ee178879e6ae466d81114819f6a06306279",
+      "command": "python tools/prepush_linkcheck.py --range 607576acc557a318d5f813f8a0813bc86f03d140..1fdd6e952ab75136934bae8f86810b41edbc5ef3",
+      "verified": 87,
+      "warnings": 0,
+      "blocking": 0,
+      "scope": "Actual source and both consumers of the comment-only header change."
+    },
+    "decl": {
+      "exit_code": 0,
+      "log": "build/bmb-native1013/decl.log",
+      "log_sha256": "089820c876d5c7901a997bbdd7ffc7fecb71a02ef887508c2b7e32da3bb8a449",
+      "command": "python tools/check_decl_agreement.py --changed 607576acc557a318d5f813f8a0813bc86f03d140"
+    },
+    "port": {
+      "exit_code": 0,
+      "log": "build/bmb-native1013/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "command": "python tools/port_refcheck.py",
+      "checked": 267
+    },
+    "langmode": {
+      "exit_code": 0,
+      "log": "build/bmb-native1013/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "command": "python tools/langmode_audit.py --check langmode-baseline.json"
+    },
+    "conflict": {
+      "exit_code": 0,
+      "log": "build/bmb-native1013/conflict.log",
+      "log_sha256": "d53e508de275899b72abdbde0f47f2cabeea7fe9f0870d2be7688e04456221f1",
+      "command": "python tools/check_tubuild_conflicts.py ov102/daBmb_c"
+    },
+    "rombuild": {
+      "exit_code": 0,
+      "log": "build/bmb-native1013/rombuild.log",
+      "log_sha256": "a1150f5ebd707ed237dd3759a6a6d184725d42d1126ba6227e91f0242dba8b31",
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "tested_head": "1fdd6e952ab75136934bae8f86810b41edbc5ef3",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "source_function_counts_observed": [
+        5888,
+        11334
+      ],
+      "source_functions_count_scope": "Final production section, not the earlier baseline-control section.",
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "dsd_baseline_symbol_errors": 9,
+      "intact_tu_gates": "dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "final_production_summary": [
+        "[6/6] analyze module and source fidelity",
+        "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+        "  reproducing: 11,334",
+        "  mismatching: 0",
+        "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+        "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "  of 3,049,600 module bytes: 2,225,480 (73.0%) source-built code, 13,020 source-owned data, 798,472 data bytes no complete source entry reaches; 48,968 compiler-emitted data bytes verified overall",
+        "  retail-gap contribution: 811,100 module bytes (12,628 function-code, 798,472 data/non-function)",
+        "ROM-build analysis: PASS",
+        "ROM data from source: 969 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,282 object records)"
+      ]
+    }
+  },
+  "limitations": [
+    "Partial reconstruction remains under issue2413: the two current partial findings are deferred, not closed by byte identity.",
+    "The stock full-ROM pipeline reports nine baseline DSD symbol errors; final intact-TU gates have zero new errors. This does not claim a globally clean DSD symbol inventory.",
+    "The global ROM-data inventory is advisory and remains partial; use the exact final production summary for its measured counts. The owned Bob-omb data/metadata/storage checks are separately exact.",
+    "The full-ROM command used --no-rom: module/source fidelity is checked; a new final cartridge image is not claimed.",
+    "Producer proof does not substitute for independent Source acceptance. No queue publication, push, PR or merge was performed by this author."
+  ],
+  "source_evidence": {
+    "field_offset_mapping": [
+      {
+        "old_shadow": "pos",
+        "actual_owner_field": "dActor_c::mPosX/mPosY/mPosZ",
+        "offset": "0x5c/0x60/0x64"
+      },
+      {
+        "old_shadow": "angY",
+        "actual_owner_field": "dActor_c::mAngleY",
+        "offset": "0x8e"
+      },
+      {
+        "old_shadow": "prevAngY",
+        "actual_owner_field": "dActor_c::mPrevAngleY",
+        "offset": "0x94"
+      },
+      {
+        "old_shadow": "horzSpeed",
+        "actual_owner_field": "dActor_c::mHorzSpeed",
+        "offset": "0x98"
+      },
+      {
+        "old_shadow": "vertSpeed",
+        "actual_owner_field": "dActor_c::mVertSpeed",
+        "offset": "0xa8"
+      },
+      {
+        "old_shadow": "anim",
+        "actual_owner_field": "daBmb_c::mModelAnim dExtFrameCtrl_c base",
+        "offset": "0x300+0x50=0x350"
+      },
+      {
+        "old_shadow": "animSpeed",
+        "actual_owner_field": "mModelAnim.speed",
+        "offset": "0x35c"
+      },
+      {
+        "old_shadow": "chase",
+        "actual_owner_field": "daBmb_c::mChasePlayer",
+        "offset": "0x38c"
+      },
+      {
+        "old_shadow": "home",
+        "actual_owner_field": "daBmb_c::mHomePosX/mHomePosY/mHomePosZ",
+        "offset": "0x3c4/0x3c8/0x3cc"
+      },
+      {
+        "old_shadow": "state",
+        "actual_owner_field": "daBmb_c::mState",
+        "offset": "0x3dc"
+      },
+      {
+        "old_shadow": "turnTimer",
+        "actual_owner_field": "daBmb_c::mTurnTimer",
+        "offset": "0x3e8"
+      },
+      {
+        "old_shadow": "variant",
+        "actual_owner_field": "daBmb_c::mVariant",
+        "offset": "0x3f5"
+      },
+      {
+        "old_shadow": "chase+0x35c",
+        "actual_owner_field": "Player::mGrabbedByActor",
+        "offset": "0x35c"
+      },
+      {
+        "old_shadow": "chase+0x5c",
+        "actual_owner_field": "Player inherited mPosX/mPosY/mPosZ",
+        "offset": "0x5c/0x60/0x64"
+      }
+    ],
+    "real_dispatch_call": [
+      {
+        "off": 136,
+        "type": 1,
+        "sym": "func_ov102_0214bf64",
+        "addr": 34914148,
+        "add": -8,
+        "callsite": "0x214b0c4"
+      }
+    ],
+    "retained_helper_contracts": [
+      "func_ov102_0214bf64(void*) keeps C linkage and existing configured name; daBmb_c* is a local actual-receiver view.",
+      "DecIfAbove0_Short(u16*) and _Z14ApproachLinearRiii(int&,int,int) unchanged.",
+      "Vec3_HorzAngle(const Vector3*,const Vector3*) and Vec3_Dist(const Vector3*,const Vector3*) retain exact C symbols/targets; local shadow argument types are replaced by the existing real type, with borrowed scalar-triplet views.",
+      "ApproachLinear(short&,short,short), func_ov102_0214b988(void*) and func_ov102_0214beb4(void*) unchanged.",
+      "ClosestPlayer actual dActor_c member returns Player*. ModelAnim frame-controller Advance explicitly selects dExtFrameCtrl_c::Advance at its existing base subobject.",
+      "All other helper interfaces, scalar Fix12 seams, global declarations and configuration policies remain unchanged. The class header changes comments only; complete raw/prepared 277/266-edge equality checks every destination."
+    ],
+    "receiver_evidence": "daBmb_c::func_ov102_0214b03c dispatches case0 as func_ov102_0214bf64(this); every replaced field agrees with include/daBmb_c.h, inherited dActor fields, and Player::mGrabbedByActor. Complete unchanged raw/normal objects prove all emitted offsets and destinations remain identical.",
+    "failed_optional_probe": "build/enemy-leaf-scout1013/rejected-position-copy.json",
+    "owned_storage_qualification": "Six owned data records total213 bytes inside the complete216-byte .data claim; ordinary preparation verifies the full claim including padding. No owned init/ctor/BSS. Raw/normal container and full277/266-edge identity cover all emitted storage; all11metadata records240bytes including vtable preambles independently match retail with zero blind words."
+  },
+  "checkpoint": "1fdd6e952ab75136934bae8f86810b41edbc5ef3",
+  "tested_build_trees": {
+    "src": "b25e411792fc0269dac7f23cbfb391be37621dae",
+    "include": "c7ddefeec66a5773fb44954a9bee56bef4a5b10d",
+    "config": "1de3789f744de3982a2a6b4aceec2df003218f5f",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "retained_partial_boundaries": [
+    "State0 remains the existing externally named free function; no new header method/symbol-ledger claim.",
+    "Scalar position/home members still use borrowed Vector3 views; no owning temporary is introduced.",
+    "The chase helper retains its original int-pointer three-word snapshot into an existing Vector3. A direct named-field load spelling shortened it168->164 bytes; failed private variant is retained, not called an impossibility floor.",
+    "Fix12-by-value extern seams, carry-path raw accesses/volatile pins, SharedFilePtr loaded-word views and unnamed state/helper labels remain."
+  ],
+  "input_git_blobs": {
+    "src/actors/daBmb_c.cpp": "890f4926de18918f1590491a3844a6d489887410",
+    "include/daBmb_c.h": "bd28f68ec0ea726cd4ac558274c4d05918663dfd",
+    "config/tu_manifest.d/ov102/daBmb_c.json": "4ed587f8c0f9420b5305b76513a4c9f268cebe9f",
+    "config/rombuild-versions.txt": "540955bfb80c1ebfbf1266ba92e0e5224a2016e0"
+  },
+  "report_only_finalization": {
+    "rule": "Only this experiment report changes after the tested checkpoint. src, include, config, tools and port must retain the exact tested tree IDs.",
+    "binding_artifact": "build/bmb-native1013/final-binding.json"
+  }
+}

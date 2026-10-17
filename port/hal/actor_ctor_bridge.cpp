@@ -112,7 +112,7 @@ extern "C" void _ZN10dBgActor_cC2Ev(void *self)
 // dActor_c::operator delete reaches the two-argument Deallocate; the port's
 // Memory layer spells it with one.
 extern "C" void _ZN6Memory10DeallocateEPv(void *p);
-extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *p, void *) { _ZN6Memory10DeallocateEPv(p); }
+extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *p, void *) { _ZN6Memory10DeallocateEPv(p); }
 
 // dBase_c sits between fBase_c and dActor_c; its own two undefined slots come
 // along with the same vtable emission.

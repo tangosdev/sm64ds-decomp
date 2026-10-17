@@ -1,0 +1,151 @@
+{
+  "schema": 2,
+  "task_id": "issue2410-finish1015-cont2",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2410",
+  "completion": "partial - native query lifetime, attachment layout and shared matrix copies only",
+  "original_input": "a67bb58e8bee6fb75224a3ca8fce4cbe3585f75f",
+  "tested_base": "53dc648eaf7d24847f461a193a3f81203cf4d098",
+  "production_source_commit": "079bbca6ea017a311c4a97d8ea91d9e2e82e34bb",
+  "compiler": "2004/b56",
+  "production_inputs": {
+    "src/game/actors/d_a_mky.cpp": "0dcdddc7c6818b2d31eee102a6c251f118c0b4414bc914a6efe10537888edc91",
+    "include/daMky_c.h": "a0aec09dcd810e0621dcdacc6f2bade833460fe804cedf1a2e239c3f23ccd301",
+    "include/dActor_c.h": "81356503076794ba1796732848f6d9713798bd5e6713a17079b7f0cc02dd5584",
+    "config/tu_manifest.d/ov030/daMky_c.json": "a44430726bbea34342f522f3a6fb1e2317eaf9054c048824f4fd4c34845fcb05"
+  },
+  "actual_checks": {
+    "monkey_functions": 46,
+    "independent_strict": "46 VERIFIED, blind 0, diffs empty",
+    "independent_complete_object": "Literal equality to saved a67 input. Equality to current-main control after only exact Bundle945/950 name correspondence.",
+    "declaration_ratchet": "no new disagreements or local header copies",
+    "style_findings": 0,
+    "style_deferrals": 0,
+    "full_rom": {
+      "status": "passed",
+      "modules_exact": 106,
+      "functions_reproduced": 11334,
+      "function_mismatches": 0,
+      "source_owned_data_reproduced": 334,
+      "source_owned_data_mismatches": 0,
+      "source_owned_bss_claims": 241,
+      "intact_tu_gates": "PASS, no new symbol errors, exact storage aliases"
+    },
+    "header_consumers": {
+      "files": 307,
+      "functions": 5661,
+      "verified": 5449,
+      "inherited_blind_warnings": 212,
+      "blocking": 0,
+      "all_warning_consumers_complete_raw_elf_identical_to_main": true,
+      "inputs_stable": true,
+      "method": "306 files use unchanged prepush_linkcheck.verify; remaining 1 large file(s) execute that same unmodified function code partitioned by exact symbols_for enumeration. Resolver, linkcheck and ERROR retry unchanged."
+    },
+    "other_header_consumers": {
+      "total": 306,
+      "complete_raw_elf_identical": 306,
+      "normalization": "none",
+      "control_base": "53dc648eaf7d24847f461a193a3f81203cf4d098"
+    },
+    "global_rom_data_advisory": {
+      "verified": 974,
+      "partial": 1537,
+      "differs": 1,
+      "unnamed": 15,
+      "qualification": "Separate advisory; differing dCcAcPos vtable comes from unchanged complete-object-identical consumers."
+    }
+  },
+  "fixed_review_findings": [
+    {
+      "id": "MKY-NATIVE-PR-UNDEFINED-Z-01",
+      "kind": "correctness",
+      "resolution": "Both uses of the removed zero temporary now use literal0; independently compiled and strictly rechecked."
+    }
+  ],
+  "recovery": {
+    "status": "explicitly authorized and applied",
+    "queue_readback_commit": "34947fdc2a0130f50fe5253600ecdbc6ff282f16",
+    "scope": "Only the four specifically approved file reservations; no source, ownership, credentials, unrelated resources or previous history removed."
+  },
+  "limits": [
+    "No completed grouped Actor/header consumer migration is included.",
+    "Producer evidence is separate from final exact-head Source judgment and terminal private CI.",
+    "Shared scalar interfaces, genuine shared handle lifecycles and native metadata/global enrollment remain unfinished.",
+    "The two shared Matrix4x3 definitions remain incompatible; this slice uses the existing flat form and does not assert a canonical type repair."
+  ],
+  "historical_checkpoint": {
+    "schema": 1,
+    "task_id": "issue2410-finish1015",
+    "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2410",
+    "completion": "partial - shared source dependencies and ownership recovery pending",
+    "original_input": "df618e80271212106c9f1e225756f691abaa498b",
+    "tested_base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+    "compiler": "2004/b56",
+    "production_inputs": {
+      "src/game/actors/d_a_mky.cpp": "45685a522262b5743e0ccf8345fe6bff5eb2e78198925b1333c9f8c408991f39",
+      "include/daMky_c.h": "a0aec09dcd810e0621dcdacc6f2bade833460fe804cedf1a2e239c3f23ccd301",
+      "include/dActor_c.h": "81356503076794ba1796732848f6d9713798bd5e6713a17079b7f0cc02dd5584",
+      "config/tu_manifest.d/ov030/daMky_c.json": "1465ddb0395e5fd8127ffdf9707dcc719489c07f29674ce59a6e949b62774752"
+    },
+    "reports": {
+      "build/native-final-tu-verify.log": "fe7dbcb05d00f7627e05fd4f307e6cbdd0f4bd1e4755f4b71d277a76d9eaf196",
+      "build/native-checkpoint-full-rom.json": "630c443d28cb390ccc2c68bb6a7e8eedc286708be0cfcceb3ac0b19bd7148c97",
+      "build/native-checkpoint-declarations.log": "c05d916e729aed68430e46cc4a7c4ef3e7f1dd40520e24ee677a84da8338b15e",
+      "build/native-checkpoint-style.json": "07d120cc0d2789c380df075da71f0b96f65800a6c17b09f0eacb77abcfda49fb",
+      "build/actor-header-equivalence.json": "0c3796c069b9023148e96e171112ebbe785219a6713f50c5f1dd9567488a9233",
+      "build/format-proof/equivalence.json": "3bb177e626a0e6b9c0dc48d2bdc3ee6e209fbefd3544d7c38180e20953a2d553"
+    },
+    "actual_checks": {
+      "monkey_functions": 46,
+      "strict_isolation_destinations_order": "PASS",
+      "other_shared_actor_consumers_raw_identical": 306,
+      "full_rom_modules_exact": 106,
+      "source_functions_reproduced": 11334,
+      "source_functions_mismatched": 0,
+      "source_data_claims_reproduced": 332,
+      "declaration_ratchet": "no new disagreements or local redeclarations",
+      "style_findings": 0,
+      "style_deferrals": 0,
+      "formatting": "same lexical tokens; complete Monkey raw object identical"
+    },
+    "limits": [
+      "No private CI or final independent exact-commit Source acceptance of this checkpoint.",
+      "Current class metadata remains externalized. Global ROM-data advisory verdicts include974verified/1521partial/1differ/15unnamed and are separate from exact module/source gates.",
+      "Native globals/initializer and genuine shared lifecycle/API bodies remain scratch-only conditional experiments; do not treat them as production enrollment.",
+      "Four-file queue recovery explicitly awaits user authorization; all other current owners retain their resources.",
+      "Shared Matrix4x3 definitions remain incompatible C++ types selected byincludeorder."
+    ],
+    "remaining": [
+      "production shared handle layout/lifecycle plus264-source closure (391 duplicated local storage declarations in199 affected sources)",
+      "seven scalar API canonical migrations plus360-source header closure and preservation of declaration debt/attribution",
+      "semantic method helper names and desired collision accessors",
+      "native initializer/global/profile/data ownership with exact metadata extents and genuine interior array labels",
+      "separate explicit-size terminal BSS tooling change",
+      "independent Source acceptance and private exact-head/base validation"
+    ],
+    "full_rom_tested_source_commit": "a24cdcbf48348bd1ce9bca8f8ffea4a9ef1d462f",
+    "full_rom_bridge_to_this_commit": "Subsequent changes are pinned formatting with identical lexical tokens and complete raw Monkey object, scoped generated verification metadata, and documentation. The production policy, addresses, enrolled source set and all other consumer tokens are unchanged."
+  },
+  "production_git_blob_sha256": {
+    "src/game/actors/d_a_mky.cpp": "0dcdddc7c6818b2d31eee102a6c251f118c0b4414bc914a6efe10537888edc91",
+    "include/daMky_c.h": "ec543b2b5714c3e57eec2fdd46dcb8b09803c950103d0cebb612df16156eef47",
+    "include/dActor_c.h": "28649cf1e9b25f7062150173f48edcc06b0c5cc4105120c0b674eadcc933b1d2",
+    "config/tu_manifest.d/ov030/daMky_c.json": "a44430726bbea34342f522f3a6fb1e2317eaf9054c048824f4fd4c34845fcb05"
+  },
+  "working_file_hash_note": "production_inputs are exact working-file bytes; production_git_blob_sha256 disambiguates checkout CRLF filtering.",
+  "reports_sha256": {
+    "build/native-pr-final-full-rom.json": "d5e18afe6db7a970e38d7262ef1162c7612db3300e784016b8a2832ca9b43f4d",
+    "build/native-pr-final-full-rom.log": "0afa3dbd8911ff0da5d0ad7009d5f1fa008427433f606f188cb49728046d49a2",
+    "build/native-pr-whole-consumers/report.json": "8a4b16351e8071e6e569e32d47747e88980c69e433e9d14da92786940b02859f",
+    "build/native-pr-final-tu.log": "8e2f8df213826f21e4a63847452e684055e69d41c814ac70a67d94c48bd498ac",
+    "build/native-pr-declarations.log": "f7b9f4f2da82d16b98eb38a1c579d8bef254cf589093f79c034f2ffd9fd237d0",
+    "build/native-pr-style.json": "f2d493ecbef969da1e7ef29089d14084e94b08b245eaad67a94d1910ed87aee6",
+    "build/native-pr-parallel-linkcheck/report.json": "770a61ea6634f3a3e63981672b6926a9a4025c13d79407dc9e6e14c1d36a3796",
+    "build/native-pr-parallel-linkcheck/inputs.json": "448a691fc55014fdc4c4b760936f4f3832a865ddbf68ca3c702598f20763277f",
+    "build/native-pr-final-declarations.log": "74ad155dd7b2e83198ec74c1e3e888e5a639cad8688e656bc59455ea1861241c",
+    "build/native-pr-final-style.json": "f2d493ecbef969da1e7ef29089d14084e94b08b245eaad67a94d1910ed87aee6",
+    "build/run_native_pr_parallel_linkcheck.py": "910355e2bd72da594a6e2048db297fc904c968dbcd09e5d6f473a2d6ebacf2cd",
+    "build/finish_native_pr_parallel_linkcheck.py": "4cb3632deaeb1d3a97161aa089f455141ceee7d3fc3d7bbdbfd2d22a0a7139ed"
+  },
+  "proof_scope": "Fresh full-ROM, complete-object equality for306 other consumers, and full5661-function generic sweep on the immutable production source freeze. Independent reviewer rebuilt/strictly verified Monkey and separately audited producer broad inputs, methods and raw artifacts. Formal Source judgment/private CI recorded separately.",
+  "pr_url": "https://github.com/tangosdev/sm64ds-decomp/pull/3896"
+}

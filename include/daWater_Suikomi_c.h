@@ -64,7 +64,7 @@ struct daWater_Suikomi_c {
     u8  pad_101[0xf];
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [src/actors/daWater_Suikomi_c.cpp] */
+       checks. Was a u8 marker. [src/game/actors/d_a_water_suikomi.cpp] */
     dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
     u8  mWithMeshClsn;            /* 0x150 */
     u8  pad_151[0x1c3];

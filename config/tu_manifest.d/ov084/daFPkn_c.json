@@ -1,8 +1,8 @@
 {
   "id": "ov084/daFPkn_c",
   "module": "ov084",
-  "source": "src/actors/daFPkn_c.cpp",
-  "promoted_source": "src/actors/daFPkn_c.cpp",
+  "source": "src/game/actors/d_a_f_pkn.cpp",
+  "promoted_source": "src/game/actors/d_a_f_pkn.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

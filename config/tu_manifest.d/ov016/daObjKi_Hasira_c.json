@@ -1,8 +1,8 @@
 {
   "id": "ov016/daObjKi_Hasira_c",
   "module": "ov016",
-  "source": "src/actors/daObjKi_Hasira_c.cpp",
-  "promoted_source": "src/actors/daObjKi_Hasira_c.cpp",
+  "source": "src/game/actors/d_a_obj_ki_hasira.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ki_hasira.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -12,7 +12,7 @@
     "MEASURED: the empty inline destructor in the class header emits D1 ahead of D0, the cartridge's order (0x02112a00 then 0x02112a44), and no D2. Same lever as the dBgActor_c leaves config/tu_manifest.d/ov022/daObjFl_Ring_c.json and daObjFl_UkiKi_c.json.",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)",
     "fold-lane-c-0929: daObjKi_Hasira_c_classInit (0x02112ec4..0x02112ef4) abuts this TU's own range with no gap (the next class, src/game/actors/d_a_obj_ki_ita.cpp, begins exactly at 0x02112ef4) and tu_map never attributed it because it cuts on symbol name",
-    "sinit/ov016-hasira: folded the __sinit_ov016_02113978 static-initializer shard (.init 0x02113978..0x021139e4) into this already-promoted TU, widening the complete delinks.txt claim with .init/.ctor/.bss sections. The shard constructed the RockPillar_ModelFile (1597) and RockPillar_ClsnFile (1598) SharedFilePtr handles with destructor registration; the TU now defines them as HasiraModelFile/HasiraCollisionFile file-scope objects in retail construction order, and the compiler-generated __sinit_daObjKi_Hasira_c.cpp is byte-identical to the shard."
+    "sinit/ov016-hasira: folded the __sinit_ov016_02113978 static-initializer shard (.init 0x02113978..0x021139e4) into this already-promoted TU, widening the complete delinks.txt claim with .init/.ctor/.bss sections. The shard constructed the RockPillar_ModelFile (1597) and RockPillar_ClsnFile (1598) SharedFilePtr handles with destructor registration; the TU now defines them as HasiraModelFile/HasiraCollisionFile file-scope objects in retail construction order, and the compiler-generated __sinit_d_a_obj_ki_hasira.cpp is byte-identical to the shard."
   ],
   "sections": [
     {
@@ -131,7 +131,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN16daObjKi_Hasira_c8BehaviorEv and the one that held _ZN16daObjKi_Hasira_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED by dropping BOTH mangled declarations (the Behavior source spelled the parameter void *self, the InitResources source void *): the merged TU calls it as the real member include/dBgActor_c.h already declares, `void UpdateClsnPosAndRot();`, with no byte change. No TUBUILD CONFLICT marker survives in the merged source.",
     "The legacy Behavior source carried `#pragma opt_common_subs off` and an identity inline_fn() that laundered field addresses. Neither survives: with the real member layout (mState/mTurnTimer/mFallSpeed/mFallAccel/mTarget) every access was rewritten by name and re-verified one construct at a time, and removing the pragma changed no byte. Two measured levers remain, each commented where it stands: the off-screen test is spelled as an int flag before the branch, and the crash point is a volatile Vector3.",
     "The model and collision SharedFilePtrs are ov016 .bss rows named RockPillar_ModelFile / RockPillar_ClsnFile in symbols.txt (each shares its address with a data_ov016_ alias); they are data names, not the class name, and are left for a separate rename. The CLPS block data_ov016_02113cac is unnamed ov016 .data this TU does not own.",
-    "STYLE ORACLE: src/actors/daObjFl_Block_c.cpp / daObjFl_Ring_c.cpp -- dBgActor_c leaves with the same inline-empty-destructor shape and the same deadstrip-data RTTI licensing.",
+    "STYLE ORACLE: src/game/actors/d_a_obj_fl_block.cpp / d_a_obj_fl_ring.cpp -- dBgActor_c leaves with the same inline-empty-destructor shape and the same deadstrip-data RTTI licensing.",
     "fold-lane-c-0929: folded the daObjKi_Hasira_c_classInit registry factory (0x02112ec4..0x02112ef4) into this already-promoted TU, widening the complete delinks.txt claim from 0x02112a00..0x02112ec4 to 0x02112a00..0x02112ef4. The loose one-function source hand-called fBase_c::operator new(808), dBgActor_c::dBgActor_c() and stored _ZTV16daObjKi_Hasira_c; daObjKi_Hasira_c declares no constructor of its own, so the compiler-synthesized default constructor emits exactly that sequence, and the factory is now written as the real `return new daObjKi_Hasira_c();`. No pragma in this TU, so emission is reverse of source order; the factory, being the highest ROM address in the run, is written at the very top of the file, ahead of InitResources.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
@@ -340,7 +340,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "fold-lane-c-0929: the folded classInit factory's `new daObjKi_Hasira_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct src/actors/daObjHatenaBlock_c.cpp and daObjSimpleLift_c.cpp already document). No configured ROM symbol and no inbound relocation after the licensed function set is retained."
+      "reason": "fold-lane-c-0929: the folded classInit factory's `new daObjKi_Hasira_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct src/game/actors/d_a_obj_hatena_block.cpp and d_a_obj_simple_lift.cpp already document). No configured ROM symbol and no inbound relocation after the licensed function set is retained."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -430,7 +430,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daObjKi_Hasira_c.cpp",
+      "symbol": "__sinit_d_a_obj_ki_hasira.cpp",
       "address": "0x02113978",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -439,7 +439,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjKi_Hasira_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ki_hasira.cpp",
       "address": "0x02113ac4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -485,13 +485,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjKi_Hasira_c.cpp",
+      "symbol": "__sinit_d_a_obj_ki_hasira.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjKi_Hasira_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ki_hasira.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -615,7 +615,7 @@
       "source": "0x02113ac4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjKi_Hasira_c.cpp",
+      "symbol": "__sinit_d_a_obj_ki_hasira.cpp",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02113978"

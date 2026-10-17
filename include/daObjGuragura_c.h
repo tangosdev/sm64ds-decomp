@@ -90,7 +90,7 @@ struct daObjGuragura_c : dBgActor_c {
        that KEPT it would be dropped from the build entirely and the functions it
        defines would stop being compiled, with every gate still reporting green.
        Render's definition (ov002 0x020b6144) now lives in
-       src/actors/daObjGuragura_c.cpp, so that file IS this class's key-function
+       src/game/actors/d_a_obj_guragura.cpp, so that file IS this class's key-function
        TU. It stays eligible anyway: mwccarm dead-strips the vtable and RTTI it
        asks for, and `python tools/tubuild.py verify ov002/daObjGuragura_c` records
        each dropped symbol, with the ROM home it would have collided with, in the

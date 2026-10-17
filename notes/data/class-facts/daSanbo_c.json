@@ -801,7 +801,7 @@
     "STAGE 3B CEILING IS NAME RECOVERY, NOT CODEGEN. 10 of the 36 members already carry mangled _ZN5Pokey names and convert as a pure codegen question. The other 26 (12 PMF handlers, 12 helpers, 2 factories) carry auto-generated names -- func_ov096_* and daSanbo_c_classInit_* -- so converting them means renaming, with the symbols.txt edit above. State that wall in the result rather than reporting a bare fraction.",
     "extern \"C\" REGION PLACEMENT. Any member kept as a free function must stay inside the one file-scope extern \"C\" region, and that region must sit after the last surviving func_* member, because a class member function cannot live inside it.",
     "THREE PROSE CITATIONS MUST MOVE IN THE PROMOTION COMMIT. notes/actor-leaf-provenance.md names src/_ZN5Pokey13InitResourcesEv.cpp (line 76), src/_ZN5Pokey8BehaviorEv.cpp (line 85) and src/_ZN5Pokey16OnPendingDestroyEv.cpp (line 87). All three shards are deleted by this promotion, so each becomes a dead reference the moment the fold lands. Repoint them to the promoted source in the same commit. (A fourth hit, src/func_ov096_02137088.cpp in audit/enrollment_report.md, belongs to daTor_c/Tornado, not to this class.) Scope of that search: grep for 'src/func_ov096_', 'src/_ZN5Pokey' and 'src/d_a_sanbo' across *.c, *.cpp, *.h and *.md in the whole repo -- 4 hits total, listed above.",
-    "check_dead_references.py IS ALREADY RED ON origin/main, and it now scans C/C++ comments as well as prose (72730e19a, landed mid-scout). On the merged tree it exits 1 for a reference this class did not create: src/actors/dScMgSound_c.cpp:420 names src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp, a shard an earlier promotion deleted. That file is byte-identical to origin/main here, so the failure is inherited, not ours. Do not bank it with --update-code (the tool says that is for a clean pinned main checkout) and do not read the red as your own regression -- but expect stage 4 to hit it."
+    "check_dead_references.py IS ALREADY RED ON origin/main, and it now scans C/C++ comments as well as prose (72730e19a, landed mid-scout). On the merged tree it exits 1 for a reference this class did not create: src/minigames/d_s_mg_sound.cpp:420 names src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp, a shard an earlier promotion deleted. That file is byte-identical to origin/main here, so the failure is inherited, not ours. Do not bank it with --update-code (the tool says that is for a clean pinned main checkout) and do not read the red as your own regression -- but expect stage 4 to hit it."
   ],
   "unproven": [
     "The class name `Pokey` is COINED. It does not appear in this cartridge in any case (see coined_name_search); the ROM RTTI name is daSanbo_c. Keeping `Pokey` as the C++ spelling is a disclosure, not a finding.",
@@ -984,7 +984,7 @@
       "historical_input_lines": 1013,
       "current_source_files": 1,
       "current_source_lines": 1146,
-      "source": "src/actors/daSanbo_c.cpp",
+      "source": "src/game/actors/d_a_sanbo.cpp",
       "licensed_functions": 36,
       "note": "queue_audit.py derives the current row; the scout 34/957 and pre-fold 36/1013 are historical counts."
     }

@@ -1117,6 +1117,37 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
             shutil.rmtree(scratch, ignore_errors=True)
 
 
+# The compile phase runs in worker processes, not threads. A warm build is nearly all
+# cache hits, and a hit is not a compile: it is _retarget and _isolate rewriting the
+# ELF in pure Python, ~90 ms a file across ~2,600 files. Threads serialise all of that
+# on the GIL -- the validator measured one busy core out of a three-CPU quota while
+# -j6 threads took turns -- so -j bought nothing on exactly the build it runs most.
+#
+# Each worker gets the read-only inputs once, through the initializer, rather than
+# with every file. The ObjectCache is rebuilt per worker instead of shipped: it holds
+# a lock, and its writes were already safe across processes (temp file + os.replace).
+# Data-check rows come back with each result instead of landing in a shared list, and
+# the parent appends them in source order, so romdata output no longer depends on
+# which thread happened to finish first.
+_WORKER = None
+
+
+def _worker_init(cache_args, inputs):
+    global _WORKER
+    _WORKER = (RBK.ObjectCache(*cache_args) if cache_args else None, inputs)
+
+
+def _worker_compile(job):
+    rel, prebuilt = job
+    cache, kw = _WORKER
+    sink = [] if kw["data_check"] else None
+    rel, err, outcome = compile_one(rel, kw["vers"], cache, kw["init_srcs"], kw["syms"],
+                                    data_sink=sink, prebuilt=prebuilt,
+                                    compiler_only=kw["compiler_only"],
+                                    intact_tus=kw["intact_tus"])
+    return rel, err, outcome, sink
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -1283,15 +1314,18 @@ def main():
         failures = []
         outcomes = {}
         if srcs:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-                for rel, err, outcome in ex.map(
-                        lambda s: compile_one(s, vers, cache, init_srcs, syms,
-                                              data_sink=data_sink,
-                                              compiler_only=compiler_only,
-                                              intact_tus=intact_tus,
-                                              prebuilt=tu_overrides.get(
-                                                  s.replace("\\", "/"))), srcs):
+            inputs = {"vers": vers, "init_srcs": init_srcs, "syms": syms,
+                      "compiler_only": compiler_only, "intact_tus": intact_tus,
+                      "data_check": data_sink is not None}
+            jobs = [(s, tu_overrides.get(s.replace("\\", "/"))) for s in srcs]
+            with concurrent.futures.ProcessPoolExecutor(
+                    max_workers=min(args.jobs, len(jobs)), initializer=_worker_init,
+                    initargs=((cache.root, cache.repo, cache.enabled), inputs)) as ex:
+                for rel, err, outcome, rows in ex.map(_worker_compile, jobs,
+                                                      chunksize=8):
                     outcomes[outcome] = outcomes.get(outcome, 0) + 1
+                    if rows:
+                        data_sink.extend(rows)
                     if err:
                         failures.append((rel, err))
         if failures:

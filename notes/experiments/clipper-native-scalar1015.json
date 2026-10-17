@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "issue": 2410,
+  "status": "Producer-verified partial continuation; exact final docs head offered for independent Source; PR/private acceptance separate",
+  "base_commit": "fc20639c19766d05227360ee5617f5246f3887c1",
+  "remote_main": "53dc648eaf7d24847f461a193a3f81203cf4d098",
+  "method": {
+    "address": "0x02015560",
+    "size": "0x3c",
+    "old": "_ZN8dClipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_",
+    "new": "_ZN8dClipper16TransformAndClipER9Matrix4x3R7Vector3iS3_",
+    "name_provenance": "inferred from observed transform then sphere/frustum clipping; not a recovered debug name"
+  },
+  "preview": {
+    "path": "build/clipper-native-preview",
+    "handoff_sha256": "83c50123cf3af76318b4b79e5d4e4bfc49c60afadf50ca6e22a5e93320860b90",
+    "strict_functions_per_control_and_candidate": 196,
+    "blind": 0,
+    "complete_tus": 7
+  },
+  "camera_probe": {
+    "source": "src/engine/view/d_camera.cpp",
+    "scope": "Declare the same singleton as real dClipper and pass its address from the retained C-linkage handler; no speculative native C++ handler conversion.",
+    "complete_raw_elf_identical": true,
+    "control_sha256": "e34605a2ae2da5882557b6c8b272702badbfe597fc28f4f5ed9f9c48e79f1d61",
+    "candidate_sha256": "e34605a2ae2da5882557b6c8b272702badbfe597fc28f4f5ed9f9c48e79f1d61"
+  },
+  "production_acceptance": {
+    "source_head": "21015108cba4ccf770742d7a66835d3aa8934fe2",
+    "command": "python tools/rombuild.py -j16 --no-rom --report-json build/clipper-full-rom.json",
+    "exit_code": 0,
+    "inputs_stable": true,
+    "input_count": 4398,
+    "module_fidelity": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "differingBytes": 0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11334,
+      "compiledBytes": 2225480,
+      "sourceFunctions": 11334,
+      "sourceBytes": 2225480,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.43577343005789,
+      "reproducingFunctions": 11334,
+      "reproducingBytes": 2225480,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 334,
+      "sourceBssClaims": 241,
+      "sourceBssBytes": 30644,
+      "reproducingDataClaims": 334,
+      "reproducingDataClaimBytes": 13268,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "intact_link_ok": true,
+    "new_symbol_errors": [],
+    "storage_alias_errors": [],
+    "strict_consumer_checks": {
+      "files": 8,
+      "checks": 250,
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "complete_raw_objects_literal_to_measured_candidates": true,
+      "authoritative_intact_sources": [
+        "src/game/actors/d_a_bg_snm_bdy.cpp",
+        "src/game/stages/d_ent_obj.cpp"
+      ]
+    },
+    "generic_expanded_check": {
+      "files": 8,
+      "functions": 242,
+      "verdicts": {
+        "VERIFIED": 241,
+        "BLIND-47": 1
+      },
+      "blocking": [],
+      "warning": "__sinit_d_ent_obj.cpp remains generic BLIND-47; actual production-prepared initializer independently strict VERIFIED, blind0, diffs[].",
+      "orchestration": "Official verify.__code__ unchanged, exact symbols_for enumerated as singleton jobs; original symbol resolver, subprocess linker and ERROR retry unchanged. No tool edits."
+    },
+    "static_gates": {
+      "declaration": "No new disagreements or header-declaration copies; baseline untouched.",
+      "style": "9 files, zero findings/format deferrals",
+      "rename_ledger": "3726 live mangled rows, zero stale live rows",
+      "port": "257 references all resolve",
+      "dead_references": "No new dead references or broken markdown links"
+    },
+    "global_advisory": {
+      "verified": 974,
+      "partial": 1537,
+      "differs": 1,
+      "unnamed": 15
+    },
+    "global_advisory_limit": "Known dCcAcPos_c vtable advisory difference is distinct from all334 exact source-owned data claims; no blanket metadata acceptance.",
+    "artifacts_sha256": {
+      "build/clipper-full-rom.json": "5e76048dbd210c984ca42d186349a74ef7804b09a3dc563f0d685b34546f85f4",
+      "build/clipper-full-rom-inputs.json": "56cfa695cbdc1d0782ee27cc3fab54eb59ad634ad3eb9ebc7adf6760de00b177",
+      "build/clipper-full-rom-receipt.json": "239235de41a167aeb6ce47e5472619ea58778acfc27908fe3ccfbbb6caf54f31",
+      "build/clipper-final-production/report.json": "c0b6ecab30e0a8660197a4d620116e49358531a82e404689dc23b6b59d82debe",
+      "build/clipper-final-parallel-linkcheck/report.json": "69f38438e02cfb5aa779c72333a4e29e6f44ff1cfd4b21a85658223bf7c6b1ab",
+      "build/clipper-final-style.json": "952332738e969ba07d03fc1ad8988d11ca8c14ba1454623f237162a0fd740d67"
+    },
+    "formal_source_review": "pending final immutable docs-head handoff",
+    "private_ci": "not run on this second PR yet",
+    "issue_completion": false
+  },
+  "new_findings": [
+    {
+      "id": "CLIPPER-RESULT-EXTENT-01",
+      "kind": "correctness",
+      "status": "fixed",
+      "detail": "Replace two-int result with real three-component Vector3; preserve exact complete TU and initializer."
+    },
+    {
+      "id": "CLIPPER-SINGLETON-DECL-01",
+      "kind": "correctness",
+      "status": "fixed",
+      "detail": "Camera and owned Tree contribution agree on real dClipper singleton; address use and complete object/codegen proved; declaration ratchet passes without baseline edit."
+    }
+  ],
+  "deferred": [
+    "Other Fix12 template boundaries",
+    "Shared Matrix4x3 ODR representation debt",
+    "Native Monkey asset handles, initialization, metadata and complete class reconstruction",
+    "Grouped Actor API dependency closure"
+  ],
+  "source_freeze": "21015108cba4ccf770742d7a66835d3aa8934fe2",
+  "tree_contribution": {
+    "commit": "788bdd051ff0b4eb97a8b3ad0609563bc51d371d",
+    "api_input": "91cf588e91bae0f2f5c3888cab37e8eb5370e3f4",
+    "producer_session": "codex-yegg-native-three-method-astra-producer1014",
+    "grouped_checkpoint_preserved": "89788a89ea032392593e7372c6b2c31ee75ca7fd",
+    "files": [
+      "src/game/actors/d_a_tree.cpp"
+    ],
+    "owner_context_queue": "b2a3ad9cc6ef83869d3409da0a2f40b1b942b7ab",
+    "source_policy_acceptance": "bounded independent Tree pass/partial, not formal acceptance of the broader Actor task",
+    "producer_handoff": "C:/tmp/sm64ds-tree-clipper-native1015/build/tree-clipper-native1015/HANDOFF.json",
+    "producer_handoff_sha256": "e57489349cc165be7798a8503e3ec81669cd8b4cc9937baf7f6a2ff87ea24738",
+    "independent_handoff": "C:/tmp/sm64ds-tree-clipper-independent1015/build/tree-clipper-independent1015/HANDOFF.json",
+    "independent_report_sha256": "1cff17c165e22e3681866372faa0189829aad2990d83291d2e7c280f1a0c11f3"
+  },
+  "independent_reviews": {
+    "root_astra_initial": "C:/tmp/sm64ds-mky-native-review1015/build/clipper-review/preliminary-review.json",
+    "root_astra_initial_sha256": "65a8e6dd3a4cfbd7865f9c4e6cf6d44a9aae27099af7ef8b8056ffc274b150df",
+    "root_astra_tree": "C:/tmp/sm64ds-mky-native-review1015/build/clipper-tree-review/independent-rebuild.json",
+    "root_astra_tree_sha256": "e834a11459dc25439404de094aa177ec1dc0688009ae714ae8a3ad4923a193e8",
+    "coverage": "All eight actual TUs rebuilt independently against controls,250strictchecks per side, complete storage/symbol/typed-graph proof. Producer full-ROM evidence is separately audited, not claimed independently rerun."
+  }
+}

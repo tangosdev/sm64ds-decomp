@@ -206,12 +206,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@501",
+      "from": "@502",
       "to": "@54",
       "evidence": "mwcc numbers this model registration node @488 per TU; the pair's other node @489 collides with ov100's configured @489 on main, so both nodes take fresh sequential names no longer than the originals"
     },
     {
-      "from": "@502",
+      "from": "@503",
       "to": "@55",
       "evidence": "mwcc numbers this collision registration node @489 per TU and ov100 already owns @489 at 0x02148364 on main, so the batch link would multiply-define it"
     }

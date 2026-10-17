@@ -1,4 +1,10 @@
 //cpp
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_ks_water_AssetId {
+    ASSET_KS_MIZU_BMD = 0x0689,
+    ASSET_KS_MIZU_KCL = 0x068a
+};
+
 #include "Sound.h"
 /* Production translation unit for ov017/daObjKsWater_c, hand-curated.
  * 7 function(s), .text 0x021111a0..0x021114b8.
@@ -138,7 +144,7 @@ int daObjKsWater_c::Behavior()
         int d = mOriginalPosY - mPosY;
         if (d < 0) d = -d;
         if (d < 0x92e000) {
-            mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, *(const Vector3 *)&mCamSpacePosX, 0);
+            mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
             mPosY -= 0x5000;
         }
     }
@@ -185,5 +191,5 @@ int daObjKsWater_c::CleanupResources()
 
 /* File-scope objects, in __sinit_d_a_obj_ks_water.cpp construction order:
  * the model's SharedFilePtr, then the collision file's. */
-KsWaterModelFilePtr data_ov017_02111c88(0x689);
-KsWaterClsnFileHandle data_ov017_02111c80(0x68a);
+KsWaterModelFilePtr data_ov017_02111c88(ASSET_KS_MIZU_BMD);
+KsWaterClsnFileHandle data_ov017_02111c80(ASSET_KS_MIZU_KCL);

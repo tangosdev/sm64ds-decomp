@@ -1,8 +1,8 @@
 {
   "id": "ov071/daEykn_c",
   "module": "ov071",
-  "source": "src/actors/daEykn_c.cpp",
-  "promoted_source": "src/actors/daEykn_c.cpp",
+  "source": "src/game/actors/d_a_eykn.cpp",
+  "promoted_source": "src/game/actors/d_a_eykn.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -17,6 +17,21 @@
       "name": ".text",
       "start": "0x02120668",
       "end": "0x02121a6c"
+    },
+    {
+      "name": ".init",
+      "start": "0x021228c8",
+      "end": "0x02122a1c"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02122b34",
+      "end": "0x02122b38"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02123038",
+      "end": "0x021230b8"
     }
   ],
   "functions": [
@@ -197,12 +212,77 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov071_02123038",
+      "address": "0x02123038",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
+    },
+    {
+      "symbol": "data_ov071_02123040",
+      "address": "0x02123040",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
+    },
+    {
+      "symbol": "data_ov071_02123048",
+      "address": "0x02123048",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
+    },
+    {
+      "symbol": "data_ov071_02123050",
+      "address": "0x02123050",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
+    },
+    {
+      "symbol": "@182",
+      "address": "0x02123058",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native destructor-registration node at the unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@183",
+      "address": "0x02123064",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native destructor-registration node at the unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@184",
+      "address": "0x02123070",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native destructor-registration node at the unchanged retail initializer destination."
+    },
+    {
+      "symbol": "@185",
+      "address": "0x0212307c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native destructor-registration node at the unchanged retail initializer destination."
+    },
+    {
+      "symbol": "data_ov071_02123088",
+      "address": "0x02123088",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
+    }
+  ],
   "notes": [
     "_ZN8daEykn_c13InitResourcesEv (0x02121734) was absorbed after promotion, extending the delinks.txt range to 0x021219cc.",
     "The destructor is defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
     "The state helpers are members with coined names (see include/daEykn_c.h); their symbols.txt rows were renamed in place. Previous tree name MrI was coined. class_rename kept MrI_Spawn / MrI_Projectile rows (no --with-derived). The duplicate _ZTV3MrI alias of _ZTV8daEykn_c was deleted.",
-    "fold-lane-D-0929: folded the daEykn_c_classInit_EYEKUN_BOSS and daEykn_c_classInit_EYEKUN registry factories (0x021219cc..0x02121a6c) into this already-promoted TU, widening the complete delinks.txt claim from 0x02120668..0x021219cc to 0x02120668..0x02121a6c. Each loose one-function source hand-called fBase_c::operator new(536) + the inherited dActor_c ctor + this class's vtable store + the four member subobjects in field order (ModelAnim, TextureSequence, dExtShadowModel_c, dCcAcPos_c); daEykn_c has no user-declared constructor, so both are now `new daEykn_c()` -- same bytes, zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the two factories append after InitResources, in ROM order (EYEKUN_BOSS then EYEKUN). `tubuild.py verify` reports 25/25 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (the existing _ZN8daEykn_cD2Ev deadstrip row, from the out-of-line destructor, already covers the homeless base-object-destructor helper `return new` emits here). Retired: src/d_a_eykn_eyekun_boss.c, src/d_a_eykn_eyekun.c (both credited tangosdev, carried into attribution.json as path#symbol overrides)."
+    "fold-lane-D-0929: folded the daEykn_c_classInit_EYEKUN_BOSS and daEykn_c_classInit_EYEKUN registry factories (0x021219cc..0x02121a6c) into this already-promoted TU, widening the complete delinks.txt claim from 0x02120668..0x021219cc to 0x02120668..0x02121a6c. Each loose one-function source hand-called fBase_c::operator new(536) + the inherited dActor_c ctor + this class's vtable store + the four member subobjects in field order (ModelAnim, TextureSequence, dExtShadowModel_c, dCcAcPos_c); daEykn_c has no user-declared constructor, so both are now `new daEykn_c()` -- same bytes, zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the two factories append after InitResources, in ROM order (EYEKUN_BOSS then EYEKUN). `tubuild.py verify` reports 25/25 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (the existing _ZN8daEykn_cD2Ev deadstrip row, from the out-of-line destructor, already covers the homeless base-object-destructor helper `return new` emits here). Retired: src/d_a_eykn_eyekun_boss.c, src/d_a_eykn_eyekun.c (both credited tangosdev, carried into attribution.json as path#symbol overrides).",
+    "Native initializer follow-up: four file handles and three two-PMF state rows replace the handwritten __sinit_ov071_021228c8.c. Local EyknModelFile/EyknTextureSequenceFile/EyknAnimationFileHandle type names are inferred eight-byte resource-family ABI views; the C1/D1 aliases assert their measured exact helper destinations, not recovered original class names. Six copied ROM PMF descriptors remain ROM-owned; their native C++ imports and the BSS state table leave the C-linkage block. All prior Fix12/interface/layout leftovers remain partial reconstruction."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -269,6 +349,186 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov071-daEykn_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02120668",
+        "end": "0x02121a6c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02120668",
+          "end": "0x02121a6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x021228c8",
+          "end": "0x02122a1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02122b34",
+          "end": "0x02122b38",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02123038",
+          "end": "0x021230b8",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 36
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              79
+            ],
+            "desired": [
+              79
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              77
+            ],
+            "desired": [
+              77
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "desired": [
+              6,
+              8,
+              7,
+              5,
+              12,
+              10,
+              11,
+              9,
+              13
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ],
+              "desired": [
+                6,
+                8,
+                7,
+                5,
+                12,
+                10,
+                11,
+                9,
+                13
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ]
+            }
+          ],
+          "symbolIndices": 9,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -289,63 +549,465 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov071",
       "canonical_address": "0x02122d30",
-      "reason": "Text-only TU: externalize to canonical public address 0x02122d30."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02122d30."
     },
     {
       "symbol": "_ZTI8daEykn_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov071",
       "canonical_address": "0x02122ce4",
-      "reason": "Text-only TU: externalize to canonical public address 0x02122ce4."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02122ce4."
     },
     {
       "symbol": "_ZTS8daEykn_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov071",
       "canonical_address": "0x02122cd8",
-      "reason": "Text-only TU: externalize to canonical public address 0x02122cd8."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02122cd8."
     },
     {
       "symbol": "_ZTI8dActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e390",
-      "reason": "Text-only TU: externalize to canonical public address 0x0208e390."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x0208e390."
     },
     {
       "symbol": "_ZTS8dActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384",
-      "reason": "Text-only TU: externalize to canonical public address 0x0208e384."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x0208e384."
     },
     {
       "symbol": "_ZTI7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e78",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086e78."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02086e78."
     },
     {
       "symbol": "_ZTS7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e54",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086e54."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02086e54."
     },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086d70",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086d70."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02086d70."
     },
     {
       "symbol": "_ZTS7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086e60."
+      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02086e60."
+    }
+  ],
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_d_a_eykn.cpp",
+      "address": "0x021228c8",
+      "size": "0x154",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native four-handle construction and three PMF state rows reproduce the 340-byte retail initializer."
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_eykn.cpp",
+      "address": "0x02122b34",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Original constructor-table entry for this native initializer."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@534",
+      "to": "@182",
+      "evidence": "Compiler-local registration node at ov071:0x02123058; fleet-unique short label changes no storage or relocation."
+    },
+    {
+      "from": "@535",
+      "to": "@183",
+      "evidence": "Compiler-local registration node at ov071:0x02123064; fleet-unique short label changes no storage or relocation."
+    },
+    {
+      "from": "@536",
+      "to": "@184",
+      "evidence": "Compiler-local registration node at ov071:0x02123070; fleet-unique short label changes no storage or relocation."
+    },
+    {
+      "from": "@537",
+      "to": "@185",
+      "evidence": "Compiler-local registration node at ov071:0x0212307c; fleet-unique short label changes no storage or relocation."
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_eykn.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned compiler-local symbol to the DSD global symbol surface without changing storage or relocations."
+    },
+    {
+      "symbol": ".p__sinit_d_a_eykn.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned compiler-local symbol to the DSD global symbol surface without changing storage or relocations."
+    },
+    {
+      "symbol": "@182",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned compiler-local symbol to the DSD global symbol surface without changing storage or relocations."
+    },
+    {
+      "symbol": "@183",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned compiler-local symbol to the DSD global symbol surface without changing storage or relocations."
+    },
+    {
+      "symbol": "@184",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned compiler-local symbol to the DSD global symbol surface without changing storage or relocations."
+    },
+    {
+      "symbol": "@185",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact owned compiler-local symbol to the DSD global symbol surface without changing storage or relocations."
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN13EyknModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN13EyknModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN23EyknTextureSequenceFileC1Ej",
+      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017934",
+      "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN23EyknTextureSequenceFileD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201791c",
+      "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN23EyknAnimationFileHandleC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
+    },
+    {
+      "symbol": "_ZN23EyknAnimationFileHandleD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "Compiler destructor registration calls the unchanged original arm9 helper."
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x021228d8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021228e8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021228f4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017934"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122904",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122910",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017934"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122920",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212292c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212293c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123050",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123050"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@182",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123058"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123038",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123038"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201791c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@183",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123064"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123040",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123040"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@184",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123070"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123048",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123048"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x021229fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@185",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x0212307c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122a00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123088",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123088"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122a04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02122cb8",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122cb8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122a08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02122cc0",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122cc0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122a0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02122ca8",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122ca8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122a10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02122cd0",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122cd0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122a14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02122cb0",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122cb0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122a18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02122cc8",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122cc8"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02122b34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_eykn.cpp",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021228c8"
     }
   ]
 }

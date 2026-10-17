@@ -3,9 +3,10 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "nitro/fx/fx.h"
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
-#define DIVR(x) ((int)(((long long)(x) * -1000 + 0x800) >> 12))
+#define DIVR(x) FX_MUL(x, -1000)
 
 void func_ov007_020c5188(char *sb, int arg1)
 {

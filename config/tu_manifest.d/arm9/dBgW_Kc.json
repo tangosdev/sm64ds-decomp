@@ -1,16 +1,16 @@
 {
   "id": "arm9/dBgW_Kc",
   "module": "arm9",
-  "source": "src/engine/collision/dBgW_Kc.cpp",
-  "promoted_source": "src/engine/collision/dBgW_Kc.cpp",
+  "source": "src/engine/collision/d_bg_w_kc.cpp",
+  "promoted_source": "src/engine/collision/d_bg_w_kc.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "CONTIGUOUS AND EXHAUSTIVE: 0x020396d8..0x020398fc is covered by exactly 12 config/arm9/symbols.txt function symbols with no gap and no overlap, all carrying `complete` in config/arm9/delinks.txt with a .text section and nothing else.",
-    "CLASS IDENTITY FROM ROM RTTI: _ZTS7dBgW_Kc sits at arm9 0x020993bc, _ZTI7dBgW_Kc at 0x020993c8 and the vtable address point at 0x020993dc, naming the members in this run (destructor triple, both constructor variants, Virtual08, SetFile, UpdateFileOffsets) as one class's. The ITCM half of the class (the DetectClsn triple and the three geometry/surface slots the same vtable points into 0x01ffb0fc..0x01ffd97c) lives in src/engine/collision/dBgW_Kc_itcm.cpp under module itcm.",
+    "CLASS IDENTITY FROM ROM RTTI: _ZTS7dBgW_Kc sits at arm9 0x020993bc, _ZTI7dBgW_Kc at 0x020993c8 and the vtable address point at 0x020993dc, naming the members in this run (destructor triple, both constructor variants, Virtual08, SetFile, UpdateFileOffsets) as one class's. The ITCM half of the class (the DetectClsn triple and the three geometry/surface slots the same vtable points into 0x01ffb0fc..0x01ffd97c) lives in src/engine/collision/d_bg_w_kc_itcm.cpp under module itcm.",
     "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order and each lifecycle group in its fixed order, D2,D0,D1 for the destructor and C1,C2 for the constructor. The ROM holds _ZN7dBgW_KcD2Ev (0x020397fc), D0 (0x0203982c), D1 (0x02039864), then C1 (0x02039894), C2 (0x020398c8) -- exactly that layout from one destructor and one constructor definition at the head of the file.",
     "HELPERS ARE THIS TU'S OWN: func_020396dc turns a KCL_Tri* into its triangle index off this collider's kclFile->tris and is called only by the class's three DetectClsn overrides; func_02039794/7b8/7dc are the slope-band classify, wall-facing test and near-zero divisor guard the ITCM walk and actor-collision TUs (func_02036acc, dBgCh_Actr) call by raw address -- TU-local workers, not vtable slots.",
-    "NEIGHBOURS ARE OTHER SUBJECTS: below, func_020396d0 (0x020396d0..0x020396d8) belongs to the dBgW base family's own run. Above, func_020398fc (0x020398fc..) opens derived class dBgW_KcMbg's contiguous run (vtable _ZTV10dBgW_KcMbg at 0x02099434, RTTI _ZTI10dBgW_KcMbg at 0x02099410) -- the same class the promoted dBgW_KcMbg.cpp TU already claims."
+    "NEIGHBOURS ARE OTHER SUBJECTS: below, func_020396d0 (0x020396d0..0x020396d8) belongs to the dBgW base family's own run. Above, func_020398fc (0x020398fc..) opens derived class dBgW_KcMbg's contiguous run (vtable _ZTV10dBgW_KcMbg at 0x02099434, RTTI _ZTI10dBgW_KcMbg at 0x02099410) -- the same class the promoted d_bg_w_kc_mbg.cpp TU already claims."
   ],
   "sections": [
     {
@@ -111,7 +111,7 @@
     "Cartridge RTTI names the class dBgW_Kc (_ZTS7dBgW_Kc at arm9 0x020993bc, _ZTI at 0x020993c8, vtable address point at 0x020993dc). The licensed run is .text 0x020396d8..0x020398fc (12 functions): the Virtual08 stub, the prism-index helper, SetFile, UpdateFileOffsets, the three slope/divisor guards and the five lifecycle variants -- one TU the way the original engine file was almost certainly shaped.",
     "Deferred codegen emits D2,D0,D1 for the destructor and C1,C2 for the constructor in that fixed order, and plain members in reverse source order, so the promoted file defines ctor and dtor first and then walks the ROM run backwards. All five lifecycle variants are cartridge-retained here: derived classes dBgW_KcMbg and dBgW_KcMbgSclY construct through C2/D2.",
     "func_020396dc and the three func_020397* guards keep their func_ names. They are free workers called by raw address -- the guards by actor-collision TUs and the class's own ITCM overrides, the prism-index helper only inside this collider family -- not vtable slots, so there is no honest member name to give them.",
-    "The DetectClsn triple, the GetNormal/GetTriangleOrigin/GetSurfaceInfo slots and the GetUnkOctreeY/GetOctreeOriginY const members are ITCM-resident (0x01ffb07c..0x01ffd97c) and live in the sibling TU src/engine/collision/dBgW_Kc_itcm.cpp under config/arm9/itcm/ -- the same class, split the way the cartridge splits it."
+    "The DetectClsn triple, the GetNormal/GetTriangleOrigin/GetSurfaceInfo slots and the GetUnkOctreeY/GetOctreeOriginY const members are ITCM-resident (0x01ffb07c..0x01ffd97c) and live in the sibling TU src/engine/collision/d_bg_w_kc_itcm.cpp under config/arm9/itcm/ -- the same class, split the way the cartridge splits it."
   ],
   "compiler_only_output": [
     {

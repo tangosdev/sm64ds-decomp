@@ -3,6 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "nitro/fx/fx.h"
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
@@ -15,9 +16,9 @@ void func_ov007_020c7c60(char **self, int r6, int r4)
     SubVec3(&d1, (struct Vector3 *)(self + 3), &d2);
 
     m = -r6;
-    scaled.x = (int)(((long long)m * d2.x + 0x800) >> 12);
-    scaled.y = (int)(((long long)m * d2.y + 0x800) >> 12);
-    scaled.z = (int)(((long long)m * d2.z + 0x800) >> 12);
+    scaled.x = FX_MUL(m, d2.x);
+    scaled.y = FX_MUL(m, d2.y);
+    scaled.z = FX_MUL(m, d2.z);
 
     AddVec3((struct Vector3 *)(self[0] + 0x10), &scaled, (struct Vector3 *)(self[0] + 0x10));
     SubVec3((struct Vector3 *)(self[1] + 0x10), &scaled, (struct Vector3 *)(self[1] + 0x10));

@@ -11,7 +11,7 @@ TU and this handoff differ from the current main base. No source move, manifest 
 ## Source correction
 
 **SOUND2881-01 is fixed.** The old `mTable[0x1a8]` excluded a live four-byte
-word which `func_ov006_020c33dc` (in `src/actors/unit020bfec0.cpp`) initializes at component offset +0x1a8.
+word which `func_ov006_020c33dc` (in `src/minigames/unit020bfec0.cpp`) initializes at component offset +0x1a8.
 The animation functions at ov006 020c2300, 020c2440, 020c24e4, 020c2594 and
 020c271c test that word before requesting sound. `func_02012174` wraps sound
 playback; the word is not a resource-ready result.
@@ -40,13 +40,13 @@ claimed complete by this narrow storage repair.
 ## Producer proof under 2004/b56
 
 - `affected_src.py include/dScMgSound_c.h`: one production consumer,
-  `src/actors/dScMgSound_c.cpp`.
+  `src/minigames/d_s_mg_sound.cpp`.
 - Complete compiled TU object is identical to the pre-repair composition:
   36,680 bytes, SHA256 `daf34c005a640ca2e029e624704332961317ed1cf5049e1da9f64cbd6e271192`.
   This comparison includes emitted metadata and relocations.
-- `prepush_linkcheck.py --files src/actors/dScMgSound_c.cpp`: all 82 functions
+- `prepush_linkcheck.py --files src/minigames/d_s_mg_sound.cpp`: all 82 functions
   VERIFIED, no differences, zero blind words, no warnings or blocking results.
-- `romdata_check.py --files src/actors/dScMgSound_c.cpp`: 13 records,
+- `romdata_check.py --files src/minigames/d_s_mg_sound.cpp`: 13 records,
   7 VERIFIED / 212 bytes, 6 PARTIAL / 68 compared bytes, zero DIFFERS.
   Partial ancestor metadata is unchanged; it is not relabeled as full coverage.
 - `rombuild.py -j16 --no-rom`: 11,208/11,208 functions reproduce,

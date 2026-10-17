@@ -227,7 +227,7 @@ wall, else underside. **[P]**
 their own behaviour; `Update` links the object at the head of `data_0209cee8`, so the
 active set is rebuilt each frame by whoever chooses to register. `Process()` (0x02014aa8)
 is O(n²) over that list and has **exactly one caller: `dScStage_c::Render()` at 0x0202ba14** —
-verified directly, `src/_ZN10dScStage_c6RenderEv.cpp` is the only file in `src/` that names it.
+verified directly, `dScStage_c::Render` (now in `src/game/stages/d_s_stage_methods.cpp`) is the only definition in `src/` that names it.
 **[P]**
 
 *(Call-site counts in this section and §3.6 are reloc-table derived — they count sites,
@@ -321,7 +321,7 @@ Three things on that branch are harvestable into `main` with no byte risk:
    collapses the Itanium D1/D0 pair into one slot and every virtual past it lands one slot
    low — `GetPos` indexes what is `D0` in a ROM-shaped table. The ROM shape is
    `[0] D1, [1] D0, [2] GetPos, [3] GetOwnerID`, and the matched grab test
-   `func_ov002_020caf98` (ROM ordinal 239 of the ov002/Player TU, now in [src/actors/Player.cpp](../src/actors/Player.cpp)) calls slot 2 for `GetPos`, confirming it. Any host or portable
+   `func_ov002_020caf98` (ROM ordinal 239 of the ov002/Player TU, now in [src/game/player/Player.cpp](../src/game/player/Player.cpp)) calls slot 2 for `GetPos`, confirming it. Any host or portable
    build must keep the ROM shape and dispatch by explicit slot.
 
 The 1,143-commit gap is mostly the class-rename campaign, which the port branch predates —
@@ -365,9 +365,9 @@ concentrated in structure, status, and numbers.
 #### Retraction: `dBgCh_Lin` 0x54 is not misnamed
 
 A first pass of this survey reported that 0x54 should be `clsnPos`, not `lineEnd`. **That was
-wrong, and it rested on an inverted premise** — that [func_ov002_020fea4c](../src/actors/dM3dGLin.cpp) is `GetStart`. Read
+wrong, and it rested on an inverted premise** — that [func_ov002_020fea4c](../src/engine/collision/d_m3d_g_lin.cpp) is `GetStart`. Read
 the body: `a[0..2] = b[3..5]` reads offset 0x44, the `dM3dGLin`'s *second* `Vector3`, so it is
-**GetEnd**; [func_ov002_020fea68](../src/actors/dM3dGLin.cpp) (`b[0..2]`) is GetStart.
+**GetEnd**; [func_ov002_020fea68](../src/engine/collision/d_m3d_g_lin.cpp) (`b[0..2]`) is GetStart.
 
 So `func_02037608` seeds 0x54 from the line **end**, and `dBgW_KcMbg::DetectClsn`
 depends on that, transforming 0x38 and 0x54 as the two endpoints of the scratch segment. On a

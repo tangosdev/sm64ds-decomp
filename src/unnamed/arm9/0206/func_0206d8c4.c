@@ -1,4 +1,5 @@
 extern void _ZN4cstd8__assertEPKcS1_S1_i(const char *, const char *, const char *, int);
+#pragma optimize_for_size on /* built for size like func_0206d32c: the loop enters at its test */
 extern const char data_020868fc;
 extern const char data_02086a08;
 
@@ -18,11 +19,6 @@ void func_0206d8c4(struct Arr *s, unsigned int index) {
         _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x55, &data_02086a08, 1);
     }
     s->count--;
-    n = s->count;
-    goto test;
-loop:
-    s->elems[index] = s->elems[index + 1];
-    index++;
-test:
-    if (index < n) goto loop;
+    for (n = s->count; index < n; index++)
+        s->elems[index] = s->elems[index + 1];
 }

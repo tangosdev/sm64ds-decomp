@@ -30,6 +30,8 @@ struct daDemo_c {
     };
 
     struct simpleModel_c : param_c, Model {
+        SharedFilePtr *mFile; /* 0x5c */
+
         virtual ~simpleModel_c();
         void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
     };
@@ -61,7 +63,7 @@ daDemo_c::anmModel_c::~anmModel_c()
 
 daDemo_c::simpleModel_c::~simpleModel_c()
 {
-    SharedFilePtr *file = *(SharedFilePtr **)((char *)this + 0x5c);
+    SharedFilePtr *file = mFile;
     if (file != 0) {
         file->Release();
     }

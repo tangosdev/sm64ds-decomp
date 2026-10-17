@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 void func_ov007_020c5490(char* obj, int* m)
 {
     int i;
@@ -27,13 +28,9 @@ void func_ov007_020c5490(char* obj, int* m)
                 y = e[1];
                 dx = x - b7c;
                 dy = y - b80;
-                *(int*)((char*)row + k) =
-                    ((int)(((s64)m[0] * dx + 0x800) >> 12)
-                     + (int)(((s64)m[1] * dy + 0x800) >> 12)) + b7c;
+                *(int *)((char *)row + k) = (FX_MUL(m[0], dx) + FX_MUL(m[1], dy)) + b7c;
                 j++;
-                e[1] =
-                    ((int)(((s64)m[2] * dx + 0x800) >> 12)
-                     + (int)(((s64)m[3] * dy + 0x800) >> 12)) + *(int*)(obj + 0x80);
+                e[1] = (FX_MUL(m[2], dx) + FX_MUL(m[3], dy)) + *(int *)(obj + 0x80);
                 k += 0xc;
             } while (j < (int)*(unsigned short*)((*(char***)(obj + 0x38))[i] + 8));
         }

@@ -1,8 +1,8 @@
 {
   "id": "ov033/daObjTtFuta_c",
   "module": "ov033",
-  "source": "src/actors/daObjTtFuta_c.cpp",
-  "promoted_source": "src/actors/daObjTtFuta_c.cpp",
+  "source": "src/game/actors/d_a_obj_tt_futa.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_tt_futa.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x21111a0..0x21113a4, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjTtFuta_c",
     "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "fold-lane-c-0929: loose src/d_a_obj_tt_futa.c (daObjTtFuta_c_classInit, 0x021113a4..0x021113d4) sits immediately after this TU's InitResources with no gap before the next class's TU (src/actors/daObjTtWater_c.cpp at 0x021113d4); folded in as `return new daObjTtFuta_c();` -- daObjTtFuta_c declares no constructor of its own, so the compiler-synthesized default constructor reproduces the loose file's hand-written fBase_c::operator new(800) + dBgActor_c::dBgActor_c() + vtable store sequence byte-for-byte."
+    "fold-lane-c-0929: loose src/d_a_obj_tt_futa.c (daObjTtFuta_c_classInit, 0x021113a4..0x021113d4) sits immediately after this TU's InitResources with no gap before the next class's TU (src/game/actors/d_a_obj_tt_water.cpp at 0x021113d4); folded in as `return new daObjTtFuta_c();` -- daObjTtFuta_c declares no constructor of its own, so the compiler-synthesized default constructor reproduces the loose file's hand-written fBase_c::operator new(800) + dBgActor_c::dBgActor_c() + vtable store sequence byte-for-byte."
   ],
   "sections": [
     {
@@ -451,7 +451,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjTtFuta_c.cpp",
+      "symbol": "__sinit_d_a_obj_tt_futa.cpp",
       "address": "0x021119e8",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -460,7 +460,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjTtFuta_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_tt_futa.cpp",
       "address": "0x02111ac0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -518,13 +518,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjTtFuta_c.cpp",
+      "symbol": "__sinit_d_a_obj_tt_futa.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjTtFuta_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_tt_futa.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -648,7 +648,7 @@
       "source": "0x02111ac0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjTtFuta_c.cpp",
+      "symbol": "__sinit_d_a_obj_tt_futa.cpp",
       "addend": 0,
       "target_module": "ov033",
       "target_address": "0x021119e8"

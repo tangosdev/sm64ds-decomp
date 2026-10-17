@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "base_commit": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "task_id": "bg-collision-cpp1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3784",
+  "source": "src/actors/dBgActor_c.cpp",
+  "source_sha256": "01d12d8a905e79fd048fbf1dc0918bdc58d4400afe23544f5168d6cc3d45c000",
+  "change": "Compile func_ov002_020eea84 as C++ with C linkage, retaining its two-word ceiling snapshot via int[2] and using native actor/collision/Sound APIs and existing actor fields.",
+  "receiver": {
+    "type": "dBgCh_Actr",
+    "caller": "Player::mMeshClsn at +0x380",
+    "evidence": [
+      "src/actors/Player.cpp caller passes c+0x380 and c",
+      "include/Player.h mMeshClsn field at0x380"
+    ],
+    "tu_placement": "Existing medium-confidence adjacency/subject placement; no new dBgActor method claim."
+  },
+  "production": {
+    "mode": "ordinary text-only promoted TU",
+    "preparation": "rombuild.compiler_only_policies then rombuild._isolate",
+    "intact_mode": "Not applicable: prepare_intact_object rejects original and candidate because no owned nontext is enrolled.",
+    "functions": 20,
+    "initializers": 0,
+    "owned_nontext": 0,
+    "header_changes": false,
+    "manifest_changes": false,
+    "temporary_pin_changes": false
+  },
+  "bounded_experiments": {
+    "constructs": 12,
+    "scalar_cpp_control_diffs": 10,
+    "matching_copy_shape": "int[2] aggregate",
+    "also_exact": [
+      "unsigned[2]",
+      "nested int[2]"
+    ],
+    "nonmatching": [
+      "unsigned short[4]",
+      "byte[8]",
+      "separate array temporary",
+      "direct field address"
+    ],
+    "native_variants": [
+      "dActor_c::FindWithID and Sound::PlayBank0",
+      "dBgCh_Actr::IsOnWall/GetWallResult",
+      "existing actorID/position fields",
+      "dBgPi::GetClsnID on actual wall result"
+    ],
+    "inline_assembly": false,
+    "new_policy": false
+  },
+  "whole_object": {
+    "fresh_original_and_candidate_compiles": true,
+    "compiler": "2004/b56",
+    "whole_raw_elf_equal": true,
+    "raw_sha256": "25f62d1a53e75dec96102f84d14af45e12ec402593ced26ca5bfaa28c2618b5b",
+    "whole_prepared_elf_equal": true,
+    "prepared_sha256": "028096517a23abe0b318251cac12d12b870cab91f638768ea95b90ee477bf295",
+    "raw_defined_symbols": 63,
+    "raw_typed_relocations": 179,
+    "anonymous_symbols": [],
+    "prepared_strict_functions": 20,
+    "prepared_strict_verdict": "VERIFIED",
+    "diffs": [],
+    "blind": 0,
+    "externalized_metadata": [
+      {
+        "name": "_ZTV10dBgActor_c",
+        "size": 136,
+        "module": "ov002",
+        "storage_address": "0x210ae30",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTI10dBgActor_c",
+        "size": 12,
+        "module": "ov002",
+        "storage_address": "0x21089ec",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTS10dBgActor_c",
+        "size": 13,
+        "module": "ov002",
+        "storage_address": "0x2108a04",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTI8dActor_c",
+        "size": 12,
+        "module": "arm9",
+        "storage_address": "0x208e390",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTS8dActor_c",
+        "size": 10,
+        "module": "arm9",
+        "storage_address": "0x208e384",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTI7dBase_c",
+        "size": 12,
+        "module": "arm9",
+        "storage_address": "0x2086e78",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTS7dBase_c",
+        "size": 9,
+        "module": "arm9",
+        "storage_address": "0x2086e54",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTI7fBase_c",
+        "size": 8,
+        "module": "arm9",
+        "storage_address": "0x2086d70",
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "name": "_ZTS7fBase_c",
+        "size": 9,
+        "module": "arm9",
+        "storage_address": "0x2086e60",
+        "blind": 0,
+        "exact": true
+      }
+    ],
+    "externalized_metadata_bytes": 221
+  },
+  "gates": {
+    "full_rom": {
+      "command": "python -u tools/rombuild.py -j16 --no-rom",
+      "exit_code": 0,
+      "source_checkpoint": "6a07e548f2ae58476d88bab10c687d07a6ed5d36",
+      "functions": 11332,
+      "mismatches": 0,
+      "data_claims": 331,
+      "bss_claims": 239,
+      "exact_modules": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "baseline_control": "Nine inherited dsd interior-symbol errors; final intact gate introduces none.",
+      "romdata_inventory": "969 verified,1519 partial,1 inherited differ,21 unnamed; advisory inventory is not a complete data reconstruction claim."
+    },
+    "prepush_range": {
+      "command": "python -u tools/prepush_linkcheck.py --range 08b118098ecb7ce86b85f1215886a4618e268a86..HEAD",
+      "exit_code": 0,
+      "checked": 20,
+      "verified": 20,
+      "warnings": 0,
+      "blocking": 0,
+      "blind": 0
+    },
+    "declaration_agreement": "pass:84 files scoped,641 inherited disagreements,0new disagreements or header redeclarations",
+    "port_references": "pass:267 resolve",
+    "language_mode": "pass against origin/chaos-data banked baseline"
+  },
+  "completion": "partial",
+  "remaining_work": [
+    {
+      "location": "src/actors/dBgActor_c.cpp:func_ov002_020eea84",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "detail": "Ceiling shadow snapshot and query wrappers, C-linkage raw pointer boundary and scalar Player::Hurt Fix12 ABI remain measured boundaries.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3784",
+      "owner": "codex-bg-collision-coordinator1013"
+    }
+  ],
+  "artifact_paths": [
+    "build/bgcopy/whole-tu-proof.json",
+    "build/bgcopy/sweep.json",
+    "build/bgcopy/native-sweep.json",
+    "build/bgcopy/typed-sweep.json",
+    "build/bg-collision1013/full-rom.log",
+    "build/bg-collision1013/decl.log",
+    "build/bg-collision1013/langmode.log"
+  ],
+  "binding": "Final report-only descendant retains the exact source/include/config/tools/port input trees of the tested source checkpoint; independent verification accepts this commit explicitly."
+}

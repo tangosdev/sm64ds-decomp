@@ -1,0 +1,291 @@
+{
+  "schema": 1,
+  "task_id": "choropu-native1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3792",
+  "base_commit": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "main_at_composition": "1d76f967993874f77af8de4d744e138eb3084cec",
+  "depends_on": "Independently reviewed tools/renamecycles1013, issue #3790; source-only PR stacked on its immutable head.",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src/actors/daChoropu_c.cpp",
+  "source_sha256": "d97ed103bc6844ffde14dfe9e454d037fdf6a84cff701d01f42fcb50d27847e8",
+  "completion": "partial",
+  "change": "Replace two obsolete local Spawn declarations/calls with the existing dActor_c::Spawn API and thirteen animation word-puns with named filePtr reads on four measured local handles.",
+  "identity": "Existing daChoropu_c (Monty Mole/CHOROPU), dActor_c base, and daChoro_Rock_c (its thrown rock/CHORO_ROCK), dEnemyBase_c base; existing RTTI, vtables and factory/lifecycle unchanged.",
+  "native_spawn": {
+    "return": "dActor_c*",
+    "parameters": [
+      "u32",
+      "u32",
+      "const Vector3&",
+      "const Vector3_16*",
+      "s8 area",
+      "s16 death table id"
+    ],
+    "equivalence": "mAreaId already has s8 type and both death IDs are literal -1. Actor ID, parameter, position and angle pointer values and all destinations are unchanged."
+  },
+  "local_animation_handle": {
+    "size": 8,
+    "alignment": 4,
+    "fileID": "u16 at +0",
+    "numRefs": "u8 at +2",
+    "implicit_padding": "+3",
+    "filePtr": "void* at +4",
+    "evidence": [
+      "Construct -> func_02017e48 -> func_02017e0c performs halfword+0, byte+2, zero pointer+4 stores.",
+      "SharedFilePtr::Load at 02017c54 reads these fields and assigns/returns pointer+4.",
+      "SharedFilePtr::Release at 02017b64 decrements reference byte+2."
+    ],
+    "names": "Observed semantics, not recovered original identifiers. Shared header/model handle layout unchanged; no whole host-build claim."
+  },
+  "constructs_tested": 3,
+  "production_proof": {
+    "normal_preparation": true,
+    "entire_prepared_elf_identical": true,
+    "prepared_sha256": "a5229b8b194e81a310df536c8c47faf943f55e16a5c30ea11dfd43b1353ad9c0",
+    "strict_rom_rows": 34,
+    "functions_including_initializer": 27,
+    "owned_rom_data_rows": 7,
+    "blind": 0,
+    "diffs": [],
+    "bss_rows": 13,
+    "bss_bytes": 168,
+    "bss_kind": "SHT_NOBITS, four-byte alignment, unchanged symbol homes/sizes/zero initialization",
+    "owned_nontext_typed_relocations": 40,
+    "prepared_typed_references": 199,
+    "metadata_records": 14,
+    "metadata_bytes": 406,
+    "metadata": [
+      {
+        "symbol": "_ZTV11daChoropu_c",
+        "address": "0x21280a8",
+        "size": 132,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI11daChoropu_c",
+        "address": "0x2127fbc",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS11daChoropu_c",
+        "address": "0x2127fc8",
+        "size": 14,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTV14daChoro_Rock_c",
+        "address": "0x2128024",
+        "size": 132,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI14daChoro_Rock_c",
+        "address": "0x2127fb0",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS14daChoro_Rock_c",
+        "address": "0x2127fd8",
+        "size": 17,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "address": "0x21081c0",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "address": "0x21081cc",
+        "size": 15,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "address": "0x208e390",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "address": "0x208e384",
+        "size": 10,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "address": "0x2086e78",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "address": "0x2086e54",
+        "size": 9,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "address": "0x2086d70",
+        "size": 8,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "address": "0x2086e60",
+        "size": 9,
+        "exact": true,
+        "blind": 0
+      }
+    ],
+    "compiler_only_policy": "No change. Complete existing type strings, typeinfos and vtables including ABI preambles link exactly."
+  },
+  "rename_provenance": {
+    "change": "Exactly twelve existing from keys decrease by six; all canonical targets, homes, ownership, evidence and policy keys remain unchanged.",
+    "mapping": [
+      {
+        "oldFrom": "@1033",
+        "newFrom": "@1027",
+        "unchangedTo": "@1010"
+      },
+      {
+        "oldFrom": "@1034",
+        "newFrom": "@1028",
+        "unchangedTo": "@1011"
+      },
+      {
+        "oldFrom": "@1035",
+        "newFrom": "@1029",
+        "unchangedTo": "@1012"
+      },
+      {
+        "oldFrom": "@1036",
+        "newFrom": "@1030",
+        "unchangedTo": "@1013"
+      },
+      {
+        "oldFrom": "@1037",
+        "newFrom": "@1031",
+        "unchangedTo": "@1014"
+      },
+      {
+        "oldFrom": "@1038",
+        "newFrom": "@1032",
+        "unchangedTo": "@1015"
+      },
+      {
+        "oldFrom": "@1040",
+        "newFrom": "@1034",
+        "unchangedTo": "@1017"
+      },
+      {
+        "oldFrom": "@1042",
+        "newFrom": "@1036",
+        "unchangedTo": "@1019"
+      },
+      {
+        "oldFrom": "@1044",
+        "newFrom": "@1038",
+        "unchangedTo": "@1021"
+      },
+      {
+        "oldFrom": "@1046",
+        "newFrom": "@1040",
+        "unchangedTo": "@1023"
+      },
+      {
+        "oldFrom": "@1048",
+        "newFrom": "@1042",
+        "unchangedTo": "@1025"
+      },
+      {
+        "oldFrom": "@1050",
+        "newFrom": "@1044",
+        "unchangedTo": "@1027"
+      }
+    ],
+    "evidence": "Original and combined actual TU compile under 2004/b56. Whole normal prepared ELF is identical; every nontext body and incoming typed edge retains its canonical identity. The former validator wrongly rejected @1027 reused as a different planned target."
+  },
+  "remaining": [
+    {
+      "id": "choropu-local-model-and-scalar-api",
+      "owner": "choropu-native1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3792",
+      "description": "Local model words[2], shared empty SharedFilePtr declaration, scalar mangled APIs and LAUND/field/address expressions remain."
+    },
+    {
+      "id": "choropu-rock-helper-and-source-shapes",
+      "owner": "choropu-native1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3792",
+      "description": "Rock helper func_ov080_02124418 remains free. Existing angle/int source shapes and Throw actor-id conditional remain; no compiler-floor claim."
+    }
+  ],
+  "private_artifacts": [
+    "build/choropu-native1013/whole-proof.json",
+    "build/choropu-native1013/choropu-prepare.json"
+  ],
+  "terminal_gates": {
+    "tested_commit": "500df8e1691d12bf5c68361714b57cf3acffe711",
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\choropu-native1013\\full_rom.log"
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\choropu-native1013\\range.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\choropu-native1013\\port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\choropu-native1013\\langmode.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\choropu-native1013\\decl.log"
+      }
+    }
+  },
+  "stock_changed_range": {
+    "checked": 27,
+    "verified": 26,
+    "warnings": [
+      {
+        "name": "__sinit_daChoropu_c.cpp",
+        "verdict": "BLIND-14",
+        "blind": 14
+      }
+    ],
+    "blocking": 0
+  },
+  "full_production": {
+    "modules_exact": 106,
+    "modules_total": 106,
+    "functions_reproducing": 11332,
+    "data_claims_reproducing": 331,
+    "bss_claims": 239,
+    "baseline_limits": "Pre-existing stock dsd symbol errors and one differing unenrolled ROM-data inventory record persist; zero new symbol errors and exact owned storage."
+  },
+  "binding": "Terminal full-ROM/range/static gates at production_checkpoint. Final descendant changes only this report; src/include/config/tools/port trees remain identical.",
+  "production_checkpoint": "500df8e1691d12bf5c68361714b57cf3acffe711"
+}

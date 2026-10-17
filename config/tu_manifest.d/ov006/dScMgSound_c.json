@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgSound_c",
   "module": "ov006",
-  "source": "src/actors/dScMgSound_c.cpp",
-  "promoted_source": "src/actors/dScMgSound_c.cpp",
+  "source": "src/minigames/d_s_mg_sound.cpp",
+  "promoted_source": "src/minigames/d_s_mg_sound.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -16,6 +16,21 @@
       "name": ".text",
       "start": "0x02119904",
       "end": "0x0211cbd0"
+    },
+    {
+      "name": ".init",
+      "start": "0x02132970",
+      "end": "0x02132f68"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021335d4",
+      "end": "0x021335d8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02142cc0",
+      "end": "0x02142e88"
     }
   ],
   "functions": [
@@ -34,532 +49,532 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_021199c0Ev",
+      "symbol": "_ZN12dScMgSound_c14DrawWinSpriteBEv",
       "address": "0x021199c0",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_021199c0.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119a18Ev",
+      "symbol": "_ZN12dScMgSound_c16UpdateWinSpriteBEv",
       "address": "0x02119a18",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_02119a18.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119a88Ev",
+      "symbol": "_ZN12dScMgSound_c15StartWinSpriteBEv",
       "address": "0x02119a88",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_02119a88.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119aa8Ev",
+      "symbol": "_ZN12dScMgSound_c14DrawWinSpriteAEv",
       "address": "0x02119aa8",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_02119aa8.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119b00Ev",
+      "symbol": "_ZN12dScMgSound_c16UpdateWinSpriteAEv",
       "address": "0x02119b00",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_02119b00.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119ba4Ev",
+      "symbol": "_ZN12dScMgSound_c15StartWinSpriteAEv",
       "address": "0x02119ba4",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_02119ba4.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119bc4Ev",
+      "symbol": "_ZN12dScMgSound_c9DrawTriesEv",
       "address": "0x02119bc4",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_02119bc4.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119bdcEv",
+      "symbol": "_ZN12dScMgSound_c9DrawNotesEv",
       "address": "0x02119bdc",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_02119bdc.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119c74Ev",
+      "symbol": "_ZN12dScMgSound_c8DrawPopsEv",
       "address": "0x02119c74",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov006_02119c74.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119d50Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop12_FinishEi",
       "address": "0x02119d50",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_02119d50.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119dc4Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop12_FlyEi",
       "address": "0x02119dc4",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_02119dc4.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119e5cEi",
+      "symbol": "_ZN12dScMgSound_c11Pop12_StartEi",
       "address": "0x02119e5c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_02119e5c.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119eecEi",
+      "symbol": "_ZN12dScMgSound_c12Pop12_UpdateEi",
       "address": "0x02119eec",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_02119eec.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119f3cEi",
+      "symbol": "_ZN12dScMgSound_c12Pop11_FinishEi",
       "address": "0x02119f3c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_02119f3c.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_02119fb0Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop11_FlyEi",
       "address": "0x02119fb0",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_02119fb0.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a048Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop11_StartEi",
       "address": "0x0211a048",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211a048.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a0d8Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop11_UpdateEi",
       "address": "0x0211a0d8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211a0d8.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a128Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop10_FinishEi",
       "address": "0x0211a128",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_0211a128.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a19cEi",
+      "symbol": "_ZN12dScMgSound_c9Pop10_FlyEi",
       "address": "0x0211a19c",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_0211a19c.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a234Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop10_StartEi",
       "address": "0x0211a234",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211a234.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a2c4Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop10_UpdateEi",
       "address": "0x0211a2c4",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211a2c4.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a314Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop09_FinishEi",
       "address": "0x0211a314",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_0211a314.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a388Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop09_FlyEi",
       "address": "0x0211a388",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_0211a388.c",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a420Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop09_StartEi",
       "address": "0x0211a420",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211a420.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a4b0Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop09_UpdateEi",
       "address": "0x0211a4b0",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211a4b0.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a500Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop08_FinishEi",
       "address": "0x0211a500",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_0211a500.c",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a578Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop08_FlyEi",
       "address": "0x0211a578",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_0211a578.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a5ecEi",
+      "symbol": "_ZN12dScMgSound_c11Pop08_StartEi",
       "address": "0x0211a5ec",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_0211a5ec.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a648Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop08_UpdateEi",
       "address": "0x0211a648",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211a648.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a698Ev",
+      "symbol": "_ZN12dScMgSound_c12Pop07_FinishEv",
       "address": "0x0211a698",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0211a698.c",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a69cEi",
+      "symbol": "_ZN12dScMgSound_c9Pop07_FlyEi",
       "address": "0x0211a69c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_0211a69c.c",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a714Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop07_StartEi",
       "address": "0x0211a714",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_0211a714.c",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a7acEi",
+      "symbol": "_ZN12dScMgSound_c12Pop07_UpdateEi",
       "address": "0x0211a7ac",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211a7ac.cpp",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a7fcEi",
+      "symbol": "_ZN12dScMgSound_c12Pop06_FinishEi",
       "address": "0x0211a7fc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_0211a7fc.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a910Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop06_FlyEi",
       "address": "0x0211a910",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov006_0211a910.c",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211a9fcEi",
+      "symbol": "_ZN12dScMgSound_c11Pop06_StartEi",
       "address": "0x0211a9fc",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0211a9fc.c",
       "ordinal": 37
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211aa44Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop06_UpdateEi",
       "address": "0x0211aa44",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211aa44.cpp",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211aa94Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop05_FinishEi",
       "address": "0x0211aa94",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_0211aa94.c",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ab0cEi",
+      "symbol": "_ZN12dScMgSound_c9Pop05_FlyEi",
       "address": "0x0211ab0c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_0211ab0c.c",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ab80Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop05_StartEi",
       "address": "0x0211ab80",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_0211ab80.c",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211abdcEi",
+      "symbol": "_ZN12dScMgSound_c12Pop05_UpdateEi",
       "address": "0x0211abdc",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211abdc.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ac2cEv",
+      "symbol": "_ZN12dScMgSound_c12Pop04_FinishEv",
       "address": "0x0211ac2c",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0211ac2c.c",
       "ordinal": 43
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ac30Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop04_FlyEi",
       "address": "0x0211ac30",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_0211ac30.c",
       "ordinal": 44
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ad00Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop04_StartEi",
       "address": "0x0211ad00",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_0211ad00.c",
       "ordinal": 45
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ad44Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop04_UpdateEi",
       "address": "0x0211ad44",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211ad44.cpp",
       "ordinal": 46
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ad94Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop03_FinishEi",
       "address": "0x0211ad94",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_0211ad94.c",
       "ordinal": 47
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ae40Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop03_FlyEi",
       "address": "0x0211ae40",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211ae40.c",
       "ordinal": 48
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211aed0Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop03_StartEi",
       "address": "0x0211aed0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211aed0.c",
       "ordinal": 49
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211af60Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop03_UpdateEi",
       "address": "0x0211af60",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211af60.cpp",
       "ordinal": 50
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211afb0Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop02_FinishEi",
       "address": "0x0211afb0",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_0211afb0.c",
       "ordinal": 51
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b05cEi",
+      "symbol": "_ZN12dScMgSound_c9Pop02_FlyEi",
       "address": "0x0211b05c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211b05c.c",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b0ecEi",
+      "symbol": "_ZN12dScMgSound_c11Pop02_StartEi",
       "address": "0x0211b0ec",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211b0ec.c",
       "ordinal": 53
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b17cEi",
+      "symbol": "_ZN12dScMgSound_c12Pop02_UpdateEi",
       "address": "0x0211b17c",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211b17c.cpp",
       "ordinal": 54
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b1ccEi",
+      "symbol": "_ZN12dScMgSound_c12Pop01_FinishEi",
       "address": "0x0211b1cc",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_0211b1cc.c",
       "ordinal": 55
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b278Ei",
+      "symbol": "_ZN12dScMgSound_c9Pop01_FlyEi",
       "address": "0x0211b278",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211b278.c",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b308Ei",
+      "symbol": "_ZN12dScMgSound_c11Pop01_StartEi",
       "address": "0x0211b308",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_0211b308.c",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b398Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop01_UpdateEi",
       "address": "0x0211b398",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211b398.cpp",
       "ordinal": 58
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b3e8Ev",
+      "symbol": "_ZN12dScMgSound_c12Pop00_FinishEv",
       "address": "0x0211b3e8",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0211b3e8.c",
       "ordinal": 59
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b3ecEi",
+      "symbol": "_ZN12dScMgSound_c9Pop00_FlyEi",
       "address": "0x0211b3ec",
       "size": "0x00000110",
       "legacy_source": "src/func_ov006_0211b3ec.c",
       "ordinal": 60
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b4fcEi",
+      "symbol": "_ZN12dScMgSound_c11Pop00_StartEi",
       "address": "0x0211b4fc",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_0211b4fc.c",
       "ordinal": 61
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b590Ei",
+      "symbol": "_ZN12dScMgSound_c12Pop00_UpdateEi",
       "address": "0x0211b590",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0211b590.cpp",
       "ordinal": 62
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b5e0Ev",
+      "symbol": "_ZN12dScMgSound_c10UpdatePopsEv",
       "address": "0x0211b5e0",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_0211b5e0.cpp",
       "ordinal": 63
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b654Ei",
+      "symbol": "_ZN12dScMgSound_c9SpawnPopsEi",
       "address": "0x0211b654",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_0211b654.c",
       "ordinal": 64
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b790Ev",
+      "symbol": "_ZN12dScMgSound_c14CheckRoundOverEv",
       "address": "0x0211b790",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_0211b790.c",
       "ordinal": 65
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b80cEv",
+      "symbol": "_ZN12dScMgSound_c9CheckPairEv",
       "address": "0x0211b80c",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_0211b80c.c",
       "ordinal": 66
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b954Ev",
+      "symbol": "_ZN12dScMgSound_c11UpdateNotesEv",
       "address": "0x0211b954",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_0211b954.cpp",
       "ordinal": 67
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211b9c8Ev",
+      "symbol": "_ZN12dScMgSound_c15RevealUnmatchedEv",
       "address": "0x0211b9c8",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov006_0211b9c8.cpp",
       "ordinal": 68
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211ba88Ei",
+      "symbol": "_ZN12dScMgSound_c16Note_StateScrollEi",
       "address": "0x0211ba88",
       "size": "0x00000158",
       "legacy_source": "src/func_ov006_0211ba88.cpp",
       "ordinal": 69
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211bbe0Ei",
+      "symbol": "_ZN12dScMgSound_c17Note_StateClosingEi",
       "address": "0x0211bbe0",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_0211bbe0.c",
       "ordinal": 70
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211bc68Ei",
+      "symbol": "_ZN12dScMgSound_c14Note_StateOpenEi",
       "address": "0x0211bc68",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_0211bc68.c",
       "ordinal": 71
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211bc8cEi",
+      "symbol": "_ZN12dScMgSound_c17Note_StateOpeningEi",
       "address": "0x0211bc8c",
       "size": "0x000002b8",
       "legacy_source": "src/func_ov006_0211bc8c.cpp",
       "ordinal": 72
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211bf44Ei",
+      "symbol": "_ZN12dScMgSound_c14Note_StateWaitEi",
       "address": "0x0211bf44",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_0211bf44.c",
       "ordinal": 73
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211c080Ev",
+      "symbol": "_ZN12dScMgSound_c9DealNotesEv",
       "address": "0x0211c080",
       "size": "0x000003f8",
       "legacy_source": "src/func_ov006_0211c080.c",
       "ordinal": 74
     },
     {
-      "symbol": "_ZN12dScMgSound_c19func_ov006_0211c478Ev",
+      "symbol": "_ZN12dScMgSound_c10ResetRoundEv",
       "address": "0x0211c478",
       "size": "0x00000140",
       "legacy_source": "src/func_ov006_0211c478.c",
       "ordinal": 75
     },
     {
-      "symbol": "_ZN12dScMgSound_c9Virtual50Ev",
+      "symbol": "_ZN12dScMgSound_c11OnNewRecordEv",
       "address": "0x0211c5b8",
       "size": "0x00000018",
       "legacy_source": "src/_ZN12dScMgSound_c9Virtual50Ev.cpp",
       "ordinal": 76
     },
     {
-      "symbol": "_ZN12dScMgSound_c13OnYoshiTryEatEi",
+      "symbol": "_ZN12dScMgSound_c10StartRoundEi",
       "address": "0x0211c5d0",
       "size": "0x000000f4",
       "legacy_source": "src/_ZN12dScMgSound_c13OnYoshiTryEatEi.cpp",
@@ -595,21 +610,129 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "sSoundPop10Table",
+      "address": "0x02142cc0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop05Table",
+      "address": "0x02142cd8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop06Table",
+      "address": "0x02142cf0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop11Table",
+      "address": "0x02142d08",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop07Table",
+      "address": "0x02142d20",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop00Table",
+      "address": "0x02142d38",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop01Table",
+      "address": "0x02142d50",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop08Table",
+      "address": "0x02142d68",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop02Table",
+      "address": "0x02142d80",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop09Table",
+      "address": "0x02142d98",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop12Table",
+      "address": "0x02142db0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop03Table",
+      "address": "0x02142dc8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPop04Table",
+      "address": "0x02142de0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundNoteStateTable",
+      "address": "0x02142df8",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    },
+    {
+      "symbol": "sSoundPopUpdateTable",
+      "address": "0x02142e20",
+      "size": "0x68",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scene-owned pointer-to-member dispatch table populated by the Sound static initializer and consumed by this TU."
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning: RAW: src/func_ov006_02119bdc.cpp (func_ov006_02119bdc) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov006_0211b5e0.cpp (func_ov006_0211b5e0) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov006_0211b954.cpp (func_ov006_0211b954) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold func_ov006_0211b80c and the one that held func_ov006_0211bc8c; kept the first, the other is commented out for review -- RESOLVED: `void func_02012790(int)` kept. The other spelling was `void func_02012790(u32 id)`; both call sites pass a small positive literal (0x26, 0xe, 0x12f), so the two spellings generate the same argument setup and the signed form is the family convention decl_common.h uses.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c2594' differs between the legacy file that used to hold _ZN12dScMgSound_c9Virtual50Ev and the one that held _ZN12dScMgSound_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: `void func_ov006_020c2594(void *c)` kept; the alternate was `char *`. Both call sites pass an interior pointer into mTable, and the one that spelled it `char *` writes `c + 0x4f38`, which converts implicitly. No cast was needed and the bytes are unchanged.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_0211c478' differs between the legacy file that used to hold _ZN12dScMgSound_c13OnYoshiTryEatEi and the one that held _ZN12dScMgSound_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: neither spelling kept -- the DEFINITION is in this TU, `void func_ov006_0211c478(char *base)`, so the forward declaration was rewritten to match it and the two callers cast: InitResources passes `(char *)r7`, and OnYoshiTryEat now holds a `char *` outright.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_0211c080' differs between the legacy file that used to hold _ZN12dScMgSound_c13OnYoshiTryEatEi and the one that held _ZN12dScMgSound_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: same as func_ov006_0211c478 -- the definition is in this TU as `void func_ov006_0211c080(char *o)`, the forward declaration follows it, and both callers pass a `char *`.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_02119eec and the one that held func_ov006_0211a0d8; kept the first, the other is commented out for review -- RESOLVED by splitting the type, not by picking a body. Eleven dispatch members saw `struct C` INCOMPLETE and two saw it complete; mwccarm chooses a pointer-to-member representation from what it knows of the class, so merging them onto one complete `C` would have changed the eleven. `C` stays incomplete and the two members that index the array use a distinct complete type, `CFull`. Both alternate bodies (`Elem arr[1]` and `Sub arr[1]`) are the same layout, so `CFull` carries it once.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Sub') differs between the legacy file that used to hold func_ov006_0211a0d8 and the one that held func_ov006_0211a500; kept the first, the other is commented out for review -- RESOLVED by renaming: the two `Sub`s are different types. func_ov006_0211a0d8's is the 0x24 dispatch element, byte-identical to `Elem`, and is now spelled `Elem`. func_ov006_0211a500's is the four-int view of the same stride and is now `BallSlot`.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Entry') differs between the legacy file that used to hold func_ov006_02119eec and the one that held func_ov006_0211a9fc; kept the first, the other is commented out for review -- RESOLVED by renaming: three unrelated types shared the tag. The jump-table row stays `Entry` (and `EntryFull` for the complete-view family); func_ov006_0211a9fc's +0x51b8 view is now `NoteSlot`; func_ov006_0211aa94's +0x51b4 view is now `BigSlot`.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0211a9fc and the one that held func_ov006_0211b9c8; kept the first, the other is commented out for review -- RESOLVED by renaming: three unrelated types shared the tag. func_ov006_0211a500's is `BallObj`, func_ov006_0211a9fc's is `NoteObj`, and func_ov006_0211b9c8's polymorphic view is `SceneVt`.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'E') differs between the legacy file that used to hold func_ov006_0211b80c and the one that held func_ov006_0211bc68; kept the first, the other is commented out for review -- RESOLVED by merging: `char _[0x14]` and `unsigned char b[0x14]` are the same layout and neither member is ever read -- both members use the type only for its 0x14 stride. One `struct E { char _[0x14]; }` serves both."
+    "tubuild create warning: RAW: src/func_ov006_02119bdc.cpp (DrawNotes) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_0211b5e0.cpp (UpdatePops) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_0211b954.cpp (UpdateNotes) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold CheckPair and the one that held Note_StateOpening; kept the first, the other is commented out for review -- RESOLVED: `void func_02012790(int)` kept. The other spelling was `void func_02012790(u32 id)`; both call sites pass a small positive literal (0x26, 0xe, 0x12f), so the two spellings generate the same argument setup and the signed form is the family convention decl_common.h uses.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Presenter_PlayCheer' differs between the legacy file that used to hold _ZN12dScMgSound_c11OnNewRecordEv and the one that held _ZN12dScMgSound_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: `void Presenter_PlayCheer(void *c)` kept; the alternate was `char *`. Both call sites pass an interior pointer into mTable, and the one that spelled it `char *` writes `c + 0x4f38`, which converts implicitly. No cast was needed and the bytes are unchanged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ResetRound' differs between the legacy file that used to hold _ZN12dScMgSound_c10StartRoundEi and the one that held _ZN12dScMgSound_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: neither spelling kept -- the DEFINITION is in this TU, `void ResetRound(char *base)`, so the forward declaration was rewritten to match it and the two callers cast: InitResources passes `(char *)r7`, and OnYoshiTryEat now holds a `char *` outright.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DealNotes' differs between the legacy file that used to hold _ZN12dScMgSound_c10StartRoundEi and the one that held _ZN12dScMgSound_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: same as ResetRound -- the definition is in this TU as `void DealNotes(char *o)`, the forward declaration follows it, and both callers pass a `char *`.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold Pop12_Update and the one that held Pop11_Update; kept the first, the other is commented out for review -- RESOLVED by splitting the type, not by picking a body. Eleven dispatch members saw `struct C` INCOMPLETE and two saw it complete; mwccarm chooses a pointer-to-member representation from what it knows of the class, so merging them onto one complete `C` would have changed the eleven. `C` stays incomplete and the two members that index the array use a distinct complete type, `CFull`. Both alternate bodies (`Elem arr[1]` and `Sub arr[1]`) are the same layout, so `CFull` carries it once.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Sub') differs between the legacy file that used to hold Pop11_Update and the one that held Pop08_Finish; kept the first, the other is commented out for review -- RESOLVED by renaming: the two `Sub`s are different types. Pop11_Update's is the 0x24 dispatch element, byte-identical to `Elem`, and is now spelled `Elem`. Pop08_Finish's is the four-int view of the same stride and is now `BallSlot`.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Entry') differs between the legacy file that used to hold Pop12_Update and the one that held Pop06_Start; kept the first, the other is commented out for review -- RESOLVED by renaming: three unrelated types shared the tag. The jump-table row stays `Entry` (and `EntryFull` for the complete-view family); Pop06_Start's +0x51b8 view is now `NoteSlot`; Pop05_Finish's +0x51b4 view is now `BigSlot`.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold Pop06_Start and the one that held RevealUnmatched; kept the first, the other is commented out for review -- RESOLVED by renaming: three unrelated types shared the tag. Pop08_Finish's is `BallObj`, Pop06_Start's is `NoteObj`, and RevealUnmatched's polymorphic view is `SceneVt`.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'E') differs between the legacy file that used to hold CheckPair and the one that held Note_StateOpen; kept the first, the other is commented out for review -- RESOLVED by merging: `char _[0x14]` and `unsigned char b[0x14]` are the same layout and neither member is ever read -- both members use the type only for its 0x14 stride. One `struct E { char _[0x14]; }` serves both.",
+    "SOUND INITIALIZER FOLD (2026-10-15): the fifteen native PMF table definitions emit __sinit_d_s_mg_sound.cpp at ov006:0x02132970 (0x5f8), its .ctor word at 0x021335d4, and 456 BSS bytes at 0x02142cc0..0x02142e88. Retired the handwritten C initializer. Descriptor constants remain ROM-owned imports; no .data ownership is claimed. All 82 original functions remain identical including relocation records. Owned tables use ordinary C++ linkage. Direct &member initializers were also measured: same initializer instructions and unchanged functions, but 57 anonymous descriptors whose layout/names are not yet reconstructed. Named const PMF definitions add runtime initialization (0xe14 instead of 0x5f8). These candidates are not substituted into production.",
+    "The interior BSS label data_ov006_02142e02 is live: OV007:0x020f7cf0 relocates to it, ten bytes into sSoundNoteStateTable. It must remain a configured destination. Supported linker alias preservation is required for the intact BSS-owning candidate; deleting the label fails dsd delink. See notes/agents/handoffs/sound-sinit1015.md."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -684,7 +807,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov006-dScMgSound_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -708,19 +831,156 @@
           "end": "0x0211cbd0",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02132970",
+          "end": "0x02132f68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021335d4",
+          "end": "0x021335d8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02142cc0",
+          "end": "0x02142e88",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 82
+          "LICENSED": 99
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              176
+            ],
+            "desired": [
+              176
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              174
+            ],
+            "desired": [
+              174
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37
+            ],
+            "desired": [
+              35,
+              29,
+              30,
+              23,
+              31,
+              25,
+              26,
+              33,
+              27,
+              34,
+              24,
+              32,
+              28,
+              36,
+              37
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37
+              ],
+              "desired": [
+                35,
+                29,
+                30,
+                23,
+                31,
+                25,
+                26,
+                33,
+                27,
+                34,
+                24,
+                32,
+                28,
+                36,
+                37
+              ],
+              "slots": [
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37
+              ]
+            }
+          ],
+          "symbolIndices": 15,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -844,10 +1104,775 @@
     {
       "symbol": "_ZTV12dScMgSound_c",
       "disposition": "deadstrip-data",
-      "reason": "This class's own vtable, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213f844, outside this TU's only licensed range (.text 0x02119904-0x0211cbd0), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. THIRTY-SIX SLOTS, 0x90 from the address point (0x98 of storage from 0x0213f83c, the extra eight bytes being offset-to-top and the typeinfo pointer). Settled by three independent tools, because neither of the two single-tool rules is sound: (1) relocations -- the contiguous four-byte-spaced run reaches 0x0213f8d4, but that word belongs to the NEXT object, which config/arm9/overlays/ov006/symbols.txt names data_ov006_0213f8d4 and which is a table of eight-byte pairs, so the raw run OVERSHOOTS by one word, the known ov006 failure mode; (2) tools/rtti_vtables.py --own dScMgSound_c reports 36 slots (base dScMgSingle3DBase_c also 36); (3) tools/romdata_check.py check_object() reports bytes 144, emitted 144, romExtent 144, blindWords 0, VERIFIED. All three land on 0x90/36. Unlike the sibling oracle dScMgSingle3DBase_c, whose row records a PARTIAL prefix, this table is emitted whole and verified whole.",
+      "reason": "This class's own vtable, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213f844, outside this TU's only licensed range (.text 0x02119904-0x0211cbd0), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. THIRTY-SIX SLOTS, 0x90 from the address point (0x98 of storage from 0x0213f83c, the extra eight bytes being offset-to-top and the typeinfo pointer). Settled by three independent tools, because neither of the two single-tool rules is sound: (1) relocations -- the contiguous four-byte-spaced run reaches 0x0213f8d4, but that word belongs to the NEXT object, which config/arm9/overlays/ov006/symbols.txt names pmf_dScMgTeresa_c_Boo_StateFound and which is a table of eight-byte pairs, so the raw run OVERSHOOTS by one word, the known ov006 failure mode; (2) tools/rtti_vtables.py --own dScMgSound_c reports 36 slots (base dScMgSingle3DBase_c also 36); (3) tools/romdata_check.py check_object() reports bytes 144, emitted 144, romExtent 144, blindWords 0, VERIFIED. All three land on 0x90/36. Unlike the sibling oracle dScMgSingle3DBase_c, whose row records a PARTIAL prefix, this table is emitted whole and verified whole.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213f844"
     }
   ],
-  "externalized_output": []
+  "externalized_output": [],
+  "init": [
+    {
+      "symbol": "__sinit_d_s_mg_sound.cpp",
+      "address": "0x02132970",
+      "size": "0x5f8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler-generated from the fifteen scene dispatch tables; all 1528 linked bytes and 72 relocation destinations equal retail."
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_s_mg_sound.cpp",
+      "address": "0x021335d4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Compiler-generated constructor-table entry for the owned Sound initializer."
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_s_mg_sound.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact compiler-local initializer/constructor entry to DSD, as for the other promoted minigame initializers."
+    },
+    {
+      "symbol": ".p__sinit_d_s_mg_sound.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose the exact compiler-local initializer/constructor entry to DSD, as for the other promoted minigame initializers."
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".ctor",
+      "source": "0x21335d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_s_mg_sound.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2132970"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Note_StateWait",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f594"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Note_StateOpening",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f694"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundNoteStateTable",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142df8"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Note_StateOpen",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6a4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Note_StateClosing",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f634"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Note_StateScroll",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f64c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop00_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPopUpdateTable",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142e20"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop01_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5b4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop02_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f63c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop07_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f554"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop03_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop08_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop04_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5a4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop05_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5ac"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop06_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f62c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop09_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f55c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop10_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f53c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop11_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f564"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop12_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f604"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop00_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f60c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132e9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop00Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142d38"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ea0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop02_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f52c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ea4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop00_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f56c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ea8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop00_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f534"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132eac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop01_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f584"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132eb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop01_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f51c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132eb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop01Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142d50"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132eb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop01_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f66c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ebc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop02Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142d80"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ec0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop02_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f4fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ec4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop02_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f504"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ec8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop03_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ecc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop07_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f624"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ed0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop03Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142dc8"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ed4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop03_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6d4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ed8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop03_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132edc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop04_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f524"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop04Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142de0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ee4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop04_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f67c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop04_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6ac"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132eec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop05_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop05_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f684"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ef4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop05Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142cd8"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132ef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop05_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f674"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132efc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop06_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f664"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop06_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f654"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop06Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142cf0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop06_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6bc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop07Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142d20"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop07_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f61c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop07_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f614"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop08_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop08_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f57c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop08Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142d68"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop08_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5ec"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop09_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5d4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop09_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f6b4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop09Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142d98"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop10_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5bc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop09_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f50c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop10_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f59c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop10_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f68c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop11_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f514"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop10Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142cc0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop11_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f644"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop11_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f574"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop12_Start",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5f4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop12_Fly",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f58c"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "pmf_dScMgSound_c_Pop12_Finish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213f5cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop11Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142d08"
+    },
+    {
+      "section": ".init",
+      "source": "0x2132f64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSoundPop12Table",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142db0"
+    }
+  ],
+  "production_mode": "intact-object"
 }

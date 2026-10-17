@@ -1,0 +1,432 @@
+{
+  "schema": 1,
+  "scope": "Native unchained Chain Chomp Spawn calls",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3809",
+  "source_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "compiler": "2004/b56",
+  "production_source": "src/actors/daWanwan2_c.cpp",
+  "source_sha256": "d0f52805d54c21bf400051716d607721a4ee769936c68c7a07ccec42c0f4da15",
+  "change": "Four calls use the existing dActor_c::Spawn interface, three with actual mLinkPos vectors; the coin call retains its inherited-position view. The duplicate raw prototype is removed. Four existing destructor-registration emitted names and evidence change naturally, with unchanged canonical targets/homes, bindings, storage and all other policy.",
+  "raw_identity": {
+    "equal": false,
+    "exact_four_name_bijection": true,
+    "entire_raw_equal_after_existing_canonical_names": true,
+    "normalized_sha256": "a1ea03f4e1465aebb6c99c0a2041a40a8a4a2175e20294e0248d014d7b014072"
+  },
+  "raw_original_sha256": "78161c80ad0a94740856cdf8ab30c8777e05f1bd06c680be194936181e5b451c",
+  "raw_candidate_sha256": "586058cad1def2ed207cee6eaca071b755b35dfe13a4737d3d4206b4a3a74342",
+  "production_whole_ELF_equal": true,
+  "production_sha256": "9dc4cbdf5807ccd4518217d58b54a83378c0a86c209593520ae058597c7a1d4d",
+  "normal_production_parity": true,
+  "proof": {
+    "strict_rows": 19,
+    "strict_functions": 17,
+    "blind": 0,
+    "diffs": [],
+    "bss_records": 9,
+    "bss_bytes": 96,
+    "owned_nontext_refs": 22,
+    "raw_typed_refs": 243,
+    "prepared_typed_refs": 182,
+    "complete_metadata_records": 11,
+    "complete_metadata_bytes": 245,
+    "metadata": [
+      {
+        "symbol": "_ZTV11daWanwan2_c",
+        "module": "ov100",
+        "address": "0x214804c",
+        "size": 132,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI11daWanwan2_c",
+        "module": "ov100",
+        "address": "0x2148014",
+        "size": 12,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS11daWanwan2_c",
+        "module": "ov100",
+        "address": "0x2148020",
+        "size": 14,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081c0",
+        "size": 12,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081cc",
+        "size": 15,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "address": "0x208e390",
+        "size": 12,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "address": "0x208e384",
+        "size": 10,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e78",
+        "size": 12,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e54",
+        "size": 9,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "address": "0x2086d70",
+        "size": 8,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "address": "0x2086e60",
+        "size": 9,
+        "blind": 0
+      }
+    ],
+    "overrides": []
+  },
+  "node_bijection": {
+    "nodes": [
+      {
+        "original": "@1012",
+        "candidate": "@1006",
+        "canonical": "@169",
+        "address": "0x021486c4",
+        "symbol_index": 35,
+        "entry": {
+          "st_name": 2389,
+          "st_value": 0,
+          "st_size": 12,
+          "st_info": {
+            "bind": "STB_LOCAL",
+            "type": "STT_OBJECT"
+          },
+          "st_other": {
+            "local": 0,
+            "visibility": "STV_DEFAULT"
+          },
+          "st_shndx": 39
+        },
+        "section_name": ".bss",
+        "section": {
+          "sh_name": 310,
+          "sh_type": "SHT_NOBITS",
+          "sh_flags": 3,
+          "sh_addr": 0,
+          "sh_offset": 14272,
+          "sh_size": 12,
+          "sh_link": 0,
+          "sh_info": 0,
+          "sh_addralign": 4,
+          "sh_entsize": 0
+        },
+        "references": [
+          {
+            "section": ".init",
+            "offset": 188,
+            "type": 2,
+            "addend": 0
+          }
+        ]
+      },
+      {
+        "original": "@1013",
+        "candidate": "@1007",
+        "canonical": "@170",
+        "address": "0x021486d0",
+        "symbol_index": 36,
+        "entry": {
+          "st_name": 2395,
+          "st_value": 0,
+          "st_size": 12,
+          "st_info": {
+            "bind": "STB_LOCAL",
+            "type": "STT_OBJECT"
+          },
+          "st_other": {
+            "local": 0,
+            "visibility": "STV_DEFAULT"
+          },
+          "st_shndx": 41
+        },
+        "section_name": ".bss",
+        "section": {
+          "sh_name": 320,
+          "sh_type": "SHT_NOBITS",
+          "sh_flags": 3,
+          "sh_addr": 0,
+          "sh_offset": 14272,
+          "sh_size": 12,
+          "sh_link": 0,
+          "sh_info": 0,
+          "sh_addralign": 4,
+          "sh_entsize": 0
+        },
+        "references": [
+          {
+            "section": ".init",
+            "offset": 200,
+            "type": 2,
+            "addend": 0
+          }
+        ]
+      },
+      {
+        "original": "@1014",
+        "candidate": "@1008",
+        "canonical": "@171",
+        "address": "0x021486dc",
+        "symbol_index": 37,
+        "entry": {
+          "st_name": 2401,
+          "st_value": 0,
+          "st_size": 12,
+          "st_info": {
+            "bind": "STB_LOCAL",
+            "type": "STT_OBJECT"
+          },
+          "st_other": {
+            "local": 0,
+            "visibility": "STV_DEFAULT"
+          },
+          "st_shndx": 43
+        },
+        "section_name": ".bss",
+        "section": {
+          "sh_name": 330,
+          "sh_type": "SHT_NOBITS",
+          "sh_flags": 3,
+          "sh_addr": 0,
+          "sh_offset": 14272,
+          "sh_size": 12,
+          "sh_link": 0,
+          "sh_info": 0,
+          "sh_addralign": 4,
+          "sh_entsize": 0
+        },
+        "references": [
+          {
+            "section": ".init",
+            "offset": 216,
+            "type": 2,
+            "addend": 0
+          }
+        ]
+      },
+      {
+        "original": "@1015",
+        "candidate": "@1009",
+        "canonical": "@172",
+        "address": "0x021486e8",
+        "symbol_index": 38,
+        "entry": {
+          "st_name": 2407,
+          "st_value": 0,
+          "st_size": 12,
+          "st_info": {
+            "bind": "STB_LOCAL",
+            "type": "STT_OBJECT"
+          },
+          "st_other": {
+            "local": 0,
+            "visibility": "STV_DEFAULT"
+          },
+          "st_shndx": 45
+        },
+        "section_name": ".bss",
+        "section": {
+          "sh_name": 340,
+          "sh_type": "SHT_NOBITS",
+          "sh_flags": 3,
+          "sh_addr": 0,
+          "sh_offset": 14272,
+          "sh_size": 12,
+          "sh_link": 0,
+          "sh_info": 0,
+          "sh_addralign": 4,
+          "sh_entsize": 0
+        },
+        "references": [
+          {
+            "section": ".init",
+            "offset": 228,
+            "type": 2,
+            "addend": 0
+          }
+        ]
+      }
+    ],
+    "spawn_calls": [
+      {
+        "caller": "func_ov100_021435e8",
+        "caller_address": "0x021435e8",
+        "calls": [
+          {
+            "off": 108,
+            "type": 1,
+            "sym": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+            "addr": 33623596,
+            "add": -8
+          },
+          {
+            "off": 300,
+            "type": 1,
+            "sym": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+            "addr": 33623596,
+            "add": -8
+          },
+          {
+            "off": 356,
+            "type": 1,
+            "sym": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+            "addr": 33623596,
+            "add": -8
+          }
+        ]
+      },
+      {
+        "caller": "_ZN11daWanwan2_c8BehaviorEv",
+        "caller_address": "0x02143d64",
+        "calls": [
+          {
+            "off": 436,
+            "type": 1,
+            "sym": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+            "addr": 33623596,
+            "add": -8
+          }
+        ]
+      }
+    ]
+  },
+  "spawn_callee": {
+    "source": "src/actors/dActor_c.cpp",
+    "source_sha256": "d70273a5010b8a323742683c75b75acf4c9039f826a37efe9d9b5b3fcad83380",
+    "receipt": {
+      "name": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+      "module": "arm9",
+      "addr": "0x02010e2c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "signature": "dActor_c*(u32,u32,const Vector3&,const Vector3_16*,s8,s16)"
+  },
+  "predecessors": [
+    "native-destructor-repair-0922",
+    "ov100-ibl-wanwan2-door-0930e",
+    "chainchomp-typed-calls1012"
+  ],
+  "remaining": "Scalar Fix12 calls, PMF stand-ins, hand-built factory, char-pointer workers, inherited actor-position view and other raw/model/volatile forms remain partial reconstruction. Existing broad destructor/callback review findings retain their accepted historical IDs; no new full review of unrelated classes is claimed.",
+  "factory_probe": {
+    "source_snapshot": "92a09548cb7ba81ab20d1b932774adeabd24d6df",
+    "headers_tools_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "scout_session": "codex-wanwan2-factory-scout1013",
+    "outcome": "No native factory winner with current headers/policies",
+    "cells": [
+      "new daWanwan2_c()",
+      "new daWanwan2_c"
+    ],
+    "baseline_factory": 280,
+    "native_factory": 236,
+    "ordinary_baseline": "VERIFIED 280B, diffs0,blind0; full ordinary intact preparation succeeds",
+    "ordinary_native": "both refuse unlicensed _ZN7Vector3C1Ev; full factory size mismatch",
+    "native_objects_identical": true,
+    "callback_boundary": "Native Vector3C1 bodybx lr is emitted, but no target mapping exists. Equal four-byte bodies alone do not prove canonical callback identity. No mapping/policy added.",
+    "missing_constructor": "Vector3s array at+0x768: retail uses func_0203d73c; current type has no user ctor",
+    "tracked_changes": false,
+    "public_writes": false,
+    "hashes": {
+      "baseline-raw.o": "586058cad1def2ed207cee6eaca071b755b35dfe13a4737d3d4206b4a3a74342",
+      "baseline-prepared.o": "9dc4cbdf5807ccd4518217d58b54a83378c0a86c209593520ae058597c7a1d4d",
+      "native-value-raw.o": "a885f6e154963ccf76f9eb4fd8564ca9926070ea68b3d70667b734247ce4f527",
+      "native-default-raw.o": "a885f6e154963ccf76f9eb4fd8564ca9926070ea68b3d70667b734247ce4f527",
+      "results.json": "3a4ec2468c01e18eb6f1c73778a33a85c8dd8c685fac38fd40cc527793e91cab",
+      "stale-comment-correction.json": "4098ad541084d7e3c0a16ba5bd52750bdeec2af56bd48f89256ea11407bd2198"
+    }
+  },
+  "factory_comment_correction": "Current Vector3 has an empty user ctor; the natural factory still omits the short-vector array constructor. Only measured current-header results are claimed. Historical no-constructor,0xa4 and text-only/factory-separate prose is superseded without changing ownership or compiler policy.",
+  "full_ROM": {
+    "checkpoint": "92a09548cb7ba81ab20d1b932774adeabd24d6df",
+    "modules_exact": 106,
+    "modules_total": 106,
+    "exit_code": 0,
+    "log": "build\\wanwan2-spawn1013\\full_rom.log",
+    "limits": "Pre-existing stock ITCM symbol-check errors and one differing unenrolled ROM-data inventory entry remain separate from exact owned proof."
+  },
+  "full_checkpoint_binding": {
+    "old_and_current_raw_sha256": "586058cad1def2ed207cee6eaca071b755b35dfe13a4737d3d4206b4a3a74342",
+    "old_and_current_prepared_sha256": "9dc4cbdf5807ccd4518217d58b54a83378c0a86c209593520ae058597c7a1d4d",
+    "Source_change": "factory comment only",
+    "manifest_change": "boundary/notes and stale vtable reason only; complete behavior policy projection identical",
+    "comment_checkpoint": "2e0691a56a72f1b973e79c11db3d0c8716d41298",
+    "changed_files": [
+      "config/tu_manifest.d/ov100/daWanwan2_c.json",
+      "notes/experiments/wanwan2-spawn1013.json",
+      "src/actors/daWanwan2_c.cpp"
+    ],
+    "other_build_inputs_unchanged": true
+  },
+  "committed_static_gates": {
+    "tested_commit": "2e0691a56a72f1b973e79c11db3d0c8716d41298",
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "results": {
+      "range": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-spawn1013\\corrected-range.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-spawn1013\\corrected-decl.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-spawn1013\\corrected-port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-spawn1013\\corrected-langmode.log"
+      }
+    }
+  },
+  "stock_range": {
+    "checked": 18,
+    "verified": 17,
+    "warnings": [
+      {
+        "name": "__sinit_daWanwan2_c.cpp",
+        "verdict": "BLIND-10",
+        "blind": 10
+      }
+    ],
+    "blocking": 0,
+    "qualification": "Raw per-function initializer warning is preserved. Actual ordinary intact initializer244B and ctor4B strictly link with0blind; all22 nontext references and full prepared ELF are verified."
+  },
+  "binding": "Final report-only descendant retains five tree IDs of the corrected Source checkpoint. Full-ROM checkpoint is separately bound by complete raw/prepared object equality and unchanged effective policy and other compilation inputs."
+}

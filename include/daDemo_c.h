@@ -93,6 +93,9 @@ struct daDemo_c : dActor_c {
     };
 
     struct simpleModel_c : param_c, dExtSimpleModel_c {
+        /* Stored and loaded by func_ov002_020f6960, released by the destructor. */
+        SharedFilePtr *mFile; /* 0x5c */
+
         int func_ov002_020f6960(SharedFilePtr *fp, int n);
         virtual ~simpleModel_c();
         void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }

@@ -18,7 +18,7 @@
  * as g_profile_SNOWMAN.
  *
  * Field names from 0x398 down marked "coined" are named for what the matched
- * bodies in src/actors/daSnowman_c.cpp do with them, not recovered.
+ * bodies in src/game/actors/d_a_snowman.cpp do with them, not recovered.
  */
 
 #include "dEnemyBase_c.h"

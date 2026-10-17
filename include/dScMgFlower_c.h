@@ -5,13 +5,13 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0x5ff8, from the factory's own `_ZN7fBase_cnwEj(0x5ff8)`
- * (dScMgFlower_c_classInit, at the end of src/actors/dScMgFlower_c.cpp).
+ * (dScMgFlower_c_classInit, at the end of src/minigames/d_s_mg_flower.cpp).
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER. The factory builds
  * mArray at 0x4f38 (0x16 elements of 0x20, element ctor
- * func_ov006_0212b88c) and then an object at 0x51f8
- * (func_ov006_020c3f54); the destructor destroys the 0x51f8 object first
- * (func_ov006_020c3e70), then mArray (element dtor func_ov006_0212a650).
+ * Petal_ElemCtor) and then an object at 0x51f8
+ * (FlowerFace_Construct); the destructor destroys the 0x51f8 object first
+ * (FlowerFace_Destruct), then mArray (element dtor Petal_ElemDtor).
  * Nothing is left over either way.
  *
  * THE 0x51f8 OBJECT is opaque: nothing reads inside it, so its size is
@@ -41,7 +41,7 @@
  * deferred code generation, which is the regime every one of those siblings
  * compiles in. This file's translation unit does not: it needs
  * `#pragma defer_codegen off` for an optimisation bracket to bind to a single
- * member (see src/actors/dScMgFlower_c.cpp), and with deferral off the variant
+ * member (see src/minigames/d_s_mg_flower.cpp), and with deferral off the variant
  * group emits D1, D0, D2 instead. Four verify rounds, each the whole TU:
  *   (a) inline destructor, deferred, members in descending ROM order
  *                          -> 8/9, section order correct, Behavior cannot match
@@ -56,7 +56,7 @@
  *                          -> the bracketed member regresses, so the bracket,
  *                             and therefore `defer_codegen off`, is load-bearing
  * (c) is what ships. The two legacy shards each carried an out-of-line copy of
- * the same body; both are absorbed into src/actors/dScMgFlower_c.cpp and the
+ * the same body; both are absorbed into src/minigames/d_s_mg_flower.cpp and the
  * single definition lives there.
  *
  * THE D2 THE ROM DOES NOT HAVE IS NOT A CONTRADICTION -- IT IS THE REASON.
@@ -70,7 +70,7 @@
  *
  * Declared first and out of line, the destructor is this class's KEY FUNCTION,
  * so the TU that DEFINES it emits _ZTV/_ZTI/_ZTS plus the whole ancestor chain's
- * typeinfo. That is src/actors/dScMgFlower_c.cpp, which licenses all thirteen
+ * typeinfo. That is src/minigames/d_s_mg_flower.cpp, which licenses all thirteen
  * records in the same block; each has a cartridge home outside this TU's
  * licensed .text range, so dsd delinks them independently.
  *
@@ -85,16 +85,16 @@
 #define DSCMGFLOWER_C_H
 #include "dScMgSingle3DBase_c.h"
 
-extern "C" void *func_ov006_020c3e70(char *t); /* decl_common.h's own signature */
+extern "C" void *FlowerFace_Destruct(char *t); /* decl_common.h's own signature */
 extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void func_ov006_0212a650(void);
+extern "C" void Petal_ElemDtor(void);
 
 struct dScMgFlower_c : dScMgSingle3DBase_c {
     /* The 2-vector value type the petal setup swaps through (Fix12 x, y --
        the same pair func_0203d388 rotates in place). THE EMPTY DESTRUCTOR IS
        LOAD-BEARING, for the reason types.h gives Vector3 one: a local of this
        type keeps an 8-byte stack home even though every copy through it goes
-       register to register, and func_ov006_0212a764's frame is 0x1c only with
+       register to register, and DealPetals's frame is 0x1c only with
        that home (0x14 without it; a plain POD pair, a ctor-only pair, an int[2]
        and two scalar temps all lose the slot -- measured, 2004/b56). Nested so
        the coined name cannot collide with anything global. */
@@ -104,7 +104,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         ~Vec2() {}
     };
 
-    /* Declared first and defined out of line, in src/actors/dScMgFlower_c.cpp:
+    /* Declared first and defined out of line, in src/minigames/d_s_mg_flower.cpp:
        see the file banner for the four rounds that settled the form. Its body's
        two explicit calls are the ROM's own order -- the 0x51f8 object, then
        mArray -- the reverse of the factory's construction order. Everything
@@ -113,7 +113,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        of dScMgSingle3DBase_c's already-inline destructor. */
     virtual ~dScMgFlower_c();
 
-    /* Defined inline at the end of src/actors/dScMgFlower_c.cpp, where the
+    /* Defined inline at the end of src/minigames/d_s_mg_flower.cpp, where the
        factory's `new` expands it: mArray through __cxa_vec_ctor, then the
        0x51f8 object. */
     dScMgFlower_c();
@@ -133,16 +133,16 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        this class's KEY FUNCTION and the TU that DEFINES it -- and only that one
        -- emits _ZTV13dScMgFlower_c. See the banner. */
     s32 InitResources();   /* slot  0 */
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void StartRound(int arg);               /* slot 18 */
     s32 Behavior();        /* slot  6 */
     s32 Render();          /* slot  9 */
 
     /* scene helpers */
-    void func_ov006_0212a654();           /* per-frame petal update */
-    void func_ov006_0212a764();           /* round setup / restart */
+    void UpdatePetals();           /* per-frame petal update */
+    void DealPetals();           /* round setup / restart */
 
-    u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650.
-                              One 0x20-byte petal record, as func_ov006_0212a764
+    u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor Petal_ElemDtor.
+                              One 0x20-byte petal record, as DealPetals
                               (the round setup) and Behavior read it:
                                 +0x00 u8   active        +0x04 Vec2 pos (Fix12 x, y)
                                 +0x01 u8   unk1          +0x0c s32  unk0c
@@ -172,10 +172,10 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     s32 mWinStreak;        /* 0x5fdc -- consecutive "loves me" petals; at 3 the
                               payout is 3 points instead of 1 */
     s32 mLoseStreak;       /* 0x5fe0 -- the mirror count, pays nothing */
-    s32 mHoldTimer;        /* 0x5fe4 -- OnYoshiTryEat counts it up to
+    s32 mHoldTimer;        /* 0x5fe4 -- StartRound counts it up to
                               0x15 and resets; above 0x14 means "held" */
     s32 mState;            /* 0x5fe8 -- 0 playing, 1 over */
-    s32 mFaceSprite;       /* 0x5fec -- index into data_ov006_0213ab94, the
+    s32 mFaceSprite;       /* 0x5fec -- index into sFlowerFaceSprites, the
                               flower's face */
     s32 mScore;            /* 0x5ff0 -- clamped to 9999 */
     u16 mBgScrollPhase;    /* 0x5ff4 -- += 0xc0 a frame; indexes the sine table

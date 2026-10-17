@@ -1,0 +1,238 @@
+{
+  "schema": 1,
+  "task_id": "moray-offset1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3797",
+  "base_commit": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src/actors/daMoray_c.cpp",
+  "source_sha256": "b400cd6c08f8b44e16c378cde8e10c5c1f7938195edc0deff269180d05cdad81",
+  "change": "Remove Moray\u2019s final C island with genuine POD offset storage and explicit copies; reconstruct the measured model/animation handle fields and replace four generic casts with named filePtr accesses.",
+  "completion": "partial",
+  "identity": "Existing daMoray_c is the Jolly Roger Bay eel/MORAY; class identity, native factory, lifecycle and all state records remain unchanged.",
+  "layout": {
+    "type": "MorayCylinderOffset",
+    "fields": "s32 x,y,z at offsets0,4,8",
+    "size": 12,
+    "alignment": 4,
+    "storage": "SHT_NOBITS, global STT_OBJECT atov016:02114d4c, zero initialized; no registered constructor/destructor",
+    "names": "Descriptive reconstructed names, not recovered source names.",
+    "matched_idiom": "src/actors/daBakubaku_c.cpp uses BakuVec3 POD cylinder offset and component copies into collision Vector3 locals. Read-only evidence; no other actor changed."
+  },
+  "constructs": {
+    "count": 4,
+    "baseline": "Original C-mode global reproduces retail.",
+    "cpp_Vector3_control": "Actual C++ Vector3 adds a12B destructor node and grows initializer464to492; refused as unlicensed output.",
+    "winner": "Genuine local POD plus six named component assignments.",
+    "temporary_control": "Genuine three-argument Vector3 temporaries retain InitResources968B but change five instruction words."
+  },
+  "normal_production": {
+    "entire_prepared_ELF_equal": true,
+    "prepared_size": 22104,
+    "prepared_sha256": "af6bc97e57d6872dfe1c705c75bc3300187556779523d37f66852f31444d1f5c",
+    "strict_rom_rows": 33,
+    "functions_text": 21,
+    "initializer": {
+      "size": 464,
+      "strict": true,
+      "blind": 0
+    },
+    "ctor_array": {
+      "size": 4,
+      "strict": true,
+      "blind": 0
+    },
+    "owned_rom_data_bytes": 80,
+    "owned_data_rows": 10,
+    "bss_rows": 14,
+    "bss_bytes": 172,
+    "owned_nontext_typed_refs": 44,
+    "raw_typed_refs": 272,
+    "prepared_typed_refs": 218,
+    "metadata": [
+      {
+        "symbol": "_ZTV9daMoray_c",
+        "address": "0x2114950",
+        "size": 132,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI9daMoray_c",
+        "address": "0x21148d4",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS9daMoray_c",
+        "address": "0x21148c8",
+        "size": 11,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "address": "0x21081c0",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "address": "0x21081cc",
+        "size": 15,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "address": "0x208e390",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "address": "0x208e384",
+        "size": 10,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "address": "0x2086e78",
+        "size": 12,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "address": "0x2086e54",
+        "size": 9,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "address": "0x2086d70",
+        "size": 8,
+        "exact": true,
+        "blind": 0
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "address": "0x2086e60",
+        "size": 9,
+        "exact": true,
+        "blind": 0
+      }
+    ],
+    "metadata_bytes": 242,
+    "metadata_count": 11,
+    "blind": 0,
+    "diffs": [],
+    "qualification": "Normal TP.prepare_intact_object with actual tracked Source/manifest; complete emitted metadata including vtable ABI preambles and short type-name tails linked directly. Existing advisory romdata PARTIAL labels remain; no Source address overrides or new policies."
+  },
+  "manifest": {
+    "from_keys": 14,
+    "delta": -39,
+    "provenance": "Full symbol-index/body/type/binding/size/section and every incoming typed offset/addend bijection; complete raw graph and canonical prepared ELF match controls.",
+    "canonical_targets_and_ownership": "Unchanged.",
+    "prose": "Cylinder storage evidence and static-fold note describe the current POD. Two inherited factory notes now correctly describe the merged native new expression and existing Vector3 constructor policy."
+  },
+  "remaining": [
+    {
+      "id": "MORAY-NATIVE-001",
+      "disposition": "deferred",
+      "owner": "andrewboudreau",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3764",
+      "description": "Prior scalar Fix12 ABI bridges, field/matrix views, state/helper names and documented source limitations remain; no compiler floor claimed."
+    }
+  ],
+  "private_artifacts": [
+    "build/moray-offset1013/whole-proof.json",
+    "build/moray-offset1013/prepare.json",
+    "build/moray-offset1013/scout-proof/pod-proof.json"
+  ],
+  "handles": {
+    "fields": "u16 fileID at+0,u8 numRefs at+2,void* filePtr at+4; natural padding+3",
+    "size": 8,
+    "alignment": 4,
+    "direct_reads": 4,
+    "generic_view_removed": "MorayFile",
+    "actual_model_evidence": "func02017acc->02017e48->02017e0c storeshalfword0,byte2,pointer4; func02017ab4->02017e34 readsIDhalfword0. ModelLoadFile usescount+2/pointer+4.",
+    "animation_evidence": "SharedFilePtrConstruct/destruct/load/release independently agree; twelve strict helper receipts preserved.",
+    "both_entire_raw_and_prepared_ELF_identical_to_POD_checkpoint": true,
+    "anonymous_names_and_manifest_unchanged": true,
+    "names": "Observed local semantics; shared header and aliases remain unchanged."
+  },
+  "source_binding": {
+    "full_ROM_checkpoint": "5b61ab3bb33f13976d1f6e9e15825266cf4410a0",
+    "reason": "Combined handle cleanup produces the identical complete raw and normal prepared ELF. No other src/include/config/tools/port file differs from the full-ROM checkpoint. Fresh actual-source whole proof and committed scoped/static checks follow."
+  },
+  "full_ROM": {
+    "checkpoint": "5b61ab3bb33f13976d1f6e9e15825266cf4410a0",
+    "modules_exact": 106,
+    "modules_total": 106,
+    "functions_reproducing": 11332,
+    "data_claims_reproducing": 331,
+    "bss_claims": 239,
+    "exit_code": 0,
+    "log": "build/moray-offset1013/full_rom.log",
+    "limits": "Pre-existing stock symbol-check failures and one differing unenrolled ROM-data record persist; zero new symbol errors and exact owned storage."
+  },
+  "combined_source_checkpoint": "d168b117f82739409a44335d9a53ca7afae77f1b",
+  "combined_source_binding": {
+    "tested_commit": "d168b117f82739409a44335d9a53ca7afae77f1b",
+    "full_rom_checkpoint": "5b61ab3bb33f13976d1f6e9e15825266cf4410a0",
+    "changed_files": [
+      "notes/experiments/moray-offset1013.json",
+      "src/actors/daMoray_c.cpp"
+    ],
+    "entire_actual_raw_ELF_equal": true,
+    "raw_sha256": "d059d61c1a15725e3c883d16146a319ca912563f5d8c8a10b3548d84a2798978",
+    "prepared_sha256": "af6bc97e57d6872dfe1c705c75bc3300187556779523d37f66852f31444d1f5c",
+    "all_other_source_header_config_tool_port_inputs_unchanged": true
+  },
+  "committed_static_and_range": {
+    "tested_commit": "d168b117f82739409a44335d9a53ca7afae77f1b",
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "results": {
+      "range": {
+        "exit_code": 0,
+        "log": "build\\moray-offset1013\\combined-range.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\moray-offset1013\\combined-port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\moray-offset1013\\combined-langmode.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\moray-offset1013\\combined-decl.log"
+      }
+    }
+  },
+  "stock_range": {
+    "checked": 22,
+    "verified": 20,
+    "warnings": [
+      {
+        "name": "daMoray_c_classInit",
+        "verdict": "BLIND-1",
+        "blind": 1
+      },
+      {
+        "name": "__sinit_daMoray_c.cpp",
+        "verdict": "BLIND-10",
+        "blind": 10
+      }
+    ],
+    "blocking": 0,
+    "qualification": "Existing raw factory/initializer warnings are retained. Both full functions strictly link with zero blind words in the actual normal prepared object."
+  },
+  "binding": "Final descendant changes this report only relative to combined_source_checkpoint. The combined Source has the identical complete raw and prepared object as the full-ROM checkpoint; no other build input changed."
+}

@@ -1,8 +1,8 @@
 {
   "id": "ov090/daPukupuku_c",
   "module": "ov090",
-  "source": "src/actors/daPukupuku_c.cpp",
-  "promoted_source": "src/actors/daPukupuku_c.cpp",
+  "source": "src/game/actors/d_a_pukupuku.cpp",
+  "promoted_source": "src/game/actors/d_a_pukupuku.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -144,7 +144,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daPukupuku_c.cpp",
+      "symbol": "__sinit_d_a_pukupuku.cpp",
       "address": "0x02133f4c",
       "size": "0xd4",
       "binding": "STB_GLOBAL",
@@ -153,7 +153,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daPukupuku_c.cpp",
+      "symbol": ".p__sinit_d_a_pukupuku.cpp",
       "address": "0x021340cc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -244,13 +244,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daPukupuku_c.cpp",
+      "symbol": "__sinit_d_a_pukupuku.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daPukupuku_c.cpp",
+      "symbol": ".p__sinit_d_a_pukupuku.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -434,7 +434,7 @@
       "source": "0x021340cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daPukupuku_c.cpp",
+      "symbol": "__sinit_d_a_pukupuku.cpp",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02133f4c"
@@ -455,7 +455,7 @@
     "include/common.h is included FIRST, deliberately. Matrix4x3 has two spellings sharing the MATRIX4X3_DEFINED guard and whichever a TU sees first stands. daPukupuku_c.h reaches math/Matrix.h (nested 'Matrix3x3 r; Vector3 t') through ModelAnim.h; that spelling splits func_ov090_02133338's 48-byte matrix copy into a 9-word and a 3-word move and compiled to 0x90 against the ROM's 0x74. common.h's flat 's32 m[12]' restores the ROM's three 4-register ldm/stm blocks. Both are 0x30 bytes and nothing in this TU names .r or .t.",
     "Only the single ~daPukupuku_c() at ordinal 0 is defined: mwccarm emits the D1, D0 and D2 variants together from one declaration, so ordinal 1 carries its @symbol marker and a note instead of a body.",
     "REFUTED and not carried into the TU: the legacy src/func_ov090_02133200.c claimed 'recovered name: daManta_c_Kill' and 'daManta_c::Kill - recovered from vtable slot identity'. _ZTV9daManta_c spans 0x0213423c..0x021342b8 and its slots hold only daManta_c's own functions; 0x2133200 is in no vtable. Its sole referrer in the ROM is 0x21342b8, the first pointer-to-member entry of daPukupuku_c's state table, which begins exactly where daManta_c's vtable ends -- the likely source of the mis-assignment. No replacement name is coined.",
-    "Static initializer folded: the PukupukuModelFile handle (file 0x418), the PukupukuAnimationFilePtr handle (file 0x419), their destructor-registration nodes and the two PukuStateRow state rows make mwcc emit __sinit_daPukupuku_c.cpp itself (0xd4, raw-byte-identical to retail __sinit_ov090_02133f4c with the same instruction sequence and literal pool); the handwritten src/unnamed/ov090/__sinit_ov090_02133f4c.c is retired. The rows are plain word copies from the four .data descriptors (no destructor registration), so no vector alias is needed. Both compiler temps (@620/@621 nodes) are fleet-unique, so no defined_symbol_renames are needed. This fold does NOT license the .data descriptors, the RTTI chain, the g_profile row or the vtable, which stay compiler-only deadstrip.",
+    "Static initializer folded: the PukupukuModelFile handle (file 0x418), the PukupukuAnimationFilePtr handle (file 0x419), their destructor-registration nodes and the two PukuStateRow state rows make mwcc emit __sinit_d_a_pukupuku.cpp itself (0xd4, raw-byte-identical to retail __sinit_ov090_02133f4c with the same instruction sequence and literal pool); the handwritten src/unnamed/ov090/__sinit_ov090_02133f4c.c is retired. The rows are plain word copies from the four .data descriptors (no destructor registration), so no vector alias is needed. Both compiler temps (@620/@621 nodes) are fleet-unique, so no defined_symbol_renames are needed. This fold does NOT license the .data descriptors, the RTTI chain, the g_profile row or the vtable, which stay compiler-only deadstrip.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {

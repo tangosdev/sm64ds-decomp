@@ -77,7 +77,7 @@
       "typeinfo_pointer_address": "0x0213cf0c",
       "typeinfo_pointer": "0x0213ce54"
     },
-    "extent_evidence": "Read from extracted/overlays/overlay_0006.bin. 0x0213cf08 = 0x00000000 (offset-to-top), 0x0213cf0c = 0x0213ce54 (= _ZTI12dScMgLuigi_c), then 36 consecutive relocated code pointers from slot 0 at 0x0213cf10 through slot 35 at 0x0213cf9c. The exclusive end 0x0213cfa0 is NOT a slot: its bytes are 2f 47 4d 2f 64 32 5f 64 ... = the ASCII string \"/MG/d_2d_mg_bg_luigi1_ncg.bin\\0\", and dsd gives it its own symbol data_ov006_0213cfa0. tools/rtti_vtables.py --own dScMgLuigi_c independently reports 36 slots against a 36-slot base. No trailing null slot was truncated here, because the table is followed by string data rather than by zeros.",
+    "extent_evidence": "Read from extracted/overlays/overlay_0006.bin. 0x0213cf08 = 0x00000000 (offset-to-top), 0x0213cf0c = 0x0213ce54 (= _ZTI12dScMgLuigi_c), then 36 consecutive relocated code pointers from slot 0 at 0x0213cf10 through slot 35 at 0x0213cf9c. The exclusive end 0x0213cfa0 is NOT a slot: its bytes are 2f 47 4d 2f 64 32 5f 64 ... = the ASCII string \"/MG/d_2d_mg_bg_luigi1_ncg.bin\\0\", and dsd gives it its own symbol sLuigiBg1NcgPath. tools/rtti_vtables.py --own dScMgLuigi_c independently reports 36 slots against a 36-slot base. No trailing null slot was truncated here, because the table is followed by string data rather than by zeros.",
     "complete_slots": [
       {
         "slot": 0,
@@ -228,7 +228,7 @@
         "slot_address": "0x0213cf58",
         "target": "0x020f3294",
         "module": "ov006",
-        "symbol": "_ZN12dScMgLuigi_c13OnYoshiTryEatEi",
+        "symbol": "_ZN12dScMgLuigi_c10StartRoundEi",
         "owner": "dScMgLuigi_c"
       },
       {
@@ -236,7 +236,7 @@
         "slot_address": "0x0213cf5c",
         "target": "0x020b2994",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c13OnTurnIntoEggEi",
+        "symbol": "_ZN11dScMgBase_c11CanEndStateEi",
         "owner": "dScMgBase_c"
       },
       {
@@ -244,7 +244,7 @@
         "slot_address": "0x0213cf60",
         "target": "0x020b2990",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c9Virtual50Ev",
+        "symbol": "_ZN11dScMgBase_c11OnNewRecordEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -252,7 +252,7 @@
         "slot_address": "0x0213cf64",
         "target": "0x020b298c",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c15OnGroundPoundedEv",
+        "symbol": "_ZN11dScMgBase_c10OnDealDoneEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -260,7 +260,7 @@
         "slot_address": "0x0213cf68",
         "target": "0x020ae198",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c11OnAttacked1Ev",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback1Ev",
         "owner": "dScMgBase_c"
       },
       {
@@ -268,7 +268,7 @@
         "slot_address": "0x0213cf6c",
         "target": "0x020ae1a0",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c11OnAttacked2Ev",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback0Ev",
         "owner": "dScMgBase_c"
       },
       {
@@ -276,7 +276,7 @@
         "slot_address": "0x0213cf70",
         "target": "0x020ae140",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c8OnKickedEv",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback2Ev",
         "owner": "dScMgBase_c"
       },
       {
@@ -284,7 +284,7 @@
         "slot_address": "0x0213cf74",
         "target": "0x020ae128",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c8OnPushedEv",
+        "symbol": "_ZN11dScMgBase_c16OnGraphCallback3Ev",
         "owner": "dScMgBase_c"
       },
       {
@@ -292,7 +292,7 @@
         "slot_address": "0x0213cf78",
         "target": "0x020b04e0",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv",
+        "symbol": "_ZN11dScMgBase_c14GetDisplayModeEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -300,7 +300,7 @@
         "slot_address": "0x0213cf7c",
         "target": "0x020af27c",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c15OnHitByMegaCharEv",
+        "symbol": "_ZN11dScMgBase_c8OpenMenuEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -308,7 +308,7 @@
         "slot_address": "0x0213cf80",
         "target": "0x020af04c",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c19OnHitFromUnderneathEv",
+        "symbol": "_ZN11dScMgBase_c9CloseMenuEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -316,7 +316,7 @@
         "slot_address": "0x0213cf84",
         "target": "0x020af094",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c16OnAimedAtWithEggEv",
+        "symbol": "_ZN11dScMgBase_c17SaveScreenForMenuEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -324,7 +324,7 @@
         "slot_address": "0x0213cf88",
         "target": "0x020aeed8",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv",
+        "symbol": "_ZN11dScMgBase_c21RestoreScreenFromMenuEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -332,7 +332,7 @@
         "slot_address": "0x0213cf8c",
         "target": "0x020b2880",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c9Virtual7CEv",
+        "symbol": "_ZN11dScMgBase_c15InitSubScreenBgEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -340,7 +340,7 @@
         "slot_address": "0x0213cf90",
         "target": "0x020b27f4",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c9Virtual80Ev",
+        "symbol": "_ZN11dScMgBase_c16InitMainScreenBgEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -348,7 +348,7 @@
         "slot_address": "0x0213cf94",
         "target": "0x020b265c",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c9Virtual84Ev",
+        "symbol": "_ZN11dScMgBase_c11InitEnginesEv",
         "owner": "dScMgBase_c"
       },
       {
@@ -356,7 +356,7 @@
         "slot_address": "0x0213cf98",
         "target": "0x020ae3b4",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c9Virtual88Eiiii",
+        "symbol": "_ZN11dScMgBase_c11PaintSquareEiiii",
         "owner": "dScMgBase_c"
       },
       {
@@ -364,9 +364,9 @@
         "slot_address": "0x0213cf9c",
         "target": "0x020ad660",
         "module": "ov004",
-        "symbol": "_ZN11dScMgBase_c9Virtual8CEv",
+        "symbol": "_ZN11dScMgBase_c12IsAltVariantEv",
         "owner": "dScMgBase_c",
-        "note": "Address 0x020ad660 is the FIRST byte of ov002, ov004 and ov007 alike (all three share base_address 0x020ad660), and each defines a different function there: func_ov002_020ad660 (0x1d8), _ZN11dScMgBase_c9Virtual8CEv (0x14) and func_ov007_020ad660 (0x410). ov004 is the applicable resident: the direct base's RTTI lives in ov004 and 21 of the other 22 inherited slots resolve into ov004, whose symbols.txt is the only one naming this target as a dScMgBase_c member."
+        "note": "Address 0x020ad660 is the FIRST byte of ov002, ov004 and ov007 alike (all three share base_address 0x020ad660), and each defines a different function there: func_ov002_020ad660 (0x1d8), _ZN11dScMgBase_c12IsAltVariantEv (0x14) and func_ov007_020ad660 (0x410). ov004 is the applicable resident: the direct base's RTTI lives in ov004 and 21 of the other 22 inherited slots resolve into ov004, whose symbols.txt is the only one naming this target as a dScMgBase_c member."
       }
     ]
   },
@@ -434,12 +434,12 @@
       "slot": 18,
       "address": "0x020f3294",
       "size": "0x12c",
-      "symbol": "_ZN12dScMgLuigi_c13OnYoshiTryEatEi",
+      "symbol": "_ZN12dScMgLuigi_c10StartRoundEi",
       "name": "OnYoshiTryEat",
       "shard": "src/_ZN12dScMgLuigi_c13OnYoshiTryEatEi.cpp"
     }
   ],
-  "destructor_order": "D1 at 0x020efc0c (0x24 bytes) precedes D0 at 0x020efc30 (0x38 bytes). Both store the vptr 0x0213cf10 at offset 0 and then BL ov004 0x020b29c0 (dScMgBase_c D2). D0 additionally loads the heap pointer from arm9 bss data_020a0eac and calls arm9 0x0203c1e8 _ZN6Memory10DeallocateEPvP4Heap. No dScMgLuigi_c D2 symbol exists.",
+  "destructor_order": "D1 at 0x020efc0c (0x24 bytes) precedes D0 at 0x020efc30 (0x38 bytes). Both store the vptr 0x0213cf10 at offset 0 and then BL ov004 0x020b29c0 (dScMgBase_c D2). D0 additionally loads the heap pointer from arm9 bss data_020a0eac and calls arm9 0x0203c1e8 _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE. No dScMgLuigi_c D2 symbol exists.",
   "text_span": {
     "start": "0x020efc0c",
     "end": "0x020f3834",
@@ -449,7 +449,7 @@
     "non_virtual_count": 50,
     "boundary_confidence": "high on the right, medium on the left",
     "right_boundary_evidence": "The class's last function is dScMgLuigi_c_classInit at 0x020f3800 (0x34 bytes), ending exactly at 0x020f3834, where _ZN13dScMgMemory_cD1Ev begins. 0x020f3834 is also the start of the ALREADY PROMOTED delink unit src/minigames/d_s_mg_memory.cpp, whose manifest config/tu_manifest.d/ov006/dScMgMemory_c.json declares sections .text 0x020f3834..0x020f5564. A named other class's destructor plus a landed single-span TU is a hard boundary, not an inference.",
-    "left_boundary_evidence": "The function immediately below, func_ov006_020efc08, is 4 bytes and its only word is 0xe12fff1e = 'bx lr' - an empty function. It is its own delink unit src/unnamed/ov006/func_ov006_020efc08.c. Below IT is dScMgJump2_c_classInit at 0x020efaf0. Nothing in the ROM attributes the stub to either neighbour, so it is left OUT of this class's span. If a byte gate later demands it, it is the only candidate to move.",
+    "left_boundary_evidence": "The function immediately below, Jump2Popup_ElemCtor, is 4 bytes and its only word is 0xe12fff1e = 'bx lr' - an empty function. It is its own delink unit src/unnamed/ov006/func_ov006_020efc08.c. Below IT is dScMgJump2_c_classInit at 0x020efaf0. Nothing in the ROM attributes the stub to either neighbour, so it is left OUT of this class's span. If a byte gate later demands it, it is the only candidate to move.",
     "self_containment_evidence": "Proven twice, independently. (1) Relocations: config/arm9/overlays/ov006/relocs.txt has 13518 rows, of which 6938 carry module:overlay(6). Filtering on that spelling, exactly 70 accepted rows point into [0x020efc0c,0x020f3834); 39 originate inside the span and 31 outside, and ALL 31 outside ones are kind:load from this class's own data cluster - 7 from vtable slots, 23 from PMF records, 1 from g_profile_MG_LUIGI. Zero kind:arm_call rows enter the span from elsewhere in ov006. (2) Decoding: every BL/BLX word in every ov006 function body was decoded; 0 target the span from outside it, and 0 leave the span for another ov006 function. The 37 intra-class calls found by decoding are the SAME 37 found by relocation, set for set. Sanity check on the filter, per roles/scout.md: scanning the other modules' relocs.txt for this address range yields 164 address-overlapping rows, of which the module filter REJECTS 163 - an unfiltered scan would have invented 163 phantom callers."
   },
   "shard_inventory": {
@@ -600,7 +600,7 @@
       },
       {
         "range": "0x0213ce70..0x0213cf08",
-        "what": "class tables data_ov006_0213ce70/ce84/ce98/ceac/cec0/cee0, 7 addresses in this range loaded by this class's code"
+        "what": "class tables sLuigiTextSpritesByLanguage/ce84/ce98/ceac/cec0/cee0, 7 addresses in this range loaded by this class's code"
       },
       {
         "range": "0x0213cf08..0x0213cfa0",
@@ -639,7 +639,7 @@
       "0x0213ce54"
     ],
     "bss_cluster": "0x021421ec..0x021422a4",
-    "bss_evidence": "5 bss symbols - data_ov006_021421ec / 02142204 / 0214221c / 02142234 / 02142254 - and this class's code carries module:overlay(6) load relocations to all five and to no other bss address. The next bss symbol, 0x021422a4, is claimed by dScMgMemory_c's manifest as the start of its own state.",
+    "bss_evidence": "5 bss symbols - sLuigiIrisTable / 02142204 / 0214221c / 02142234 / 02142254 - and this class's code carries module:overlay(6) load relocations to all five and to no other bss address. The next bss symbol, 0x021422a4, is claimed by dScMgMemory_c's manifest as the start of its own state.",
     "rodata_referenced": "0x0212e848..0x0212e8d8 (11 distinct addresses)",
     "static_initializer": "NONE. This class's 23 PMF records already contain their code pointers in the linked ROM image and carry kind:load relocations, i.e. they are link-time initialized data. No __sinit_ov006_* function references any address in this class's text or data cluster. Contrast dScMgMemory_c, whose manifest names __sinit_ov006_021311c8 as building its PMF tables."
   },
@@ -650,7 +650,7 @@
     "problem": "0x0213cfa0 is dScMgLuigi_c's data, not dScMgMemory_c's. It holds the string \"/MG/d_2d_mg_bg_luigi1_ncg.bin\" and the only reference to it is from:0x020f37c0, inside _ZN12dScMgLuigi_c13InitResourcesEv. dScMgMemory_c's data cluster actually begins at 0x0213cfc0. The error is 0x20 bytes and is confined to a prose evidence string - no section range, no byte and no gate is affected - but a writer copying that manifest as an oracle would inherit it."
   },
   "irq_callback": {
-    "symbol": "func_ov006_020efcf8",
+    "symbol": "Luigi_PrepareScanlines",
     "address": "0x020efcf8",
     "size": "0xb4",
     "constraint": "Installed as IRQ 2's handler by arm9 _ZN3IRQ13SetIRQHandlerEjPFvvE, whose second parameter mangles as PFvvE = void(*)(). This function is taken as a PLAIN function pointer and cannot become a non-static dScMgLuigi_c member. Leave it a free function, or make it a static member. This is the one member of the 50 whose form the ROM constrains outright."
@@ -658,7 +658,7 @@
   "non_virtual_note": "The 50 functions below are every function in the span that is neither a vtable target nor the factory. Measured on base 41afd900: 23 are reached only through the class's own PMF records with a zero this-adjustment, 26 are called directly and only from inside this class, and 1 is the IRQ handler above. Every caller address was confirmed twice - once from module-filtered relocations and once by decoding every BL in ov006 .text - and the two sets are identical. This proves TU membership and dispatch shape. It does NOT prove original identifiers, nor member-versus-file-local linkage.",
   "non_virtual": [
     {
-      "symbol": "func_ov006_020efcf8",
+      "symbol": "Luigi_PrepareScanlines",
       "address": "0x020efcf8",
       "size": "0xb4",
       "shard": "src/func_ov006_020efcf8.c",
@@ -671,7 +671,7 @@
       }
     },
     {
-      "symbol": "func_ov006_020efdac",
+      "symbol": "Luigi_PushScanlineRecord",
       "address": "0x020efdac",
       "size": "0x44",
       "shard": "src/func_ov006_020efdac.c",
@@ -1481,7 +1481,7 @@
       {
         "module": "ov004",
         "address": "0x020af948",
-        "symbol": "func_ov004_020af948",
+        "symbol": "Mg_RenderSubSpriteMtx",
         "sites": 6
       }
     ]
@@ -1519,7 +1519,7 @@
   "promoted_ov006_siblings_note": "re-derived from notes/data/tu-promotion-queue.tsv at the base_commit above (already_promoted column): 14 of the 32 ov006 rows. config/tu_manifest.d/ov006/ holds 24 manifests. dMgJump3DMario_c is the newest and landed while this file was being written.",
   "unproven": [
     "The original identifiers and the member-versus-file-local linkage of all 50 non-vtable functions. The ROM proves dispatch shape and TU membership; stripped names are not recoverable.",
-    "Whether func_ov006_020efc08 (4 bytes, 'bx lr', at 0x020efc08) belongs to this TU or to dScMgJump2_c. It sits between them, is its own delink unit, has no caller and no relocation, and nothing attributes it. It is excluded here.",
+    "Whether Jump2Popup_ElemCtor (4 bytes, 'bx lr', at 0x020efc08) belongs to this TU or to dScMgJump2_c. It sits between them, is its own delink unit, has no caller and no relocation, and nothing attributes it. It is excluded here.",
     "The arm9 relocation from:0x02008c18 kind:arm_call to:0x020effb8 carries module:overlays(2,6) - an AMBIGUOUS list. Both ov002 (func_ov002_020effb8, size 0x310) and ov006 (func_ov006_020effb8, size 0x74) define a function at that address, and dsd did not resolve it. This is NOT evidence of an external caller for this class; do not report it as one.",
     "sizeof(dScMgBase_c). The +0x4660 derived-storage boundary is a convergence of two access paths, not a proof; the only hard bound is <= 0x4710 from the smallest ov006 dScMgBase_c allocation.",
     "Semantic names and aggregate types for every field. Offsets, strides, counts, widths and signed loads are measured; the names in include/dScMgLuigi_c.h are a prior reconstruction and are not corroborated here.",

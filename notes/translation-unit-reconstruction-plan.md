@@ -629,3 +629,30 @@ If the answer is favorable, implement scratch linking and promotion. If it is no
 The one-function files are a matching scaffold, not the intended final C++ architecture. Keep that scaffold operational while adding a small manifest-backed shadow pipeline for reconstructed translation units. Prove one complete text-only TU end to end before supporting partial extraction or global data. Promote a consolidated file only when it preserves all byte, relocation, symbol, module, and ROM guarantees, then delete its superseded fragments.
 
 This provides a controlled path from approximately eleven thousand verified function fragments to hundreds of coherent C++ translation units without sacrificing the hybrid ROM pipeline that made the current decompilation possible.
+
+### Explicit compiler-local function correspondence
+
+A `defined_symbol_renames` row normally owns a non-text manifest symbol. A
+compiler-local TEXT spelling additionally requires an `owned_function` descriptor:
+`module`, `address`, `size`, `function_ordinal`, `raw_type: STT_FUNC`, and
+`raw_binding: STB_LOCAL`. These repeat a unique existing `functions` row and its
+unique module-qualified symbol-registry extent; they do not create a ROM home.
+The full function must lie in the entry's unique TEXT claim. Normal complete
+production enrollment and full byte/typed-relocation verification remain required.
+
+TB and the relocation audit share the same descriptor and RAW definition checks.
+The emitted symbol must be a unique local function of the declared full size in
+allocated executable storage. Its canonical target must be absent before rename.
+Function chains, cycles, conflicting policies and collisions refuse. Existing
+non-text simultaneous temporary-name overlaps retain their original behavior.
+The existing string-table-only operation preserves symbol ordinals and every
+non-name symbol field, section payload and relocation entry. Binding rewrites are
+a separate subsequent policy, not part of the name correspondence.
+
+The relocation audit recognizes the exact inverse preimage function population,
+including all unaffected configured functions. An already canonical object keeps
+its existing audit pass-through; explicitly preparing it again through TB still
+refuses a missing raw source spelling. Neither case licenses unknown output,
+a different module at the same address, a different body, or an unproved callee.
+Policy admission is not a byte proof: full retained payload, typed edges, storage,
+emission order and normal link checks must still pass on the actual input.

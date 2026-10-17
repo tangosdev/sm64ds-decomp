@@ -1,0 +1,1136 @@
+{
+  "task": "trs-latest1013",
+  "base_commit": "9b221e4bdacd4b8f90d2fd9467804746619124fc",
+  "accepted_input": "29bdf789d44184f8289cce061549108d3853b1a1",
+  "checkpoint": "5b2969e731c78838fb96be2884f0010f125cfb3a",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3822",
+  "coordinator": "codex-trs-latest-coordinator1013",
+  "source_completion": "partial",
+  "summary": "Compose the unchanged accepted Boo native-interface candidate onto actual9b221e after PR3815. Shared-header delta is comments only; fresh complete current raw/prepared objects, typed graphs, storage and metadata reproduce the accepted component. Scoped current gates pass; original607 global evidence remains historical.",
+  "sources": [
+    "src/actors/daTrs_c.cpp",
+    "include/daTrs_c.h",
+    "include/daTBasket_c.h",
+    "include/daTrsIcon_c.h"
+  ],
+  "manifest": "config/tu_manifest.d/ov063/daTBasket_c+daTrsIcon_c+daTrs_c.json",
+  "producer_sessions": [
+    "codex-trs-latest-producer1013",
+    "codex-trs-current-producer1013",
+    "codex-trs-native-producer1013",
+    "01a135f6-ffe2-7f12-a948-096399c6745c"
+  ],
+  "scout_provenance": {
+    "actual_thread": "01a135f6-ffe2-7f12-a948-096399c6745c",
+    "agent": "/root/camera_valueweb_pass",
+    "parent_session": "01a12e6f-7ee1-7162-9a64-81145ed6b260",
+    "handoff_sha256": "18ea2c63dff4256e0c9ad5b72cd55c8180ba965e7ebbb61beef3152458f154fe"
+  },
+  "predecessor_tasks": [
+    "trs-current1013"
+  ],
+  "inherited_findings": {
+    "F1": {
+      "claim": "Re-key rows 1 and 2 onto the TU rather than adding a second row.",
+      "disposition": "fixed",
+      "fix": "For the two renamed members in the table (row 1 D0 and row 8 Behavior), prescribe rows under BOTH mangled spellings, exactly as the existing 26 already do - that is why there are 33 rows for 26 shards. Adding src/actors/da1up_c.cpp#_ZN13OneUpMushroomD0Ev -> tangosdev alongside the new spelling returns exit 0, 28 consolidated, 0 lost. Row 8's ghost currently survives via match_finishers so it does not go red today, but the same both-spellings rule should apply.",
+      "historical_scope_only": true,
+      "id": "F1",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "Applying the table exactly as written makes python tools/prepush_attribution.py exit 1 with 'CREDIT LOST _ZN13OneUpMushroomD0Ev was src/_ZN13OneUpMushroomD0Ev [tangosdev]'. member_overrides_at keys on the symbol after '#', and the deleted shard's basename is the OLD spelling _ZN13OneUpMushroomD0Ev, not _ZN7da1up_cD0Ev. Verified by scratch simulation (discarded).",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "must-fix",
+      "summary": "Re-key rows 1 and 2 onto the TU rather than adding a second row.",
+      "where": "Reconstruction dimensions, the owed-attribution table and the paragraph under it"
+    },
+    "F2": {
+      "claim": "this gate only sees the 26 shards that HAVE an attribution.json override row. The other 10 do not appear in its ledger at all",
+      "disposition": "fixed",
+      "fix": "State the real mechanism. The conclusion the handoff draws from it - that '0 changed' does not contradict the validator's 8 reassignments because the two tools measure different things - survives and is if anything stronger.",
+      "historical_scope_only": true,
+      "id": "F2",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "Backwards on both halves. All 10 unrowed shards DO appear in prepush_attribution's HEAD ledger - 8 because match_finishers never expires a deleted path, 2 because their bare-path attribution.json override key survives the file's deletion - and read as unchanged at the same stem with the same author. It is the 26 ROWED shards that vanish from the HEAD ledger (their credit came from first_matchers, which ends a lineage on delete) and are rescued by the path#symbol rows; that rescue is literally what '26 consolidated' counts. Measured: 10 of 10 unrowed present in HEAD lineage, 0 of 26 rowed present.",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "must-fix",
+      "summary": "this gate only sees the 26 shards that HAVE an attribution.json override row. The other 10 do not appear in its ledger at all",
+      "where": "Proof, the 'Contributor attribution' entry"
+    },
+    "F3": {
+      "claim": "Three named contributors other than the project account are owed credit here -- ruspecial (1), lunavyqo (1) and alexsobolew7 (1)",
+      "disposition": "fixed",
+      "fix": "Correct the count of distinct people. The per-row 'Credit owed to' cells may keep the raw handle - the file already carries alexsobolew7 elsewhere and canon resolves it.",
+      "historical_scope_only": true,
+      "id": "F3",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "attribution.json's own aliases map, at both base and HEAD, contains 'alexsobolew7': 'ruspecial'. validate_merge canonicalises through it. There are TWO distinct non-project contributors owed: ruspecial 2 rows and lunavyqo 1. tangosdev is owed 5.",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "should-fix",
+      "summary": "Three named contributors other than the project account are owed credit here -- ruspecial (1), lunavyqo (1) and alexsobolew7 (1)",
+      "where": "Reconstruction dimensions, the sentence under the owed-attribution table"
+    },
+    "F4": {
+      "claim": "32 block-scope mangled extern declarations",
+      "disposition": "fixed",
+      "fix": "Either correct it or hedge it the way the raw-offset count is already hedged.",
+      "historical_scope_only": true,
+      "id": "F4",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "33 by grep -c -E '^\\s+extern .*_Z[A-Za-z0-9_]+'. Regex-dependent descriptive figure, not a proof claim.",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "minor",
+      "summary": "32 block-scope mangled extern declarations",
+      "where": "Reconstruction dimensions, layout paragraph"
+    },
+    "TRS-AUDIT-PARTIAL-001": {
+      "disposition": "deferred",
+      "evidence": "Native factories and97ownedfunctions pass, but flat scalar vector puns, opaque/camera/other-actor offset views, halfword signedness puns, FlagW reinterpretation, volatile dummy/vector/particle forms, this?&rot:&rot and opt_propagation bracket remain. Historical committed experiments exist; this audit did not remeasure alternatives or establish a universal compiler floor.",
+      "id": "TRS-AUDIT-PARTIAL-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3822",
+      "kind": "reconstruction",
+      "location": "src/actors/daTrs_c.cpp",
+      "owner": "codex-trs-native-coordinator1013",
+      "reason": "The useful local typed interfaces are now improved, but the remaining raw/scalar/scheduling and synthetic lifecycle boundaries are explicitly partial; no universal compiler constraint is asserted.",
+      "required_action": "Record explicit partial completion with a newly assigned live issue/owner if adopting a candidate; issue2721 is closed and its promotion/FLAGS16 obligations are historical.",
+      "summary": "Typed class ownership coexists with scalar/vector/raw views and codegen-sensitive local forms."
+    },
+    "TRS-AUDIT-PARTIAL-002": {
+      "disposition": "deferred",
+      "evidence": "Two synthetic SharedFilePtr-derived two-word wrapper types create7handles;5aliases comprise4lifecycle seams plus compiler global registration. Three plain Vec3globals and their runtime registration cells remain explicit; scalar Fix12 mangled calls and metadata/profile externalization remain. Byte identity does not recover original types/names.",
+      "id": "TRS-AUDIT-PARTIAL-002",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3822",
+      "kind": "reconstruction",
+      "location": "src/actors/daTrs_c.cpp:101-115; manifest undefined_symbol_aliases",
+      "owner": "codex-trs-native-coordinator1013",
+      "reason": "The useful local typed interfaces are now improved, but the remaining raw/scalar/scheduling and synthetic lifecycle boundaries are explicitly partial; no universal compiler constraint is asserted.",
+      "required_action": "Record explicit partial completion with a newly assigned live issue/owner if adopting a candidate; issue2721 is closed and its promotion/FLAGS16 obligations are historical.",
+      "summary": "Resource wrapper and scalar ABI reconstruction remains partial."
+    },
+    "TRS-AUDIT-PROV-001": {
+      "disposition": "fixed",
+      "evidence": "Manifest says separate initializer/text-only ownership, while actual entry owns304Binit,4Bctor,21BSS216B and Source defines all7handles; basket header says TU only externs edec, which is defined at Source3658.",
+      "id": "TRS-AUDIT-PROV-001",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov063/daTBasket_c+daTrsIcon_c+daTrs_c.json#boundary_evidence[3]; include/daTBasket_c.h:40-41",
+      "reason": "Manifest and basket header now describe actual TU-owned initializer, ctor and handles.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Static-initializer and handle ownership prose predates the completed fold."
+    },
+    "TRS-AUDIT-PROV-002": {
+      "disposition": "fixed",
+      "evidence": "Basket header says PlaySecretSound lacks shared declaration and stays mangled, but Sound.h107 declares it and Source3316 already calls native. Source blanket rationale includes GetCapState/UpdateCapPos, although dCapEnemy_c.h62/68 declares their int/reference forms with no Fix12 by-value parameter. Preserve measured ABI seams individually; do not claim a compiler barrier without evidence.",
+      "id": "TRS-AUDIT-PROV-002",
+      "kind": "provenance",
+      "location": "include/daTBasket_c.h:35-36; src/actors/daTrs_c.cpp:29-33",
+      "reason": "GetCapState is native; Source records the measured direct UpdateCapPos residue separately. Basket header correctly identifies native Sound::PlaySecretSound and the remaining Particle scalar seam.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Native API availability claims are stale."
+    },
+    "TRS-AUDIT-PROV-003": {
+      "disposition": "fixed",
+      "evidence": "include/fBase_c.h167 now defines size_t forwarding operator new to retail _ZN7fBase_cnwEj. Qualify these as existing local forwarding adapters, or separately prove safe deletion; a prose repair need not change code.",
+      "id": "TRS-AUDIT-PROV-003",
+      "kind": "provenance",
+      "location": "include/daTrs_c.h:326; include/daTBasket_c.h allocator comment",
+      "reason": "Both leaf allocator comments now describe existing forwarding adapters and acknowledge fBase_c also declares an adapter; code unchanged.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Local allocator adapters are described as awaiting an adapter already in fBase_c."
+    },
+    "TRS-AUDIT-PROV-004": {
+      "disposition": "fixed",
+      "evidence": "Current factory is daTrsIcon_c_classInit and all bodies live in src/actors/daTrs_c.cpp. Later paragraph correctly calls BigBooIcon_Spawn historical; align opening wording with that historical scope.",
+      "id": "TRS-AUDIT-PROV-004",
+      "kind": "provenance",
+      "location": "include/daTrsIcon_c.h:6-8",
+      "reason": "Icon header calls BigBooIcon historical and names the current daTrsIcon_c factory/TU identity.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Opening paragraph claims BigBooIcon spelling is retained by current factory/source directory."
+    },
+    "TRS-AUDIT-TYPE-001": {
+      "disposition": "fixed",
+      "evidence": "At checkpoint aaf0378523db2ff9cfaf6367eb33aaf8c81149cf, static_cast<Player*>(FindWithID(id)) occurs before the null and hitFlags0x400000 checks. dCc_c.h documents this bit as player; the baseline only dereferenced Player fields after it. Rejected collision actors need not be Player objects, so forming the downcast before this guard asserts an unsupported subtype even though generated bytes match.",
+      "id": "TRS-AUDIT-TYPE-001",
+      "kind": "correctness",
+      "location": "src/actors/daTrs_c.cpp:func_ov063_0211a0dc",
+      "reason": "FindWithID remains a dActor_c* through the null/category checks; Player* is formed only after hitFlags0x400000. Fresh actual99strict checks, full normalized raw graph, complete ordinary prepared ELF, metadata and storage agree with the original component. The original aaf full-ROM remains separately bound.",
+      "summary": "Player downcast precedes the collision category guard that justifies it."
+    },
+    "TRS-NATIVE-001": {
+      "disposition": "fixed",
+      "id": "TRS-NATIVE-001",
+      "kind": "reconstruction",
+      "location": "src/actors/daTrs_c.cpp",
+      "reason": "Seven handles use measured u16/u8/typed-pointer layout; native GetCapState, typed Icon receiver/Vector3 reference and Player hit-path local preserve all owned bytes and typed destinations.",
+      "summary": "Use truthful loaded-file and borrowed actor interfaces while retaining measured scalar boundaries."
+    }
+  },
+  "findings": [
+    {
+      "claim": "Re-key rows 1 and 2 onto the TU rather than adding a second row.",
+      "disposition": "fixed",
+      "fix": "For the two renamed members in the table (row 1 D0 and row 8 Behavior), prescribe rows under BOTH mangled spellings, exactly as the existing 26 already do - that is why there are 33 rows for 26 shards. Adding src/actors/da1up_c.cpp#_ZN13OneUpMushroomD0Ev -> tangosdev alongside the new spelling returns exit 0, 28 consolidated, 0 lost. Row 8's ghost currently survives via match_finishers so it does not go red today, but the same both-spellings rule should apply.",
+      "historical_scope_only": true,
+      "id": "F1",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "Applying the table exactly as written makes python tools/prepush_attribution.py exit 1 with 'CREDIT LOST _ZN13OneUpMushroomD0Ev was src/_ZN13OneUpMushroomD0Ev [tangosdev]'. member_overrides_at keys on the symbol after '#', and the deleted shard's basename is the OLD spelling _ZN13OneUpMushroomD0Ev, not _ZN7da1up_cD0Ev. Verified by scratch simulation (discarded).",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "must-fix",
+      "summary": "Re-key rows 1 and 2 onto the TU rather than adding a second row.",
+      "where": "Reconstruction dimensions, the owed-attribution table and the paragraph under it"
+    },
+    {
+      "claim": "this gate only sees the 26 shards that HAVE an attribution.json override row. The other 10 do not appear in its ledger at all",
+      "disposition": "fixed",
+      "fix": "State the real mechanism. The conclusion the handoff draws from it - that '0 changed' does not contradict the validator's 8 reassignments because the two tools measure different things - survives and is if anything stronger.",
+      "historical_scope_only": true,
+      "id": "F2",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "Backwards on both halves. All 10 unrowed shards DO appear in prepush_attribution's HEAD ledger - 8 because match_finishers never expires a deleted path, 2 because their bare-path attribution.json override key survives the file's deletion - and read as unchanged at the same stem with the same author. It is the 26 ROWED shards that vanish from the HEAD ledger (their credit came from first_matchers, which ends a lineage on delete) and are rescued by the path#symbol rows; that rescue is literally what '26 consolidated' counts. Measured: 10 of 10 unrowed present in HEAD lineage, 0 of 26 rowed present.",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "must-fix",
+      "summary": "this gate only sees the 26 shards that HAVE an attribution.json override row. The other 10 do not appear in its ledger at all",
+      "where": "Proof, the 'Contributor attribution' entry"
+    },
+    {
+      "claim": "Three named contributors other than the project account are owed credit here -- ruspecial (1), lunavyqo (1) and alexsobolew7 (1)",
+      "disposition": "fixed",
+      "fix": "Correct the count of distinct people. The per-row 'Credit owed to' cells may keep the raw handle - the file already carries alexsobolew7 elsewhere and canon resolves it.",
+      "historical_scope_only": true,
+      "id": "F3",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "attribution.json's own aliases map, at both base and HEAD, contains 'alexsobolew7': 'ruspecial'. validate_merge canonicalises through it. There are TWO distinct non-project contributors owed: ruspecial 2 rows and lunavyqo 1. tangosdev is owed 5.",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "should-fix",
+      "summary": "Three named contributors other than the project account are owed credit here -- ruspecial (1), lunavyqo (1) and alexsobolew7 (1)",
+      "where": "Reconstruction dimensions, the sentence under the owed-attribution table"
+    },
+    {
+      "claim": "32 block-scope mangled extern declarations",
+      "disposition": "fixed",
+      "fix": "Either correct it or hedge it the way the raw-offset count is already hedged.",
+      "historical_scope_only": true,
+      "id": "F4",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411.md (historical scope)",
+      "measured": "33 by grep -c -E '^\\s+extern .*_Z[A-Za-z0-9_]+'. Regex-dependent descriptive figure, not a proof claim.",
+      "reason": "Historical finding retained from completed issue-2411; accepted handoff bb5bbfae682dccfc1cdb0aab0defdd702ad919c9 and verifier vfy-2411c-0907 recorded the corrected attribution explanation/table. This Boo continuation does not edit that historical report or attribution, and claims no new repair of its scope.",
+      "severity": "minor",
+      "summary": "32 block-scope mangled extern declarations",
+      "where": "Reconstruction dimensions, layout paragraph"
+    },
+    {
+      "disposition": "deferred",
+      "evidence": "Native factories and97ownedfunctions pass, but flat scalar vector puns, opaque/camera/other-actor offset views, halfword signedness puns, FlagW reinterpretation, volatile dummy/vector/particle forms, this?&rot:&rot and opt_propagation bracket remain. Historical committed experiments exist; this audit did not remeasure alternatives or establish a universal compiler floor.",
+      "id": "TRS-AUDIT-PARTIAL-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3822",
+      "kind": "reconstruction",
+      "location": "src/actors/daTrs_c.cpp",
+      "owner": "codex-trs-native-coordinator1013",
+      "reason": "The useful local typed interfaces are now improved, but the remaining raw/scalar/scheduling and synthetic lifecycle boundaries are explicitly partial; no universal compiler constraint is asserted.",
+      "required_action": "Record explicit partial completion with a newly assigned live issue/owner if adopting a candidate; issue2721 is closed and its promotion/FLAGS16 obligations are historical.",
+      "summary": "Typed class ownership coexists with scalar/vector/raw views and codegen-sensitive local forms."
+    },
+    {
+      "disposition": "deferred",
+      "evidence": "Two synthetic SharedFilePtr-derived two-word wrapper types create7handles;5aliases comprise4lifecycle seams plus compiler global registration. Three plain Vec3globals and their runtime registration cells remain explicit; scalar Fix12 mangled calls and metadata/profile externalization remain. Byte identity does not recover original types/names.",
+      "id": "TRS-AUDIT-PARTIAL-002",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3822",
+      "kind": "reconstruction",
+      "location": "src/actors/daTrs_c.cpp:101-115; manifest undefined_symbol_aliases",
+      "owner": "codex-trs-native-coordinator1013",
+      "reason": "The useful local typed interfaces are now improved, but the remaining raw/scalar/scheduling and synthetic lifecycle boundaries are explicitly partial; no universal compiler constraint is asserted.",
+      "required_action": "Record explicit partial completion with a newly assigned live issue/owner if adopting a candidate; issue2721 is closed and its promotion/FLAGS16 obligations are historical.",
+      "summary": "Resource wrapper and scalar ABI reconstruction remains partial."
+    },
+    {
+      "disposition": "fixed",
+      "evidence": "Manifest says separate initializer/text-only ownership, while actual entry owns304Binit,4Bctor,21BSS216B and Source defines all7handles; basket header says TU only externs edec, which is defined at Source3658.",
+      "id": "TRS-AUDIT-PROV-001",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov063/daTBasket_c+daTrsIcon_c+daTrs_c.json#boundary_evidence[3]; include/daTBasket_c.h:40-41",
+      "reason": "Manifest and basket header now describe actual TU-owned initializer, ctor and handles.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Static-initializer and handle ownership prose predates the completed fold."
+    },
+    {
+      "disposition": "fixed",
+      "evidence": "Basket header says PlaySecretSound lacks shared declaration and stays mangled, but Sound.h107 declares it and Source3316 already calls native. Source blanket rationale includes GetCapState/UpdateCapPos, although dCapEnemy_c.h62/68 declares their int/reference forms with no Fix12 by-value parameter. Preserve measured ABI seams individually; do not claim a compiler barrier without evidence.",
+      "id": "TRS-AUDIT-PROV-002",
+      "kind": "provenance",
+      "location": "include/daTBasket_c.h:35-36; src/actors/daTrs_c.cpp:29-33",
+      "reason": "GetCapState is native; Source records the measured direct UpdateCapPos residue separately. Basket header correctly identifies native Sound::PlaySecretSound and the remaining Particle scalar seam.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Native API availability claims are stale."
+    },
+    {
+      "disposition": "fixed",
+      "evidence": "include/fBase_c.h167 now defines size_t forwarding operator new to retail _ZN7fBase_cnwEj. Qualify these as existing local forwarding adapters, or separately prove safe deletion; a prose repair need not change code.",
+      "id": "TRS-AUDIT-PROV-003",
+      "kind": "provenance",
+      "location": "include/daTrs_c.h:326; include/daTBasket_c.h allocator comment",
+      "reason": "Both leaf allocator comments now describe existing forwarding adapters and acknowledge fBase_c also declares an adapter; code unchanged.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Local allocator adapters are described as awaiting an adapter already in fBase_c."
+    },
+    {
+      "disposition": "fixed",
+      "evidence": "Current factory is daTrsIcon_c_classInit and all bodies live in src/actors/daTrs_c.cpp. Later paragraph correctly calls BigBooIcon_Spawn historical; align opening wording with that historical scope.",
+      "id": "TRS-AUDIT-PROV-004",
+      "kind": "provenance",
+      "location": "include/daTrsIcon_c.h:6-8",
+      "reason": "Icon header calls BigBooIcon historical and names the current daTrsIcon_c factory/TU identity.",
+      "required_action": "Repair in a claimed producer scope and independently recheck; reviewer made no tracked edits.",
+      "summary": "Opening paragraph claims BigBooIcon spelling is retained by current factory/source directory."
+    },
+    {
+      "disposition": "fixed",
+      "evidence": "At checkpoint aaf0378523db2ff9cfaf6367eb33aaf8c81149cf, static_cast<Player*>(FindWithID(id)) occurs before the null and hitFlags0x400000 checks. dCc_c.h documents this bit as player; the baseline only dereferenced Player fields after it. Rejected collision actors need not be Player objects, so forming the downcast before this guard asserts an unsupported subtype even though generated bytes match.",
+      "id": "TRS-AUDIT-TYPE-001",
+      "kind": "correctness",
+      "location": "src/actors/daTrs_c.cpp:func_ov063_0211a0dc",
+      "reason": "FindWithID remains a dActor_c* through the null/category checks; Player* is formed only after hitFlags0x400000. Fresh actual99strict checks, full normalized raw graph, complete ordinary prepared ELF, metadata and storage agree with the original component. The original aaf full-ROM remains separately bound.",
+      "summary": "Player downcast precedes the collision category guard that justifies it."
+    },
+    {
+      "disposition": "fixed",
+      "id": "TRS-NATIVE-001",
+      "kind": "reconstruction",
+      "location": "src/actors/daTrs_c.cpp",
+      "reason": "Seven handles use measured u16/u8/typed-pointer layout; native GetCapState, typed Icon receiver/Vector3 reference and Player hit-path local preserve all owned bytes and typed destinations.",
+      "summary": "Use truthful loaded-file and borrowed actor interfaces while retaining measured scalar boundaries."
+    }
+  ],
+  "historical_scope": "Cancelled tu-ov063-trs-0927 has no accepted finding output. Its issue2721 is closed after promotion/FLAGS16 cleanup. Broad completed issue-2411 F1..F4 are preserved as historical attribution-review findings, not newly fixed Boo defects. New partial ownership is issue3822.",
+  "actual_git_lineage": [
+    "c76ec89ce552f13be3bd3061b6adf054138ca577|andrewboudreau|daTrs_c: correct field comments from review, name the OBJ_KEY spawn",
+    "65e92928856ea62d6316007929168c18b3d6f25a|andrewboudreau|daTrs_c: type the raw-offset accesses, name actor ids, refresh comments",
+    "2a2ce52670ca82b9e9853ec82614f660b2fd9102|andrewboudreau|daTrs_c: name the Boo's fields and flag bits from their uses",
+    "c2bff1393446061a66f29fa61a1c7bd97c3c33ab|lunavyqo|Fold the ov063 teresa static initializer into daTrs_c.cpp",
+    "f000cb01adc7e22ac1c048f26c8d75daa1b93f1b|lunavyqo|Merge remote-tracking branch 'origin/main' into fold/arm9-camera",
+    "ec46de5cff3229ad39036e63b5359e593aa203bc|lunavyqo|Merge origin/main into fold/arm9-animation",
+    "d2a7c0c30f31fdd1944b41a4b4f9f4accab58aa4|lunavyqo|Merge origin/main into fold/arm9-camera",
+    "38cbe1f63033d816c8c6e505b388643c1ed51a22|lunavyqo|Fold arm9 dCamera_c's 53 shards into src/engine/view/dCamera_c.cpp",
+    "05402edeab206d8d41223d641e5f5531c9bfe99f|lunavyqo|Merge origin/main into fold/arm9-shadowmodel",
+    "1ba8c17b27cbe0b104ef1ff2c39561aeef2d75f5|lunavyqo|Rename ShadowModel to the ROM type name dExtShadowModel_c.",
+    "ea7efda84ad8c066ffc184caffc59e2e22d6ec30|lunavyqo|Rename Animation to the ROM type name dExtFrameCtrl_c.",
+    "24f1409488481fb8b6062d40db77352b03e02465|lunavyqo|Deslop ov063/daTBasket_c+daTrsIcon_c+daTrs_c: methodize the func_ov063_* helpers"
+  ],
+  "original_function_authorship": {
+    "git_log": [
+      "c76ec89ce552f13be3bd3061b6adf054138ca577 andrewboudreau daTrs_c: correct field comments from review, name the OBJ_KEY spawn",
+      "65e92928856ea62d6316007929168c18b3d6f25a andrewboudreau daTrs_c: type the raw-offset accesses, name actor ids, refresh comments",
+      "2a2ce52670ca82b9e9853ec82614f660b2fd9102 andrewboudreau daTrs_c: name the Boo's fields and flag bits from their uses",
+      "c2bff1393446061a66f29fa61a1c7bd97c3c33ab lunavyqo Fold the ov063 teresa static initializer into daTrs_c.cpp",
+      "69c35e06da0bba77911cd88d33323ea6842fee93 lunavyqo Restore main folds dropped by the merge: dExtShadowModel_c, BlendModelAnim, GXS.",
+      "38cbe1f63033d816c8c6e505b388643c1ed51a22 lunavyqo Fold arm9 dCamera_c's 53 shards into src/engine/view/dCamera_c.cpp",
+      "1ba8c17b27cbe0b104ef1ff2c39561aeef2d75f5 lunavyqo Rename ShadowModel to the ROM type name dExtShadowModel_c.",
+      "ea7efda84ad8c066ffc184caffc59e2e22d6ec30 lunavyqo Rename Animation to the ROM type name dExtFrameCtrl_c.",
+      "24f1409488481fb8b6062d40db77352b03e02465 lunavyqo Deslop ov063/daTBasket_c+daTrsIcon_c+daTrs_c: methodize the func_ov063_* helpers",
+      "a47511fd362d2e4774e1834207aa19c8582ba441 Andrew Give ApproachLinear its real bool(short&, short, short) signature tree-wide (#3292)",
+      "d3785b6c8fe523865795eadf67c98220d8df2859 Andrew Promote ov063/daTrs_c: daTrs_c + daTBasket_c + daTrsIcon_c as one TU (src/actors/daTrs_c.cpp) (#3264)"
+    ],
+    "function_author_counts": {
+      "tangosdev": 63,
+      "andrewboudreau": 14,
+      "lunavyqo": 15,
+      "ruspecial": 4,
+      "aitddlabs": 1
+    },
+    "function_authors": {
+      "_ZN7daTrs_cD1Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_cD1Ev"
+      },
+      "_ZN7daTrs_cD0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_cD0Ev"
+      },
+      "_ZN11daTBasket_cD1Ev": {
+        "author": "tangosdev",
+        "name": "_ZN11daTBasket_cD1Ev"
+      },
+      "_ZN11daTBasket_cD0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN11daTBasket_cD0Ev"
+      },
+      "_ZN11daTrsIcon_cD1Ev": {
+        "author": "tangosdev",
+        "name": "_ZN11daTrsIcon_cD1Ev"
+      },
+      "_ZN11daTrsIcon_cD0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN11daTrsIcon_cD0Ev"
+      },
+      "_ZN7daTrs_c16OnAimedAtWithEggEv": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c16OnAimedAtWithEggEv"
+      },
+      "_ZN7daTrs_c19func_ov063_021160d4Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_021160d4Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116190Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_02116190Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116244Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116244Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_021162c8Ev": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_021162c8Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_021163d0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_021163d0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211640cEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_0211640cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_021166acEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_021166acEv"
+      },
+      "_ZN11daTBasket_c19func_ov063_021169c4Ev": {
+        "author": "tangosdev",
+        "name": "_ZN11daTBasket_c19func_ov063_021169c4Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116a1cEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_02116a1cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02116bf0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116bf0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116bf4Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_02116bf4Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116d38Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116d38Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116d98Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116d98Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116dbcEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116dbcEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02116df0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116df0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116e14Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116e14Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116f48Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02116f48Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02116facEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_02116facEv"
+      },
+      "_ZN7daTrs_c19func_ov063_021172a8Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_021172a8Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02117364Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_02117364Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02117650Ev": {
+        "author": "ruspecial",
+        "name": "_ZN7daTrs_c19func_ov063_02117650Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211776cEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211776cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_021177b0Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_021177b0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02117b0cEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_02117b0cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02117cdcEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02117cdcEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02118458Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02118458Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211873cEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211873cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02118914Ev": {
+        "author": "aitddlabs",
+        "name": "_ZN7daTrs_c19func_ov063_02118914Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_021189f4Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_021189f4Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02118b2cEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02118b2cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02118b98Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_02118b98Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02118cd8Ev": {
+        "author": "ruspecial",
+        "name": "_ZN7daTrs_c19func_ov063_02118cd8Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02118ddcEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02118ddcEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02118e5cEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02118e5cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02118ea0Ev": {
+        "author": "ruspecial",
+        "name": "_ZN7daTrs_c19func_ov063_02118ea0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02118eacEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02118eacEv"
+      },
+      "func_ov063_02118f24": {
+        "author": "tangosdev",
+        "name": "func_ov063_02118f24"
+      },
+      "_ZN7daTrs_c19func_ov063_02118f50Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02118f50Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02118f74Ev": {
+        "author": "ruspecial",
+        "name": "_ZN7daTrs_c19func_ov063_02118f74Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119074Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_02119074Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119274Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119274Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_021192d4Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_021192d4Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211934cEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_0211934cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_0211975cEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211975cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02119870Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119870Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119894Ev": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_02119894Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119960Ev": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_02119960Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119a2cEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119a2cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02119a50Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119a50Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119ab0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119ab0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119b1cEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119b1cEv"
+      },
+      "_ZN7daTrs_c19func_ov063_02119b84Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119b84Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119bb0Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119bb0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119c18Ej": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119c18Ej"
+      },
+      "_ZN7daTrs_c19func_ov063_02119c58Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119c58Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_02119cc0Eisi": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_02119cc0Eisi"
+      },
+      "_ZN7daTrs_c19func_ov063_02119e38Eisi": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_02119e38Eisi"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a030Eii": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a030Eii"
+      },
+      "func_ov063_0211a0a8": {
+        "author": "tangosdev",
+        "name": "func_ov063_0211a0a8"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a0dcEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_0211a0dcEv"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a3d0Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_0211a3d0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a564Ei": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a564Ei"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a634Ei": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a634Ei"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a6f0Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_0211a6f0Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a718Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a718Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a76cEii": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a76cEii"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a810Ei": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a810Ei"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a8a4Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a8a4Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a960Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a960Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211a964Ei": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211a964Ei"
+      },
+      "_ZN7daTrs_c19func_ov063_0211aa34Ev": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c19func_ov063_0211aa34Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211ab68Ev": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c19func_ov063_0211ab68Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211ad00Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211ad00Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211adb4Ev": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211adb4Ev"
+      },
+      "_ZN7daTrs_c19func_ov063_0211adfcEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c19func_ov063_0211adfcEv"
+      },
+      "_ZN11daTBasket_c16CleanupResourcesEv": {
+        "author": "tangosdev",
+        "name": "_ZN11daTBasket_c16CleanupResourcesEv"
+      },
+      "_ZN7daTrs_c16CleanupResourcesEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c16CleanupResourcesEv"
+      },
+      "_ZN7daTrs_c16OnPendingDestroyEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c16OnPendingDestroyEv"
+      },
+      "_ZN7daTrs_c6RenderEv": {
+        "author": "lunavyqo",
+        "name": "_ZN7daTrs_c6RenderEv"
+      },
+      "_ZN11daTBasket_c6RenderEv": {
+        "author": "tangosdev",
+        "name": "_ZN11daTBasket_c6RenderEv"
+      },
+      "_ZN7daTrs_c8BehaviorEv": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c8BehaviorEv"
+      },
+      "_ZN11daTBasket_c8BehaviorEv": {
+        "author": "tangosdev",
+        "name": "_ZN11daTBasket_c8BehaviorEv"
+      },
+      "_ZN7daTrs_c13InitResourcesEv": {
+        "author": "tangosdev",
+        "name": "_ZN7daTrs_c13InitResourcesEv"
+      },
+      "_ZN11daTBasket_c13InitResourcesEv": {
+        "author": "tangosdev",
+        "name": "_ZN11daTBasket_c13InitResourcesEv"
+      },
+      "_ZN11daTrsIcon_c13InitResourcesEv": {
+        "author": "tangosdev",
+        "name": "_ZN11daTrsIcon_c13InitResourcesEv"
+      },
+      "_ZN7daTrs_c13OnYoshiTryEatEv": {
+        "author": "andrewboudreau",
+        "name": "_ZN7daTrs_c13OnYoshiTryEatEv"
+      },
+      "daTrsIcon_c_classInit": {
+        "author": "tangosdev",
+        "name": "daTrsIcon_c_classInit"
+      },
+      "daTBasket_c_classInit": {
+        "author": "tangosdev",
+        "name": "daTBasket_c_classInit"
+      },
+      "daTrs_c_classInit_BOSS_TERESA": {
+        "author": "lunavyqo",
+        "name": "daTrs_c_classInit_BOSS_TERESA"
+      },
+      "daTrs_c_classInit_TERESA": {
+        "author": "lunavyqo",
+        "name": "daTrs_c_classInit_TERESA"
+      }
+    },
+    "new_candidate_author": "Not authored by this reviewer; scout camera_valueweb_pass is separate."
+  },
+  "current_coordinator_followup": "Current coordinator retains responsibility for the two deferred reconstruction findings under open issue3822 alongside the recorded original owner. Closed2721 and historical issue2411 are not presented as new unresolved current scope.",
+  "canary": [
+    true,
+    "2004/b56"
+  ],
+  "whole_proof": {
+    "baseline": {
+      "strict": 99,
+      "bss_records": 21,
+      "bss_bytes": 216,
+      "metadata_records": 19,
+      "metadata_bytes": 582,
+      "raw_refs": 778,
+      "prepared_refs": 643,
+      "raw_sha256": "942dd78f754396119151eb97b7bed0b20d9c21a5519857cea15fa73fdce36f0d",
+      "prepared_sha256": "881b53d61e008abb6674e23b79692b94919ec145967cd0fdf51fedc4653a1fd7"
+    },
+    "candidate": {
+      "strict": 99,
+      "bss_records": 21,
+      "bss_bytes": 216,
+      "metadata_records": 19,
+      "metadata_bytes": 582,
+      "raw_refs": 778,
+      "prepared_refs": 643,
+      "raw_sha256": "887370be769d6fba8adc62c6b4aa944b85697936e700b12380dd515fc275cd57",
+      "prepared_sha256": "881b53d61e008abb6674e23b79692b94919ec145967cd0fdf51fedc4653a1fd7"
+    },
+    "complete_owned_bodies_edges_equal": true,
+    "complete_metadata_equal": true,
+    "ordinary_preparation": true,
+    "raw_container_equal": false,
+    "prepared_container_equal": true,
+    "base": "9b221e4bdacd4b8f90d2fd9467804746619124fc",
+    "full_rom_run": false
+  },
+  "component_identity": {
+    "containers": {
+      "baseline_raw": {
+        "complete_container_equal_to_accepted_corrected_component": true,
+        "sha256": "942dd78f754396119151eb97b7bed0b20d9c21a5519857cea15fa73fdce36f0d"
+      },
+      "baseline_prepared": {
+        "complete_container_equal_to_accepted_corrected_component": true,
+        "sha256": "881b53d61e008abb6674e23b79692b94919ec145967cd0fdf51fedc4653a1fd7"
+      },
+      "candidate_raw": {
+        "complete_container_equal_to_accepted_corrected_component": true,
+        "sha256": "887370be769d6fba8adc62c6b4aa944b85697936e700b12380dd515fc275cd57"
+      },
+      "candidate_prepared": {
+        "complete_container_equal_to_accepted_corrected_component": true,
+        "sha256": "881b53d61e008abb6674e23b79692b94919ec145967cd0fdf51fedc4653a1fd7"
+      }
+    },
+    "complete_owned_and_metadata_graphs_equal_to_accepted_guard_component": true,
+    "complete_raw_graph_equal_after_seven_measured_input_names": true,
+    "name_map": {
+      "@3115": "@3118",
+      "@3116": "@3119",
+      "@3117": "@3120",
+      "@3118": "@3121",
+      "@3119": "@3122",
+      "@3120": "@3123",
+      "@3121": "@3124"
+    },
+    "storage_identity": true,
+    "header_tokens_equal_to_current_base": {
+      "include/daTrs_c.h": true,
+      "include/daTBasket_c.h": true,
+      "include/daTrsIcon_c.h": true
+    },
+    "header_consumers": [
+      "src/actors/daTrs_c.cpp"
+    ],
+    "runtime_canonical_fields_aliases_policies_and_ownership_unchanged": true,
+    "current_global_full_rom_run": false,
+    "qualification": "Fresh current9b221e Boo scoped object/graph/storage proof. Original aaf global ROM evidence belongs to base607; no full current-tree global result is inferred from target equality."
+  },
+  "compiler_only_proof_transfer": {
+    "source_report": "notes/experiments/trs-native1013.json",
+    "complete_raw_objects_equal_to_accepted_objects": true,
+    "three_D2_zero_incoming": true,
+    "Vector3_D1_complete_4B_strict_canonical_match": true,
+    "ordinary_current_preparation_passed": true
+  },
+  "metadata_qualification": "19 complete raw metadata records (582 bytes), including three full132B vtables with preambles, are externalized and separately verified against ROM. This does not enroll metadata or profiles as Source-owned data.",
+  "gates": {
+    "range": {
+      "name": "range",
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "9b221e4bdacd4b8f90d2fd9467804746619124fc..5b2969e731c78838fb96be2884f0010f125cfb3a",
+        "--json",
+        "build/trs-latest1013/range-report.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 93.205637216568,
+      "log": "build/trs-latest1013/range.log",
+      "log_sha256": "5e48e936408d91062fa0ad6e68e942c7ae9959cca02dd50844a7fdb7da1ef9ec",
+      "tested_commit": "5b2969e731c78838fb96be2884f0010f125cfb3a"
+    },
+    "decl": {
+      "name": "decl",
+      "command": [
+        "python",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "9b221e4bdacd4b8f90d2fd9467804746619124fc"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.39227271080017,
+      "log": "build/trs-latest1013/decl.log",
+      "log_sha256": "5389c26117e5e0ba9f23e48de3f0d8876ef66bb106f961131410d3873249b232",
+      "tested_commit": "5b2969e731c78838fb96be2884f0010f125cfb3a"
+    },
+    "port": {
+      "name": "port",
+      "command": [
+        "python",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.74027419090271,
+      "log": "build/trs-latest1013/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "tested_commit": "5b2969e731c78838fb96be2884f0010f125cfb3a"
+    },
+    "langmode": {
+      "name": "langmode",
+      "command": [
+        "python",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.100953817367554,
+      "log": "build/trs-latest1013/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "tested_commit": "5b2969e731c78838fb96be2884f0010f125cfb3a"
+    },
+    "conflicts": {
+      "name": "conflicts",
+      "command": [
+        "python",
+        "tools/check_tubuild_conflicts.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.3303539752960205,
+      "log": "build/trs-latest1013/conflicts.log",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "tested_commit": "5b2969e731c78838fb96be2884f0010f125cfb3a"
+    }
+  },
+  "stock_range_summary": {
+    "checked": 98,
+    "verified": 96,
+    "warnings": 2,
+    "blocking": 0,
+    "warning_controls": {
+      "baseline": [
+        {
+          "name": "_ZN7daTrs_c19func_ov063_0211ab68Ev",
+          "module": "ov063",
+          "addr": "0x0211ab68",
+          "verdict": "BLIND-3",
+          "diffs": [],
+          "blind": 3
+        },
+        {
+          "name": "__sinit_daTrs_c.cpp",
+          "module": "ov063",
+          "addr": "0x0211e29c",
+          "verdict": "BLIND-16",
+          "diffs": [],
+          "blind": 16
+        }
+      ],
+      "candidate": [
+        {
+          "name": "_ZN7daTrs_c19func_ov063_0211ab68Ev",
+          "module": "ov063",
+          "addr": "0x0211ab68",
+          "verdict": "BLIND-3",
+          "diffs": [],
+          "blind": 3
+        },
+        {
+          "name": "__sinit_daTrs_c.cpp",
+          "module": "ov063",
+          "addr": "0x0211e29c",
+          "verdict": "BLIND-16",
+          "diffs": [],
+          "blind": 16
+        }
+      ],
+      "context": "Actual current headers; each object uses its immutable source revision manifest renames with unchanged stock per-function isolation. Ordinary whole preparation separately verifies every owned row with zero blind."
+    },
+    "qualification": "Unchanged baseline/candidate BLIND-3 lazy Vector3 registrations and BLIND-16 initializer, zero diffs. Ordinary complete99row proof verifies both bodies and typed destinations with zero blind."
+  },
+  "historical_global_proof": {
+    "base": "607576acc557a318d5f813f8a0813bc86f03d140",
+    "checkpoint": "aaf0378523db2ff9cfaf6367eb33aaf8c81149cf",
+    "terminal": {
+      "name": "full-rom",
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom",
+        "--report-json",
+        "build/trs-native1013/rom-report.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 368.265061378479,
+      "log": "build/trs-native1013/full-rom.log",
+      "log_sha256": "f01e8767abe1d597770ad96d0269601be805618640d50439cd72c77e2ada7eeb",
+      "tested_commit": "aaf0378523db2ff9cfaf6367eb33aaf8c81149cf"
+    },
+    "production_summary": {
+      "modules": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11334,
+        "compiledBytes": 2225480,
+        "sourceFunctions": 11334,
+        "sourceBytes": 2225480,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.43577343005789,
+        "reproducingFunctions": 11334,
+        "reproducingBytes": 2225480,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "intact_link_ok": true,
+      "origin": "Historical actual-current607 full-ROM at aaf. Corrected Source component transfers this runtime proof through complete ordinary prepared ELF identity; no full-ROM rerun at the guard checkpoint is claimed.",
+      "report_sha256": "1699e74e7984bffdff99945442a4bee09855a92e619dc8c2a4a2e0a4b4388800",
+      "tested_checkpoint": "aaf0378523db2ff9cfaf6367eb33aaf8c81149cf"
+    },
+    "baseline_and_advisory_qualifications": {
+      "baseline_control": {
+        "artifact": "build/tu/_baseline/link/linkcheck.json",
+        "symbol_check_passed": false,
+        "errors": [
+          "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+          "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+          "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+        ],
+        "meaning": "Inherited baseline DSD lookup failures include ITCM, ARM9 data and overlay identifiers. Baseline modules pass. Final production separately reports zero new symbol errors and exact storage aliases; baseline symbol-check success is not claimed."
+      },
+      "advisory_data_coverage": {
+        "verified_symbols": 969,
+        "partial_symbols": 1519,
+        "differing_symbols": 1,
+        "unnamed_by_config": 21,
+        "object_records": 5282
+      },
+      "advisory_meaning": "This broad advisory object-data inventory is separate from the complete production data claims and is not an all-data or metadata ownership claim.",
+      "module_composition": {
+        "moduleBytes": 3049600,
+        "codeBytes": 2238108,
+        "dataBytes": 811492,
+        "sourceDataBytes": 13020,
+        "unownedDataBytes": 798472,
+        "retailGapCodeBytes": 12628,
+        "retailGapBytes": 811100,
+        "retailGapBytesOfModulePercent": 26.59693074501574,
+        "sourceBytes": 2225480,
+        "sourceBytesOfModulePercent": 72.97612801678909,
+        "dataBytesVerified": 48968,
+        "sourceDataBytesOfModulePercent": 0.42694123819517316,
+        "dataBytesOfModulePercent": 26.609784889821615
+      },
+      "ownership_boundary": "Exact modules include retail gap bytes. Boo ownership is separately proved for99strict rows and21BSS216bytes;19complete metadata records582bytes are externalized and byte/typed-edge checked, not enrolled as owned data."
+    },
+    "guarded_source_checkpoint": "19d5ce86e2b623eb0147dcbdeb4226da6af44a81",
+    "transfer": "The original aaf run is on607. Corrected19d guarded-cast Source was verified by complete ordinary prepared identity and the seven precisely measured raw names. Fresh actual9b221e control/candidate now reproduce the same corresponding complete raw/prepared containers, all metadata/storage and typed graphs. PR3815 changes to consumed types.h/Vector3s.h are comments only and actual compiler output is identical. Unrelated new-main source/config changes were not globally rebuilt here; no new current-global full-ROM result is claimed."
+  },
+  "current_global_full_rom_run": false,
+  "report_only_binding": {
+    "checkpoint": "5b2969e731c78838fb96be2884f0010f125cfb3a",
+    "production_trees": {
+      "src": "7502fa72123583b7f7492c71da681af6a4891903",
+      "include": "952395b2e6b198a2de60ebc997fb934f4c26a568",
+      "config": "471b0a961b3872d2498cae71cec67f041a693447",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "rule": "Final new-report-only descendant retains these five actual9b-composition trees exactly; both previous reports remain byte-identical."
+  },
+  "status": "Actual9b221e scoped proof and gates terminal0. Await independent exact-final review and serialized Root publication; no current-global full-ROM claim.",
+  "artifacts": {
+    "whole.py": "b6879bc9e9248ee522aa169bd1deb22cfbec95b07149573a31ce5bae0027ffaf",
+    "proof.json": "540cfec5a181d0c33d68e87392cf99a5b64933481cff887c86374a156557f327",
+    "storage.json": "a9a1bea1f185ce88f00f3ca5e81c2e7470c939e44791cf6acc626a62d368854c",
+    "component-proof.py": "e824de6e71ae563c12fc2d83f0f9571935bed90ac7a9673c2579ce7aa55098e9",
+    "component-identity.json": "39672546c388ad748ea784269ccca9f874f5fd5ff1f583632895ebefe560103e",
+    "input-delta.json": "ae0ef1d5b55abd7497c6b8dfcb2cf235d355305b6823a241d34ce8cd06bd73fa",
+    "canary.json": "92e0c184b73516e78730574833ee476c2124a050e83b75a6b71b82354f899c7a",
+    "warning-controls.py": "3e42191f6cd2c1a517fe6a09b3a516dc54344e670c45c998f88dfa571473b2bf",
+    "stock-warning-controls.json": "d138763a837760e957c002177507615d9f260fab8c39abb1cded3ab3764272e2",
+    "predecessor-task.json": "9a1e13408f923b3e1a129dad9e22f961dac7e17a068ffb67a262691c4778c633",
+    "inherited-findings.json": "7fde80fb1d24f0d291d55e2e08920bd33896f840d282f260c58ebd7136e53a88",
+    "baseline/raw.o": "942dd78f754396119151eb97b7bed0b20d9c21a5519857cea15fa73fdce36f0d",
+    "baseline/prepared.o": "881b53d61e008abb6674e23b79692b94919ec145967cd0fdf51fedc4653a1fd7",
+    "baseline/strict.json": "bd8d9b3d755c826267938b98174afdd9299208ff421ca1bf9b790a417f3463fc",
+    "baseline/complete-graphs.json": "d1e0e1757b0f87a1212995ecb19b5bc73c845dee8922451d3b968c4e5cd1db79",
+    "baseline/metadata.json": "3b42030000460fa52a31fb540c02f0597770d28c1ef2c2876b1d095ae765fbbe",
+    "candidate/raw.o": "887370be769d6fba8adc62c6b4aa944b85697936e700b12380dd515fc275cd57",
+    "candidate/prepared.o": "881b53d61e008abb6674e23b79692b94919ec145967cd0fdf51fedc4653a1fd7",
+    "candidate/strict.json": "bd8d9b3d755c826267938b98174afdd9299208ff421ca1bf9b790a417f3463fc",
+    "candidate/complete-graphs.json": "98e004c183da7180ea49908b5aec772b889c1d1b4bdaca86e03c6d2102928098",
+    "candidate/metadata.json": "3b42030000460fa52a31fb540c02f0597770d28c1ef2c2876b1d095ae765fbbe"
+  },
+  "historical_reports": [
+    {
+      "path": "notes/experiments/trs-native1013.json",
+      "accepted_commit": "29bdf789d44184f8289cce061549108d3853b1a1",
+      "committed_blob_sha256": "65b76f16766b881e3e577f4739806353d818651c32dcc1f3ada11e534b77a357",
+      "unchanged": true
+    },
+    {
+      "path": "notes/experiments/trs-current1013.json",
+      "accepted_commit": "29bdf789d44184f8289cce061549108d3853b1a1",
+      "committed_blob_sha256": "03379927a71ea76f5c1bd40676060a01f861b6c5b9f29bb7fd52e5bef03f15da",
+      "unchanged": true
+    }
+  ],
+  "input_delta": {
+    "base": "9b221e4bdacd4b8f90d2fd9467804746619124fc",
+    "previous": "f46242f90162d98de86a3c24644e2ca2b1957dcb",
+    "candidate": "29bdf789d44184f8289cce061549108d3853b1a1",
+    "changed_paths": [
+      "config/tu_manifest.d/ov034/daHanachan_c.json",
+      "config/tu_manifest.d/ov080/daChoro_Rock_c+daChoropu_c.json",
+      "config/tu_manifest.d/ov100/daWanwan2_c.json",
+      "contributions.json",
+      "include/Vector3s.h",
+      "include/types.h",
+      "notes/experiments/bakubaku-handles1013.json",
+      "notes/experiments/nknk-handles1013.json",
+      "notes/experiments/wanwan2-spawn1013.json",
+      "src/actors/dBgActor_c.cpp",
+      "src/actors/daBombking_c.cpp",
+      "src/actors/daJango_c.cpp",
+      "src/actors/daKing_Donketu_c.cpp",
+      "src/engine/collision/dBgW_KcMbg.cpp",
+      "src/engine/collision/dCc_c.cpp",
+      "src/game/actors/d_a_pic_gate.cpp"
+    ],
+    "headers": {
+      "include/types.h": {
+        "noncomment_text_equal": true,
+        "old_blob": "2c1015e259aa17f1860216da96e58c9f3847661bbf1d74c20188c810b1260639",
+        "new_blob": "d02733a5530459ca5cd8da02c6c5b2e5ddc380a38ebe36b985df363977a6f434"
+      },
+      "include/Vector3s.h": {
+        "noncomment_text_equal": true,
+        "old_blob": "adeb912afe4fcf4a1d9aadfea0d87dcd5afb545de32a17bfb3234cb745b82fbb",
+        "new_blob": "2153bc20073e64f15cd7cda7fda3be10e27ebde8886e66214a10735a4b1153ea"
+      }
+    },
+    "unchanged_inputs": [
+      "src/actors/daTrs_c.cpp",
+      "config/tu_manifest.d/ov063/daTBasket_c+daTrsIcon_c+daTrs_c.json",
+      "tools",
+      "config/arm9/overlays/ov063"
+    ]
+  }
+}

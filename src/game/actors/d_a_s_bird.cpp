@@ -33,8 +33,8 @@
  *   D1/D0 and 02111224/02111234 sit below it in
  *   d_a_s_bird_head.cpp, so this TU's complete range is
  *   0x021115d8..0x02111a70.
- * - *(Vector3 *)&mPosX addressing shape (a Vector3 member at 0x05c is a
- *   dActor_c campaign, not this leaf).
+ * - Vec3_Asr / Vec3_Sub / func_0201267c are declared with void *, so
+ *   &mPosX and &mCamSpacePosX pass to them uncast.
  * - data_020a0e68 scratch matrix; data_02082214 sine table;
  *   data_0209e650 RNG; func_0201267c (sound 0x6a at mCamSpacePos).
  * - RandomIntInternal stays unsigned: signed % 400 changed codegen.
@@ -204,7 +204,7 @@ void daSBird_c::func_ov009_021116ec()
     if (mIsLeader) {
         int n = (int)param1 & 0xf;
         if (n > 1) {
-            Vector3_16 rot = *(Vector3_16 *)&mPrevAngleX;
+            Vector3_16 rot = mPrevAngle;
             for (int i = 0; i < n - 1; i++) {
                 Vector3 pos;
                 pos.x = mPosX

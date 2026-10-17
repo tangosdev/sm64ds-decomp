@@ -1,57 +1,56 @@
 //cpp
 extern "C" void func_ov007_020bfe4c(void *o, int x, int y, int z, void *out);
 
-struct Vec3 { int w[3]; };
+/* Array form on purpose: a three-int-member struct copies field by field,
+   while the ROM copies these with one ldm/stm. */
+struct Vec3 {
+    int w[3];
+};
 
-struct Obj {
-  char pad[8];
-  unsigned short count;   /* 0x8 */
-  char pad2[0x24 - 0xa];
-  int *f24;               /* 0x24 */
-  int *f28;               /* 0x28 */
+struct Group {
+    char pad[8];
+    unsigned short count; /* 0x8 */
+    char pad2[0x24 - 0xa];
+    int *f24; /* 0x24 */
+    int *f28; /* 0x28 */
 };
 
 struct ObjA8 {
-  char pad[0x2c];
-  int f2c;                /* 0x2c */
+    char pad[0x2c];
+    int f2c; /* 0x2c */
 };
 
-struct C {
-  char pad0[8];
-  int n;                  /* 0x8 */
-  char pad1[0x28 - 0xc];
-  Vec3 **a28;             /* 0x28 */
-  Vec3 **a2c;             /* 0x2c */
-  char pad2[0x38 - 0x30];
-  Obj **a38;              /* 0x38 */
-  char pad3[0x70 - 0x3c];
-  Vec3 f70;               /* 0x70 */
-  Vec3 f7c;               /* 0x7c */
-  char pad4[0xa8 - 0x88];
-  ObjA8 *a8;              /* 0xa8 */
+struct Picker {
+    char pad0[8];
+    int groupCount; /* 0x8 */
+    char pad1[0x28 - 0xc];
+    Vec3 **groupPoints; /* 0x28 */
+    Vec3 **a2c;         /* 0x2c */
+    char pad2[0x38 - 0x30];
+    Group **groups; /* 0x38 */
+    char pad3[0x58 - 0x3c];
+    int hitGroup;   /* 0x58: picked group, -1 = none (see func_ov007_020c5a6c) */
+    int hitIndex;   /* 0x5c: picked point in that group, -1 = none */
+    Vec3 hitOffset; /* 0x60 */
+    char pad4[0x70 - 0x6c];
+    Vec3 pos; /* 0x70 */
+    Vec3 f7c; /* 0x7c */
+    char pad5[0xa8 - 0x88];
+    ObjA8 *a8; /* 0xa8 */
 };
 
-extern "C" void func_ov007_020c5dec(C *c){
-  int i;
-  for (i = 0; i < c->n; i++) {
-    int j;
-    for (j = 0; j < c->a38[i]->count; j++) {
-      ObjA8 *o = c->a8;
-      Obj *obj = c->a38[i];
-      func_ov007_020bfe4c(o, obj->f24[j], obj->f28[j], -o->f2c, &c->a2c[i][j]);
-      {
-        Vec3 *dst = &c->a28[i][j];
-        Vec3 *src = &c->a2c[i][j];
-        *dst = *src;
-      }
+extern "C" void func_ov007_020c5dec(Picker *c) {
+    int i;
+    for (i = 0; i < c->groupCount; i++) {
+        int j;
+        for (j = 0; j < c->groups[i]->count; j++) {
+            ObjA8 *o = c->a8;
+            Group *group = c->groups[i];
+            func_ov007_020bfe4c(o, group->f24[j], group->f28[j], -o->f2c, &c->a2c[i][j]);
+            c->groupPoints[i][j] = c->a2c[i][j];
+        }
     }
-  }
-  c->f70 = c->f7c;
-  {
-    *(int*)((char*)c + 0x5c) = -1;
-    *(int*)((char*)c + 0x58) = *(int*)((char*)c + 0x5c);
-    *(int*)((char*)c + 0x68) = 0;
-    *(int*)((char*)c + 0x64) = *(int*)((char*)c + 0x68);
-    *(int*)((char*)c + 0x60) = *(int*)((char*)c + 0x64);
-  }
+    c->pos = c->f7c;
+    c->hitGroup = c->hitIndex = -1;
+    c->hitOffset.w[0] = c->hitOffset.w[1] = c->hitOffset.w[2] = 0;
 }

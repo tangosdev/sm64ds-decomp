@@ -60,6 +60,8 @@ void func_02071364(Decimal *result, const Decimal *x, const Decimal *y)
             unsigned char *jp = ip + 1;
             for (; jp < ep; jp++) {
                 if (*jp != 0) {
+                    /* kept, as in MSL's timesdec: break + a jp test (0x1b4) or an
+                       inline predicate (0x1bc) both grow it */
                     goto round;
                 }
             }

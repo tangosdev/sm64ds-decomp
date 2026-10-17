@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SM64DS recovered TU treemap</title>
+<style>
+  :root { color-scheme: dark; font-family: "Segoe UI", system-ui, sans-serif; background: #141517; color: #e6e7e9; }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .wrap { max-width: 1640px; margin: auto; padding: 20px; }
+  a { color: #91c5ff; overflow-wrap: anywhere; }
+  nav { display: flex; gap: 20px; margin-bottom: 20px; font-size: 14px; }
+  h1 { font-size: 24px; margin: 0 0 8px; }
+  p { color: #a8abb0; line-height: 1.55; margin: 8px 0 16px; }
+  #stats { display: flex; gap: 12px 28px; flex-wrap: wrap; margin: 22px 0; }
+  #stats b { display: block; font-size: 23px; color: #e6e7e9; }
+  #stats span { color: #a8abb0; font-size: 13px; }
+  .legend, .controls { display: flex; gap: 12px 20px; flex-wrap: wrap; margin: 16px 0; align-items: end; }
+  .legend { font-size: 13px; color: #b9bdc5; }
+  .sw { display: inline-block; width: 12px; height: 12px; margin-right: 7px; border-radius: 2px; }
+  label { display: grid; gap: 6px; font-size: 13px; color: #b9bdc5; }
+  input, select { background: #22252a; color: #e6e7e9; border: 1px solid #50555d; border-radius: 5px; padding: 9px; max-width: 100%; }
+  #search { width: 290px; }
+  #tu { width: 440px; }
+  .map { background: #1d1f22; border: 1px solid #50555d; border-radius: 6px; overflow: hidden; }
+  svg { display: block; width: 100%; }
+  .tile { cursor: pointer; stroke: #141517; stroke-width: .8; }
+  .tile:hover, .tile:focus, .tile.selected { stroke: #fff; stroke-width: 2; outline: none; }
+  .dim { opacity: .12; }
+  .tile-label { pointer-events: none; fill: #fff; font-size: 11px; }
+  #detail { margin-top: 18px; background: #1d1f22; border: 1px solid #50555d; border-radius: 6px; padding: 20px; }
+  h2 { font-size: 20px; margin: 0 0 12px; overflow-wrap: anywhere; }
+  dl { display: grid; grid-template-columns: 150px 1fr; gap: 10px; margin: 14px 0; font-size: 14px; }
+  dt { color: #a8abb0; } dd { margin: 0; overflow-wrap: anywhere; }
+  .table-wrap { overflow: auto; max-height: 430px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #393b3f; }
+  th { position: sticky; top: 0; background: #25282d; }
+  td:first-child { overflow-wrap: anywhere; min-width: 180px; }
+  td:not(:first-child) { white-space: nowrap; }
+  .note { font-size: 12px; }
+  @media (max-width: 600px) { .wrap { padding: 14px; } dl { grid-template-columns: 105px 1fr; } #detail { padding: 14px; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <nav aria-label="Progress views"><a href="index.html">Function treemap</a><strong aria-current="page">TU treemap</strong></nav>
+  <h1>SM64DS recovered translation units</h1>
+  <p>Each colored rectangle is a recovered TU, usually one intended <code>.cpp</code> file, sized by its functions’ compiled code bytes.
+    Select a rectangle to open its source, manifest, and function list. Gray regions retain code without a TU manifest.</p>
+  <div id="stats"></div>
+  <div class="legend">
+    <span><i class="sw" style="background:#3fa75a"></i>Production-enrolled TU</span>
+    <span><i class="sw" style="background:#578fce"></i>Reconstructed TU, not fully enrolled</span>
+    <span><i class="sw" style="background:#4a4d52"></i>Unassigned code</span>
+  </div>
+  <div class="controls">
+    <label>Module<select id="module"><option value="">All modules</option></select></label>
+    <label>Find a TU or source<input id="search" type="search" placeholder="Player, daTree_c, d_a_tree.cpp…"></label>
+    <label>Choose a TU<select id="tu"><option value="">Select a rectangle or choose here</option></select></label>
+  </div>
+  <p id="results" class="note" role="status"></p>
+  <div class="map"><svg id="map" viewBox="0 0 1600 1000" role="group" aria-label="Recovered translation units grouped by module"></svg></div>
+  <section id="detail" aria-label="Selected translation unit"><p>Select a TU to inspect its source and reconstruction evidence.</p></section>
+  <p class="note">Area measures code bytes, not source length or data sections. Colors measure TU enrollment, independently of function matching.
+    Membership comes from <code>config/tu_manifest.d/</code> and complete source ownership. Production enrollment requires every declared function
+    to belong to the existing promoted source in <code>complete</code> delinks ranges. Additional functions compiled from that same source
+    join its TU when ownership is unambiguous. Unassigned is one aggregate per module, not an inferred TU.
+    Candidate boundaries without manifests are not asserted as recovered files.</p>
+  <noscript>This interactive TU treemap requires JavaScript. The <a href="index.html">function treemap</a> also works without JavaScript.</noscript>
+</main>
+<script id="tu-data" type="application/json">__TU_DATA__</script>
+<script>
+"use strict";
+const data = JSON.parse(document.getElementById("tu-data").textContent);
+const groups = data.groups, svg = document.getElementById("map"), ns = "http://www.w3.org/2000/svg";
+const moduleSelect = document.getElementById("module"), tuSelect = document.getElementById("tu"), search = document.getElementById("search");
+const detail = document.getElementById("detail"), fmt = n => n.toLocaleString("en-US");
+const pct = (n, d) => d ? (100 * n / d).toFixed(2) + "%" : "—";
+const stateLabels = {production: "Production-enrolled", reconstructed: "Not fully production-enrolled", unassigned: "No recovered TU membership"};
+const tiles = new Map();
+let selected = null;
+function element(tag, text, parent) { const el = document.createElement(tag); if (text != null) el.textContent = text; if (parent) parent.append(el); return el; }
+function svgElement(tag, attrs, parent) { const el = document.createElementNS(ns, tag); for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v); parent.append(el); return el; }
+const tus = groups.filter(g => g.state !== "unassigned"), totalBytes = groups.reduce((s, g) => s + g.bytes, 0);
+const recoveredBytes = tus.reduce((s, g) => s + g.bytes, 0);
+for (const [value, label] of [[fmt(tus.length), "Recovered TUs"], [fmt(tus.filter(g => g.state === "production").length), "Production-enrolled TUs"],
+  [pct(recoveredBytes, totalBytes), "Code bytes assigned to a TU"], [fmt(totalBytes), "Total code bytes"]]) {
+  const card = element("div", null, document.getElementById("stats")); element("b", value, card); element("span", label, card);
+}
+for (const region of data.regions) {
+  moduleSelect.add(new Option(region.module, region.module));
+  svgElement("rect", {x: region.x, y: region.y, width: region.w, height: region.h, fill: "#1d1f22", stroke: "#888c92"}, svg);
+  if (region.w > 38 && region.h > 25) svgElement("text", {x: region.x + 5, y: region.y + 15, fill: "#e6e7e9", "font-size": 12}, svg).textContent = region.module;
+}
+for (const box of data.boxes) {
+  const g = groups[box.index];
+  const rect = svgElement("rect", {x: box.x, y: box.y, width: box.w, height: box.h, fill: data.colors[g.state],
+    class: "tile", tabindex: 0, role: "button", "aria-label": `${g.id}, ${fmt(g.bytes)} bytes, ${stateLabels[g.state]}`}, svg);
+  svgElement("title", {}, rect).textContent = `${g.id}\n${g.source || "No TU source"}\n${fmt(g.bytes)} bytes · ${g.functions.length} functions\n${stateLabels[g.state]}\nMatched: ${pct(g.matchedBytes, g.bytes)}`;
+  rect.addEventListener("click", () => choose(box.index));
+  rect.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); choose(box.index); } });
+  let label = null;
+  if (box.w > 85 && box.h > 25) {
+    label = svgElement("text", {x: box.x + 5, y: box.y + 16, class: "tile-label"}, svg);
+    const max = Math.floor((box.w - 10) / 7);
+    label.textContent = g.label.length > max ? g.label.slice(0, max - 1) + "…" : g.label;
+  }
+  tiles.set(box.index, {rect, label});
+}
+function matches(g) { const query = search.value.trim().toLowerCase(); return (!moduleSelect.value || moduleSelect.value === g.module) &&
+  (!query || `${g.id} ${g.source || ""} ${g.status}`.toLowerCase().includes(query)); }
+function filter() {
+  tuSelect.replaceChildren(new Option("Select a rectangle or choose here", ""));
+  let count = 0;
+  groups.forEach((g, i) => {
+    const visible = matches(g), tile = tiles.get(i);
+    if (tile) { tile.rect.classList.toggle("dim", !visible); tile.rect.setAttribute("tabindex", visible ? "0" : "-1"); if (tile.label) tile.label.classList.toggle("dim", !visible); }
+    if (visible) { count++; tuSelect.add(new Option(`${g.id} · ${g.label} (${fmt(g.bytes)} B)`, String(i))); }
+  });
+  tuSelect.value = selected !== null && matches(groups[selected]) ? String(selected) : "";
+  document.getElementById("results").textContent = `${count} groups shown. Search dims other groups; the module selector zooms the map.`;
+  const region = data.regions.find(r => r.module === moduleSelect.value);
+  svg.setAttribute("viewBox", region ? `${region.x} ${region.y} ${region.w} ${region.h}` : "0 0 1600 1000");
+}
+function choose(i) {
+  if (selected !== null && tiles.has(selected)) tiles.get(selected).rect.classList.remove("selected");
+  selected = i; const g = groups[i]; if (tiles.has(i)) tiles.get(i).rect.classList.add("selected");
+  tuSelect.value = matches(g) ? String(i) : "";
+  detail.replaceChildren(); element("h2", g.id, detail); const dl = element("dl", null, detail);
+  function row(label, value, url) { element("dt", label, dl); const dd = element("dd", null, dl); if (url) { const a = element("a", value, dd); a.href = url; } else dd.textContent = value; }
+  row("Source", g.source || "No recovered source", g.sourceUrl);
+  row("Manifest", g.manifestUrl ? "Open TU manifest on GitHub" : "No manifest", g.manifestUrl);
+  row("Enrollment", stateLabels[g.state]); row("Manifest status", g.status); row("Boundary confidence", g.confidence);
+  row("Code", `${fmt(g.bytes)} bytes · ${fmt(g.functions.length)} functions`);
+  row("Matched", `${fmt(g.matchedFunctions)} functions · ${fmt(g.matchedBytes)} bytes (${pct(g.matchedBytes, g.bytes)})`);
+  if (g.ownerAssignedFunctions) row("Source ownership", `${fmt(g.ownerAssignedFunctions)} functions mapped by complete delinks ownership, outside the manifest function list`);
+  if (g.missing) row("Outside DB", `${g.missing} declared function addresses absent from the progress universe; not included in area`);
+  if (g.source && !g.sourceUrl) row("Source availability", "Recorded path is absent from this repository snapshot");
+  const wrap = element("div", null, detail); wrap.className = "table-wrap"; const table = element("table", null, wrap);
+  const head = element("tr", null, element("thead", null, table));
+  for (const label of ["Function", "Address", "Bytes", "Match", "TU evidence"]) element("th", label, head).scope = "col";
+  const body = element("tbody", null, table);
+  const membershipLabels = {manifest: "Manifest", source: "Compiled source", unassigned: "Unassigned"};
+  for (const f of g.functions) { const tr = element("tr", null, body); for (const value of [f.name, "0x" + f.addr.toString(16).padStart(8, "0"), fmt(f.size), f.matched ? "Matched" : "Unmatched", membershipLabels[f.membership]]) element("td", value, tr); }
+}
+moduleSelect.addEventListener("change", filter); search.addEventListener("input", filter);
+tuSelect.addEventListener("change", () => { if (tuSelect.value !== "") choose(Number(tuSelect.value)); });
+filter();
+</script>
+</body>
+</html>

@@ -1,14 +1,14 @@
 {
   "id": "ov006/dMgTrmpln2Mario_c+dMgTrmpln3DMario_c",
   "module": "ov006",
-  "source": "src/actors/dMgTrmpln2Mario_c.cpp",
-  "promoted_source": "src/actors/dMgTrmpln2Mario_c.cpp",
+  "source": "src/minigames/d_mg_trmpln2_mario.cpp",
+  "promoted_source": "src/minigames/d_mg_trmpln2_mario.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "WHOLE UNIT. build/tu_map.json ov006 calls 0x020c8dd4..0x020cd744 one contiguous linker run of 88 functions; every function already had a complete delinks entry and a byte-matching one-function source, so there is no hole.",
-    "LOWER EDGE: the unit at 0x020c8a30..0x020c8dd4 (sprite pool, ends with the 4-byte record constructor at 0x020c8dd0). UPPER EDGE: 0x020cd744 is where the next run starts; the last function of this unit is func_ov006_020cd72c (size 0x18).",
-    "WHAT IT IS: dMgTrmpln2Mario_c (D1 0x020ca604, constructor 0x020ca78c, filed under the misnamed _ZN6Player29TryExitCharacterDoorWithIntroEv) and dMgTrmpln3DMario_c (D1 0x020ccfc8, constructor 0x020cd12c) with their helpers. ROM RTTI: _ZTI17dMgTrmpln2Mario_c 0x0213b250, _ZTI18dMgTrmpln3DMario_c 0x0213b244, adapter classes dMgTrmpObjAdapter_c / dMgTrmpRingObjAdapter_c alongside. The 'Player' class label in tu_map comes only from that misnamed constructor symbol."
+    "LOWER EDGE: the unit at 0x020c8a30..0x020c8dd4 (sprite pool, ends with the 4-byte record constructor at 0x020c8dd0). UPPER EDGE: 0x020cd744 is where the next run starts; the last function of this unit is TrmpObjAdapter_Construct (size 0x18).",
+    "WHAT IT IS: dMgTrmpln2Mario_c (D1 0x020ca604, constructor 0x020ca78c, Trmp2Mario_Construct, formerly misfiled as _ZN6Player29TryExitCharacterDoorWithIntroEv) and dMgTrmpln3DMario_c (D1 0x020ccfc8, constructor 0x020cd12c) with their helpers. ROM RTTI: _ZTI17dMgTrmpln2Mario_c 0x0213b250, _ZTI18dMgTrmpln3DMario_c 0x0213b244, adapter classes dMgTrmpObjAdapter_c / dMgTrmpRingObjAdapter_c alongside. The 'Player' class label in tu_map comes only from that misnamed constructor symbol."
   ],
   "sections": [
     {
@@ -19,616 +19,616 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov006_020c8dd4",
+      "symbol": "Trmp2Mario_GetVelocity",
       "address": "0x020c8dd4",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020c8dd4.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov006_020c8ddc",
+      "symbol": "Trmp2Mario_Reset",
       "address": "0x020c8ddc",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_020c8ddc.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_020c8e80",
+      "symbol": "Trmp2Mario_GetPrevPos",
       "address": "0x020c8e80",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020c8e80.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020c8e88",
+      "symbol": "Trmp2Mario_GetPos",
       "address": "0x020c8e88",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020c8e88.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020c8e90",
+      "symbol": "Trmp2Mario_Render",
       "address": "0x020c8e90",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c8e90.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020c8ecc",
+      "symbol": "Trmp2Mario_UpdateMatrix",
       "address": "0x020c8ecc",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c8ecc.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020c8f20",
+      "symbol": "Trmp2Mario_Update",
       "address": "0x020c8f20",
       "size": "0x00000104",
       "legacy_source": "src/func_ov006_020c8f20.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020c9024",
+      "symbol": "Trmp2Mario_ApplyGravity",
       "address": "0x020c9024",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c9024.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020c905c",
+      "symbol": "Trmp2Mario_StateKnockedOut",
       "address": "0x020c905c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c905c.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020c9098",
+      "symbol": "Trmp2Mario_EnterByKind",
       "address": "0x020c9098",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020c9098.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020c91ac",
+      "symbol": "Trmp2Mario_StateBounce",
       "address": "0x020c91ac",
       "size": "0x00000334",
       "legacy_source": "src/func_ov006_020c91ac.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020c94e0",
+      "symbol": "Trmp2Mario_BounceOffLineA",
       "address": "0x020c94e0",
       "size": "0x000002dc",
       "legacy_source": "src/func_ov006_020c94e0.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020c97bc",
+      "symbol": "Trmp2Mario_StateWallBounce",
       "address": "0x020c97bc",
       "size": "0x000002e4",
       "legacy_source": "src/func_ov006_020c97bc.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020c9aa0",
+      "symbol": "Trmp2Mario_BounceOffLineB",
       "address": "0x020c9aa0",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov006_020c9aa0.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_020c9c8c",
+      "symbol": "Trmp2Mario_EnterBounce",
       "address": "0x020c9c8c",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_020c9c8c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020c9d7c",
+      "symbol": "Trmp2Mario_StateRespawnWait",
       "address": "0x020c9d7c",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020c9d7c.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov006_020c9e7c",
+      "symbol": "Trmp2Mario_EnterRespawnWait",
       "address": "0x020c9e7c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c9e7c.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020c9efc",
+      "symbol": "Trmp2Mario_StateMissed",
       "address": "0x020c9efc",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020c9efc.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov006_020c9fe4",
+      "symbol": "Trmp2Mario_EnterMissed",
       "address": "0x020c9fe4",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020c9fe4.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_020ca070",
+      "symbol": "Trmp2Mario_StateFall",
       "address": "0x020ca070",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov006_020ca070.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020ca2ec",
+      "symbol": "Trmp2Mario_EnterFall",
       "address": "0x020ca2ec",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020ca2ec.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov006_020ca310",
+      "symbol": "Trmp2Mario_StateAppearWait",
       "address": "0x020ca310",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020ca310.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov006_020ca374",
+      "symbol": "Trmp2Mario_EnterAppearWait",
       "address": "0x020ca374",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020ca374.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov006_020ca39c",
+      "symbol": "Trmp2Mario_StateHidden",
       "address": "0x020ca39c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020ca39c.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov006_020ca3a8",
+      "symbol": "Trmp2Mario_EnterHidden",
       "address": "0x020ca3a8",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020ca3a8.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov006_020ca430",
+      "symbol": "Trmp2Mario_Load",
       "address": "0x020ca430",
       "size": "0x000001d4",
       "legacy_source": "src/func_ov006_020ca430.c",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov006_020ca604",
+      "symbol": "Trmp2Mario_Destruct",
       "address": "0x020ca604",
       "size": "0x00000188",
       "legacy_source": "src/func_ov006_020ca604.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN6Player29TryExitCharacterDoorWithIntroEv",
+      "symbol": "Trmp2Mario_Construct",
       "address": "0x020ca78c",
       "size": "0x0000002c",
       "legacy_source": "src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov006_020ca7b8",
+      "symbol": "Trmp2Mario_Hide",
       "address": "0x020ca7b8",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020ca7b8.c",
       "ordinal": 28
     },
     {
-      "symbol": "func_ov006_020ca840",
+      "symbol": "Trmp2Mario_EnterAll",
       "address": "0x020ca840",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020ca840.c",
       "ordinal": 29
     },
     {
-      "symbol": "func_ov006_020ca8e0",
+      "symbol": "Trmp2Mario_MoveToStart",
       "address": "0x020ca8e0",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020ca8e0.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "func_ov006_020caa08",
+      "symbol": "Trmp2Mario_PlaceAtStart",
       "address": "0x020caa08",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_020caa08.c",
       "ordinal": 31
     },
     {
-      "symbol": "func_ov006_020caadc",
+      "symbol": "Trmp2Mario_DrawAll",
       "address": "0x020caadc",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_020caadc.c",
       "ordinal": 32
     },
     {
-      "symbol": "func_ov006_020cac30",
+      "symbol": "Trmp2Mario_UpdateAll",
       "address": "0x020cac30",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020cac30.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "func_ov006_020cac9c",
+      "symbol": "Trmp2Mario_ResetAll",
       "address": "0x020cac9c",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020cac9c.c",
       "ordinal": 34
     },
     {
-      "symbol": "func_ov006_020cad3c",
+      "symbol": "Trmp2Mario_SetTuning",
       "address": "0x020cad3c",
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_020cad3c.c",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov006_020cae9c",
+      "symbol": "Trmp2Mario_InitPool",
       "address": "0x020cae9c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020cae9c.c",
       "ordinal": 36
     },
     {
-      "symbol": "func_ov006_020caf44",
+      "symbol": "Trmp3DMario_GetVelocity",
       "address": "0x020caf44",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020caf44.c",
       "ordinal": 37
     },
     {
-      "symbol": "func_ov006_020caf4c",
+      "symbol": "Trmp3DMario_IsMissed",
       "address": "0x020caf4c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020caf4c.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_ov006_020cafa4",
+      "symbol": "Trmp3DMario_GetPrevPos",
       "address": "0x020cafa4",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020cafa4.c",
       "ordinal": 39
     },
     {
-      "symbol": "func_ov006_020cafac",
+      "symbol": "Trmp3DMario_GetPos",
       "address": "0x020cafac",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020cafac.c",
       "ordinal": 40
     },
     {
-      "symbol": "func_ov006_020cafb4",
+      "symbol": "Trmp3DMario_Render",
       "address": "0x020cafb4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020cafb4.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "func_ov006_020cafdc",
+      "symbol": "Trmp3DMario_UpdateMatrix",
       "address": "0x020cafdc",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020cafdc.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "func_ov006_020cb030",
+      "symbol": "Trmp3DMario_Update",
       "address": "0x020cb030",
       "size": "0x00000104",
       "legacy_source": "src/func_ov006_020cb030.cpp",
       "ordinal": 43
     },
     {
-      "symbol": "func_ov006_020cb134",
+      "symbol": "Trmp3DMario_ApplyGravity",
       "address": "0x020cb134",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020cb134.cpp",
       "ordinal": 44
     },
     {
-      "symbol": "func_ov006_020cb16c",
+      "symbol": "Trmp3DMario_StateKnockedOut",
       "address": "0x020cb16c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020cb16c.c",
       "ordinal": 45
     },
     {
-      "symbol": "func_ov006_020cb1a8",
+      "symbol": "Trmp3DMario_EnterByKind",
       "address": "0x020cb1a8",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_020cb1a8.cpp",
       "ordinal": 46
     },
     {
-      "symbol": "func_ov006_020cb2b4",
+      "symbol": "Trmp3DMario_StateGoal",
       "address": "0x020cb2b4",
       "size": "0x00000274",
       "legacy_source": "src/func_ov006_020cb2b4.c",
       "ordinal": 47
     },
     {
-      "symbol": "func_ov006_020cb528",
+      "symbol": "Trmp3DMario_EnterGoal",
       "address": "0x020cb528",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020cb528.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "func_ov006_020cb5c4",
+      "symbol": "Trmp3DMario_StateLand",
       "address": "0x020cb5c4",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020cb5c4.c",
       "ordinal": 49
     },
     {
-      "symbol": "func_ov006_020cb690",
+      "symbol": "Trmp3DMario_EnterLand",
       "address": "0x020cb690",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020cb690.cpp",
       "ordinal": 50
     },
     {
-      "symbol": "func_ov006_020cb72c",
+      "symbol": "Trmp3DMario_StateFallToLedge",
       "address": "0x020cb72c",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020cb72c.c",
       "ordinal": 51
     },
     {
-      "symbol": "func_ov006_020cb814",
+      "symbol": "Trmp3DMario_EnterFallToLedge",
       "address": "0x020cb814",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cb814.c",
       "ordinal": 52
     },
     {
-      "symbol": "func_ov006_020cb838",
+      "symbol": "Trmp3DMario_StateHardBounce",
       "address": "0x020cb838",
       "size": "0x000002b4",
       "legacy_source": "src/func_ov006_020cb838.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "func_ov006_020cbaec",
+      "symbol": "Trmp3DMario_BounceOffLineA",
       "address": "0x020cbaec",
       "size": "0x00000290",
       "legacy_source": "src/func_ov006_020cbaec.cpp",
       "ordinal": 54
     },
     {
-      "symbol": "func_ov006_020cbd7c",
+      "symbol": "Trmp3DMario_StateBounce",
       "address": "0x020cbd7c",
       "size": "0x0000025c",
       "legacy_source": "src/func_ov006_020cbd7c.cpp",
       "ordinal": 55
     },
     {
-      "symbol": "func_ov006_020cbfd8",
+      "symbol": "Trmp3DMario_BounceOffLineB",
       "address": "0x020cbfd8",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov006_020cbfd8.cpp",
       "ordinal": 56
     },
     {
-      "symbol": "func_ov006_020cc198",
+      "symbol": "Trmp3DMario_JumpOff",
       "address": "0x020cc198",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020cc198.cpp",
       "ordinal": 57
     },
     {
-      "symbol": "func_ov006_020cc2ac",
+      "symbol": "Trmp3DMario_StateMissed",
       "address": "0x020cc2ac",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_020cc2ac.c",
       "ordinal": 58
     },
     {
-      "symbol": "func_ov006_020cc37c",
+      "symbol": "Trmp3DMario_EnterMissed",
       "address": "0x020cc37c",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020cc37c.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "func_ov006_020cc408",
+      "symbol": "Trmp3DMario_StateFall",
       "address": "0x020cc408",
       "size": "0x00000210",
       "legacy_source": "src/func_ov006_020cc408.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "func_ov006_020cc618",
+      "symbol": "Trmp3DMario_EnterFall",
       "address": "0x020cc618",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cc618.c",
       "ordinal": 61
     },
     {
-      "symbol": "func_ov006_020cc63c",
+      "symbol": "Trmp3DMario_StateWalkBack",
       "address": "0x020cc63c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020cc63c.c",
       "ordinal": 62
     },
     {
-      "symbol": "func_ov006_020cc698",
+      "symbol": "Trmp3DMario_EnterWalkBack",
       "address": "0x020cc698",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020cc698.cpp",
       "ordinal": 63
     },
     {
-      "symbol": "func_ov006_020cc724",
+      "symbol": "Trmp3DMario_StateOnLedge",
       "address": "0x020cc724",
       "size": "0x000001a4",
       "legacy_source": "src/func_ov006_020cc724.c",
       "ordinal": 64
     },
     {
-      "symbol": "func_ov006_020cc8c8",
+      "symbol": "Trmp3DMario_EnterOnLedge",
       "address": "0x020cc8c8",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_020cc8c8.c",
       "ordinal": 65
     },
     {
-      "symbol": "func_ov006_020cc9b8",
+      "symbol": "Trmp3DMario_StateWalkIn",
       "address": "0x020cc9b8",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020cc9b8.c",
       "ordinal": 66
     },
     {
-      "symbol": "func_ov006_020cc9fc",
+      "symbol": "Trmp3DMario_EnterWalkIn",
       "address": "0x020cc9fc",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020cc9fc.cpp",
       "ordinal": 67
     },
     {
-      "symbol": "func_ov006_020ccae0",
+      "symbol": "Trmp3DMario_StateOnGround",
       "address": "0x020ccae0",
       "size": "0x000001ac",
       "legacy_source": "src/func_ov006_020ccae0.c",
       "ordinal": 68
     },
     {
-      "symbol": "func_ov006_020ccc8c",
+      "symbol": "Trmp3DMario_EnterOnGround",
       "address": "0x020ccc8c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_020ccc8c.cpp",
       "ordinal": 69
     },
     {
-      "symbol": "func_ov006_020ccd04",
+      "symbol": "Trmp3DMario_IsOffstage",
       "address": "0x020ccd04",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020ccd04.c",
       "ordinal": 70
     },
     {
-      "symbol": "func_ov006_020ccd64",
+      "symbol": "Trmp3DMario_StateOffstage",
       "address": "0x020ccd64",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_020ccd64.c",
       "ordinal": 71
     },
     {
-      "symbol": "func_ov006_020ccd78",
+      "symbol": "Trmp3DMario_EnterOffstage",
       "address": "0x020ccd78",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020ccd78.cpp",
       "ordinal": 72
     },
     {
-      "symbol": "func_ov006_020cce0c",
+      "symbol": "Trmp3DMario_Load",
       "address": "0x020cce0c",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_020cce0c.c",
       "ordinal": 73
     },
     {
-      "symbol": "func_ov006_020ccfc8",
+      "symbol": "Trmp3DMario_Destruct",
       "address": "0x020ccfc8",
       "size": "0x00000164",
       "legacy_source": "src/func_ov006_020ccfc8.cpp",
       "ordinal": 74
     },
     {
-      "symbol": "func_ov006_020cd12c",
+      "symbol": "Trmp3DMario_Construct",
       "address": "0x020cd12c",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020cd12c.c",
       "ordinal": 75
     },
     {
-      "symbol": "func_ov006_020cd158",
+      "symbol": "Trmp3DMario_CountFinished",
       "address": "0x020cd158",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020cd158.c",
       "ordinal": 76
     },
     {
-      "symbol": "func_ov006_020cd1e0",
+      "symbol": "Trmp3DMario_StartAll",
       "address": "0x020cd1e0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020cd1e0.c",
       "ordinal": 77
     },
     {
-      "symbol": "func_ov006_020cd270",
+      "symbol": "Trmp3DMario_DrawAll",
       "address": "0x020cd270",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov006_020cd270.c",
       "ordinal": 78
     },
     {
-      "symbol": "func_ov006_020cd39c",
+      "symbol": "Trmp3DMario_UpdateAll",
       "address": "0x020cd39c",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020cd39c.c",
       "ordinal": 79
     },
     {
-      "symbol": "func_ov006_020cd424",
+      "symbol": "Trmp3DMario_ResetAll",
       "address": "0x020cd424",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov006_020cd424.c",
       "ordinal": 80
     },
     {
-      "symbol": "func_ov006_020cd510",
+      "symbol": "Trmp3DMario_SetTuning",
       "address": "0x020cd510",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov006_020cd510.c",
       "ordinal": 81
     },
     {
-      "symbol": "func_ov006_020cd62c",
+      "symbol": "Trmp3DMario_SetSpawnHeight",
       "address": "0x020cd62c",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020cd62c.c",
       "ordinal": 82
     },
     {
-      "symbol": "func_ov006_020cd658",
+      "symbol": "Trmp3DMario_InitPool",
       "address": "0x020cd658",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020cd658.c",
       "ordinal": 83
     },
     {
-      "symbol": "func_ov006_020cd6d8",
+      "symbol": "TrmpRingObjAdapter_Clear",
       "address": "0x020cd6d8",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020cd6d8.c",
       "ordinal": 84
     },
     {
-      "symbol": "func_ov006_020cd6f4",
+      "symbol": "TrmpRingObjAdapter_Construct",
       "address": "0x020cd6f4",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020cd6f4.c",
       "ordinal": 85
     },
     {
-      "symbol": "func_ov006_020cd720",
+      "symbol": "TrmpObjAdapter_Clear",
       "address": "0x020cd720",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020cd720.c",
       "ordinal": 86
     },
     {
-      "symbol": "func_ov006_020cd72c",
+      "symbol": "TrmpObjAdapter_Construct",
       "address": "0x020cd72c",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_020cd72c.c",
@@ -638,7 +638,7 @@
   "data": [],
   "bss": [],
   "notes": [
-    "Text-only fold of 88 one-function shards (func_ov006_020c8dd4 .. func_ov006_020cd72c). Class forms stay address-named free functions: neither dMgTrmpln2Mario_c nor dMgTrmpln3DMario_c has a header and no key function is a real method here, so no vtable/RTTI is emitted by this TU."
+    "Text-only fold of 88 one-function shards (Trmp2Mario_GetVelocity .. TrmpObjAdapter_Construct). Class forms stay address-named free functions: neither dMgTrmpln2Mario_c nor dMgTrmpln3DMario_c has a header and no key function is a real method here, so no vtable/RTTI is emitted by this TU."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

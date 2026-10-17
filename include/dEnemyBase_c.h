@@ -23,7 +23,7 @@ struct outAngle_;
 struct ww_;
 /* The actor heap and its deallocator, for the inline operator delete below.
    Spelt exactly as include/decl_common.h spells it -- see the note in dActor_c.h. */
-extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
 extern "C" void *data_020a0eac;
 
 struct dEnemyBase_c : dActor_c {
@@ -106,7 +106,7 @@ struct dEnemyBase_c : dActor_c {
        dEnemyBase_c gained it, and following that instruction would have broken the D0
        route for 51 subclasses. See the long comment in dActor_c.h for why an inline
        member is what the ROM shows. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
 
     /* --- non-virtual --- */
     int AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_);
@@ -151,7 +151,7 @@ struct dEnemyBase_c : dActor_c {
            (enemy, Vector3_16 &, Player &) -- Vec3_HorzAngle(player + 0x5c,
            &this->pos), then Player::IncMegaKillCount(player) -- while ov004's
            only unambiguous callers are inside ov004 itself. The name moved to
-           ov002 0x020ada40; ov004's function is `func_ov004_020ada40` again.
+           ov002 0x020ada40; ov004's function is `Mg_SetSessionBest` again.
 
        (2) ARITY. Every `bl` to this address in the whole image was disassembled:
            19 of them, and the split is itself the proof of (1). The four inside

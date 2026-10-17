@@ -28,7 +28,7 @@ extern "C" {
 void _ZN5ModelC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
-void *_ZN4Heap13SetupRootHeapEv(void);
+void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 extern Matrix4x3 data_0209b3ec;     /* camera matrix Model::Render composes */
 }
 
@@ -72,7 +72,7 @@ int main(void)
 {
     SetUnhandledExceptionFilter(fault);
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(_ZN5mHeap6Heap_t13SetupRootHeapEv() != NULL);
 
     /* identity camera: Render multiplies the model matrix against it */
     memset(&data_0209b3ec, 0, sizeof data_0209b3ec);

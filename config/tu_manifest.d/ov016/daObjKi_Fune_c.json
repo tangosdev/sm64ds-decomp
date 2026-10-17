@@ -10,7 +10,7 @@
     "class label(s): daObjKi_Fune_c",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "the run below ends at 0x0211260c with src/d_a_moray.c, a different class; the D1 at 0x0211260c is this class's first function.",
-    "fold-lane-c-0929: folded daObjKi_Fune_c_classInit_KI_FUNE_UP (0x021129a0) + daObjKi_Fune_c_classInit_KI_FUNE (0x021129d0) into this TU. Both allocate 812 = 0x32c, the RTTI-proven size this class asserts, construct dBgActor_c and install _ZTV14daObjKi_Fune_c -- daObjKi_Fune_c declares no constructor of its own, so `return new daObjKi_Fune_c()` reproduces each byte-for-byte. No pragma in this TU, so emission is reverse of source order; both factories, being the two highest ROM addresses in the run, are written at the top of the file, KI_FUNE (0x021129d0) then KI_FUNE_UP (0x021129a0), ahead of InitResources. The next class, src/actors/daObjKi_Hasira_c.cpp, still begins exactly at 0x02112a00, untouched."
+    "fold-lane-c-0929: folded daObjKi_Fune_c_classInit_KI_FUNE_UP (0x021129a0) + daObjKi_Fune_c_classInit_KI_FUNE (0x021129d0) into this TU. Both allocate 812 = 0x32c, the RTTI-proven size this class asserts, construct dBgActor_c and install _ZTV14daObjKi_Fune_c -- daObjKi_Fune_c declares no constructor of its own, so `return new daObjKi_Fune_c()` reproduces each byte-for-byte. No pragma in this TU, so emission is reverse of source order; both factories, being the two highest ROM addresses in the run, are written at the top of the file, KI_FUNE (0x021129d0) then KI_FUNE_UP (0x021129a0), ahead of InitResources. The next class, src/game/actors/d_a_obj_ki_hasira.cpp, still begins exactly at 0x02112a00, untouched."
   ],
   "sections": [
     {
@@ -102,28 +102,28 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov016_02114dcc",
+      "symbol": "gKiFuneDownACollisionFile",
       "address": "0x02114dcc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_ki_fune.cpp"
     },
     {
-      "symbol": "data_ov016_02114dd4",
+      "symbol": "gKiFuneUpModelFile",
       "address": "0x02114dd4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_ki_fune.cpp"
     },
     {
-      "symbol": "data_ov016_02114ddc",
+      "symbol": "gKiFuneUpCollisionFile",
       "address": "0x02114ddc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_ki_fune.cpp"
     },
     {
-      "symbol": "data_ov016_02114de4",
+      "symbol": "gKiFuneDownAModelFile",
       "address": "0x02114de4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -417,7 +417,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "fold-lane-c-0929: each folded classInit factory's `new daObjKi_Fune_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct src/actors/daObjHatenaBlock_c.cpp and daObjSimpleLift_c.cpp already document). No configured ROM symbol and no inbound relocation after the licensed function set is retained."
+      "reason": "fold-lane-c-0929: each folded classInit factory's `new daObjKi_Fune_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct src/game/actors/d_a_obj_hatena_block.cpp and d_a_obj_simple_lift.cpp already document). No configured ROM symbol and no inbound relocation after the licensed function set is retained."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -555,24 +555,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@436",
+      "from": "@438",
       "to": "@820",
       "evidence": "mwcc numbers this registration node @422 per TU and another module already defines @422"
     },
     {
-      "from": "@437",
+      "from": "@439",
       "to": "@605",
       "evidence": "batch-5 atdup: @423 collides cross-module (temps are fleet-global); renumber to unused same-length @605"
     },
     {
-      "from": "@438",
+      "from": "@440",
       "to": "@604",
       "evidence": "batch-5 atdup: @424 collides cross-module (temps are fleet-global); renumber to unused same-length @604"
     },
     {
-      "from": "@439",
+      "from": "@441",
       "to": "@425",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @439 now; licensed under the existing pin @425"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @441 now; licensed under the existing pin @425"
     }
   ],
   "symbol_binding_rewrites": [
@@ -699,7 +699,7 @@
       "source": "0x02113940",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov016_02114dd4",
+      "symbol": "gKiFuneUpModelFile",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02114dd4"
@@ -729,7 +729,7 @@
       "source": "0x02113950",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov016_02114de4",
+      "symbol": "gKiFuneDownAModelFile",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02114de4"
@@ -749,7 +749,7 @@
       "source": "0x0211395c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov016_02114ddc",
+      "symbol": "gKiFuneUpCollisionFile",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02114ddc"
@@ -779,7 +779,7 @@
       "source": "0x0211396c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov016_02114dcc",
+      "symbol": "gKiFuneDownACollisionFile",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02114dcc"

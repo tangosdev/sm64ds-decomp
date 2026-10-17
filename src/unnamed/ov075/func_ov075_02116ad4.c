@@ -1,3 +1,8 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum func_ov075_02116ad4_AssetId {
+    ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN = 0x025e
+};
+
 #include "types.h"
 extern int func_0203d9b4(void);
 extern void func_0200f13c(void);
@@ -29,7 +34,7 @@ int func_ov075_02116ad4(void *arg) {
     if (*(int *)((char *)arg + 8) != 0 || func_0203d9b4() != 0) {
         func_0200f13c();
         if (func_0203d9b4() != 0) {
-            LoadCompressedFileAt(0x25e, _ZN3G2S12GetBG2ScrPtrEv());
+            LoadCompressedFileAt(ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN, _ZN3G2S12GetBG2ScrPtrEv());
         }
         DecompressLZ16(data_0208a0e4[func_0200f0bc()], 0x6600000);
     }

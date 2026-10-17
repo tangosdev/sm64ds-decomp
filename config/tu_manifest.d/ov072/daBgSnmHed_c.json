@@ -1,8 +1,8 @@
 {
   "id": "ov072/daBgSnmHed_c",
   "module": "ov072",
-  "source": "src/actors/daBgSnmHed_c.cpp",
-  "promoted_source": "src/actors/daBgSnmHed_c.cpp",
+  "source": "src/game/actors/d_a_bg_snm_hed.cpp",
+  "promoted_source": "src/game/actors/d_a_bg_snm_hed.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

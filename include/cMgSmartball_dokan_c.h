@@ -9,7 +9,7 @@
  * says so, and no code in the family touches an offset >= 0x34 through a
  * dokan pointer.
  *
- * CONSTRUCTED BY func_ov006_02110bc0, left a free function for the same
+ * CONSTRUCTED BY cMgSmartball_dokan_c_Construct, left a free function for the same
  * reason the base's is (this tree has migrated zero constructors). It calls
  * the base constructor, stores this vtable, and sets the base's mRadius to
  * 0x20000 -- the per-child constant every sibling's constructor also writes,

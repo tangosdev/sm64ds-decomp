@@ -38,6 +38,7 @@
 
 #include "common.h"
 #include "daEyBm_c.h"
+#include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
 #include "Player.h"
@@ -63,20 +64,21 @@ struct EyBmVec3 {
 
 extern EyBmVec3 data_ov071_021230b8;
 
-/* Typed reconstruction of the actor-table descriptor at ov071:0x02122dc4. */
-struct DaEyBmSpawnInfo {
-    daEyBm_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
+/* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
+ * Yoshi is eating the actor, then has it in his mouth. Actor ID 0xbf is
+ * PLAYER. These int-returning predicates are what make the ROM materialize
+ * 0/1 before testing it. */
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
 
-typedef char DaEyBmSpawnInfo_size_must_be_0x1c[
-    sizeof(DaEyBmSpawnInfo) == 0x1c ? 1 : -1];
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
 
 /* The leaf operator new forwards fBase_c::operator new; the implicit constructor
  * emits the measured dActor_c C2, vptr store, and three member C1s. */
@@ -86,7 +88,8 @@ extern "C" daEyBm_c *daEyBm_c_classInit()
     return new daEyBm_c();
 }
 
-extern "C" DaEyBmSpawnInfo g_profile_EYEKUN_BEAM = {
+/* The actor-table descriptor, at ov071:0x02122dc4. */
+extern "C" SpawnInfo<daEyBm_c> g_profile_EYEKUN_BEAM = {
     daEyBm_c_classInit,
     0x0108,
     0x007a,
@@ -147,14 +150,10 @@ int daEyBm_c::Behavior()
 {
     DaEyBmVector3Words offset;
     DaEyBmVector3Words velocity;
-    int flags = mFlags;
-    int destroying = (int)((flags & 0x40000) != 0);
-    int beingEaten;
-    if (destroying)
+    if (IsInYoshiMouth(this))
         return 1;
 
-    beingEaten = (int)((flags & 0x20000) != 0);
-    if (!beingEaten) {
+    if (!IsBeingEaten(this)) {
         offset = *(DaEyBmVector3Words *)&data_ov071_021230b8;
         mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&offset);
 
@@ -221,7 +220,7 @@ void daEyBm_c::UpdateShadow()
     mMatrix.m[11] = mPosZ >> 3;
 
     dBgCh_Gnd ground;
-    ground.SetObjAndPos(*(Vector3 *)&mPosX, this);
+    ground.SetObjAndPos(mPos, this);
     Fix12i depth;
     if (ground.DetectClsn())
         depth = (mPosY - ground.clsnY) + 0x1e000;
@@ -247,8 +246,7 @@ void daEyBm_c::HurtPlayer()
     dActor_c *found = dActor_c::FindWithID(ownerID);
     if (!found)
         return;
-    int isPlayer = (int)(found->actorID == 0xbf);
-    if (!isPlayer)
+    if (!IsPlayerActor(found))
         return;
     if (mdCcAcPos_c.hitFlags & 0x8000)
         return;

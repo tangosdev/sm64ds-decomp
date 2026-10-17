@@ -1,8 +1,8 @@
 {
   "id": "arm9/dCapEnemy_c",
   "module": "arm9",
-  "source": "src/actors/dCapEnemy_c_arm9.cpp",
-  "promoted_source": "src/actors/dCapEnemy_c_arm9.cpp",
+  "source": "src/runtime/actor/d_cap_enemy_arm9.cpp",
+  "promoted_source": "src/runtime/actor/d_cap_enemy_arm9.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -109,7 +109,7 @@
   "bss": [],
   "compiler_only_output": [],
   "notes": [
-    "The ov002 half stays src/actors/dCapEnemy_c.cpp. This file is the arm9 half because that path is already enrolled in ov002 and rombuild refuses one complete path in two modules.",
+    "The ov002 half stays src/runtime/actor/d_cap_enemy.cpp. This file is the arm9 half because that path is already enrolled in ov002 and rombuild refuses one complete path in two modules.",
     "D1 and C2 keep per-function shards: the destructor is the key function, and only a member ~dCapEnemy_c() emits _ZTV11dCapEnemy_c for romdata_check. A member definition in this multi-function object would also emit global D0/D2/C1, homed to the ov002 TU, which plan_many cannot deadstrip."
   ],
   "verification": {

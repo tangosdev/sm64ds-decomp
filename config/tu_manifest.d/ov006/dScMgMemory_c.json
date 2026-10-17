@@ -15,7 +15,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x020f3834..0x020f5564, 47 functions; the 46 scene methods are immediately followed by the unique MG_MEMORY classInit and end exactly where dScMgMemory2_c begins",
-    "RTTI/data ownership cluster: the unique MgMemoryMatch_SpawnInfo profile, PMF source pairs, scene RTTI/type string, resources/tables and vtable occupy 0x0213cfc0..0x0213d288; the previous symbol, data_ov006_0213cfa0, is dScMgLuigi_c's own resource path '/MG/d_2d_mg_bg_luigi1_ncg.bin' (0x0213cfa0..0x0213cfc0 including padding to alignment), and the next symbol after this cluster begins dScMgMemory2_c data. CORRECTED 2026-09-06: this field previously said the cluster starts at 0x0213cfa0 and that 'the previous byte ends dScMgLuigi_c data'. Both were wrong by 0x20 and the claim swallowed dScMgLuigi_c's string. Cartridge evidence, overlay_0006.bin at base 0x020bfec0: 0x0213cfa0 reads 2F474D2F 64325F64 5F676D5F 6C5F6762 69676975 636E5F31 69622E67 0000006E, i.e. the 29-byte NUL-terminated ASCII path; the first word of this TU's own data is at 0x0213cfc0, 020F5164, and 0x0213cfc0/0x0213cfc8/0x0213cfd0 are {0x020f5164, 0}, {0x020f41b0, 0}, {0x020f51b0, 0} -- PMF record shape. Prose only: no byte, address or symbol claim of this TU changes.",
+    "RTTI/data ownership cluster: the unique MgMemoryMatch_SpawnInfo profile, PMF source pairs, scene RTTI/type string, resources/tables and vtable occupy 0x0213cfc0..0x0213d288; the previous symbol, sLuigiBg1NcgPath, is dScMgLuigi_c's own resource path '/MG/d_2d_mg_bg_luigi1_ncg.bin' (0x0213cfa0..0x0213cfc0 including padding to alignment), and the next symbol after this cluster begins dScMgMemory2_c data. CORRECTED 2026-09-06: this field previously said the cluster starts at 0x0213cfa0 and that 'the previous byte ends dScMgLuigi_c data'. Both were wrong by 0x20 and the claim swallowed dScMgLuigi_c's string. Cartridge evidence, overlay_0006.bin at base 0x020bfec0: 0x0213cfa0 reads 2F474D2F 64325F64 5F676D5F 6C5F6762 69676975 636E5F31 69622E67 0000006E, i.e. the 29-byte NUL-terminated ASCII path; the first word of this TU's own data is at 0x0213cfc0, 020F5164, and 0x0213cfc0/0x0213cfc8/0x0213cfd0 are {0x020f5164, 0}, {0x020f41b0, 0}, {0x020f51b0, 0} -- PMF record shape. Prose only: no byte, address or symbol claim of this TU changes.",
     "static-initializer ownership: __sinit_ov006_021311c8 and .p__sinit_ov006_021311c8 build this TU's five PMF tables and sprite-pointer state; the next initializer at 0x021314e4 owns dScMgMemory2_c state",
     "BSS ownership: this minigame's state occupies 0x021422a4..0x021423a8; the next BSS symbol begins dScMgMemory2_c state"
   ],
@@ -323,21 +323,21 @@
       "ordinal": 39
     },
     {
-      "symbol": "_ZN13dScMgMemory_c15OnGroundPoundedEv",
+      "symbol": "_ZN13dScMgMemory_c10OnDealDoneEv",
       "address": "0x020f523c",
       "size": "0x00000014",
       "legacy_source": "src/_ZN13dScMgMemory_c15OnGroundPoundedEv.cpp",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN13dScMgMemory_c13OnTurnIntoEggEi",
+      "symbol": "_ZN13dScMgMemory_c11CanEndStateEi",
       "address": "0x020f5250",
       "size": "0x00000074",
       "legacy_source": "src/_ZN13dScMgMemory_c13OnTurnIntoEggEi.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN13dScMgMemory_c13OnYoshiTryEatEi",
+      "symbol": "_ZN13dScMgMemory_c10StartRoundEi",
       "address": "0x020f52c4",
       "size": "0x00000060",
       "legacy_source": "src/_ZN13dScMgMemory_c13OnYoshiTryEatEi.cpp",
@@ -375,42 +375,42 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_021422a4",
+      "symbol": "sMemoryPlayerTable",
       "address": "0x021422a4",
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "three player states (no enrolled consumer names it yet), plain-copied from the ROM constants"
     },
     {
-      "symbol": "data_ov006_021422bc",
+      "symbol": "sMemoryResultTable",
       "address": "0x021422bc",
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "four result states, plain-copied from the ROM constants"
     },
     {
-      "symbol": "data_ov006_021422dc",
+      "symbol": "sMemoryStateTable",
       "address": "0x021422dc",
       "size": "0x28",
       "binding": "STB_GLOBAL",
       "evidence": "five main states, plain-copied from the ROM constants"
     },
     {
-      "symbol": "data_ov006_02142304",
+      "symbol": "sMemoryRoundTable",
       "address": "0x02142304",
       "size": "0x30",
       "binding": "STB_GLOBAL",
       "evidence": "six round states, plain-copied from the ROM constants"
     },
     {
-      "symbol": "data_ov006_02142334",
+      "symbol": "sMemoryCardTable",
       "address": "0x02142334",
       "size": "0x38",
       "binding": "STB_GLOBAL",
       "evidence": "seven card states, plain-copied from the ROM constants"
     },
     {
-      "symbol": "data_ov006_0214236c",
+      "symbol": "sMemoryCardSprites",
       "address": "0x0214236c",
       "size": "0x3c",
       "binding": "STB_GLOBAL",
@@ -420,7 +420,7 @@
   "notes": [
     "2026-09-03 real-member reconstruction: all 38 address-only scene functions are genuine dScMgMemory_c members with descriptive names. Five PMF tables built by __sinit_ov006_021311c8 independently fix their groupings and order: main StateSetup/StatePlay/StateJudge/StateResult/StateExit; round RoundStart/RoundDealEasy/RoundDealNormal/RoundDealHard/RoundWaitDeal/RoundReveal; result ResultWait/ResultReward/ResultTurnCards/ResultFinish; card CardMove/CardIdle/CardSelect/CardFlipUp/CardWait/CardFlipDown/CardFlyAway; player PlayerDrop/PlayerMove/PlayerWait.",
     "COINED NAMES, the one thing not provable: the 38 handler/helper ROM symbols were address-only, so no recovered spelling exists to confirm or contradict the descriptive names in functions[]. The ROM proves their dScMgMemory_c ownership and the PMF tables prove state-group identities; exact original source spellings are disclosed as unknown here and in symbols/actor_renames.tsv.",
-    "ROM-PROVEN LAYOUT: the unique MG_MEMORY factory allocates 0x5340 bytes. Matched access patterns prove twelve 0x18-byte cards, three 0x14-byte player markers, a 0x10-byte cursor, signed ready/deal counters, and the scene-state tail. The shared 0x270 object at 0x4f38 has its measured func_ov006_020c1c64 destructor, so C++ owns reverse-order scene teardown.",
+    "ROM-PROVEN LAYOUT: the unique MG_MEMORY factory allocates 0x5340 bytes. Matched access patterns prove twelve 0x18-byte cards, three 0x14-byte player markers, a 0x10-byte cursor, signed ready/deal counters, and the scene-state tail. The shared 0x270 object at 0x4f38 has its measured Dealer_Destruct destructor, so C++ owns reverse-order scene teardown.",
     "MEASURED CODEWARRIOR EMISSION BOUNDARY: the default deferred code generator makes the last optimization state win across an apparent pragma push/pop. Global defer_codegen off makes definitions emit eagerly in ROM-ascending source order, allowing DrawCards' opt_propagation off and CardFlyAway's opt_lifetimes off to be scoped with push/pop. The resulting single object emits all 47 text sections byte-exact and in cartridge order.",
     "MEASURED ITERATOR-SPELLING BOUNDARY: direct typed mCards/mPlayers expressions were tested in the remaining 17 offset-view methods. They changed strength reduction, base-address formation, register allocation, or section size despite identical semantics. The public class layout remains typed; those localized implementation views preserve demonstrated mwccarm 1.2 code generation rather than substituting prettier non-matching code.",
     "MEASURED CW 1.2 FACTORY WALL: dScMgMemory_c_classInit is allocation plus a fully folded scene construction sequence. Semantic placement construction is unavailable in this compiler setup, so the literal classInit bridge preserves allocation size, base construction, vptr transitions, Particle::SysTracker construction and shared-state construction explicitly and byte-exact.",
@@ -818,7 +818,7 @@
       "source": "0x02131464",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02133810",
+      "symbol": "sMgCardSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02133810"
@@ -828,7 +828,7 @@
       "source": "0x02131468",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0214236c",
+      "symbol": "sMemoryCardSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0214236c"
@@ -838,7 +838,7 @@
       "source": "0x0213146c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213cfd0",
+      "symbol": "pmf_dScMgMemory_c_StateSetup",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213cfd0"
@@ -848,7 +848,7 @@
       "source": "0x02131470",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021422dc",
+      "symbol": "sMemoryStateTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021422dc"
@@ -858,7 +858,7 @@
       "source": "0x02131474",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213cfc0",
+      "symbol": "pmf_dScMgMemory_c_StatePlay",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213cfc0"
@@ -868,7 +868,7 @@
       "source": "0x02131478",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d088",
+      "symbol": "pmf_dScMgMemory_c_StateJudge",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d088"
@@ -878,7 +878,7 @@
       "source": "0x0213147c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d080",
+      "symbol": "pmf_dScMgMemory_c_StateResult",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d080"
@@ -888,7 +888,7 @@
       "source": "0x02131480",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d028",
+      "symbol": "pmf_dScMgMemory_c_ResultFinish",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d028"
@@ -898,7 +898,7 @@
       "source": "0x02131484",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d078",
+      "symbol": "pmf_dScMgMemory_c_StateExit",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d078"
@@ -908,7 +908,7 @@
       "source": "0x02131488",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d068",
+      "symbol": "pmf_dScMgMemory_c_RoundStart",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d068"
@@ -918,7 +918,7 @@
       "source": "0x0213148c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142304",
+      "symbol": "sMemoryRoundTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142304"
@@ -928,7 +928,7 @@
       "source": "0x02131490",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d038",
+      "symbol": "pmf_dScMgMemory_c_ResultWait",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d038"
@@ -938,7 +938,7 @@
       "source": "0x02131494",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d060",
+      "symbol": "pmf_dScMgMemory_c_RoundDealEasy",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d060"
@@ -948,7 +948,7 @@
       "source": "0x02131498",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d058",
+      "symbol": "pmf_dScMgMemory_c_RoundDealNormal",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d058"
@@ -958,7 +958,7 @@
       "source": "0x0213149c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d050",
+      "symbol": "pmf_dScMgMemory_c_RoundDealHard",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d050"
@@ -968,7 +968,7 @@
       "source": "0x021314a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d000",
+      "symbol": "pmf_dScMgMemory_c_RoundWaitDeal",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d000"
@@ -978,7 +978,7 @@
       "source": "0x021314a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213cfe0",
+      "symbol": "pmf_dScMgMemory_c_RoundReveal",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213cfe0"
@@ -988,7 +988,7 @@
       "source": "0x021314a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021422bc",
+      "symbol": "sMemoryResultTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021422bc"
@@ -998,7 +998,7 @@
       "source": "0x021314ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d020",
+      "symbol": "pmf_dScMgMemory_c_ResultReward",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d020"
@@ -1008,7 +1008,7 @@
       "source": "0x021314b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d030",
+      "symbol": "pmf_dScMgMemory_c_ResultTurnCards",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d030"
@@ -1018,7 +1018,7 @@
       "source": "0x021314b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d018",
+      "symbol": "pmf_dScMgMemory_c_CardMove",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d018"
@@ -1028,7 +1028,7 @@
       "source": "0x021314b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213cfe8",
+      "symbol": "pmf_dScMgMemory_c_CardSelect",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213cfe8"
@@ -1038,7 +1038,7 @@
       "source": "0x021314bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142334",
+      "symbol": "sMemoryCardTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142334"
@@ -1048,7 +1048,7 @@
       "source": "0x021314c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213cff0",
+      "symbol": "pmf_dScMgMemory_c_CardIdle",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213cff0"
@@ -1058,7 +1058,7 @@
       "source": "0x021314c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213cfc8",
+      "symbol": "pmf_dScMgMemory_c_CardFlipUp",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213cfc8"
@@ -1068,7 +1068,7 @@
       "source": "0x021314c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d010",
+      "symbol": "pmf_dScMgMemory_c_CardWait",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d010"
@@ -1078,7 +1078,7 @@
       "source": "0x021314cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d008",
+      "symbol": "pmf_dScMgMemory_c_CardFlipDown",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d008"
@@ -1088,7 +1088,7 @@
       "source": "0x021314d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d070",
+      "symbol": "pmf_dScMgMemory_c_CardFlyAway",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d070"
@@ -1098,7 +1098,7 @@
       "source": "0x021314d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213cff8",
+      "symbol": "pmf_dScMgMemory_c_PlayerDrop",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213cff8"
@@ -1108,7 +1108,7 @@
       "source": "0x021314d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d048",
+      "symbol": "pmf_dScMgMemory_c_PlayerMove",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d048"
@@ -1118,7 +1118,7 @@
       "source": "0x021314dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0213d040",
+      "symbol": "pmf_dScMgMemory_c_PlayerWait",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213d040"
@@ -1128,7 +1128,7 @@
       "source": "0x021314e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021422a4",
+      "symbol": "sMemoryPlayerTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021422a4"

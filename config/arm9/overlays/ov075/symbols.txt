@@ -149,10 +149,10 @@ data_ov075_0211b544 kind:data(any) addr:0x0211b544
 data_ov075_0211b554 kind:data(any) addr:0x0211b554
 data_ov075_0211b594 kind:data(any) addr:0x0211b594
 data_ov075_0211b5d4 kind:data(any) addr:0x0211b5d4
-__sinit_dEntObj_c.cpp kind:function(arm,size=0x520) addr:0x0211b5e0
+__sinit_d_ent_obj.cpp kind:function(arm,size=0x520) addr:0x0211b5e0
 __sinit_ov075_0211bb00 kind:function(arm,size=0xa1c) addr:0x0211bb00
 __sinit_ov075_0211c51c kind:function(arm,size=0x88) addr:0x0211c51c
-.p__sinit_dEntObj_c.cpp kind:data(word) addr:0x0211c5a4
+.p__sinit_d_ent_obj.cpp kind:data(word) addr:0x0211c5a4
 .p__sinit_ov075_0211bb00 kind:data(word) addr:0x0211c5a8
 .p__sinit_ov075_0211c51c kind:data(word) addr:0x0211c5ac
 @1032 kind:data(any) addr:0x0211c5c0

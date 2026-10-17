@@ -7,8 +7,8 @@
   `tu_map` calls `0x020e3854..0x020e6bf4`. The sourceless hole at
   `func_ov006_020e5450` (a banked near-miss draft, not enrolled) splits the
   run, so it licenses as two contiguous sides: the lower TU
-  `src/actors/dScMgCurling2_c.cpp` (already promoted) and the new
-  `src/actors/dScMgCurling2_c_upper.cpp`. The zero-gap `d_s_mg_curling2`
+  `src/minigames/d_s_mg_curling2.cpp` (already promoted) and the new
+  `src/game/actors/dScMgCurling2_c_upper.cpp`. The zero-gap `d_s_mg_curling2`
   classInit at `0x020e6bf4` is the next unit and stays separate.
 - **Fold:** the 20 scattered shards (16 `func_ov006_*` helpers + 4 already-
   mangled vtable slots) became one TU under `#pragma defer_codegen off`,

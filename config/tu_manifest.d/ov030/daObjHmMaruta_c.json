@@ -1,8 +1,8 @@
 {
   "id": "ov030/daObjHmMaruta_c",
   "module": "ov030",
-  "source": "src/actors/daObjHmMaruta_c.cpp",
-  "promoted_source": "src/actors/daObjHmMaruta_c.cpp",
+  "source": "src/game/actors/d_a_obj_hm_maruta.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_hm_maruta.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x211155c..0x211164c, 5 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjHmMaruta_c",
     "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "fold-lane-c-0929: loose src/d_a_obj_hm_maruta.c (daObjHmMaruta_c_classInit, 0x0211164c..0x02111688) sits immediately after this TU's InitResources with no gap before the next class's TU (src/actors/daMky_c.cpp at 0x02111688); folded in as `return new daObjHmMaruta_c();`. Neither daObjHmMaruta_c nor its base daObjMaruta_c declares a constructor, so the compiler-synthesized default-constructor chain reproduces the loose file's hand-written fBase_c::operator new(836) + dBgActor_c::dBgActor_c() + the inlined daObjMaruta_c vtable store (_ZTV13daObjMaruta_c, daObjMaruta_c's own implicit ctor level has no out-of-line symbol so mwccarm inlines its vtable store at the call site) + this class's own vtable store (_ZTV15daObjHmMaruta_c) sequence byte-for-byte. This TU has no #pragma defer_codegen, so mwccarm emits one .text section per function in reverse source order; the factory is the highest ROM address, so it is written first in source, ahead of InitResources."
+    "fold-lane-c-0929: loose src/d_a_obj_hm_maruta.c (daObjHmMaruta_c_classInit, 0x0211164c..0x02111688) sits immediately after this TU's InitResources with no gap before the next class's TU (src/game/actors/d_a_mky.cpp at 0x02111688); folded in as `return new daObjHmMaruta_c();`. Neither daObjHmMaruta_c nor its base daObjMaruta_c declares a constructor, so the compiler-synthesized default-constructor chain reproduces the loose file's hand-written fBase_c::operator new(836) + dBgActor_c::dBgActor_c() + the inlined daObjMaruta_c vtable store (_ZTV13daObjMaruta_c, daObjMaruta_c's own implicit ctor level has no out-of-line symbol so mwccarm inlines its vtable store at the call site) + this class's own vtable store (_ZTV15daObjHmMaruta_c) sequence byte-for-byte. This TU has no #pragma defer_codegen, so mwccarm emits one .text section per function in reverse source order; the factory is the highest ROM address, so it is written first in source, ahead of InitResources."
   ],
   "sections": [
     {
@@ -81,18 +81,18 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov030_02115ca8",
+      "symbol": "gHmMarutaModelFile",
       "address": "0x02115ca8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjHmMaruta_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_hm_maruta.cpp"
     },
     {
-      "symbol": "data_ov030_02115cb0",
+      "symbol": "gHmMarutaCollisionFile",
       "address": "0x02115cb0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "SharedFilePtr constructed by __sinit_daObjHmMaruta_c.cpp"
+      "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_hm_maruta.cpp"
     },
     {
       "symbol": "@613",
@@ -115,7 +115,7 @@
     "The three ov080 helpers are declared with the parameter types their definitions in src/game/actors/d_a_obj_maruta.cpp use (daObjMaruta_c *, ResourceDescriptor * / int *), inside a long_calls on/off bracket: the pooled cross-overlay tail call binds at the declaration.",
     "SCOPE: daObjHmMaruta_c_classInit (0x0211164c, src/d_a_obj_hm_maruta.c) sits just past this run's right edge and tools/tu_map.py cuts it as its own candidate, so it stays a one-function C source. The run is bounded below by daObjHmBskt_c's promoted TU (ends 0x0211155c); no other class is interleaved.",
     "LICENSING: 13 deadstrip-data rows, every one citing a configured ROM home -- this class's _ZTV/_ZTI/_ZTS (ov030) plus the daObjMaruta_c (ov022), dBgActor_c (ov002), dActor_c/dBase_c/fBase_c (arm9) chain. Possible only after the coined RollingLogTtm spelling was renamed to the cartridge RTTI name.",
-    "Folded __sinit_ov030_021148b8 into this TU. mwcc emits __sinit_daObjHmMaruta_c.cpp for the model handle (file 1562) and collision handle (file 1563) that data_ov030_02115a04 indexes. Registration nodes @363->@613 and @364->@166. The handwritten src/unnamed/ov030/__sinit_ov030_021148b8.c is retired.",
+    "Folded __sinit_ov030_021148b8 into this TU. mwcc emits __sinit_d_a_obj_hm_maruta.cpp for the model handle (file 1562) and collision handle (file 1563) that data_ov030_02115a04 indexes. Registration nodes @363->@613 and @364->@166. The handwritten src/unnamed/ov030/__sinit_ov030_021148b8.c is retired.",
     "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical."
   ],
   "verification": {
@@ -432,7 +432,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjHmMaruta_c.cpp",
+      "symbol": "__sinit_d_a_obj_hm_maruta.cpp",
       "address": "0x021148b8",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -441,11 +441,11 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjHmMaruta_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_hm_maruta.cpp",
       "address": "0x02114dd4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "ctor-table word pointing at __sinit_daObjHmMaruta_c.cpp"
+      "evidence": "ctor-table word pointing at __sinit_d_a_obj_hm_maruta.cpp"
     }
   ],
   "undefined_symbol_aliases": [
@@ -499,13 +499,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjHmMaruta_c.cpp",
+      "symbol": "__sinit_d_a_obj_hm_maruta.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global at this address"
     },
     {
-      "symbol": ".p__sinit_daObjHmMaruta_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_hm_maruta.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally"
@@ -569,7 +569,7 @@
       "source": "0x02114904",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov030_02115ca8",
+      "symbol": "gHmMarutaModelFile",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02115ca8"
@@ -599,7 +599,7 @@
       "source": "0x02114914",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov030_02115cb0",
+      "symbol": "gHmMarutaCollisionFile",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02115cb0"
@@ -629,7 +629,7 @@
       "source": "0x02114dd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjHmMaruta_c.cpp",
+      "symbol": "__sinit_d_a_obj_hm_maruta.cpp",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x021148b8"

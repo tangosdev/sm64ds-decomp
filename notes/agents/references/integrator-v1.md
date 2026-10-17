@@ -100,7 +100,7 @@ an earlier green head is not evidence for the new merge commit.
 
     python tools/tubuild.py verify <ov>/<Class>        # once per class
     python tools/rombuild.py -j 16                     # 106/106 exact + retail NDS
-    python tools/romdata_check.py --files src/actors/<Class>.cpp   # per class
+    python tools/romdata_check.py --files src/game/<dir>/<file>.cpp   # per class
     python tools/tiers_ratchet.py --check              # PASS
     python tools/cpp_tu_state.py --check-note
     python tools/source_coverage.py --check --base origin/main

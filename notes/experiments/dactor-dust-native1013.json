@@ -1,0 +1,699 @@
+{
+  "task": "dactor-dust-native1013",
+  "base": "3e2468d893f1a768db8f6da911b9b7746db75c64",
+  "producer": "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+  "author": {
+    "agent": "/root/ibl_interface_independent",
+    "thread": "01a13751-2d56-7901-a14d-9543eb0dbf2e"
+  },
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3169",
+  "status": "Current composed byte/object and required static gates passed. The accepted initializer prerequisite resolves the formerly failing declaration prerequisite; independent exact-final Source acceptance remains separate.",
+  "scope": "Restore the two native landing-dust methods and real ground-query header/member access into the enrolled91-function Actor TU. No header, ABI, manifest, policy, symbol or enrollment change.",
+  "source": "src/actors/dActor_c.cpp",
+  "manifest": "config/tu_manifest.d/arm9/Actor.json",
+  "targets": [
+    {
+      "symbol": "_ZN8dActor_c13LandingDustAtER7Vector3b",
+      "module": "arm9",
+      "address": "0x0200fac4",
+      "size": 136
+    },
+    {
+      "symbol": "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+      "module": "arm9",
+      "address": "0x0200fb84",
+      "size": 136
+    }
+  ],
+  "ownership_boundary": "Only the two reserved dust bodies are changed. The two held Sound methods at0x0200f874..0x0200f97c and every other89 body are unchanged; full object/body/relocation proof checks the complete TU without claiming its other ranges.",
+  "source_benefit": "Genuine dActor_c methods take Vector3 references and use component fields. The existing dBgCh_Gnd header replaces the local0x50-byte shadow; automatic query lifetime and the named clsnY field replace raw height offsets. The HugeLandingDustAt symbol annotation directly precedes its definition so both genuine members are collected.",
+  "lineage": {
+    "historical_native_shards": {
+      "commit": "9f8ffc9ddebb30dd9d95f2ff78b557f0be1c4ee7",
+      "pr": 1907,
+      "git_author": "Andrew",
+      "date": "2026-08-28T10:48:55-05:00",
+      "main_ancestor_verified": true,
+      "scope": "Already supplied the same native method forms, actual ground header and clsnY member in separate shards. Current work restores these forms into the enrolled promoted Actor TU, rather than claiming their first invention."
+    },
+    "actor_production_promotion": "1a3e4cbd7be21df3dd748a35b0d56df257246a8a",
+    "tail_reduction": "527c0903619170b779ea7cfd8dc48155f6889fbb",
+    "current_private_author": {
+      "agent": "/root/ibl_interface_independent",
+      "thread": "01a13751-2d56-7901-a14d-9543eb0dbf2e"
+    }
+  },
+  "historical_findings": [
+    {
+      "disposition": "fixed",
+      "id": "onturnintoegg-src-tu-redeclaration",
+      "kind": "correctness",
+      "location": "src_tu/actors/Actor.cpp:1140, src_tu/actors/Koopa+KoopaSmall.cpp:347, src_tu/actors/Lakitu.cpp:88, src_tu/actors/Spiny.cpp:88",
+      "reason": "Re-checked at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried on the verifier's word. All four definitions read void <Class>::OnTurnIntoEgg(Player &player) at exactly the cited lines, and the base declaration in include/dActor_c.h:144 reads virtual void OnTurnIntoEgg(Player &player); slot 19. A tree-wide grep for 'int OnTurnIntoEgg' returns exactly one hit, include/dScMgMemory_c.h:76 virtual int OnTurnIntoEgg(int mode);, which is the separate minigame (int) hierarchy the handoff explicitly keeps as int on the strength of 14 observed ov004 calls that consume the result -- a different overload, not a survivor of this repair. The objective test is compilation, since a redeclaration cannot compile: premerge_check ran the src-tu-refs gate on the merge tree and it passes on both sides, and check_src_tu_compiles is reported by the verifier at 170/170. Disposition unchanged: fixed.",
+      "summary": "Four byte-verified promoted translation units still defined OnTurnIntoEgg(Player&) as int after the header contract moved to void, so the whole-tree compile rejected them as redeclarations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "handoff-matching-headers-claim-false",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md:58-69",
+      "reason": "Re-read the section in the tree at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. The phrase survives only inside an explicit retraction: the text names the earlier claim as wrong, says a whole-tree compile falsified it, and gives the measured readings (exit 1 at 156/160 on candidate 848da2bb8, exit 0 at 159/159 on task base 26f54f8fc), then names the four src_tu definitions that were still int. No unretracted assertion of matching headers exists anywhere in the file. Disposition unchanged: fixed.",
+      "summary": "An earlier revision claimed the overrides returned void with matching headers; a whole-tree compile falsified it."
+    },
+    {
+      "disposition": "deferred",
+      "id": "da1up-reconstruction-debt-disclosed",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2505",
+      "kind": "reconstruction",
+      "location": "src/actors/da1up_c.cpp, include/da1up_c.h",
+      "owner": "fleet-0907-prod-oneup-0908",
+      "reason": "Re-read both files at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c and the disclosure is intact and specific, not a blanket disclaimer. include/da1up_c.h opens by separating what the cartridge proves from what the project invented: the type-name string 7da1up_c at 0x02108370 and _ZTI7da1up_c at 0x0210837c are ROM-attested, ONEUPKINOKO and SCALEUP_KINOKO are ROM ASCII in arm9's actor debug-name table, while the member names and signatures, the classInit and g_profile_ affixes and EVERY field name are marked as reconstructed, with mStateTimer carrying an inline coined-name marker and the tail fields and base extent named as inferences. src/actors/da1up_c.cpp restates the same split, and the handoff's closing paragraph enumerates the remaining debt (eight native definitions emitting nine method symbols, 27 free-function bodies, the opaque PMF holder, the local ModelCache view, raw offsets, destructor/vtable/RTTI and initializer ownership unchanged) and refuses to count the live timer and Model call as method conversions. Deferral is legitimate for kind reconstruction, the review completion is partial as that requires, and the debt has a named owner and its own repository issue. Disposition unchanged: deferred.",
+      "summary": "da1up_c retains substantial unrecovered reconstruction: coined field names, an opaque PMF holder, a local ModelCache view, raw offsets and other ABI parameter views."
+    },
+    {
+      "disposition": "fixed",
+      "id": "dead-references-koopa-plus-truncation",
+      "kind": "correctness",
+      "location": "config/dead-reference-baseline.json, notes/agents/handoffs/issue-2411-humanizer-2.md:68",
+      "reason": "Every element reproduced independently on the MERGE TREE at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0. (1) python tools/check_dead_references.py exits 0 on the merge tree and 0 on the base control, exit codes captured directly to files and never through a pipe. (2) The branch-level diff of config/dead-reference-baseline.json adds exactly ONE entry -- file notes/agents/handoffs/issue-2411-humanizer-2.md, ref src_tu/actors/Koopa -- and removes none. (3) The tool was not weakened: the branch-level git diff over tools/ is entirely EMPTY, so check_dead_references.py is byte-identical to main's. (4) The regex really cannot express the path: PATH_RE's character class is [A-Za-z0-9_.-] with no plus sign, and git ls-files shows exactly 8 tracked files carrying a plus, three of them under src_tu/. (5) The precedent is real: the baseline already carries (notes/actor-leaf-provenance.md, src_tu/actors/EnemySpawner), the identical truncation of src_tu/actors/EnemySpawner+EnemySwitchTag.cpp. RESIDUAL IMPRECISION, disclosed rather than raised as a separate finding: the handoff and the verifier's own reason call that precedent one entry above the new pair; the file sorts by (file, ref) and the precedent is at index 1 while the new entry is at index 12, so it is eleven entries above, not one. The substantive claim (a direct precedent of the identical shape exists in this same file) is true and was verified; only the positional adjective is wrong, it moves no number and changes no verdict, and a provenance finding cannot be deferred under source_review, so raising it would demand a commit this verify-mode stage is forbidden to make. Recorded here so a later writer can correct the word. Disposition unchanged: fixed.",
+      "summary": "check_dead_references PATH_RE cannot express + in a filename, so the handoff's citation of src_tu/actors/Koopa+KoopaSmall.cpp truncated to a path not in the tree and the gate went red."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-rows-stale-from-branch-edits",
+      "kind": "correctness",
+      "location": "notes/data/tu-promotion-queue.tsv, rows Crate / Coin / daGmch_c (plus da1up_c)",
+      "reason": "Measured on both trees rather than inferred. On the merge tree at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0, python tools/queue_audit.py --check exits 0 and prints 'queue agrees with the tree' -- 0 rows disagreeing. On the base control at bdcb1df7d3d071ab46d79e6538fec176efa78780 the same command exits 1 with 'total_lines: 2 row(s) disagree with the tree'. The --check form was used deliberately: the bare invocation exits 0 while printing the same disagreement line, and it was run here on the red base to confirm that trap still bites (bare exit 0 on a red base). The two base rows were named by running --write on the base control and reading the diff: ChiefChilly 1992 to 1993 and Player 26798 to 26799, then restored with git checkout -- and git status --porcelain confirmed empty. So the merge tree is green exactly where main alone is red, which is the fixed outcome, confirmed and not assumed. Disposition unchanged: fixed.",
+      "summary": "The branch's own edits to src/ files left queue total_lines cells stale, and an earlier revision wrote them off as pre-existing on main."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-audit-residue-miscited-as-preexisting",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, the queue-rows bullet",
+      "reason": "Re-read the bullet at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. It now retracts the earlier claim in terms, says plainly that it was wrong for three of the five, gives the per-row table (Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120) with each row delta matched to its source-file line delta, and keeps only ChiefChilly and Player as pre-existing -- which the base control independently confirms are exactly the two rows main is red on. ONE RESIDUAL IMPRECISION, settled here as clearing without a new finding. The bullet attributes the ChiefChilly/Player staleness to main's 9b8cb8add editing include/ChiefChilly.h and include/Player.h. That is the wrong half of the commit: queue_audit derives total_lines by summing lines over the delinks-resolved source paths of the row's range, which are src/ paths only, and no include/ path appears in config/arm9/delinks.txt, so a header edit cannot move the cell. The same commit 9b8cb8add also edited src/_ZN11ChiefChillyD1Ev.cpp and src/_ZN6PlayerD1Ev.cpp, and those are what moved the numbers: measured with git show 9b8cb8add^:<path> piped to wc -l against git show 9b8cb8add:<path>, 22 to 23 and 35 to 36, which are exactly the +1 deltas the two rows need. The commit attribution and the direction of responsibility are therefore both correct and independently verified; 9b8cb8add is an ancestor of both bdcb1df7d and the branch's merge-base c52f63ca5, so it is genuinely main's. Only the named mechanism is wrong. It moves no number, changes no gate verdict and does not affect this branch's attribution, and under source_review a provenance finding may not be deferred, so raising it would require a corrective commit that mode verify forbids -- converting a wrong noun into a hard publish refusal. It clears as-is and is recorded here so the next writer touching this bullet fixes the sentence. Disposition unchanged: fixed.",
+      "summary": "The handoff attributed all five stale queue rows to main; three were the branch's own."
+    }
+  ],
+  "historical_findings_scope": "Six issue-2411-humanizer-2 dictionaries retain their original task scope and dispositions, including OneUp-only debt; they are historical lineage, not new dActor defects or new dust authorship.",
+  "current_audit_findings": [
+    {
+      "id": "DUST-AUDIT-PROV-001",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/actors/dActor_c.cpp:56",
+      "summary": "The old reconciliation paragraph describes the removed private ground-query shadow and asserts an unnecessary type restriction.",
+      "reason": "Private candidate explicitly distinguishes remaining ordinal12/18 RaycastGroundPod bridges from real-header automatic objects in ordinal14/16. Independent full raw/prepared identity proves the genuine ground class works. Final tracked candidate still requires acceptance."
+    },
+    {
+      "id": "DUST-AUDIT-PARTIAL-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/actors/dActor_c.cpp:1338 and remaining TU",
+      "summary": "Dust members improve two functions; the surrounding Actor reconstruction retains raw ground workspaces, scalar particle ABI calls and other free/raw helpers.",
+      "reason": "RaycastGroundPod and explicit C1/D1 calls remain for ordinal12/18; Particle Fix12 scalar adapter stays under documented by-value ABI constraint. Separate Actor constructor/destructor shards own lifecycle and RTTI/vtables. No full-class completion claim.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3169",
+      "owner": "dActor dust source producer and root reconstruction coordinator"
+    }
+  ],
+  "remaining_boundaries": [
+    "Ordinal12/18 RaycastGroundPod workspaces and explicit C1/D1 calls remain unchanged.",
+    "The existing Particle scalar fixed-point ABI declaration remains; this task neither tests nor claims a new universal compiler limitation.",
+    "Other Actor raw/free helper bodies, separate constructor/destructor shards and their vtable/RTTI ownership remain unchanged.",
+    "The existing cross-named LandingDust/HugeLandingDust wrapper behavior is preserved; no rename or behavior interpretation is introduced."
+  ],
+  "bowser_context": "Current accepted3e Bowser Source retains three native dust calls using real Vector3 locals (one LandingDustAt and two HugeLandingDustAt). Earlier004 private ordinary-output caller checks remain historical; fresh current global ROM proof covers the composed source. No Bowser edit or new whole-Bowser ownership claim.",
+  "private_scout": {
+    "base": "004286a4182211efc61873cb0cbdf4bc8311b096",
+    "candidate_sha256": "b58f590458916b3a6752509d39aa0b6f84d00b64cab2d28a4dc608c558180170",
+    "path": "C:/tmp/sm64ds-dust-current-probe1013/build/dust-current-probe1013/HANDOFF.json",
+    "private_proof_not_production_gate": true,
+    "scope": "Historical004 private scout; fresh current production proof is recorded above."
+  },
+  "verification": {
+    "whole_actor_object": {
+      "base": "3e2468d893f1a768db8f6da911b9b7746db75c64",
+      "checkpoint": "c98bf741747ca7f7415250f4fb3abc7653515f0c",
+      "source": "src/actors/dActor_c.cpp",
+      "manifest": "config/tu_manifest.d/arm9/Actor.json",
+      "compiler": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "strict_functions": 91,
+      "blind": 0,
+      "diffs": [],
+      "targets": [
+        {
+          "name": "_ZN8dActor_c13LandingDustAtER7Vector3b",
+          "module": "arm9",
+          "addr": "0x0200fac4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+          "module": "arm9",
+          "addr": "0x0200fb84",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "raw_sha256": "76b805b8458a6aeb58a48b31a47d1cff1b833ff271cea0afa9a353bcc9130b81",
+      "prepared_sha256": "19edbeb864623c1a1f22eedf2237a6c8131e0674276fc35ba615a78abc16a4ed",
+      "whole_raw_identical": true,
+      "whole_ordinary_prepared_identical": true,
+      "raw_edges": 191,
+      "prepared_edges": 191,
+      "metadata_records": 0,
+      "owned_data": 0,
+      "owned_bss": 0,
+      "owned_init": 0,
+      "nontext": [
+        {
+          "container": "raw",
+          "allocated_nontext": []
+        },
+        {
+          "container": "prepared",
+          "allocated_nontext": []
+        }
+      ],
+      "ordinary_path": [
+        "rombuild._retarget",
+        "rombuild._isolate"
+      ],
+      "private_tool_override": false,
+      "compiler_only_policies": {
+        "deadstrip": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "expect": {
+          "_ZN7Vector3D1Ev": "1eff2fe1"
+        },
+        "data": [],
+        "homes": {
+          "_ZN7Vector3D1Ev": [
+            "arm9",
+            33583808
+          ]
+        }
+      },
+      "other89_body_tokens_unchanged": true,
+      "body_comparison_qualification": "Comment/whitespace-insensitive ordinal blocks; only redundant dBgCh_Gnd forward declaration removed from ordinal18 before comparison. No other89 body code changes.",
+      "held_sound_ordinals_unchanged": [
+        5,
+        6
+      ],
+      "native_definitions": [
+        {
+          "symbol": "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+          "signature": "void (<this>, Vector3 &, bool)",
+          "is_member": true,
+          "line": 1387
+        },
+        {
+          "symbol": "_ZN8dActor_c13LandingDustAtER7Vector3b",
+          "signature": "void (<this>, Vector3 &, bool)",
+          "is_member": true,
+          "line": 1417
+        }
+      ],
+      "header_config_tools_port_unchanged": true,
+      "historical_raw_and_prepared_identity": true,
+      "historical_base": "004286a4182211efc61873cb0cbdf4bc8311b096",
+      "historical_checkpoint": "d1ad30cb20cd9597b08e4442d4a90425f16d5c1c",
+      "source_unchanged_since_bae": true,
+      "graphs_sha256": "e3acf05c74acb2cb7edadb33035e9c189c902f9b4715d5668220c7142fa9c156"
+    },
+    "rombuild": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "log": "build/dactor-dust-native1013/current/rombuild.log",
+      "log_sha256": "f6c2307733acfee858c1ac0e814f9a26b99a5147160ce803012f16d643446f74",
+      "tested_head": "c98bf741747ca7f7415250f4fb3abc7653515f0c",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "source_function_counts_observed": [
+        11334
+      ],
+      "function_count_scope": "Final production section; earlier baseline control count is not production coverage.",
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "baseline_dsd_symbol_errors": 9,
+      "final_production_summary": [
+        "[6/6] analyze module and source fidelity",
+        "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+        "  reproducing: 11,334",
+        "  mismatching: 0",
+        "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+        "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "  of 3,049,600 module bytes: 2,225,480 (73.0%) source-built code, 13,020 source-owned data, 798,472 data bytes no complete source entry reaches; 48,968 compiler-emitted data bytes verified overall",
+        "  retail-gap contribution: 811,100 module bytes (12,628 function-code, 798,472 data/non-function)",
+        "ROM-build analysis: PASS",
+        "ROM data from source: 969 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,282 object records)"
+      ],
+      "official_report": "build/dactor-dust-native1013/current/rombuild-report.json",
+      "official_report_sha256": "85dc3f734a0a7efe2d9378650b75be3b104c0ce5bbcc05d545251a2eb325a645",
+      "baseline_control_scope": "Official current build reused the existing content-bound stock baseline after standard tu_production validation. No new baseline-control build is claimed; current production compilation/link/module/source/storage gates ran successfully.",
+      "baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "new_symbol_errors": []
+    },
+    "whole-proof": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "build/dactor-dust-native1013/current/whole-proof.py"
+      ],
+      "log": "build/dactor-dust-native1013/current/whole-proof.log",
+      "log_sha256": "82a37af681f86492ff2e26109872c1835b61e6e88656526c9a136acea9d44aaa"
+    },
+    "stock": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "3e2468d893f1a768db8f6da911b9b7746db75c64..c98bf741747ca7f7415250f4fb3abc7653515f0c",
+        "--json",
+        "build\\dactor-dust-native1013\\current\\stock.json"
+      ],
+      "log": "build/dactor-dust-native1013/current/stock.log",
+      "log_sha256": "8ea3a85396b4f7e1e0416dc022aef04654b224322d01375e9fe40bcda2aafeb5",
+      "mode": "Literal --range 3e2468d893f1a768db8f6da911b9b7746db75c64..c98bf741747ca7f7415250f4fb3abc7653515f0c",
+      "source_files": 1,
+      "checked": 91,
+      "verified": 91,
+      "warnings": 0,
+      "blocking": 0,
+      "blind": 0,
+      "results_sha256": "58df5646e5b746323404709270a4ef24dd7d1cfefb4f38443240e5ff566df760"
+    },
+    "decl": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "3e2468d893f1a768db8f6da911b9b7746db75c64"
+      ],
+      "log": "build/dactor-dust-native1013/current/decl.log",
+      "log_sha256": "49c692d6f53e45320f6d2d1ee1e2820f1bec3f23824d93d6a14bfdea9909dfe8",
+      "result": "PASS against accepted3e prerequisite; no new declaration/local header-redeclaration findings.",
+      "scope": "1640 files, including984 reached through13 changed type names.",
+      "exact_current_base_comparison": {
+        "base": "3e2468d893f1a768db8f6da911b9b7746db75c64",
+        "checkpoint": "c98bf741747ca7f7415250f4fb3abc7653515f0c",
+        "literal_changed_exit": 0,
+        "whole_collection_before_after_keysets_identical": true,
+        "whole_collection_disagreements_before": 7495,
+        "whole_collection_disagreements_after": 7495,
+        "new_disagreements": [],
+        "removed_disagreements": [],
+        "foreign_input_blobs": {
+          "src/unnamed/ov002/__sinit_ov002_021019d0.c": {
+            "base": "9daa7eae32b97d5f7c1ddd2ea4381d04fae17b87",
+            "checkpoint": "9daa7eae32b97d5f7c1ddd2ea4381d04fae17b87"
+          },
+          "src/actors/daLuigi_c.cpp": {
+            "base": "7cdb421d80fccd7b6c51b186a4b8d37fd41ba0c8",
+            "checkpoint": "7cdb421d80fccd7b6c51b186a4b8d37fd41ba0c8"
+          },
+          "include/SharedFilePtr.h": {
+            "base": "4cf9477fa21821a8c400546d4be6a4ebebe7c2be",
+            "checkpoint": "4cf9477fa21821a8c400546d4be6a4ebebe7c2be"
+          },
+          "config/decl-agreement-baseline.json": {
+            "base": "15bc3797f5966bef13ba9e4ffddcf8ac0538a736",
+            "checkpoint": "15bc3797f5966bef13ba9e4ffddcf8ac0538a736"
+          }
+        },
+        "reported_foreign_disagreements": [],
+        "no_baseline_or_foreign_source_edit": true
+      },
+      "qualification": "Stock scanner omission for the inherited four initializer objects remains explicitly documented in the unchanged independently accepted prerequisite report. Dust two native member declarations are positively parsed with the real implicit this, Vector3 reference and bool types."
+    },
+    "decl-global": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--check"
+      ],
+      "log": "build/dactor-dust-native1013/current/decl-global.log",
+      "log_sha256": "5942b16c0995d6a65bd8f22ede89eb157c60a66f020a1ea18f0f8e1ab027cf35"
+    },
+    "port": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/port_refcheck.py"
+      ],
+      "log": "build/dactor-dust-native1013/current/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "checked": 267
+    },
+    "langmode": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "log": "build/dactor-dust-native1013/current/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+    },
+    "conflict": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_tubuild_conflicts.py"
+      ],
+      "log": "build/dactor-dust-native1013/current/conflict.log",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "manifest_entries": 429,
+      "sources_read": 429,
+      "recorded_conflict_markers": 6
+    }
+  },
+  "publication": "Report frozen before queue handoff. Subsequent producer offer requires coordinator clearance; public Source branch/PR/main actions and independent acceptance remain outside this producer report.",
+  "checkpoint": "c98bf741747ca7f7415250f4fb3abc7653515f0c",
+  "source_completion": "partial: two native dust members and real query type/member access restored; surrounding raw/POD/scalar and lifecycle-shard boundaries remain.",
+  "tested_build_trees": {
+    "src": "bddf817026af21194fdae4a8c0854fcbe5fc42da",
+    "include": "c79a00fb061e7ba1710053ccfe5ee542cdc6914c",
+    "config": "df77857bea28beb682e2150b64dc0fce2f18450b",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "input_git_blobs": {
+    "src/actors/dActor_c.cpp": "028c4c1aad670df3ade279165445cfac591a14bd",
+    "include/dActor_c.h": "ca66dfd1fb439603bd6a0616ff3365cc32e21bac",
+    "include/dBgCh_Gnd.h": "434174b167fb040a56aaf0a21652b6d61924f9bf",
+    "config/tu_manifest.d/arm9/Actor.json": "584c424e38743e6127b0b807daeb32623ba78cba"
+  },
+  "report_only_finalization": "Only this report changes after current composition checkpointc98bf741747ca7f7415250f4fb3abc7653515f0c. build/dactor-dust-native1013/current/final-binding.json binds all five build trees to the exact final commit.",
+  "limitations": [
+    "The two dust methods are restored native members; RaycastGroundPod, scalar Particle bridge, other raw/free helpers and lifecycle/RTTI shards remain partial reconstruction.",
+    "Six historical findings retain their original scope and dispositions; the two Dust audit findings remain separate and byte-for-byte unchanged.",
+    "The old004 scoped declaration failure on four foreign objects remains historically recorded; current3e prerequisite resolves the contract through reviewed Source without baseline banking.",
+    "The accepted initializer report retains the stock collector omission and unrecovered SharedFilePtr layout/raw Player views; no broader reconstruction completion is claimed here.",
+    "Actor manifest owns91 text entries only; this object emits no data/BSS/init/metadata.",
+    "Nine baseline DSD symbol errors and the global data advisory inventory remain; zero new production symbol errors is the actual gate.",
+    "--no-rom does not claim a newly assembled final candidate cartridge image.",
+    "Independent Source acceptance and public publication remain separate coordinator/verifier actions."
+  ],
+  "accepted_task_input": "004286a4182211efc61873cb0cbdf4bc8311b096",
+  "composition": {
+    "accepted_prerequisite": "3e2468d893f1a768db8f6da911b9b7746db75c64",
+    "prerequisite_pr": 3829,
+    "current_main_contained": "3428442f0f324c32086d2f86fe98c6efa3b69e2d",
+    "original_dust_final": "bae812e5a0620b1e13341c7512a599d0fd39e516",
+    "source_unchanged_since_original_final": true,
+    "scope": "Compare this Dust candidate against the accepted prerequisite as tested_base. The only differential paths are dActor_c.cpp and this report. No foreign Source, header, manifest, policy or baseline is edited by the composition. Original004 task ancestry and two-range reservations remain preserved.",
+    "prerequisite_report": "notes/experiments/player-file-handles1014.json",
+    "prerequisite_qualification": "The independently accepted prerequisite uses truthful opaque C object declarations. Stock parse_file omits those four elaborated declarations; its report records direct positive parsing/native comparison and undefined ELF imports. No stock positive-collection claim or complete SharedFilePtr layout claim is inherited here. FILEHANDLES-COLLECTOR-001 and FILEHANDLES-LAYOUT-002 stay in that unchanged prerequisite report, not reassigned as Dust authorship.",
+    "prerequisite_authorship": "Tango original initializer match131962b2d1e416f41e5d31a6fa14eb3dd20499bf and subsequent lineage remain recorded by the accepted initializer report."
+  },
+  "historical_verification": {
+    "classification": "Historical old004 control and Dust verification; not current composition acceptance. The old declaration failure remains a failure in this record.",
+    "base": "004286a4182211efc61873cb0cbdf4bc8311b096",
+    "checkpoint": "d1ad30cb20cd9597b08e4442d4a90425f16d5c1c",
+    "final": "bae812e5a0620b1e13341c7512a599d0fd39e516",
+    "report_git_object": "4517a4cefe4d55229d59aef9551bdc14dbb8fcb8",
+    "decl": {
+      "exit_code": 1,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "004286a4182211efc61873cb0cbdf4bc8311b096"
+      ],
+      "log": "build/dactor-dust-native1013/decl.log",
+      "log_sha256": "c3ff871a31641dcd164b3e6c55590f3533f9a86154a4800580ae268ac3d701ab",
+      "result": "FAIL on unchanged exact-base disagreements; no new declaration or local header-redeclaration finding.",
+      "scope": "1640 files, including984 reached through13 changed type names; conservative type reach exposes existing foreign records.",
+      "base_global_command": "python tools/check_decl_agreement.py --check",
+      "base_global_exit_code": 1,
+      "base_global_log": "build/dactor-dust-native1013/base-decl-global.log",
+      "base_global_log_sha256": "73c276b743005f1e53e6b4ce036db73f8993a695001cfa123e76e9779d9caf6f",
+      "exact_base_comparison": {
+        "base": "004286a4182211efc61873cb0cbdf4bc8311b096",
+        "checkpoint": "d1ad30cb20cd9597b08e4442d4a90425f16d5c1c",
+        "literal_changed_exit": 1,
+        "whole_collection_before_after_keysets_identical": true,
+        "whole_collection_disagreements_before": 7533,
+        "whole_collection_disagreements_after": 7533,
+        "new_disagreements": [],
+        "removed_disagreements": [],
+        "foreign_input_blobs": {
+          "src/unnamed/ov002/__sinit_ov002_021019d0.c": {
+            "base": "cc92619b9486550068a038624a738d88ac58452f",
+            "checkpoint": "cc92619b9486550068a038624a738d88ac58452f"
+          },
+          "src/actors/daLuigi_c.cpp": {
+            "base": "7cdb421d80fccd7b6c51b186a4b8d37fd41ba0c8",
+            "checkpoint": "7cdb421d80fccd7b6c51b186a4b8d37fd41ba0c8"
+          },
+          "include/SharedFilePtr.h": {
+            "base": "4cf9477fa21821a8c400546d4be6a4ebebe7c2be",
+            "checkpoint": "4cf9477fa21821a8c400546d4be6a4ebebe7c2be"
+          },
+          "config/decl-agreement-baseline.json": {
+            "base": "15bc3797f5966bef13ba9e4ffddcf8ac0538a736",
+            "checkpoint": "15bc3797f5966bef13ba9e4ffddcf8ac0538a736"
+          }
+        },
+        "reported_foreign_disagreements": [
+          {
+            "symbol": "data_ov002_0210e8d0",
+            "kind": "return",
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 463,
+            "decl": "char []",
+            "got": "char []",
+            "want": "SharedFilePtr",
+            "basis": "plurality",
+            "ref_file": "src/actors/daLuigi_c.cpp",
+            "ref_line": 105,
+            "ref": "SharedFilePtr"
+          },
+          {
+            "symbol": "data_ov002_0210eb20",
+            "kind": "return",
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 537,
+            "decl": "char []",
+            "got": "char []",
+            "want": "SharedFilePtr",
+            "basis": "plurality",
+            "ref_file": "src/actors/daLuigi_c.cpp",
+            "ref_line": 103,
+            "ref": "SharedFilePtr"
+          },
+          {
+            "symbol": "data_ov002_0210ebb8",
+            "kind": "return",
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 556,
+            "decl": "char []",
+            "got": "char []",
+            "want": "SharedFilePtr",
+            "basis": "plurality",
+            "ref_file": "src/actors/daLuigi_c.cpp",
+            "ref_line": 102,
+            "ref": "SharedFilePtr"
+          },
+          {
+            "symbol": "data_ov002_0210ebd8",
+            "kind": "return",
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 560,
+            "decl": "char []",
+            "got": "char []",
+            "want": "SharedFilePtr",
+            "basis": "plurality",
+            "ref_file": "src/actors/daLuigi_c.cpp",
+            "ref_line": 106,
+            "ref": "SharedFilePtr"
+          }
+        ],
+        "no_baseline_or_foreign_source_edit": true
+      },
+      "integration_requirement": "Resolve or explicitly account for these unrelated base disagreements in the owning integration workflow. This producer does not edit the foreign files, bank a new baseline, weaken the checker, or claim this literal gate is green."
+    },
+    "rombuild": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "log": "build/dactor-dust-native1013/rombuild.log",
+      "log_sha256": "54c2e9fa75bf6476bc720fb9d8c987bf999bc6061d5da03a5cfc5b358f8d3d78",
+      "tested_head": "d1ad30cb20cd9597b08e4442d4a90425f16d5c1c",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "source_function_counts_observed": [
+        5888,
+        11334
+      ],
+      "function_count_scope": "Final production section; earlier baseline control count is not production coverage.",
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "baseline_dsd_symbol_errors": 9,
+      "final_production_summary": [
+        "[6/6] analyze module and source fidelity",
+        "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+        "  reproducing: 11,334",
+        "  mismatching: 0",
+        "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+        "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "  of 3,049,600 module bytes: 2,225,480 (73.0%) source-built code, 13,020 source-owned data, 798,472 data bytes no complete source entry reaches; 48,968 compiler-emitted data bytes verified overall",
+        "  retail-gap contribution: 811,100 module bytes (12,628 function-code, 798,472 data/non-function)",
+        "ROM-build analysis: PASS",
+        "ROM data from source: 969 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,282 object records)"
+      ]
+    },
+    "whole_actor_object": {
+      "base": "004286a4182211efc61873cb0cbdf4bc8311b096",
+      "checkpoint": "d1ad30cb20cd9597b08e4442d4a90425f16d5c1c",
+      "source": "src/actors/dActor_c.cpp",
+      "manifest": "config/tu_manifest.d/arm9/Actor.json",
+      "compiler": "2004/b56",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "strict_functions": 91,
+      "blind": 0,
+      "diffs": [],
+      "targets": [
+        {
+          "name": "_ZN8dActor_c13LandingDustAtER7Vector3b",
+          "module": "arm9",
+          "addr": "0x0200fac4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+          "module": "arm9",
+          "addr": "0x0200fb84",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "raw_sha256": "76b805b8458a6aeb58a48b31a47d1cff1b833ff271cea0afa9a353bcc9130b81",
+      "prepared_sha256": "19edbeb864623c1a1f22eedf2237a6c8131e0674276fc35ba615a78abc16a4ed",
+      "whole_raw_identical": true,
+      "whole_ordinary_prepared_identical": true,
+      "raw_edges": 191,
+      "prepared_edges": 191,
+      "metadata_records": 0,
+      "owned_data": 0,
+      "owned_bss": 0,
+      "owned_init": 0,
+      "nontext": [
+        {
+          "container": "raw",
+          "allocated_nontext": []
+        },
+        {
+          "container": "prepared",
+          "allocated_nontext": []
+        }
+      ],
+      "ordinary_path": [
+        "rombuild._retarget",
+        "rombuild._isolate"
+      ],
+      "private_tool_override": false,
+      "compiler_only_policies": {
+        "deadstrip": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "expect": {
+          "_ZN7Vector3D1Ev": "1eff2fe1"
+        },
+        "data": [],
+        "homes": {
+          "_ZN7Vector3D1Ev": [
+            "arm9",
+            33583808
+          ]
+        }
+      },
+      "other89_body_tokens_unchanged": true,
+      "body_comparison_qualification": "Comment/whitespace-insensitive ordinal blocks; only redundant dBgCh_Gnd forward declaration removed from ordinal18 before comparison. No other89 body code changes.",
+      "held_sound_ordinals_unchanged": [
+        5,
+        6
+      ],
+      "native_definitions": [
+        {
+          "symbol": "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+          "signature": "void (<this>, Vector3 &, bool)",
+          "is_member": true,
+          "line": 1387
+        },
+        {
+          "symbol": "_ZN8dActor_c13LandingDustAtER7Vector3b",
+          "signature": "void (<this>, Vector3 &, bool)",
+          "is_member": true,
+          "line": 1417
+        }
+      ],
+      "header_config_tools_port_unchanged": true
+    }
+  },
+  "old_to_current_control_inputs": {
+    "src/actors/dActor_c.cpp": {
+      "old004": "0a4b2b9f12fd72929fc4329bb161e9cb21adedfa",
+      "current3e": "0a4b2b9f12fd72929fc4329bb161e9cb21adedfa"
+    },
+    "include/dActor_c.h": {
+      "old004": "ca66dfd1fb439603bd6a0616ff3365cc32e21bac",
+      "current3e": "ca66dfd1fb439603bd6a0616ff3365cc32e21bac"
+    },
+    "include/dBgCh_Gnd.h": {
+      "old004": "434174b167fb040a56aaf0a21652b6d61924f9bf",
+      "current3e": "434174b167fb040a56aaf0a21652b6d61924f9bf"
+    },
+    "config/tu_manifest.d/arm9/Actor.json": {
+      "old004": "584c424e38743e6127b0b807daeb32623ba78cba",
+      "current3e": "584c424e38743e6127b0b807daeb32623ba78cba"
+    }
+  },
+  "report_generation": {
+    "initial_failure": {
+      "stage": "report-only generation after all eight production gates exited0",
+      "source_checkpoint": "c98bf741747ca7f7415250f4fb3abc7653515f0c",
+      "failed_expression": "int(re.search(r'(\\d+) error line\\(s\\)',s)[1])",
+      "error": "TypeError: NoneType object is not subscriptable",
+      "cause": "Current official ROM log omitted a freshly printed baseline-control block because standard tu_production reused an existing content-bound baseline.",
+      "exit_capture": "The Python traceback was observed; its exit code was not separately captured because subsequent read-only shell commands continued. No report write occurred before the failing expression.",
+      "resolution": "Read baselineSymbolErrors and newSymbolErrors from the actual current successful build/rombuild-report.json. Preserve all nine baseline errors and explicit cached-control scope; no Source change or byte-gate rerun."
+    },
+    "corrected_generator": "build/dactor-dust-native1013/current/finalize-report.py",
+    "corrected_report_generation": "PASS; current official JSON proves the cached baseline count and successful current production gate."
+  }
+}

@@ -8,16 +8,16 @@
 struct Heap;
 
 extern struct Heap* data_020a0ea0; /* at 0x020a0eac: Memory::gameHeapPtr */
-extern u32 _ZN4Heap7_SizeofEPv(struct Heap* heap, void* ptr);
+extern u32 _ZN5mHeap6Heap_t7_SizeofEPv(struct Heap* heap, void* ptr);
 extern u32 func_020469e0(void* ptr);
-extern u32 _ZN4Heap10ReallocateEPvj(struct Heap* heap, void* ptr, u32 newSize);
+extern u32 _ZN5mHeap6Heap_t10ReallocateEPvj(struct Heap* heap, void* ptr, u32 newSize);
 
 u32 func_02017060(void* ptr)
 {
     if (!ptr)
         return 0;
     struct Heap* heap = data_020a0ea0;
-    _ZN4Heap7_SizeofEPv(heap, ptr);
+    _ZN5mHeap6Heap_t7_SizeofEPv(heap, ptr);
     u32 newSize = func_020469e0(ptr);
-    return _ZN4Heap10ReallocateEPvj(heap, ptr, newSize);
+    return _ZN5mHeap6Heap_t10ReallocateEPvj(heap, ptr, newSize);
 }

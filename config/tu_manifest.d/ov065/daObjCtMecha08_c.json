@@ -1,8 +1,8 @@
 {
   "id": "ov065/daObjCtMecha08_c",
   "module": "ov065",
-  "source": "src/actors/daObjCtMecha08_c.cpp",
-  "promoted_source": "src/actors/daObjCtMecha08_c.cpp",
+  "source": "src/game/actors/d_a_obj_ct_mecha08.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ct_mecha08.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x211b7f0..0x211bb7c, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjCtMecha08_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold (0930c): the two registry factories daObjCtMecha08_c_classInit_CT_MECHA08B (0x0211bb7c, 0x30) and daObjCtMecha08_c_classInit_CT_MECHA08A (0x0211bbac, 0x30) abut this TU's former end 0x0211bb7c with no gap and nothing between them; tu_map left them in their own unlabelled unit because it cuts on symbol name. Both construct this class (operator new(0x330), dBgActor_c C2, _ZTV16daObjCtMecha08_c store). The widened range 0x0211b7f0..0x0211bbdc ends where the daObjCtMecha09_c TU (src/actors/daObjCtMecha09_c.cpp) begins."
+    "classInit fold (0930c): the two registry factories daObjCtMecha08_c_classInit_CT_MECHA08B (0x0211bb7c, 0x30) and daObjCtMecha08_c_classInit_CT_MECHA08A (0x0211bbac, 0x30) abut this TU's former end 0x0211bb7c with no gap and nothing between them; tu_map left them in their own unlabelled unit because it cuts on symbol name. Both construct this class (operator new(0x330), dBgActor_c C2, _ZTV16daObjCtMecha08_c store). The widened range 0x0211b7f0..0x0211bbdc ends where the daObjCtMecha09_c TU (src/game/actors/d_a_obj_ct_mecha09.cpp) begins."
   ],
   "sections": [
     {
@@ -102,7 +102,7 @@
       "evidence": "collision file handle constructed with file ID 0x5c9"
     },
     {
-      "symbol": "data_ov065_0211d984",
+      "symbol": "gCtMechaObj08bModelFile",
       "address": "0x0211d984",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -116,7 +116,7 @@
       "evidence": "model file handle constructed with file ID 0x5c8"
     },
     {
-      "symbol": "data_ov065_0211d994",
+      "symbol": "gCtMechaObj08bCollisionFile",
       "address": "0x0211d994",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -157,10 +157,10 @@
     "Destructor form: ~daObjCtMecha08_c is inline and empty in include/daObjCtMecha08_c.h, the daObjCtMecha10_c / daObjBk_Lift_c form for the same dBgActor_c shape. Written out of line (the draft), the fold round recorded an unlicensed homeless D2 and emission order PARTIAL with ordinal pair (0, 1) out of ROM order; inline, all six functions emit ROM-ascending and no D2 is emitted.",
     "InitResources was enrolled without `complete` before this promotion: its CLPS-block load (from:0x0211bb68) is an ambiguous relocation, `module:overlays(12,13,24,33,35,43,47,52,53,56)`, and the legacy source spelled it with the invented name func_021121b8, which no symbols.txt defines (config/unresolved-baseline.json). tools/overlay_residency.py settle() narrows the ten candidates to ov035 -- the Tick Tock Clock level overlay, whose own daObjCtMecha10_c uses the neighbouring CLPS block data_ov035_021121d8 -- so the TU names data_ov035_021121b8. The promoted entry is `complete`.",
     "Codegen levers carried from the legacy Behavior and re-measured in TU context: the clamp keeps the ROM's goto shape, and the mMoveDir toggle goes through a laundered integer address (the member spelling changes the function's size).",
-    "Deliberately left mangled: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange each take Fix12<int> by value, and a real method call homes the argument and size-DIFFs the caller (the wall 6az that include/dBgW_KcMbg.h and src/actors/daObjCtMecha10_c.cpp both record). DecIfAbove0_Short and RandomIntInternal have no header home and keep their linker names.",
+    "Deliberately left mangled: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange each take Fix12<int> by value, and a real method call homes the argument and size-DIFFs the caller (the wall 6az that include/dBgW_KcMbg.h and src/game/actors/d_a_obj_ct_mecha10.cpp both record). DecIfAbove0_Short and RandomIntInternal have no header home and keep their linker names.",
     "This entry licenses .text only. ov065's .data is not claimed here, so the class vtable and the whole __si_class_type_info chain the compiler drags in with it are compiler-only output, each row naming the cartridge copy it duplicates.",
     "classInit fold (0930c): both factories are folded in as `return new daObjCtMecha08_c();` (no user-declared constructor). This file has no `#pragma defer_codegen off` and emits in reverse source order, so they are written at the top, CT_MECHA08A first and CT_MECHA08B second, ahead of InitResources. The new-expression makes mwccarm emit _ZN10dBgActor_cD2Ev, licensed as a compiler_only_output deadstrip row. tubuild verify: 8/8 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_obj_ct_mecha08_ct_mecha08b.c and src/d_a_obj_ct_mecha08_ct_mecha08a.c; their credit carries in attribution.json as path#symbol overrides.",
-    "Static initializer folded: the two Mecha08ModelFile handles (files 0x5c8/0x5ca), the two Mecha08CollisionFilePtr handles (files 0x5c9/0x5cb) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/actors/daObjCtMecha08_c.cpp, carrying the TU already-used TtcRotatingGear_ModelFile/TtcRotatingGear_ClsnFile names for the two handles the code names (mecha05/wcmizu precedent). The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov065_0211c9b8 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @409/@410/@411/@412 were free fleet-wide and are kept. The .bss claim 0x0211d97c..0x0211d9cc ends exactly at the next symbol; no bound row is needed. The orphan data_ov065_0211d9bc label inside the 0x9b4 node span (nothing references it; ttfuta precedent) is dropped with them. The retired shard data_ov065_0211d97c/98c alias rows and their stale decl_common.h lines are dropped per S42. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
+    "Static initializer folded: the two Mecha08ModelFile handles (files 0x5c8/0x5ca), the two Mecha08CollisionFilePtr handles (files 0x5c9/0x5cb) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/game/actors/d_a_obj_ct_mecha08.cpp, carrying the TU already-used TtcRotatingGear_ModelFile/TtcRotatingGear_ClsnFile names for the two handles the code names (mecha05/wcmizu precedent). The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov065_0211c9b8 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @409/@410/@411/@412 were free fleet-wide and are kept. The .bss claim 0x0211d97c..0x0211d9cc ends exactly at the next symbol; no bound row is needed. The orphan data_ov065_0211d9bc label inside the 0x9b4 node span (nothing references it; ttfuta precedent) is dropped with them. The retired shard data_ov065_0211d97c/98c alias rows and their stale decl_common.h lines are dropped per S42. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
   "verification": {
@@ -413,7 +413,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "classInit fold (0930c): each daObjCtMecha08_c_classInit_* factory's `new daObjCtMecha08_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/actors/daObjHatenaBlock_c.cpp). No configured ROM symbol of that name exists and nothing relocates to it."
+      "reason": "classInit fold (0930c): each daObjCtMecha08_c_classInit_* factory's `new daObjCtMecha08_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/game/actors/d_a_obj_hatena_block.cpp). No configured ROM symbol of that name exists and nothing relocates to it."
     },
     {
       "symbol": "_ZTV16daObjCtMecha08_c",
@@ -495,7 +495,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjCtMecha08_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha08.cpp",
       "address": "0x0211c9b8",
       "size": "0xbc",
       "binding": "STB_GLOBAL",
@@ -504,7 +504,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjCtMecha08_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_mecha08.cpp",
       "address": "0x0211cb00",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -550,13 +550,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjCtMecha08_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha08.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjCtMecha08_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_mecha08.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -592,7 +592,7 @@
       "source": "0x0211cb00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjCtMecha08_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha08.cpp",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211c9b8"
@@ -712,7 +712,7 @@
       "source": "0x0211ca4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d984",
+      "symbol": "gCtMechaObj08bModelFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d984"
@@ -762,7 +762,7 @@
       "source": "0x0211ca68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d994",
+      "symbol": "gCtMechaObj08bCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d994"
@@ -780,24 +780,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@423",
+      "from": "@420",
       "to": "@409",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @423 now; licensed under the existing pin @409"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @420 now; licensed under the existing pin @409"
     },
     {
-      "from": "@426",
+      "from": "@423",
       "to": "@412",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @426 now; licensed under the existing pin @412"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @423 now; licensed under the existing pin @412"
     },
     {
-      "from": "@425",
+      "from": "@422",
       "to": "@411",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @425 now; licensed under the existing pin @411"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @422 now; licensed under the existing pin @411"
     },
     {
-      "from": "@424",
+      "from": "@421",
       "to": "@410",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @424 now; licensed under the existing pin @410"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @421 now; licensed under the existing pin @410"
     }
   ]
 }

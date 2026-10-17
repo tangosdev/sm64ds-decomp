@@ -115,5 +115,14 @@ class LayoutCheck(unittest.TestCase):
         self.assertEqual(LC.known_issues(p), {("L2", "sym_one"), ("L4", "SomeClass")})
 
 
+    def test_l7_flags_a_class_named_actor_or_stage_file(self):
+        self.write("game/actors/daFoo_c.cpp")
+        self.write("game/actors/d_a_foo.cpp")
+        self.write("game/stages/dScBoot_c.cpp")
+        self.write("minigames/unit020b2c84.cpp")
+        r = self.run_check(self.delinks(), known=set())
+        self.assertEqual({f["key"] for f in r["L7"]},
+                         {"src/game/actors/daFoo_c.cpp", "src/game/stages/dScBoot_c.cpp"})
+
 if __name__ == "__main__":
     unittest.main()

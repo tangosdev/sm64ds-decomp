@@ -21,7 +21,7 @@
  */
 struct daBrq_c : dActor_c {
     /* The { enter, update } record the state machine runs; the tables live
-     * in ov070 .data at 0x02123668, filled by __sinit_ov070_02122d80. */
+     * in ov070 BSS at 0x02123668, initialized natively in d_a_brq.cpp. */
     typedef s32 (daBrq_c::*StateFn)();
     struct State {
         StateFn enter;

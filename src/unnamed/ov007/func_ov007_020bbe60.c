@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern void func_ov007_020c6784(void *self, int count, int p2, int p3, int p4, int p5, int mode);
 
 extern char *data_ov007_0210342c;
@@ -21,7 +22,7 @@ void func_ov007_020bbe60(int idx) {
     *(int *)(data_ov007_02104ba0 + 0x38) = 0x78;
     if (idx == 0 && *(u8 *)(data_ov007_0210342c + idx + 0xfc) == 2) {
         int *o = (int *)data_ov007_02104ba0;
-        int mid = (int)(((s64)(o[0x38 / 4] << 12) * 0x1800 + 0x800) >> 12);
+        int mid = FX_MUL((o[0x38 / 4] << 12), 0x1800);
         o[0x38 / 4] = mid >> 12;
     }
     ((u8 *)(data_ov007_0210342c + 0xfc))[idx]++;

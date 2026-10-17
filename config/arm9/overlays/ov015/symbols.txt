@@ -81,16 +81,16 @@ data_ov015_02112f2c kind:data(any) addr:0x02112f2c ambiguous
 data_ov015_02112f58 kind:data(any) addr:0x02112f58 ambiguous
 data_ov015_02112f7c kind:data(any) addr:0x02112f7c ambiguous
 __sinit_d_a_obj_bk_billboard.cpp kind:function(arm,size=0x40) addr:0x02112f9c
-__sinit_daObjBk_Botaosi_c.cpp kind:function(arm,size=0x6c) addr:0x02112fdc
-__sinit_ov015_02113048 kind:function(arm,size=0x21c) addr:0x02113048
-__sinit_daObjBk_Lift_c.cpp kind:function(arm,size=0x6c) addr:0x02113264
+__sinit_d_a_obj_bk_botaosi.cpp kind:function(arm,size=0x6c) addr:0x02112fdc
+__sinit_d_a_obj_bk_dossunbar.cpp kind:function(arm,size=0x21c) addr:0x02113048
+__sinit_d_a_obj_bk_lift.cpp kind:function(arm,size=0x6c) addr:0x02113264
 __sinit_d_a_obj_bk_rotebar.cpp kind:function(arm,size=0x6c) addr:0x021132d0
 __sinit_d_a_obj_bk_ukisima.cpp kind:function(arm,size=0x6c) addr:0x0211333c
 __sinit_d_a_obj_bk_fall_block.cpp kind:function(arm,size=0x68) addr:0x021133a8
 .p__sinit_d_a_obj_bk_billboard.cpp kind:data(word) addr:0x02113410
-.p__sinit_daObjBk_Botaosi_c.cpp kind:data(word) addr:0x02113414
-.p__sinit_ov015_02113048 kind:data(word) addr:0x02113418
-.p__sinit_daObjBk_Lift_c.cpp kind:data(word) addr:0x0211341c
+.p__sinit_d_a_obj_bk_botaosi.cpp kind:data(word) addr:0x02113414
+.p__sinit_d_a_obj_bk_dossunbar.cpp kind:data(word) addr:0x02113418
+.p__sinit_d_a_obj_bk_lift.cpp kind:data(word) addr:0x0211341c
 .p__sinit_d_a_obj_bk_rotebar.cpp kind:data(word) addr:0x02113420
 .p__sinit_d_a_obj_bk_ukisima.cpp kind:data(word) addr:0x02113424
 .p__sinit_d_a_obj_bk_fall_block.cpp kind:data(word) addr:0x02113428
@@ -261,20 +261,20 @@ g_profile_BK_DOWN_B kind:data(any) addr:0x021148b8 ambiguous
 _ZTV20daObjBk_Fall_Block_c kind:data(any) addr:0x021148dc
 data_ov015_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov015_021148f0 kind:data(any) addr:0x021148f0 ambiguous
-data_ov015_02114960 kind:bss addr:0x02114960
+gBkBillbordModelFile kind:bss addr:0x02114960
 @253 kind:bss addr:0x02114968
 data_ov015_02114974 kind:bss addr:0x02114974
 data_ov015_0211497c kind:bss addr:0x0211497c
 @47 kind:bss addr:0x02114984
 @46 kind:bss addr:0x02114990
-data_ov015_0211499c kind:bss addr:0x0211499c
-data_ov015_021149a4 kind:bss addr:0x021149a4
-data_ov015_021149ac kind:bss addr:0x021149ac
-data_ov015_021149b4 kind:bss addr:0x021149b4
-data_ov015_021149bc kind:bss addr:0x021149bc
-data_ov015_021149c8 kind:bss addr:0x021149c8
-data_ov015_021149d4 kind:bss addr:0x021149d4
-data_ov015_021149e0 kind:bss addr:0x021149e0
+gBkDossunbarLCollisionFile kind:bss addr:0x0211499c
+gBkDossunbarSModelFile kind:bss addr:0x021149a4
+gBkDossunbarSCollisionFile kind:bss addr:0x021149ac
+gBkDossunbarLModelFile kind:bss addr:0x021149b4
+@963 kind:bss addr:0x021149bc
+@939 kind:bss addr:0x021149c8
+@940 kind:bss addr:0x021149d4
+@943 kind:bss addr:0x021149e0
 data_ov015_021149ec kind:bss addr:0x021149ec
 data_ov015_021149f0 kind:bss addr:0x021149f0 ambiguous
 data_ov015_021149fc kind:bss addr:0x021149fc ambiguous
@@ -288,12 +288,12 @@ data_ov015_02114a84 kind:bss addr:0x02114a84
 data_ov015_02114a8c kind:bss addr:0x02114a8c
 @49 kind:bss addr:0x02114a94
 @48 kind:bss addr:0x02114aa0
-data_ov015_02114aac kind:bss addr:0x02114aac
-data_ov015_02114ab4 kind:bss addr:0x02114ab4
+gBkUkisimaModelFile kind:bss addr:0x02114aac
+gBkUkisimaCollisionFile kind:bss addr:0x02114ab4
 @638 kind:bss addr:0x02114abc
 @635 kind:bss addr:0x02114ac8
-data_ov015_02114ad4 kind:bss addr:0x02114ad4
-data_ov015_02114adc kind:bss addr:0x02114adc
+gBkDownBCollisionFile kind:bss addr:0x02114ad4
+gBkDownBModelFile kind:bss addr:0x02114adc
 @626 kind:bss addr:0x02114ae4
 @173 kind:bss addr:0x02114af0
 data_ov015_02114afc kind:bss addr:0x02114afc

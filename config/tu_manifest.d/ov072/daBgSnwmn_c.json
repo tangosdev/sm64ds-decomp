@@ -1,8 +1,8 @@
 {
   "id": "ov072/daBgSnwmn_c",
   "module": "ov072",
-  "source": "src/actors/daBgSnwmn_c.cpp",
-  "promoted_source": "src/actors/daBgSnwmn_c.cpp",
+  "source": "src/game/actors/d_a_bg_snwmn.cpp",
+  "promoted_source": "src/game/actors/d_a_bg_snwmn.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
@@ -10,7 +10,7 @@
     "build/tu_map.json identifies the eight-function daBgSnwmn_c run at 0x02120824..0x02120c00 but leaves the immediately following factory run at 0x02120c00..0x02120c58 unattributed",
     "the main registry maps BIG_SNOWMAN to the 0x02122954 descriptor, whose first word relocates to daBgSnwmn_c_classInit at 0x02120c00",
     "daBgSnwmn_c_classInit allocates the RTTI-proven class size 0x1f0, installs _ZTV11daBgSnwmn_c, constructs the five header-proven members, and ends exactly at daPgBby_c's D1 at 0x02120c58; the factory join is registry/factory-backed rather than tu_map-proven",
-    "the compiler-generated __sinit_daBgSnwmn_c.cpp is byte-identical to retail __sinit_ov072_02122350 (0xc4) and carries the same call and pool destinations: two model handles, the texseq handle, and the cylinder offset"
+    "the compiler-generated __sinit_d_a_bg_snwmn.cpp is byte-identical to retail __sinit_ov072_02122350 (0xc4) and carries the same call and pool destinations: two model handles, the texseq handle, and the cylinder offset"
   ],
   "sections": [
     {
@@ -106,7 +106,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daBgSnwmn_c.cpp",
+      "symbol": "__sinit_d_a_bg_snwmn.cpp",
       "address": "0x02122350",
       "size": "0xc4",
       "binding": "STB_GLOBAL",
@@ -115,7 +115,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daBgSnwmn_c.cpp",
+      "symbol": ".p__sinit_d_a_bg_snwmn.cpp",
       "address": "0x02122710",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -152,19 +152,19 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov072_02122c40",
+      "symbol": "gdaBgSnwmnBigSnowmanBodyModelFile",
       "address": "0x02122c40",
       "size": "0x8",
       "evidence": "model resource handle constructed with file ID 0x2ad"
     },
     {
-      "symbol": "data_ov072_02122c48",
+      "symbol": "gdaBgSnwmnBigSnowmanHeadModelFile",
       "address": "0x02122c48",
       "size": "0x8",
       "evidence": "model resource handle constructed with file ID 0x2af"
     },
     {
-      "symbol": "data_ov072_02122c50",
+      "symbol": "gdaBgSnwmnBigSnowmanSmileTextureSequenceFile",
       "address": "0x02122c50",
       "size": "0x8",
       "evidence": "texseq resource handle constructed with file ID 0x2b0"
@@ -262,13 +262,13 @@
       "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the one-function control and configured ROM symbol use global binding"
     },
     {
-      "symbol": "__sinit_daBgSnwmn_c.cpp",
+      "symbol": "__sinit_d_a_bg_snwmn.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daBgSnwmn_c.cpp",
+      "symbol": ".p__sinit_d_a_bg_snwmn.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -374,7 +374,7 @@
       "source": "0x021223e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov072_02122c40",
+      "symbol": "gdaBgSnwmnBigSnowmanBodyModelFile",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02122c40"
@@ -404,7 +404,7 @@
       "source": "0x021223f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov072_02122c48",
+      "symbol": "gdaBgSnwmnBigSnowmanHeadModelFile",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02122c48"
@@ -424,7 +424,7 @@
       "source": "0x021223fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov072_02122c50",
+      "symbol": "gdaBgSnwmnBigSnowmanSmileTextureSequenceFile",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02122c50"
@@ -484,7 +484,7 @@
       "source": "0x02122710",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daBgSnwmn_c.cpp",
+      "symbol": "__sinit_d_a_bg_snwmn.cpp",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02122350"
@@ -1001,12 +1001,12 @@
     }
   ],
   "notes": [
-    "The class name daBgSnwmn_c and profile ID BIG_SNOWMAN survive in the ROM. daBgSnwmn_c_classInit, g_profile_BIG_SNOWMAN, and the consolidated TU name daBgSnwmn_c.cpp are source-style reconstructions supported by the registry relationship and later EAD conventions.",
+    "The class name daBgSnwmn_c and profile ID BIG_SNOWMAN survive in the ROM. daBgSnwmn_c_classInit, g_profile_BIG_SNOWMAN, and the consolidated TU name d_a_bg_snwmn.cpp are source-style reconstructions supported by the registry relationship and later EAD conventions.",
     "The full factory join is a tested reconstruction hypothesis backed by direct registry and constructor evidence; build/tu_map.json does not itself label that one-function run as daBgSnwmn_c.",
     "The typed 0x1c profile layout is classInit, signed 16-bit behaviorPriority, signed 16-bit renderPriority, actorFlags, clipOffsetY, clipRadius, clipDistance, and farDistance. Its unchanged retail words are 0x0110, 0x0083, 3, 1, 0x0012c000, 0x01000000, and 0x00001000 after the factory pointer.",
     "The inline destructor declared last makes mwccarm emit the exact D1 then D0 pair with no D2 body. The class-local operator new routes ordinary `new daBgSnwmn_c()` to the retail fBase_c allocator; the compiler emits and owns the vptr store.",
     "Legacy per-function contribution comparison is not applicable to the final lifecycle form: the two old out-of-line destructor shards cannot compile beside the inline destructor that emits their exact replacements. The ordinary intact-object linkcheck is the production proof.",
-    "The file-scope model handles, texseq handle, and cylinder offset are defined in this TU. mwcc emits __sinit_daBgSnwmn_c.cpp, the ctor word, and four anonymous registration nodes. Class RTTI and the vtable stay where they were. The handwritten src/__sinit_ov072_02122350.c is retired.",
+    "The file-scope model handles, texseq handle, and cylinder offset are defined in this TU. mwcc emits __sinit_d_a_bg_snwmn.cpp, the ctor word, and four anonymous registration nodes. Class RTTI and the vtable stay where they were. The handwritten src/__sinit_ov072_02122350.c is retired.",
     "Local scratch link matched this machine's stock control. The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the owned ranges matched."
   ],
   "verification": {

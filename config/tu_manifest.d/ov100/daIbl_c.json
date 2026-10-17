@@ -1,12 +1,12 @@
 {
   "id": "ov100/daIbl_c",
   "module": "ov100",
-  "source": "src/actors/daIbl_c.cpp",
-  "promoted_source": "src/actors/daIbl_c.cpp",
+  "source": "src/game/actors/d_a_ibl.cpp",
+  "promoted_source": "src/game/actors/d_a_ibl.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x2141f04..0x214316c, 15 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daBtfly_c_classInit (src/actors/daBtfly_c.cpp) ends exactly at 0x02141f04 below it.",
+    "contiguous linker run: 0x2141f04..0x214316c, 15 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daBtfly_c_classInit (src/game/actors/d_a_btfly.cpp) ends exactly at 0x02141f04 below it.",
     "class label(s): daIbl_c",
     "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "classInit tail fold: daIbl_c_classInit (0x0214316c..0x021431c4) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x02141f04..0x021431c4, bounded above by daWanwan2_c's D1, which starts exactly at 0x021431c4."

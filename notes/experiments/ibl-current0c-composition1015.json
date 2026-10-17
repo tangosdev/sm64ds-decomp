@@ -1,0 +1,294 @@
+{
+  "schema": 1,
+  "task_id": "ibl-current0c-composition1015",
+  "actual_report_producer": "Codex /root, codex-ibl-current0c-root-producer1015",
+  "change": "Compose the existing PR with current main and refresh verification. Preserve its accepted Source, header, manifest and historical report blobs.",
+  "published_input": "ac04755af7569dd65f3e9c79db3bdfd6bac76142",
+  "tested_base": "0c558835b163c1f672479d00b979ebf251759cbf",
+  "actual_source_tested_commit": "278eb9429918c2da7fa670ecfda319f08c54c651",
+  "source_header_manifest_historical_report_blobs": {
+    "config/tu_manifest.d/ov100/daIbl_c.json": "cfa6f7b982d1f822a494b0c71fc8c28dbdafc1d0",
+    "include/daIbl_c.h": "3fc9ff7a407f8c7059fa967493bfd5905266ebc0",
+    "notes/experiments/ibl-native-object-boundaries1015.json": "2f2f87af4d9e52654e1449fa90e8592ef38a500d",
+    "src/game/actors/d_a_ibl.cpp": "3e2f22cf30f3731b2468e9781aa69aa9ba7c59d7"
+  },
+  "original_source_authorship": "Address-keyed credits and all inherited contributions remain unchanged. This report producer authors the current composition/report, not the inherited native Source work.",
+  "reason": "Live PR Source guard rejected the previous head after main merged native initializers and terminal-BSS tooling. This composition imports those accepted main changes and needs fresh review before publication.",
+  "current_tools": {
+    "task_workflow": "0c558835b163c1f672479d00b979ebf251759cbf",
+    "tubuild_blob": "0de29c9ac3ede142fc160c19afc4dff5448cda10",
+    "active_source_review_policy": "18af52b49b9fb5663d417bdfa86109b7b157aaa3"
+  },
+  "fresh_producer_gates": {
+    "base": "0c558835b163c1f672479d00b979ebf251759cbf",
+    "source_checkpoint": "278eb9429918c2da7fa670ecfda319f08c54c651",
+    "gates": [
+      {
+        "name": "rombuild",
+        "exit_code": 0,
+        "seconds": 305.579,
+        "log_sha256": "d801fc5cccc524a12fccc5d3f76aac4f0d6f2bb8893f9cdc3cfff49f28a981ea",
+        "log": "build/current0c-ibl-root1015/full-build.log",
+        "actual_fresh_run": true
+      },
+      {
+        "name": "prepush",
+        "exit_code": 0,
+        "seconds": 13.718,
+        "log": "build\\current0c-ibl-root1015\\prepush.log",
+        "log_sha256": "cfd5b3afad100680cab8ce6ec171c1475f3ec08a65ce3893fe23255f6475acef"
+      },
+      {
+        "name": "whitespace",
+        "exit_code": 0,
+        "seconds": 0.063,
+        "log": "build\\current0c-ibl-root1015\\whitespace.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "old_full_runs_not_current": true
+  },
+  "full_log_final_lines": [
+    "      | Error: Some symbol(s) did not match.",
+    "[8/8] dsd rom config + rom build",
+    "      ok (3.8s) -> build/tu/_baseline/link/sm64ds-tu.nds  16777216 bytes  sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "",
+    "BASELINE CONTROL: modules PASS, dsd check symbols --fail FAIL, ROM built.",
+    "This is the same scratch pipeline with NO TU substitution: anything failing here is pre-existing and belongs to the tree, not to any TU.",
+    "report -> build/tu/_baseline/link/linkcheck.json (gitignored)",
+    "[3/6] mwccarm: 2734 enrolled source file(s), -j16",
+    "      2733 reused from cache, 1 compiled",
+    "      lcf: defined 10 interior row(s) at their ROM address (SDK_SYS_STACKSIZE, SDK_IRQ_STACKSIZE, func_01ff98f4, func_01ff99a4, _deq, func_01ff9d40, func_01ff9e2c, _ZN3IRQ11SetFIQStateEb, _ZN3IRQ11SetIRQStateEb, data_ov006_02142e02)",
+    "[4/6] mwldarm",
+    "      intact TU gates: dsd modules PASS, zero new symbol errors, storage aliases exact",
+    "[5/6] skipped (--no-rom)",
+    "[6/6] analyze module and source fidelity",
+    "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+    "  reproducing: 11,334",
+    "  mismatching: 0",
+    "source-owned data claims: 334  (reproducing 334, mismatching 0)",
+    "source-owned BSS claims: 241  (30,644 NOBITS bytes; object/symbol gates)",
+    "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+    "  of 3,049,600 module bytes: 2,225,480 (73.0%) source-built code, 13,268 source-owned data, 798,224 data bytes no complete source entry reaches; 49,088 compiler-emitted data bytes verified overall",
+    "  retail-gap contribution: 810,852 module bytes (12,628 function-code, 798,224 data/non-function)",
+    "ROM-build analysis: PASS",
+    "ROM data from source: 974 symbol(s) verified, 1,537 partial, 1 differ, 15 unnamed by config (from 5,275 object records)"
+  ],
+  "full_global_qualification": "The actual new invocation is current-base proof. Inherited control symbol/advisory output is retained in the log; this does not assert that every global symbol/advisory is clean.",
+  "focused_proof_status": "Prior exact focused/object/metadata/storage acceptance remains historical evidence. New independent focused checks under current tools are required before acceptance and publication; none is asserted here in advance.",
+  "prepush_qualification": "Current changed range verifies the 16 Ibl functions without warnings. The separate 18 r_nk bodies and storage are checked independently; do not call this generic range 34 checks.",
+  "inherited_findings": {
+    "IBL-CURRENT-GENERIC-COVERAGE-1015": {
+      "disposition": "open",
+      "id": "IBL-CURRENT-GENERIC-COVERAGE-1015",
+      "kind": "provenance",
+      "location": "notes/experiments/ibl-native-object-boundaries1015.json:/gates/qualifications/1 and /whole_object_proof/limits; producer currente209/HANDOFF.json:/limits/2",
+      "next_action": "Producer makes a report-only correction distinguishing current16/0warnings generic coverage from additional r_nk full-object/storage proof and historical35/BLIND18; preserve all22 previous finding dictionaries and record this provenance correction.",
+      "reason": "Both current producer and independent --range e209..HEAD prepush artifacts check16 Ibl functions, all16 VERIFIED,0warnings,0blocking. The header no longer differs from currentmain, so generic prepush does not include r_nk or its initializer. Independent additional scope proves all18 r_nk text functions and complete548B/48-reference nontext storage plus208B/17-record BSS. Historical35-check/header-fanout BLIND18 must remain explicitly historical, not described as a current generic warning.",
+      "summary": "The current packet incorrectly carries a generic initializer BLIND18 warning into the current comment-only follow-up."
+    },
+    "IBL-FACTORY-MEMBER-COUNT-1015": {
+      "disposition": "fixed",
+      "id": "IBL-FACTORY-MEMBER-COUNT-1015",
+      "kind": "provenance",
+      "location": "src/game/actors/d_a_ibl.cpp:945",
+      "reason": "The comment now says return new constructs the ball and its members. The current class has six class-type member subobjects: dBgCh_Actr, Model, dExtShadowModel_c, dCcAc_c, Vector3 mDrawScale and PathPtr. The empty inline Vector3 constructor still begins a real subobject lifetime; five out-of-line constructor calls are not the member count. The sole comment replacement preserves its physical line and all executable Source. Fresh complete RAW and ordinary prepared objects for both consumers remain literal, with all34 strict functions and complete metadata/storage checked. Earlier fixed lifecycle provenance and all21 prior finding dictionaries remain verbatim as historical accepted epochs.",
+      "summary": "Factory prose now describes construction without an obsolete five-member count."
+    },
+    "IBL-HURT-CONTRACT-1015": {
+      "disposition": "fixed",
+      "id": "IBL-HURT-CONTRACT-1015",
+      "kind": "correctness",
+      "location": "src/game/actors/d_a_ibl.cpp:local Hurt declaration",
+      "reason": "Declaration is int(Player*,void*,u32,int,u8,u8,u8), replacing void/Vector3*/u32 flag disagreement. ActorID guard precedes the existing Player cast; all seven arguments and discarded result remain. Native by-value Fix12 call reconstruction is still pending; the configured mangled spelling does not prove a unique original scalar type.",
+      "summary": "The local Hurt bridge agrees with the actual current definition."
+    },
+    "IBL-INTERFACE-1013-NATIVE": {
+      "disposition": "fixed",
+      "id": "IBL-INTERFACE-1013-NATIVE",
+      "kind": "reconstruction",
+      "location": "src/actors/daIbl_c.cpp:func_ov100_02142b90 and deleted externs",
+      "reason": "ClosestPlayer returns Player*. Spawn is the genuine static dActor_c interface with signed area/death-table parameters. IRONBALL actor 220 maps to daIbl_c, making the child downcast and direct mDispenser store consistent with the existing factory, RTTI and class layout. Both redundant local externs are removed. Complete raw and production objects remain identical, with exact canonical callees independently verified.",
+      "summary": "Nearest-player lookup and spawning use existing class declarations and typed pointers."
+    },
+    "IBL-INTERFACE-1013-PARTIAL": {
+      "disposition": "deferred",
+      "id": "IBL-INTERFACE-1013-PARTIAL",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3812",
+      "kind": "reconstruction",
+      "location": "src/actors/daIbl_c.cpp:Vec3i/M48/EmbeddedClass/VtEntry views, Behavior, scalar ABI externs and flat inherited fields",
+      "owner": "root enemy-cleanup coordinator / codex-ibl-interface-producer1013",
+      "reason": "The scoped cleanup preserves the plain stack snapshot and borrowed position/angle spans without adding Vector3 lifecycle. Remaining bridges are not certified as necessary compiler walls by this review; their cleanup is deferred explicitly under the continuing enemy workstream. Text-only production ownership remains unchanged; emitted metadata is checked separately before its externalization.",
+      "summary": "Existing raw views, manual PMF dispatch, scalar Fix12 ABI calls, and unnamed helper boundaries remain partial reconstruction."
+    },
+    "IBL-INTERFACE-1013-REPORT": {
+      "disposition": "fixed",
+      "id": "IBL-INTERFACE-1013-REPORT",
+      "kind": "provenance",
+      "location": "notes/experiments/ibl-interface1013.json:full_rom_summary.source_functions",
+      "reason": "Rejected head 2d250497365bffae2c0aa9d832847cc9fe2ba47e reported the earlier baseline-control count 5888. Corrected head 6821669b3425ce80712dd8610b93758153a17d87 records 11334 and preserves the correction history. The final production build log independently reports 11334 reproducing functions; all six build-input trees remain identical to the measured checkpoint.",
+      "summary": "The final committed summary now reports the actual 11334 source functions."
+    },
+    "IBL-LIFECYCLE-PROVENANCE-1015": {
+      "disposition": "fixed",
+      "id": "IBL-LIFECYCLE-PROVENANCE-1015",
+      "kind": "provenance",
+      "location": "include/daIbl_c.h and src/game/actors/d_a_ibl.cpp:leftovers",
+      "reason": "Vector3 default construction does not initialize components; current drawn variants store them before Render. New actual member/local lifetimes exist, while exact D1/D0/D2/factory and complete object identity establishes unchanged emitted lifecycle/cleanup. PathPtr witness wording no longer calls it the fifth member. Earlier universal caller-size assertions are qualified as pending reconstruction.",
+      "summary": "Header/source prose distinguishes inferred grouping, real new lifetimes and unchanged emitted code."
+    },
+    "IBL-NATIVE-RENDER-1015": {
+      "disposition": "fixed",
+      "id": "IBL-NATIVE-RENDER-1015",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_ibl.cpp:Render and include/daIbl_c.h:0x3ac",
+      "reason": "Removed the fake EmbeddedClass/vtable view and replaced only the three scale scalars with Vector3 mDrawScale. The x/y/z uses retain order and values. Group/type/name are inferred from observed scalar stores and the real Render pointer contract, not original spelling proved by RTTI. Header layout24fields/0mismatch/0unparsed and size0x3fc; all lifecycle bodies and both consumers remain byte-identical.",
+      "summary": "Render uses the actual Model interface and an actual Vector3 draw-scale member."
+    },
+    "IBL-NATIVE-SPAWNER-1015": {
+      "disposition": "fixed",
+      "id": "IBL-NATIVE-SPAWNER-1015",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_ibl.cpp:func_ov100_02142b90",
+      "reason": "The local XYZ components are initialized before use. Actual Player scalar subobjects are read through a character view of the enclosing object at verified offsets0x5c/0x60/0x64; no cross-member scalar array is formed. Native direct named loads and const-reference loads measured392B instead of396B; the preserved whole-object representation bridge gives exact396B and complete raw/prepared identity. This does not reconstruct Player position as a grouped Vector3.",
+      "summary": "The spawner constructs a real automatic Vector3 and no longer fabricates a Vec3i object over Player fields."
+    },
+    "IBL-REMAINING-BOUNDARIES-1015": {
+      "disposition": "deferred",
+      "id": "IBL-REMAINING-BOUNDARIES-1015",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3812",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_ibl.cpp inherited fields, Spawn, M48 and Behavior",
+      "next_action": "Continue the separately owned shared field/interface/state reconstruction with complete current consumer and byte proof; retain this documented bridge until then.",
+      "owner": "codex-ibl-native-object-boundaries-root-coordinator1015",
+      "reason": "The new Player byte bridge retains raw offsets. Existing Spawn casts over this actor's flat position/angle fields, other base scalar views, M48 matrix copying, scalar helper bridges and manual PMF dispatch/mixed handler returns are unchanged and not original-type proof. Ibl remains a legacy text-only owner; ROM-supplied State/PMF/resource data and separate startup ownership are not newly claimed. Koopa Source and manifest remain literal; the retained full144 packet must compose its Koopa-manifest work onto this accepted lineage rather than overwrite it.",
+      "summary": "Shared flat-field, scalar ABI, aggregate-copy and manual state boundaries remain partial."
+    },
+    "NDT0922-01": {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    "NDT0922-02": {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    "NDT0922-03": {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    "RCV-PACKET-01": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    "RCV-PACKET-02": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    "RCV-PACKET-03": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    "RCV-PACKET-04": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    "RCV-SHADOW-01": {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    "RCV2908-01": {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    "RCV2908-02": {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    "RCV2908-03": {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    "RCV2908-04": {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    "STALE-ARRAY-RUNTIME-TEST": {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    }
+  },
+  "completion": "Partial reconstruction preserved. This refresh does not complete the class or resolve inherited deferred interfaces, fields, ownership or names.",
+  "report_creation_phase": "producer checkpoint; later acceptance and publication are recorded by immutable queue outputs",
+  "formal_acceptance_at_report_creation": false,
+  "publication_ready_at_report_creation": false,
+  "required_next": "Independent exact-candidate Source, body, metadata, storage, typed-relocation and static review; normal fast-forward update of the existing PR; rerun live Source guard and private CI for that exact new head. No merge authorized.",
+  "final_report_only_binding": "This report is the only file added after the actual tested source checkpoint; src/include/config/tools/port must remain literal to that checkpoint."
+}

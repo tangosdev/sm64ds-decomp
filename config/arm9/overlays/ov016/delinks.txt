@@ -4,7 +4,7 @@
     .ctor       start:0x02113abc end:0x02113ad0 kind:rodata align:4
     .data       start:0x02113ae0 end:0x02114d20 kind:data align:32
     .bss        start:0x02114d20 end:0x02114ea0 kind:bss align:32
-src/actors/daMoray_c.cpp:
+src/game/actors/d_a_moray.cpp:
     complete
     .text start:0x021111a0 end:0x0211260c
     .init start:0x021136ec end:0x021138bc
@@ -19,7 +19,7 @@ src/game/actors/d_a_obj_ki_fune.cpp:
     .ctor start:0x02113ac0 end:0x02113ac4
     .bss start:0x02114dcc end:0x02114e1c
 
-src/actors/daObjKi_Hasira_c.cpp:
+src/game/actors/d_a_obj_ki_hasira.cpp:
     complete
     .text start:0x02112a00 end:0x02112ef4
     .init start:0x02113978 end:0x021139e4
@@ -33,7 +33,7 @@ src/game/actors/d_a_obj_ki_ita.cpp:
     .ctor start:0x02113ac8 end:0x02113acc
     .bss start:0x02114e44 end:0x02114e6c
 
-src/actors/daSlide_Box_c.cpp:
+src/game/actors/d_a_slide_box.cpp:
     complete
     .text start:0x02112ff8 end:0x0211354c
     .init start:0x02113a50 end:0x02113abc

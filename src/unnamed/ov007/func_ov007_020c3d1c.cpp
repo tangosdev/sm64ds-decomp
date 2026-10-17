@@ -4,7 +4,7 @@
  * Player name. It reads no fields at all; it just calls a function pointer held
  * in ov007 data, so nothing here identifies the object as a Player.
  *
- * Detached from Player.h; see func_ov006_020d6084.cpp.
+ * Detached from Player.h; see SlotB2_Hide.cpp.
  */
 extern "C" {
 typedef void (*FP)(void*);

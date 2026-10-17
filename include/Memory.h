@@ -2,7 +2,8 @@
 #define MEMORY_H
 #include "types.h"
 
-struct Heap;
+namespace mHeap { struct Heap_t; }
+typedef mHeap::Heap_t Heap;  /* as in include/Heap.h */
 
 namespace Memory {
 

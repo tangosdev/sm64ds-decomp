@@ -183,14 +183,14 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN13dScMgMCarlo_c13OnTurnIntoEggEi",
+      "symbol": "_ZN13dScMgMCarlo_c11CanEndStateEi",
       "address": "0x020f8a3c",
       "size": "0x0000022c",
       "legacy_source": "src/func_ov006_020f8a3c.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN13dScMgMCarlo_c13OnYoshiTryEatEi",
+      "symbol": "_ZN13dScMgMCarlo_c10StartRoundEi",
       "address": "0x020f8c68",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020f8c68.c",
@@ -221,11 +221,11 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_0214250c",
+      "symbol": "sMCarloCardSprites",
       "address": "0x0214250c",
       "size": "0x4c",
       "binding": "STB_GLOBAL",
-      "evidence": "sprite-index remap table: 19 words copied from the retail table data_ov006_02133810 at overlay load; Render indexes it by sprite"
+      "evidence": "sprite-index remap table: 19 words copied from the retail table sMgCardSprites at overlay load; Render indexes it by sprite"
     }
   ],
   "notes": [
@@ -233,20 +233,20 @@
     "tubuild create warning: RAW: src/func_ov006_020f7ee4.cpp (func_ov006_020f7ee4) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov006_020f8a3c.c (func_ov006_020f8a3c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov006_020f8c68.c (func_ov006_020f8c68) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_0213d574' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142500' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021424fc' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7a90; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142508' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7a90; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021424fc' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b10; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142508' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b10; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142500' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b90; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021424fc' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142508' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142500' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142504' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f8320; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02142504' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f84a8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c0aa8' differs between the legacy file that used to hold _ZN13dScMgMCarlo_c6RenderEv and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov004_020beb68' differs between the legacy file that used to hold func_ov006_020f7c10 and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloDealProgress' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloCards' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloFirstPick' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7a90; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloSecondPick' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7a90; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloFirstPick' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b10; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloSecondPick' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b10; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloCards' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b90; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloFirstPick' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloSecondPick' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloCards' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloCardsTail' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f8320; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sMCarloCardsTail' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f84a8; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Camera_InitDealerView' differs between the legacy file that used to hold _ZN13dScMgMCarlo_c6RenderEv and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gMgScene' differs between the legacy file that used to hold func_ov006_020f7c10 and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Node') differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Node') differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b90; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held func_ov006_020f8224; kept the first, the other is commented out for review",
@@ -658,7 +658,7 @@
       "source": "0x02131954",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02133810",
+      "symbol": "sMgCardSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02133810"
@@ -668,7 +668,7 @@
       "source": "0x02131958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0214250c",
+      "symbol": "sMCarloCardSprites",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0214250c"

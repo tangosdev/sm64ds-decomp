@@ -68,7 +68,7 @@ struct daObjTtWater_c {
     u8  pad_2ec[0x34];
     /* TextureTransformer member, named by the class's own destructor calling
        TextureTransformer's D1 at +0x320 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN14daObjTtWater_cD1Ev, now in src/actors/daObjTtWater_c.cpp] */
+       checks. Was a u8 marker. [_ZN14daObjTtWater_cD1Ev, now in src/game/actors/d_a_obj_tt_water.cpp] */
     TextureTransformer mTextureTransformer;            /* 0x320 */
     s32 mMinPosY;            /* 0x334 */
     s32 mSoundID;            /* 0x338 */

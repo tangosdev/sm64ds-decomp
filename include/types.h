@@ -87,6 +87,13 @@ typedef struct Vector3s {
        __cxa_vec_cleanup(this + 0x444, 5, 6, func_02011508), a POD array needs no
        cleanup, and 0x02011508 is four bytes of `bx lr`. 6 is sizeof(Vector3s). */
     ~Vector3s() {}
+    /* Empty default construction: daHanachan_c's factory passes
+       func_0203d73c, four bytes of `bx lr`, to __cxa_vec_ctor(this + 0x444,
+       5, 6, ...). The body is defined in Vector3s.h, so a C++ file that
+       default-constructs a Vector3s (a local, an array, or a class holding
+       one) must include that header, or it calls an undefined
+       _ZN8Vector3sC1Ev. */
+    inline Vector3s();
 #endif
 } Vector3s;
 

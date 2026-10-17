@@ -1,8 +1,8 @@
 {
   "id": "arm9/dBgW_KcMbgSclY",
   "module": "arm9",
-  "source": "src/engine/collision/dBgW_KcMbgSclY.cpp",
-  "promoted_source": "src/engine/collision/dBgW_KcMbgSclY.cpp",
+  "source": "src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp",
+  "promoted_source": "src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

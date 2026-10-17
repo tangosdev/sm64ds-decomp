@@ -69,7 +69,7 @@ void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(void *self, HeapAllocator *
 #include "ExpandingHeapAllocator.h"
 #include "MemoryNode.h"
 extern "C" {
-ExpandingHeapAllocator *_ZN4Heap28CreateExpandingHeapAllocatorEPvjj(
+ExpandingHeapAllocator *_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj(
     void *address, u32 size, u32 flags)
 { return Heap::CreateExpandingHeapAllocator(address, size, flags); }
 

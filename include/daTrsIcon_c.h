@@ -4,8 +4,9 @@
 #include "dActor_c.h"
 
 /* ICON_TERESA, actor 0xd3 (g_profile_ICON_TERESA at 0x0211e7c4). The ROM RTTI
- * names this class daTrsIcon_c; BigBooIcon is the descriptive spawn-table name
- * retained by its factory and source directory. A Big Boo spawns it
+ * names this class daTrsIcon_c; BigBooIcon is its historical descriptive
+ * spawn-table name. The factory and TU now use the daTrsIcon_c identity.
+ * A Big Boo spawns it
  * (daTrs_c::mSpawnedActorID) and moves it along with itself; it tracks the
  * star the Big Boo releases.
  *

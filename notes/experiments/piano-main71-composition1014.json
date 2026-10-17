@@ -1,0 +1,485 @@
+{
+  "task": "piano-main71-composition1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
+  "completion": "partial",
+  "source_author": "Astra authored native construction, local Vector3 and actorID changes; Root corrected the target comment and composes this current-main continuation. Original matcher credit unchanged.",
+  "accepted_input": "5ed96fb3853c194facca6fe82f217ab411bd1bc1",
+  "accepted_input_base": "2968908e6773f24bdcf5b8da48304d9d02619fe4",
+  "accepted_predecessor_task": "piano-current-main1014",
+  "accepted_predecessor_verification_sha256": "f81c7f4daacbfe6cfc210895c0d945a93d9a712290667b3000c336f1dda18f91",
+  "tested_base": "71afe50de65c8e5d9b3d3147aec090698074c50d",
+  "composition_checkpoint": "a250295a543c969df7b832c3d41081b9ae4ebacf",
+  "change": "Normal merge of main71afe historical-evidence repair into independently accepted Piano. Native Source/header/manifest and previous reports are unchanged; all main changes imported literally. This new report records current composition without relabelling old proof as a new global build.",
+  "normal_merge_both_parents_preserved": true,
+  "inherited_findings": [
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PIANO-FIX12-INTERFACES",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_piano.cpp local extern block and calls",
+      "owner": "codex-piano-native-root-coordinator1014; next explicitly claimed producer",
+      "reason": "Retained partial reconstruction outside this native construction/local-vector/actor-ID scope; no fresh failed native-ABI experiment or universal compiler limitation is claimed.",
+      "summary": "Matched scalar declarations remain for animation, collision initialization, mesh SetFile, Player Hurt and DropShadow interfaces. Issue2720 explicitly leaves its items5/6 outside this cleanup; applicable shared class follow-ups include3791,3801 and3784."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PIANO-SCALAR-POSITION-VIEWS",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_piano.cpp state helpers and matrices",
+      "owner": "codex-piano-native-root-coordinator1014; next explicitly claimed producer",
+      "reason": "Retained partial reconstruction outside this native construction/local-vector/actor-ID scope; no fresh failed native-ABI experiment or universal compiler limitation is claimed.",
+      "summary": "Vector3 pointer views across dActor scalar position members and the flat Matrix4x3 representation remain. Real local Vector3 objects do not repair the shared field grouping or prove original layout types."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PIANO-FREE-HELPER-INTERFACES",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_piano.cpp helpers/local externs",
+      "owner": "codex-piano-native-root-coordinator1014; next explicitly claimed producer",
+      "reason": "Retained partial reconstruction outside this native construction/local-vector/actor-ID scope; no fresh failed native-ABI experiment or universal compiler limitation is claimed.",
+      "summary": "Address-named free functions and Vec3-pointer helper declarations remain current configured interfaces. Radius/height setters and original source names are not reconstructed."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PIANO-RELOAD-FORMS",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_piano.cpp search/attack/shadow helpers",
+      "owner": "codex-piano-native-root-coordinator1014; next explicitly claimed producer",
+      "reason": "Retained partial reconstruction outside this native construction/local-vector/actor-ID scope; no fresh failed native-ABI experiment or universal compiler limitation is claimed.",
+      "summary": "Existing volatile position/angle accesses, sine-table order, strength-reduction pragmas and state-dispatch reload forms remain. Their exact bytes do not uniquely recover original syntax."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PIANO-EXTERNAL-PROFILE-CLPS",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_piano.cpp resource definitions and InitResources",
+      "owner": "codex-piano-native-root-coordinator1014; next explicitly claimed producer",
+      "reason": "Retained partial reconstruction outside this native construction/local-vector/actor-ID scope; no fresh failed native-ABI experiment or universal compiler limitation is claimed.",
+      "summary": "The external g_profile_PIANO and CLPS payload are not reconstructed. Existing asset-handle classes/state table ownership remain unchanged."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PIANO-DECLARATION-POPULATION",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
+      "kind": "reconstruction",
+      "location": "check_decl_agreement results for this Source and its symbol population",
+      "owner": "codex-piano-native-root-coordinator1014; next explicitly claimed producer",
+      "reason": "Retained partial reconstruction outside this native construction/local-vector/actor-ID scope; no fresh failed native-ABI experiment or universal compiler limitation is claimed.",
+      "summary": "Scoped/global declaration ratchets pass with no new disagreement. Existing 175 scoped findings and 7477 global disagreements remain; this is not universal declaration agreement."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PIANO-2712-02",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_piano.cpp and config/tu_manifest.d/ov063/daPiano_c.json",
+      "reason": "Independently reviewed actual Source/manifest delta and fresh whole-TU retained graph, ordinary strict functions, complete metadata and helper proof support this scoped fix; unrelated historical findings remain historical.",
+      "summary": "Native factory and real local vectors now use the promoted TU, with exact supported helper handling and fresh whole-TU proof."
+    },
+    {
+      "disposition": "fixed",
+      "id": "PIANO-STALE-PROVENANCE",
+      "kind": "provenance",
+      "location": "src/game/actors/d_a_piano.cpp and config/tu_manifest.d/ov063/daPiano_c.json",
+      "reason": "Independently reviewed actual Source/manifest delta and fresh whole-TU retained graph, ordinary strict functions, complete metadata and helper proof support this scoped fix; unrelated historical findings remain historical.",
+      "summary": "Existing fBase_c actorID is named, func0201267c is acknowledged as an enrolled Sound.cpp forwarder, and old promotion-only manifest measurements are explicitly historical."
+    },
+    {
+      "id": "PIANO-NEAREST-PROVENANCE-1014",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "include/daPiano_c.h:37",
+      "summary": "Active header says0211dbb8 stores the nearest moving player although matched helper returns after the first qualifying slot.",
+      "reason": "Independently read exact nearest -> first qualifying header replacement against immediate-return loop and inspected corrected current author disclosure/report. Own fresh onlyconsumer before/after raw101d64ca... and ordinary1a7c7e9a... complete16672B objects literal to own prior strict/metadata/graphs and actuald8ccombinedbuild object; TPownedBeforeAfterPASS, comment-removedheaderbytesliteral, allother4460inputentriesliteral. Freshrepairedscopeddecl/deadrefs/whitespace0. No behavior, layout, declarations, ownership, helpers, ABI, policy or matchercredit changes. Original failed06c72attempt remains preserved.",
+      "source_evidence": {
+        "file": "src/game/actors/d_a_piano.cpp",
+        "lines": "258-267",
+        "statement": "bestDist=0x7fffffff; first qualifying condition stores mTarget; func_ov063_0211ddac(...kStateAttack); return;"
+      },
+      "header_quote": "Chase target: func_ov063_0211dbb8 stores the nearest moving player slot",
+      "header_consumer_closure": [
+        "src/game/actors/d_a_piano.cpp"
+      ],
+      "inherited_unchanged_header": true
+    }
+  ],
+  "finding_accounting": {
+    "total": 22,
+    "fixed": 16,
+    "deferred": 6
+  },
+  "fresh_object_and_input_proof": {
+    "kind": "Root producer current-main composition proof, not independent acceptance",
+    "checkpoint": "a250295a543c969df7b832c3d41081b9ae4ebacf",
+    "accepted_input": "5ed96fb3853c194facca6fe82f217ab411bd1bc1",
+    "tested_base": "71afe50de65c8e5d9b3d3147aec090698074c50d",
+    "normal_merge_both_parents_preserved": true,
+    "actor_source_header_manifest_and_reports_literal_accepted": true,
+    "src_include_tools_port_trees_literal_accepted": true,
+    "config_tree_literal": false,
+    "exact_changed_config_paths": [
+      "config/dead-reference-baseline.json",
+      "config/tu_manifest.d/ov030/daMky_c.json",
+      "config/tu_manifest.d/ov075/dScEntry_c.json",
+      "config/tu_manifest.d/ov085/daObjKanban_c.json",
+      "config/tu_manifest.d/ov091/daDsnBase_c.json",
+      "config/tu_manifest.d/ov091/daObjPile_c.json",
+      "config/tu_manifest.d/ov100/daStarGate_c.json"
+    ],
+    "all_changed_config_blobs_literal_main": true,
+    "semantic_proof_sha256": "9e9cc91f16e43217c68cf29ec120dfc79a08d79012c5579495f98035b364e756",
+    "all_six_manifest_changed_leaves_inspected": 20,
+    "canonical_functions_maps_ranges_ownership_helper_policies_unchanged": true,
+    "reason_nonempty_predicate_preserved": true,
+    "fresh_entire_raw_literal_accepted_and_combined_full_input": true,
+    "fresh_entire_ordinary_literal_accepted_and_combined_full_object": true,
+    "raw_sha256": "101d64ca16833f03be02c6400ba6d053fbd8826b41ed840a2e08432726a5e390",
+    "ordinary_sha256": "1a7c7e9a51fed23455f61920e6b7c59a84d781a15607e82aa8c930297fc951fd",
+    "raw_bytes": 16672,
+    "ordinary_bytes": 16672,
+    "normal_owned_before_after_freshly_verified": true,
+    "full_build_transfer": "Actual combined full106/11334 remains atd8c; own accepted repaired header transfer and these six measured manifest semantic changes positively bind all source/compiler/link-policy inputs. Config bytes/cache fingerprints and historical notes differ; no new global build or universal input identity is claimed."
+  },
+  "main_manifest_delta": {
+    "config_tree_literal": false,
+    "exact_changed_config_paths": [
+      "config/dead-reference-baseline.json",
+      "config/tu_manifest.d/ov030/daMky_c.json",
+      "config/tu_manifest.d/ov075/dScEntry_c.json",
+      "config/tu_manifest.d/ov085/daObjKanban_c.json",
+      "config/tu_manifest.d/ov091/daDsnBase_c.json",
+      "config/tu_manifest.d/ov091/daObjPile_c.json",
+      "config/tu_manifest.d/ov100/daStarGate_c.json"
+    ],
+    "manifest_count": 6,
+    "changed_leaf_count": 20,
+    "manifests": [
+      {
+        "path": "config/tu_manifest.d/ov030/daMky_c.json",
+        "old_blob": "f05a17740a3e7c87ec044e8cf15ac02c0a346ddc",
+        "new_blob": "ee8e50c09695dc7e7ff078f2b98a3b5a55d7bfac",
+        "old_sha256": "bda2618b24480bb67240b58f95b95a0e24bf9f3947f22ab60011d3cb112afadb",
+        "new_sha256": "a6e4e0784d8ab1871759017106806da06afb2b38bee12769d1a838831f5bb073",
+        "production_mode": null,
+        "all_other_recursive_json_values_exact": true,
+        "helper_reason_presence_unchanged": true,
+        "canonical_functions_maps_ranges_ownership_helper_policies_unchanged": true,
+        "changed_leaf_paths": [
+          "/compiler_only_output/11/reason",
+          "/verification/compilerOnlyOutput/requested/2",
+          "/verification/compilerOnlyOutput/deadstripped/1"
+        ]
+      },
+      {
+        "path": "config/tu_manifest.d/ov075/dScEntry_c.json",
+        "old_blob": "98593f6f7ceb93659d83fe1e367c43b6d57a8293",
+        "new_blob": "b90266f509459f0bea616af8e41e3712b0e6c5db",
+        "old_sha256": "c7a79e5f355113e00842de751b6fc49e4e4bc4db8639f8b7d68e264c0962c031",
+        "new_sha256": "cfeffa3823c1813aa8f72c85142b72f80fbbb3548e4c17b4988eb547dcc4d15d",
+        "production_mode": null,
+        "all_other_recursive_json_values_exact": true,
+        "helper_reason_presence_unchanged": true,
+        "canonical_functions_maps_ranges_ownership_helper_policies_unchanged": true,
+        "changed_leaf_paths": [
+          "/verification/linkcheck"
+        ]
+      },
+      {
+        "path": "config/tu_manifest.d/ov085/daObjKanban_c.json",
+        "old_blob": "121773d5e9a1e20f7ef7da066c3f9d80358adc5b",
+        "new_blob": "a69dee364700f0e88e42586d48bd2015f9569bf3",
+        "old_sha256": "2d0133ca6fd068bdd0186d7dd0b276fb6898b5ead5f5e5b7e6b5d6a42e366ce5",
+        "new_sha256": "d8c5a632b43c875753d65380ae3577c3c5b2135061c7e0243989eae2085bca66",
+        "production_mode": "intact-object",
+        "all_other_recursive_json_values_exact": true,
+        "helper_reason_presence_unchanged": true,
+        "canonical_functions_maps_ranges_ownership_helper_policies_unchanged": true,
+        "changed_leaf_paths": [
+          "/verification/criteria/declared_function_set_equals_defined_function_set"
+        ]
+      },
+      {
+        "path": "config/tu_manifest.d/ov091/daDsnBase_c.json",
+        "old_blob": "7b39a0151980bd527203535eec94b4969c3c28bd",
+        "new_blob": "7506a7ffaede2151000ee4f2a0572fe8cc8f08bf",
+        "old_sha256": "68a31689ef9102635266f52d53b83006018cf60b34d981a8de8dcad56a84e141",
+        "new_sha256": "b2f79594cd80f4810920295666b0871b8a60790472fa95e7ab40afab113e59a8",
+        "production_mode": null,
+        "all_other_recursive_json_values_exact": true,
+        "helper_reason_presence_unchanged": true,
+        "canonical_functions_maps_ranges_ownership_helper_policies_unchanged": true,
+        "changed_leaf_paths": [
+          "/notes/11"
+        ]
+      },
+      {
+        "path": "config/tu_manifest.d/ov091/daObjPile_c.json",
+        "old_blob": "3813d8d1f96f580666a5c14937a4e92808f4c468",
+        "new_blob": "e1b3f9e0469704af2a4c1a51d0904dd34f9b60b9",
+        "old_sha256": "9e4f8380e2496cf3a9c983f61ad85cea465cc5fcd4dd1afa661bdd09b58dc80d",
+        "new_sha256": "04bd4e862bbb6e395770861e685d22e90074cec997a7e5419539b22382e20d5a",
+        "production_mode": "intact-object",
+        "all_other_recursive_json_values_exact": true,
+        "helper_reason_presence_unchanged": true,
+        "canonical_functions_maps_ranges_ownership_helper_policies_unchanged": true,
+        "changed_leaf_paths": [
+          "/verification/criteria/declared_function_set_equals_defined_function_set"
+        ]
+      },
+      {
+        "path": "config/tu_manifest.d/ov100/daStarGate_c.json",
+        "old_blob": "82bd0e099826a89486a542999ee9d17ca0945fde",
+        "new_blob": "36e13d3c57406d3981505c068b57d4cf9b0fd866",
+        "old_sha256": "3285ec358c051ad05cecd4f1695a84e60cf5c1d2b7991f1d9e48d22161770266",
+        "new_sha256": "1d0d67dff126c6351684c38ecc6f3ffff5ae5fe7b4f4cee553ba9bb5bef0c1dc",
+        "production_mode": "intact-object",
+        "all_other_recursive_json_values_exact": true,
+        "helper_reason_presence_unchanged": true,
+        "canonical_functions_maps_ranges_ownership_helper_policies_unchanged": true,
+        "changed_leaf_paths": [
+          "/partitioned_link/lastAttempt/symbolBindingPolicy/requested/2/symbol",
+          "/partitioned_link/lastAttempt/symbolBindingPolicy/requested/3/symbol",
+          "/partitioned_link/lastAttempt/symbolBindingPolicy/rewritten/2/symbol",
+          "/partitioned_link/lastAttempt/symbolBindingPolicy/rewritten/3/symbol",
+          "/partitioned_link/lastAttempt/nontextPartition/licensedSymbols/0",
+          "/partitioned_link/lastAttempt/nontextPartition/licensedSymbols/18",
+          "/partitioned_link/lastVerified/symbolBindingPolicy/requested/2/symbol",
+          "/partitioned_link/lastVerified/symbolBindingPolicy/requested/3/symbol",
+          "/partitioned_link/lastVerified/symbolBindingPolicy/rewritten/2/symbol",
+          "/partitioned_link/lastVerified/symbolBindingPolicy/rewritten/3/symbol",
+          "/partitioned_link/lastVerified/nontextPartition/licensedSymbols/0",
+          "/partitioned_link/lastVerified/nontextPartition/licensedSymbols/18",
+          "/partitioned_link/sinitSpellingNote"
+        ]
+      }
+    ],
+    "semantics": "Exact changed leaves are prose or dated result records, except deadstrip reason whose consumed nonempty predicate is preserved. All remaining recursive manifest values including live functions/maps/from/to/ranges/ownership/helper dispositions and active structured admission are identical. Supports a qualified 296->71 build-semantic transfer in conjunction with each candidate own proof; does not prove an uncomposed candidate or replace independent review.",
+    "changed_reason_is_consumed": "The nonempty reason predicate is preserved. Historical result strings are not universally ignored: structured intact admission evidence is consumed, and is unchanged here; dScEntry prose linkcheck sits outside intact mode.",
+    "static_policy": "The dead-reference baseline adds56 historical-document allowances; no source/header/build-tool code or live build policy changes. Its static checker was freshly rerun.",
+    "new_review_context": "51 historical notes, including seven Piano requires, were imported literally and require current-context source review. They retain original historical source/symbol identities with explicit epoch context."
+  },
+  "proof_scope": {
+    "normal_owned_unique_functions": 18,
+    "strict_blind": 0,
+    "strict_diffs": 0,
+    "full_canonical_metadata": [
+      11,
+      244,
+      47
+    ],
+    "raw_retained_graph": [
+      41,
+      167,
+      191
+    ],
+    "normal_retained_graph": [
+      41,
+      167,
+      144
+    ],
+    "whole_original_versus_native_containers_literal": false,
+    "qualified_transfer": "New whole RAW and ordinary object containers are each literal to accepted native outputs; original-versus-native containers remain different because discarded helper records remain. Previous fresh exact strict/metadata/helper/storage proof transfers through whole object identity and unchanged live inputs.",
+    "actual_combined_full_build": "d8c9c7bc2cbe9bd28eb0b8d92f8ae2e50b9fc8aa",
+    "actual_full_modules": 106,
+    "actual_full_source_functions": 11334,
+    "actual_full_data_claims": 331,
+    "actual_full_bss_claims": 239,
+    "new_full_build_run": false,
+    "qualifications": [
+      "The current config tree and object-cache fingerprints differ; exact field-level semantic proof replaces a false all-inputs-literal assertion.",
+      "Standard prepush reports17VERIFIED and initializerBLIND9; normal initializer strict proof independently covers destinations.",
+      "Nine inherited scratch stock-symbol errors, global data advisories and --no-rom no-candidate-image qualification remain recorded in prior reports.",
+      "All six deferred reconstruction findings remain open; no original-source uniqueness or complete class reconstruction claim."
+    ]
+  },
+  "fresh_scoped_gates": [
+    {
+      "name": "prepush",
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "71afe50de65c8e5d9b3d3147aec090698074c50d..HEAD",
+        "--json",
+        "build\\main71-compositions1014\\piano-main71-prepush.json"
+      ],
+      "executed_commit": "a250295a543c969df7b832c3d41081b9ae4ebacf",
+      "exit_code": 0,
+      "seconds": 12.701857805252075,
+      "log": "build\\main71-compositions1014\\piano-main71-prepush.log",
+      "sha256": "aa949a4eb26d2879ed612b50ee0ecb2d72cf3b6c2d003b0024969252ce086297"
+    },
+    {
+      "name": "decl-scoped",
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "71afe50de65c8e5d9b3d3147aec090698074c50d"
+      ],
+      "executed_commit": "a250295a543c969df7b832c3d41081b9ae4ebacf",
+      "exit_code": 0,
+      "seconds": 9.921207189559937,
+      "log": "build\\main71-compositions1014\\piano-main71-decl-scoped.log",
+      "sha256": "a3d29b2f98ec59047b8e0a076d7eae8138743696fe883ca2c5c0dc8a5e64ca2e"
+    },
+    {
+      "name": "port",
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/port_refcheck.py"
+      ],
+      "executed_commit": "a250295a543c969df7b832c3d41081b9ae4ebacf",
+      "exit_code": 0,
+      "seconds": 1.5734026432037354,
+      "log": "build\\main71-compositions1014\\piano-main71-port.log",
+      "sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+    },
+    {
+      "name": "dead-references",
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_dead_references.py"
+      ],
+      "executed_commit": "a250295a543c969df7b832c3d41081b9ae4ebacf",
+      "exit_code": 0,
+      "seconds": 5.455928325653076,
+      "log": "build\\main71-compositions1014\\piano-main71-dead-references.log",
+      "sha256": "5136f11e62c57db7507c51f8b42455129491acf502883622fc051b3a4ac7a4d5"
+    },
+    {
+      "name": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "71afe50de65c8e5d9b3d3147aec090698074c50d..HEAD"
+      ],
+      "executed_commit": "a250295a543c969df7b832c3d41081b9ae4ebacf",
+      "exit_code": 0,
+      "seconds": 0.05317544937133789,
+      "log": "build\\main71-compositions1014\\piano-main71-whitespace.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "evidence": {
+    "build/main71-compositions1014/piano-main71-proof.json": "36c9010d49f6763118ef74c11be83723502d1852d42c473bbd45fda07dc04b78",
+    "build/main71-compositions1014/main71-semantic-proof.json": "9e9cc91f16e43217c68cf29ec120dfc79a08d79012c5579495f98035b364e756",
+    "build/main71-compositions1014/piano-main71.raw.o": "101d64ca16833f03be02c6400ba6d053fbd8826b41ed840a2e08432726a5e390",
+    "build/main71-compositions1014/piano-main71.ordinary.o": "1a7c7e9a51fed23455f61920e6b7c59a84d781a15607e82aa8c930297fc951fd",
+    "build/main71-compositions1014/piano-main71-preparation.json": "7a5d91b2415d7099bcd3d2cfbeba93fd368c6199a2de3f685c4cbf189a209650",
+    "build/main71-compositions1014/piano-main71-gates.json": "92ecdbf3008345c4d4a0a9b5940d31a13d5959461e27264424c4ffc2bd0d5ad0"
+  },
+  "next_action": "A separately claimed independent verifier must review this exact final candidate/base71, inherited22findings and changed historical context, fresh whole-object and measured manifest semantics. After accepted review, authorized focused PR publication and normal private CI; no merge."
+}

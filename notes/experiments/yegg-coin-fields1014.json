@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "task_id": "yegg-coin-fields1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3847",
+  "completion": "partial",
+  "formal_acceptance": false,
+  "actual_source_author": "Codex /root, codex-yegg-coin-fields-root-producer1014",
+  "source_checkpoint": "ce13e453168718de1aa8b2bdfe7b8bbf22cd038c",
+  "source_base": "64d267126c8df54900f18b98b3d9baae6e11377b",
+  "tested_base": "92ad0fdcf0639c56181648c022a8a1d2659ade74",
+  "candidate": "this commit",
+  "source": "src/game/actors/d_a_yegg.cpp",
+  "function": "_ZN8daYegg_c19func_ov002_020ec80cEPviis",
+  "address": "ov002:0x020ec80c",
+  "size": 300,
+  "change": "Use existing dActor_c mPrevAngleX/Y/Z and mHorzSpeed fields for spawned coin stores instead of byte-offset writes. Preserve Spawn arguments, null check, RNG calls and ordering, narrowing widths, and compound speed arithmetic. Update obsolete source note.",
+  "evidence": "Existing dActor_c layout places the s16 previous-angle fields at +0x92/+0x94/+0x96 and s32 horizontal speed at +0x98. These are existing reconstructed interface names; this slice does not recover original names or coin-consumer semantics.",
+  "proof": {
+    "compiler": "2004/b56, independently live canary VERIFIED",
+    "strict_functions": 34,
+    "different_words": 0,
+    "blind_relocations": 0,
+    "whole_raw_literal_equal_64d_control": true,
+    "whole_prepared_literal_equal_64d_control": true,
+    "raw_sha256": "4de153a42bbcbff442d2c18fe506070a6e1bae7dfc93db59930a9b4105f51cc6",
+    "prepared_sha256": "33fd40a6f29cb17567214b6aca43e0919276042e0b93fd0b191ca9ed32c66620",
+    "source_working_bytes_sha256": "caf5d40f63100168c265cc920f33bcb140073689091255040780914b54f105d7",
+    "source_git_lf_sha256": "5341da71396daf90ebcde2b14a950d9bcd577238b204af553010553e7eb0749a",
+    "full_stock_rombuild": {
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "actual_terminal_exit": 0,
+      "actual_tested_commit": "ce13e453168718de1aa8b2bdfe7b8bbf22cd038c",
+      "modules_exact": 106,
+      "modules_total": 106,
+      "functions_exact": 11334,
+      "data_claims_exact": 331,
+      "bss_claims": 239,
+      "new_symbol_errors": 0,
+      "existing_baseline_symbol_errors": 9,
+      "advisory_global_data": {
+        "verified": 970,
+        "partial": 1519,
+        "differ": 1,
+        "unnamed": 21
+      },
+      "qualification": "Default build passed. Existing baseline symbol errors and global data advisory differences remain; no clean global metadata claim. --no-rom skips final cartridge assembly."
+    },
+    "prepush_linkcheck": "34 verified, 0 warnings, 0 blocking; actual exit 0",
+    "other_gates": {
+      "scoped_declaration_agreement": 0,
+      "port_refcheck": 0,
+      "duplicate_sources": 0,
+      "dead_references": 0,
+      "git_diff_check": 0
+    }
+  },
+  "tested_production_trees": {
+    "src": "7c6ff5d4351fbbc05181102a267fe1ed611e8ccb",
+    "include": "d996ee1a84869ec357c253949d092d7e275c80a4",
+    "config": "474bcde99ec59a8d04b5823d0ca03601c898cf2d",
+    "tools": "fe80573092c00318ea9a7230c9ab65eb1165f76d",
+    "port": "e8de3a79dcca33cce401d217cc28703313c8539b"
+  },
+  "inherited_findings": {
+    "YEGG-GROUND-PROVENANCE-01": {
+      "disposition": "fixed",
+      "id": "YEGG-GROUND-PROVENANCE-01",
+      "kind": "provenance",
+      "location": "src/actors/daYegg_c.cpp:57",
+      "reason": "Independent preflight flagged the stale clause before immutable Source checkpoint. Exact294789d/b934 Source removes that clause and explicitly describes real ground lifetime/clsnY and reconstructed actor-interface identifiers. Current Source/report preserve remaining raw offsets rather than presenting entire class complete.",
+      "summary": "Private combined candidate still described the replaced ground clsnY field access as a raw+0x44 read."
+    },
+    "YEGG-RECONSTRUCTION-01": {
+      "disposition": "deferred",
+      "id": "YEGG-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3847",
+      "kind": "reconstruction",
+      "location": "src/actors/daYegg_c.cpp and include/daYegg_c.h",
+      "owner": "codex-yegg-readable-producer1014 and codex-yegg-readable-coordinator1014 reconstruction followup",
+      "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, Player+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free Player-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
+      "summary": "Yegg remains a partial reconstructed class despite three genuine interface/lifetime replacements and intact owned TU storage."
+    }
+  },
+  "finding_continuation": "Four spawned-coin stores within YEGG-RECONSTRUCTION-01 are addressed here; preserve its full inherited dictionary and deferred disposition. Raw DOSUN/Player fields, math workspaces, helper names and other partial reconstruction remain.",
+  "scope": "One Source file and this report. No header, manifest, symbol, policy, enrollment or matching-credit changes. Prior accepted Yegg history retained.",
+  "review": "Producer evidence only. A distinct actual reviewer must claim and accept this exact final commit at the declared current base. The final report-only commit must retain all five tested production trees."
+}

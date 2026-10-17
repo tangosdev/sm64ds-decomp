@@ -1,6 +1,6 @@
 # Domain buckets under `src/`
 
-Status: active policy, 2026-08-27. Answers one question `tools/srcpath.py` deliberately
+Status: active policy, 2026-08-27; the class-TU directories below were populated on 2026-10-14. Answers one question `tools/srcpath.py` deliberately
 leaves open: which top-level directory does a class's *first* promoted file go into.
 
 ## What this is not
@@ -32,6 +32,7 @@ src/
   runtime/
     memory/
     math/
+    actor/              <- populated: ActorBase, dActor_c, dEnemyBase_c, ...
     graphics/
       fader/
     audio/
@@ -39,14 +40,14 @@ src/
   game/
     player/
     camera/
-    actors/
+    actors/             <- d_a_<name>.cpp, flat (no per-class subdirectory)
     objects/
-    stages/
+    stages/             <- scene classes
   ui/
-    hud/
+    hud/                <- populated: dMeter_c, dMap_c, cap icons
     menus/
     messages/
-  minigames/
+  minigames/            <- populated: dScMg*_c, dMg*_c, d_s_mg_*, ov004 units
   unnamed/
     <module>/           <- maturity gate, not a domain; see above
 ```
@@ -81,8 +82,7 @@ a rendering primitive, not gameplay logic and not UI text/menus. That's
 - `runtime/` — engine primitives independent of any one actor or scene.
   - `memory/`, `math/` — no dedicated `notes/*.md` yet; placeholders only.
   - `graphics/` — `fader/` is the one populated example (see above). `dFader_c` was
-    previously under `src/engine/fader/`; remapping it here is migration debt, not done
-    by this doc.
+    moved here from the engine layer.
   - `audio/` — `_ZN5Sound6Player...` classes exist (`srcpath.py`'s `class_of` docstring
     cites `Sound::Player` as a real symbol, grouped under outer component `Sound`). No
     dedicated `notes/*.md` yet.
@@ -100,7 +100,7 @@ a rendering primitive, not gameplay logic and not UI text/menus. That's
   - `stages/` — `notes/scene-provenance.md`, `notes/dscene-c-siblings-census.md`.
 - `ui/` — no gameplay logic, on-screen presentation only.
   - `hud/`, `menus/` — no dedicated note yet; placeholders.
-  - `messages/` — was `src/engine/message/`; remapping here is migration debt.
+  - `messages/` — moved here from the engine layer.
 - `minigames/` — top-level, not nested under `game/`, per `notes/minigame-provenance.md`.
 
 **Adding a bucket this doc doesn't already list** needs the same bar: point at existing
@@ -109,14 +109,13 @@ in the PR that adds it, not a guess about what EAD Tokyo probably had.
 
 ## Migration debt (not executed by this doc)
 
-Two already-migrated buckets predate this tree and don't fit it as-is. Remapping any of
+The engine layer predates this tree. Remapping any of
 these is a separate rename-only PR, done with the usual attribution-safe recipe — nothing
 here executes them:
 
 | Today | Target | Why |
 |---|---|---|
-| `src/engine/message/` | `src/ui/messages/` | UI content, mislabeled `engine/` |
-| `src/engine/fader/` | `src/runtime/graphics/fader/` | not a spawn-table actor; see above |
+| `src/engine/<subsystem>/` | stays | the engine layer (collision, model, sound, heap, particle, view, ...) is a coherent bucket in its own right; only `message/` and `fader/` were misfiled and have moved |
 | `src/unnamed/ov063/` | unchanged | name intentionally kept, see above |
 
 ## Decision procedure for a promotion PR
@@ -126,17 +125,18 @@ here executes them:
    unmigrated location until its migration-debt PR lands).
 2. First-ever promoted file for this class (the bootstrap case `placement_for` can't
    answer): check `ACTOR_SPAWN_TABLE` membership first, then match content against the
-   bucket list above, and create `src/<bucket>/.../<Class>/` in the same PR that promotes
-   the class. If nothing obviously fits, default to `src/game/actors/<Class>/` — most of
+   bucket list above, and create `src/<bucket>/` in the same PR that promotes the class.
+   If nothing obviously fits, default to `d_a_<name>.cpp` under `src/game/actors/` — most of
    the ROM's named classes are actors, and a wrong-but-consistent default beats a
    one-off directory nobody else will reuse.
 3. Never pre-create a bucket for a class that hasn't been promoted yet.
 
-## Why not more buckets, sooner
+## Where the class TUs went
 
-Only 168 files (`src/actors/`, `src/engine/`, `src/unnamed/ov063/`) have moved out of the
-flat root as of 2026-08-26, out of 11,302. Directory reorganization is this project's
-lowest-priority goal, behind byte-match accuracy and portability — this doc exists so
-that the placement decisions already happening inside conversion PRs are consistent with
-each other, not to justify spending dedicated effort moving already-converted classes
-into a fuller tree.
+The promoted class TUs that used to sit in the top-level actors directory (223 files) and the first
+`src/game/actors/` batch were filed into the buckets above in one rename-only change:
+actors to `src/game/actors/` as `d_a_*.cpp`, scenes to `src/game/stages/`, minigame
+scenes and helpers to `src/minigames/`, actor base classes to `src/runtime/actor/`, HUD
+classes to `src/ui/hud/`, `Player` to `src/game/player/`. The old top-level actors directory no longer exists.
+Directory reorganization is still the project's lowest-priority goal, behind byte-match
+accuracy and portability.

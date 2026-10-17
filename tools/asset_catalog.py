@@ -652,7 +652,7 @@ def build_layout_candidates(rows: list[dict[str, str]],
 
     output = []
     for source, group in sorted(by_source.items()):
-        if source.startswith(("src/actors/", "src/game/actors/")):
+        if source.startswith("src/game/actors/"):
             continue
         owner_symbols = sorted(filter(None, {
             anonymous_owner_symbol(row["owner"]) for row in group

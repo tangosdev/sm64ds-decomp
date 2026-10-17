@@ -22,7 +22,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Class, TU, symbol and module-qualified ROM scope: `ov071/daObjCasket_c`, ov071 `.text`
   `[0x02121fe4, 0x021226a0)`, 14 functions.
-- Reserved surfaces actually touched: `src/actors/daObjCasket_c.cpp`, `include/daObjCasket_c.h`,
+- Reserved surfaces actually touched: `src/game/actors/d_a_obj_casket.cpp`, `include/daObjCasket_c.h`,
   `config/arm9/overlays/ov071/symbols.txt` (7 rows renamed in place),
   `config/tu_manifest.d/ov071/daObjCasket_c.json` (7 symbol fields plus the evidence prose) and
   this class's 7 override keys in `attribution.json` (re-keyed in place, with credit unchanged).
@@ -76,7 +76,7 @@ R9 was fixed at promotion and is unchanged.
   table and the two SharedFilePtr objects stay `data_ov071_*` rows owned by `__sinit_ov071_02122a64`.
 - Attribution preserved through each rename: the 7 overrides were re-keyed to the new symbols
   with the same credit.
-- Residue in `src/actors/daObjCasket_c.cpp` (matching lines, base to this commit): lines 299 to 291,
+- Residue in `src/game/actors/d_a_obj_casket.cpp` (matching lines, base to this commit): lines 299 to 291,
   `unk_` 0 to 0, `func_` 29 to 2, `extern "C"` 9 to 2, `_ZN` 11 to 18. The 7 added `_ZN` lines are
   the new marker lines. Non-marker `_ZN` lines stay at 7: the three Fix12 bridges.
 

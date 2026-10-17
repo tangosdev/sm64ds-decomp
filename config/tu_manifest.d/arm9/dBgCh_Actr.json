@@ -1,8 +1,8 @@
 {
   "id": "arm9/dBgCh_Actr",
   "module": "arm9",
-  "source": "src/engine/collision/dBgCh_Actr.cpp",
-  "promoted_source": "src/engine/collision/dBgCh_Actr.cpp",
+  "source": "src/engine/collision/d_bg_ch_actr.cpp",
+  "promoted_source": "src/engine/collision/d_bg_ch_actr.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

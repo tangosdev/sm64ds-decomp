@@ -274,7 +274,7 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov070_02123698",
+      "symbol": "gKeronpaModelFile",
       "address": "0x02123698",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -833,7 +833,7 @@
       "source": "0x02122ffc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov070_02123698",
+      "symbol": "gKeronpaModelFile",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02123698"

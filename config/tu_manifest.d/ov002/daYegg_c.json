@@ -1,15 +1,15 @@
 {
   "id": "ov002/daYegg_c",
   "module": "ov002",
-  "source": "src/actors/daYegg_c.cpp",
-  "promoted_source": "src/actors/daYegg_c.cpp",
+  "source": "src/game/actors/d_a_yegg.cpp",
+  "promoted_source": "src/game/actors/d_a_yegg.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20ec56c..0x20ee3d8, 32 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. src/game/actors/d_a_warpkun.cpp ends exactly at 0x020ec56c below it.",
     "class label(s): daYegg_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit tail fold: daYegg_c_classInit (0x020ee3d8..0x020ee42c) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x020ec56c..0x020ee42c, bounded above by src/actors/dBgActor_c.cpp, which starts exactly at 0x020ee42c."
+    "classInit tail fold: daYegg_c_classInit (0x020ee3d8..0x020ee42c) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x020ec56c..0x020ee42c, bounded above by src/runtime/actor/d_bg_actor.cpp, which starts exactly at 0x020ee42c."
   ],
   "sections": [
     {
@@ -703,7 +703,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daYegg_c.cpp",
+      "symbol": "__sinit_d_a_yegg.cpp",
       "address": "0x02107118",
       "size": "0xdc",
       "binding": "STB_GLOBAL",
@@ -712,7 +712,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daYegg_c.cpp",
+      "symbol": ".p__sinit_d_a_yegg.cpp",
       "address": "0x02108118",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -816,7 +816,7 @@
       "source": "0x02108118",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daYegg_c.cpp",
+      "symbol": "__sinit_d_a_yegg.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02107118"
@@ -904,13 +904,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daYegg_c.cpp",
+      "symbol": "__sinit_d_a_yegg.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated static initializer is emitted local by mwcc but must be exposed as the configured .init destination at 0x02107118"
     },
     {
-      "symbol": ".p__sinit_daYegg_c.cpp",
+      "symbol": ".p__sinit_d_a_yegg.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated ctor-table object is emitted local by mwcc but must be exposed as the configured .ctor destination at 0x02108118"
@@ -966,44 +966,44 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1562",
+      "from": "@1536",
       "to": "@1530",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1562 now; licensed under the existing pin @1530"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1562 and retained licensed @1530. No function alias, new metadata, or deadstrip policy introduced."
     },
     {
-      "from": "@1574",
+      "from": "@1548",
       "to": "@1542",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1574 now; licensed under the existing pin @1542"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1574 and retained licensed @1542. No function alias, new metadata, or deadstrip policy introduced."
     },
     {
-      "from": "@1572",
+      "from": "@1546",
       "to": "@1540",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1572 now; licensed under the existing pin @1540"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1572 and retained licensed @1540. No function alias, new metadata, or deadstrip policy introduced."
     },
     {
-      "from": "@1570",
+      "from": "@1544",
       "to": "@1538",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1570 now; licensed under the existing pin @1538"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1570 and retained licensed @1538. No function alias, new metadata, or deadstrip policy introduced."
     },
     {
-      "from": "@1564",
+      "from": "@1538",
       "to": "@1532",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1564 now; licensed under the existing pin @1532"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1564 and retained licensed @1532. No function alias, new metadata, or deadstrip policy introduced."
     },
     {
-      "from": "@1560",
+      "from": "@1534",
       "to": "@1528",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1560 now; licensed under the existing pin @1528"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1560 and retained licensed @1528. No function alias, new metadata, or deadstrip policy introduced."
     },
     {
-      "from": "@1566",
+      "from": "@1540",
       "to": "@1534",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1566 now; licensed under the existing pin @1534"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1566 and retained licensed @1534. No function alias, new metadata, or deadstrip policy introduced."
     },
     {
-      "from": "@1568",
+      "from": "@1542",
       "to": "@1536",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1568 now; licensed under the existing pin @1536"
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1568 and retained licensed @1536. No function alias, new metadata, or deadstrip policy introduced."
     }
   ]
 }

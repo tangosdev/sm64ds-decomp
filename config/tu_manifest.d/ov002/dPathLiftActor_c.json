@@ -1,8 +1,8 @@
 {
   "id": "ov002/dPathLiftActor_c",
   "module": "ov002",
-  "source": "src/actors/dPathLiftActor_c.cpp",
-  "promoted_source": "src/actors/dPathLiftActor_c.cpp",
+  "source": "src/runtime/actor/d_path_lift_actor.cpp",
+  "promoted_source": "src/runtime/actor/d_path_lift_actor.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "Contiguous production run ov002:0x020ef320..0x020effb8: the dPathLiftActor_c destructor pair D0 (0x020ef320) and D1 (0x020ef390), 19 dPathLiftActor_c methods and the existing func_ov002_020eff90 C bridge.",
     "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): Original 22-function promotion fails production ownership: emitted inline destructor order differs from the retail D0/D1 order. Both legacy destructor owners remain enrolled.",
     "dPathLiftActor_c identity is ROM RTTI evidence; original whole-TU boundary and complete lifecycle/state-data ownership remain unresolved.",
-    "DESTRUCTOR FOLD. The licensed run is now 0x020ef320..0x020effb8 (22 functions), with _ZN16dPathLiftActor_cD0Ev at 0x020ef320 (size 0x70) and _ZN16dPathLiftActor_cD1Ev at 0x020ef390 (size 0x5c) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 22/22 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
+    "DESTRUCTOR FOLD. The licensed run is now 0x020ef320..0x020effb8 (22 functions), with _ZN16dPathLiftActor_cD0Ev at 0x020ef320 (size 0x70) and _ZN16dPathLiftActor_cD1Ev at 0x020ef390 (size 0x5c) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/game/actors/d_a_obj_dorifu.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 22/22 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {
@@ -192,7 +192,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_dPathLiftActor_c.cpp",
+      "symbol": "__sinit_d_path_lift_actor.cpp",
       "address": "0x021071f4",
       "size": "0xa4",
       "binding": "STB_GLOBAL",
@@ -201,7 +201,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_dPathLiftActor_c.cpp",
+      "symbol": ".p__sinit_d_path_lift_actor.cpp",
       "address": "0x0210811c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -285,51 +285,51 @@
       "symbol": "data_ov002_0210af2c",
       "address": "0x0210af2c",
       "size": "0x3c",
-      "evidence": "the three PathLiftState records SetState and BaseBehavior index; pointer-to-member slots are zero in ROM and filled by __sinit_dPathLiftActor_c.cpp, name slots link to the state-name slots"
+      "evidence": "the three PathLiftState records SetState and BaseBehavior index; pointer-to-member slots are zero in ROM and filled by __sinit_d_path_lift_actor.cpp, name slots link to the state-name slots"
     }
   ],
   "bss": [],
   "defined_symbol_renames": [
     {
-      "from": "@852",
+      "from": "@851",
       "to": "@647",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@854",
+      "from": "@853",
       "to": "@649",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@862",
+      "from": "@861",
       "to": "@657",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@858",
+      "from": "@857",
       "to": "@997",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@860",
+      "from": "@859",
       "to": "@998",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@856",
+      "from": "@855",
       "to": "@999",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_dPathLiftActor_c.cpp",
+      "symbol": "__sinit_d_path_lift_actor.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_dPathLiftActor_c.cpp",
+      "symbol": ".p__sinit_d_path_lift_actor.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -465,7 +465,7 @@
       "source": "0x0210811c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_dPathLiftActor_c.cpp",
+      "symbol": "__sinit_d_path_lift_actor.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021071f4"
@@ -593,7 +593,7 @@
   ],
   "notes": [
     "Partial production promotion, not completion of the class/TU assignment.",
-    "The state data data_ov002_0210af2c, the scale triple data_ov002_0210af00, the class metadata records and the __sinit_dPathLiftActor_c.cpp static initializer are this TU's own emission; the handwritten __sinit_ov002_021071f4 source is retired. Foreign-home compiler metadata duplicates are measured at configured ROM homes; no coined or unowned metadata waiver.",
+    "The state data data_ov002_0210af2c, the scale triple data_ov002_0210af00, the class metadata records and the __sinit_d_path_lift_actor.cpp static initializer are this TU's own emission; the handwritten __sinit_ov002_021071f4 source is retired. Foreign-home compiler metadata duplicates are measured at configured ROM homes; no coined or unowned metadata waiver.",
     "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 22-function slice (the destructor pair included) is the verified useful subset.",
     "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument.",
     "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, dPathLiftActor_c_EmitDeletingDestructor and dPathLiftActor_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/dPathLiftActor_c.h because the class's descendants inline its vptr store."

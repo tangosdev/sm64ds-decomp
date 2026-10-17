@@ -24,7 +24,7 @@
  * SM64DS RTTI names the implementation daJango_c. The reconstructed factory
  * daJango_c_classInit (0x0211ce80, historical alias Klepto_Spawn)
  * installs this class's cartridge vtable and lives in
- * src/actors/daJango_c.cpp alongside the rest of the class; the
+ * src/game/actors/d_a_jango.cpp alongside the rest of the class; the
  * reconstructed profile global g_profile_JANGO (historical alias
  * Klepto_SpawnInfo) is its registry descriptor.
  */
@@ -66,7 +66,7 @@ struct daJango_c : dEnemyBase_c {
        record (Behavior) and the SWOOP record (func_ov062_0211b51c); the other
        records (data_ov062_0211e15c / _0211e16c / _0211e17c) are only passed to
        func_ov062_0211c658. The five records are filled in by
-       __sinit_ov062_0211d6fc; src/actors/daJango_c.cpp names them. */
+       __sinit_ov062_0211d6fc; src/game/actors/d_a_jango.cpp names them. */
     void                        *mState;                /* 0x42c */
     /* The path node Klepto is at. InitResources has PathPtr::GetNode write the
        node at mPathNodeIndex here (the carrying-a-star branch then teleports the

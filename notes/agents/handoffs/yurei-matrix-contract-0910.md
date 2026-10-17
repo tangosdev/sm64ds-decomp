@@ -1,7 +1,7 @@
 # Yurei matrix helper contract correction — 2026-09-11
 
 `YUREI-MATRIX-CONTRACT-01` corrects the declaration used by
-[func_ov065_0211696c](../../../src/actors/daYurei_Mucho_c.cpp) in [src/actors/daYurei_Mucho_c.cpp](../../../src/actors/daYurei_Mucho_c.cpp). The previous
+[func_ov065_0211696c](../../../src/game/actors/d_a_yurei_mucho.cpp) in [src/game/actors/d_a_yurei_mucho.cpp](../../../src/game/actors/d_a_yurei_mucho.cpp). The previous
 `(void *dst, const void *a, const void *b)` declaration put the writable output
 in the wrong position. The actual definition in [src/MulMat4x3Mat4x3.c](../../../src/MulMat4x3Mat4x3.c) takes
 `(const int *a, const int *b, int *dst)` and writes twelve words through its

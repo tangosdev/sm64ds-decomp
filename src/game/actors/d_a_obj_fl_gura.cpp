@@ -19,7 +19,14 @@
  *   data_ov064_*.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_fl_gura_AssetId {
+    ASSET_FL_GURA_BMD = 0x05f3,
+    ASSET_FL_GURA_KCL = 0x05f4
+};
+
 #include "daObjFl_Gura_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
 struct CLPS_Block;
@@ -38,19 +45,6 @@ int func_ov002_020b60fc(daObjGuragura_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov064_0211adb0;
 }
 
-struct FlGuraSpawnInfo {
-    daObjFl_Gura_c *(*classInit)();
-    s16 executePriority; /* +4: also FL_GURA registry id 0x0048 = 72 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char FlGuraSpawnInfo_size_must_be_0x1c[
-    sizeof(FlGuraSpawnInfo) == 0x1c ? 1 : -1];
-
 // @symbol daObjFl_Gura_c_classInit
 extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit()
 {
@@ -58,15 +52,15 @@ extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit()
 }
 
 // @symbol g_profile_FL_GURA
-extern "C" FlGuraSpawnInfo g_profile_FL_GURA = {
+extern "C" SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
     daObjFl_Gura_c_classInit,
-    0x0048,
+    0x0048, /* FL_GURA registry id 72 */
     0x0118,
     2,
     0x00080000,
     0x001a0000,
     0x02000000,
-    0
+    0,
 };
 
 // @symbol _ZN14daObjFl_Gura_c13InitResourcesEv
@@ -100,5 +94,5 @@ struct FlGuraCollisionFilePtr : SharedFilePtr {
 // @symbol __sinit_d_a_obj_fl_gura.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
-FlGuraModelFilePtr data_ov064_0211c768(1523);      /* model */
-FlGuraCollisionFilePtr data_ov064_0211c770(1524);  /* collision */
+FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);      /* model */
+FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL);  /* collision */

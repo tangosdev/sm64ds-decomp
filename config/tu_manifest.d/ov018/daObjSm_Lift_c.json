@@ -1,15 +1,15 @@
 {
   "id": "ov018/daObjSm_Lift_c",
   "module": "ov018",
-  "source": "src/actors/daObjSm_Lift_c.cpp",
-  "promoted_source": "src/actors/daObjSm_Lift_c.cpp",
+  "source": "src/game/actors/d_a_obj_sm_lift.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_sm_lift.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "HISTORY: contiguous linker run: 0x21111a0..0x21117e8, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjSm_Lift_c",
     "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "the compiler-generated __sinit_daObjSm_Lift_c.cpp is raw-byte-identical to retail __sinit_ov018_02112c14 (0x6c, ten relocations): the model handle (asset 1715) then the collision handle (asset 1716), each constructed and destructor-registered. The ctor word at 0x02112e6c points at that initializer.",
+    "the compiler-generated __sinit_d_a_obj_sm_lift.cpp is raw-byte-identical to retail __sinit_ov018_02112c14 (0x6c, ten relocations): the model handle (asset 1715) then the collision handle (asset 1716), each constructed and destructor-registered. The ctor word at 0x02112e6c points at that initializer.",
     "CLASSINIT TAIL FOLD (2026-10-09): the run 0x021117e8..0x02111848 abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off. func_ov018_021117e8 stores the touching actor into this class's unk_320 (+0x320, the word Behavior zeroes every frame and InitResources clears) when its actorID is 0xbf (the player); func_ov018_02111804 is the dBgW callback veneer that drops the collider and forwards (lift, other) to it, and its only reference is this TU's InitResources (func_020393c4(c + 0x124, func_ov018_02111804)); daObjSm_Lift_c_classInit is spelled `return new daObjSm_Lift_c;` (operator new 0x354, dBgActor_c base ctor, _ZTV14daObjSm_Lift_c vptr store -- the retired shard's hand-spelled sequence), for the SM_LIFT profile. The TU no longer includes decl_common.h, whose `extern int func_ov018_02111804[];` would clash with the definition; nothing else in the file needed it. The unit is 0x021111a0..0x02111848, bounded above by src/game/actors/d_a_pg_mthr.cpp, which starts exactly at 0x02111848. The new-expression advances mwcc's compiler-label counter by 28, so the two .bss destructor-registration nodes now compile as @800 (model handle, 0x02113bdc) and @801 (collision handle, 0x02113bd0); defined_symbol_renames maps them back to the configured @772/@773, because ov063 daPiano_c already defines a global @800."
   ],
   "sections": [
@@ -116,14 +116,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov018_02113bc0",
+      "symbol": "gSmLiftCollisionFile",
       "address": "0x02113bc0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1716; dBgW_Kc::LoadFile consumes it in InitResources"
     },
     {
-      "symbol": "data_ov018_02113bc8",
+      "symbol": "gSmLiftModelFile",
       "address": "0x02113bc8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -483,7 +483,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daObjSm_Lift_c.cpp",
+      "symbol": "__sinit_d_a_obj_sm_lift.cpp",
       "address": "0x02112c14",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -492,7 +492,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjSm_Lift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_sm_lift.cpp",
       "address": "0x02112e6c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -538,13 +538,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjSm_Lift_c.cpp",
+      "symbol": "__sinit_d_a_obj_sm_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjSm_Lift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_sm_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -608,7 +608,7 @@
       "source": "0x02112c60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov018_02113bc8",
+      "symbol": "gSmLiftModelFile",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02113bc8"
@@ -638,7 +638,7 @@
       "source": "0x02112c70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov018_02113bc0",
+      "symbol": "gSmLiftCollisionFile",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02113bc0"
@@ -668,7 +668,7 @@
       "source": "0x02112e6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjSm_Lift_c.cpp",
+      "symbol": "__sinit_d_a_obj_sm_lift.cpp",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02112c14"

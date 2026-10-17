@@ -3,30 +3,14 @@
     .ctor       start:0x020b1350 end:0x020b1350 kind:rodata align:4
     .data       start:0x020b1360 end:0x020b18a0 kind:data align:32
     .bss        start:0x020b18a0 end:0x020b18a0 kind:bss align:32
-src/actors/dScTitle_c.cpp:
+src/game/stages/d_s_title.cpp:
     complete
     .text start:0x020ad660 end:0x020addfc
 
-src/actors/dScStarSel_c.cpp:
+src/game/stages/d_s_star_sel_methods.cpp:
     complete
-    .text start:0x020addfc end:0x020af038
+    .text start:0x020addfc end:0x020b0580
 
-src/_ZN12dScStarSel_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020af038 end:0x020af86c
-
-src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020af86c end:0x020af8a0
-
-src/_ZN12dScStarSel_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020af8a0 end:0x020b04f0
-
-src/d_s_star_sel.cpp:
-    complete
-    .text start:0x020b04f0 end:0x020b0580
-
-src/actors/dScGameOver_c.cpp:
+src/game/stages/d_s_game_over.cpp:
     complete
     .text start:0x020b0580 end:0x020b117c

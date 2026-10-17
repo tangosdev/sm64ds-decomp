@@ -1,8 +1,8 @@
 {
   "id": "ov064/daObjFl_Amilift_c",
   "module": "ov064",
-  "source": "src/actors/daObjFl_Amilift_c.cpp",
-  "promoted_source": "src/actors/daObjFl_Amilift_c.cpp",
+  "source": "src/game/actors/d_a_obj_fl_amilift.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_fl_amilift.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -565,7 +565,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjFl_Amilift_c.cpp",
+      "symbol": "__sinit_d_a_obj_fl_amilift.cpp",
       "address": "0x0211afc0",
       "size": "0xb8",
       "binding": "STB_GLOBAL",
@@ -574,7 +574,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjFl_Amilift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_fl_amilift.cpp",
       "address": "0x0211b734",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -621,40 +621,40 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@566",
+      "from": "@565",
       "to": "@106",
       "evidence": "mwcc emits this compiler temp as @545; ov091 promotes @545 globally, so the configured @106 stays the licensed name"
     },
     {
-      "from": "@567",
+      "from": "@566",
       "to": "@557",
       "evidence": "mwcc emits this compiler temp as @546; ov080 promotes @546 globally, so the configured @557 stays the licensed name"
     },
     {
-      "from": "@569",
+      "from": "@568",
       "to": "@107",
       "evidence": "mwcc emits this compiler temp as @548; ov080 promotes @548 globally, so the configured @107 stays the licensed name"
     },
     {
-      "from": "@570",
+      "from": "@569",
       "to": "@108",
       "evidence": "mwcc emits this compiler temp as @549; ov091 promotes @549 globally, so the configured @108 stays the licensed name"
     },
     {
-      "from": "@572",
+      "from": "@571",
       "to": "@109",
       "evidence": "mwcc emits this compiler temp as @551; the configured @109 stays the licensed name so the ov064 symbol surface is unchanged by the classInit tail merge"
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjFl_Amilift_c.cpp",
+      "symbol": "__sinit_d_a_obj_fl_amilift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated static initializer is emitted local by mwcc but must be exposed as the configured .init destination at 0x0211afc0"
     },
     {
-      "symbol": ".p__sinit_daObjFl_Amilift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_fl_amilift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word is emitted local but must be exposed at 0x0211b734"
@@ -836,7 +836,7 @@
       "source": "0x0211b734",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjFl_Amilift_c.cpp",
+      "symbol": "__sinit_d_a_obj_fl_amilift.cpp",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211afc0"

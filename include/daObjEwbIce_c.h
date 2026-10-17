@@ -1,11 +1,11 @@
 /* class daObjEwbIce_c : dBgActor_c. Real C++ form.
  *
  * Base and size from the factories (daObjEwbIce_c_classInit_EWB_ICE_A/B/C,
- * src/actors/daObjEwbIce_c.cpp):
+ * src/game/actors/d_a_obj_ewb_ice.cpp):
  * fBase_c::operator new(828) -- 0x33c -- then dBgActor_c::dBgActor_c(),
  * then stores _ZTV13daObjEwbIce_c. No intermediate: the destructor stores only
  * its own vptr and dBgActor_c's, with zero extra member-destructor calls
- * in between (~daObjEwbIce_c in src/actors/daObjEwbIce_c.cpp), so every
+ * in between (~daObjEwbIce_c in src/game/actors/d_a_obj_ewb_ice.cpp), so every
  * field below 0x320 is a scalar, not a sub-object.
  *
  * dBgActor_c ends at 0x320; daObjEwbIce_c adds 0x1c more bytes, closing exactly

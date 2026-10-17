@@ -87,35 +87,35 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov027_02113c08",
+      "symbol": "gIceDonketuHitAnimationFile",
       "address": "0x02113c08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x2e6; the data_ov027_021138f4 file table's third pointer reaches it"
     },
     {
-      "symbol": "data_ov027_02113c10",
+      "symbol": "gIceDonketuModelFile",
       "address": "0x02113c10",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x2e4; the data_ov027_021138f4 file table's first pointer reaches it"
     },
     {
-      "symbol": "data_ov027_02113c18",
+      "symbol": "gIceDonketuDeadAnimationFile",
       "address": "0x02113c18",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x2e5; the data_ov027_021138f4 file table's second pointer reaches it"
     },
     {
-      "symbol": "data_ov027_02113c20",
+      "symbol": "gIceDonketuTurnAnimationFile",
       "address": "0x02113c20",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation resource handle constructed with file ID 0x2e7; the data_ov027_021138f4 file table's fourth pointer reaches it"
     },
     {
-      "symbol": "data_ov027_02113c28",
+      "symbol": "gIceDonketuWalkAnimationFile",
       "address": "0x02113c28",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -786,7 +786,7 @@
       "source": "0x02112dbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov027_02113c10",
+      "symbol": "gIceDonketuModelFile",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02113c10"
@@ -816,7 +816,7 @@
       "source": "0x02112dc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov027_02113c18",
+      "symbol": "gIceDonketuDeadAnimationFile",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02113c18"
@@ -846,7 +846,7 @@
       "source": "0x02112dd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov027_02113c08",
+      "symbol": "gIceDonketuHitAnimationFile",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02113c08"
@@ -866,7 +866,7 @@
       "source": "0x02112de4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov027_02113c20",
+      "symbol": "gIceDonketuTurnAnimationFile",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02113c20"
@@ -886,7 +886,7 @@
       "source": "0x02112df0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov027_02113c28",
+      "symbol": "gIceDonketuWalkAnimationFile",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02113c28"

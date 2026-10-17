@@ -20,7 +20,7 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
        _ZN19dScMgSingle3DBase_cD2Ev, so an out-of-line body leaves each child
        an undefined external (measured on dScMgMemory_c). Being inline, it is
        not the key function; AfterInitResources is, which places the vtable
-       and typeinfo in src/minigames/d_s_mg_single3_d_base.cpp. */
+       and typeinfo in src/minigames/d_s_mg_single3d_base.cpp. */
     virtual ~dScMgSingle3DBase_c() {}
 
     /* Overrides of dScMgBase_c virtuals, in vtable order; dScMgBase_c has
@@ -31,8 +31,8 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
     virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
     virtual int  BeforeBehavior();                  /* slot  7 */
     virtual int  BeforeRender();                    /* slot 10 */
-    virtual int  OnHitByCannonBlastedChar();      /* slot 26 */
-    virtual void Virtual84();                          /* slot 33 */
+    virtual int  GetDisplayMode();      /* slot 26 */
+    virtual void InitEngines();                          /* slot 33 */
 
     /* DO NOT restyle the seven `offset 0xNN` comments below into this
      * tree's usual hex-comment form: check_header_offsets.py's DATA_SIZE
@@ -40,7 +40,7 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
      * the last field it CAN parse, which silently undercounts every derived
      * class's field offsets. MEASURED -- see notes/minigame-provenance.md. */
     /* 0x4660..0x471c IS ONE MINIGAME CAMERA, 0xbc bytes, and three readings
-     * agree. Camera_UpdateMatrices (src/actors/unit020bfec0.cpp) -- the ov006 routine both
+     * agree. Camera_UpdateMatrices (src/minigames/unit020bfec0.cpp) -- the ov006 routine both
      * dScMgRoulette_c::Render and dScMg3DEsp_c::Render call as
      * Camera_UpdateMatrices(this + 0x4660) -- carries the layout outright:
      * view matrix at +0x00, projection at +0x60, `eye` at +0xa0, `target` at

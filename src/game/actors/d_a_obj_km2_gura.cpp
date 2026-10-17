@@ -23,7 +23,14 @@
  *   data_ov045_*.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km2_gura_AssetId {
+    ASSET_KM2_GURA_BMD = 0x065f,
+    ASSET_KM2_GURA_KCL = 0x0660
+};
+
 #include "daObjKm2_Gura_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
@@ -75,19 +82,6 @@ int func_ov002_020b6244(daObjGuragura_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020b60fc(daObjGuragura_c *self, ResourceDescriptor *descriptor);
 }
 
-struct GuraSpawnInfo {
-    daObjKm2_Gura_c *(*classInit)();
-    s16 executePriority; /* +4: also KM2_GURA registry id 0x008d = 141 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char GuraSpawnInfo_size_must_be_0x1c[
-    sizeof(GuraSpawnInfo) == 0x1c ? 1 : -1];
-
 // @symbol daObjKm2_Gura_c_classInit
 extern "C" daObjKm2_Gura_c *daObjKm2_Gura_c_classInit()
 {
@@ -95,15 +89,15 @@ extern "C" daObjKm2_Gura_c *daObjKm2_Gura_c_classInit()
 }
 
 // @symbol g_profile_KM2_GURA
-extern "C" GuraSpawnInfo g_profile_KM2_GURA = {
+extern "C" SpawnInfo<daObjKm2_Gura_c> g_profile_KM2_GURA = {
     daObjKm2_Gura_c_classInit,
-    0x008d,
+    0x008d, /* KM2_GURA registry id 141 */
     0x00d4,
     2,
     0x00120000,
     0x00200000,
     0x02000000,
-    0
+    0,
 };
 
 // @symbol _ZN15daObjKm2_Gura_c13InitResourcesEv
@@ -120,5 +114,5 @@ s32 daObjKm2_Gura_c::CleanupResources()
 
 /* Source order is construction order: model file 1631, then the collision
  * file 1632. The compiler registers each destructor beside the object. */
-Km2GuraModelFilePtr data_ov045_02113220(1631);
-Km2GuraClsnFilePtr data_ov045_02113228(1632);
+Km2GuraModelFilePtr data_ov045_02113220(ASSET_KM2_GURA_BMD);
+Km2GuraClsnFilePtr data_ov045_02113228(ASSET_KM2_GURA_KCL);

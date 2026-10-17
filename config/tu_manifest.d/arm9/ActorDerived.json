@@ -1,8 +1,8 @@
 {
   "id": "arm9/ActorDerived",
   "module": "arm9",
-  "source": "src/actors/ActorDerived.cpp",
-  "promoted_source": "src/actors/ActorDerived.cpp",
+  "source": "src/runtime/actor/ActorDerived.cpp",
+  "promoted_source": "src/runtime/actor/ActorDerived.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

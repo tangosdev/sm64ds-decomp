@@ -1,9 +1,10 @@
+#include "nitro/fx/fx.h"
 typedef struct { int x, y; } Vec2_Fix12;
 
 void func_0203d680(Vec2_Fix12 *out, const Vec2_Fix12 *in, int scale)
 {
-    int rx = (int)(((long long)in->x * scale + 0x800) >> 12);
-    int ry = (int)(((long long)in->y * scale + 0x800) >> 12);
+    int rx = FX_MUL(in->x, scale);
+    int ry = FX_MUL(in->y, scale);
     out->x = rx;
     out->y = ry;
 }

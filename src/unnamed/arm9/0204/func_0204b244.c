@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef short s16;
@@ -112,8 +113,8 @@ void func_0204b244(Self *self, Node *node)
 
     {
         G *g = self->p34->p18->p0;
-        int v1 = (int)(((long long)node->p30 * node->p34 + 0x800) >> 12);
-        int v2 = (int)(((long long)v1 * g->scale + 0x800) >> 12);
+        int v1 = FX_MUL(node->p30, node->p34);
+        int v2 = FX_MUL(v1, g->scale);
         func_020527e8(scl, v2, v1, v1);
     }
 

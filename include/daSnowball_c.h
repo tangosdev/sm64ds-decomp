@@ -45,7 +45,7 @@
 
 struct daSnowball_c;
 
-/* A two-entry state record. daSnowball_c.cpp defines data_ov081_02128eb4
+/* A two-entry state record. d_a_snowball.cpp defines data_ov081_02128eb4
  * with these two methods; the compiler copies the descriptors in at overlay
  * load. `enter` runs once when the record is installed, `update` once per
  * Behavior. */

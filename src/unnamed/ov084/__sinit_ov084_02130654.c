@@ -1,3 +1,14 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov084_02130654_AssetId {
+    ASSET_PAKKUN_ATTACK_BCA = 0x03cf,
+    ASSET_PAKKUN_DEAD_BCA = 0x03d0,
+    ASSET_PAKKUN_FIRE_BCA = 0x03d1,
+    ASSET_PAKKUN_FIRE_ED_BCA = 0x03d2,
+    ASSET_PAKKUN_MODEL_BMD = 0x03d3,
+    ASSET_PAKKUN_SLEEP_BCA = 0x03d4,
+    ASSET_PAKKUN_SLEEP_LOOP_BCA = 0x03d5
+};
+
 extern int func_02017acc();
 extern void func_020731dc();
 extern int _ZN13SharedFilePtr9ConstructEj();
@@ -33,19 +44,19 @@ extern struct P2 data_ov084_02130be4;
 
 void __sinit_ov084_02130654(void)
 {
-    func_02017acc(data_ov084_02130dfc, 0x3d3);
+    func_02017acc(data_ov084_02130dfc, ASSET_PAKKUN_MODEL_BMD);
     func_020731dc(data_ov084_02130dfc, func_02017ab4, data_ov084_02130e44);
-    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e14, 0x3cf);
+    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e14, ASSET_PAKKUN_ATTACK_BCA);
     func_020731dc(data_ov084_02130e14, SharedFilePtr_Destruct_Anim, data_ov084_02130e50);
-    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e24, 0x3d0);
+    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e24, ASSET_PAKKUN_DEAD_BCA);
     func_020731dc(data_ov084_02130e24, SharedFilePtr_Destruct_Anim, data_ov084_02130e68);
-    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e0c, 0x3d4);
+    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e0c, ASSET_PAKKUN_SLEEP_BCA);
     func_020731dc(data_ov084_02130e0c, SharedFilePtr_Destruct_Anim, data_ov084_02130e74);
-    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130df4, 0x3d5);
+    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130df4, ASSET_PAKKUN_SLEEP_LOOP_BCA);
     func_020731dc(data_ov084_02130df4, SharedFilePtr_Destruct_Anim, data_ov084_02130e5c);
-    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e04, 0x3d1);
+    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e04, ASSET_PAKKUN_FIRE_BCA);
     func_020731dc(data_ov084_02130e04, SharedFilePtr_Destruct_Anim, data_ov084_02130e2c);
-    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e1c, 0x3d2);
+    _ZN13SharedFilePtr9ConstructEj(data_ov084_02130e1c, ASSET_PAKKUN_FIRE_ED_BCA);
     func_020731dc(data_ov084_02130e1c, SharedFilePtr_Destruct_Anim, data_ov084_02130e38);
 
     data_ov084_02130e80[0] = data_ov084_02130bb4;

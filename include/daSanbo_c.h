@@ -44,7 +44,7 @@ struct daSanbo_c : dActor_c {
        finds its previous segment with dActor_c::FindWithID(param1), and copies
        that segment's mRootPos triple at this same 0x36c offset. Each segment
        therefore inherits the head's root position through the chain.
-       [InitResources, in src/actors/daSanbo_c.cpp] */
+       [InitResources, in src/game/actors/d_a_sanbo.cpp] */
     s32 mRootPosX;            /* 0x36c */
     s32 mRootPosY;            /* 0x370 */
     s32 mRootPosZ;            /* 0x374 */
@@ -58,7 +58,7 @@ struct daSanbo_c : dActor_c {
     dActor_c *mHitActor;        /* 0x388 */
     /* Behavior early-outs on distance from the player UNLESS mState is 2 or 5,
        which keep running however far away the player is.
-       [Behavior, in src/actors/daSanbo_c.cpp] */
+       [Behavior, in src/game/actors/d_a_sanbo.cpp] */
     s32 mState;            /* 0x38c */
     /* The head has no previous segment. Unlinking a body segment updates both
        neighbors; finding the head requires following mPrevSegment. */

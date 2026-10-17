@@ -24,12 +24,7 @@ int func_ov075_0211aa94(char *c, char *b)
     *(int *)(c + 0x90) = *(int *)(d + 0x28);
     *(int *)(c + 0x94) = *(int *)(d + 0x2c);
     *(int *)(c + 0x98) = *(int *)(a + 0x10);
-    if (*(int *)(c + 0x88) == 0)
-        goto ret0;
-    if (*(int *)(c + 0x8c) != 0)
-        goto ret1;
-ret0:
-    return 0;
-ret1:
+    if (*(int *)(c + 0x88) == 0 || *(int *)(c + 0x8c) == 0)
+        return 0;
     return 1;
 }

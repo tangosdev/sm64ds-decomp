@@ -58,14 +58,14 @@
  * nothing in the cartridge says whether it is a member.
  *
  * REAL METHODS, NOT THE FREE-FUNCTION IDIOM. Older recoveries (daDoor_c before
- * its promotion, src/actors/ActorBase.cpp) declare the override here but define
+ * its promotion, src/runtime/actor/ActorBase.cpp) declare the override here but define
  * it as a free function under a hand-written mangled `extern "C"` name. That
  * idiom cannot survive promotion. With the destructor inline the key function
  * is the first DECLARED non-inline virtual -- InitResources -- and a
  * hand-mangled free function does not DEFINE it, so mwcc emits neither the
  * _ZTV/_ZTI/_ZTS group nor the inline destructor's D1/D0 pair, and objisolate
  * refuses the entry with `_ZN18daObjClockHuriko_cD1Ev has 0 defined symbols`
- * (the same failure src/actors/d_a_tree.cpp records at its own line 133). All
+ * (the same failure src/game/actors/d_a_tree.cpp records at its own line 133). All
  * four overrides are therefore real `daObjClockHuriko_c::` methods, which is
  * what makes this TU the key-function TU. Bodies are unchanged apart from the
  * implicit `this`; the ROM bytes still match at 106/106.

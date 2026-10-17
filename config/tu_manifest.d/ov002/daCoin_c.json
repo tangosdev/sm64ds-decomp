@@ -1,15 +1,15 @@
 {
   "id": "ov002/daCoin_c",
   "module": "ov002",
-  "source": "src/actors/daCoin_c.cpp",
-  "promoted_source": "src/actors/daCoin_c.cpp",
+  "source": "src/game/actors/d_a_coin.cpp",
+  "promoted_source": "src/game/actors/d_a_coin.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20b0f54..0x20b2a98, 28 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daCoin_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit tail fold (0930c): the three registry factories daCoin_c_classInit_BLUE_COIN / _RED_COIN / _COIN (0x020b2a98..0x020b2ba0) abut this TU's range with no gap, contiguous with each other, and are now inside it; tu_map cuts on symbol name and left them out. The unit is 0x020b0f54..0x020b2ba0, bounded above by src/game/actors/daFeather_c/daFeather_c.cpp, which starts exactly at 0x020b2ba0."
+    "classInit tail fold (0930c): the three registry factories daCoin_c_classInit_BLUE_COIN / _RED_COIN / _COIN (0x020b2a98..0x020b2ba0) abut this TU's range with no gap, contiguous with each other, and are now inside it; tu_map cuts on symbol name and left them out. The unit is 0x020b0f54..0x020b2ba0, bounded above by src/game/actors/d_a_feather.cpp, which starts exactly at 0x020b2ba0."
   ],
   "sections": [
     {
@@ -357,7 +357,7 @@
       "address": "0x0210dc70",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9-element daCoin_c member-function-pointer table indexed by mBehaviorType; populated by __sinit_daCoin_c.cpp"
+      "evidence": "9-element daCoin_c member-function-pointer table indexed by mBehaviorType; populated by __sinit_d_a_coin.cpp"
     }
   ],
   "notes": [
@@ -642,7 +642,7 @@
       "source": "0x021080dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daCoin_c.cpp",
+      "symbol": "__sinit_d_a_coin.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02100c50"
@@ -1313,7 +1313,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daCoin_c.cpp",
+      "symbol": "__sinit_d_a_coin.cpp",
       "address": "0x02100c50",
       "size": "0xf4",
       "binding": "STB_GLOBAL",
@@ -1322,7 +1322,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daCoin_c.cpp",
+      "symbol": ".p__sinit_d_a_coin.cpp",
       "address": "0x021080dc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1331,13 +1331,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daCoin_c.cpp",
+      "symbol": "__sinit_d_a_coin.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daCoin_c.cpp",
+      "symbol": ".p__sinit_d_a_coin.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1399,47 +1399,47 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1562",
+      "from": "@1555",
       "to": "@1543",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1565 to @1562. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1543."
     },
     {
-      "from": "@1578",
+      "from": "@1571",
       "to": "@1559",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1581 to @1578. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1559."
     },
     {
-      "from": "@1570",
+      "from": "@1563",
       "to": "@1551",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1573 to @1570. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1551."
     },
     {
-      "from": "@1566",
+      "from": "@1559",
       "to": "@1547",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1569 to @1566. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1547."
     },
     {
-      "from": "@1574",
+      "from": "@1567",
       "to": "@1555",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1577 to @1574. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1555."
     },
     {
-      "from": "@1572",
+      "from": "@1565",
       "to": "@1553",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1575 to @1572. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1553."
     },
     {
-      "from": "@1568",
+      "from": "@1561",
       "to": "@1549",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1571 to @1568. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1549."
     },
     {
-      "from": "@1576",
+      "from": "@1569",
       "to": "@1557",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1579 to @1576. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1557."
     },
     {
-      "from": "@1564",
+      "from": "@1557",
       "to": "@1545",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1567 to @1564. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1545."
     }

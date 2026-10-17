@@ -21,7 +21,7 @@
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
  * include/ModelBase.h for the key-function rule and the objisolate exemption
- * to it. One ~dCcAc_c() in src/engine/collision/dCcAc_c.cpp emits the ROM's
+ * to it. One ~dCcAc_c() in src/engine/collision/d_cc_ac.cpp emits the ROM's
  * D2, D0 and D1 copies.
  *
  * LAYOUT: the base is 0x30 and owner sits at 0x30, so the object is 0x34 --
@@ -49,7 +49,7 @@ struct dCcAc_c : dCc_c {
     virtual Vector3 &GetPos();          /* slot 2 - the owner's pos, not ours */
     virtual u32 GetOwnerID();           /* slot 3 - owner->uniqueID */
 
-    /* DECLARED, defined out of line in src/engine/collision/dCcAc_c.cpp --
+    /* DECLARED, defined out of line in src/engine/collision/d_cc_ac.cpp --
      * one dCcAc_c() emits the ROM's C1 and C2 copies; the init list nulls
      * owner, which is the only store past the vptr the ROM makes. */
     dCcAc_c();

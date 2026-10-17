@@ -1,0 +1,309 @@
+{
+  "schema": 1,
+  "exceptions": [
+    {
+      "path": "src/engine/view/Graphics3D.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3",
+      "count": 2,
+      "reason": "G3i::PerspectiveW_ takes six Fix12<int> by value, and include/G3i.h deliberately leaves it undeclared for that reason (the by-value Fix12 ABI wall). Initialise3dGraphics calls it once to load the default perspective; the second occurrence is the extern \"C\" declaration. Follow-up: retire it with the other Fix12-by-value walls once a Fix12 spelling that passes in registers exists.",
+      "evidence": "include/G3i.h header comment (PerspectiveW_ is NOT declared here); carried verbatim from src/Initialise3dGraphics.cpp on main, which this PR folds; arm9/Graphics3D 4/4 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_star_sel_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2G212GetBG2ScrPtrEv",
+      "count": 3,
+      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp records. The GX/GXS/G3X calls beside it are real namespace calls. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
+      "evidence": "include/decl_common.h:290 `extern int G2[];`; src/game/stages/d_s_title.cpp G2 note; carried verbatim from src/_ZN12dScStarSel_c13InitResourcesEv.cpp on main (6 occurrences), which this PR folds; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_star_sel_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2G213GetBG2CharPtrEv",
+      "count": 3,
+      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp records. The GX/GXS/G3X calls beside it are real namespace calls. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
+      "evidence": "include/decl_common.h:290 `extern int G2[];`; src/game/stages/d_s_title.cpp G2 note; carried verbatim from src/_ZN12dScStarSel_c13InitResourcesEv.cpp on main (6 occurrences), which this PR folds; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_star_sel_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN5ModelC1Ev",
+      "count": 2,
+      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
+      "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_star_sel_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN5ModelD1Ev",
+      "count": 2,
+      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
+      "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_star_sel_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_cC2Ev",
+      "count": 2,
+      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
+      "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_star_sel_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_cnwEj",
+      "count": 2,
+      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
+      "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
+      "count": 47,
+      "reason": "OAM::Render (scaled overload): it takes Fix12<int> by value, which this tree cannot declare without changing the call ABI (the Fix12 wall); the C++ name is spelled as the mangled symbol so the by-value word is passed as a plain int, exactly as the absorbed shard did.",
+      "evidence": "include/OAM.h:14 (the three Fix12 Render overloads are deliberately not declared there); arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM20VS_NEW_STAR_APPEAREDE",
+      "count": 2,
+      "reason": "OAM::VS_NEW_STAR_APPEARED: OAM.h declares no static sprite-record data, so the OamAttr record keeps its mangled data name as an extern. Follow-up: declare the OAM sprite records as static members in OAM.h (one shared header change, every consumer).",
+      "evidence": "include/OAM.h (no static data members); arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM4COINE",
+      "count": 4,
+      "reason": "OAM::COIN: OAM.h declares no static sprite-record data, so the OamAttr record keeps its mangled data name as an extern. Follow-up: declare the OAM sprite records as static members in OAM.h (one shared header change, every consumer).",
+      "evidence": "include/OAM.h (no static data members); arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM5TIMESE",
+      "count": 6,
+      "reason": "OAM::TIMES: OAM.h declares no static sprite-record data, so the OamAttr record keeps its mangled data name as an extern. Follow-up: declare the OAM sprite records as static members in OAM.h (one shared header change, every consumer).",
+      "evidence": "include/OAM.h (no static data members); arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2x18SetBlendBrightnessEPVtts",
+      "count": 7,
+      "reason": "PS_Init passes `a | 0x20` unnarrowed; through G2x.h's `unsigned short val` the call gains a narrowing and PS_Init grows from 0x1d4 to 0x1e4 bytes (measured), so the call keeps the mangled spelling with an int middle parameter.",
+      "evidence": "include/G2x.h:40; PS_Init 0x0202942c size 0x1d4; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G3X6SetFogEbiii",
+      "count": 2,
+      "reason": "RenderFog passes the fog record's enable byte as a raw int; G3X.h's `bool enable` normalises it and RenderFog stops matching (measured: G3X::SetFog(fog->mEnabled, ...) DIFFs), so the call keeps the mangled spelling.",
+      "evidence": "include/G3X.h:18; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10dScStage_c14LoadGraphics2DEbi",
+      "count": 2,
+      "reason": "InitResources passes a raw int as the bool parameter; through the header's `bool e3d` InitResources stops matching (measured: dScStage_c::LoadGraphics2D(v0_6, data_0209f2f8) DIFFs), so the call keeps the mangled spelling (the member definition itself is a real dScStage_c::LoadGraphics2D).",
+      "evidence": "include/dScStage_c.h:107; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3Fog4InitEt5Fix12IiES1_",
+      "count": 3,
+      "reason": "Fog::Init: it takes Fix12<int> by value, which this tree cannot declare without changing the call ABI (the Fix12 wall); the C++ name is spelled as the mangled symbol so the by-value word is passed as a plain int, exactly as the absorbed shard did. Its definition stays an extern \"C\" function under the mangled name for the same reason.",
+      "evidence": "include/Fog.h; Fog::Init 0x0202c830; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj",
+      "count": 2,
+      "reason": "TextureTransformer::SetFile: it takes Fix12<int> by value, which this tree cannot declare without changing the call ABI (the Fix12 wall); the C++ name is spelled as the mangled symbol so the by-value word is passed as a plain int, exactly as the absorbed shard did.",
+      "evidence": "include/TextureTransformer.h; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN4cstd5atan2E5Fix12IiES1_",
+      "count": 2,
+      "reason": "cstd::atan2: it takes Fix12<int> by value, which this tree cannot declare without changing the call ABI (the Fix12 wall); the C++ name is spelled as the mangled symbol so the by-value word is passed as a plain int, exactly as the absorbed shard did.",
+      "evidence": "arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN5ModelC1Ev",
+      "count": 2,
+      "reason": "LoadSkybox spells the allocation as _Znwj plus a null-guarded constructor call, which a new-expression does not emit in this shape; the constructor is called by its mangled name.",
+      "evidence": "LoadSkybox; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN18TextureTransformerC1Ev",
+      "count": 2,
+      "reason": "LoadTextureTransformers spells the allocation as _Znwj plus a null-guarded constructor call, which a new-expression does not emit in this shape; the constructor is called by its mangled name.",
+      "evidence": "LoadTextureTransformers; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9dFdWipe_cD1Ev",
+      "count": 3,
+      "reason": "The fader-array helpers pass dFdWipe_c's destructor by address to the array new/delete helpers (func_02073244/func_02073470); C++ cannot take a destructor's address, so the symbol is declared by its mangled name (local extern).",
+      "evidence": "CleanupResources and InitResources array helpers; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9dFdWipe_cC1Ev",
+      "count": 2,
+      "reason": "InitResources passes dFdWipe_c's constructor by address to the array-construct helper func_02073470; C++ cannot take a constructor's address, so the symbol is declared by its mangled name (local extern).",
+      "evidence": "InitResources; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2G213GetBG2CharPtrEv",
+      "count": 11,
+      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp and d_s_star_sel_methods.cpp record. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
+      "evidence": "include/decl_common.h:290 `extern int G2[];`; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2G212GetBG2ScrPtrEv",
+      "count": 6,
+      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp and d_s_star_sel_methods.cpp record. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
+      "evidence": "include/decl_common.h:290 `extern int G2[];`; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(u8*)(p+0x711",
+      "count": 1,
+      "reason": "Player.h names the byte at 0x711 only `pad_711`; its role is not recovered, so the read keeps the offset rather than inventing a field name. Follow-up: name Player 0x711 once its role is proved.",
+      "evidence": "include/Player.h:392 `u8 pad_711[0x1];`; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10dScEntry_c6icon_cC1Ev",
+      "count": 2,
+      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
+      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10dScEntry_c6icon_cD1Ev",
+      "count": 2,
+      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
+      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN12OamAnimationC1Ev",
+      "count": 2,
+      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
+      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN12OamAnimationD1Ev",
+      "count": 2,
+      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
+      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_cC2Ev",
+      "count": 2,
+      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
+      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_cnwEj",
+      "count": 2,
+      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
+      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "unknown-field",
+      "match": "unk_287",
+      "count": 1,
+      "reason": "dScEntry_c::InitResources clears byte 0x287, moved verbatim from the retired src/_ZN10dScEntry_c13InitResourcesEv.cpp (`self->unk_287 = 0` on main). include/dScEntry_c.h names the field unk_287. Its other users are unnamed raw-offset helpers in the same unit (func_ov075_02117e84 and func_ov075_02118378 store 0 and 0xe; func_ov075_02119dc4 clears it as a bit mask out of data_0209d45c), and data_0209d45c's role is itself unproven, so no name is invented. Follow-up: rename the header field when those helpers fold into this class and data_0209d45c is identified.",
+      "evidence": "src/_ZN10dScEntry_c13InitResourcesEv.cpp on main line 95; include/dScEntry_c.h line 33 (`u8 unk_287; /* 0x287 */`); ROM ov075 dScEntry_c::InitResources TEXT-VERIFIED in ov075/d_s_entry_methods"
+    },
+    {
+      "path": "src/Message2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
+      "count": 9,
+      "reason": "OAM::Render's scaled overload takes two Fix12<int> by value, and include/OAM.h deliberately leaves the by-value Fix12 overloads out: a method with that parameter homes r0-r3 to the stack, which the ROM callers do not. Message::Update calls it eight times to draw the choice cursor and the next-page arrow; the ninth occurrence is the extern \"C\" declaration. Follow-up: retire it together with the other Fix12-by-value walls once a Fix12 spelling that passes in registers exists.",
+      "evidence": "include/OAM.h header comment (by-value Fix12 overloads not declared); carried verbatim from src/_ZN7Message6UpdateEv.cpp on main (9 occurrences), which this PR folds; arm9/Message2 13/13 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2S13GetBG0CharPtrEv",
+      "count": 14,
+      "reason": "No header declares G2S's BG pointer getters; they are defined in src/engine/gx/G2.cpp as unsigned-returning members of namespace G2S, and Message.cpp's leftover note already keeps every one of its calls to them mangled for that reason. Follow-up: give G2S a header and convert all of this file's calls together.",
+      "evidence": "src/Message.cpp header leftover note (G2S BG pointer getters stay mangled); the count caps the whole file: its existing calls plus one carried verbatim from src/unnamed/arm9/0201/func_0201cd08.cpp, which this PR folds; arm9/Message 32/32 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2S12GetBG0ScrPtrEv",
+      "count": 13,
+      "reason": "No header declares G2S's BG pointer getters; they are defined in src/engine/gx/G2.cpp as unsigned-returning members of namespace G2S, and Message.cpp's leftover note already keeps every one of its calls to them mangled for that reason. Follow-up: give G2S a header and convert all of this file's calls together.",
+      "evidence": "src/Message.cpp header leftover note (G2S BG pointer getters stay mangled); the count caps the whole file: its existing calls plus one carried verbatim from src/unnamed/arm9/0201/func_0201cd08.cpp, which this PR folds; arm9/Message 32/32 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2G212GetBG1ScrPtrEv",
+      "count": 2,
+      "reason": "Inherited BG1-screen-map binding from absorbed helper 02116128; no shared G2 function header exists. Retained partial interface reconstruction, not a measured compiler wall. Follow-up: recover the shared G2 interface and prove its consumers.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+      "count": 5,
+      "reason": "Inherited OAM Render binding from absorbed helper 0211621c. The Fix12-by-value overload is intentionally absent from OAM.h because its class ABI changes calls (wall 6az). Follow-up: resolve that ABI with consumer byte proof before replacing the word arguments.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
+      "count": 4,
+      "reason": "Existing and absorbed OAM scaled Render calls retain the measured Fix12-by-value ABI bridge (OAM.h, wall 6az). Follow-up: resolve that ABI across consumers before replacing the integer arguments.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/game/stages/d_s_entry.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(data_0209ee90+0x1d4",
+      "count": 1,
+      "reason": "Inherited score field access in absorbed helper 0211621c; ROM loads the base score at offset 0x1d4 then adds the per-player delta. The cross-overlay global layout is not yet reconstructed. Follow-up: recover its owning arm9 type and verify all consumers before substituting a shared field.",
+      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    }
+  ]
+}

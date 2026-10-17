@@ -3556,8 +3556,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN4Heap11ResizeToFitEv.cpp",
-      "name": "_ZN4Heap11ResizeToFitEv",
+      "file": "src/_ZN5mHeap6Heap_t11ResizeToFitEv.cpp",
+      "name": "_ZN5mHeap6Heap_t11ResizeToFitEv",
       "module": "arm9",
       "addr": "0x203c390",
       "verdict": "VERIFIED",
@@ -3565,8 +3565,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN4Heap6IntactEv.cpp",
-      "name": "_ZN4Heap6IntactEv",
+      "file": "src/_ZN5mHeap6Heap_t6IntactEv.cpp",
+      "name": "_ZN5mHeap6Heap_t6IntactEv",
       "module": "arm9",
       "addr": "0x203c664",
       "verdict": "VERIFIED",
@@ -3574,8 +3574,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN4Heap6SizeofEPv.cpp",
-      "name": "_ZN4Heap6SizeofEPv",
+      "file": "src/_ZN5mHeap6Heap_t6SizeofEPv.cpp",
+      "name": "_ZN5mHeap6Heap_t6SizeofEPv",
       "module": "arm9",
       "addr": "0x203c454",
       "verdict": "VERIFIED",
@@ -3583,8 +3583,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN4Heap8AllocateEji.cpp",
-      "name": "_ZN4Heap8AllocateEji",
+      "file": "src/_ZN5mHeap6Heap_t8AllocateEji.cpp",
+      "name": "_ZN5mHeap6Heap_t8AllocateEji",
       "module": "arm9",
       "addr": "0x203c6cc",
       "verdict": "VERIFIED",
@@ -4996,8 +4996,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9SolidHeap11VDeallocateEPv.cpp",
-      "name": "_ZN9SolidHeap11VDeallocateEPv",
+      "file": "src/_ZN5mHeap11SolidHeap_t11VDeallocateEPv.cpp",
+      "name": "_ZN5mHeap11SolidHeap_t11VDeallocateEPv",
       "module": "arm9",
       "addr": "0x203c4e4",
       "verdict": "VERIFIED",
@@ -5005,8 +5005,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9SolidHeap7VSizeofEPv.cpp",
-      "name": "_ZN9SolidHeap7VSizeofEPv",
+      "file": "src/_ZN5mHeap11SolidHeap_t7VSizeofEPv.cpp",
+      "name": "_ZN5mHeap11SolidHeap_t7VSizeofEPv",
       "module": "arm9",
       "addr": "0x203c428",
       "verdict": "VERIFIED",
@@ -20064,7 +20064,7 @@
           "src/_ZN23daObjRotateUpdownLift_c16CleanupResourcesEv.cpp",
           "src/_ZN3Key13InitResourcesEv.cpp",
           "src/_ZN4Coin13OnTurnIntoEggER6Player.cpp",
-          "src/_ZN4Heap6IntactEv.cpp",
+          "src/_ZN5mHeap6Heap_t6IntactEv.cpp",
           "src/_ZN5Crate8BehaviorEv.cpp",
           "src/_ZN5Stage22RenderModelTransparentEv.cpp",
           "src/_ZN5Timer9StopTimerEv.cpp",
@@ -20183,7 +20183,7 @@
           "src/_ZN23daObjRotateUpdownLift_c16CleanupResourcesEv.cpp",
           "src/_ZN3Key13InitResourcesEv.cpp",
           "src/_ZN4Coin13OnTurnIntoEggER6Player.cpp",
-          "src/_ZN4Heap6IntactEv.cpp",
+          "src/_ZN5mHeap6Heap_t6IntactEv.cpp",
           "src/_ZN5Crate8BehaviorEv.cpp",
           "src/_ZN5Stage22RenderModelTransparentEv.cpp",
           "src/_ZN5Timer9StopTimerEv.cpp",
@@ -20318,7 +20318,7 @@
           "src/_ZN23daObjRotateUpdownLift_c8BehaviorEv.cpp",
           "src/_ZN3Key16CleanupResourcesEv.cpp",
           "src/_ZN4Coin8BehaviorEv.cpp",
-          "src/_ZN4Heap6SizeofEPv.cpp",
+          "src/_ZN5mHeap6Heap_t6SizeofEPv.cpp",
           "src/_ZN7daTgz_c13InitResourcesEv.cpp",
           "src/_ZN5Stage7LoadFogEv.cpp",
           "src/_ZN9daMoray_c13InitResourcesEv.cpp",
@@ -20442,7 +20442,7 @@
           "src/_ZN23daObjRotateUpdownLift_c8BehaviorEv.cpp",
           "src/_ZN3Key16CleanupResourcesEv.cpp",
           "src/_ZN4Coin8BehaviorEv.cpp",
-          "src/_ZN4Heap6SizeofEPv.cpp",
+          "src/_ZN5mHeap6Heap_t6SizeofEPv.cpp",
           "src/_ZN7daTgz_c13InitResourcesEv.cpp",
           "src/_ZN5Stage7LoadFogEv.cpp",
           "src/_ZN9daMoray_c13InitResourcesEv.cpp",
@@ -20577,7 +20577,7 @@
           "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp",
           "src/_ZN3Key8BehaviorEv.cpp",
           "src/_ZN4Door16CleanupResourcesEv.cpp",
-          "src/_ZN4Heap8AllocateEji.cpp",
+          "src/_ZN5mHeap6Heap_t8AllocateEji.cpp",
           "src/_ZN5Stage11RenderModelEv.cpp",
           "src/_ZN5Stump16CleanupResourcesEv.cpp",
           "src/_ZN9daMoray_c8BehaviorEv.cpp",
@@ -20702,7 +20702,7 @@
           "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp",
           "src/_ZN3Key8BehaviorEv.cpp",
           "src/_ZN4Door16CleanupResourcesEv.cpp",
-          "src/_ZN4Heap8AllocateEji.cpp",
+          "src/_ZN5mHeap6Heap_t8AllocateEji.cpp",
           "src/_ZN5Stage11RenderModelEv.cpp",
           "src/_ZN5Stump16CleanupResourcesEv.cpp",
           "src/_ZN9daMoray_c8BehaviorEv.cpp",
@@ -20866,7 +20866,7 @@
           "src/_ZN8Snowball13InitResourcesEv.cpp",
           "src/_ZN8dActor_cC2Ev.cpp",
           "src/_ZN9MontyMole13InitResourcesEv.cpp",
-          "src/_ZN9SolidHeap11VDeallocateEPv.cpp",
+          "src/_ZN5mHeap11SolidHeap_t11VDeallocateEPv.cpp",
           "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
           "src/_ZN9WaterBomb8BehaviorEv.cpp",
           "src/_ZN9dScDSMT_c8BehaviorEv.cpp",
@@ -20991,7 +20991,7 @@
           "src/_ZN8Snowball13InitResourcesEv.cpp",
           "src/_ZN8dActor_cC2Ev.cpp",
           "src/_ZN9MontyMole13InitResourcesEv.cpp",
-          "src/_ZN9SolidHeap11VDeallocateEPv.cpp",
+          "src/_ZN5mHeap11SolidHeap_t11VDeallocateEPv.cpp",
           "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
           "src/_ZN9WaterBomb8BehaviorEv.cpp",
           "src/_ZN9dScDSMT_c8BehaviorEv.cpp",
@@ -21127,7 +21127,7 @@
           "src/_ZN8Snowball8BehaviorEv.cpp",
           "src/_ZN9dScBoot_c13InitResourcesEv.cpp",
           "src/_ZN8daStar_c13AddStarMarkerEv.cpp",
-          "src/_ZN9SolidHeap7VSizeofEPv.cpp",
+          "src/_ZN5mHeap11SolidHeap_t7VSizeofEPv.cpp",
           "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
           "src/_ZN18daWater_Tatumaki_c13InitResourcesEv.cpp",
           "src/_ZN9daDossy_c13InitResourcesEv.cpp",
@@ -21252,7 +21252,7 @@
           "src/_ZN8Snowball8BehaviorEv.cpp",
           "src/_ZN9dScBoot_c13InitResourcesEv.cpp",
           "src/_ZN8daStar_c13AddStarMarkerEv.cpp",
-          "src/_ZN9SolidHeap7VSizeofEPv.cpp",
+          "src/_ZN5mHeap11SolidHeap_t7VSizeofEPv.cpp",
           "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
           "src/_ZN18daWater_Tatumaki_c13InitResourcesEv.cpp",
           "src/_ZN9daDossy_c13InitResourcesEv.cpp",
@@ -21359,7 +21359,7 @@
           "src/_ZN23daObjRotateUpdownLift_c13InitResourcesEv.cpp",
           "src/_ZN8dMeter_c6RenderEv.cpp",
           "src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp",
-          "src/_ZN4Heap11ResizeToFitEv.cpp",
+          "src/_ZN5mHeap6Heap_t11ResizeToFitEv.cpp",
           "src/_ZN5Crate4KillEv.cpp",
           "src/_ZN5Stage17UpdateMenuButtonsEb.cpp",
           "src/_ZN5Timer7GetTimeEv.cpp",
@@ -21482,7 +21482,7 @@
           "src/_ZN23daObjRotateUpdownLift_c13InitResourcesEv.cpp",
           "src/_ZN8dMeter_c6RenderEv.cpp",
           "src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp",
-          "src/_ZN4Heap11ResizeToFitEv.cpp",
+          "src/_ZN5mHeap6Heap_t11ResizeToFitEv.cpp",
           "src/_ZN5Crate4KillEv.cpp",
           "src/_ZN5Stage17UpdateMenuButtonsEb.cpp",
           "src/_ZN5Timer7GetTimeEv.cpp",
@@ -21783,10 +21783,10 @@
         "src/_ZN4Door16CleanupResourcesEv.cpp",
         "src/_ZN4Fish16CleanupResourcesEv.cpp",
         "src/_ZN4Fish8BehaviorEv.cpp",
-        "src/_ZN4Heap11ResizeToFitEv.cpp",
-        "src/_ZN4Heap6IntactEv.cpp",
-        "src/_ZN4Heap6SizeofEPv.cpp",
-        "src/_ZN4Heap8AllocateEji.cpp",
+        "src/_ZN5mHeap6Heap_t11ResizeToFitEv.cpp",
+        "src/_ZN5mHeap6Heap_t6IntactEv.cpp",
+        "src/_ZN5mHeap6Heap_t6SizeofEPv.cpp",
+        "src/_ZN5mHeap6Heap_t8AllocateEji.cpp",
         "src/_ZN5Crate13InitResourcesEv.cpp",
         "src/_ZN5Crate16CleanupResourcesEv.cpp",
         "src/_ZN5Crate4KillEv.cpp",
@@ -21943,8 +21943,8 @@
         "src/_ZN8daStar_c8BehaviorEv.cpp",
         "src/_ZN9SeesawBob13InitResourcesEv.cpp",
         "src/_ZN9SeesawBob16CleanupResourcesEv.cpp",
-        "src/_ZN9SolidHeap11VDeallocateEPv.cpp",
-        "src/_ZN9SolidHeap7VSizeofEPv.cpp",
+        "src/_ZN5mHeap11SolidHeap_t11VDeallocateEPv.cpp",
+        "src/_ZN5mHeap11SolidHeap_t7VSizeofEPv.cpp",
         "src/_ZN9daKirai_c13InitResourcesEv.cpp",
         "src/_ZN9daKirai_c8BehaviorEv.cpp",
         "src/_ZN9Spindrift13InitResourcesEv.cpp",
@@ -23050,20 +23050,20 @@
           "name": "_ZN4Fish8BehaviorEv"
         },
         {
-          "file": "src/_ZN4Heap11ResizeToFitEv.cpp",
-          "name": "_ZN4Heap11ResizeToFitEv"
+          "file": "src/_ZN5mHeap6Heap_t11ResizeToFitEv.cpp",
+          "name": "_ZN5mHeap6Heap_t11ResizeToFitEv"
         },
         {
-          "file": "src/_ZN4Heap6IntactEv.cpp",
-          "name": "_ZN4Heap6IntactEv"
+          "file": "src/_ZN5mHeap6Heap_t6IntactEv.cpp",
+          "name": "_ZN5mHeap6Heap_t6IntactEv"
         },
         {
-          "file": "src/_ZN4Heap6SizeofEPv.cpp",
-          "name": "_ZN4Heap6SizeofEPv"
+          "file": "src/_ZN5mHeap6Heap_t6SizeofEPv.cpp",
+          "name": "_ZN5mHeap6Heap_t6SizeofEPv"
         },
         {
-          "file": "src/_ZN4Heap8AllocateEji.cpp",
-          "name": "_ZN4Heap8AllocateEji"
+          "file": "src/_ZN5mHeap6Heap_t8AllocateEji.cpp",
+          "name": "_ZN5mHeap6Heap_t8AllocateEji"
         },
         {
           "file": "src/_ZN5Crate13InitResourcesEv.cpp",
@@ -23690,12 +23690,12 @@
           "name": "_ZN9SeesawBob16CleanupResourcesEv"
         },
         {
-          "file": "src/_ZN9SolidHeap11VDeallocateEPv.cpp",
-          "name": "_ZN9SolidHeap11VDeallocateEPv"
+          "file": "src/_ZN5mHeap11SolidHeap_t11VDeallocateEPv.cpp",
+          "name": "_ZN5mHeap11SolidHeap_t11VDeallocateEPv"
         },
         {
-          "file": "src/_ZN9SolidHeap7VSizeofEPv.cpp",
-          "name": "_ZN9SolidHeap7VSizeofEPv"
+          "file": "src/_ZN5mHeap11SolidHeap_t7VSizeofEPv.cpp",
+          "name": "_ZN5mHeap11SolidHeap_t7VSizeofEPv"
         },
         {
           "file": "src/_ZN9daKirai_c13InitResourcesEv.cpp",

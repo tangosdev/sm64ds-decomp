@@ -35,10 +35,10 @@ data_ov033_0211192c kind:data(any) addr:0x0211192c ambiguous
 data_ov033_02111944 kind:data(any) addr:0x02111944 ambiguous
 data_ov033_02111960 kind:data(any) addr:0x02111960 ambiguous
 data_ov033_02111994 kind:data(any) addr:0x02111994 ambiguous
-__sinit_daObjTtFuta_c.cpp kind:function(arm,size=0x6c) addr:0x021119e8
-__sinit_daObjTtWater_c.cpp kind:function(arm,size=0x6c) addr:0x02111a54
-.p__sinit_daObjTtFuta_c.cpp kind:data(word) addr:0x02111ac0
-.p__sinit_daObjTtWater_c.cpp kind:data(word) addr:0x02111ac4
+__sinit_d_a_obj_tt_futa.cpp kind:function(arm,size=0x6c) addr:0x021119e8
+__sinit_d_a_obj_tt_water.cpp kind:function(arm,size=0x6c) addr:0x02111a54
+.p__sinit_d_a_obj_tt_futa.cpp kind:data(word) addr:0x02111ac0
+.p__sinit_d_a_obj_tt_water.cpp kind:data(word) addr:0x02111ac4
 data_ov033_02111ae0 kind:data(any) addr:0x02111ae0
 data_ov033_02111ae4 kind:data(any) addr:0x02111ae4
 data_ov033_02111ae8 kind:data(any) addr:0x02111ae8

@@ -34,7 +34,7 @@ struct daPiano_c : dBgActor_c {
      * it on transitions, func_ov063_0211ddf4 reads it every frame. */
     s32 mStateIdx;            /* 0x6c8 */
     s32 mMinPosY;            /* 0x6cc */
-    /* Chase target: func_ov063_0211dbb8 stores the nearest moving player slot
+    /* Chase target: func_ov063_0211dbb8 stores the first qualifying moving player slot
      * from data_0209f394 here; func_ov063_0211d8cc steers toward it. */
     dActor_c *mTarget;            /* 0x6d0 */
     Vector3 mHomePos;            /* 0x6d4 */

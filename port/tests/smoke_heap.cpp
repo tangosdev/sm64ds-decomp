@@ -14,13 +14,13 @@ typedef unsigned int u32;
 
 struct ExpandingHeapAllocator;
 extern "C" {
-ExpandingHeapAllocator *_ZN4Heap28CreateExpandingHeapAllocatorEPvjj(void *address, u32 size, u32 flags);
+ExpandingHeapAllocator *_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj(void *address, u32 size, u32 flags);
 void *_ZN22ExpandingHeapAllocator8AllocateEji(ExpandingHeapAllocator *self, u32 size, int align);
 int _ZN22ExpandingHeapAllocator10DeallocateEPv(ExpandingHeapAllocator *self, void *ptr);
 extern int _ZN6Memory25isRootHeapIterInitializedE;
 extern int data_020a4d34;
 }
-#define CreateAllocator _ZN4Heap28CreateExpandingHeapAllocatorEPvjj
+#define CreateAllocator _ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj
 #define Alloc(a, n)     _ZN22ExpandingHeapAllocator8AllocateEji((a), (n), 4)
 #define Free(a, p)      _ZN22ExpandingHeapAllocator10DeallocateEPv((a), (p))
 

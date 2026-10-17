@@ -1,0 +1,183 @@
+{
+  "status": "Production Source and byte/static gates complete; immutable independent acceptance and PR validation are separate.",
+  "base_commit": "92ad0fdcf0639c56181648c022a8a1d2659ade74",
+  "source": "src/engine/collision/dBgCh_SphCrr_query.cpp",
+  "source_author": {
+    "model": "GPT-6 Astra",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "producer_session": "codex-collision-query-astra-producer1014",
+    "private_research_session": "codex-cpp-frontier-astra1014",
+    "disclosure": "Same actual agent authored private candidate, production Source and report. Root coordinated; Recovery independently preflighted the Source. Neither authored this Source change."
+  },
+  "source_sha256": "d3eb2a20d1c3b4992ba82adcae8caeaae1692f9546e77710dc267f7b0c22d65c",
+  "change": "Replace five fake receiver/layout classes with existing dBgW ground/line virtual overloads and BeforeClsn, and real dActor_c clip-volume fields. Existing helper signatures and all shared declarations stay unchanged.",
+  "proof": {
+    "compiler": "2004/b56",
+    "strict_unique_functions": 57,
+    "strict_diffs": 0,
+    "strict_blind": 0,
+    "raw_literal_equal": true,
+    "prepared_literal_equal": true,
+    "raw_bytes": 17544,
+    "raw_sha256": "51d330c4e51706448fc5cc0439a2cd01e4b3d282ef2686eda6743c2b66cea1a8",
+    "prepared_sha256": "1f9fa2683d250b87419aae4af259053f275fb98c8e2c400797a3c067562a974e",
+    "raw_typed_refs": 167,
+    "prepared_typed_refs": 159,
+    "ordinary_mode": "existing text-only partitioned TU; nontext externalized unchanged; no intact ownership claim",
+    "nontext": "Five raw allocated data sections totaling 50 bytes are unchanged; ordinary legacy preparation zeroes all five. No newly retained canonical metadata/storage ownership claimed. Complete raw/prepared objects and graphs literally equal.",
+    "declaration_inventory_equal": true,
+    "parsed_declarations": 25,
+    "parsed_definitions": 49,
+    "declaration_qualification": "Actual repository parser on both complete Source texts using current scalar and static-member indices; not a global or --changed ratchet run on a production commit.",
+    "virtual_contracts": {
+      "DetectClsn_ground": "include/dBgW.h existing slot 6, dBgCh_Gnd&",
+      "DetectClsn_line": "include/dBgW.h existing slot 7, dBgCh_Lin&",
+      "BeforeClsn": "include/dBgW.h existing slot 9; actual dBgW.cpp definition forwards dBgPi/actor/Vector3/angle pointers; actual dBgCh_Actr.cpp callers agree"
+    }
+  },
+  "private_handoff_sha256": "0f80538d52f8b3646870ae8afd07e19068366472d16c4e836577cf6f29d5f62f",
+  "historical_credit": "Existing matched-function provenance and lunavyqo/Cursor TU-fold credit preserved; no function-authors or attribution edits.",
+  "findings": [
+    {
+      "id": "COLLISION-QUERY-PARTIAL-01",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "description": "Position reads retain measured byte-offset grouping; Vec3 POD copy view and existing self-position integer-laundering remain.",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:position grouping in ground/line scans"
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-02",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "description": "PcAB/PcObj record reconstruction remains.",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:PcAB/PcObj record views"
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-03",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "description": "PFN and func_02038234 stored callback/extra-register contract remain unrecovered.",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:PFN / func_02038234"
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-04",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "description": "RecordHit raw int versus native s16 bridge remains.",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:dBgPi::RecordHit calls"
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-05",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "description": "Address-named free helpers retain current public signatures; no complete class lifecycle reconstruction claimed.",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:address-named helpers"
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-06",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:Vec3_HorzDist / inherited actor-position views",
+      "description": "Existing Vec3/Vector3 views and actor scalar-position to Vector3 storage boundary remain partial. This patch does not assert those three separate actor fields form an independently live Vector3 object or resolve the inherited alias/lifetime interface. New position reads use the complete actor byte representation to address the existing s32 subobjects.",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854"
+    }
+  ],
+  "verification_pending": [
+    "Independent exact offered Source/report review and byte verification",
+    "PR publication only after independent acceptance; no merge"
+  ],
+  "public_actions": "Approved issue3854 and supported producer task registered/claimed; no Source PR or merge by this producer.",
+  "rejected_experiment": {
+    "source": "direct-fields-failed.cpp",
+    "proof": "direct-fields-failure.json",
+    "reason": "Direct mPosX/Y/Z reads remove four bytes in each of three scans. Preserved failure; final reads genuine s32 subobjects through complete-object byte representation at existing +5c/+60/+64 offsets; no first-scalar-as-array traversal."
+  },
+  "tested_source_commit": "17f6ffe589db102066e20688237f7088aa761762",
+  "production_pipeline_private_run": {
+    "terminal": 0,
+    "seconds": 308.87,
+    "modules_exact": 106,
+    "source_functions_exact": 11334,
+    "source_functions_mismatching": 0,
+    "source_data_exact": 331,
+    "source_data_mismatching": 0,
+    "source_bss_claims": 239,
+    "intact_tu_gate": "modules PASS, zero new symbol errors, storage aliases exact",
+    "baseline_control": "All modules PASS, stock ROM SHA256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8; baseline symbol check has nine inherited errors. Candidate invoked --no-rom, so no new candidate .nds was requested.",
+    "global_data_advisory": {
+      "verified": 970,
+      "partial": 1519,
+      "differ": 1,
+      "unnamed": 21,
+      "qualification": "Inherited global advisories; not an all-data-clean claim."
+    },
+    "explicit_transfer": {
+      "actual_full_rom_tested_commit": "429bba1715b5ff9d1f66e2bff34e3066335b5fb0",
+      "production_source_checkpoint": "17f6ffe589db102066e20688237f7088aa761762",
+      "compiler_input_trees_equal": [
+        "src",
+        "include",
+        "config",
+        "tools",
+        "port"
+      ],
+      "explanation": "The exact Source/include/config/tools/port compiler inputs are identical between actual tested private checkpoint and this production Source checkpoint. Full-ROM result transfers explicitly; production object/static checks are rerun separately. No claim of a fresh production full-ROM invocation."
+    }
+  },
+  "static_checks": {
+    "prepush": "57 checked,57verified,zero warnings/blocking; terminal0",
+    "declarations": "Global/scoped actual terminal0; no new disagreements or local header redeclarations. Global7483 inherited; scoped474 files4070 inherited disagreements.",
+    "port": "267 references resolve; terminal0",
+    "langmode": "Actual existing chaos-data baseline5357d9aeec02ed411310fde18fc9f725110964a5; ratchet PASS terminal0",
+    "duplicate_sources": "2804 stems none doubled; terminal0",
+    "drafts_compile": "21/21 existing NONMATCHING drafts compile; terminal0; not match claims",
+    "rename_ledger": "3655 live mangled/vtable rows and chains pass;797 coined rows outside scope,1345 historical rows preserved",
+    "header_offsets": "dActor/Gnd/Lin zero mismatch; dBgW existing known-issues waiver remains, no new waiver.",
+    "diff_check": "terminal0",
+    "historical_invocation_failures": "prepush_attribution.py absent at current pin and obsolete langmode --check without required path each returned2; logs retained. Correct langmode invocation passes. Attribution files unchanged, no substitute-script claim."
+  },
+  "private_evidence": {
+    "proof_sha256": "c53290ddfe8bbe7f7335a4a779a42945d1055ed5f1e04c3f07006cd2431e927f",
+    "gate_results_sha256": "2113bb576af01162b6b6b21daeb3b702efe6b69ccf74140110316f338fcab236",
+    "additional_gates_sha256": "a6de663591ad457f9806d8b947ba12035089d7703665e7a526964f30a823d340"
+  },
+  "historical_related_scope": "DONE line-native-return1013 covers separate dBgCh_Lin.cpp native getter/caller family; its partial interface work remains unchanged. No exact query Source/range queue predecessor or dedicated issue was found by bounded read-only search.",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+  "task": "collision-query-native1014",
+  "production_fresh_checks": {
+    "tested_source_commit": "17f6ffe589db102066e20688237f7088aa761762",
+    "proof_sha256": "c53290ddfe8bbe7f7335a4a779a42945d1055ed5f1e04c3f07006cd2431e927f",
+    "static_gates": {
+      "decl_global": 0,
+      "decl_scoped": 0,
+      "port": 0,
+      "duplicate_sources": 0,
+      "drafts_compile": 0,
+      "rename_ledger": 0,
+      "header_offsets": 0,
+      "diff": 0,
+      "langmode": 0,
+      "prepush": 0
+    },
+    "static_gate_evidence_sha256": "941cf5aa98f0ef8c2b465e9d5ffffe9e2e653c7ee04d50c1601249a70674db5e",
+    "all_57_functions_verified": true,
+    "whole_raw_and_prepared_literal_equal": true
+  },
+  "independent_private_preflight": {
+    "author_handoff_sha256": "0f80538d52f8b3646870ae8afd07e19068366472d16c4e836577cf6f29d5f62f",
+    "independent_handoff_sha256": "d2f3acdb72c8c7485eac1919f2485463d8d641ee343368acfdb36c220618594e",
+    "result": "Same exact Source d3eb has independent private preflight with no actionable Source finding; this is not formal acceptance of the final report/commit."
+  },
+  "completion": "partial"
+}

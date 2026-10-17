@@ -208,126 +208,126 @@
         "slot_address": "0x0213bf98",
         "target": "0x020de5b0",
         "module": "ov006",
-        "name": "_ZN11dScMgCoin_c13OnYoshiTryEatEi"
+        "name": "_ZN11dScMgCoin_c10StartRoundEi"
       },
       {
         "slot": 19,
         "slot_address": "0x0213bf9c",
         "target": "0x020b2994",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c13OnTurnIntoEggEi"
+        "name": "_ZN11dScMgBase_c11CanEndStateEi"
       },
       {
         "slot": 20,
         "slot_address": "0x0213bfa0",
         "target": "0x020b2990",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual50Ev"
+        "name": "_ZN11dScMgBase_c11OnNewRecordEv"
       },
       {
         "slot": 21,
         "slot_address": "0x0213bfa4",
         "target": "0x020b298c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c15OnGroundPoundedEv"
+        "name": "_ZN11dScMgBase_c10OnDealDoneEv"
       },
       {
         "slot": 22,
         "slot_address": "0x0213bfa8",
         "target": "0x020ae198",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c11OnAttacked1Ev"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback1Ev"
       },
       {
         "slot": 23,
         "slot_address": "0x0213bfac",
         "target": "0x020ae1a0",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c11OnAttacked2Ev"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback0Ev"
       },
       {
         "slot": 24,
         "slot_address": "0x0213bfb0",
         "target": "0x020ae140",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c8OnKickedEv"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback2Ev"
       },
       {
         "slot": 25,
         "slot_address": "0x0213bfb4",
         "target": "0x020ae128",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c8OnPushedEv"
+        "name": "_ZN11dScMgBase_c16OnGraphCallback3Ev"
       },
       {
         "slot": 26,
         "slot_address": "0x0213bfb8",
         "target": "0x020b04e0",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv"
+        "name": "_ZN11dScMgBase_c14GetDisplayModeEv"
       },
       {
         "slot": 27,
         "slot_address": "0x0213bfbc",
         "target": "0x020af27c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c15OnHitByMegaCharEv"
+        "name": "_ZN11dScMgBase_c8OpenMenuEv"
       },
       {
         "slot": 28,
         "slot_address": "0x0213bfc0",
         "target": "0x020af04c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c19OnHitFromUnderneathEv"
+        "name": "_ZN11dScMgBase_c9CloseMenuEv"
       },
       {
         "slot": 29,
         "slot_address": "0x0213bfc4",
         "target": "0x020af094",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c16OnAimedAtWithEggEv"
+        "name": "_ZN11dScMgBase_c17SaveScreenForMenuEv"
       },
       {
         "slot": 30,
         "slot_address": "0x0213bfc8",
         "target": "0x020aeed8",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv"
+        "name": "_ZN11dScMgBase_c21RestoreScreenFromMenuEv"
       },
       {
         "slot": 31,
         "slot_address": "0x0213bfcc",
         "target": "0x020b2880",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual7CEv"
+        "name": "_ZN11dScMgBase_c15InitSubScreenBgEv"
       },
       {
         "slot": 32,
         "slot_address": "0x0213bfd0",
         "target": "0x020b27f4",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual80Ev"
+        "name": "_ZN11dScMgBase_c16InitMainScreenBgEv"
       },
       {
         "slot": 33,
         "slot_address": "0x0213bfd4",
         "target": "0x020b265c",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual84Ev"
+        "name": "_ZN11dScMgBase_c11InitEnginesEv"
       },
       {
         "slot": 34,
         "slot_address": "0x0213bfd8",
         "target": "0x020ae3b4",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual88Eiiii"
+        "name": "_ZN11dScMgBase_c11PaintSquareEiiii"
       },
       {
         "slot": 35,
         "slot_address": "0x0213bfdc",
         "target": "0x020ad660",
         "module": "ov004",
-        "name": "_ZN11dScMgBase_c9Virtual8CEv",
+        "name": "_ZN11dScMgBase_c12IsAltVariantEv",
         "note": "The address collides with entries in ov000/ov002/ov003/ov007; the ov006 relocation explicitly permits the ov004 implementation, and the direct-base table has the same slot target."
       }
     ]
@@ -366,7 +366,7 @@
     },
     {
       "slot": 18,
-      "symbol": "_ZN11dScMgCoin_c13OnYoshiTryEatEi",
+      "symbol": "_ZN11dScMgCoin_c10StartRoundEi",
       "address": "0x020de5b0",
       "size": "0x8c"
     }
@@ -408,282 +408,282 @@
     },
     "non_vtable_functions": [
       {
-        "symbol": "func_ov006_020dbe9c",
+        "symbol": "Bag_Draw",
         "address": "0x020dbe9c",
         "size": "0xe0"
       },
       {
-        "symbol": "func_ov006_020dbf7c",
+        "symbol": "Bag_State3",
         "address": "0x020dbf7c",
         "size": "0x1d8"
       },
       {
-        "symbol": "func_ov006_020dc154",
+        "symbol": "Bag_State2",
         "address": "0x020dc154",
         "size": "0x70"
       },
       {
-        "symbol": "func_ov006_020dc1c4",
+        "symbol": "Bag_State1",
         "address": "0x020dc1c4",
         "size": "0xa8"
       },
       {
-        "symbol": "func_ov006_020dc26c",
+        "symbol": "Bag_Release",
         "address": "0x020dc26c",
         "size": "0x28"
       },
       {
-        "symbol": "func_ov006_020dc294",
+        "symbol": "Bag_State0",
         "address": "0x020dc294",
         "size": "0x4"
       },
       {
-        "symbol": "func_ov006_020dc298",
+        "symbol": "Bag_Update",
         "address": "0x020dc298",
         "size": "0x60"
       },
       {
-        "symbol": "func_ov006_020dc2f8",
+        "symbol": "Bag_Show",
         "address": "0x020dc2f8",
         "size": "0x3c"
       },
       {
-        "symbol": "func_ov006_020dc334",
+        "symbol": "Bag_Hide",
         "address": "0x020dc334",
         "size": "0x14"
       },
       {
-        "symbol": "func_ov006_020dc348",
+        "symbol": "Caption_Finish",
         "address": "0x020dc348",
         "size": "0x28"
       },
       {
-        "symbol": "func_ov006_020dc370",
+        "symbol": "Caption_Trigger",
         "address": "0x020dc370",
         "size": "0x4c"
       },
       {
-        "symbol": "func_ov006_020dc3bc",
+        "symbol": "Caption_Draw",
         "address": "0x020dc3bc",
         "size": "0x58"
       },
       {
-        "symbol": "func_ov006_020dc414",
+        "symbol": "Caption_State4",
         "address": "0x020dc414",
         "size": "0x9c"
       },
       {
-        "symbol": "func_ov006_020dc4b0",
+        "symbol": "Caption_State3",
         "address": "0x020dc4b0",
         "size": "0x18"
       },
       {
-        "symbol": "func_ov006_020dc4c8",
+        "symbol": "Caption_State2",
         "address": "0x020dc4c8",
         "size": "0xfc"
       },
       {
-        "symbol": "func_ov006_020dc5c4",
+        "symbol": "Caption_State1",
         "address": "0x020dc5c4",
         "size": "0x10c"
       },
       {
-        "symbol": "func_ov006_020dc6d0",
+        "symbol": "Caption_State0",
         "address": "0x020dc6d0",
         "size": "0x84"
       },
       {
-        "symbol": "func_ov006_020dc754",
+        "symbol": "Caption_Update",
         "address": "0x020dc754",
         "size": "0x60"
       },
       {
-        "symbol": "func_ov006_020dc7b4",
+        "symbol": "Caption_Show",
         "address": "0x020dc7b4",
         "size": "0x48"
       },
       {
-        "symbol": "func_ov006_020dc7fc",
+        "symbol": "Caption_Reset",
         "address": "0x020dc7fc",
         "size": "0x18"
       },
       {
-        "symbol": "func_ov006_020dc814",
+        "symbol": "DrawResultPrompt",
         "address": "0x020dc814",
         "size": "0x5c"
       },
       {
-        "symbol": "func_ov006_020dc870",
+        "symbol": "DrawResultNumbers",
         "address": "0x020dc870",
         "size": "0x90"
       },
       {
-        "symbol": "func_ov006_020dc900",
+        "symbol": "Popup_UpdateAll",
         "address": "0x020dc900",
         "size": "0x60"
       },
       {
-        "symbol": "func_ov006_020dc960",
+        "symbol": "Popup_Spawn",
         "address": "0x020dc960",
         "size": "0x3c"
       },
       {
-        "symbol": "func_ov006_020dc99c",
+        "symbol": "Sparkle_DrawAll",
         "address": "0x020dc99c",
         "size": "0x68"
       },
       {
-        "symbol": "func_ov006_020dca04",
+        "symbol": "Sparkle_UpdateAll",
         "address": "0x020dca04",
         "size": "0x118"
       },
       {
-        "symbol": "func_ov006_020dcb1c",
+        "symbol": "Sparkle_Burst",
         "address": "0x020dcb1c",
         "size": "0x12c"
       },
       {
-        "symbol": "func_ov006_020dcc48",
+        "symbol": "Popup_DrawAll",
         "address": "0x020dcc48",
         "size": "0x70"
       },
       {
-        "symbol": "func_ov006_020dccb8",
+        "symbol": "DrawScorePlayer",
         "address": "0x020dccb8",
         "size": "0xbc"
       },
       {
-        "symbol": "func_ov006_020dcd74",
+        "symbol": "DrawScoreRival",
         "address": "0x020dcd74",
         "size": "0xc8"
       },
       {
-        "symbol": "func_ov006_020dce3c",
+        "symbol": "Score_Update",
         "address": "0x020dce3c",
         "size": "0x6c"
       },
       {
-        "symbol": "func_ov006_020dcea8",
+        "symbol": "DrawCoinValues",
         "address": "0x020dcea8",
         "size": "0x154"
       },
       {
-        "symbol": "func_ov006_020dcffc",
+        "symbol": "Coin_State2",
         "address": "0x020dcffc",
         "size": "0x4"
       },
       {
-        "symbol": "func_ov006_020dd000",
+        "symbol": "Coin_State1",
         "address": "0x020dd000",
         "size": "0xe0"
       },
       {
-        "symbol": "func_ov006_020dd0e0",
+        "symbol": "Coin_State0",
         "address": "0x020dd0e0",
         "size": "0x1ec"
       },
       {
-        "symbol": "func_ov006_020dd2cc",
+        "symbol": "Coin_UpdateAll",
         "address": "0x020dd2cc",
         "size": "0x68"
       },
       {
-        "symbol": "func_ov006_020dd334",
+        "symbol": "LayOutCoins",
         "address": "0x020dd334",
         "size": "0x17c"
       },
       {
-        "symbol": "func_ov006_020dd4b0",
+        "symbol": "KickBlockUnderCoin",
         "address": "0x020dd4b0",
         "size": "0xe4"
       },
       {
-        "symbol": "func_ov006_020dd594",
+        "symbol": "DrawBlocks",
         "address": "0x020dd594",
         "size": "0xc4"
       },
       {
-        "symbol": "func_ov006_020dd658",
+        "symbol": "Block_State5",
         "address": "0x020dd658",
         "size": "0x164"
       },
       {
-        "symbol": "func_ov006_020dd7bc",
+        "symbol": "Block_State4",
         "address": "0x020dd7bc",
         "size": "0x4"
       },
       {
-        "symbol": "func_ov006_020dd7c0",
+        "symbol": "Block_State3",
         "address": "0x020dd7c0",
         "size": "0xc0"
       },
       {
-        "symbol": "func_ov006_020dd880",
+        "symbol": "Block_State2",
         "address": "0x020dd880",
         "size": "0x214"
       },
       {
-        "symbol": "func_ov006_020dda94",
+        "symbol": "Block_State1",
         "address": "0x020dda94",
         "size": "0x20c"
       },
       {
-        "symbol": "func_ov006_020ddca0",
+        "symbol": "Block_State0",
         "address": "0x020ddca0",
         "size": "0x58"
       },
       {
-        "symbol": "func_ov006_020ddcf8",
+        "symbol": "Block_ClampToWalls",
         "address": "0x020ddcf8",
         "size": "0x74"
       },
       {
-        "symbol": "func_ov006_020ddd6c",
+        "symbol": "Block_UpdateAll",
         "address": "0x020ddd6c",
         "size": "0xbc"
       },
       {
-        "symbol": "func_ov006_020dde28",
+        "symbol": "Block_Animate",
         "address": "0x020dde28",
         "size": "0x88"
       },
       {
-        "symbol": "func_ov006_020ddeb0",
+        "symbol": "SpawnBlocks",
         "address": "0x020ddeb0",
         "size": "0xec"
       },
       {
-        "symbol": "func_ov006_020ddf9c",
+        "symbol": "ResetRound",
         "address": "0x020ddf9c",
         "size": "0x144"
       },
       {
-        "symbol": "func_ov006_020de0e0",
+        "symbol": "Phase_State5",
         "address": "0x020de0e0",
         "size": "0xf4"
       },
       {
-        "symbol": "func_ov006_020de1d4",
+        "symbol": "Phase_State4",
         "address": "0x020de1d4",
         "size": "0x98"
       },
       {
-        "symbol": "func_ov006_020de26c",
+        "symbol": "Phase_State3",
         "address": "0x020de26c",
         "size": "0x1d4"
       },
       {
-        "symbol": "func_ov006_020de440",
+        "symbol": "Phase_State2",
         "address": "0x020de440",
         "size": "0x144"
       },
       {
-        "symbol": "func_ov006_020de584",
+        "symbol": "Phase_State1",
         "address": "0x020de584",
         "size": "0x28"
       },
       {
-        "symbol": "func_ov006_020de5ac",
+        "symbol": "Phase_State0",
         "address": "0x020de5ac",
         "size": "0x4"
       }
@@ -743,7 +743,7 @@
       "from": "0x020de5a8",
       "kind": "load",
       "target": "0x020ddd6c",
-      "use": "func_ov006_020de584 loads the target into ip and tail-dispatches with bx ip at 0x020de5a4"
+      "use": "Phase_State1 loads the target into ip and tail-dispatches with bx ip at 0x020de5a4"
     },
     "callback_tables": {
       "entry_size": "0x8",
@@ -766,122 +766,122 @@
         {
           "record": "0x0213be44",
           "target": "0x020dc294",
-          "symbol": "func_ov006_020dc294"
+          "symbol": "Bag_State0"
         },
         {
           "record": "0x0213be4c",
           "target": "0x020dc1c4",
-          "symbol": "func_ov006_020dc1c4"
+          "symbol": "Bag_State1"
         },
         {
           "record": "0x0213be54",
           "target": "0x020de1d4",
-          "symbol": "func_ov006_020de1d4"
+          "symbol": "Phase_State4"
         },
         {
           "record": "0x0213be5c",
           "target": "0x020de0e0",
-          "symbol": "func_ov006_020de0e0"
+          "symbol": "Phase_State5"
         },
         {
           "record": "0x0213be64",
           "target": "0x020dd880",
-          "symbol": "func_ov006_020dd880"
+          "symbol": "Block_State2"
         },
         {
           "record": "0x0213be6c",
           "target": "0x020de584",
-          "symbol": "func_ov006_020de584"
+          "symbol": "Phase_State1"
         },
         {
           "record": "0x0213be74",
           "target": "0x020dda94",
-          "symbol": "func_ov006_020dda94"
+          "symbol": "Block_State1"
         },
         {
           "record": "0x0213be7c",
           "target": "0x020de440",
-          "symbol": "func_ov006_020de440"
+          "symbol": "Phase_State2"
         },
         {
           "record": "0x0213be84",
           "target": "0x020dd7c0",
-          "symbol": "func_ov006_020dd7c0"
+          "symbol": "Block_State3"
         },
         {
           "record": "0x0213be8c",
           "target": "0x020dbf7c",
-          "symbol": "func_ov006_020dbf7c"
+          "symbol": "Bag_State3"
         },
         {
           "record": "0x0213be94",
           "target": "0x020dcffc",
-          "symbol": "func_ov006_020dcffc"
+          "symbol": "Coin_State2"
         },
         {
           "record": "0x0213be9c",
           "target": "0x020dd658",
-          "symbol": "func_ov006_020dd658"
+          "symbol": "Block_State5"
         },
         {
           "record": "0x0213bea4",
           "target": "0x020de26c",
-          "symbol": "func_ov006_020de26c"
+          "symbol": "Phase_State3"
         },
         {
           "record": "0x0213beac",
           "target": "0x020dc4b0",
-          "symbol": "func_ov006_020dc4b0"
+          "symbol": "Caption_State3"
         },
         {
           "record": "0x0213beb4",
           "target": "0x020dd7bc",
-          "symbol": "func_ov006_020dd7bc"
+          "symbol": "Block_State4"
         },
         {
           "record": "0x0213bebc",
           "target": "0x020dc414",
-          "symbol": "func_ov006_020dc414"
+          "symbol": "Caption_State4"
         },
         {
           "record": "0x0213bec4",
           "target": "0x020dc6d0",
-          "symbol": "func_ov006_020dc6d0"
+          "symbol": "Caption_State0"
         },
         {
           "record": "0x0213becc",
           "target": "0x020dc4c8",
-          "symbol": "func_ov006_020dc4c8"
+          "symbol": "Caption_State2"
         },
         {
           "record": "0x0213bed4",
           "target": "0x020dc5c4",
-          "symbol": "func_ov006_020dc5c4"
+          "symbol": "Caption_State1"
         },
         {
           "record": "0x0213bee4",
           "target": "0x020de5ac",
-          "symbol": "func_ov006_020de5ac"
+          "symbol": "Phase_State0"
         },
         {
           "record": "0x0213beec",
           "target": "0x020ddca0",
-          "symbol": "func_ov006_020ddca0"
+          "symbol": "Block_State0"
         },
         {
           "record": "0x0213bef4",
           "target": "0x020dc154",
-          "symbol": "func_ov006_020dc154"
+          "symbol": "Bag_State2"
         },
         {
           "record": "0x0213befc",
           "target": "0x020dd0e0",
-          "symbol": "func_ov006_020dd0e0"
+          "symbol": "Coin_State0"
         },
         {
           "record": "0x0213bf04",
           "target": "0x020dd000",
-          "symbol": "func_ov006_020dd000"
+          "symbol": "Coin_State1"
         }
       ]
     }
@@ -1081,14 +1081,14 @@
       "meaning": "These are the queue no-legacy-source:2. Both are class methods -- each takes this in r0 and reads fields at this+0x5000 -- but neither has a delink section nor a src file, so they stay inside ov006 undecompiled .text. A promoted TU cannot contain them, and the address range 0x020dbe40..0x020de988 therefore cannot be delinked contiguously. This is why promotion_route is text-only.",
       "entries": [
         {
-          "symbol": "func_ov006_020dbe9c",
+          "symbol": "Bag_Draw",
           "address": "0x020dbe9c",
           "size": "0xe0",
           "referenced_by": "called from inside the run; src/_ZN11dScMgCoin_c6RenderEv.cpp already names it as an extern",
           "shape": "reads this+0x51bd as a gate, this+0x51b8 (halfword), this+0x51a8/0x51ac, this+0x51be; builds a 0x18-byte stack record of 20.12 fixed-point values and tail-calls ov004 0x020b023c"
         },
         {
-          "symbol": "func_ov006_020dd0e0",
+          "symbol": "Coin_State0",
           "address": "0x020dd0e0",
           "size": "0x1ec",
           "referenced_by": "callback-table record 0x0213befc; no direct call from inside the run",
@@ -1101,7 +1101,7 @@
       "hazard": "Both carry #pragma opt_common_subs off and #pragma opt_strength_reduction off. Both switches are file-global in mwccarm 2004/b56 by default -- a bracketed off/on pair does not bind positionally -- so folding these two into the TU turns them off for every section in it unless #pragma defer_codegen off is set first, which makes the brackets bind but forces an ascending-source rewrite of the whole TU. That lever took dScMgHanachan_c from 22/61 to 49/61 in PR #2309. Run the delete-outright control first; measure defer_codegen off second.",
       "entries": [
         {
-          "symbol": "func_ov006_020dca04",
+          "symbol": "Sparkle_UpdateAll",
           "address": "0x020dca04",
           "file": "src/func_ov006_020dca04.c",
           "pragmas": [
@@ -1110,7 +1110,7 @@
           ]
         },
         {
-          "symbol": "func_ov006_020dcb1c",
+          "symbol": "Sparkle_Burst",
           "address": "0x020dcb1c",
           "file": "src/func_ov006_020dcb1c.c",
           "pragmas": [
@@ -1141,175 +1141,175 @@
       {
         "address": "0x020dbf7c",
         "size": "0x1d8",
-        "symbol": "func_ov006_020dbf7c",
+        "symbol": "Bag_State3",
         "file": "src/func_ov006_020dbf7c.c",
         "lang": "c"
       },
       {
         "address": "0x020dc154",
         "size": "0x70",
-        "symbol": "func_ov006_020dc154",
+        "symbol": "Bag_State2",
         "file": "src/func_ov006_020dc154.c",
         "lang": "c"
       },
       {
         "address": "0x020dc1c4",
         "size": "0xa8",
-        "symbol": "func_ov006_020dc1c4",
+        "symbol": "Bag_State1",
         "file": "src/func_ov006_020dc1c4.c",
         "lang": "c"
       },
       {
         "address": "0x020dc26c",
         "size": "0x28",
-        "symbol": "func_ov006_020dc26c",
+        "symbol": "Bag_Release",
         "file": "src/func_ov006_020dc26c.c",
         "lang": "c"
       },
       {
         "address": "0x020dc294",
         "size": "0x4",
-        "symbol": "func_ov006_020dc294",
+        "symbol": "Bag_State0",
         "file": "src/func_ov006_020dc294.c",
         "lang": "c"
       },
       {
         "address": "0x020dc298",
         "size": "0x60",
-        "symbol": "func_ov006_020dc298",
+        "symbol": "Bag_Update",
         "file": "src/func_ov006_020dc298.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020dc2f8",
         "size": "0x3c",
-        "symbol": "func_ov006_020dc2f8",
+        "symbol": "Bag_Show",
         "file": "src/func_ov006_020dc2f8.c",
         "lang": "c"
       },
       {
         "address": "0x020dc334",
         "size": "0x14",
-        "symbol": "func_ov006_020dc334",
+        "symbol": "Bag_Hide",
         "file": "src/func_ov006_020dc334.c",
         "lang": "c"
       },
       {
         "address": "0x020dc348",
         "size": "0x28",
-        "symbol": "func_ov006_020dc348",
+        "symbol": "Caption_Finish",
         "file": "src/func_ov006_020dc348.c",
         "lang": "c"
       },
       {
         "address": "0x020dc370",
         "size": "0x4c",
-        "symbol": "func_ov006_020dc370",
+        "symbol": "Caption_Trigger",
         "file": "src/func_ov006_020dc370.c",
         "lang": "c"
       },
       {
         "address": "0x020dc3bc",
         "size": "0x58",
-        "symbol": "func_ov006_020dc3bc",
+        "symbol": "Caption_Draw",
         "file": "src/func_ov006_020dc3bc.c",
         "lang": "c"
       },
       {
         "address": "0x020dc414",
         "size": "0x9c",
-        "symbol": "func_ov006_020dc414",
+        "symbol": "Caption_State4",
         "file": "src/func_ov006_020dc414.c",
         "lang": "c"
       },
       {
         "address": "0x020dc4b0",
         "size": "0x18",
-        "symbol": "func_ov006_020dc4b0",
+        "symbol": "Caption_State3",
         "file": "src/func_ov006_020dc4b0.c",
         "lang": "c"
       },
       {
         "address": "0x020dc4c8",
         "size": "0xfc",
-        "symbol": "func_ov006_020dc4c8",
+        "symbol": "Caption_State2",
         "file": "src/func_ov006_020dc4c8.c",
         "lang": "c"
       },
       {
         "address": "0x020dc5c4",
         "size": "0x10c",
-        "symbol": "func_ov006_020dc5c4",
+        "symbol": "Caption_State1",
         "file": "src/func_ov006_020dc5c4.c",
         "lang": "c"
       },
       {
         "address": "0x020dc6d0",
         "size": "0x84",
-        "symbol": "func_ov006_020dc6d0",
+        "symbol": "Caption_State0",
         "file": "src/func_ov006_020dc6d0.c",
         "lang": "c"
       },
       {
         "address": "0x020dc754",
         "size": "0x60",
-        "symbol": "func_ov006_020dc754",
+        "symbol": "Caption_Update",
         "file": "src/func_ov006_020dc754.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020dc7b4",
         "size": "0x48",
-        "symbol": "func_ov006_020dc7b4",
+        "symbol": "Caption_Show",
         "file": "src/func_ov006_020dc7b4.c",
         "lang": "c"
       },
       {
         "address": "0x020dc7fc",
         "size": "0x18",
-        "symbol": "func_ov006_020dc7fc",
+        "symbol": "Caption_Reset",
         "file": "src/func_ov006_020dc7fc.c",
         "lang": "c"
       },
       {
         "address": "0x020dc814",
         "size": "0x5c",
-        "symbol": "func_ov006_020dc814",
+        "symbol": "DrawResultPrompt",
         "file": "src/func_ov006_020dc814.c",
         "lang": "c"
       },
       {
         "address": "0x020dc870",
         "size": "0x90",
-        "symbol": "func_ov006_020dc870",
+        "symbol": "DrawResultNumbers",
         "file": "src/func_ov006_020dc870.c",
         "lang": "c"
       },
       {
         "address": "0x020dc900",
         "size": "0x60",
-        "symbol": "func_ov006_020dc900",
+        "symbol": "Popup_UpdateAll",
         "file": "src/func_ov006_020dc900.c",
         "lang": "c"
       },
       {
         "address": "0x020dc960",
         "size": "0x3c",
-        "symbol": "func_ov006_020dc960",
+        "symbol": "Popup_Spawn",
         "file": "src/func_ov006_020dc960.c",
         "lang": "c"
       },
       {
         "address": "0x020dc99c",
         "size": "0x68",
-        "symbol": "func_ov006_020dc99c",
+        "symbol": "Sparkle_DrawAll",
         "file": "src/func_ov006_020dc99c.c",
         "lang": "c"
       },
       {
         "address": "0x020dca04",
         "size": "0x118",
-        "symbol": "func_ov006_020dca04",
+        "symbol": "Sparkle_UpdateAll",
         "file": "src/func_ov006_020dca04.c",
         "lang": "c",
         "pragmas": [
@@ -1320,7 +1320,7 @@
       {
         "address": "0x020dcb1c",
         "size": "0x12c",
-        "symbol": "func_ov006_020dcb1c",
+        "symbol": "Sparkle_Burst",
         "file": "src/func_ov006_020dcb1c.c",
         "lang": "c",
         "pragmas": [
@@ -1331,203 +1331,203 @@
       {
         "address": "0x020dcc48",
         "size": "0x70",
-        "symbol": "func_ov006_020dcc48",
+        "symbol": "Popup_DrawAll",
         "file": "src/func_ov006_020dcc48.c",
         "lang": "c"
       },
       {
         "address": "0x020dccb8",
         "size": "0xbc",
-        "symbol": "func_ov006_020dccb8",
+        "symbol": "DrawScorePlayer",
         "file": "src/func_ov006_020dccb8.c",
         "lang": "c"
       },
       {
         "address": "0x020dcd74",
         "size": "0xc8",
-        "symbol": "func_ov006_020dcd74",
+        "symbol": "DrawScoreRival",
         "file": "src/func_ov006_020dcd74.c",
         "lang": "c"
       },
       {
         "address": "0x020dce3c",
         "size": "0x6c",
-        "symbol": "func_ov006_020dce3c",
+        "symbol": "Score_Update",
         "file": "src/func_ov006_020dce3c.c",
         "lang": "c"
       },
       {
         "address": "0x020dcea8",
         "size": "0x154",
-        "symbol": "func_ov006_020dcea8",
+        "symbol": "DrawCoinValues",
         "file": "src/func_ov006_020dcea8.c",
         "lang": "c"
       },
       {
         "address": "0x020dcffc",
         "size": "0x4",
-        "symbol": "func_ov006_020dcffc",
+        "symbol": "Coin_State2",
         "file": "src/func_ov006_020dcffc.c",
         "lang": "c"
       },
       {
         "address": "0x020dd000",
         "size": "0xe0",
-        "symbol": "func_ov006_020dd000",
+        "symbol": "Coin_State1",
         "file": "src/func_ov006_020dd000.c",
         "lang": "c"
       },
       {
         "address": "0x020dd2cc",
         "size": "0x68",
-        "symbol": "func_ov006_020dd2cc",
+        "symbol": "Coin_UpdateAll",
         "file": "src/func_ov006_020dd2cc.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020dd334",
         "size": "0x17c",
-        "symbol": "func_ov006_020dd334",
+        "symbol": "LayOutCoins",
         "file": "src/func_ov006_020dd334.c",
         "lang": "c"
       },
       {
         "address": "0x020dd4b0",
         "size": "0xe4",
-        "symbol": "func_ov006_020dd4b0",
+        "symbol": "KickBlockUnderCoin",
         "file": "src/func_ov006_020dd4b0.c",
         "lang": "c"
       },
       {
         "address": "0x020dd594",
         "size": "0xc4",
-        "symbol": "func_ov006_020dd594",
+        "symbol": "DrawBlocks",
         "file": "src/func_ov006_020dd594.c",
         "lang": "c"
       },
       {
         "address": "0x020dd658",
         "size": "0x164",
-        "symbol": "func_ov006_020dd658",
+        "symbol": "Block_State5",
         "file": "src/func_ov006_020dd658.c",
         "lang": "c"
       },
       {
         "address": "0x020dd7bc",
         "size": "0x4",
-        "symbol": "func_ov006_020dd7bc",
+        "symbol": "Block_State4",
         "file": "src/func_ov006_020dd7bc.c",
         "lang": "c"
       },
       {
         "address": "0x020dd7c0",
         "size": "0xc0",
-        "symbol": "func_ov006_020dd7c0",
+        "symbol": "Block_State3",
         "file": "src/func_ov006_020dd7c0.c",
         "lang": "c"
       },
       {
         "address": "0x020dd880",
         "size": "0x214",
-        "symbol": "func_ov006_020dd880",
+        "symbol": "Block_State2",
         "file": "src/func_ov006_020dd880.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020dda94",
         "size": "0x20c",
-        "symbol": "func_ov006_020dda94",
+        "symbol": "Block_State1",
         "file": "src/func_ov006_020dda94.c",
         "lang": "c"
       },
       {
         "address": "0x020ddca0",
         "size": "0x58",
-        "symbol": "func_ov006_020ddca0",
+        "symbol": "Block_State0",
         "file": "src/func_ov006_020ddca0.c",
         "lang": "c"
       },
       {
         "address": "0x020ddcf8",
         "size": "0x74",
-        "symbol": "func_ov006_020ddcf8",
+        "symbol": "Block_ClampToWalls",
         "file": "src/func_ov006_020ddcf8.c",
         "lang": "c"
       },
       {
         "address": "0x020ddd6c",
         "size": "0xbc",
-        "symbol": "func_ov006_020ddd6c",
+        "symbol": "Block_UpdateAll",
         "file": "src/func_ov006_020ddd6c.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020dde28",
         "size": "0x88",
-        "symbol": "func_ov006_020dde28",
+        "symbol": "Block_Animate",
         "file": "src/func_ov006_020dde28.c",
         "lang": "c"
       },
       {
         "address": "0x020ddeb0",
         "size": "0xec",
-        "symbol": "func_ov006_020ddeb0",
+        "symbol": "SpawnBlocks",
         "file": "src/func_ov006_020ddeb0.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020ddf9c",
         "size": "0x144",
-        "symbol": "func_ov006_020ddf9c",
+        "symbol": "ResetRound",
         "file": "src/func_ov006_020ddf9c.c",
         "lang": "c"
       },
       {
         "address": "0x020de0e0",
         "size": "0xf4",
-        "symbol": "func_ov006_020de0e0",
+        "symbol": "Phase_State5",
         "file": "src/func_ov006_020de0e0.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020de1d4",
         "size": "0x98",
-        "symbol": "func_ov006_020de1d4",
+        "symbol": "Phase_State4",
         "file": "src/func_ov006_020de1d4.c",
         "lang": "c"
       },
       {
         "address": "0x020de26c",
         "size": "0x1d4",
-        "symbol": "func_ov006_020de26c",
+        "symbol": "Phase_State3",
         "file": "src/func_ov006_020de26c.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020de440",
         "size": "0x144",
-        "symbol": "func_ov006_020de440",
+        "symbol": "Phase_State2",
         "file": "src/func_ov006_020de440.cpp",
         "lang": "cpp"
       },
       {
         "address": "0x020de584",
         "size": "0x28",
-        "symbol": "func_ov006_020de584",
+        "symbol": "Phase_State1",
         "file": "src/func_ov006_020de584.c",
         "lang": "c"
       },
       {
         "address": "0x020de5ac",
         "size": "0x4",
-        "symbol": "func_ov006_020de5ac",
+        "symbol": "Phase_State0",
         "file": "src/func_ov006_020de5ac.c",
         "lang": "c"
       },
       {
         "address": "0x020de5b0",
         "size": "0x8c",
-        "symbol": "_ZN11dScMgCoin_c13OnYoshiTryEatEi",
+        "symbol": "_ZN11dScMgCoin_c10StartRoundEi",
         "file": "src/_ZN11dScMgCoin_c13OnYoshiTryEatEi.cpp",
         "lang": "cpp"
       },
@@ -1619,7 +1619,7 @@
         "unk_51dc"
       ],
       "gap": "It names 5 of the 32 tail offsets proved below. The other 27 -- 0x5194 through 0x51c4, plus 0x51cc/0x51d0/0x51dd/0x51de/0x51df -- sit inside pad_4660 or pad_51cc today and are reached through raw char* casts in the shards.",
-      "one_claim_in_it_is_wrong": "Its comment says the tree-wide OnYoshiTryEat mislabel landed on slot 17/D0 instead of slot 18. The cartridge does not support that framing: slot 18 (0x020de5b0) IS _ZN11dScMgCoin_c13OnYoshiTryEatEi in ov006 symbols.txt, and slot 17 (0x020dbe64) is the D0 body. src/_ZN11dScMgCoin_cD0Ev.cpp repeats the same sentence. It describes an old mislabel that has since been corrected on both files, but now reads as if the vtable itself were mislabelled, which it is not. Harmless to bytes; do not carry the sentence forward."
+      "one_claim_in_it_is_wrong": "Its comment says the tree-wide OnYoshiTryEat mislabel landed on slot 17/D0 instead of slot 18. The cartridge does not support that framing: slot 18 (0x020de5b0) IS _ZN11dScMgCoin_c10StartRoundEi in ov006 symbols.txt, and slot 17 (0x020dbe64) is the D0 body. src/_ZN11dScMgCoin_cD0Ev.cpp repeats the same sentence. It describes an old mislabel that has since been corrected on both files, but now reads as if the vtable itself were mislabelled, which it is not. Harmless to bytes; do not carry the sentence forward."
     },
     "factory_file": {
       "path": "src/d_s_mg_coin.cpp",
@@ -1663,31 +1663,31 @@
     "promoted_to_src_actors": [
       {
         "class": "dScMgBomroom_c",
-        "output": "src/actors/dScMgBomroom_c.cpp"
+        "output": "src/minigames/d_s_mg_bomroom.cpp"
       },
       {
         "class": "dScMgD3DBase_c",
-        "output": "src/actors/dScMgD3DBase_c.cpp"
+        "output": "src/minigames/d_s_mg_d3d_base.cpp"
       },
       {
         "class": "dScMgHanachan_c",
-        "output": "src/actors/dScMgHanachan_c.cpp"
+        "output": "src/minigames/d_s_mg_hanachan_methods.cpp"
       },
       {
         "class": "dScMgMemory2_c",
-        "output": "src/actors/dScMgMemory2_c.cpp"
+        "output": "src/minigames/d_s_mg_memory2.cpp"
       },
       {
         "class": "dScMgRoulette_c",
-        "output": "src/actors/dScMgRoulette_c.cpp"
+        "output": "src/minigames/d_s_mg_roulette_methods.cpp"
       },
       {
         "class": "dScMgSound_c",
-        "output": "src/actors/dScMgSound_c.cpp"
+        "output": "src/minigames/d_s_mg_sound.cpp"
       },
       {
         "class": "dScMgTeresa_c",
-        "output": "src/actors/dScMgTeresa_c.cpp"
+        "output": "src/minigames/d_s_mg_teresa.cpp"
       }
     ],
     "promoted_to_src_minigames": [
@@ -1700,7 +1700,7 @@
       "dScMgMCarlo2_c+MgPairAGoneAndOn -> src/minigames/d_s_mg_m_carlo2.cpp",
       "dScMgMCarlo_c -> src/minigames/d_s_mg_m_carlo.cpp",
       "dScMgMemory_c -> src/minigames/d_s_mg_memory.cpp",
-      "dScMgSingle3DBase_c -> src/minigames/d_s_mg_single3_d_base.cpp",
+      "dScMgSingle3DBase_c -> src/minigames/d_s_mg_single3d_base.cpp",
       "dScMgTrampoline2_c -> src/minigames/d_s_mg_trampoline2.cpp",
       "dScMgTrampoline_c+MgTrampolineTime -> src/minigames/d_s_mg_trampoline.cpp"
     ],
@@ -1717,7 +1717,7 @@
     "The semantic identity of the four-byte object or state at +0x51c4. The factory passes this+0x51c4 and value 1 to main func_0203b9b4, whose complete body stores one word and returns, but neither function carries RTTI or a recovered type name.",
     "The source form that produces D1 followed by D0 without a Coin D2. The ROM order and symbol absence are facts; an inline in-class destructor is a compiler-reproduction hypothesis for the writer to measure.",
     "Source-style names for inherited placeholder slots Virtual34, Virtual38, Virtual50, Virtual7C, Virtual80, Virtual84, Virtual88 and Virtual8C. Slot numbers and linked targets are exact, but those names are repository coinage.",
-    "Whether func_ov006_020dbe9c and func_ov006_020dd0e0 belonged to this original translation unit at all. Both sit inside the contiguous run, both take this in r0 and address this+0x5000 fields, but both are undelinked and unrecovered, so nothing about their source form is established.",
+    "Whether Bag_Draw and Coin_State0 belonged to this original translation unit at all. Both sit inside the contiguous run, both take this in r0 and address this+0x5000 fields, but both are undelinked and unrecovered, so nothing about their source form is established.",
     "The 27 tail offsets proved here that include/dScMgCoin_c.h does not name. Their effective offsets and access widths are ROM-proven; where an aggregate boundary falls among them, and whether the 0x1c-stride and 0x18-stride indexed accesses walk the same array, is not.",
     "Whether a text-only promotion can span the two holes at all, or whether it is bound by the licensed-claim rule and has to be taken as one of the three contiguous segments. The segment boundaries and counts are exact; which of them stage 4 can actually license is not established here.",
     "Whether the file-global reach of opt_common_subs / opt_strength_reduction can be confined with defer_codegen off on a TU of this size, and whether either pragma is load-bearing at all. Both are measurements, and the delete-outright control comes first."

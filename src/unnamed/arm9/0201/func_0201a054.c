@@ -18,7 +18,7 @@ extern void func_02018aa4(void);
 extern void _ZN3IRQ11DisableIRQsEj(u32 m);
 extern void func_0203ad84(void);
 extern void func_0201a9fc(void* c);
-extern void _ZN4Heap18InitializeGameHeapEjPS_(u32 sz, void* p);
+extern void _ZN5mHeap6Heap_t18InitializeGameHeapEjPS0_(u32 sz, void* p);
 extern void func_02019440(void);
 extern void func_020134c8(void);
 extern void func_0203b684(void);
@@ -64,7 +64,7 @@ void func_0201a054(void){
   if (!r4)
     func_0203ad84();
   func_0201a9fc(data_0209d574);
-  _ZN4Heap18InitializeGameHeapEjPS_(0x3b000, 0);
+  _ZN5mHeap6Heap_t18InitializeGameHeapEjPS0_(0x3b000, 0);
   func_0201a9fc(data_0209d574);
   func_02019440();
   if (!r4)

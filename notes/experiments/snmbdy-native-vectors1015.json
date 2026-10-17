@@ -1,0 +1,562 @@
+{
+  "schema": 1,
+  "task": "snmbdy-native-vectors1015",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2476",
+  "status": "Current-main producer proof complete; fresh independent exact Source and byte review required.",
+  "completion": "partial",
+  "candidate": "This commit; the coordination queue records its exact immutable output SHA.",
+  "source_checkpoint": "04bfe2db97aeb1a7059bece6dfd4726e1347dd9f",
+  "base_commit": "01d8f8937091493e88705ba294ed6052f5e30e7e",
+  "source_author": {
+    "session": "codex-snmbdy-native-vectors-root-producer1015",
+    "agent_uuid": "01a12e6f-7ee1-7162-9a64-81145ed6b260"
+  },
+  "proof_and_report_assistance": {
+    "session": "codex-enemy-frontier-astra1014",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "scope": "Ignored proof harness, permutation comparator V1 and draft builder; no Source or manifest authorship. Root corrected V1 JSON Container serialization in preserved V2 without changing comparison rules."
+  },
+  "scope": {
+    "source": "src/game/actors/d_a_bg_snm_bdy.cpp",
+    "manifest": "config/tu_manifest.d/ov072/daBgSnmBdy_c.json",
+    "source_sha256": "93c311ed2be4a6d0963ebfebc0f4694b6ff5a09aaafcb30fd6d22bc1c876de72",
+    "manifest_sha256": "8dd48cc261f5fb9d6d3d1942503311427a65c54115fd7d120d0abf69a36964da",
+    "source_lines": 640,
+    "new_native_locals": 4,
+    "new_methods": 0,
+    "new_matches": 0,
+    "new_promotion": false,
+    "header_or_enrollment_or_credit_change": false,
+    "manifest_changed_leaf_paths": [
+      "/compiler_only_output/0/reason",
+      "/notes"
+    ],
+    "manifest_semantic_policy_unchanged": true,
+    "source_git_blob_sha256": "3ad76fcb070a6732bcadf55e744db452cea7aafcea711d5257a80f2ea4e0f991",
+    "manifest_git_blob_sha256": "8dd48cc261f5fb9d6d3d1942503311427a65c54115fd7d120d0abf69a36964da",
+    "source_physical_sha256": "93c311ed2be4a6d0963ebfebc0f4694b6ff5a09aaafcb30fd6d22bc1c876de72",
+    "source_hash_qualification": "source_sha256 records the compiled Windows physical file. source_git_blob_sha256 records exact committed LF text. An extra uncached Git-LF compile produces the identical whole RAW object; these different input-byte hashes are not mislabeled literal source equality."
+  },
+  "proof": {
+    "compiler": "2004/b56, unchanged production settings",
+    "owned_functions": 29,
+    "strict_blind": 0,
+    "owned_metadata_records": 4,
+    "owned_metadata_payload_bytes": 187,
+    "owned_alignment_padding_bytes": 1,
+    "complete_owned_data_bytes": 188,
+    "canonical_import_records": 6,
+    "canonical_import_payload_bytes": 60,
+    "canonical_callback": "Existing Vector3D1 at arm9:020072c0",
+    "raw_refs": 165,
+    "prepared_refs": 157,
+    "raw_sha256": "8fb5125d5061ba92eb4f39a47406230916ff8245867d74fe284ec2a06cf9200d",
+    "prepared_sha256": "d46ff5511ad522585d6539313b9bd99b1cae06f45bc4efa2544592b4a7fcc233",
+    "baseline_raw_sha256": "33afe397693ce6f27d38eabe641eaef78d67c53c7fc8288a445f589bb388304b",
+    "baseline_prepared_sha256": "8fae4b1321a4fbf0d6d978e1e69a5805955f071a29ac43b80db7141fc9ee6116",
+    "baseline_candidate_whole_ELF_literal_equal": false,
+    "measured_section_bijection": {
+      "31": 32,
+      "32": 33,
+      "33": 31,
+      "all_other_indices": "identity"
+    },
+    "equivalence": "Complete allocated payloads, logical section attributes, full symbol multiplicities/attributes and every typed relocation/target/addend/incoming/outgoing edge are equal under that exact bijection. Only physical ELF section/string/symbol-index/layout representation changes. No masking or policy amendment.",
+    "initial_final_literal_binding": "Historical initial/final candidate objects remain literally equal. Fresh current-main uncached objects are additionally whole-file literal to that candidate. Current focused proof records the actual current Source checkpoint.",
+    "ordinary_preparation": "Supported intact rombuild preparation and direct tu_production route agree; existing helper/import policies unchanged, owned188B data including padding and vtable preamble positively verified.",
+    "external_storage_limit": "Unclaimed separate initializer/state/resource storage remains outside this TU; no new ownership is asserted.",
+    "exact_git_lf_compile": {
+      "source_git_lf_sha256": "3ad76fcb070a6732bcadf55e744db452cea7aafcea711d5257a80f2ea4e0f991",
+      "source_physical_sha256": "93c311ed2be4a6d0963ebfebc0f4694b6ff5a09aaafcb30fd6d22bc1c876de72",
+      "physical_literal_equal": false,
+      "literal_after_crlf_normalization": true,
+      "compiler": "2004/b56",
+      "raw_sha256": "8fb5125d5061ba92eb4f39a47406230916ff8245867d74fe284ec2a06cf9200d",
+      "raw_entire_object_literal_equal": true,
+      "qualification": "Additional uncached compile consumes exact Git LF blob under the same source basename and production flags; entire RAW equality binds committed public text to tested physical Source."
+    },
+    "current_composition": {
+      "head": "04bfe2db97aeb1a7059bece6dfd4726e1347dd9f",
+      "base": "01d8f8937091493e88705ba294ed6052f5e30e7e",
+      "fresh_uncached_raw_literal_historical_candidate": true,
+      "actual_ordinary_prepared_literal_direct_focused_prepared": true,
+      "raw_sha256": "8fb5125d5061ba92eb4f39a47406230916ff8245867d74fe284ec2a06cf9200d",
+      "prepared_sha256": "d46ff5511ad522585d6539313b9bd99b1cae06f45bc4efa2544592b4a7fcc233",
+      "historical_exact_baseline_section_correspondence_sha256": "07a870aa72a3cb42503600e3d70ba3f41e675337f6c756043f9e128ffeb97933",
+      "exact_git_lf_compile_evidence_sha256": "80d58a2c355bb245653b56589d1681d24e98807454259aaa68566921bf0ac2b3",
+      "qualification": "Fresh uncached ordinary compiler and intact preparation reproduce the complete prior candidate RAW and prepared objects literally on this composition. Full29-owned/188B-owned-data/6-import/canonical-callback/reference proof was rerun. The baseline section permutation remains the explicitly measured historical proof, transferred by literal candidate-object equality; baseline/candidate whole ELF files are not literally equal."
+    }
+  },
+  "gates": {
+    "current_statics": [
+      {
+        "name": "whitespace",
+        "exit": 0,
+        "seconds": 0.07800000003771856,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "declaration",
+        "exit": 0,
+        "seconds": 9.186999999976251,
+        "log_sha256": "fbb756cc0d9ce67f04469d0fc2e682ae45406ab979541900f42d83be31e5cb6d"
+      },
+      {
+        "name": "port",
+        "exit": 0,
+        "seconds": 1.6410000000032596,
+        "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+      },
+      {
+        "name": "deadrefs",
+        "exit": 0,
+        "seconds": 5.5,
+        "log_sha256": "5136f11e62c57db7507c51f8b42455129491acf502883622fc051b3a4ac7a4d5"
+      },
+      {
+        "name": "ledger",
+        "exit": 0,
+        "seconds": 0.10899999999674037,
+        "log_sha256": "f8e4f26409a6cf7c024cdbc0f4b9afd5e99b2934b2ab390306fe8d8b29f3315e"
+      },
+      {
+        "name": "duplicates",
+        "exit": 0,
+        "seconds": 0.42199999996228144,
+        "log_sha256": "3c7d30e74da563c3759d899256bc6d497413d6fac97b5d50dde941fb71d9727d"
+      },
+      {
+        "name": "langmode",
+        "exit": 0,
+        "seconds": 11.625,
+        "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+      },
+      {
+        "name": "prepush",
+        "exit": 0,
+        "seconds": 21.10899999999674,
+        "log_sha256": "c3cb6231729f8ca09059d7602157b080b2dc6766fb86c07031eae866a5bd6fee"
+      }
+    ],
+    "full_terminal_exit": 0,
+    "full_terminal_metadata": {
+      "head": "04bfe2db97aeb1a7059bece6dfd4726e1347dd9f",
+      "base": "01d8f8937091493e88705ba294ed6052f5e30e7e",
+      "exit": 0,
+      "seconds": 329.56199999997625,
+      "log_sha256": "a5e05a9aa5ade0544111947c9b2e724167e7fe7b2d6a1fb1cb3aa7e4a7b960cb"
+    },
+    "actual_current_full_summary": [
+      "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+      "reproducing: 11,334",
+      "mismatching: 0",
+      "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+      "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "ROM-build analysis: PASS",
+      "ROM data from source: 970 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,285 object records)"
+    ],
+    "full_stock_command": [
+      "python",
+      "tools/rombuild.py",
+      "-j16",
+      "--no-rom",
+      "--report-json",
+      "build\\snmbdy-native-vectors1015\\current01d8\\rombuild.json",
+      "--data-json",
+      "build\\snmbdy-native-vectors1015\\current01d8\\romdata-full.json"
+    ],
+    "full_build_metrics": {
+      "module_fidelity": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11334,
+        "compiledBytes": 2225480,
+        "sourceFunctions": 11334,
+        "sourceBytes": 2225480,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.43577343005789,
+        "reproducingFunctions": 11334,
+        "reproducingBytes": 2225480,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "cache": {
+        "enabled": true,
+        "reused": 2752,
+        "compiled": 0,
+        "uncacheable": 0,
+        "tuDerived": 0
+      },
+      "baseline_symbol_errors": 9,
+      "new_symbol_errors": 0,
+      "broader_data_inventory": {
+        "verified": 970,
+        "partial": 1519,
+        "differs": 1,
+        "unnamed": 21
+      }
+    },
+    "qualifications": [
+      "Full build and eight statics ran at the committed current Source composition checkpoint; final report-only output has separately verified equality of all five production trees.",
+      "Nine inherited baseline symbol errors remain; zero-new errors and complete module fidelity are separate from an all-green symbol control claim.",
+      "Global data advisory retains970 verified/1519partial/1differ/21unnamed; this is not global debt clearance.",
+      "Current committed prepush verified29 functions with zero warnings. Current declaration ratchet passes, not universal declaration agreement.",
+      "An obsolete extra prepush_attribution.py invocation failed because the script is absent. Its diagnostic remains separate; current AGENTS requires no credit script, and actual address rows/complete Git credit blobs are unchanged.",
+      "Historical8312 producer and independent proof are retained in historical_proof_epochs. Fresh01d8 full/object/static results above do not substitute for the new independent review required after rework."
+    ]
+  },
+  "lineage": {
+    "inherited_findings": 6,
+    "raw_aggregate_equals_latest_accepted": true,
+    "accepted_epochs": [
+      {
+        "task_id": "pr-2445-source-review-fixes",
+        "commit": "8e4b35b677b849519c6eed98b376e692a52cfd74",
+        "session": "review-2445-0910-independent-b"
+      },
+      {
+        "task_id": "pr2445-composition-0910",
+        "commit": "3b71825d7da2b969c4d962fd82b189090743757f",
+        "session": "review-composed2445-0910-independent-b"
+      },
+      {
+        "task_id": "pr2445-final-restack-0910",
+        "commit": "7366ba11e951f91876dd2b741900b84f6a8063b9",
+        "session": "codex-r2398-snm-final-0910"
+      }
+    ],
+    "address_credits": 29,
+    "credit_file_bindings": {
+      "function-authors.json": {
+        "base_and_head_git_blob_literal_equal": true,
+        "physical_json_equal": true,
+        "git_lf_sha256": "aacde5d11c6a54ef881be8bc1c74d5daff5883cdf551298bfb71e35545796b5e",
+        "physical_sha256": "34e8a673a6851b2fc7bdd088bd21f4c7e9308592ff93eb29499dd597dde7095d",
+        "physical_bytes_literal_equal": false
+      },
+      "attribution.json": {
+        "base_and_head_git_blob_literal_equal": true,
+        "physical_json_equal": true,
+        "git_lf_sha256": "d89ea07bf8ec987d79c830ca90ea397497f55b7f07ba996a8900beab23f2f367",
+        "physical_sha256": "fb25b93cea07bb1df0201a8a975ac2553588559b32a90080a22cee69b7dc510a",
+        "physical_bytes_literal_equal": false
+      }
+    },
+    "qualification": "Six accepted dictionaries below are preserved verbatim, including SNM-06 deferred. Historic location paths/measurements retain their original epoch. Git-LF credit blobs are literal equal; different physical CRLF bytes are not mislabeled literal."
+  },
+  "findings": [
+    {
+      "disposition": "fixed",
+      "id": "SNM-01",
+      "kind": "provenance",
+      "location": "include/daBgSnmBdy_c.h:110; config/tu_manifest.d/ov072/daBgSnmBdy_c.json:800; symbols/actor_renames.tsv:3122,3582",
+      "prior_review": "pr2445.humanizer-20260908.json finding 1",
+      "reason": "Independently read whole class/header and relevant manifest explanations. SetState and Ei int-versus-enum inference is consistently disclosed; direct final ledger inspection confirms both ov072:0x0211fcb0 why cells. Own complete3608-record three-way ledger multiset audit preserves all prior records.",
+      "summary": "SetState and Ei/int-versus-enum inference is disclosed consistently."
+    },
+    {
+      "disposition": "fixed",
+      "id": "SNM-02",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/pr-2445-source-review-fixes.md:41; config/tu_manifest.d/ov072/daBgSnmBdy_c.json:802; notes/agents/handoffs/prod-snmbdy-0907.md:1",
+      "prior_review": "pr2445.humanizer-20260908.json finding 2",
+      "reason": "Read current continuation/composition handoffs and historical boundary. Current class has26 out-of-line member definitions,factory,inline D1/D0=29symbols. Source/header/manifest equal accepted8e4b,while final49-path diff exactly matches3b718/base666. Current29-function and188-byte proof is explicitly new at7366/actualbasea0cc;historical measurements retain their pins.",
+      "summary": "Current handoff separates historical proof and corrects the function census."
+    },
+    {
+      "disposition": "fixed",
+      "id": "SNM-03",
+      "kind": "provenance",
+      "location": "src/actors/daBgSnmBdy_c.cpp:105-117; config/tu_manifest.d/ov072/daBgSnmBdy_c.json:797",
+      "prior_review": "pr2445.review.md first finding, previously unnumbered; stable ID assigned here",
+      "reason": "Read typed profile and consumer-derived meaning: behavior/render priorities,+8flags,and four SetRanges words. Widths/order/values unchanged. Independently compiled final object reproduces the complete188-byte data band with36relocations,including profile,factory pointer,RTTI,name and fullvtable storage.",
+      "summary": "Profile field names now agree with their actual consumers."
+    },
+    {
+      "disposition": "fixed",
+      "id": "SNM-04",
+      "kind": "reconstruction",
+      "location": "src/actors/daBgSnmBdy_c.cpp:284-291,394-400; include/daBgSnmBdy_c.h:69-72",
+      "prior_review": "pr2445.review.md second finding, previously unnumbered; stable ID assigned here",
+      "reason": "Read complete source. InitState1/2/3/4/5 use existing named scalar fields with observed widths and values;Behavior calls real direct collider Clear/Update. Own fresh final-class proof verifies29exact-size symbols/3892bytes,zero blind/diff. Larger raw bodies remain SNM06 partial scope.",
+      "summary": "Small state initializers use already-declared scalar members."
+    },
+    {
+      "disposition": "fixed",
+      "id": "SNM-05",
+      "kind": "reconstruction",
+      "location": "src/actors/daBgSnmBdy_c.cpp:28-34; include/Player.h:43,698",
+      "prior_review": "pr2445.review.md third finding, previously unnumbered; stable ID assigned here",
+      "reason": "Whole-source/header read confirms real Player.h inclusion and no fabricated complete Player class. Exact final compile uses current inherited headers and reproduces every method;no unsupported header-conflict or compiler-wall excuse is accepted.",
+      "summary": "The TU uses the real Player declaration."
+    },
+    {
+      "disposition": "deferred",
+      "id": "SNM-06",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2476",
+      "kind": "reconstruction",
+      "location": "src/actors/daBgSnmBdy_c.cpp:33-82,146-186,244-279,294-630",
+      "owner": "humanizer/integrator support through @andrewboudreau",
+      "reason": "Full630-line TU and129-line header independently read. Larger raw state bodies,ABI calls,matrixword-copy adapter,oneunknown field and padding remain explicit partial reconstruction under issue2476 with existing owner. Genuine native lifecycle,ordinary new,typed subobjects and owned text/data are preserved;this is bounded progress,not complete reconstruction or a universal compiler constraint.",
+      "summary": "Larger state bodies retain raw field access, external mangled helper calls and a matrix-copy adapter."
+    },
+    {
+      "id": "SNM-NATIVE-LOCALS-1015",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_bg_snm_bdy.cpp:State1,State5,AdvancePath",
+      "summary": "Four automatic vector stand-ins now use real Vector3 objects.",
+      "reason": "messagePos, clipResult, homePos and node use the existing native type and truthful object addresses/references. Scalar actor-position fields are not reinterpreted as Vector3 subobjects. Real C++ lifetimes now exist; exact body/graph proof establishes unchanged emitted execution and cleanup, not identical source-level lifetimes."
+    },
+    {
+      "id": "SNM-NATIVE-FLOOR-1015",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_bg_snm_bdy.cpp:UpdateGroundCollision",
+      "summary": "Use the existing native floor getter and borrowed polygon surface.",
+      "reason": "The existing const GetFloorResult member returns void*. The explicit cast names its actual borrowed dBgPi result, and the real surface member replaces pointer+4 arithmetic. No ownership, object construction, shared-header change or claim that the wrapper API is fully typed is introduced."
+    },
+    {
+      "id": "SNM-HURT-AGREEMENT-1015",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_bg_snm_bdy.cpp:HurtPlayer and local Hurt declaration",
+      "summary": "The scalar Hurt declaration agrees with its current reconstructed definition.",
+      "reason": "Use int(Player*,void*,u32,int,u8,u8,u8), preserving the actorID guard before the Player cast, all argument values and discarded result. The Fix12-by-value native method reconstruction remains partial; current definition agreement does not uniquely recover original parameter spelling."
+    },
+    {
+      "id": "SNM-CURRENT-PROVENANCE-1015",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_bg_snm_bdy.cpp banner; config/tu_manifest.d/ov072/daBgSnmBdy_c.json notes and compiler-only reason",
+      "summary": "Current vector/getter and helper-emission prose matches the actual candidate.",
+      "reason": "Stale AdvancePath array/no-destructor and missing-getter statements are corrected; manifest notes/reason describe the existing Vector3D1 emission order without changing policy. Earlier experiment measurements remain historical. The class already had native methods/factory and intact production enrollment; this scope adds no matching credit or promotion."
+    }
+  ],
+  "source_preflight": {
+    "reviewer": "Recovery",
+    "handoff_sha256": "891dbb80aa0d48cf6cdd002dfc35e24df15908d720f4a679fcc1050f16e0aeb9",
+    "status": "Positive read-only Source preflight; not formal independent acceptance."
+  },
+  "evidence": {
+    "build/snmbdy-native-vectors1015/current01d8/composition.json": "b454001cd467a6526021dbbc1db6733f230bd5e6f54b9a6a8347ec019a8b24f3",
+    "build/snmbdy-native-vectors1015/current01d8/producer-owner-confirmed.json": "3866f125a1e1adb49216eebf29b00627de919e3c6d60510dea4102bb2e82fbc0",
+    "build/snmbdy-native-vectors1015/current01d8/ordinary-compile.json": "c88bcc8aa570c4fdae07dbbaeb073ff293848291dab3d1d5b4870d398150d25d",
+    "build/snmbdy-native-vectors1015/current01d8/object-binding.json": "4f3ee45e2d36518cb6d26d0f3a8e7e515c90dad823a5eef902d1bcf6963aaad5",
+    "build/snmbdy-native-vectors1015/current01d8-proof/proof.json": "920cc4256d7acdb17f71aa2d2dcce66737a2172e132e165769c6d923296fc854",
+    "build/snmbdy-native-vectors1015/current01d8-proof/comparison.json": "b6a70498406b8332b8f4fff8c670dbb2d5cf20c61dc83cdce470d62be3b16e25",
+    "build/snmbdy-native-vectors1015/current01d8/focused-proof-terminal.json": "96293f6026fcf46fe5d2760c84bbf27a86767d8b30767f5f4adc971b0deb7d42",
+    "build/snmbdy-native-vectors1015/current01d8/rombuild-terminal.json": "1aa4700ce3e35eccdb16281603805f75e8a5e2c83003075eb71679dcef3ddd82",
+    "build/snmbdy-native-vectors1015/current01d8/rombuild.json": "d1349f6711d701796c8b0c29d637bad8352e266a9d2da8461310cf5d979f0def",
+    "build/snmbdy-native-vectors1015/current01d8/gate-results.json": "6f631e868b32bfa58bb14ac7bd1ee394d6a03d25f7777fc34397156abc4c514d",
+    "build/snmbdy-native-vectors1015/current01d8/prepush.json": "75a245c58417022629a3f7a0ed1dd04c1a7fc4a139473c048b25ed724757af71",
+    "build/snmbdy-native-vectors1015/section-permutation-proof.json": "07a870aa72a3cb42503600e3d70ba3f41e675337f6c756043f9e128ffeb97933",
+    "build/snmbdy-native-vectors1015/git-lf/proof.json": "80d58a2c355bb245653b56589d1681d24e98807454259aaa68566921bf0ac2b3",
+    "build/snmbdy-native-vectors-coordinator1015/accepted-findings.json": "cb3d8dda838bbb7a8c4844f3e6c2a38e7077a5cec34122ab17e7d4dee4c4edfb",
+    "build/snmbdy-native-vectors-coordinator1015/aggregate-lineage-comparison.json": "1d1fcba428cdc69747a12c495b830dbca904c34ec952c2332d1273d7e50cbe38",
+    "build/snmbdy-native-vectors-coordinator1015/preserved-address-credits.json": "3981092f8d19a8f3989329e88c5e21ee4568b5d88d42643d61375309a881b3bf"
+  },
+  "not_claimed": [
+    "Independent formal acceptance",
+    "Private CI or public publication",
+    "Merge",
+    "New matching credit or C++ method conversion",
+    "Complete class reconstruction"
+  ],
+  "historical_proof_epochs": [
+    {
+      "output_commit": "3f27edc3f96e66b569fbd22ba7bd2134c47de6da",
+      "source_checkpoint": "8a0c093fcd9281852bc8c712e3bc4e5deb35316c",
+      "base_commit": "8312a7819ae2687e0a1173aad18fd5c11f72f415",
+      "report_git_sha256": "df469ed47187156aba0aca86f2a61895089ad8462692f629ce3bd64af2a1b61e",
+      "gates": {
+        "current_statics": [
+          {
+            "name": "whitespace",
+            "exit": 0,
+            "seconds": 0.07459540001582354,
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "declaration",
+            "exit": 0,
+            "seconds": 13.518142500019167,
+            "log_sha256": "7372c497b4d9a77d0b7be1528f057a7e2c43ff466989d2d71d59facaf4c2f838"
+          },
+          {
+            "name": "port",
+            "exit": 0,
+            "seconds": 2.1281733000068925,
+            "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+          },
+          {
+            "name": "deadrefs",
+            "exit": 0,
+            "seconds": 16.491210600011982,
+            "log_sha256": "5136f11e62c57db7507c51f8b42455129491acf502883622fc051b3a4ac7a4d5"
+          },
+          {
+            "name": "ledger",
+            "exit": 0,
+            "seconds": 0.13754949998110533,
+            "log_sha256": "f8e4f26409a6cf7c024cdbc0f4b9afd5e99b2934b2ab390306fe8d8b29f3315e"
+          },
+          {
+            "name": "duplicates",
+            "exit": 0,
+            "seconds": 0.6597670000046492,
+            "log_sha256": "3c7d30e74da563c3759d899256bc6d497413d6fac97b5d50dde941fb71d9727d"
+          },
+          {
+            "name": "langmode",
+            "exit": 0,
+            "seconds": 13.163135499984492,
+            "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+          },
+          {
+            "name": "prepush",
+            "exit": 0,
+            "seconds": 26.167165799997747,
+            "log_sha256": "c3cb6231729f8ca09059d7602157b080b2dc6766fb86c07031eae866a5bd6fee"
+          }
+        ],
+        "full_terminal_exit": 0,
+        "full_terminal_metadata": {
+          "head": "8a0c093fcd9281852bc8c712e3bc4e5deb35316c",
+          "base": "8312a7819ae2687e0a1173aad18fd5c11f72f415",
+          "exit": 0,
+          "seconds": 361.9992592000053
+        },
+        "actual_current_full_summary": [
+          "source-built functions: 5,888  (1,190,448 / 2,238,108 code bytes, 53.19%)",
+          "reproducing: 5,888",
+          "mismatching: 0",
+          "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+          "ROM-build analysis: PASS",
+          "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+          "reproducing: 11,334",
+          "mismatching: 0",
+          "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+          "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+          "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+          "ROM-build analysis: PASS",
+          "ROM data from source: 970 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,285 object records)"
+        ],
+        "qualifications": [
+          "Full build and eight statics ran at the committed current Source composition checkpoint; final report-only output has separately verified equality of all five production trees.",
+          "Nine inherited baseline symbol errors remain; zero-new errors and complete module fidelity are separate from an all-green symbol control claim.",
+          "Global data advisory retains970 verified/1519partial/1differ/21unnamed; this is not global debt clearance.",
+          "Current committed prepush verified29 functions with zero warnings. Current declaration ratchet passes, not universal declaration agreement.",
+          "An obsolete extra prepush_attribution.py invocation failed because the script is absent. Its diagnostic remains separate; current AGENTS requires no credit script, and actual address rows/complete Git credit blobs are unchanged.",
+          "Historical8312 producer and independent proof are retained in historical_proof_epochs. Fresh01d8 full/object/static results above do not substitute for the new independent review required after rework."
+        ],
+        "full_stock_command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom",
+          "--report-json",
+          "build\\snmbdy-native-vectors1015\\rombuild.json",
+          "--data-json",
+          "build\\snmbdy-native-vectors1015\\romdata-full.json"
+        ],
+        "full_build_metrics": {
+          "module_fidelity": {
+            "modulesChecked": 106,
+            "modulesExact": 106,
+            "modulesExpectedOnly": 106,
+            "comparedBytes": 3049600,
+            "differingBytes": 0,
+            "unexpectedDifferingBytes": 0,
+            "percent": 100.0
+          },
+          "source_build": {
+            "totalCodeFunctions": 11397,
+            "totalCodeBytes": 2238108,
+            "compiledFunctions": 11334,
+            "compiledBytes": 2225480,
+            "sourceFunctions": 11334,
+            "sourceBytes": 2225480,
+            "modFunctions": 0,
+            "modBytes": 0,
+            "sourceBytesPercent": 99.43577343005789,
+            "reproducingFunctions": 11334,
+            "reproducingBytes": 2225480,
+            "mismatchingFunctions": 0,
+            "mismatchingFunctionBytes": 0,
+            "differingSourceBytes": 0,
+            "sourceDataClaims": 331,
+            "sourceBssClaims": 239,
+            "sourceBssBytes": 30164,
+            "reproducingDataClaims": 331,
+            "reproducingDataClaimBytes": 13020,
+            "mismatchingDataClaims": 0,
+            "mismatchingDataClaimBytes": 0
+          },
+          "cache": {
+            "enabled": true,
+            "reused": 2751,
+            "compiled": 1,
+            "uncacheable": 0,
+            "tuDerived": 0
+          },
+          "baseline_symbol_errors": 9,
+          "new_symbol_errors": 0,
+          "broader_data_inventory": {
+            "verified": 970,
+            "partial": 1519,
+            "differs": 1,
+            "unnamed": 21
+          }
+        }
+      },
+      "evidence": {
+        "build/snmbdy-native-vectors1015/source-checkpoint.json": "9d67316156a292125e4056afe70e0ae5d34d0e2ff6931a32b12b18889620c364",
+        "build/snmbdy-native-vectors1015/candidate-final/proof.json": "dd13ae5a6726264baa59b53aff8ab871c084a15224e400c82d92e82583aafe30",
+        "build/snmbdy-native-vectors1015/section-permutation-proof.json": "07a870aa72a3cb42503600e3d70ba3f41e675337f6c756043f9e128ffeb97933",
+        "build/snmbdy-native-vectors1015/section-permutation-v1-diagnostic.json": "bcfe454a8e839e20a6d6dec6edfba10bdd86fdca19bcca209e7a2027bcac4874",
+        "build/snmbdy-native-vectors1015/candidate-proof-terminal.json": "ab2d388ec1951731ff537614eb297f518cd68ed255adf233a8b313b8635a6299",
+        "build/snmbdy-native-vectors1015/gate-results-static-final.json": "7fb57177b93004d34c62e6f2aa90124b740b0575e64e0040fca743dc51d730b3",
+        "build/snmbdy-native-vectors1015/rombuild-terminal.json": "be9980781156c7f2d6c5aee1dabcbcfbdff62e5a8b565340014fb3bf45516948",
+        "build/snmbdy-native-vectors1015/rombuild.json": "7be6cb5c74affec5f558a588b23a9c4c9aae9cebe8a1e9074cb82adf02304f04",
+        "build/snmbdy-native-vectors-coordinator1015/accepted-findings.json": "cb3d8dda838bbb7a8c4844f3e6c2a38e7077a5cec34122ab17e7d4dee4c4edfb",
+        "build/snmbdy-native-vectors-coordinator1015/aggregate-lineage-comparison.json": "1d1fcba428cdc69747a12c495b830dbca904c34ec952c2332d1273d7e50cbe38",
+        "build/snmbdy-native-vectors-coordinator1015/preserved-address-credits.json": "3981092f8d19a8f3989329e88c5e21ee4568b5d88d42643d61375309a881b3bf",
+        "build/snmbdy-native-vectors1015/git-lf/proof.json": "80d58a2c355bb245653b56589d1681d24e98807454259aaa68566921bf0ac2b3"
+      },
+      "qualification": "Original completed producer proof and independent historical verification remain bound to8312. After external Yurei merge01d8, independent review correctly returned STALE_COMPOSITION and supported rework. No Source or manifest defect was reported; all ten findings were retained. These prior results are not claimed current-main acceptance."
+    }
+  ],
+  "composition": {
+    "source_checkpoint": "04bfe2db97aeb1a7059bece6dfd4726e1347dd9f",
+    "parents": [
+      "3f27edc3f96e66b569fbd22ba7bd2134c47de6da",
+      "01d8f8937091493e88705ba294ed6052f5e30e7e"
+    ],
+    "tested_base": "01d8f8937091493e88705ba294ed6052f5e30e7e",
+    "previous_output": "3f27edc3f96e66b569fbd22ba7bd2134c47de6da",
+    "all_60_read_inputs_literal_previously_tested": true,
+    "production_source_manifest_literal_previously_tested": true,
+    "qualification": "Normal merge of Source-bearing main; report-only final child retains all five production trees literally. Contributions-only progress tip is a separately recorded base-window observation."
+  }
+}

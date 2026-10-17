@@ -110,7 +110,7 @@ reason than tidiness.)*
 **Entry:** pilot (§3) passed.
 **Set:** direct-proven, tier `P2-vtable-only` (`func_<addr>`, no mangled name anywhere),
 enrolled, free of all seven lexical hazards. Modules: [ov006](../config/arm9/overlays/ov006/symbols.txt) 51, [ov004](../config/arm9/overlays/ov004/symbols.txt) 13, [arm9](../config/arm9/symbols.txt) 9, [ov064](../config/arm9/overlays/ov064/symbols.txt) 7,
-[ov002](../config/arm9/overlays/ov002/symbols.txt) 5, [ov022](../config/arm9/overlays/ov022/symbols.txt) 5, [ov045](../config/arm9/overlays/ov045/symbols.txt) 5, [ov071](../config/arm9/overlays/ov071/symbols.txt) 4, [ov070](../config/arm9/overlays/ov070/symbols.txt) 4, [ov072](../config/arm9/overlays/ov072/symbols.txt) 3, tail. Six sit in the safe merge pool ([func_ov081_021261b8](../src/actors/daSnowball_c.cpp)(weak ref to `daSnowman_c`), [func_ov026_021122b0](../src/actors/daWater_Suikomi_c.cpp)(weak ref to `daWater_Tatumaki_c`), [func_ov026_021122cc](../src/actors/daWater_Suikomi_c.cpp)(weak ref to `daWater_Tatumaki_c`), [func_ov027_02111680](../src/game/actors/d_a_i_donketu.cpp)(func 3 used to assemble TU - `d_a_i_donketu.cpp`), `func_ov064_0211755c`(weak ref to `daBDonketu_c`), [func_ov022_02112710](../src/game/actors/d_a_obj_fl_maruta.cpp))(ROM ordinal 4 of `daObj_volcanoCannon_c`) — **per §7 those six are ceded to the merge**, leaving 76 here.
+[ov002](../config/arm9/overlays/ov002/symbols.txt) 5, [ov022](../config/arm9/overlays/ov022/symbols.txt) 5, [ov045](../config/arm9/overlays/ov045/symbols.txt) 5, [ov071](../config/arm9/overlays/ov071/symbols.txt) 4, [ov070](../config/arm9/overlays/ov070/symbols.txt) 4, [ov072](../config/arm9/overlays/ov072/symbols.txt) 3, tail. Six sit in the safe merge pool ([func_ov081_021261b8](../src/game/actors/d_a_snowball.cpp)(weak ref to `daSnowman_c`), [func_ov026_021122b0](../src/game/actors/d_a_water_suikomi.cpp)(weak ref to `daWater_Tatumaki_c`), [func_ov026_021122cc](../src/game/actors/d_a_water_suikomi.cpp)(weak ref to `daWater_Tatumaki_c`), [func_ov027_02111680](../src/game/actors/d_a_i_donketu.cpp)(func 3 used to assemble TU - `d_a_i_donketu.cpp`), `func_ov064_0211755c`(weak ref to `daBDonketu_c`), [func_ov022_02112710](../src/game/actors/d_a_obj_fl_maruta.cpp))(ROM ordinal 4 of `daObj_volcanoCannon_c`) — **per §7 those six are ceded to the merge**, leaving 76 here.
 
 The exact edit — two lines, no restructuring:
 
@@ -297,7 +297,7 @@ merge. So S1 legitimately harvests blocked-pool files; S6 does not.
 
 Why not the 4-byte `dThIcon_c::Render` (an empty `bx lr`), which had its own
 per-function source directly under `src/` when this was written and is now a
-member of `src/actors/dThIcon_c.cpp`: a stub is
+member of `src/ui/hud/d_th_icon.cpp`: a stub is
 codegen-identical in both languages by construction and would validate nothing. This file
 is the smallest candidate that puts **real code** through the C→C++ front end while
 holding every other variable fixed:

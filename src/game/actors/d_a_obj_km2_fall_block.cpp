@@ -20,6 +20,12 @@
  *   data_ov045_*. g_profile_KM2_KUZURE lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km2_fall_block_AssetId {
+    ASSET_KM2_KUZURE_BMD = 0x0661,
+    ASSET_KM2_KUZURE_KCL = 0x0662
+};
+
 #include "daObjKm2_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
@@ -77,5 +83,5 @@ s32 daObjKm2_Fall_Block_c::CleanupResources()
 
 /* Retail construction order: model 1633, then collision 1634.
  * mwcc emits __sinit_d_a_obj_km2_fall_block.cpp. */
-Km2FallModelFilePtr data_ov045_02113250(1633);
-Km2FallClsnFileHandle data_ov045_02113248(1634);
+Km2FallModelFilePtr gKm2KuzureModelFile(ASSET_KM2_KUZURE_BMD);
+Km2FallClsnFileHandle gKm2KuzureCollisionFile(ASSET_KM2_KUZURE_KCL);

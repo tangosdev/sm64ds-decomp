@@ -1,0 +1,564 @@
+{
+  "schema": 1,
+  "task_id": "issue2410-reconstruction1015",
+  "issue_url": "https://github.com/tangosdev/sm64ds-decomp/issues/2410",
+  "original_input": "8d5689cb92452c46d0ce9888dbbecef6b839bccc",
+  "tested_base": "79390c10a9fb3f6321618e4a6773da66e4df0f55",
+  "compiler": "2004/b56",
+  "production_input_hashes": {
+    "src/game/actors/d_a_mky.cpp": "7e018de2131dd60b6d723bdf52858e1f07683013202584d3f34c57dde47d6c4d",
+    "include/daMky_c.h": "e5a33edcb5aea1e064512789876cc48ee8a40e32fdc02ecefff79cb2aea2e352",
+    "config/tu_manifest.d/ov030/daMky_c.json": "6308f4c3715ef04283632ec513115e88f3f1cb6271d2ba5ea5649e131c4506a8"
+  },
+  "changes": [
+    "Typed 16-byte entry/update PMF descriptor; all 22 targets return int and results remain discarded.",
+    "Recovered Player pointers at 0xd0 and 0x3a8, signed path index, substate and reset countdown names. Names are inferred.",
+    "Ordinary PathPtr GetNode/NumNodes calls and bone-5 indexing.",
+    "Native dBgPi copy construction/destruction replaces both shadow result layouts and manual vtable/destructor operations.",
+    "Typed cap actor +0xd0 write and Matrix4x3 pointer result; removed dead shadows/declarations and state7 pointer laundering."
+  ],
+  "source_evidence": {
+    "scope": "Read-only source interface scout; evidence, not final candidate acceptance",
+    "source_base": "8d5689cb92452c46d0ce9888dbbecef6b839bccc",
+    "module": "ov030",
+    "pmf_layout": {
+      "descriptor_base": "0x02115e0c",
+      "descriptor_count": 11,
+      "descriptor_size": 16,
+      "records": [
+        {
+          "state": 0,
+          "role": "enter",
+          "record_address": "0x2115b68",
+          "record_size": 8,
+          "words": [
+            "0x2114124",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState0Ev",
+          "target_address": "0x2114124",
+          "target_size": "0x10",
+          "cpp_return_type": "int",
+          "initializer_source_line": 108
+        },
+        {
+          "state": 0,
+          "role": "update",
+          "record_address": "0x2115b60",
+          "record_size": 8,
+          "words": [
+            "0x2113ff0",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02113ff0Ev",
+          "target_address": "0x2113ff0",
+          "target_size": "0x134",
+          "cpp_return_type": "int",
+          "initializer_source_line": 109
+        },
+        {
+          "state": 1,
+          "role": "enter",
+          "record_address": "0x2115af0",
+          "record_size": 8,
+          "words": [
+            "0x2113fd8",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState1Ev",
+          "target_address": "0x2113fd8",
+          "target_size": "0x18",
+          "cpp_return_type": "int",
+          "initializer_source_line": 110
+        },
+        {
+          "state": 1,
+          "role": "update",
+          "record_address": "0x2115b50",
+          "record_size": 8,
+          "words": [
+            "0x2113d20",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02113d20Ev",
+          "target_address": "0x2113d20",
+          "target_size": "0x2b8",
+          "cpp_return_type": "int",
+          "initializer_source_line": 111
+        },
+        {
+          "state": 2,
+          "role": "enter",
+          "record_address": "0x2115b00",
+          "record_size": 8,
+          "words": [
+            "0x2113be8",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState2Ev",
+          "target_address": "0x2113be8",
+          "target_size": "0x138",
+          "cpp_return_type": "int",
+          "initializer_source_line": 112
+        },
+        {
+          "state": 2,
+          "role": "update",
+          "record_address": "0x2115b40",
+          "record_size": 8,
+          "words": [
+            "0x2113b38",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02113b38Ev",
+          "target_address": "0x2113b38",
+          "target_size": "0xb0",
+          "cpp_return_type": "int",
+          "initializer_source_line": 113
+        },
+        {
+          "state": 3,
+          "role": "enter",
+          "record_address": "0x2115b48",
+          "record_size": 8,
+          "words": [
+            "0x2113a80",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState3Ev",
+          "target_address": "0x2113a80",
+          "target_size": "0xb8",
+          "cpp_return_type": "int",
+          "initializer_source_line": 114
+        },
+        {
+          "state": 3,
+          "role": "update",
+          "record_address": "0x2115b18",
+          "record_size": 8,
+          "words": [
+            "0x21136b0",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_021136b0Ev",
+          "target_address": "0x21136b0",
+          "target_size": "0x3d0",
+          "cpp_return_type": "int",
+          "initializer_source_line": 115
+        },
+        {
+          "state": 4,
+          "role": "enter",
+          "record_address": "0x2115b10",
+          "record_size": 8,
+          "words": [
+            "0x211360c",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState4Ev",
+          "target_address": "0x211360c",
+          "target_size": "0xa4",
+          "cpp_return_type": "int",
+          "initializer_source_line": 116
+        },
+        {
+          "state": 4,
+          "role": "update",
+          "record_address": "0x2115ad8",
+          "record_size": 8,
+          "words": [
+            "0x2113324",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02113324Ev",
+          "target_address": "0x2113324",
+          "target_size": "0x2e8",
+          "cpp_return_type": "int",
+          "initializer_source_line": 117
+        },
+        {
+          "state": 5,
+          "role": "enter",
+          "record_address": "0x2115b58",
+          "record_size": 8,
+          "words": [
+            "0x21132d4",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState5Ev",
+          "target_address": "0x21132d4",
+          "target_size": "0x50",
+          "cpp_return_type": "int",
+          "initializer_source_line": 118
+        },
+        {
+          "state": 5,
+          "role": "update",
+          "record_address": "0x2115b20",
+          "record_size": 8,
+          "words": [
+            "0x2113094",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02113094Ev",
+          "target_address": "0x2113094",
+          "target_size": "0x240",
+          "cpp_return_type": "int",
+          "initializer_source_line": 119
+        },
+        {
+          "state": 6,
+          "role": "enter",
+          "record_address": "0x2115ae0",
+          "record_size": 8,
+          "words": [
+            "0x2112ff8",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState6Ev",
+          "target_address": "0x2112ff8",
+          "target_size": "0x9c",
+          "cpp_return_type": "int",
+          "initializer_source_line": 120
+        },
+        {
+          "state": 6,
+          "role": "update",
+          "record_address": "0x2115b28",
+          "record_size": 8,
+          "words": [
+            "0x2112da0",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02112da0Ev",
+          "target_address": "0x2112da0",
+          "target_size": "0x258",
+          "cpp_return_type": "int",
+          "initializer_source_line": 121
+        },
+        {
+          "state": 7,
+          "role": "enter",
+          "record_address": "0x2115ae8",
+          "record_size": 8,
+          "words": [
+            "0x2112c14",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState7Ev",
+          "target_address": "0x2112c14",
+          "target_size": "0x18c",
+          "cpp_return_type": "int",
+          "initializer_source_line": 122
+        },
+        {
+          "state": 7,
+          "role": "update",
+          "record_address": "0x2115b30",
+          "record_size": 8,
+          "words": [
+            "0x2112a84",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02112a84Ev",
+          "target_address": "0x2112a84",
+          "target_size": "0x190",
+          "cpp_return_type": "int",
+          "initializer_source_line": 123
+        },
+        {
+          "state": 8,
+          "role": "enter",
+          "record_address": "0x2115ac8",
+          "record_size": 8,
+          "words": [
+            "0x2112a14",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState8Ev",
+          "target_address": "0x2112a14",
+          "target_size": "0x70",
+          "cpp_return_type": "int",
+          "initializer_source_line": 124
+        },
+        {
+          "state": 8,
+          "role": "update",
+          "record_address": "0x2115ad0",
+          "record_size": 8,
+          "words": [
+            "0x2112578",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02112578Ev",
+          "target_address": "0x2112578",
+          "target_size": "0x49c",
+          "cpp_return_type": "int",
+          "initializer_source_line": 125
+        },
+        {
+          "state": 9,
+          "role": "enter",
+          "record_address": "0x2115b08",
+          "record_size": 8,
+          "words": [
+            "0x2112560",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c11EnterState9Ev",
+          "target_address": "0x2112560",
+          "target_size": "0x18",
+          "cpp_return_type": "int",
+          "initializer_source_line": 126
+        },
+        {
+          "state": 9,
+          "role": "update",
+          "record_address": "0x2115b70",
+          "record_size": 8,
+          "words": [
+            "0x2112400",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_02112400Ev",
+          "target_address": "0x2112400",
+          "target_size": "0x160",
+          "cpp_return_type": "int",
+          "initializer_source_line": 127
+        },
+        {
+          "state": 10,
+          "role": "enter",
+          "record_address": "0x2115af8",
+          "record_size": 8,
+          "words": [
+            "0x21123a4",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c12EnterState10Ev",
+          "target_address": "0x21123a4",
+          "target_size": "0x5c",
+          "cpp_return_type": "int",
+          "initializer_source_line": 128
+        },
+        {
+          "state": 10,
+          "role": "update",
+          "record_address": "0x2115b38",
+          "record_size": 8,
+          "words": [
+            "0x21122b0",
+            "0x0"
+          ],
+          "target_symbol": "_ZN7daMky_c19func_ov030_021122b0Ev",
+          "target_address": "0x21122b0",
+          "target_size": "0xf4",
+          "cpp_return_type": "int",
+          "initializer_source_line": 129
+        }
+      ],
+      "all_22_targets_declared_int": true,
+      "all_22_adjustments_zero": true
+    },
+    "mouth_writer": {
+      "definition": "src/game/player/Player.cpp:17389",
+      "symbol": "func_ov002_020d7030",
+      "address": "0x020d7030",
+      "size": "0x5c",
+      "behavior": [
+        "sets target actor mFlags bit 0x20000",
+        "stores first argument at target+0xd0",
+        "stores target at first_argument+0x360 (Player::mObjInMouth)"
+      ],
+      "player_caller": "Player::func_ov002_020d6998 at Player.cpp:17191 passes self as first argument",
+      "monkey_reader": "daMky_c::func_ov030_02111bc4 copies mEatingPlayer into mPlayer under flag0x20000",
+      "other_mPlayer_writers": [
+        "ClosestPlayer()",
+        "FindWithID(otherOwner) guarded by actorID == 0xbf",
+        "zero"
+      ],
+      "name_status": "mEatingPlayer and mPlayer are inferred reconstruction names, not recovered retail identifiers"
+    },
+    "additional_probe": {
+      "native_dCcAc_Init": {
+        "file": "build/interface-scout/review-probes/cc_init_native/d_a_mky.cpp",
+        "function": "_ZN7daMky_c13InitResourcesEv",
+        "compiler": "2004/b56",
+        "target_size": "0x25c",
+        "candidate_size": "0x26c",
+        "verdict": "SIZE_MISMATCH"
+      }
+    }
+  },
+  "emitted_object_comparison": {
+    "method": "All existing defined function/data payloads and attributes are compared; typed relocations differ only in the two explicitly recorded ABI-vtable spellings. Generated-name correspondence and added compiler-only output are separately disclosed. This is not literal raw-ELF equality.",
+    "control_sha256": "7bb9a468c033eb06b6430b4bc5f08626d4265eb1d7ef7ccbdce94a537cae1709",
+    "candidate_sha256": "85d6b0a51ed8d6620e6efb58d457f04f4978a58e1e83e48d92f7787b1b10d632",
+    "existing_definitions": 58,
+    "compiler_local_name_correspondence": {
+      "before": "_ZN7daMky_c21Bundle$903d_a_mky_cppD1Ev",
+      "after": "_ZN7daMky_c21Bundle$950d_a_mky_cppD1Ev"
+    },
+    "expected_relocation_changes": [
+      {
+        "function": "_ZN7daMky_c19func_ov030_02112400Ev",
+        "offset": "0x15c",
+        "before": {
+          "offset": 348,
+          "type": 2,
+          "target": "data_02099368",
+          "addend": 0
+        },
+        "after": {
+          "offset": 348,
+          "type": 2,
+          "target": "_ZTV5dBgPi",
+          "addend": 8
+        },
+        "meaning": "Direct address-point alias versus C++ vtable storage + 8-byte ABI preamble; configured address point 0x02099368. Checked by strict relocated verification, not assumed from spelling."
+      },
+      {
+        "function": "_ZN7daMky_c19func_ov030_02112a84Ev",
+        "offset": "0x188",
+        "before": {
+          "offset": 392,
+          "type": 2,
+          "target": "data_02099368",
+          "addend": 0
+        },
+        "after": {
+          "offset": 392,
+          "type": 2,
+          "target": "_ZTV5dBgPi",
+          "addend": 8
+        },
+        "meaning": "Direct address-point alias versus C++ vtable storage + 8-byte ABI preamble; configured address point 0x02099368. Checked by strict relocated verification, not assumed from spelling."
+      }
+    ],
+    "extra_compiler_output": {
+      "_ZN11SurfaceInfoD1Ev": {
+        "size": 4,
+        "bind": "STB_LOPROC",
+        "type": "STT_FUNC",
+        "bytes": "1eff2fe1",
+        "relocations": []
+      }
+    },
+    "missing": [],
+    "unexpected_changes": []
+  },
+  "metadata": {
+    "records_equal_to_control": true,
+    "symbols": 9,
+    "verified": 4,
+    "partial": 5,
+    "differs": 0,
+    "scope": "The five incomplete vtable/typeinfo/name records remain partial; no data-promotion claim."
+  },
+  "validation": {
+    "tu_functions": 46,
+    "tu_result": "46/46 MATCH, object isolation clean, relocation destinations clean, expected emission order; compiler-only policies accepted.",
+    "strict_relocation_checks": 46,
+    "blind": 0,
+    "differences": 0,
+    "header_consumers": [
+      "src/game/actors/d_a_mky.cpp"
+    ],
+    "style_findings": 0,
+    "style_deferrals": 0,
+    "declaration_ratchet": "no new local redeclarations or declaration disagreements",
+    "port_references": 259,
+    "dead_references": "no new dead references or broken Markdown links",
+    "full_rom": {
+      "status": "passed",
+      "modules_exact": 106,
+      "modules_checked": 106,
+      "source_functions_reproducing": 11334,
+      "source_functions_mismatching": 0,
+      "source_owned_data_reproducing": 332,
+      "intact_tu_ok": true,
+      "new_symbol_errors": [],
+      "rom_data_advisories": {
+        "verified": 974,
+        "partial": 1521,
+        "differ": 1,
+        "unnamed": 15
+      },
+      "limits": "--no-rom was used; baseline DSD symbol lookup errors and partial data records remain separate from module fidelity."
+    },
+    "base_refresh": {
+      "full_command_started_on_base": "8d5689cb92452c46d0ce9888dbbecef6b839bccc",
+      "fast_forwarded_to": "79390c10a9fb3f6321618e4a6773da66e4df0f55",
+      "changed_paths": [
+        ".github/workflows/tool-tests.yml",
+        ".github/workflows/update-chaos-data.yml",
+        "README.md",
+        "contributions.json",
+        "docs/index.html",
+        "docs/tu-treemap.html",
+        "tools/test_tu_treemap.py",
+        "tools/treemap.py",
+        "tools/tu_treemap.html",
+        "tools/tu_treemap.py"
+      ],
+      "production_inputs_unchanged": true,
+      "note": "The remote-base refresh changes only web/treemap/progress/CI files. All production sources, headers, config and ROM/compiler/validation inputs are identical. The completed full gate carries forward on that exact input identity; it was not rerun merely for unrelated web changes."
+    }
+  },
+  "negative_experiments": [
+    {
+      "name": "Native Matrix4x3 copy",
+      "function": "_ZN7daMky_c19func_ov030_02112094Ev",
+      "alternative": "Replace local POD M4x3 typedef with Matrix4x3.",
+      "retail_size": "0x21c",
+      "candidate_size": "0x270",
+      "result": "changed bytes and size; reverted",
+      "object_sha256": "aa48a83c0708b831f1ae4c9972bf3df0a9cd88660a528bd1eb4a4e24f1870a93"
+    },
+    {
+      "name": "Native ModelAnim SetAnim",
+      "function": "_ZN7daMky_c12EnterState10Ev",
+      "alternative": "Fix12<int> speed = {0x1000}; mModelAnim.SetAnim(file, flags, speed, 0).",
+      "retail_size": "0x5c",
+      "candidate_size": "0x64",
+      "result": "fresh isolated scout probe changed size; scalar ABI call retained"
+    },
+    {
+      "name": "Native collision Init",
+      "function": "_ZN7daMky_c13InitResourcesEv",
+      "alternative": "Fix12<int> radius={0x28000}, height={0x64000}; mdCcAc_c.Init(this, radius, height, 0x800004, 0x49000).",
+      "retail_size": "0x25c",
+      "candidate_size": "0x26c",
+      "result": "changed bytes and size; reverted",
+      "object_sha256": "e42a5481f80eea70976001b8c1d941a116776dee0328f7855c682afd66c24f49"
+    },
+    {
+      "name": "Native line-query lifetime",
+      "function": "_ZN7daMky_c19func_ov030_02111734Ev",
+      "alternative": "Automatic dBgCh_Lin local instead of raw rc storage and manual C1/D1.",
+      "retail_size": "0x15c",
+      "candidate_size": "0x168",
+      "result": "fresh isolated scout probe changed size; original lifetime retained"
+    },
+    {
+      "name": "Native mesh Init",
+      "alternative": "mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0)",
+      "result": "Raw code shape unchanged but the current header spells scalar Fix12i arguments, changing the mangled callee. This is an unresolved shared-interface boundary, not a successful native-call replacement."
+    }
+  ],
+  "remaining_reconstruction": [
+    "POD matrix carrier and copies; native Matrix4x3 changes emitted bytes.",
+    "Raw carrier/cap +0xc8 accesses inside shared dActor_c padding; no shared-base edit was reserved.",
+    "Raw line-query storage/lifetime and measured scalar Fix12 call boundaries.",
+    "Address-derived helper names, legacy asset handle declarations and the C static initializer remain.",
+    "One unknown 0x3bc field and padding remain; vtable/RTTI partial extents and externalized ROM ownership are unchanged."
+  ],
+  "completion": "partial",
+  "private_validation": "not run: no PR created for this continuation",
+  "reports_sha256": {
+    "mky-final-rombuild.json": "fda76f4f823b74372e4fe4b29e6a854f0b1829ff8c57336eb2df479a5e86ea36",
+    "mky-final-linkcheck.json": "bedf714b4a3fe0853fd6e27037df185abc3c2d00d551668ec6e02e4cad5cc35b",
+    "mky-complete-object-equivalence.json": "df1016eb7032f1a2631ff2484599bebd9f1ffffb48fb2ed9ebf75d696f394f6d",
+    "mky-metadata-equivalence.json": "74a3e6af22e671360aaa821f90a0675ea0ca73ba0f706b6c124cbf85eb2e2463"
+  }
+}

@@ -10,7 +10,7 @@
  * workers (the three pures at slots 3..5 and the DetectClsn triple at
  * 6..8) from ITCM - 0x01ffd920, 0x01ffd8d8, 0x01ffd890, 0x01ffd3f8,
  * 0x01ffb0fc, 0x01ffb830 - the six are defined in
- * src/engine/collision/dBgW_Kc_itcm.cpp. Slots 9..12 stay on the base
+ * src/engine/collision/d_bg_w_kc_itcm.cpp. Slots 9..12 stay on the base
  * implementations.
  *
  * The CLPS_BlockRef member owns its one-word lifetime. Its compiler-generated
@@ -116,7 +116,7 @@ struct dBgW_Kc : dBgW {
     virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - ITCM */
 
     /* C1 and the C2 base-subobject variant are defined in
-       src/engine/collision/dBgW_Kc.cpp (notes/ctor-migration.md section 2). */
+       src/engine/collision/d_bg_w_kc.cpp (notes/ctor-migration.md section 2). */
     dBgW_Kc();
 
     /* --- non-virtual --- */

@@ -59,7 +59,7 @@ follow-up. The shared headers and enrolled definitions are unchanged.
 
 SP2863-06 is fixed locally: the false recovered `daJgm_c_Kill` / vtable claim is
 replaced by the evidenced state3-entry PMF relationship. Relocations point from
-[data_ov077_021278e8](../../../config/arm9/overlays/ov077/symbols.txt) to [func_ov077_021258dc](../../../src/actors/daTgz_c.cpp)(ROM Ordinal 17); the initializer copies that record
+[data_ov077_021278e8](../../../config/arm9/overlays/ov077/symbols.txt) to [func_ov077_021258dc](../../../src/game/actors/d_a_tgz.cpp)(ROM Ordinal 17); the initializer copies that record
 to `data_ov077_02127c28+0x30`, selected by the state helper's `state << 4` indexing.
 No original private method name is invented. The unchanged enrolled legacy shard
 still contains its old comment; this repair covers the owned shadow source.

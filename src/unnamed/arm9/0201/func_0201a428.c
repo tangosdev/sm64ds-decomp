@@ -3,9 +3,9 @@
  */
 
 extern void *data_0209d524; /* global: void* (Heap*) */
-extern void _ZN4Heap7DestroyEv(void *);
+extern void _ZN5mHeap6Heap_t7DestroyEv(void *);
 
 void func_0201a428(void) {
-    _ZN4Heap7DestroyEv(data_0209d524);
+    _ZN5mHeap6Heap_t7DestroyEv(data_0209d524);
     data_0209d524 = 0;
 }

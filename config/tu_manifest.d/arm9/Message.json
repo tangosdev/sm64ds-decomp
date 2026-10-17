@@ -6,227 +6,242 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x0201ce10..0x0201fcd4, 30 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
-    "TOP EDGE: src/unnamed/arm9/0201/func_0201cd08.cpp (0x0201cd08..0x0201ce10) ends exactly where the run begins -- an unrelated shard, not a Message member. BOTTOM EDGE: src/LoadFont.cpp begins exactly at 0x0201fcd4, which is the end of the \"Message, menu and course text\" run in notes/mangled-fold-decisions.md (0x0201CE10..0x0201FCD4). Message::ResetAllGlobals at 0x0201fcac is the last function of this file.",
-    "CLASS-LOCAL COMPLETE: the run is every Message::* display entry point plus the message-window helpers they call (star-entry table walk, tile fill, BG clear), ending at the shared state reset func_0201eaac's consumers. DisplayText/Display self-calls resolve inside the TU."
+    "contiguous linker run: 0x0201cb7c..0x0201fcd4, 32 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
+    "TOP EDGE: src/ui/messages/func_0201cb2c.c (ParseMessageBankSections, 0x0201cb2c..0x0201cb7c) ends where dScStage_c::UpdateMessage begins. It is the message-bank parser, called from the bank loader past this file's bottom edge (func_0201fe08), and nothing in this run calls it, so it stays out. It is also Message2.cpp's bottom edge. BOTTOM EDGE: src/LoadFont.cpp begins exactly at 0x0201fcd4. Message::ResetAllGlobals at 0x0201fcac is the last function of this file.",
+    "CLASS-LOCAL COMPLETE: the run is every Message::* display entry point plus the message-window helpers they call (star-entry table walk, tile fill, BG clear), ending at the shared state reset func_0201eaac's consumers. DisplayText/Display self-calls resolve inside the TU.",
+    "UPPER EXTENSION (0x0201cb7c..0x0201ce10): func_0201cd08 is a display entry of the same shape as DisplaySaveStatusText, which follows it. It clears the BG0 message planes and draws two lines through func_0201d418 and Message_DrawCenteredLine, both members of this run, after the func_0201eaac reset. dScStage_c::UpdateMessage drives the window from the stage's frame: Message::UpdateWindow/Update, and Message::DisplaySaving for the 0x295 save prompt. It sits in the gap between the two Message runs and has no other home."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x0201ce10",
+      "start": "0x0201cb7c",
       "end": "0x0201fcd4"
     }
   ],
   "functions": [
     {
+      "symbol": "_ZN10dScStage_c13UpdateMessageEv",
+      "address": "0x0201cb7c",
+      "size": "0x0000018c",
+      "legacy_source": "src/_ZN10dScStage_c13UpdateMessageEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_0201cd08",
+      "address": "0x0201cd08",
+      "size": "0x00000108",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201cd08.cpp",
+      "ordinal": 1
+    },
+    {
       "symbol": "_ZN7Message21DisplaySaveStatusTextEt",
       "address": "0x0201ce10",
       "size": "0x000000ac",
       "legacy_source": "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
-      "ordinal": 0
+      "ordinal": 2
     },
     {
       "symbol": "func_0201cebc",
       "address": "0x0201cebc",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cebc.c",
-      "ordinal": 1
+      "ordinal": 3
     },
     {
       "symbol": "_ZN7Message21DisplayLevelClearTextEta",
       "address": "0x0201cf80",
       "size": "0x00000038",
       "legacy_source": "src/_ZN7Message21DisplayLevelClearTextEta.cpp",
-      "ordinal": 2
+      "ordinal": 4
     },
     {
       "symbol": "func_0201cfb8",
       "address": "0x0201cfb8",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cfb8.c",
-      "ordinal": 3
+      "ordinal": 5
     },
     {
       "symbol": "_ZN7Message22DisplayOptionsMenuTextEt",
       "address": "0x0201d018",
       "size": "0x000000e0",
       "legacy_source": "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
-      "ordinal": 4
+      "ordinal": 6
     },
     {
       "symbol": "LoadControllerModeText",
       "address": "0x0201d0f8",
       "size": "0x0000020c",
       "legacy_source": "src/LoadControllerModeText.c",
-      "ordinal": 5
+      "ordinal": 7
     },
     {
       "symbol": "_ZN7Message25DisplayControllerModeTextEt",
       "address": "0x0201d304",
       "size": "0x00000114",
       "legacy_source": "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
-      "ordinal": 6
+      "ordinal": 8
     },
     {
       "symbol": "func_0201d418",
       "address": "0x0201d418",
       "size": "0x00000178",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d418.c",
-      "ordinal": 7
+      "ordinal": 9
     },
     {
       "symbol": "func_0201d590",
       "address": "0x0201d590",
       "size": "0x00000110",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d590.cpp",
-      "ordinal": 8
+      "ordinal": 10
     },
     {
       "symbol": "Message_DrawCenteredLine",
       "address": "0x0201d6a0",
       "size": "0x000001b0",
       "legacy_source": "src/Message_DrawCenteredLine.c",
-      "ordinal": 9
+      "ordinal": 11
     },
     {
       "symbol": "func_0201d850",
       "address": "0x0201d850",
       "size": "0x000007f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d850.c",
-      "ordinal": 10
+      "ordinal": 12
     },
     {
       "symbol": "_ZN7Message16DisplayPauseTextEth",
       "address": "0x0201e044",
       "size": "0x000000e8",
       "legacy_source": "src/_ZN7Message16DisplayPauseTextEth.cpp",
-      "ordinal": 11
+      "ordinal": 13
     },
     {
       "symbol": "_ZN7Message19DisplayDontSaveTextEt",
       "address": "0x0201e12c",
       "size": "0x000000f4",
       "legacy_source": "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
-      "ordinal": 12
+      "ordinal": 14
     },
     {
       "symbol": "func_0201e220",
       "address": "0x0201e220",
       "size": "0x000000f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201e220.cpp",
-      "ordinal": 13
+      "ordinal": 15
     },
     {
       "symbol": "_ZN7Message19DisplaySaveMenuTextEt",
       "address": "0x0201e314",
       "size": "0x00000058",
       "legacy_source": "src/_ZN7Message19DisplaySaveMenuTextEt.cpp",
-      "ordinal": 14
+      "ordinal": 16
     },
     {
       "symbol": "_ZN7Message11DisplayTextEt",
       "address": "0x0201e36c",
       "size": "0x00000208",
       "legacy_source": "src/_ZN7Message11DisplayTextEt.cpp",
-      "ordinal": 15
+      "ordinal": 17
     },
     {
       "symbol": "_ZN7Message7DisplayEj",
       "address": "0x0201e574",
       "size": "0x00000148",
       "legacy_source": "src/_ZN7Message7DisplayEj.cpp",
-      "ordinal": 16
+      "ordinal": 18
     },
     {
       "symbol": "_ZN7Message28DisplayStarNameForStarSelectEj",
       "address": "0x0201e6bc",
       "size": "0x00000160",
       "legacy_source": "src/_ZN7Message28DisplayStarNameForStarSelectEj.cpp",
-      "ordinal": 17
+      "ordinal": 19
     },
     {
       "symbol": "_ZN7Message30DisplayCourseNameForStarSelectEj",
       "address": "0x0201e81c",
       "size": "0x00000290",
       "legacy_source": "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
-      "ordinal": 18
+      "ordinal": 20
     },
     {
       "symbol": "func_0201eaac",
       "address": "0x0201eaac",
       "size": "0x000000e8",
       "legacy_source": "src/unnamed/arm9/0201/func_0201eaac.c",
-      "ordinal": 19
+      "ordinal": 21
     },
     {
       "symbol": "_ZN7Message13DisplaySavingEt",
       "address": "0x0201eb94",
       "size": "0x000003a4",
       "legacy_source": "src/_ZN7Message13DisplaySavingEt.cpp",
-      "ordinal": 20
+      "ordinal": 22
     },
     {
       "symbol": "func_0201ef38",
       "address": "0x0201ef38",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_0201ef38.c",
-      "ordinal": 21
+      "ordinal": 23
     },
     {
       "symbol": "func_0201ef50",
       "address": "0x0201ef50",
       "size": "0x000001b8",
       "legacy_source": "src/unnamed/arm9/0201/func_0201ef50.c",
-      "ordinal": 22
+      "ordinal": 24
     },
     {
       "symbol": "func_0201f108",
       "address": "0x0201f108",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0201/func_0201f108.c",
-      "ordinal": 23
+      "ordinal": 25
     },
     {
       "symbol": "func_0201f138",
       "address": "0x0201f138",
       "size": "0x000001f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201f138.cpp",
-      "ordinal": 24
+      "ordinal": 26
     },
     {
       "symbol": "func_0201f32c",
       "address": "0x0201f32c",
       "size": "0x00000820",
       "legacy_source": "src/unnamed/arm9/0201/func_0201f32c.c",
-      "ordinal": 25
+      "ordinal": 27
     },
     {
       "symbol": "func_0201fb4c",
       "address": "0x0201fb4c",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201fb4c.c",
-      "ordinal": 26
+      "ordinal": 28
     },
     {
       "symbol": "ObjectMessageIDToActualMessageID",
       "address": "0x0201fc10",
       "size": "0x00000078",
       "legacy_source": "src/ObjectMessageIDToActualMessageID.c",
-      "ordinal": 27
+      "ordinal": 29
     },
     {
       "symbol": "func_0201fc88",
       "address": "0x0201fc88",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0201/func_0201fc88.c",
-      "ordinal": 28
+      "ordinal": 30
     },
     {
       "symbol": "_ZN7Message15ResetAllGlobalsEv",
       "address": "0x0201fcac",
       "size": "0x00000028",
       "legacy_source": "src/_ZN7Message15ResetAllGlobalsEv.cpp",
-      "ordinal": 29
+      "ordinal": 31
     }
   ],
   "data": [],
@@ -234,6 +249,7 @@
   "compiler_only_output": [],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
+    "dScStage_c::UpdateMessage (0x0201cb7c), the stage's per-frame message driver, and func_0201cd08 open the file by address; both were folded in from shards, so the TU is not only Message::* members.",
     "Message is the tree's existing class name (include/Message.h), per Juan's 2026-10-11 rule: fold onto the established name, never coin one.",
     "Message is NOT polymorphic -- no RTTI, no vtable, no ctor/dtor -- so no key-function partition; every member is static except Display and they migrate freely. The display entry points drive one shared render state around 0x0209d660 plus the star-entry table at data_0209d708.",
     "#pragma defer_codegen off gives source-order emission: src/Message.cpp lists definitions ROM-ascending and the emitted section order is ROM-ascending. Deferred codegen was unusable because the three optimization-pragma functions would read their offs last-wins at end of file.",
@@ -247,8 +263,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-Message/Message.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 30,
-    "functions_declared": 30,
+    "functions_matched": 32,
+    "functions_declared": 32,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],

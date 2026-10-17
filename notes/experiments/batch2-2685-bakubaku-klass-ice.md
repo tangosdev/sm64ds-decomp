@@ -2,7 +2,7 @@
 
 - tested_commit: 019a7cc06 (cleanup-leftover-overlay-batch-2 at experiment time)
 - compiler: mwccarm 2004/b56 (tools/mwccarm/2004/b56/mwccarm.exe)
-- claim: `src/actors/daBakubaku_c.cpp:13-15` keeps
+- claim: `src/game/actors/d_a_bakubaku.cpp:13-15` keeps
   `struct Klass;` incomplete because completing it as daBakubaku_c
   ICEs mwccarm's PMF.
 - attempted_change (scratch-applied, then reverted):
@@ -21,7 +21,7 @@
 - command:
 
 ```text
-.venv/bin/python tools/match.py --c src/actors/daBakubaku_c.cpp \
+.venv/bin/python tools/match.py --c src/game/actors/d_a_bakubaku.cpp \
   --func _ZN12daBakubaku_c8BehaviorEv --addr 0x021121b4 --size 0x128 \
   --version 2004/b56 --module ov032 --strict-relocs --brief
 ```

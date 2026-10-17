@@ -3,7 +3,7 @@
     .ctor       start:0x02122f34 end:0x02122f3c kind:rodata align:4
     .data       start:0x02122f40 end:0x02123280 kind:data align:32
     .bss        start:0x02123280 end:0x021234e0 kind:bss align:32
-src/actors/daKing_Donketu_c.cpp:
+src/game/actors/d_a_king_donketu.cpp:
     complete
     .text start:0x0211f000 end:0x02121f90
     .init start:0x02122874 end:0x02122d48
@@ -11,7 +11,7 @@ src/actors/daKing_Donketu_c.cpp:
     .data start:0x02122f40 end:0x02123040
     .bss start:0x02123280 end:0x02123420
 
-src/actors/daObjEwbIce_c.cpp:
+src/game/actors/d_a_obj_ewb_ice.cpp:
     complete
     .text start:0x02121f90 end:0x02122874
     .init start:0x02122d48 end:0x02122f34

@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern void func_ov007_020c1448(void *a, int b, int c, int d, int e);
 extern void func_ov007_020c1404(void *c);
 extern int _ZN4cstd3divEii(int a, int b);
@@ -42,8 +43,8 @@ void func_ov007_020ca5f0(char *a1, char *a2, int *a3, int a4, int a5)
   {
     int q1 = _ZN4cstd3divEii(tw * (*((int *) (a2 + 0x14))), d0);
     int q2 = _ZN4cstd3divEii(th * (*((int *) (a2 + 0x18))), d1);
-    int fx1 = (int) (((((s64) (*((s16 *) (a1 + 0x24)))) * (*((int *) (a2 + 0xc)))) + 0x800) >> 12);
-    int fx2 = (int) (((((s64) (*((s16 *) (a1 + 0x26)))) * (*((int *) (a2 + 0x10)))) + 0x800) >> 12);
+    int fx1 = FX_MUL((*((s16 *)(a1 + 0x24))), (*((int *)(a2 + 0xc))));
+    int fx2 = FX_MUL((*((s16 *)(a1 + 0x26))), (*((int *)(a2 + 0x10))));
     func_ov007_020caeac(*((int *) a1), *((int *) (a1 + 0x2c)), *((int *) (a1 + 0x30)), *((int *) (a1 + 0x34)), d0, d1, *((int *) (a2 + 4)), *((int *) (a2 + 8)), q1, q2, fx1, fx2, 6);
   }
   else

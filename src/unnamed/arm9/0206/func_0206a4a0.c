@@ -31,21 +31,12 @@ int func_0206a4a0(void)
     func_0206a3a4((u16)data_020a9de0[1], a);
     func_0206a458(b);
 
-    if (io[0xb2] == 0x96) {
-        if (*(u16 *)card != *(u16 *)(io + 0xbe))
-            goto setflag;
-    }
-    if (io[0xb2] != 0x96) {
-        if (*(u16 *)card != *(u16 *)0x801fffe)
-            goto setflag;
-    }
-    if (card->w8 != *(int *)(io + 0xac) && card->b0) {
-    setflag:
-        {
-            u8 *p = (u8 *)(((int)card + 5));
-            ret = 0;
-            *p |= 2;
-        }
+    if ((io[0xb2] == 0x96 && *(u16 *)card != *(u16 *)(io + 0xbe)) ||
+        (io[0xb2] != 0x96 && *(u16 *)card != *(u16 *)0x801fffe) ||
+        (card->w8 != *(int *)(io + 0xac) && card->b0)) {
+        u8 *p = (u8 *)(((int)card + 5));
+        ret = 0;
+        *p |= 2;
     }
 
     func_0206a424(b);

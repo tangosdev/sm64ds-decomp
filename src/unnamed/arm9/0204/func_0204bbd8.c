@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 typedef struct { int x, y, z; } Vec3;
 
 typedef struct {
@@ -69,8 +70,6 @@ extern void func_02055388(int *m);
 extern void func_0204c24c(u8 a, u8 b);
 extern s16 data_02082214[];
 
-#define FX(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
-
 void func_0204bbd8(Self *self, Node *node)
 {
     Ctx *c = self->p34;
@@ -101,7 +100,7 @@ void func_0204bbd8(Self *self, Node *node)
     if (scale == 0)
         return;
 
-    v1w = (int)(((s64)node->p30 * node->p34 + 0x800) >> 12);
+    v1w = FX_MUL(node->p30, node->p34);
     trans.x = node->p14 + node->p8;
     trans.y = node->p18 + node->pc;
     trans.z = node->p1c + node->p10;
@@ -111,18 +110,18 @@ void func_0204bbd8(Self *self, Node *node)
         int idx = node->p36 >> 4;
         int sinv;
         int cosv;
-        v2 = FX(v1w, q);
+        v2 = FX_MUL(v1w, q);
         sinv = data_02082214[idx * 2 + 1];
         cosv = data_02082214[idx * 2];
-        mat[0] = FX(sinv, v2);
-        mat[3] = FX(-cosv, v1w);
-        mat[1] = FX(cosv, v2);
+        mat[0] = FX_MUL(sinv, v2);
+        mat[3] = FX_MUL(-cosv, v1w);
+        mat[1] = FX_MUL(cosv, v2);
         mat[9] = trans.x;
         mat[10] = trans.y;
         mat[8] = 0x1000;
         mat[11] = trans.z;
         mat[6] = 0;
-        mat[4] = FX(sinv, v1w);
+        mat[4] = FX_MUL(sinv, v1w);
         mat[7] = 0;
         mat[2] = 0;
         mat[5] = 0;

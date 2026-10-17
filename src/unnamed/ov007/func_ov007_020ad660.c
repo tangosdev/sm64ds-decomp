@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern u8 data_ov007_0210342c[];
 extern short data_02082214[];
 
@@ -114,7 +115,7 @@ void func_ov007_020ad660(char *arg0)
                 var_r4 = _ZN4cstd3divEii(temp_r1 << 0xc, 0x50);
             }
             {
-                int t = (int)(((long long)var_r4 * 0xe10 + 0x800) >> 0xc);
+                int t = FX_MUL(var_r4, 0xe10);
                 int r = _ZN4cstd3divEii(t << 0x10, 0x168);
                 int inv, inv2, prod, result;
                 r = (u16)r;
@@ -125,7 +126,7 @@ void func_ov007_020ad660(char *arg0)
                     inv2 = 0;
                 }
                 prod = data_02082214[(r >> 4) * 2] * 0x19;
-                result = (int)(((long long)inv2 * prod + 0x800) >> 0xc);
+                result = FX_MUL(inv2, prod);
                 *(int *)(*(char **)(arg0 + 4) + 0x2c) = result;
             }
             if (var_r4 >= 0x1000) {
@@ -158,7 +159,7 @@ void func_ov007_020ad660(char *arg0)
                 half = sq / 2;
                 tblval = data_02082214[idx * 2];
                 temp_a = half + 0x800;
-                result = (int)(((long long)temp_a * tblval + 0x800) >> 0xc);
+                result = FX_MUL(temp_a, tblval);
                 *(int *)(*(char **)(arg0 + 4) + 0x2c) = -result;
             }
             if (var_r0 >= 0x1000) {

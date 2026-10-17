@@ -423,7 +423,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@436",
+      "from": "@434",
       "to": "@127",
       "evidence": "mwcc numbers this registration node @422 per TU and the fleet already defines a global @422, so the scratch link would multiply-define it; the first target @108 collides with ov064 daObjFl_Amilift_c's global @108 on main, so it lands on @127"
     }

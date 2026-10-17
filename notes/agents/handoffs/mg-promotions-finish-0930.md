@@ -8,9 +8,9 @@ Follow-up: https://github.com/tangosdev/sm64ds-decomp/issues/3317.
 
 | Candidate | Functions | Production source | Claimed range |
 | --- | ---: | --- | --- |
-| dMgState | 4 | src/actors/dMgState_c.cpp | ov004 text 020b8714..020b8a8c, BSS 020bfd04..020bfda8 |
-| Slot1/Slot3 | 39 | src/actors/dScMgSlots.cpp | ov006 text 0210a8c0..0210c9e0 |
-| Smartball scene and objects | 132 | src/actors/dScMgSmartball_c.cpp | ov006 text 0210d740..02119904 |
+| dMgState | 4 | src/minigames/d_mg_state.cpp | ov004 text 020b8714..020b8a8c, BSS 020bfd04..020bfda8 |
+| Slot1/Slot3 | 39 | src/minigames/d_s_mg_slots.cpp | ov006 text 0210a8c0..0210c9e0 |
+| Smartball scene and objects | 132 | src/minigames/d_s_mg_smartball.cpp | ov006 text 0210d740..02119904 |
 
 All three are `complete` production entries. The 157 absorbed source files and three shadow paths are retired; the old 18-function Slot1 manifest is superseded by the combined 39-function entry. Slot1 InitResources was independently relocation-verified and enrolled; its factory remains enrolled separately.
 

@@ -73,70 +73,70 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov047_02112658",
+      "symbol": "gKm3Dan1CollisionFile",
       "address": "0x02112658",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112660",
+      "symbol": "gKm3Dan4CollisionFile",
       "address": "0x02112660",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112668",
+      "symbol": "gKm3Dan2ModelFile",
       "address": "0x02112668",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112670",
+      "symbol": "gKm3Dan2CollisionFile",
       "address": "0x02112670",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112678",
+      "symbol": "gKm3Dan0CollisionFile",
       "address": "0x02112678",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112680",
+      "symbol": "gKm3Dan1ModelFile",
       "address": "0x02112680",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112688",
+      "symbol": "gKm3Dan3ModelFile",
       "address": "0x02112688",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112690",
+      "symbol": "gKm3Dan4ModelFile",
       "address": "0x02112690",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_02112698",
+      "symbol": "gKm3Dan3CollisionFile",
       "address": "0x02112698",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km3_dorifu.cpp"
     },
     {
-      "symbol": "data_ov047_021126a0",
+      "symbol": "gKm3Dan0ModelFile",
       "address": "0x021126a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1026,7 +1026,7 @@
       "source": "0x02111948",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_021126a0",
+      "symbol": "gKm3Dan0ModelFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x021126a0"
@@ -1056,7 +1056,7 @@
       "source": "0x02111958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112680",
+      "symbol": "gKm3Dan1ModelFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112680"
@@ -1076,7 +1076,7 @@
       "source": "0x02111964",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112668",
+      "symbol": "gKm3Dan2ModelFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112668"
@@ -1096,7 +1096,7 @@
       "source": "0x02111970",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112688",
+      "symbol": "gKm3Dan3ModelFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112688"
@@ -1116,7 +1116,7 @@
       "source": "0x0211197c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112690",
+      "symbol": "gKm3Dan4ModelFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112690"
@@ -1136,7 +1136,7 @@
       "source": "0x02111988",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112678",
+      "symbol": "gKm3Dan0CollisionFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112678"
@@ -1166,7 +1166,7 @@
       "source": "0x02111994",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112658",
+      "symbol": "gKm3Dan1CollisionFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112658"
@@ -1186,7 +1186,7 @@
       "source": "0x021119a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112670",
+      "symbol": "gKm3Dan2CollisionFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112670"
@@ -1206,7 +1206,7 @@
       "source": "0x021119ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112698",
+      "symbol": "gKm3Dan3CollisionFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112698"
@@ -1226,7 +1226,7 @@
       "source": "0x021119b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov047_02112660",
+      "symbol": "gKm3Dan4CollisionFile",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02112660"

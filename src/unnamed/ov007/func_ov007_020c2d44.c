@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 struct S {
     int pad[6];
     int *f18;
@@ -21,8 +22,8 @@ void func_ov007_020c2d44(struct S *thiz, int n) {
         dy = 0;
         ang = 0;
     }
-    int a = (int)(((long long)dy * dy + 0x800) >> 12);
-    int b = (int)(((long long)dx * dx + 0x800) >> 12);
+    int a = FX_MUL(dy, dy);
+    int b = FX_MUL(dx, dx);
     int len = func_020531a4(a + b);
     thiz->f18[n] = len;
     thiz->f1c[n] = -ang;

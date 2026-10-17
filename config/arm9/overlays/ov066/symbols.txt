@@ -62,8 +62,8 @@ _ZN6Eyerok16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211a2dc
 func_ov066_0211a2e4 kind:function(arm,size=0x78) addr:0x0211a2e4
 func_ov066_0211a35c kind:function(arm,size=0x14) addr:0x0211a35c
 daIwante_c_classInit kind:function(arm,size=0xa8) addr:0x0211a370
-__sinit_Eyerok.cpp kind:function(arm,size=0x7a8) addr:0x0211a418
-.p__sinit_Eyerok.cpp kind:data(word) addr:0x0211abc0
+__sinit_d_a_iwante.cpp kind:function(arm,size=0x7a8) addr:0x0211a418
+.p__sinit_d_a_iwante.cpp kind:data(word) addr:0x0211abc0
 data_ov066_0211abe0 kind:data(any) addr:0x0211abe0
 data_ov066_0211abe4 kind:data(any) addr:0x0211abe4
 data_ov066_0211abe8 kind:data(any) addr:0x0211abe8

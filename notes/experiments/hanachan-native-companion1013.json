@@ -1,0 +1,289 @@
+{
+  "inputToolCommit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+  "scope": "Native Wiggler factory and narrowly visible short-vector inline construction",
+  "compiler": "2004/b56",
+  "declaration": "inline Vector3s(); in include/types.h",
+  "definition": "inline Vector3s::Vector3s() {} in guarded include/Vector3s.h",
+  "definitionConsumers": [
+    "src/actors/daDossy_c.cpp",
+    "src/engine/collision/dBgW_Kc_itcm.cpp",
+    "src/stage/LevelObjects.cpp",
+    "src/actors/daHanachan_c.cpp"
+  ],
+  "fullDeclarationFanout": {
+    "compiled": 1088,
+    "unchangedCompleteObjects": 1085,
+    "temporaryNameChanges": 0,
+    "changedWithoutDefinition": [
+      "src/actors/daDossy_c.cpp",
+      "src/engine/collision/dBgW_Kc_itcm.cpp",
+      "src/stage/LevelObjects.cpp"
+    ]
+  },
+  "restoredConsumerProof": [
+    {
+      "source": "src/actors/daDossy_c.cpp",
+      "preparedAllDefinedBytesMetadataTypedRelocationsIdentical": true,
+      "symbols": 59
+    },
+    {
+      "source": "src/engine/collision/dBgW_Kc_itcm.cpp",
+      "preparedAllDefinedBytesMetadataTypedRelocationsIdentical": true,
+      "symbols": 16
+    },
+    {
+      "source": "src/stage/LevelObjects.cpp",
+      "preparedAllDefinedBytesMetadataTypedRelocationsIdentical": true,
+      "symbols": 19
+    },
+    {
+      "source": "src/actors/daHanachan_c.cpp",
+      "preparedAllDefinedBytesMetadataTypedRelocationsIdentical": true,
+      "symbols": 110
+    }
+  ],
+  "mappingChanges": {
+    "Dossy": 14,
+    "Wiggler": 0,
+    "otherConsumers": 0
+  },
+  "canonicalCallbacks": [
+    {
+      "symbol": "_ZN7Vector3C1Ev",
+      "canonical": "func_0203d384",
+      "module": "arm9",
+      "address": "0x0203d384",
+      "arrayCounts": [
+        5,
+        5
+      ],
+      "stride": 12
+    },
+    {
+      "symbol": "_ZN8Vector3sC1Ev",
+      "canonical": "func_0203d73c",
+      "module": "arm9",
+      "address": "0x0203d73c",
+      "arrayCounts": [
+        5
+      ],
+      "stride": 6,
+      "offset": "0x444"
+    }
+  ],
+  "ownership": {
+    "queueCommit": "f5ff4e883d0d6aa462d1c3d18c8a77bf3756fbbf",
+    "resources": [
+      "class:DorriePlatform",
+      "class:dBgW_Kc",
+      "class:daDossyCap_c",
+      "class:daDossy_c",
+      "class:daHanachan_c",
+      "file:config/tu_manifest.d/ov034/dahanachan_c.json",
+      "file:config/tu_manifest.d/ov065/dorrieplatform+dadossycap_c+dadossy_c.json",
+      "file:include/types.h",
+      "file:include/vector3s.h",
+      "file:notes/experiments/hanachan-native-companion1013.json",
+      "file:src/actors/dadossy_c.cpp",
+      "file:src/actors/dahanachan_c.cpp",
+      "file:src/engine/collision/dbgw_kc_itcm.cpp",
+      "file:src/stage/levelobjects.cpp",
+      "range:itcm:33534076:33544572",
+      "range:ov002:34595216:34597452",
+      "range:ov034:34673056:34682912",
+      "range:ov034:34683116:34685048",
+      "range:ov034:34685048:34685052",
+      "range:ov034:34686264:34686484",
+      "range:ov034:34686496:34687196",
+      "range:ov065:34701120:34707160",
+      "range:ov065:34718784:34719328",
+      "range:ov065:34720488:34720492",
+      "range:ov065:34721052:34721076",
+      "range:ov065:34723616:34723860"
+    ],
+    "tuClaims": [
+      {
+        "source": "src/actors/daDossy_c.cpp",
+        "manifest": "config/tu_manifest.d/ov065/DorriePlatform+daDossyCap_c+daDossy_c.json",
+        "id": "ov065/DorriePlatform+daDossyCap_c+daDossy_c",
+        "module": "ov065",
+        "sections": [
+          {
+            "name": ".text",
+            "start": "0x02117f40",
+            "end": "0x021196d8"
+          },
+          {
+            "name": ".init",
+            "start": "0x0211c440",
+            "end": "0x0211c660"
+          },
+          {
+            "name": ".ctor",
+            "start": "0x0211cae8",
+            "end": "0x0211caec"
+          },
+          {
+            "name": ".data",
+            "start": "0x0211cd1c",
+            "end": "0x0211cd34"
+          },
+          {
+            "name": ".bss",
+            "start": "0x0211d720",
+            "end": "0x0211d814"
+          }
+        ]
+      },
+      {
+        "source": "src/engine/collision/dBgW_Kc_itcm.cpp",
+        "manifest": "config/tu_manifest.d/itcm/dBgW_Kc.json",
+        "id": "itcm/dBgW_Kc",
+        "module": "itcm",
+        "sections": [
+          {
+            "name": ".text",
+            "start": "0x01ffb07c",
+            "end": "0x01ffd97c"
+          }
+        ]
+      },
+      {
+        "source": "src/stage/LevelObjects.cpp",
+        "manifest": "config/tu_manifest.d/ov002/LevelObjects.json",
+        "id": "ov002/LevelObjects",
+        "module": "ov002",
+        "sections": [
+          {
+            "name": ".text",
+            "start": "0x020fe190",
+            "end": "0x020fea4c"
+          }
+        ]
+      },
+      {
+        "source": "src/actors/daHanachan_c.cpp",
+        "manifest": "config/tu_manifest.d/ov034/daHanachan_c.json",
+        "id": "ov034/daHanachan_c",
+        "module": "ov034",
+        "sections": [
+          {
+            "name": ".text",
+            "start": "0x021111a0",
+            "end": "0x02113820"
+          },
+          {
+            "name": ".init",
+            "start": "0x021138ec",
+            "end": "0x02114078"
+          },
+          {
+            "name": ".ctor",
+            "start": "0x02114078",
+            "end": "0x0211407c"
+          },
+          {
+            "name": ".data",
+            "start": "0x02114538",
+            "end": "0x02114614"
+          },
+          {
+            "name": ".bss",
+            "start": "0x02114620",
+            "end": "0x021148dc"
+          }
+        ]
+      }
+    ],
+    "overlaps": []
+  },
+  "hostValidation": {
+    "compiler": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x86\\cl.exe",
+    "collisionCompile": 0,
+    "Vector3sSymbolRows": [
+      "018 00000000 SECTA  notype ()    External     | ??1Vector3s@@QAE@XZ (public: __thiscall Vector3s::~Vector3s(void))",
+      "019 00000000 SECT7  notype ()    External     | ??0Vector3s@@QAE@XZ (public: __thiscall Vector3s::Vector3s(void))"
+    ],
+    "smokeCompile": 0,
+    "smokeLink": 0,
+    "smokeExit": 0,
+    "scope": "Actual dBgW_Kc_itcm translation unit compiles with MSVC x86, ctor symbol defined; companion constructor smoke links and exits0. No full port build claimed. No direct Vector3s uses found in port sources; dBgW_Kc_itcm is the constructor user in port slices8/9."
+  },
+  "task": "hanachan-native-companion1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3780",
+  "base_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+  "upstream_main_context": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "tooling_pr": "https://github.com/tangosdev/sm64ds-decomp/pull/3766",
+  "status": "Integrated production, complete expanded consumer checks and current-main/toolstack/native-PR composition pass; final independent immutable-head Source acceptance required before source-only stacked PR.",
+  "integrated_gates": {
+    "tested_source_commit": "01615fe367f5c03ad51bc25a1e85b7dc1ac4e919",
+    "tested_base": "257ef7edb18afda407e1e6957478878ed5952ffa",
+    "production_rom": {
+      "result": "PASS",
+      "functions_reproduced": 11331,
+      "mismatching_functions": 0,
+      "data_claims_reproduced": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "global_advisory": "969 verified,1519 partial,1 inherited differing,21 unnamed"
+    },
+    "declarations": {
+      "scoped_files": 1640,
+      "inherited_disagreements": 6483,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    },
+    "composition": {
+      "scenario": "current main plus separately accepted canonical-duplicate tool257; not unmodified main",
+      "main": "08b118098ecb7ce86b85f1215886a4618e268a86",
+      "tool_stack": "257ef7edb18afda407e1e6957478878ed5952ffa",
+      "source_checkpoint": "01615fe367f5c03ad51bc25a1e85b7dc1ac4e919",
+      "verified_scenarios": 11,
+      "result": "PASS",
+      "qualification": "Complete prepared objects and typed reference graphs compared for four owned consumers, five exact pending native PR variants and both Source changes between toolbase and main; full ROM totals above apply to the actual toolbase branch."
+    },
+    "expanded_linkcheck": {
+      "selected_files": 1088,
+      "selected_symbols": 9629,
+      "checked": 9628,
+      "verified": 9401,
+      "warnings": 227,
+      "blocking": 0,
+      "inherited_nonmatching_skips": 1,
+      "implementation": "Exact stock changed-source selection, first-match symbol resolver and subprocess linkcheck/retry logic run in parallel; same stock warning/skip semantics.",
+      "serial_producer_run": "Started required CLI; superseded its partial duplicate run only after complete equivalent parallel coverage. No terminal success is claimed for the stopped serial process.",
+      "warning_closure": "224 whole raw objects match independently compiled original controls; Dossy initializer BLIND-25, Wiggler initializer BLIND-73 and factory BLIND-2 separately verify with normal prepared objects.",
+      "draft_qualification": "func_02009e70 remains an unchanged NONMATCHING draft; no match claimed."
+    },
+    "independent_preliminary": {
+      "strict_prepared_checks": 97,
+      "verified": 97,
+      "blind": 0,
+      "diffs": 0,
+      "prepared_defined_symbols": 204,
+      "raw_relocations_covered": 936,
+      "header_consumers_compiled": 1088,
+      "whole_raw_objects_identical": 1086,
+      "changed_objects": [
+        "Wiggler",
+        "Dossy"
+      ],
+      "qualification": "Owned bytes, complete symbol metadata and every typed relocation/addend/embedded word match controls; Wiggler whole ELF container equality is not claimed because new constructor helper bookkeeping changes it."
+    }
+  },
+  "initial_scout_limitations": [
+    "Full current-main/native-PR composition and full ROM link remain for owned adoption",
+    "Five previously measured split-vtable stock-control prerequisites are unavailable in scout tree; their raw objects are unchanged",
+    "Remaining Wiggler char-pointer segment traversal, Fix12 ABI calls and foreign camera fields are unchanged"
+  ],
+  "remaining_work": [
+    "Existing Wiggler segment walks, resource layout views, foreign camera casts and scalar Fix12 ABI bridges remain partial reconstruction under issue3780."
+  ],
+  "source_lf_sha256": "7a1cf5397e31455d90cdd9c898a8ddf41cf480193bd40d6af4f99a2d9c8c00bf"
+}

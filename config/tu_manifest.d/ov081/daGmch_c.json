@@ -1,8 +1,8 @@
 {
   "id": "ov081/daGmch_c",
   "module": "ov081",
-  "source": "src/actors/daGmch_c.cpp",
-  "promoted_source": "src/actors/daGmch_c.cpp",
+  "source": "src/game/actors/d_a_gmch.cpp",
+  "promoted_source": "src/game/actors/d_a_gmch.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -431,14 +431,14 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov081_02128ec4",
+      "symbol": "gGamaguchiJumpEndAnimationFile",
       "address": "0x02128ec4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x2ff"
     },
     {
-      "symbol": "data_ov081_02128ecc",
+      "symbol": "gGamaguchiJumpAnimationFile",
       "address": "0x02128ecc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -459,7 +459,7 @@
       "evidence": "animation file handle constructed with file ID 0x300"
     },
     {
-      "symbol": "data_ov081_02128ee4",
+      "symbol": "gGamaguchiWalkEndAnimationFile",
       "address": "0x02128ee4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -498,21 +498,21 @@
       "address": "0x02128f1c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node for data_ov081_02128ee4"
+      "evidence": "compiler-local destructor-registration node for gGamaguchiWalkEndAnimationFile"
     },
     {
       "symbol": "@1089",
       "address": "0x02128f28",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node for data_ov081_02128ecc"
+      "evidence": "compiler-local destructor-registration node for gGamaguchiJumpAnimationFile"
     },
     {
       "symbol": "@1074",
       "address": "0x02128f34",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node for data_ov081_02128ec4"
+      "evidence": "compiler-local destructor-registration node for gGamaguchiJumpEndAnimationFile"
     },
     {
       "symbol": "data_ov081_02128f40",
@@ -561,7 +561,7 @@
     "The 8 RAW notes above describe what `tubuild create` produced. That output was NOT used: at 36 members the generated preamble is unusable, so the merged source was hand-assembled from the 36 shards plus src/d_a_gmch.c in ROM-ascending order. Read the file's own header comment for what was and was not reconciled.",
     "MEASURED, and it is the one thing in this TU that is not a shard's own spelling: `#include \"common.h\"` sits BEFORE daGmch_c.h. common.h and math/Matrix.h both define Matrix4x3 under the single MATRIX4X3_DEFINED guard and whichever is seen first stands. daGmch_c.h reaches math/Matrix.h through Model.h, so without that line ordinal 34 (_ZN8daGmch_c13InitResourcesEv) sees the structured Matrix3x3+Vector3 spelling, splits `mMatrix = IDENTITY_MATRIX4X3` into a 9-word ldm/stm plus a CSE tail and comes out 0x1f0 against the cartridge's 0x1d4 -- 35/36. The shards reached the flat s32[12] spelling through decl_common.h -> common.h; this include replaces that route and restores 36/36.",
     "decl_common.h is deliberately NOT included. It declares 7 of this TU's 26 auto-named members and 3 of those 7 contradict the byte-matched definitions: func_ov081_02126950 as (void*, void*) against (int*, void*), func_ov081_02127708 as int(char*) against void(C*), and func_ov081_0212777c as (void*, int) against (char*, int). Including it would be three `illegal function overloading` errors pointed at the definitions rather than at the header, which is the ov002/Player and ov006/dScMgLuigi_c precedent.",
-    "Static-initializer fold: src/unnamed/ov081/__sinit_ov081_021284f0.c is retired; its five file handles (model 0x2fd, animations 0x300/0x301/0x2fe/0x2ff in construction order), six registration nodes, eighteen PMF literals, the nine {enter, update} state pairs at 0x02128f40 and the draw-offset Vector3 at 0x02128ef8 are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. The offset stays a real Vector3: brace init is constant initialization -- .data image, no .init action, no registration -- so a one-slot GmchDrawReg sentinel's ctor emits the three stores and the declared-ahead Vector3 earns only the registration, whose reference lands on _ZN7Vector3D1Ev directly (this TU's own vague-linkage copy is the pre-existing deadstrip-duplicate). The sentinel's 1-byte bss is a homeless deadstrip. EnterState1 is the table's lone void-returning half and is cast to the int StatePmf. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_daGmch_c.cpp. Emitted temps need no defined_symbol_renames on this base (@1070-@1074/@1110 nodes, @1076-@1080 literals are all unused).",
+    "Static-initializer fold: src/unnamed/ov081/__sinit_ov081_021284f0.c is retired; its five file handles (model 0x2fd, animations 0x300/0x301/0x2fe/0x2ff in construction order), six registration nodes, eighteen PMF literals, the nine {enter, update} state pairs at 0x02128f40 and the draw-offset Vector3 at 0x02128ef8 are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. The offset stays a real Vector3: brace init is constant initialization -- .data image, no .init action, no registration -- so a one-slot GmchDrawReg sentinel's ctor emits the three stores and the declared-ahead Vector3 earns only the registration, whose reference lands on _ZN7Vector3D1Ev directly (this TU's own vague-linkage copy is the pre-existing deadstrip-duplicate). The sentinel's 1-byte bss is a homeless deadstrip. EnterState1 is the table's lone void-returning half and is cast to the int StatePmf. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_gmch.cpp. Emitted temps need no defined_symbol_renames on this base (@1070-@1074/@1110 nodes, @1076-@1080 literals are all unused).",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
@@ -965,7 +965,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov081",
       "canonical_address": "0x02128c04",
-      "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned -- all 113 delink blocks in config/arm9/overlays/ov081/delinks.txt are .text or .init only, so no file owns any of ov081's .data. Extent corroborated three ways: the cartridge words put mwcc's two-word preamble {0x00000000, 0x02128bd4} at 0x02128bfc and the last slot at 0x02128c7c, with _ZTI15daObjIceBlock_c next at 0x02128c80, so the OBJECT is 0x02128bfc..0x02128c80 = 0x84 bytes; tools/rtti_vtables.py --own daGmch_c reports 31 slots (0x7c) plus the 0x8 preamble = 0x84; the emitted _ZTV8daGmch_c is 0x84. symbols.txt names the address point 0x02128c04, which is the convention romdata_check re-derives the object start from."
+      "reason": "This class vtable's canonical cartridge storage 0x02128bfc..0x02128c80 remains ROM-gap owned, outside this TU's owned .data 0x02128b38..0x02128bc8. The earlier text/init-only ownership description is historical: this manifest now also owns .ctor, .data and .bss. Extent corroborated three ways: the cartridge words put mwcc's two-word preamble {0x00000000, 0x02128bd4} at 0x02128bfc and the last slot at 0x02128c7c, with _ZTI15daObjIceBlock_c next at 0x02128c80, so the OBJECT is 0x02128bfc..0x02128c80 = 0x84 bytes; tools/rtti_vtables.py --own daGmch_c reports 31 slots (0x7c) plus the 0x8 preamble = 0x84; the emitted _ZTV8daGmch_c is 0x84. symbols.txt names the address point 0x02128c04, which is the convention romdata_check re-derives the object start from."
     },
     {
       "symbol": "_ZTI8daGmch_c",
@@ -1031,7 +1031,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daGmch_c.cpp",
+      "symbol": "__sinit_d_a_gmch.cpp",
       "address": "0x021284f0",
       "size": "0x2c8",
       "binding": "STB_GLOBAL",
@@ -1040,7 +1040,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daGmch_c.cpp",
+      "symbol": ".p__sinit_d_a_gmch.cpp",
       "address": "0x02128830",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1086,125 +1086,135 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1107",
-      "to": "@1045",
-      "evidence": "mwcc emits this compiler temp as @1091; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
-    },
-    {
-      "from": "@1109",
-      "to": "@1046",
-      "evidence": "mwcc emits this compiler temp as @1093; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
-    },
-    {
-      "from": "@1111",
-      "to": "@1047",
-      "evidence": "mwcc emits this compiler temp as @1095; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
-    },
-    {
-      "from": "@1113",
-      "to": "@1048",
-      "evidence": "mwcc emits this compiler temp as @1097; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
-    },
-    {
-      "from": "@1115",
-      "to": "@1049",
-      "evidence": "mwcc emits this compiler temp as @1099; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
-    },
-    {
       "from": "@1117",
-      "to": "@1050",
-      "evidence": "mwcc emits this compiler temp as @1101; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
+      "to": "@1045",
+      "evidence": "mwcc emits this compiler temp as @1091; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1117 replaces @1107 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1045."
     },
     {
       "from": "@1119",
-      "to": "@1051",
-      "evidence": "mwcc emits this compiler temp as @1103; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
+      "to": "@1046",
+      "evidence": "mwcc emits this compiler temp as @1093; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1119 replaces @1109 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1046."
     },
     {
       "from": "@1121",
-      "to": "@1052",
-      "evidence": "mwcc emits this compiler temp as @1105; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
+      "to": "@1047",
+      "evidence": "mwcc emits this compiler temp as @1095; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1121 replaces @1111 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1047."
     },
     {
       "from": "@1123",
-      "to": "@1053",
-      "evidence": "mwcc emits this compiler temp as @1107; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
+      "to": "@1048",
+      "evidence": "mwcc emits this compiler temp as @1097; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1123 replaces @1113 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1048."
     },
     {
       "from": "@1125",
+      "to": "@1049",
+      "evidence": "mwcc emits this compiler temp as @1099; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1125 replaces @1115 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1049."
+    },
+    {
+      "from": "@1127",
+      "to": "@1050",
+      "evidence": "mwcc emits this compiler temp as @1101; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1127 replaces @1117 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1050."
+    },
+    {
+      "from": "@1129",
+      "to": "@1051",
+      "evidence": "mwcc emits this compiler temp as @1103; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1129 replaces @1119 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1051."
+    },
+    {
+      "from": "@1131",
+      "to": "@1052",
+      "evidence": "mwcc emits this compiler temp as @1105; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1131 replaces @1121 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1052."
+    },
+    {
+      "from": "@1133",
+      "to": "@1053",
+      "evidence": "mwcc emits this compiler temp as @1107; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1133 replaces @1123 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1053."
+    },
+    {
+      "from": "@1135",
       "to": "@1080",
-      "evidence": "mwcc emits this compiler temp as @1109; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally"
+      "evidence": "mwcc emits this compiler temp as @1109; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1135 replaces @1125 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1080."
     },
     {
-      "from": "@1099",
+      "from": "@1109",
       "to": "@1083",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1099 now; licensed under the existing pin @1083"
-    },
-    {
-      "from": "@1095",
-      "to": "@1079",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1095 now; licensed under the existing pin @1079"
-    },
-    {
-      "from": "@1097",
-      "to": "@1081",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1097 now; licensed under the existing pin @1081"
-    },
-    {
-      "from": "@1092",
-      "to": "@1076",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1092 now; licensed under the existing pin @1076"
-    },
-    {
-      "from": "@1094",
-      "to": "@1078",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1094 now; licensed under the existing pin @1078"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1099 now; licensed under the existing pin @1083 Native local Vector3/Hurt-contract continuation: compiler input @1109 replaces @1099 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1083."
     },
     {
       "from": "@1105",
+      "to": "@1079",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1095 now; licensed under the existing pin @1079 Native local Vector3/Hurt-contract continuation: compiler input @1105 replaces @1095 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1079."
+    },
+    {
+      "from": "@1107",
+      "to": "@1081",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1097 now; licensed under the existing pin @1081 Native local Vector3/Hurt-contract continuation: compiler input @1107 replaces @1097 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1081."
+    },
+    {
+      "from": "@1102",
+      "to": "@1076",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1092 now; licensed under the existing pin @1076 Native local Vector3/Hurt-contract continuation: compiler input @1102 replaces @1092 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1076."
+    },
+    {
+      "from": "@1104",
+      "to": "@1078",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1094 now; licensed under the existing pin @1078 Native local Vector3/Hurt-contract continuation: compiler input @1104 replaces @1094 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1078."
+    },
+    {
+      "from": "@1115",
       "to": "@1073",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1105 now; licensed under the existing pin @1089"
+      "evidence": "Historical prior mapping note (retained verbatim; not a current input/canonical-name claim): compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1105 now; licensed under the existing pin @1089 Current measured mapping: @1115 -> @1073 at unchanged allocated coordinates and with complete typed edges preserved; see native Vector3 whole-object proof."
     },
     {
-      "from": "@1103",
+      "from": "@1113",
       "to": "@1071",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1103 now; licensed under the existing pin @1087"
+      "evidence": "Historical prior mapping note (retained verbatim; not a current input/canonical-name claim): compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1103 now; licensed under the existing pin @1087 Current measured mapping: @1113 -> @1071 at unchanged allocated coordinates and with complete typed edges preserved; see native Vector3 whole-object proof."
     },
     {
-      "from": "@1101",
+      "from": "@1111",
       "to": "@1085",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1101 now; licensed under the existing pin @1085"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1101 now; licensed under the existing pin @1085 Native local Vector3/Hurt-contract continuation: compiler input @1111 replaces @1101 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1085."
     },
     {
-      "from": "@1126",
+      "from": "@1136",
       "to": "@1110",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1126 now; licensed under the existing pin @1110"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1126 now; licensed under the existing pin @1110 Native local Vector3/Hurt-contract continuation: compiler input @1136 replaces @1126 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1110."
     },
     {
-      "from": "@1086",
+      "from": "@1096",
       "to": "@1070",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1086 now; licensed under the existing pin @1070"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1086 now; licensed under the existing pin @1070 Native local Vector3/Hurt-contract continuation: compiler input @1096 replaces @1086 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1070."
     },
     {
-      "from": "@1088",
+      "from": "@1098",
       "to": "@1072",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1088 now; licensed under the existing pin @1072"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1088 now; licensed under the existing pin @1072 Native local Vector3/Hurt-contract continuation: compiler input @1098 replaces @1088 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1072."
     },
     {
-      "from": "@1090",
+      "from": "@1100",
       "to": "@1074",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1090 now; licensed under the existing pin @1074"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1090 now; licensed under the existing pin @1074 Native local Vector3/Hurt-contract continuation: compiler input @1100 replaces @1090 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1074."
+    },
+    {
+      "from": "@1097",
+      "to": "@1087",
+      "evidence": "Native local Vector3/Hurt-contract continuation: input @1097 replaces @1087 at the same 12-byte NOBITS registration node, with unchanged coordinates, symbol attributes and all incoming/outgoing typed edges; preserves existing canonical name and binding rewrite."
+    },
+    {
+      "from": "@1099",
+      "to": "@1089",
+      "evidence": "Native local Vector3/Hurt-contract continuation: input @1099 replaces @1089 at the same 12-byte NOBITS registration node, with unchanged coordinates, symbol attributes and all incoming/outgoing typed edges; preserves existing canonical name and binding rewrite."
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daGmch_c.cpp",
+      "symbol": "__sinit_d_a_gmch.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daGmch_c.cpp",
+      "symbol": ".p__sinit_d_a_gmch.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1361,7 +1371,7 @@
       "source": "0x02128830",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daGmch_c.cpp",
+      "symbol": "__sinit_d_a_gmch.cpp",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x021284f0"
@@ -1721,7 +1731,7 @@
       "source": "0x0212873c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov081_02128ee4",
+      "symbol": "gGamaguchiWalkEndAnimationFile",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02128ee4"
@@ -1741,7 +1751,7 @@
       "source": "0x02128748",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov081_02128ecc",
+      "symbol": "gGamaguchiJumpAnimationFile",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02128ecc"
@@ -1761,7 +1771,7 @@
       "source": "0x02128754",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov081_02128ec4",
+      "symbol": "gGamaguchiJumpEndAnimationFile",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02128ec4"

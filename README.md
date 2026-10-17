@@ -100,17 +100,17 @@ fair to use, but all source is written from scratch against your own ROM.
 
 <!-- progress:start -->
 ```
-Functions  ██████████████████████████████  100.0%   11,387 / 11,389
-Code size  ██████████████████████████████  99.8%   2,233,384 / 2,238,108 bytes
+Functions  ██████████████████████████████  100.0%   11,389 / 11,389
+Code size  ██████████████████████████████  100.0%   2,238,108 / 2,238,108 bytes
 ```
 <!-- progress:end -->
 
 <!-- tiers:start -->
 ```
-MATCHED    ██████████████████████████████  100.0%   11,387 / 11,389 functions
-           of which 115 are byte-exact assembly (hand-written in the original, not C)
-CONVERTED  █████████░░░░░░░░░░░░░░░░░░░░░  31.6%   3,601 / 11,386 functions
-LINKED     ████████████████████████████░░  93.5%   10,595 / 11,328 matched TUs
+MATCHED    ██████████████████████████████  100.0%   11,389 / 11,389 functions
+           of which 108 are byte-exact assembly (hand-written in the original, not C)
+CONVERTED  ████████████░░░░░░░░░░░░░░░░░░  39.8%   4,531 / 11,385 functions
+LINKED     █████████████████████████████░  96.2%   10,957 / 11,389 functions
 ```
 <!-- tiers:end -->
 
@@ -118,6 +118,8 @@ LINKED     ███████████████████████
 
 For an interactive version where you can hover any function for its name, address,
 size, and status, see the [progress treemap on GitHub Pages](https://tangosdev.github.io/sm64ds-decomp/).
+The [recovered TU treemap](https://tangosdev.github.io/sm64ds-decomp/tu-treemap.html)
+groups code by reconstructed translation unit, with links to each source file and TU manifest.
 
 The three bars measure different things:
 
@@ -126,8 +128,8 @@ The three bars measure different things:
 - **CONVERTED** means a person can read that source without the ROM open next to them:
   real C++ classes with their real names, bases and vtables instead of flat C full of
   offsets.
-- **LINKED** means the matched file is compiled straight into the PC port, replacing the
-  stand-in the port used before.
+- **LINKED** means the function's matched file is compiled straight into the PC port,
+  replacing the stand-in the port used before. Like the other two it counts functions.
 
 ## Where things stand
 

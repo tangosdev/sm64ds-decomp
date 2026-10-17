@@ -1,19 +1,19 @@
 //cpp
 /* ov006/dScMgJump2_c -- the second jump minigame, 30 functions
  * (.text 0x020eebe8..0x020efc0c), ending with the factory
- * dScMgJump2_c_classInit and the element constructor func_ov006_020efc08
+ * dScMgJump2_c_classInit and the element constructor Jump2Popup_ElemCtor
  * it registers.
  *
  * Functions run in REVERSE of ROM order (highest address first); do not
- * reorder. The legacy file for func_ov006_020ef5ac had
+ * reorder. The legacy file for State_Play had
  * `#pragma opt_propagation off`; it is not needed, and carried here it
  * would apply to every function in the file.
  *
  * leftovers:
- *   - func_ov006_020ef0d4, ..ef05c, ..eeff0, ..eef90, ..eef58 and ..ef2b8
+ *   - Jump2Popup_InitPool, ..ef05c, ..eeff0, ..eef90, ..eef58 and ..ef2b8
  *     stay free: none takes the object (they walk the element list globals
  *     or program the light registers), so a receiver exists only to be
- *     passed, not used. func_ov006_020eed64 and func_ov006_020efc08 are
+ *     passed, not used. Jump2Popup_ElemDtor and Jump2Popup_ElemCtor are
  *     the shared empty element destructor and constructor --
  *     dScMgTrampoline2_c's factory and array cleanup use them too -- and
  *     are registered through the C __cxa_vec_ctor boundary.
@@ -24,6 +24,13 @@
  *     (the board objects' TUs and the minigame base), not this TU's own.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_s_mg_jump2_AssetId {
+    ASSET_D_2D_MG_JUMP_NCL_BIN = 0x00d1,
+    ASSET_JUMP_BACK01_BMD = 0x0203,
+    ASSET_JUMP_BACK02_BMD = 0x0204
+};
+
 #include "dScMgJump2_c.h"
 #include "Model.h"
 #include "SharedFilePtr.h"
@@ -31,18 +38,18 @@
 #include "decl_common.h"
 #include "Particle__System.h"
 
-/* The list link at the head of each Elem. Its two methods link `this` into
- * and back out of the live list at data_ov006_021421c0. */
-struct Node {
-    struct Node* next;
-    void func_ov006_020eef40();   /* push */
-    void func_ov006_020eeef4();   /* remove */
+/* The list link at the head of each Jump2Popup. Its two methods link `this` into
+ * and back out of the live list at sJump2PopupList. */
+struct Jump2PopupLink {
+    struct Jump2PopupLink *next;
+    void Link();   /* push */
+    void Unlink();   /* remove */
 };
 
 /* The 0x24-byte entries of mArray3, read back from what the functions below
  * do with them. Local because nothing names the type yet. */
-struct Elem {
-    struct Elem *next;      /* 0x00 -- the live list */
+struct Jump2Popup {
+    struct Jump2Popup *next; /* 0x00 -- the live list */
     int   x, y;             /* 0x04 -- 20.12 position */
     int   targetX, targetY; /* 0x0c */
     int   speedX, speedY;   /* 0x14 */
@@ -51,9 +58,9 @@ struct Elem {
     short active;           /* 0x20 */
     short _22;
 
-    void func_ov006_020eee3c(int startX, int startY, int spriteId);  /* spawn */
-    void func_ov006_020eedc8();                                      /* update */
-    void func_ov006_020eed68();                                      /* draw   */
+    void Spawn(int startX, int startY, int spriteId);  /* spawn */
+    void Tick();                                      /* update */
+    void DrawNumber();                                      /* draw   */
 };
 
 /* Whole-matrix copies go through this so they stay one block move. */
@@ -73,7 +80,7 @@ typedef void (dScMgJump2_c::*dScMgJump2_cState)();
 struct G2 { int w[2]; };
 
 /* Vtable shim for InitResources' last call, a virtual dispatch through slot
- * 18 of this class's own table. Calling OnYoshiTryEat by name would compile
+ * 18 of this class's own table. Calling StartRound by name would compile
  * to a direct branch instead. */
 struct Base {
     virtual void m00();
@@ -109,16 +116,16 @@ struct Jump2ModelFile : SharedFilePtr {
     ~Jump2ModelFile();
 };
 
-extern Jump2ModelFile data_ov006_021421cc; /* model file 0x203 */
-extern Jump2ModelFile data_ov006_021421c4; /* model file 0x204 */
+extern Jump2ModelFile gOV006JumpBack01ModelFile; /* model file 0x203 */
+extern Jump2ModelFile sJump2Back02ModelFile;     /* model file 0x204 */
 
 extern "C" {
 extern void func_0203d630(int* p, int m);
-extern struct Node* data_ov006_021421c0;
-extern int data_ov006_021421bc;
-extern struct Elem *data_ov006_021421b0;
-extern void *data_ov006_021421b8;
-void func_ov004_020ad90c(void);
+extern struct Jump2PopupLink *sJump2PopupList;
+extern int sJump2PopupCount;
+extern struct Jump2Popup *sJump2Popups;
+extern void *sJump2BackFile;
+void Mg_CommitRecords(void);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
@@ -126,33 +133,33 @@ void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern int data_020a0e68;
 unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
 unsigned int a, unsigned int b, int c, int d, int e, const Vector3_16f *f);
-void func_ov006_020eef90(void);
-extern void* func_ov006_020c7300(void*);
-extern void* func_ov006_020c4060(void*);
-extern void func_ov004_020adb1c(int);
-extern void func_ov004_020b0a54(int);
-extern void func_ov006_020c42bc(void);
-extern void func_ov006_020c712c(void);
-extern int data_ov006_02140308;
-extern struct G2 data_ov006_0213cc74;
-extern struct G2 data_ov006_0213cc9c;
-extern void func_ov006_020c4148(void);
-extern void func_ov006_020c6f8c(int a);
-extern int data_ov006_02140304;
-extern int data_ov006_02140328;
-extern int data_ov006_02140428;
-extern struct G2 data_ov006_0213cc84;
-extern void func_ov006_020c7490(void);
-extern struct G2 data_ov006_0213cc8c;
-extern struct G2 data_ov006_0213cc94;
+void Jump2Popup_UpdateAll(void);
+extern void* Jump3D_AllIdle(void*);
+extern void* Heyho_AllIdle(void*);
+extern void Mg_SubmitScore(int);
+extern void Mg_SetSharedState(int);
+extern void Heyho_SeparateAll(void);
+extern void Jump3D_UpdateAll(void);
+extern int sJumpComboCount;
+extern struct G2 pmf_dScMgJump2_c_State_Idle;
+extern struct G2 pmf_dScMgJump2_c_State_End;
+extern void Heyho_SettleAll(void);
+extern void Jump3D_SetTuning(int a);
+extern int sHeyhoUnsettledCount;
+extern int sHeyhoCount;
+extern int sJump3DMariosLeft;
+extern struct G2 pmf_dScMgJump2_c_State_Play;
+extern void Jump3D_StartRoundLayout(void);
+extern struct G2 pmf_dScMgJump2_c_State_Result;
+extern struct G2 pmf_dScMgJump2_c_State_Intro;
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, int dst);
 extern void Camera_UpdateMatrices(void *cam);
-extern void func_ov006_020c7388(void);
-extern void func_ov006_020c40e8(void);
-extern int func_ov004_020b04c0(void);
-extern int func_ov006_020c4684(void *ptr, int n);
-extern int func_ov006_020c7574(void *base, int count);
+extern void Jump3D_SetLowGravity(void);
+extern void Heyho_ReactAll(void);
+extern int Mg_GetTopScreenYOffset(void);
+extern int Heyho_InitPool(void *ptr, int n);
+extern int Jump3D_InitPool(void *base, int count);
 extern u8 data_0209d45c;
 extern s16 data_02082614;
 }
@@ -172,15 +179,15 @@ void *_ZN5ModelC1Ev(void *p);
 extern char _ZTV14dScMgD3DBase_c[];
 dMgJump3DMario_c *_ZN16dMgJump3DMario_cD1Ev(dMgJump3DMario_c *object);
 dMgJump3DMario_c *_ZN16dMgJump3DMario_cC1Ev(dMgJump3DMario_c *object);
-int func_ov006_020c6f70(char *object);
+int Heyho_Construct(char *object);
 
-// @symbol func_ov006_020efc08
+// @symbol Jump2Popup_ElemCtor
 /* The empty constructor of mArray3's 0x24-byte elements, the partner of
- * the shared empty destructor func_ov006_020eed64. The factory below hands
+ * the shared empty destructor Jump2Popup_ElemDtor. The factory below hands
  * the pair to __cxa_vec_ctor; dScMgTrampoline2_c's factory reuses both.
  * Written above the factory because this TU emits .text in reverse source
  * order, and the ROM has it directly after the factory. */
-void func_ov006_020efc08(void *object)
+void Jump2Popup_ElemCtor(void *object)
 {
 }
 
@@ -209,31 +216,31 @@ void *dScMgJump2_c_classInit()
         _ZN8Particle10SysTrackerC1Ev(raw + 0x47e4);
         *(char **)raw = (char *)&_ZTV12dScMgJump2_c[2];
         __cxa_vec_ctor(raw + 0x500c, 3, 0xb8, (void (*)(void *))_ZN16dMgJump3DMario_cC1Ev, (void (*)(void *))_ZN16dMgJump3DMario_cD1Ev);
-        __cxa_vec_ctor(raw + 0x5234, 6, 0xf0, (void (*)(void *))func_ov006_020c6f70, (void (*)(void *))func_ov006_020c6f3c);
-        __cxa_vec_ctor(raw + 0x57d4, 0x10, 0x24, func_ov006_020efc08, func_ov006_020eed64);
+        __cxa_vec_ctor(raw + 0x5234, 6, 0xf0, (void (*)(void *))Heyho_Construct, (void (*)(void *))Heyho_Destruct);
+        __cxa_vec_ctor(raw + 0x57d4, 0x10, 0x24, Jump2Popup_ElemCtor, Jump2Popup_ElemDtor);
         _ZN5ModelC1Ev(raw + 0x5a14);
     }
     return raw;
 }
 }
 
-// @symbol _ZN12dScMgJump2_c13OnYoshiTryEatEi
+// @symbol _ZN12dScMgJump2_c10StartRoundEi
 /* Slot 18: resets the round and arms the start countdown. */
-void dScMgJump2_c::OnYoshiTryEat(int /* arg */)
+void dScMgJump2_c::StartRound(int /* arg */)
 {
-  func_ov006_020c72b4();
-  func_ov006_020c719c(0, 0);
-  data_ov006_02140328 = 3;
-  func_ov006_020c44b4(0, 0);
-  func_ov006_020eeff0();
-  func_ov006_020ef7f8();
+  Jump3D_DisableInput();
+  Jump3D_Arrange(0, 0);
+  sHeyhoCount = 3;
+  Heyho_SpawnAll(0, 0);
+  Jump2Popup_ClearAll();
+  BeginIntro();
 }
 
-// @symbol _ZN12dScMgJump2_c13OnTurnIntoEggEi
+// @symbol _ZN12dScMgJump2_c11CanEndStateEi
 /* Slot 19. */
-int dScMgJump2_c::OnTurnIntoEgg(int /* mode */)
+int dScMgJump2_c::CanEndState(int /* mode */)
 {
-    func_ov006_020c8a9c(0, 0);
+    Puff_ClearAll(0, 0);
     return 1;
 }
 
@@ -247,8 +254,8 @@ s32 dScMgJump2_c::InitResources()
     s32 fov;
     void *bmdFile;
 
-    tiles = LoadFile(data_ov006_0213cce0[GetGameLanguage()]);
-    palette = LoadFile(0xd1);
+    tiles = LoadFile(sJump2NcgByLanguage[GetGameLanguage()]);
+    palette = LoadFile(ASSET_D_2D_MG_JUMP_NCL_BIN);
     DecompressLZ16(tiles, 0x6400000);
     GX::LoadOBJPltt((const void *)palette, 0, 0x80);
     Deallocate((void *)tiles);
@@ -278,17 +285,17 @@ s32 dScMgJump2_c::InitResources()
     this->mCamera1Angle = 0x800;
     Camera_UpdateMatrices(base + 0x4728);
 
-    if (func_ov006_020c4684(mArray2, 6) == 0)
+    if (Heyho_InitPool(mArray2, 6) == 0)
         return 0;
 
-    func_ov006_020ef0d4((int)mArray3, 0x10);
+    Jump2Popup_InitPool((int)mArray3, 0x10);
 
-    data_ov006_02140314 = 1;
-    if (func_ov006_020c7574(mPlayers, 3) == 0)
+    sHeyhoScorePopups = 1;
+    if (Jump3D_InitPool(mPlayers, 3) == 0)
         return 0;
 
-    data_ov006_021421b8 = &data_ov006_021421c4;
-    bmdFile = Model::LoadFile(*(SharedFilePtr *)&data_ov006_021421c4);
+    sJump2BackFile = &sJump2Back02ModelFile;
+    bmdFile = Model::LoadFile(*(SharedFilePtr *)&sJump2Back02ModelFile);
 
     if (((Model *)mModel)->SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
@@ -296,187 +303,185 @@ s32 dScMgJump2_c::InitResources()
         return 0;
     }
 
-    func_ov004_020b04d0(0x10);
+    Mg_SetTopScreenYOffset(0x10);
     ((Base *)this)->m48(-1);
     return 1;
 }
 
 /* The state functions: five are the exec targets the PMF records at
- * data_ov006_0213cc74..9c point into (see the header's state-machine note);
+ * pmf_dScMgJump2_c_State_Idle..9c point into (see the header's state-machine note);
  * the other three are the transitions that install a record and arm
- * unk_5a74. unk_5a64 accumulates unk_5a68 >> 12 each tick and wraps at
+ * mStateTimer. mAnimPhase accumulates mAnimRate >> 12 each tick and wraps at
  * 0x1000.
  *
  * This one arms the countdown and installs the next state. */
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef7f8Ev
-void dScMgJump2_c::func_ov006_020ef7f8(){
-  unk_5a74 = 0x78;
-  unk_5a64 = 0;
-  unk_5a68 = 0x4000;
-  *(struct G2*)pad_5004 = data_ov006_0213cc94;
+// @symbol _ZN12dScMgJump2_c10BeginIntroEv
+void dScMgJump2_c::BeginIntro(){
+    mStateTimer = 0x78;
+    mAnimPhase = 0;
+    mAnimRate = 0x4000;
+    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Intro;
 }
 
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef794Ev
-void dScMgJump2_c::func_ov006_020ef794()
+// @symbol _ZN12dScMgJump2_c11State_IntroEv
+void dScMgJump2_c::State_Intro()
 {
-    s16 *countdown = &unk_5a74;
+    s16 *countdown = &mStateTimer;
     *countdown = *countdown - 1;
-    if (unk_5a74 == 0) {
+    if (mStateTimer == 0) {
         if (mPromptBlinkCount == 0) {
             mPromptEnabled = 1;
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        func_ov006_020c7490();
-        func_ov006_020ef768();
+        Jump3D_StartRoundLayout();
+        BeginPlay();
     }
-    func_ov006_020c42bc();
+    Heyho_SeparateAll();
 }
 
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef768Ev
-void dScMgJump2_c::func_ov006_020ef768()
+// @symbol _ZN12dScMgJump2_c9BeginPlayEv
+void dScMgJump2_c::BeginPlay()
 {
-    unk_5a74 = 0xf0;
-    *(struct G2 *)pad_5004 = data_ov006_0213cc84;
+    mStateTimer = 0xf0;
+    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Play;
 }
 
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef5acEv
-void dScMgJump2_c::func_ov006_020ef5ac()
+// @symbol _ZN12dScMgJump2_c10State_PlayEv
+void dScMgJump2_c::State_Play()
 {
     s16 done;
-    int prevScore = data_ov006_02140308;
-    int *acc = &unk_5a64;
+    int prevScore = sJumpComboCount;
+    int *acc = &mAnimPhase;
     int mode;
 
-    *acc += unk_5a68 >> 12;
-    if (unk_5a64 > 0x1000)
+    *acc += mAnimRate >> 12;
+    if (mAnimPhase > 0x1000)
         *acc -= 0x1000;
 
     done = 0;
-    mode = data_ov006_02140304;
+    mode = sHeyhoUnsettledCount;
     switch (mode) {
     case 0:
         done = 1;
         break;
     case 1:
         {
-            int rc = ApproachLinear2(unk_5a74, done, 2);
-            if (rc)
-                done = 1;
+        int rc = ApproachLinear2(mStateTimer, done, 2);
+        if (rc)
+            done = 1;
         }
         break;
     default:
         {
-            int rc = ApproachLinear2(unk_5a74, done, 1);
-            if (rc)
-                done = 1;
+        int rc = ApproachLinear2(mStateTimer, done, 1);
+        if (rc)
+            done = 1;
         }
         break;
     }
 
-    if (done != 0 && data_ov006_02140304 < data_ov006_02140328) {
+    if (done != 0 && sHeyhoUnsettledCount < sHeyhoCount) {
         int value;
         s16 countdown;
-        func_ov006_020c4148();
-        unk_5a74 = 0xf0 - data_ov006_02140308 * 6;
-        countdown = unk_5a74;
+        Heyho_SettleAll();
+        mStateTimer = 0xf0 - sJumpComboCount * 6;
+        countdown = mStateTimer;
         if (countdown < 0x3c)
             countdown = 0x3c;
-        unk_5a74 = countdown;
-        value = (data_ov006_02140308 << 4) + 0x1600;
+        mStateTimer = countdown;
+        value = (sJumpComboCount << 4) + 0x1600;
         if (value > 0x2200)
             value = 0x2200;
-        func_ov006_020c6f8c(value);
+        Jump3D_SetTuning(value);
     }
 
-    func_ov006_020c42bc();
-    func_ov006_020c712c();
+    Heyho_SeparateAll();
+    Jump3D_UpdateAll();
 
-    if (prevScore != data_ov006_02140308) {
-        switch (data_ov006_02140308) {
+    if (prevScore != sJumpComboCount) {
+        switch (sJumpComboCount) {
         case 3:
-            data_ov006_02140328 = 4;
+            sHeyhoCount = 4;
             mPromptEnabled = 0;
             break;
         case 0xa:
-            data_ov006_02140328 = 5;
+            sHeyhoCount = 5;
             break;
         case 0x14:
-            data_ov006_02140328 = 6;
+            sHeyhoCount = 6;
             break;
         }
-        func_ov004_020adb1c(data_ov006_02140308);
+        Mg_SubmitScore(sJumpComboCount);
     }
 
-    if (data_ov006_02140428 != 0)
+    if (sJump3DMariosLeft != 0)
         return;
-    func_ov006_020ef580();
+    BeginEnd();
 }
 
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef580Ev
-void dScMgJump2_c::func_ov006_020ef580()
+// @symbol _ZN12dScMgJump2_c8BeginEndEv
+void dScMgJump2_c::BeginEnd()
 {
-    unk_5a74 = 0x20;
-    *(struct G2 *)pad_5004 = data_ov006_0213cc9c;
+    mStateTimer = 0x20;
+    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_End;
 }
 
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef4ecEv
-void dScMgJump2_c::func_ov006_020ef4ec()
+// @symbol _ZN12dScMgJump2_c9State_EndEv
+void dScMgJump2_c::State_End()
 {
-  int *acc = &unk_5a64;
-  *acc += unk_5a68 >> 12;
-  if (unk_5a64 > 0x1000)
-  {
-    *acc -= 0x1000;
+    int *acc = &mAnimPhase;
+    *acc += mAnimRate >> 12;
+    if (mAnimPhase > 0x1000) {
+        *acc -= 0x1000;
+    }
+  Heyho_SeparateAll();
+  Jump3D_UpdateAll();
+  if (ApproachLinear2(mStateTimer, 0, 1) == 0) {
+      return;
   }
-  func_ov006_020c42bc();
-  func_ov006_020c712c();
-  if (ApproachLinear2(unk_5a74, 0, 1) == 0)
-  {
-    return;
-  }
-  func_ov006_020c7388();
-  func_ov006_020c40e8();
-  *(struct G2 *)pad_5004 = data_ov006_0213cc8c;
+  Jump3D_SetLowGravity();
+  Heyho_ReactAll();
+  *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Result;
 }
 
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef480Ev
-void dScMgJump2_c::func_ov006_020ef480(){
-    void *obj = func_ov006_020c7300(this);
+// @symbol _ZN12dScMgJump2_c12State_ResultEv
+void dScMgJump2_c::State_Result(){
+    void *obj = Jump3D_AllIdle(this);
     if(obj){
-        obj = func_ov006_020c4060(obj);
+        obj = Heyho_AllIdle(obj);
         if(obj){
-            func_ov004_020adb1c(data_ov006_02140308);
-            func_ov004_020b0a54(0x12);
+            Mg_SubmitScore(sJumpComboCount);
+            Mg_SetSharedState(MG_STATE_GAME_OVER);
             mPromptEnabled = 0;
-            *(struct G2 *)pad_5004 = data_ov006_0213cc74;
+            *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Idle;
         }
     }
-    func_ov006_020c42bc();
-    func_ov006_020c712c();
+    Heyho_SeparateAll();
+    Jump3D_UpdateAll();
 }
 
-// @symbol _ZN12dScMgJump2_c19func_ov006_020ef47cEv
-void dScMgJump2_c::func_ov006_020ef47c()
+// @symbol _ZN12dScMgJump2_c10State_IdleEv
+void dScMgJump2_c::State_Idle()
 {
 }
 
 // @symbol _ZN12dScMgJump2_c8BehaviorEv
-/* Slot 6. unk_5a6c is a particle system's unique ID, handed to
+/* Slot 6. mParticleId is a particle system's unique ID, handed to
  * NewUnkCallback818 and back each frame. The object FromUniqueID returns is
  * untyped, so its fields at 0x50 and 0x58 stay raw. Both Particle::System
  * calls keep their mangled spellings: declaring the real Fix12<int>
  * parameters changes how the call passes them. */
 s32 dScMgJump2_c::Behavior()
 {
-    unk_5a6c = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-        unk_5a6c, 0xf0, 0x400000, 0x800000, -0x480000, 0);
-    void *system = Particle::System::FromUniqueID(unk_5a6c);
+    mParticleId = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+        mParticleId, 0xf0, 0x400000, 0x800000, -0x480000, 0);
+    void *system = Particle::System::FromUniqueID(mParticleId);
     if (system != 0) {
         *(int *)((char *)system + 0x50) = 0x4000;
         *(unsigned char *)((char *)system + 0x58) = 0x2c;
     }
-    func_ov006_020eef90();
+    Jump2Popup_UpdateAll();
     {
         dScMgJump2_cState *pp = (dScMgJump2_cState *)pad_5004;
         (this->**pp)();
@@ -487,7 +492,7 @@ s32 dScMgJump2_c::Behavior()
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_0203cd80(int* m, int x);
 
-void func_ov006_020ef2b8(void) {
+void Jump2_SetLights(void) {
     int light0[3];
     int light1[3];
     *(volatile int*)0x40004cc = 0x7fff;
@@ -528,37 +533,38 @@ s32 dScMgJump2_c::Render()
     int x;
     int i;
 
-    func_ov004_020b1a5c(data_ov006_02140308, 4);
-    func_ov006_020eef58();
-    func_ov006_020ef2b8();
+    Mg_DrawTopRightCounter(sJumpComboCount, 4);
+    Jump2Popup_DrawAll();
+    Jump2_SetLights();
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
     *(struct M48 *)&((Model *)mModel)->mat4x3 = *(struct M48 *)&data_020a0e68;
 
-    scale = *(struct S3 *)&data_ov006_0213ccb0;
+    scale = *(struct S3 *)&sJump2RenderScale;
 
     {
         int *obj = (int *)(mModel + 8);
         anim = (void *)obj[1];
         func_02045e44((void *)obj, 1, 0);
     }
-    *(int *)((char *)anim + 0x18) = unk_5a64;
+    *(int *)((char *)anim + 0x18) = mAnimPhase;
     {
         Model *model = (Model *)mModel;
         model->Render((Vector3 *)&scale);
     }
 
-    func_ov006_020c70d0();
-    func_ov006_020c425c();
+    Jump3D_DrawAll();
+    Heyho_DrawAll();
 
-    if (unk_4664 == 1) {
+    if (mDrawSubScreen == 1) {
         x = 0x6e;
-        count = data_ov006_02140428;
+        count = sJump3DMariosLeft;
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)data_ov006_0213cccc[idx][1], (void *)x, 0xc, (void *)0);
+                DrawOamSprite((void *)sJump2TextSpritesByLanguage[idx][1], (void *)x, 0xc,
+                              (void *)0);
             } else {
-                RenderOamMainScreen(data_ov006_02134cf8, x, 0xc, -1, -1);
+                RenderOamMainScreen(sJumpLifeIconSprite, x, 0xc, -1, -1);
             }
             x += 0x12;
         }
@@ -568,31 +574,31 @@ s32 dScMgJump2_c::Render()
 }
 
 // @symbol _ZN12dScMgJump2_c16CleanupResourcesEv
-/* Slot 3. data_ov006_021421b8 points at the model's file handle; it is
+/* Slot 3. sJump2BackFile points at the model's file handle; it is
  * released and cleared. */
 s32 dScMgJump2_c::CleanupResources()
 {
-    ((SharedFilePtr *)data_ov006_021421b8)->Release();
-    data_ov006_021421b8 = 0;
-    func_ov004_020ad90c();
+    ((SharedFilePtr *)sJump2BackFile)->Release();
+    sJump2BackFile = 0;
+    Mg_CommitRecords();
     return 1;
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef0d4(int table, int count){
-  data_ov006_021421b0 = (struct Elem *)table;
-  data_ov006_021421bc = count;
-  data_ov006_021421b4 = 0;
+void Jump2Popup_InitPool(int table, int count){
+    sJump2Popups = (struct Jump2Popup *)table;
+    sJump2PopupCount = count;
+    data_ov006_021421b4 = 0;
 }
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef05c(int x, int y, int sprite)
+void Jump2Popup_Spawn(int x, int y, int sprite)
 {
     int i;
-    for (i = data_ov006_021421bc - 1; i >= 0; i--) {
-        if (data_ov006_021421b0[i].active == 0) {
-            data_ov006_021421b0[i].func_ov006_020eee3c(x, y, sprite);
+    for (i = sJump2PopupCount - 1; i >= 0; i--) {
+        if (sJump2Popups[i].active == 0) {
+            sJump2Popups[i].Spawn(x, y, sprite);
             return;
         }
     }
@@ -600,55 +606,55 @@ void func_ov006_020ef05c(int x, int y, int sprite)
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eeff0(void){
+void Jump2Popup_ClearAll(void){
     int i;
-    for(i=0;i<data_ov006_021421bc;i++){
-        data_ov006_021421b0[i].active = 0;
+    for (i = 0; i < sJump2PopupCount; i++) {
+        sJump2Popups[i].active = 0;
     }
-    data_ov006_021421c0=0;
+    sJump2PopupList = 0;
 }
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eef90(void)
+void Jump2Popup_UpdateAll(void)
 {
     int i = 0;
-    if (i < data_ov006_021421bc) {
+    if (i < sJump2PopupCount) {
         int offset = 0;
         do {
-            ((Elem *)((char *)data_ov006_021421b0 + offset))->func_ov006_020eedc8();
+            ((Jump2Popup *)((char *)sJump2Popups + offset))->Tick();
             i++;
             offset += 0x24;
-        } while (i < data_ov006_021421bc);
+        } while (i < sJump2PopupCount);
     }
 }
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eef58(void) {
-    void *node = data_ov006_021421c0;
+void Jump2Popup_DrawAll(void) {
+    void *node = sJump2PopupList;
     if (node == 0) return;
     do {
-        ((Elem *)node)->func_ov006_020eed68();
+        ((Jump2Popup *)node)->DrawNumber();
         node = *(void **)node;
     } while (node != 0);
 }
 }
 
-// @symbol _ZN4Node19func_ov006_020eef40Ev
-void Node::func_ov006_020eef40(){
-  *(void**)this = data_ov006_021421c0;
-  data_ov006_021421c0 = this;
+// @symbol _ZN14Jump2PopupLink4LinkEv
+void Jump2PopupLink::Link() {
+    *(void **)this = sJump2PopupList;
+    sJump2PopupList = this;
 }
 
-// @symbol _ZN4Node19func_ov006_020eeef4Ev
-void Node::func_ov006_020eeef4() {
-    struct Node* prev = data_ov006_021421c0;
+// @symbol _ZN14Jump2PopupLink6UnlinkEv
+void Jump2PopupLink::Unlink() {
+    struct Jump2PopupLink *prev = sJump2PopupList;
     if (prev == this) {
-        data_ov006_021421c0 = this->next;
+        sJump2PopupList = this->next;
         return;
     }
-    struct Node* cur = prev->next;
+    struct Jump2PopupLink *cur = prev->next;
     while (cur) {
         if (cur == this) {
             prev->next = this->next;
@@ -659,9 +665,8 @@ void Node::func_ov006_020eeef4() {
     }
 }
 
-// @symbol _ZN4Elem19func_ov006_020eee3cEiii
-void Elem::func_ov006_020eee3c(int startX, int startY, int spriteId)
-{
+// @symbol _ZN10Jump2Popup5SpawnEiii
+void Jump2Popup::Spawn(int startX, int startY, int spriteId) {
     x = startX;
     y = startY;
     speedX = 0;
@@ -669,27 +674,27 @@ void Elem::func_ov006_020eee3c(int startX, int startY, int spriteId)
     targetX = startX;
     targetY = startY - 0x40000;
     if (targetY < 0x8000) {
-        int limit = func_ov004_020b04c0() << 12;
+        int limit = Mg_GetTopScreenYOffset() << 12;
         if (targetY > -limit) {
             targetY = 0x8000;
             goto done;
         }
     }
-    if (targetY >= -0xb8000 - (func_ov004_020b04c0() << 12))
+    if (targetY >= -0xb8000 - (Mg_GetTopScreenYOffset() << 12))
         goto done;
-    targetY = -0xb8000 - (func_ov004_020b04c0() << 12);
+    targetY = -0xb8000 - (Mg_GetTopScreenYOffset() << 12);
 done:
     life = 0x80;
     active = 1;
     sprite = (short)spriteId;
-    ((Node *)this)->func_ov006_020eef40();
+    ((Jump2PopupLink *)this)->Link();
 }
 
-// @symbol _ZN4Elem19func_ov006_020eedc8Ev
-void Elem::func_ov006_020eedc8() {
+// @symbol _ZN10Jump2Popup4TickEv
+void Jump2Popup::Tick() {
     if (active == 0) return;
     if (ApproachLinear2(life, 0, 1) != 0) {
-        ((Node *)this)->func_ov006_020eeef4();
+        ((Jump2PopupLink *)this)->Unlink();
         active = 0;
     }
     ApproachLinear(x, targetX, speedX);
@@ -697,16 +702,15 @@ void Elem::func_ov006_020eedc8() {
     func_0203d630(&speedX, 0xf00);
 }
 
-// @symbol _ZN4Elem19func_ov006_020eed68Ev
-void Elem::func_ov006_020eed68()
-{
+// @symbol _ZN10Jump2Popup10DrawNumberEv
+void Jump2Popup::DrawNumber() {
     if (active == 0) return;
-    func_ov004_020b2444(x >> 12, y >> 12,
+    Mg_DrawBigNumber(x >> 12, y >> 12,
                         sprite, -1, -1, 0, data_ov006_021421b4);
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eed64(void *object)
+void Jump2Popup_ElemDtor(void *object)
 {
 }
 }
@@ -721,5 +725,5 @@ void func_ov006_020eed64(void *object)
 /* Static-init globals (was the handwritten __sinit_ov006_02130f00 shard).
  * Definition order is the retail initializer's construction order: the
  * 0x203 model handle, then the 0x204 model handle. */
-Jump2ModelFile data_ov006_021421cc(0x203);
-Jump2ModelFile data_ov006_021421c4(0x204);
+Jump2ModelFile gOV006JumpBack01ModelFile(ASSET_JUMP_BACK01_BMD);
+Jump2ModelFile sJump2Back02ModelFile(ASSET_JUMP_BACK02_BMD);

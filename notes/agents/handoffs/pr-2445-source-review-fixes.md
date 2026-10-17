@@ -138,7 +138,7 @@ failure did not discard either set of findings.
   identity with the adopted PR: this rework intentionally changes C++ source.
 - **SNM-03 fixed in source and manifest.** The descriptor halfwords at +0x04 and
   +0x06 are behavior/render priorities, as read by `fBase_c::fBase_c()` in
-  `src/actors/ActorBase.cpp`. `dActor_c::dActor_c()` in
+  `src/runtime/actor/ActorBase.cpp`. `dActor_c::dActor_c()` in
   `src/_ZN8dActor_cC2Ev.cpp` reads flags at +0x08 and sends words at
   +0x0c/+0x10/+0x14/+0x18 to SetRanges as clip offset Y, clip radius, clip
   distance and far distance. The BIG_SNOWMAN_BODY registry entry corroborates
@@ -263,7 +263,7 @@ manifest copy. No source changed after these gates began.
   exact**. This builds the final 16,777,216-byte production ROM, not only a stock
   control or a `--no-rom` module result. SHA256:
   `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`.
-- `python tools/romdata_check.py --files src/actors/daBgSnmBdy_c.cpp --json
+- `python tools/romdata_check.py --files src/game/actors/d_a_bg_snm_bdy.cpp --json
   <class-romdata.json>`: exit 0, 6 VERIFIED symbols
   (196 bytes), 4 PARTIAL records
   (36 equal bytes), zero DIFFERS/UNNAMED. Partial extents are

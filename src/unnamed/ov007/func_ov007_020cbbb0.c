@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef struct { int x, y, z; } Elem;
 typedef struct { char pad[8]; Elem ****rows; } Grid;
 
@@ -23,7 +24,7 @@ void *func_ov007_020cbbb0(int a0, int a1, int a2, int *a3)
     ctx = (Ctx *)func_ov007_020c3df4(0, 0x38);
     a0m1 = a0 - 1;
     d1 = (int)_ZN4cstd3divEii(a2, a0m1);
-    t = (int)(((long long)a2 * 0x16a1 + 0x800) >> 12);
+    t = FX_MUL(a2, 0x16a1);
     d2 = (int)_ZN4cstd3divEii(t / 2, a0m1);
     {
         int n = a0 - 1;

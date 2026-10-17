@@ -116,7 +116,7 @@ void f(void *t) {
 
 
 def test_a_qualified_call_on_another_class_is_left_alone():
-    """src/engine/view/dCamera_c.cpp: three `OAM::Render(..)` and one `View::Render()`."""
+    """src/engine/view/d_camera.cpp: three `OAM::Render(..)` and one `View::Render()`."""
     src = """\
 struct OAM { static void Render(bool, int); };
 struct View { int Render(); };
@@ -169,7 +169,7 @@ def test_a_call_that_never_matched_still_stops_the_file():
 
 # ------------------------------------------------------- the implicit-`this` shape
 
-# Player::St_Land_Init (src/actors/Player.cpp) in miniature: the body IS a Player member, and
+# Player::St_Land_Init (src/game/player/Player.cpp) in miniature: the body IS a Player member, and
 # calls its sibling with no receiver at all.
 IMPLICIT = """\
 struct Player {

@@ -19,7 +19,7 @@ struct dFdBrightness_c;
 
 /* The actor heap and its deallocator, for the inline operator delete below.
    Spelt exactly as include/decl_common.h spells it -- see the note in dActor_c.h. */
-extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
 extern "C" void *data_020a0eac;
 
 struct dScene_c : dBase_c {
@@ -40,7 +40,7 @@ struct dScene_c : dBase_c {
        base, and dScene_c's immediate base is dBase_c, which has none. This
        copy is also what all ten direct subclasses find as THEIR immediate
        base, so it unlocks their D0s too. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
 
     /* --- overrides, in _ZTV8dScene_c order. Signatures must match fBase_c's
            declarations exactly or these become new slots instead of overrides. --- */

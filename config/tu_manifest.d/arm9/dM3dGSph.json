@@ -1,8 +1,8 @@
 {
   "id": "arm9/dM3dGSph",
   "module": "arm9",
-  "source": "src/engine/collision/dM3dGSph.cpp",
-  "promoted_source": "src/engine/collision/dM3dGSph.cpp",
+  "source": "src/engine/collision/d_m3d_g_sph.cpp",
+  "promoted_source": "src/engine/collision/d_m3d_g_sph.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

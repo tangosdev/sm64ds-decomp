@@ -6,7 +6,7 @@ This handoff describes this commit; the queue records any published immutable ou
 - Task/session: `minigame-single3dbase-readable-0922` / `codex-single3d-readable-0922`.
 - Worktree/branch: `C:/tmp/sm64ds-mg-single3dread0922`, `cleanup/minigame-single3dbase-readable-0922`.
 - Source/workflow base: `d033c646262e878ce234bafd37d6b5b3abf40179`.
-- Scope: `src/minigames/d_s_mg_single3_d_base.cpp` and this handoff; nine functions in ov006 `[0x0210a4b0,0x0210a8c0)` (1,040 bytes).
+- Scope: `src/minigames/d_s_mg_single3d_base.cpp` and this handoff; nine functions in ov006 `[0x0210a4b0,0x0210a8c0)` (1,040 bytes).
 - Status: producer candidate with local proof complete; independent source/byte review remains required. No source branch push, PR or merge is claimed.
 
 ## Changes
@@ -29,7 +29,7 @@ The seven explicit bodies and compiler-owned D1/D0 pair keep their source/emissi
 
 The unchanged base and final candidate were compiled with `match.compile_c`, `build_pin.flags_for` and pinned 2004/b56. Their complete raw objects are identical: **9,272 bytes**, SHA256 `d8c2029388fcd6a9d500ad77ec6745ec535704c2299ebf814dd9822d7a76e59b`. This covers symbols, metadata and relocations, not only masked function bytes. Private baseline/final snapshots and reports are under `build/single3d-readable/`.
 
-- `prepush_linkcheck.py --files src/minigames/d_s_mg_single3_d_base.cpp`: **9/9 VERIFIED**, zero warnings, blind relocations or differences.
+- `prepush_linkcheck.py --files src/minigames/d_s_mg_single3d_base.cpp`: **9/9 VERIFIED**, zero warnings, blind relocations or differences.
 - `romdata_check.py --files ...`: **6 VERIFIED / 200 bytes**, **5 PARTIAL / 56 compared bytes**, zero DIFFERS or UNNAMED. Partial inherited type-name coverage remains unchanged.
 - `check_decl_agreement.py --changed d033c646262e878ce234bafd37d6b5b3abf40179`: no new disagreement; 67 scoped banked rows remain.
 - `check_tubuild_conflicts.py ov006/dScMgSingle3DBase_c`: all records agree, no conflict notes or markers.

@@ -4,11 +4,11 @@
     .ctor       start:0x0211cae0 end:0x0211cb08 kind:rodata align:4
     .data       start:0x0211cb20 end:0x0211d600 kind:data align:32
     .bss        start:0x0211d600 end:0x0211da00 kind:bss align:32
-src/actors/daYurei_Mucho_c.cpp:
+src/game/actors/d_a_yurei_mucho.cpp:
     complete
     .text start:0x02115ee0 end:0x02116f98
 
-src/actors/daBasabasa_c.cpp:
+src/game/actors/d_a_basabasa.cpp:
     complete
     .text start:0x02116f98 end:0x02117f40
     .init start:0x0211c2a8 end:0x0211c440
@@ -16,7 +16,7 @@ src/actors/daBasabasa_c.cpp:
     .data start:0x0211cc20 end:0x0211cc60
     .bss start:0x0211d690 end:0x0211d720
 
-src/actors/daDossy_c.cpp:
+src/game/actors/d_a_dossy.cpp:
     complete
     .text start:0x02117f40 end:0x021196d8
     .init start:0x0211c440 end:0x0211c660
@@ -24,49 +24,49 @@ src/actors/daDossy_c.cpp:
     .data start:0x0211cd1c end:0x0211cd34
     .bss start:0x0211d720 end:0x0211d814
 
-src/actors/daObjCtRotateBlock_c.cpp:
+src/game/actors/d_a_obj_ct_rotate_block.cpp:
     complete
     .text start:0x021196d8 end:0x02119f3c
     .init start:0x0211c660 end:0x0211c76c
     .ctor start:0x0211caec end:0x0211caf0
     .bss start:0x0211d814 end:0x0211d88c
 
-src/actors/daObjCtMecha03_c.cpp:
+src/game/actors/d_a_obj_ct_mecha03.cpp:
     complete
     .text start:0x02119f3c end:0x0211a494
     .init start:0x0211c76c end:0x0211c7d8
     .ctor start:0x0211caf0 end:0x0211caf4
     .bss start:0x0211d88c end:0x0211d8b4
 
-src/actors/daObjCtMecha04_c.cpp:
+src/game/actors/d_a_obj_ct_mecha04.cpp:
     complete
     .text start:0x0211a494 end:0x0211ab60
     .init start:0x0211c7d8 end:0x0211c890
     .ctor start:0x0211caf4 end:0x0211caf8
     .bss start:0x0211d8b4 end:0x0211d904
 
-src/game/actors/daObjCtMecha05_c.cpp:
+src/game/actors/d_a_obj_ct_mecha05.cpp:
     complete
     .text start:0x0211ab60 end:0x0211b360
     .init start:0x0211c890 end:0x0211c8fc
     .ctor start:0x0211caf8 end:0x0211cafc
     .bss start:0x0211d904 end:0x0211d92c
 
-src/actors/daObjCtKaitendai_c.cpp:
+src/game/actors/d_a_obj_ct_kaitendai.cpp:
     complete
     .text start:0x0211b360 end:0x0211b7f0
     .init start:0x0211c8fc end:0x0211c9b8
     .ctor start:0x0211cafc end:0x0211cb00
     .bss start:0x0211d92c end:0x0211d97c
 
-src/actors/daObjCtMecha08_c.cpp:
+src/game/actors/d_a_obj_ct_mecha08.cpp:
     complete
     .text start:0x0211b7f0 end:0x0211bbdc
     .init start:0x0211c9b8 end:0x0211ca74
     .ctor start:0x0211cb00 end:0x0211cb04
     .bss start:0x0211d97c end:0x0211d9cc
 
-src/actors/daObjCtMecha09_c.cpp:
+src/game/actors/d_a_obj_ct_mecha09.cpp:
     complete
     .text start:0x0211bbdc end:0x0211c078
     .init start:0x0211ca74 end:0x0211cae0

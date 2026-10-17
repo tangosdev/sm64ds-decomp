@@ -1,10 +1,10 @@
 // Host globals and the synthetic ExpandingHeap vtable.
 //
-// THE VTABLE PROBLEM: the C-spelled ctor installs `&_ZTV13ExpandingHeap`
+// THE VTABLE PROBLEM: the C-spelled ctor installs `&_ZTVN5mHeap9ExpHeap_tE`
 // as the object's vptr -- the Itanium vtable symbol, slot array starting at
 // the symbol itself. C++ callers then dispatch through shadow-class casts
 // (`((Base*)this)->m(...)`), which MSVC compiles as a __thiscall through a
-// numbered slot. So the HAL provides _ZTV13ExpandingHeap as a real slot
+// numbered slot. So the HAL provides _ZTVN5mHeap9ExpHeap_tE as a real slot
 // array whose entries are __fastcall shims (ecx carries `this` exactly as
 // __thiscall passes it; the dummy edx parameter absorbs fastcall's second
 // register) forwarding to the real V-methods from src/.
@@ -26,7 +26,8 @@
 namespace Memory {
 void *Allocate(u32 size, int align, Heap *heap);
 }
-#pragma comment(linker, "/alternatename:?Allocate@Memory@@YAPAXIHPAUHeap@@@Z=?Allocate@Memory@@YAPAXIHPAVHeap@@@Z")
+/* No alias: `Heap' is now one type, struct mHeap::Heap_t, so the struct-vs-
+   class decoration split this used to bridge cannot arise. */
 
 extern "C" {
 u32 _ZN22ExpandingHeapAllocator14SizeofInternalEPv(void *ptr)
@@ -34,9 +35,9 @@ u32 _ZN22ExpandingHeapAllocator14SizeofInternalEPv(void *ptr)
 u32 _ZN22ExpandingHeapAllocator10MemoryLeftEv(
     ExpandingHeapAllocator *self)
 { return self->MemoryLeft(); }
-Heap *_ZN4Heap13SetupRootHeapEv()
+Heap *_ZN5mHeap6Heap_t13SetupRootHeapEv()
 { return Heap::SetupRootHeap(); }
-void *_ZN6Memory8AllocateEjiP4Heap(u32 size, int align, Heap *heap)
+void *_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(u32 size, int align, Heap *heap)
 { return Memory::Allocate(size, align, heap); }
 }
 
@@ -52,15 +53,16 @@ int data_02099d90;     /* heap bring-up state flag */
 
 // C references to Heap::Allocate/Deallocate -> the MSVC method definitions.
 extern "C" {
-void *_ZN4Heap8AllocateEji(void *self, u32 size, int align)
+void *_ZN5mHeap6Heap_t8AllocateEji(void *self, u32 size, int align)
 { return ((Heap *)self)->Allocate(size, align); }
-void _ZN4Heap10DeallocateEPv(void *self, void *p)
+void _ZN5mHeap6Heap_t10DeallocateEPv(void *self, void *p)
 { ((Heap *)self)->Deallocate(p); }
 }
 
 // Memory::defaultHeapPtr is data_020a0ea0 by its address-name (data alias).
-#pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAVHeap@@A=_data_020a0ea0")
-#pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAUHeap@@A=_data_020a0ea0")
+// MSVC writes a variable's type into its decorated name, so this spelling
+// follows the class: `Heap' is a typedef for mHeap::Heap_t (include/Heap.h).
+#pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAUHeap_t@mHeap@@A=_data_020a0ea0")
 
 // Crash(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
 // the C++-linkage references alias onto the same definition.
@@ -79,7 +81,7 @@ extern "C" void Crash(void)
 
 // Heap::Allocate(u32): the one-argument overload the allocator veneer path
 // uses (func_0203cc0c). Align 4, same as Memory::Allocate(u32)'s default.
-extern "C" void *_ZN4Heap8AllocateEj(void *self, u32 size)
+extern "C" void *_ZN5mHeap6Heap_t8AllocateEj(void *self, u32 size)
 {
     return (void *)(size_t)((Heap *)self)->Allocate(size, 4);
 }
@@ -102,7 +104,7 @@ static u32 __fastcall slot_memory_left(void *self, void *)
 TRAP(0) TRAP(1) TRAP(4) TRAP(5) TRAP(6) TRAP(7)
 TRAP(9) TRAP(10) TRAP(12) TRAP(13) TRAP(14)
 
-extern "C" void *_ZTV13ExpandingHeap[15] = {
+extern "C" void *_ZTVN5mHeap9ExpHeap_tE[15] = {
     (void *)slot_trap0,        /*  0: deleting destructor */
     (void *)slot_trap1,        /*  1: VDestroy */
     (void *)slot_alloc,        /*  2: VAllocate */
@@ -120,53 +122,24 @@ extern "C" void *_ZTV13ExpandingHeap[15] = {
     (void *)slot_trap14,       /* 14: VResizeToFit */
 };
 
-// ---- ExpandingHeap's constructor, under its Itanium spelling ---------------
-//
-// src/engine/heap/Heap.cpp's CreateRootHeap and CreateExpandingHeap call
-// `_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator' as an extern "C"
-// function, for the reason hal/heap_globals.cpp's constructor-bridge block gives:
-// C1 is an Itanium ABI variant tag and MSVC has no syntax that emits or references
-// one, so the only way to satisfy that string is to write a function with it.
-//
-// IT IS HERE AND NOT NEXT TO THE OTHER TWO because heap_globals.cpp is also linked
-// by smoke_heap, whose slice is the allocator layer alone. The body has to name
-// ExpandingHeap's constructor, and smoke_heap does not compile it -- putting this
-// there would trade two of smoke_heap's unresolved symbols for a new one.
-//
-// The placement new also installs the MSVC vptr, which is what
-// src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.cpp already does when
-// MSVC compiles it; this bridge does not change which table an object carries. The
-// synthetic _ZTV13ExpandingHeap above serves the C-spelled callers, and the note at
-// the head of this file covers the slot numbering the two orders disagree on.
-#include <new>
-
-extern "C" ExpandingHeap *_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator(
-    void *self, void *start, u32 size, Heap *root, ExpandingHeapAllocator *allocator)
-{
-    return ::new (self) ExpandingHeap(start, size, root, allocator);
-}
-
-// ---- SolidHeap's constructor, under its Itanium spelling -------------------
-//
-// Same seam as above, for the other factory src/engine/heap/Heap.cpp's
-// CreateSolidHeap calls: `_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator'.
-// Here (not in heap_globals.cpp) for the same smoke_heap reason: the body
-// names SolidHeap's constructor, which only smoke_roots compiles -- through
-// src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.cpp in slice_gate3a.txt.
-#include "SolidHeap.h"
-
-extern "C" SolidHeap *_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator(
-    void *self, void *start, u32 size, Heap *root, SolidHeapAllocator *allocator)
-{
-    return ::new (self) SolidHeap(start, size, root, allocator);
-}
-
 // ---- SolidHeapAllocator's constructor, under its Itanium spelling ----------
 //
-// Same seam once more: src/engine/heap/SolidHeapAllocator.cpp's
-// CreateSolidHeapAllocator factory calls `_ZN18SolidHeapAllocatorC1EPvj'.
-// The real constructor is compiled into smoke_roots with that same TU
+// src/engine/heap/SolidHeapAllocator.cpp's CreateSolidHeapAllocator factory
+// calls `_ZN18SolidHeapAllocatorC1EPvj' as an extern "C" function, for the
+// reason hal/heap_globals.cpp's constructor-bridge block gives: C1 is an
+// Itanium ABI variant tag and MSVC has no syntax that emits or references one,
+// so the only way to satisfy that string is to write a function with it. The
+// real constructor is compiled into smoke_roots with that same TU
 // (slice_gate3a.txt), so placement new resolves it there.
+//
+// IT IS HERE AND NOT IN heap_globals.cpp because heap_globals.cpp is also
+// linked by smoke_heap, whose slice is the allocator layer alone and does not
+// compile the constructor this body names.
+//
+// The heaps' own constructors needed the same bridge while Heap.cpp's
+// factories called them by their C1 names; they construct with placement new
+// now, which MSVC resolves to its own constructor symbol.
+#include <new>
 #include "SolidHeapAllocator.h"
 
 extern "C" SolidHeapAllocator *_ZN18SolidHeapAllocatorC1EPvj(

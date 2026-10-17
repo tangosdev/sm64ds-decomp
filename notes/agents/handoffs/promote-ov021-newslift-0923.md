@@ -23,7 +23,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ## What changed and why
 
 - Class, TU, symbol and module-qualified ROM scope: `daObjCvNewsLift_c` in [ov021](../../../config/arm9/overlays/ov021/symbols.txt). The promoted
-  TU `src/actors/daObjCvNewsLift_c.cpp` owns `.text 0x021111a0..0x021121e8`, 19 functions,
+  TU `src/game/actors/d_a_obj_cv_news_lift.cpp` owns `.text 0x021111a0..0x021121e8`, 19 functions,
   text-only route (no `.data` claim).
 - Reserved surfaces actually touched: the class header (renamed to
   `include/daObjCvNewsLift_c.h`), the [ov021 `delinks.txt`](../../../config/arm9/overlays/ov021/delinks.txt) and [ov021 `symbols.txt`](../../../config/arm9/overlays/ov021/symbols.txt), the class manifest
@@ -57,7 +57,7 @@ This document describes this commit. The queue records its immutable output SHA.
     `ands` comes from the two early returns in its tail.
   - Kept because measured: the `(u16)(s16)mWobblePhase` double cast, the volatile reads of
     [data_02092768](../../../config/arm9/symbols.txt) in the reset path, and the per-element pointer writes in `Behavior`. The
-    0x30-stepped `platform` walker in [func_ov021_0211129c](../../../src/actors/daObjCvNewsLift_c.cpp)(ROM Ordinal 2) stores through
+    0x30-stepped `platform` walker in [func_ov021_0211129c](../../../src/game/actors/d_a_obj_cv_news_lift.cpp)(ROM Ordinal 2) stores through
     `(char *)platform + 0x460`: `mPlatformMats[i]` misses by 8 words and a second pointer
     reallocates the loop.
   - The five collision callbacks are `void` and use a local `int isPlayer`. The one-argument,
@@ -73,8 +73,8 @@ This document describes this commit. The queue records its immutable output SHA.
 - Genuine methods; remaining free-function and ABI bridges: `InitResources`, `CleanupResources`,
   `Behavior`, `Render` and both destructors are real members. classInit is `new
   daObjCvNewsLift_c()`. Twelve helpers keep their unnamed `func_ov021_*` symbols: the eight
-  collision callbacks and setters from 0x02111ec4 to 0x02111fe4, [func_ov021_02112024](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c14OnMainMeshRideEP8dActor_c](../../../src/actors/daObjCvNewsLift_c.cpp)), 
-  [func_ov021_02112128](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c](../../../src/actors/daObjCvNewsLift_c.cpp)), [func_ov021_02111434](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c21UpdateModelTransformsEv](../../../src/actors/daObjCvNewsLift_c.cpp)) and [func_ov021_0211129c](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c20UpdateClsnTransformsEv](../../../src/actors/daObjCvNewsLift_c.cpp)). They take the class pointer explicitly. `InitResources` still calls
+  collision callbacks and setters from 0x02111ec4 to 0x02111fe4, [func_ov021_02112024](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c14OnMainMeshRideEP8dActor_c](../../../src/game/actors/d_a_obj_cv_news_lift.cpp)), 
+  [func_ov021_02112128](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c](../../../src/game/actors/d_a_obj_cv_news_lift.cpp)), [func_ov021_02111434](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c21UpdateModelTransformsEv](../../../src/game/actors/d_a_obj_cv_news_lift.cpp)) and [func_ov021_0211129c](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c20UpdateClsnTransformsEv](../../../src/game/actors/d_a_obj_cv_news_lift.cpp)). They take the class pointer explicitly. `InitResources` still calls
   the mangled `_ZN10dBgW_KcMbg7SetFile...` spelling (by-value `Fix12<int>`) and the unnamed
   `func_020393c4` and `func_020393d4`.
 - Recovered layout and fields; remaining shadow structs and raw offsets: the header is a real
@@ -119,7 +119,7 @@ files is compiled. The other gates were re-run on this commit's tree.
   already banked the same symbol and kind under a legacy shard this promotion deletes. The
   last, [data_ov021_02114a20](../../../config/arm9/overlays/ov021/symbols.txt), is the TU's `Vector3 []` against decl_common's `int []`
   placeholder, banked beside the existing `__sinit` entry. One re-keyed row lands on
-  `include/decl_common.h`: its `int` return for [func_ov021_02111434](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c21UpdateModelTransformsEv](../../../src/actors/daObjCvNewsLift_c.cpp)) now disagrees with the
+  `include/decl_common.h`: its `int` return for [func_ov021_02111434](../../../config/tu_manifest.d/ov021/daObjCvNewsLift_c.json)(current [_ZN17daObjCvNewsLift_c21UpdateModelTransformsEv](../../../src/game/actors/d_a_obj_cv_news_lift.cpp)) now disagrees with the
   corrected `void` definition. It is banked, not fixed, because the header is not reserved.
   The baseline change is 57 inserted lines and 0 removed; nothing was regenerated or re-sorted.
 - Port, path, reference and other static gates:

@@ -1,12 +1,12 @@
 //cpp
+#include "OAM.h"
+
 extern "C" {
 struct Matrix2x2;
 }
 typedef int Fix12i;
 
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int show, void* attr, int a, int b, int c, int d, Fix12i e, Fix12i f, int g, int h);
-extern "C" int _ZN3OAM9RenderSubEP7OamAttriiii(void* attr, int a, int b, int c, int d);
-extern "C" int _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int show, void* attr, int a, int b, int c, int d, Matrix2x2* m);
 
 extern short data_02082214[];
 
@@ -21,13 +21,13 @@ extern "C" void func_0202048c(char* a0, int a1, int a2)
         if (mode == 2) {
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, *(void**)(a0 + 4), a1, a2 + 0xc0,
                 *(signed char*)(a0 + 0x22), *(signed char*)(a0 + 0x23), 0x1000, 0x1000, 0, -1);
-            _ZN3OAM9RenderSubEP7OamAttriiii(*(void**)(a0 + 4), a1, a2,
-                *(signed char*)(a0 + 0x22), *(signed char*)(a0 + 0x23));
+            OAM::RenderSub((OamAttr *)*(void **)(a0 + 4), a1, a2, *(signed char *)(a0 + 0x22),
+                           *(signed char *)(a0 + 0x23));
             return;
         }
         if (mode == 1) {
-            _ZN3OAM9RenderSubEP7OamAttriiii(*(void**)(a0 + 4), a1, a2,
-                *(signed char*)(a0 + 0x22), *(signed char*)(a0 + 0x23));
+            OAM::RenderSub((OamAttr *)*(void **)(a0 + 4), a1, a2, *(signed char *)(a0 + 0x22),
+                           *(signed char *)(a0 + 0x23));
             return;
         }
         _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, *(void**)(a0 + 4), a1, a2,
@@ -58,17 +58,17 @@ extern "C" void func_0202048c(char* a0, int a1, int a2)
 
     int mode = *(int*)(a0 + 0x28);
     if (mode == 2) {
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, *(void**)(a0 + 4), a1, a2 + 0xc0,
-            *(signed char*)(a0 + 0x22), *(signed char*)(a0 + 0x23), (Matrix2x2*)m);
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, *(void**)(a0 + 4), a1, a2,
-            *(signed char*)(a0 + 0x22), *(signed char*)(a0 + 0x23), (Matrix2x2*)m);
+        OAM::Render(false, (OamAttr *)*(void **)(a0 + 4), a1, a2 + 0xc0,
+                    *(signed char *)(a0 + 0x22), *(signed char *)(a0 + 0x23), (Matrix2x2 *)m);
+        OAM::Render(true, (OamAttr *)*(void **)(a0 + 4), a1, a2, *(signed char *)(a0 + 0x22),
+                    *(signed char *)(a0 + 0x23), (Matrix2x2 *)m);
         return;
     }
     if (mode == 1) {
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, *(void**)(a0 + 4), a1, a2,
-            *(signed char*)(a0 + 0x22), *(signed char*)(a0 + 0x23), (Matrix2x2*)m);
+        OAM::Render(true, (OamAttr *)*(void **)(a0 + 4), a1, a2, *(signed char *)(a0 + 0x22),
+                    *(signed char *)(a0 + 0x23), (Matrix2x2 *)m);
         return;
     }
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, *(void**)(a0 + 4), a1, a2,
-        *(signed char*)(a0 + 0x22), *(signed char*)(a0 + 0x23), (Matrix2x2*)m);
+    OAM::Render(false, (OamAttr *)*(void **)(a0 + 4), a1, a2, *(signed char *)(a0 + 0x22),
+                *(signed char *)(a0 + 0x23), (Matrix2x2 *)m);
 }

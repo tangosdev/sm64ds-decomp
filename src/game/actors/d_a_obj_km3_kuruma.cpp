@@ -22,6 +22,12 @@
  *   data_ov047_*.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km3_kuruma_AssetId {
+    ASSET_KM3_KURUMA_BMD = 0x067f,
+    ASSET_KM3_KURUMA_KCL = 0x0680
+};
+
 #include "SharedFilePtr.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
@@ -70,24 +76,12 @@ extern "C" ResourceDescriptor data_ov047_02112408 = {
 };
 
 #include "daObjKm3_Kuruma_c.h"
+#include "SpawnInfo.h"
 
 extern "C" {
 s32 func_ov002_020b6958(daObjKuruma_c *self, ResourceDescriptor *descriptor);
 s32 func_ov002_020b68b0(daObjKuruma_c *self, ResourceDescriptor *descriptor);
 }
-
-struct KurumaSpawnInfo {
-    daObjKm3_Kuruma_c *(*classInit)();
-    s16 executePriority; /* +4: also KM3_KURUMA registry id 0x0097 = 151 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char KurumaSpawnInfo_size_must_be_0x1c[
-    sizeof(KurumaSpawnInfo) == 0x1c ? 1 : -1];
 
 // @symbol daObjKm3_Kuruma_c_classInit
 extern "C" daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit()
@@ -96,9 +90,9 @@ extern "C" daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit()
 }
 
 // @symbol g_profile_KM3_KURUMA
-extern "C" KurumaSpawnInfo g_profile_KM3_KURUMA = {
+extern "C" SpawnInfo<daObjKm3_Kuruma_c> g_profile_KM3_KURUMA = {
     daObjKm3_Kuruma_c_classInit,
-    0x0097,
+    0x0097, /* KM3_KURUMA registry id 151 */
     0x00de,
     2,
     0,
@@ -121,5 +115,5 @@ s32 daObjKm3_Kuruma_c::CleanupResources()
 
 /* Source order is construction order: model file 1663, then the collision
  * file 1664. The compiler registers each destructor beside the object. */
-Km3KurumaModelFilePtr data_ov047_02112638(1663);
-Km3KurumaClsnFilePtr data_ov047_02112630(1664);
+Km3KurumaModelFilePtr data_ov047_02112638(ASSET_KM3_KURUMA_BMD);
+Km3KurumaClsnFilePtr data_ov047_02112630(ASSET_KM3_KURUMA_KCL);

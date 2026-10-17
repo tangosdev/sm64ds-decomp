@@ -81,7 +81,7 @@
  * It argued this class's vtable is never emitted, so nothing could disagree with the
  * cartridge. That held while the inline destructor left the class without a key
  * function -- but `virtual int CleanupResources();` is declared non-inline here and
- * DEFINED in src/actors/daOts_c.cpp, which makes it the key function
+ * DEFINED in src/game/actors/d_a_ots.cpp, which makes it the key function
  * and makes that translation unit emit _ZTV7daOts_c. Measured: the emitted table
  * carried dEnemyBase_c's concrete InitResources and Behavior in slots 0 and 6 where
  * the cartridge has zeros, eight bytes wrong, and no byte gate could see it -- the
@@ -219,7 +219,7 @@ struct daOts_c : dEnemyBase_c {
 
     /* Tail::mState (reached through tail()), written by BehaviorCommon's switch and by the helpers it calls.
        Which child classes use which states is theirs to say; these names describe
-       what the shared handlers in src/actors/daOts_c.cpp do. */
+       what the shared handlers in src/game/actors/d_a_ots.cpp do. */
     enum State {
         STATE_RETURN_HOME = 0,  /* walks toward mHomePos at 5 units a frame; switches to STATE_CHASE once the player is within 800 units of it */
         STATE_CHASE = 1,        /* the child's UpdateRunState runs; back to STATE_RETURN_HOME when the player is not within 1000 units of mHomePos */

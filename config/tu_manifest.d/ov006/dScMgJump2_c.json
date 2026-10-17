@@ -9,7 +9,7 @@
     "HISTORY: contiguous linker run: 0x20eebe8..0x20efc08, 29 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): dScMgJump2_c",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this run, func_ov006_020efc08 (0x020efc08, size 0x4, a bare return, formerly src/unnamed/ov006/func_ov006_020efc08.c), abuts its .text end -- the end of this TU's own factory dScMgJump2_c_classInit (0x020efaf0..0x020efc08) -- with no gap and is now inside it; the next ov006 delinks entry, src/actors/dScMgLuigi_c.cpp, starts exactly at 0x020efc0c. Membership: it is the empty element constructor this TU's factory passes to __cxa_vec_ctor for mArray3 (literal word 0x020efc00, 16 elements of 0x24), paired with the empty element destructor func_ov006_020eed64 that this TU already owns. The image's only other reference to it is dScMgTrampoline2_c's factory (0x0212488c, src/minigames/d_s_mg_trampoline2.cpp), which reuses the same ctor/dtor pair (it references func_ov006_020eed64 at 0x02124884 too), exactly the cross-TU shape func_ov006_020eed64 already has; nothing else refers to it. Written above the factory, with C linkage, because this TU emits .text in reverse source order."
+    "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this run, Jump2Popup_ElemCtor (0x020efc08, size 0x4, a bare return, formerly src/unnamed/ov006/func_ov006_020efc08.c), abuts its .text end -- the end of this TU's own factory dScMgJump2_c_classInit (0x020efaf0..0x020efc08) -- with no gap and is now inside it; the next ov006 delinks entry, src/minigames/d_s_mg_luigi.cpp, starts exactly at 0x020efc0c. Membership: it is the empty element constructor this TU's factory passes to __cxa_vec_ctor for mArray3 (literal word 0x020efc00, 16 elements of 0x24), paired with the empty element destructor Jump2Popup_ElemDtor that this TU already owns. The image's only other reference to it is dScMgTrampoline2_c's factory (0x0212488c, src/minigames/d_s_mg_trampoline2.cpp), which reuses the same ctor/dtor pair (it references Jump2Popup_ElemDtor at 0x02124884 too), exactly the cross-TU shape Jump2Popup_ElemDtor already has; nothing else refers to it. Written above the factory, with C linkage, because this TU emits .text in reverse source order."
   ],
   "sections": [
     {
@@ -49,77 +49,77 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_020eed64",
+      "symbol": "Jump2Popup_ElemDtor",
       "address": "0x020eed64",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020eed64.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN4Elem19func_ov006_020eed68Ev",
+      "symbol": "_ZN10Jump2Popup10DrawNumberEv",
       "address": "0x020eed68",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020eed68.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN4Elem19func_ov006_020eedc8Ev",
+      "symbol": "_ZN10Jump2Popup4TickEv",
       "address": "0x020eedc8",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_020eedc8.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN4Elem19func_ov006_020eee3cEiii",
+      "symbol": "_ZN10Jump2Popup5SpawnEiii",
       "address": "0x020eee3c",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020eee3c.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN4Node19func_ov006_020eeef4Ev",
+      "symbol": "_ZN14Jump2PopupLink6UnlinkEv",
       "address": "0x020eeef4",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov006_020eeef4.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN4Node19func_ov006_020eef40Ev",
+      "symbol": "_ZN14Jump2PopupLink4LinkEv",
       "address": "0x020eef40",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_020eef40.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020eef58",
+      "symbol": "Jump2Popup_DrawAll",
       "address": "0x020eef58",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020eef58.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020eef90",
+      "symbol": "Jump2Popup_UpdateAll",
       "address": "0x020eef90",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020eef90.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020eeff0",
+      "symbol": "Jump2Popup_ClearAll",
       "address": "0x020eeff0",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020eeff0.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020ef05c",
+      "symbol": "Jump2Popup_Spawn",
       "address": "0x020ef05c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_020ef05c.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020ef0d4",
+      "symbol": "Jump2Popup_InitPool",
       "address": "0x020ef0d4",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020ef0d4.c",
@@ -140,7 +140,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020ef2b8",
+      "symbol": "Jump2_SetLights",
       "address": "0x020ef2b8",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020ef2b8.c",
@@ -154,56 +154,56 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef47cEv",
+      "symbol": "_ZN12dScMgJump2_c10State_IdleEv",
       "address": "0x020ef47c",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020ef47c.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef480Ev",
+      "symbol": "_ZN12dScMgJump2_c12State_ResultEv",
       "address": "0x020ef480",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020ef480.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef4ecEv",
+      "symbol": "_ZN12dScMgJump2_c9State_EndEv",
       "address": "0x020ef4ec",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020ef4ec.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef580Ev",
+      "symbol": "_ZN12dScMgJump2_c8BeginEndEv",
       "address": "0x020ef580",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020ef580.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef5acEv",
+      "symbol": "_ZN12dScMgJump2_c10State_PlayEv",
       "address": "0x020ef5ac",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_020ef5ac.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef768Ev",
+      "symbol": "_ZN12dScMgJump2_c9BeginPlayEv",
       "address": "0x020ef768",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020ef768.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef794Ev",
+      "symbol": "_ZN12dScMgJump2_c11State_IntroEv",
       "address": "0x020ef794",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020ef794.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef7f8Ev",
+      "symbol": "_ZN12dScMgJump2_c10BeginIntroEv",
       "address": "0x020ef7f8",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020ef7f8.c",
@@ -217,14 +217,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "_ZN12dScMgJump2_c13OnTurnIntoEggEi",
+      "symbol": "_ZN12dScMgJump2_c11CanEndStateEi",
       "address": "0x020efa84",
       "size": "0x00000024",
       "legacy_source": "src/_ZN12dScMgJump2_c13OnTurnIntoEggEi.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN12dScMgJump2_c13OnYoshiTryEatEi",
+      "symbol": "_ZN12dScMgJump2_c10StartRoundEi",
       "address": "0x020efaa8",
       "size": "0x00000048",
       "legacy_source": "src/_ZN12dScMgJump2_c13OnYoshiTryEatEi.cpp",
@@ -238,7 +238,7 @@
       "ordinal": 28
     },
     {
-      "symbol": "func_ov006_020efc08",
+      "symbol": "Jump2Popup_ElemCtor",
       "address": "0x020efc08",
       "size": "0x00000004",
       "legacy_source": "src/unnamed/ov006/func_ov006_020efc08.c",
@@ -248,14 +248,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_021421c4",
+      "symbol": "sJump2Back02ModelFile",
       "address": "0x021421c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x204; InitResources loads it through the SharedFilePtr base"
     },
     {
-      "symbol": "data_ov006_021421cc",
+      "symbol": "gOV006JumpBack01ModelFile",
       "address": "0x021421cc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -278,17 +278,17 @@
   ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421c0' differs between the legacy file that used to hold func_ov006_020eeef4 and the one that held func_ov006_020eef40; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421c0' differs between the legacy file that used to hold func_ov006_020eeef4 and the one that held func_ov006_020eef58; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b0' differs between the legacy file that used to hold func_ov006_020eef90 and the one that held func_ov006_020eeff0; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421c0' differs between the legacy file that used to hold func_ov006_020eeef4 and the one that held func_ov006_020eeff0; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b0' differs between the legacy file that used to hold func_ov006_020eef90 and the one that held func_ov006_020ef05c; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b0' differs between the legacy file that used to hold func_ov006_020eef90 and the one that held func_ov006_020ef0d4; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z15ApproachLinear2Rsss' differs between the legacy file that used to hold func_ov006_020eedc8 and the one that held func_ov006_020ef5ac; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020adb1c' differs between the legacy file that used to hold func_ov006_020ef480 and the one that held func_ov006_020ef5ac; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2PopupList' differs between the legacy file that used to hold Unlink and the one that held Link; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2PopupList' differs between the legacy file that used to hold Unlink and the one that held Jump2Popup_DrawAll; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2Popups' differs between the legacy file that used to hold Jump2Popup_UpdateAll and the one that held Jump2Popup_ClearAll; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2PopupList' differs between the legacy file that used to hold Unlink and the one that held Jump2Popup_ClearAll; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2Popups' differs between the legacy file that used to hold Jump2Popup_UpdateAll and the one that held Jump2Popup_Spawn; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2Popups' differs between the legacy file that used to hold Jump2Popup_UpdateAll and the one that held Jump2Popup_InitPool; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z15ApproachLinear2Rsss' differs between the legacy file that used to hold Tick and the one that held State_Play; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_SubmitScore' differs between the legacy file that used to hold State_Result and the one that held State_Play; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b8' differs between the legacy file that used to hold _ZN12dScMgJump2_c16CleanupResourcesEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sJump2BackFile' differs between the legacy file that used to hold _ZN12dScMgJump2_c16CleanupResourcesEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
@@ -607,7 +607,7 @@
     {
       "symbol": "_ZTV12dScMgJump2_c",
       "disposition": "deadstrip-data",
-      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump2_c.h defines `virtual ~dScMgJump2_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- OnYoshiTryEat, at ov006:0x020efaa8 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020eebe8 BELOW D0 at 0x020eec9c, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213ccfc, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020eebe8-0x020efc08), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213ccfc is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213ccf4 holds the offset-to-top 0 and 0x0213ccf8 holds 0x0213cca4, `&_ZTI12dScMgJump2_c` -- and those two words lie outside the symbol's extent (they fall inside data_ov006_0213cce0), so anchoring the comparison at the symbol leaves them uncompared. The slots themselves are covered in full, unlike ov018/daPgMthr_c: the next symbol is data_ov006_0213cd8c, so the _ZTV extent 0x0213ccfc-0x0213cd8c is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words.",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump2_c.h defines `virtual ~dScMgJump2_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- OnYoshiTryEat, at ov006:0x020efaa8 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020eebe8 BELOW D0 at 0x020eec9c, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213ccfc, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020eebe8-0x020efc08), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213ccfc is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213ccf4 holds the offset-to-top 0 and 0x0213ccf8 holds 0x0213cca4, `&_ZTI12dScMgJump2_c` -- and those two words lie outside the symbol's extent (they fall inside sJump2NcgByLanguage), so anchoring the comparison at the symbol leaves them uncompared. The slots themselves are covered in full, unlike ov018/daPgMthr_c: the next symbol is data_ov006_0213cd8c, so the _ZTV extent 0x0213ccfc-0x0213cd8c is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213ccfc"
     }
@@ -736,7 +736,7 @@
       "source": "0x02130f4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021421cc",
+      "symbol": "gOV006JumpBack01ModelFile",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021421cc"
@@ -766,7 +766,7 @@
       "source": "0x02130f5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021421c4",
+      "symbol": "sJump2Back02ModelFile",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021421c4"

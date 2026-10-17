@@ -14,6 +14,12 @@
  * - ModelAnim::SetAnim stays mangled (Fix12<int> by value, wall 6az)
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_mc_flag_AssetId {
+    ASSET_MC_FLAG_BMD = 0x068d,
+    ASSET_MC_FLAG_WAIT_BCA = 0x068e
+};
+
 #include "daMcFlag_c.h"
 #include "SharedFilePtr.h"
 
@@ -105,5 +111,5 @@ s32 daMcFlag_c::CleanupResources()
 // @symbol _ZN10daMcFlag_cD0Ev
 // @symbol _ZN10daMcFlag_cD1Ev
 
-McFlagModelFileHandle data_ov009_02113eb8(0x68d);
-McFlagAnimResFileHandle data_ov009_02113eb0(0x68e);
+McFlagModelFileHandle data_ov009_02113eb8(ASSET_MC_FLAG_BMD);
+McFlagAnimResFileHandle data_ov009_02113eb0(ASSET_MC_FLAG_WAIT_BCA);

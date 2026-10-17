@@ -1,8 +1,8 @@
 {
   "id": "ov078/daBombking_c",
   "module": "ov078",
-  "source": "src/actors/daBombking_c.cpp",
-  "promoted_source": "src/actors/daBombking_c.cpp",
+  "source": "src/game/actors/d_a_bombking.cpp",
+  "promoted_source": "src/game/actors/d_a_bombking.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -1170,7 +1170,7 @@
   ],
   "production_mode": "intact-object",
   "promotion_route": "text-only",
-  "promotion_note": "Text-only. This is a KEY-FUNCTION TU: the out-of-line destructor is the key function, so the object emits _ZTV/_ZTI/_ZTS for the whole inherited chain as vague linkage and the scratch link must deadstrip 13 compiler-only symbols before linking (tubuild.py:5091). That rewrite is what caps the linkcheck result at scratch-link-verified rather than link-verified -- tubuild's own ladder comment says a key-function TU cannot reach link-verified until phase F. The evidence is nonetheless stronger than text-only requires: module fidelity 106/106 exact and the built ROM sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 is byte-identical to the stock control.",
+  "promotion_note": "This TU is enrolled through production_mode intact-object. It owns 52 text functions at 0x02123740..0x02126660 and four data records in the 188-byte range 0x02126e0c..0x02126ec8: the class typeinfo, type-name string, actor profile, and complete vtable storage including its ABI preamble. Normal production preparation verifies the owned bytes and typed relocations, applies the existing compiler-only policies to inherited RTTI and duplicate functions, and retains the class-owned data. Earlier text-only and scratch-link measurements remain historical evidence; fresh proof for each continuation is bound to its exact candidate and tested base in that continuation report.",
   "source_review_checkpoint": {
     "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2479",
     "status": "partial-awaiting-independent-review",

@@ -1,8 +1,8 @@
 {
   "id": "ov001/dThIcon_c",
   "module": "ov001",
-  "source": "src/actors/dThIcon_c.cpp",
-  "promoted_source": "src/actors/dThIcon_c.cpp",
+  "source": "src/ui/hud/d_th_icon.cpp",
+  "promoted_source": "src/ui/hud/d_th_icon.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -46,7 +46,7 @@
   "notes": [
     "Reconstructed by tools/tubuild.py create and then reconciled by hand. No pragma is needed anywhere in this unit: both functions reproduced byte-exact on the first compile under the build's stock flags, with codegen left deferred, so the whole file is written in the reverse of ROM address order and mwccarm's end-of-file emission puts the two .text sections back in ROM-ascending order.",
     "tubuild create reported no cross-file conflicts in includes, externs, macros or local declarations, and no destructor variants or pragmas in either legacy source. The only reconciliation was cosmetic: the Behavior shard routed both of its tests through a redundant `int v` temporary copied out of unk_00c, which the merged source drops in favour of testing the member directly. Both functions were re-verified byte-exact afterwards.",
-    "The one extern this TU carries, data_0208ee44, is spelt `extern int` -- the plurality spelling in the tree and the one its other scalar users (src/actors/dScMgCup_c.cpp, src/minigames/d_s_mg_base.cpp) already use. config/decl-agreement-baseline.json banks five pre-existing disagreements on this symbol (`unsigned char []`, `char`, `int []`); this TU does not add to them and none were touched.",
+    "The one extern this TU carries, data_0208ee44, is spelt `extern int` -- the plurality spelling in the tree and the one its other scalar users (src/minigames/d_s_mg_cup.cpp, src/minigames/d_s_mg_base.cpp) already use. config/decl-agreement-baseline.json banks five pre-existing disagreements on this symbol (`unsigned char []`, `char`, `int []`); this TU does not add to them and none were touched.",
     "This class's constructor and destructor are inline in include/dThIcon_c.h and are not odr-used here, so unlike the sibling dCapIcon_c TU in this overlay no C1/C2/D0/D1/D2 variant is emitted at all. The only compiler-only output is the vague-linkage RTTI trio below, and all three have ROM homes, so this TU has no homeless symbol to deadstrip."
   ],
   "verification": {

@@ -184,14 +184,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@451",
+      "from": "@439",
       "to": "@138",
       "evidence": "compiler temporary; mwcc numbers it @437 per TU and ov096 daTor_c (this batch) also defines a global @437, so the scratch link collides"
     },
     {
-      "from": "@452",
+      "from": "@440",
       "to": "@438",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @452 now; licensed under the existing pin @438"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @440 now (twelve named locals retired from InitResources and Behavior); licensed under the existing pin @438"
     }
   ],
   "symbol_binding_rewrites": [

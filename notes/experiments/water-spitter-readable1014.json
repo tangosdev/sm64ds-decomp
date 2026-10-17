@@ -1,0 +1,580 @@
+{
+  "task": "water-spitter-readable1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
+  "registered_base": "39e4d67ae1935d80cd6f79fa42f056ae4803df06",
+  "composed_base": "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2",
+  "source_checkpoint": "1c50cacc6958e54ae85a47408a14226d1da4828d",
+  "composition_checkpoint": "7ded107a5170ba438165eb77098b18b48abeafe3",
+  "source_author": {
+    "model": "GPT-6 Astra",
+    "actual_agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "producer_session": "codex-water-spitter-astra-producer1014",
+    "private_research_label": "codex-enemy-frontier-astra1014",
+    "disclosure": "The same actual Astra agent authored the private candidate, production Source and this report. Root coordinated and independently reviewed; Root did not author this Source. Existing Source and upstream composition retain their Git attribution. The same actual Astra agent authored the reserved two-comment header repair after independent rework; the reviewer did not edit it."
+  },
+  "scope": [
+    "src/actors/daWater_Hakidasi_c.cpp",
+    "include/daWater_Hakidasi_c.h",
+    "notes/experiments/water-spitter-readable1014.json"
+  ],
+  "change": "Use existing Player metal/position members and factory-evidenced daWater_Ring_c members; include Model.h and consume its static void* LoadFile API with discarded result. Remove the replaced namespace shadow and duplicate scalar typedef. The review continuation corrects two header comments only. No header fields, typedefs, layout or signatures, manifest, config, names, enrollment or policy changed.",
+  "source_completion": "partial",
+  "remaining_reconstruction": [
+    {
+      "id": "HAKIDASI-STATE-CONTRACT",
+      "location": "src/actors/daWater_Hakidasi_c.cpp:func_ov064_0211982c / State / Behavior",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "The installer retains a C shadow receiver and int-returning PMF at table offset0; Behavior uses the header void-returning member at offset8. Original callback contracts and a genuine class installer remain unresolved; do not infer void from a discarded result. Existing PMF constants/init ownership remains unchanged.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
+      "owner": "class coordinator; next explicitly claimed producer",
+      "reason": "Retained reconstruction work outside this reviewed field/API and header-provenance cleanup; tracked on issue3848 with the existing concrete owner. No unique original spelling or universal compiler impossibility is claimed."
+    },
+    {
+      "id": "HAKIDASI-FIX12-BRIDGES",
+      "location": "src/actors/daWater_Hakidasi_c.cpp:Particle::System::New and dCcAc_c::Init calls",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "Both retain explicitly justified mangled scalar bridges. Inherited InitResources prose cites a historical Fix12 by-value lowering constraint; this scope does not establish that constraint for either exact current caller or claim agreement for their other scalar or pointer parameters. Genuine native-call reconstruction remains pending.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
+      "owner": "class coordinator; next explicitly claimed producer",
+      "reason": "Retained reconstruction work outside this reviewed field/API and header-provenance cleanup; tracked on issue3848 with the existing concrete owner. No unique original spelling or universal compiler impossibility is claimed."
+    },
+    {
+      "id": "HAKIDASI-MATCHED-FORMS",
+      "location": "src/actors/daWater_Hakidasi_c.cpp:func_ov064_021193b4",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "Integer-pointer laundering M(), local Vec3/Vec3_16 PODs, volatile rotation stores, m1=-1, vector casts, widened timer read and strength-reduction pragmas remain inherited matching forms. Their endpoint fields are improved; eliminating the forms themselves remains future work.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
+      "owner": "class coordinator; next explicitly claimed producer",
+      "reason": "Retained reconstruction work outside this reviewed field/API and header-provenance cleanup; tracked on issue3848 with the existing concrete owner. No unique original spelling or universal compiler impossibility is claimed."
+    },
+    {
+      "id": "HAKIDASI-NAMES-LAYOUT",
+      "location": "src/actors/daWater_Hakidasi_c.cpp:class helpers / ring velocity fields",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "Address-derived member names and unknown fields remain. Existing unk_0a4/unk_0ac spellings were retained without guessed semantics. Real Player is the current reconstructed class view, not proof of an original class-name spelling.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
+      "owner": "class coordinator; next explicitly claimed producer",
+      "reason": "Retained reconstruction work outside this reviewed field/API and header-provenance cleanup; tracked on issue3848 with the existing concrete owner. No unique original spelling or universal compiler impossibility is claimed."
+    },
+    {
+      "id": "HAKIDASI-DECL-POPULATION",
+      "location": "src/actors/daWater_Hakidasi_c.cpp:Source local externs and other declarations naming its symbols",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "Ten banked declaration findings still involve this Source. Model::LoadFile now uses the actual header static void* API; nineteen disagreements elsewhere remain in that symbol population. Global/scoped ratchet success is not whole-tree declaration agreement.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
+      "owner": "class coordinator; next explicitly claimed producer",
+      "reason": "Retained reconstruction work outside this reviewed field/API and header-provenance cleanup; tracked on issue3848 with the existing concrete owner. No unique original spelling or universal compiler impossibility is claimed."
+    },
+    {
+      "id": "HAKIDASI-HEADER-PROSE",
+      "location": "include/daWater_Hakidasi_c.h",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "summary": "Corrected the two false header comments: the TU installer does read and invoke the first int-returning callback at+0x00 while State models the+0x08 main callback; the production TU already defines a real C++ destructor. The legacy flat C view remains without an impossibility claim.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
+      "owner": "class coordinator; next explicitly claimed producer",
+      "reason": "Independent review rejected the inherited false claims as provenance errors. The exact reserved repair replaces only those two comments, with identical noncomment bytes, line counts and every affected consumer object. Callback contracts remain deferred under HAKIDASI-STATE-CONTRACT; the provenance defect is repaired, not reclassified or deferred.",
+      "evidence": {
+        "header_checkpoint": "e06654b7d83c431db07254ef77e0f34a9a0d5ca1",
+        "affected_sources": [
+          "src/actors/daWater_Hakidasi_c.cpp"
+        ],
+        "fresh_raw_prepared_literal_equal": true,
+        "strict_unique_functions": 13,
+        "canonical_metadata_symbols": 11
+      }
+    }
+  ],
+  "lineage": {
+    "predecessor_tasks": [
+      "fold-tails-ov002-ov016-ov064-0930c",
+      "ov002-yegg-heyho-rename-0930d"
+    ],
+    "inherited_producer_sessions": [
+      "claude-prod-X-0930c",
+      "claude-producer-0930d"
+    ],
+    "structured_inherited_findings": 0,
+    "qualification": "Legacy queue outputs contain byte checks rather than complete Source findings. Existing Source leftovers are carried as explicit new stable deferred findings; legacy completion does not prove complete class reconstruction. Historical Source work includes lunavyqo and andrewboudreau; Git ancestry retains original coauthor records.",
+    "review_rework": {
+      "rejected_output": "d9c011011678602b64d7b4945c56b6767215594e",
+      "same_task_continuation": true,
+      "new_claim_input": "d9c011011678602b64d7b4945c56b6767215594e",
+      "header_reservation_confirmed_queue": "5a73c94a9c60ca0703e23d7581241028da943bdc",
+      "finding_classification": "HAKIDASI-HEADER-PROSE remains provenance and is now fixed; all other five deferred IDs are preserved.",
+      "initial_registered_base_unchanged": "39e4d67ae1935d80cd6f79fa42f056ae4803df06"
+    }
+  },
+  "factory_identity": {
+    "actor_id": "0xf4",
+    "table": "0x02090864",
+    "slot": "0x2090c34",
+    "profile": "0x211c3fc",
+    "profile_words": [
+      "0x211a1b0",
+      "0x6600f4",
+      "0x2",
+      "0x64000"
+    ],
+    "factory": "0x211a1b0",
+    "factory_bytes_hex": "10402de9390ea0e3a1a4fceb0040b0e10a00000af352feeb2c109fe5110e84e2001084e52aeafbeb150e84e29374fcebc30f84e2dbf2fbebd70f84e2d7edfbeb0400a0e11040bde81eff2fe120c41102",
+    "class_addresses": {
+      "_ZTV14daWater_Ring_c": "0x211c420",
+      "_ZTI14daWater_Ring_c": "0x211c3dc",
+      "_ZTS14daWater_Ring_c": "0x211c3e8"
+    },
+    "rtti_name": "14daWater_Ring_c",
+    "typeinfo_words": [
+      "0x209a764",
+      "0x211c3e8",
+      "0x21081c0"
+    ]
+  },
+  "byte_proof": {
+    "compiler": "2004/b56",
+    "source_sha256": "c3c62b280b82e5486c2d935f2e3f366b3707877558b28a88703ff9dda74d7792",
+    "manifest_blob": "39b82722632362a6d1bdaa44dd18b19cf15a1837",
+    "raw_literal_equal": true,
+    "prepared_literal_equal": true,
+    "raw_sha256": "54fd34ecfe07c8fe8386a1f4105b7fabccb6ac2b190db172f8a02dcb6fa8249e",
+    "prepared_sha256": "57331a2b474e928fe272091ec3ba34791be1168c6b13f11b4015b4e45e76d3bb",
+    "raw_references": 103,
+    "prepared_references": 53,
+    "strict_unique_functions": 13,
+    "strict_text_functions": 12,
+    "strict_initializer_functions": 1,
+    "strict_result": "All VERIFIED; zero differing bytes and zero blind relocations. Init is additional to the twelve manifest text functions.",
+    "retained_storage": [
+      {
+        "section": ".init",
+        "start": "0x0211b4dc",
+        "end": "0x0211b518",
+        "emittedBytes": 60,
+        "sizeOk": true,
+        "bytesOk": true,
+        "differingWords": 0,
+        "relocCount": 3
+      },
+      {
+        "section": ".ctor",
+        "start": "0x0211b748",
+        "end": "0x0211b74c",
+        "emittedBytes": 4,
+        "sizeOk": true,
+        "bytesOk": true,
+        "differingWords": 0,
+        "relocCount": 1
+      },
+      {
+        "section": ".bss",
+        "start": "0x0211c934",
+        "end": "0x0211c944",
+        "emittedBytes": 16,
+        "sizeOk": true,
+        "bytesOk": true,
+        "differingWords": 0,
+        "relocCount": 0
+      }
+    ],
+    "externalized_metadata": {
+      "symbols": 11,
+      "bytes": 252,
+      "typed_references": 46,
+      "full_bytes_rom_equal": true,
+      "qualification": "Explicit typed-relocation ROM comparison covers all string tails and vtable8-byte preamble; ordinary deadstrip-data preparation alone is not presented as that positive comparison."
+    },
+    "compiler_only": "Existing D2 deadstrip retained (56B/fourrefs); all46 metadata refs plus4 D2 refs explain103 raw to53 prepared. Complete allocated/symbol/typed-edge graphs are equal.",
+    "latest_complete_proof": "build/water-spitter-readable1014/header-rework/proof.json",
+    "latest_metadata_proof": "build/water-spitter-readable1014/header-rework/canonical-metadata-proof.json"
+  },
+  "gates": {
+    "base": "39e4d67ae1935d80cd6f79fa42f056ae4803df06",
+    "source_checkpoint": "1c50cacc6958e54ae85a47408a14226d1da4828d",
+    "gates": [
+      {
+        "name": "rombuild",
+        "command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom",
+          "--report-json",
+          "build\\water-spitter-readable1014\\rombuild.json",
+          "--data-json",
+          "build\\water-spitter-readable1014\\romdata-full.json"
+        ],
+        "exit_code": 0,
+        "seconds": 294.48,
+        "log": "build\\water-spitter-readable1014\\rombuild.log"
+      },
+      {
+        "name": "prepush",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "39e4d67ae1935d80cd6f79fa42f056ae4803df06..HEAD",
+          "--json",
+          "build\\water-spitter-readable1014\\prepush.json"
+        ],
+        "exit_code": 0,
+        "seconds": 9.41,
+        "log": "build\\water-spitter-readable1014\\prepush.log"
+      },
+      {
+        "name": "decl-scoped",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "39e4d67ae1935d80cd6f79fa42f056ae4803df06"
+        ],
+        "exit_code": 0,
+        "seconds": 8.73,
+        "log": "build\\water-spitter-readable1014\\decl-scoped.log"
+      },
+      {
+        "name": "decl-global",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 7.66,
+        "log": "build\\water-spitter-readable1014\\decl-global.log"
+      },
+      {
+        "name": "model-population",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--symbol",
+          "_ZN5Model8LoadFileER13SharedFilePtr"
+        ],
+        "exit_code": 0,
+        "seconds": 7.75,
+        "log": "build\\water-spitter-readable1014\\model-population.log"
+      },
+      {
+        "name": "port",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.73,
+        "log": "build\\water-spitter-readable1014\\port.log"
+      },
+      {
+        "name": "langmode",
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "seconds": 10.21,
+        "log": "build\\water-spitter-readable1014\\langmode.log"
+      },
+      {
+        "name": "tu-conflicts",
+        "command": [
+          "python",
+          "tools/check_tubuild_conflicts.py"
+        ],
+        "exit_code": 0,
+        "seconds": 0.31,
+        "log": "build\\water-spitter-readable1014\\tu-conflicts.log"
+      },
+      {
+        "name": "duplicates",
+        "command": [
+          "python",
+          "tools/check_duplicate_sources.py"
+        ],
+        "exit_code": 0,
+        "seconds": 0.36,
+        "log": "build\\water-spitter-readable1014\\duplicates.log"
+      },
+      {
+        "name": "drafts",
+        "command": [
+          "python",
+          "tools/check_drafts_compile.py",
+          "--quiet"
+        ],
+        "exit_code": 0,
+        "seconds": 0.9,
+        "log": "build\\water-spitter-readable1014\\drafts.log"
+      },
+      {
+        "name": "diff-check",
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "39e4d67ae1935d80cd6f79fa42f056ae4803df06"
+        ],
+        "exit_code": 0,
+        "seconds": 0.05,
+        "log": "build\\water-spitter-readable1014\\diff-check.log"
+      }
+    ]
+  },
+  "full_production_result": {
+    "report_sha256": "0d66670098049ed71eb3f789a970e2bd1b9f0e12e62ed3353642cf606742ee2e",
+    "summary": {
+      "schemaVersion": 1,
+      "profile": "stock",
+      "status": "passed",
+      "romOut": "C:\\tmp\\sm64ds-water-spitter-readable1014\\build\\sm64ds.nds",
+      "profileConfig": "build\\rombuild-config\\stock\\arm9",
+      "enrolledFiles": 2752,
+      "alternateToolchainFiles": 0
+    },
+    "qualification": "Actual rombuild terminal0 at the Source checkpoint, with --no-rom (no final candidate NDS packaging). Its internally launched baseline control did package a stock control ROM with SHA d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8; baseline modules pass but dsd check symbols --fail reports pre-existing missing ITCM symbols. This is not an all-green dsd-symbol claim.",
+    "coverage": {
+      "modules_exact": 106,
+      "modules_total": 106,
+      "source_functions_reproducing": 11334,
+      "source_function_mismatches": 0,
+      "source_data_claims_reproducing": 331,
+      "source_data_mismatches": 0,
+      "BSS_claims": 239,
+      "BSS_bytes": 30164,
+      "intact_gate": "dsd modules PASS; zero new symbol errors; storage aliases exact"
+    },
+    "global_data_advisory": {
+      "verified": 970,
+      "partial": 1519,
+      "differ": 1,
+      "unnamed": 21,
+      "qualification": "Inherited global emitted-data advisories; current owned metadata and storage are separately fully proven. No zero-global-data-debt claim."
+    }
+  },
+  "composition": {
+    "original_base": "39e4d67ae1935d80cd6f79fa42f056ae4803df06",
+    "tested_source_checkpoint": "1c50cacc6958e54ae85a47408a14226d1da4828d",
+    "composed_base": "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2",
+    "composition_checkpoint": "c509278a30ec2b8034c268fea4ce6bc9f4d686b8",
+    "upstream_changed_paths": [
+      "notes/experiments/actor-native-return1014.json",
+      "src/actors/dActor_c.cpp"
+    ],
+    "unchanged_dependency_trees": {
+      "include": "9a7fe3dd2d6c10927c6604d70dc4bfaca9c614ae",
+      "config": "90bf84d569cd549c53ca5d06180145c10e78d62e",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "owned_source_sha256": "ab0669dfe26fbfee45745f5ddc74330521eb2a05b6deae638143cbfe28adba62",
+    "owned_source_blob": "17c258f5e79cb2ceda707a84f3531664c087332f",
+    "upstream_object_proof": {
+      "before": "39e4d67ae1935d80cd6f79fa42f056ae4803df06",
+      "after": "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2",
+      "source": "src/actors/dActor_c.cpp",
+      "whole_raw_equal": true,
+      "whole_prepared_equal": true,
+      "raw_sha256": "76b805b8458a6aeb58a48b31a47d1cff1b833ff271cea0afa9a353bcc9130b81",
+      "prepared_sha256": "19edbeb864623c1a1f22eedf2237a6c8131e0674276fc35ba615a78abc16a4ed",
+      "raw_bytes": 29496,
+      "prepared_bytes": 29496
+    },
+    "upstream_proof_sha256": "8b8381bb78602075f713cd0b52aa422e72408445b7a6e052d5828d1a0764e8ff",
+    "upstream_proof_author": "Root actual agent01a12e6f-7ee1-7162-9a64-81145ed6b260; this producer independently read the two raw/prepared object pairs and verified literal equality and exact Source snapshots.",
+    "qualification": "Normal merge preserves all owned Source bytes. Only upstream Source dActor_c changes, with whole raw and normally prepared ELF literal equality; Actor is an existing legacy text-only partitioned TU, so no new intact or nontext ownership is claimed. All other Source blobs plus include/config/tools/port trees are unchanged. This explicitly transfers the tested full production output; it is not a new full-ROM execution."
+  },
+  "declaration": {
+    "global_findings": 7483,
+    "source_involving_count": 10,
+    "new_local_header_copies": 0,
+    "retained_findings_by_symbol": {
+      "Matrix4x3_FromRotationY": 1,
+      "MulVec3Mat4x3": 2,
+      "_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE": 4,
+      "data_020a0e68": 1,
+      "func_02012790": 2
+    },
+    "detail_artifact": "build/water-spitter-readable1014/declaration-details.json"
+  },
+  "proof_artifacts": {
+    "proof.json": "7e4036fe3fc3547367eb5ba6d8cf49573406e33e46cacc0973385b8f398b2e82",
+    "canonical-metadata-proof.json": "709f09f8e36022e763686e67a686131778306cbb0e34299e14f57b6c09269461",
+    "final-proof/proof.json": "c05aa09dc030e7767e62721e2c2b2a94ac9dac2d3142784c31cd385057f4af53",
+    "final-proof/canonical-metadata-proof.json": "709f09f8e36022e763686e67a686131778306cbb0e34299e14f57b6c09269461",
+    "declaration-details.json": "bae390e395731f328caae0cdd189ebc549767e66ba71f5c2fb0232083f29c671",
+    "gate-results.json": "8754e258639bbac74cdc0bb790cd07fe61b91148eb28acbd67d93285a945dd93",
+    "current-composition.json": "8646218af90cc9703a0d8596bbc898c3d5dec6177df12d5d45a52536b57167ac",
+    "private-factory-rom-evidence.json": "91b7390e5dcbcb8a42642278da471549fa1a0bfe7932dfdaf380832e86fda7c9",
+    "comment-transfer.json": "3a6dfac912a3e5597eee535f7b54bc350386b5dc5cf0d470fad087696175ea09",
+    "final-gates.json": "227c9738ff2f54c82777ac9a93676afd00624beb103533aee48c106f0dde7fc1",
+    "header-rework/proof.json": "c05aa09dc030e7767e62721e2c2b2a94ac9dac2d3142784c31cd385057f4af53",
+    "header-rework/canonical-metadata-proof.json": "709f09f8e36022e763686e67a686131778306cbb0e34299e14f57b6c09269461",
+    "header-rework/header-transfer.json": "7ded053a6e8d529127ccc9cf93237ea3c55f2b38ddc39510f92e9c3b9a9648b3",
+    "header-rework/gate-results.json": "5adc0352123b0cb588869c54326b2ef4ce006d1926815f38b52ef430861c6d4a",
+    "header-rework/affected-src.json": "c92c3ff869685fcd03c68e67d5f8454958142ada38062539bb8bf7dcf23f5569",
+    "header-rework/previous-findings.json": "ac06481d6122a2fd2f7afeffb35f5e836cb53f0fc021f195eda2f79d6eec0a6d"
+  },
+  "independent_review": "Root independently verified the first Source slice and rejected its inherited header prose as an open provenance defect. This producer repaired only the two explicitly reserved header comments and reran their complete consumer/metadata and required scoped gates. Independent acceptance of this new exact Source/header/report candidate remains pending.",
+  "final_binding": "This report-only final commit retains src/include/config/tools/port trees of final_source_header_checkpoint. External rework-final-binding.json identifies the exact immutable output and verifies those five trees. Full-ROM execution remains at1c50/39e, bound through the recorded c173 composition, Source-comment and header-comment transfers.",
+  "final_source_checkpoint": "e06654b7d83c431db07254ef77e0f34a9a0d5ca1",
+  "comment_only_transfer": {
+    "before_checkpoint": "c509278a30ec2b8034c268fea4ce6bc9f4d686b8",
+    "full_rom_source_checkpoint": "1c50cacc6958e54ae85a47408a14226d1da4828d",
+    "before_sha256": "ab0669dfe26fbfee45745f5ddc74330521eb2a05b6deae638143cbfe28adba62",
+    "after_sha256": "c3c62b280b82e5486c2d935f2e3f366b3707877558b28a88703ff9dda74d7792",
+    "change": "Replace exactly two newly added local-extern comments; soften unsupported specific compiler-constraint claims to native-call reconstruction pending. No other byte changes.",
+    "same_newline_count": true,
+    "block_comment_removed_source_literal_equal": true,
+    "fresh_whole_raw_elf_literal_equal": true,
+    "qualification": "Full-ROM execution predates this prose edit and current-main composition. All other compiler inputs are unchanged by the comment-only edit; same line count and complete raw/prepared equality support exact transfer. Final Source tree is not claimed equal to the old tested Source tree."
+  },
+  "final_scoped_gates": {
+    "base": "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2",
+    "head": "7ded107a5170ba438165eb77098b18b48abeafe3",
+    "gates": [
+      {
+        "name": "decl-scoped",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2"
+        ],
+        "exit_code": 0
+      },
+      {
+        "name": "decl-global",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "name": "prepush",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2..HEAD",
+          "--json",
+          "build\\water-spitter-readable1014\\final-prepush.json"
+        ],
+        "exit_code": 0
+      },
+      {
+        "name": "diff-check",
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "final_source_header_checkpoint": "e06654b7d83c431db07254ef77e0f34a9a0d5ca1",
+  "header_comment_rework": {
+    "transfer": {
+      "continuation_input": "d9c011011678602b64d7b4945c56b6767215594e",
+      "header_before_sha256": "787757dd85faa459d3e9047dfb13c1dfc86f742607e67ab84cc3f19044fd9704",
+      "header_after_sha256": "9c7bf54fd7ed72d82f415d885e5c73dd667e9a4f081d2a9821f101a91f766b5c",
+      "source_sha256": "c3c62b280b82e5486c2d935f2e3f366b3707877558b28a88703ff9dda74d7792",
+      "exact_two_comment_replacements": true,
+      "newline_count_unchanged": true,
+      "header_noncomment_bytes_literal_equal": true,
+      "fresh_before_after_complete_raw_literal_equal": true,
+      "qualification": "No field, typedef, signature or layout change. Original full-ROM run remains at1c50/39e; all transitive header consumers are freshly verified and whole-object equality transfers the module proof, not a claimed new full-ROM execution.",
+      "header_checkpoint": "e06654b7d83c431db07254ef77e0f34a9a0d5ca1",
+      "changed_paths": [
+        "include/daWater_Hakidasi_c.h"
+      ],
+      "unchanged_trees": {
+        "src": "2f921afc45154174f7cfff2ed63d6cec4a5c168c",
+        "config": "90bf84d569cd549c53ca5d06180145c10e78d62e",
+        "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+        "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+      },
+      "include_tree_changed_only_claimed_header": true,
+      "whole_prepared_literal_equal": true,
+      "strict_unique_functions": 13,
+      "canonical_metadata_symbols": 11,
+      "canonical_metadata_bytes": 252,
+      "canonical_metadata_refs": 46
+    },
+    "gates": {
+      "head": "e06654b7d83c431db07254ef77e0f34a9a0d5ca1",
+      "base": "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2",
+      "gates": [
+        {
+          "name": "affected-src",
+          "command": [
+            "python",
+            "tools/affected_src.py",
+            "include/daWater_Hakidasi_c.h",
+            "--json"
+          ],
+          "exit_code": 0,
+          "seconds": 1.53
+        },
+        {
+          "name": "prepush",
+          "command": [
+            "python",
+            "tools/prepush_linkcheck.py",
+            "--range",
+            "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2..HEAD",
+            "--json",
+            "build\\water-spitter-readable1014\\header-rework\\prepush.json"
+          ],
+          "exit_code": 0,
+          "seconds": 9.82
+        },
+        {
+          "name": "decl-scoped",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--changed",
+            "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2"
+          ],
+          "exit_code": 0,
+          "seconds": 12.57
+        },
+        {
+          "name": "decl-global",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--check"
+          ],
+          "exit_code": 0,
+          "seconds": 9.64
+        },
+        {
+          "name": "diff-check",
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2"
+          ],
+          "exit_code": 0,
+          "seconds": 0.06
+        }
+      ]
+    },
+    "full_rom_rerun": false,
+    "qualification": "Actual affected_src reports only this Source. Fresh complete before/after consumer ELFs and normal preparation,13 strict functions, all11 canonical metadata bodies and owned init/ctor/BSS verify literally. Other Source/config/tools/port trees and every other header blob are unchanged. These positive input/output checks transfer the previously bound full-ROM results; this is not a fresh full-ROM run."
+  }
+}

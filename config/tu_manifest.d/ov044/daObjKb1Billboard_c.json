@@ -138,7 +138,7 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov044_02111680",
+      "symbol": "gKb1BallModelFile",
       "address": "0x02111680",
       "size": "0x8",
       "evidence": "model resource handle constructed with file ID 1570"
@@ -232,7 +232,7 @@
       "source": "0x02111344",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov044_02111680",
+      "symbol": "gKb1BallModelFile",
       "addend": 0,
       "target_module": "ov044",
       "target_address": "0x02111680"
@@ -1201,7 +1201,7 @@
           "_ZTS19daObjKb1Billboard_c",
           "_ZTV19daObjKb1Billboard_c",
           "__sinit_d_a_obj_kb1_billboard.cpp",
-          "data_ov044_02111680",
+          "gKb1BallModelFile",
           "g_profile_KB1_BILLBOARD"
         ],
         "deferredOutputs": [
@@ -1901,7 +1901,7 @@
           "_ZTS19daObjKb1Billboard_c",
           "_ZTV19daObjKb1Billboard_c",
           "__sinit_d_a_obj_kb1_billboard.cpp",
-          "data_ov044_02111680",
+          "gKb1BallModelFile",
           "g_profile_KB1_BILLBOARD"
         ],
         "deferredOutputs": [

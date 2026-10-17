@@ -38,6 +38,15 @@
  *   inventing a layout.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_i_donketu_AssetId {
+    ASSET_ICE_DONKETU_BMD = 0x02e4,
+    ASSET_ICE_DONKETU_DEAD_BCA = 0x02e5,
+    ASSET_ICE_DONKETU_HIT_BCA = 0x02e6,
+    ASSET_ICE_DONKETU_TURN_BCA = 0x02e7,
+    ASSET_ICE_DONKETU_WALK_BCA = 0x02e8
+};
+
 #include "daIDonketu_c.h"
 #include "SharedFilePtr.h"
 
@@ -190,8 +199,8 @@ int daIDonketu_c::UpdateRunState()
 
 /* The Chill Bully's model and animation handles, in the sinit call order the
  * data_ov027_021138f4 file table repeats. */
-IDonketuModelFilePtr data_ov027_02113c10(0x2e4);
-IDonketuAnimationFileHandle data_ov027_02113c18(0x2e5);
-IDonketuAnimationFileHandle data_ov027_02113c08(0x2e6);
-IDonketuAnimationFileHandle data_ov027_02113c20(0x2e7);
-IDonketuAnimationFileHandle data_ov027_02113c28(0x2e8);
+IDonketuModelFilePtr gIceDonketuModelFile(ASSET_ICE_DONKETU_BMD);
+IDonketuAnimationFileHandle gIceDonketuDeadAnimationFile(ASSET_ICE_DONKETU_DEAD_BCA);
+IDonketuAnimationFileHandle gIceDonketuHitAnimationFile(ASSET_ICE_DONKETU_HIT_BCA);
+IDonketuAnimationFileHandle gIceDonketuTurnAnimationFile(ASSET_ICE_DONKETU_TURN_BCA);
+IDonketuAnimationFileHandle gIceDonketuWalkAnimationFile(ASSET_ICE_DONKETU_WALK_BCA);

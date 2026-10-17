@@ -1,8 +1,8 @@
 {
   "id": "ov095/daObjSeesaw_c",
   "module": "ov095",
-  "source": "src/actors/daObjSeesaw_c.cpp",
-  "promoted_source": "src/actors/daObjSeesaw_c.cpp",
+  "source": "src/game/actors/d_a_obj_seesaw.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_seesaw.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
@@ -172,98 +172,98 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov095_02137780",
+      "symbol": "gBSiSoModelFile",
       "address": "0x02137780",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1445; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
-      "symbol": "data_ov095_02137788",
+      "symbol": "gKm3ShisoModelFile",
       "address": "0x02137788",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1669; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
-      "symbol": "data_ov095_02137790",
+      "symbol": "gObjSeesawModelFile",
       "address": "0x02137790",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1162; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
-      "symbol": "data_ov095_02137798",
+      "symbol": "gKm1ShisoModelFile",
       "address": "0x02137798",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1623; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
-      "symbol": "data_ov095_021377a0",
+      "symbol": "gBSiSoCollisionFile",
       "address": "0x021377a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1446; dBgW_Kc::LoadFile reaches it through the data_ov095_021374a4 pointer table"
     },
     {
-      "symbol": "data_ov095_021377a8",
+      "symbol": "gKm3YokoshisoCollisionFile",
       "address": "0x021377a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1672; dBgW_Kc::LoadFile reaches it through the data_ov095_021374a4 pointer table"
     },
     {
-      "symbol": "data_ov095_021377b0",
+      "symbol": "gKm2YokoshisoModelFile",
       "address": "0x021377b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1645; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
-      "symbol": "data_ov095_021377b8",
+      "symbol": "gRcShisoModelFile",
       "address": "0x021377b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1709; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
-      "symbol": "data_ov095_021377c0",
+      "symbol": "gRcShisoCollisionFile",
       "address": "0x021377c0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1710; dBgW_Kc::LoadFile reaches it through the data_ov095_021374a4 pointer table"
     },
     {
-      "symbol": "data_ov095_021377c8",
+      "symbol": "gObjSeesawCollisionFile",
       "address": "0x021377c8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1163; dBgW_Kc::LoadFile reaches it through the data_ov095_021374a4 pointer table"
     },
     {
-      "symbol": "data_ov095_021377d0",
+      "symbol": "gKm2YokoshisoCollisionFile",
       "address": "0x021377d0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1646; dBgW_Kc::LoadFile reaches it through the data_ov095_021374a4 pointer table"
     },
     {
-      "symbol": "data_ov095_021377d8",
+      "symbol": "gKm3YokoshisoModelFile",
       "address": "0x021377d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1671; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
-      "symbol": "data_ov095_021377e0",
+      "symbol": "gKm1ShisoCollisionFile",
       "address": "0x021377e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1624; dBgW_Kc::LoadFile reaches it through the data_ov095_021374a4 pointer table"
     },
     {
-      "symbol": "data_ov095_021377e8",
+      "symbol": "gKm3ShisoCollisionFile",
       "address": "0x021377e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -815,7 +815,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjSeesaw_c.cpp",
+      "symbol": "__sinit_d_a_obj_seesaw.cpp",
       "address": "0x02136fe0",
       "size": "0x24c",
       "binding": "STB_GLOBAL",
@@ -824,7 +824,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjSeesaw_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_seesaw.cpp",
       "address": "0x021373b4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -870,13 +870,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjSeesaw_c.cpp",
+      "symbol": "__sinit_d_a_obj_seesaw.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjSeesaw_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_seesaw.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1324,7 +1324,7 @@
       "source": "0x0213717c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_02137790",
+      "symbol": "gObjSeesawModelFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x02137790"
@@ -1354,7 +1354,7 @@
       "source": "0x0213718c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_02137780",
+      "symbol": "gBSiSoModelFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x02137780"
@@ -1374,7 +1374,7 @@
       "source": "0x02137198",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_02137798",
+      "symbol": "gKm1ShisoModelFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x02137798"
@@ -1394,7 +1394,7 @@
       "source": "0x021371a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377b0",
+      "symbol": "gKm2YokoshisoModelFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377b0"
@@ -1414,7 +1414,7 @@
       "source": "0x021371b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_02137788",
+      "symbol": "gKm3ShisoModelFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x02137788"
@@ -1434,7 +1434,7 @@
       "source": "0x021371bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377d8",
+      "symbol": "gKm3YokoshisoModelFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377d8"
@@ -1454,7 +1454,7 @@
       "source": "0x021371c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377b8",
+      "symbol": "gRcShisoModelFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377b8"
@@ -1474,7 +1474,7 @@
       "source": "0x021371d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377c8",
+      "symbol": "gObjSeesawCollisionFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377c8"
@@ -1504,7 +1504,7 @@
       "source": "0x021371e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377a0",
+      "symbol": "gBSiSoCollisionFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377a0"
@@ -1524,7 +1524,7 @@
       "source": "0x021371f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377e0",
+      "symbol": "gKm1ShisoCollisionFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377e0"
@@ -1544,7 +1544,7 @@
       "source": "0x021371fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377d0",
+      "symbol": "gKm2YokoshisoCollisionFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377d0"
@@ -1564,7 +1564,7 @@
       "source": "0x02137208",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377e8",
+      "symbol": "gKm3ShisoCollisionFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377e8"
@@ -1584,7 +1584,7 @@
       "source": "0x02137214",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377a8",
+      "symbol": "gKm3YokoshisoCollisionFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377a8"
@@ -1604,7 +1604,7 @@
       "source": "0x02137220",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov095_021377c0",
+      "symbol": "gRcShisoCollisionFile",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x021377c0"
@@ -1624,7 +1624,7 @@
       "source": "0x021373b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjSeesaw_c.cpp",
+      "symbol": "__sinit_d_a_obj_seesaw.cpp",
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x02136fe0"

@@ -19,7 +19,7 @@ src/game/actors/d_a_obj_km2_ami_bou.cpp:
     .data start:0x02112d80 end:0x02112e3c
     .bss start:0x021131a8 end:0x021131d0
 
-src/actors/daObjKm2_Nobiru_c.cpp:
+src/game/actors/d_a_obj_km2_nobiru.cpp:
     complete
     .text start:0x02111840 end:0x02111b14
     .init start:0x02112280 end:0x021122ec

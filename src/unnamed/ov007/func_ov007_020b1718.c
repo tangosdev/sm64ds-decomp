@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 // @symbol func_ov007_020b1718
 /* recovered: per-frame update of a two-mode screen transition driven by the
  * manager at data_ov007_0210342c. Mode 1 eases a scale toward 0x1000 over
@@ -59,9 +60,9 @@ void func_ov007_020b1718(void)
             r3 = q << 2;
 
             if (r3 <= 0x1000)
-                s = (int)(((s64)r3 * 0x1000 + 0x800) >> 12);
+                s = FX_MUL(r3, 0x1000);
             else if (r3 <= 0x3000)
-                s = (int)(((s64)(r3 - 0x1000) * (-0x400) + 0x800) >> 12) + 0x1000;
+                s = FX_MUL((r3 - 0x1000), (-0x400)) + 0x1000;
             else
                 s = (int)((((s64)1 - (r3 - 0x3000)) * 0x800) >> 12) + 0x800;
 

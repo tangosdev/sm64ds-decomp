@@ -34,12 +34,11 @@
  * - Vec3_Sub / Vec3_HorzLen: local externs, the spellings d_a_s_bird.cpp
  *   uses (no shared header). RandomIntInternal and func_0201267c are
  *   declared as their definitions are.
- * - &mPosX is a Vector3 pun for Vec3_Sub and Spawn (dActor_c campaign).
+ * - Vec3_Sub is declared with void *, so &mPosX passes to it uncast.
  * - RandomIntInternal is cast unsigned at both uses: a signed % 4000 and
  *   a signed >> 16 change codegen.
  * - The ClosestPlayer result is a char* because the player position at
- *   +0x5c is read through the dActor_c pun the siblings use; mCamSpacePosX
- *   is cast to a Vector3 for the sound call the same way.
+ *   +0x5c is read by raw offset, the way the siblings read it.
  */
 #include "daSBird_c.h"
 #include "common.h"
@@ -68,7 +67,7 @@ extern "C" void func_ov009_0211145c(daSBird_c *self)
             int n = (int)self->param1 & 0xf;
             if (n > 1) {
                 for (int i = 0; i < n - 1; i++) {
-                    void *a = dActor_c::Spawn(0x157, 0x10, *(Vector3 *)&self->mPosX, 0, self->mAreaId, -1);
+                    void *a = dActor_c::Spawn(0x157, 0x10, self->mPos, 0, self->mAreaId, -1);
                     if (a)
                         ((daSBird_c *)a)->func_ov009_02111224(self->uniqueID);
                 }
@@ -78,7 +77,7 @@ extern "C" void func_ov009_0211145c(daSBird_c *self)
         } else {
             return;
         }
-        func_0201267c(0x6a, (const Vector3 *)&self->mCamSpacePosX);
+        func_0201267c(0x6a, &self->mCamSpacePos);
     }
     self->mPrevAngleX = 5000 - (unsigned int)RandomIntInternal(&data_0209e650) % 4000;
     self->mPrevAngleY = (unsigned int)RandomIntInternal(&data_0209e650) >> 16;

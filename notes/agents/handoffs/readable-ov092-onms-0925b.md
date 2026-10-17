@@ -5,7 +5,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3161, task `readable-ov092-onms-0925b`, stage `revise`, role producer, session `claude-prod-readable-ov092-onms-0925b`, Claude Code.
-- Round 2 identity: stage `revise`, role producer, session `claude-prod-readable-ov092-onms-0925b-r2`, Claude Code, input `c0899166dafb81ba44de93b6dffad3ea0efa7573` (the round-1 output). Round 2 changes comments only, in `include/daOnms_c.h` and `src/actors/daOnms_c.cpp`, and this handoff; see Round 2 below.
+- Round 2 identity: stage `revise`, role producer, session `claude-prod-readable-ov092-onms-0925b-r2`, Claude Code, input `c0899166dafb81ba44de93b6dffad3ea0efa7573` (the round-1 output). Round 2 changes comments only, in `include/daOnms_c.h` and `src/game/actors/d_a_onms.cpp`, and this handoff; see Round 2 below.
 - Source branch and previous accepted input SHA: `readable/readable-ov092-onms-0925b`, input `3fa23a549903672f45d2d37433b289ec3126a720` (origin/main at enqueue).
 - Original source base SHA and installed workflow/tool SHA: both `3fa23a549903672f45d2d37433b289ec3126a720`.
 - Separate evidence commits and required artifacts in this commit: none. The compiler experiments below are prose records of the source change tried and the measured result; no experiment artifact is committed.
@@ -15,10 +15,10 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `ov092/daOnms_c`, `src/actors/daOnms_c.cpp`, ov092 .text 0x02130f00..0x02132018 (22 functions). Promoted in #3125; the issue had no recorded readability review, so this pass starts from the self-audit below.
-- Reserved source/header/config surfaces actually touched: `src/actors/daOnms_c.cpp`, `include/daOnms_c.h`, `config/arm9/overlays/ov092/symbols.txt` (16 rows renamed in place), `config/tu_manifest.d/ov092/daOnms_c.json`, this handoff, and this class's 13 keys in the `attribution.json` ledger. `config/arm9/overlays/ov092/delinks.txt` is reserved but unchanged: it holds only address ranges.
+- Class/TU/symbol and module-qualified ROM scope: `ov092/daOnms_c`, `src/game/actors/d_a_onms.cpp`, ov092 .text 0x02130f00..0x02132018 (22 functions). Promoted in #3125; the issue had no recorded readability review, so this pass starts from the self-audit below.
+- Reserved source/header/config surfaces actually touched: `src/game/actors/d_a_onms.cpp`, `include/daOnms_c.h`, `config/arm9/overlays/ov092/symbols.txt` (16 rows renamed in place), `config/tu_manifest.d/ov092/daOnms_c.json`, this handoff, and this class's 13 keys in the `attribution.json` ledger. `config/arm9/overlays/ov092/delinks.txt` is reserved but unchanged: it holds only address ranges.
 - ROM observations, read from `extracted/overlays/overlay_0092.bin` and the ov092 config:
-  - The nine member-pointer records at 0x02132240..0x02132288 reach the state bodies by address (ov092 relocs.txt rows from 0x02132240 to 0x02132280). `src/actors/daOnms_c.cpp` defines the table at 0x02132568 and the generated `__sinit_daOnms_c.cpp` copies them in state order 0 to 8: 0x021315ac, 0x02131578, 0x021316b0, 0x02131680, 0x02131650, 0x02131620, 0x021311b0, 0x02131010, 0x02130fcc.
+  - The nine member-pointer records at 0x02132240..0x02132288 reach the state bodies by address (ov092 relocs.txt rows from 0x02132240 to 0x02132280). `src/game/actors/d_a_onms.cpp` defines the table at 0x02132568 and the generated `__sinit_daOnms_c.cpp` copies them in state order 0 to 8: 0x021315ac, 0x02131578, 0x021316b0, 0x02131680, 0x02131650, 0x02131620, 0x021311b0, 0x02131010, 0x02130fcc.
   - 0x02132074..0x021320cc is .rodata (ov092 delinks.txt). It holds three s32 at 0x02132074 (0x7c000, 0x7c000, 0x8c000), three s32 at 0x02132080 (0x3c000, 0x3c000, 0xc000) and 64 s8 at 0x0213208c, values in -3..2.
 - Lineage evidence or structural inference:
   - The state bodies take the object in r0 and are reached only through the member-pointer table, so they are written as members. The helpers `NextMove`, `Roll`, `Launch`, `CheckPlayerHit` and `UpdateModelMtx` are called only from this TU with the object in r0.
@@ -71,10 +71,10 @@ Self-audit of the base, numbered R1 to R24. The issue lists no numbered findings
 | R14 | temporaries | Pointer temporaries, `short lr`, `int z`, `idx`, x, y, z temporaries | Fixed | E13, E17, E18. |
 | R15 | temporaries | The `int v` and `int g` early returns in StateBounce, the dead `tmp` copy there, the `int b` flag in CheckPlayerHit and `int *p` in StateKnocked | Deferred: measured, no committed artifact | E9, E11, E12, E14, E15. One comment each. |
 | R16 | goto | None at base | Not applicable | |
-| R17 | dead or local declarations | `struct MMC`, `struct Obj`, `Mtx43`, the second copies of `data_020a0e68` and the three matrix prototypes, local prototypes of `func_ov092_021316d8` and `021319b0`, the `ToxBoxState` typedef names, the header's dead C shadow struct (`#else` branch, no C consumer: `python tools/affected_src.py include/daOnms_c.h` lists only `src/actors/daOnms_c.cpp` and `src/d_a_onms.cpp`) | Fixed | Removed, or renamed after daOnms_c. The shadow struct also carried stale prose: it said a 0 entry ends a move sequence, where the body tests for -1. |
+| R17 | dead or local declarations | `struct MMC`, `struct Obj`, `Mtx43`, the second copies of `data_020a0e68` and the three matrix prototypes, local prototypes of `func_ov092_021316d8` and `021319b0`, the `ToxBoxState` typedef names, the header's dead C shadow struct (`#else` branch, no C consumer: `python tools/affected_src.py include/daOnms_c.h` lists only `src/game/actors/d_a_onms.cpp` and `src/game/actors/d_a_onms.cpp`) | Fixed | Removed, or renamed after daOnms_c. The shadow struct also carried stale prose: it said a 0 entry ends a move sequence, where the body tests for -1. |
 | R18 | local declarations | `Vec3_HorzAngle`, `Vec3_HorzDist`, `func_02012694`, the matrix helpers, `func_02037e38`, `func_02037e84`, `func_0203568c`, `func_020393d4`, `func_ov002_020de328` and `data_02082214` are declared locally | Still deferred | No header this TU includes declares them; `check_decl_agreement` reports no new local redeclaration. Owner: next producer on #3161. |
 | R19 | address-named data | `data_ov092_02132074`, `02132080`, `0213208c` | Fixed | E19. Static const members, rows renamed in place. |
-| R20 | address-named data | `data_ov092_02132540`, `02132548` and `02132568`; `data_ov092_02132220` and `02132294` | Fixed (first three) | `src/actors/daOnms_c.cpp` defines the two resource handles and the state table; the compiler emits `__sinit_daOnms_c.cpp`. `include/decl_common.h` still declares the last two. |
+| R20 | address-named data | `data_ov092_02132540`, `02132548` and `02132568`; `data_ov092_02132220` and `02132294` | Fixed (first three) | `src/game/actors/d_a_onms.cpp` defines the two resource handles and the state table; the compiler emits `__sinit_daOnms_c.cpp`. `include/decl_common.h` still declares the last two. |
 | R21 | address-named data | `data_02082214`, `data_020a0e68` | Still deferred | arm9 rows, not ov092's. |
 | R22 | unmeasured codegen notes | The `func_ov092_02131010` note ("escaped stack struct", `mwccarm 1.2/sp2p3`), the "recovered: shared common types" banners, the file-header claim about twelve-word matrix copies | Fixed | E10 shows the struct is not needed; the notes are gone and each kept form carries one measured comment. |
 | R23 | stale manifest notes | The `Frame` compiler-only entry named by source line number; the `_ZN7Vector3D1Ev` reason citing old function names; no note mapping the renames | Fixed | See Changed paths. |
@@ -91,7 +91,7 @@ Verifier findings from the round-1 review on #3161, and what round 2 did with ea
 | V3 | Leftover `recovered:` banner and a prose slash on the destructor comment | Fixed | The destructor comment now opens "Complete destructor:" and reads "dCcAcPos_c and dBgCh_Actr teardown". Same line count. |
 | V4 to V7 | Floor-result offset, StateBounce return type, punch and kick reading, floor type wording | Still deferred | Not in round 2's scope. Owner: next producer on #3161. |
 
-`git diff c0899166da..HEAD -- include/daOnms_c.h src/actors/daOnms_c.cpp` touches 10 lines, all inside comments; the code text before each changed comment is identical, so neither header consumer (`src/actors/daOnms_c.cpp`, `src/d_a_onms.cpp`) sees a code change. Neither file changes its line count.
+`git diff c0899166da..HEAD -- include/daOnms_c.h src/game/actors/d_a_onms.cpp` touches 10 lines, all inside comments; the code text before each changed comment is identical, so neither header consumer (`src/game/actors/d_a_onms.cpp`, `src/game/actors/d_a_onms.cpp`) sees a code change. Neither file changes its line count.
 
 | Command (round 2) | Exit | Result |
 |---|---|---|
@@ -104,7 +104,7 @@ The residue counts, Changed paths and Proof sections below are round 1's and wer
 ## Reconstruction dimensions
 
 - Exact function/byte and relocation coverage: 22/22 functions, objisolate clean, relocation destinations clean, ROM order.
-- Genuine methods; remaining free-function/ABI bridges: 19 of the 22 functions are daOnms_c members: D1, D0, InitResources, CleanupResources, Behavior, Render, the eight states and the five helpers. The other 3 are C-linkage: `func_ov092_021313b0`, `02131578` and `02131a88` (R3). The factory `daOnms_c_classInit` is outside this TU, in `src/d_a_onms.cpp`. Seven mangled callee bridges remain (R5, R6).
+- Genuine methods; remaining free-function/ABI bridges: 19 of the 22 functions are daOnms_c members: D1, D0, InitResources, CleanupResources, Behavior, Render, the eight states and the five helpers. The other 3 are C-linkage: `func_ov092_021313b0`, `02131578` and `02131a88` (R3). The factory `daOnms_c_classInit` is outside this TU, in `src/game/actors/d_a_onms.cpp`. Seven mangled callee bridges remain (R5, R6).
 - Recovered layout/fields; remaining shadow structs/raw offsets: every daOnms_c field is named. No raw `this` offset and no shadow struct remain. The Vector3 casts over dActor_c scalars remain (R11).
 - Lifecycle, vtable/RTTI, initializer and data ownership: unchanged. The new members are non-virtual and the new statics are declarations only, so layout (0x594), vtable and RTTI are unchanged. The TU stays text-only.
 - Attribution preserved through each move/rename: the 13 `attribution.json` keys follow the renamed symbols with the same authors (`ruspecial` keeps StateBounce, `lunavyqo` keeps Launch, `tangosdev` the other eleven). The data rows carry no attribution key.
@@ -114,8 +114,8 @@ Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count
 
 | Path | Revision | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
 |---|---|---|---|---|---|---|
-| `src/actors/daOnms_c.cpp` | base `3fa23a5499` | 683 | 3 | 66 | 17 | 55 |
-| `src/actors/daOnms_c.cpp` | this commit | 573 | 0 | 27 | 4 | 36 |
+| `src/game/actors/d_a_onms.cpp` | base `3fa23a5499` | 683 | 3 | 66 | 17 | 55 |
+| `src/game/actors/d_a_onms.cpp` | this commit | 573 | 0 | 27 | 4 | 36 |
 | `include/daOnms_c.h` | base `3fa23a5499` | 185 | 3 | 14 | 0 | 4 |
 | `include/daOnms_c.h` | this commit | 97 | 0 | 3 | 0 | 0 |
 
@@ -132,7 +132,7 @@ Of the 36 `_ZN` lines in the source, 19 are `// @symbol` marker lines for member
 | `config/tu_manifest.d/ov092/daOnms_c.json` | the keys below |
 | `include/daOnms_c.h` | named fields, member and static declarations, C shadow struct removed, header comment tidied |
 | `notes/agents/handoffs/readable-ov092-onms-0925b.md` | this handoff |
-| `src/actors/daOnms_c.cpp` | the source changes above |
+| `src/game/actors/d_a_onms.cpp` | the source changes above |
 
 Changed keys in `config/tu_manifest.d/ov092/daOnms_c.json`, from a python parse of both revisions:
 
@@ -152,7 +152,7 @@ All commands ran in `C:/tmp/claude-rd-ov092` on the source of this commit. This 
 |---|---|---|
 | `python tools/tubuild.py verify ov092/daOnms_c` | 0 | 22/22 MATCH; objisolate clean; relocation destinations clean; ROM-ascending order |
 | Object comparison with pyelftools, `build/tu/ov092-daOnms_c/daOnms_c.o` from base `3fa23a5499` against the one `tubuild verify` builds from this commit, under the 16-row rename map | 0 | 24/24 named function bodies identical: the 22 ROM functions plus the compiler-only D2 and `_ZN7Vector3D1Ev`. 24/24 per-function relocation sets identical by symbol name, and 163 relocations in 28 relocation sections in each object. The undefined-symbol set is identical, 92 symbols, apart from the three data renames. The defined global set, 24 symbols, differs only by the 13 function renames. The base object's local `_ZN21Frame$518daOnms_c_cppD1Ev` (four-byte `bx lr`, deadstripped) is absent at this commit, which is why the object has 68 sections where the base had 69. |
-| `python tools/rombuild.py -j16` (full, with ROM) | 0 | 7100 enrolled sources, 7098 reused and 2 compiled (`src/actors/daOnms_c.cpp` and `src/d_a_onms.cpp`, the two consumers of the header); 11,214 of 11,214 source-built functions reproducing, 0 mismatching; module fidelity 106/106 exact; intact TU gates PASS with zero new symbol errors; `intactTuRom.identical` true. Its romData report lists 3 differing data symbols, `_ZTV10dCcAcPos_c` and two daDemo_c typeinfos, none in ov092 or in files this commit changes. |
+| `python tools/rombuild.py -j16` (full, with ROM) | 0 | 7100 enrolled sources, 7098 reused and 2 compiled (`src/game/actors/d_a_onms.cpp` and `src/game/actors/d_a_onms.cpp`, the two consumers of the header); 11,214 of 11,214 source-built functions reproducing, 0 mismatching; module fidelity 106/106 exact; intact TU gates PASS with zero new symbol errors; `intactTuRom.identical` true. Its romData report lists 3 differing data symbols, `_ZTV10dCcAcPos_c` and two daDemo_c typeinfos, none in ov092 or in files this commit changes. |
 | `python tools/prepush_linkcheck.py --range 3fa23a5499..HEAD` | 0 | 23 checked, 23 verified, 0 warnings, 0 blocking (every daOnms_c function plus `daOnms_c_classInit`) |
 | `the old credit check` | 0 | 7272 tracked, 0 changed, 0 lost |
 | `python tools/check_decl_agreement.py --changed 3fa23a5499` | 0 | no new disagreements, no new local redeclarations |
@@ -162,7 +162,7 @@ All commands ran in `C:/tmp/claude-rd-ov092` on the source of this commit. This 
 | `python tools/queue_audit.py --check-promoted` | 0 | every row agrees with the manifests |
 | `python tools/check_src_tu_compiles.py` | 0 | 299/299 translation units compile |
 | `python tools/port_refcheck.py` | 0 | 408 references, all resolve |
-| `python tools/affected_src.py include/daOnms_c.h` | 0 | `src/actors/daOnms_c.cpp`, `src/d_a_onms.cpp` |
+| `python tools/affected_src.py include/daOnms_c.h` | 0 | `src/game/actors/d_a_onms.cpp`, `src/game/actors/d_a_onms.cpp` |
 | `git diff 3fa23a5499..HEAD -- include/decl_common.h config/dead-reference-baseline.json config/decl-agreement-baseline.json` | 0 | empty |
 
 - Full-ROM build: see the rombuild row.

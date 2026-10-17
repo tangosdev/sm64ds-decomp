@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "task": "chiefchilly-native1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+  "source": "src/actors/daKing_Donketu_c.cpp",
+  "manifest": "config/tu_manifest.d/ov073/daKing_Donketu_c.json",
+  "base_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+  "upstream_main_context": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "tooling_pr": "https://github.com/tangosdev/sm64ds-decomp/pull/3766",
+  "symbol": "daKing_Donketu_c_classInit",
+  "module": "ov073",
+  "address": "0x02121ec8",
+  "size": 200,
+  "change": "Use return new daKing_Donketu_c; and remove obsolete factory-only ABI declarations/manual vtable store and stale constructor prose.",
+  "scope": "Source factory and existing production manifest; no header/module symbols/delinks/paths/temporary-pin changes.",
+  "anonymous_symbols_preserved": 40,
+  "status": "Producer production checks pass; independent exact-head Source acceptance required before source-only stacked PR.",
+  "remaining_work": [
+    "Existing scalar ABI bridges, raw views and partial actor reconstruction remain unchanged."
+  ],
+  "gates": {
+    "tested_source_commit": "47cef9a7ac55ba77bd8239516c385a8d43d5e192",
+    "tested_base": "257ef7edb18afda407e1e6957478878ed5952ffa",
+    "production_rom": {
+      "result": "PASS",
+      "functions_reproduced": 11331,
+      "mismatching_functions": 0,
+      "data_claims_reproduced": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "global_advisory": "969 verified,1519 partial,1 inherited differing,21 unnamed"
+    },
+    "raw_prepush": {
+      "checked": 48,
+      "verified": 46,
+      "warnings": [
+        {
+          "symbol": "daKing_Donketu_c_classInit",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "symbol": "__sinit_daKing_Donketu_c.cpp",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "qualification": "Raw standalone checks do not apply production TU preparation or canonical callback policy; independent prepared checks must close both warnings."
+    },
+    "private_prepared_parity": {
+      "functions": 48,
+      "objects": 65,
+      "defined_symbols": 115,
+      "qualification": "Private scout baseline/candidate bytes, symbol metadata and typed relocations identical after ordinary intact preparation; independent replication pending."
+    },
+    "anonymous_graph": {
+      "symbols": 40,
+      "incoming_references": 40,
+      "outgoing_references": 32,
+      "temporary_pin_changes": 0,
+      "qualification": "Names, bytes, owner, offsets, relocation types, addends and embedded words preserved; independent replication pending."
+    },
+    "raw_metadata": {
+      "symbols": 35,
+      "verified": 6,
+      "verified_bytes": 180,
+      "partial": 29,
+      "partial_bytes": 52,
+      "differs": 0,
+      "unnamed": 0
+    },
+    "declarations": {
+      "scoped_files": 477,
+      "inherited_disagreements": 4235,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    }
+  },
+  "source_lf_sha256": "c936c71293cf6c8f819e5d33bc67f44cb0760a1b93bc4f3ec7c051d5d0ba55e7"
+}

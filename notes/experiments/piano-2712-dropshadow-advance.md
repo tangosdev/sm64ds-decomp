@@ -173,3 +173,6 @@ Both halves of the old bullet were carried over from a sibling actor rather
 than measured against this TU. One survived measurement and one did not. A
 leftover that cites another file's result is not evidence about this
 candidate, which is the whole point of PIANO-2712-02.
+
+Current source locations after PR #3840: [src/game/actors/d_a_piano.cpp](../../src/game/actors/d_a_piano.cpp).
+The experiment and commands above retain the paths at `tested_commit`.

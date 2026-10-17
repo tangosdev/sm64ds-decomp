@@ -26,6 +26,12 @@
  *   02112328); they are not owned here.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km3_kaitendai_AssetId {
+    ASSET_KM3_KAITENDAI_BMD = 0x067d,
+    ASSET_KM3_KAITENDAI_KCL = 0x067e
+};
+
 #include "SharedFilePtr.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
@@ -74,6 +80,7 @@ extern "C" ResourceDescriptor data_ov047_02112334 = {
 };
 
 #include "daObjKm3_Kaitendai_c.h"
+#include "SpawnInfo.h"
 
 extern "C" {
 s32 func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
@@ -83,19 +90,6 @@ extern s16 data_ov047_02112320;
 extern s16 data_ov047_02112324;
 }
 
-struct KaitendaiSpawnInfo {
-    daObjKm3_Kaitendai_c *(*classInit)();
-    s16 executePriority; /* +4: also KM3_KAITENDAI registry id 0x009c = 156 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char KaitendaiSpawnInfo_size_must_be_0x1c[
-    sizeof(KaitendaiSpawnInfo) == 0x1c ? 1 : -1];
-
 // @symbol daObjKm3_Kaitendai_c_classInit
 extern "C" daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit()
 {
@@ -103,9 +97,9 @@ extern "C" daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit()
 }
 
 // @symbol g_profile_KM3_KAITENDAI
-extern "C" KaitendaiSpawnInfo g_profile_KM3_KAITENDAI = {
+extern "C" SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
     daObjKm3_Kaitendai_c_classInit,
-    0x009c,
+    0x009c, /* KM3_KAITENDAI registry id 156 */
     0x00e3,
     2,
     0,
@@ -131,5 +125,5 @@ s32 daObjKm3_Kaitendai_c::CleanupResources()
 
 /* Source order is construction order: model file 1661, then the collision
  * file 1662. The compiler registers each destructor beside the object. */
-Km3KaitendaiModelFilePtr data_ov047_02112610(1661);
-Km3KaitendaiClsnFilePtr data_ov047_02112608(1662);
+Km3KaitendaiModelFilePtr data_ov047_02112610(ASSET_KM3_KAITENDAI_BMD);
+Km3KaitendaiClsnFilePtr data_ov047_02112608(ASSET_KM3_KAITENDAI_KCL);

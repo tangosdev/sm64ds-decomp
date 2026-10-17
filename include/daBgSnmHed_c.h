@@ -20,7 +20,7 @@
  *
  * The reconstructed factory daBgSnmHed_c_classInit (0x021207d4, historical
  * alias SnowmanHead_Spawn) constructs it for the BIG_SNOWMAN_HEAD registry
- * profile and lives in src/actors/daBgSnmHed_c.cpp alongside the rest of the
+ * profile and lives in src/game/actors/d_a_bg_snm_hed.cpp alongside the rest of the
  * class.
  */
 struct daBgSnmHed_c : dActor_c {
@@ -31,7 +31,13 @@ struct daBgSnmHed_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;           /* 0x16c */
 
     typedef int (daBgSnmHed_c::*StateFunc)();
-    StateFunc *mStateFuncs;             /* 0x328 */
+    /* One row of the sinit-built table: the 8-byte init PMF, then the
+       8-byte per-frame behavior PMF. */
+    struct StateEntry {
+        StateFunc init;
+        StateFunc behavior;
+    };
+    StateEntry *mState;                 /* 0x328 */
     Player *mTalkPlayer;                /* 0x32c */
     s32 mStateValue;                    /* 0x330 */
     u8 mSubstate;                       /* 0x334 */

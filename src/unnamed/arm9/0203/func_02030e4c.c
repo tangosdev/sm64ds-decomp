@@ -9,9 +9,7 @@ extern void (*data_020927ec[])(void);
 int func_02030e4c(void)
 {
     void (*fn)(void);
-    if (data_0209fc68 != 0 && data_0209fc68 < 5) {
-        if (!func_0203da80(0x9d))
-            goto second;
+    if (data_0209fc68 != 0 && data_0209fc68 < 5 && func_0203da80(0x9d)) {
         if (func_0203da80(4)) {
             data_0209fc58 |= 0x10;
         } else if (func_0203da80(0x80)) {
@@ -22,11 +20,8 @@ int func_02030e4c(void)
                 data_0209fc58 |= 0x20;
         }
         func_02030790();
-    } else {
-    second:
-        if (data_0209fc68 >= 3 && data_0209fc68 < 5) {
-            if (func_0203d950(0) != 0 && data_0209fc54 == 0)
-                goto end;
+    } else if (data_0209fc68 >= 3 && data_0209fc68 < 5) {
+        if (func_0203d950(0) == 0 || data_0209fc54 != 0) {
             data_0209fc58 |= 1;
             if (data_0209fc68 < 4)
                 data_0209fc58 |= 0x20;
@@ -35,7 +30,6 @@ int func_02030e4c(void)
             func_02030790();
         }
     }
-end:
     fn = data_020927ec[data_0209fc68];
     if (fn != 0)
         fn();

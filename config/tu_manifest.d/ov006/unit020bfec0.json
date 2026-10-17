@@ -1,8 +1,8 @@
 {
   "id": "ov006/unit020bfec0",
   "module": "ov006",
-  "source": "src/actors/unit020bfec0.cpp",
-  "promoted_source": "src/actors/unit020bfec0.cpp",
+  "source": "src/minigames/unit020bfec0.cpp",
+  "promoted_source": "src/minigames/unit020bfec0.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -10,7 +10,7 @@
     "Upper edge 0x020c4048: the next linker unit begins there (tu_map), and its data starts at 0x0213af18, after this unit's last data word 0x0213aee8.",
     "93 functions, contiguous, every one a one-function shard that already byte-matched; no gaps inside 0x020bfec0..0x020c4048.",
     "Data windows are exclusive: all 45 distinct ov006 data targets referenced from the run lie in 0x0213ac48..0x0213aee8, 0x0213ad28, 0x0212b890, 0x0212b89c, 0x0212b8fc, 0x0212c9e4, and none is referenced from outside the run.",
-    "bss 0x021402e0..0x021402fc belongs to the one function-local static (guard word, destructor node, Vector3) in func_ov006_020c3754.",
+    "bss 0x021402e0..0x021402fc belongs to the one function-local static (guard word, destructor node, Vector3) in FallingPetal_Spawn.",
     "No RTTI, vtable or sinit record separates the run into smaller units, so interior boundaries are unproven and it is folded whole as the tu_map unit."
   ],
   "sections": [
@@ -22,14 +22,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov006_020bfec0",
+      "symbol": "Camera_ProjectToScreen16",
       "address": "0x020bfec0",
       "size": "0x00000138",
       "legacy_source": "src/func_ov006_020bfec0.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov006_020bfff8",
+      "symbol": "Camera_ProjectToScreen",
       "address": "0x020bfff8",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_020bfff8.cpp",
@@ -43,630 +43,630 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020c0264",
+      "symbol": "MascotWalker_StatePause",
       "address": "0x020c0264",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020c0264.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020c0304",
+      "symbol": "MascotWalker_StartPause",
       "address": "0x020c0304",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c0304.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020c0364",
+      "symbol": "MascotWalker_StateWalk",
       "address": "0x020c0364",
       "size": "0x00000218",
       "legacy_source": "src/func_ov006_020c0364.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020c057c",
+      "symbol": "MascotWalker_StartNextPath",
       "address": "0x020c057c",
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_020c057c.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020c06dc",
+      "symbol": "MascotWalker_UpdateMatrix",
       "address": "0x020c06dc",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020c06dc.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020c07a0",
+      "symbol": "MascotWalker_Draw",
       "address": "0x020c07a0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c07a0.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020c07e8",
+      "symbol": "MascotWalker_Update",
       "address": "0x020c07e8",
       "size": "0x00000144",
       "legacy_source": "src/func_ov006_020c07e8.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020c092c",
+      "symbol": "MascotWalker_Load",
       "address": "0x020c092c",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020c092c.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020c09f8",
+      "symbol": "MascotWalker_Destruct",
       "address": "0x020c09f8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020c09f8.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020c0a48",
+      "symbol": "MascotWalker_Construct",
       "address": "0x020c0a48",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c0a48.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020c0aa8",
+      "symbol": "Camera_InitDealerView",
       "address": "0x020c0aa8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020c0aa8.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_020c0af8",
+      "symbol": "Dealer_ResetMatrices",
       "address": "0x020c0af8",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_020c0af8.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020c0b74",
+      "symbol": "Dealer_StateWin",
       "address": "0x020c0b74",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_020c0b74.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov006_020c0c80",
+      "symbol": "Dealer_PlayWin",
       "address": "0x020c0c80",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_020c0c80.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020c0ce8",
+      "symbol": "Dealer_StateLose",
       "address": "0x020c0ce8",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c0ce8.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov006_020c0d68",
+      "symbol": "Dealer_PlayLose",
       "address": "0x020c0d68",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020c0d68.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_020c0df0",
+      "symbol": "Dealer_StateSwap",
       "address": "0x020c0df0",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020c0df0.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020c0e8c",
+      "symbol": "Dealer_StartSwap",
       "address": "0x020c0e8c",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020c0e8c.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov006_020c0efc",
+      "symbol": "Dealer_IsAnimDone",
       "address": "0x020c0efc",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c0efc.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov006_020c0f0c",
+      "symbol": "Dealer_IsBusy",
       "address": "0x020c0f0c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c0f0c.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov006_020c0f9c",
+      "symbol": "Dealer_StateReveal",
       "address": "0x020c0f9c",
       "size": "0x000001c8",
       "legacy_source": "src/func_ov006_020c0f9c.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov006_020c1164",
+      "symbol": "Dealer_StartReveal",
       "address": "0x020c1164",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020c1164.c",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov006_020c11c0",
+      "symbol": "Dealer_StateDeal",
       "address": "0x020c11c0",
       "size": "0x00000260",
       "legacy_source": "src/func_ov006_020c11c0.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov006_020c1420",
+      "symbol": "Dealer_StartDeal",
       "address": "0x020c1420",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020c1420.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov006_020c14bc",
+      "symbol": "Dealer_StateShuffle",
       "address": "0x020c14bc",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020c14bc.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov006_020c1604",
+      "symbol": "Dealer_StartShuffle",
       "address": "0x020c1604",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c1604.c",
       "ordinal": 28
     },
     {
-      "symbol": "func_ov006_020c16b4",
+      "symbol": "Dealer_IsIdleAtRest",
       "address": "0x020c16b4",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020c16b4.c",
       "ordinal": 29
     },
     {
-      "symbol": "func_ov006_020c1718",
+      "symbol": "Dealer_IsIdle",
       "address": "0x020c1718",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c1718.c",
       "ordinal": 30
     },
     {
-      "symbol": "func_ov006_020c1760",
+      "symbol": "Dealer_StateIdle",
       "address": "0x020c1760",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c1760.c",
       "ordinal": 31
     },
     {
-      "symbol": "func_ov006_020c1764",
+      "symbol": "Dealer_PlayIdle",
       "address": "0x020c1764",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020c1764.cpp",
       "ordinal": 32
     },
     {
-      "symbol": "func_ov006_020c1804",
+      "symbol": "Dealer_Draw",
       "address": "0x020c1804",
       "size": "0x000001cc",
       "legacy_source": "src/func_ov006_020c1804.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "func_ov006_020c19d0",
+      "symbol": "Dealer_Update",
       "address": "0x020c19d0",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020c19d0.cpp",
       "ordinal": 34
     },
     {
-      "symbol": "func_ov006_020c1a88",
+      "symbol": "Dealer_Load",
       "address": "0x020c1a88",
       "size": "0x000001dc",
       "legacy_source": "src/func_ov006_020c1a88.c",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov006_020c1c64",
+      "symbol": "Dealer_Destruct",
       "address": "0x020c1c64",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov006_020c1c64.c",
       "ordinal": 36
     },
     {
-      "symbol": "func_ov006_020c1d80",
+      "symbol": "Dealer_Construct",
       "address": "0x020c1d80",
       "size": "0x00000134",
       "legacy_source": "src/func_ov006_020c1d80.c",
       "ordinal": 37
     },
     {
-      "symbol": "func_ov006_020c1eb4",
+      "symbol": "Camera_InitSlotsView",
       "address": "0x020c1eb4",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020c1eb4.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_ov006_020c1ef8",
+      "symbol": "Mascot_StopLooking",
       "address": "0x020c1ef8",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020c1ef8.c",
       "ordinal": 39
     },
     {
-      "symbol": "func_ov006_020c1f04",
+      "symbol": "Mascot_LookAt",
       "address": "0x020c1f04",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c1f04.c",
       "ordinal": 40
     },
     {
-      "symbol": "func_ov006_020c1f4c",
+      "symbol": "Mascot_UpdateMatrix",
       "address": "0x020c1f4c",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_020c1f4c.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "func_ov006_020c201c",
+      "symbol": "Mascot_Draw",
       "address": "0x020c201c",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020c201c.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "func_ov006_020c2144",
+      "symbol": "Mascot_Update",
       "address": "0x020c2144",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c2144.c",
       "ordinal": 43
     },
     {
-      "symbol": "func_ov006_020c2154",
+      "symbol": "Mascot_Load",
       "address": "0x020c2154",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c2154.c",
       "ordinal": 44
     },
     {
-      "symbol": "func_ov006_020c21e4",
+      "symbol": "Mascot_Destruct",
       "address": "0x020c21e4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c21e4.c",
       "ordinal": 45
     },
     {
-      "symbol": "func_ov006_020c221c",
+      "symbol": "Mascot_Construct",
       "address": "0x020c221c",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020c221c.c",
       "ordinal": 46
     },
     {
-      "symbol": "func_ov006_020c225c",
+      "symbol": "Camera_InitPresenterView",
       "address": "0x020c225c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c225c.c",
       "ordinal": 47
     },
     {
-      "symbol": "func_ov006_020c2290",
+      "symbol": "Presenter_UpdateMatrix",
       "address": "0x020c2290",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c2290.c",
       "ordinal": 48
     },
     {
-      "symbol": "func_ov006_020c22d8",
+      "symbol": "Presenter_StateSurprisedThenIdle",
       "address": "0x020c22d8",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c22d8.c",
       "ordinal": 49
     },
     {
-      "symbol": "func_ov006_020c2300",
+      "symbol": "Presenter_PlayCheerLoop",
       "address": "0x020c2300",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c2300.c",
       "ordinal": 50
     },
     {
-      "symbol": "func_ov006_020c23a8",
+      "symbol": "Presenter_StateLoseStart",
       "address": "0x020c23a8",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020c23a8.cpp",
       "ordinal": 51
     },
     {
-      "symbol": "func_ov006_020c2440",
+      "symbol": "Presenter_PlayLose",
       "address": "0x020c2440",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_020c2440.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "func_ov006_020c24e4",
+      "symbol": "Presenter_StateSurprisedThenSmile",
       "address": "0x020c24e4",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c24e4.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "func_ov006_020c2594",
+      "symbol": "Presenter_PlayCheer",
       "address": "0x020c2594",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c2594.c",
       "ordinal": 54
     },
     {
-      "symbol": "func_ov006_020c263c",
+      "symbol": "Presenter_StateMistake",
       "address": "0x020c263c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c263c.c",
       "ordinal": 55
     },
     {
-      "symbol": "func_ov006_020c2664",
+      "symbol": "Presenter_PlayMiss",
       "address": "0x020c2664",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c2664.c",
       "ordinal": 56
     },
     {
-      "symbol": "func_ov006_020c26f4",
+      "symbol": "Presenter_StateWin",
       "address": "0x020c26f4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c26f4.c",
       "ordinal": 57
     },
     {
-      "symbol": "func_ov006_020c271c",
+      "symbol": "Presenter_PlayMatch",
       "address": "0x020c271c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c271c.c",
       "ordinal": 58
     },
     {
-      "symbol": "func_ov006_020c27c4",
+      "symbol": "Presenter_StateIdle",
       "address": "0x020c27c4",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_020c27c4.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "func_ov006_020c2848",
+      "symbol": "Presenter_PlayIdle",
       "address": "0x020c2848",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov006_020c2848.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "func_ov006_020c2924",
+      "symbol": "Presenter_ResetPose",
       "address": "0x020c2924",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c2924.cpp",
       "ordinal": 61
     },
     {
-      "symbol": "func_ov006_020c2984",
+      "symbol": "Presenter_IsAnimDone",
       "address": "0x020c2984",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c2984.c",
       "ordinal": 62
     },
     {
-      "symbol": "func_ov006_020c2994",
+      "symbol": "Presenter_IsIdle",
       "address": "0x020c2994",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c2994.c",
       "ordinal": 63
     },
     {
-      "symbol": "func_ov006_020c29dc",
+      "symbol": "Presenter_Draw",
       "address": "0x020c29dc",
       "size": "0x000001b0",
       "legacy_source": "src/func_ov006_020c29dc.cpp",
       "ordinal": 64
     },
     {
-      "symbol": "func_ov006_020c2b8c",
+      "symbol": "Presenter_Update",
       "address": "0x020c2b8c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020c2b8c.cpp",
       "ordinal": 65
     },
     {
-      "symbol": "func_ov006_020c2be8",
+      "symbol": "Presenter_TrackStylus",
       "address": "0x020c2be8",
       "size": "0x00000468",
       "legacy_source": "src/func_ov006_020c2be8.c",
       "ordinal": 66
     },
     {
-      "symbol": "func_ov006_020c3050",
+      "symbol": "Presenter_Load",
       "address": "0x020c3050",
       "size": "0x00000238",
       "legacy_source": "src/func_ov006_020c3050.c",
       "ordinal": 67
     },
     {
-      "symbol": "func_ov006_020c3288",
+      "symbol": "Presenter_Destruct",
       "address": "0x020c3288",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_020c3288.c",
       "ordinal": 68
     },
     {
-      "symbol": "func_ov006_020c33dc",
+      "symbol": "Presenter_Construct",
       "address": "0x020c33dc",
       "size": "0x0000014c",
       "legacy_source": "src/func_ov006_020c33dc.c",
       "ordinal": 69
     },
     {
-      "symbol": "func_ov006_020c3528",
+      "symbol": "FallingPetal_UpdateMatrix",
       "address": "0x020c3528",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c3528.cpp",
       "ordinal": 70
     },
     {
-      "symbol": "func_ov006_020c35a8",
+      "symbol": "FallingPetal_Draw",
       "address": "0x020c35a8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020c35a8.cpp",
       "ordinal": 71
     },
     {
-      "symbol": "func_ov006_020c35e8",
+      "symbol": "FallingPetal_Update",
       "address": "0x020c35e8",
       "size": "0x0000016c",
       "legacy_source": "src/func_ov006_020c35e8.c",
       "ordinal": 72
     },
     {
-      "symbol": "func_ov006_020c3754",
+      "symbol": "FallingPetal_Spawn",
       "address": "0x020c3754",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_020c3754.c",
       "ordinal": 73
     },
     {
-      "symbol": "func_ov006_020c3884",
+      "symbol": "FallingPetal_SetModel",
       "address": "0x020c3884",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c3884.c",
       "ordinal": 74
     },
     {
-      "symbol": "func_ov006_020c38ac",
+      "symbol": "FlowerFace_StateHate",
       "address": "0x020c38ac",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c38ac.c",
       "ordinal": 75
     },
     {
-      "symbol": "func_ov006_020c38b0",
+      "symbol": "FlowerFace_PlayHate",
       "address": "0x020c38b0",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c38b0.c",
       "ordinal": 76
     },
     {
-      "symbol": "func_ov006_020c3904",
+      "symbol": "FlowerFace_StateLike",
       "address": "0x020c3904",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c3904.c",
       "ordinal": 77
     },
     {
-      "symbol": "func_ov006_020c3908",
+      "symbol": "FlowerFace_PlayLike",
       "address": "0x020c3908",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c3908.c",
       "ordinal": 78
     },
     {
-      "symbol": "func_ov006_020c395c",
+      "symbol": "FlowerFace_StatePick",
       "address": "0x020c395c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c395c.c",
       "ordinal": 79
     },
     {
-      "symbol": "func_ov006_020c3990",
+      "symbol": "FlowerFace_PlayPetalPulled",
       "address": "0x020c3990",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020c3990.c",
       "ordinal": 80
     },
     {
-      "symbol": "func_ov006_020c3ad8",
+      "symbol": "FlowerFace_StateIdle",
       "address": "0x020c3ad8",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c3ad8.c",
       "ordinal": 81
     },
     {
-      "symbol": "func_ov006_020c3adc",
+      "symbol": "FlowerFace_PlayIdle",
       "address": "0x020c3adc",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020c3adc.c",
       "ordinal": 82
     },
     {
-      "symbol": "func_ov006_020c3b2c",
+      "symbol": "Camera_InitFlowerView",
       "address": "0x020c3b2c",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c3b2c.c",
       "ordinal": 83
     },
     {
-      "symbol": "func_ov006_020c3b80",
+      "symbol": "FlowerFace_IsIdle",
       "address": "0x020c3b80",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c3b80.c",
       "ordinal": 84
     },
     {
-      "symbol": "func_ov006_020c3bc8",
+      "symbol": "FlowerFace_Reset",
       "address": "0x020c3bc8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020c3bc8.c",
       "ordinal": 85
     },
     {
-      "symbol": "func_ov006_020c3bf4",
+      "symbol": "FlowerFace_Draw",
       "address": "0x020c3bf4",
       "size": "0x00000124",
       "legacy_source": "src/func_ov006_020c3bf4.cpp",
       "ordinal": 86
     },
     {
-      "symbol": "func_ov006_020c3d18",
+      "symbol": "FlowerFace_Update",
       "address": "0x020c3d18",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020c3d18.cpp",
       "ordinal": 87
     },
     {
-      "symbol": "func_ov006_020c3d88",
+      "symbol": "FlowerFace_Load",
       "address": "0x020c3d88",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020c3d88.cpp",
       "ordinal": 88
     },
     {
-      "symbol": "func_ov006_020c3e54",
+      "symbol": "FallingPetal_Destruct",
       "address": "0x020c3e54",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020c3e54.c",
       "ordinal": 89
     },
     {
-      "symbol": "func_ov006_020c3e70",
+      "symbol": "FlowerFace_Destruct",
       "address": "0x020c3e70",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020c3e70.cpp",
       "ordinal": 90
     },
     {
-      "symbol": "func_ov006_020c3f54",
+      "symbol": "FlowerFace_Construct",
       "address": "0x020c3f54",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov006_020c3f54.cpp",
       "ordinal": 91
     },
     {
-      "symbol": "func_ov006_020c402c",
+      "symbol": "FallingPetal_Construct",
       "address": "0x020c402c",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020c402c.c",
@@ -714,7 +714,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so this TU re-emits it with vague linkage for the Vector3 temporary in func_ov006_020c3bf4. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN7Vector3D1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so this TU re-emits it with vague linkage for the Vector3 temporary in FlowerFace_Draw. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN7Vector3D1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     }
   ]
 }

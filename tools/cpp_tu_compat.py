@@ -42,7 +42,7 @@ import validate_merge as VM  # noqa: E402
 
 
 SYMBOLS = ("_ZN4Pair5FirstEv", "_ZN4Pair6SecondEv")
-SOURCE = pathlib.PurePosixPath("src", "actors", "Pair.cpp").as_posix()
+SOURCE = pathlib.PurePosixPath("src", "runtime", "actor", "Pair.cpp").as_posix()
 START = 0x02000000
 
 SYMBOL_TEXT = "".join(
@@ -82,7 +82,7 @@ class _Fixture:
         self.repo = pathlib.Path(self._tmp.name)
 
     def __enter__(self):
-        for directory in ("src/actors", "legacy-src", "include", "config/arm9",
+        for directory in ("src/runtime/actor", "legacy-src", "include", "config/arm9",
                           "port/hal"):
             (self.repo / directory).mkdir(parents=True, exist_ok=True)
         (self.repo / SOURCE).write_text(SOURCE_TEXT, encoding="utf-8")

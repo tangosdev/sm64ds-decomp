@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern u8 data_ov007_02104ba0[];
 extern u16 data_ov007_020d7b54[];
 extern short data_02082214[];
@@ -116,7 +117,7 @@ void func_ov007_020bad8c(void)
             u = u >> 0x10;
             idx = (int)u >> 4;
             tblval = data_02082214[idx * 2];
-            amt = (int)(((long long)tblval * 0x258 + 0x800) >> 0xc);
+            amt = FX_MUL(tblval, 0x258);
             func_ov007_020c55bc(r6, amt + 0x1000, 0x1000 - amt);
         }
         *(int *)(*(char **)data_ov007_02104ba0 + 0x1c) = 2;
@@ -133,7 +134,7 @@ void func_ov007_020bad8c(void)
         if (m != 0x1e) {
             return;
         }
-        func_ov007_020bbc08(3, 0x1e, (int)(((long long)var_r4 * 0x7d0 + 0x800) >> 0xc) + 0xc8);
+        func_ov007_020bbc08(3, 0x1e, FX_MUL(var_r4, 0x7d0) + 0xc8);
         return;
     }
     case 5:

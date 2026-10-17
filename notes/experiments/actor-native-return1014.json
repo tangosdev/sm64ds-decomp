@@ -1,0 +1,744 @@
+{
+  "task": "actor-native-return1014",
+  "base": "a159039b892ca45ca794d5e612ce15a971496768",
+  "tested_source_checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+  "source_author_session": "codex-root-actor-native-return1014",
+  "actual_root_thread": "01a12e6f-7ee1-7162-9a64-81145ed6b260",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3169",
+  "scope": [
+    "src/actors/dActor_c.cpp",
+    "notes/experiments/actor-native-return1014.json"
+  ],
+  "source_completion": "partial",
+  "change": "Replace the C-linkage hand-spelled void(out,this) entry with the existing genuine Vector3-returning dActor_c::OnAimedAtWithEggReturnVec member. The member snapshots all three position components before calling the virtual OnAimedAtWithEgg, adds the returned height to the saved y component, and returns the saved vector.",
+  "signature_evidence": {
+    "existing_declaration": "include/dActor_c.h already declares virtual Vector3 OnAimedAtWithEggReturnVec(); no header or vtable layout change.",
+    "retail_entry": "arm9 0x020100dc..0x02010124, 72 bytes, existing canonical member symbol unchanged.",
+    "abi": "The compiler supplies the hidden aggregate return buffer and receiver for the native definition. Exact raw object identity proves this source shape preserves the existing retail ABI under 2004/b56.",
+    "naming": "Reuse the current reconstructed method and field names; no uniquely recovered original spelling claim."
+  },
+  "ordinary_production": {
+    "manifest": "config/tu_manifest.d/arm9/Actor.json",
+    "policy": "Unmodified text-only partitioned preparation and existing byte-identical Vector3 duplicate rule; no intact nontext claim added.",
+    "vector3_duplicate": {
+      "name": "_ZN7Vector3D1Ev",
+      "module": "arm9",
+      "addr": "0x020072c0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "ownership": "No RTTI/vtable/init/data/BSS storage emitted here; lifecycle shard ownership unchanged.",
+    "text_only_partitioned": true,
+    "qualification": "This manifest uses the existing text-only partitioned pipeline. No intact-object or new nontext storage ownership claim; separate lifecycle shards retain constructor/destructor/vtable/RTTI ownership."
+  },
+  "historical_findings": {
+    "DUST-AUDIT-PARTIAL-001": {
+      "disposition": "deferred",
+      "id": "DUST-AUDIT-PARTIAL-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3169",
+      "kind": "reconstruction",
+      "location": "src/actors/dActor_c.cpp:1338 and remaining TU",
+      "owner": "dActor dust source producer and root reconstruction coordinator",
+      "reason": "RaycastGroundPod and explicit C1/D1 calls remain for ordinal12/18; Particle Fix12 scalar adapter stays under documented by-value ABI constraint. Separate Actor constructor/destructor shards own lifecycle and RTTI/vtables. No full-class completion claim.",
+      "summary": "Dust members improve two functions; the surrounding Actor reconstruction retains raw ground workspaces, scalar particle ABI calls and other free/raw helpers."
+    },
+    "DUST-AUDIT-PROV-001": {
+      "disposition": "fixed",
+      "id": "DUST-AUDIT-PROV-001",
+      "kind": "provenance",
+      "location": "src/actors/dActor_c.cpp:56",
+      "reason": "Private candidate explicitly distinguishes remaining ordinal12/18 RaycastGroundPod bridges from real-header automatic objects in ordinal14/16. Independent full raw/prepared identity proves the genuine ground class works. Final tracked candidate still requires acceptance.",
+      "summary": "The old reconciliation paragraph describes the removed private ground-query shadow and asserts an unnecessary type restriction."
+    },
+    "da1up-reconstruction-debt-disclosed": {
+      "disposition": "deferred",
+      "id": "da1up-reconstruction-debt-disclosed",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2505",
+      "kind": "reconstruction",
+      "location": "src/actors/da1up_c.cpp, include/da1up_c.h",
+      "owner": "fleet-0907-prod-oneup-0908",
+      "reason": "Re-read both files at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c and the disclosure is intact and specific, not a blanket disclaimer. include/da1up_c.h opens by separating what the cartridge proves from what the project invented: the type-name string 7da1up_c at 0x02108370 and _ZTI7da1up_c at 0x0210837c are ROM-attested, ONEUPKINOKO and SCALEUP_KINOKO are ROM ASCII in arm9's actor debug-name table, while the member names and signatures, the classInit and g_profile_ affixes and EVERY field name are marked as reconstructed, with mStateTimer carrying an inline coined-name marker and the tail fields and base extent named as inferences. src/actors/da1up_c.cpp restates the same split, and the handoff's closing paragraph enumerates the remaining debt (eight native definitions emitting nine method symbols, 27 free-function bodies, the opaque PMF holder, the local ModelCache view, raw offsets, destructor/vtable/RTTI and initializer ownership unchanged) and refuses to count the live timer and Model call as method conversions. Deferral is legitimate for kind reconstruction, the review completion is partial as that requires, and the debt has a named owner and its own repository issue. Disposition unchanged: deferred.",
+      "summary": "da1up_c retains substantial unrecovered reconstruction: coined field names, an opaque PMF holder, a local ModelCache view, raw offsets and other ABI parameter views."
+    },
+    "dead-references-koopa-plus-truncation": {
+      "disposition": "fixed",
+      "id": "dead-references-koopa-plus-truncation",
+      "kind": "correctness",
+      "location": "config/dead-reference-baseline.json, notes/agents/handoffs/issue-2411-humanizer-2.md:68",
+      "reason": "Every element reproduced independently on the MERGE TREE at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0. (1) python tools/check_dead_references.py exits 0 on the merge tree and 0 on the base control, exit codes captured directly to files and never through a pipe. (2) The branch-level diff of config/dead-reference-baseline.json adds exactly ONE entry -- file notes/agents/handoffs/issue-2411-humanizer-2.md, ref src_tu/actors/Koopa -- and removes none. (3) The tool was not weakened: the branch-level git diff over tools/ is entirely EMPTY, so check_dead_references.py is byte-identical to main's. (4) The regex really cannot express the path: PATH_RE's character class is [A-Za-z0-9_.-] with no plus sign, and git ls-files shows exactly 8 tracked files carrying a plus, three of them under src_tu/. (5) The precedent is real: the baseline already carries (notes/actor-leaf-provenance.md, src_tu/actors/EnemySpawner), the identical truncation of src_tu/actors/EnemySpawner+EnemySwitchTag.cpp. RESIDUAL IMPRECISION, disclosed rather than raised as a separate finding: the handoff and the verifier's own reason call that precedent one entry above the new pair; the file sorts by (file, ref) and the precedent is at index 1 while the new entry is at index 12, so it is eleven entries above, not one. The substantive claim (a direct precedent of the identical shape exists in this same file) is true and was verified; only the positional adjective is wrong, it moves no number and changes no verdict, and a provenance finding cannot be deferred under source_review, so raising it would demand a commit this verify-mode stage is forbidden to make. Recorded here so a later writer can correct the word. Disposition unchanged: fixed.",
+      "summary": "check_dead_references PATH_RE cannot express + in a filename, so the handoff's citation of src_tu/actors/Koopa+KoopaSmall.cpp truncated to a path not in the tree and the gate went red."
+    },
+    "handoff-matching-headers-claim-false": {
+      "disposition": "fixed",
+      "id": "handoff-matching-headers-claim-false",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md:58-69",
+      "reason": "Re-read the section in the tree at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. The phrase survives only inside an explicit retraction: the text names the earlier claim as wrong, says a whole-tree compile falsified it, and gives the measured readings (exit 1 at 156/160 on candidate 848da2bb8, exit 0 at 159/159 on task base 26f54f8fc), then names the four src_tu definitions that were still int. No unretracted assertion of matching headers exists anywhere in the file. Disposition unchanged: fixed.",
+      "summary": "An earlier revision claimed the overrides returned void with matching headers; a whole-tree compile falsified it."
+    },
+    "onturnintoegg-src-tu-redeclaration": {
+      "disposition": "fixed",
+      "id": "onturnintoegg-src-tu-redeclaration",
+      "kind": "correctness",
+      "location": "src_tu/actors/Actor.cpp:1140, src_tu/actors/Koopa+KoopaSmall.cpp:347, src_tu/actors/Lakitu.cpp:88, src_tu/actors/Spiny.cpp:88",
+      "reason": "Re-checked at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried on the verifier's word. All four definitions read void <Class>::OnTurnIntoEgg(Player &player) at exactly the cited lines, and the base declaration in include/dActor_c.h:144 reads virtual void OnTurnIntoEgg(Player &player); slot 19. A tree-wide grep for 'int OnTurnIntoEgg' returns exactly one hit, include/dScMgMemory_c.h:76 virtual int OnTurnIntoEgg(int mode);, which is the separate minigame (int) hierarchy the handoff explicitly keeps as int on the strength of 14 observed ov004 calls that consume the result -- a different overload, not a survivor of this repair. The objective test is compilation, since a redeclaration cannot compile: premerge_check ran the src-tu-refs gate on the merge tree and it passes on both sides, and check_src_tu_compiles is reported by the verifier at 170/170. Disposition unchanged: fixed.",
+      "summary": "Four byte-verified promoted translation units still defined OnTurnIntoEgg(Player&) as int after the header contract moved to void, so the whole-tree compile rejected them as redeclarations."
+    },
+    "queue-audit-residue-miscited-as-preexisting": {
+      "disposition": "fixed",
+      "id": "queue-audit-residue-miscited-as-preexisting",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, the queue-rows bullet",
+      "reason": "Re-read the bullet at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. It now retracts the earlier claim in terms, says plainly that it was wrong for three of the five, gives the per-row table (Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120) with each row delta matched to its source-file line delta, and keeps only ChiefChilly and Player as pre-existing -- which the base control independently confirms are exactly the two rows main is red on. ONE RESIDUAL IMPRECISION, settled here as clearing without a new finding. The bullet attributes the ChiefChilly/Player staleness to main's 9b8cb8add editing include/ChiefChilly.h and include/Player.h. That is the wrong half of the commit: queue_audit derives total_lines by summing lines over the delinks-resolved source paths of the row's range, which are src/ paths only, and no include/ path appears in config/arm9/delinks.txt, so a header edit cannot move the cell. The same commit 9b8cb8add also edited src/_ZN11ChiefChillyD1Ev.cpp and src/_ZN6PlayerD1Ev.cpp, and those are what moved the numbers: measured with git show 9b8cb8add^:<path> piped to wc -l against git show 9b8cb8add:<path>, 22 to 23 and 35 to 36, which are exactly the +1 deltas the two rows need. The commit attribution and the direction of responsibility are therefore both correct and independently verified; 9b8cb8add is an ancestor of both bdcb1df7d and the branch's merge-base c52f63ca5, so it is genuinely main's. Only the named mechanism is wrong. It moves no number, changes no gate verdict and does not affect this branch's attribution, and under source_review a provenance finding may not be deferred, so raising it would require a corrective commit that mode verify forbids -- converting a wrong noun into a hard publish refusal. It clears as-is and is recorded here so the next writer touching this bullet fixes the sentence. Disposition unchanged: fixed.",
+      "summary": "The handoff attributed all five stale queue rows to main; three were the branch's own."
+    },
+    "queue-rows-stale-from-branch-edits": {
+      "disposition": "fixed",
+      "id": "queue-rows-stale-from-branch-edits",
+      "kind": "correctness",
+      "location": "notes/data/tu-promotion-queue.tsv, rows Crate / Coin / daGmch_c (plus da1up_c)",
+      "reason": "Measured on both trees rather than inferred. On the merge tree at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0, python tools/queue_audit.py --check exits 0 and prints 'queue agrees with the tree' -- 0 rows disagreeing. On the base control at bdcb1df7d3d071ab46d79e6538fec176efa78780 the same command exits 1 with 'total_lines: 2 row(s) disagree with the tree'. The --check form was used deliberately: the bare invocation exits 0 while printing the same disagreement line, and it was run here on the red base to confirm that trap still bites (bare exit 0 on a red base). The two base rows were named by running --write on the base control and reading the diff: ChiefChilly 1992 to 1993 and Player 26798 to 26799, then restored with git checkout -- and git status --porcelain confirmed empty. So the merge tree is green exactly where main alone is red, which is the fixed outcome, confirmed and not assumed. Disposition unchanged: fixed.",
+      "summary": "The branch's own edits to src/ files left queue total_lines cells stale, and an earlier revision wrote them off as pre-existing on main."
+    }
+  },
+  "historical_qualification": "Exact findings retained from dactor-dust-main-compose1014. These include inherited older class and queue findings and describe their historical epochs, not this change. The original producer task did not declare predecessor_tasks; the current-base continuation must explicitly inherit this producer and the prior Actor task so independent acceptance retains their authors and findings.",
+  "remaining_reconstruction": "The Actor TU remains partially reconstructed: ground-query POD bridges and explicit C1/D1 calls in some helpers, particle Fix12 scalar adapters, raw/free helper interfaces, other hand-spelled methods and separate lifecycle shards remain. This converts one actual method; it is not a complete class conversion.",
+  "verification": {
+    "compiler": "2004/b56",
+    "source_disk_sha256": "c1d3c991c0124a4d981f63a6831f85eae135d575f5c6408a32105be6a87b7056",
+    "source_git_blob_sha256": "03f4b2b1a4b3f4975fd86cf816bbe6a201492430bc291d97926658a8bda70638",
+    "manifest_sha256": "88a9839f8202d1a3ddb349d0c381e4d2e9791d5ac3f4a8821eef82672289b1b2",
+    "raw_sha256": "76b805b8458a6aeb58a48b31a47d1cff1b833ff271cea0afa9a353bcc9130b81",
+    "prepared_sha256": "19edbeb864623c1a1f22eedf2237a6c8131e0674276fc35ba615a78abc16a4ed",
+    "entire_raw_equal": true,
+    "entire_prepared_equal": true,
+    "strict_unique_functions": 91,
+    "blind": 0,
+    "raw_relocations": 191,
+    "prepared_relocations": 191,
+    "complete_retained_definitions": [
+      "LoadBlueCoinModel",
+      "UnloadBlueCoinModel",
+      "_ZN5Sound15PlaySecretSoundEP8dActor_cPt",
+      "_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt",
+      "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE",
+      "_ZN8dActor_c10FindWithIDEj",
+      "_ZN8dActor_c10PoofDustAtERK7Vector3",
+      "_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs",
+      "_ZN8dActor_c11AfterRenderEj",
+      "_ZN8dActor_c11LandingDustEb",
+      "_ZN8dActor_c11OnAttacked1ERS_",
+      "_ZN8dActor_c11OnAttacked2ERS_",
+      "_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_",
+      "_ZN8dActor_c11UntrackStarERa",
+      "_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3",
+      "_ZN8dActor_c12BeforeRenderEv",
+      "_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s",
+      "_ZN8dActor_c13AfterBehaviorEj",
+      "_ZN8dActor_c13ClosestPlayerEv",
+      "_ZN8dActor_c13DistToCPlayerEv",
+      "_ZN8dActor_c13LandingDustAtER7Vector3b",
+      "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "_ZN8dActor_c13OnYoshiTryEatEv",
+      "_ZN8dActor_c13SmallPoofDustEv",
+      "_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j",
+      "_ZN8dActor_c13SpawnSoundObjEj",
+      "_ZN8dActor_c14BeforeBehaviorEv",
+      "_ZN8dActor_c14FarthestPlayerEv",
+      "_ZN8dActor_c14GetSubtractionEss",
+      "_ZN8dActor_c14TriplePoofDustEv",
+      "_ZN8dActor_c15FindWithActorIDEjPS_",
+      "_ZN8dActor_c15GivePlayerCoinsER6Playerhj",
+      "_ZN8dActor_c15HugeLandingDustEb",
+      "_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i",
+      "_ZN8dActor_c15IsPlayerInRangeERK7Vector3i",
+      "_ZN8dActor_c15IsPlayerInRangeEi",
+      "_ZN8dActor_c15OnGroundPoundedERS_",
+      "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player",
+      "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "_ZN8dActor_c16TriplePoofDustAtERK7Vector3",
+      "_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b",
+      "_ZN8dActor_c17GetWaterHeightWDWEv",
+      "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+      "_ZN8dActor_c17TrackInDeathTableEv",
+      "_ZN8dActor_c18AfterInitResourcesEj",
+      "_ZN8dActor_c18ClosestWithActorIDEj",
+      "_ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j",
+      "_ZN8dActor_c18FindExplosionActorER5dCc_c",
+      "_ZN8dActor_c18GetBitInDeathTableEv",
+      "_ZN8dActor_c18HorzAngleToCPlayerEv",
+      "_ZN8dActor_c18HorzAngleToFPlayerEv",
+      "_ZN8dActor_c19BeforeInitResourcesEv",
+      "_ZN8dActor_c19DisappearPoofDustAtERK7Vector3",
+      "_ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j",
+      "_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c",
+      "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h",
+      "_ZN8dActor_c19UntrackInDeathTableEv",
+      "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "_ZN8dActor_c22ClosestNonVanishPlayerEv",
+      "_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE",
+      "_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c",
+      "_ZN8dActor_c23HorzAngleToCPlayerOrAngEv",
+      "_ZN8dActor_c24BumpedUnderneathByPlayerER6Player",
+      "_ZN8dActor_c24KillAndTrackInDeathTableEv",
+      "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv",
+      "_ZN8dActor_c4NextEPKS_",
+      "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+      "_ZN8dActor_c7FindEggER5dCc_c",
+      "_ZN8dActor_c8OnKickedERS_",
+      "_ZN8dActor_c8OnPushedERS_",
+      "_ZN8dActor_c8PoofDustEv",
+      "_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_",
+      "_ZN8dActor_c9TrackStarEjj",
+      "_ZN8dActor_c9UpdatePosEP5dCc_c",
+      "_ZN8dActor_c9Virtual50Ev",
+      "func_0200f760",
+      "func_0200f7f0",
+      "func_0200fa04",
+      "func_0200fa8c",
+      "func_0200fc44",
+      "func_0200fccc",
+      "func_02010304",
+      "func_020105cc",
+      "func_02010844",
+      "func_02010da4",
+      "func_02010e78"
+    ],
+    "prepared_nontext": [],
+    "declarations": {
+      "before": 7491,
+      "after": 7491,
+      "new": 0,
+      "removed": 0,
+      "new_unbanked": 0,
+      "population": [
+        {
+          "file": "src/actors/dActor_c.cpp",
+          "line": 1107,
+          "signature": "Vector3 (<this>)",
+          "is_member": true,
+          "definition": true
+        }
+      ],
+      "qualification": "Ratchet success is not whole-tree declaration agreement; existing banked debt remains."
+    },
+    "terminal_gates": {
+      "rombuild": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ],
+        "exit_code": 0,
+        "seconds": 304.9529999999795,
+        "log": "build\\actor-native-return1014\\rombuild.log",
+        "checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+        "base": "a159039b892ca45ca794d5e612ce15a971496768"
+      },
+      "stock": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "a159039b892ca45ca794d5e612ce15a971496768..ae3aeea4f379c312740f3f4006d60599d1e34816",
+          "--json",
+          "build\\actor-native-return1014\\stock.json"
+        ],
+        "exit_code": 0,
+        "seconds": 73.625,
+        "log": "build\\actor-native-return1014\\stock.log",
+        "checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+        "base": "a159039b892ca45ca794d5e612ce15a971496768"
+      },
+      "decl": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "a159039b892ca45ca794d5e612ce15a971496768"
+        ],
+        "exit_code": 0,
+        "seconds": 16.34399999998277,
+        "log": "build\\actor-native-return1014\\decl.log",
+        "checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+        "base": "a159039b892ca45ca794d5e612ce15a971496768"
+      },
+      "decl-global": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 14.030999999959022,
+        "log": "build\\actor-native-return1014\\decl-global.log",
+        "checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+        "base": "a159039b892ca45ca794d5e612ce15a971496768"
+      },
+      "port": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.7969999999622814,
+        "log": "build\\actor-native-return1014\\port.log",
+        "checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+        "base": "a159039b892ca45ca794d5e612ce15a971496768"
+      },
+      "langmode": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/langmode_audit.py",
+          "--check",
+          "build\\actor-native-return1014\\langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "seconds": 15.687999999965541,
+        "log": "build\\actor-native-return1014\\langmode.log",
+        "checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+        "base": "a159039b892ca45ca794d5e612ce15a971496768"
+      },
+      "conflict": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_tubuild_conflicts.py"
+        ],
+        "exit_code": 0,
+        "seconds": 4.39100000000326,
+        "log": "build\\actor-native-return1014\\conflict.log",
+        "checkpoint": "ae3aeea4f379c312740f3f4006d60599d1e34816",
+        "base": "a159039b892ca45ca794d5e612ce15a971496768"
+      }
+    },
+    "full_rom": {
+      "modules_exact": 106,
+      "source_functions_exact": 11334,
+      "data_claims_exact": 331,
+      "bss_claims": 239,
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "qualification": "Production candidate modules pass; no packaged candidate-ROM claim because --no-rom. Existing stock control symbol errors remain. Global data advisory is 969 verified,1519 partial,1 differ,21 unnamed from5282 records; it is not a global zero-difference assertion."
+    }
+  },
+  "formal_acceptance": false,
+  "publication": "Current-base independent acceptance pending; no public PR yet.",
+  "current_base_composition": {
+    "task": "actor-native-return-current1014",
+    "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1",
+    "tested_source_checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+    "original_source_and_report_output": "964b9ac13750de704b6c29081eabf6bd562dd927",
+    "predecessor_tasks": [
+      "actor-native-return1014",
+      "dactor-dust-main-compose1014"
+    ],
+    "source_author_session": "codex-root-actor-native-return1014",
+    "actual_root_thread": "01a12e6f-7ee1-7162-9a64-81145ed6b260",
+    "change": "Merge current native fBase initialization and scene fields into preserved Actor member candidate; Actor Source, header, manifest and existing production policy unchanged.",
+    "source_disk_sha256": "c1d3c991c0124a4d981f63a6831f85eae135d575f5c6408a32105be6a87b7056",
+    "source_git_blob_sha256": "03f4b2b1a4b3f4975fd86cf816bbe6a201492430bc291d97926658a8bda70638",
+    "raw_sha256": "76b805b8458a6aeb58a48b31a47d1cff1b833ff271cea0afa9a353bcc9130b81",
+    "prepared_sha256": "19edbeb864623c1a1f22eedf2237a6c8131e0674276fc35ba615a78abc16a4ed",
+    "complete_raw_and_prepared_equal_under_current_headers": true,
+    "strict_unique_functions": 91,
+    "raw_relocations": 191,
+    "prepared_relocations": 191,
+    "blind": 0,
+    "prepared_nontext": [],
+    "vector3_duplicate": {
+      "name": "_ZN7Vector3D1Ev",
+      "module": "arm9",
+      "addr": "0x020072c0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "declaration_before": 7491,
+    "declaration_after": 7491,
+    "new_disagreements": 0,
+    "removed_disagreements": 0,
+    "terminal_gates": {
+      "rombuild": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ],
+        "exit_code": 0,
+        "seconds": 272.65600000001723,
+        "log": "build\\actor-native-return-current1014\\rombuild.log",
+        "checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+        "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+      },
+      "stock": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "58927e7d8e76b13899e7cf4931d756a47ad438f1..862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+          "--json",
+          "build\\actor-native-return-current1014\\stock.json"
+        ],
+        "exit_code": 0,
+        "seconds": 63.09399999998277,
+        "log": "build\\actor-native-return-current1014\\stock.log",
+        "checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+        "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+      },
+      "decl": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+        ],
+        "exit_code": 0,
+        "seconds": 12.125,
+        "log": "build\\actor-native-return-current1014\\decl.log",
+        "checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+        "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+      },
+      "decl-global": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 10.96899999998277,
+        "log": "build\\actor-native-return-current1014\\decl-global.log",
+        "checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+        "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+      },
+      "port": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.8589999999967404,
+        "log": "build\\actor-native-return-current1014\\port.log",
+        "checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+        "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+      },
+      "langmode": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/langmode_audit.py",
+          "--check",
+          "build\\actor-native-return-current1014\\langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "seconds": 14.76600000000326,
+        "log": "build\\actor-native-return-current1014\\langmode.log",
+        "checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+        "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+      },
+      "conflict": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_tubuild_conflicts.py"
+        ],
+        "exit_code": 0,
+        "seconds": 0.5160000000032596,
+        "log": "build\\actor-native-return-current1014\\conflict.log",
+        "checkpoint": "862e02d94b7e9a9a796ff5c57abcb295c6a7bd89",
+        "base": "58927e7d8e76b13899e7cf4931d756a47ad438f1"
+      }
+    },
+    "production": {
+      "modules_exact": 106,
+      "functions_exact": 11334,
+      "data_claims_exact": 331,
+      "bss_claims": 239,
+      "packaged_candidate_rom": false,
+      "qualification": "Current full module/ownership checks pass under --no-rom; baseline symbol errors and broad data advisory debt remain."
+    },
+    "inheritance": "The queue continuation explicitly inherits the original Root producer task and dactor-dust-main-compose1014 authors and all eight findings; historical dictionaries above retain their original epochs.",
+    "formal_acceptance": false
+  },
+  "latest_main_composition": {
+    "task": "actor-native-return-final1014",
+    "base": "1ea12ec7432b56ee8ebd8a783b68602781df59d7",
+    "preserved_source_parent": "f4724f3ea61f083ad75b7a92444a66115e333bfe",
+    "source_checkpoint": "329e3d29ec5e59c4af80edc1072bb7e80ae8905f",
+    "source_author": "Original accepted producer unchanged; Root composed upstream and wrote this report only.",
+    "predecessor": "actor-native-return-main1014",
+    "four_dependency_trees_equal": {
+      "include": "9a7fe3dd2d6c10927c6604d70dc4bfaca9c614ae",
+      "config": "90bf84d569cd549c53ca5d06180145c10e78d62e",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "complete_src_delta": [
+      "src/actors/ActorBase.cpp"
+    ],
+    "all_other_src_blobs_unchanged": true,
+    "upstream_source_output_proof": [
+      {
+        "source": "src/actors/ActorBase.cpp",
+        "old_source_blob": "da804163ba53e9d530c49c037ea1547d7c41a1f7",
+        "current_source_blob": "0cb3174fa8f4e4e127a9b3ee025fdacfd229723e",
+        "raw_equal": true,
+        "prepared_equal": true,
+        "whole_graphs_equal": true,
+        "raw_sha256": "9b73570275d39aef46c4b94b4d6c85963e47ba51e55fdf09a4d37d1bd92f88b1",
+        "prepared_sha256": "137165db1189a5fa603d7e179f94eeea5c937828fdd5dc10692b392b2c65c704",
+        "unique_strict": 30,
+        "checks": [
+          {
+            "name": "func_020433b8",
+            "module": "arm9",
+            "addr": "0x020433b8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_cnwEj",
+            "module": "arm9",
+            "addr": "0x02043444",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c13OnHeapCreatedEv",
+            "module": "arm9",
+            "addr": "0x02043494",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c9Virtual38Ejj",
+            "module": "arm9",
+            "addr": "0x0204349c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c9Virtual34Ejj",
+            "module": "arm9",
+            "addr": "0x0204357c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_02043810",
+            "module": "arm9",
+            "addr": "0x02043810",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c18MarkForDestructionEv",
+            "module": "arm9",
+            "addr": "0x02043824",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_02043880",
+            "module": "arm9",
+            "addr": "0x02043880",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c16OnPendingDestroyEv",
+            "module": "arm9",
+            "addr": "0x02043ac0",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c11AfterRenderEj",
+            "module": "arm9",
+            "addr": "0x02043ac4",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c12BeforeRenderEv",
+            "module": "arm9",
+            "addr": "0x02043ac8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c6RenderEv",
+            "module": "arm9",
+            "addr": "0x02043af0",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c13AfterBehaviorEj",
+            "module": "arm9",
+            "addr": "0x02043af8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c14BeforeBehaviorEv",
+            "module": "arm9",
+            "addr": "0x02043afc",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c8BehaviorEv",
+            "module": "arm9",
+            "addr": "0x02043b24",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c21AfterCleanupResourcesEj",
+            "module": "arm9",
+            "addr": "0x02043b2c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+            "module": "arm9",
+            "addr": "0x02043bac",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c16CleanupResourcesEv",
+            "module": "arm9",
+            "addr": "0x02043bf0",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c18AfterInitResourcesEj",
+            "module": "arm9",
+            "addr": "0x02043bf8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c19BeforeInitResourcesEv",
+            "module": "arm9",
+            "addr": "0x02043c78",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c13InitResourcesEv",
+            "module": "arm9",
+            "addr": "0x02043c80",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE",
+            "module": "arm9",
+            "addr": "0x02043c88",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_cD2Ev",
+            "module": "arm9",
+            "addr": "0x02043d48",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_cD0Ev",
+            "module": "arm9",
+            "addr": "0x02043d78",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_cD1Ev",
+            "module": "arm9",
+            "addr": "0x02043dbc",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN7fBase_cC2Ev",
+            "module": "arm9",
+            "addr": "0x02043dec",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_02043f4c",
+            "module": "arm9",
+            "addr": "0x02043f4c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_02043f98",
+            "module": "arm9",
+            "addr": "0x02043f98",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_02043fdc",
+            "module": "arm9",
+            "addr": "0x02043fdc",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_0204405c",
+            "module": "arm9",
+            "addr": "0x0204405c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          }
+        ],
+        "raw_refs": 132,
+        "prepared_refs": 98
+      }
+    ],
+    "full_module_proof_binding": "The one changed upstream Source file produce literal identical complete raw and ordinarily prepared objects, symbols, sections and references. For Actor, f472 was a prepared but not accepted composition; the accepted Source/module checkpoint remains1414085, bound through the already recorded two-upstream object proof. All other Source blobs and four dependency trees are unchanged. This positively binds the accepted parent module proof to this composition; it is not described as a new full-ROM execution.",
+    "formal_acceptance": false
+  }
+}

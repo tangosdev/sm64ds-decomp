@@ -18,8 +18,7 @@
  *   header method form size-DIFFs (0xb8 against the cartridge's 0xac).
  * - dBgActor_c::IsClsnInRangeOnScreen 6az (Behavior; header method form
  *   refused). No dBgCh::Init in this TU.
- * - (Vector3 *)&mPosX / mHomePosX: dActor_c stores the triples as scalars;
- *   grouping as Vector3 is a shared-header campaign.
+ * - (Vector3 *)&mHomePosX: the class stores its home triple as scalars.
  * - data_ov002_0210d7f4 CLPS: this TU consumes it, overlay .data owns it.
  *   S14: g_profile_CANNON_SHUTTER stays outside the licensed .text.
  * - func_ov002_020bc990: inbound from ov084 (daRedBombhei_c). No coined name.
@@ -30,7 +29,14 @@
 
 /* daObjCannonShutter_c.h FIRST: it pulls in dBgActor_c.h, which must reach
    common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_cannon_shutter_AssetId {
+    ASSET_CANNON_SHUTTER_BMD = 0x045f,
+    ASSET_CANNON_SHUTTER_KCL = 0x0460
+};
+
 #include "daObjCannonShutter_c.h"
+#include "SpawnInfo.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
@@ -78,23 +84,6 @@ struct CannonShutterClsnFilePtr : SharedFilePtr {
 extern "C" CannonShutterModelFilePtr data_ov002_0210e12c;   /* the BMD model */
 extern "C" CannonShutterClsnFilePtr data_ov002_0210e124;    /* the KCL collision mesh */
 
-/* Runtime actor/process profile descriptor at ov002:0x02109d14. The field
- * roles are established by the recovered fBase_c/dActor_c consumers; their
- * exact original SM64DS member spellings are not preserved. */
-struct CannonShutterSpawnInfo {
-    daObjCannonShutter_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char CannonShutterSpawnInfo_size_must_be_0x1c[
-    sizeof(CannonShutterSpawnInfo) == 0x1c ? 1 : -1];
-
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjCannonShutter_c_classInit
@@ -115,8 +104,9 @@ extern "C" daObjCannonShutter_c *daObjCannonShutter_c_classInit()
  * CANNON_SHUTTER registry ID, descriptor/factory relationship, and object
  * shape; later EAD lineage supplies the classInit/g_profile spelling prior.
  * Exact original SM64DS spellings are not preserved. Historical project
- * aliases: daObjCannonShutter_c_Spawn and daObjCannonShutter_c_SpawnInfo. */
-extern "C" CannonShutterSpawnInfo g_profile_CANNON_SHUTTER = {
+ * aliases: daObjCannonShutter_c_Spawn and daObjCannonShutter_c_SpawnInfo.
+ * The descriptor is at ov002:0x02109d14. */
+extern "C" SpawnInfo<daObjCannonShutter_c> g_profile_CANNON_SHUTTER = {
     daObjCannonShutter_c_classInit,
     0x000e,
     0x009e,
@@ -187,11 +177,11 @@ int daObjCannonShutter_c::Behavior()
         }
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         MulVec3Mat4x3(&slide, &data_020a0e68, &rotated);
-        AddVec3((Vector3 *)&mPosX, &rotated, (Vector3 *)&mPosX);
-        if (Vec3_Dist((Vector3 *)&mHomePosX, (Vector3 *)&mPosX) > 0xa000) {
+        AddVec3(&mPos, &rotated, &mPos);
+        if (Vec3_Dist((Vector3 *)&mHomePosX, &mPos) > 0xa000) {
             mOpenPhase = 1;                             /* past 10.0: go forward */
         }
-        if (Vec3_HorzDist((Vector3 *)&mHomePosX, (Vector3 *)&mPosX) > 0xc8000) {
+        if (Vec3_HorzDist((Vector3 *)&mHomePosX, &mPos) > 0xc8000) {
             /* Past 200.0 out: the cannon is clear. Tell every shutter. */
             daObjCannonShutter_c *other =
                 (daObjCannonShutter_c *)dActor_c::FindWithActorID(0xe, 0);
@@ -255,5 +245,5 @@ void daObjCannonShutter_c::func_ov002_020bc990()
 
 /* Order is the retail initializer: model 0x45f, mesh-collision 0x460. mwcc
  * emits __sinit_d_a_obj_cannon_shutter.cpp from these two definitions. */
-CannonShutterModelFilePtr data_ov002_0210e12c(0x45f);
-CannonShutterClsnFilePtr data_ov002_0210e124(0x460);
+CannonShutterModelFilePtr data_ov002_0210e12c(ASSET_CANNON_SHUTTER_BMD);
+CannonShutterClsnFilePtr data_ov002_0210e124(ASSET_CANNON_SHUTTER_KCL);

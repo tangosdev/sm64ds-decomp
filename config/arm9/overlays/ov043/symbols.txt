@@ -116,12 +116,12 @@ data_ov043_021125e0 kind:bss addr:0x021125e0
 data_ov043_021125e8 kind:bss addr:0x021125e8
 @378 kind:bss addr:0x021125f0
 @379 kind:bss addr:0x021125fc
-data_ov043_02112608 kind:bss addr:0x02112608
-data_ov043_02112610 kind:bss addr:0x02112610
+gKm1KurumajikuCollisionFile kind:bss addr:0x02112608
+gKm1KurumajikuModelFile kind:bss addr:0x02112610
 @99 kind:bss addr:0x02112618
 @98 kind:bss addr:0x02112624
-data_ov043_02112630 kind:bss addr:0x02112630
-data_ov043_02112638 kind:bss addr:0x02112638
+gKm1KurumaCollisionFile kind:bss addr:0x02112630
+gKm1KurumaModelFile kind:bss addr:0x02112638
 @615 kind:bss addr:0x02112640
 @614 kind:bss addr:0x0211264c
 data_ov043_02112658 kind:bss addr:0x02112658

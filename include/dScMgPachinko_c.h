@@ -10,7 +10,7 @@
    words (address-gap math against the neighbouring g_profile_MG_TAMAIRE
    table, and relocs.txt cross-references confirm it belongs to a wholly
    different actor's spawn descriptor, not this class) -- excluded, along
-   with func_ov006_021019e0 and dScMgPachinko2_c_classInit, from this migration.
+   with Paddle_StateOrbit and dScMgPachinko2_c_classInit, from this migration.
    Fields below dScMgBase_c's own 0x4660 are INHERITED, not this class's
    own -- accessed via raw offsets on a char* cast of `this` (0xa4, 0xc0,
    0xc3, 0xc4 all touched here, all already dScMgBase_c's own, same as
@@ -80,7 +80,7 @@ struct dScMgPachinko_shot {
 typedef char dScMgPachinko_shot_size_must_be_0x38[sizeof(struct dScMgPachinko_shot) == 0x38 ? 1 : -1];
 #endif
 
-/* A score popup: 30 of them at 0x4cf0 (func_ov006_020fbb2c). */
+/* A score popup: 30 of them at 0x4cf0 (PachinkoPopup_SpawnScore). */
 struct dScMgPachinko_popup {
     s32 x;              /* 0x00 */
     s32 y;              /* 0x04 */
@@ -88,7 +88,7 @@ struct dScMgPachinko_popup {
     u16 value;          /* 0x0a */
 };
 
-/* One of the three swinging rows at 0x4e58 (func_ov006_020fa844 swings
+/* One of the three swinging rows at 0x4e58 (PachinkoDeco_UpdateAll swings
    angle between -0x1000 and 0x1000; dir picks the way). */
 struct dScMgPachinko_row {
     s32 x;              /* 0x00 */
@@ -121,10 +121,69 @@ struct dScMgPachinko_pipe {
     u8  pad1b;
 };
 
+/* A hit effect: the burst sprite PachinkoFx_Spawn starts at a hit, worth
+   `points` once its animation ends. */
+struct dScMgPachinko_fx {
+    s32 x;          /* 0x00 -- 20.12 */
+    s32 y;          /* 0x04 -- 20.12 */
+    u16 timer;      /* 0x08 -- frames on the current frame; steps at 6 */
+    u16 points;     /* 0x0a -- popup score spawned when it ends; 0 for none */
+    u8  active;     /* 0x0c */
+    u8  frame;      /* 0x0d */
+    u8  visible;    /* 0x0e */
+    u8  kind;       /* 0x0f -- 2 uses the long (six-frame) animation */
+    u8  target;     /* 0x10 */
+    u8  pad11[0x3];
+};
+
+/* The flyer that crosses the top of the board: Lakitu on his cloud (seen in
+   melonDS). Its state handlers dispatch on `state`, guarded by `active`
+   (PachinkoFlyer_StateWaiting..). */
+struct dScMgPachinko_flyer {
+    s32 x;          /* 0x00 -- 20.12 */
+    s32 y;          /* 0x04 -- 20.12 */
+    s32 vx;         /* 0x08 -- 20.12 */
+    s32 vy;         /* 0x0c -- 20.12; StateWaiting seeds 0x2000, StateDescend adds it to y */
+    s32 sound;      /* 0x10 -- looping sound handle */
+    u16 delay;      /* 0x14 */
+    u8  active;     /* 0x16 */
+    u8  visible;    /* 0x17 */
+    u8  state;      /* 0x18 */
+    u8  facing;     /* 0x19 -- flips at each edge; picks the sprite */
+    u8  passes;     /* 0x1a -- crossings left */
+    u8  pad1b;
+};
+
+/* One of the four targets (PachinkoTarget_ShowAll / HideAll): the four
+   flowers along the bottom (seen in melonDS; y 0xa0000, x from a table). */
+struct dScMgPachinko_target {
+    s32 x;          /* 0x00 -- 20.12 */
+    s32 y;          /* 0x04 -- 20.12 */
+    u8  active;     /* 0x08 */
+    u8  visible;    /* 0x09 */
+    u8  sprite;     /* 0x0a -- index into the target sprite table */
+    u8  pad0b;
+};
+
+/* The scrolling background (PachinkoBg_StateWaiting..), dispatched on `state`. */
+struct dScMgPachinko_bg {
+    s32 x;          /* 0x00 -- 20.12 */
+    s32 y;          /* 0x04 -- 20.12 */
+    s32 vx;         /* 0x08 */
+    s32 vy;         /* 0x0c */
+    s16 timer;      /* 0x10 */
+    u8  active;     /* 0x12 */
+    u8  state;      /* 0x13 */
+};
+
 #ifndef SM64DS_PLATFORM_PC
 typedef char dScMgPachinko_popup_size_must_be_0xc[sizeof(dScMgPachinko_popup) == 0xc ? 1 : -1];
 typedef char dScMgPachinko_row_size_must_be_0x18[sizeof(dScMgPachinko_row) == 0x18 ? 1 : -1];
 typedef char dScMgPachinko_pipe_size_must_be_0x1c[sizeof(dScMgPachinko_pipe) == 0x1c ? 1 : -1];
+typedef char dScMgPachinko_fx_size_must_be_0x14[sizeof(dScMgPachinko_fx) == 0x14 ? 1 : -1];
+typedef char dScMgPachinko_flyer_size_must_be_0x1c[sizeof(dScMgPachinko_flyer) == 0x1c ? 1 : -1];
+typedef char dScMgPachinko_target_size_must_be_0xc[sizeof(dScMgPachinko_target) == 0xc ? 1 : -1];
+typedef char dScMgPachinko_bg_size_must_be_0x14[sizeof(dScMgPachinko_bg) == 0x14 ? 1 : -1];
 #endif
 
 struct dScMgPachinko_c : dScMgBase_c {
@@ -132,7 +191,7 @@ struct dScMgPachinko_c : dScMgBase_c {
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void StartRound(int arg);               /* slot 18 */
 
     dScMgPachinko_ball mBall[30];    /* 0x4660, stride 0x38, ends 0x4cf0 */
     dScMgPachinko_popup mPopup[30];  /* 0x4cf0 */
@@ -141,20 +200,28 @@ struct dScMgPachinko_c : dScMgBase_c {
     dScMgPachinko_shot mShot[24];    /* 0x4ed8, stride 0x38; 24 puts the
                                         siblings' own 0x5418 field exactly
                                         one record past the end */
-    u8  pad_5418[0x7f8];
-    s32 unk_5c10;            /* 0x5c10 */
-    u8  pad_5c14[0x4];
-    u16 unk_5c18;            /* 0x5c18 */
-    u8  pad_5c1a[0x2];
-    u16 unk_5c1c;            /* 0x5c1c */
-    u8  pad_5c1e[0x6];
-    u16 unk_5c24;            /* 0x5c24 */
-    u16 unk_5c26;            /* 0x5c26 */
-    u16 unk_5c28;            /* 0x5c28 */
-    u16 unk_5c2a;            /* 0x5c2a */
+    /* 0x5418..0x5958: no reconstructed function reads or writes it. */
+    u8  pad_5418[0x540];
+    dScMgPachinko_fx     mFx[30];     /* 0x5958 */
+    /* mFlyer and mBg are one-element arrays: their state handlers take an
+       index and step it (i * 0x1c, i * 0x14) the way the array handlers do,
+       and both dispatchers pass 0. [inference from codegen] */
+    dScMgPachinko_flyer  mFlyer[1];   /* 0x5bb0 */
+    dScMgPachinko_target mTarget[4];  /* 0x5bcc */
+    dScMgPachinko_bg     mBg[1];      /* 0x5bfc */
+    s32 mPhase;                       /* 0x5c10 -- Behavior: 0 setup, 1 play, 2 results wait */
+    u8 pad_5c14[0x4];                 /* 0x5c14 */
+    u16 mEndTimer;                    /* 0x5c18 -- 0x40 frames from time up to the results */
+    u8 pad_5c1a[0x2];                 /* 0x5c1a */
+    u16 mNextBallDelay; /* 0x5c1c -- frames to the next penned Bob-omb (throw speed >> 10) */
+    u8 pad_5c1e[0x6];   /* 0x5c1e */
+    u16 mWaveTimer;     /* 0x5c24 -- frames to the next spawn; 0x50 - 4 per level, >= 0x20 */
+    u16 mWaveSpawns;    /* 0x5c26 -- enemies spawned; every tenth raises mWaveLevel */
+    u16 mWaveLevel;     /* 0x5c28 -- 0..0x27: enemy speed, spawn rate and wave size */
+    u16 mHitPause;      /* 0x5c2a -- 0x20 frames of only effects after a shot hits a flyer */
     /* trailing extent the ROM's `new dScMgPachinko_c` literal proves; see tools/opnew_sizes.py */
-    u8  pad_5c2c[0x5];
-    u8  unk_5c31;            /* 0x5c31 */
+    u8 pad_5c2c[0x5];
+    u8 unk_5c31; /* 0x5c31 */
     u8  pad_5c32[0x6];
 };
 

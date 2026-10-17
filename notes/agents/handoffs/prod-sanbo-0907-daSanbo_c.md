@@ -23,7 +23,7 @@ revisions; they do not override these corrections.
 
 The integration review also corrects the table ownership described below.
 The twelve PMF constants at [ov096](../../../config/arm9/overlays/ov096/symbols.txt):`0x02137920..0x02137980` are read by
-`__sinit_ov096_0213770c`, folded into [daSanbo_c.cpp](../../../src/actors/daSanbo_c.cpp), which reorders them into six entry/update pairs in
+`__sinit_ov096_0213770c`, folded into [daSanbo_c.cpp](../../../src/game/actors/d_a_sanbo.cpp), which reorders them into six entry/update pairs in
 BSS at `0x02137b48..0x02137ba8`. Dispatch uses that BSS table. The initializer
 remains separately enrolled; an additional initializer is not an established
 consequence of every possible C++ table definition. The dated integration
@@ -53,7 +53,7 @@ shard counts below describe the pre-fold inputs, not the current queue row.
 
   Facts: `notes/data/class-facts/daSanbo_c.json` -- the scout's blob, moved with
   the class, prose preserved verbatim plus one added key saying so. dScStage_c
-  artifacts: `src/actors/daSanbo_c.cpp`,
+  artifacts: `src/game/actors/d_a_sanbo.cpp`,
   [config/tu_manifest.d/ov096/daSanbo_c.json](../../../config/tu_manifest.d/ov096/daSanbo_c.json), `include/daSanbo_c.h`.
 - Next action, responsible role and blockers: independent verification of this
   historical commit (verifier). The original no-blocker assessment was superseded
@@ -67,7 +67,7 @@ shard counts below describe the pre-fold inputs, not the current queue row.
 
 - Class/TU/symbol and module-qualified ROM scope: `daSanbo_c` in [ov096](../../../config/arm9/overlays/ov096/symbols.txt), the
   contiguous run `0x02135700..0x02136db0`, 36 functions, folded from 36
-  one-function sources into `src/actors/daSanbo_c.cpp` with a single `complete`
+  one-function sources into `src/game/actors/d_a_sanbo.cpp` with a single `complete`
   delink span.
 - Reserved source/header/config surfaces actually touched: the class header,
   renamed from its coined spelling to `include/daSanbo_c.h` and given an inline
@@ -202,7 +202,7 @@ worktree, against merge-base `11ef9a7dd`, after the rebase.
   This is the check that resolves each relocation and compares the LINKED bytes,
   so it closes the hole a wildcarded byte compare leaves open.
 - Complete emitted TU and data/metadata checks: `python tools/romdata_check.py
-  --files src/actors/daSanbo_c.cpp` -- 9 data records emitted, 5 VERIFIED (168
+  --files src/game/actors/d_a_sanbo.cpp` -- 9 data records emitted, 5 VERIFIED (168
   bytes equal to the cartridge), 4 PARTIAL, 0 DIFFERS, 0 UNNAMED. The vtable
   verifies all 124 bytes of its 31 slots against [ov096](../../../config/arm9/overlays/ov096/symbols.txt):`0x021379d8`, and the
   class's own typeinfo record all 12 bytes. The 4 PARTIAL are typeinfo NAME
@@ -311,7 +311,7 @@ and all 36 functions still MATCH.
   names, and each records what was actually done instead of the generator's "the other
   is commented out for review", which was no longer true of any of them. Two of the
   five were not simple "keep the winner" choices and now say so: the live
-  [func_ov096_02135800](../../../src/actors/daSanbo_c.cpp)(ROM Ordinal 5 used to assemble `daSanbo_c.cpp`) and `Vec3_HorzAngle` declarations each take part of their
+  [func_ov096_02135800](../../../src/game/actors/d_a_sanbo.cpp)(ROM Ordinal 5 used to assemble `daSanbo_c.cpp`) and `Vec3_HorzAngle` declarations each take part of their
   signature from the losing observation, and the `struct Obj` conflict was two
   different objects the generator collided on one name, so the loser became
   `RenderView` rather than being discarded.
@@ -324,7 +324,7 @@ and all 36 functions still MATCH.
   sources that never existed. They named real files before the rename, which rewrote
   the coined spelling INSIDE the citation text, and the promotion then deleted the
   files. `tools/check_dead_references.py` cannot see them because they carry no
-  repo-rooted `src/` prefix. They now name the member and `src/actors/daSanbo_c.cpp`,
+  repo-rooted `src/` prefix. They now name the member and `src/game/actors/d_a_sanbo.cpp`,
   which the gate does check and which resolves.
 - The same header still spelt its size assert with a coined-name identifier. It now
   takes the ROM name. The header has exactly one consumer, so there is no fan-out.

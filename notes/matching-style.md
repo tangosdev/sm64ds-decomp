@@ -235,8 +235,8 @@ Also spelled `u16 *p = (u16*)(((int)c + 0x4c0c) & 0xFFFFFFFFFFFFFFFFULL); *p = *
 **Landed examples** (all byte-identical, strict relocs, linkcheck VERIFIED):
 `func_ov006_02114c04` (the clearest -- RMW/single-use split across a whole loop body),
 `func_ov006_0211fe78` (63 divergences -> 0 in one edit),
-`src/actors/dScMgBomroom_c.cpp` (`func_ov006_020d8d84`, folded from its shard), `func_ov006_0211e8a8`
-(both now in `src/actors/dScMgTeresa_c.cpp`).
+`src/minigames/d_s_mg_bomroom.cpp` (`func_ov006_020d8d84`, folded from its shard), `func_ov006_0211e8a8`
+(both now in `src/minigames/d_s_mg_teresa.cpp`).
 
 **Cost of the stale note.** `func_ov006_0211e8a8` was worked to 12 divergences, correctly diagnosed
 as the "first-access-fold wall" per the old text, and abandoned as unmatchable. Pointed at the
@@ -251,7 +251,7 @@ own fix -- **do not pre-fold the base**. Modelling `self + 0x4694 + (i<<6)` as a
 mwcc pool-load it and hoist the result into callee-saved registers (observed: 7-register push).
 Modelling the same thing as a **stride-0x40 struct array** indexed `[i]` yields the ROM's
 `add rX,self,i,lsl#6; add rX,rX,#0x4000; ldrb [rX,#0x694]` and rematerializes per region.
-(`src/actors/dScMgBomroom_c.cpp`, which absorbed the former `func_ov006_020d69b8`
+(`src/minigames/d_s_mg_bomroom.cpp`, which absorbed the former `func_ov006_020d69b8`
 and `func_ov006_020d816c` shards.)
 
 Related: write the cast **inline** at each use. Hoisting it into a local pointer (`Ent *ents = ...`)
@@ -348,7 +348,7 @@ same subsystem -- neither fell to search:
 - `func_020316d8` was floored at **23 divergences after ~5600 compiles** of declaration-order,
   statement-order, type and pragma hill-climbing, and diagnosed as a pure allocator rotation. The
   supporting finding was even correct: decl order and `register`/type knobs have *zero* effect on
-  that function. It was not an allocator floor. The matched sibling `src/unnamed/arm9/0201/func_0201b100.c` contains
+  that function. It was not an allocator floor. The matched sibling `func_0201b100` (now in `src/Message2.cpp`) contains
   the same blit loop and carries the load-bearing spellings directly -- a `(short)(int)` double cast
   to defeat the range-folder, the slow path as an `else` block with block-scoped locals, a char-cast
   third store that breaks an mla-coalesce. ~650 compiles from that start.
@@ -373,8 +373,8 @@ greppable feature of the *residual* and scan every matched function for it:
 | function | address-nearest siblings | what signature search found |
 |---|---|---|
 | `func_ov063_02119074` | nothing on frame padding | scan for prologue `push {r4,lr}; sub sp,#0x10` + near-zero sp traffic (dead frame space) -> the `volatile int dummy[N]` idiom |
-| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `func_ov006_02108f2c` (now folded into `src/actors/dScMgRoulette_c.cpp`), same table/compares/callee; 7 words closed in one edit |
-| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `func_ov006_02107ea8` (now folded into `src/actors/dScMgRoulette_c.cpp`); 11 -> 0 |
+| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `func_ov006_02108f2c` (now folded into `src/minigames/d_s_mg_roulette_methods.cpp`), same table/compares/callee; 7 words closed in one edit |
+| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `func_ov006_02107ea8` (now folded into `src/minigames/d_s_mg_roulette_methods.cpp`); 11 -> 0 |
 
 Practical recipes: grep `src/` for a **callee name** your function also calls (then filter by
 argument shape); scan matched ROM bytes for a distinctive **instruction pattern** from your residual;
@@ -407,7 +407,7 @@ your target before starting.**
 > introduces extra *named webs*, which cost an 11-word rotation on `func_ov006_021082fc`
 > that no declaration-order permutation could fix. Swapping it for form #1 (taken verbatim
 > from the twin `func_ov006_02107ea8`, now part of
-> `src/actors/dScMgRoulette_c.cpp`) closed that function 11 -> 0 in one edit.
+> `src/minigames/d_s_mg_roulette_methods.cpp`) closed that function 11 -> 0 in one edit.
 > Form #2 beat `volatile` on `func_ov060_02117db8` for the same reason: dropping `volatile`
 > alone deleted the stores as dead, but merging two stack Vec3s into one `int v[6]` whose
 > address escapes into a call kept them *and* let the scheduler hoist the call-arg setup the
@@ -420,7 +420,7 @@ your target before starting.**
   struct PVec { s32 x, y, z; ~PVec() {} };
   ```
   Probed and rejected as the cause first: 4-byte structs, non-POD classes, `Vector3`-by-value,
-  varargs, 7-arg models. It is not a struct-ABI effect. (`func_ov002_020d869c` in `src/actors/Player.cpp`)
+  varargs, 7-arg models. It is not a struct-ABI effect. (`func_ov002_020d869c` in `src/game/player/Player.cpp`)
 - Where the ROM keeps several apparently-dead stores to locals, wrap **all the locals in one
   enclosing struct whose address is taken**. That blocks SROA/register promotion for the whole
   aggregate so the dead stores survive, while store-to-load forwarding still supplies the registers.
@@ -451,7 +451,7 @@ not fold away (~12 cast spellings all did). Spell it as a **pointer difference**
 off = ((char (*)[0x24])0)[idx] - (char*)0;
 ```
 Operand order then matters: the pointer base must be the left operand of the following add, or you
-get the operands swapped. (`func_ov006_0211e8a8`, in `src/actors/dScMgTeresa_c.cpp`)
+get the operands swapped. (`func_ov006_0211e8a8`, in `src/minigames/d_s_mg_teresa.cpp`)
 
 **`if/else` vs ternary has NON-LOCAL regalloc effects.** The existing "preserve ternaries" guidance
 is not universal. A case written as a ternary poisoned the whole function's r1/r2 assignment for two
@@ -463,13 +463,13 @@ pair is the only construct adjacent to a coloring residual, **try both forms**.
 **Parallel loops want their own locals.** Six structurally identical zero-init loops sharing one
 `i`/`p` pair gave correct instruction shape with permuted registers; giving each loop its own counter
 and pointer fixed the allocation exactly. A declaration-order swap did not.
-(`src/actors/dScMgPachinko_c.cpp`, `func_ov006_020feba8`, folded from its shard)
+(`src/minigames/d_s_mg_pachinko.cpp`, `func_ov006_020feba8`, folded from its shard)
 
 **Assignment order, not declaration order.** Where a 24-permutation *declaration*-order sweep is
 inert, reordering the **assignment / first use** can still flip the entire callee-saved assignment
 (observed: 33 divergences -> 0 from moving one assignment). Source position of the first *use* sets
 web rank. Corollary: an inert decl-order sweep means the lever is **gated**, not dead -- try
-`#pragma opt_lifetimes off` and re-sweep. (`src/actors/dScMgPachinko_c.cpp`, `func_ov006_020fe750`, folded from its shard)
+`#pragma opt_lifetimes off` and re-sweep. (`src/minigames/d_s_mg_pachinko.cpp`, `func_ov006_020fe750`, folded from its shard)
 
 **Prefer a respelling to a pragma.** `#pragma opt_strength_reduction off` and the address-tree
 respelling `((int*)c + k)[0x1510]` both killed a spurious induction variable; the respelling was

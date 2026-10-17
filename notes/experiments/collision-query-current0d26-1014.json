@@ -1,0 +1,293 @@
+{
+  "status": "Current-main composition with producer proof complete; independent reacceptance required.",
+  "task": "collision-query-current0d26-composition1014",
+  "predecessor_task": "collision-query-native1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+  "pull_request": "https://github.com/tangosdev/sm64ds-decomp/pull/3856",
+  "protocol_ancestral_base": "92ad0fdcf0639c56181648c022a8a1d2659ade74",
+  "accepted_input_commit": "c1d4496a252e8e43791e0223e96b6db780309ee7",
+  "tested_current_base": "0d26d45d7d579f3db3a6d554f73589737149349b",
+  "tested_composition_checkpoint": "a6233f70f8ed59afea69a2e526254f3d871de0b8",
+  "source": "src/engine/collision/dBgCh_SphCrr_query.cpp",
+  "source_sha256": "d3eb2a20d1c3b4992ba82adcae8caeaae1692f9546e77710dc267f7b0c22d65c",
+  "source_author": {
+    "model": "GPT-6 Astra",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "producer_session": "codex-collision-query-astra-producer1014",
+    "private_research_session": "codex-cpp-frontier-astra1014",
+    "disclosure": "Same actual agent authored private candidate, production Source and report. Root coordinated; Recovery independently preflighted the Source. Neither authored this Source change."
+  },
+  "composition_author": {
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "producer_session": "codex-collision-current0d26-astra-producer1014",
+    "disclosure": "Same actual Astra Source author as the predecessor; Root coordinated and Recovery reviewed independently. No authorship transfer."
+  },
+  "change": "Normally merge the accepted upstream Menbo provenance-only change and preserve the exact accepted collision Source and original report. This report records the current-base composition proof.",
+  "unchanged_original_report": {
+    "path": "notes/experiments/collision-query-native1014.json",
+    "sha256": "3f09fc21699daf7d93d310e4eafd2c6dbfde61d64808d53cfaeab96872c8dc10"
+  },
+  "upstream_delta": {
+    "paths": [
+      "config/tu_manifest.d/ov090/daMenbo_c.json",
+      "notes/agents/handoffs/pr2994-provenance-repair-0923.md",
+      "src/game/actors/d_a_menbo.cpp"
+    ],
+    "source_comment_only": true,
+    "manifest_changed_leaves": [
+      "/notes/4",
+      "/compiler_only_output/12/reason"
+    ],
+    "manifest_semantic_policy_unchanged": true,
+    "all_other_Source_config_blobs_unchanged": true,
+    "include_tools_port_trees_identical": true
+  },
+  "fresh_collision_proof": {
+    "functions": 57,
+    "strict_verified": 57,
+    "diffs": 0,
+    "blind": 0,
+    "whole_raw_prepared_literal_equal": true,
+    "raw_bytes": 17544,
+    "raw_sha256": "51d330c4e51706448fc5cc0439a2cd01e4b3d282ef2686eda6743c2b66cea1a8",
+    "prepared_sha256": "1f9fa2683d250b87419aae4af259053f275fb98c8e2c400797a3c067562a974e",
+    "raw_typed_refs": 167,
+    "prepared_typed_refs": 159,
+    "raw_nontext_sections": 5,
+    "raw_nontext_bytes": 50,
+    "metadata_qualification": "Complete incidental nontext and symbol/reference graphs remain literal-equal. Existing legacy text-only normal preparation externalizes this nontext. No new retained-data or intact-metadata ownership claim.",
+    "proof_sha256": "414a84981dd30e03c755e918ef92f3b1da647ff8a93f34443806e4effae198fe"
+  },
+  "fresh_menbo_composition_proof": {
+    "old_base": "92ad0fdcf0639c56181648c022a8a1d2659ade74",
+    "current_base": "0d26d45d7d579f3db3a6d554f73589737149349b",
+    "strict_functions": 25,
+    "diffs": 0,
+    "blind": 0,
+    "whole_raw_prepared_literal_equal": true,
+    "raw_bytes": 24144,
+    "prepared_bytes": 24144,
+    "raw_sha256": "e3eead17c51a61bfc0e9c7cc8a3bbe8b73b0e4428292bc309cb2818ae2c748e2",
+    "prepared_sha256": "ba4f36d1f61139054818722238cf30dc9265ed52787f58d1754533d73ea9d4b6",
+    "raw_typed_refs": 295,
+    "prepared_typed_refs": 244,
+    "normal_intact_owned_storage_before_after": "PASS, including actual initializer/ctor/data/BSS claims and existing exact metadata externalization.",
+    "proof_sha256": "71447c080bdbbd265fbf577884a121b64b6711da0fa434c700ba3e9207bfdb9e"
+  },
+  "full_ROM": {
+    "actual_historical_run": {
+      "terminal": 0,
+      "seconds": 308.87,
+      "modules_exact": 106,
+      "source_functions_exact": 11334,
+      "source_functions_mismatching": 0,
+      "source_data_exact": 331,
+      "source_data_mismatching": 0,
+      "source_bss_claims": 239,
+      "intact_tu_gate": "modules PASS, zero new symbol errors, storage aliases exact",
+      "baseline_control": "All modules PASS, stock ROM SHA256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8; baseline symbol check has nine inherited errors. Candidate invoked --no-rom, so no new candidate .nds was requested.",
+      "global_data_advisory": {
+        "verified": 970,
+        "partial": 1519,
+        "differ": 1,
+        "unnamed": 21,
+        "qualification": "Inherited global advisories; not an all-data-clean claim."
+      },
+      "explicit_transfer": {
+        "actual_full_rom_tested_commit": "429bba1715b5ff9d1f66e2bff34e3066335b5fb0",
+        "production_source_checkpoint": "17f6ffe589db102066e20688237f7088aa761762",
+        "compiler_input_trees_equal": [
+          "src",
+          "include",
+          "config",
+          "tools",
+          "port"
+        ],
+        "explanation": "The exact Source/include/config/tools/port compiler inputs are identical between actual tested private checkpoint and this production Source checkpoint. Full-ROM result transfers explicitly; production object/static checks are rerun separately. No claim of a fresh production full-ROM invocation."
+      }
+    },
+    "current_transfer": "No new full global invocation. The prior actual106/11334/331/239 result transfers through unchanged inputs except three upstream prose paths, complete fresh Menbo RAW/normal/owned-storage/typed-edge identity, and fresh collision57 exact output. Source/config trees are not identical.",
+    "baseline_symbol_errors": 9,
+    "new_symbol_errors": 0,
+    "global_data_advisories": {
+      "verified": 970,
+      "partial": 1519,
+      "differ": 1,
+      "unnamed": 21
+    },
+    "binding_sha256": "daf52f576558b13d7e8cae0ab7ffa2628e59860d0c10d6c7d1cff9dd2583ff5c"
+  },
+  "fresh_current_static_gates": {
+    "tested_commit": "a6233f70f8ed59afea69a2e526254f3d871de0b8",
+    "tested_base": "0d26d45d7d579f3db3a6d554f73589737149349b",
+    "results": {
+      "decl_global": {
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py"
+        ],
+        "terminal": 0,
+        "seconds": 8.0,
+        "log": "build\\collision-query-current1014\\decl_global.log"
+      },
+      "decl_scoped": {
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "0d26d45d7d579f3db3a6d554f73589737149349b"
+        ],
+        "terminal": 0,
+        "seconds": 9.209,
+        "log": "build\\collision-query-current1014\\decl_scoped.log"
+      },
+      "port": {
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "terminal": 0,
+        "seconds": 1.588,
+        "log": "build\\collision-query-current1014\\port.log"
+      },
+      "duplicate_sources": {
+        "command": [
+          "python",
+          "tools/check_duplicate_sources.py"
+        ],
+        "terminal": 0,
+        "seconds": 0.369,
+        "log": "build\\collision-query-current1014\\duplicate_sources.log"
+      },
+      "drafts_compile": {
+        "command": [
+          "python",
+          "tools/check_drafts_compile.py",
+          "--quiet"
+        ],
+        "terminal": 0,
+        "seconds": 0.931,
+        "log": "build\\collision-query-current1014\\drafts_compile.log"
+      },
+      "rename_ledger": {
+        "command": [
+          "python",
+          "tools/check_rename_ledger.py"
+        ],
+        "terminal": 0,
+        "seconds": 0.079,
+        "log": "build\\collision-query-current1014\\rename_ledger.log"
+      },
+      "header_offsets": {
+        "command": [
+          "python",
+          "tools/check_header_offsets.py",
+          "include/dBgW.h",
+          "include/dActor_c.h",
+          "include/dBgCh_Gnd.h",
+          "include/dBgCh_Lin.h"
+        ],
+        "terminal": 0,
+        "seconds": 0.281,
+        "log": "build\\collision-query-current1014\\header_offsets.log"
+      },
+      "diff": {
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "0d26d45d7d579f3db3a6d554f73589737149349b..HEAD"
+        ],
+        "terminal": 0,
+        "seconds": 0.049,
+        "log": "build\\collision-query-current1014\\diff.log"
+      },
+      "langmode": {
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "build\\collision-query-current1014\\langmode-baseline.json"
+        ],
+        "terminal": 0,
+        "seconds": 10.495,
+        "log": "build\\collision-query-current1014\\langmode.log"
+      },
+      "prepush": {
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "0d26d45d7d579f3db3a6d554f73589737149349b..HEAD"
+        ],
+        "terminal": 0,
+        "seconds": 35.45,
+        "log": "build\\collision-query-current1014\\prepush.log"
+      }
+    }
+  },
+  "source_completion": "partial",
+  "findings": [
+    {
+      "id": "COLLISION-QUERY-PARTIAL-01",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:position grouping in ground/line scans",
+      "summary": "Position reads retain measured byte-offset grouping; Vec3 POD copy view and existing self-position integer-laundering remain.",
+      "reason": "Existing reconstruction gap retained with unchanged complete output; future scope is tracked on issue3854. Bounded direct-field failure is evidence for that attempted form only, not a universal compiler impossibility."
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-02",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:PcAB/PcObj record views",
+      "summary": "PcAB/PcObj record reconstruction remains.",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made."
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-03",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:PFN / func_02038234",
+      "summary": "PFN and func_02038234 stored callback/extra-register contract remain unrecovered.",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made."
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-04",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:dBgPi::RecordHit calls",
+      "summary": "RecordHit raw int versus native s16 bridge remains.",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made."
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-05",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:address-named helpers",
+      "summary": "Address-named free helpers retain current public signatures; no complete class lifecycle reconstruction claimed.",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made."
+    },
+    {
+      "id": "COLLISION-QUERY-PARTIAL-06",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/engine/collision/dBgCh_SphCrr_query.cpp:Vec3_HorzDist / inherited actor-position views",
+      "owner": "codex-collision-query-astra-coordinator1014; next explicitly claimed producer",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3854",
+      "summary": "Existing Vec3/Vector3 views and actor scalar-position to Vector3 storage boundary remain partial. This patch does not assert those three separate actor fields form an independently live Vector3 object or resolve the inherited alias/lifetime interface. New position reads use the complete actor byte representation to address the existing s32 subobjects.",
+      "reason": "Inherited interface reconstruction remains outside the six changed query bodies; no completion or original-type claim is made."
+    }
+  ],
+  "public_actions": "No merge-to-main. Update existing PR3856 only after distinct independent exact-current acceptance."
+}

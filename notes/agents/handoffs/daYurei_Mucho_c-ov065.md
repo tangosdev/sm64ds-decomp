@@ -117,7 +117,7 @@ mwcc's own D1/D0 vptr stores both write.
 ### A wrong callee the byte gate could not see
 
 The retired shard `func_ov065_021162c0.c`(ROM Ordinal 4 used to assemble `daYurei_Mucho_c.cpp`, see [daYurei_Mucho_c.json](../../../config/tu_manifest.d/ov065/daYurei_Mucho_c.json)) called `_ZN6EyerokD0Ev` -- [ov066](../../../config/arm9/overlays/ov066/symbols.txt)'s name
-for address 0x02115f84. In [ov065](../../../config/arm9/overlays/ov065/symbols.txt) that address is [func_ov065_02115f84](../../../src/actors/daYurei_Mucho_c.cpp)(ROM Ordinal 2), the death
+for address 0x02115f84. In [ov065](../../../config/arm9/overlays/ov065/symbols.txt) that address is [func_ov065_02115f84](../../../src/game/actors/d_a_yurei_mucho.cpp)(ROM Ordinal 2), the death
 helper two ordinals below, and [ov065](../../../config/arm9/overlays/ov065/symbols.txt) is the module this branch links. The ROM's
 own `bl 0x02115f84` at 0x02116314 decides it. `match.py` wildcards the relocated
 word, so the wrong callee reproduced the bytes; `linkcheck.py` is what closes it,
@@ -125,11 +125,11 @@ and it now reports VERIFIED with 0 blind slots.
 
 ### Style oracle
 
-Templated from `src/actors/daObjCtMecha03_c.cpp` and
+Templated from `src/game/actors/d_a_obj_ct_mecha03.cpp` and
 [config/tu_manifest.d/ov065/daObjCtMecha03_c.json](../../../config/tu_manifest.d/ov065/daObjCtMecha03_c.json) -- the most recent promoted
-[ov065](../../../config/arm9/overlays/ov065/symbols.txt) sibling and the one on the live `src/actors/` convention.
+[ov065](../../../config/arm9/overlays/ov065/symbols.txt) sibling and the one on the live `src/game/actors/` convention.
 `daObjCtMecha05_c` uses the older `src/game/actors/` path and is not the
-placement precedent. `src/actors/daBmb_c.cpp` supplied the folded-factory shape,
+placement precedent. `src/game/actors/d_a_bmb.cpp` supplied the folded-factory shape,
 since Mecha03 has no factory in its TU.
 
 ### Destructor ordering
@@ -165,7 +165,7 @@ declares 0x0211d650 and 0x0211d660 as `char[]` and 0x0211d680 as a bare `int`,
 and a second differing declaration is a compile error. They are cast at each use.
 Only the address ever reaches the code, so the cast costs no bytes.
 
-The five-Vector3 stack aggregate in [func_ov065_02116364](../../../src/actors/daYurei_Mucho_c.cpp) was given a file-scope
+The five-Vector3 stack aggregate in [func_ov065_02116364](../../../src/game/actors/d_a_yurei_mucho.cpp) was given a file-scope
 name, `V3Quint`. As an unnamed local class mwccarm mangles its implicit
 destructor with a file-and-counter tag that moves whenever the file moves, so the
 manifest row licensing it would not have survived the move out of `src_tu/`. The
@@ -183,7 +183,7 @@ emitted bytes are unchanged. Same remedy as `V3Quad` in [ov002](../../../config/
   the TU, plus the `extern "C"` factory.
 - Recovered layout: `include/daYurei_Mucho_c.h` is 103 lines with 2 `unk_` fields
   and 3 `pad_` runs. The class size 0x3e4 is the ROM's own allocation literal, not
-  a rounded field span. `src/actors/daYurei_Mucho_c.cpp` still matches `tiers.py`'s
+  a rounded field span. `src/game/actors/d_a_yurei_mucho.cpp` still matches `tiers.py`'s
   `RAW_OFFSET` regex on 89 of its 888 lines (94 occurrences).
 - The `State` struct is now typed: both words are pointers-to-member, evidenced by
   the module's static initializer copying each object in as two 8-byte halves from
@@ -216,7 +216,7 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
   ROM-ascending emission order, 13 compiler-only symbols all licensed.
 - **`tools/linkcheck.py` driven BY SYMBOL** (not by file stem): all 23 symbols
   VERIFIED, 0 diffs, 0 blind slots, run as
-  `--module ov065 --c src/actors/daYurei_Mucho_c.cpp --name <symbol> --addr <addr>
+  `--module ov065 --c src/game/actors/d_a_yurei_mucho.cpp --name <symbol> --addr <addr>
   --size <size>`. This is the gate that proves the corrected callee and the
   address-point bias link to the cartridge's exact bytes.
   Coverage limit stated plainly: `prepush_linkcheck.py --range 11ef9a7dd..HEAD`
@@ -224,15 +224,15 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
   this TU itself as `[WARN] daYurei_Mucho_c NO-SYM`, because it resolves by file
   stem and a promoted TU defines many symbols. That gate proves nothing about this
   TU; the by-symbol run above is the proof.
-- **`tools/romdata_check.py --files src/actors/daYurei_Mucho_c.cpp`** -- 11 emitted
+- **`tools/romdata_check.py --files src/game/actors/d_a_yurei_mucho.cpp`** -- 11 emitted
   data symbols: VERIFIED 6 (180 bytes), PARTIAL 5 (52 bytes equal), **DIFFERS 0**,
   UNNAMED 0. The six verified are the four inherited typeinfo records, this class's
   own `_ZTI15daYurei_Mucho_c`, and **`_ZTV15daYurei_Mucho_c`, all 124 bytes of it --
   31 slots byte-exact at 0x0211cba4**, which independently confirms both the
   address point and the slot count. The five PARTIALs are the `_ZTS` type-name
   strings, short of the ROM's named extent by trailing alignment.
-  CONTROL: `src/actors/daBmb_c.cpp` (landed, merged) reports 6/5/0/0, and
-  `src/actors/daObjCtMecha03_c.cpp` (landed, merged) reports 6/5/0/0. Identical
+  CONTROL: `src/game/actors/d_a_bmb.cpp` (landed, merged) reports 6/5/0/0, and
+  `src/game/actors/d_a_obj_ct_mecha03.cpp` (landed, merged) reports 6/5/0/0. Identical
   shape.
 - **`tools/validate_merge.py --base origin/main --head HEAD`** with both ROM
   reports -- module fidelity 106/106 exact; byte-verified functions and code bytes
@@ -328,7 +328,7 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
   `extern int Snufit_Kill(int*);` was a dead declaration in
   `include/decl_common.h` -- no definition, no caller, and no such symbol in
   [config/arm9/overlays/ov065/symbols.txt](../../../config/arm9/overlays/ov065/symbols.txt), which spells the function
-  `func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)). It is deleted. It was NOT renamed to
+  `func_ov065_021177e4` (now in [src/game/actors/d_a_basabasa.cpp](../../../src/game/actors/d_a_basabasa.cpp)). It is deleted. It was NOT renamed to
   `daYurei_Mucho_c_Kill`, because the shard's own attribution turned out to be
   wrong on both halves, refuted by three ROM reads recorded in the shard's
   header comment: 0x021177e4 is in no vtable in [ov065](../../../config/arm9/overlays/ov065/symbols.txt) (neither
@@ -387,8 +387,8 @@ or shared declaration was invented to disguise the unresolved destination.
 *YUR-05* corrects the copy and metadata explanations. `Matrix4x3` is available
 through the model headers, and `Vector3` is available in `types.h`. At this include
 order, `Matrix4x3` contains the existing non-POD `Vector3`. Replacing `Mtx43`'s POD
-copies grows [func_ov065_0211696c](../../../src/actors/daYurei_Mucho_c.cpp)(ROM Ordinal 13 of `daYurei_Mucho_c`) from 0x17c to 0x1c8; replacing the V3A copy
-with `Vector3` grows [func_ov065_02116364](../../../src/actors/daYurei_Mucho_c.cpp)(ROM Ordinal 6 of `daYurei_Mucho_c`) from 0x224 to 0x234. The small POD views
+copies grows [func_ov065_0211696c](../../../src/game/actors/d_a_yurei_mucho.cpp)(ROM Ordinal 13 of `daYurei_Mucho_c`) from 0x17c to 0x1c8; replacing the V3A copy
+with `Vector3` grows [func_ov065_02116364](../../../src/game/actors/d_a_yurei_mucho.cpp)(ROM Ordinal 6 of `daYurei_Mucho_c`) from 0x224 to 0x234. The small POD views
 remain documented matching constraints, not evidence that project types are absent.
 The ordinary subobject constructors also exist; the manual factory is unfinished
 reconstruction, not a requirement caused by missing constructors.
@@ -410,7 +410,7 @@ These are class-local experiment results, not final current-main acceptance.
 The 12 address-named free helpers, manual factory, remaining raw storage and
 copy views continue under #2478. `SharedFilePtr` still has no recovered fields in
 its header: retain the measured direct +4 file-pointer load rather than calling
-`LoadFile` or inventing a field. The neighboring `func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)) belongs to
+`LoadFile` or inventing a field. The neighboring `func_ov065_021177e4` (now in [src/game/actors/d_a_basabasa.cpp](../../../src/game/actors/d_a_basabasa.cpp)) belongs to
 `daBasabasa_c`; its previously accepted provenance-only correction is preserved.
 
 ### Current-main composition
@@ -425,7 +425,7 @@ shared Actor header is byte-for-byte main's version.
 The rename-ledger conflict was resolved as the exact three-way row multiset
 (3,573 rows), and attribution equals the recursive three-way merge. Both parent
 histories and their contributor records are preserved. The neighboring
-`func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)) retains the accepted input's provenance-only correction.
+`func_ov065_021177e4` (now in [src/game/actors/d_a_basabasa.cpp](../../../src/game/actors/d_a_basabasa.cpp)) retains the accepted input's provenance-only correction.
 
 Fresh **2004/b56** compilation on this composition verifies all 23 functions and
 4,280 text bytes, with zero blind words or differences. All 156 symbol references

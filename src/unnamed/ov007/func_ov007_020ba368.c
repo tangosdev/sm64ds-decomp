@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern u8 data_ov007_02104ba0[];
 extern u8 data_ov007_02104b9c[];
 extern s16 data_ov007_02104b98[];
@@ -72,7 +73,7 @@ int func_ov007_020ba368(int t)
             *(int *)(*(char **)(*(char **)data_ov007_02104b9c + 8) + 0x50) = 0x1f000;
             func_ov007_020bdeb0(0x1b);
         }
-        *p2 = d / 2 - (int)(((s64)ease * d + 0x800) >> 0xc);
+        *p2 = d / 2 - FX_MUL(ease, d);
         *p1 = *p2 - d * 2;
         func_ov007_020ba9bc();
         *p1 = v1;
@@ -113,19 +114,19 @@ int func_ov007_020ba368(int t)
         } else {
             v = _ZN4cstd3divEii((t - 0xc8) << 0xc, 0x190);
         }
-        ratio += (int)(((s64)v * 0x1e000 + 0x800) >> 0xc);
+        ratio += FX_MUL(v, 0x1e000);
         r8arg = 0x1000;
         if (*(int *)(*(char **)data_ov007_02104ba0 + 0x20) == 4) {
             if (t <= 0xc8) {
                 if (t <= 0x64) {
-                    ratio = (int)(((s64)ratio * 0x258 + 0x800) >> 0xc);
+                    ratio = FX_MUL(ratio, 0x258);
                     r8arg = -0xa;
                 } else {
-                    ratio = (int)(((s64)ratio * 0x320 + 0x800) >> 0xc);
+                    ratio = FX_MUL(ratio, 0x320);
                     r8arg = -0x32;
                 }
             } else if (t <= 0x12c) {
-                ratio = (int)(((s64)ratio * 0xa + 0x800) >> 0xc);
+                ratio = FX_MUL(ratio, 0xa);
             }
         }
         {
@@ -191,10 +192,10 @@ int func_ov007_020ba368(int t)
             u = u >> 0x10;
             idx = (int)u >> 4;
             tblval = data_02082214[idx * 2];
-            term = (int)(((s64)ease2 * 0x3e8 + 0x800) >> 0xc);
-            sinval = (int)(((s64)tblval * term + 0x800) >> 0xc);
+            term = FX_MUL(ease2, 0x3e8);
+            sinval = FX_MUL(tblval, term);
             if (t <= 0x4d) {
-                sinval += (int)(((s64)ease1 * 0x4b0 + 0x800) >> 0xc);
+                sinval += FX_MUL(ease1, 0x4b0);
                 a += sinval;
                 b += sinval;
             } else {

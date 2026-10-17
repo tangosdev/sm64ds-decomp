@@ -53,7 +53,7 @@ struct daObjFl_Puzzle_c : dBgActor_c {
     u8  mStepActive;            /* 0x339 -- 1 while a step runs; the script
                              advances only when it is 0 */
     u8  mCanSpawnCoin;            /* 0x33a -- 1 until the piece first attempts its coin spawn */
-    /* Inline is load-bearing. The forcing calls in src/actors/daObjFl_Coin_c.cpp
+    /* Inline is load-bearing. The forcing calls in src/game/actors/d_a_obj_fl_coin.cpp
      * emit D1 then D0. An out-of-line body emits D2, D0, D1. */
     virtual ~daObjFl_Puzzle_c() {}
 

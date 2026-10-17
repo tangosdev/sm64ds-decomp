@@ -5,7 +5,8 @@
 
 # Model
 src/engine/model/Model.cpp
-src/_ZN5Model8LoadFileER13SharedFilePtr.cpp
+# Model::LoadFile lives in src/SharedFilePtr.cpp (slice 3b), compiled
+# under SM64DS_PORT_GATE4B.
 src/_ZN5Model23AddToCommonModelDataArrER8BMD_File.cpp
 src/engine/model/Model4.cpp
 src/_ZN5Model12SetPolygonIDEi.cpp
@@ -32,7 +33,6 @@ src/MulMat3x3Mat3x3.c
 src/_ZN9ModelBaseC2Ev.cpp
 src/DMASyncWordTransfer.c
 src/func_02059fd0.c
-src/func_0203cc0c.c
 
 # gate 4c additions: the animation path (UpdateBones recursion).
 # func_020453c0 lives in the ModelComponents TU listed above.
@@ -42,7 +42,8 @@ src/func_020456a0.c
 # cstd::abs is defined host-side in hal/heap_globals.cpp: its src/ home,
 # src/cstd4.cpp, carries hand-asm the host cannot compile, and every target that
 # links this slice links heap_globals.cpp as well.
-src/_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr.cpp
+# dExtFrameCtrl_c::LoadFile lives in src/SharedFilePtr.cpp (slice 3b),
+# compiled under SM64DS_PORT_GATE4B.
 src/_ZN15dExtFrameCtrl_c17UpdateFileOffsetsER8BCA_File.cpp
 
 # Whole-class slice. Once a constructor is a real C++ constructor its TU
@@ -50,5 +51,6 @@ src/_ZN15dExtFrameCtrl_c17UpdateFileOffsetsER8BCA_File.cpp
 # vtable there -- which needs EVERY virtual defined, not the subset a gate
 # happens to exercise. A migrated class can no longer be sliced method by
 # method; it comes across whole. src/engine/model/Model.cpp (above) is that
-# TU for this class.
-src/func_0203cbc0.c
+# TU for this class. Its destructor calls the delete veneer func_0203cbc0,
+# which src/engine/heap/Heap.cpp (slice 3a) now defines for the host, along
+# with the allocator func_0203cc0c this slice used to list as well.

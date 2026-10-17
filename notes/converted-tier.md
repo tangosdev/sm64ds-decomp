@@ -82,13 +82,13 @@ It scored `real_name` 972 → 2,611 and CONVERTED → 1,087, and it is wrong fou
 An adversarial audit found all four with concrete cases:
 
 - **Misattribution.** `search()` takes the first match anywhere in the file.
-  `src/_ZN10dScStage_c13UpdateMessageEv.cpp` reports `Message::UpdateWindow` — a
+  The old `dScStage_c::UpdateMessage` shard (now in `src/Message.cpp`) reported `Message::UpdateWindow` — a
   one-line stub for a *dependency* class declared above the real function.
   The old `Coffin::InitResources` shard (now `daObjCasket_c::InitResources` in
   the promoted daObjCasket_c TU) matched a bare `MeshCollider::LoadFile`
   forward declaration that ends in `;` and is defined in another file entirely.
 - **Override of a correct failure.** Four files whose own symbol is a genuinely
-  unidentified `func_ov*` placeholder (`func_ov006_020c8f20` and `func_ov006_020cb030`, now inside `src/actors/dMgTrmpln2Mario_c.cpp`,
+  unidentified `func_ov*` placeholder (`func_ov006_020c8f20` and `func_ov006_020cb030`, now inside `src/minigames/d_mg_trmpln2_mario.cpp`,
   `func_ov064_02117220`, `func_ov079_02126f8c`) had their verdict flipped to pass
   by an unrelated declaration elsewhere in the file.
 - **Dropped qualifiers.** `Sound::Player::SetPlayableSeqCount` came out as
@@ -170,8 +170,8 @@ registers is a `volatile`-qualified pointer, so the criterion failed the code th
 had no alternative:
 
 ```sh
-src/actors/dScene_c.cpp (ResetHardwareRegisters)  74 volatile hits, all 0x0400xxxx
-src/_ZN2GX13SetBankForTexEt.cpp                  25 volatile hits, all VRAM banks
+src/game/stages/d_scene.cpp (ResetHardwareRegisters)  74 volatile hits, all 0x0400xxxx
+src/engine/gx/GX_VramCnt.cpp (SetBankForTex)     25 volatile hits, all VRAM banks
 src/engine/gx/G2x.cpp (SetBGyAffine)              the register block is a PARAMETER
 ```
 
@@ -202,7 +202,7 @@ volatile int vi; vi dummy;` would carry no `volatile` at the use site at all.
 
 `tools/tiers_ratchet.py` banks the SET of CONVERTED paths and fails when one
 leaves. A TU promotion consolidates N per-symbol `src/_ZN....cpp` files into the
-one `src/actors/<Class>.cpp` they always were, which git records as N deletions plus one
+one `src/game/<dir>/<file>.cpp` they always were, which git records as N deletions plus one
 addition. Every one read as
 
 ```sh
@@ -219,7 +219,7 @@ A GONE path is now resolved through the manifest (via `tools/tu_manifest.py`, pe
 naming the absorbing file:
 
 ```sh
-MOVED -- absorbed into src/game/actors/daObjPathLift_c.cpp by TU promotion
+MOVED -- absorbed into src/game/actors/d_a_obj_path_lift.cpp by TU promotion
          (ov100/daObjPathLift_c), which fails: No raw offset arithmetic ...;
          Calls things by real names, not mangled _Z
 ```

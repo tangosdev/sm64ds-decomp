@@ -1,7 +1,7 @@
 //cpp
 /* ov080/daPicGate_c -- picture-gate helpers: the mesh machinery under the
- * promoted TU (src/actors/daPicGate_c.cpp, .text 0x021264ec..0x02126fbc).
- * .text 0x02125404..0x021261f4: the destructor pair, then the fifteen
+ * promoted TU (src/game/actors/d_a_pic_gate_methods.cpp, .text 0x021264ec..0x02126fbc).
+ * .text 0x02125404..0x021264ec: the destructor pair, then the sixteen
  * func_ov080_* helpers that fill the range up to the class TU.
  *
  *   ~daPicGate_c         D1 0x02125404, D0 0x02125428 -- the key function, so
@@ -20,8 +20,8 @@
  *                        plays a sound.
  *   func_ov080_02125940  BuildNormals -- per-cell normal from the neighbour
  *                        cross product, packed for G3_NORMAL.
- *   func_ov080_02125af0  FlattenFrame -- cells off the current width/height
- *                        get z = 0 and the flat packed normal.
+ *   func_ov080_02125af0  FlattenFrame -- cells on the border of the current
+ *                        width/height get z = 0 and the flat packed normal.
  *   func_ov080_02125bb0  RippleHeight -- wave height at a cell's distance.
  *   func_ov080_02125cd4 / func_ov080_02125d08 -- wave-clock math on
  *                        mWaveParams.
@@ -32,18 +32,14 @@
  *                        flat quad states; the texCoord pattern differs.
  *   func_ov080_02125fd0  DrawFlat -- emit the flat quad.
  *   func_ov080_02126120 -- the empty state slot.
- *
- * The wave-mesh renderer at 0x021261f4 is matched and enrolled separately in
- * src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp, covering the interval
- * through 0x021264ec between this file and the class TU.
+ *   func_ov080_021261f4  DrawWave -- the wave-mesh renderer: one triangle
+ *                        strip per pair of adjacent cell columns.
  *
  * deslop leftovers:
  * - Vertex.texCoord/colour reach the GX ports through literal
  *   *(int *)0x0400xxxx stores: the ports stay unnamed so the stores keep
  *   the same non-volatile idiom the promoted TU uses.
- * - HitTest keeps the goto skeleton the ROM's branch shape needs (the
- *   positive/negative-z split), and BuildNormals keeps the triple-store
- *   zero-init of its Vec3 locals.
+ * - BuildNormals keeps the triple-store zero-init of its Vec3 locals.
  */
 
 #include "daPicGate_c.h"
@@ -52,6 +48,7 @@
 #include "Model.h"
 #include "SharedFilePtr.h"
 #include "private/Ov080Mat.h"
+#include "nitro/fx/fx.h"
 
 #pragma defer_codegen off
 
@@ -222,8 +219,6 @@ void daPicGate_c::func_ov080_021256f8()
     Vec3 ob;
     Vec3 oa;
     Player *r5;
-    int za;
-    int zb;
     int x, y;
     int lim;
     u32 raw;
@@ -239,44 +234,31 @@ void daPicGate_c::func_ov080_021256f8()
     MulVec3Mat4x3((Vector3 *)&a, &data_020a0e68, (Vector3 *)&oa);
     MulVec3Mat4x3((Vector3 *)&b, &data_020a0e68, (Vector3 *)&ob);
 
-    za = oa.z;
-    if (za <= 0)
-        goto L9c;
-    zb = ob.z;
-    if (zb <= 0)
-        goto Lb0;
-L9c:
-    if (za >= 0)
-        goto neg;
-    zb = ob.z;
-    if (zb < 0)
-        goto neg;
-Lb0:
-    x = ob.x << 3;
-    y = ob.y << 3;
-    ob.x = x;
-    ob.y = y;
-    if (x < 0)
+    if ((oa.z > 0 && ob.z <= 0) || (oa.z < 0 && ob.z >= 0)) {
+        x = ob.x << 3;
+        y = ob.y << 3;
+        ob.x = x;
+        ob.y = y;
+        if (x < 0)
+            return;
+        raw = param1;
+        nib = raw & 0xf;
+        lim = (nib + 1) * 0x64000;
+        if (x > lim)
+            return;
+        if (y < 0)
+            return;
+        nib = (raw >> 4) & 0xf;
+        lim = (nib + 1) * 0x64000;
+        if (y > lim)
+            return;
+        func_ov080_02125de0(x, y, 1);
         return;
-    raw = param1;
-    nib = raw & 0xf;
-    lim = (nib + 1) * 0x64000;
-    if (x > lim)
-        return;
-    if (y < 0)
-        return;
-    nib = (raw >> 4) & 0xf;
-    lim = (nib + 1) * 0x64000;
-    if (y > lim)
-        return;
-    func_ov080_02125de0(x, y, 1);
-    return;
+    }
 
-neg:
-    if (za <= 0xa000)
+    if (oa.z <= 0xa000)
         return;
-    zb = ob.z;
-    if (zb > 0xa000)
+    if (ob.z > 0xa000)
         return;
     if (mWaveTimer != 0)
         return;
@@ -351,37 +333,19 @@ void daPicGate_c::func_ov080_02125940()
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125af0Ev
-/* FlattenFrame: every cell whose x or y is off the picture's width/height
- * keeps its edge; the interior is reset to z = 0 and the flat packed
- * normal (0x1ff00000). */
+/* FlattenFrame: every cell on the picture's border (x at 0 or the full
+ * width, y at 0 or the full height) is reset to z = 0 and the flat packed
+ * normal (0x1ff00000); interior cells are left as they are. */
 void daPicGate_c::func_ov080_02125af0()
 {
-    int i;
-    int cnt = mNumCells;
-    i = 0;
-    if (cnt <= 0) return;
-    do {
+    for (int i = 0; i < mNumCells; i++) {
         Vertex *e = mCells + i;
-        int v = e->x;
-        if (v != 0) {
-            unsigned int t = param1;
-            int a = ((unsigned char)(t & 0xf) + 1) * 0x64000;
-            if (v != a) {
-                int v2 = e->y;
-                if (v2 != 0) {
-                    int b = ((unsigned char)((t >> 4) & 0xf) + 1) * 0x64000;
-                    if (v2 != b) goto next;
-                }
-            }
+        if (e->x == 0 || e->x == ((unsigned char)(param1 & 0xf) + 1) * 0x64000 || e->y == 0 ||
+            e->y == ((unsigned char)((param1 >> 4) & 0xf) + 1) * 0x64000) {
+            e->z = 0;
+            mCells[i].color = 0x1ff00000;
         }
-        e->z = 0;
-        {
-            Vertex *e2 = mCells + i;
-            e2->color = 0x1ff00000;
-        }
-    next:
-        i++;
-    } while (i < mNumCells);
+    }
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125bb0Ei
@@ -395,7 +359,6 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
     int r5res, r4res, sum, idx;
     Fix12i f;
     short tv;
-    long long prod;
 
     if (r4 == 0)
         return 0;
@@ -414,15 +377,13 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
     r4res = func_ov080_02125cd4(mWaveParams->duration - mWaveTimer);
 
     f = _ZN4cstd4fdivEii(r4res, mWaveParams->unk_0c);
-    prod = (long long)(-f) * (long long)r6;
-    sum = r4res + (int)((prod + 0x800) >> 12);
+    sum = r4res + FX_MUL(-f, r6);
     if (sum < 0)
         sum = 0;
 
     idx = (unsigned short)r5res >> 4;
     tv = *(short *)((char *)data_02082214 + (idx << 2));
-    prod = (long long)tv * (long long)sum;
-    return (int)((prod + 0x800) >> 12);
+    return FX_MUL(tv, sum);
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125cd4Ei
@@ -442,34 +403,29 @@ s32 daPicGate_c::func_ov080_02125d08(s32 frames)
 {
     int *obj = (int *)mWaveParams;
     Fix12i speed = _ZN4cstd4fdivEii(0xffff, obj[2]);
-    long long prod = (long long)frames * (long long)speed;
-    int result = (int)((prod + 0x800) >> 12);
+    int result = FX_MUL(frames, speed);
     s16 cur = mWavePhase;
     return (s16)(result - cur);
 }
 
-/* func_ov080_02125d64 stays a C free function: the Vector3 copy it does is
- * the C front end's ldm/stm block move, and C++ scalarizes it on every
- * installed mwccarm (the ov062 wall). #pragma cplusplus off parses it as C.
- * Do not redeclare its callees. */
-#pragma cplusplus off
+/* Initialize the plain vector inside the loop: b56 emits the retail block
+ * copy in C++ mode. This helper retains its existing C-linkage boundary. */
 struct Elem { struct Vector3 pos; int dist; int pad[2]; };  /* 0x18 */
 
 // @symbol func_ov080_02125d64
 /* Refresh every cell's planar distance from the wave origin (unk_134);
  * Elem::dist feeds RippleHeight. */
-void func_ov080_02125d64(char *c)
+extern "C" void func_ov080_02125d64(char *c)
 {
     int i;
-    struct Vec3 tmp;
+
     for (i = 0; i < *(unsigned short*)(c + 0x1b8); i++) {
         struct Elem *e = (struct Elem *)(*(char **)(c + 0x1a0) + i * 0x18);
-        tmp = *(struct Vec3 *)&e->pos;
+        Vec3 tmp = *(struct Vec3 *)&e->pos;
         tmp.z = 0;
         e->dist = Vec3_Dist((struct Vector3 *)(c + 0x134), (struct Vector3 *)&tmp);
     }
 }
-#pragma cplusplus on
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125de0Eiii
 /* BeginWave: the origin in cell space goes to unk_134, every cell's dist
@@ -613,3 +569,100 @@ void daPicGate_c::func_ov080_02126124()
     mCorners[3].color = 0x20000000;
     mCorners[3].texCoord = 0;
 }
+
+#define G3_POLYGON_ATTR    (*(int *)0x040004a4)
+#define G3_TEXIMAGE_PARAM  (*(int *)0x040004a8)
+#define G3_TEXPLTT_BASE    (*(int *)0x040004ac)
+#define G3_DIF_AMB         (*(int *)0x040004c0)
+#define G3_SPE_EMI         (*(int *)0x040004c4)
+enum { kMtxPosVec = 2, kMtxPos = 1, kScale = 0x20000, kTriStrip = 2 };
+extern "C" {
+extern void func_02055388(void *m);
+extern void func_02055998(void *m);
+extern int data_ov080_0212771c[];
+}
+/* texgen=NORMAL variant: no per-vertex TEXCOORD, positions at >>7. */
+#define EMIT_VTX7(v) \
+    G3_NORMAL = (v)->color; \
+    vz = (v)->z; \
+    s2 = (s16)(vz >> 7); \
+    vx = (v)->x; \
+    s0 = (s16)(vx >> 7); \
+    vx = (u16)s0; \
+    vy = (v)->y; \
+    s1 = (s16)(vy >> 7); \
+    G3_VTX_16 = vx | ((u16)s1 << 16); \
+    G3_VTX_16 = (u16)s2
+
+static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 sizeS, u32 sizeT, u32 pltt0) {
+    G3_TEXIMAGE_PARAM =
+        (addr >> 3) | (texFmt << 26) | 0x80000000 | (sizeS << 20) | (sizeT << 23) | (pltt0 << 29);
+}
+
+// @symbol _ZN11daPicGate_c19func_ov080_021261f4Ev
+/* DrawWave. The ports this one needs beyond the file's set are spelled
+ * the same plain way, and its texture-parameter helper takes the five
+ * fields it varies. */
+#pragma opt_propagation off
+void daPicGate_c::func_ov080_021261f4() {
+    int tmp[12];
+    int i, j, n;
+
+    MulMat4x3Mat4x3(mMtx, data_0209b3ec.m, tmp);
+    G3_MTX_PUSH = 0;
+    func_02055998(data_ov080_0212771c);
+    func_02055388(tmp);
+    G3_MTX_MODE = kMtxPosVec;
+    func_020553a4(tmp);
+    G3_TEXCOORD = 0x04000400;
+    G3_LIGHT_VECTOR = 0xe0000000;
+    G3_LIGHT_COLOR = 0xc0007fff;
+    {
+        struct Ov080Mat *m2 = (struct Ov080Mat *)mTexRecord;
+        G3_DIF_AMB = m2->difAmb | 0x7fff0000;
+    }
+    G3_SPE_EMI = ((struct Ov080Mat *)mTexRecord)->speEmi;
+    {
+        Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
+        G3_TexImageParam(m2->texAddr, (m2->param >> 26) & 7, (m2->param >> 20) & 7,
+                         (m2->param >> 23) & 7, (m2->param >> 29) & 1);
+    }
+    {
+        struct Ov080Mat *m3 = (struct Ov080Mat *)mTexRecord;
+        G3_TEXPLTT_BASE = m3->pltAddr >> (4 - (((m3->param >> 0x1a) & 7) == 2 ? 1 : 0));
+    }
+    G3_POLYGON_ATTR = 0x01000088 | ((((u8)((param1 >> 8) & 0x1f)) == 7) ? 0x14 : 0x1f) << 16;
+    G3_MTX_SCALE = 0x10000;
+    G3_MTX_SCALE = 0x10000;
+    G3_MTX_SCALE = 0x10000;
+
+    n = (int)mCols;
+    i = 0;
+    n = n - 1;
+    if (n > 0) {
+        do {
+            G3_BEGIN = kTriStrip;
+            j = 0;
+            if ((int)mRows > 0) {
+                do {
+                    Vertex *base = mCells;
+                    int rows = (int)mRows;
+                    Vertex *v1 = &base[i + j * rows];
+                    Vertex *v2 = &base[(i + 1) + j * rows];
+                    int vx, vy, vz;
+                    s16 s0, s1, s2;
+
+                    EMIT_VTX7(v1);
+                    EMIT_VTX7(v2);
+
+                    j++;
+                } while (j < (int)mRows);
+            }
+            G3_END = 0;
+            i++;
+        } while (i < (int)mCols - 1);
+    }
+    G3_MTX_POP = 1;
+}
+
+#pragma opt_propagation on

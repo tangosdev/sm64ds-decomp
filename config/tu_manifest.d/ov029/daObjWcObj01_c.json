@@ -65,13 +65,13 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov029_02114220",
+      "symbol": "gWcObj01ModelFile",
       "address": "0x02114220",
       "size": "0x8",
       "evidence": "model resource handle constructed with file ID 1740; InitResources loads the BMD it wraps"
     },
     {
-      "symbol": "data_ov029_02114228",
+      "symbol": "gWcObj01CollisionFile",
       "address": "0x02114228",
       "size": "0x8",
       "evidence": "collision resource handle constructed with file ID 1741; InitResources loads the KCL it wraps"
@@ -544,7 +544,7 @@
       "source": "0x02112b84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov029_02114220",
+      "symbol": "gWcObj01ModelFile",
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x02114220"
@@ -574,7 +574,7 @@
       "source": "0x02112b94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov029_02114228",
+      "symbol": "gWcObj01CollisionFile",
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x02114228"

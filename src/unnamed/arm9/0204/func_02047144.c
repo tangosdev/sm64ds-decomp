@@ -16,20 +16,14 @@ int func_02047144(const Table2* tbl, const char* name)
 {
     u32 count = tbl->count;
     u32 i = 0;
-    if (i >= count)
-        goto not_found;
-    {
+    if (i < count) {
         Entry16* entries = tbl->entries;
-        while (1)
-        {
+        do {
             if (_ZN4cstd6strcmpEPKcS1_(entries[i].name, name) == 0)
                 return (int)i;
             i++;
-            if (i >= tbl->count)
-                break;
-        }
+        } while (i < tbl->count);
     }
-not_found:
     Crash();
     return -1;
 }

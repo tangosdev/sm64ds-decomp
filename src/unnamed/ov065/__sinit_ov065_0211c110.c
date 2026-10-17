@@ -1,3 +1,11 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov065_0211c110_AssetId {
+    ASSET_YUREI_MUCHO_BMD = 0x042d,
+    ASSET_YUREI_MUCHO_ATTACK_BCA = 0x042e,
+    ASSET_YUREI_MUCHO_BALL_BMD = 0x042f,
+    ASSET_YUREI_MUCHO_WAIT_BCA = 0x0430
+};
+
 extern void func_02017acc();
 extern void func_020731dc();
 extern void _ZN13SharedFilePtr9ConstructEj();
@@ -24,13 +32,13 @@ extern S8 data_ov065_0211cb38, data_ov065_0211cb48;
 
 void __sinit_ov065_0211c110(void)
 {
-    func_02017acc(&data_ov065_0211d610, 0x42f);
+    func_02017acc(&data_ov065_0211d610, ASSET_YUREI_MUCHO_BALL_BMD);
     func_020731dc(&data_ov065_0211d610, func_02017ab4, &data_ov065_0211d644);
-    func_02017acc(&data_ov065_0211d618, 0x42d);
+    func_02017acc(&data_ov065_0211d618, ASSET_YUREI_MUCHO_BMD);
     func_020731dc(&data_ov065_0211d618, func_02017ab4, &data_ov065_0211d620);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov065_0211d600, 0x430);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov065_0211d600, ASSET_YUREI_MUCHO_WAIT_BCA);
     func_020731dc(&data_ov065_0211d600, SharedFilePtr_Destruct_Anim, &data_ov065_0211d62c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov065_0211d608, 0x42e);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov065_0211d608, ASSET_YUREI_MUCHO_ATTACK_BCA);
     func_020731dc(&data_ov065_0211d608, SharedFilePtr_Destruct_Anim, &data_ov065_0211d638);
 
     data_ov065_0211d670[0] = data_ov065_0211cb30; data_ov065_0211d670[1] = data_ov065_0211cb58;

@@ -1,0 +1,272 @@
+{
+  "schema": 1,
+  "task": "eyerok-current1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
+  "producer_session": "codex-eyerok-current-producer1013",
+  "base_commit": "607576acc557a318d5f813f8a0813bc86f03d140",
+  "accepted_predecessor": "0e7ec60e0725ab3e437ee96add1a78bdbdd11f6f",
+  "tested_checkpoint": "3f6aec49259cb361ba3fa8edd4fba5a8a970e6b5",
+  "scope": "Compose the accepted Eyerok native hand Spawn and native factory cleanup with current main. Source, manifest and historical report remain byte-for-byte identical Git blobs to the predecessor; this report adds current-context evidence only.",
+  "completion": "partial",
+  "composition": "Merge accepted predecessor into actual current main; no header, tool, symbol-ledger, Source or manifest adaptations.",
+  "input_changes": "Between historical ffb2 and current607, the only header/tool/Eyerok Source/manifest input change is TextureSequence.h: BTP_File fields unk_04, unk_0c, unk_20 become texRecords, palRecords, seqRecords, with comments updated and widths/order/layout unchanged.",
+  "unchanged_blobs": {
+    "src/actors/Eyerok.cpp": {
+      "accepted": "c33e9c304c2978529c0179682c81493cd15988ee",
+      "current": "c33e9c304c2978529c0179682c81493cd15988ee"
+    },
+    "config/tu_manifest.d/ov066/Eyerok.json": {
+      "accepted": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664",
+      "current": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664"
+    },
+    "notes/experiments/eyerok-native1013.json": {
+      "accepted": "ef46fd02b70d1cd3dbb33ddc9463cce0671ed273",
+      "current": "ef46fd02b70d1cd3dbb33ddc9463cce0671ed273"
+    }
+  },
+  "tested_build_trees": {
+    "src": "96e40fa5e6f961f6d990abea569a0e255d4a4599",
+    "include": "7416241192710afe9e442343e2dfc840155ee7bb",
+    "config": "324d3c5d1dd261ae562432650a87118ee0a2ab79",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "current_context_proof": {
+    "current_main": "607576acc557a318d5f813f8a0813bc86f03d140",
+    "accepted_offer": "0e7ec60e0725ab3e437ee96add1a78bdbdd11f6f",
+    "accepted_base": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
+    "actual_worktree": "C:\\tmp\\sm64ds-eyerok-context1013",
+    "source_blob": "c33e9c304c2978529c0179682c81493cd15988ee",
+    "manifest_blob": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664",
+    "actual_current_header_blob": "dc35f608718ce03f9e0be91dcab71463d80b2be2",
+    "header_change": "Three BTP_File member names and related comments only; no width/order/layout change. Actual current-main tools and headers consumed.",
+    "whole_raw_elf_identical": true,
+    "whole_prepared_elf_identical": true,
+    "raw_sha256": "949ddfb078be2078634e7a1ed5f826e2f650993e8d01ead09d3b76aa324d0761",
+    "prepared_sha256": "febe3f85adceb3fb6342915a29de09ebe3565dae3afdce3b70ee184ef779eae8",
+    "all_owned_bodies_graphs_storage_identical": true,
+    "raw_edges": 805,
+    "prepared_edges": 756,
+    "bss_records": 63,
+    "bss_bytes": 744,
+    "strict_rows": 66,
+    "blind": 0,
+    "initializer_bytes": 1960,
+    "initializer_edges": 149,
+    "input_names_changed": false,
+    "measured_mappings": 22,
+    "metadata_qualification": "Complete raw container identity preserves prior emitted metadata exactly: vtable typeinfo preamble remains zero rather than retail 0x0211ad24; 128 slot bytes (32 entries) match. Existing externalization supplies the unowned retail table. No claim of complete emitted metadata equality to retail.",
+    "scope": "Claimed current-base continuation; tracked merged Source and manifest compiled and prepared with actual current headers/tools. No current global full-ROM build claimed."
+  },
+  "fresh_graph_storage_policy_summary": {
+    "raw_relocations": 805,
+    "prepared_relocations": 756,
+    "complete_containers_equal_to_accepted": true,
+    "bss_records": 63,
+    "bss_nobits_bytes": 744,
+    "initializer_bytes": 1960,
+    "initializer_typed_edges": 149,
+    "ctor_bytes": 4,
+    "ctor_typed_edges": 1,
+    "strict_rows": 66,
+    "strict_blind": 0,
+    "individual_lifecycle_policies": {
+      "_ZN10dBgActor_cD2Ev": {
+        "size": 56,
+        "section": 120,
+        "incoming": [],
+        "configured_homes": null,
+        "standard_plan": {
+          "keep": null,
+          "drop": [
+            120,
+            121
+          ],
+          "externalise": [],
+          "dead": [
+            "_ZN10dBgActor_cD2Ev"
+          ],
+          "referenced": [],
+          "rebase": [
+            5,
+            7,
+            9
+          ],
+          "error": null
+        }
+      },
+      "_ZN9Matrix4x3D1Ev": {
+        "size": 4,
+        "section": 119,
+        "incoming": [],
+        "configured_homes": null,
+        "standard_plan": {
+          "keep": null,
+          "drop": [
+            119
+          ],
+          "externalise": [],
+          "dead": [
+            "_ZN9Matrix4x3D1Ev"
+          ],
+          "referenced": [],
+          "rebase": [
+            5,
+            7,
+            9,
+            120
+          ],
+          "error": null
+        }
+      }
+    },
+    "canonical_callback": {
+      "symbol": "_ZN7Vector3C1Ev",
+      "canonical_symbol": "func_0203d384",
+      "module": "arm9",
+      "address": "0x0203d384",
+      "bytes": 4,
+      "verdict": "VERIFIED",
+      "blind": 0
+    },
+    "metadata": {
+      "emitted_bytes": 136,
+      "slot_bytes": 128,
+      "slots": 32,
+      "slots_match": true,
+      "emitted_typeinfo_word": "00000000",
+      "retail_typeinfo_word": "24ad1102",
+      "complete_emitted_metadata_matches_retail": false
+    }
+  },
+  "historical_full_rom": {
+    "scope": "Historical only: tested on ffb2 base at b6db2d1fcfa6345557b45431aa73e044ffcc2fd1 and bound to accepted0e7; NOT a current607 global ROM-build result.",
+    "report": "notes/experiments/eyerok-native1013.json",
+    "base_commit": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
+    "modules_exact": 106,
+    "source_functions_reproducing": 11334,
+    "source_data_reproducing": 331,
+    "bss_claims": 239,
+    "result": "PASS"
+  },
+  "current_global_full_rom": {
+    "run": false,
+    "qualification": "Current607 Source, complete ordinary prepared object and all owned code/data/storage/callbacks were remeasured. Full raw and prepared container identity establishes unchanged Eyerok output. No current global full-ROM result is claimed."
+  },
+  "workflow_gates": {
+    "literal_range": "607576acc557a318d5f813f8a0813bc86f03d140..3f6aec49259cb361ba3fa8edd4fba5a8a970e6b5",
+    "prepush_linkcheck": {
+      "exit_code": 0,
+      "checked": 65,
+      "verified": 63,
+      "warnings": [
+        {
+          "symbol": "daIwante_c_classInit",
+          "blind": 1
+        },
+        {
+          "symbol": "__sinit_Eyerok.cpp",
+          "blind": 48
+        }
+      ],
+      "qualification": "Unchanged raw-object warnings. Actual ordinary preparation resolves the canonical callback and local registration inputs; prepared66 strict rows have zero blind words."
+    },
+    "declaration_agreement": {
+      "exit_code": 0,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_refcheck": {
+      "exit_code": 0,
+      "references": 267,
+      "stale": 0
+    },
+    "language_mode": {
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  },
+  "inherited_findings": {
+    "EYEROK-METADATA-001": {
+      "disposition": "deferred",
+      "id": "EYEROK-METADATA-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
+      "kind": "reconstruction",
+      "location": "src/actors/Eyerok.cpp: RTTI pragma; config/tu_manifest.d/ov066/Eyerok.json: vtable policy",
+      "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
+      "reason": "Whole emitted 136-byte vtable equals prior emitted copy, but typeinfo +4 is zero versus retail 0x0211ad24. All 128 slot bytes match. Existing externalization preserves the canonical retail table; no complete emitted metadata equality.",
+      "summary": "Coined identity and RTTI-off emitted metadata remain partial."
+    },
+    "EYEROK-NATIVE-001": {
+      "disposition": "fixed",
+      "id": "EYEROK-NATIVE-001",
+      "kind": "reconstruction",
+      "location": "src/actors/Eyerok.cpp: Eyerok::InitResources",
+      "reason": "The obsolete mangled local declaration and void-pointer return casts are removed. Complete caller bodies and typed destinations strictly verify.",
+      "summary": "Both hand spawns use the existing typed dActor_c::Spawn interface."
+    },
+    "EYEROK-NATIVE-002": {
+      "disposition": "fixed",
+      "id": "EYEROK-NATIVE-002",
+      "kind": "reconstruction",
+      "location": "src/actors/Eyerok.cpp: daIwante_c_classInit",
+      "reason": "Real class members, Vector3[20] at +0x4dc with stride 12, complete callbacks and unchanged native teardown establish lifecycle identity. Complete 168-byte factory and all 12 raw typed edges accounted for.",
+      "summary": "Native new Eyerok() replaces the raw allocation and manual construction chain."
+    },
+    "EYEROK-POLICY-001": {
+      "disposition": "fixed",
+      "id": "EYEROK-POLICY-001",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov066/Eyerok.json",
+      "reason": "Both new deadstrip predicates pass individually against complete incoming graphs and private sections; no arbitrary equal-empty-body alias. Vector3 constructor canonical identity also follows real member-array/destructor pairing. All 22 registration mappings measured; owned rows and addresses unchanged.",
+      "summary": "Lifecycle dispositions and local registration identities have direct ownership proof."
+    },
+    "EYEROK-PROV-001": {
+      "disposition": "fixed",
+      "id": "EYEROK-PROV-001",
+      "kind": "provenance",
+      "location": "src/actors/Eyerok.cpp; notes/experiments/eyerok-native1013.json",
+      "reason": "Original candidate author thread 01a135f6-ffe2-7f12-a948-096399c6745c and actual prior writers remain attributed. Live task has no inherited finding IDs; none invented or discarded.",
+      "summary": "Class-name and RTTI prose accurately distinguishes coined Eyerok from retail daIwante and preserves source lineage."
+    },
+    "EYEROK-RECON-001": {
+      "disposition": "deferred",
+      "id": "EYEROK-RECON-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
+      "kind": "reconstruction",
+      "location": "src/actors/Eyerok.cpp: raw views and helper interfaces",
+      "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
+      "reason": "Actor/player/dust-position walks, EVec3/M48/Vec4 scaffolding, scalar Fix12 ABI declarations and unnamed helpers remain outside this accepted slice. No new compiler impossibility is claimed.",
+      "summary": "Raw object walks and scalar ABI scaffolding remain partially reconstructed."
+    },
+    "EYEROK-RESOURCE-001": {
+      "disposition": "deferred",
+      "id": "EYEROK-RESOURCE-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
+      "kind": "reconstruction",
+      "location": "src/actors/Eyerok.cpp: resource wrappers and PMF/state representation",
+      "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
+      "reason": "Existing two-word SharedFilePtr-derived wrappers and PMF/state representation remain unchanged; strict byte and storage proof does not establish complete C++ reconstruction.",
+      "summary": "Resource and state interfaces remain partial."
+    }
+  },
+  "inherited_findings_qualification": "All seven IDs, dispositions and historical reasons are preserved verbatim from predecessor acceptance. EYEROK-PROV-001 refers to the predecessor task having zero inherited findings; this continuation inherits seven. Deferred metadata/raw/scalar/resource/PMF boundaries remain open under issue3817 and the recorded owners.",
+  "lineage": "Original scout /root/camera_valueweb_pass, thread01a135f6-ffe2-7f12-a948-096399c6745c; native implementation contributors and historical writers remain in the predecessor report and live producer lineage. This continuation is authored by codex-eyerok-current-producer1013, who cannot independently approve it.",
+  "proof_artifacts": [
+    "build/eyerok-current1013/proof/CURRENT-CONTEXT-HANDOFF.json",
+    "build/eyerok-current1013/proof/preparation.json",
+    "build/eyerok-current1013/proof/checks.json",
+    "build/eyerok-current1013/proof/fresh-graph-storage-policies.json"
+  ],
+  "gate_log_sha256": {
+    "proof": "0f0927c595188a66ccd1d83134769e3760aa27f6aefd0fc932f8a21314abb465",
+    "prepush": "03c66879a2a26bfcd031a98965ad76dfd2efdc4e50926426df98842808aa1437",
+    "declarations": "cea16f9cba59e3ba4581aea849b332ae0c43465427aabb933b0bfe6fa23e846d",
+    "port": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+    "langmode": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+  },
+  "pending": [
+    "Independent current-base immutable Source acceptance"
+  ],
+  "publication": "Producer offer only. Root coordinates queue publication and PR after independent acceptance; no main merge authorized."
+}

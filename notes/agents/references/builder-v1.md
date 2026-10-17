@@ -36,7 +36,7 @@ not merely once after the rebase.
     #      every verify; do not predict it.
     python tools/rombuild.py -j 6
     Get-FileHash build/sm64ds.nds -Algorithm SHA256
-    python tools/romdata_check.py --files src/actors/<Class>.cpp
+    python tools/romdata_check.py --files src/game/<dir>/<file>.cpp
     python tools/tu_order_check.py <ov>/<Class>      # takes positional ids
 
     # 2. ratchet, then COMMIT — before anything reads an eligibility report
@@ -522,7 +522,7 @@ already stale. Getting this wrong costs a full validation cycle.
   fails identically for [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daBar_c` on untouched `main`, and a second
   control taken on the `dScMgPanel_c` run reproduces it on
   [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgTeresa_c`, an already-promoted text-only TU that run never
-  touched: `FAIL src/actors/dScMgTeresa_c.cpp: isolate: intact TU preparation
+  touched: `FAIL src/minigames/d_s_mg_teresa.cpp: isolate: intact TU preparation
   refused: ov006/dScMgTeresa_c: intact production requires one .text claim and
   at least one non-text claim`. The exact chain is
   `tubuild.py:4613` (`enrolled_intact_candidate = True` for any entry already in

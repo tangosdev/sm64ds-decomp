@@ -9,19 +9,23 @@
  * emitted `struct a; struct a_; struct b;' as forward declarations -- parameter
  * names mistaken for type names. No source file ever referenced them; dropped.
  *
- * THE ROM'S NAME FOR THIS CLASS IS `mHeap::Heap_t'. Its RTTI record at
+ * THE CLASS IS `mHeap::Heap_t', THE ROM'S OWN NAME. Its RTTI record at
  * arm9:0x02099ce4 spells `N5mHeap6Heap_tE', and its two subclasses are
- * `mHeap::SolidHeap_t' (0x02099cf8) and `mHeap::ExpHeap_t' (0x02099cec). The
- * tree calls them Heap / SolidHeap / ExpandingHeap, and every symbol in
- * the config symbols.txt files is spelled that way, so renaming is a whole-tree
- * change and is deliberately NOT done here. Recorded so the next reader does
- * not rediscover it.
+ * `mHeap::SolidHeap_t' (0x02099cf8) and `mHeap::ExpHeap_t' (0x02099cec). Every
+ * member symbol is mangled against those names. `Heap', `SolidHeap' and
+ * `ExpandingHeap' survive only as typedefs, the tree's older spelling, so the
+ * C++ callers that say `Heap*' did not have to change with the rename; the C
+ * spelling below has no mangling and keeps the old tag.
+ *
+ * The namespace is not cosmetic: mwccarm writes the qualified name into the
+ * class's type_info string, and a TU that emits this class's RTTI (the one that
+ * defines ~Heap_t, its key function) must produce the cartridge's bytes.
  *
  * ==== LAYOUT: 0x14 bytes, and the evidence for each field ====
  *
  * Offsets/widths are observed (evidence_history + evidence_rom, both passes
  * agreeing on 4-byte accesses at 0x00/0x04/0x08/0x0c/0x10). Names come from the
- * constructor's own body, not from a guess: _ZN4HeapC2EPvjPS_ writes start,
+ * constructor's own body, not from a guess: _ZN5mHeap6Heap_tC2EPvjPS0_ writes start,
  * size and root into 0x04/0x08/0x0c in that order and then zeroes 0x10.
  *
  * TWO CORRECTIONS TO THE SKELETON THIS REPLACES:
@@ -65,7 +69,7 @@
  * Return types are taken from the DEFINITIONS (the ExpandingHeap and SolidHeap
  * overrides, which are migrated and byte-gated), never from a caller -- callers
  * disagree 27% of the time and most of these discard the result. Note that
- * slot 3 is spelled `VAllocate(u32, int)': _ZN13ExpandingHeap9VAllocateEji.
+ * slot 3 is spelled `VAllocate(u32, int)': _ZN5mHeap9ExpHeap_t9VAllocateEji.
  * _ZN9SolidHeap9VAllocateEjj used to claim (u32, u32) for the SAME SLOT, so one
  * of the two imported names was wrong -- and every sibling in the family
  * (Heap::Allocate, SolidHeapAllocator::Allocate,
@@ -85,7 +89,7 @@
  * on one of the two the ROM says the other side was right:
  *
  *   slot 13  VSetNodeID  -> u32, NOT void. What the bytes observe is
- *            NON-VOIDNESS, and only that: _ZN9SolidHeap10VSetNodeIDEj
+ *            NON-VOIDNESS, and only that: _ZN5mHeap11SolidHeap_t10VSetNodeIDEj
  *            (0x0203c3f0) is eight bytes -- `mov r0,#0 / bx lr' -- so it
  *            materializes a return value that no void body can emit (measured:
  *            `void f(u32 id){id=0;}' loses the store to dead-code elimination
@@ -140,7 +144,14 @@ struct Heap {
 #else
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
-struct Heap {
+/* Global, so the elaborated `struct SolidHeapAllocator*' below names the
+   allocator classes and does not declare new ones inside mHeap. */
+struct SolidHeapAllocator;
+struct ExpandingHeapAllocator;
+
+namespace mHeap {
+
+struct Heap_t {
     void* heapStart;                /* 0x04 -- first byte of the arena this heap
                                        hands out; for a root heap it is the heap
                                        object's own end, `this + 0x18'. */
@@ -148,13 +159,13 @@ struct Heap {
                                        address. Heap::CreateRootHeap's local
                                        shadow calls it `heapEnd' and types its
                                        own parameter `void* end', but its
-                                       mangled name is _ZN4Heap14CreateRootHeapEPvj
+                                       mangled name is _ZN5mHeap6Heap_t14CreateRootHeapEPvj
                                        -- `j', a u32 -- and it passes
                                        `size - 0x18' onward as a size. Three of
                                        the four hand-written shadows in the tree
                                        already agreed on heapSize; that fourth
                                        one is the outlier. */
-    struct Heap* parentHeap;        /* 0x0c -- heap this one was carved out of;
+    Heap_t* parentHeap;             /* 0x0c -- heap this one was carved out of;
                                        NULL for the root. Heap::Destroy releases
                                        the block back through it. */
     u32   flags;                    /* 0x10 -- bit 0x4000 = fail-fast: when set,
@@ -168,9 +179,9 @@ struct Heap {
     /* The constructor and destructor are real compiler-spelled methods. Their
        one-function objects also carry compiler-emitted vtable/RTTI passengers;
        strict object isolation retains only the licensed function section while
-       rebinding _ZTV4Heap to the ROM's existing address-point symbol. */
-    Heap(void* start, u32 size, Heap* root);
-    virtual ~Heap();
+       rebinding the vtable to the ROM's existing address-point symbol. */
+    Heap_t(void* start, u32 size, Heap_t* root);
+    virtual ~Heap_t();
 
     /* Pure, because the ROM says so: Heap's own sixteen slots hold code only at
        0 and 1, and NULL at 2..15. Every one of these is implemented by
@@ -208,7 +219,7 @@ struct Heap {
     u32   MaxAllocationUnitSize();           /* slot 10 */
     void  SetNodeID(u32 id);                 /* slot 13 */
     u32   ResizeToFit();                     /* slot 15, Rescue+Crash on 0 */
-    Heap* SetDefault();                      /* installs this as the default
+    Heap_t* SetDefault();                    /* installs this as the default
                                                 heap, returns the previous one */
 
     /* Tail-call veneers. Each is a three-word thunk in the ROM --
@@ -233,14 +244,14 @@ struct Heap {
        these declares exactly as many parameters as its ROM body takes
        arguments, leaving no room for a leading `this'. The one instance method
        among them, ResizeToFit, is declared above and does use `this'. */
-    static Heap* SetupRootHeap();
-    static void  InitializeRootHeap();
-    static Heap* CreateRootHeap(void* mem, u32 size);
-    static Heap* CreateSolidHeap(u32 size, Heap* root, int align);
-    static Heap* CreateExpandingHeap(u32 size, Heap* root, int align);
-    static void  InitializeGameHeap(u32 size, Heap* root);
-    static void* SetupSolidHeapAsDefault(u32 size, Heap* root, int align);
-    static void* InitializeSolidHeapAsDefault(u32 size, Heap* root, int align);
+    static Heap_t* SetupRootHeap();
+    static void    InitializeRootHeap();
+    static Heap_t* CreateRootHeap(void* mem, u32 size);
+    static Heap_t* CreateSolidHeap(u32 size, Heap_t* root, int align);
+    static Heap_t* CreateExpandingHeap(u32 size, Heap_t* root, int align);
+    static void    InitializeGameHeap(u32 size, Heap_t* root);
+    static void*   SetupSolidHeapAsDefault(u32 size, Heap_t* root, int align);
+    static void*   InitializeSolidHeapAsDefault(u32 size, Heap_t* root, int align);
                                              /* veneer -> SetupSolidHeapAsDefault */
     static void  RestoreFromTemporary();
 
@@ -265,6 +276,10 @@ struct Heap {
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
 };
+
+} /* namespace mHeap */
+
+typedef mHeap::Heap_t Heap;
 #endif
 
 #endif

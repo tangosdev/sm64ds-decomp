@@ -20,9 +20,9 @@
 extern "C" {
 #endif
 
-extern u32 _ZN4Heap7_SizeofEPv(void*, void*);
-extern void _ZN4Heap10ReallocateEPvj(void*, void*, unsigned int);
-extern void _ZN4Heap6RescueEv(int);
+extern u32 _ZN5mHeap6Heap_t7_SizeofEPv(void*, void*);
+extern void _ZN5mHeap6Heap_t10ReallocateEPvj(void*, void*, unsigned int);
+extern void _ZN5mHeap6Heap_t6RescueEv(int);
 
 
 #ifdef __cplusplus

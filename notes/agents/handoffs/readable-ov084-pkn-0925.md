@@ -14,8 +14,8 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `ov084/daPkn_c`, `src/actors/daPkn_c.cpp`, ov084 .text 0x0212eaf0..0x02130174 (24 functions). Promoted in #3115; this is its first readability pass.
-- Reserved source/header/config surfaces actually touched: `src/actors/daPkn_c.cpp`, `include/daPkn_c.h`, `config/arm9/overlays/ov084/symbols.txt` (nine rows renamed in place), `config/tu_manifest.d/ov084/daPkn_c.json` (see Changed paths), this handoff, and this class's nine keys in the `attribution.json` ledger. `config/arm9/overlays/ov084/delinks.txt` is reserved but unchanged: it holds only address ranges.
+- Class/TU/symbol and module-qualified ROM scope: `ov084/daPkn_c`, `src/game/actors/d_a_pkn.cpp`, ov084 .text 0x0212eaf0..0x02130174 (24 functions). Promoted in #3115; this is its first readability pass.
+- Reserved source/header/config surfaces actually touched: `src/game/actors/d_a_pkn.cpp`, `include/daPkn_c.h`, `config/arm9/overlays/ov084/symbols.txt` (nine rows renamed in place), `config/tu_manifest.d/ov084/daPkn_c.json` (see Changed paths), this handoff, and this class's nine keys in the `attribution.json` ledger. `config/arm9/overlays/ov084/delinks.txt` is reserved but unchanged: it holds only address ranges.
 - ROM observations: the vtable at 0x02130c28 was reread from `extracted/overlays/overlay_0084.bin`. 31 nonzero slots end at 0x02130ca4, slot 29 (0x02130c9c) is 0x0212ec58 (OnAimedAtWithEgg), and seven zero words run to the .data end at 0x02130cc0. The .data records at 0x02130ba4..0x02130be4 hold the nine state bodies by address (ov084 relocs.txt rows from 0x02130ba4 to 0x02130be4), and `src/unnamed/ov084/__sinit_ov084_02130654.c` copies them into the table at 0x02130e80 in state order 0 to 8: 0x0212fc10, 0x0212fa7c, 0x0212f6d8, 0x0212f630, 0x0212f588, 0x0212f460, 0x0212f33c, 0x0212f2dc, 0x0212f298.
 - Lineage evidence or structural inference: the nine state bodies take the object in r0 and are reached only through the member-pointer table, so they are written as members. Field meanings come from their uses: 0x460 holds `dActor_c::ClosestPlayer()` and is dereferenced as a Player (mVertSpeed, mHorzSpeed, mIsAirborne); 0x464 holds `Vec3_Dist` to it or 0x7fffffff; 0x46c copies `Player::mIsAirborne` (0x6de); 0x474 is the second particle handle (effect 0xfd, zeroed with 0x470); 0x478 is the `Sound::PlayLong` handle; 0x45d is set to 1 when the fade of sub-sound 0x36 to 0 is accepted and to 0 when the fade-in is issued.
 - Hypothesized names/filenames, explicitly not recovered facts: `StateWait` (0x0212fc10, `_ZN7daPkn_c9StateWaitEv`), `StateSleep` (0x0212fa7c, `_ZN7daPkn_c10StateSleepEv`), `StateBite` (0x0212f6d8, `_ZN7daPkn_c9StateBiteEv`), `StateWake` (0x0212f630, `_ZN7daPkn_c9StateWakeEv`), `StateDoze` (0x0212f588, `_ZN7daPkn_c9StateDozeEv`), `StateDie` (0x0212f460, `_ZN7daPkn_c8StateDieEv`), `StateShrink` (0x0212f33c, `_ZN7daPkn_c11StateShrinkEv`), `StateGone` (0x0212f2dc, `_ZN7daPkn_c9StateGoneEv`) and `StateRegrow` (0x0212f298, `_ZN7daPkn_c11StateRegrowEv`) are coined, and so are the field names `mSubSoundFadedOut`, `mClosestPlayer`, `mPlayerDist`, `mPlayerAirborne`, `mParticleHandle2` and `mLoopSoundHandle`. `include/daPkn_c.h` marks both groups as coined next to the declarations.
@@ -55,7 +55,7 @@ Self-audit of the base, numbered R1 to R33, with the four #2473 items folded in 
 | ID | Category | Finding at base | Outcome | Reason or evidence |
 |---|---|---|---|---|
 | R1 (I1) | extern "C" state bodies | The nine state bodies are C-linkage `func_ov084_*` free functions | Fixed | Members under coined names; symbols.txt rows, manifest symbol fields and attribution keys renamed in place. The .data records reach them by address. |
-| R2 | extern "C" helpers | `func_ov084_0212ebb4`, `0212ec04`, `0212ec60`, `0212ef00`, `0212f1d0`, `0212f204` are C-linkage | Partially fixed | Their bodies now use named fields and real calls. They keep C linkage because `include/decl_common.h` declares all six by these names and is off limits; `src/actors/daFPkn_c.cpp` also names `func_ov084_0212ec04`. Owner: next producer on #2473. |
+| R2 | extern "C" helpers | `func_ov084_0212ebb4`, `0212ec04`, `0212ec60`, `0212ef00`, `0212f1d0`, `0212f204` are C-linkage | Partially fixed | Their bodies now use named fields and real calls. They keep C linkage because `include/decl_common.h` declares all six by these names and is off limits; `src/game/actors/d_a_f_pkn.cpp` also names `func_ov084_0212ec04`. Owner: next producer on #2473. |
 | R3 | mangled bridges | C-linkage bridges for `dActor_c::FindWithID`, `ClosestPlayer`, `JumpedOnByPlayer`, `Spawn`, `Player::IncMegaKillCount`, `Animation::Finished`, `WillHitFrame`, `SetFlags` (through `include/decl_Animation.h`), `Sound::PlayLong`, `ApproachLinear` | Fixed | E5, E10, E12, E22. The undefined-symbol set is unchanged. |
 | R4 (I3) | mangled bridges | `ModelAnim::SetAnim`, `dCcAc_c::Init`, `dCcAcPos_c::Init`, `dBgCh_Actr::Init` in InitResources and the states | Still deferred | Not remeasured here. The earlier alternatives (p06, p15 and the Init probes) are recorded in `notes/agents/handoffs/pr-2450-source-review-fixes.md`; `include/dBgCh_Actr.h` declares Init with `Fix12i`, which mangles to a different symbol. Owner: next producer on #2473. |
 | R5 | mangled bridges | `Particle::System::New`, `NewSimple`, `Sound::PlaySub`, `Player::Hurt`, `Player::Bounce` | Still deferred | Each symbol carries `Fix12<int>` by value. `include/Player.h` declares neither Hurt nor Bounce and `include/Sound.h` leaves PlaySub out on purpose; both are shared headers outside this reservation. Not measured. Owner: next producer on #2473. |
@@ -98,12 +98,12 @@ Self-audit of the base, numbered R1 to R33, with the four #2473 items folded in 
 - Attribution preserved through each move/rename: the nine `attribution.json` keys follow the renamed symbols with the same authors (`ruspecial` keeps StateWait, `lunavyqo` keeps StateBite, StateDie and StateShrink, `tangosdev` the other five).
 - Remaining agreed issue scope: R2, R4, R5, R8, R13, R17, R18, R20 to R23, R25 to R27, R32, R33, V3.
 
-Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; both revisions end in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. At base `src/actors/daPkn_c.cpp` has 30 `unk_` and 78 `_ZN` occurrences on 29 and 77 lines; at this commit lines and occurrences agree for every token.
+Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; both revisions end in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. At base `src/game/actors/d_a_pkn.cpp` has 30 `unk_` and 78 `_ZN` occurrences on 29 and 77 lines; at this commit lines and occurrences agree for every token.
 
 | Path | Revision | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
 |---|---|---|---|---|---|---|
-| `src/actors/daPkn_c.cpp` | base `ace15a6c62` | 939 | 29 | 78 | 16 | 77 |
-| `src/actors/daPkn_c.cpp` | this commit | 839 | 4 | 59 | 8 | 52 |
+| `src/game/actors/d_a_pkn.cpp` | base `ace15a6c62` | 939 | 29 | 78 | 16 | 77 |
+| `src/game/actors/d_a_pkn.cpp` | this commit | 839 | 4 | 59 | 8 | 52 |
 | `include/daPkn_c.h` | base `ace15a6c62` | 122 | 7 | 0 | 1 | 5 |
 | `include/daPkn_c.h` | this commit | 111 | 0 | 0 | 0 | 2 |
 
@@ -120,7 +120,7 @@ The four `unk_` lines left are `unk_108` (R8). Nine of the 52 `_ZN` lines are th
 | `config/tu_manifest.d/ov084/daPkn_c.json` | the keys below |
 | `include/daPkn_c.h` | field names and types, the nine state declarations, operator new and `_ZTV7daPkn_c` removed, header comment tidied |
 | `notes/agents/handoffs/readable-ov084-pkn-0925.md` | this handoff |
-| `src/actors/daPkn_c.cpp` | the source changes above |
+| `src/game/actors/d_a_pkn.cpp` | the source changes above |
 
 Changed keys in `config/tu_manifest.d/ov084/daPkn_c.json`, from a python parse of both revisions: `functions[9..17].symbol` (the nine renames), `notes[1]` to `notes[25]` ("states" to "then stated"), `notes[27]` added (the rename map and what this pass changed), and `compiler_only_output[0].reason` (the Vector3 users by their current names). `verification.compilerOnlyOutput.droppedSections[17]` went from 38 to 35: `tools/tubuild.py verify` rewrites that list from the object it compiles, and the value is the section index (`st_shndx`) of the dropped `_ZN7Vector3D1Ev` .text, which moved from 38 at base to 35 at this commit because the emission order changed. Both objects have 67 sections. `notes[0]`, `notes[26]`, `boundary_evidence`, `sections`, `verification` and the other `compiler_only_output` entries are unchanged; each was reread against this commit.
 
@@ -142,12 +142,12 @@ All commands were rerun in round 2 in `C:/tmp/claude-rd-ov084` on the source of 
 | `python tools/queue_audit.py --check-promoted` | 0 | OK |
 | `python tools/port_refcheck.py` | 0 | 408 references, all resolve |
 | `the old credit check` | 0 | 7295 tracked, 0 changed, 0 lost |
-| `python tools/affected_src.py include/daPkn_c.h` | 0 | `src/actors/daPkn_c.cpp` only |
+| `python tools/affected_src.py include/daPkn_c.h` | 0 | `src/game/actors/d_a_pkn.cpp` only |
 | `git diff ace15a6c62 -- include/decl_common.h config/dead-reference-baseline.json config/decl-agreement-baseline.json` | 0 | empty |
 
 - Full-ROM build: see the rombuild row.
 - Explicit function/consumer relocation checks: tubuild verify and prepush_linkcheck, above.
 - Complete emitted TU and data/metadata checks: the object comparison above covers every function, relocation and symbol of the TU object. This TU licenses .text only; the vtable, RTTI and romdata checks from the promotion were not rerun, and the class's data and virtual members are unchanged.
-- Shared-header consumer expansion: `python tools/affected_src.py include/daPkn_c.h` lists only `src/actors/daPkn_c.cpp`. No other header changed.
+- Shared-header consumer expansion: `python tools/affected_src.py include/daPkn_c.h` lists only `src/game/actors/d_a_pkn.cpp`. No other header changed.
 - Port/path/reference and other applicable static gates: above.
 - Private validation, if run, and the exact PR head/base it tested: not run.

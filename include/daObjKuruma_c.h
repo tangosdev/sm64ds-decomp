@@ -56,7 +56,7 @@ struct daObjKuruma_c : dBgActor_c {
        _ZTV13daObjKuruma_c. That symbol is already delinked data (ov002 0x02109278,
        config/arm9/overlays/ov002/symbols.txt).
 
-       RENDER IS NOW DEFINED, in src/actors/daObjKuruma_c.cpp, together with the
+       RENDER IS NOW DEFINED, in src/game/actors/d_a_obj_kuruma.cpp, together with the
        other three functions of this class's linker run -- so that intact TU is the
        key function's TU and it is the one that emits the vtable. That is expected
        and licensed rather than a problem: the emitted vtable and the RTTI triple

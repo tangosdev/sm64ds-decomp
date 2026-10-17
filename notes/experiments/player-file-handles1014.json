@@ -1,0 +1,703 @@
+{
+  "task": "player-file-handles1014",
+  "base": "e54d313d932f908937b82a3d3e84482d3d460b9c",
+  "checkpoint": "a13b3f84f1eef2df67364cc1784f06c386f72767",
+  "status": "Production byte/object and required static gates passed with explicit stock collector limitation. Independent Source acceptance remains separate.",
+  "source_completion": "Scoped opaque object contract repair; SharedFilePtr layout, initializer C++ migration and Player raw views remain partial.",
+  "issue_dependency": "https://github.com/tangosdev/sm64ds-decomp/issues/3169",
+  "issue_context": "Focused prerequisite for the dActor dust continuation: its declaration gate exposed these four existing foreign disagreements. This does not claim the initializer belongs to dActor_c.",
+  "producer": {
+    "session": "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+    "agent": "/root/ibl_interface_independent",
+    "harness": "Codex",
+    "authorship": "Current four-declaration repair and evidence only; prior matching authorship is preserved."
+  },
+  "scope": {
+    "source": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+    "report": "notes/experiments/player-file-handles1014.json",
+    "module": "ov002",
+    "range": [
+      "0x021019d0",
+      "0x02106e40"
+    ],
+    "size_bytes": 21616,
+    "changes": [
+      "Add an incomplete SharedFilePtr tag without fields.",
+      "Declare four imported SharedFilePtr objects instead of char arrays.",
+      "Pass the two model objects explicitly by address where array decay was used."
+    ],
+    "unchanged": [
+      "Native Luigi interfaces and Source",
+      "Player.cpp and SharedFilePtr.h",
+      "all headers, manifests, symbol ledgers, storage ownership, compiler policies and declaration baseline",
+      "all constructor/destructor registration destinations and initializer instruction bytes"
+    ]
+  },
+  "lineage": {
+    "original_match": {
+      "commit": "131962b2d1e416f41e5d31a6fa14eb3dd20499bf",
+      "author": "Tango",
+      "subject": "Match __sinit_ov002_021019d0 (ov002, 21,616 bytes)"
+    },
+    "later_renames": [
+      {
+        "commit": "5a20219f3fb29a00a5e825fb7fd444c1661bdf8c",
+        "author": "Tango"
+      },
+      {
+        "commit": "41a0ab25253e5b4f584605b986e37f3c9e6398dc",
+        "author": "Tango"
+      }
+    ],
+    "overlay_path_move": {
+      "commit": "b41fdb5891b2b3cb18b812e9acb75e861b5fd0c9",
+      "author": "Andrew",
+      "pr": 3656
+    },
+    "inherited_finding_ids": [],
+    "scope_note": "This task has no predecessor Source finding IDs; dust findings retain their original scope in the dust task and are not reassigned here."
+  },
+  "contracts": {
+    "source_form": "The existing SharedFilePtr.h is C++ only and intentionally has no recovered fields. An incomplete C tag names these imported objects without copying a method declaration or asserting size/layout. No include/header change or typedef workaround is used.",
+    "positive_four_contracts": {
+      "data_ov002_0210e8d0": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210e8d0;",
+        "positive_direct_declarator": [
+          "data_ov002_0210e8d0",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 105,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210e8d0",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      },
+      "data_ov002_0210eb20": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210eb20;",
+        "positive_direct_declarator": [
+          "data_ov002_0210eb20",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 103,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210eb20",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      },
+      "data_ov002_0210ebb8": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210ebb8;",
+        "positive_direct_declarator": [
+          "data_ov002_0210ebb8",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 102,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210ebb8",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      },
+      "data_ov002_0210ebd8": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210ebd8;",
+        "positive_direct_declarator": [
+          "data_ov002_0210ebd8",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 106,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210ebd8",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      }
+    },
+    "definition_status": "Neither this initializer nor daLuigi_c defines these four objects. The scanner previously chose the Luigi spelling by plurality, not by locating a definition.",
+    "storage_ownership": {
+      "0x210e8d0": [
+        {
+          "owner": null,
+          "start": "0x210d9a0",
+          "end": "0x21111a0",
+          "module_section_only": true
+        }
+      ],
+      "0x210eb20": [
+        {
+          "owner": null,
+          "start": "0x210d9a0",
+          "end": "0x21111a0",
+          "module_section_only": true
+        }
+      ],
+      "0x210ebb8": [
+        {
+          "owner": null,
+          "start": "0x210d9a0",
+          "end": "0x21111a0",
+          "module_section_only": true
+        }
+      ],
+      "0x210ebd8": [
+        {
+          "owner": null,
+          "start": "0x210d9a0",
+          "end": "0x21111a0",
+          "module_section_only": true
+        }
+      ]
+    },
+    "initializer_ownership": "Enrollment owns only .init [0x021019d0,0x02106e40). .p__sinit_ov002_021019d0 at0x02108110 is separate and not allocated by this Source.",
+    "construction_evidence": {
+      "model_bridge": "func_02017acc, arm9 0x02017acc,24B",
+      "texture_bridge": "SharedFilePtr_Construct_TexSeq, arm9 0x02017934,24B",
+      "native_member": "_ZN13SharedFilePtr9ConstructEj, arm9 0x0201799c,24B",
+      "common_chain": "All three forward through func_02017e48 to func_02017e0c. The latter writes the file ID at+0, reference count at+2 and file pointer at+4. This supports shared-handle identity; this repair does not promote that observation into a shared layout."
+    },
+    "four_prepared_import_relocations": {
+      "prepared": [
+        {
+          "section": 5,
+          "offset": 4156,
+          "type": 2,
+          "symbol": "data_ov002_0210eb20",
+          "symbol_index": 24,
+          "addend": 0
+        },
+        {
+          "section": 5,
+          "offset": 4180,
+          "type": 2,
+          "symbol": "data_ov002_0210ebb8",
+          "symbol_index": 28,
+          "addend": 0
+        },
+        {
+          "section": 5,
+          "offset": 16064,
+          "type": 2,
+          "symbol": "data_ov002_0210e8d0",
+          "symbol_index": 649,
+          "addend": 0
+        },
+        {
+          "section": 5,
+          "offset": 16148,
+          "type": 2,
+          "symbol": "data_ov002_0210ebd8",
+          "symbol_index": 663,
+          "addend": 0
+        }
+      ]
+    }
+  },
+  "verification": {
+    "rombuild": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "log": "build/player-file-handles1014/rombuild.log",
+      "log_sha256": "d02e415c61ec8465d193f291dc8234a54b1fa7abbe7df8391958fc1ab957af47",
+      "tested_head": "a13b3f84f1eef2df67364cc1784f06c386f72767",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "source_function_counts_observed": [
+        5888,
+        11334
+      ],
+      "function_count_scope": "Final production section; earlier baseline control count is not production coverage.",
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "baseline_dsd_symbol_errors": 9,
+      "final_production_summary": [
+        "[6/6] analyze module and source fidelity",
+        "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+        "  reproducing: 11,334",
+        "  mismatching: 0",
+        "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+        "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "  of 3,049,600 module bytes: 2,225,480 (73.0%) source-built code, 13,020 source-owned data, 798,472 data bytes no complete source entry reaches; 48,968 compiler-emitted data bytes verified overall",
+        "  retail-gap contribution: 811,100 module bytes (12,628 function-code, 798,472 data/non-function)",
+        "ROM-build analysis: PASS",
+        "ROM data from source: 969 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,282 object records)"
+      ],
+      "no_rom_scope": "--no-rom does not claim a newly assembled final candidate cartridge image."
+    },
+    "whole-proof": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "build/player-file-handles1014/whole-proof.py"
+      ],
+      "log": "build/player-file-handles1014/whole-proof.log",
+      "log_sha256": "d8c7233917ad09d7a2cd1ac09de8ba0933ca9e44aa697c3b3ab28e0e51f32315"
+    },
+    "stock": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "e54d313d932f908937b82a3d3e84482d3d460b9c..a13b3f84f1eef2df67364cc1784f06c386f72767",
+        "--json",
+        "build\\player-file-handles1014\\stock.json"
+      ],
+      "log": "build/player-file-handles1014/stock.log",
+      "log_sha256": "48838ee40623c057eaf3f3912937e43cccd58b8eb691e6e9c186597cc8d34b68",
+      "mode": "Literal --range e54d313d932f908937b82a3d3e84482d3d460b9c..a13b3f84f1eef2df67364cc1784f06c386f72767",
+      "source_files": 1,
+      "checked": 1,
+      "verified": 1,
+      "warnings": 0,
+      "blocking": 0,
+      "results": [
+        {
+          "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+          "name": "__sinit_ov002_021019d0",
+          "module": "ov002",
+          "addr": "0x21019d0",
+          "verdict": "VERIFIED",
+          "blind": 0,
+          "diffs": []
+        }
+      ]
+    },
+    "decl": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "e54d313d932f908937b82a3d3e84482d3d460b9c"
+      ],
+      "log": "build/player-file-handles1014/decl.log",
+      "log_sha256": "27c502d985983a60ff23a211c3a367b20759f9aff2c0705785befb2d00063f2b",
+      "result": "PASS, with collector coverage limitation below. No baseline update.",
+      "base_global_command": "python tools/check_decl_agreement.py --check",
+      "base_global_exit_code": 1,
+      "base_global_log": "build/player-file-handles1014/base-decl-check.log",
+      "base_global_log_sha256": "7f7a430a885e80d965760404cd8f214f43d8b04888f3636d9b563c97d9807f44",
+      "candidate_global_command": "python tools/check_decl_agreement.py --check",
+      "candidate_global_exit_code": 0,
+      "candidate_global_log": "build/player-file-handles1014/decl-global.log",
+      "candidate_global_log_sha256": "0f0609256347cab180a97102f96fa1a42eaee939ce4c49a6ad44cbef904daa21",
+      "stock_collector_limitation": "parse_file skips elaborated struct data declarations before parse_declarator. Stock four-error removal is not positive agreement coverage for these four. Direct declarator parsing, native declaration comparison, independent source review, and undefined ELF imports provide separate contract evidence.",
+      "whole_collection_before": 7533,
+      "whole_collection_after": 7529,
+      "new_findings": 0,
+      "removed_findings": 4,
+      "scoped_files": 137,
+      "note": "The four removals are a stock scanner omission, not positive stock agreement coverage. Actual source contracts are supported separately by direct declarator parsing, comparison to native Luigi declarations, undefined ELF imports and whole relocated initializer proof."
+    },
+    "port": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/port_refcheck.py"
+      ],
+      "log": "build/player-file-handles1014/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "checked": 267
+    },
+    "langmode": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "log": "build/player-file-handles1014/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+    },
+    "conflict": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_tubuild_conflicts.py"
+      ],
+      "log": "build/player-file-handles1014/conflict.log",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "manifest_entries": 429,
+      "sources_read": 429,
+      "recorded_conflict_markers": 6
+    }
+  },
+  "complete_initializer_proof": {
+    "base": "e54d313d932f908937b82a3d3e84482d3d460b9c",
+    "checkpoint": "a13b3f84f1eef2df67364cc1784f06c386f72767",
+    "source": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+    "candidate": "C:\\tmp\\sm64ds-player-file-handles1014\\src\\unnamed\\ov002\\__sinit_ov002_021019d0.c",
+    "candidate_sha256": "5da8458d8e9f60d1a5315f43975e4ff6df66a9fadadfda1be38a7c53622ca9cc",
+    "compiler": "2004/b56",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "symbol": "__sinit_ov002_021019d0",
+    "module": "ov002",
+    "address": "0x021019d0",
+    "size_bytes": 21616,
+    "end_exclusive": "0x02106e40",
+    "whole_raw_identical": true,
+    "whole_normal_prepared_identical": true,
+    "raw_sha256": "29539c41ffc0b2270a00c2d0213ff66fb3acf1dfbcd6ba2a68db37c094f70c89",
+    "prepared_sha256": "930731602deb22d1fddead0cd3f2c7bb3b6f10f988871fd95aba1a14768e5f4d",
+    "raw_edges": 1841,
+    "prepared_edges": 1841,
+    "strict": {
+      "name": "__sinit_ov002_021019d0",
+      "module": "ov002",
+      "addr": "0x021019d0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "emitted_metadata_records": 0,
+    "allocated_nontext": [
+      {
+        "container": "raw",
+        "nontext": []
+      },
+      {
+        "container": "prepared",
+        "nontext": []
+      }
+    ],
+    "declaration_population": {
+      "data_ov002_0210e8d0": {
+        "definitions": [],
+        "before_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 105,
+            "type": "SharedFilePtr"
+          },
+          {
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 463,
+            "type": "char []"
+          }
+        ],
+        "candidate_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 105,
+            "type": "SharedFilePtr"
+          }
+        ]
+      },
+      "data_ov002_0210eb20": {
+        "definitions": [],
+        "before_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 103,
+            "type": "SharedFilePtr"
+          },
+          {
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 537,
+            "type": "char []"
+          }
+        ],
+        "candidate_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 103,
+            "type": "SharedFilePtr"
+          }
+        ]
+      },
+      "data_ov002_0210ebb8": {
+        "definitions": [],
+        "before_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 102,
+            "type": "SharedFilePtr"
+          },
+          {
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 556,
+            "type": "char []"
+          }
+        ],
+        "candidate_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 102,
+            "type": "SharedFilePtr"
+          }
+        ]
+      },
+      "data_ov002_0210ebd8": {
+        "definitions": [],
+        "before_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 106,
+            "type": "SharedFilePtr"
+          },
+          {
+            "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+            "line": 560,
+            "type": "char []"
+          }
+        ],
+        "candidate_declarations": [
+          {
+            "file": "src/actors/daLuigi_c.cpp",
+            "line": 106,
+            "type": "SharedFilePtr"
+          }
+        ]
+      }
+    },
+    "new_disagreements": [],
+    "removed_disagreements": [
+      {
+        "symbol": "data_ov002_0210e8d0",
+        "kind": "return",
+        "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+        "line": 463,
+        "decl": "char []",
+        "got": "char []",
+        "want": "SharedFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daLuigi_c.cpp",
+        "ref_line": 105,
+        "ref": "SharedFilePtr"
+      },
+      {
+        "symbol": "data_ov002_0210eb20",
+        "kind": "return",
+        "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+        "line": 537,
+        "decl": "char []",
+        "got": "char []",
+        "want": "SharedFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daLuigi_c.cpp",
+        "ref_line": 103,
+        "ref": "SharedFilePtr"
+      },
+      {
+        "symbol": "data_ov002_0210ebb8",
+        "kind": "return",
+        "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+        "line": 556,
+        "decl": "char []",
+        "got": "char []",
+        "want": "SharedFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daLuigi_c.cpp",
+        "ref_line": 102,
+        "ref": "SharedFilePtr"
+      },
+      {
+        "symbol": "data_ov002_0210ebd8",
+        "kind": "return",
+        "file": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
+        "line": 560,
+        "decl": "char []",
+        "got": "char []",
+        "want": "SharedFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daLuigi_c.cpp",
+        "ref_line": 106,
+        "ref": "SharedFilePtr"
+      }
+    ],
+    "before_disagreements": 7533,
+    "after_disagreements": 7529,
+    "source_benefit": "C initializer now declares four opaque SharedFilePtr objects and passes their addresses. Native Luigi APIs, object storage ownership, SharedFilePtr layout/header and raw Player views remain unchanged.",
+    "scope": "Claimed initializer only; actual production Source and actual base control compiled under current unchanged tools/policies.",
+    "temporary_source_metadata": "Candidate keeps the actual initializer basename; compile flags/version come from the actual enrolled Source path. Ordinary retarget/isolation uses that exact Source identity with unchanged current tools/config.",
+    "direct_contracts": {
+      "data_ov002_0210e8d0": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210e8d0;",
+        "positive_direct_declarator": [
+          "data_ov002_0210e8d0",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 105,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210e8d0",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      },
+      "data_ov002_0210eb20": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210eb20;",
+        "positive_direct_declarator": [
+          "data_ov002_0210eb20",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 103,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210eb20",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      },
+      "data_ov002_0210ebb8": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210ebb8;",
+        "positive_direct_declarator": [
+          "data_ov002_0210ebb8",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 102,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210ebb8",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      },
+      "data_ov002_0210ebd8": {
+        "source_declaration": "extern struct SharedFilePtr data_ov002_0210ebd8;",
+        "positive_direct_declarator": [
+          "data_ov002_0210ebd8",
+          "SharedFilePtr",
+          null,
+          false,
+          false,
+          null
+        ],
+        "native_declaration": {
+          "file": "src/actors/daLuigi_c.cpp",
+          "line": 106,
+          "type": "SharedFilePtr"
+        },
+        "elf_import": [
+          {
+            "name": "data_ov002_0210ebd8",
+            "section": "SHN_UNDEF",
+            "size": 0,
+            "type": "STT_NOTYPE"
+          }
+        ]
+      }
+    },
+    "stock_collector_limitation": "parse_file skips elaborated struct data declarations before parse_declarator. Stock four-error removal is not positive agreement coverage for these four. Direct declarator parsing, native declaration comparison, independent source review, and undefined ELF imports provide separate contract evidence.",
+    "graphs_sha256": "90c60e9b344fc771f49bc187616b2de25affa814b6e89e16f7e05485d5e0c087"
+  },
+  "retained_boundaries": [
+    {
+      "id": "FILEHANDLES-COLLECTOR-001",
+      "status": "deferred",
+      "scope": "tools/check_decl_agreement.py",
+      "finding": "parse_file skips elaborated struct data declarations before parse_declarator. Stock four-error removal is not positive agreement coverage for these four. Direct declarator parsing, native declaration comparison, independent source review, and undefined ELF imports provide separate contract evidence.",
+      "next_action": "Separate tooling scope should collect ordinary elaborated data declarations; do not disguise this omission as positive stock coverage.",
+      "owner": "root coordinator",
+      "issue_dependency": "https://github.com/tangosdev/sm64ds-decomp/issues/3169"
+    },
+    {
+      "id": "FILEHANDLES-LAYOUT-002",
+      "status": "deferred",
+      "scope": "SharedFilePtr layout and unmodified Player/Luigi raw views",
+      "finding": "SharedFilePtr.h still intentionally declares methods without recovered fields. Luigi retains LoadedSharedFile view; Player retains block-local char[]/int[] views and offset/index accesses. The fifth animation handle data_ov002_0210eaa0 remains outside this four-object repair. No full shared-resource reconstruction is claimed.",
+      "next_action": "Reserve complete layout and consumer fanout before broader native shared-resource migration.",
+      "owner": "root coordinator",
+      "issue_dependency": "https://github.com/tangosdev/sm64ds-decomp/issues/3169"
+    }
+  ],
+  "tested_build_trees": {
+    "src": "66798604d238c38d9335d6196a30957772a1504e",
+    "include": "0cd7d23f87e38d765c687e423314767e7fde486f",
+    "config": "4eb2bc59085d5ae56d709593388e879b3f631632",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "input_git_blobs": {
+    "src/unnamed/ov002/__sinit_ov002_021019d0.c": "9daa7eae32b97d5f7c1ddd2ea4381d04fae17b87",
+    "include/SharedFilePtr.h": "4cf9477fa21821a8c400546d4be6a4ebebe7c2be",
+    "src/actors/daLuigi_c.cpp": "7cdb421d80fccd7b6c51b186a4b8d37fd41ba0c8",
+    "src/actors/Player.cpp": "7a23d28e06330f60ea1ef9ec47b1ce1d75ed38e9",
+    "config/arm9/overlays/ov002/delinks.txt": "e712de4581162c453513b472a46397fedfa4ee55",
+    "config/arm9/overlays/ov002/symbols.txt": "1e03d840bd0e0a67c2d2046e6477e222c7889360",
+    "config/decl-agreement-baseline.json": "15bc3797f5966bef13ba9e4ffddcf8ac0538a736"
+  },
+  "report_only_finalization": "Only this report changes after the tested checkpoint; private final-binding.json verifies all five build trees and exact final changed paths.",
+  "public_status": "No queue publication, push, PR or main merge by this producer. Independent verifier and coordinator own acceptance/publication."
+}

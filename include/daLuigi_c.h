@@ -46,7 +46,7 @@ struct daLuigi_c : dActor_c {
 
     /* Inline and empty: the compiler writes the member teardown, emits D1
        then D0 in the cartridge's order, and InitResources becomes the key
-       function that places the vtable in src/actors/daLuigi_c.cpp. */
+       function that places the vtable in src/game/actors/d_a_luigi.cpp. */
     virtual ~daLuigi_c() {}                   /* slots 16, 17 */
     virtual s32 InitResources();              /* slot  0 */
     virtual s32 CleanupResources();           /* slot  3 */
@@ -69,7 +69,7 @@ typedef char daLuigi_c_size_must_be_0x20c[
 #endif
 
 /* One state: two members called with the player, `enter` once by SetState
- * and `execute` every frame by Behavior. daLuigi_c.cpp defines the record;
+ * and `execute` every frame by Behavior. d_a_luigi.cpp defines the record;
  * the compiler copies the two pointer-to-member descriptors into it at
  * overlay load. daLuigiState and daLuigiStateFn are coined names. */
 typedef int (daLuigi_c::*daLuigiStateFn)(Player *player);

@@ -1,15 +1,15 @@
 {
   "id": "ov002/daStarBase_c+daStar_c",
   "module": "ov002",
-  "source": "src/actors/daStar_c.cpp",
-  "promoted_source": "src/actors/daStar_c.cpp",
+  "source": "src/game/actors/d_a_star.cpp",
+  "promoted_source": "src/game/actors/d_a_star.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20e6c40..0x20ebe5c, 77 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daStarBase_c, daStar_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "the compiler-generated __sinit_daStar_c.cpp is raw-byte-identical to retail __sinit_ov002_02106e40 (0x2d8, fifty-three relocations): five model-handle constructions and destructor registrations, four animation-handle constructions and destructor registrations, then the fourteen pointer-to-member descriptor copies into the state table data_ov002_021109d8. The ctor word at 0x02108114 points at that initializer."
+    "the compiler-generated __sinit_d_a_star.cpp is raw-byte-identical to retail __sinit_ov002_02106e40 (0x2d8, fifty-three relocations): five model-handle constructions and destructor registrations, four animation-handle constructions and destructor registrations, then the fourteen pointer-to-member descriptor copies into the state table data_ov002_021109d8. The ctor word at 0x02108114 points at that initializer."
   ],
   "sections": [
     {
@@ -1503,7 +1503,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daStar_c.cpp",
+      "symbol": "__sinit_d_a_star.cpp",
       "address": "0x02106e40",
       "size": "0x2d8",
       "binding": "STB_GLOBAL",
@@ -1512,7 +1512,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daStar_c.cpp",
+      "symbol": ".p__sinit_d_a_star.cpp",
       "address": "0x02108114",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1558,13 +1558,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daStar_c.cpp",
+      "symbol": "__sinit_d_a_star.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated static initializer is emitted local by mwcc but must be exposed as the configured .init destination at 0x02106e40"
     },
     {
-      "symbol": ".p__sinit_daStar_c.cpp",
+      "symbol": ".p__sinit_d_a_star.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated ctor-table object is emitted local by mwcc but must be exposed as the configured .ctor destination at 0x02108114"
@@ -2244,7 +2244,7 @@
       "source": "0x02108114",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daStar_c.cpp",
+      "symbol": "__sinit_d_a_star.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02106e40"
@@ -2392,117 +2392,117 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2237",
+      "from": "@2230",
       "to": "@2223",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2237 now; licensed under the existing pin @2223"
     },
     {
-      "from": "@2238",
+      "from": "@2231",
       "to": "@2224",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2238 now; licensed under the existing pin @2224"
     },
     {
-      "from": "@2239",
+      "from": "@2232",
       "to": "@2225",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2239 now; licensed under the existing pin @2225"
     },
     {
-      "from": "@2240",
+      "from": "@2233",
       "to": "@2226",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2240 now; licensed under the existing pin @2226"
     },
     {
-      "from": "@2241",
+      "from": "@2234",
       "to": "@2227",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2241 now; licensed under the existing pin @2227"
     },
     {
-      "from": "@2242",
+      "from": "@2235",
       "to": "@2228",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2242 now; licensed under the existing pin @2228"
     },
     {
-      "from": "@2243",
+      "from": "@2236",
       "to": "@2229",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2243 now; licensed under the existing pin @2229"
     },
     {
-      "from": "@2244",
+      "from": "@2237",
       "to": "@2230",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2244 now; licensed under the existing pin @2230"
     },
     {
-      "from": "@2245",
+      "from": "@2238",
       "to": "@2231",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2245 now; licensed under the existing pin @2231"
     },
     {
-      "from": "@2247",
+      "from": "@2240",
       "to": "@2233",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2247 now; licensed under the existing pin @2233"
     },
     {
-      "from": "@2249",
+      "from": "@2242",
       "to": "@2235",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2249 now; licensed under the existing pin @2235"
     },
     {
-      "from": "@2251",
+      "from": "@2244",
       "to": "@59",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2253",
+      "from": "@2246",
       "to": "@58",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2255",
+      "from": "@2248",
       "to": "@24",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2257",
+      "from": "@2250",
       "to": "@57",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2259",
+      "from": "@2252",
       "to": "@23",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2261",
+      "from": "@2254",
       "to": "@28",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2263",
+      "from": "@2256",
       "to": "@31",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2265",
+      "from": "@2258",
       "to": "@56",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2267",
+      "from": "@2260",
       "to": "@32",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2269",
+      "from": "@2262",
       "to": "@22",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2271",
+      "from": "@2264",
       "to": "@27",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     },
     {
-      "from": "@2273",
+      "from": "@2266",
       "to": "@29",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
     }

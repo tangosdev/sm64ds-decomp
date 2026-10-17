@@ -1,15 +1,15 @@
 {
   "id": "arm9/dCcAc_c",
   "module": "arm9",
-  "source": "src/engine/collision/dCcAc_c.cpp",
-  "promoted_source": "src/engine/collision/dCcAc_c.cpp",
+  "source": "src/engine/collision/d_cc_ac.cpp",
+  "promoted_source": "src/engine/collision/d_cc_ac.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED, so there is no tu_map boundary or `tubuild.py create` candidate id here; every line below is hand-derived and independently checkable.",
     "contiguous linker run 0x0201489c..0x02014a34: the delinks entries tile the span exactly with no hole (config/arm9/delinks.txt, config/arm9/symbols.txt).",
     "class-label homogeneity: every symbol in the run is a member of dCcAc_c or of its derived family class dCcAcPos_c (the position-bearing subclass, _ZTV10dCcAcPos_c at 0x0208e704, _ZTI10dCcAcPos_c at 0x0208e680 recording dCcAc_c as base), plus func_02014a20, the dCcAcPos_c GetOwnerID tail-call veneer the linker emitted for the inherited slot-3 vtable entry.",
-    "neighbour below: dCcPos_c.cpp ends at 0x0201489c (the sibling collision primitive TU). Neighbour above: _ZN10dCcAcPos_cD0Ev.cpp at 0x02014a34, the first of the three dCcAcPos_c lifecycle shards this TU does not claim."
+    "neighbour below: d_cc_pos.cpp ends at 0x0201489c (the sibling collision primitive TU). Neighbour above: _ZN10dCcAcPos_cD0Ev.cpp at 0x02014a34, the first of the three dCcAcPos_c lifecycle shards this TU does not claim."
   ],
   "sections": [
     {

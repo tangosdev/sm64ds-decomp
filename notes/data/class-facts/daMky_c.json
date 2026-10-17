@@ -407,7 +407,7 @@
       "address": "0x021116d0",
       "size": "0x5c",
       "vtable_slot": 17,
-      "body": "Does NOT call D1. It INLINES the whole D1 body (same five destructor calls in the same order, same vptr store), then loads a Heap* indirectly -- ldr r1,[pc,#0x18] -> literal 0x020a0eac (arm9 .bss symbol data_020a0eac), ldr r1,[r1] -- and tail-calls _ZN6Memory10DeallocateEPvP4Heap @arm9 0x0203c1e8 with r0 = this. Returns this.",
+      "body": "Does NOT call D1. It INLINES the whole D1 body (same five destructor calls in the same order, same vptr store), then loads a Heap* indirectly -- ldr r1,[pc,#0x18] -> literal 0x020a0eac (arm9 .bss symbol data_020a0eac), ldr r1,[r1] -- and tail-calls _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE @arm9 0x0203c1e8 with r0 = this. Returns this.",
       "writer_note": "The deallocation is a direct Memory::Deallocate(this, *g_heap) call, not a call to a separate operator delete symbol. No _ZN7fBase_cdlEPv exists in config/arm9/symbols.txt."
     },
     "emission_order_in_rom": "D1 (0x02111688) precedes D0 (0x021116d0) in address order, and both are the two LOWEST addresses in the class's text run."

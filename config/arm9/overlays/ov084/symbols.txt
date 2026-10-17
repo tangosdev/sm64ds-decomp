@@ -125,10 +125,10 @@ data_ov084_021302f4 kind:data(any) addr:0x021302f4
 data_ov084_0213030c kind:data(any) addr:0x0213030c
 data_ov084_02130320 kind:data(any) addr:0x02130320 ambiguous
 data_ov084_02130334 kind:data(any) addr:0x02130334
-__sinit_daKrb_c.cpp kind:function(arm,size=0x1fc) addr:0x0213035c
+__sinit_d_a_krb.cpp kind:function(arm,size=0x1fc) addr:0x0213035c
 __sinit_ov084_02130558 kind:function(arm,size=0xfc) addr:0x02130558
 __sinit_ov084_02130654 kind:function(arm,size=0x20c) addr:0x02130654
-.p__sinit_daKrb_c.cpp kind:data(word) addr:0x02130860
+.p__sinit_d_a_krb.cpp kind:data(word) addr:0x02130860
 .p__sinit_ov084_02130558 kind:data(word) addr:0x02130864
 .p__sinit_ov084_02130654 kind:data(word) addr:0x02130868
 data_ov084_02130880 kind:data(any) addr:0x02130880
@@ -177,12 +177,12 @@ _ZTV7daPkn_c kind:data(any) addr:0x02130c28
 data_ov084_02130cc0 kind:bss addr:0x02130cc0
 data_ov084_02130cc8 kind:bss addr:0x02130cc8
 data_ov084_02130cd0 kind:bss addr:0x02130cd0
-data_ov084_02130cd8 kind:bss addr:0x02130cd8
+gKuriboRecoverAnimationFile kind:bss addr:0x02130cd8
 data_ov084_02130ce0 kind:bss addr:0x02130ce0
 data_ov084_02130ce8 kind:bss addr:0x02130ce8
 data_ov084_02130cf0 kind:bss addr:0x02130cf0
 data_ov084_02130cf8 kind:bss addr:0x02130cf8
-data_ov084_02130d00 kind:bss addr:0x02130d00
+gKuriboLowModelModelFile kind:bss addr:0x02130d00
 @1952 kind:bss addr:0x02130d08
 @1944 kind:bss addr:0x02130d14
 @1945 kind:bss addr:0x02130d20

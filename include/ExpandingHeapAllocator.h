@@ -22,12 +22,14 @@
  * declarations -- parameter names mistaken for type names. No source ever referenced
  * them; dropped, as in SolidHeapAllocator.h. */
 struct ExpandingHeapAllocator : HeapAllocator {
-    MemoryNode* mFirstNode; /* 0x024 */
-    MemoryNode* mLastNode;  /* 0x028 */
-    u32 unk_02c;            /* 0x02c */
-    u32 unk_030;            /* 0x030 */
-    u16 mNodeID;            /* 0x034 */
-    u16 mFlags2;            /* 0x036 */
+    MemoryNode *mFirstNode; /* 0x024 */
+    MemoryNode *mLastNode;  /* 0x028 */
+    /* The in-use list: Deallocate unlinks from it (the bookkeeping at 0x024 + 8),
+       AllocateNode links onto its tail, DeallocateAll walks it from the head. */
+    MemoryNode *mUsedFirstNode; /* 0x02c */
+    MemoryNode *mUsedLastNode;  /* 0x030 */
+    u16 mNodeID;                /* 0x034 */
+    u16 mFlags2;                /* 0x036 */
 #ifdef __cplusplus
     ExpandingHeapAllocator(void* heapEnd, u32 flags);
 

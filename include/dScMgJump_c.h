@@ -29,7 +29,7 @@
  * state functions below assign the next data_ov006_0213cb* row into. That
  * write, and the s16 countdown at 0x5014 in the same functions, are what
  * bound dScMgD3DBase_c at 0x5004 from above. Both live in
- * src/actors/dScMgJump_c.cpp now.
+ * src/minigames/d_s_mg_jump_methods.cpp now.
  *
  * THE DESTRUCTOR IS DEFINED IN THE CLASS BODY, for the emission-order reason
  * spelled out at the definition below. No separate operator delete is needed:
@@ -49,7 +49,7 @@
  * The casts below adapt the existing lifecycle entries at that ABI boundary. */
 extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride,
                        void (*dtor)(void *));
-extern "C" int func_ov006_020c6f3c(int *object);
+extern "C" int Heyho_Destruct(int *object);
 
 struct dScMgJump_c : dScMgD3DBase_c {
     /* DEFINED IN THE CLASS BODY, DELIBERATELY -- not a style choice.
@@ -65,10 +65,10 @@ struct dScMgJump_c : dScMgD3DBase_c {
        no descendant's own destructor is affected either way.
        It does give up the key function: with this inline, the first virtual
        DECLARED but not defined here is InitResources below, which lives in
-       src/actors/dScMgJump_c.cpp, so _ZTV11dScMgJump_c is emitted by that one
+       src/minigames/d_s_mg_jump_methods.cpp, so _ZTV11dScMgJump_c is emitted by that one
        translation unit and by no other. */
     virtual ~dScMgJump_c() {
-        __cxa_vec_cleanup(mArray2, 6, 0xf0, (void (*)(void *))func_ov006_020c6f3c);
+        __cxa_vec_cleanup(mArray2, 6, 0xf0, (void (*)(void *))Heyho_Destruct);
     }
 
     /* This class's own overrides, read off the ROM's vtable: the slots where the
@@ -77,29 +77,29 @@ struct dScMgJump_c : dScMgD3DBase_c {
        theirs -- an override of a virtual an ancestor already declares is
        implicitly virtual either way, so each reuses an existing slot and adds no
        field, and the 0x5834 assert below still holds. */
-    s32 InitResources();    /* slot  0 -- src/actors/dScMgJump_c.cpp, the key function */
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
-    s32 CleanupResources(); /* slot  3 -- src/actors/dScMgJump_c.cpp */
-    s32 Behavior();         /* slot  6 -- src/actors/dScMgJump_c.cpp */
-    s32 Render();           /* slot  9 -- src/actors/dScMgJump_c.cpp */
+    s32 InitResources();    /* slot  0 -- src/minigames/d_s_mg_jump_methods.cpp, the key function */
+    virtual void StartRound(int arg);               /* slot 18 */
+    virtual int  CanEndState(int mode);              /* slot 19 */
+    s32 CleanupResources(); /* slot  3 -- src/minigames/d_s_mg_jump_methods.cpp */
+    s32 Behavior();         /* slot  6 -- src/minigames/d_s_mg_jump_methods.cpp */
+    s32 Render();           /* slot  9 -- src/minigames/d_s_mg_jump_methods.cpp */
 
     /* The minigame's state functions. Unnamed in the cartridge; stored as
-       {fn, 0} pairs in the data_ov006_0213cb4c table rows, dispatched through
+       {fn, 0} pairs in the pmf_dScMgJump_c_State_Result table rows, dispatched through
        mState by Behavior. The mangled spellings are what the table relocs
        resolve by. */
-    void func_ov006_020ee2c0();
-    void func_ov006_020ee2c4();
-    void func_ov006_020ee3bc();
-    void func_ov006_020ee3ec();
-    void func_ov006_020ee44c();
-    void func_ov006_020ee4e0();
-    void func_ov006_020ee508();
-    void func_ov006_020ee598();
-    void func_ov006_020ee5b8();
-    void func_ov006_020ee658();
+    void State_Idle();
+    void State_Final();
+    void BeginFinal();
+    void State_Result();
+    void State_End();
+    void BeginEnd();
+    void State_Play();
+    void BeginPlay();
+    void State_Intro();
+    void BeginIntro();
 
-    /* 0x5004 IS A PAIR OF s32, not padding: func_ov006_020ee2c4 and the other
+    /* 0x5004 IS A PAIR OF s32, not padding: State_Final and the other
        state functions assign the next table row into it whole, and that write
        plus the s16 at 0x5014 are what bound dScMgD3DBase_c at 0x5004 from
        above. The sole member must stay an ARRAY: with two named scalars
@@ -113,7 +113,7 @@ struct dScMgJump_c : dScMgD3DBase_c {
     u8    pad_5016[0x6];   /* 0x5016 */
     Model mModel;          /* 0x501c -- 0x50, destroyed last, see banner */
     dMgJump3DMario_c mPlayers[3]; /* 0x506c -- RTTI-proven element type */
-    u8    mArray2[0x5a0];  /* 0x5294 -- 6 * 0xf0, elem dtor func_ov006_020c6f3c */
+    u8    mArray2[0x5a0];  /* 0x5294 -- 6 * 0xf0, elem dtor Heyho_Destruct */
 };
 
 #ifndef SM64DS_PLATFORM_PC

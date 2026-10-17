@@ -1,0 +1,250 @@
+{
+  "id": "arm9/SharedFilePtr",
+  "module": "arm9",
+  "source": "src/SharedFilePtr.cpp",
+  "promoted_source": "src/SharedFilePtr.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "Contiguous linker run arm9:0x0201787c..0x02017e60, 28 functions, gapless in config/arm9/delinks.txt, each a one-function file.",
+    "BOTTOM EDGE: the dFader_c TU (src/runtime/graphics/fader/d_fader.cpp) ends at 0x0201787c with dFader_c's D1; func_0201787c begins there. func_0201787c calls SharedFilePtr::LoadFile and Model::UpdateFileOffsets, and func_020178b4/func_020178cc chain into func_02017a9c/func_02017ae4, so the run's first three functions are this family, not the fader's.",
+    "TOP EDGE: func_02017e0c, func_02017e34 and func_02017e48 belong. They stamp, publish and construct the handle's own fields (+0 fileID, +2 numRefs, +4 filePtr), and inside this run they are reached only from this run's construct/destroy helpers. func_02017e60 is the first function that does not belong: it clears the 12-entry table at data_0209d3c4 that func_02017e94 (the overlay unloader) walks, and func_02018aa4 calls it. That is the overlay/FS loader run (UnloadOverlay, LoadOverlay, LoadFile, Deallocate ...), which is a different subsystem.",
+    "The four X::LoadFile(SharedFilePtr&) members of Model, TextureSequence, dExtFrameCtrl_c and dBgW_Kc sit inside the run between SharedFilePtr's own members and helpers, so they are this file's, not their classes' TUs.",
+    "No ROM RTTI names this unit. The file is named after the tree class SharedFilePtr (include/SharedFilePtr.h), and confidence stays medium because the original file name and the upper edge's ownership of func_02017e0c..func_02017e48 come from call-graph evidence, not from a symbol."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0201787c",
+      "end": "0x02017e60"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_0201787c",
+      "address": "0x0201787c",
+      "size": "0x00000038",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201787c.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_020178b4",
+      "address": "0x020178b4",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_020178b4.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_020178cc",
+      "address": "0x020178cc",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_020178cc.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN15TextureSequence8LoadFileER13SharedFilePtr",
+      "address": "0x020178e4",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN15TextureSequence8LoadFileER13SharedFilePtr.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "address": "0x0201791c",
+      "size": "0x00000018",
+      "legacy_source": "src/SharedFilePtr_Destruct_TexSeq.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "address": "0x02017934",
+      "size": "0x00000018",
+      "legacy_source": "src/SharedFilePtr_Construct_TexSeq.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr",
+      "address": "0x0201794c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "address": "0x02017984",
+      "size": "0x00000018",
+      "legacy_source": "src/SharedFilePtr_Destruct_Anim.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "address": "0x0201799c",
+      "size": "0x00000018",
+      "legacy_source": "src/_ZN13SharedFilePtr9ConstructEj.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_020179b4",
+      "address": "0x020179b4",
+      "size": "0x00000058",
+      "legacy_source": "src/unnamed/arm9/0201/func_020179b4.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_02017a0c",
+      "address": "0x02017a0c",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017a0c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_02017a24",
+      "address": "0x02017a24",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017a24.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN5Model8LoadFileER13SharedFilePtr",
+      "address": "0x02017a3c",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN5Model8LoadFileER13SharedFilePtr.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN13SharedFilePtr19ReallocateModelFileEv",
+      "address": "0x02017a8c",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_02017a9c",
+      "address": "0x02017a9c",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017a9c.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_02017ab4",
+      "address": "0x02017ab4",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017ab4.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_02017acc",
+      "address": "0x02017acc",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017acc.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_02017ae4",
+      "address": "0x02017ae4",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017ae4.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN7dBgW_Kc8LoadFileER13SharedFilePtr",
+      "address": "0x02017afc",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN7dBgW_Kc8LoadFileER13SharedFilePtr.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "address": "0x02017b34",
+      "size": "0x00000018",
+      "legacy_source": "src/SharedFilePtr_Destruct_Clsn.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_02017b4c",
+      "address": "0x02017b4c",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017b4c.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN13SharedFilePtr7ReleaseEv",
+      "address": "0x02017b64",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN13SharedFilePtr7ReleaseEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN13SharedFilePtr8LoadFileEv",
+      "address": "0x02017bc4",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN13SharedFilePtr8LoadFileEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_02017c24",
+      "address": "0x02017c24",
+      "size": "0x00000030",
+      "legacy_source": "src/func_02017c24.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN13SharedFilePtr4LoadEv",
+      "address": "0x02017c54",
+      "size": "0x000001b8",
+      "legacy_source": "src/_ZN13SharedFilePtr4LoadEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_02017e0c",
+      "address": "0x02017e0c",
+      "size": "0x00000028",
+      "legacy_source": "src/func_02017e0c.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_02017e34",
+      "address": "0x02017e34",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017e34.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_02017e48",
+      "address": "0x02017e48",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_02017e48.c",
+      "ordinal": 27
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Definitions are written ROM-descending. Default mwccarm deferred codegen emits .text in reverse source order, so emission is ROM-ascending. No file-wide pragma.",
+    "The unnamed helpers keep their address names and C linkage, with the signatures their one-function files defined, so no caller's declaration agreement changes. SharedFilePtr_Construct_TexSeq / _Destruct_TexSeq / _Destruct_Anim / _Destruct_Clsn keep their existing linker names.",
+    "Host build (port/): the refcounting core (func_02017e0c, func_02017c24, LoadFile, Release) compiles for gate 3b. Model::LoadFile and dExtFrameCtrl_c::LoadFile compile only under SM64DS_PORT_GATE4B and dBgW_Kc::LoadFile only under SM64DS_PORT_GATE8, which port/CMakeLists.txt defines on the targets that link those slices. Everything else is under #ifndef _MSC_VER."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-SharedFilePtr/SharedFilePtr.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 28,
+    "functions_declared": 28,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -53,6 +53,11 @@
  *   are unnamed Player / Bob-omb helpers.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_cnn_AssetId {
+    ASSET_HOUDAI_BMD = 0x045e
+};
+
 #include "common.h"
 #include "daCnn_c.h"
 #include "SharedFilePtr.h"
@@ -112,7 +117,7 @@ struct CnnModelFilePtr : SharedFilePtr {
  * the model to Model::LoadFile.
  * ------------------------------------------------------------------------ */
 // @symbol __sinit_d_a_cnn.cpp
-CnnModelFilePtr data_ov098_0213c8e8(0x45e);
+CnnModelFilePtr data_ov098_0213c8e8(ASSET_HOUDAI_BMD);
 
 /* The member pointers the initializer copies into the table
    (0x0213c644..0x0213c664 in .data, an unclaimed run). Each record is one
@@ -245,7 +250,7 @@ void daCnn_c::func_ov098_0213b0a4()
     {
         short target = mTargetAngleY;
         if (prevAngleY != target && mPrevAngleY == target)
-            Sound::PlayBank3(0x14d, *(const Vector3 *)&mCamSpacePosX);
+            Sound::PlayBank3(0x14d, mCamSpacePos);
     }
     if (mPrevAngleX != mTargetPitch) return;
     if (mPrevAngleY == mTargetAngleY) {
@@ -276,14 +281,14 @@ void daCnn_c::func_ov098_0213ade8()
         mTimer -= 1;
 
     closest = ClosestPlayer();
-    if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&closest->mPosX) >= 0x800000)
+    if (Vec3_Dist(&mPos, &closest->mPos) >= 0x800000)
         return;
 
     timer = mTimer;
     if (timer == 0) {
         mState = 0;
         func_ov098_0213b15c();
-        Sound::PlayBank3(0x14c, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0x14c, mCamSpacePos);
         return;
     }
 
@@ -360,7 +365,7 @@ void daCnn_c::func_ov098_0213ade8()
         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             0, 8, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ, &rot, 0);
 
-        Sound::PlayBank3(0xd4, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0xd4, mCamSpacePos);
         mRecoilSpeed = -0x1800;
         return;
     }
@@ -403,7 +408,7 @@ void daCnn_c::func_ov098_0213ad08()
         mLoadStep = 0;
         mPlayer = player;
         mdCcAc_c.flags |= 1;
-        Sound::PlayBank3(0x14b, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0x14b, mCamSpacePos);
     }
 }
 
@@ -463,7 +468,7 @@ void daCnn_c::func_ov098_0213aa28()
         quakePos.y = mPosY;
         quakePos.z = mPosZ;
         _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &quakePos, 0x1f4000);
-        Sound::PlayBank3(0x14c, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0x14c, mCamSpacePos);
         break;
 
     case 1:
@@ -473,7 +478,7 @@ void daCnn_c::func_ov098_0213aa28()
             break;
         mLoadStep++;
         mTimer = 0;
-        Sound::PlayBank3(0x14d, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0x14d, mCamSpacePos);
         break;
 
     case 2:
@@ -483,7 +488,7 @@ void daCnn_c::func_ov098_0213aa28()
             break;
         if (!func_ov002_020df300(mPlayer))
             break;
-        Sound::PlayBank3(0x14e, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0x14e, mCamSpacePos);
         mTimer = 0;
         mLoadStep++;
         break;

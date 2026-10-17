@@ -67,7 +67,7 @@ Independent of the review's numbers.
   exact; ROM-build analysis PASS. Re-run cached after the comment correction
   recompiles this file and reports the same verdicts.
 - `python tools/linkcheck.py --name _ZN11daTrsTrap_c8BehaviorEv --module ov063
-  --addr 0x0211ce74 --size 0x8c --c src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp`:
+  --addr 0x0211ce74 --size 0x8c --c src/game/actors/d_a_trs_trap.cpp`:
   verdict `VERIFIED`, `diffs: []`, `blind: 0`. Driven the same way over all 11
   of the class's configured functions -- the five methods here, both destructor
   shards and the four factories -- every one returns `VERIFIED`, `diffs: []`,

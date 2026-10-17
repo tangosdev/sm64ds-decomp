@@ -21,6 +21,7 @@
 #include "decl_common.h"
 #include "Particle__Behavior.h"
 #include "math/Matrix.h"
+#include "nitro/fx/fx.h"
 
 extern "C" {
 /* local extern: no header declares the sine table or these three matrix
@@ -145,16 +146,14 @@ void LimitPlane::Func(EffectData& effect, char* particle, Vector3&)
             if (current < plane) {
                 if (current + state.offset.y > plane) {
                     state.offset.y = plane - current;
-                    state.velocity.y = -(int)(((s64)state.velocity.y
-                        * effect.limitPlane.restitution + 0x800) >> 12);
+                    state.velocity.y = -FX_MUL(state.velocity.y, effect.limitPlane.restitution);
                     return;
                 }
             }
             if (current > plane) {
                 if (current + state.offset.y < plane) {
                     state.offset.y = plane - current;
-                    state.velocity.y = -(int)(((s64)state.velocity.y
-                        * effect.limitPlane.restitution + 0x800) >> 12);
+                    state.velocity.y = -FX_MUL(state.velocity.y, effect.limitPlane.restitution);
                 }
             }
         }
@@ -167,12 +166,12 @@ void RadiusConverge::Func(EffectData& effect, char* particle, Vector3&)
 {
     Element& state = *(Element*)particle;
 
-    state.offset.x += (int)(((s64)effect.radiusConverge.strength
-        * (effect.radiusConverge.targetX - state.offset.x) + 0x800) >> 12);
-    state.offset.y += (int)(((s64)effect.radiusConverge.strength
-        * (effect.radiusConverge.targetY - state.offset.y) + 0x800) >> 12);
-    state.offset.z += (int)(((s64)effect.radiusConverge.strength
-        * (effect.radiusConverge.targetZ - state.offset.z) + 0x800) >> 12);
+    state.offset.x +=
+        FX_MUL(effect.radiusConverge.strength, (effect.radiusConverge.targetX - state.offset.x));
+    state.offset.y +=
+        FX_MUL(effect.radiusConverge.strength, (effect.radiusConverge.targetY - state.offset.y));
+    state.offset.z +=
+        FX_MUL(effect.radiusConverge.strength, (effect.radiusConverge.targetZ - state.offset.z));
 }
 
 } // namespace Particle

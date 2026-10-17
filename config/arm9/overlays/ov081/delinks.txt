@@ -4,14 +4,14 @@
     .ctor       start:0x02128824 end:0x02128838 kind:rodata align:4
     .data       start:0x02128840 end:0x02128d60 kind:data align:32
     .bss        start:0x02128d60 end:0x02129000 kind:bss align:32
-src/actors/daHuwa_c.cpp:
+src/game/actors/d_a_huwa.cpp:
     complete
     .text start:0x02123740 end:0x02124090
     .init start:0x021280e8 end:0x02128154
     .ctor start:0x02128824 end:0x02128828
     .bss start:0x02128d60 end:0x02128d88
 
-src/actors/daSnowman_c.cpp:
+src/game/actors/d_a_snowman.cpp:
     complete
     .text start:0x02124090 end:0x02125f14
     .init start:0x02128154 end:0x021284b4
@@ -19,7 +19,7 @@ src/actors/daSnowman_c.cpp:
     .data start:0x021288f8 end:0x02128998
     .bss start:0x02128d88 end:0x02128eb4
 
-src/actors/daSnowball_c.cpp:
+src/game/actors/d_a_snowball.cpp:
     complete
     .text start:0x02125f14 end:0x02126504
     .init start:0x021284b4 end:0x021284f0
@@ -27,7 +27,7 @@ src/actors/daSnowball_c.cpp:
     .data start:0x02128a6c end:0x02128a7c
     .bss start:0x02128eb4 end:0x02128ec4
 
-src/actors/daGmch_c.cpp:
+src/game/actors/d_a_gmch.cpp:
     complete
     .text start:0x02126504 end:0x02127b34
     .init start:0x021284f0 end:0x021287b8

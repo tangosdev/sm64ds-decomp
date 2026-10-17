@@ -1,0 +1,149 @@
+{
+  "id": "ov075/d_s_entry_methods",
+  "module": "ov075",
+  "source": "src/game/stages/d_s_entry_methods.cpp",
+  "promoted_source": "src/game/stages/d_s_entry_methods.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "UPPER PART OF dScEntry_c's UNIT. tools/tu_map.py (build/tu_map.json, rebuilt from build/rtti.json and build/rtti_vtables.json) puts dScEntry_c and OamAnimation in one linker run, ov075 0x02115ab8..0x0211a854, 82 functions, and ov075's three __sinit_* functions match its three runs. ov075/dScEntry_c (src/game/stages/d_s_entry.cpp) licenses the run's first 13 functions, 0x02115ab8..0x02116128. This entry licenses its last nine, 0x0211a210..0x0211a854. The 69 func_ov075_* helpers between them each have their own complete delinks entry, and a delinks entry carries exactly one contiguous .text claim, so the two parts cannot be one source until those 69 are folded too.",
+    "THE HOLE IS THIS CLASS's CODE. Referrer census over every relocs.txt under config/arm9, each relocating word resolved to its owning symbol in its own module: every inbound reference to 0x02116128..0x0211a210 comes from dScEntry_c::InitResources (func_ov075_02116818, func_ov075_02116ad4), dScEntry_c::Behavior (func_ov075_02119dc4), one another, or the step tables at ov075 0x0211c6f8..0x0211c8d8. Every reference into that .data range comes from this run's own functions (icon_c::Render, the hole helpers), from neighbouring ov075 .data, or from __sinit_ov075_0211bb00, which copies the step tables into .bss and also constructs dScEntry_c::graphCallback_c (0x021160b4) and the callback object data_ov075_0211d71c that InitResources registers. No other class's code reaches the hole.",
+    "LEFT EDGE 0x0211a210: dScEntry_c::CleanupResources, the first of six members pinned only by _ZTV10dScEntry_c (0x0211d304) at their slots -- 3, 12, 9, 6, 0, 1 in ROM order. The three functions below it (func_ov075_0211a100/0211a148/0211a194) are hole helpers reached from other hole helpers; they are not folded here, because they do not move the join any closer. The edge is where the per-function sources stop, not a unit boundary.",
+    "RIGHT EDGE 0x0211a854: dScEntry_c_classInit_RESULT (referenced only by g_profile_RESULT) is followed by _ZN12OamAnimationC1Ev and _ZN10dScEntry_c6icon_cC1Ev, which only the two factories reference (__cxa_vec_ctor arguments). That is d_ent_obj.cpp's unit tail exactly -- vtable methods, classInit, then the constructor the factory hands to __cxa_vec_ctor -- and the two constructors are empty, the shape of inline copies a factory forces out at the end of its unit. dScEntry_c_classInit_ENTRY at 0x0211a854 is past that tail. The code after it, 0x0211a948..0x0211b524, is reached from dEntObj_c's methods and through the tables at 0x0211d34c..0x0211d35c that __sinit_ov075_0211c51c reads, never from dScEntry_c. tu_map starts its third run at 0x0211a854. src/game/stages/d_s_entry_entry.cpp therefore stays out of this entry.",
+    "NO VTABLE OR TYPEINFO IS EMITTED. dScEntry_c's key function, its destructor, is defined in src/game/stages/d_s_entry.cpp. icon_c and OamAnimation get no record here either; the verified object carries no data symbols (verification.compilerOnlyOutput.data is empty)."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211a210",
+      "end": "0x0211a854"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10dScEntry_c16CleanupResourcesEv",
+      "address": "0x0211a210",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN10dScEntry_c16CleanupResourcesEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10dScEntry_c16OnPendingDestroyEv",
+      "address": "0x0211a268",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN10dScEntry_c6RenderEv",
+      "address": "0x0211a26c",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN10dScEntry_c6RenderEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10dScEntry_c8BehaviorEv",
+      "address": "0x0211a2b8",
+      "size": "0x00000158",
+      "legacy_source": "src/_ZN10dScEntry_c8BehaviorEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN10dScEntry_c13InitResourcesEv",
+      "address": "0x0211a410",
+      "size": "0x00000324",
+      "legacy_source": "src/_ZN10dScEntry_c13InitResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN10dScEntry_c19BeforeInitResourcesEv",
+      "address": "0x0211a734",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "dScEntry_c_classInit_RESULT",
+      "address": "0x0211a740",
+      "size": "0x000000f4",
+      "legacy_source": "src/game/stages/d_s_entry_result.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN12OamAnimationC1Ev",
+      "address": "0x0211a834",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN12OamAnimationC1Ev.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN10dScEntry_c6icon_cC1Ev",
+      "address": "0x0211a838",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN10dScEntry_c6icon_cC1Ev.cpp",
+      "ordinal": 8
+    }
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12OamAnimationC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Compiler-generated base-object constructor variant for OamAnimation. The cartridge defines only the complete-object C1 at 0x0211a834; OamAnimation is never a base subobject, no symbols.txt in the tree defines a C2 and nothing relocates to one."
+    },
+    {
+      "symbol": "_ZN10dScEntry_c6icon_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Compiler-generated base-object constructor variant for the nested icon_c. The cartridge defines only the complete-object C1 at 0x0211a838; icon_c is never a base subobject, no symbols.txt in the tree defines a C2 and nothing relocates to one."
+    },
+    {
+      "symbol": "_ZN9dThIcon_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "include/dThIcon_c.h defines ~dThIcon_c() {} inline, so compiling icon_c's out-of-line constructor in this TU materialises the base's base-object destructor as vague linkage (STB_LOPROC, 0x10 bytes). No checked-in symbols.txt (arm9, itcm, dtcm, ov000-ov102) names a dThIcon_c destructor of any variant, the same finding config/tu_manifest.d/ov004/dMgPsOpt_c.json records, so a home count of 0 selects the plain deadstrip, not deadstrip-duplicate."
+    }
+  ],
+  "notes": [
+    "Absorbed sources (all retired): src/_ZN10dScEntry_c16CleanupResourcesEv.cpp, src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp, src/_ZN10dScEntry_c6RenderEv.cpp, src/_ZN10dScEntry_c8BehaviorEv.cpp, src/_ZN10dScEntry_c13InitResourcesEv.cpp, src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp, src/game/stages/d_s_entry_result.cpp, src/_ZN12OamAnimationC1Ev.cpp, src/_ZN10dScEntry_c6icon_cC1Ev.cpp. Credit stays by address in function-authors.json.",
+    "Form: `#pragma defer_codegen off` and ROM-ascending source, the same form as d_s_entry.cpp, so the two parts join by concatenation once the hole is folded.",
+    "Render and Behavior now share one this-relative view, dScEntryStepView, in place of the per-file `C` and `Self` shadows. It names only what the header still holds as opaque storage: the two pointer-to-member steps at 0x5c (Behavior) and 0x64 (Render) and the icon count at 0x280. Behavior's fade bytes are the header's mFadeBrightness/mFadeTick/mIsFading, its icon loop calls icon_c::Behavior through an icon_c pointer over mIcons (the shard's one-slot `Poly0` view is gone), and InitResources reads fBase_c::param1 instead of `*(s32 *)(c + 8)`. All byte-identical.",
+    "InitResources' GXS palette loads and Sound calls are real namespace/member calls now (GXS declared in the preamble as d_s_star_sel_methods.cpp does; Sound from Sound.h). The factory moves over verbatim except `_ZTV8dScene_c`, which decl_common.h declares as int[], so the factory casts it rather than redeclaring it as char[].",
+    "OamAnimation() and icon_c() stay out-of-line definitions. Inline class-body forms would not be emitted, because the factory names the constructors by their linker names for __cxa_vec_ctor and nothing in C++ uses them."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov075-d_s_entry_methods/d_s_entry_methods.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12OamAnimationC2Ev",
+        "_ZN10dScEntry_c6icon_cC2Ev",
+        "_ZN9dThIcon_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dScEntry_c6icon_cC2Ev",
+        "_ZN12OamAnimationC2Ev",
+        "_ZN9dThIcon_cD2Ev"
+      ],
+      "droppedSections": [
+        18,
+        20,
+        21,
+        24,
+        25
+      ],
+      "data": [],
+      "dataExternalized": [],
+      "canonicalDuplicates": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

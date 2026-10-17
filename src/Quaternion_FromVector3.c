@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef long long s64;
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int x, y, z, w; } Quat;
@@ -32,9 +33,9 @@ void Quaternion_FromVector3(Quat *out, Vec3 *a, Vec3 *b)
         absr4 = (r4 < 0) ? -r4 : r4;
         if (absr4 > 4) {
             q = _ZN4cstd4fdivEii(0x1000, r4);
-            out->x = (int)(((s64)vb.x * q + 0x800) >> 12);
-            out->y = (int)(((s64)vb.y * q + 0x800) >> 12);
-            out->z = (int)(((s64)vb.z * q + 0x800) >> 12);
+            out->x = FX_MUL(vb.x, q);
+            out->y = FX_MUL(vb.y, q);
+            out->z = FX_MUL(vb.z, q);
             out->w = r4 >> 1;
             return;
         }

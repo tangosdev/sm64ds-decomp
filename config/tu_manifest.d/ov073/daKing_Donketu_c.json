@@ -1,8 +1,8 @@
 {
   "id": "ov073/daKing_Donketu_c",
   "module": "ov073",
-  "source": "src/actors/daKing_Donketu_c.cpp",
-  "promoted_source": "src/actors/daKing_Donketu_c.cpp",
+  "source": "src/game/actors/d_a_king_donketu.cpp",
+  "promoted_source": "src/game/actors/d_a_king_donketu.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -10,7 +10,7 @@
     "class label(s): daKing_Donketu_c",
     "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "WIDENED to the whole tu_map unit 0x0211f000..0x02121ec8 (46 functions): Behavior (0x021218a0, 0x42c), InitResources (0x02121ccc, 0x1f4) and OnAimedAtWithEgg (0x02121ec0, 0x8) folded in above Render, in ROM-ascending order under the file's existing `#pragma defer_codegen off`. The right edge was then the unit's own; the abutting factory daKing_Donketu_c_classInit was folded in by the 0930c classInit fold (below).",
-    "classInit fold (0930c): the KING_DONKETU registry factory daKing_Donketu_c_classInit (0x02121ec8, 0xc8) abuts the tu_map unit's end 0x02121ec8 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x0211f000..0x02121f90 (47 functions) ends where the daObjEwbIce_c TU (src/actors/daObjEwbIce_c.cpp) begins.",
+    "classInit fold (0930c): the KING_DONKETU registry factory daKing_Donketu_c_classInit (0x02121ec8, 0xc8) abuts the tu_map unit's end 0x02121ec8 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x0211f000..0x02121f90 (47 functions) ends where the daObjEwbIce_c TU (src/game/actors/d_a_obj_ewb_ice.cpp) begins.",
     "sinit fold: __sinit_ov073_02122874 (0x4d4) constructs eight file handles (model 0x359 via func_02017acc + func_02017ab4 dtor; animations 0x354..0x35b via SharedFilePtr::Construct + SharedFilePtr_Destruct_Anim) and copies the sixteen state records from the thirty-two PMF literals at 0x02122f40..0x02123040 into bss 0x02123320..0x02123410. Emitted .init is byte-identical to retail modulo relocations (0 diffs over 0x4d4)."
   ],
   "sections": [
@@ -599,56 +599,56 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov073_02123280",
+      "symbol": "gKingIceDonketuDeadAnimationFile",
       "address": "0x02123280",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x355"
     },
     {
-      "symbol": "data_ov073_02123288",
+      "symbol": "gKingIceDonketuWalkAnimationFile",
       "address": "0x02123288",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x35b"
     },
     {
-      "symbol": "data_ov073_02123290",
+      "symbol": "gKingIceDonketuJumpEdAnimationFile",
       "address": "0x02123290",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x357"
     },
     {
-      "symbol": "data_ov073_02123298",
+      "symbol": "gKingIceDonketuModelModelFile",
       "address": "0x02123298",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x359"
     },
     {
-      "symbol": "data_ov073_021232a0",
+      "symbol": "gKingIceDonketuHitAnimationFile",
       "address": "0x021232a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x356"
     },
     {
-      "symbol": "data_ov073_021232a8",
+      "symbol": "gKingIceDonketuDamageAnimationFile",
       "address": "0x021232a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x354"
     },
     {
-      "symbol": "data_ov073_021232b0",
+      "symbol": "gKingIceDonketuJumpStAnimationFile",
       "address": "0x021232b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x358"
     },
     {
-      "symbol": "data_ov073_021232b8",
+      "symbol": "gKingIceDonketuWaitAnimationFile",
       "address": "0x021232b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -824,7 +824,7 @@
     }
   ],
   "notes": [
-    "STATUS RECONCILED 2026-09-19: text-verified -> promoted. The consolidation had already happened; only the status field lagged. MEASURED, not inferred from missing legacy paths: exactly one .text stanza in config/arm9/overlays/ov073/delinks.txt overlaps this entry's run, it is 'complete', it covers 0x0211f000..0x021218a0 exactly, and it names THIS entry's own promoted_source src/actors/daKing_Donketu_c.cpp -- not another entry's. All 43 declared functions fall inside the run, they tile it with no gap, and the first starts at the range start while the last ends at the range end. The absence of the 43 legacy one-function sources is the expected steady state of a completed promotion, not evidence of one.",
+    "STATUS RECONCILED 2026-09-19: text-verified -> promoted. The consolidation had already happened; only the status field lagged. MEASURED, not inferred from missing legacy paths: exactly one .text stanza in config/arm9/overlays/ov073/delinks.txt overlaps this entry's run, it is 'complete', it covers 0x0211f000..0x021218a0 exactly, and it names THIS entry's own promoted_source src/game/actors/d_a_king_donketu.cpp -- not another entry's. All 43 declared functions fall inside the run, they tile it with no gap, and the first starts at the range start while the last ends at the range end. The absence of the 43 legacy one-function sources is the expected steady state of a completed promotion, not evidence of one.",
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/func_ov073_0211fbf4.cpp (func_ov073_0211fbf4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov073_02120098.cpp (func_ov073_02120098) did not split (the definition is inside the extern \"C\" block opened on line 3, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
@@ -894,7 +894,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov073_0211f2c0' differs between the legacy file that used to hold func_ov073_021200e0 and the one that held func_ov073_02120b78; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. func_ov073_0211f2c0 is declared once in the merged TU as `extern void func_ov073_0211f2c0(void *self, int strength);`; the losing spelling carried in from func_ov073_02120b78 was `extern void func_ov073_0211f2c0(void* c, int a);`. Both declare the identifier func_ov073_0211f2c0 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov073_0211f144 and the one that held func_ov073_02120b78; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. Vec3_HorzAngle is declared once in the merged TU as `extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);`; the losing spelling carried in from func_ov073_02120b78 was `extern short Vec3_HorzAngle(const void* v0, const void* v1);`. Both declare the identifier Vec3_HorzAngle with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov073_0211f61c and the one that held func_ov073_02120c08; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt is declared once in the merged TU as `extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* thiz, struct BCA_File* f, int i, int j, Fix12i fx, u16 k);`; the losing spelling carried in from func_ov073_02120c08 was `extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt();`. Both declare the identifier _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123288' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held func_ov073_02120c08; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123288 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123288[2];`; the losing spelling carried in from func_ov073_02120c08 was `extern P2 data_ov073_02123288;`. Both declare the identifier data_ov073_02123288 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuWalkAnimationFile' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held func_ov073_02120c08; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuWalkAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuWalkAnimationFile[2];`; the losing spelling carried in from func_ov073_02120c08 was `extern P2 gKingIceDonketuWalkAnimationFile;`. Both declare the identifier gKingIceDonketuWalkAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ChiefChilly_ChangeState' differs between the legacy file that used to hold func_ov073_0211f61c and the one that held func_ov073_02120c7c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. ChiefChilly_ChangeState is declared once in the merged TU as `int ChiefChilly_ChangeState(C *c, PMF *p);`; the losing spelling carried in from func_ov073_02120c7c was `extern \"C\" void ChiefChilly_ChangeState(void* c, PMF* p);`. Both declare the identifier ChiefChilly_ChangeState with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov073_0211fa74 and the one that held func_ov073_02120c7c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. _Z14ApproachLinearRiii is declared once in the merged TU as `extern void _Z14ApproachLinearRiii(int* p, int t, int s);`; the losing spelling carried in from func_ov073_02120c7c was `extern \"C\" void _Z14ApproachLinearRiii(int& v, int a, int b);`. Both declare the identifier _Z14ApproachLinearRiii with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_021233c0' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held func_ov073_02120c7c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_021233c0 is declared once in the merged TU as `extern char data_ov073_021233c0[];`; the losing spelling carried in from func_ov073_02120c7c was `extern PMF data_ov073_021233c0;`. Both declare the identifier data_ov073_021233c0 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
@@ -916,7 +916,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov073_0211f2c0' differs between the legacy file that used to hold func_ov073_021200e0 and the one that held func_ov073_02120ed0; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. func_ov073_0211f2c0 is declared once in the merged TU as `extern void func_ov073_0211f2c0(void *self, int strength);`; the losing spelling carried in from func_ov073_02120ed0 was `extern void func_ov073_0211f2c0(void *c, int a);`. Both declare the identifier func_ov073_0211f2c0 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209e650' differs between the legacy file that used to hold func_ov073_0211f61c and the one that held func_ov073_02120ed0; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_0209e650 is declared once in the merged TU as `extern u16 data_0209e650;`; the losing spelling carried in from func_ov073_02120ed0 was `extern void *data_0209e650;`. Both declare the identifier data_0209e650 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov073_0211f61c and the one that held func_ov073_0212122c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt is declared once in the merged TU as `extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* thiz, struct BCA_File* f, int i, int j, Fix12i fx, u16 k);`; the losing spelling carried in from func_ov073_0212122c was `extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt();`. Both declare the identifier _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123288' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held func_ov073_0212122c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123288 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123288[2];`; the losing spelling carried in from func_ov073_0212122c was `extern P2 data_ov073_02123288;`. Both declare the identifier data_ov073_02123288 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuWalkAnimationFile' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held func_ov073_0212122c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuWalkAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuWalkAnimationFile[2];`; the losing spelling carried in from func_ov073_0212122c was `extern P2 gKingIceDonketuWalkAnimationFile;`. Both declare the identifier gKingIceDonketuWalkAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ChiefChilly_ChangeState' differs between the legacy file that used to hold func_ov073_0211f61c and the one that held func_ov073_0212128c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. ChiefChilly_ChangeState is declared once in the merged TU as `int ChiefChilly_ChangeState(C *c, PMF *p);`; the losing spelling carried in from func_ov073_0212128c was `extern int ChiefChilly_ChangeState(void* c, void* p);`. Both declare the identifier ChiefChilly_ChangeState with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held func_ov073_0212128c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_0209f318 is declared once in the merged TU as `extern void *data_0209f318;`; the losing spelling carried in from func_ov073_0212128c was `extern void* data_0209f318;`. Both declare the identifier data_0209f318 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123360' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held func_ov073_0212128c; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123360 is declared once in the merged TU as `extern char data_ov073_02123360[];`; the losing spelling carried in from func_ov073_0212128c was `extern void* data_ov073_02123360;`. Both declare the identifier data_ov073_02123360 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
@@ -928,9 +928,9 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held func_ov073_021215cc; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. Vec3_Lsl is declared once in the merged TU as `extern void Vec3_Lsl(void *d, void *s, int sh);`; the losing spelling carried in from func_ov073_021215cc was `extern void Vec3_Lsl(Vec3* d, Vec3* s, int sh);`. Both declare the identifier Vec3_Lsl with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulMat4x3Mat4x3' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held func_ov073_021215cc; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. MulMat4x3Mat4x3 is declared once in the merged TU as `extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);`; the losing spelling carried in from func_ov073_021215cc was `extern void MulMat4x3Mat4x3(void* a, void* b, void* c);`. Both declare the identifier MulMat4x3Mat4x3 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held func_ov073_021215cc; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_020a0e68 is declared once in the merged TU as `extern struct Matrix4x3 data_020a0e68;`; the losing spelling carried in from func_ov073_021215cc was `extern Mtx43 data_020a0e68;`. Both declare the identifier data_020a0e68 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123280' differs between the legacy file that used to hold func_ov073_0212000c and the one that held _ZN16daKing_Donketu_c16CleanupResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123280 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123280[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c16CleanupResourcesEv was `extern void* data_ov073_02123280;`. Both declare the identifier data_ov073_02123280 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123288' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held _ZN16daKing_Donketu_c16CleanupResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123288 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123288[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c16CleanupResourcesEv was `extern void* data_ov073_02123288;`. Both declare the identifier data_ov073_02123288 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_021232a8' differs between the legacy file that used to hold func_ov073_021203ac and the one that held _ZN16daKing_Donketu_c16CleanupResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_021232a8 is declared once in the merged TU as `extern struct BCA_File *data_ov073_021232a8[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c16CleanupResourcesEv was `extern void* data_ov073_021232a8;`. Both declare the identifier data_ov073_021232a8 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuDeadAnimationFile' differs between the legacy file that used to hold func_ov073_0212000c and the one that held _ZN16daKing_Donketu_c16CleanupResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuDeadAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuDeadAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c16CleanupResourcesEv was `extern void* gKingIceDonketuDeadAnimationFile;`. Both declare the identifier gKingIceDonketuDeadAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuWalkAnimationFile' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held _ZN16daKing_Donketu_c16CleanupResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuWalkAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuWalkAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c16CleanupResourcesEv was `extern void* gKingIceDonketuWalkAnimationFile;`. Both declare the identifier gKingIceDonketuWalkAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuDamageAnimationFile' differs between the legacy file that used to hold func_ov073_021203ac and the one that held _ZN16daKing_Donketu_c16CleanupResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuDamageAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuDamageAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c16CleanupResourcesEv was `extern void* gKingIceDonketuDamageAnimationFile;`. Both declare the identifier gKingIceDonketuDamageAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held _ZN16daKing_Donketu_c8BehaviorEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_020a0e68 is declared once in the merged TU as `extern struct Matrix4x3 data_020a0e68;`; the losing spelling carried in from _ZN16daKing_Donketu_c8BehaviorEv was `extern Mat4x3 data_020a0e68;`. Both declare the identifier data_020a0e68 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Short' differs between the legacy file that used to hold func_ov073_0211f61c and the one that held _ZN16daKing_Donketu_c8BehaviorEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. DecIfAbove0_Short is declared once in the merged TU as `extern u16 DecIfAbove0_Short(void* p);`; the losing spelling carried in from _ZN16daKing_Donketu_c8BehaviorEv was `extern unsigned short DecIfAbove0_Short(unsigned short *p);`. Both declare the identifier DecIfAbove0_Short with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulMat4x3Mat4x3' differs between the legacy file that used to hold func_ov073_0211f2c0 and the one that held _ZN16daKing_Donketu_c8BehaviorEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. MulMat4x3Mat4x3 is declared once in the merged TU as `extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);`; the losing spelling carried in from _ZN16daKing_Donketu_c8BehaviorEv was `extern void MulMat4x3Mat4x3(void *d, void *a, void *b);`. Both declare the identifier MulMat4x3Mat4x3 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
@@ -940,25 +940,25 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov073_0211f144 and the one that held _ZN16daKing_Donketu_c8BehaviorEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. Matrix4x3_FromRotationY is declared once in the merged TU as `extern void Matrix4x3_FromRotationY(void* m, short ang);`; the losing spelling carried in from _ZN16daKing_Donketu_c8BehaviorEv was `extern void Matrix4x3_FromRotationY(void *m, int angle);`. Both declare the identifier Matrix4x3_FromRotationY with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov073_0211f144 and the one that held _ZN16daKing_Donketu_c8BehaviorEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. MulVec3Mat4x3 is declared once in the merged TU as `extern void MulVec3Mat4x3(const void* in, void* m, void* out);`; the losing spelling carried in from _ZN16daKing_Donketu_c8BehaviorEv was `extern void MulVec3Mat4x3(void *a, void *m, void *out);`. Both declare the identifier MulVec3Mat4x3 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov073_0211f61c' differs between the legacy file that used to hold func_ov073_02120910 and the one that held _ZN16daKing_Donketu_c8BehaviorEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. func_ov073_0211f61c is declared once in the merged TU as `extern int func_ov073_0211f61c(void *c);`; the losing spelling carried in from _ZN16daKing_Donketu_c8BehaviorEv was `extern void func_ov073_0211f61c(void *self);`. Both declare the identifier func_ov073_0211f61c with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123280' differs between the legacy file that used to hold func_ov073_0212000c and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123280 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123280[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_02123280;`. Both declare the identifier data_ov073_02123280 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_021232a0' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_021232a0 is declared once in the merged TU as `extern struct BCA_File *data_ov073_021232a0[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_021232a0;`. Both declare the identifier data_ov073_021232a0 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123288' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123288 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123288[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_02123288;`. Both declare the identifier data_ov073_02123288 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_021232a8' differs between the legacy file that used to hold func_ov073_021203ac and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_021232a8 is declared once in the merged TU as `extern struct BCA_File *data_ov073_021232a8[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_021232a8;`. Both declare the identifier data_ov073_021232a8 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123290' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123290 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123290[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_02123290;`. Both declare the identifier data_ov073_02123290 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_021232b0' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_021232b0 is declared once in the merged TU as `extern struct BCA_File *data_ov073_021232b0[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_021232b0;`. Both declare the identifier data_ov073_021232b0 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_021232b8' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_021232b8 is declared once in the merged TU as `extern struct BCA_File *data_ov073_021232b8[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_021232b8;`. Both declare the identifier data_ov073_021232b8 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuDeadAnimationFile' differs between the legacy file that used to hold func_ov073_0212000c and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuDeadAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuDeadAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuDeadAnimationFile;`. Both declare the identifier gKingIceDonketuDeadAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuHitAnimationFile' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuHitAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuHitAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuHitAnimationFile;`. Both declare the identifier gKingIceDonketuHitAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuWalkAnimationFile' differs between the legacy file that used to hold func_ov073_02120ad8 and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuWalkAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuWalkAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuWalkAnimationFile;`. Both declare the identifier gKingIceDonketuWalkAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuDamageAnimationFile' differs between the legacy file that used to hold func_ov073_021203ac and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuDamageAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuDamageAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuDamageAnimationFile;`. Both declare the identifier gKingIceDonketuDamageAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuJumpEdAnimationFile' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuJumpEdAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuJumpEdAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuJumpEdAnimationFile;`. Both declare the identifier gKingIceDonketuJumpEdAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuJumpStAnimationFile' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuJumpStAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuJumpStAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuJumpStAnimationFile;`. Both declare the identifier gKingIceDonketuJumpStAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuWaitAnimationFile' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuWaitAnimationFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuWaitAnimationFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuWaitAnimationFile;`. Both declare the identifier gKingIceDonketuWaitAnimationFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210da30' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov002_0210da30 is declared once in the merged TU as `extern struct BCA_File *data_ov002_0210da30[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov002_0210da30;`. Both declare the identifier data_ov002_0210da30 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov073_02123298' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. data_ov073_02123298 is declared once in the merged TU as `extern struct BCA_File *data_ov073_02123298[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr data_ov073_02123298;`. Both declare the identifier data_ov073_02123298 with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gKingIceDonketuModelModelFile' differs between the legacy file that used to hold _ZN16daKing_Donketu_c16CleanupResourcesEv and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. gKingIceDonketuModelModelFile is declared once in the merged TU as `extern struct BCA_File *gKingIceDonketuModelModelFile[2];`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern SharedFilePtr gKingIceDonketuModelModelFile;`. Both declare the identifier gKingIceDonketuModelModelFile with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ChiefChilly_ChangeState' differs between the legacy file that used to hold func_ov073_0211f61c and the one that held _ZN16daKing_Donketu_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: the alternate was a redundant restatement of the same symbol, not a second symbol. ChiefChilly_ChangeState is declared once in the merged TU as `int ChiefChilly_ChangeState(C *c, PMF *p);`; the losing spelling carried in from _ZN16daKing_Donketu_c13InitResourcesEv was `extern int ChiefChilly_ChangeState(void* c, PMF* p);`. Both declare the identifier ChiefChilly_ChangeState with C linkage (this TU's `extern \"C\"` block), where the declared identifier IS the linker symbol, so the differing return/parameter spelling cannot select a different ROM symbol. The kept declaration stands; only the commented-out alternate was removed.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov073_0211f144 and the one that held func_ov073_0211f61c; kept the first, the other is commented out for review RESOLVED: neither local typedef survives. The merged TU reaches types.h's real `struct Vector3` through common.h and every use in the file is spelled `struct Vector3`; there is no `typedef ... Vector3` anywhere in src/actors/daKing_Donketu_c.cpp. The two shard-local spellings that disagreed were both dropped in favour of the header type, so no marker remains.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov073_0211f144 and the one that held func_ov073_0211f61c; kept the first, the other is commented out for review RESOLVED: neither local typedef survives. The merged TU reaches types.h's real `struct Vector3` through common.h and every use in the file is spelled `struct Vector3`; there is no `typedef ... Vector3` anywhere in src/game/actors/d_a_king_donketu.cpp. The two shard-local spellings that disagreed were both dropped in favour of the header type, so no marker remains.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Fix12') differs between the legacy file that used to hold func_ov073_0211f494 and the one that held func_ov073_0211f61c; kept the first, the other is commented out for review RESOLVED: neither local typedef survives. types.h permits a private `typedef s32 Fix12;` in a single src/ file, but include/math/Fix12.h declares Fix12 as a class TEMPLATE and this TU reaches it through types.h, so the shards that spelled a parameter `Fix12` take `Fix12i` here instead -- both are s32 and the mangled names those declarations carry are unchanged. See the comment above the extern block.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vec3') differs between the legacy file that used to hold func_ov073_0211f494 and the one that held func_ov073_021215cc; kept the first, the other is commented out for review RESOLVED: one spelling survives -- `typedef struct { int x, y, z; } Vec3;` declared once near the top of src/actors/daKing_Donketu_c.cpp and used by every member that wanted a POD triple rather than types.h's Vector3. The func_ov073_021215cc variant was dropped, not commented out, so no marker remains.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vec3') differs between the legacy file that used to hold func_ov073_0211f494 and the one that held func_ov073_021215cc; kept the first, the other is commented out for review RESOLVED: one spelling survives -- `typedef struct { int x, y, z; } Vec3;` declared once near the top of src/game/actors/d_a_king_donketu.cpp and used by every member that wanted a POD triple rather than types.h's Vector3. The func_ov073_021215cc variant was dropped, not commented out, so no marker remains.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov073_02120c7c and the one that held _ZN16daKing_Donketu_c8BehaviorEv; kept the first, the other is commented out for review RESOLVED, and by exclusion rather than by merge. _ZN16daKing_Donketu_c8BehaviorEv is NOT part of this fold -- it stays in its own shard above the opt_propagation split -- so its `struct C` never entered the TU. The surviving declaration is func_ov073_02120c7c's side of the pair, kept COMPLETE (`struct C { char pad[0x37c]; PMF *pp; };`) because mwccarm 2004/b56 picks its pointer-to-member representation from the completeness of the class. That shard's own field-offset view of the same object keeps its offsets under the distinct name `struct CB`.",
     "PROMOTION IS REFUSED BY tools/tubuild.py promote --dry-run, and the TU is banked text-verified rather than promoted. The two printed reasons are 'manifest status is not link-verified or data-verified' and 'the promotion-ready status is not the recorded linkcheck result'. The recorded result is `scratch-link-verified`, which promotion_refusals() can never accept: it demands status in (link-verified, data-verified) AND linkcheck.result == status, while classify_link_result() returns the `scratch-` prefix whenever the compiler-only policy rewrites the object before the link -- which it does for every key-function TU, this one included (it deadstrips _ZN16daKing_Donketu_cD2Ev, _ZN7Vector3D1Ev and eleven typeinfo/vtable records). Census of config/tu_manifest.d on this tree: 213 manifests, 182 promoted, 169 of those carrying compiler_only_output, 80 promoted entries recording exactly this `scratch-*` result, and only 2 entries in the whole tree satisfying status == recorded result -- neither of them promoted. cmd_promote also has no mutating path at all: anything but --dry-run exits 2. The refusal is therefore structural to the gate, not a defect in this TU, and clearing it is a tools change that belongs in its own review.",
-    "PROMOTED ON THIS BRANCH, BY HAND, FOLLOWING THE DRY RUN'S OWN PLAN: src_tu/actors/daKing_Donketu_c.cpp moved to src/actors/daKing_Donketu_c.cpp, the 43 superseded one-function sources deleted, and config/arm9/overlays/ov073/delinks.txt's 43 `complete` entries replaced by a single `complete` .text claim 0x0211f000..0x021218a0. Before the edit both invariants were asserted against HEAD: the 43 removed entries tiled that span with no gap and no overlap, and their path set equalled this manifest's functions[].legacy_source exactly. `status` is deliberately left at text-verified -- tools/tubuild.py promote still refuses this entry for the two structural reasons recorded above, and the verification level actually reached is the one banked. notes/data/tu-promotion-queue.tsv therefore keeps already_promoted = no, which is the value tools/queue_audit.py --check-promoted wants for any status other than exactly `promoted`, and which is independently correct here because this is a PARTIAL fold: 43 of the unit's 47 functions. Behavior, InitResources, OnAimedAtWithEgg and daKing_Donketu_c_classInit keep their own shards and their own delinks.txt entries -- see the source file's header for the opt_propagation measurement that splits the unit there.",
+    "PROMOTED ON THIS BRANCH, BY HAND, FOLLOWING THE DRY RUN'S OWN PLAN: src_tu/actors/d_a_king_donketu.cpp moved to src/game/actors/d_a_king_donketu.cpp, the 43 superseded one-function sources deleted, and config/arm9/overlays/ov073/delinks.txt's 43 `complete` entries replaced by a single `complete` .text claim 0x0211f000..0x021218a0. Before the edit both invariants were asserted against HEAD: the 43 removed entries tiled that span with no gap and no overlap, and their path set equalled this manifest's functions[].legacy_source exactly. `status` is deliberately left at text-verified -- tools/tubuild.py promote still refuses this entry for the two structural reasons recorded above, and the verification level actually reached is the one banked. notes/data/tu-promotion-queue.tsv therefore keeps already_promoted = no, which is the value tools/queue_audit.py --check-promoted wants for any status other than exactly `promoted`, and which is independently correct here because this is a PARTIAL fold: 43 of the unit's 47 functions. Behavior, InitResources, OnAimedAtWithEgg and daKing_Donketu_c_classInit keep their own shards and their own delinks.txt entries -- see the source file's header for the opt_propagation measurement that splits the unit there.",
     "WIDEN 2026-09-28: the opt_propagation split is closed. Behavior's shard carried a file-scope `#pragma opt_propagation off`; at file scope in this TU it costs eight members (measured: 0211f2c0, 0211f494, 0211fa74, 021203ac, 02120d80, 0212128c, 021215cc and InitResources DIFF, 38/46). Because this TU already runs with `#pragma defer_codegen off`, a positional bracket binds: `#pragma push` / `opt_propagation off` directly above Behavior and `#pragma pop` after it gives 46/46 MATCH, objisolate clean, reloc-destinations clean. ONE placement detail is load-bearing and was measured both ways: the pop must not directly follow Behavior's closing brace. With the pop (or an `opt_propagation on`) immediately after the `}`, Behavior comes out DIFF (0x428 vs 0x42c with the propagated constant 0x2000 and a re-loaded &data_020a0e68 instead of the retail register copies) because the directive is read as lookahead before Behavior is generated; with no closing directive at all Behavior matches and InitResources DIFFs. Putting InitResources' extern declarations between Behavior and the pop keeps it clear. The three shards src/_ZN16daKing_Donketu_c8BehaviorEv.cpp, src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp and src/_ZN16daKing_Donketu_c16OnAimedAtWithEggEv.cpp are retired and their delinks entries merged into this TU's single .text claim. Their declarations were reconciled onto the TU's existing spellings (BCA_File*[2] globals cast to SharedFilePtr* at the dExtFrameCtrl_c/Model LoadFile calls, data_ov073_02123330 passed as (PMF *) as every other ChangeState call site here does, HugeLandingDustAt called as the dActor_c member the TU already uses); none moved a byte. Behavior adds one homeless compiler-only symbol, _ZN9RayParamsD1Ev, licensed as plain deadstrip.",
-    "classInit fold (0930c): daKing_Donketu_c_classInit is folded in last, in ROM order, under the file's `#pragma defer_codegen off`. `return new daKing_Donketu_c();` was tried first and DIFFs: types.h's Vector3 has no user-declared constructor, so the synthesized constructor omits the cartridge's three __cxa_vec_ctor(..., func_0203d384, _ZN7Vector3D1Ev) calls over mWaypointsA (0x3e8, 8), mWaypointsB (0x448, 8) and unk_4d4 (0x4d4, 2) -- the same wall the ov095/daObjFlamethrower_c fold measured. The factory therefore keeps the retired source's hand-built sequence verbatim (operator new(sizeof = 0x504), dEnemyBase_c C2, vtable store, dCcAcPos_c / dBgCh_Actr / BlendModelAnim / dExtShadowModel_c C1, three __cxa_vec_ctor), with one change the merge requires: this TU is the key-function TU and defines _ZTV16daKing_Donketu_c at the start of the vtable object, so the store reads `&_ZTV16daKing_Donketu_c[2]` (declared `extern int[]` at namespace scope) instead of the loose file's address-point reference. The ABI-seam externs sit in the file's top extern \"C\" block, above the first @symbol marker; __cxa_vec_ctor is declared with the definition's (void *, unsigned int, unsigned int, ctor, dtor) spelling, so the retired file's banked declaration-agreement row is dropped rather than re-keyed. No new compiler-only output. tubuild verify: 47/47 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_king_donketu.cpp; its credit carries in attribution.json as a path#symbol override.",
-    "sinit fold (2026-10): the handwritten src/unnamed/ov073/__sinit_ov073_02122874.c is retired; the class TU now defines the eight file handles and the sixteen State records the initializer fills, so mwcc emits __sinit_daKing_Donketu_c.cpp itself. The three state-enter stubs func_ov073_0211fbec / _0211fc70 / _0211fe84 are PMF targets in the records, so they are members now (declared in the class header); func_ov073_0212000c returns short and is reinterpreted to the int-PMF slot. production_mode intact-object: this entry now licenses .init/.ctor/.data/.bss alongside .text.",
+    "classInit native reconstruction (2026-10-13): daKing_Donketu_c_classInit remains last in ROM source order and now returns new daKing_Donketu_c. Native construction preserves the 0x504 allocation, base/member initialization order and all three Vector3 arrays: mWaypointsA at 0x3e8 count 8, mWaypointsB at 0x448 count 8, unk_4d4 at 0x4d4 count 2, all stride 12 with the original func_0203d384 constructor callback and _ZN7Vector3D1Ev destructor callback. The emitted Vector3 default constructor is an exact four-byte relocation-free duplicate of arm9:0x0203d384 and uses the canonical duplicate policy. Removed factory-only ABI declarations and manual vptr assignment. All 40 compiler temporaries retain their original identity and existing manifest pins; complete bytes, metadata and incoming/outgoing typed references agree with the pre-change object. Normal intact-object preparation accepts all owned output. This supersedes the historical no-Vector3-constructor limitation recorded during the factory fold. Remaining class reconstruction limits remain documented in the Source header.",
+    "sinit fold (2026-10): the handwritten src/unnamed/ov073/__sinit_ov073_02122874.c is retired; the class TU now defines the eight file handles and the sixteen State records the initializer fills, so mwcc emits __sinit_d_a_king_donketu.cpp itself. The three state-enter stubs func_ov073_0211fbec / _0211fc70 / _0211fe84 are PMF targets in the records, so they are members now (declared in the class header); func_ov073_0212000c returns short and is reinterpreted to the int-PMF slot. production_mode intact-object: this entry now licenses .init/.ctor/.data/.bss alongside .text.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
@@ -1586,11 +1586,19 @@
       "symbol": "_ZTV16daKing_Donketu_c",
       "disposition": "deadstrip-data",
       "reason": "The class's own vtable, emitted because this TU owns the key function (the out-of-line destructor). Extent corroborated three ways: (a) the relocated run in config/arm9/overlays/ov073/relocs.txt is unbroken from 0x0212308c -- the typeinfo word of the 8-byte offset-to-top/typeinfo preamble -- through 0x02123108, 32 consecutive relocated words, 1 typeinfo + 31 slots, with the first unrelocated word at 0x02123110; (b) the next symbols.txt row after the address point is data_ov073_0212310c at 0x0212310c; (c) the vtable's own 31-slot length is what identifies the base as dEnemyBase_c. All three give symbol extent 0x02123090..0x0212310c = 0x7c = 31 slots, and STORAGE 0x02123088..0x0212310c = 0x84, which is exactly the size tubuild verify reports for the .data section this TU emits. The cartridge's copy sits inside the overlay's unclaimed .data gap (config/arm9/overlays/ov073/delinks.txt attributes no source file to 0x02122f40..0x02123280), so this promotion is text-only and the emitted copy is discarded rather than substituted."
+    },
+    {
+      "symbol": "_ZN7Vector3C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "Native Vector3 mWaypointsA[8], mWaypointsB[8] and unk_4d4[2] arrays retain the retail stride 12, original func_0203d384 construction callback and _ZN7Vector3D1Ev destruction callback."
     }
   ],
   "init": [
     {
-      "symbol": "__sinit_daKing_Donketu_c.cpp",
+      "symbol": "__sinit_d_a_king_donketu.cpp",
       "address": "0x02122874",
       "size": "0x4d4",
       "binding": "STB_GLOBAL",
@@ -1599,7 +1607,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daKing_Donketu_c.cpp",
+      "symbol": ".p__sinit_d_a_king_donketu.cpp",
       "address": "0x02122f34",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1932,7 +1940,7 @@
       "source": "0x02122f34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daKing_Donketu_c.cpp",
+      "symbol": "__sinit_d_a_king_donketu.cpp",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02122874"
@@ -2102,7 +2110,7 @@
       "source": "0x02122c28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123298",
+      "symbol": "gKingIceDonketuModelModelFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123298"
@@ -2132,7 +2140,7 @@
       "source": "0x02122c38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123280",
+      "symbol": "gKingIceDonketuDeadAnimationFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123280"
@@ -2162,7 +2170,7 @@
       "source": "0x02122c48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_021232a0",
+      "symbol": "gKingIceDonketuHitAnimationFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x021232a0"
@@ -2182,7 +2190,7 @@
       "source": "0x02122c54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123288",
+      "symbol": "gKingIceDonketuWalkAnimationFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123288"
@@ -2202,7 +2210,7 @@
       "source": "0x02122c60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_021232a8",
+      "symbol": "gKingIceDonketuDamageAnimationFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x021232a8"
@@ -2222,7 +2230,7 @@
       "source": "0x02122c68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_02123290",
+      "symbol": "gKingIceDonketuJumpEdAnimationFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123290"
@@ -2242,7 +2250,7 @@
       "source": "0x02122c74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_021232b0",
+      "symbol": "gKingIceDonketuJumpStAnimationFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x021232b0"
@@ -2262,7 +2270,7 @@
       "source": "0x02122c7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov073_021232b8",
+      "symbol": "gKingIceDonketuWaitAnimationFile",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x021232b8"
@@ -2797,13 +2805,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daKing_Donketu_c.cpp",
+      "symbol": "__sinit_d_a_king_donketu.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daKing_Donketu_c.cpp",
+      "symbol": ".p__sinit_d_a_king_donketu.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -3052,204 +3060,204 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@1883",
+      "from": "@1865",
       "to": "@1831",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1883 -> @1865 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1866",
+      "to": "@1832",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1884 -> @1866 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1867",
+      "to": "@1833",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1885 -> @1867 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1868",
+      "to": "@1834",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1886 -> @1868 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1869",
+      "to": "@1835",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1887 -> @1869 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1870",
+      "to": "@1836",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1888 -> @1870 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1871",
+      "to": "@1837",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1889 -> @1871 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1872",
+      "to": "@1838",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1890 -> @1872 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1874",
+      "to": "@1840",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1892 -> @1874 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1876",
+      "to": "@1842",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1894 -> @1876 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1878",
+      "to": "@1844",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1896 -> @1878 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1880",
+      "to": "@1846",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1898 -> @1880 changes. Canonical destination unchanged."
+    },
+    {
+      "from": "@1882",
+      "to": "@1848",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1900 -> @1882 changes. Canonical destination unchanged."
     },
     {
       "from": "@1884",
-      "to": "@1832",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1885",
-      "to": "@1833",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1850",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1902 -> @1884 changes. Canonical destination unchanged."
     },
     {
       "from": "@1886",
-      "to": "@1834",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1887",
-      "to": "@1835",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1852",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1904 -> @1886 changes. Canonical destination unchanged."
     },
     {
       "from": "@1888",
-      "to": "@1836",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1889",
-      "to": "@1837",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1854",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1906 -> @1888 changes. Canonical destination unchanged."
     },
     {
       "from": "@1890",
-      "to": "@1838",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1856",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1908 -> @1890 changes. Canonical destination unchanged."
     },
     {
       "from": "@1892",
-      "to": "@1840",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1858",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1910 -> @1892 changes. Canonical destination unchanged."
     },
     {
       "from": "@1894",
-      "to": "@1842",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1860",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1912 -> @1894 changes. Canonical destination unchanged."
     },
     {
       "from": "@1896",
-      "to": "@1844",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1862",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1914 -> @1896 changes. Canonical destination unchanged."
     },
     {
       "from": "@1898",
-      "to": "@1846",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1864",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1916 -> @1898 changes. Canonical destination unchanged."
     },
     {
       "from": "@1900",
-      "to": "@1848",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1866",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1918 -> @1900 changes. Canonical destination unchanged."
     },
     {
       "from": "@1902",
-      "to": "@1850",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1868",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1920 -> @1902 changes. Canonical destination unchanged."
     },
     {
       "from": "@1904",
-      "to": "@1852",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1870",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1922 -> @1904 changes. Canonical destination unchanged."
     },
     {
       "from": "@1906",
-      "to": "@1854",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1872",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1924 -> @1906 changes. Canonical destination unchanged."
     },
     {
       "from": "@1908",
-      "to": "@1856",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1874",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1926 -> @1908 changes. Canonical destination unchanged."
     },
     {
       "from": "@1910",
-      "to": "@1858",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1876",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1928 -> @1910 changes. Canonical destination unchanged."
     },
     {
       "from": "@1912",
-      "to": "@1860",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1878",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1930 -> @1912 changes. Canonical destination unchanged."
     },
     {
       "from": "@1914",
-      "to": "@1862",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1880",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1932 -> @1914 changes. Canonical destination unchanged."
     },
     {
       "from": "@1916",
-      "to": "@1864",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1882",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1934 -> @1916 changes. Canonical destination unchanged."
     },
     {
       "from": "@1918",
-      "to": "@1866",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@190",
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1936 -> @1918 changes. Canonical destination unchanged."
     },
     {
       "from": "@1920",
-      "to": "@1868",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1922",
-      "to": "@1870",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1924",
-      "to": "@1872",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1926",
-      "to": "@1874",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1928",
-      "to": "@1876",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1930",
-      "to": "@1878",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1932",
-      "to": "@1880",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1934",
-      "to": "@1882",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1936",
-      "to": "@190",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1938",
       "to": "@191",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1938 -> @1920 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1939",
+      "from": "@1921",
       "to": "@192",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1939 -> @1921 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1941",
+      "from": "@1923",
       "to": "@193",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1941 -> @1923 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1943",
+      "from": "@1925",
       "to": "@1891",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1943 -> @1925 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1945",
+      "from": "@1927",
       "to": "@1893",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1945 -> @1927 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1947",
+      "from": "@1929",
       "to": "@1895",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1947 -> @1929 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1949",
+      "from": "@1931",
       "to": "@1897",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1949 -> @1931 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1951",
+      "from": "@1933",
       "to": "@1899",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1951 -> @1933 changes. Canonical destination unchanged."
     },
     {
-      "from": "@1953",
+      "from": "@1935",
       "to": "@1901",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "Measured native-interface continuation: corresponding raw symbol retains section, offset, size, binding, emitted body and complete relocation graph; only compiler input name @1953 -> @1935 changes. Canonical destination unchanged."
     }
   ]
 }

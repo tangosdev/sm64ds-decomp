@@ -11,6 +11,7 @@
  */
 
 #include "Model.h"
+#include "G3X.h"
 
 extern "C" {
 extern u32 data_020a4bc8;
@@ -106,9 +107,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
     const struct Table *t = (const struct Table *)tbl;
     u32 count = t->count;
     u32 i = 0;
-    if (i >= count)
-        goto not_found;
-    {
+    if (i < count) {
         struct Entry *entry = t->entries;
         while (1)
         {
@@ -120,7 +119,6 @@ extern "C" int func_02046590(const void *tbl, const char *name)
                 break;
         }
     }
-not_found:
     Crash();
     return -1;
 }
@@ -497,7 +495,6 @@ extern "C" void func_02045e2c(int obj, int i, int a, short b)
 }
 
 extern "C" void _ZN4CP1510EnableDTCMEv(void);
-extern "C" void _ZN3G3X13SetClearColorEtiiib(u16 color, int r, int g, int b, int alpha);
 extern "C" u16 func_02053ed0(void);
 extern "C" u16 func_02053ec0(void);
 
@@ -514,7 +511,7 @@ extern "C" void func_02045d9c(void)
     u16 ip = *(volatile u16 *)0x4000060;
     ip = (ip & ~0x3000u) | 8;
     *(volatile u16 *)0x4000060 = ip;
-    _ZN3G3X13SetClearColorEtiiib(0, 0, r2, 0, 0);
+    G3X::SetClearColor(0, 0, r2, 0, false);
     if (func_02053ed0() == 0) {
         Crash();
     }

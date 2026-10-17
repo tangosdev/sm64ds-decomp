@@ -1,8 +1,8 @@
 {
   "id": "ov001/CapIconMgr",
   "module": "ov001",
-  "source": "src/actors/CapIconMgr.cpp",
-  "promoted_source": "src/actors/CapIconMgr.cpp",
+  "source": "src/ui/hud/CapIconMgr.cpp",
+  "promoted_source": "src/ui/hud/CapIconMgr.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

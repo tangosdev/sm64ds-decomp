@@ -1,8 +1,8 @@
 {
   "id": "ov002/da1up_c",
   "module": "ov002",
-  "source": "src/actors/da1up_c.cpp",
-  "promoted_source": "src/actors/da1up_c.cpp",
+  "source": "src/game/actors/d_a_1up.cpp",
+  "promoted_source": "src/game/actors/d_a_1up.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -416,7 +416,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_da1up_c.cpp",
+      "symbol": "__sinit_d_a_1up.cpp",
       "address": "0x02100adc",
       "size": "0x174",
       "binding": "STB_GLOBAL",
@@ -425,7 +425,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_da1up_c.cpp",
+      "symbol": ".p__sinit_d_a_1up.cpp",
       "address": "0x021080d8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -435,13 +435,13 @@
   "undefined_symbol_aliases": [],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_da1up_c.cpp",
+      "symbol": "__sinit_d_a_1up.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_da1up_c.cpp",
+      "symbol": ".p__sinit_d_a_1up.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -576,7 +576,7 @@
     "LEFTOVER CLEANUP: folded da1up_c_classInit_SCALEUP_KINOKO / _ONEUPKINOKO as `return new da1up_c()` with leaf operator new(unsigned long). Named-field substitution on C++ members; Behavior 0x100 stays the unsigned-short launder (named ++mStateTimer size-DIFF). dBgCh_Actr::Init / dCcAc_c::Init stay mangled (6az). 38/38 MATCH TEXT-VERIFIED.",
     "PROMOTION: two deliberate signature changes are recorded in the source. func_ov002_020af218 gains a declared but unused second parameter (five callers pass 0xbb8), and func_ov002_020af684 changed from void to int without gaining a return statement. Reverting either change was recorded to move bytes; that measurement does not establish a valid C++ return contract for func_ov002_020af684 or a typed forwarding contract for func_ov002_020af218. Both remain source-reconstruction work requiring fresh caller/callee evidence and byte/relocation proof.",
     "PRE-PROMOTION LINK EVIDENCE, recorded verbatim because it is the only usable kind: `python tools/tubuild.py linkcheck ov002/da1up_c` run against the pre-substitution tree returned SCRATCH-LINK-VERIFIED. The whole .text range 0x020aee40..0x020b0530 reproduces from one object; source-built functions 11,190 reproducing / 0 mismatching; module fidelity 106/106 exact, 100.000000% of compared bytes; `dsd check modules --fail` PASS; the full ROM builds to sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, IDENTICAL to the source-independent strict stock control. `dsd check symbols --fail` FAILS with 9 error lines (overlay_100, overlay_102, data_020ad524, data_020ad560 and five ITCM symbols) -- the baseline control has the same 9, so 0 NEW and 0 resolved, but the check is NOT green and must not be reported as such. Once the source is enrolled in delinks.txt a re-run routes down the intact path and fails at [4/8] regardless; that is pre-existing behaviour and not evidence about this TU.",
-    "SINIT INTEGRATION: this file now defines the fourteen-entry pointer-to-member-function dispatch table data_ov002_0210dc00 that Behavior indexes by mMushroomType. mwcc emits the fourteen {function pointer, 0} PMF descriptors (@1151..@1176, one per dispatch index) as anonymous .data objects, the .init copy loop __sinit_da1up_c.cpp at 0x02100adc, and the .p__sinit_da1up_c.cpp ctor-table word at 0x021080d8; the delinker pins every object to its retail address via symbols.txt. The handwritten src/unnamed/ov002/__sinit_ov002_02100adc.c is retired -- the compiler-generated initializer is byte-identical and carries the same fifteen relocation sites. Dispatch index 3's handler func_ov002_020afc44 returns int, so its entry takes an explicit (PMF) cast. The definition sits at file end because @NNN is a single linker namespace across the tree: at its natural spot the descriptors would emit @974..@999, which collide with ov092/daOnms_c's configured @963..@981 pins.",
+    "SINIT INTEGRATION: this file now defines the fourteen-entry pointer-to-member-function dispatch table data_ov002_0210dc00 that Behavior indexes by mMushroomType. mwcc emits the fourteen {function pointer, 0} PMF descriptors (@1151..@1176, one per dispatch index) as anonymous .data objects, the .init copy loop __sinit_d_a_1up.cpp at 0x02100adc, and the .p__sinit_d_a_1up.cpp ctor-table word at 0x021080d8; the delinker pins every object to its retail address via symbols.txt. The handwritten src/unnamed/ov002/__sinit_ov002_02100adc.c is retired -- the compiler-generated initializer is byte-identical and carries the same fifteen relocation sites. Dispatch index 3's handler func_ov002_020afc44 returns int, so its entry takes an explicit (PMF) cast. The definition sits at file end because @NNN is a single linker namespace across the tree: at its natural spot the descriptors would emit @974..@999, which collide with ov092/daOnms_c's configured @963..@981 pins.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "production_mode": "intact-object",
@@ -1122,7 +1122,7 @@
       "source": "0x021080d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_da1up_c.cpp",
+      "symbol": "__sinit_d_a_1up.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02100adc"

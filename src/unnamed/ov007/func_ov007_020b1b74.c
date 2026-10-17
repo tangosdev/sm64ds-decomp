@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern void func_ov007_020b2614(int a, int b, int c);
 extern int _ZN4cstd3divEii(int a, int b);
 
@@ -33,7 +34,7 @@ void func_ov007_020b1b74(void)
         else
             val = _ZN4cstd3divEii(r4 << 12, 0xa);
         sq = (int)(((long long)val * val) >> 12);
-        data_ov007_0210342c->ff8 = (int)(((long long)sq * 0x17d0 + 0x800) >> 12);
+        data_ov007_0210342c->ff8 = FX_MUL(sq, 0x17d0);
     } else if (r4 <= 0x1e) {
         int val;
         int t;
@@ -46,7 +47,7 @@ void func_ov007_020b1b74(void)
             val = _ZN4cstd3divEii((r4 - 0xa) << 12, 0x14);
         t = 0x1000 - val;
         sq = (int)(((long long)t * t) >> 12);
-        data_ov007_0210342c->ff8 = (int)(((long long)sq * 0x7d0 + 0x800) >> 12) + 0x1000;
+        data_ov007_0210342c->ff8 = FX_MUL(sq, 0x7d0) + 0x1000;
     } else {
         data_ov007_0210342c->f8->field2 = 0;
     }

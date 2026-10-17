@@ -1,0 +1,1752 @@
+{
+  "task": "player-swing-native1013",
+  "base": "da2ee4ed5574f03eeb805fdb4de647740dfa2561",
+  "producer": "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+  "candidate_author": {
+    "agent": "/root/ibl_interface_independent",
+    "thread": "01a13751-2d56-7901-a14d-9543eb0dbf2e"
+  },
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
+  "status": "Producer gates passed on the frozen current-base checkpoint; independent Source acceptance required.",
+  "change": "Define the existing swing-state body as int Player::St_SwingPlayer_Main() with a real nonvirtual Player.h declaration and an adjacent @symbol annotation recognized by the declaration collector. The local char* view binds to this; no forwarding wrapper or symbol alias is added.",
+  "source": "src/actors/Player.cpp",
+  "header": "include/Player.h",
+  "manifest": "config/tu_manifest.d/ov002/Player.json",
+  "symbol": "_ZN6Player19St_SwingPlayer_MainEv",
+  "address": "ov002:0x020d9fec",
+  "size_bytes": 964,
+  "inherited_findings": [
+    {
+      "disposition": "deferred",
+      "id": "PLAYERANIM-ABI-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
+      "kind": "reconstruction",
+      "location": "src/actors/Player.cpp:328",
+      "owner": "codex-player-anim-coordinator1013",
+      "reason": "Accept the narrowly scoped C++ language/API improvement as partial. The three pre-existing scalar bridges preserve the external raw fixed-point ABI; native signatures and their codegen remain future matching work.",
+      "summary": "Scalar mangled SetAnim and particle Fix12 ABI bridges remain."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PLAYERANIM-RAWVIEWS-002",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
+      "kind": "reconstruction",
+      "location": "src/actors/Player.cpp:376",
+      "owner": "codex-player-anim-coordinator1013",
+      "reason": "The new real ModelAnim-to-dExtFrameCtrl_c base adjustment is supported by the existing +0x50 layout. The inherited frame read/cast chain and prop pointer at +0x72c are not presented as reconstructed interfaces; retain their cleanup under the class continuation.",
+      "summary": "Selected frame-controller, camera-space vector and spawned-prop accesses retain raw views and casts."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PLAYERANIM-VOLATILE-003",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
+      "kind": "reconstruction",
+      "location": "src/actors/Player.cpp:391",
+      "owner": "codex-player-anim-coordinator1013",
+      "reason": "Independent ROM inspection confirms the store at020bcf98 and reload fromsp+20 at020bcfb8 before the particle call. Independently removing only this expression emits604rather than636bytes. Accept its retention as deferred reconstruction; neither the producer report nor this review claims the original source used volatile.",
+      "summary": "Inherited volatile X load is a retained reconstruction device, not established original intent."
+    },
+    {
+      "disposition": "deferred",
+      "id": "PLAYERANIM-BOUNDARY-004",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
+      "kind": "reconstruction",
+      "location": "src/actors/Player.cpp:321",
+      "owner": "codex-player-anim-coordinator1013",
+      "reason": "The Player receiver is supported by St_Wait_Main and existing layout. An actual two-int entry models the snapshot naturally and restores C++ codegen; only equality tests and the unsigned SetAnim conversion use its ID, so changing local storage from unsigned field to int bits introduces no different comparison. No original array representation or original helper name is claimed. Genuine member signature/table naming remain deferred.",
+      "summary": "Free C-linkage char-pointer entry and array-backed AnimEntry27 table remain partial."
+    }
+  ],
+  "historical_scope": "The four inherited findings and notes/experiments/player-anim-copy-cpp1013.json retain their original script-animation scope. This state-member change does not complete Player reconstruction or resolve unrelated raw/Fix12/lifecycle work.",
+  "historical_predecessor": {
+    "task": "player-anim-copy-cpp1013",
+    "accepted_commit": "06045911b387715e1432aac071d0ebceb19705ec",
+    "producer_outputs": [
+      {
+        "stage": "produce",
+        "session": "codex-player-anim-producer1013",
+        "commit": "06045911b387715e1432aac071d0ebceb19705ec"
+      }
+    ]
+  },
+  "remaining_boundaries": [
+    "The state body retains raw scalar/offset and helper ABI views, including Fix12 extern seams; native receiver binding is the scoped improvement.",
+    "The existing promoted TU owns612 text functions; constructor/destructor tails, metadata and unrelated state reconstruction remain outside this change."
+  ],
+  "verification": {
+    "native_definition": {
+      "definition": "int (<this>)",
+      "is_member": true,
+      "symbol": "_ZN6Player19St_SwingPlayer_MainEv",
+      "line": 19765,
+      "manifest_unchanged": true,
+      "historical_report_unchanged": true,
+      "historical_report_sha256": "0498e8df593b8805acefed2905a8ca2f082fec84386e661a66ab0e6a9387057e"
+    },
+    "whole_player_object": {
+      "base": "da2ee4ed5574f03eeb805fdb4de647740dfa2561",
+      "checkpoint": "0e8009a587e115270f2855f6f434fd747d1b855f",
+      "source": "src/actors/Player.cpp",
+      "manifest": "config/tu_manifest.d/ov002/Player.json",
+      "compiler": "2004/b56",
+      "strict_functions": 612,
+      "blind": 0,
+      "diffs": [],
+      "target": {
+        "name": "_ZN6Player19St_SwingPlayer_MainEv",
+        "module": "ov002",
+        "addr": "0x020d9fec",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      "raw_sha256": "8578494b097f2690c70bd21119d794a87a1ecd73f115dba65edadb3255190132",
+      "prepared_sha256": "285238d9b2627e66076e7f73d947bb9346188968fb7d3c5d0c87e42152da23d6",
+      "whole_raw_identical": true,
+      "whole_ordinary_prepared_identical": true,
+      "raw_edges": 4974,
+      "prepared_edges": 4974,
+      "metadata_records": 0,
+      "owned_data": 0,
+      "owned_bss": 0,
+      "owned_init": 0,
+      "owned_ctor": 0,
+      "nontext": [
+        {
+          "container": "raw",
+          "allocated_nontext": []
+        },
+        {
+          "container": "prepared",
+          "allocated_nontext": []
+        }
+      ],
+      "ordinary_path": [
+        "rombuild._retarget",
+        "rombuild._isolate"
+      ],
+      "text_only_manifest": true,
+      "private_tool_override": false,
+      "compiler_only_policies": {
+        "deadstrip": [
+          "_ZN7Vector3D1Ev",
+          "_ZN6V3QuadD1Ev",
+          "_ZN4PVecD1Ev",
+          "_ZN8PVec869cD1Ev",
+          "_ZN8PVec8944D1Ev",
+          "_ZN11Vector3e968D1Ev"
+        ],
+        "expect": {
+          "_ZN7Vector3D1Ev": "1eff2fe1"
+        },
+        "data": [],
+        "homes": {
+          "_ZN7Vector3D1Ev": [
+            "arm9",
+            33583808
+          ]
+        }
+      }
+    },
+    "header_consumers": {
+      "actual_control_compiles": 143,
+      "actual_candidate_compiles": 143,
+      "complete_raw_objects_identical": 143,
+      "compiler": "actual build_pin.version_for/flags_for per source",
+      "no_blanket_header_invariance_assumption": true,
+      "artifact": "build/player-swing-native1013/consumer-proof.json",
+      "artifact_sha256": "836686f32deab1875998fd96fd4e40721a2657572b747d0b7a0b331fa3d84bba",
+      "paths_artifact": "build/player-swing-native1013/consumer-paths.json"
+    },
+    "rombuild": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/rombuild.log",
+      "log_sha256": "31c61aef4373de37fc229fc4b0390cd53f26eaf235babbca4fd4062e4ed2a2e8",
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "tested_head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "source_function_counts_observed": [
+        5888,
+        11334
+      ],
+      "function_count_scope": "Final production section; earlier control count is not production coverage.",
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "baseline_dsd_symbol_errors": 9,
+      "final_production_summary": [
+        "[6/6] analyze module and source fidelity",
+        "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+        "  reproducing: 11,334",
+        "  mismatching: 0",
+        "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+        "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "  of 3,049,600 module bytes: 2,225,480 (73.0%) source-built code, 13,020 source-owned data, 798,472 data bytes no complete source entry reaches; 48,968 compiler-emitted data bytes verified overall",
+        "  retail-gap contribution: 811,100 module bytes (12,628 function-code, 798,472 data/non-function)",
+        "ROM-build analysis: PASS",
+        "ROM data from source: 969 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,282 object records)"
+      ]
+    },
+    "decl": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/decl.log",
+      "log_sha256": "90ed40e32a9e8058554d8d4c5a53e5b7d0bbb27272752b699f3f7b3404e2fc18",
+      "command": "python tools/check_decl_agreement.py --changed da2ee4ed5574f03eeb805fdb4de647740dfa2561"
+    },
+    "port": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "command": "python tools/port_refcheck.py",
+      "checked": 267
+    },
+    "langmode": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "command": "python tools/langmode_audit.py --check langmode-baseline.json"
+    },
+    "conflict": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/conflict.log",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "command": "python tools/check_tubuild_conflicts.py",
+      "manifest_entries": 429,
+      "sources_read": 429,
+      "all_recorded_conflicts_match": true
+    },
+    "consumers": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/consumers.log",
+      "log_sha256": "2481c0cbe5fa15604b9827e7653e905cecdaf5ea997f517a0c1befc62fb73555"
+    },
+    "whole-proof": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/whole-proof.log",
+      "log_sha256": "70b2424c0169e63876fb3a28330d0e00bb4977fe0a213967eb57d8d2a0a62df8"
+    },
+    "stock_batches": {
+      "exit_code": 0,
+      "log": "build/player-swing-native1013/stock-batches.log",
+      "log_sha256": "cc6c0507437ac728935eb214724b67777cff61255b74644842a29821e7b578c0",
+      "base": "da2ee4ed5574f03eeb805fdb4de647740dfa2561",
+      "checkpoint": "0e8009a587e115270f2855f6f434fd747d1b855f",
+      "scope": "Official prepush_linkcheck.py --files batches over exact changed_src_files(base..checkpoint) union; literal serial --range was interrupted and is not claimed passed.",
+      "files": 143,
+      "checked": 3858,
+      "verified": 3764,
+      "warnings": [
+        {
+          "file": "src/actors/daTrs_c.cpp",
+          "name": "_ZN7daTrs_c19func_ov063_0211ab68Ev",
+          "module": "ov063",
+          "addr": "0x211ab68",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daTrs_c.cpp",
+          "name": "__sinit_daTrs_c.cpp",
+          "module": "ov063",
+          "addr": "0x211e29c",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daGmch_c.cpp",
+          "name": "__sinit_daGmch_c.cpp",
+          "module": "ov081",
+          "addr": "0x21284f0",
+          "verdict": "BLIND-13",
+          "blind": 13,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daSnowman_c.cpp",
+          "name": "__sinit_daSnowman_c.cpp",
+          "module": "ov081",
+          "addr": "0x2128154",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "_ZN8daDoor_c19func_ov100_02144a38EP6Player",
+          "module": "ov100",
+          "addr": "0x2144a38",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "_ZN8daDoor_c19func_ov100_021451c4EPvP6Player",
+          "module": "ov100",
+          "addr": "0x21451c4",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "_ZN8daDoor_c13InitResourcesEv",
+          "module": "ov100",
+          "addr": "0x21455a0",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "__sinit_daDoor_c.cpp",
+          "module": "ov100",
+          "addr": "0x2147698",
+          "verdict": "BLIND-26",
+          "blind": 26,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDossy_c.cpp",
+          "name": "__sinit_daDossy_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c440",
+          "verdict": "BLIND-25",
+          "blind": 25,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daChoropu_c.cpp",
+          "name": "__sinit_daChoropu_c.cpp",
+          "module": "ov080",
+          "addr": "0x21278c0",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daPopoi_c.cpp",
+          "name": "__sinit_daPopoi_c.cpp",
+          "module": "ov077",
+          "addr": "0x21275fc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjKey_c.cpp",
+          "name": "__sinit_daObjKey_c.cpp",
+          "module": "ov089",
+          "addr": "0x21328d4",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSeesaw_c.cpp",
+          "name": "__sinit_daObjSeesaw_c.cpp",
+          "module": "ov095",
+          "addr": "0x2136fe0",
+          "verdict": "BLIND-30",
+          "blind": 30,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBtfly_c.cpp",
+          "name": "__sinit_daBtfly_c.cpp",
+          "module": "ov100",
+          "addr": "0x21473bc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCasket_c.cpp",
+          "name": "__sinit_daObjCasket_c.cpp",
+          "module": "ov071",
+          "addr": "0x2122a64",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjRotateUpdownLift_c.cpp",
+          "name": "__sinit_daObjRotateUpdownLift_c.cpp",
+          "module": "ov091",
+          "addr": "0x2134524",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDsn_c.cpp",
+          "name": "__sinit_daDsn_c.cpp",
+          "module": "ov091",
+          "addr": "0x2134930",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKrb_c.cpp",
+          "name": "__sinit_daKrb_c.cpp",
+          "module": "ov084",
+          "addr": "0x213035c",
+          "verdict": "BLIND-20",
+          "blind": 20,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_propeller_heyho.cpp",
+          "name": "__sinit_d_a_propeller_heyho.cpp",
+          "module": "ov070",
+          "addr": "0x2122afc",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSwitch_c.cpp",
+          "name": "__sinit_daObjSwitch_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101588",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daOwl_c.cpp",
+          "name": "__sinit_daOwl_c.cpp",
+          "module": "ov094",
+          "addr": "0x21367e8",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daPiano_c/d_a_piano.cpp",
+          "name": "__sinit_d_a_piano.cpp",
+          "module": "ov063",
+          "addr": "0x211e5fc",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daChair_c.cpp",
+          "name": "__sinit_daChair_c.cpp",
+          "module": "ov020",
+          "addr": "0x211372c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBk_Botaosi_c.cpp",
+          "name": "__sinit_daObjBk_Botaosi_c.cpp",
+          "module": "ov015",
+          "addr": "0x2112fdc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_hatena_switch.cpp",
+          "name": "__sinit_d_a_obj_hatena_switch.cpp",
+          "module": "ov002",
+          "addr": "0x2100ec4",
+          "verdict": "BLIND-11",
+          "blind": 11,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSlIceBlock_c.cpp",
+          "name": "__sinit_daObjSlIceBlock_c.cpp",
+          "module": "ov027",
+          "addr": "0x2112cb0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_cannon_shutter.cpp",
+          "name": "__sinit_d_a_obj_cannon_shutter.cpp",
+          "module": "ov002",
+          "addr": "0x2101968",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKpa_c.cpp",
+          "name": "__sinit_daKpa_c.cpp",
+          "module": "ov060",
+          "addr": "0x21195dc",
+          "verdict": "BLIND-73",
+          "blind": 73,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_nknk.cpp",
+          "name": "__sinit_d_a_nknk.cpp",
+          "module": "ov062",
+          "addr": "0x211d2d8",
+          "verdict": "BLIND-24",
+          "blind": 24,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daHanachan_c.cpp",
+          "name": "daHanachan_c_classInit",
+          "module": "ov034",
+          "addr": "0x21136a4",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daHanachan_c.cpp",
+          "name": "__sinit_daHanachan_c.cpp",
+          "module": "ov034",
+          "addr": "0x21138ec",
+          "verdict": "BLIND-73",
+          "blind": 73,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjMarioCap_c.cpp",
+          "name": "__sinit_daObjMarioCap_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101064",
+          "verdict": "BLIND-27",
+          "blind": 27,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daJango_c.cpp",
+          "name": "__sinit_daJango_c.cpp",
+          "module": "ov062",
+          "addr": "0x211d6fc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBasabasa_c.cpp",
+          "name": "__sinit_daBasabasa_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c2a8",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMoray_c.cpp",
+          "name": "daMoray_c_classInit",
+          "module": "ov016",
+          "addr": "0x2112588",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMoray_c.cpp",
+          "name": "__sinit_daMoray_c.cpp",
+          "module": "ov016",
+          "addr": "0x21136ec",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWanwan2_c.cpp",
+          "name": "daWanwan2_c_classInit",
+          "module": "ov100",
+          "addr": "0x21442dc",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWanwan2_c.cpp",
+          "name": "__sinit_daWanwan2_c.cpp",
+          "module": "ov100",
+          "addr": "0x21475a4",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daHuwa_c.cpp",
+          "name": "__sinit_daHuwa_c.cpp",
+          "module": "ov081",
+          "addr": "0x21280e8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_ey_bm.cpp",
+          "name": "__sinit_d_a_ey_bm.cpp",
+          "module": "ov071",
+          "addr": "0x2122a1c",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSm_Lift_c.cpp",
+          "name": "__sinit_daObjSm_Lift_c.cpp",
+          "module": "ov018",
+          "addr": "0x2112c14",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjKanban_c.cpp",
+          "name": "__sinit_daObjKanban_c.cpp",
+          "module": "ov085",
+          "addr": "0x212fdb0",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daStar_c.cpp",
+          "name": "__sinit_daStar_c.cpp",
+          "module": "ov002",
+          "addr": "0x2106e40",
+          "verdict": "BLIND-20",
+          "blind": 20,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjHatenaBlock_c.cpp",
+          "name": "__sinit_daObjHatenaBlock_c.cpp",
+          "module": "ov102",
+          "addr": "0x214d908",
+          "verdict": "BLIND-19",
+          "blind": 19,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/Scuttlebug.cpp",
+          "name": "__sinit_Scuttlebug.cpp",
+          "module": "ov071",
+          "addr": "0x21226ac",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_pg_mthr.cpp",
+          "name": "__sinit_d_a_pg_mthr.cpp",
+          "module": "ov018",
+          "addr": "0x2112c80",
+          "verdict": "BLIND-13",
+          "blind": 13,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBlockL_c.cpp",
+          "name": "__sinit_daObjBlockL_c.cpp",
+          "module": "ov002",
+          "addr": "0x2100d44",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_c1_trap.cpp",
+          "name": "__sinit_d_a_obj_c1_trap.cpp",
+          "module": "ov010",
+          "addr": "0x211203c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daUdlift_c.cpp",
+          "name": "__sinit_daUdlift_c.cpp",
+          "module": "ov095",
+          "addr": "0x213722c",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daGrock_c.cpp",
+          "name": "__sinit_daGrock_c.cpp",
+          "module": "ov021",
+          "addr": "0x2113688",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_cnn.cpp",
+          "name": "__sinit_d_a_cnn.cpp",
+          "module": "ov098",
+          "addr": "0x213c214",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjPile_c.cpp",
+          "name": "__sinit_daObjPile_c.cpp",
+          "module": "ov091",
+          "addr": "0x21349c4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daObjPushblock_c.cpp",
+          "name": "__sinit_daObjPushblock_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101478",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_c1_hikari.cpp",
+          "name": "__sinit_d_a_obj_c1_hikari.cpp",
+          "module": "ov010",
+          "addr": "0x211211c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/Eyerok.cpp",
+          "name": "daIwante_c_classInit",
+          "module": "ov066",
+          "addr": "0x211a370",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/Eyerok.cpp",
+          "name": "__sinit_Eyerok.cpp",
+          "module": "ov066",
+          "addr": "0x211a418",
+          "verdict": "BLIND-48",
+          "blind": 48,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_btn.cpp",
+          "name": "__sinit_d_a_btn.cpp",
+          "module": "ov079",
+          "addr": "0x2127618",
+          "verdict": "BLIND-36",
+          "blind": 36,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daC_Jugem_c.cpp",
+          "name": "__sinit_daC_Jugem_c.cpp",
+          "module": "ov085",
+          "addr": "0x212fa40",
+          "verdict": "BLIND-12",
+          "blind": 12,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBook_c.cpp",
+          "name": "__sinit_daBook_c.cpp",
+          "module": "ov020",
+          "addr": "0x2113674",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_krpa.cpp",
+          "name": "__sinit_d_a_krpa.cpp",
+          "module": "ov070",
+          "addr": "0x2122f30",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKirai_c.cpp",
+          "name": "__sinit_daKirai_c.cpp",
+          "module": "ov060",
+          "addr": "0x211a388",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWater_Tatumaki_c.cpp",
+          "name": "__sinit_daWater_Tatumaki_c.cpp",
+          "module": "ov026",
+          "addr": "0x2112c94",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBk_Lift_c.cpp",
+          "name": "__sinit_daObjBk_Lift_c.cpp",
+          "module": "ov015",
+          "addr": "0x2113264",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_ice_board.cpp",
+          "name": "__sinit_d_a_obj_ice_board.cpp",
+          "module": "ov018",
+          "addr": "0x2112e00",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjKi_Hasira_c.cpp",
+          "name": "__sinit_daObjKi_Hasira_c.cpp",
+          "module": "ov016",
+          "addr": "0x2113978",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_KomaU_c.cpp",
+          "name": "__sinit_daObjFl_KomaU_c.cpp",
+          "module": "ov064",
+          "addr": "0x211b0e4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKing_Donketu_c.cpp",
+          "name": "daKing_Donketu_c_classInit",
+          "module": "ov073",
+          "addr": "0x2121ec8",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKing_Donketu_c.cpp",
+          "name": "__sinit_daKing_Donketu_c.cpp",
+          "module": "ov073",
+          "addr": "0x2122874",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBlockS_c.cpp",
+          "name": "__sinit_daObjBlockS_c.cpp",
+          "module": "ov098",
+          "addr": "0x213c058",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_jgm.cpp",
+          "name": "__sinit_d_a_jgm.cpp",
+          "module": "ov077",
+          "addr": "0x2127240",
+          "verdict": "BLIND-19",
+          "blind": 19,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_wanwan.cpp",
+          "name": "daWanwan_c_classInit",
+          "module": "ov014",
+          "addr": "0x2112d1c",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_wanwan.cpp",
+          "name": "__sinit_d_a_wanwan.cpp",
+          "module": "ov014",
+          "addr": "0x2113118",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBakubaku_c.cpp",
+          "name": "__sinit_daBakubaku_c.cpp",
+          "module": "ov032",
+          "addr": "0x2112c10",
+          "verdict": "BLIND-8",
+          "blind": 8,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBttBk_c.cpp",
+          "name": "__sinit_daBttBk_c.cpp",
+          "module": "ov080",
+          "addr": "0x2127a60",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_hyuhyu.cpp",
+          "name": "__sinit_d_a_hyuhyu.cpp",
+          "module": "ov091",
+          "addr": "0x2134a30",
+          "verdict": "BLIND-8",
+          "blind": 8,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daRNk_c.cpp",
+          "name": "__sinit_daRNk_c.cpp",
+          "module": "ov062",
+          "addr": "0x211d4a0",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjTbox_c.cpp",
+          "name": "__sinit_daObjTbox_c.cpp",
+          "module": "ov064",
+          "addr": "0x211b59c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWbm_c.cpp",
+          "name": "__sinit_daWbm_c.cpp",
+          "module": "ov098",
+          "addr": "0x213c2b4",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daShark_c.cpp",
+          "name": "__sinit_daShark_c.cpp",
+          "module": "ov090",
+          "addr": "0x2134020",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daFRing_c.cpp",
+          "name": "__sinit_daFRing_c.cpp",
+          "module": "ov060",
+          "addr": "0x211a428",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKuriKing_c.cpp",
+          "name": "daKuriKing_c_classInit_KURIKING_VANISH",
+          "module": "ov074",
+          "addr": "0x2122764",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKuriKing_c.cpp",
+          "name": "daKuriKing_c_classInit_KURIKING",
+          "module": "ov074",
+          "addr": "0x2122838",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKuriKing_c.cpp",
+          "name": "__sinit_daKuriKing_c.cpp",
+          "module": "ov074",
+          "addr": "0x2122978",
+          "verdict": "BLIND-31",
+          "blind": 31,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daSanbo_c.cpp",
+          "name": "__sinit_daSanbo_c.cpp",
+          "module": "ov096",
+          "addr": "0x213770c",
+          "verdict": "BLIND-5",
+          "blind": 5,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMip_c.cpp",
+          "name": "__sinit_daMip_c.cpp",
+          "module": "ov085",
+          "addr": "0x212f5ec",
+          "verdict": "BLIND-21",
+          "blind": 21,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjTatefuda_c.cpp",
+          "name": "__sinit_daObjTatefuda_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101738",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMenbo_c.cpp",
+          "name": "__sinit_daMenbo_c.cpp",
+          "module": "ov090",
+          "addr": "0x2133ce8",
+          "verdict": "BLIND-12",
+          "blind": 12,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_star_gate.cpp",
+          "name": "__sinit_d_a_star_gate.cpp",
+          "module": "ov100",
+          "addr": "0x2147a70",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_fish.cpp",
+          "name": "__sinit_d_a_fish.cpp",
+          "module": "ov100",
+          "addr": "0x2147bc0",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daPgDfdr_c.cpp",
+          "name": "__sinit_daPgDfdr_c.cpp",
+          "module": "ov027",
+          "addr": "0x2112df8",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daPukupuku_c.cpp",
+          "name": "__sinit_daPukupuku_c.cpp",
+          "module": "ov090",
+          "addr": "0x2133f4c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_ice_block.cpp",
+          "name": "__sinit_d_a_obj_ice_block.cpp",
+          "module": "ov081",
+          "addr": "0x21287b8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjHeart_c.cpp",
+          "name": "__sinit_daObjHeart_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101900",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFlamethrower_c.cpp",
+          "name": "daObjFlamethrower_c_classInit",
+          "module": "ov095",
+          "addr": "0x2136ed4",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        }
+      ],
+      "blocking": [],
+      "drafts": [],
+      "batch_records": [
+        {
+          "id": 1,
+          "tree": "C:/tmp/sm64ds-player-stock1013-01",
+          "files": [
+            "src/actors/Player.cpp"
+          ],
+          "expected_rows": 612,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/actors/Player.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 4696,
+          "exit_code": 0,
+          "rows": 612,
+          "verdicts": {
+            "VERIFIED": 612
+          },
+          "json_sha256": "d649267d4518592d7398ff21faa2e0ee543fdf6e82b14228aec7f8763dc73c44",
+          "log_sha256": "fc356051f6c8c4d7fec5975725257a8f2632ae0478e0865a59863428f62dfc68"
+        },
+        {
+          "id": 2,
+          "tree": "C:/tmp/sm64ds-player-stock1013-02",
+          "files": [
+            "src/actors/daTrs_c.cpp",
+            "src/actors/daGmch_c.cpp",
+            "src/actors/daSnowman_c.cpp",
+            "src/actors/daDoor_c.cpp",
+            "src/actors/daDossy_c.cpp",
+            "src/actors/daChoropu_c.cpp",
+            "src/actors/daPeach_c.cpp",
+            "src/actors/daPopoi_c.cpp",
+            "src/actors/daObjKey_c.cpp",
+            "src/actors/daObjSeesaw_c.cpp",
+            "src/actors/daBtfly_c.cpp",
+            "src/game/actors/d_a_pic_gate.cpp",
+            "src/actors/daObjCasket_c.cpp",
+            "src/actors/daObjRotateUpdownLift_c.cpp",
+            "src/actors/daLuigi_c.cpp",
+            "src/game/actors/d_a_klr.cpp",
+            "src/game/actors/d_a_obj_maruta.cpp",
+            "src/actors/daDsn_c.cpp",
+            "src/game/actors/daFeather_c/daFeather_c.cpp"
+          ],
+          "expected_rows": 465,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/actors/daTrs_c.cpp",
+            "src/actors/daGmch_c.cpp",
+            "src/actors/daSnowman_c.cpp",
+            "src/actors/daDoor_c.cpp",
+            "src/actors/daDossy_c.cpp",
+            "src/actors/daChoropu_c.cpp",
+            "src/actors/daPeach_c.cpp",
+            "src/actors/daPopoi_c.cpp",
+            "src/actors/daObjKey_c.cpp",
+            "src/actors/daObjSeesaw_c.cpp",
+            "src/actors/daBtfly_c.cpp",
+            "src/game/actors/d_a_pic_gate.cpp",
+            "src/actors/daObjCasket_c.cpp",
+            "src/actors/daObjRotateUpdownLift_c.cpp",
+            "src/actors/daLuigi_c.cpp",
+            "src/game/actors/d_a_klr.cpp",
+            "src/game/actors/d_a_obj_maruta.cpp",
+            "src/actors/daDsn_c.cpp",
+            "src/game/actors/daFeather_c/daFeather_c.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 44152,
+          "exit_code": 0,
+          "rows": 465,
+          "verdicts": {
+            "VERIFIED": 448,
+            "BLIND-3": 2,
+            "BLIND-16": 2,
+            "BLIND-13": 1,
+            "BLIND-2": 1,
+            "BLIND-1": 1,
+            "BLIND-26": 1,
+            "BLIND-25": 1,
+            "BLIND-14": 1,
+            "BLIND-10": 2,
+            "BLIND-18": 1,
+            "BLIND-30": 1,
+            "BLIND-6": 2,
+            "BLIND-9": 1
+          },
+          "json_sha256": "29321973fe32261c7881c2782b8fe4aed8f9d3246f7e4f7cdf6579018aa92b91",
+          "log_sha256": "08a55d38fd9d9dcdd703eb8adf36ef1546939ba3a5f02076c7c097440ac4f02e"
+        },
+        {
+          "id": 3,
+          "tree": "C:/tmp/sm64ds-player-stock1013-03",
+          "files": [
+            "src/actors/dActor_c.cpp",
+            "src/actors/da1up_c.cpp",
+            "src/actors/daKrb_c.cpp",
+            "src/actors/dEnemyBase_c.cpp",
+            "src/game/actors/d_a_pg_bby.cpp",
+            "src/game/actors/d_a_propeller_heyho.cpp",
+            "src/actors/daObjSwitch_c.cpp",
+            "src/actors/daOwl_c.cpp",
+            "src/actors/daFPkn_c.cpp",
+            "src/actors/daObjPowerUpItem_c.cpp",
+            "src/game/actors/daPiano_c/d_a_piano.cpp",
+            "src/game/actors/d_a_obj_fl_maruta.cpp",
+            "src/actors/daChair_c.cpp",
+            "src/actors/daObjBk_Botaosi_c.cpp",
+            "src/game/actors/d_a_obj_hatena_switch.cpp",
+            "src/actors/daObjYajirusi_c.cpp",
+            "src/actors/daObjSlIceBlock_c.cpp",
+            "src/game/actors/d_a_obj_cannon_shutter.cpp",
+            "src/game/actors/d_a_obj_abuku.cpp"
+          ],
+          "expected_rows": 464,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/actors/dActor_c.cpp",
+            "src/actors/da1up_c.cpp",
+            "src/actors/daKrb_c.cpp",
+            "src/actors/dEnemyBase_c.cpp",
+            "src/game/actors/d_a_pg_bby.cpp",
+            "src/game/actors/d_a_propeller_heyho.cpp",
+            "src/actors/daObjSwitch_c.cpp",
+            "src/actors/daOwl_c.cpp",
+            "src/actors/daFPkn_c.cpp",
+            "src/actors/daObjPowerUpItem_c.cpp",
+            "src/game/actors/daPiano_c/d_a_piano.cpp",
+            "src/game/actors/d_a_obj_fl_maruta.cpp",
+            "src/actors/daChair_c.cpp",
+            "src/actors/daObjBk_Botaosi_c.cpp",
+            "src/game/actors/d_a_obj_hatena_switch.cpp",
+            "src/actors/daObjYajirusi_c.cpp",
+            "src/actors/daObjSlIceBlock_c.cpp",
+            "src/game/actors/d_a_obj_cannon_shutter.cpp",
+            "src/game/actors/d_a_obj_abuku.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 18756,
+          "exit_code": 0,
+          "rows": 464,
+          "verdicts": {
+            "VERIFIED": 454,
+            "BLIND-20": 1,
+            "BLIND-16": 1,
+            "BLIND-10": 2,
+            "BLIND-9": 1,
+            "BLIND-3": 1,
+            "BLIND-6": 3,
+            "BLIND-11": 1
+          },
+          "json_sha256": "f09d677816265e9be68464330a4a7ce5074279aa4d6428ef7ab4794726ace8da",
+          "log_sha256": "49b42d4f8700a5148104aa6deb442cc2f61c76c42cdd4a9957538297281b3ffe"
+        },
+        {
+          "id": 4,
+          "tree": "C:/tmp/sm64ds-player-stock1013-04",
+          "files": [
+            "src/actors/daKpa_c.cpp",
+            "src/game/actors/d_a_nknk.cpp",
+            "src/actors/daHanachan_c.cpp",
+            "src/actors/daYegg_c.cpp",
+            "src/actors/daObjMarioCap_c.cpp",
+            "src/actors/daKpaFire_c.cpp",
+            "src/actors/daJango_c.cpp",
+            "src/actors/daBasabasa_c.cpp",
+            "src/actors/daMoray_c.cpp",
+            "src/actors/daBgSnmHed_c.cpp",
+            "src/actors/daWanwan2_c.cpp",
+            "src/actors/daSnmBth_c.cpp",
+            "src/actors/daWater_Ring_c.cpp",
+            "src/actors/daHuwa_c.cpp",
+            "src/game/actors/d_a_ey_bm.cpp",
+            "src/actors/daObjSm_Lift_c.cpp",
+            "src/actors/daFPknBall_c.cpp",
+            "src/game/actors/d_a_ch_scene.cpp",
+            "src/actors/daObjKanban_c.cpp",
+            "src/_ZN6Player13OnYoshiTryEatEv.cpp",
+            "src/_ZN6PlayerD0Ev.cpp",
+            "src/d_a_ply.cpp"
+          ],
+          "expected_rows": 463,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/actors/daKpa_c.cpp",
+            "src/game/actors/d_a_nknk.cpp",
+            "src/actors/daHanachan_c.cpp",
+            "src/actors/daYegg_c.cpp",
+            "src/actors/daObjMarioCap_c.cpp",
+            "src/actors/daKpaFire_c.cpp",
+            "src/actors/daJango_c.cpp",
+            "src/actors/daBasabasa_c.cpp",
+            "src/actors/daMoray_c.cpp",
+            "src/actors/daBgSnmHed_c.cpp",
+            "src/actors/daWanwan2_c.cpp",
+            "src/actors/daSnmBth_c.cpp",
+            "src/actors/daWater_Ring_c.cpp",
+            "src/actors/daHuwa_c.cpp",
+            "src/game/actors/d_a_ey_bm.cpp",
+            "src/actors/daObjSm_Lift_c.cpp",
+            "src/actors/daFPknBall_c.cpp",
+            "src/game/actors/d_a_ch_scene.cpp",
+            "src/actors/daObjKanban_c.cpp",
+            "src/_ZN6Player13OnYoshiTryEatEv.cpp",
+            "src/_ZN6PlayerD0Ev.cpp",
+            "src/d_a_ply.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 15160,
+          "exit_code": 0,
+          "rows": 463,
+          "verdicts": {
+            "VERIFIED": 448,
+            "BLIND-73": 2,
+            "BLIND-24": 1,
+            "BLIND-2": 3,
+            "BLIND-27": 1,
+            "BLIND-10": 4,
+            "BLIND-1": 1,
+            "BLIND-6": 2,
+            "BLIND-3": 1
+          },
+          "json_sha256": "e4b8001827bf2ba53387bac6d266ea0f0f59e76e02ccc20229266f76b73bde43",
+          "log_sha256": "809eef95d99b7869ee67b35b4df93be9b0301e7577e6ed1a380fcfca427bf06d"
+        },
+        {
+          "id": 5,
+          "tree": "C:/tmp/sm64ds-player-stock1013-05",
+          "files": [
+            "src/actors/daStar_c.cpp",
+            "src/actors/daObjHatenaBlock_c.cpp",
+            "src/actors/Scuttlebug.cpp",
+            "src/actors/daTgz_c.cpp",
+            "src/actors/daCoin_c.cpp",
+            "src/actors/daBgSnmBdy_c.cpp",
+            "src/actors/daEykn_c.cpp",
+            "src/game/actors/d_a_pg_mthr.cpp",
+            "src/game/actors/d_a_kp_fr.cpp",
+            "src/actors/daObjBlockL_c.cpp",
+            "src/game/actors/d_a_obj_c1_trap.cpp",
+            "src/actors/daUdlift_c.cpp",
+            "src/actors/daBbl_c.cpp",
+            "src/actors/daGrock_c.cpp",
+            "src/game/actors/d_a_cnn.cpp",
+            "src/actors/daObjPile_c.cpp",
+            "src/game/actors/daObjPushblock_c.cpp",
+            "src/game/actors/d_a_obj_c1_hikari.cpp",
+            "src/game/actors/d_a_warpkun.cpp",
+            "src/_ZN6PlayerC1Ev.cpp",
+            "src/_ZN6PlayerD1Ev.cpp",
+            "src/unnamed/arm9/0202/func_02029408.cpp"
+          ],
+          "expected_rows": 463,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/actors/daStar_c.cpp",
+            "src/actors/daObjHatenaBlock_c.cpp",
+            "src/actors/Scuttlebug.cpp",
+            "src/actors/daTgz_c.cpp",
+            "src/actors/daCoin_c.cpp",
+            "src/actors/daBgSnmBdy_c.cpp",
+            "src/actors/daEykn_c.cpp",
+            "src/game/actors/d_a_pg_mthr.cpp",
+            "src/game/actors/d_a_kp_fr.cpp",
+            "src/actors/daObjBlockL_c.cpp",
+            "src/game/actors/d_a_obj_c1_trap.cpp",
+            "src/actors/daUdlift_c.cpp",
+            "src/actors/daBbl_c.cpp",
+            "src/actors/daGrock_c.cpp",
+            "src/game/actors/d_a_cnn.cpp",
+            "src/actors/daObjPile_c.cpp",
+            "src/game/actors/daObjPushblock_c.cpp",
+            "src/game/actors/d_a_obj_c1_hikari.cpp",
+            "src/game/actors/d_a_warpkun.cpp",
+            "src/_ZN6PlayerC1Ev.cpp",
+            "src/_ZN6PlayerD1Ev.cpp",
+            "src/unnamed/arm9/0202/func_02029408.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 45436,
+          "exit_code": 0,
+          "rows": 463,
+          "verdicts": {
+            "VERIFIED": 451,
+            "BLIND-20": 1,
+            "BLIND-19": 1,
+            "BLIND-6": 4,
+            "BLIND-13": 1,
+            "BLIND-14": 2,
+            "BLIND-3": 3
+          },
+          "json_sha256": "e715097841d4a915cdf7b23c04254700c56cfcdd517a49c062fc0d9d317c0fa2",
+          "log_sha256": "427d3f8c4d27097256573d552e8d3366bce0ffb6db7d836470f36539b530e34e"
+        },
+        {
+          "id": 6,
+          "tree": "C:/tmp/sm64ds-player-stock1013-06",
+          "files": [
+            "src/actors/Eyerok.cpp",
+            "src/actors/daMky_c.cpp",
+            "src/game/actors/d_a_btn.cpp",
+            "src/actors/daC_Jugem_c.cpp",
+            "src/actors/daBook_c.cpp",
+            "src/game/actors/d_a_pg_rcer.cpp",
+            "src/game/actors/d_a_krpa.cpp",
+            "src/actors/daPkn_c.cpp",
+            "src/game/actors/d_a_red_bombhei.cpp",
+            "src/actors/dMeter_c.cpp",
+            "src/actors/daBrq_c.cpp",
+            "src/actors/daKirai_c.cpp",
+            "src/actors/daIbl_c.cpp",
+            "src/actors/daWater_Tatumaki_c.cpp",
+            "src/actors/daPropeller_Heyho_Fire_c.cpp",
+            "src/actors/daObjBk_Lift_c.cpp",
+            "src/game/actors/d_a_obj_ice_board.cpp",
+            "src/actors/daObjKi_Hasira_c.cpp",
+            "src/actors/daObjFl_KomaU_c.cpp",
+            "src/actors/daObjLava_c.cpp"
+          ],
+          "expected_rows": 464,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/actors/Eyerok.cpp",
+            "src/actors/daMky_c.cpp",
+            "src/game/actors/d_a_btn.cpp",
+            "src/actors/daC_Jugem_c.cpp",
+            "src/actors/daBook_c.cpp",
+            "src/game/actors/d_a_pg_rcer.cpp",
+            "src/game/actors/d_a_krpa.cpp",
+            "src/actors/daPkn_c.cpp",
+            "src/game/actors/d_a_red_bombhei.cpp",
+            "src/actors/dMeter_c.cpp",
+            "src/actors/daBrq_c.cpp",
+            "src/actors/daKirai_c.cpp",
+            "src/actors/daIbl_c.cpp",
+            "src/actors/daWater_Tatumaki_c.cpp",
+            "src/actors/daPropeller_Heyho_Fire_c.cpp",
+            "src/actors/daObjBk_Lift_c.cpp",
+            "src/game/actors/d_a_obj_ice_board.cpp",
+            "src/actors/daObjKi_Hasira_c.cpp",
+            "src/actors/daObjFl_KomaU_c.cpp",
+            "src/actors/daObjLava_c.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 36248,
+          "exit_code": 0,
+          "rows": 464,
+          "verdicts": {
+            "VERIFIED": 452,
+            "BLIND-1": 1,
+            "BLIND-48": 1,
+            "BLIND-36": 1,
+            "BLIND-12": 1,
+            "BLIND-10": 1,
+            "BLIND-3": 2,
+            "BLIND-6": 5
+          },
+          "json_sha256": "506d2c377e47b0bd10bb06908a521b2ad25cb7b0120ace4730449d924e057b13",
+          "log_sha256": "2686d8a48bacd659f0e3a9e1f08555530621d02af0c05d060a99e5e0d02d2151"
+        },
+        {
+          "id": 7,
+          "tree": "C:/tmp/sm64ds-player-stock1013-07",
+          "files": [
+            "src/engine/collision/dBgCh_Actr.cpp",
+            "src/actors/daKing_Donketu_c.cpp",
+            "src/actors/daObjBlockS_c.cpp",
+            "src/game/actors/d_a_holhei.cpp",
+            "src/game/actors/d_a_jgm.cpp",
+            "src/game/actors/d_a_wanwan.cpp",
+            "src/actors/daBakubaku_c.cpp",
+            "src/game/actors/d_a_obj_bk_dossunbar.cpp",
+            "src/actors/daBttBk_c.cpp",
+            "src/game/actors/d_a_hyuhyu.cpp",
+            "src/actors/daRNk_c.cpp",
+            "src/actors/daObjTbox_c.cpp",
+            "src/actors/daObj_Mip_Key_c.cpp",
+            "src/actors/daWbm_c.cpp",
+            "src/actors/daShark_c.cpp",
+            "src/actors/dCapEnemy_c_arm9.cpp",
+            "src/actors/CapIconMgr.cpp",
+            "src/actors/daObjBkKillerdai_c.cpp",
+            "src/actors/daFRing_c.cpp",
+            "src/actors/daObjCloset_c.cpp"
+          ],
+          "expected_rows": 464,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/engine/collision/dBgCh_Actr.cpp",
+            "src/actors/daKing_Donketu_c.cpp",
+            "src/actors/daObjBlockS_c.cpp",
+            "src/game/actors/d_a_holhei.cpp",
+            "src/game/actors/d_a_jgm.cpp",
+            "src/game/actors/d_a_wanwan.cpp",
+            "src/actors/daBakubaku_c.cpp",
+            "src/game/actors/d_a_obj_bk_dossunbar.cpp",
+            "src/actors/daBttBk_c.cpp",
+            "src/game/actors/d_a_hyuhyu.cpp",
+            "src/actors/daRNk_c.cpp",
+            "src/actors/daObjTbox_c.cpp",
+            "src/actors/daObj_Mip_Key_c.cpp",
+            "src/actors/daWbm_c.cpp",
+            "src/actors/daShark_c.cpp",
+            "src/actors/dCapEnemy_c_arm9.cpp",
+            "src/actors/CapIconMgr.cpp",
+            "src/actors/daObjBkKillerdai_c.cpp",
+            "src/actors/daFRing_c.cpp",
+            "src/actors/daObjCloset_c.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 36380,
+          "exit_code": 0,
+          "rows": 464,
+          "verdicts": {
+            "VERIFIED": 450,
+            "BLIND-1": 2,
+            "BLIND-18": 2,
+            "BLIND-6": 3,
+            "BLIND-19": 1,
+            "BLIND-10": 1,
+            "BLIND-8": 2,
+            "BLIND-3": 2,
+            "BLIND-9": 1
+          },
+          "json_sha256": "680ebee2e0fe6510db88ed67264f85d4045d2b291e168153746a73e77e291774",
+          "log_sha256": "e13117d7b4a30122cf674456a227891a2234b7e73e08e6824cfe96e9262368fc"
+        },
+        {
+          "id": 8,
+          "tree": "C:/tmp/sm64ds-player-stock1013-08",
+          "files": [
+            "src/actors/daKuriKing_c.cpp",
+            "src/actors/daBombking_c.cpp",
+            "src/actors/daSanbo_c.cpp",
+            "src/actors/daBmb_c.cpp",
+            "src/actors/daMip_c.cpp",
+            "src/actors/daObjTatefuda_c.cpp",
+            "src/actors/daMenbo_c.cpp",
+            "src/actors/daOts_c.cpp",
+            "src/actors/daYurei_Mucho_c.cpp",
+            "src/game/actors/d_a_star_gate.cpp",
+            "src/game/actors/d_a_fish.cpp",
+            "src/actors/daPgDfdr_c.cpp",
+            "src/actors/daPukupuku_c.cpp",
+            "src/game/actors/d_a_kinopio.cpp",
+            "src/actors/daSnowball_c.cpp",
+            "src/actors/dMap_c.cpp",
+            "src/game/actors/d_a_obj_ice_block.cpp",
+            "src/actors/daObjHeart_c.cpp",
+            "src/actors/daObjFire_c.cpp",
+            "src/actors/daObjFlamethrower_c.cpp"
+          ],
+          "expected_rows": 463,
+          "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
+          "trees": {
+            "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+            "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+            "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "command": [
+            "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "tools/prepush_linkcheck.py",
+            "--files",
+            "src/actors/daKuriKing_c.cpp",
+            "src/actors/daBombking_c.cpp",
+            "src/actors/daSanbo_c.cpp",
+            "src/actors/daBmb_c.cpp",
+            "src/actors/daMip_c.cpp",
+            "src/actors/daObjTatefuda_c.cpp",
+            "src/actors/daMenbo_c.cpp",
+            "src/actors/daOts_c.cpp",
+            "src/actors/daYurei_Mucho_c.cpp",
+            "src/game/actors/d_a_star_gate.cpp",
+            "src/game/actors/d_a_fish.cpp",
+            "src/actors/daPgDfdr_c.cpp",
+            "src/actors/daPukupuku_c.cpp",
+            "src/game/actors/d_a_kinopio.cpp",
+            "src/actors/daSnowball_c.cpp",
+            "src/actors/dMap_c.cpp",
+            "src/game/actors/d_a_obj_ice_block.cpp",
+            "src/actors/daObjHeart_c.cpp",
+            "src/actors/daObjFire_c.cpp",
+            "src/actors/daObjFlamethrower_c.cpp",
+            "--json",
+            "build/player-stock1013/result.json"
+          ],
+          "canary": "(True, '2004/b56')",
+          "status": "TERMINAL",
+          "pid": 41476,
+          "exit_code": 0,
+          "rows": 463,
+          "verdicts": {
+            "VERIFIED": 449,
+            "BLIND-1": 3,
+            "BLIND-31": 1,
+            "BLIND-5": 1,
+            "BLIND-21": 1,
+            "BLIND-6": 4,
+            "BLIND-12": 1,
+            "BLIND-3": 1,
+            "BLIND-14": 1,
+            "BLIND-16": 1
+          },
+          "json_sha256": "0c3bbcac06a954dbc11b792d8ef7772c77580389cc3b1966ad356805c3cbdd36",
+          "log_sha256": "aca066a6e2e987750495a71daa578b74bed855f61e8a25517d9819e13c36aca1"
+        }
+      ],
+      "five_trees": {
+        "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+        "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+        "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+        "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+        "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+      },
+      "scope_equal_to_143_compiled_consumers": true,
+      "non_strict_row_count": 94,
+      "advisory_blind_words": 1065,
+      "warning_baseline_control": {
+        "base": "da2ee4ed5574f03eeb805fdb4de647740dfa2561",
+        "command_scope": "Official tools/linkcheck.py for each observed advisory symbol against untouched base Source; not a full baseline --files fanout.",
+        "symbols_checked": 94,
+        "candidate_warning_rows": 94,
+        "verdict_blind_and_diffs_identical": true,
+        "artifact": "build/player-swing-native1013/stock-warning-baseline.json",
+        "sha256": "44441a44ef857929bfee7b71e7f28814502677b907bcd4ff33d0dcd796c6bd39"
+      },
+      "private_orchestrator_qualification": "The batch runner initially asserted zero advisory warnings after all official result files had been written. That private expectation failed on inherited BLIND rows; the final collector retains all warnings and separately checks each official exit and exact coverage. It is not an official stock failure or a Source change.",
+      "official_results_artifact": "build/player-swing-native1013/stock-batches-results.json",
+      "official_results_sha256": "037dd5bfcfe70446b04fd5ec3eb8fe0248a1658d8e6741b645a7980f6abd31b9"
+    },
+    "serial_stock_range": {
+      "status": "INTERRUPTED / superseded; not a passed gate",
+      "command": "python tools/prepush_linkcheck.py --range da2ee4ed5574f03eeb805fdb4de647740dfa2561..HEAD",
+      "head_during_invocation": "0e8009a587e115270f2855f6f434fd747d1b855f",
+      "pid": 19948,
+      "exec_session": 45348,
+      "exit_code": -1,
+      "reason": "Authorized bounded parallel official --files batches retain the exact 143-file changed_src_files scope; each batch runs in a separate wired checkpoint worktree with separate build and TEMP/TMP.",
+      "evidence": "build/player-swing-native1013/stock-serial-interruption.json",
+      "log": "build/player-swing-native1013/stock-serial-interrupted.log"
+    }
+  },
+  "publication": "No queue publication, push, PR or merge to main by this author.",
+  "checkpoint": "0e8009a587e115270f2855f6f434fd747d1b855f",
+  "source_completion": "partial: native swing-state binding is complete; retained raw helper/field views and the four historical script findings remain disclosed.",
+  "tested_build_trees": {
+    "src": "fca922e30679691f5faf357c0235fa8da1338d02",
+    "include": "ea7be002b6e86c1f879475ac5609e007aff2e0a5",
+    "config": "ec75a4cbd2b4d2d5f62ae4181a420bbc36474f1a",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "input_git_blobs": {
+    "src/actors/Player.cpp": "7d4b09d6401306634f10167ceb3860a40d77fcd4",
+    "include/Player.h": "93f59e0022d8c031a4c789059f88a33578e1de35",
+    "config/tu_manifest.d/ov002/Player.json": "b777c3595ddf37eb4c51a61158bb4b763241c28e",
+    "notes/experiments/player-anim-copy-cpp1013.json": "4574b3d43d8984d386b2cd28221805852596424b"
+  },
+  "report_only_finalization": "Only this report changes after the tested checkpoint; build/player-swing-native1013/final-binding.json checks all five build trees and exact final changed paths.",
+  "limitations": [
+    "Four inherited findings retain their exact original IDs, dispositions, reasons and script-animation scope; no new state-member proof closes them.",
+    "The swing body remains a partial reconstruction over raw offsets and ABI helpers even though its native receiver and nonvirtual member declaration are genuine.",
+    "Nine baseline DSD symbol errors remain; final ordinary/intact-TU gates require zero new symbol errors.",
+    "The final global ROM-data advisory inventory is preserved in the production summary and is not a claim that all project data is reconstructed.",
+    "--no-rom verifies module and source fidelity; a newly assembled final cartridge image is not claimed.",
+    "Literal serial prepush --range was interrupted; equivalent official --files batches verified the exact 143-file scope, including all 3,858 resolved rows with the advisory warnings listed above. The serial invocation is not claimed passed.",
+    "Independent Source acceptance and public publication are not performed by this producer."
+  ]
+}

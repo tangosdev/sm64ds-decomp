@@ -17,7 +17,7 @@ This document describes this commit. The queue records its immutable output SHA.
   workflow/tools `d7e28406933497ff40150f9b912efe64666a00b2`.
 - Separate evidence commits and required artifacts in this commit:
   no separate evidence commits. `notes/data/class-facts/daMky_c.json` is committed on
-  this branch. Required artifacts present: `src/actors/daMky_c.cpp`,
+  this branch. Required artifacts present: `src/game/actors/d_a_mky.cpp`,
   [config/tu_manifest.d/ov030/daMky_c.json](../../../config/tu_manifest.d/ov030/daMky_c.json).
 - Next action, responsible role and blockers:
   independent verification (verifier). No known blocker. One scope note below:
@@ -54,7 +54,7 @@ This document describes this commit. The queue records its immutable output SHA.
   coined; only the class name and the number come from the cartridge. Each such
   row states this in its own ledger `why` column.
 - Hypothesized names/filenames, explicitly not recovered facts:
-  the file name `src/actors/daMky_c.cpp` is a repository convention, not a
+  the file name `src/game/actors/d_a_mky.cpp` is a repository convention, not a
   recovered original filename. `EnterState`, and the `_classInit_MONKEY_STAR` /
   `_classInit_MONKEY_THIEF` factory spellings, are coined.
 - Compiler experiments and measured barriers:
@@ -122,7 +122,7 @@ Recorded separately, not combined into one score.
 - Recovered layout/fields; remaining shadow structs/raw offsets:
   `include/daMky_c.h` is 126 lines and still carries 5 `unk_` fields
   (`unk_380`, `unk_384`, `unk_388`, `unk_3a8`, `unk_3cb`) plus 5 `pad_` runs.
-  `src/actors/daMky_c.cpp` matches `tiers.py`'s own `RAW_OFFSET` regex on
+  `src/game/actors/d_a_mky.cpp` matches `tiers.py`'s own `RAW_OFFSET` regex on
   **381 of its 2,320 lines, 447 occurrences** — 90 lines inside the 20 converted
   methods, 291 inside the 24 bridges — and the file contains **zero** named-field
   accesses. Layout recovery is partial, and the remaining scope should be planned
@@ -178,7 +178,7 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   `python tools/tubuild.py verify ov030/daMky_c` — exit 0.
   "44/44 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED",
   all 44 in expected ROM-ascending emission order.
-  `python tools/romdata_check.py --files src/actors/daMky_c.cpp` — exit 0.
+  `python tools/romdata_check.py --files src/game/actors/d_a_mky.cpp` — exit 0.
   9 emitted data symbols: VERIFIED 4 (44 bytes: `_ZTI7daMky_c`, `_ZTI8dActor_c`,
   `_ZTI7dBase_c`, `_ZTI7fBase_c`), PARTIAL 5 (156 bytes equal, coverage short of
   the ROM's extent), DIFFERS 0, UNNAMED 0.
@@ -267,7 +267,7 @@ only part that describes the composition.
   in any integration-lane file. `config/converted-baseline.json` was audited by
   shape rather than arithmetic, as it merges silently: `main` did not touch it
   across this range, so the merged content is the candidate's — 5 whole-file rows
-  under the retired per-shard names out, 6 `src/actors/daMky_c.cpp#…` member rows
+  under the retired per-shard names out, 6 `src/game/actors/d_a_mky.cpp#…` member rows
   in, `count` 2696 → 2697.
 - **The composed head carries the post-#2425 `tools/`.** `tools/romdata_check.py`
   and `tools/validate_merge.py` are byte-identical to `main`'s, so the head's ROM
@@ -300,7 +300,7 @@ only part that describes the composition.
   `chaos_db_ci`, which resolves overrides by **whole path** and therefore never reads
   a `path#symbol` row at all. Measured on this composition, base versus head, with
   that same whole-path resolution: **34 [ov030](../../../config/arm9/overlays/ov030/symbols.txt) shard paths lose their attribution and
-  one path gains it** (`src/actors/daMky_c.cpp`), for a net move of
+  one path gains it** (`src/game/actors/d_a_mky.cpp`), for a net move of
 
   | contributor | delta |
   |---|---|

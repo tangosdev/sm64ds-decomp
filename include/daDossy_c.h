@@ -82,7 +82,7 @@ struct daDossy_c : dActor_c {
     u8  mClsnState;             /* 0x11b5 */
     u8  pad_11b6[0x2];
 
-    /* Inline is load-bearing: src/actors/daDossy_c.cpp defines the key
+    /* Inline is load-bearing: src/game/actors/d_a_dossy.cpp defines the key
      * function InitResources, so it emits D1 then D0 with no homeless D2. */
     virtual ~daDossy_c() {}
 

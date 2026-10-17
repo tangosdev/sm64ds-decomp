@@ -11,14 +11,14 @@ src/game/actors/d_a_obj_hm_bskt.cpp:
     .ctor start:0x02114dd0 end:0x02114dd4
     .bss start:0x02115c80 end:0x02115ca8
 
-src/actors/daObjHmMaruta_c.cpp:
+src/game/actors/d_a_obj_hm_maruta.cpp:
     complete
     .text start:0x0211155c end:0x02111688
     .init start:0x021148b8 end:0x02114924
     .ctor start:0x02114dd4 end:0x02114dd8
     .bss start:0x02115ca8 end:0x02115cd0
 
-src/actors/daMky_c.cpp:
+src/game/actors/d_a_mky.cpp:
     complete
     .text start:0x02111688 end:0x02114690
 

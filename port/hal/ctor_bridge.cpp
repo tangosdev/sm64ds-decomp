@@ -4,8 +4,9 @@
 // class -- C1 for a complete object and C2 for a base subobject -- and this
 // decomp enrolls each variant in its own file, objisolate stripping the
 // sibling the file does not own. That is correct for the cartridge and it is
-// why src/_ZN15dExtFrameCtrl_cC1Ev.cpp and src/_ZN15dExtFrameCtrl_cC2Ev.cpp both exist with
-// the same body.
+// why src/_ZN9ModelAnimC1Ev.cpp and src/_ZN9ModelAnimC2Ev.cpp both exist.
+// A class whose TU is whole emits both variants from one constructor
+// instead; the host still gets only one.
 //
 // MSVC has ONE constructor symbol. Compile both files for the host and the
 // pair lands on the same decorated name -- LNK2005, a duplicate definition
@@ -109,8 +110,9 @@ ModelBase::~ModelBase()
     abort();
 }
 
-// src/func_0203cbc0.c is a tail-call veneer to _ZdlPv, the DS global operator
-// delete, and Model's destructor calls it. The veneer is sliced now, so its
-// target routes through the Memory layer here -- matching how _Znwj is
-// handled in hal/cxxname_bridge.cpp.
+// _ZdlPv is the DS global operator delete. Its delete veneer, func_0203cbc0,
+// which Model's destructor calls, now comes from src/engine/heap/Heap.cpp with
+// a host body over the default heap; this keeps the _ZdlPv spelling itself
+// routed through the Memory layer -- matching how _Znwj is handled in
+// hal/cxxname_bridge.cpp.
 extern "C" void _ZdlPv(void *p) { _ZN6Memory10DeallocateEPv(p); }

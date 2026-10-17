@@ -3,23 +3,23 @@
  *
  * class daKpaTail_c: Bowser's tail (actor ID 278, spawned by daKpa_c::InitResources).
  * A Player who grabs it is held by it while Bowser's own hold handler runs (see
- * daKpa_c.cpp). Four of its functions are real methods; its state workers live in
- * daKpa_c.cpp as extern "C" helpers.
+ * d_a_kpa.cpp). Its resource, behavior and state-worker functions are real
+ * methods defined in d_a_kpa.cpp.
  *
  * Readability pass: the members are named from how those workers use them and
- * BowserTail_State (daKpa_c.cpp) names the three mState values. Leftover: bit
- * 0x400 of the tail's mFlags, which daKpa_c.cpp only tests, is not named.
+ * BowserTail_State (d_a_kpa.cpp) names the three mState values. Leftover: bit
+ * 0x400 of the tail's mFlags, which d_a_kpa.cpp only tests, is not named.
  *
  * One sub-object, and its offset is checked twice -- once by dCcAc_c's
  * own size assertion, once by closing exactly on the next named field:
  *
- *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
- *     dCcAc_c  0x0d4 + 0x034 = 0x108   -> mBowserUniqueID
+ *     dActor_c   0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dCcAc_c    0x0d4 + 0x034 = 0x108   -> mBowserUniqueID
  *
  * The last 0x10 bytes (0x108..0x118) are Bowser's uniqueID, the Player the tail
  * is holding, a three-state dispatch index, and two halfword counters. Each is
  * named from how daKpaTail_c's own state workers (func_ov060_02115b84 and its
- * three callees, in daKpa_c.cpp) read and write it.
+ * three callees, in d_a_kpa.cpp) read and write it.
  *
  * sizeof is 0x118, which is not inferred from the fields: daKpaTail_c_classInit asks
  * fBase_c::operator new for 280 bytes.
@@ -42,7 +42,7 @@ struct daKpaTail_c : dActor_c {
     u8  pad_0d0[0x4];
     /* Named by the class's own destructor calling dCcAc_c's D1 at
        +0x0d4 -- a relocation the ROM build checks. */
-    dCcAc_c mdCcAc_c;     /* 0x0d4 */
+    dCcAc_c mdCcAc_c;                                   /* 0x0d4 */
     /* daKpa_c's fBase_c::uniqueID. Behavior resolves it with
        dActor_c::FindWithID and puts the tail 0x8c units from his position, in
        the direction of his previous facing angle plus 0x8000. */
@@ -92,12 +92,12 @@ struct daKpaTail_c {
     u8  pad_068[0x6c];
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build checks. */
-    dCcAc_c mdCcAc_c;            /* 0x0d4 */
-    u32 mBowserUniqueID;            /* 0x108 */
-    void *mHeldPlayer;              /* 0x10c */
-    s32 mState;                     /* 0x110 */
-    u16 mTimer;                     /* 0x114 */
-    u16 mHoldCountdown;             /* 0x116 */
+    dCcAc_c mdCcAc_c;     /* 0x0d4 */
+    u32 mBowserUniqueID;  /* 0x108 */
+    void *mHeldPlayer;    /* 0x10c */
+    s32 mState;           /* 0x110 */
+    u16 mTimer;           /* 0x114 */
+    u16 mHoldCountdown;   /* 0x116 */
 };
 
 #endif /* __cplusplus */

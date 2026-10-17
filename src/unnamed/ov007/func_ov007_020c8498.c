@@ -49,12 +49,11 @@ void func_ov007_020c8498(char* r5)
             if(r6 != 0){
                 r6();
             }
-            if(r6 != *(VFN*)(r5 + 0x24)) goto next;
-            if((u32)*(int*)(r5 + 0xc) <= 1) *(int*)(r5 + 0x24) = 0;
+            if (r6 == *(VFN *)(r5 + 0x24) && (u32)(*(int *)(r5 + 0xc)) <= 1)
+                *(int *)(r5 + 0x24) = 0;
         }
     }
 
-next:
     if(*(int*)(r5 + 8) == 0) return;
 
     switch(*(int*)(r5 + 0x10)){

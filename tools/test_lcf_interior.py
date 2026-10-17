@@ -35,6 +35,29 @@ def _elf(defined=(), imported=(), local=()):
     return hdr + syms + strtab + shdrs
 
 
+def _bss_elf(name="table", size=40, imported=()):
+    """A NOBITS storage object plus imports, with no invented alias definition."""
+    names = [name, *imported]
+    strings = b"\0"
+    offsets = {}
+    for symbol in names:
+        offsets[symbol] = len(strings)
+        strings += symbol.encode() + b"\0"
+    symbols = b"\0" * 16
+    symbols += struct.pack("<IIIBBH", offsets[name], 0, size, 0x11, 0, 1)
+    for symbol in imported:
+        symbols += struct.pack("<IIIBBH", offsets[symbol], 0, 0, 0x10, 0, 0)
+    symoff, stroff = 52, 52 + len(symbols)
+    shoff = stroff + len(strings)
+    headers = b"\0" * 40
+    headers += struct.pack("<IIIIIIIIII", 0, 8, 3, 0, 52, size, 0, 0, 4, 0)
+    headers += struct.pack("<IIIIIIIIII", 0, 2, 0, 0, symoff, len(symbols), 3, 1, 4, 16)
+    headers += struct.pack("<IIIIIIIIII", 0, 3, 0, 0, stroff, len(strings), 0, 0, 1, 0)
+    header = b"\x7fELF\x01\x01\x01" + b"\0" * 9
+    header += struct.pack("<HHIIIIIHHHHHH", 1, 40, 1, 0, 0, shoff, 0, 52, 0, 0, 40, 4, 0)
+    return header + symbols + strings + headers
+
+
 SYMBOLS = (
     "func_01ff97d8 kind:function(arm,size=0x11c) addr:0x01ff97d8\n"
     "func_01ff98f4 kind:function(arm,size=0xb0) addr:0x01ff98f4\n"
@@ -153,6 +176,90 @@ class LcfInteriorTests(unittest.TestCase):
         lcf.write_bytes(LCF.replace("\n", "\r\n").encode())
         LI.patch(lcf, objects_txt, self.root / "config")
         self.assertIn(b"SECTIONS {\r\n    func_01ff98f4 = 0x01ff98f4;\r\n", lcf.read_bytes())
+
+
+BSS_LCF = LCF.replace("    .text : {}", "    .text : {}\n    .ov006 : {\n    }")
+
+
+class BssInteriorTests(unittest.TestCase):
+    def _link(self, *objects):
+        lcf, paths = LcfInteriorTests._link(self, *objects)
+        lcf.write_text(BSS_LCF)
+        return lcf, paths
+    tearDown = LcfInteriorTests.tearDown
+
+    def setUp(self):
+        LcfInteriorTests.setUp(self)
+        self.module = self.root / "config" / "overlays" / "ov006"
+        self.module.mkdir(parents=True)
+        self.symbols = self.module / "symbols.txt"
+        self.delinks = self.module / "delinks.txt"
+        self.symbols.write_text("table kind:bss addr:0x02142df8\n"
+                                "inside kind:bss addr:0x02142e02\n")
+        self.delinks.write_text("src/table.cpp:\n    complete\n"
+                                "    .bss start:0x02142cc0 end:0x02142e88\n")
+
+    def test_live_overlay_bss_alias_has_canonical_address_in_its_output_module(self):
+        raw = _bss_elf(imported=["inside"])
+        lcf, objects = self._link(raw)
+        self.assertEqual(LI.patch(lcf, objects, self.root / "config"),
+                         [("inside", 0x02142e02)])
+        self.assertIn("    .ov006 : {\n        inside = 0x02142e02;", lcf.read_text())
+        self.assertEqual((self.root / "o0.o").read_bytes(), raw)
+
+    def test_bss_alias_requires_a_complete_source_owned_extent(self):
+        lcf, objects = self._link(_bss_elf(imported=["inside"]))
+        for text in ("    .bss start:0x02142cc0 end:0x02142e88\n",
+                     "src/table.cpp:\n    .bss start:0x02142cc0 end:0x02142e88\n",
+                     "src/table.cpp:\n    complete\n    .bss start:0x02142e00 end:0x02142e88\n"):
+            with self.subTest(text=text):
+                self.delinks.write_text(text)
+                self.assertEqual(LI.patch(lcf, objects, self.root / "config"), [])
+                self.assertEqual(lcf.read_text(), BSS_LCF)
+
+    def test_bss_alias_requires_a_unique_owner_and_configured_home(self):
+        for defined, size, extra in ((True, 8, ""), (False, 40, ""),
+                                    (True, 40, "inside kind:bss addr:0x02142e04\n"),
+                                    (True, 40, "table kind:data(any) addr:0x02142df8\n")):
+            with self.subTest(defined=defined, size=size, extra=extra):
+                self.symbols.write_text("table kind:bss addr:0x02142df8\n"
+                                        "inside kind:bss addr:0x02142e02\n" + extra)
+                obj = _bss_elf(size=size, imported=["inside"]) if defined else _elf(imported=["inside"])
+                lcf, objects = self._link(obj)
+                self.assertEqual(LI.patch(lcf, objects, self.root / "config"), [])
+
+    def test_bss_alias_does_not_invent_a_label_at_or_past_the_owner_end(self):
+        for address in (0x02142df8, 0x02142e20, 0x02142e24):
+            with self.subTest(address=address):
+                self.symbols.write_text("table kind:bss addr:0x02142df8\n"
+                                        f"inside kind:bss addr:0x{address:08x}\n")
+                lcf, objects = self._link(_bss_elf(imported=["inside"]))
+                self.assertEqual(LI.patch(lcf, objects, self.root / "config"), [])
+
+    def test_bss_alias_rejects_cross_overlay_name_ambiguity(self):
+        other = self.root / "config" / "overlays" / "ov007"
+        other.mkdir()
+        (other / "symbols.txt").write_text("inside kind:bss addr:0x02142e02\n")
+        lcf, objects = self._link(_bss_elf(imported=["inside"]))
+        self.assertEqual(LI.patch(lcf, objects, self.root / "config"), [])
+
+    def test_existing_alias_definition_and_duplicate_owners_are_not_replaced(self):
+        for objects_in in ((_bss_elf(imported=["inside"]), _elf(defined=["inside"])),
+                           (_bss_elf(imported=["inside"]), _bss_elf())):
+            with self.subTest(count=len(objects_in)):
+                lcf, objects = self._link(*objects_in)
+                self.assertEqual(LI.patch(lcf, objects, self.root / "config"), [])
+
+
+    def test_bss_alias_refuses_missing_or_ambiguous_output_module(self):
+        for text in (LCF, BSS_LCF.replace("    .ov006 : {", "    .ov006 : { }\n    .ov006 : {")):
+            with self.subTest(text=text):
+                lcf, objects = self._link(_bss_elf(imported=["inside"]))
+                lcf.write_text(text)
+                before = lcf.read_bytes()
+                with self.assertRaisesRegex(ValueError, "exactly one .ov006"):
+                    LI.patch(lcf, objects, self.root / "config")
+                self.assertEqual(lcf.read_bytes(), before)
 
 
 if __name__ == "__main__":

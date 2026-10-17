@@ -1,8 +1,8 @@
 {
  "id": "ov080/daPicGate_c",
  "module": "ov080",
- "source": "src/actors/daPicGate_c.cpp",
- "promoted_source": "src/actors/daPicGate_c.cpp",
+ "source": "src/game/actors/d_a_pic_gate_methods.cpp",
+ "promoted_source": "src/game/actors/d_a_pic_gate_methods.cpp",
  "status": "promoted",
  "boundary_confidence": "medium",
  "boundary_evidence": [
@@ -205,7 +205,7 @@
  ],
  "bss": [
   {
-   "symbol": "data_ov080_0212851c",
+   "symbol": "gForBhModelFile",
    "address": "0x0212851c",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -216,10 +216,10 @@
    "address": "0x02128604",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_0212851c"
+   "evidence": "compiler-local destructor-registration node for gForBhModelFile"
   },
   {
-   "symbol": "data_ov080_02128524",
+   "symbol": "gForBkModelFile",
    "address": "0x02128524",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -230,10 +230,10 @@
    "address": "0x02128610",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_02128524"
+   "evidence": "compiler-local destructor-registration node for gForBkModelFile"
   },
   {
-   "symbol": "data_ov080_021284ac",
+   "symbol": "gForKiModelFile",
    "address": "0x021284ac",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -244,10 +244,10 @@
    "address": "0x02128550",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284ac"
+   "evidence": "compiler-local destructor-registration node for gForKiModelFile"
   },
   {
-   "symbol": "data_ov080_021284fc",
+   "symbol": "gForSmModelFile",
    "address": "0x021284fc",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -258,10 +258,10 @@
    "address": "0x0212861c",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284fc"
+   "evidence": "compiler-local destructor-registration node for gForSmModelFile"
   },
   {
-   "symbol": "data_ov080_0212850c",
+   "symbol": "gForCvEx5ModelFile",
    "address": "0x0212850c",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -272,10 +272,10 @@
    "address": "0x02128568",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_0212850c"
+   "evidence": "compiler-local destructor-registration node for gForCvEx5ModelFile"
   },
   {
-   "symbol": "data_ov080_021284cc",
+   "symbol": "gForFlModelFile",
    "address": "0x021284cc",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -286,10 +286,10 @@
    "address": "0x02128574",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284cc"
+   "evidence": "compiler-local destructor-registration node for gForFlModelFile"
   },
   {
-   "symbol": "data_ov080_021284b4",
+   "symbol": "gForDlModelFile",
    "address": "0x021284b4",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -300,10 +300,10 @@
    "address": "0x02128580",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284b4"
+   "evidence": "compiler-local destructor-registration node for gForDlModelFile"
   },
   {
-   "symbol": "data_ov080_02128514",
+   "symbol": "gForWlModelFile",
    "address": "0x02128514",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -314,10 +314,10 @@
    "address": "0x0212858c",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_02128514"
+   "evidence": "compiler-local destructor-registration node for gForWlModelFile"
   },
   {
-   "symbol": "data_ov080_021284f4",
+   "symbol": "gForSlModelFile",
    "address": "0x021284f4",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -328,10 +328,10 @@
    "address": "0x02128598",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284f4"
+   "evidence": "compiler-local destructor-registration node for gForSlModelFile"
   },
   {
-   "symbol": "data_ov080_0212852c",
+   "symbol": "gForWcModelFile",
    "address": "0x0212852c",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -342,10 +342,10 @@
    "address": "0x021285a4",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_0212852c"
+   "evidence": "compiler-local destructor-registration node for gForWcModelFile"
   },
   {
-   "symbol": "data_ov080_021284dc",
+   "symbol": "gForHmModelFile",
    "address": "0x021284dc",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -356,10 +356,10 @@
    "address": "0x021285b0",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284dc"
+   "evidence": "compiler-local destructor-registration node for gForHmModelFile"
   },
   {
-   "symbol": "data_ov080_021284e4",
+   "symbol": "gForHsModelFile",
    "address": "0x021284e4",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -370,10 +370,10 @@
    "address": "0x021285bc",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284e4"
+   "evidence": "compiler-local destructor-registration node for gForHsModelFile"
   },
   {
-   "symbol": "data_ov080_021284ec",
+   "symbol": "gForTdTtModelFile",
    "address": "0x021284ec",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -384,10 +384,10 @@
    "address": "0x021285c8",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284ec"
+   "evidence": "compiler-local destructor-registration node for gForTdTtModelFile"
   },
   {
-   "symbol": "data_ov080_021284bc",
+   "symbol": "gForCtModelFile",
    "address": "0x021284bc",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -398,10 +398,10 @@
    "address": "0x021285d4",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284bc"
+   "evidence": "compiler-local destructor-registration node for gForCtModelFile"
   },
   {
-   "symbol": "data_ov080_02128504",
+   "symbol": "gForExMarioModelFile",
    "address": "0x02128504",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -412,10 +412,10 @@
    "address": "0x021285e0",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_02128504"
+   "evidence": "compiler-local destructor-registration node for gForExMarioModelFile"
   },
   {
-   "symbol": "data_ov080_0212853c",
+   "symbol": "gForExLuigiModelFile",
    "address": "0x0212853c",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -426,10 +426,10 @@
    "address": "0x021285ec",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_0212853c"
+   "evidence": "compiler-local destructor-registration node for gForExLuigiModelFile"
   },
   {
-   "symbol": "data_ov080_021284d4",
+   "symbol": "gForExWarioModelFile",
    "address": "0x021284d4",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -440,10 +440,10 @@
    "address": "0x021285f8",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284d4"
+   "evidence": "compiler-local destructor-registration node for gForExWarioModelFile"
   },
   {
-   "symbol": "data_ov080_02128534",
+   "symbol": "gForVsCrossModelFile",
    "address": "0x02128534",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -454,10 +454,10 @@
    "address": "0x02128544",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_02128534"
+   "evidence": "compiler-local destructor-registration node for gForVsCrossModelFile"
   },
   {
-   "symbol": "data_ov080_021284c4",
+   "symbol": "gForVsIslandModelFile",
    "address": "0x021284c4",
    "size": "0x8",
    "binding": "STB_GLOBAL",
@@ -468,7 +468,7 @@
    "address": "0x0212855c",
    "size": "0xc",
    "binding": "STB_GLOBAL",
-   "evidence": "compiler-local destructor-registration node for data_ov080_021284c4"
+   "evidence": "compiler-local destructor-registration node for gForVsIslandModelFile"
   },
   {
    "symbol": "data_ov080_02128628",
@@ -926,7 +926,7 @@
  "production_mode": "intact-object",
  "init": [
   {
-   "symbol": "__sinit_daPicGate_c.cpp",
+   "symbol": "__sinit_d_a_pic_gate_methods.cpp",
    "address": "0x02127b2c",
    "size": "0x434",
    "binding": "STB_GLOBAL",
@@ -935,7 +935,7 @@
  ],
  "ctor": [
   {
-   "symbol": ".p__sinit_daPicGate_c.cpp",
+   "symbol": ".p__sinit_d_a_pic_gate_methods.cpp",
    "address": "0x02127f68",
    "size": "0x4",
    "binding": "STB_GLOBAL",
@@ -1328,7 +1328,7 @@
    "source": "0x2127e48",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_0212851c",
+   "symbol": "gForBhModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x0212851c"
@@ -1358,7 +1358,7 @@
    "source": "0x2127e58",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_02128524",
+   "symbol": "gForBkModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x02128524"
@@ -1378,7 +1378,7 @@
    "source": "0x2127e64",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284ac",
+   "symbol": "gForKiModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284ac"
@@ -1398,7 +1398,7 @@
    "source": "0x2127e70",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284fc",
+   "symbol": "gForSmModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284fc"
@@ -1418,7 +1418,7 @@
    "source": "0x2127e7c",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_0212850c",
+   "symbol": "gForCvEx5ModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x0212850c"
@@ -1438,7 +1438,7 @@
    "source": "0x2127e88",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284cc",
+   "symbol": "gForFlModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284cc"
@@ -1458,7 +1458,7 @@
    "source": "0x2127e94",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284b4",
+   "symbol": "gForDlModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284b4"
@@ -1478,7 +1478,7 @@
    "source": "0x2127ea0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_02128514",
+   "symbol": "gForWlModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x02128514"
@@ -1498,7 +1498,7 @@
    "source": "0x2127eac",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284f4",
+   "symbol": "gForSlModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284f4"
@@ -1518,7 +1518,7 @@
    "source": "0x2127eb8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_0212852c",
+   "symbol": "gForWcModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x0212852c"
@@ -1538,7 +1538,7 @@
    "source": "0x2127ec4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284dc",
+   "symbol": "gForHmModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284dc"
@@ -1558,7 +1558,7 @@
    "source": "0x2127ed0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284e4",
+   "symbol": "gForHsModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284e4"
@@ -1578,7 +1578,7 @@
    "source": "0x2127edc",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284ec",
+   "symbol": "gForTdTtModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284ec"
@@ -1598,7 +1598,7 @@
    "source": "0x2127ee8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284bc",
+   "symbol": "gForCtModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284bc"
@@ -1618,7 +1618,7 @@
    "source": "0x2127ef4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_02128504",
+   "symbol": "gForExMarioModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x02128504"
@@ -1638,7 +1638,7 @@
    "source": "0x2127f00",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_0212853c",
+   "symbol": "gForExLuigiModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x0212853c"
@@ -1658,7 +1658,7 @@
    "source": "0x2127f08",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284d4",
+   "symbol": "gForExWarioModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284d4"
@@ -1678,7 +1678,7 @@
    "source": "0x2127f14",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_02128534",
+   "symbol": "gForVsCrossModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x02128534"
@@ -1698,7 +1698,7 @@
    "source": "0x2127f20",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov080_021284c4",
+   "symbol": "gForVsIslandModelFile",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x021284c4"
@@ -1848,7 +1848,7 @@
    "source": "0x02127f68",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "__sinit_daPicGate_c.cpp",
+   "symbol": "__sinit_d_a_pic_gate_methods.cpp",
    "addend": 0,
    "target_module": "ov080",
    "target_address": "0x02127b2c"
@@ -1976,13 +1976,13 @@
  ],
  "symbol_binding_rewrites": [
   {
-   "symbol": "__sinit_daPicGate_c.cpp",
+   "symbol": "__sinit_d_a_pic_gate_methods.cpp",
    "from": "STB_LOCAL",
    "to": "STB_GLOBAL",
    "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
   },
   {
-   "symbol": ".p__sinit_daPicGate_c.cpp",
+   "symbol": ".p__sinit_d_a_pic_gate_methods.cpp",
    "from": "STB_LOCAL",
    "to": "STB_GLOBAL",
    "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"

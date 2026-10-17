@@ -66,3 +66,6 @@ UNDEFINED symbols referencing dBgCh_Actr Init:
 ```
 
 - verdict: CONSTRAINT SUPPORTED
+
+Current source locations after PR #3840: [src/game/actors/d_a_feather.cpp](../../src/game/actors/d_a_feather.cpp).
+The experiment and commands above retain the paths at `tested_commit`.

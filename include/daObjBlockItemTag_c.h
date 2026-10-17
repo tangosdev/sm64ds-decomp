@@ -24,7 +24,7 @@ struct daObjBlockItemTag_c : dActor_c {
     u8 pad_0d9[0x3];
 
     /* Declared first so the single out-of-line definition in
-     * src/actors/daObjBlockItemTag_c.cpp stays the key function and the TU
+     * src/game/actors/d_a_obj_block_item_tag.cpp stays the key function and the TU
      * emits the same verified data passengers. */
     virtual ~daObjBlockItemTag_c();                         /* slots 16, 17 */
 

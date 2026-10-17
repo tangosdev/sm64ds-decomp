@@ -160,6 +160,20 @@ extern "C" unsigned _ZN3IRQ11DisableIRQsEj(unsigned mask) {
 }
 extern "C" void _ZN3IRQ15ClearInterruptsEj(unsigned) {}
 
+// The same registry under include/IRQ.h's real names. Decomp files that call
+// IRQ::GetIRQHandler and friends through that header (func_0205a358) link
+// against these C++-linkage definitions; files that still declare the mangled
+// spelling locally link against the extern "C" ones above.
+namespace IRQ {
+typedef void (*Handler)(void);
+Handler GetIRQHandler(unsigned mask) {
+    return reinterpret_cast<Handler>(_ZN3IRQ13GetIRQHandlerEj(mask));
+}
+void SetIRQHandler(unsigned mask, Handler h) { _ZN3IRQ13SetIRQHandlerEjPFvvE(mask, h); }
+unsigned EnableIRQs(unsigned mask) { return _ZN3IRQ10EnableIRQsEj(mask); }
+unsigned DisableIRQs(unsigned mask) { return _ZN3IRQ11DisableIRQsEj(mask); }
+}  // namespace IRQ
+
 // DMA to the FIFO is the display-list path (func_0205a290). ctrl bit 30 is
 // IRQ-on-complete (the final chunk); a GXFIFO-destined chunk without it relies
 // on the half-empty IRQ to pump the next chunk.

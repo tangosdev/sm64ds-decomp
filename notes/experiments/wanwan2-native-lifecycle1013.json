@@ -1,0 +1,488 @@
+{
+  "schema": 1,
+  "task_id": "wanwan2-native-lifecycle1013",
+  "scope": "Native unchained Chain Chomp classInit and complete Wiggler shared Vector3s lifecycle dependency",
+  "base_commit": "358b39da3cbb37eff91f8609f45f2cfc33d26f0b",
+  "dependency_commit": "e0f2989a90b91861d08fc8f935cdcbe65a7d6679",
+  "dependency_pr": "https://github.com/tangosdev/sm64ds-decomp/pull/3783",
+  "stacked_base_pr": "https://github.com/tangosdev/sm64ds-decomp/pull/3810",
+  "tool_dependency_pr": "https://github.com/tangosdev/sm64ds-decomp/pull/3793",
+  "composition": "Full nine-file Wiggler change merged; its four affected callers and fourteen Dossy measured compiler inputs retained. No partial header cherry-pick. Existing Chain Chomp Spawn source is the PR base.",
+  "source_change": "Replace manual allocation/constructor calls with return new daWanwan2_c(), include actual Vector3s constructor definition, remove obsolete factory extern block. No member layout changes.",
+  "lifecycle": "Two Vector3[6] arrays at +0x6d8/+0x720 and Vector3s[6] at +0x768; actual factory/destructor counts and strides agree. mUnk_768 semantic purpose remains unknown.",
+  "compiler_temporary_inputs": "Four destructor node inputs @1006..@1009 become @1007..@1010; canonical @169..@172 and storage unchanged. Complete initializer bytes and typed ABS32 offsets identify them.",
+  "object_boundary": "Entire raw/prepared ELF containers legitimately differ because native constructor sections and symbols are added/canonicalized. Complete owned bodies and typed references must compare exactly; no container equality claim.",
+  "inherited_findings": {
+    "HANACHAN-RAW-01": {
+      "disposition": "deferred",
+      "id": "HANACHAN-RAW-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3780",
+      "kind": "reconstruction",
+      "location": "src/actors/daHanachan_c.cpp:9",
+      "owner": "codex-hanachan-coordinator1013",
+      "reason": "This coherent factory/lifecycle improvement preserves these existing bodies and their byte proof. The task issue explicitly retains the remaining reconstruction scope; acceptance is partial rather than a claim that the entire class is recovered.",
+      "summary": "Segment traversal, resource-handle payload access, foreign camera field views and scalar Fix12 ABI bridges remain in the existing TU."
+    },
+    "NDT0922-01": {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    "NDT0922-02": {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    "NDT0922-03": {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    "RCV-PACKET-01": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    "RCV-PACKET-02": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    "RCV-PACKET-03": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    "RCV-PACKET-04": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    "RCV-SHADOW-01": {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    "RCV2908-01": {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    "RCV2908-02": {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    "RCV2908-03": {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    "RCV2908-04": {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    "STALE-ARRAY-RUNTIME-TEST": {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    },
+    "WANWAN2-FACTORY-1013-BOUNDARY": {
+      "disposition": "deferred",
+      "id": "WANWAN2-FACTORY-1013-BOUNDARY",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3809",
+      "kind": "reconstruction",
+      "location": "src/actors/daWanwan2_c.cpp: daWanwan2_c_classInit; config/tu_manifest.d/ov100/daWanwan2_c.json",
+      "owner": "codex-wanwan2-spawn-producer1013",
+      "reason": "Fresh independent private controls confirm both ordinary new forms emit236 instead of280bytes, have four array calls using one shared unbound Vector3 constructor literal, omit the short-vector callback, and fail unchanged normal admission for unlicensed Vector3C1. This supports the bounded current comment only, not a universal compiler floor or a new canonical alias. No new mappings were added.",
+      "summary": "The current factory remains explicit, with obsolete no-Vector3-constructor and separate-shard explanations corrected."
+    },
+    "WANWAN2-SPAWN-1013-PARTIAL": {
+      "disposition": "deferred",
+      "id": "WANWAN2-SPAWN-1013-PARTIAL",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3809",
+      "kind": "reconstruction",
+      "location": "src/actors/daWanwan2_c.cpp: Behavior and retained factory/helper boundaries",
+      "owner": "codex-wanwan2-spawn-producer1013",
+      "reason": "Coin position still uses the inherited s32 field Vector3 view. Existing PMF stand-ins, scalar Fix12 calls, char-pointer workers, explicit factory constructor chain and raw/model/volatile forms remain. No shared layout or state-interface completeness is claimed. The four temporary-name refreshes preserve actual storage/registration identity rather than shaping source for parser numbering.",
+      "summary": "Four real native Spawn calls and three actual link-vector expressions are complete for this scope; broader actor reconstruction remains partial."
+    }
+  },
+  "remaining_reconstruction": [
+    "WANWAN2-SPAWN-1013-PARTIAL remains; actor helper/raw views outside factory unchanged.",
+    "HANACHAN-RAW-01 remains; inherited Wiggler raw views outside factory unchanged."
+  ],
+  "resolved_boundary": "WANWAN2-FACTORY-1013-BOUNDARY is fixed by native construction with the complete actual Vector3s lifecycle dependency, the strict production factory/callback proof, unchanged initializer/node storage, full header closure and full ROM. Independent Source review is recorded in the task handoff.",
+  "tested_checkpoint": "b579ae9b453615e339520aa908c751651ffb089e",
+  "gates": {
+    "tested_commit": "b579ae9b453615e339520aa908c751651ffb089e",
+    "tested_base": "358b39da3cbb37eff91f8609f45f2cfc33d26f0b",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-native-lifecycle1013\\full_rom.log",
+        "command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ]
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-native-lifecycle1013\\parallel-range.log",
+        "command": [
+          "python",
+          "build\\wanwan2-native-lifecycle1013\\parallel-stock.py"
+        ],
+        "stock_cli_commands": 9629,
+        "method": "Private parallel scheduling of stock discovery and every unchanged stock _run_linkcheck CLI, including stock ERROR retry. The original ordered registry and regex first-match resolver is expanded exactly once with hashed inputs and original-function probes; committed and working inputs are asserted clean before/after. Unchanged P.main/P.verify consume only complete exact-key results at immutable checkpoint; no verdict is dropped or rewritten. Incomplete serial run is superseded, not counted as successful.",
+        "selection_proof": "build\\wanwan2-native-lifecycle1013\\parallel-selection.json",
+        "resolver_equivalence": "build\\wanwan2-native-lifecycle1013\\resolver-equivalence.json",
+        "terminal_stock_main_proof": {
+          "tested_commit": "b579ae9b453615e339520aa908c751651ffb089e",
+          "tested_base": "358b39da3cbb37eff91f8609f45f2cfc33d26f0b",
+          "exit_code": 0,
+          "files": 1089,
+          "stock_calls": 9629,
+          "unique_unchanged_cli_commands": 9629,
+          "drafts": [
+            "src/unnamed/arm9/0200/func_02009e70.cpp"
+          ],
+          "same_final_trees": {
+            "src": "c75093f14b74aec6645115fb7b8ae7e40e2445bd",
+            "include": "d814d311a342346594c05ce845848e102623078e",
+            "config": "4f881b01452dd6f92685bba941caeb46b1844c02",
+            "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+            "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+          },
+          "method": "Private parallel scheduling of stock discovery and every unchanged stock _run_linkcheck CLI, including stock ERROR retry. The original ordered registry and regex first-match resolver is expanded exactly once with hashed inputs and original-function probes; committed and working inputs are asserted clean before/after. Unchanged P.main/P.verify consume only complete exact-key results at immutable checkpoint; no verdict is dropped or rewritten. Incomplete serial run is superseded, not counted as successful.",
+          "cli_results": "parallel-cli-results.json",
+          "terminal_stock_table": "range.json",
+          "terminal_stock_log": "parallel-range.log"
+        },
+        "scheduler_sha256": "683fd0bc7b913c11c1430f05aac359287f596cbe370d61cb4455d1689e4708af"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-native-lifecycle1013\\port.log",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ]
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-native-lifecycle1013\\langmode.log",
+        "command": [
+          "python",
+          "tools/langmode_audit.py",
+          "--check",
+          "langmode-baseline.json"
+        ]
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-native-lifecycle1013\\decl.log",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "358b39da3cbb37eff91f8609f45f2cfc33d26f0b"
+        ]
+      },
+      "affected": {
+        "exit_code": 0,
+        "log": "build\\wanwan2-native-lifecycle1013\\affected.log",
+        "command": [
+          "python",
+          "tools/affected_src.py",
+          "include/types.h",
+          "include/Vector3s.h",
+          "--json"
+        ]
+      }
+    },
+    "superseded_runs": "Incomplete literal serial gate and earlier private discovery attempts retained; none is reported as terminal success. All actual compiler/linker verdicts in the final table come from unchanged stock CLI invocations."
+  },
+  "chain_chomp_proof": {
+    "strict_code_init_ctor": 19,
+    "bss_records": 9,
+    "bss_bytes": 96,
+    "metadata_records": 11,
+    "metadata_bytes": 245,
+    "raw_typed_relocations": 243,
+    "prepared_typed_relocations": 182,
+    "owned_nontext_relocations": 22,
+    "prepared_sha256": "ee86f2ed4348141fa44c709d54ccbbda7065cc9c8a636e13dad8dcf4fe6b81cd",
+    "ordinary_retarget_isolate_parity": true,
+    "complete_owned_bodies_and_typed_edges_equal": true,
+    "whole_raw_or_prepared_container_identity_claimed": false,
+    "address_overrides": []
+  },
+  "native_constructor_and_node_identity": {
+    "constructor_checks": [
+      {
+        "emitted": "_ZN7Vector3C1Ev",
+        "actual_callback": "func_0203d384",
+        "check": {
+          "name": "_ZN7Vector3C1Ev",
+          "module": "arm9",
+          "addr": "0x0203d384",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      },
+      {
+        "emitted": "_ZN8Vector3sC1Ev",
+        "actual_callback": "func_0203d73c",
+        "check": {
+          "name": "_ZN8Vector3sC1Ev",
+          "module": "arm9",
+          "addr": "0x0203d73c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      }
+    ],
+    "all_280_raw_factory_bytes_equal": true,
+    "unchanged_factory_edges": 18,
+    "changed_factory_callback_slots": [
+      {
+        "before": {
+          "off": 264,
+          "type": 2,
+          "sym": "func_0203d384",
+          "addr": 33805188,
+          "add": 0
+        },
+        "after": {
+          "off": 264,
+          "type": 2,
+          "sym": "_ZN7Vector3C1Ev",
+          "addr": null,
+          "add": 0
+        }
+      },
+      {
+        "before": {
+          "off": 276,
+          "type": 2,
+          "sym": "func_0203d73c",
+          "addr": 33806140,
+          "add": 0
+        },
+        "after": {
+          "off": 276,
+          "type": 2,
+          "sym": "_ZN8Vector3sC1Ev",
+          "addr": null,
+          "add": 0
+        }
+      }
+    ],
+    "all_244_initializer_bytes_equal": true,
+    "measured_nodes": [
+      {
+        "old_input": "@1006",
+        "new_input": "@1007",
+        "canonical": "@169",
+        "offset": "0xbc",
+        "bytes": 12
+      },
+      {
+        "old_input": "@1007",
+        "new_input": "@1008",
+        "canonical": "@170",
+        "offset": "0xc8",
+        "bytes": 12
+      },
+      {
+        "old_input": "@1008",
+        "new_input": "@1009",
+        "canonical": "@171",
+        "offset": "0xd8",
+        "bytes": 12
+      },
+      {
+        "old_input": "@1009",
+        "new_input": "@1010",
+        "canonical": "@172",
+        "offset": "0xe4",
+        "bytes": 12
+      }
+    ],
+    "actual_member_evidence": "Vector3 mLinkPos[6]+0x6d8, mLinkVel[6]+0x720; Vector3s mUnk_768[6]+0x768; retail/native destructor agrees on arrays/count/stride/callback type. No semantic purpose invented for mUnk_768."
+  },
+  "independent_consumer_comparison": {
+    "consumers": 1089,
+    "whole_raw_identical": 1086,
+    "raw_changed": [
+      "src/actors/daDossy_c.cpp",
+      "src/actors/daHanachan_c.cpp",
+      "src/actors/daWanwan2_c.cpp"
+    ],
+    "owned_prepared": [
+      {
+        "source": "src/engine/collision/dBgW_Kc_itcm.cpp",
+        "defined_symbols": 16,
+        "differences": []
+      },
+      {
+        "source": "src/stage/LevelObjects.cpp",
+        "defined_symbols": 19,
+        "differences": []
+      },
+      {
+        "source": "src/actors/daHanachan_c.cpp",
+        "defined_symbols": 110,
+        "differences": []
+      },
+      {
+        "source": "src/actors/daDossy_c.cpp",
+        "defined_symbols": 59,
+        "differences": []
+      },
+      {
+        "source": "src/actors/daWanwan2_c.cpp",
+        "defined_symbols": 30,
+        "differences": []
+      }
+    ],
+    "owned_raw": [
+      {
+        "source": "src/engine/collision/dBgW_Kc_itcm.cpp",
+        "baseline_defined_symbols": 19,
+        "candidate_defined_symbols": 19,
+        "changed_existing": [],
+        "added": []
+      },
+      {
+        "source": "src/stage/LevelObjects.cpp",
+        "baseline_defined_symbols": 21,
+        "candidate_defined_symbols": 21,
+        "changed_existing": [],
+        "added": []
+      },
+      {
+        "source": "src/actors/daHanachan_c.cpp",
+        "baseline_defined_symbols": 124,
+        "candidate_defined_symbols": 126,
+        "changed_existing": [],
+        "added": [
+          "func_0203d384",
+          "func_0203d73c"
+        ]
+      },
+      {
+        "source": "src/actors/daDossy_c.cpp",
+        "baseline_defined_symbols": 75,
+        "candidate_defined_symbols": 75,
+        "changed_existing": [],
+        "added": []
+      },
+      {
+        "source": "src/actors/daWanwan2_c.cpp",
+        "baseline_defined_symbols": 44,
+        "candidate_defined_symbols": 46,
+        "changed_existing": [],
+        "added": [
+          "func_0203d384",
+          "func_0203d73c"
+        ]
+      }
+    ],
+    "strict_checks": 118,
+    "strict_verdicts": {
+      "VERIFIED": 118
+    }
+  },
+  "stock_expanded_range": {
+    "checked": 9629,
+    "verdict_counts": {
+      "VERIFIED": 9397,
+      "BLIND-48": 1,
+      "BLIND-6": 100,
+      "BLIND-47": 1,
+      "BLIND-23": 1,
+      "BLIND-2": 15,
+      "BLIND-16": 5,
+      "BLIND-5": 4,
+      "BLIND-12": 5,
+      "BLIND-8": 3,
+      "BLIND-10": 19,
+      "BLIND-3": 21,
+      "BLIND-14": 6,
+      "BLIND-1": 13,
+      "BLIND-26": 2,
+      "BLIND-25": 1,
+      "BLIND-9": 5,
+      "BLIND-13": 2,
+      "BLIND-73": 2,
+      "BLIND-18": 4,
+      "BLIND-42": 1,
+      "BLIND-20": 2,
+      "BLIND-31": 1,
+      "BLIND-21": 1,
+      "BLIND-32": 1,
+      "BLIND-19": 2,
+      "BLIND-27": 1,
+      "BLIND-30": 2,
+      "BLIND-39": 1,
+      "BENIGN": 4,
+      "BLIND-36": 1,
+      "BLIND-24": 1,
+      "BLIND-11": 1,
+      "BLIND-22": 3
+    },
+    "blocking": 0,
+    "report": "build/wanwan2-native-lifecycle1013/range.json",
+    "warning_qualification": "Raw singular-function symbol-coverage warnings are preserved. Complete production full-ROM proof, independently unchanged consumer objects, and strict prepared changed-TU rows provide separate evidence; warnings are not described as zero-blind passes."
+  },
+  "final_binding": "This report-only descendant retains exact src/include/config/tools/port tree IDs of the tested checkpoint. Independent final acceptance is bound to the final immutable offer."
+}

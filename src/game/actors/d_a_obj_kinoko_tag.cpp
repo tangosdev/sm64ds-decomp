@@ -19,8 +19,6 @@
  * - dCcAc_c::Init 6az: InitResources passes Fix12<int> by value; the header
  *   method form size-DIFFs (notes/mwccarm-codegen.md 6az).
  * - KinokoPositionWords: a local Vector3 would emit vague-linkage ~Vector3.
- * - *(Vector3 *)&mPosX addressing shape (a Vector3 member at 0x05c is a
- *   dActor_c campaign, not this leaf).
  * - data_ov002_0210da30 is the ov002 SharedFilePtr handle; symbols.txt has
  *   no recovered name, so it is not coined. SharedFilePtr.h has no fields.
  * - PILE / daObjPile_c.h +0x32c backlink (actor ID 0x1b).
@@ -30,6 +28,7 @@
  */
 
 #include "daObjKinokoTag_c.h"
+#include "SpawnInfo.h"
 #include "Model.h"
 #include "SharedFilePtr.h"
 
@@ -43,24 +42,6 @@ struct KinokoPositionWords {
 
 typedef char KinokoPositionWords_size_must_be_0xc[
     sizeof(KinokoPositionWords) == 0xc ? 1 : -1];
-
-/* Typed owner for the two 0x1c actor/process profile descriptors at
- * ov002:0x02108cb4 and 0x02108cd0. Field roles are recovered from
- * fBase_c/dActor_c consumers; exact original member spellings are not
- * preserved. */
-struct KinokoTagSpawnInfo {
-    daObjKinokoTag_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-
-typedef char KinokoTagSpawnInfo_size_must_be_0x1c[
-    sizeof(KinokoTagSpawnInfo) == 0x1c ? 1 : -1];
 
 extern "C" {
 extern SharedFilePtr data_ov002_0210da30;
@@ -79,7 +60,8 @@ extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG()
     return new daObjKinokoTag_c();
 }
 
-extern "C" KinokoTagSpawnInfo g_profile_KINOKO_TAG = {
+/* The actor profile at ov002:0x02108cb4. */
+extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_TAG = {
     daObjKinokoTag_c_classInit_KINOKO_TAG,
     0x0140,
     0x013e,
@@ -96,7 +78,8 @@ extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG()
     return new daObjKinokoTag_c();
 }
 
-extern "C" KinokoTagSpawnInfo g_profile_KINOKO_CREATE_TAG = {
+/* The actor profile at ov002:0x02108cd0. */
+extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_CREATE_TAG = {
     daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG,
     0x013f,
     0x013d,
@@ -127,8 +110,7 @@ s32 daObjKinokoTag_c::Behavior()
         if (!mSearchedForPile) {
             other = FindWithActorID(0x1b, 0);
             while (other != 0) {
-                if (Vec3_Dist((Vector3 *)&mPosX,
-                              (Vector3 *)&other->mPosX) < 0x96000) {
+                if (Vec3_Dist(&mPos, &other->mPos) < 0x96000) {
                     mHasLinkedPile = 1;
                     /* PILE / daObjPile_c.h +0x32c */
                     *(dActor_c **)((u8 *)other + 0x32c) = this;
@@ -200,9 +182,7 @@ void daObjKinokoTag_c::SpawnMegaMushroom()
             spawnPos.z = tagPos->z;
 
             LandingDustAt(*(Vector3 *)&spawnPos, true);
-            dActor_c *mushroom = Spawn(
-                0x115, 0xd, *(Vector3 *)&tag->mPosX,
-                0, mAreaId, -1);
+            dActor_c *mushroom = Spawn(0x115, 0xd, tag->mPos, 0, mAreaId, -1);
             mushroom->mVertSpeed = 0x28000;
 
             tag->KillAndTrackInDeathTable();

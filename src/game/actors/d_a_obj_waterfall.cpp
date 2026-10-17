@@ -25,6 +25,7 @@
  */
 
 #include "daObjWaterfall_c.h"
+#include "SpawnInfo.h"
 
 extern "C" s8 data_0209f2f8; /* LEVEL_ID */
 
@@ -61,23 +62,10 @@ extern "C" daObjWaterfall_c *daObjWaterfall_c_classInit()
     return new daObjWaterfall_c();
 }
 
-struct WaterfallSpawnInfo {
-    daObjWaterfall_c *(*classInit)();
-    s16 executePriority; /* +4: also WATERFALL registry id 0x00c5 = 197 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char WaterfallSpawnInfo_size_must_be_0x1c[
-    sizeof(WaterfallSpawnInfo) == 0x1c ? 1 : -1];
-
 // @symbol g_profile_WATERFALL
-extern "C" WaterfallSpawnInfo g_profile_WATERFALL = {
+extern "C" SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
     daObjWaterfall_c_classInit,
-    0x00c5,
+    0x00c5, /* WATERFALL registry id 197 */
     0x0015,
     0x00800003,
     0x00060000,

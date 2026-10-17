@@ -19,20 +19,26 @@
  * - func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
  *   mMeshCollider; dBgW.h has no setter.
  * - func_020393a4: Behavior pokes mMeshCollider with 0x100000 (no setter).
- * - Event::GetBit stays the scalar mangled ABI (Behavior).
  * - func_ov029_021126dc / 02112710 stay placeholder labels (Y-rot + pos
  *   into mClsnMat2 / mModel2.mat4x3). Not coined.
  * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles;
  *   data_ov029_0211304c the CLPS block stays unowned overlay data.
- * - Behavior case 1 keeps the unsigned short* increment pointer plus the
- *   raw 0x3a0 reload (`*p > 0x168` CSEs and size-DIFFs).
+ * - Behavior case 1 keeps the unsigned short* increment pointer
+ *   (`*p > 0x168` CSEs and size-DIFFs).
  * - S14: g_profile_WC_OBJ04 stays outside the licensed .text.
  * - common.h first via dBgActor_c.h (SetFile matrix argument).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wc_obj04_AssetId {
+    ASSET_WC_OBJ04_BMD = 0x06d1,
+    ASSET_WC_OBJ04_KCL = 0x06d2
+};
+
 #include "common.h"
 #include "daObjWc_Obj04_c.h"
 #include "SharedFilePtr.h"
+#include "Event.h"
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -54,7 +60,6 @@ struct WcObj04CollisionFilePtr : SharedFilePtr {
 extern "C" {
 void func_020393a4(void *p, int v);
 void func_020393d4(int *p, int v);
-int _ZN5Event6GetBitEj(unsigned int);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, KCL_File *file, Matrix4x3 *mat, int scale,
     short angY, CLPS_Block &clps);
@@ -120,7 +125,7 @@ int daObjWc_Obj04_c::Behavior()
 
     switch (mState) {
     case 0:
-        if (_ZN5Event6GetBitEj(mEventID) == 0)
+        if (Event::GetBit(mEventID) == 0)
             break;
 
         {
@@ -138,14 +143,13 @@ int daObjWc_Obj04_c::Behavior()
 
     case 1: {
         /* MATCH: `*p > 0x168` CSEs the timer load and size-DIFFs. The
-         * unsigned short* increment pointer plus the raw 0x3a0 reload are
-         * the cartridge form. */
-        unsigned short *p = (unsigned short *)((char *)&mStateTimer);
-        if (*(unsigned short *)(((char *)this) + 0x300 + 0xa0) > 0x168) {
-            mVisible = *(unsigned short *)(((char *)this) + 0x300 + 0xa0) & 1;
+         * increment goes through the pointer; the tests reload the field. */
+        unsigned short *p = &mStateTimer;
+        if (mStateTimer > 0x168) {
+            mVisible = mStateTimer & 1;
         }
         *p = *p + 1;
-        if (_ZN5Event6GetBitEj(mEventID) != 0)
+        if (Event::GetBit(mEventID) != 0)
             break;
         mMeshCollider.Disable();
         mState = 0;
@@ -228,5 +232,5 @@ extern "C" void func_ov029_021126dc(daObjWc_Obj04_c *c)
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj04.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj04ModelFilePtr data_ov029_0211432c(0x6d1);
-WcObj04CollisionFilePtr data_ov029_02114324(0x6d2);
+WcObj04ModelFilePtr data_ov029_0211432c(ASSET_WC_OBJ04_BMD);
+WcObj04CollisionFilePtr data_ov029_02114324(ASSET_WC_OBJ04_KCL);

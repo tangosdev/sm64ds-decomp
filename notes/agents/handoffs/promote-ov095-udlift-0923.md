@@ -28,7 +28,7 @@ This document describes this commit. The queue records its immutable output SHA.
   header), [ov095
   delinks.txt](../../../config/arm9/overlays/ov095/delinks.txt) and [symbols.txt](../../../config/arm9/overlays/ov095/symbols.txt), the new
   [manifest entry](../../../config/tu_manifest.d/ov095/daUdlift_c.json), the promoted
-  [src/actors/daUdlift_c.cpp](../../../src/actors/daUdlift_c.cpp), the three factory sources (comment and
+  [src/game/actors/d_a_udlift.cpp](../../../src/game/actors/d_a_udlift.cpp), the three factory sources (comment and
   `_ZTV` spelling only), `symbols/actor_renames.tsv` and its report (the
   class_rename rows), and these ledgers, which the integrator reconciles:
   `attribution.json`, `config/converted-baseline.json`,
@@ -47,7 +47,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - ROM observations: the RTTI record at [ov095](../../../config/arm9/overlays/ov095/symbols.txt) 0x021375b0 reads
   [__si_class_type_info+8, 0x021375bc, _ZTI10dBgActor_c]; 0x021375bc holds
   "10daUdlift_c"; the typeinfo word before the vtable address point 0x02137628
-  is 0x021375b0. [__sinit_daUdlift_c.cpp](../../../src/actors/daUdlift_c.cpp) fills the `.bss` state table at
+  is 0x021375b0. [__sinit_daUdlift_c.cpp](../../../src/game/actors/d_a_udlift.cpp) fills the `.bss` state table at
   0x02137910 with five pointer-to-member constants whose relocations resolve
   state 0..4 to 0x02136368, 0x02136298, 0x02136178, 0x02136090 and 0x02136104.
 ---
@@ -64,8 +64,8 @@ This document describes this commit. The queue records its immutable output SHA.
 - Compiler experiments (each re-verified 11/11 or measured to fail):
   both int-cast `(int)lift + 0x60` position updates became
   `lift->mPosY += lift->mVertSpeed` with no byte change; testing `actorID`
-  inline instead of through an int flag DIFFs in both [func_ov095_02136368](../../../config/tu_manifest.d/ov095/daUdlift_c.json)(current [_ZN10daUdlift_c9StateWaitEv](../../../src/actors/daUdlift_c.cpp)) and
-  [func_ov095_02136178](../../../config/tu_manifest.d/ov095/daUdlift_c.json)(current [_ZN10daUdlift_c13StateMoveDownEv](../../../src/actors/daUdlift_c.cpp)) (10/11 each), so the flags stay, each with a short note.
+  inline instead of through an int flag DIFFs in both [func_ov095_02136368](../../../config/tu_manifest.d/ov095/daUdlift_c.json)(current [_ZN10daUdlift_c9StateWaitEv](../../../src/game/actors/d_a_udlift.cpp)) and
+  [func_ov095_02136178](../../../config/tu_manifest.d/ov095/daUdlift_c.json)(current [_ZN10daUdlift_c13StateMoveDownEv](../../../src/game/actors/d_a_udlift.cpp)) (10/11 each), so the flags stay, each with a short note.
 
 ## Reconstruction dimensions
 
@@ -119,7 +119,7 @@ and this note were added after the byte and link gates ran.
   106/106 modules exact. `python tools/prepush_linkcheck.py --range
   eb8f46d46a..HEAD` exit 0: 657 consumers of the two changed headers, 2057
   checked, 2055 verified, 0 blocking. The 2 warnings are BLIND-2 on
-  `_ZN9dScDSMT_c8BehaviorEv` and BLIND-1 on [func_ov089_0213162c](../../../src/actors/daObjKey_c.cpp), both files
+  `_ZN9dScDSMT_c8BehaviorEv` and BLIND-1 on [func_ov089_0213162c](../../../src/game/actors/d_a_obj_key.cpp), both files
   this change does not touch.
 ---
 - `python tools/tubuild.py verify ov095/daUdlift_c`: 11/11 MATCH, objisolate
@@ -136,7 +136,7 @@ and this note were added after the byte and link gates ran.
   config symbols.txt: all resolve under their exact mangled spelling.
 ---
 - `python tools/tu_promote.py ov095/daUdlift_c --dry-run`, then applied: 11
-  functions consolidated to src/actors/daUdlift_c.cpp (the srcpath-expected
+  functions consolidated to src/game/actors/d_a_udlift.cpp (the srcpath-expected
   destination), 11 attribution overrides, 4 CONVERTED identities retained.
 ---
 - `python tools/tubuild.py linkcheck --baseline --module ov095 -j16 --clean`
@@ -161,7 +161,7 @@ and this note were added after the byte and link gates ran.
   It reported 4 disagreements that are re-keyed from the absorbed files, not
   new: the Earthquake arity 3, [data_ov095_021375a4](../../../config/arm9/overlays/ov095/symbols.txt)'s CLPS_Block type, and
   `func_020393c4` and `func_020393d4` param 2. The baseline keys for those
-  symbols moved in place to [src/actors/daUdlift_c.cpp](../../../src/actors/daUdlift_c.cpp). The 6 banked entries of
+  symbols moved in place to [src/game/actors/d_a_udlift.cpp](../../../src/game/actors/d_a_udlift.cpp). The 6 banked entries of
   the retired files that no longer disagree were dropped. After that it exits
   0 with no new disagreements, and the tree-wide run also exits 0. The
   baseline was not regenerated, re-sorted or union-merged.
@@ -197,7 +197,7 @@ plus this note on top of the input; history not rewritten.
   0x0213645c, 0x021364b0, 0x021364d8 and 0x021365d8 in
   `config/match_provenance.jsonl` (lines 451-456) and
   `config/match_attempts.jsonl` (lines 1842-1847) now carry the
-  `_ZN10daUdlift_c*` names and `srcPath` `src/actors/daUdlift_c.cpp`, the
+  `_ZN10daUdlift_c*` names and `srcPath` `src/game/actors/d_a_udlift.cpp`, the
   promoted TU (as the `tubuild promote` history-tracker note asks: retarget,
   do not delete). Only those two fields changed; key order, line endings and
   row order are preserved and every other field (including `note` and

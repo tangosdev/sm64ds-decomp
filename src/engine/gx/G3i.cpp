@@ -5,18 +5,15 @@
  * camera basis (right/up2/forward) and streams it to the position-matrix port,
  * PerspectiveW_ drives the division unit at 0x4000290 to build a perspective
  * projection and streams it to the projection port. Both are static (no this)
- * and both optionally mirror the matrix into a caller's Matrix4x3. The file is
- * written ROM-descending because mwccarm emits .text in reverse source order
- * under default deferred codegen. func_02055998 is the lowest address, so it
- * is last in this file.
- *
- * PerspectiveW_ keeps its literal-mangled `extern "C"` name and C body: the
- * six `Fix12<int>` by-value parameters in its mangled name are the by-value-
- * class ABI wall (the include/OAM.h note), and its ROM bytes are the C front
- * end's output, so it parses under `#pragma cplusplus off`.
+ * and both optionally mirror the matrix into a caller's Matrix4x3.
  */
+// leftovers: PerspectiveW_ keeps its literal-mangled extern "C" name and C
+// body with an int * matrix (the six by-value Fix12<int> params are the
+// include/OAM.h ABI wall; the ROM bytes are the C front end's output).
+// func_02055998 keeps its address name (no recovered name exists).
 #include "G3i.h"
 #include "math/Matrix.h"
+#include "nitro/fx/fx.h"
 
 extern "C" {
 void NormalizeVec3(Vector3 *v, Vector3 *out);
@@ -91,7 +88,7 @@ void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
     if (scaleW != 0x1000)
         q = q * scaleW / 0x1000;
     zz = (int)(((f + n) * q + 0x80000000LL) >> 32);
-    v = (int)(((s64)(n << 1) * f + 0x800) >> 12);
+    v = FX_MUL((n << 1), f);
     wz = (int)((q * v + 0x80000000LL) >> 32);
     if (flag) {
         *port = zz;
@@ -172,8 +169,8 @@ void G3i::LookAt_(const Vector3 *at, const Vector3 *up, const Vector3 *eye,
     mat->t.z = tz;
 }
 
-extern "C" {
-void func_02055998(int *m)
+// @symbol func_02055998
+extern "C" void func_02055998(int *m)
 {
     *(volatile int *)0x4000440 = 3;
     *(volatile int *)0x4000458 = m[0] << 4;
@@ -192,5 +189,4 @@ void func_02055998(int *m)
     *(volatile int *)0x4000458 = m[13];
     *(volatile int *)0x4000458 = m[14];
     *(volatile int *)0x4000458 = m[15];
-}
 }

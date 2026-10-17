@@ -1,62 +1,62 @@
 {
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x0211c600..0x0211d270, 16 function(s) -- the whole tools/tu_map.py unit: D1 and D0, the nine state and refresh bodies 0x0211c684..0x0211cdec, and the five methods. Below it src/actors/daTrs_c.cpp ends at 0x0211c600; above it the collision-callback pair at 0x0211d270 opens the factory unit, entry ov063/daTrsTrap_c_classInit.",
+    "contiguous linker run: 0x0211c600..0x0211d270, 16 function(s) -- the whole tools/tu_map.py unit: D1 and D0, the nine state and refresh bodies 0x0211c684..0x0211cdec, and the five methods. Below it src/game/actors/d_a_trs.cpp ends at 0x0211c600; above it the collision-callback pair at 0x0211d270 opens the factory unit, entry ov063/daTrsTrap_c_classInit.",
     "The four state bodies are reached through the dispatch records at ov063:0x0211e9ac..0x0211e9c4 (func_ov063_0211c7b0, 0211cc18, 0211cb54, 0211c89c); the refresh helpers are called from Behavior and InitResources; func_ov063_0211c770 from 0211cc18 and 0211c82c from 0211c7b0. Every body reads daTrsTrap_c fields.",
     "class label: daTrsTrap_c (ROM _ZTS at ov063 0x0211e9d8); _ZTV address point 0x0211ea88."
   ],
   "bss": [
     {
-      "symbol": "data_ov063_0211ee98",
+      "symbol": "gThMeryGoModelFile",
       "address": "0x0211ee98",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x6c1"
     },
     {
-      "symbol": "data_ov063_0211eea0",
+      "symbol": "gThKaidanCollisionFile",
       "address": "0x0211eea0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x6be"
     },
     {
-      "symbol": "data_ov063_0211eea8",
+      "symbol": "gThTrapModelFile",
       "address": "0x0211eea8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x6c3"
     },
     {
-      "symbol": "data_ov063_0211eeb0",
+      "symbol": "gThKaidanModelFile",
       "address": "0x0211eeb0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x6bd"
     },
     {
-      "symbol": "data_ov063_0211eeb8",
+      "symbol": "gThHondanaModelFile",
       "address": "0x0211eeb8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x6bb"
     },
     {
-      "symbol": "data_ov063_0211eec0",
+      "symbol": "gThHondanaCollisionFile",
       "address": "0x0211eec0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x6bc"
     },
     {
-      "symbol": "data_ov063_0211eec8",
+      "symbol": "gThMeryGoCollisionFile",
       "address": "0x0211eec8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x6c2"
     },
     {
-      "symbol": "data_ov063_0211eed0",
+      "symbol": "gThTrapCollisionFile",
       "address": "0x0211eed0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -357,7 +357,7 @@
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "production_mode": "intact-object",
-  "promoted_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp",
+  "promoted_source": "src/game/actors/d_a_trs_trap.cpp",
   "sections": [
     {
       "name": ".text",
@@ -385,7 +385,7 @@
       "end": "0x0211ef58"
     }
   ],
-  "source": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp",
+  "source": "src/game/actors/d_a_trs_trap.cpp",
   "status": "promoted",
   "verification": {
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
@@ -901,7 +901,7 @@
       "source": "0x211e514",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211eeb8",
+      "symbol": "gThHondanaModelFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211eeb8"
@@ -931,7 +931,7 @@
       "source": "0x211e524",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211eeb0",
+      "symbol": "gThKaidanModelFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211eeb0"
@@ -951,7 +951,7 @@
       "source": "0x211e530",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211ee98",
+      "symbol": "gThMeryGoModelFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211ee98"
@@ -971,7 +971,7 @@
       "source": "0x211e53c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211eea8",
+      "symbol": "gThTrapModelFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211eea8"
@@ -991,7 +991,7 @@
       "source": "0x211e548",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211eec0",
+      "symbol": "gThHondanaCollisionFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211eec0"
@@ -1021,7 +1021,7 @@
       "source": "0x211e558",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211eea0",
+      "symbol": "gThKaidanCollisionFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211eea0"
@@ -1041,7 +1041,7 @@
       "source": "0x211e564",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211eec8",
+      "symbol": "gThMeryGoCollisionFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211eec8"
@@ -1061,7 +1061,7 @@
       "source": "0x211e570",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211eed0",
+      "symbol": "gThTrapCollisionFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211eed0"
@@ -1179,62 +1179,62 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@729",
+      "from": "@728",
       "to": "@712",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@731",
+      "from": "@730",
       "to": "@714",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@732",
+      "from": "@731",
       "to": "@715",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@735",
+      "from": "@734",
       "to": "@718",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@736",
+      "from": "@735",
       "to": "@719",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@738",
+      "from": "@737",
       "to": "@721",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@740",
+      "from": "@739",
       "to": "@723",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@742",
+      "from": "@741",
       "to": "@725",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@744",
+      "from": "@743",
       "to": "@727",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@730",
+      "from": "@729",
       "to": "@990",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@733",
+      "from": "@732",
       "to": "@991",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@734",
+      "from": "@733",
       "to": "@992",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

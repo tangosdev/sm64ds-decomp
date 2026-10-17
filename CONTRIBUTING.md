@@ -7,6 +7,10 @@ byte-identical to the retail ROM under the pinned compiler. See
 [`AGENTS.md`](AGENTS.md) for what a change looks like and what the merge gate
 checks — this file is setup and ground rules.
 
+For source conventions and the local/CI style check, read the
+[canonical source-style guide](notes/source-style.md). It covers initialization,
+naming, casts, formatting, and documented matching exceptions.
+
 ## Get in touch
 
 - **Discord: `beansntoast`**, DM me. Best for claiming work, asking which

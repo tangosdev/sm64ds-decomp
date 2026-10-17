@@ -17,31 +17,31 @@
 #include "dScMgD3DBase_c.h"
 
 extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void *func_ov006_020ca604(void);
-extern "C" void func_ov006_020d1008(void);
-extern "C" void func_ov006_020eed64(void *object);
+extern "C" void *Trmp2Mario_Destruct(void);
+extern "C" void TrmpLine_Destroy(void);
+extern "C" void Jump2Popup_ElemDtor(void *object);
 struct Model;
-extern "C" int func_ov006_021227c8(char *object);
-extern "C" Model *func_ov006_02122c68(Model *model);
-extern "C" void func_ov006_02120938(void);
+extern "C" int Trmp2_DestructJumperModels(char *object);
+extern "C" Model *Trmp2Spinner_Destruct(Model *model);
+extern "C" void Trmp_Nothing(void);
 
 struct dScMgTrampoline2_c : dScMgD3DBase_c {
     typedef void (dScMgTrampoline2_c::*State)();
 
     virtual ~dScMgTrampoline2_c() {
-        __cxa_vec_cleanup(mArray6, 5, 0x24, (void *)func_ov006_02120938);
-        __cxa_vec_cleanup(mArray5, 0x14, 0x78, (void *)func_ov006_02122c68);
-        __cxa_vec_cleanup(mArray4, 0xa, 0x24, (void *)func_ov006_020eed64);
-        __cxa_vec_cleanup(mArray3, 0xa, 0x1d0, (void *)func_ov006_021227c8);
-        __cxa_vec_cleanup(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
-        __cxa_vec_cleanup(mArray1, 5, 0xdc, (void *)func_ov006_020ca604);
+        __cxa_vec_cleanup(mArray6, 5, 0x24, (void *)Trmp_Nothing);
+        __cxa_vec_cleanup(mArray5, 0x14, 0x78, (void *)Trmp2Spinner_Destruct);
+        __cxa_vec_cleanup(mArray4, 0xa, 0x24, (void *)Jump2Popup_ElemDtor);
+        __cxa_vec_cleanup(mArray3, 0xa, 0x1d0, (void *)Trmp2_DestructJumperModels);
+        __cxa_vec_cleanup(mArray2, 3, 0x32c, (void *)TrmpLine_Destroy);
+        __cxa_vec_cleanup(mArray1, 5, 0xdc, (void *)Trmp2Mario_Destruct);
     }
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
-    virtual int  OnAttacked2();                        /* slot 23 */
-    virtual int  OnKicked();                           /* slot 24 */
-    virtual int  OnPushed();                           /* slot 25 */
-    virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
+    virtual void StartRound(int arg);               /* slot 18 */
+    virtual int  CanEndState(int mode);              /* slot 19 */
+    virtual int  OnGraphCallback0();                        /* slot 23 */
+    virtual int  OnGraphCallback2();                           /* slot 24 */
+    virtual int  OnGraphCallback3();                           /* slot 25 */
+    virtual void PaintSquare(int cx, int cy, int colour, int size); /* slot 34 */
 
     /* State callbacks stored in mState, the same scheme dScMgTrampoline_c
        uses: eight-byte PMF records in .data, dispatched by Behavior every
@@ -65,16 +65,16 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     /* Raw eight-byte state PMF. Behavior calls through it. A typed
        global initializer emits a __sinit this ROM does not have. */
     u32 mState[2];            /* 0x5004 */
-    u8  mArray1[0x44c];       /* 0x500c -- 5 * 0xdc,    elem dtor func_ov006_020ca604 */
-    u8  mArray2[0x984];       /* 0x5458 -- 3 * 0x32c,   elem dtor func_ov006_020d1008 */
-    u8  mArray3[0x1220];      /* 0x5ddc -- 0xa * 0x1d0, elem dtor func_ov006_021227c8 */
-    u8  mArray4[0x168];       /* 0x6ffc -- 0xa * 0x24,  elem dtor func_ov006_020eed64 */
-    u8  mArray5[0x960];       /* 0x7164 -- 0x14 * 0x78, elem dtor func_ov006_02122c68 */
+    u8  mArray1[0x44c];       /* 0x500c -- 5 * 0xdc,    elem dtor Trmp2Mario_Destruct */
+    u8  mArray2[0x984];       /* 0x5458 -- 3 * 0x32c,   elem dtor TrmpLine_Destroy */
+    u8  mArray3[0x1220];      /* 0x5ddc -- 0xa * 0x1d0, elem dtor Trmp2_DestructJumperModels */
+    u8  mArray4[0x168];       /* 0x6ffc -- 0xa * 0x24,  elem dtor Jump2Popup_ElemDtor */
+    u8  mArray5[0x960];       /* 0x7164 -- 0x14 * 0x78, elem dtor Trmp2Spinner_Destruct */
     u32 mParticleID;          /* 0x7ac4 -- Particle::System unique ID */
     int mRamp;                /* 0x7ac8 -- fixed point; rests at 0x14000, eased
                                  toward 0x7000 as misses come in */
     u8  pad_7acc[0x4];        /* 0x7acc -- no matched read */
-    u8  mArray6[0xb4];        /* 0x7ad0 -- 5 * 0x24,    elem dtor func_ov006_02120938 */
+    u8  mArray6[0xb4];        /* 0x7ad0 -- 5 * 0x24,    elem dtor Trmp_Nothing */
     int mTimer;               /* 0x7b84 -- countdown between waves and states */
     int mPattern;             /* 0x7b88 -- scripted spawn-table index, toward 6 */
     int mDragSoundHandle;     /* 0x7b8c -- positional drag sound, fed back */
@@ -91,7 +91,7 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     u8  pad_7ba6[2];          /* 0x7ba6 */
     s16 mRoundOver;           /* 0x7ba8 -- Render skips the playfield once set */
     u8  mTouching;            /* 0x7baa */
-    u8  mTouchReleased;       /* 0x7bab -- OnAttacked2 consumes it */
+    u8  mTouchReleased;       /* 0x7bab -- OnGraphCallback0 consumes it */
 
     /* These definitions override existing base slots without adding fields.
        The production TU defines the non-inline virtuals and emits the vtable;

@@ -10,8 +10,8 @@ _ZN9daLuigi_c6RenderEv kind:function(arm,size=0x1b0) addr:0x02111358
 _ZN9daLuigi_c8BehaviorEv kind:function(arm,size=0x16c) addr:0x02111508
 _ZN9daLuigi_c13InitResourcesEv kind:function(arm,size=0x1ec) addr:0x02111674
 daLuigi_c_classInit kind:function(arm,size=0x74) addr:0x02111860
-__sinit_daLuigi_c.cpp kind:function(arm,size=0x3c) addr:0x021118d4
-.p__sinit_daLuigi_c.cpp kind:data(word) addr:0x02111910
+__sinit_d_a_luigi.cpp kind:function(arm,size=0x3c) addr:0x021118d4
+.p__sinit_d_a_luigi.cpp kind:data(word) addr:0x02111910
 data_ov055_02111920 kind:data(any) addr:0x02111920
 data_ov055_02111924 kind:data(any) addr:0x02111924
 data_ov055_02111928 kind:data(any) addr:0x02111928

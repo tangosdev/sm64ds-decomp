@@ -25,44 +25,36 @@ void func_020627e8(u8 *self, int flag)
     ctx = WM_GetSystemWork();
     saved = _ZN3IRQ7DisableEv();
     slot = H(0x408);
-    if (*(u16 *)(self + ((u32)slot << 8)) != 0)
-        goto early_exit;
+    if (*(u16 *)(self + ((u32)slot << 8)) == 0) {
+        _ZN4CP1519InvalidateDataCacheEjj(*(u32 *)(ctx + 4) + 0x86, 2);
 
-    _ZN4CP1519InvalidateDataCacheEjj(*(u32 *)(ctx + 4) + 0x86, 2);
+        prevSlot = H(0x408);
+        next = (u16)((prevSlot + 1) % 4);
+        mask = *(u16 *)(*(u32 *)(ctx + 4) + 0x86);
+        newSlot = (H(0x418) == 1) ? (u16)((next + 1) % 4) : next;
 
-    prevSlot = H(0x408);
-    next = (u16)((prevSlot + 1) % 4);
-    mask = *(u16 *)(*(u32 *)(ctx + 4) + 0x86);
-    newSlot = (H(0x418) == 1) ? (u16)((next + 1) % 4) : next;
+        zero = 0;
+        MultiStore16(zero, self + ((u32)newSlot << 8), 0x100);
 
-    zero = 0;
-    MultiStore16(zero, self + ((u32)newSlot << 8), 0x100);
+        *(u16 *)(self + ((u32)newSlot << 8)) = (u16)(H(0x40e) & (mask | 1));
+        H(0x408) = next;
+        *(u16 *)(self + ((u32)prevSlot << 8)) = H(0x40e);
+        if (flag == 1) {
+            *(u16 *)(self + ((u32)prevSlot << 8)) &= ~1;
+        }
 
-    *(u16 *)(self + ((u32)newSlot << 8)) = (u16)(H(0x40e) & (mask | 1));
-    H(0x408) = next;
-    *(u16 *)(self + ((u32)prevSlot << 8)) = H(0x40e);
-    if (flag == 1) {
-        *(u16 *)(self + ((u32)prevSlot << 8)) &= ~1;
+        _ZN3IRQ7RestoreEj(saved);
+
+        ret = func_020623ec((int)func_02062d10, (int)(self + ((u32)prevSlot << 8)), H(0x414),
+                            (u16)(H(0x40e) & mask), H(0x416), 1);
+
+        if (ret == 7) {
+            *(u16 *)(self + ((u32)prevSlot << 1) + 0x400) = 0xffff;
+            H(0x40a) = (u16)((H(0x40a) + 1) % 4);
+        } else if (ret != 0 && ret != 2) {
+            H(0x41c) = 3;
+        }
+    } else {
+        _ZN3IRQ7RestoreEj(saved);
     }
-
-    _ZN3IRQ7RestoreEj(saved);
-
-    ret = func_020623ec((int)func_02062d10, (int)(self + ((u32)prevSlot << 8)),
-                        H(0x414), (u16)(H(0x40e) & mask), H(0x416), 1);
-
-    if (ret == 7) {
-        *(u16 *)(self + ((u32)prevSlot << 1) + 0x400) = 0xffff;
-        H(0x40a) = (u16)((H(0x40a) + 1) % 4);
-        return;
-    }
-    if (ret == 0)
-        return;
-    if (ret != 2) {
-        H(0x41c) = 3;
-    }
-    return;
-
-early_exit:
-    _ZN3IRQ7RestoreEj(saved);
-    return;
 }

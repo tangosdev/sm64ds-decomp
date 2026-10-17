@@ -79,10 +79,12 @@ struct dScStage_c : dScene_c {
     void RenderModelTransparent();
 
     int GetSkyboxID();
+    /* Member, not static: Behavior hands it `this` in r0 (`mov r0,r4`) even
+       though the body never reads it. */
+    void CheckInput();
 
     /* --- static: reached with no object. The pause-screen and menu group all
            take their first declared argument in r0. --- */
-    static void CheckInput();
     static void LoadClsnAndObjects(LVL_Overlay &ovl, u32 param, dBgW_Kc &mc);
     static void RenderVsModeNewStar();
     static void RenderVsModeCountdown();
@@ -92,8 +94,7 @@ struct dScStage_c : dScene_c {
     static void LC_Render();
     static void LC_Update();
     static void CheckCameraInput();
-    /* PS_Init is deliberately NOT declared here; it uses its own local shadow
-       of dScStage_c instead. See notes/scene-provenance.md before wiring it up. */
+    static void PS_Init();
     static void PS_Render();
     static void PS_Cleanup();
     static void PS_UpdateSaveMenu(bool held);
@@ -107,6 +108,7 @@ struct dScStage_c : dScene_c {
     static void PS_Update();
     static int  IsPauseDisabled();
     static int  CanPause();
+    static void UpdateMessage();
     /* Trailing extent the ROM's `new dScStage_c` size literal proves; see
        tools/opnew_sizes.py. */
     u8  pad_9c0[0x4];

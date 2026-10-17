@@ -147,7 +147,7 @@ def test_bytes_matching_is_not_a_pass_when_a_relocation_points_elsewhere():
     in the folded trampoline-Mario TU."""
     if not _toolchain():
         return
-    rel = "src/actors/dMgTrmpln2Mario_c.cpp"
+    rel = "src/minigames/d_mg_trmpln2_mario.cpp"
     name, addr, size, label = "func_ov006_020cb030", 0x020cb030, 0x104, "ov006"
     ok, _ = BP.verify(REPO / rel, name, addr, size, label)
     assert ok, "precondition: this file's BYTES reproduce under the pinned compiler"
@@ -160,7 +160,7 @@ def test_bytes_matching_is_not_a_pass_when_a_relocation_points_elsewhere():
 def test_a_destination_check_that_could_not_run_is_not_a_pass():
     if not _toolchain():
         return
-    rel = "src/actors/dMgTrmpln2Mario_c.cpp"
+    rel = "src/minigames/d_mg_trmpln2_mario.cpp"
     args = ("func_ov006_020cb030", 0x020cb030, 0x104, "ov006")
     for strict in (_strict(None), _strict(exc=RuntimeError("index unavailable"))):
         ok, why = BP.verify(REPO / rel, *args, strict=strict)

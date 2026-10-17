@@ -263,11 +263,14 @@ def render(mods, out_path):
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SM64DS decomp progress treemap</title>
 <style>
   html, body {{ margin: 0; background: {PAGE_BG}; color: {TEXT};
     font-family: "Segoe UI", system-ui, sans-serif; }}
   .wrap {{ max-width: {CANVAS_W + 40}px; margin: 0 auto; padding: 20px; }}
+  nav {{ display: flex; gap: 20px; margin-bottom: 20px; font-size: 14px; }}
+  nav a {{ color: #91c5ff; }}
   h1 {{ font-size: 20px; font-weight: 600; margin: 0 0 4px; }}
   .stats {{ display: flex; gap: 28px; flex-wrap: wrap; margin: 10px 0 16px;
     font-size: 14px; color: {SUBTEXT}; }}
@@ -282,6 +285,7 @@ def render(mods, out_path):
 </head>
 <body>
 <div class="wrap">
+  <nav aria-label="Progress views"><strong aria-current="page">Function treemap</strong><a href="tu-treemap.html">TU treemap</a></nav>
   <h1>SM64DS decompilation progress</h1>
   <div class="stats">
     <div>Functions matched: <b>{total_done_n:,}</b> / {total_n:,}

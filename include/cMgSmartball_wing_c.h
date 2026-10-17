@@ -70,10 +70,10 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
     void RebuildVerts();
     int  HitTest(int *pos);
 
-    s32 unk_034;       /* 0x034 -- set to 0x14 on the first trigger and 0 on
+    s32 mTriggerTime;  /* 0x034 -- set to 0x14 on the first trigger and 0 on
                            every later one by Trigger; no reader */
-    s32 unk_038;       /* 0x038 -- zeroed by the same call; no reader */
-    u8  unk_03c;       /* 0x03c -- set to 1 by the same call; no reader */
+    s32 mTriggerPhase; /* 0x038 -- zeroed by the same call; no reader */
+    u8 mTriggerFlag;   /* 0x03c -- set to 1 by the same call; no reader */
     u8  pad_03d[0x3];  /* explicit: the compiler inserts this either way, but
                           an implicit gap is a gap nobody has looked at */
     s32 mTriggerCount; /* 0x040 -- how many times the piranha has fed this

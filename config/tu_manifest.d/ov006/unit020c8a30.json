@@ -1,16 +1,16 @@
 {
   "id": "ov006/unit020c8a30",
   "module": "ov006",
-  "source": "src/actors/unit020c8a30.cpp",
-  "promoted_source": "src/actors/unit020c8a30.cpp",
+  "source": "src/minigames/unit020c8a30.cpp",
+  "promoted_source": "src/minigames/unit020c8a30.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "WHOLE UNIT. build/tu_map.json ov006 calls 0x020c8a30..0x020c8dd4 one contiguous linker run of 10 functions with no class label; the 10 symbols.txt sizes (0x34, 0x38, 0x58, 0xb4, 0xc4, 0xc, 0x130, 0x24, 0x4, 0x4) sum to exactly 0x3a4 = 0x020c8dd4 - 0x020c8a30 and each starts where the previous ends, so there is no hole and no segment choice.",
-    "LOWER EDGE: the promoted dMgJump3DMario_c unit ends at 0x020c8a30 (its last function, _ZN16dMgJump3DMario_cC1Ev, ends exactly there). UPPER EDGE: the unpromoted Player/dMgTrmpln2Mario_c/dMgTrmpln3DMario_c unit starts at 0x020c8dd4 with func_ov006_020c8dd4. Neither edge has a gap.",
-    "WHAT IT IS: one static array of three 0x20-byte records at data_ov006_021404d8 and its helpers. The module's static initialiser (__sinit at 0x0212f660, relocs 0x0212f6a0..0x0212f6ac) calls __cxa_vec_ctor(&data_ov006_021404d8, 3, 0x20, func_ov006_020c8dd0, func_ov006_020c8dcc) and registers func_ov006_020c8da8, which calls __cxa_vec_cleanup with the same dtor, so 0x020c8dd0 is the record constructor, 0x020c8dcc its destructor and 0x020c8da8 the array destructor; all three are inside the run. The other seven functions are the pool's draw/update/reset/claim operations; their only data are data_ov006_021404c4..021404f6 and data_ov006_02140518 (the last record, 0x021404d8 + 0x40).",
+    "LOWER EDGE: the promoted dMgJump3DMario_c unit ends at 0x020c8a30 (its last function, _ZN16dMgJump3DMario_cC1Ev, ends exactly there). UPPER EDGE: the unpromoted Player/dMgTrmpln2Mario_c/dMgTrmpln3DMario_c unit starts at 0x020c8dd4 with Trmp2Mario_GetVelocity. Neither edge has a gap.",
+    "WHAT IT IS: one static array of three 0x20-byte records at sPuffs and its helpers. The module's static initialiser (__sinit at 0x0212f660, relocs 0x0212f6a0..0x0212f6ac) calls __cxa_vec_ctor(&sPuffs, 3, 0x20, Puff_Nothing, Puff_ElemDtor) and registers Puff_CleanupAll, which calls __cxa_vec_cleanup with the same dtor, so 0x020c8dd0 is the record constructor, 0x020c8dcc its destructor and 0x020c8da8 the array destructor; all three are inside the run. The other seven functions are the pool's draw/update/reset/claim operations; their only data are sPuffNextIndex..021404f6 and sPuffPoolLast (the last record, 0x021404d8 + 0x40).",
     "NO CLASS NAME. The ROM carries no RTTI string or vtable for the record type (build/rtti.json has no entry in this range and the record type has no virtuals), and no source or note names it, so the unit keeps the unit<addr> name rather than an invented class name.",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide). The one sinit that touches this run's bss statics is __sinit_ov006_0212f660 (data_ov006_021404d8, data_ov006_021404cc); it stays its own file, so this TU stays text-only."
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide). The one sinit that touches this run's bss statics is __sinit_ov006_0212f660 (sPuffs, data_ov006_021404cc); it stays its own file, so this TU stays text-only."
   ],
   "sections": [
     {
@@ -21,70 +21,70 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov006_020c8a30",
+      "symbol": "Puff_DrawAll",
       "address": "0x020c8a30",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c8a30.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov006_020c8a64",
+      "symbol": "Puff_UpdateAll",
       "address": "0x020c8a64",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c8a64.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_020c8a9c",
+      "symbol": "Puff_ClearAll",
       "address": "0x020c8a9c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020c8a9c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020c8af4",
+      "symbol": "Puff_Draw",
       "address": "0x020c8af4",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov006_020c8af4.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020c8ba8",
+      "symbol": "Puff_Update",
       "address": "0x020c8ba8",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020c8ba8.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020c8c6c",
+      "symbol": "Puff_Clear",
       "address": "0x020c8c6c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020c8c6c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020c8c78",
+      "symbol": "Puff_Spawn",
       "address": "0x020c8c78",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_020c8c78.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020c8da8",
+      "symbol": "Puff_CleanupAll",
       "address": "0x020c8da8",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020c8da8.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020c8dcc",
+      "symbol": "Puff_ElemDtor",
       "address": "0x020c8dcc",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c8dcc.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020c8dd0",
+      "symbol": "Puff_Nothing",
       "address": "0x020c8dd0",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c8dd0.c",
@@ -94,7 +94,7 @@
   "data": [],
   "bss": [],
   "notes": [
-    "Text-only fold of ten one-function shards (func_ov006_020c8a30 .. func_ov006_020c8dd0). Callers by relocation: the shards at 0x020c70d0..0x020c7278 (draw/update/reset), dScMgJump_c, dScMgJump2_c, dScMgTrampoline_c and dScMgTrampoline2_c (reset), dMgJump3DMario_c (claim, 0x020c7930) and the unit at 0x020c8dd4 (claim, 0x020c9f28 and later)."
+    "Text-only fold of ten one-function shards (Puff_DrawAll .. Puff_Nothing). Callers by relocation: the shards at 0x020c70d0..0x020c7278 (draw/update/reset), dScMgJump_c, dScMgJump2_c, dScMgTrampoline_c and dScMgTrampoline2_c (reset), dMgJump3DMario_c (claim, 0x020c7930) and the unit at 0x020c8dd4 (claim, 0x020c9f28 and later)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

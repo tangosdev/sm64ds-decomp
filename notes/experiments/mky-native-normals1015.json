@@ -1,0 +1,743 @@
+{
+  "schema": 1,
+  "task": "mky-native-normals1015",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2410",
+  "candidate": "This commit; immutable output is recorded by the coordination queue.",
+  "status": "Producer-verified candidate; independent Source and byte acceptance is the next stage.",
+  "source_checkpoint": "2714e353a628edc9d11469425c606f6d29d23598",
+  "registered_input_commit": "4137ccfae3598f603c0f655dc07666f55a10b227",
+  "base_commit": "9b563defa143c1c93811564e2e81c00c4a7c1f29",
+  "tooling_workflow_commit": "4137ccfae3598f603c0f655dc07666f55a10b227",
+  "source_review_policy_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "producer_session": "codex-mky-native-normals-root1015",
+  "upstream_composition": {
+    "explanation": "After registration and claim, upstream Chomp PR3862 was externally merged. Before any Monkey Source edit, this clean producer tree fast-forwarded to actual main9b. Every registered required input blob is unchanged4137 versus9b. The original task input remains4137, an ancestor of this output; actual Source, proof and independent review base is9b.",
+    "registered_required_inputs_unchanged": {
+      "src/game/actors/d_a_mky.cpp": true,
+      "config/tu_manifest.d/ov030/daMky_c.json": true,
+      "include/daMky_c.h": true,
+      "include/dBgCh_Actr.h": true,
+      "include/dBgCh_SphCrr.h": true,
+      "include/dBgPi.h": true,
+      "include/dBgPc.h": true,
+      "include/SurfaceInfo.h": true,
+      "include/types.h": true,
+      "config/arm9/overlays/ov030/delinks.txt": true,
+      "config/arm9/overlays/ov030/symbols.txt": true,
+      "notes/agents/handoffs/issue-2410-daMky_c.md": true,
+      "tools/rombuild.py": true,
+      "tools/linkcheck.py": true,
+      "tools/build_pin.py": true,
+      "tools/tubuild.py": true
+    },
+    "proof_header_qualification": "Ordinary-object proof was run with the final edited Source and manifest while HEAD was still9b. Its source/manifest hashes exactly equal committed2714; its head field records the precommit worktree parent, not the candidate. Postcommit prepush ran at2714 and checked46 functions."
+  },
+  "changes": [
+    "Use two actual existing Vector3 local objects and the native const floor/wall result getters in the296-byte collision-normal helper.",
+    "Access the actual borrowed dBgPi/dBgPc.surface member instead of manufacturing a SurfaceInfo view at result+4.",
+    "Remove three shadow/redundant typedefs, two POD-reference casts and two now-unused duplicate getter imports.",
+    "Update only the measured Bundle compiler-local input name and stale active-range prose in the existing manifest."
+  ],
+  "scope": {
+    "source": "src/game/actors/d_a_mky.cpp",
+    "manifest": "config/tu_manifest.d/ov030/daMky_c.json",
+    "target_symbol": "_ZN7daMky_c19func_ov030_02111f6cEP10dBgCh_Actr",
+    "target_module": "ov030",
+    "target_address": "0x02111f6c",
+    "target_size": 296,
+    "source_physical_sha256": "fb422ab4ed2dfbbd6e884fec59dd02be30c0473be534b003bb4ebd35eea18006",
+    "source_git_lf_sha256": "8d9dad737975fbffc2b7abadfdf538a55529c03b443a9949798991f4d556d3a6",
+    "manifest_physical_sha256": "2a1d8d36d8edfb9cb48489f0aeb584777a6c1f1ec81d3f4f70fd91543a3a09d7",
+    "manifest_git_lf_sha256": "c1834037f281627edebd0da699596ef36f786f159b92632b221481352508e52f",
+    "shared_headers_changed": false,
+    "production_enrollment_changed": false,
+    "actual_source_measurement": {
+      "module": "ov030",
+      "start": "0x2111688",
+      "end": "0x2114690",
+      "absorbed": [
+        "daMky_c_classInit_MONKEY_STAR",
+        "daMky_c_classInit_MONKEY_THIEF"
+      ],
+      "run_functions": 46,
+      "src_files": 1,
+      "total_lines": 1776,
+      "unmatched": 0,
+      "no_legacy_source": 0,
+      "sourceless": [],
+      "not_in_delinks": 0,
+      "orphans": [],
+      "pragma_files": 1,
+      "all_promoted": true
+    },
+    "measurement_qualification": "The raw promotion TSV still says3 files/2381 lines. Actual supported Tree.measure returns one promoted1776-line Source covering46 functions with no incomplete claim, sourceless function or orphan. No global bookkeeping rewrite was made.",
+    "attribution": "All original address-keyed function authors and prior accepted source credits remain untouched; no function rename or file move."
+  },
+  "object_lifetime_and_interface_evidence": {
+    "normal_objects": "Vector3 n and wn have genuine lifetimes and existing canonical destructor callbacks. CopyNormalTo writes all three coordinates before any read. The wall normal-copy call is preserved even though the value is unused.",
+    "borrowed_polygon": "dBgCh_Actr const floor/wall getters at0203566c/0203565c return borrowed result pointers. The existing SphCrr getter implementations at02037938/020378dc return actual mClsnResult1/mClsnResult2 dBgPi objects. dBgPi has the real dBgPc base at+4 containing surface. No dBgPi is constructed or copied by this helper.",
+    "copy_normal": "SurfaceInfo::CopyNormalTo(Vector3&) const at02037dcc writes12 bytes.",
+    "receiver_and_control_flow": "Preserve the update of this->mWithMeshClsn, query the passed w, preserve ground then wall guards/getter/copy ordering, update veneer selection and all signed multiplication/division.",
+    "remaining_boundary": "The existing getter API still returns void*. A localized cast to its actual borrowed polygon object remains; no shared API or speculative type is introduced.",
+    "original_spelling": "Existing type/member interfaces are ROM-supported reconstruction. This does not claim unique original local names or original source spelling."
+  },
+  "whole_object_proof": {
+    "compiler": "2004/b56 with unchanged production build_pin.flags_for(source). No ASM, volatile, new pragma, artificial effect, optimization change or policy expansion.",
+    "baseline_raw_sha256": "5fd7555fdb4b024b0ab027b4ef9fb46b2e33a24fa97515c25bc1e072d44ba944",
+    "candidate_raw_sha256": "3853d90543142b141bde37f9211bdb966b4eba3b64a92c9ce4e1e08c336495d7",
+    "baseline_prepared_sha256": "ee5b980440664b828c4132b616ec9133b049df76f86a227f1bbd1e3a8855bbc4",
+    "candidate_prepared_sha256": "790c791ac62876afa7974786eccad4ee770056266ed140abe3a181a89e4463aa",
+    "complete_comparison": {
+      "raw_complete_equal_after_one_name_correspondence": true,
+      "prepared_complete_equal_after_one_name_correspondence": true,
+      "owned_bodies_and_typed_edges_equal": true,
+      "complete_metadata_bodies_and_edges_equal": true,
+      "canonical_callbacks_equal": true,
+      "strict_equal": true
+    },
+    "name_correspondence": {
+      "complete_raw_equal_after_one_exact_local_name_correspondence": true,
+      "old_name_occurrences": 1,
+      "new_name_occurrences": 1,
+      "helper_body_equal": true,
+      "helper_edges_equal": true,
+      "helper_symbol_attributes_equal": true,
+      "baseline": {
+        "name": "_ZN7daMky_c21Bundle$902d_a_mky_cppD1Ev",
+        "entry": {
+          "st_name": 2083,
+          "st_value": 0,
+          "st_size": 4,
+          "st_info": {
+            "bind": "STB_LOPROC",
+            "type": "STT_FUNC"
+          },
+          "st_other": {
+            "local": 0,
+            "visibility": "STV_DEFAULT"
+          },
+          "st_shndx": 33
+        },
+        "body": "1eff2fe1",
+        "typed_edges": []
+      },
+      "candidate": {
+        "name": "_ZN7daMky_c21Bundle$903d_a_mky_cppD1Ev",
+        "entry": {
+          "st_name": 2083,
+          "st_value": 0,
+          "st_size": 4,
+          "st_info": {
+            "bind": "STB_LOPROC",
+            "type": "STT_FUNC"
+          },
+          "st_other": {
+            "local": 0,
+            "visibility": "STV_DEFAULT"
+          },
+          "st_shndx": 33
+        },
+        "body": "1eff2fe1",
+        "typed_edges": []
+      }
+    },
+    "qualification": "Unmodified raw/prepared object hashes differ. Equality is after exactly one measured compiler-local Bundle902/903 name correspondence, not blanket renaming or a new canonical function alias.",
+    "owned_code_checks": 46,
+    "canonical_Vector3_D1_callback_checks": 1,
+    "metadata_objects": 9,
+    "metadata_bytes": 213,
+    "metadata": [
+      {
+        "symbol": "_ZTV7daMky_c",
+        "module": "ov030",
+        "address": "0x2115bf4",
+        "size": 132
+      },
+      {
+        "symbol": "_ZTI7daMky_c",
+        "module": "ov030",
+        "address": "0x2115b84",
+        "size": 12
+      },
+      {
+        "symbol": "_ZTS7daMky_c",
+        "module": "ov030",
+        "address": "0x2115b78",
+        "size": 9
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "address": "0x208e390",
+        "size": 12
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "address": "0x208e384",
+        "size": 10
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e78",
+        "size": 12
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e54",
+        "size": 9
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "address": "0x2086d70",
+        "size": 8
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "address": "0x2086e60",
+        "size": 9
+      }
+    ],
+    "metadata_extent": "Complete emitted objects, including full132-byte Mky vtable storage with its8-byte ABI preamble.",
+    "homeless_helpers": [
+      {
+        "symbol": "_ZN7daMky_cD2Ev",
+        "size": 72
+      },
+      {
+        "symbol": "_ZN7daMky_c21Bundle$903d_a_mky_cppD1Ev",
+        "size": 4
+      }
+    ],
+    "helper_qualification": "D2 and BundleD1 remain covered by the existing production derive_deadstrip/reachability policy and preserved full bodies/attributes/incoming typed edges. Homeless helper checks are not counted as ROM-matched functions.",
+    "ownership": "This TU owns text only. It owns no initialization, ctor-array, data or BSS range; none is invented or counted here.",
+    "proof": {
+      "path": "build/mky-native-normals1015/native/proof.json",
+      "sha256": "2f6f0cb3cfead04b3a622a255d39eb1c1bc09b62d5aec76ad3c91ca321957bb1"
+    },
+    "baseline_proof": {
+      "path": "build/mky-native-normals1015/baseline/proof.json",
+      "sha256": "b99988f117bd93ef200157cda746a9e0602b0a5f0949e794d988052cdfa34632"
+    },
+    "comparison": {
+      "path": "build/mky-native-normals1015/native/complete-comparison.json",
+      "sha256": "1f400711d31996e931e8012ce8ec4583c4743c215518a2bcb7b03dce72f492ff"
+    },
+    "correspondence": {
+      "path": "build/mky-native-normals1015/native/Bundle-name-correspondence.json",
+      "sha256": "813d6d226c3f34c8bc1bce69a80a7fed9310b670aad73bcb11cf9daa2164bb9e"
+    },
+    "raw_relocation_records": 432,
+    "prepared_relocation_records": 383
+  },
+  "gates": {
+    "production_rombuild": {
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 672.828209400177,
+      "exact_modules": 106,
+      "source_functions_reproducing": 11334,
+      "source_mismatches": 0,
+      "log": {
+        "path": "build/mky-native-normals1015/native/rombuild.log",
+        "sha256": "0325e31dbbec1a0c3f6e5b4e1b2304f8392cae30fe267b5bf3d3bb6f2a5232e2"
+      },
+      "limits": "Baseline-control dsd symbol scan retains9 known missing-symbol diagnostics; production intact-TU gates report modules PASS and zero new symbol errors. The separate global ROM-data summary retains1 pre-existing differing symbol and partial/unnamed records; this is not a claim that all repository data is reconstructed."
+    },
+    "committed_source_relocations": {
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "9b563defa143c1c93811564e2e81c00c4a7c1f29..HEAD"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 229.18800000002375,
+      "head": "2714e353a628edc9d11469425c606f6d29d23598",
+      "log": "prepush-final.log",
+      "log_sha256": "b4da91bdd8212de6d0e0fff869b91e408299d87e5bf3c752d7e6c0e1e3d3f473",
+      "checked": 46,
+      "verified": 46,
+      "warnings": 0,
+      "blocking": 0
+    },
+    "earlier_range_checks": {
+      "superseded_attempts": [
+        "static-5.log",
+        "static-6.log",
+        "prepush-committed.log",
+        "prepush-committed-result.json"
+      ],
+      "qualification": "These range checks ran with HEAD equal to the base, before the Source commit completed. Their exit zero and zero checked functions are not Source coverage. The prepush-committed result incorrectly called itself the committed-source run; this qualification supersedes that label while preserving the original artifact.",
+      "actual_source_checkpoint": "2714e353a628edc9d11469425c606f6d29d23598"
+    },
+    "static_working_tree_checks": [
+      {
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "9b563defa143c1c93811564e2e81c00c4a7c1f29"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 13.867704629898071,
+        "log": "static-0.log"
+      },
+      {
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 4.306802988052368,
+        "log": "static-1.log"
+      },
+      {
+        "command": [
+          "python",
+          "tools/check_dead_references.py"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 29.83303165435791,
+        "log": "static-2.log"
+      },
+      {
+        "command": [
+          "python",
+          "tools/check_rename_ledger.py"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 1.3886733055114746,
+        "log": "static-3.log"
+      },
+      {
+        "command": [
+          "python",
+          "tools/check_duplicate_sources.py"
+        ],
+        "exit": 0,
+        "elapsed_seconds": 0.4237251281738281,
+        "log": "static-4.log"
+      }
+    ],
+    "declaration_qualification": "The scoped declaration parser reports44 defined symbols,1700 files in scope and6429 banked disagreements, with no new disagreement or header-declaration copy; independent object proof covers all46 owned functions. The parser reports17 pre-existing unparsed declarators globally.",
+    "whitespace": {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "9b563defa143c1c93811564e2e81c00c4a7c1f29..HEAD"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.045999999972991645,
+      "head": "2714e353a628edc9d11469425c606f6d29d23598",
+      "log": "whitespace-final.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "language_mode": {
+      "command": [
+        "python",
+        "tools/langmode_audit.py",
+        "--check",
+        "C:\\tmp\\sm64ds-mky-native-normals1015\\build\\mky-native-normals1015\\native\\langmode-baseline.json"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 13.812999999965541,
+      "head": "2714e353a628edc9d11469425c606f6d29d23598",
+      "log": "langmode-final.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+    },
+    "baseline_qualification": "Language ratchet uses the existing origin/chaos-data baseline saved only under ignored build/. No baseline is regenerated or banked by this PR."
+  },
+  "assistance": [
+    {
+      "agent": "scene_producer_recovery",
+      "role": "Read-only six-actor scout and positive actual-Source preflight; no Monkey Source authorship or producer compilation. Formal exact-output verification is a separate next stage."
+    }
+  ],
+  "predecessor_tasks": [
+    "issue-2410",
+    "issue-2411-humanizer-2",
+    "pr2864-identity-promotion-0920",
+    "pr2878-contract-repair-0920",
+    "native-destructor-repair-0922",
+    "asset-readability1014"
+  ],
+  "inherited_producer_sessions": [
+    "accepted-main-0922",
+    "andrewboudreau",
+    "andrewboudreau-pr2878",
+    "codex-asset-readability1014",
+    "codex-humanizer-oneup-20260907-01",
+    "codex-integrator-0920",
+    "codex-koopa-identity-producer-0920",
+    "codex-native-destructor-producer-0922",
+    "codex-native-destructor-proposal-0921",
+    "codex-receiver-publication-0925",
+    "codex-repair-koopa2864-0920",
+    "fleet-0907-prod-oneup-0908",
+    "fleet-0907-prod-oneup-0909",
+    "fleet-0907-prod-oneup-0909b",
+    "prod-2410-0907"
+  ],
+  "lineage_qualification": "All32 accepted inherited finding dictionaries are preserved verbatim. Accepted later fixed Oneup/Koopa/native-destructor epochs remain distinct from raw earlier open history; cancelled context-only tasks are not acceptance.",
+  "source_review_findings_for_handoff": [
+    {
+      "disposition": "fixed",
+      "id": "onturnintoegg-src-tu-redeclaration",
+      "kind": "correctness",
+      "location": "src_tu/actors/Actor.cpp:1140, src_tu/actors/Koopa+KoopaSmall.cpp:347, src_tu/actors/Lakitu.cpp:88, src_tu/actors/Spiny.cpp:88",
+      "reason": "Fixed, re-measured at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried forward. All four definitions read void <Class>::OnTurnIntoEgg(Player &player) at the exact cited lines, and the declarations in include/dActor_c.h:144, include/Koopa.h:67, include/Lakitu.h:64 and include/Spiny.h:57 all read virtual void. Independently, python tools/check_src_tu_compiles.py exits 0 with 170/170 translation units compiling, which is the same whole-tree compile that originally falsified the claim; a surviving int-versus-void redeclaration could not compile.",
+      "summary": "A header contract change made OnTurnIntoEgg(Player&) return void while four byte-verified promoted translation units still defined it as int, so the compiler rejected them as redeclarations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "handoff-matching-headers-claim-false",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md:58-69",
+      "reason": "Fixed and re-read at the candidate. The section now names the old wording as wrong, states that a whole-tree compile falsified it, explains the mechanism (the header moved a shared contract but touched no file under src_tu/), and records the falsifying measurement with both sides. I checked the four file-and-line citations it gives and every one resolves to the void definition it claims, so the retraction is accurate and not merely softened wording.",
+      "summary": "An earlier revision claimed the overrides returned void with matching headers; a whole-tree compile falsified it."
+    },
+    {
+      "disposition": "deferred",
+      "id": "da1up-reconstruction-debt-disclosed",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2505",
+      "kind": "reconstruction",
+      "location": "src/actors/da1up_c.cpp",
+      "owner": "fleet-0907-prod-oneup-0908",
+      "reason": "Still correctly deferred, and the disclosure re-read at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried on trust. The candidate handoff still carries both halves of the disclosure: it states the work is a source-consistent, byte-proved reconstruction and not recovery of an original type spelling, and it still enumerates the outstanding debt (27 free-function bodies, the opaque PMF holder, the local ModelCache view, raw offsets and other ABI parameter views) as remaining reconstruction work. This repair commit changed only a TSV and a markdown file and did not touch src/actors/da1up_c.cpp, so the debt is unchanged and remains tracked by issue 2505.",
+      "summary": "The promoted da1up_c translation unit is byte-proved but is a reconstruction rather than recovered original source: members keep address-derived func_ov002_* spellings, unk_<offset> members stand in for unrecovered field names, and parameters are carried through opaque ABI views, so member-ness and vtable index are proven while original names and types are not."
+    },
+    {
+      "disposition": "fixed",
+      "id": "dead-references-koopa-plus-truncation",
+      "kind": "correctness",
+      "location": "config/dead-reference-baseline.json, notes/agents/handoffs/issue-2411-humanizer-2.md:68",
+      "reason": "Fixed and reproduced. python tools/check_dead_references.py at the candidate exits 0, reporting no new dead references and no broken markdown links. The repair is a single banked baseline entry pairing the handoff with the truncated stem, with no change to tools/: I diffed tools/ between the branch merge base and the candidate and it is empty, so the scanner itself was not weakened. The underlying citation is real, not papered over: src_tu/actors/Koopa+KoopaSmall.cpp:347 is still present at handoff line 68, git ls-tree shows the file in the candidate tree, and line 347 of it is the definition void Koopa::OnTurnIntoEgg(Player &player).",
+      "summary": "PATH_RE in tools/check_dead_references.py excludes the plus character, so the citation of the Koopa translation unit truncated to a stem that does not exist and the gate went to exit 1 on this branch while exit 0 on main."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-rows-stale-from-branch-edits",
+      "kind": "correctness",
+      "location": "notes/data/tu-promotion-queue.tsv, rows Crate / Coin / daGmch_c",
+      "reason": "Fixed, and re-derived rather than accepted. The TSV diff for this commit changes exactly five total_lines cells and nothing else: Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120, ChiefChilly 1992 to 1993, Player 26798 to 26799. I re-derived the three branch-caused ones from the tree by counting lines of each file at both commits: src/_ZN5Crate13OnTurnIntoEggER6Player.cpp 42 to 38 (-4), src/_ZN4Coin13OnTurnIntoEggER6Player.cpp 24 to 23 (-1), src/actors/daGmch_c.cpp 1119 to 1120 (+1); each file delta equals its row delta exactly. At the candidate python tools/queue_audit.py prints that the queue agrees with the tree and --check exits 0 with zero rows disagreeing. Verified the fix is confined: the diff for this commit touches only the TSV and the handoff, and is empty over tools/, config/, src/, src_tu/, include/ and symbols/actor_renames.tsv.",
+      "summary": "Three tu-promotion-queue rows disagreed with the tree because this branch changed the line counts of the files they measure, and the rows were not refreshed."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-audit-residue-miscited-as-preexisting",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, the queue-rows bullet",
+      "reason": "Fixed as a retraction, not a rewording. The retracted sentence about the rows not being this branch to move no longer greps anywhere in the tree. The replacement explicitly says the earlier revision was wrong for three of the five, separates the true premise (the stated cells are unchanged from main) from the false conclusion, and states the rows were stale precisely because this branch edits moved the files they measure and are now refreshed. I reproduced its two load-bearing numbers independently: at base bdcb1df7d3d071ab46d79e6538fec176efa78780 exactly 2 rows disagree and at the candidate the fix leaves 0, and by running --write at a restored base control I confirmed the two are exactly ChiefChilly and Player. I also confirmed the pre-existing attribution to main 9b8cb8add by measurement: that commit moved src/_ZN11ChiefChillyD1Ev.cpp from 22 to 23 lines and src/_ZN6PlayerD1Ev.cpp from 35 to 36, the +1 seen in each row. One imprecision remains and is disclosed rather than passed over: the bullet attributes that staleness to edits to include/ChiefChilly.h and include/Player.h, whereas total_lines is summed over src/ files only, so the cells actually moved on the two D1Ev.cpp sources; 9b8cb8add did edit both the headers and those sources, so the statement is true as written and the commit attribution and direction of responsibility are correct, but the named mechanism is the wrong half of the commit. The merge-ordering correction in the same section is factually right: git log shows 587f156e3 has parents 6bf546d78 and c52f63ca5 and it is the oldest of the repair branch own commits, so the merge did precede every repair.",
+      "summary": "The handoff reported all five remaining disagreeing rows as inherited from main and therefore not this branch to move; measured at main only two of the five disagree there, and the other three were this branch own doing."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:428,433; include/Koopa.h; include/ModelAnim.h",
+      "reason": "Named actor u16 mWalkState and mInvincibleTimer replace out-of-bounds ModelAnim-relative accesses. Header has measured ownership; source byte proof remains exact. Candidate header/handoff accurately describe ModelAnim and actor ownership; integrator must publish the matching revised PR body when updating the branch.",
+      "summary": "The new ModelAnim-relative writes point outside the 0x64-byte member."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-02",
+      "kind": "correctness",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:165-170,1102,1119,1401",
+      "reason": "Truthful helper contracts and void transition result are retained; original redundant/fake declarations disappear with retired shards. External death/unload dependency reconciliation is explicit, with current changed-scope declarations passing.",
+      "summary": "Namespace aliases hide contradictory call contracts for the same C symbol."
+    },
+    {
+      "disposition": "deferred",
+      "id": "KP2864-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2871",
+      "kind": "reconstruction",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:120-126,591 and the 27 free helpers",
+      "owner": "codex-integrator-0920",
+      "reason": "Real ModelAnim rendering and ordinary factories/destructor/member Release calls are present.27 free helpers, raw field/PMF/volatile/copy forms and bounded scalar ABI bridges remain partial reconstruction; no general compiler impossibility is asserted.",
+      "summary": "The TU still contains fabricated virtual dispatch and substantial shadow scaffolding."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-04",
+      "kind": "correctness",
+      "location": "config/tu_manifest.d/ov062/Koopa+KoopaSmall.json:verification",
+      "original_kind": "promotion",
+      "reason": "Fresh complete-object policy/order audit has no unlicensed outputs or policy failures, D1 precedes D0, and all39 strict functions/all11 complete metadata bodies verify. Normal text-only production control links the exact compiler-sourced span and whole ROM. The specialized intact-mode refusal is retained honestly, not labeled a pass.",
+      "schema_mapping_reason": "Schema1 has no promotion kind; retain original kind/history and map the fixed hard output/order/link blocker to correctness, never deferred reconstruction.",
+      "summary": "Stored verification is text-only and explicitly not a complete-object promotion pass."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-05",
+      "kind": "provenance",
+      "location": "include/Koopa.h; config/arm9/overlays/ov062/symbols.txt:165-170",
+      "reason": "Real daNknk_c emission now matches all11 complete canonical metadata records including10-byte RTTI name and132-byte vtable with preamble. Community Koopa is only a source typedef; no invented metadata home or altered retail address licenses the class.",
+      "summary": "The coined Koopa class identity does not reproduce the ROM RTTI identity."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-06",
+      "kind": "provenance",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp and promotion ledgers",
+      "reason": "All39 shards are retired into the one complete production text owner;39 original symbol credits and4 converted identities/positions remain.37 written markers plus actual inline lifecycle definitions cover39 bodies. Seven declaration-fingerprint path migrations are distinct from attribution, and five unchanged-main exceptions remain debt.",
+      "summary": "Accounting and source ownership still describe the unpromoted shadow."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-07",
+      "kind": "correctness",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Existing actual-symbol scalar bridge and real Vector3_16 replace the obsolete import. Independent normal production control resolves the actual ov002 callee at020ada40; whole object is unchanged across the cleanup successor. Canonical C++ signature equivalence is not claimed.",
+      "summary": "Obsolete address-shaped callee import passed local inference but failed the real linker."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-08",
+      "kind": "correctness",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Canonical existing Matrix4x3 is used by the callee and all13 measured affected callers, including omitted daMky locals;57 concrete diagnostics heal. Independent normal ROM covers enrolled output, while the unchanged ov006 draft remains excluded and the ov081 canonical weak body is accounted.",
+      "summary": "Matrix translation helper used incompatible private and shared pointer declarations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-09",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Restored3 native member calls, named fields, ordinary loop and this argument; fresh entire raw object equals the independently linked control. D1/D0 derive from actual inline destructor, and all4 original converted identities still score every criterion true.",
+      "summary": "Consolidated CleanupResources regressed genuine Release calls, and synthetic lifecycle markers obscured the real destructor source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-10",
+      "kind": "provenance",
+      "location": "symbols/actor_renames.tsv:1694-1700",
+      "reason": "Independently confirmed exactly seven fourth-column replacements to the actual native names; addresses, original-name columns, reasons, ordering, appended history and all other rows are unchanged. Fresh check_rename_ledger.py passes all2202 checked mangled/vtable rows;1520 coined rows remain explicitly outside that tool scope.",
+      "summary": "Seven active mangled rename targets retained obsolete Koopa names after native daNknk_c symbol promotion."
+    },
+    {
+      "disposition": "fixed",
+      "id": "DA2878-03",
+      "kind": "correctness",
+      "location": "src/actors/daMip_c.cpp:184; src/actors/daMky_c.cpp:1570",
+      "original_local_record": {
+        "disposition": "open",
+        "evidence": "src/func_02012790.c:3 returns the sound handle from Sound::Play2D. Mip has five calls across StateSaveTalkMain/StateCaughtMain; Mky has one call in func_ov030_021136b0. Results are currently discarded, which does not make the contradictory declarations true.",
+        "id": "DA2878-03",
+        "introduced": false,
+        "kind": "correctness",
+        "location": "src/actors/daMip_c.cpp:184; src/actors/daMky_c.cpp:1570",
+        "repair": "Use actual unsigned result/parameter in both owned TU prototypes; preserve C linkage. Proposed exact patch pr2878-proposed-audio-contract.patch requires producer whole-object and strict proof.",
+        "summary": "The two TUs declare func_02012790 as void(int), but its actual definition is unsigned int(unsigned int)."
+      },
+      "reason": "Both owned func_02012790 declarations now agree with the actual unsigned-int result and unsigned-int ID definition. Independent full-object and strict relocated checks preserve every call site.",
+      "summary": "The two TUs declare func_02012790 as void(int), but its actual definition is unsigned int(unsigned int)."
+    },
+    {
+      "disposition": "fixed",
+      "id": "DA2878-04",
+      "kind": "correctness",
+      "location": "src/actors/daMip_c.cpp:138,140,166,182,187; src/actors/daMky_c.cpp:180,182; src/actors/daKrb_c.cpp:119-120,162,167,190,194-195",
+      "original_local_record": {
+        "disposition": "open",
+        "evidence": "Confirmed definitions: Mip ApproachAngle returns int, Animation::LoadFile char*, func02013944 void, func02022a4c u32; Mip declares different results. Mip ApplyOpacity prototype/call includes an extra argument versus the genuine this+u32 method. Mky ClearGroundFlag/Clear are genuine void methods but global declarations return int. Krb ReleaseCap/RespawnIfHasCap return dActor_c*, KillByInvincibleChar is void, Player::Hurt is int; its declarations disagree. DecIfAbove0 byte/short return narrow unsigned values and Math_Function0203b14c returns int. Inventory is saved separately; each repair requires actual caller/ABI proof. Final bounded pass also confirms Player::DropActor actual int (Mip and four Mky locals), Sound::PlaySub actual bool (Mip int/Mky void) and Particle::System::New actual integer handle (Mip void*).",
+        "id": "DA2878-04",
+        "introduced": false,
+        "kind": "correctness",
+        "limits": "Do not equate every one of136 scanner rows with a correctness defect. Plurality-only void* disagreements, destructor parse artifacts, assembly veneers and the measured unsigned RandomInt LSR view need independent classification, not blind canonicalization. No newly measured compiler wall or blanket bank is authorized.",
+        "location": "src/actors/daMip_c.cpp:138,140,166,182,187; src/actors/daMky_c.cpp:180,182; src/actors/daKrb_c.cpp:119-120,162,167,190,194-195",
+        "repair": "Root producer should repair definite families in all3 free Mip/Mky/Krb files under the sealed task; see pr2878-contract-triage.json. No Chair/shared-header/global-ledger edit is needed. Existing raw and typed-interface reconstruction remains explicitly partial.",
+        "summary": "Whole-TU acceptance needs explicit triage of further inherited actual-definition contract contradictions; byte-neutral field edits do not close them."
+      },
+      "reason": "Actual definitions and genuine headers were inspected, not selected by declaration plurality. Fixed the definite return families, integer Particle handle, sound wrappers with unsigned IDs/const Vector3 pointers, Krb Hurt u8 flags, and coherent two-u32 ApplyOpacity definition/callers/forwarder/canonical ARM9 name. Independent25-site retail census (15 zero/10 one), ordinary one-argument negative and unnamed-form complete-object proofs support the final API without claiming unique original source arity. The genuine-header versus legacy-scalar width seam is explicitly retained as uncertainty, not silently declared repaired.",
+      "summary": "Whole-TU acceptance needs explicit triage of further inherited actual-definition contract contradictions; byte-neutral field edits do not close them."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    {
+      "disposition": "deferred",
+      "id": "ASSET-NAMING-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "Source naming scope and existing actor/interface reconstruction",
+      "owner": "Original asset coordinator and subsequently claimed C++ reconstruction producers",
+      "reason": "Accepted partial readability scope; no class completion, original identifier, full declaration agreement or193warning relocation claim. Exact complete-object and module proofs independently preserve behavior.",
+      "summary": "Remaining reserved/encoded asset candidates and existing class/ABI/raw-field reconstruction debts are outside this evidenced naming slice."
+    },
+    {
+      "id": "MKY-NATIVE-NORMALS-01",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_mky.cpp:func_ov030_02111f6c",
+      "reason": "Two genuine Vector3 locals replace the anonymous POD twin and reference casts. Existing native getters borrow the actual dBgPi object and its inherited surface member, with both normal-copy calls, guards, receivers, ordering and arithmetic preserved. No automatic polygon or fake subobject is introduced."
+    },
+    {
+      "id": "MKY-NATIVE-NORMALS-02",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/tu_manifest.d/ov030/daMky_c.json",
+      "reason": "The existing function-local Bundle destructor input changes from $902 to $903. Complete raw and production-prepared objects are equal only after that single measured string correspondence; helper body, attributes, incoming references and typed edges are preserved. Nine active metadata reasons now name the current licensed end02114690 and retain the original44-function end021145e0 as history. No new policy, alias, range or canonical destination is admitted."
+    },
+    {
+      "id": "MKY-NATIVE-NORMALS-03",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_mky.cpp and include/daMky_c.h",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2410",
+      "owner": "codex-enemy-root-coordinator1015",
+      "reason": "The existing class remains partial: raw/scalar views, opaque resource and state interfaces, scalar Fix12 bridges, unnamed fields and the void-pointer getter return contract remain. This targeted normal-helper cleanup is not whole-class reconstruction or a new C-to-C++ conversion.",
+      "next_action": "Continue the existing class reconstruction under issue2410 with separately reserved genuine interfaces and current byte/relocation proof."
+    }
+  ],
+  "remaining": "The class remains partial under issue2410. This is a scoped readability and object-lifetime repair, not a new class promotion or a claim that all deferred reconstruction is complete.",
+  "next_action": "Independent verifier claims this exact immutable output in its own wired tree, reviews actual9b composition and all inherited findings, and redoes Source/relocation/complete-object/metadata/full-stock gates. Publish an ordinary PR only after acceptance; do not merge.",
+  "inherited_accepted_finding_ids": [
+    "onturnintoegg-src-tu-redeclaration",
+    "handoff-matching-headers-claim-false",
+    "da1up-reconstruction-debt-disclosed",
+    "dead-references-koopa-plus-truncation",
+    "queue-rows-stale-from-branch-edits",
+    "queue-audit-residue-miscited-as-preexisting",
+    "KP2864-01",
+    "KP2864-02",
+    "KP2864-03",
+    "KP2864-04",
+    "KP2864-05",
+    "KP2864-06",
+    "KP2864-07",
+    "KP2864-08",
+    "KP2864-09",
+    "KP2864-10",
+    "DA2878-03",
+    "DA2878-04",
+    "NDT0922-01",
+    "NDT0922-02",
+    "NDT0922-03",
+    "RCV2908-01",
+    "RCV2908-02",
+    "RCV2908-03",
+    "RCV2908-04",
+    "RCV-PACKET-01",
+    "RCV-PACKET-02",
+    "RCV-PACKET-03",
+    "RCV-PACKET-04",
+    "STALE-ARRAY-RUNTIME-TEST",
+    "RCV-SHADOW-01",
+    "ASSET-NAMING-RECONSTRUCTION-01"
+  ]
+}

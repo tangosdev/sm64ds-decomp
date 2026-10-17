@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "scope": "Compile PicGate planar-distance helper as C++",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3800",
+  "compiler": "2004/b56",
+  "source_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "production_source": "src/game/actors/d_a_pic_gate.cpp",
+  "source_sha256": "70a079c22cd3b4640531a36e44b049527cd9720683af63b5e77f89223237f020",
+  "change": "Initialize the existing plain Vec3 in the loop and retain the helper C linkage; remove the C frontend island. Manifest prose now records separately enrolled renderer and measured C++ winner; ownership/sections/policies unchanged.",
+  "proof": {
+    "raw_entire_ELF_equal": true,
+    "raw_sha256": "3deff52487da1984188bab05d5d2ad2f81a96eb28bb1e81720e1ca32d31307d9",
+    "production_entire_ELF_equal": true,
+    "prepared_sha256": "164f0f11d29facda243ac1a248748b8b7218d4b1eff8a89b3fdb079b4cba5627",
+    "strict_rows": 17,
+    "strict_bytes": 3568,
+    "strict_functions": 17,
+    "owned_init_and_ctor_records": 0,
+    "blind": 0,
+    "all_diffs": [],
+    "bss_records": 0,
+    "bss_bytes": 0,
+    "complete_metadata_records": 9,
+    "complete_metadata_bytes": 218,
+    "metadata": [
+      {
+        "symbol": "_ZTV11daPicGate_c",
+        "module": "ov080",
+        "address": "0x21282ac",
+        "size": 132,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI11daPicGate_c",
+        "module": "ov080",
+        "address": "0x2128274",
+        "size": 12,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS11daPicGate_c",
+        "module": "ov080",
+        "address": "0x2128280",
+        "size": 14,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "address": "0x208e390",
+        "size": 12,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "address": "0x208e384",
+        "size": 10,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e78",
+        "size": 12,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e54",
+        "size": 9,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "address": "0x2086d70",
+        "size": 8,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "address": "0x2086e60",
+        "size": 9,
+        "blind": 0,
+        "exact": true
+      }
+    ],
+    "raw_typed_references": 97,
+    "prepared_typed_references": 52,
+    "normal_preparation": "ordinary on-disk compiler_only policies and isolation; no override"
+  },
+  "remaining": "Existing raw-offset cell views and C-linkage free-function ABI remain; this does not claim a class/TU fold or full field reconstruction.",
+  "full_ROM": {
+    "checkpoint": "57dd1e9191cb5c1eb13b135f62cf48368f113662",
+    "modules_exact": 106,
+    "modules_total": 106,
+    "exit_code": 0,
+    "log": "build\\picgate-copy1013\\full_rom.log",
+    "limits": "Full modules and owned storage exact. Pre-existing stock dsd missing ITCM symbols and one differing unenrolled ROM-data inventory entry remain distinct."
+  },
+  "committed_checks": {
+    "tested_commit": "57dd1e9191cb5c1eb13b135f62cf48368f113662",
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\picgate-copy1013\\full_rom.log"
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\picgate-copy1013\\range.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\picgate-copy1013\\port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\picgate-copy1013\\langmode.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\picgate-copy1013\\decl.log"
+      }
+    }
+  },
+  "stock_range": {
+    "checked": 17,
+    "verified": 17,
+    "warnings": [],
+    "blocking": 0
+  },
+  "binding": "This report-only descendant retains all src/include/config/tools/port trees from the tested full-ROM checkpoint. Independent final Source review is required separately."
+}

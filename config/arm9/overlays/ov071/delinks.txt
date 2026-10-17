@@ -12,16 +12,19 @@ src/_ZN10ScuttlebugD0Ev.cpp:
     complete
     .text start:0x0211f048 end:0x0211f0a4
 
-src/actors/Scuttlebug.cpp:
+src/game/actors/d_a_spd.cpp:
     complete
     .text start:0x0211f0a4 end:0x02120668
     .init start:0x021226ac end:0x021228c8
     .ctor start:0x02122b30 end:0x02122b34
     .bss start:0x02122f80 end:0x02123038
 
-src/actors/daEykn_c.cpp:
+src/game/actors/d_a_eykn.cpp:
     complete
     .text start:0x02120668 end:0x02121a6c
+    .init start:0x021228c8 end:0x02122a1c
+    .ctor start:0x02122b34 end:0x02122b38
+    .bss start:0x02123038 end:0x021230b8
 
 src/game/actors/d_a_ey_bm.cpp:
     complete
@@ -30,14 +33,10 @@ src/game/actors/d_a_ey_bm.cpp:
     .ctor start:0x02122b38 end:0x02122b3c
     .bss start:0x021230b8 end:0x021230d0
 
-src/actors/daObjCasket_c.cpp:
+src/game/actors/d_a_obj_casket.cpp:
     complete
     .text start:0x02121fe4 end:0x021226a0
     .init start:0x02122a64 end:0x02122b30
     .ctor start:0x02122b3c end:0x02122b40
     .data start:0x02122ecc end:0x02122ef4
     .bss start:0x021230d0 end:0x021230f8
-
-src/unnamed/ov071/__sinit_ov071_021228c8.c:
-    complete
-    .init start:0x021228c8 end:0x02122a1c

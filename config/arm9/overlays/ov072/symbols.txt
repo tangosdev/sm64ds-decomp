@@ -92,11 +92,11 @@ data_ov072_02121ffc kind:data(any) addr:0x02121ffc
 data_ov072_02122004 kind:data(any) addr:0x02122004
 __sinit_ov072_02122018 kind:function(arm,size=0x1e0) addr:0x02122018
 __sinit_ov072_021221f8 kind:function(arm,size=0x158) addr:0x021221f8
-__sinit_daBgSnwmn_c.cpp kind:function(arm,size=0xc4) addr:0x02122350
+__sinit_d_a_bg_snwmn.cpp kind:function(arm,size=0xc4) addr:0x02122350
 __sinit_ov072_02122414 kind:function(arm,size=0x2f4) addr:0x02122414
 .p__sinit_ov072_02122018 kind:data(word) addr:0x02122708
 .p__sinit_ov072_021221f8 kind:data(word) addr:0x0212270c
-.p__sinit_daBgSnwmn_c.cpp kind:data(word) addr:0x02122710
+.p__sinit_d_a_bg_snwmn.cpp kind:data(word) addr:0x02122710
 .p__sinit_ov072_02122414 kind:data(word) addr:0x02122714
 data_ov072_02122720 kind:data(any) addr:0x02122720
 data_ov072_02122728 kind:data(any) addr:0x02122728
@@ -154,16 +154,16 @@ data_ov072_02122b4c kind:bss addr:0x02122b4c
 data_ov072_02122b58 kind:bss addr:0x02122b58
 data_ov072_02122b64 kind:bss addr:0x02122b64
 data_ov072_02122bc4 kind:bss addr:0x02122bc4
-data_ov072_02122bcc kind:bss addr:0x02122bcc
-data_ov072_02122bd4 kind:bss addr:0x02122bd4
+gBigSnowmanSmileTextureSequenceFile kind:bss addr:0x02122bcc
+gBigSnowmanCryTextureSequenceFile kind:bss addr:0x02122bd4
 data_ov072_02122bdc kind:bss addr:0x02122bdc
 data_ov072_02122be8 kind:bss addr:0x02122be8
 data_ov072_02122bf4 kind:bss addr:0x02122bf4
 data_ov072_02122c00 kind:bss addr:0x02122c00
 data_ov072_02122c08 kind:bss addr:0x02122c08 ambiguous
-data_ov072_02122c40 kind:bss addr:0x02122c40
-data_ov072_02122c48 kind:bss addr:0x02122c48
-data_ov072_02122c50 kind:bss addr:0x02122c50
+gdaBgSnwmnBigSnowmanBodyModelFile kind:bss addr:0x02122c40
+gdaBgSnwmnBigSnowmanHeadModelFile kind:bss addr:0x02122c48
+gdaBgSnwmnBigSnowmanSmileTextureSequenceFile kind:bss addr:0x02122c50
 @398 kind:bss addr:0x02122c58
 @399 kind:bss addr:0x02122c64
 data_ov072_02122c70 kind:bss addr:0x02122c70

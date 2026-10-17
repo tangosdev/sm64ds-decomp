@@ -16,7 +16,7 @@ and again after each raw-offset collapse.
 ## daObjSwitch_c (`include/daObjSwitch_c.h`, [ov002](../config/arm9/overlays/ov002/symbols.txt), size 0x354)
 
 Current evidence: the twenty-four-function production TU
-[`src/actors/daObjSwitch_c.cpp`](../src/actors/daObjSwitch_c.cpp) (which now
+[`src/game/actors/d_a_obj_switch.cpp`](../src/game/actors/d_a_obj_switch.cpp) (which now
 also holds the STAR_SWITCH and HANSWITCH factories) and its genuine
 class header. The names describe observed use; retail RTTI
 supplies the class identity, not the English field names. The original
@@ -63,7 +63,7 @@ recorded in the [integration evidence](experiments/pr2874-integration-0920.json)
 Formerly the coined `Crate`. Bodies read: `InitResources`, `Behavior`, `Render`,
 `CleanupResources`, `OnTurnIntoEgg`, `OnYoshiTryEat`, `OnGroundPounded`, `Kill` and
 `Crate_SetState` (then per-function files, now together in
-`src/actors/daObjBlockS_c.cpp`).
+`src/game/actors/d_a_obj_block_s.cpp`).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -114,7 +114,7 @@ class as for the flat shadow the ROM's own code is built against.
 
 Spindel (actor 163 DONGURU): a roller that turns about X and translates along Z.
 All ten bodies now live in one translation unit,
-[src/actors/daDgr_c.cpp](../src/actors/daDgr_c.cpp) — `InitResources`, `Behavior`,
+[src/game/actors/d_a_dgr.cpp](../src/game/actors/d_a_dgr.cpp) — `InitResources`, `Behavior`,
 `Render`, `CleanupResources`, the `D1`/`D0` destructor pair, the three
 `func_ov025_*` helpers, and the factory `daDgr_c_classInit`. They were separate
 one-function files when the offsets below were read, which is why the paragraphs
@@ -142,7 +142,7 @@ trailing bytes and are `unk_` in `include/dBgActor_c.h` too, which this pass doe
 own.
 
 `daDgr_c::InitResources` (then a file of its own, now ordinal 8 of
-[src/actors/daDgr_c.cpp](../src/actors/daDgr_c.cpp)) was an `extern "C"` free function
+[src/game/actors/d_a_dgr.cpp](../src/game/actors/d_a_dgr.cpp)) was an `extern "C"` free function
 over a raw `char *`, with four local one-word shadow structs (`Model`, `ModelBase`, `dBgW_Kc`,
 `dBgW_KcMbg`) and every field reached by literal offset — `*(int *)(c + 0x320) =
 *(int *)(c + 0x60);`. It is now a real `s32 daDgr_c::InitResources()` over the shared
@@ -156,12 +156,12 @@ was measured instead.
 
 ## daObjTatefuda_c (`include/daObjTatefuda_c.h`, [ov002](../config/arm9/overlays/ov002/symbols.txt), size 0x5a4)
 
-Bodies read: `src/actors/daObjTatefuda_c.cpp`,
-`src/actors/daObjTatefuda_c.cpp`, `src/actors/daObjTatefuda_c.cpp`,
-`src/actors/daObjTatefuda_c.cpp`, `src/actors/daObjTatefuda_c.cpp`,
-`src/actors/daObjTatefuda_c.cpp`,
-`src/actors/daObjTatefuda_c.cpp`,
-`src/actors/daObjTatefuda_c.cpp`.
+Bodies read: `src/game/actors/d_a_obj_tatefuda.cpp`,
+`src/game/actors/d_a_obj_tatefuda.cpp`, `src/game/actors/d_a_obj_tatefuda.cpp`,
+`src/game/actors/d_a_obj_tatefuda.cpp`, `src/game/actors/d_a_obj_tatefuda.cpp`,
+`src/game/actors/d_a_obj_tatefuda.cpp`,
+`src/game/actors/d_a_obj_tatefuda.cpp`,
+`src/game/actors/d_a_obj_tatefuda.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -171,7 +171,7 @@ Bodies read: `src/actors/daObjTatefuda_c.cpp`,
 | 0x3bc/0x3be/0x3c0 | `mHomeAngleX/Y/Z` | `InitResources` copies `mAngleX/mAngleY/mAngleZ` in the same run. |
 | 0x584 | `mParticleHandle1` | `Behavior` passes it as the first argument of `Particle::System::New` and stores the result back — a recycled handle. Effect `0x13a`. Was inside `pad_584`. |
 | 0x588 | `mParticleHandle2` | same shape through `Particle::System::NewUnkCallback818`, effect `0x13b`. Was inside `pad_584`. |
-| 0x58c | `mBreakTimer` | `Behavior` runs the whole break sequence under `if (0x58c != 0)`: disable the mesh collider, `DecIfAbove0_Byte` once a frame traillng the two particles, and on the frame it hits zero poof the dust and hand off to the class's reset routine [func_ov002_020bae9c.c](../src/actors/daObjTatefuda_c.cpp). The same shape `daObjBlockS_c` uses at its own 0x606. Was inside `pad_584`. |
+| 0x58c | `mBreakTimer` | `Behavior` runs the whole break sequence under `if (0x58c != 0)`: disable the mesh collider, `DecIfAbove0_Byte` once a frame traillng the two particles, and on the frame it hits zero poof the dust and hand off to the class's reset routine [func_ov002_020bae9c.c](../src/game/actors/d_a_obj_tatefuda.cpp). The same shape `daObjBlockS_c` uses at its own 0x606. Was inside `pad_584`. |
 | 0x58e | `mPoundsLeft` | `InitResources` sets `2`. `OnGroundPounded` either sinks the sign by `(mPoundsLeft * 0x2d) << 12` and zeroes it (a hard pound), or by one `0x2d000` step and decrements it. `Behavior` respawns the sign when it is `0`, setting it back to `2`, and only drops the shadow while it is still `2`. A remaining-steps count, not a state. |
 | 0x58f | `mPoundCooldown` | `OnGroundPounded` sets `0xf` on the soft-pound branch and returns early whenever it is nonzero; `Behavior` runs it down with `DecIfAbove0_Byte` once a frame. The gap between two successive pounds. |
 | 0x590 | `mHidden` | `Render` returns without drawing while it is nonzero; `Behavior` skips the collision-range check while it is nonzero and clears it under the same "player is far away" condition that respawns a pounded-in sign. |
@@ -185,7 +185,7 @@ which is what `include/dBgActor_c.h` calls that offset and what `InitResources` 
 to `dBgW_KcMbg::SetFile`. The marker stays `u8`, the idiom the twin already uses for
 `mdCcAc_c` and `mShadowModel`.
 
-`src/actors/daObjTatefuda_c.cpp` was an `extern "C"` free function over a raw
+`src/game/actors/d_a_obj_tatefuda.cpp` was an `extern "C"` free function over a raw
 `char *c` with 30 literal offsets and a local one-word `Vector3`; it is now a real
 `int daObjTatefuda_c::Behavior()`. That conversion is what turned 0x354, 0x380, 0x584, 0x588
 and 0x58c from padding into evidenced fields. It needed one declaration added to the
@@ -210,8 +210,8 @@ so they stay `unk_`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x3cc | `mStateTable` | `func_ov027_02111d70` writes `&data_ov027_02113ce4[idx]` into it and `func_ov027_02111d38` / `func_ov027_02111cfc` read `*(p)` and `*(p + 1)` as function pointers and call them through `this`. All three are members of [src/actors/daPgDfdr_c.cpp](../src/actors/daPgDfdr_c.cpp) since the ov027 TU promotion. Left a raw `void *` — the callee's exact function-pointer type is not proven. |
-| 0x3d8 | `mTimer` | `func_ov027_02111ca8` sets `0x14`; `func_ov027_02111c48` runs it down through `DecIfAbove0_Byte`. Both are members of [src/actors/daPgDfdr_c.cpp](../src/actors/daPgDfdr_c.cpp) since the ov027 TU promotion. |
+| 0x3cc | `mStateTable` | `func_ov027_02111d70` writes `&data_ov027_02113ce4[idx]` into it and `func_ov027_02111d38` / `func_ov027_02111cfc` read `*(p)` and `*(p + 1)` as function pointers and call them through `this`. All three are members of [src/game/actors/d_a_pg_dfdr.cpp](../src/game/actors/d_a_pg_dfdr.cpp) since the ov027 TU promotion. Left a raw `void *` — the callee's exact function-pointer type is not proven. |
+| 0x3d8 | `mTimer` | `func_ov027_02111ca8` sets `0x14`; `func_ov027_02111c48` runs it down through `DecIfAbove0_Byte`. Both are members of [src/game/actors/d_a_pg_dfdr.cpp](../src/game/actors/d_a_pg_dfdr.cpp) since the ov027 TU promotion. |
 
 Left `unk_`: `0x3d0` (set to 0 or 1, no reader identified), `0x3d4` (an index into
 `data_ov027_02113a1c` keyed by `0x3d9`), `0x3d9` (0..9, reset above 9). In the C twin,
@@ -223,7 +223,7 @@ offsets in `include/dActor_c.h` were repointed to those names: `mCamSpacePosX`,
 `mClipOffsetY`, `mClipRadius`.
 
 `daPgDfdr_c::InitResources` and `daPgDfdr_c::Behavior` — then two separate
-one-function shards, now both members of `src/actors/daPgDfdr_c.cpp` — were
+one-function shards, now both members of `src/game/actors/d_a_pg_dfdr.cpp` — were
 `extern "C"` free functions over a raw
 `char *`; both are real methods now, byte-exact. The header already declared both
 virtual, so `tools/eligible.py` is unchanged by this. The conversion made one thing
@@ -246,7 +246,7 @@ and the class now closes on 0x874 by field span instead of only by the factory's
 Bodies read: `src/_ZN6Eyerok13InitResourcesEv.cpp`,
 `src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`, and `Behavior`,
 `Render` and `CleanupResources`, which used to be one file each and are now
-members of the promoted `src/actors/Eyerok.cpp`.
+members of the promoted `src/game/actors/d_a_iwante.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -408,7 +408,7 @@ sub; }` shadow is gone in favour of `mModel.Render(0)`, and `InitResources` reac
 ---
 ## daObjHatenaBlock_c (`include/daObjHatenaBlock_c.h`, [ov102](../config/arm9/overlays/ov102/symbols.txt), size 0x3f8)
 
-Bodies read: `src/actors/daObjHatenaBlock_c.cpp`, which now holds the whole
+Bodies read: `src/game/actors/d_a_obj_hatena_block.cpp`, which now holds the whole
 translation unit. `InitResources`, `Behavior`, `Render`, `CleanupResources`,
 `OnGroundPounded`, `OnAttacked1`, `OnKicked`, `OnHitByMegaChar` and
 `OnHitFromUnderneath` were read there as one-function sources before the fold;
@@ -438,7 +438,7 @@ whole-object shadow casts are `&mModelAnim` and `&mModel`.
 
 ## daObjBk_Kabe_c (`include/daObjBk_Kabe_c.h`, [ov079](../config/arm9/overlays/ov079/symbols.txt), size 0x324)
 
-Bodies read: `src/actors/daObjBk_Kabe_c.cpp`, which now holds the whole
+Bodies read: `src/game/actors/d_a_obj_bk_kabe.cpp`, which now holds the whole
 translation unit. `InitResources`, `Behavior`, `Render`, `Kill`,
 `CleanupResources` and `OnHitByCannonBlastedChar` were read as one-function
 sources (then under the coined name `FortressWall`) before the fold, together
@@ -518,7 +518,7 @@ The promoted header derives from `dBgActor_c` directly and owns two complete
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x320 | `mState` | `Behavior` ([src/actors/daObjEwbIce_c.cpp](../src/actors/daObjEwbIce_c.cpp)) reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `Eyerok`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
+| 0x320 | `mState` | `Behavior` ([src/game/actors/d_a_obj_ewb_ice.cpp](../src/game/actors/d_a_obj_ewb_ice.cpp)) reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `Eyerok`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
 | 0x32c | `mVariant` | `InitResources` sets `0`/`1`/`2` for actorID `0xaa`/`0xab`/`0xac` and then uses it as the row index into all three 0xc-stride ov073 tables — `data_ov073_021231bc` (model), `...1c0` (KCL), `...1c4` (CLPS). `CleanupResources` indexes the first two again to `Release()` them. Was inside `pad_321`. |
 | 0x32d | `mSpawnIndex` | `InitResources` copies the value of a per-variant global counter (`data_ov073_02123424` for `0xab`, `...3420` for `0xac`) and then increments that counter — a serial number among the arena pieces of this variant. Was inside `pad_321`. |
 
@@ -535,7 +535,7 @@ Raw-offset collapses, each re-verified byte-exact: the six
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x31e | `mAngleXSpeed` | `daKpa2Bg_c::Behavior` (now in `src/actors/daKpa2Bg_c.cpp`) adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
+| 0x31e | `mAngleXSpeed` | `daKpa2Bg_c::Behavior` (now in `src/game/actors/d_a_kpa2_bg.cpp`) adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
 | 0x320 | `mAngleYSpeed` | the same, into `mAngleY`. |
 | 0x322 | `mAngleZSpeed` | the same, into `mAngleZ`. |
 
@@ -643,7 +643,7 @@ In the C twin, `0x09c` becomes `mVertAccel`, `0x0a0` `mTerminalVelocity`,
 
 A pendulum, in four fields `Behavior` integrates. `InitResources` and
 `Behavior` are read from the promoted translation unit
-`src/actors/daObjCtMecha03_c.cpp`, which absorbed the eight one-function
+`src/game/actors/d_a_obj_ct_mecha03.cpp`, which absorbed the eight one-function
 sources that used to hold them.
 
 | Offset | Name | Evidence |
@@ -705,7 +705,7 @@ In the C twin, `0x074` becomes `mCamSpacePosX`.
 | 0x348 | `mShadowMat` | `Behavior` passes `&mShadowMat` as the `Matrix4x3 &` argument of `dActor_c::DropShadowScaleXYZ(ShadowModel &, Matrix4x3 &, ...)`, with `mShadowModel` as the argument before it. `0x348 + 0x30 = 0x378`. The same shape `daObjTatefuda_c` and `daObjHatenaBlock_c` already carry. |
 | 0x37c | `mVariant` | `InitResources` sets `0`/`1` from actorID and uses it as the row index into all three ov098 resource columns `data_ov098_0213c380/384/388`. |
 
-The rename carried into `src/actors/daObjYajirusi_c.cpp` (promoted from `src_tu/`) as well as `src/`.
+The rename carried into `src/game/actors/d_a_obj_yajirusi.cpp` (promoted from `src_tu/`) as well as `src/`.
 In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 
 ---

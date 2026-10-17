@@ -120,7 +120,7 @@ struct daTor_c : dActor_c {
                                      by states 0 and 1. Was the header's
                                      trailing pad; daTor_c_classInit allocates
                                      0x370, so this is the last word. */
-    /* Out of line in daTor_c.cpp: the key function, so that TU emits
+    /* Out of line in d_a_tor.cpp: the key function, so that TU emits
      * _ZTV/_ZTI/_ZTS7daTor_c. */
     virtual ~daTor_c();
 

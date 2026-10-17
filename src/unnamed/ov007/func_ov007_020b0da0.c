@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "nitro/fx/fx.h"
 extern short data_02082214[];
 
 extern int _ZN4cstd4fdivEii(int a, int b);
@@ -97,8 +98,8 @@ void func_ov007_020b0da0(void* arg0) {
                     int valB = data_02082214[(angleB >> 4) * 2];
 
                     int valBhalf = (valB + 0x2000) / 2;
-                    int term = (int)(((s64)valA * 0x82 + 0x800) >> 12);
-                    int combined = (int)(((s64)valBhalf * term + 0x800) >> 12);
+                    int term = FX_MUL(valA, 0x82);
+                    int combined = FX_MUL(valBhalf, term);
                     short rzS = (short)(0x3fff + ((combined * 0x7fff) >> 12));
                     func_ov007_020c39f8(mat, 0, 0, (u16)rzS);
                 }

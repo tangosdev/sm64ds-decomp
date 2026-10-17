@@ -6,12 +6,12 @@
  *
  * SIZE 0x539c, from dScMgCard_c_classInit's `_ZN7fBase_cnwEj(0x539c)`.
  *
- * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64), same
+ * SHARED TABLE at 0x4f38, size 0x270 (Dealer_Construct/020c1c64), same
  * as five siblings -- see include/dScMgMemory_c.h's own note. TWO fields
  * fall WITHIN it and are real matched access:
  * mShared.unk_01a and mShared.unk_1e6 are literally the ctor's own
  * `*(short*)(t+0x1a)=0`
- * and `*(short*)(t+0x1e6)=0` writes (func_ov006_020c1d80's own
+ * and `*(short*)(t+0x1e6)=0` writes (Dealer_Construct's own
  * body), same as dScMgMCarlo2_c's own instance of these two fields -- named
  * here instead of folded into the opaque table, everything else stays pad.
  *
@@ -49,8 +49,8 @@
 #define DSCMGCARD_C_H
 #include "dScMgSingle3DBase_c.h"
 
-extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
-extern "C" void func_ov006_020c1d80(void *t);
+extern "C" int  Dealer_Destruct(char *t); /* decl_common.h's own signature */
+extern "C" void Dealer_Construct(void *t);
 extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem);
 extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
@@ -179,7 +179,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual ~dScMgCard_c() {
         __cxa_vec_cleanup(mArray2, 5, 0x30, (void *)_ZN17dMgDilarCardObj_cD1Ev);
         __cxa_vec_cleanup(mArray1, 5, 0x30, (void *)_ZN12dMgCardObj_cD1Ev);
-        func_ov006_020c1c64((char *)&mShared);
+        Dealer_Destruct((char *)&mShared);
     }
 
     /* --- this class's own vtable slots, named from the table ---
@@ -190,10 +190,10 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x020da994 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x020dabec */
     virtual s32 Render();             /* slot 9 -- ov006 0x020da9c4 */
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
+    virtual void StartRound(int arg);               /* slot 18 */
+    virtual int  CanEndState(int mode);              /* slot 19 */
 
-    virtual void OnGroundPounded();   /* slot 21 -- ov006 0x020db6ec */
+    virtual void OnDealDone();   /* slot 21 -- ov006 0x020db6ec */
 
     /* --- the round state machine and the dMeter_c column ---
        UpdateState is the one long switch on mState that Behavior drives
@@ -226,15 +226,11 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     s16 mStateTimer;         /* 0x538a -- reloaded (0x10, 0x14, 0x1e, 0x3c,
                                 0x5a) on each step and run down to 0 before
                                 mState advances */
-    s16 unk_538c;            /* 0x538c */
-    s16 unk_538e;            /* 0x538e -- the mArray1 (0x51a8) highlight pair:
-                                Render blinks the card whose config byte equals
-                                either of the two, and draws every other card
-                                every frame. 6 means "none" */
-    s16 unk_5390;            /* 0x5390 -- cleared back to 6 when the two banks
-                                disagree, while unk_538e keeps its value */
-    s16 unk_5392;            /* 0x5392 -- the same pair for mArray2 (0x5298) */
-    s16 unk_5394;            /* 0x5394 */
+    s16 mDealCount;          /* 0x538c -- [medium] cards still moving; the dealer counts it down */
+    s16 mPlayerHandFace;     /* 0x538e -- face making the player's hand (EvaluateHand); 6 = none */
+    s16 mPlayerHandFace2;    /* 0x5390 -- second face (two pair); 6 = none */
+    s16 mDealerHandFace;     /* 0x5392 -- face making the dealer's hand; 6 = none */
+    s16 mDealerHandFace2;    /* 0x5394 -- the dealer's second face; 6 = none */
     s16 mFrameCounter;       /* 0x5396 -- Behavior's only own statement is
                                 `+= 1`; Render blinks on bit 3 */
     s16 mScore;              /* 0x5398 -- a high-water mark of dScMgBase_c's own

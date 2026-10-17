@@ -1,3 +1,8 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov072_02122018_AssetId {
+    ASSET_BIG_SNOWMAN_BODY_BMD = 0x02ad
+};
+
 extern int func_02017acc();
 extern void func_020731dc();
 extern void func_02017ab4(void);
@@ -43,7 +48,7 @@ extern int data_ov072_02122b4c[];
 
 void __sinit_ov072_02122018(void)
 {
-    func_02017acc(data_ov072_02122b20, 0x2ad);
+    func_02017acc(data_ov072_02122b20, ASSET_BIG_SNOWMAN_BODY_BMD);
     func_020731dc(data_ov072_02122b20, &func_02017ab4, data_ov072_02122b28);
     data_ov072_02122b64.p0 = data_ov072_02122750;
     data_ov072_02122b64.p1 = data_ov072_02122728;

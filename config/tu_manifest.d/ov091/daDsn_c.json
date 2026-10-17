@@ -1,8 +1,8 @@
 {
   "id": "ov091/daDsn_c",
   "module": "ov091",
-  "source": "src/actors/daDsn_c.cpp",
-  "promoted_source": "src/actors/daDsn_c.cpp",
+  "source": "src/game/actors/d_a_dsn.cpp",
+  "promoted_source": "src/game/actors/d_a_dsn.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -88,25 +88,25 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov091_02135620",
+      "symbol": "gDosuneModelFile",
       "address": "0x02135620",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "Thwomp model SharedFilePtr (file 0x2f4), constructed by __sinit_daDsn_c.cpp; reached through the file table data_ov091_02135138"
+      "evidence": "Thwomp model SharedFilePtr (file 0x2f4), constructed by __sinit_d_a_dsn.cpp; reached through the file table data_ov091_02135138"
     },
     {
-      "symbol": "data_ov091_02135618",
+      "symbol": "gDosuneCollisionFile",
       "address": "0x02135618",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "Thwomp KCL SharedFilePtr (file 0x2f6), constructed by __sinit_daDsn_c.cpp; reached through the file table data_ov091_02135138"
+      "evidence": "Thwomp KCL SharedFilePtr (file 0x2f6), constructed by __sinit_d_a_dsn.cpp; reached through the file table data_ov091_02135138"
     },
     {
-      "symbol": "data_ov091_02135610",
+      "symbol": "gDosuneTextureSequenceFile",
       "address": "0x02135610",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "Thwomp texture-sequence SharedFilePtr (file 0x2f5), constructed by __sinit_daDsn_c.cpp; reached through the file table data_ov091_02135138"
+      "evidence": "Thwomp texture-sequence SharedFilePtr (file 0x2f5), constructed by __sinit_d_a_dsn.cpp; reached through the file table data_ov091_02135138"
     },
     {
       "symbol": "@795",
@@ -499,7 +499,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daDsn_c.cpp",
+      "symbol": "__sinit_d_a_dsn.cpp",
       "address": "0x02134930",
       "size": "0x94",
       "binding": "STB_GLOBAL",
@@ -508,7 +508,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daDsn_c.cpp",
+      "symbol": ".p__sinit_d_a_dsn.cpp",
       "address": "0x02134b74",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -568,13 +568,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daDsn_c.cpp",
+      "symbol": "__sinit_d_a_dsn.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daDsn_c.cpp",
+      "symbol": ".p__sinit_d_a_dsn.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -681,7 +681,7 @@
       "source": "0x02134998",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135620",
+      "symbol": "gDosuneModelFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135620"
@@ -711,7 +711,7 @@
       "source": "0x021349a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135618",
+      "symbol": "gDosuneCollisionFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135618"
@@ -741,7 +741,7 @@
       "source": "0x021349b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135610",
+      "symbol": "gDosuneTextureSequenceFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135610"
@@ -771,7 +771,7 @@
       "source": "0x02134b74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daDsn_c.cpp",
+      "symbol": "__sinit_d_a_dsn.cpp",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02134930"

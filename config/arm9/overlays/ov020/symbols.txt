@@ -52,10 +52,10 @@ data_ov020_02113534 kind:data(any) addr:0x02113534 ambiguous
 data_ov020_02113554 kind:data(any) addr:0x02113554 ambiguous
 data_ov020_021135d4 kind:data(any) addr:0x021135d4 ambiguous
 data_ov020_021135f4 kind:data(any) addr:0x021135f4 ambiguous
-__sinit_daBook_c.cpp kind:function(arm,size=0xb8) addr:0x02113674
-__sinit_daChair_c.cpp kind:function(arm,size=0x3c) addr:0x0211372c
-.p__sinit_daBook_c.cpp kind:data(word) addr:0x02113768
-.p__sinit_daChair_c.cpp kind:data(word) addr:0x0211376c
+__sinit_d_a_book.cpp kind:function(arm,size=0xb8) addr:0x02113674
+__sinit_d_a_chair.cpp kind:function(arm,size=0x3c) addr:0x0211372c
+.p__sinit_d_a_book.cpp kind:data(word) addr:0x02113768
+.p__sinit_d_a_chair.cpp kind:data(word) addr:0x0211376c
 data_ov020_02113780 kind:data(any) addr:0x02113780
 data_ov020_02113784 kind:data(any) addr:0x02113784
 data_ov020_0211378c kind:data(any) addr:0x0211378c

@@ -6,17 +6,18 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): contiguous linker run: 0x02125460..0x021261f4, 15 function(s), folded from the fifteen func_ov080_* shards that filled the range between the daPicGate_c destructor pair (0x02125404..0x02125460) and the promoted class TU (src/actors/daPicGate_c.cpp, 0x021264ec..0x02126fbc).",
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): contiguous linker run: 0x02125460..0x021261f4, 15 function(s), folded from the fifteen func_ov080_* shards that filled the range between the daPicGate_c destructor pair (0x02125404..0x02125460) and the promoted class TU (src/game/actors/d_a_pic_gate_methods.cpp, 0x021264ec..0x02126fbc).",
     "class label(s): daPicGate_c -- the class's own RTTI spelling (_ZTS11daPicGate_c). Every function takes the object as its first parameter and walks the daPicGate_c field space, so the members are written `daPicGate_c::func_ov080_NNNNaddr()` with the ROM address as the method name and the mangled spelling carried in symbols.txt (S33).",
-    "HOLE-BLOCKED RUN: 0x021261f4..0x021264ec (the wave-mesh render handler _ZN11daPicGate_c19func_ov080_021261f4Ev) sits between this run and the promoted class TU. It is a measured mwccarm 2004/b56 codegen floor -- one 5-insn register/scheduling tie in the G3_TEXIMAGE_PARAM pack, div=5 (notes/mwccarm-codegen.md 6cf, 6cz; ~560 spelling compiles + 449 pragma cells + all 25 compiler builds reproduced the same residue). It is parked NONMATCHING in src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp and stays unenrolled, so this TU's .text ends at 0x021261f4 and does not claim the hole.",
-    "func_ov080_02125d64 stays a C free function inside the C++ TU under `#pragma cplusplus off`: its Vector3 copy is the C front end's ldm/stm block move, which C++ scalarizes on every installed mwccarm (the ov062 func_ov062_0211ba84 precedent). Its symbols.txt row keeps the unmangled name.",
-    "DESTRUCTOR FOLD: the daPicGate_c destructor pair, D1 0x02125404 (0x24) and D0 0x02125428 (0x38), abuts this run's left edge with no gap and no other symbol between, so it folds in as ordinals 0 and 1 and the TU's .text widens to 0x02125404..0x021261f4 (17 functions). ~daPicGate_c() is out of line in include/daPicGate_c.h, so the one definition is written first in the file; under the file's `#pragma defer_codegen off` mwccarm emits it at parse time as D1, D0, D2 -- the cartridge's order -- with D2 dropped as compiler-only output. No forcers are needed (contrast the inline-destructor folds of #3712). The destructor is daPicGate_c's key function, so this object now also emits _ZTV11daPicGate_c and the class's RTTI; the cartridge keeps those in unowned .data and the text-only TU externalizes them, exactly as the retired single-symbol shards did. Retired src/_ZN11daPicGate_cD1Ev.cpp and src/_ZN11daPicGate_cD0Ev.cpp; their credit carries in attribution.json as path#symbol overrides."
+    "HISTORY, SUPERSEDED BY THE WAVE-MESH FOLD (last entry): The wave-mesh render handler _ZN11daPicGate_c19func_ov080_021261f4Ev is matched and enrolled separately at 0x021261f4..0x021264ec. This 17-function text claim still ends at 0x021261f4; no range, ownership or fold changes are introduced.",
+    "func_ov080_02125d64 is a C++ free function with explicit C linkage. Initializing its plain Vec3 local inside the loop emits the retail ldm/stm copy under 2004/b56; assigning a pre-existing local emitted 16 additional bytes in the measured control. Its symbols.txt row keeps the unmangled name.",
+    "DESTRUCTOR FOLD: the daPicGate_c destructor pair, D1 0x02125404 (0x24) and D0 0x02125428 (0x38), abuts this run's left edge with no gap and no other symbol between, so it folds in as ordinals 0 and 1 and the TU's .text widens to 0x02125404..0x021261f4 (17 functions). ~daPicGate_c() is out of line in include/daPicGate_c.h, so the one definition is written first in the file; under the file's `#pragma defer_codegen off` mwccarm emits it at parse time as D1, D0, D2 -- the cartridge's order -- with D2 dropped as compiler-only output. No forcers are needed (contrast the inline-destructor folds of #3712). The destructor is daPicGate_c's key function, so this object now also emits _ZTV11daPicGate_c and the class's RTTI; the cartridge keeps those in unowned .data and the text-only TU externalizes them, exactly as the retired single-symbol shards did. Retired src/_ZN11daPicGate_cD1Ev.cpp and src/_ZN11daPicGate_cD0Ev.cpp; their credit carries in attribution.json as path#symbol overrides.",
+    "WAVE-MESH FOLD (EDGE 1 moved up from 0x021261f4 to 0x021264ec): the wave-mesh renderer _ZN11daPicGate_c19func_ov080_021261f4Ev (0x021261f4, 0x2f8) abuts this run's right edge with no gap, and its own right edge is the class TU's left edge (src/game/actors/d_a_pic_gate_methods.cpp, 0x021264ec), so nothing of another class sits between. It folds in as ordinal 17, last in the file under `#pragma defer_codegen off`; its `#pragma opt_propagation off` keeps its own off/on bracket, which binds positionally with codegen not deferred. The TU's .text widens to 0x02125404..0x021264ec (18 functions); the retired src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp's delinks entry merges into this TU's single .text claim. The two daPicGate_c TUs now abut; joining them is a separate step (the class TU is intact-object and owns .init/.ctor/.data/.bss)."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02125404",
-      "end": "0x021261f4"
+      "end": "0x021264ec"
     }
   ],
   "functions": [
@@ -138,6 +139,13 @@
       "size": "0x000000d0",
       "legacy_source": "src/func_ov080_02126124.c",
       "ordinal": 16
+    },
+    {
+      "symbol": "_ZN11daPicGate_c19func_ov080_021261f4Ev",
+      "address": "0x021261f4",
+      "size": "0x000002f8",
+      "legacy_source": "src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp",
+      "ordinal": 17
     }
   ],
   "data": [],
@@ -151,8 +159,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov080-d_a_pic_gate/d_a_pic_gate.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 17,
-    "functions_declared": 17,
+    "functions_matched": 18,
+    "functions_declared": 18,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN11daPicGate_cD2Ev"
@@ -163,8 +171,6 @@
       "droppedSections": [
         9,
         10,
-        36,
-        37,
         38,
         39,
         40,
@@ -176,7 +182,9 @@
         46,
         47,
         48,
-        49
+        49,
+        50,
+        51
       ],
       "data": [
         "_ZTV11daPicGate_c",
@@ -199,7 +207,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV11daPicGate_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

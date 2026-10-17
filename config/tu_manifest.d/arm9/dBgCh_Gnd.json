@@ -1,7 +1,7 @@
 {
   "id": "arm9/dBgCh_Gnd",
   "module": "arm9",
-  "source": "src/engine/collision/dBgCh_Gnd.cpp",
+  "source": "src/engine/collision/d_bg_ch_gnd.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
@@ -9,7 +9,7 @@
     "Contiguous dBgCh_Gnd lifecycle block 0x0203748c..0x020375d0: SetObjAndPos, the two pos accessors enrolled as func_ shards (this->pos read/write at +0x38), D0, D1, C1 and the dBgPi-base destructor thunks _ZThn16_D0/_ZThn16_D1.",
     "func_02037464 before the span and func_0203782c after the last thunk belong to neighbouring clusters.",
     "DetectClsn at 0x02038f44 sits in the query-function region far below; a different TU owns it.",
-    "absorb/dBgCh_Gnd grows .text to 0x02037464..0x020375d0: func_02037464 (0x28, C++OK:hoist) appended at source end so reverse emission lands it at the left edge; bwd stop is dBgCh_Actr.cpp at 0x02035564"
+    "absorb/dBgCh_Gnd grows .text to 0x02037464..0x020375d0: func_02037464 (0x28, C++OK:hoist) appended at source end so reverse emission lands it at the left edge; bwd stop is d_bg_ch_actr.cpp at 0x02035564"
   ],
   "sections": [
     {
@@ -544,5 +544,5 @@
       "linkerOutput": null
     }
   },
-  "promoted_source": "src/engine/collision/dBgCh_Gnd.cpp"
+  "promoted_source": "src/engine/collision/d_bg_ch_gnd.cpp"
 }

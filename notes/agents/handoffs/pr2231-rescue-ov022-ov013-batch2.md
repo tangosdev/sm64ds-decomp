@@ -31,8 +31,8 @@ This document describes this commit. The queue records its immutable output SHA.
   `346b04c271b1` and `tools/validate_merge.py` is blob `a4d3b362ff58`, i.e.
   both post-#2425.
 - Separate evidence commits and required artifacts in this commit: no separate
-  evidence commit. dScStage_c artifacts: `src/actors/daObjFl_London_c.cpp`,
-  `src/actors/daObjClock_c.cpp`, `src_tu/actors/daObj_volcanoCannon_c.cpp`
+  evidence commit. dScStage_c artifacts: `src/game/actors/d_a_obj_fl_london.cpp`,
+  `src/game/actors/d_a_obj_clock.cpp`, `src_tu/actors/daObj_volcanoCannon_c.cpp`
   (shadow, text-verified), their headers in `include/`, and the three manifests
   under [config/tu_manifest.d/ov022/](../../../config/tu_manifest.d/ov022/) and [config/tu_manifest.d/ov013/](../../../config/tu_manifest.d/ov013/).
 - Next action, responsible role and blockers: independent verification of this
@@ -54,12 +54,12 @@ This document describes this commit. The queue records its immutable output SHA.
     `.data` [ov022](../../../config/arm9/overlays/ov022/symbols.txt):`[0x02113f2c,0x02113ff0)` (196 bytes: `_ZTI`, `_ZTS`,
     `g_profile_FL_LONDON`, the 32-slot `_ZTV` whose address point is
     0x02113f70). Promoted from eight one-function shards into
-    `src/actors/daObjFl_London_c.cpp`.
+    `src/game/actors/d_a_obj_fl_london.cpp`.
   - `daObjClock_c` (was coined `ClockPaintingHandShort`; base `dActor_c`, size
     0x128): text [ov013](../../../config/arm9/overlays/ov013/symbols.txt):`[0x021113bc,0x021116ac)` (9 functions, 752 bytes) and
     `.data` [ov013](../../../config/arm9/overlays/ov013/symbols.txt):`[0x021121a4,0x0211227c)` (216 bytes: `_ZTI`, `_ZTS`,
     `g_profile_CLOCK_LONG`, `g_profile_CLOCK_SHORT`, the 31-slot `_ZTV` at
-    0x02112200). Promoted from nine shards into `src/actors/daObjClock_c.cpp`.
+    0x02112200). Promoted from nine shards into `src/game/actors/d_a_obj_clock.cpp`.
     One class, two registry profiles: the byte-identical factories keep
     distinct names (`daObjClock_c_classInit_CLOCK_LONG` / `_CLOCK_SHORT`)
     because two C-linkage definitions cannot share one name. Its already
@@ -125,7 +125,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Lineage evidence or structural inference: unchanged from main's headers.
 - Hypothesized names/filenames, explicitly not recovered facts: the two clock
   factory names are coined (`_CLOCK_LONG` / `_CLOCK_SHORT` after their
-  profiles); [func_ov022_02111a1c](../../../src/actors/daObjFl_London_c.cpp) and [func_ov013_02111430](../../../src/actors/daObjClock_c.cpp) (the state
+  profiles); [func_ov022_02111a1c](../../../src/game/actors/d_a_obj_fl_london.cpp) and [func_ov013_02111430](../../../src/game/actors/d_a_obj_clock.cpp) (the state
   helpers) keep their address names.
 - Compiler experiments and measured barriers:
   - Baseline ordering: `linkcheck --baseline` builds the working tree, so a
@@ -214,7 +214,7 @@ inherited from PR #2231's own manifests or logs.
   - `python tools/tubuild.py verify <id>` for the three ids: 8/8, 9/9, 10/10
     MATCH, objisolate clean, reloc-destinations clean, emission order as
     expected, exit 0 each.
-  - `python tools/linkcheck.py --name <sym> --c src/actors/<Class>.cpp
+  - `python tools/linkcheck.py --name <sym> --c src/game/<dir>/<file>.cpp
     --module <ov> --addr ... --size ...` for all 17 promoted functions
     (addresses and sizes from the manifests): 17 VERIFIED, 0 BLIND, 0 other,
     exit 0 each (`build/G-lc-by-symbol.log`).
@@ -244,8 +244,8 @@ inherited from PR #2231's own manifests or logs.
     prints: `dsd check symbols --fail` has 9 pre-existing errors that the
     stock control also has (0 new) -- that check is not green and is not
     reported as green here.
-  - `python tools/romdata_check.py --files src/actors/daObjFl_London_c.cpp
-    src/actors/daObjClock_c.cpp`: 17 data symbols, `VERIFIED 11 (404 bytes)`,
+  - `python tools/romdata_check.py --files src/game/actors/d_a_obj_fl_london.cpp
+    src/game/actors/d_a_obj_clock.cpp`: 17 data symbols, `VERIFIED 11 (404 bytes)`,
     `PARTIAL 6 (64 bytes equal)`, `DIFFERS 0`, `UNNAMED 0`. All `_ZTI`/`_ZTV`/
     `g_profile_*` records are VERIFIED; the six PARTIALs are the
     NUL-terminated `_ZTS` strings (own and inherited), the tool's documented

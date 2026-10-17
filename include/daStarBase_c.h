@@ -42,7 +42,7 @@ struct daStarBase_c : dActor_c {
     Model mModel;            /* 0x114 */
     /* dExtShadowModel_c member, named by the class's own destructor calling
        dExtShadowModel_c's D1 at +0x164 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12daStarBase_cD0Ev, now in src/actors/daStar_c.cpp] */
+       checks. Was a u8 marker. [_ZN12daStarBase_cD0Ev, now in src/game/actors/d_a_star.cpp] */
     dExtShadowModel_c mShadowModel;            /* 0x164 */
     Matrix4x3 mShadowMtx;        /* 0x18c -- shadow transform */
     Vector3 mSpawnPos;           /* 0x1bc -- mPos as InitResources found it.

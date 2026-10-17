@@ -15,13 +15,13 @@ typed-subobject constructor (dBgCh_Actr).
 |---|---|---|
 | `src/_ZN9ModelBaseC2Ev.cpp` | `ModelBase::ModelBase()` | 0x02017150, 0x18 |
 | `src/_ZN5ModelC1Ev.cpp` | `Model::Model()` | 0x02016d58, 0x50 |
-| `src/engine/model/dExtCommonModel_c.cpp` | `dExtCommonModel_c::dExtCommonModel_c()` | 0x02016204, 0x50 |
-| `src/engine/model/dExtShadowModel_c.cpp` | `dExtShadowModel_c::dExtShadowModel_c()` | 0x02016068, 0x34 |
+| `src/engine/model/d_ext_common_model.cpp` | `dExtCommonModel_c::dExtCommonModel_c()` | 0x02016204, 0x50 |
+| `src/engine/model/d_ext_shadow_model.cpp` | `dExtShadowModel_c::dExtShadowModel_c()` | 0x02016068, 0x34 |
 | `src/engine/path/PathPtr.cpp` | `PathPtr::PathPtr()` | 0x0203ad74, 0x10 |
-| `src/engine/collision/dM3dGSph.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
-| `src/engine/collision/dBgCh_Lin.cpp` | `dBgCh_Lin::dBgCh_Lin()` | 0x020377b0, 0x5c |
+| `src/engine/collision/d_m3d_g_sph.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
+| `src/engine/collision/d_bg_ch_lin.cpp` | `dBgCh_Lin::dBgCh_Lin()` | 0x020377b0, 0x5c |
 | `src/_ZN12dBgCh_SphCrrC1Ev.cpp` | `dBgCh_SphCrr::dBgCh_SphCrr()` | 0x02037d18, 0x6c |
-| `src/engine/collision/dBgCh_Gnd.cpp` | `dBgCh_Gnd::dBgCh_Gnd()` | 0x02037570, 0x40 |
+| `src/engine/collision/d_bg_ch_gnd.cpp` | `dBgCh_Gnd::dBgCh_Gnd()` | 0x02037570, 0x40 |
 
 The seventh is the tree's **first multiple-inheritance constructor**: its
 header declares `dBgCh_Lin : dBgCh, dBgPi, dM3dGLin` straight out of the

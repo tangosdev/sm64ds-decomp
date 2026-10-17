@@ -25,6 +25,8 @@ Checks
   L5  unenrolled    a source file no delinks.txt mentions               INFO
   L6  misfiled      named/<mod>/ holds an address-named symbol, or
                     one symbols.txt places in a different module        ERROR
+  L7  file name     a file in a naming-controlled bucket (AGENTS.md
+                    "Which directory under src/") breaks its prefix rule ERROR
 
 L5 is informational on purpose: a matched function can be legitimately un-enrolled (thumb,
 misaligned stub, on the exclude list), and `enroll` already reports those with reasons.
@@ -166,6 +168,24 @@ def check(config=None, known=None):
         if len(ds) > 1:
             findings["L4"].append({"key": cls, "dirs": sorted(ds)})
 
+    # L7 -- the d_a_/d_s_/d_mg_ file-name rule. Nothing else generates or enforces it.
+    for rel in sorted(on_disk):
+        stem = pathlib.PurePosixPath(rel).stem
+        why = None
+        if rel.startswith("src/actors/"):
+            why = "src/actors/ was retired; actor leaves live in src/game/actors/"
+        elif rel.startswith("src/game/actors/") and not (
+                stem.startswith("d_a_") or stem in L7_COINED):
+            why = "actor files are d_a_*"
+        elif rel.startswith("src/game/stages/") and not (
+                stem.startswith("d_") or stem in L7_COINED):
+            why = "stage files are d_*"
+        elif rel.startswith("src/minigames/") and not (
+                stem.startswith(("d_", "unit0"))):
+            why = "minigame files are d_* (or unit<addr>)"
+        if why:
+            findings["L7"].append({"key": rel, "why": why})
+
     # L5 -- informational.
     for rel in sorted(on_disk - set(enrolled)):
         findings["L5"].append({"key": rel})
@@ -185,7 +205,9 @@ def check(config=None, known=None):
     return out
 
 
-ERRORS = ("L1", "L2", "L3", "L4", "L6")
+# Coined (no ROM RTTI name yet) files that sit in a d_*-only bucket.
+L7_COINED = {"LevelObjects", "StarCamera_Spawn"}
+ERRORS = ("L1", "L2", "L3", "L4", "L6", "L7")
 LABEL = {
     "L1": "delinks names a path with no file there (function silently falls back to ROM bytes)",
     "L2": "two source files share a symbol",
@@ -193,6 +215,7 @@ LABEL = {
     "L4": "one class split across two directories (disables placement for it)",
     "L5": "source file not enrolled in any delinks.txt",
     "L6": "misfiled under named/",
+    "L7": "file name breaks its bucket's d_a_/d_s_/d_mg_ rule",
 }
 
 

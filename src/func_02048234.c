@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef long long s64;
 typedef signed short s16;
 
@@ -22,11 +23,11 @@ void func_02048234(int *out, int sa, int sb, int sc, unsigned short ax, unsigned
     out[0] = (int)(((s64)sa * (((s64)b1 * c1) >> 12)) >> 12);
     out[1] = (int)(((s64)sa * (((s64)b1 * c0) >> 12)) >> 12);
     out[2] = (int)(((s64)(-b0) * sa) >> 12);
-    out[3] = (int)(((s64)sb * ((int)(((s64)b0 * p01 + 0x800) >> 12) - p10) + 0x800) >> 12);
-    out[4] = (int)(((s64)sb * (p11 + (int)(((s64)b0 * p00 + 0x800) >> 12)) + 0x800) >> 12);
+    out[3] = FX_MUL(sb, FX_MUL(b0, p01) - p10);
+    out[4] = FX_MUL(sb, p11 + FX_MUL(b0, p00));
     out[5] = (int)(((s64)sb * (((s64)b1 * a0) >> 12)) >> 12);
-    out[6] = (int)(((s64)sc * (p00 + (int)(((s64)b0 * p11 + 0x800) >> 12)) + 0x800) >> 12);
-    out[7] = (int)(((s64)sc * ((int)(((s64)b0 * p10 + 0x800) >> 12) - p01) + 0x800) >> 12);
+    out[6] = FX_MUL(sc, p00 + FX_MUL(b0, p11));
+    out[7] = FX_MUL(sc, FX_MUL(b0, p10) - p01);
     out[8] = (int)(((s64)sc * (((s64)b1 * a1) >> 12)) >> 12);
     out[9] = tx;
     out[10] = ty;

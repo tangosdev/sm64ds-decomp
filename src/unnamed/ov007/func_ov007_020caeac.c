@@ -1,4 +1,5 @@
 #include "common.h"
+#include "nitro/fx/fx.h"
 // @symbol func_ov007_020caeac
 
 /* Texture-mapped triangle-strip emitter for the ov007 water/cloth grid: one
@@ -13,7 +14,6 @@
 #define REG_TEX   (*(vu32 *)0x4000488)
 #define REG_VTX   (*(vu32 *)0x400048C)
 
-#define FX_MUL(a, b) ((s32)(((s64)(a) * (s64)(b) + 0x800) >> 12))
 
 static inline void G3_Vtx(s16 x, s16 y, s16 z)
 {

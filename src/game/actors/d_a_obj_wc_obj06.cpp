@@ -17,6 +17,12 @@
  * Leftover: g_profile_WC_OBJ06 is ov029 data outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wc_obj06_AssetId {
+    ASSET_WC_OBJ06_BMD = 0x06d5,
+    ASSET_WC_OBJ06_KCL = 0x06d6
+};
+
 #include "daObjWcObj06_c.h"
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
@@ -91,5 +97,5 @@ int daObjWcObj06_c::InitResources()
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj06.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj06ModelFilePtr data_ov029_021142ac(0x6d5);
-WcObj06CollisionFilePtr data_ov029_021142b4(0x6d6);
+WcObj06ModelFilePtr gWcObj06ModelFile(ASSET_WC_OBJ06_BMD);
+WcObj06CollisionFilePtr gWcObj06CollisionFile(ASSET_WC_OBJ06_KCL);

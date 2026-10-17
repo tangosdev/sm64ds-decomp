@@ -1,8 +1,8 @@
 {
   "id": "arm9/dWipe_c",
   "module": "arm9",
-  "source": "src/engine/fader/dWipe_c.cpp",
-  "promoted_source": "src/engine/fader/dWipe_c.cpp",
+  "source": "src/runtime/graphics/fader/d_wipe.cpp",
+  "promoted_source": "src/runtime/graphics/fader/d_wipe.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

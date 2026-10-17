@@ -1286,6 +1286,9 @@ def cmd_compile(args):
         obj_bytes, entry)
     if not policy_reasons and compiler_only.get("deadstripped"):
         print(f"compiler-only     : exact deadstrip {compiler_only['deadstripped']}")
+    obj_bytes, audited_bytes, policy_reasons = _apply_defined_renames_for_audit(
+        obj_bytes, audited_bytes, policy_reasons, entry)
+    inv = elf_inventory(obj_bytes)
     audit_inv = elf_inventory(audited_bytes) if audited_bytes is not None else inv
     unlicensed_funcs, unlicensed_objs, unlicensed_secs = unlicensed_inventory(
         entry, audit_inv)
@@ -1353,6 +1356,9 @@ def cmd_verify(args):
     inv = elf_inventory(obj_bytes)
     audited_bytes, compiler_only, policy_reasons = apply_compiler_only_policy(
         obj_bytes, entry)
+    obj_bytes, audited_bytes, policy_reasons = _apply_defined_renames_for_audit(
+        obj_bytes, audited_bytes, policy_reasons, entry)
+    inv = elf_inventory(obj_bytes)
     audit_inv = elf_inventory(audited_bytes) if audited_bytes is not None else inv
 
     name_index = RA.build_name_index()
@@ -1549,6 +1555,18 @@ def cmd_verify(args):
         upsert_manifest_entry(data, entry)
         save_manifest(data)
 
+    if getattr(args, "verdict", False):
+        state = "text-verified" if text_verified else "not-verified"
+        print(unit_verdict(
+            "tubuild.verify", entry["id"], state,
+            bytes=f"{n_match}/{len(rows)}",
+            missing=sum(1 for _o, _s, v in rows if v == "MISSING"),
+            relocs="ok" if all_reloc_ok else "fail",
+            order="ok" if not bad_pairs else "partial",
+            unlicensed=n_unlicensed, policy=len(policy_reasons),
+            promotable="yes" if (text_verified and not promotion_refused) else "no",
+            exit=0 if (text_verified and not promotion_refused) else 1))
+
     # A PROMOTION REFUSED is a failure of this command even when the bytes
     # reproduced. `text_verified` is deliberately NOT folded into: it drives the
     # manifest status above, and "the bytes match but the policy refuses the
@@ -1556,6 +1574,28 @@ def cmd_verify(args):
     # Before this, a refused promotion exited 0 and any caller trusting the exit
     # code shipped it.
     return 0 if (text_verified and not promotion_refused) else 1
+
+
+# ========================================================== one-line verdict
+
+VERDICT_PREFIX = "UNIT-VERDICT"
+
+
+def unit_verdict(tool, unit_id, result, **fields):
+    """The stable machine line `--verdict` appends: one line, space-separated
+    ``key=value`` pairs after a fixed prefix, keys in a fixed order per tool.
+
+    For callers that cannot parse a human report (tangOS Console scores a run by
+    a success pattern): match ``^UNIT-VERDICT `` and read ``result=``. The line is
+    printed only when the command reached a verdict; an exception, a compile
+    error or a missing manifest entry prints none, and the absence is itself the
+    failure. Values never contain spaces, so splitting on whitespace is safe.
+    Adding a key at the end is compatible; renaming or reordering one is not.
+    """
+    parts = [VERDICT_PREFIX, f"tool={tool}", f"id={unit_id}", f"result={result}"]
+    for key, value in fields.items():
+        parts.append(f"{key}={str(value).replace(' ', '_')}")
+    return " ".join(parts)
 
 
 # ========================================================== `linkcheck` -- scratch delinks
@@ -2508,6 +2548,18 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     inv = elf_inventory(obj_bytes)
     licensed = {f["symbol"] for f in entry.get("functions", [])}
     licensed |= {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
+    # Classify the raw preimage of an explicitly owned function before the
+    # later rename stage. Validate the same ELF and unique canonical home;
+    # this adds no deadstrip policy and does not change the object bytes.
+    renames = entry.get("defined_symbol_renames") or []
+    if isinstance(renames, list) and any(
+            isinstance(row, dict) and "owned_function" in row for row in renames):
+        _mapping, requested, rename_errors = RA.validated_defined_symbol_rename_plan(
+            obj_bytes, entry)
+        if rename_errors:
+            return None, {"requested": [], "ownedFunctionCorrespondences": []}, rename_errors
+        licensed |= {row["from"] for row in requested
+                     if "owned_function" in row and row["to"] in licensed}
     extras = {s["name"]: s for s in inv["symbols"]
               if s["type"] == "STT_FUNC" and not s["name"].startswith("$")
               and s["name"] not in licensed}
@@ -3004,34 +3056,28 @@ def apply_undefined_symbol_alias_policy(obj_bytes, entry, name_index=None):
                  "objisolate": plan}, []
 
 
+def _apply_defined_renames_for_audit(obj_bytes, audited_bytes, policy_reasons, entry):
+    """Return the object as production links it: after `defined_symbol_renames`.
+
+    Resolving a raw emitted `@NNN` through the fleet name index lands on whichever
+    module happens to pin the same number, so a slot the build links correctly reads
+    WRONG-DEST and the emitted temp reads as an unlicensed symbol.  A refused rename
+    is a policy refusal, exactly as production treats it, and the raw object is kept.
+    """
+    renamed, _report, reasons = apply_defined_symbol_rename_policy(obj_bytes, entry)
+    if reasons:
+        return obj_bytes, audited_bytes, list(policy_reasons) + reasons
+    if audited_bytes is not None:
+        audited_renamed, _report, _reasons = apply_defined_symbol_rename_policy(
+            audited_bytes, entry)
+        if audited_renamed is not None:
+            audited_bytes = audited_renamed
+    return renamed, audited_bytes, policy_reasons
+
+
 def apply_defined_symbol_rename_policy(obj_bytes, entry):
     """Renumber manifest-licensed compiler-local definitions to fleet-unique names."""
-    raw = entry.get("defined_symbol_renames", [])
-    if raw is None:
-        raw = []
-    if not isinstance(raw, list):
-        return None, {"requested": [], "renamed": []}, \
-            ["defined_symbol_renames must be a list"]
-    owned = {row["symbol"] for _section, row in manifest_owned_symbol_rows(entry)}
-    mapping, requested, reasons = {}, [], []
-    for ordinal, row in enumerate(raw):
-        label = f"defined_symbol_renames[{ordinal}]"
-        if not isinstance(row, dict):
-            reasons.append(f"{label} is not an object")
-            continue
-        missing = [key for key in ("from", "to", "evidence") if not row.get(key)]
-        if missing:
-            reasons.append(f"{label} is missing {missing}")
-            continue
-        old, new = str(row["from"]), str(row["to"])
-        if new not in owned:
-            reasons.append(f"{label} renames to {new}, which the manifest does not own")
-            continue
-        if old in mapping:
-            reasons.append(f"duplicate defined symbol rename for {old}")
-            continue
-        mapping[old] = new
-        requested.append(dict(row))
+    mapping, requested, reasons = RA.validated_defined_symbol_rename_plan(obj_bytes, entry)
     if reasons:
         return None, {"requested": requested, "renamed": []}, reasons
     out, plan = OI.rename_defined_symbols(obj_bytes, mapping)
@@ -3366,6 +3412,112 @@ def _configured_bss_boundaries(module, homes):
     return out
 
 
+def _configured_terminal_bss_end(module, claim, layout, owned_rows):
+    """Prove a sized final object end before configured module alignment padding.
+
+    This is an end-only alternative to the ordinary address anchors. Sizes must
+    be explicit in symbols.txt, independently reviewed from retail evidence.
+    Neither candidate object sizes nor the distance to module end invent one.
+    Returns (evidence, reasons); it never licenses ownership of the trailing gap.
+    """
+    directory = module_config_dir(RL.normalize_module(module))
+    delinks, symbols = directory / "delinks.txt", directory / "symbols.txt"
+    if not delinks.is_file() or not symbols.is_file():
+        return None, ["terminal BSS anchor needs module delinks.txt and symbols.txt"]
+    header, entries = parse_delinks_file(delinks)
+    declared = [(lo, hi) for name, lo, hi in EN.sections(header)
+                if name == ".bss" and lo <= claim["start"] < claim["end"] < hi]
+    if len(declared) != 1:
+        return None, ["terminal BSS anchor needs one containing section"]
+    containers = []
+    for line in header:
+        match = re.fullmatch(
+            r"\s*\.bss\s+start:(0x[0-9a-fA-F]+)\s+end:(0x[0-9a-fA-F]+)"
+            r"\s+kind:bss\s+align:(0x[0-9a-fA-F]+|[0-9]+)\s*",
+            line.split("//", 1)[0])
+        if match:
+            lo, hi, align = (int(value, 16 if value.startswith("0x") else 10)
+                             for value in match.groups())
+            if lo <= claim["start"] < claim["end"] < hi:
+                containers.append((lo, hi, align))
+    if len(containers) != 1:
+        return None, ["terminal BSS anchor needs one containing section with explicit alignment"]
+    _lo, module_end, align = containers[0]
+    end = claim["end"]
+    if align <= 0 or align & (align - 1) or not (0 < module_end - end < align) \
+            or _align_up(end, align) != module_end:
+        return None, ["terminal BSS remainder is not solely the configured alignment tail"]
+
+    records = []
+    for number, line in enumerate(symbols.read_text(encoding="utf-8").splitlines(), 1):
+        line = line.split("//", 1)[0].strip()
+        if not line:
+            continue
+        name = line.split()[0]
+        address = re.search(r"(?:^|\s)addr:(0x[0-9a-fA-F]+)(?=\s|$)", line)
+        if address is None:
+            return None, [f"terminal BSS anchor cannot parse symbols.txt:{number} address"]
+        address = int(address.group(1), 0)
+        if end <= address < module_end:
+            return None, [f"configured symbol {name} occupies the alleged BSS alignment tail"]
+        kind = re.search(r"(?:^|\s)kind:(\S+)", line)
+        kind = kind.group(1) if kind else ""
+        size = None
+        if kind.startswith("bss"):
+            match = re.fullmatch(r"bss(?:\(size=(0x[0-9a-fA-F]+|[0-9]+)\))?", kind)
+            if match is None:
+                return None, [f"terminal BSS anchor has malformed BSS kind at symbols.txt:{number}"]
+            if match.group(1) is not None:
+                size = int(match.group(1), 16 if match.group(1).startswith("0x") else 10)
+                if size <= 0 or address + size > 0x100000000:
+                    return None, [f"terminal BSS anchor has invalid size for {name}"]
+                if address < module_end and address + size > end:
+                    return None, [f"configured BSS object {name} crosses the proposed end"]
+        records.append((name, kind, address, size))
+
+    for owner, body in entries:
+        for section, lo, hi in entry_sections(body):
+            if max(lo, end) < min(hi, module_end):
+                return None, [f"existing {owner} {section} owns the alleged BSS alignment tail"]
+
+    terminal = [(name, row) for name, row in layout.get("symbols", {}).items()
+                if row.get("type") == "STT_OBJECT" and row.get("size", 0) > 0
+                and row["address"] + row["size"] == end
+                and claim["start"] <= row["address"]]
+    if len(terminal) != 1:
+        return None, ["terminal BSS anchor needs exactly one emitted final object"]
+    name, emitted = terminal[0]
+    configured = [record for record in records if record[0] == name]
+    if len(configured) != 1:
+        return None, [f"terminal BSS object {name} needs one configured symbol row"]
+    _name, kind, address, size = configured[0]
+    if not kind.startswith("bss(") or size is None:
+        return None, [f"terminal BSS object {name} needs an explicit configured BSS size"]
+    if address != emitted["address"] or size != emitted["size"]:
+        return None, [f"terminal BSS object {name} disagrees with its configured address/size"]
+    # A second configured label at the terminal address is ambiguous evidence.
+    if sum(record[2] == address for record in records) != 1:
+        return None, [f"terminal BSS object {name} has ambiguous configured aliases"]
+    if any(address < record[2] < end for record in records):
+        return None, [f"terminal BSS object {name} contains another configured symbol"]
+    declared = [row for section, row in owned_rows
+                if section == ".bss" and row.get("symbol") == name]
+    if len(declared) != 1:
+        return None, [f"terminal BSS object {name} needs one manifest row"]
+    try:
+        manifest_size = declared[0]["size"]
+        manifest_size = int(manifest_size, 0) if isinstance(manifest_size, str) else int(manifest_size)
+    except (KeyError, TypeError, ValueError):
+        return None, [f"terminal BSS object {name} needs a valid manifest size"]
+    emitted_address, address_error = _manifest_emitted_addr(declared[0])
+    if address_error or _manifest_addr(declared[0]) != address \
+            or emitted_address != address or manifest_size != size:
+        return None, [f"terminal BSS object {name} disagrees with its manifest address/size"]
+    return {"symbol": name, "address": hex(address), "size": hex(size),
+            "end": hex(end), "moduleEnd": hex(module_end), "alignment": align,
+            "unclaimedTailBytes": module_end - end}, []
+
+
 def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                           config_relocs=None, sym_index=None, target_reader=None,
                           symbol_homes=None, bss_boundaries=None,
@@ -3509,7 +3661,18 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                                    f"manifest says 0x{want_size:x}")
 
     for claim in (c for c in nontext if c["name"] == ".bss"):
-        if claim["start"] not in bss_boundaries or claim["end"] not in bss_boundaries:
+        end_anchored = claim["end"] in bss_boundaries
+        if claim["start"] in bss_boundaries and not end_anchored:
+            evidence, errors = _configured_terminal_bss_end(
+                owner_module, claim, layouts.get(".bss", {}), expected_rows)
+            if evidence is not None:
+                end_anchored = True
+                for row in rows:
+                    if row["section"] == ".bss":
+                        row["terminalBssAnchor"] = evidence
+            else:
+                reasons.extend(errors)
+        if claim["start"] not in bss_boundaries or not end_anchored:
             reasons.append(f".bss claim 0x{claim['start']:08x}..0x{claim['end']:08x} "
                            "does not have independently configured boundary anchors")
 
@@ -6567,6 +6730,9 @@ def main():
     p.add_argument("--no-write", action="store_true",
                    help="do not write the verification block back into the manifest "
                         "(sibling-control runs; the default still records it)")
+    p.add_argument("--verdict", action="store_true",
+                   help="append one stable `UNIT-VERDICT ...` line for machine callers; "
+                        "the report above it is unchanged")
     p.set_defaults(func=cmd_verify)
 
     p = sub.add_parser("partial", help="plan sec 9 -- derive one isolated object per "

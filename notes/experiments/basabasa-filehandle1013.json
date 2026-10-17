@@ -1,0 +1,317 @@
+{
+  "schema": 1,
+  "task_id": "basabasa-filehandle1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3787",
+  "base_commit": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src/actors/daBasabasa_c.cpp",
+  "source_sha256": "11d41777495ee83ca87a0b1bb46a14f662ad4b3a2a4b0ea2347c5bb126bc61b2",
+  "change": "Replace local animation-handle words[2] with measured fileID,numRefs,filePtr fields and seven direct filePtr reads; remove LOADED_FILE reinterpretation macro.",
+  "identity": "daBasabasa_c: Swooper/BASABASA. Existing RTTI/vtable at ov065:0211cc60/0211cca0; dEnemyBase_c base and0x440 allocation unchanged.",
+  "layout": {
+    "target": "retail DS under2004/b56",
+    "size": 8,
+    "alignment": 4,
+    "fileID": {
+      "type": "u16",
+      "offset": 0
+    },
+    "numRefs": {
+      "type": "u8",
+      "offset": 2
+    },
+    "implicit_padding": [
+      3
+    ],
+    "filePtr": {
+      "type": "void*",
+      "offset": 4
+    },
+    "evidence": [
+      "SharedFilePtr::Construct -> func_02017e48 -> func_02017e0c: halfword+0,byte+2,word-zero+4 stores",
+      "SharedFilePtr::Load at02017c54 uses these existing field types and assigns/returns buffer+4",
+      "SharedFilePtr::Release at02017b64 decrements the+2 reference byte"
+    ],
+    "names": "Observed semantics, not recovered original identifiers.",
+    "scope": "Only the existing local animation-handle type; shared empty header/model handle unchanged.",
+    "full_host_build_claim": false
+  },
+  "experiments": {
+    "constructs": 2,
+    "fallback": "existing words[1] access was exact",
+    "accepted": "actual measured local fields are exact",
+    "header_changes": false,
+    "manifest_changes": false,
+    "policy_changes": false,
+    "symbol_changes": false
+  },
+  "object_proof": {
+    "actual_main_tools": "08b118098ecb7ce86b85f1215886a4618e268a86",
+    "fresh_original_candidate_compiles": true,
+    "whole_raw_elf_equal": true,
+    "raw_sha256": "e7f26974860cf5b75fbab7534e46d96b46defd14b394755d4154d5e1f206d5e1",
+    "whole_normal_prepared_elf_equal": true,
+    "prepared_sha256": "eb206f9544f66a7fb2473b61389c2ba7c16d7d3dc3fad3c0b955670a5ce71364",
+    "licensed_rows": 44,
+    "strict_rom_rows": 32,
+    "functions_including_init": 23,
+    "rom_data_rows": 9,
+    "blind": 0,
+    "diffs": [],
+    "bss_rows": [
+      {
+        "symbol": "@906",
+        "address": "0x211d6d4",
+        "size": 12,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "@907",
+        "address": "0x211d6b0",
+        "size": 12,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "@908",
+        "address": "0x211d6bc",
+        "size": 12,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "@909",
+        "address": "0x211d6c8",
+        "size": 12,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d690",
+        "address": "0x211d690",
+        "size": 8,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d6e0",
+        "address": "0x211d6e0",
+        "size": 16,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d6f0",
+        "address": "0x211d6f0",
+        "size": 16,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d700",
+        "address": "0x211d700",
+        "size": 16,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d6a0",
+        "address": "0x211d6a0",
+        "size": 8,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d710",
+        "address": "0x211d710",
+        "size": 16,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d698",
+        "address": "0x211d698",
+        "size": 8,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      },
+      {
+        "symbol": "data_ov065_0211d6a8",
+        "address": "0x211d6a8",
+        "size": 8,
+        "type": "SHT_NOBITS",
+        "alignment": 4,
+        "zero_init": true
+      }
+    ],
+    "bss_bytes": 144,
+    "bss_interpretation": "SHT_NOBITS contribution with exact canonical homes/sizes/alignment and loader zero initialization, followed by existing initializer; no ROM payload comparison claimed.",
+    "owned_nontext_relocations": 39,
+    "prepared_typed_references": 191,
+    "complete_graph_binding": "Entire raw and prepared ELF equality preserves every section/symbol/type/offset/addend/reference and ARM mapping symbol.",
+    "externalized_metadata": [
+      {
+        "symbol": "_ZTV12daBasabasa_c",
+        "size": 132,
+        "module": "ov065",
+        "storage_address": "0x211cc98",
+        "relocations": 32,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI12daBasabasa_c",
+        "size": 12,
+        "module": "ov065",
+        "storage_address": "0x211cc60",
+        "relocations": 3,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS12daBasabasa_c",
+        "size": 15,
+        "module": "ov065",
+        "storage_address": "0x211cc6c",
+        "relocations": 0,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "size": 12,
+        "module": "ov002",
+        "storage_address": "0x21081c0",
+        "relocations": 3,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "size": 15,
+        "module": "ov002",
+        "storage_address": "0x21081cc",
+        "relocations": 0,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": 12,
+        "module": "arm9",
+        "storage_address": "0x208e390",
+        "relocations": 3,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": 10,
+        "module": "arm9",
+        "storage_address": "0x208e384",
+        "relocations": 0,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": 12,
+        "module": "arm9",
+        "storage_address": "0x2086e78",
+        "relocations": 3,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": 9,
+        "module": "arm9",
+        "storage_address": "0x2086e54",
+        "relocations": 0,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": 8,
+        "module": "arm9",
+        "storage_address": "0x2086d70",
+        "relocations": 2,
+        "blind": 0,
+        "exact": true
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": 9,
+        "module": "arm9",
+        "storage_address": "0x2086e60",
+        "relocations": 0,
+        "blind": 0,
+        "exact": true
+      }
+    ],
+    "externalized_metadata_bytes": 246
+  },
+  "gates": {
+    "whole_tu": "pass:32ROMrows0blind,12BSSrows144B,11externalizedmetadata246B,fullraw/preparedELFexact",
+    "full_rom": {
+      "command": "python -u tools/rombuild.py -j16 --no-rom",
+      "exit_code": 0,
+      "source_checkpoint": "7711045f467caf68b2acf20267e5c0b5764aaa09",
+      "functions": 11332,
+      "mismatches": 0,
+      "data_claims": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "baseline_control": "Nine inherited dsd interior-symbol errors; no new errors in final gate.",
+      "advisory_data_inventory": "969verified,1519partial,1inherited differ,21unnamed; unchanged, not full data reconstruction."
+    },
+    "prepush_range": {
+      "command": "python -u tools/prepush_linkcheck.py --range 08b118098ecb7ce86b85f1215886a4618e268a86..HEAD",
+      "exit_code": 0,
+      "checked": 23,
+      "verified": 22,
+      "warnings": 1,
+      "blocking": 0,
+      "qualified_warning": "__sinit_daBasabasa_c.cpp BLIND-10 in stock per-function rename/isolate check; identical original control and full normal prepared initializer strictly VERIFIED with0blind.",
+      "coverage_detail": "32ownedROMrows and11externalizedmetadata records all strict0blind;12BSS rows separately verified."
+    },
+    "declaration_agreement": "pass:1source22inherited disagreements,0new disagreements or header redeclarations",
+    "language_mode": "pass against current banked chaos-data baseline",
+    "port_references": "pass:267resolve"
+  },
+  "completion": "partial",
+  "remaining_work": [
+    {
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "detail": "Model handle words[2], shared empty SharedFilePtr layout, mangled Fix12 calls, raw identifiers, ExecutePerch base view and PoofPos scheduling shape remain.",
+      "owner": "codex-basabasa-coordinator1013",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3787"
+    }
+  ],
+  "artifact_paths": [
+    "build/basabasa-readability1013/whole-proof.json",
+    "build/basabasa-readability1013/candidate-prepare.json",
+    "build/basabasa-readability1013/externalized-metadata.json",
+    "build/basabasa-readability1013/full-rom.log",
+    "build/basabasa-readability1013/decl.log"
+  ],
+  "warning_api_limit": "A raw obj-input linkcheck skips manifest renames/isolation and mis-resolves TU-local @names globally. Warning control uses the actual reloc_audit._as_the_build_links_it routine that stock linkcheck uses; normal production prepare is verified separately.",
+  "source_git_blob_sha256": "11d41777495ee83ca87a0b1bb46a14f662ad4b3a2a4b0ea2347c5bb126bc61b2",
+  "binding": "Final report-only descendant preserves src/include/config/tools/port trees of the producer-tested checkpoint; independent review accepts final commit explicitly."
+}

@@ -14,7 +14,7 @@
  * SlidingBox (coined).
  *
  * The factory (daSlide_Box_c_classInit, historical alias SlidingBox_Spawn,
- * now folded into src/actors/daSlide_Box_c.cpp) allocates 0x4f8, constructs
+ * now folded into src/game/actors/d_a_slide_box.cpp) allocates 0x4f8, constructs
  * dBgActor_c, then the dBgCh_Actr at 0x324. Both destructor variants call
  * _ZN10dBgCh_ActrD1Ev on that member before the inherited dBgActor_c
  * teardown (dBgW_KcMbg, Model, dActor_c), independently pinning the layout.

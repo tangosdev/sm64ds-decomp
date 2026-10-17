@@ -72,7 +72,7 @@
     "Six-function unit 0x0211d270..0x0211d3a0 in reverse source order (no defer_codegen pragma): the mesh-collision callback pair, then the four factories as `return new daTrsTrap_c()` each. The synthesized ctor reproduces the ROM sequence (operator new, dActor_c C2, vtable store, member C1s) exactly."
   ],
   "production_mode": "text-only",
-  "promoted_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp",
+  "promoted_source": "src/game/actors/d_a_trs_trap_classinits.cpp",
   "sections": [
     {
       "end": "0x0211d3a0",
@@ -80,7 +80,7 @@
       "start": "0x0211d270"
     }
   ],
-  "source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp",
+  "source": "src/game/actors/d_a_trs_trap_classinits.cpp",
   "status": "promoted",
   "verification": {
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",

@@ -1,8 +1,8 @@
 {
   "id": "ov100/daDoor_c",
   "module": "ov100",
-  "source": "src/actors/daDoor_c.cpp",
-  "promoted_source": "src/actors/daDoor_c.cpp",
+  "source": "src/game/actors/d_a_door.cpp",
+  "promoted_source": "src/game/actors/d_a_door.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -262,28 +262,28 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov100_02148724",
+      "symbol": "gObjDoor0Star1ModelFile",
       "address": "0x02148724",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the door resource handle constructed with file ID 0x43f"
     },
     {
-      "symbol": "data_ov100_0214872c",
+      "symbol": "gObjDoor0Star3ModelFile",
       "address": "0x0214872c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the door resource handle constructed with file ID 0x441"
     },
     {
-      "symbol": "data_ov100_02148734",
+      "symbol": "gObjDoor5HorrorModelFile",
       "address": "0x02148734",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the door resource handle constructed with file ID 0x446"
     },
     {
-      "symbol": "data_ov100_0214873c",
+      "symbol": "gObjDoor0StarModelFile",
       "address": "0x0214873c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -304,7 +304,7 @@
       "evidence": "the door resource handle constructed with file ID 0x9c0b"
     },
     {
-      "symbol": "data_ov100_02148754",
+      "symbol": "gObjDoor4YamiModelFile",
       "address": "0x02148754",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -318,21 +318,21 @@
       "evidence": "the door resource handle constructed with file ID 0x9c09"
     },
     {
-      "symbol": "data_ov100_02148764",
+      "symbol": "gObjDoor0Star10ModelFile",
       "address": "0x02148764",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the door resource handle constructed with file ID 0x440"
     },
     {
-      "symbol": "data_ov100_0214876c",
+      "symbol": "gObjDoor2BoroModelFile",
       "address": "0x0214876c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the door resource handle constructed with file ID 0x444"
     },
     {
-      "symbol": "data_ov100_02148774",
+      "symbol": "gObjDoor1ModelFile",
       "address": "0x02148774",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1083,7 +1083,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daDoor_c.cpp",
+      "symbol": "__sinit_d_a_door.cpp",
       "address": "0x02147698",
       "size": "0x3d8",
       "binding": "STB_GLOBAL",
@@ -1092,7 +1092,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daDoor_c.cpp",
+      "symbol": ".p__sinit_d_a_door.cpp",
       "address": "0x02147df4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1138,13 +1138,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daDoor_c.cpp",
+      "symbol": "__sinit_d_a_door.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daDoor_c.cpp",
+      "symbol": ".p__sinit_d_a_door.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1518,7 +1518,7 @@
       "source": "0x2147994",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214873c",
+      "symbol": "gObjDoor0StarModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214873c"
@@ -1538,7 +1538,7 @@
       "source": "0x21479a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148724",
+      "symbol": "gObjDoor0Star1ModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148724"
@@ -1558,7 +1558,7 @@
       "source": "0x21479ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214872c",
+      "symbol": "gObjDoor0Star3ModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214872c"
@@ -1578,7 +1578,7 @@
       "source": "0x21479b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148764",
+      "symbol": "gObjDoor0Star10ModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148764"
@@ -1598,7 +1598,7 @@
       "source": "0x21479c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148774",
+      "symbol": "gObjDoor1ModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148774"
@@ -1618,7 +1618,7 @@
       "source": "0x21479cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214876c",
+      "symbol": "gObjDoor2BoroModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214876c"
@@ -1658,7 +1658,7 @@
       "source": "0x21479e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148754",
+      "symbol": "gObjDoor4YamiModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148754"
@@ -1678,7 +1678,7 @@
       "source": "0x21479f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148734",
+      "symbol": "gObjDoor5HorrorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148734"
@@ -1978,7 +1978,7 @@
       "source": "0x2147df4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daDoor_c.cpp",
+      "symbol": "__sinit_d_a_door.cpp",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02147698"
@@ -1986,62 +1986,62 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@574",
+      "from": "@585",
       "to": "@570",
       "evidence": "mwcc numbers this resource-handle registration node @560 per TU; daObjHeart_c's emitted object already carries @560 globally, so the scratch link would multiply-define it"
     },
     {
-      "from": "@575",
+      "from": "@586",
       "to": "@571",
       "evidence": "mwcc numbers this resource-handle registration node @561 per TU; daObjHeart_c's emitted object already carries @561 globally, so the scratch link would multiply-define it"
     },
     {
-      "from": "@580",
+      "from": "@591",
       "to": "@566",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @580 now; licensed under the existing pin @566"
     },
     {
-      "from": "@583",
+      "from": "@594",
       "to": "@569",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @583 now; licensed under the existing pin @569"
     },
     {
-      "from": "@572",
+      "from": "@583",
       "to": "@558",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @572 now; licensed under the existing pin @558"
     },
     {
-      "from": "@582",
+      "from": "@593",
       "to": "@568",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @582 now; licensed under the existing pin @568"
     },
     {
-      "from": "@573",
+      "from": "@584",
       "to": "@559",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @573 now; licensed under the existing pin @559"
     },
     {
-      "from": "@581",
+      "from": "@592",
       "to": "@567",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @581 now; licensed under the existing pin @567"
     },
     {
-      "from": "@576",
+      "from": "@587",
       "to": "@562",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @576 now; licensed under the existing pin @562"
     },
     {
-      "from": "@577",
+      "from": "@588",
       "to": "@563",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @577 now; licensed under the existing pin @563"
     },
     {
-      "from": "@578",
+      "from": "@589",
       "to": "@564",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @578 now; licensed under the existing pin @564"
     },
     {
-      "from": "@579",
+      "from": "@590",
       "to": "@565",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @579 now; licensed under the existing pin @565"
     }

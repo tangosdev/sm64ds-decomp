@@ -15,7 +15,7 @@ See also `notes/actor-vtables.md`, `notes/mwccarm-codegen.md`, `notes/actor-nami
 `fBase_c`'s code is one contiguous run, `0x02043444..0x02043f4c`, 25 functions.
 
 That range is a correction. The banner used to say `0x02043494..0x02043e04` and
-both ends were wrong; `src/actors/ActorBase.cpp` reconciled it against the
+both ends were wrong; `src/runtime/actor/ActorBase.cpp` reconciled it against the
 cartridge while rebuilding the translation unit.
 
 * `0x02043444` is the real start: `_ZN7fBase_cnwEj`, this class's own
@@ -102,7 +102,7 @@ Stated precisely: the key function -- the first non-inline virtual declared --
 must never be defined as a real method in any translation unit. Declaring the
 destructor first pins that role to TUs which by construction never will.
 `include/fBase_c.h` reaches the same end differently: it does declare
-`InitResources` (slot 0) in-class, but `src/actors/ActorBase.cpp`
+`InitResources` (slot 0) in-class, but `src/runtime/actor/ActorBase.cpp`
 deliberately defines it as an `extern "C"` free function rather than a method. Do
 not "fix" that file into a real method, and do not remove the declaration from
 `fBase_c.h` -- removing it would delete slot 0 and shift all 18 slots.
@@ -126,7 +126,7 @@ D1 body plus those instructions:
     fBase_c::~fBase_c [D0]  0x02043d78  0x44 = D1's 0x30 + 0x14
     dBase_c::~dBase_c [D0]  0x02013ea4  0x38 = D1's 0x24 + 0x14
 
-Compiled without the declaration, `src/actors/ActorDerived.cpp`'s D0 came out the
+Compiled without the declaration, `src/runtime/actor/ActorDerived.cpp`'s D0 came out the
 wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH.
 
 Why it is declared on `dActor_c` as well as on `fBase_c`: mwcc inlines
@@ -141,7 +141,7 @@ these headers. The one `src/` file that still declares a local
 `fBase_c`, not this one, so it is out of scope too. There used to be a second,
 the one-function shard behind `func_ov002_020b7e1c`; the daObjMarioCap_c
 promotion folded it into
-[src/actors/daObjMarioCap_c.cpp](../src/actors/daObjMarioCap_c.cpp), where the
+[src/game/actors/d_a_obj_mario_cap.cpp](../src/game/actors/d_a_obj_mario_cap.cpp), where the
 real `dActor_c` and `fBase_c` are in scope and the shadow is gone.
 
 No layout effect: an inline non-virtual member adds no field and no vtable slot,
@@ -149,7 +149,7 @@ and the `0x50` / `0xd0` size assertions still hold.
 
 ### 6a. Why the deallocator is declared with a `void *` second parameter
 
-`_ZN6Memory10DeallocateEPvP4Heap` is spelt in `dActor_c.h` and `fBase_c.h`
+`_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE` is spelt in `dActor_c.h` and `fBase_c.h`
 EXACTLY as `include/decl_common.h` spells it, deliberately. The mangled name says
 the second parameter is a `Heap*`, and `decl_common.h` says `void*`; declaring the
 honest type in the actor headers instead makes two incompatible `extern "C"`
@@ -162,7 +162,7 @@ once, for every caller at the same time.
 
 CW 1.2 rejects an in-class declaration of `operator new` ("illegal 'operator'
 declaration"), and it is neither virtual nor layout-affecting, so
-`src/actors/ActorBase.cpp` defines it under its mangled name instead.
+`src/runtime/actor/ActorBase.cpp` defines it under its mangled name instead.
 
 ## 7. `dActor_c` field widths -- the `0x080..0x0ab` block
 

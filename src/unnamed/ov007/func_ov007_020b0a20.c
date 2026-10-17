@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 typedef struct SubC {
     int unk0;
     char pad4[8];
@@ -143,7 +144,7 @@ void func_ov007_020b0a20(void)
             } else {
                 v = _ZN4cstd3divEii((v - 0x10) << 12, 4);
             }
-            e->unk48 = 0x1770 - (int)(((long long)v * 0x9C4 + 0x800) >> 12);
+            e->unk48 = 0x1770 - FX_MUL(v, 0x9C4);
             e->unk44 = e->unk48;
             e->unk40 = e->unk44;
         }

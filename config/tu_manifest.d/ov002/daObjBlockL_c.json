@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjBlockL_c",
   "module": "ov002",
-  "source": "src/actors/daObjBlockL_c.cpp",
-  "promoted_source": "src/actors/daObjBlockL_c.cpp",
+  "source": "src/game/actors/d_a_obj_block_l.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_block_l.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x20b35a0..0x20b406c, 14 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjBlockL_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit tail fold (0930c): the five registry factories daObjBlockL_c_classInit_BK_FUTA / _BLOCK_LL / _SW_BLOCK_L / _DP_BLOCK_L / _BLOCK_L (0x020b406c..0x020b415c) abut this TU's range with no gap, contiguous with each other, and are now inside it; tu_map cuts on symbol name and left them out. The unit is 0x020b35a0..0x020b415c, bounded above by src/actors/daObjBlockItemTag_c.cpp, which starts exactly at 0x020b415c."
+    "classInit tail fold (0930c): the five registry factories daObjBlockL_c_classInit_BK_FUTA / _BLOCK_LL / _SW_BLOCK_L / _DP_BLOCK_L / _BLOCK_L (0x020b406c..0x020b415c) abut this TU's range with no gap, contiguous with each other, and are now inside it; tu_map cuts on symbol name and left them out. The unit is 0x020b35a0..0x020b415c, bounded above by src/game/actors/d_a_obj_block_item_tag.cpp, which starts exactly at 0x020b415c."
   ],
   "sections": [
     {
@@ -257,7 +257,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjBlockL_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_l.cpp",
       "address": "0x02100d44",
       "size": "0x10c",
       "binding": "STB_GLOBAL",
@@ -266,7 +266,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjBlockL_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_block_l.cpp",
       "address": "0x021080e0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -312,45 +312,45 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1093",
+      "from": "@1072",
       "to": "@1701",
-      "evidence": "mwcc numbers this registration node @1093 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "mwcc numbers this registration node @1072 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@1094",
+      "from": "@1073",
       "to": "@1702",
-      "evidence": "mwcc numbers this registration node @1094 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "mwcc numbers this registration node @1073 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@1095",
+      "from": "@1074",
       "to": "@1703",
-      "evidence": "mwcc numbers this registration node @1095 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "mwcc numbers this registration node @1074 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@1096",
+      "from": "@1075",
       "to": "@1704",
-      "evidence": "mwcc numbers this registration node @1096 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "mwcc numbers this registration node @1075 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@1097",
+      "from": "@1076",
       "to": "@1705",
-      "evidence": "mwcc numbers this registration node @1097 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "mwcc numbers this registration node @1076 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     },
     {
-      "from": "@1098",
+      "from": "@1077",
       "to": "@1706",
-      "evidence": "mwcc numbers this registration node @1098 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
+      "evidence": "mwcc numbers this registration node @1077 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link"
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjBlockL_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_l.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjBlockL_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_block_l.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1027,7 +1027,7 @@
       "source": "0x021080e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjBlockL_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_l.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02100d44"

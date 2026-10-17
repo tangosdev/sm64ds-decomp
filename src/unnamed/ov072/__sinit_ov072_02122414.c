@@ -1,3 +1,13 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov072_02122414_AssetId {
+    ASSET_PENGUIN_CHILD_BMD = 0x03ff,
+    ASSET_PENGUIN_DIVE_BCA = 0x0400,
+    ASSET_PENGUIN_SLIDER_BCA = 0x0403,
+    ASSET_PENGUIN_STAND_UP_BCA = 0x0405,
+    ASSET_PENGUIN_WAIT1_BCA = 0x0406,
+    ASSET_PENGUIN_WALK_BCA = 0x0408
+};
+
 extern int func_02017acc(void *, int);
 extern void func_020731dc(void *, void *, void **);
 extern int _ZN13SharedFilePtr9ConstructEj(void *, int);
@@ -47,22 +57,22 @@ extern S8 data_ov072_02122cf4;
 
 void __sinit_ov072_02122414(void)
 {
-    func_02017acc(&data_ov072_02122cb4, 0x3ff);
+    func_02017acc(&data_ov072_02122cb4, ASSET_PENGUIN_CHILD_BMD);
     func_020731dc(&data_ov072_02122cb4, (void *)&func_02017ab4, (void **)&data_ov072_02122d00);
 
-    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122c9c, 0x406);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122c9c, ASSET_PENGUIN_WAIT1_BCA);
     func_020731dc(&data_ov072_02122c9c, (void *)&SharedFilePtr_Destruct_Anim, (void **)&data_ov072_02122d0c);
 
-    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122cbc, 0x408);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122cbc, ASSET_PENGUIN_WALK_BCA);
     func_020731dc(&data_ov072_02122cbc, (void *)&SharedFilePtr_Destruct_Anim, (void **)&data_ov072_02122d18);
 
-    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122c94, 0x400);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122c94, ASSET_PENGUIN_DIVE_BCA);
     func_020731dc(&data_ov072_02122c94, (void *)&SharedFilePtr_Destruct_Anim, (void **)&data_ov072_02122d24);
 
-    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122cac, 0x403);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122cac, ASSET_PENGUIN_SLIDER_BCA);
     func_020731dc(&data_ov072_02122cac, (void *)&SharedFilePtr_Destruct_Anim, (void **)&data_ov072_02122d30);
 
-    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122ca4, 0x405);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov072_02122ca4, ASSET_PENGUIN_STAND_UP_BCA);
     func_020731dc(&data_ov072_02122ca4, (void *)&SharedFilePtr_Destruct_Anim, (void **)&data_ov072_02122cc4);
 
     data_ov072_02122d6c[0].a = data_ov072_021229fc;

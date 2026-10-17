@@ -1,8 +1,8 @@
 {
   "id": "ov027/daPgDfdr_c",
   "module": "ov027",
-  "source": "src/actors/daPgDfdr_c.cpp",
-  "promoted_source": "src/actors/daPgDfdr_c.cpp",
+  "source": "src/game/actors/d_a_pg_dfdr.cpp",
+  "promoted_source": "src/game/actors/d_a_pg_dfdr.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -148,7 +148,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daPgDfdr_c.cpp",
+      "symbol": "__sinit_d_a_pg_dfdr.cpp",
       "address": "0x02112df8",
       "size": "0x178",
       "binding": "STB_GLOBAL",
@@ -157,7 +157,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daPgDfdr_c.cpp",
+      "symbol": ".p__sinit_d_a_pg_dfdr.cpp",
       "address": "0x02112fcc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -325,13 +325,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daPgDfdr_c.cpp",
+      "symbol": "__sinit_d_a_pg_dfdr.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daPgDfdr_c.cpp",
+      "symbol": ".p__sinit_d_a_pg_dfdr.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -709,7 +709,7 @@
       "source": "0x02112fcc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daPgDfdr_c.cpp",
+      "symbol": "__sinit_d_a_pg_dfdr.cpp",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02112df8"
@@ -725,7 +725,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov027_02113c94' differs between the legacy file that used to hold _ZN10daPgDfdr_c16CleanupResourcesEv and the one that held _ZN10daPgDfdr_c13InitResourcesEv; kept the first. RESOLVED at promotion: reconciled to `extern char data_ov027_02113c94;`, same reason as data_ov027_02113c7c.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov027_02113c6c' differs between the legacy file that used to hold _ZN10daPgDfdr_c16CleanupResourcesEv and the one that held _ZN10daPgDfdr_c13InitResourcesEv; kept the first. RESOLVED at promotion: reconciled to `extern char data_ov027_02113c6c;`, same reason as data_ov027_02113c7c (address-only in both users).",
     "Leftover cleanup folded daPgDfdr_c_classInit (0x0211207c..0x021120c4) as return new daPgDfdr_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. Registry/factory-backed join: the factory sits immediately after InitResources and ends at daSnmBth_c D1.",
-    "Static initializer folded: the PgDfdrModelFile handle (file 0x3fb), the three PgDfdrAnimationFilePtr handles (files 0x406/0x409/0x3fe), the PgDfdrTexSequenceFilePtr handle (file 0x407), the PgDfdrCollisionFilePtr handle (file 0x3fc), their destructor-registration nodes and the four-word state-table copy make mwcc emit __sinit_daPgDfdr_c.cpp itself (0x178, raw-byte-identical to retail __sinit_ov027_02112df8 with the same instruction sequence, literal pool order and relocation sites); the handwritten src/unnamed/ov027/__sinit_ov027_02112df8.cpp is retired. Definition order is the retail construction order, and the aggregate initializer copies the .data descriptors in the retail order (0x021139d4/0x021139cc/0x021139dc/0x021139c4), which the descriptors leave unlicensed. @751/@753/@755 clashed with ov026/ov010 and @750/@752/@754 overlap the parked cvnewslift set, so all six nodes are renamed (@750->@741, @751->@760, @752->@761, @753->@762, @754->@763, @755->@764); atdup reports 0 cross-module duplicates. One stale decl_common.h line (a descriptor, named only by this TU) is dropped per S42, and three unreferenced ambiguous second-word symbols.txt rows inside the new objects are removed. This fold does NOT license the .data descriptors, the patrol-step table, the profile/RTTI/vtable rows or any other .data.",
+    "Static initializer folded: the PgDfdrModelFile handle (file 0x3fb), the three PgDfdrAnimationFilePtr handles (files 0x406/0x409/0x3fe), the PgDfdrTexSequenceFilePtr handle (file 0x407), the PgDfdrCollisionFilePtr handle (file 0x3fc), their destructor-registration nodes and the four-word state-table copy make mwcc emit __sinit_d_a_pg_dfdr.cpp itself (0x178, raw-byte-identical to retail __sinit_ov027_02112df8 with the same instruction sequence, literal pool order and relocation sites); the handwritten src/unnamed/ov027/__sinit_ov027_02112df8.cpp is retired. Definition order is the retail construction order, and the aggregate initializer copies the .data descriptors in the retail order (0x021139d4/0x021139cc/0x021139dc/0x021139c4), which the descriptors leave unlicensed. @751/@753/@755 clashed with ov026/ov010 and @750/@752/@754 overlap the parked cvnewslift set, so all six nodes are renamed (@750->@741, @751->@760, @752->@761, @753->@762, @754->@763, @755->@764); atdup reports 0 cross-module duplicates. One stale decl_common.h line (a descriptor, named only by this TU) is dropped per S42, and three unreferenced ambiguous second-word symbols.txt rows inside the new objects are removed. This fold does NOT license the .data descriptors, the patrol-step table, the profile/RTTI/vtable rows or any other .data.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {

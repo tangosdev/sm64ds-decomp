@@ -115,28 +115,28 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov031_02111a00",
+      "symbol": "gHsStarModelFile",
       "address": "0x02111a00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_hs_billboard.cpp"
     },
     {
-      "symbol": "data_ov031_02111a08",
+      "symbol": "gHsMoonModelFile",
       "address": "0x02111a08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_hs_billboard.cpp"
     },
     {
-      "symbol": "data_ov031_02111a10",
+      "symbol": "gHsYStarModelFile",
       "address": "0x02111a10",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_hs_billboard.cpp"
     },
     {
-      "symbol": "data_ov031_02111a18",
+      "symbol": "gHsBStarModelFile",
       "address": "0x02111a18",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -642,7 +642,7 @@
       "source": "0x021114b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov031_02111a08",
+      "symbol": "gHsMoonModelFile",
       "addend": 0,
       "target_module": "ov031",
       "target_address": "0x02111a08"
@@ -672,7 +672,7 @@
       "source": "0x021114c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov031_02111a00",
+      "symbol": "gHsStarModelFile",
       "addend": 0,
       "target_module": "ov031",
       "target_address": "0x02111a00"
@@ -692,7 +692,7 @@
       "source": "0x021114d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov031_02111a10",
+      "symbol": "gHsYStarModelFile",
       "addend": 0,
       "target_module": "ov031",
       "target_address": "0x02111a10"
@@ -712,7 +712,7 @@
       "source": "0x021114e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov031_02111a18",
+      "symbol": "gHsBStarModelFile",
       "addend": 0,
       "target_module": "ov031",
       "target_address": "0x02111a18"

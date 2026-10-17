@@ -140,8 +140,8 @@ verification belongs in separately recorded evidence, not a self-SHA amendment.
 | `python tools/tubuild.py verify ov084/daPkn_c` | exit 0; 24/24 MATCH; clean objisolate, destinations, and ROM order | `final.tu.log` |
 | Exact-symbol, single-object linked check described below | 24/24 VERIFIED; exact names/sizes; zero differences and blind slots | `final.strict.json` |
 | `python tools/affected_src.py include/daPkn_c.h` | exit 0; sole consumer is this complete TU; header unchanged | `final.affected.log` |
-| `python tools/prepush_linkcheck.py --files src/actors/daPkn_c.cpp include/daPkn_c.h` | exit 0 but two basename NO-SYM warnings; **not counted as verification** | `final.prepush-files.log/json` |
-| `python tools/romdata_check.py --files src/actors/daPkn_c.cpp --json build/pkn-proof/final.romdata.json` | exit 0; 5 VERIFIED / 6 PARTIAL / 0 DIFFERS / 0 UNNAMED | `final.romdata.log/json` |
+| `python tools/prepush_linkcheck.py --files src/game/actors/d_a_pkn.cpp include/daPkn_c.h` | exit 0 but two basename NO-SYM warnings; **not counted as verification** | `final.prepush-files.log/json` |
+| `python tools/romdata_check.py --files src/game/actors/d_a_pkn.cpp --json build/pkn-proof/final.romdata.json` | exit 0; 5 VERIFIED / 6 PARTIAL / 0 DIFFERS / 0 UNNAMED | `final.romdata.log/json` |
 | `python tools/port_refcheck.py` | exit 0; 423 references, no stale references | `final.port.log` |
 | `python tools/rombuild.py -j16 --no-rom --report-json build/pkn-proof/final.rom.json --data-json build/pkn-proof/final.data.json` | exit 0; 106/106 modules exact; production analysis PASS | `final.rom.log/json` |
 
@@ -153,7 +153,7 @@ differences are neither hidden nor attributed to this repair. The final build
 reused 8,943 cached objects and compiled the changed TU once.
 
 For the stricter check, compile the complete TU once with
-`match.compile_c(Path("src/actors/daPkn_c.cpp"), "2004/b56", swarm.CPP_FLAGS)`.
+`match.compile_c(Path("src/game/actors/d_a_pkn.cpp"), "2004/b56", swarm.CPP_FLAGS)`.
 For each exact manifest symbol, apply existing
 `reloc_audit._as_the_build_links_it(raw, symbol)` and call
 `linkcheck.linkcheck(symbol, address, size, "ov084", name_index,
@@ -206,8 +206,8 @@ comments may have changed in this continuation.
 Candidate source SHA256: `ee6888954297d06561fc850a52732bd6856db5cc5609b13fd7c0cb59013a4f99`.
 
 ```diff
---- a/src/actors/daPkn_c.cpp
-+++ b/src/actors/daPkn_c.cpp
+--- a/src/game/actors/d_a_pkn.cpp
++++ b/src/game/actors/d_a_pkn.cpp
 @@ -281,6 +281,7 @@
   */
  int daPkn_c::InitResources()
@@ -232,8 +232,8 @@ Candidate source SHA256: `ee6888954297d06561fc850a52732bd6856db5cc5609b13fd7c0cb
 Candidate source SHA256: `8b07052c9c8154b2e65e98bc9991c7b9c8b4033a89a177792a852980f67a3d5b`.
 
 ```diff
---- a/src/actors/daPkn_c.cpp
-+++ b/src/actors/daPkn_c.cpp
+--- a/src/game/actors/d_a_pkn.cpp
++++ b/src/game/actors/d_a_pkn.cpp
 @@ -281,6 +281,9 @@
   */
  int daPkn_c::InitResources()
@@ -262,8 +262,8 @@ Candidate source SHA256: `8b07052c9c8154b2e65e98bc9991c7b9c8b4033a89a177792a8529
 Candidate source SHA256: `efdedb6e717dcceb130699aac161f5c3f05a6ca8c9db77fd359107ecb0607cdd`.
 
 ```diff
---- a/src/actors/daPkn_c.cpp
-+++ b/src/actors/daPkn_c.cpp
+--- a/src/game/actors/d_a_pkn.cpp
++++ b/src/game/actors/d_a_pkn.cpp
 @@ -281,6 +281,8 @@
   */
  int daPkn_c::InitResources()
@@ -289,8 +289,8 @@ Candidate source SHA256: `efdedb6e717dcceb130699aac161f5c3f05a6ca8c9db77fd359107
 Candidate source SHA256: `5245412646d895f58edd11872c68ccf71068e35d6425058de1aacc8f7a18e80c`.
 
 ```diff
---- a/src/actors/daPkn_c.cpp
-+++ b/src/actors/daPkn_c.cpp
+--- a/src/game/actors/d_a_pkn.cpp
++++ b/src/game/actors/d_a_pkn.cpp
 @@ -308,7 +308,7 @@
      mStateTimer = 0;
      unk_108 = 3;
@@ -307,8 +307,8 @@ Candidate source SHA256: `5245412646d895f58edd11872c68ccf71068e35d6425058de1aacc
 Candidate source SHA256: `6bd5e7d25e78609bfda574071f0e438d6ec8724c5bf592772b91f981e18ba555`.
 
 ```diff
---- a/src/actors/daPkn_c.cpp
-+++ b/src/actors/daPkn_c.cpp
+--- a/src/game/actors/d_a_pkn.cpp
++++ b/src/game/actors/d_a_pkn.cpp
 @@ -316,8 +316,7 @@
          s16 *tbl = data_02082214;
          /* The add sits INSIDE the integer cast, which is load-bearing here:
@@ -326,8 +326,8 @@ Candidate source SHA256: `6bd5e7d25e78609bfda574071f0e438d6ec8724c5bf592772b91f9
 Candidate source SHA256: `95b0e3f61fe9d3e0139a85873e0fb658eb44853fe803bbb05649398c7a066524`.
 
 ```diff
---- a/src/actors/daPkn_c.cpp
-+++ b/src/actors/daPkn_c.cpp
+--- a/src/game/actors/d_a_pkn.cpp
++++ b/src/game/actors/d_a_pkn.cpp
 @@ -370,10 +370,7 @@
      func_ov084_0212f204(((char*)this));
      old = mState;
@@ -347,8 +347,8 @@ Candidate source SHA256: `95b0e3f61fe9d3e0139a85873e0fb658eb44853fe803bbb0564939
 Candidate source SHA256: `a6f491c85c12a3a1a760eb0a5e3c0d1f6dcb8b49d2a458cf0b634211a015eb21`.
 
 ```diff
---- a/src/actors/daPkn_c.cpp
-+++ b/src/actors/daPkn_c.cpp
+--- a/src/game/actors/d_a_pkn.cpp
++++ b/src/game/actors/d_a_pkn.cpp
 @@ -336,7 +336,8 @@
      unk_474 = 0;
      mParticleHandle = unk_474;

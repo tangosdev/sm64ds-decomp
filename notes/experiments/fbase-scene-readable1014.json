@@ -1,0 +1,1782 @@
+{
+  "task": "fbase-scene-readable1014",
+  "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+  "producer": "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+  "scout": "codex-root-fbase-scene-scout1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+  "predecessor_tasks": [
+    "fbase-init-native1014"
+  ],
+  "source_completion": "partial",
+  "source_checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+  "status": "All seven production gates passed at the exact accepted-parent scene checkpoint; independent final Source acceptance remains pending.",
+  "scope": [
+    "src/actors/ActorBase.cpp",
+    "notes/experiments/fbase-scene-readable1014.json"
+  ],
+  "change": "Replace three local shadow structs, two raw-offset macros and four char-pointer boolean casts in func_02043880 with existing real fBase_c/SceneNode/fLiNdBaPr_c fields and ordinary comparisons; correct obsolete shadow/compiler-floor prose. Keep address-named free function, gotos and boolean temporaries.",
+  "scout_provenance": {
+    "path": "C:\\tmp\\sm64ds-fbase-init-native1014\\build\\fbase-scene-plain-bool-scout1014",
+    "disk_sha256": "fd2e82ff1a32270b9da1ef987fd0bc98f290a1ef5d5c6c283b9753edb1a7709a",
+    "normalized_lf_sha256": "004241bdfa0a455f6040915bc33bc5385dde4ad08ddd4e7b934bd3aa2a8d8401",
+    "normalization": "Only CRLF-to-LF normalization distinguishes recorded disk and normalized hashes. Production additionally repairs obsolete prose, with no expression changes from the preferred scout.",
+    "author": "codex-root-fbase-scene-scout1014"
+  },
+  "historical_findings": [
+    {
+      "disposition": "deferred",
+      "id": "FBASE-CALLBACK-CONTRACT-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+      "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+    },
+    {
+      "disposition": "deferred",
+      "id": "FBASE-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+      "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+    }
+  ],
+  "historical_failed_composition": {
+    "task": "fbase-process-pr3144-composition-0925",
+    "phase": "cancelled",
+    "input_commit": "c50c07bac79b8b2b5c88604321d6f7cb60ff6f34",
+    "base": "7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f",
+    "reported_finding_id": "FBASE-COMPOSITION-DAONMS-01",
+    "exact_queue_next_action": "Superseded by explicit producer continuation for PR3144. Independent verifier preserved failed c50c07bac79b8b2b5c88604321d6f7cb60ff6f34/base7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f report SHA256 b46f80ec9c93ad85aecdccab387822cfff17d952a54b4db96b36033fe27b22a7 and released own lease. FBASE-COMPOSITION-DAONMS-01 requires exact measured Frame515-to518 manifest identity repair plus fresh independent all12-path/current-consumer/fullROM verification. Preserve original source authors, accepted historical52a proof, prior findings and PR3144; no main merge.",
+    "recorded_reviewer": "codex-fbase-composition-verifier-0925",
+    "artifact_status": "The recorded C:/tmp/sm64ds-fbasev0923/build worktree is absent. Exact finding dictionary is not present in this task outputs (empty); preserve the reported ID and failure facts without inventing a dictionary or acceptance.",
+    "current_scope": "The recorded3144 failure and missing artifact remain historical. Accepted predecessor reports retain their exact proof epochs. This scene continuation changes no header or manifest and claims no new header-fanout or whole-daOnms review; its own current ActorBase/metadata/declaration/ROM proof is recorded separately."
+  },
+  "historical_lineage": {
+    "historical_task": "fbase-process-readable-0923",
+    "historical_task_phase": "cancelled",
+    "historical_reviewed_commit": "52a60fd1cf62315fea3aea36a26dc871fc1dc3ae",
+    "historical_reviewed_base": "83dbedd19f176eb6e2e2e677689ac9fb73f7999e",
+    "producer_sessions": [
+      "codex-root-fbase-readable-0923"
+    ],
+    "reviewer_session": "codex-fbase-verifier-0923",
+    "findings": [
+      {
+        "disposition": "deferred",
+        "id": "FBASE-CALLBACK-CONTRACT-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+        "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+      },
+      {
+        "disposition": "deferred",
+        "id": "FBASE-RECONSTRUCTION-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+        "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+      }
+    ],
+    "scope": "Exact dictionaries remain historical. Prior native-destructor and InitResources continuations supersede their narrow explicit-wrapper/key-function subclaims. This scene-only continuation removes one local shadow-layout boundary; unrelated dispatcher/heap/ABI reconstruction remains deferred."
+  },
+  "restoration_provenance": {
+    "classification": "Restoration of previously native sharded destructor forms into the promoted ActorBase TU, not first recovery.",
+    "prepromotion_source": "a7193a0ec75a46c652ca629c8223fdbd59acef6a^:src/_ZN7fBase_cD1Ev.cpp",
+    "actual_source": "#include fBase_c.h; fBase_c::~fBase_c() {}",
+    "recovery_main_ancestor": "67ea7a470aa430070c7d259269a819c7ce470ee7",
+    "recovery_author": "Andrew <andrewboudreau@gmail.com>",
+    "earlier_node_lifetime_commit": "19f4cbf16d653c8c2313722bb874aafe7e6c84e3",
+    "earlier_manager_commit": "c7ba004d5daf25d89074eb51f0b630ad466677cb",
+    "earlier_recorded_author": "= <andrewboudreau@gmail.com>",
+    "earlier_commit_scope": "Historical recovered-branch records, not ancestors of current main. Main recovery is67ea7a47; duplicate1c3cbdac and earlier19f/c7ba ancestry checks return1.",
+    "process_adoption_commit": "b88dbbebdfcb4f61f41480e0302283c4ca0b7486",
+    "process_adoption_pr": 3144
+  },
+  "historical_reports": [
+    "notes/experiments/fbase-destructor-native1014.json",
+    "notes/experiments/fbase-init-native1014.json"
+  ],
+  "current_scoped_assessment": {
+    "routine": "func_02043880",
+    "address": "0x02043880",
+    "bytes": 576,
+    "semantic_scope": "Reconcile pending kill/list membership, propagate parent pause flags, mark scene children for destruction, and reinsert nodes after priority changes. Existing fields preserve widths, offsets and lifetimes; original identifier/member status is not claimed.",
+    "boundaries": "The separate dispatcher views, list-head/heap/callback ABI bridges and allocator mismatch remain partial. Headers, manifest, metadata policies, ownership, storage and enrollment are unchanged.",
+    "evidence": "Complete raw and ordinary prepared containers, every symbol/section/relocation graph, all30 owned bodies and full97B metadata are identical to accepted213b8abc control. Pinned private constant-layout probe proves named-field offsets and widths. Declaration collector positively records free/C int(fBase_c*), with no other target declaration or disagreement in its population."
+  },
+  "verification": {
+    "whole_object": {
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "context": "Actual claimed-base native InitResources control and tracked scene-field candidate, with unchanged ordinary on-disk manifest policies.",
+      "source_sha256": "bd5c6d85517a818c62490e594ed927eefe811b2021e6034e53ca2c4da6348b54",
+      "candidate_manifest_sha256": "799fa9735bbb7d245cc59fb1247af8671863d8bef8cd5de9ef0061a46d86fc22",
+      "control_raw_sha256": "9b73570275d39aef46c4b94b4d6c85963e47ba51e55fdf09a4d37d1bd92f88b1",
+      "candidate_raw_sha256": "9b73570275d39aef46c4b94b4d6c85963e47ba51e55fdf09a4d37d1bd92f88b1",
+      "control_prepared_sha256": "137165db1189a5fa603d7e179f94eeea5c937828fdd5dc10692b392b2c65c704",
+      "candidate_prepared_sha256": "137165db1189a5fa603d7e179f94eeea5c937828fdd5dc10692b392b2c65c704",
+      "raw_container_identical": true,
+      "prepared_container_identical": true,
+      "ordinary_preparation_error": null,
+      "candidate_with_old_policy_refusal": null,
+      "unchanged_control_prepares": true,
+      "strict_rows": 30,
+      "blind": 0,
+      "checks": [
+        {
+          "name": "func_020433b8",
+          "module": "arm9",
+          "addr": "0x020433b8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cnwEj",
+          "module": "arm9",
+          "addr": "0x02043444",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c13OnHeapCreatedEv",
+          "module": "arm9",
+          "addr": "0x02043494",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c9Virtual38Ejj",
+          "module": "arm9",
+          "addr": "0x0204349c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c9Virtual34Ejj",
+          "module": "arm9",
+          "addr": "0x0204357c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043810",
+          "module": "arm9",
+          "addr": "0x02043810",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c18MarkForDestructionEv",
+          "module": "arm9",
+          "addr": "0x02043824",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043880",
+          "module": "arm9",
+          "addr": "0x02043880",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c16OnPendingDestroyEv",
+          "module": "arm9",
+          "addr": "0x02043ac0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c11AfterRenderEj",
+          "module": "arm9",
+          "addr": "0x02043ac4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c12BeforeRenderEv",
+          "module": "arm9",
+          "addr": "0x02043ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c6RenderEv",
+          "module": "arm9",
+          "addr": "0x02043af0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c13AfterBehaviorEj",
+          "module": "arm9",
+          "addr": "0x02043af8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c14BeforeBehaviorEv",
+          "module": "arm9",
+          "addr": "0x02043afc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c8BehaviorEv",
+          "module": "arm9",
+          "addr": "0x02043b24",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c21AfterCleanupResourcesEj",
+          "module": "arm9",
+          "addr": "0x02043b2c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043bac",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c16CleanupResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043bf0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c18AfterInitResourcesEj",
+          "module": "arm9",
+          "addr": "0x02043bf8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c19BeforeInitResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043c78",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c13InitResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043c80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE",
+          "module": "arm9",
+          "addr": "0x02043c88",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cD2Ev",
+          "module": "arm9",
+          "addr": "0x02043d48",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cD0Ev",
+          "module": "arm9",
+          "addr": "0x02043d78",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cD1Ev",
+          "module": "arm9",
+          "addr": "0x02043dbc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cC2Ev",
+          "module": "arm9",
+          "addr": "0x02043dec",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043f4c",
+          "module": "arm9",
+          "addr": "0x02043f4c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043f98",
+          "module": "arm9",
+          "addr": "0x02043f98",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043fdc",
+          "module": "arm9",
+          "addr": "0x02043fdc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_0204405c",
+          "module": "arm9",
+          "addr": "0x0204405c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "owned_functions": [
+        {
+          "symbol": "func_020433b8",
+          "bytes": 140,
+          "body_sha256": "e1b3c3097b346b849509aa155e08fb433d94f11dbeedb2d3804b234fc02174ee",
+          "relocations": [
+            {
+              "off": 8,
+              "type": 1,
+              "sym": "func_0204335c",
+              "addr": 33829724,
+              "add": -8
+            },
+            {
+              "off": 120,
+              "type": 1,
+              "sym": "func_0203b244",
+              "addr": 33796676,
+              "add": -8
+            },
+            {
+              "off": 132,
+              "type": 2,
+              "sym": "data_02099f24",
+              "addr": 34184996,
+              "add": 0
+            },
+            {
+              "off": 136,
+              "type": 2,
+              "sym": "data_020a4b88",
+              "addr": 34229128,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cnwEj",
+          "bytes": 80,
+          "body_sha256": "dd467f3fd8be92371429f20a42233fe70e1808d9309a84fd298741e2a3f016fc",
+          "relocations": [
+            {
+              "off": 24,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "func_0206e2f8",
+              "addr": 34005752,
+              "add": -8
+            },
+            {
+              "off": 76,
+              "type": 2,
+              "sym": "data_020a0eac",
+              "addr": 34213548,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c9Virtual38Ejj",
+          "bytes": 224,
+          "body_sha256": "d7a6c0ed6593a62465b6f3d4df66699b755388abb3f0e53132c46bc8fe68b7dc",
+          "relocations": [
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 92,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 136,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 152,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 156,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 172,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 204,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c9Virtual34Ejj",
+          "bytes": 660,
+          "body_sha256": "fdc59ee52a821dcbef907a22defa7bae83a52d6028a50ee7b1e055098192faf7",
+          "relocations": [
+            {
+              "off": 60,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 96,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 140,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 152,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 168,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 188,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 216,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t11ResizeToFitEv",
+              "addr": 33801104,
+              "add": -8
+            },
+            {
+              "off": 256,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 288,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 332,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 344,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 360,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 368,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            },
+            {
+              "off": 392,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 428,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 440,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 476,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 504,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 532,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 548,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 560,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 568,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 588,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t11ResizeToFitEv",
+              "addr": 33801104,
+              "add": -8
+            },
+            {
+              "off": 620,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t11ResizeToFitEv",
+              "addr": 33801104,
+              "add": -8
+            },
+            {
+              "off": 644,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043810",
+          "bytes": 20,
+          "body_sha256": "78a9ebd475edc16ff177f2bbb1f7c3dd3470a0c4c7ec3240718a02fc4170ae7f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c18MarkForDestructionEv",
+          "bytes": 92,
+          "body_sha256": "385dc1d93a4f65b632d93ee5a7b1724b1c259c91067fa4a51d51c29f0c86f21e",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043880",
+          "bytes": 576,
+          "body_sha256": "d1ad7589b4947a38922f955cec4de83c09829e66a9e3ddfaf493bcbed62cb9a3",
+          "relocations": [
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 68,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 84,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 96,
+              "type": 1,
+              "sym": "func_0203b20c",
+              "addr": 33796620,
+              "add": -8
+            },
+            {
+              "off": 124,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            },
+            {
+              "off": 144,
+              "type": 1,
+              "sym": "func_02043810",
+              "addr": 33830928,
+              "add": -8
+            },
+            {
+              "off": 348,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 368,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 412,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 432,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 488,
+              "type": 1,
+              "sym": "func_0203b244",
+              "addr": 33796676,
+              "add": -8
+            },
+            {
+              "off": 524,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 536,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 560,
+              "type": 2,
+              "sym": "data_020a4b78",
+              "addr": 34229112,
+              "add": 0
+            },
+            {
+              "off": 564,
+              "type": 2,
+              "sym": "data_020a4b98",
+              "addr": 34229144,
+              "add": 0
+            },
+            {
+              "off": 568,
+              "type": 2,
+              "sym": "data_020a4b88",
+              "addr": 34229128,
+              "add": 0
+            },
+            {
+              "off": 572,
+              "type": 2,
+              "sym": "data_020a4ba8",
+              "addr": 34229160,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+          "bytes": 4,
+          "body_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c11AfterRenderEj",
+          "bytes": 4,
+          "body_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c12BeforeRenderEv",
+          "bytes": 40,
+          "body_sha256": "bdd51e5e8f4bc1672281605012c408cd8eb82bc474225bd66db2943301b169e4",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c6RenderEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c13AfterBehaviorEj",
+          "bytes": 4,
+          "body_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c14BeforeBehaviorEv",
+          "bytes": 40,
+          "body_sha256": "5bc62a57cf433e90fc40f5e2b7f9505ed5b3806b29d8a48cd6295c994dcd420c",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c8BehaviorEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c21AfterCleanupResourcesEj",
+          "bytes": 128,
+          "body_sha256": "cf02ef0e60ab36ce63b67c1c5d03e37f79e91f81b029458ddab23fffc4392310",
+          "relocations": [
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "func_0203b3c0",
+              "addr": 33797056,
+              "add": -8
+            },
+            {
+              "off": 40,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 72,
+              "type": 1,
+              "sym": "func_02044334",
+              "addr": 33833780,
+              "add": -8
+            },
+            {
+              "off": 104,
+              "type": 1,
+              "sym": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
+              "addr": 33800680,
+              "add": -8
+            },
+            {
+              "off": 116,
+              "type": 2,
+              "sym": "data_020a4b6c",
+              "addr": 34229100,
+              "add": 0
+            },
+            {
+              "off": 120,
+              "type": 2,
+              "sym": "data_020a4ba8",
+              "addr": 34229160,
+              "add": 0
+            },
+            {
+              "off": 124,
+              "type": 2,
+              "sym": "data_020a0eac",
+              "addr": 34213548,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+          "bytes": 68,
+          "body_sha256": "ef27e2f36c30cd9437dd62a7852ee0521e03388e8a9f2187090937590017a325",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "func_0204424c",
+              "addr": 33833548,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c16CleanupResourcesEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c18AfterInitResourcesEj",
+          "bytes": 128,
+          "body_sha256": "d29504989a66c44e522a559621898600802b3726c4978313ee58dbeea89a0a0b",
+          "relocations": [
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 80,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 92,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 112,
+              "type": 2,
+              "sym": "data_020a4b88",
+              "addr": 34229128,
+              "add": 0
+            },
+            {
+              "off": 116,
+              "type": 2,
+              "sym": "data_02099f24",
+              "addr": 34184996,
+              "add": 0
+            },
+            {
+              "off": 120,
+              "type": 2,
+              "sym": "data_020a4b78",
+              "addr": 34229112,
+              "add": 0
+            },
+            {
+              "off": 124,
+              "type": 2,
+              "sym": "data_020a4b98",
+              "addr": 34229144,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c19BeforeInitResourcesEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c13InitResourcesEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE",
+          "bytes": 192,
+          "body_sha256": "97be9e9481e520004c748417f3408881cf9e8cffe7d0df642eda1d75c3469269",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cD2Ev",
+          "bytes": 48,
+          "body_sha256": "476c0bdcad35d3d7f5935b8e642701cb1d1d4ebe83065c00e9cbbf34218171c3",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cD0Ev",
+          "bytes": 68,
+          "body_sha256": "bca25989fa5391528b1f043fc0937be31100d4df3ed6d1f218c609ff72753ccc",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 44,
+              "type": 1,
+              "sym": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
+              "addr": 33800680,
+              "add": -8
+            },
+            {
+              "off": 60,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            },
+            {
+              "off": 64,
+              "type": 2,
+              "sym": "data_020a0eac",
+              "addr": 34213548,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cD1Ev",
+          "bytes": 48,
+          "body_sha256": "476c0bdcad35d3d7f5935b8e642701cb1d1d4ebe83065c00e9cbbf34218171c3",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cC2Ev",
+          "bytes": 352,
+          "body_sha256": "56e125529a5bd0a5755f76736d9933d18f62a5e53a588ab97ddf8da482116644",
+          "relocations": [
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN7fBase_c9SceneNodeC1Ev",
+              "addr": 33797316,
+              "add": -8
+            },
+            {
+              "off": 164,
+              "type": 1,
+              "sym": "func_0203b438",
+              "addr": 33797176,
+              "add": -8
+            },
+            {
+              "off": 220,
+              "type": 1,
+              "sym": "func_02043810",
+              "addr": 33830928,
+              "add": -8
+            },
+            {
+              "off": 320,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            },
+            {
+              "off": 324,
+              "type": 2,
+              "sym": "data_02099e70",
+              "addr": 34184816,
+              "add": 0
+            },
+            {
+              "off": 328,
+              "type": 2,
+              "sym": "data_020a4b60",
+              "addr": 34229088,
+              "add": 0
+            },
+            {
+              "off": 332,
+              "type": 2,
+              "sym": "data_020a4b54",
+              "addr": 34229076,
+              "add": 0
+            },
+            {
+              "off": 336,
+              "type": 2,
+              "sym": "data_020a4b64",
+              "addr": 34229092,
+              "add": 0
+            },
+            {
+              "off": 340,
+              "type": 2,
+              "sym": "data_020a4b48",
+              "addr": 34229064,
+              "add": 0
+            },
+            {
+              "off": 344,
+              "type": 2,
+              "sym": "data_020a4b6c",
+              "addr": 34229100,
+              "add": 0
+            },
+            {
+              "off": 348,
+              "type": 2,
+              "sym": "data_020a4bb8",
+              "addr": 34229176,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043f4c",
+          "bytes": 76,
+          "body_sha256": "c4fc78c89417c72200ea66f28db40058a080ac7366d7ce66eef557a5050ffad2",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043f98",
+          "bytes": 68,
+          "body_sha256": "9c2ea0729c8606f5bf09b20ef5b510f76eae39471ac87a5a8dccfc1f573e0582",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043fdc",
+          "bytes": 128,
+          "body_sha256": "8d68151e3bb86c0122d20e14431edbd0bf458724ccf9cb208ad04ee81cbeea46",
+          "relocations": [
+            {
+              "off": 124,
+              "type": 2,
+              "sym": "data_020a4b68",
+              "addr": 34229096,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_0204405c",
+          "bytes": 140,
+          "body_sha256": "b126eec3e0c5745a6b98b5274114c6512d84d5387141ba6a00bae7038f4f6ec6",
+          "relocations": [
+            {
+              "off": 40,
+              "type": 1,
+              "sym": "func_0203b244",
+              "addr": 33796676,
+              "add": -8
+            },
+            {
+              "off": 76,
+              "type": 1,
+              "sym": "func_0203b2ec",
+              "addr": 33796844,
+              "add": -8
+            },
+            {
+              "off": 124,
+              "type": 1,
+              "sym": "func_0203b2ec",
+              "addr": 33796844,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        }
+      ],
+      "metadata": [
+        {
+          "symbol": "_ZTI7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2086d70",
+          "complete_storage_address": "0x2086d70",
+          "bytes": 8,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS7fBase_c",
+              "addr": 34106976,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi17__class_type_infoE",
+              "addr": 34187124,
+              "add": 0
+            }
+          ],
+          "linked_sha256": "39f79d4d5b6c41e7d4c54ed04d1651545b39f777e23266ae31b48870bdf7317b"
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2086e60",
+          "complete_storage_address": "0x2086e60",
+          "bytes": 9,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [],
+          "linked_sha256": "5cfafe50bce0f8a1bbf72273ce4858cdd54dbfb20ac88c2d0b562f8d5f4165d5"
+        },
+        {
+          "symbol": "_ZTV7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2099edc",
+          "complete_storage_address": "0x2099ed4",
+          "bytes": 80,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTI7fBase_c",
+              "addr": 34106736,
+              "add": 0
+            },
+            {
+              "off": 76,
+              "type": 2,
+              "sym": "_ZN7fBase_cD0Ev",
+              "addr": 33832312,
+              "add": 0
+            },
+            {
+              "off": 72,
+              "type": 2,
+              "sym": "_ZN7fBase_cD1Ev",
+              "addr": 33832380,
+              "add": 0
+            },
+            {
+              "off": 68,
+              "type": 2,
+              "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+              "addr": 33830036,
+              "add": 0
+            },
+            {
+              "off": 64,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual38Ejj",
+              "addr": 33830044,
+              "add": 0
+            },
+            {
+              "off": 60,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual34Ejj",
+              "addr": 33830268,
+              "add": 0
+            },
+            {
+              "off": 56,
+              "type": 2,
+              "sym": "_ZN7fBase_c16OnPendingDestroyEv",
+              "addr": 33831616,
+              "add": 0
+            },
+            {
+              "off": 52,
+              "type": 2,
+              "sym": "_ZN7fBase_c11AfterRenderEj",
+              "addr": 33831620,
+              "add": 0
+            },
+            {
+              "off": 48,
+              "type": 2,
+              "sym": "_ZN7fBase_c12BeforeRenderEv",
+              "addr": 33831624,
+              "add": 0
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZN7fBase_c6RenderEv",
+              "addr": 33831664,
+              "add": 0
+            },
+            {
+              "off": 40,
+              "type": 2,
+              "sym": "_ZN7fBase_c13AfterBehaviorEj",
+              "addr": 33831672,
+              "add": 0
+            },
+            {
+              "off": 36,
+              "type": 2,
+              "sym": "_ZN7fBase_c14BeforeBehaviorEv",
+              "addr": 33831676,
+              "add": 0
+            },
+            {
+              "off": 32,
+              "type": 2,
+              "sym": "_ZN7fBase_c8BehaviorEv",
+              "addr": 33831716,
+              "add": 0
+            },
+            {
+              "off": 28,
+              "type": 2,
+              "sym": "_ZN7fBase_c21AfterCleanupResourcesEj",
+              "addr": 33831724,
+              "add": 0
+            },
+            {
+              "off": 24,
+              "type": 2,
+              "sym": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+              "addr": 33831852,
+              "add": 0
+            },
+            {
+              "off": 20,
+              "type": 2,
+              "sym": "_ZN7fBase_c16CleanupResourcesEv",
+              "addr": 33831920,
+              "add": 0
+            },
+            {
+              "off": 16,
+              "type": 2,
+              "sym": "_ZN7fBase_c18AfterInitResourcesEj",
+              "addr": 33831928,
+              "add": 0
+            },
+            {
+              "off": 12,
+              "type": 2,
+              "sym": "_ZN7fBase_c19BeforeInitResourcesEv",
+              "addr": 33832056,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZN7fBase_c13InitResourcesEv",
+              "addr": 33832064,
+              "add": 0
+            }
+          ],
+          "linked_sha256": "14718669e1616f96d10fcfff115b00aa288e0c67d21555632d5f9b34b68a8d8c"
+        }
+      ],
+      "raw_storage": [
+        {
+          "name": ".data",
+          "size": 8,
+          "type": "SHT_PROGBITS"
+        },
+        {
+          "name": ".data",
+          "size": 9,
+          "type": "SHT_PROGBITS"
+        },
+        {
+          "name": ".data",
+          "size": 80,
+          "type": "SHT_PROGBITS"
+        }
+      ],
+      "prepared_storage": [],
+      "raw_relocations": 132,
+      "prepared_relocations": 98,
+      "control_raw_relocations": 132,
+      "control_prepared_relocations": 98,
+      "policy_qualification": "Normal unmodified loader/retarget/isolate with unchanged inherited metadata policies. Complete metadata proof supplements standard policy PARTIAL tolerance. No canonical storage owned by this TU.",
+      "complete_retained_definitions_allocated_sections_and_graphs_equal": true,
+      "headers_manifest_policies_unchanged": true
+    },
+    "field_layout": {
+      "pin": "2004/b56",
+      "private_probe_source": "build\\fbase-scene-readable1014\\field-layout.cpp",
+      "flags_from": "src/actors/ActorBase.cpp",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "values": {
+        "aliveState": 14,
+        "shouldBeKilled": 15,
+        "unk_010": 16,
+        "unk_011": 17,
+        "pauseFlags": 19,
+        "manager.sceneNode.child": 24,
+        "manager.behaviorNode": 40,
+        "manager.renderNode": 56,
+        "SceneNode.next": 12,
+        "SceneNode.owner": 16,
+        "fLiNdBaPr_c.currentPriority": 12,
+        "fLiNdBaPr_c.nextPriority": 14,
+        "sizeof(pauseFlags)": 1,
+        "sizeof(currentPriority)": 2,
+        "sizeof(SceneNode)": 20,
+        "sizeof(fLiNdBaPr_c)": 16
+      },
+      "object_sha256": "1770fc67080f880459c0ef678c8b781365ff362b26f508d34172c3cf1630e1d6",
+      "qualification": "Private compiler-emitted constant layout values from unchanged real headers. No production definitions, header edits or speculative layout additions. Existing field/type names are reconstructed identifiers, not claims of unique original spelling."
+    },
+    "rombuild": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit_code": 0,
+      "seconds": 330.6000807285309,
+      "log": "build\\fbase-scene-readable1014\\rombuild.log",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "log_sha256": "cdb993740d5281962388aa27fa0411b52a9f021d30186620a5d7b959f897d30c",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "source_function_counts_observed": [
+        5888,
+        11334
+      ],
+      "count_scope": "Final official production analysis.sourceBuild; earlier baseline count is separate.",
+      "baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "new_symbol_errors": [],
+      "baseline_control_scope": "Fresh official baseline pipeline ran; its nine pre-existing DSD symbol errors and assembled retail control are retained.",
+      "no_rom_scope": "Candidate --no-rom validates linked modules; no newly assembled candidate cartridge image is claimed.",
+      "proof_epoch": "This exact scene checkpoint on accepted213b8abc. A later current-main/updated-parent composition needs its own precise transfer review; no newer-main acceptance is inferred.",
+      "official_report_sha256": "cd5e13be4e19a05a16613ebd1ea56bde1dc166bbf9b07f3b43ac772151eed7dc",
+      "actual_terminal_receipt": {
+        "path": "build/fbase-scene-readable1014/rombuild-terminal.json",
+        "sha256": "48f88987cea7a12b7472d0ca5fa493c449fe50953fef73eea9d5231425f51429",
+        "exit_code": 0
+      }
+    },
+    "stock": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "213b8abc11b20d0ba8cbb2695c23f9346c46b964..17bf59295276915be61f0e1763daa1b51ec5ce2d",
+        "--json",
+        "build\\fbase-scene-readable1014\\stock.json"
+      ],
+      "exit_code": 0,
+      "seconds": 22.077945232391357,
+      "log": "build\\fbase-scene-readable1014\\stock.log",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "log_sha256": "3ee60d615b0c2f9913a781f730a5158fef517eafbdc76ee11588613a57e2f6e8",
+      "literal_range": "213b8abc11b20d0ba8cbb2695c23f9346c46b964..17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "checked": 30,
+      "verified": 30,
+      "warnings": 0,
+      "blocking": 0,
+      "header_scope": "No changed headers. Literal official --range command covers the only changed Source TU and all30 enrolled functions; no397-consumer rerun is claimed.",
+      "actual_terminal_receipt": {
+        "path": "build/fbase-scene-readable1014/stock-terminal.json",
+        "sha256": "ef253d618a26677ac423505c8b91266d832acf688d9503384e79ff60b8807cbc",
+        "exit_code": 0
+      }
+    },
+    "decl": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "213b8abc11b20d0ba8cbb2695c23f9346c46b964"
+      ],
+      "exit_code": 0,
+      "seconds": 12.4666268825531,
+      "log": "build\\fbase-scene-readable1014\\decl.log",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "log_sha256": "15b825bcedd168c3d897766d745b0769db166f82c0a1281a3ea1d62e5bba0d68",
+      "positive_contract": {
+        "baseline_count": 7495,
+        "candidate_count": 7495,
+        "new": [],
+        "removed": [],
+        "baseline_population": [
+          {
+            "symbol": "func_02043880",
+            "signature": "int (ActorBase_Raw *)",
+            "params": [
+              "ActorBase_Raw *"
+            ],
+            "is_member": false,
+            "is_definition": true,
+            "linkage": "C",
+            "file": "src/actors/ActorBase.cpp",
+            "line": 443
+          }
+        ],
+        "candidate_population": [
+          {
+            "symbol": "func_02043880",
+            "signature": "int (fBase_c *)",
+            "params": [
+              "fBase_c *"
+            ],
+            "is_member": false,
+            "is_definition": true,
+            "linkage": "C",
+            "file": "src/actors/ActorBase.cpp",
+            "line": 392
+          }
+        ],
+        "all_target_disagreements": [],
+        "qualification": "Actual complete current declaration collection, with only the changed TU replaced by exact base for control. Free function int(fBase_c*) positively collected; no original member status is inferred. No baseline edits."
+      },
+      "scope": "468 files,28 changed symbols,114 files reached via12 changed type names;3263 scoped disagreements; no new disagreement or local-header-copy errors.",
+      "actual_terminal_receipt": {
+        "path": "build/fbase-scene-readable1014/decl-terminal.json",
+        "sha256": "12bb9f485a0be3728cfb302061ac4e2313084332bbe635d2cd8350fd463d1210",
+        "exit_code": 0
+      }
+    },
+    "decl-global": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 11.000962257385254,
+      "log": "build\\fbase-scene-readable1014\\decl-global.log",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "log_sha256": "79a2b4156fa3aa9c2e7d85e8738bbe1d857937e95b5b71413d260972ad11aebd",
+      "qualification": "7495 banked disagreements remain; no baseline edits and no claim of universal declaration agreement.",
+      "actual_terminal_receipt": {
+        "path": "build/fbase-scene-readable1014/decl-global-terminal.json",
+        "sha256": "d7c7142f6bd977d65daab5f2ef204cdbacbc20a329315592e51fda6011bc4d9a",
+        "exit_code": 0
+      }
+    },
+    "port": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.7609026432037354,
+      "log": "build\\fbase-scene-readable1014\\port.log",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "references_checked": 267,
+      "actual_terminal_receipt": {
+        "path": "build/fbase-scene-readable1014/port-terminal.json",
+        "sha256": "4269c6f8d954fc1bba1605ac4f4f93e2aca263233c11c2fe6f03b229dc324d1c",
+        "exit_code": 0
+      }
+    },
+    "langmode": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "exit_code": 0,
+      "seconds": 12.938558101654053,
+      "log": "build\\fbase-scene-readable1014\\langmode.log",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "actual_terminal_receipt": {
+        "path": "build/fbase-scene-readable1014/langmode-terminal.json",
+        "sha256": "f19b5ac1a2be9ffb40c540229e24c1eaa5eec50f4251836b24e51f50332d9313",
+        "exit_code": 0
+      }
+    },
+    "conflict": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_tubuild_conflicts.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.35788559913635254,
+      "log": "build\\fbase-scene-readable1014\\conflict.log",
+      "checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+      "base": "213b8abc11b20d0ba8cbb2695c23f9346c46b964",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "manifests": 429,
+      "sources_read": 429,
+      "recorded_notes": 6,
+      "actual_terminal_receipt": {
+        "path": "build/fbase-scene-readable1014/conflict-terminal.json",
+        "sha256": "0cd5277a120ebca46c8a303757c70dd99a935c135ef4b5676ae809d5d6954506",
+        "exit_code": 0
+      }
+    }
+  },
+  "source_sha256": "bd5c6d85517a818c62490e594ed927eefe811b2021e6034e53ca2c4da6348b54",
+  "manifest_sha256": "799fa9735bbb7d245cc59fb1247af8671863d8bef8cd5de9ef0061a46d86fc22",
+  "tested_build_trees": {
+    "src": "4e6602a2a32c182468fd28807e7ed97befbb77b5",
+    "include": "9a7fe3dd2d6c10927c6604d70dc4bfaca9c614ae",
+    "config": "166c69696a91529cd4ccf3fdd9e4269fed031518",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "global_data_advisory": {
+    "verified": 970,
+    "partial": 1519,
+    "differs": 1,
+    "unnamed": 21,
+    "totalRecords": 5285
+  },
+  "scope_qualification": "Source and report only. Complete include/config/tools/port trees and ActorBase manifest blob match accepted213b8abc exactly. No header fanout is necessary or newly claimed; predecessor397consumer evidence stays bound to its own report.",
+  "source_semantics": [
+    "When shouldBeKilled is set, clear the pending flag, unlink behavior/render or pending-list membership according to aliveState, enqueue destruction, set aliveState=2, and mark every SceneNode child owner for destruction.",
+    "In the other branch, propagate parent effective pause flags1|2 and4|8 to this actor bits2 and8, preserving local bits and original control flow.",
+    "For aliveState1, compare each process node nextPriority/currentPriority; unlink, update the current u16 priority and reinsert only when changed.",
+    "For states other than1 or2, retain existing unk_011 and unk_010 transitions and list operations. These unknown field names remain deliberately unspeculated.",
+    "All borrowed references point to existing actor subobjects; no new nodes, constructors, destructors or storage are introduced. Gotos and boolean temporaries remain as the measured source form."
+  ],
+  "tooling_history": [
+    "A private declaration helper initially expected fBase_c* without the collector canonical space; the actual collector correctly returned fBase_c *. Correcting that helper assertion required no Source changes."
+  ],
+  "artifacts": {
+    "proof.json": "65257d65fe748550bbe2e8c31e24c56930680f0bd06412ef77b435b2a2855a9e",
+    "graphs.json": "e4a835bb95bc66752ea152e81d58093dbbc91b0a0a2de3d809143dad2a66254d",
+    "deadstrip-plan.json": "cdc39e12d37cda4168dcb7da39c03dc9c9d5d4ef4b906750a331c9f4c0a0f159",
+    "declaration-proof.json": "eda620ac39f722245a699cbe2c36011098d50762c47a41e69c0698addddd2434",
+    "field-layout.json": "8fd75b2b41fee4455af4977da10032ce81e24aa1ed9cc8f1dad6a1cb0a34d58e",
+    "stock.json": "7518090cfa1dabc86b86313b1d7dd31fefa81ce685d79544862b85cc36b93d7f",
+    "rombuild-report.json": "cd5e13be4e19a05a16613ebd1ea56bde1dc166bbf9b07f3b43ac772151eed7dc",
+    "baseline-linkcheck.json": "f6ed59a1e6c6d99269215075687b160736f9337510797be1d84831ff6f18dfbb",
+    "gate-results.json": "bdc259ae61fc4f362f6b0b8d818af135eee2b7c91e12c5938352049cbbb476e9"
+  },
+  "report_only_finalization": "Only this report changes after 17bf59295276915be61f0e1763daa1b51ec5ce2d; private final-binding.json records identical src/include/config/tools/port trees.",
+  "publication": "Report finalization and producer queue offer by codex-scene-report-recovery1014, preserving original Source author 01a13751-2d56-7901-a14d-9543eb0dbf2e and scout codex-root-fbase-scene-scout1014. No public branch push, PR or main merge by this recovery session. Independent Source acceptance of this immutable final report-bound commit remains pending, followed by exact updated-parent composition review.",
+  "report_finalizer": {
+    "session": "codex-scene-report-recovery1014",
+    "role": "Report binder and queue recovery producer; no scene Source body authored by this session.",
+    "source_authors": [
+      "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+      "codex-root-fbase-scene-scout1014"
+    ],
+    "source_checkpoint": "17bf59295276915be61f0e1763daa1b51ec5ce2d",
+    "recovery_reason": "Original Source producer stopped after two authoritative Astra model-capacity errors. Root explicitly released its stopped lease after confirming all seven gates were actually terminal zero; this session claimed the ready stage with a fresh private receipt.",
+    "proof_authorship": "The original producer ran these checkpoint gates before capacity failure. This recovery session inspected their actual terminal sidecars, logs and immutable byte-input bindings; it does not claim to have rerun them.",
+    "root_recovery_record": "build/fbase-scene-readable1014/capacity-recovery-release.json",
+    "root_recovery_record_sha256": "83426c17edb79a6ee1747b60da7ee23557e3320d9a9876fa2b969cda28a02bfd"
+  },
+  "formal_acceptance": false
+}

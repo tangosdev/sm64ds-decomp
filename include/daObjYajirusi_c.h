@@ -42,7 +42,7 @@ struct daObjYajirusi_c {
     u8  pad_00e[0x4e];
      /* dActor_c's position and camera-space position, at dActor_c's own offsets
         (include/dActor_c.h lines 59-65). The flat view drops the inheritance but
-        src/actors/daObjYajirusi_c.cpp (Kill) still reads these four fields by
+        src/game/actors/d_a_obj_yajirusi.cpp (Kill) still reads these four fields by
         name, so they are pinned here rather than buried in padding. */
     s32 mPosX;                         /* 0x05c */
     s32 mPosY;                         /* 0x060 */
@@ -169,7 +169,7 @@ struct daObjYajirusi_c {
     u8  pad_2ec[0x34];
     /* dExtShadowModel_c member, named by the class's own destructor calling
        dExtShadowModel_c's D1 at +0x320 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN15daObjYajirusi_cD1Ev, now in src/actors/daObjYajirusi_c.cpp] */
+       checks. Was a u8 marker. [_ZN15daObjYajirusi_cD1Ev, now in src/game/actors/d_a_obj_yajirusi.cpp] */
     dExtShadowModel_c mShadowModel;            /* 0x320 */
     u8  mShadowMat;         /* 0x348 */
     u8  pad_349[0x33];

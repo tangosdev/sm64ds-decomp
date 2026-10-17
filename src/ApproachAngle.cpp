@@ -1,8 +1,13 @@
 //cpp
-/* Linear approach and angle step. .text 0x0203adec..0x0203b0e8.
- * mwccarm emits .text in reverse source order, so the definitions run
- * ROM-descending. DecIfAbove0_Byte ends at the left edge; AngleDiff
- * begins at the right edge. */
+/* Step an angle toward a target, and the linear approaches beside it.
+ * Definitions run high address first so reverse emission is ROM order.
+ *
+ * leftovers:
+ * - ApproachLinear2(int &) reads and writes the reference through an
+ *   unsigned char *. A full-word store widens the byte the ROM keeps.
+ * - ApproachAngle and UpdateAngle call __aeabi_idiv. The declaration is
+ *   local; the host build has no divider.
+ */
 
 #ifndef _MSC_VER
 /* The host smoke build has no divider. These two call __aeabi_idiv. */

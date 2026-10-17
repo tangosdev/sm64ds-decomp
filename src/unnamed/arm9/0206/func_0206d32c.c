@@ -39,7 +39,6 @@ extern void func_0206d8c4(struct Arr *s, u32 index);
 extern void _ZN4cstd8__assertEPKcS1_S1_i(const char *, const char *, const char *, int);
 
 int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
-    int result;
     unsigned long long end;
     unsigned long long addr64;
     int found;
@@ -51,8 +50,10 @@ int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
     struct Arr *table;
 
     table = ((unsigned)type >= 2) ? 0 : data_020a9ec0[type];
-    if (!table) { result = 0; goto epilogue; }
-    if (size == 0) { result = 1; goto epilogue; }
+    if (!table)
+        return 0;
+    if (size == 0)
+        return 1;
 
     func_0206d890(&state);
     while (func_0206dab4(0x80, &table->pad[0]) != 0) { }
@@ -175,7 +176,5 @@ int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
     *LM2(&table->pad[1]) &= ~2;
     table->pad[0] = 0;
     func_0206d868(&state);
-    result = 1;
-epilogue:
-    return result;
+    return 1;
 }

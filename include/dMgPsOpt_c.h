@@ -29,6 +29,14 @@ struct dMgPsOpt_c {
 
     dMgPsOpt_c();
     ~dMgPsOpt_c();
+    void Open();
+    void Close();
+    /* One frame of input; returns mActive. */
+    u8 Update();
+    /* Draws the live icons; 1 while the panel is up. */
+    int Draw();
+    /* 1 when no live icon is still counting down a press. */
+    int IsIdle();
 };
 
 #ifndef SM64DS_PLATFORM_PC

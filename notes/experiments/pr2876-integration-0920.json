@@ -7868,7 +7868,7 @@
             },
             {
               "offset": 32,
-              "sym": "_ZN6Memory10DeallocateEPvP4Heap",
+              "sym": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
               "addend": -8
             },
             {
@@ -11733,7 +11733,7 @@
             },
             {
               "offset": 32,
-              "sym": "_ZN6Memory10DeallocateEPvP4Heap",
+              "sym": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
               "addend": -8
             },
             {

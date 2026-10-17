@@ -3,14 +3,14 @@
     .ctor       start:0x02137900 end:0x02137908 kind:rodata align:4
     .data       start:0x02137920 end:0x02137b20 kind:data align:32
     .bss        start:0x02137b20 end:0x02137be0 kind:bss align:32
-src/actors/daSanbo_c.cpp:
+src/game/actors/d_a_sanbo.cpp:
     complete
     .text start:0x02135700 end:0x02136db0
     .init start:0x0213770c end:0x02137894
     .ctor start:0x02137900 end:0x02137904
     .bss start:0x02137b20 end:0x02137ba8
 
-src/actors/daTor_c.cpp:
+src/game/actors/d_a_tor.cpp:
     complete
     .text start:0x02136db0 end:0x0213770c
     .init start:0x02137894 end:0x02137900

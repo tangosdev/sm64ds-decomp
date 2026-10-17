@@ -1,0 +1,4 @@
+# Exact versions shared by local checks and source-style CI.
+clang-format==19.1.7
+# Optional advisory evaluation; not a production source gate.
+clang-tidy==19.1.0

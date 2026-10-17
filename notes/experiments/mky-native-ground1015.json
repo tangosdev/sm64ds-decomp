@@ -1,0 +1,117 @@
+{
+  "issue": 2410,
+  "task": "issue2410-native-ground1015",
+  "base": "c039f325547d3636acce5b6e91ad556f48713d6f",
+  "status": "producer production validation complete; exact-head formal Source and private CI remain separate",
+  "canonical_rename": {
+    "old": "func_02038ea4",
+    "new": "_ZN9dBgCh_Gnd15DetectClsnSlot0Ev",
+    "module": "arm9",
+    "address": "0x02038ea4",
+    "size": "0xa0",
+    "inferred_name": true
+  },
+  "private_preview_handoff_sha256": "2530fd0a73eb14ce75fa12dc96d0ab6a1de545c09b6a0b433c2039f63273e917",
+  "patch_sha256": "8f57237be4cba9a46619d1564713e02cd6641804aa4cdb60375bd0c04b0027a4",
+  "private_preview": {
+    "header_consumers": 70,
+    "other_literal_ELF_identical": 68,
+    "changed_tu_strict_checks_per_side": 105,
+    "blind": 0,
+    "combined_camera_object_literal_query_only": true,
+    "compiler_local_map": {
+      "_ZN7daMky_c21Bundle$963d_a_mky_cppD1Ev": "_ZN7daMky_c21Bundle$962d_a_mky_cppD1Ev"
+    },
+    "canonical_name_map": {
+      "func_02038ea4": "_ZN9dBgCh_Gnd15DetectClsnSlot0Ev"
+    }
+  },
+  "prior_findings": 50,
+  "collision_predecessor": "collision-native-bases-current-main1014",
+  "production_acceptance": {
+    "full_ROM": {
+      "report_sha256": "6402f9bb5b767841f2c659bdea202dfd4bd2d388e0dd98d0a263f1ce631a2c23",
+      "receipt_sha256": "c5c7fb9bbf2510622c3f642e78f62b27964b5730a0730f5404911677fd1f7962",
+      "modules_exact": 106,
+      "modules_total": 106,
+      "source_functions_reproduced": 11334,
+      "source_functions_total": 11334,
+      "owned_data_reproduced": 337,
+      "owned_data_total": 337,
+      "bss_claims": 244,
+      "bss_bytes": 31044,
+      "stable_tracked_inputs": 4395,
+      "new_symbol_errors": [],
+      "storage_alias_errors": []
+    },
+    "changed_complete_TUs": {
+      "sources": [
+        "src/engine/collision/d_bg_ch_sph_crr_query.cpp",
+        "src/game/actors/d_a_mky.cpp"
+      ],
+      "strict_checks": 105,
+      "blind": 0,
+      "diffs": [],
+      "actual_production_mode": "ordinary text-only for both; no invented intact preparation",
+      "literal_raw_objects_equal_measured_candidates": true,
+      "report_sha256": "4bd8abe4f612781cc122e3fd744fe1e9cea93da770b6f8e4caf237523ff144bf",
+      "measured_before_commit_with_candidate_working_tree": true,
+      "measurement_head_is_not_candidate_commit": true,
+      "clean_immutable_freeze_bridge_sha256": "87e5769f062ed50a048e04632c33de4f98eb95effeeb2491a0b8c132af137715",
+      "unchanged_source_header_input_hashes": 3271
+    },
+    "header_consumers": {
+      "total": 70,
+      "changed_sources": 2,
+      "other_complete_raw_ELF_literal_equal": 68,
+      "other_normalization": "none",
+      "report_sha256": "e65e083720dba046b7d91176af8fed784095bf9da004d5b4957598e977f0f1bb",
+      "complete_private_include_tree": true,
+      "control_changes_only": "dBgCh_Gnd.h restored to exact c039 base blob on otherwise identical current inputs"
+    },
+    "expanded_generic": {
+      "files": 70,
+      "functions": 2601,
+      "verified": 2557,
+      "blind_warnings": 44,
+      "blocking": 0,
+      "every_warning_in_68_unchanged_complete_objects": true,
+      "report_sha256": "b60b9fcfc12801e4def8a04e56bfcb51ec74672a9d8091fd496b7009928edb7c",
+      "official_verify_code_unchanged": true,
+      "exact_singleton_symbol_partition_coverage": true
+    },
+    "independent_preliminary": {
+      "strict_checks_each_control_candidate": 105,
+      "blind": 0,
+      "other_complete_raw_ELF_literal_equal": 68,
+      "changed_rebuild_report_sha256": "c0f3bec131d812a178c7afc2a5fb8bf8ac560d990d60a9b92b895eda0088fabc",
+      "header_rebuild_report_sha256": "91033f6bbd54203c7712f44ca434634576525097e893259e97b6a0f85ac01d0e",
+      "generic_freeze_audit_sha256": "10af19cf9af6e07c10eb971d41a0a8366ad4206d3a2d931b60fe5b69893f1bba",
+      "formal_exact_head_acceptance": "pending; final notes must also be reviewed",
+      "full_ROM_independently_rerun": false
+    },
+    "static_gates": {
+      "source_style_files": 3,
+      "source_style_findings": 0,
+      "source_style_deferrals": 0,
+      "new_declaration_disagreements": 0,
+      "new_local_header_copies": 0,
+      "ledger_live_rows_checked": 3728,
+      "port_references_checked": 255,
+      "new_dead_references": 0
+    }
+  },
+  "issue_complete": false,
+  "source_freeze": "9855c800e96e616a54b39f5cbfd7d9f7557244be",
+  "actual_producer": "codex-mky-finish-producer1015",
+  "prior_collision_finding_dispositions": "Latest corrected collision-native-bases-current-main1014 record: two fixed provenance findings and six deferred reconstruction findings. Older rejected dispositions are not substituted.",
+  "global_advisory": {
+    "verified": 974,
+    "partial": 1552,
+    "differs": 1,
+    "unnamed": 15,
+    "qualification": "Broad inventory, not source-owned data acceptance; the known dCcAcPos vtable difference remains distinct from337 exact source-owned data claims."
+  },
+  "formal_source_acceptance": "pending on this immutable handoff",
+  "private_validation": "pending"
+}

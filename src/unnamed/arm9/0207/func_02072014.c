@@ -48,7 +48,7 @@ int func_02072014(int *c, int *arg)
         case 14:
         default:
             func_020731fc();
-            goto done;
+            break;
         case 0:
         case 2:
         case 3:
@@ -66,12 +66,12 @@ int func_02072014(int *c, int *arg)
         case 17:
         case 18:
             sel = func_020729f4(&l);
-            break;
+            continue;
         case 13:
-            goto done;
+            break;
         }
+        break;
     }
-done:
     ReadSignedVarInt((unsigned char *)(l.a[2] + 1), &tmp);
     base = l.cpart.f6;
     bt = base + tmp;

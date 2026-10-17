@@ -42,7 +42,7 @@ struct dCcPos_c : dCc_c {
     virtual Vector3 &GetPos();          /* slot 2 */
     virtual u32 GetOwnerID();           /* slot 3 - always 0 */
 
-    /* DECLARED, defined out of line in src/engine/collision/dCcPos_c.cpp as real C++
+    /* DECLARED, defined out of line in src/engine/collision/d_cc_pos.cpp as real C++
      * -- the body is empty; the base step and the vptr store are the whole
      * ROM function. */
     dCcPos_c();

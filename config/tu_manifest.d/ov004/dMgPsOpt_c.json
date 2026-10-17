@@ -1,8 +1,8 @@
 {
   "id": "ov004/dMgPsOpt_c",
   "module": "ov004",
-  "source": "src/actors/dMgPsOpt_c.cpp",
-  "promoted_source": "src/actors/dMgPsOpt_c.cpp",
+  "source": "src/minigames/d_mg_ps_opt.cpp",
+  "promoted_source": "src/minigames/d_mg_ps_opt.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -31,42 +31,42 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_ov004_020b8dc0",
+      "symbol": "PsOpt_PlaceIcon",
       "address": "0x020b8dc0",
       "size": "0x00000120",
       "legacy_source": "src/func_ov004_020b8dc0.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov004_020b8ee0",
+      "symbol": "_ZN10dMgPsOpt_c6IsIdleEv",
       "address": "0x020b8ee0",
       "size": "0x00000038",
       "legacy_source": "src/func_ov004_020b8ee0.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov004_020b8f18",
+      "symbol": "_ZN10dMgPsOpt_c4DrawEv",
       "address": "0x020b8f18",
       "size": "0x00000060",
       "legacy_source": "src/func_ov004_020b8f18.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov004_020b8f78",
+      "symbol": "_ZN10dMgPsOpt_c6UpdateEv",
       "address": "0x020b8f78",
       "size": "0x00000284",
       "legacy_source": "src/func_ov004_020b8f78.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov004_020b91fc",
+      "symbol": "_ZN10dMgPsOpt_c5CloseEv",
       "address": "0x020b91fc",
       "size": "0x00000024",
       "legacy_source": "src/func_ov004_020b91fc.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov004_020b9220",
+      "symbol": "_ZN10dMgPsOpt_c4OpenEv",
       "address": "0x020b9220",
       "size": "0x00000060",
       "legacy_source": "src/func_ov004_020b9220.c",
@@ -236,8 +236,8 @@
     "The base class's vague-linkage records (_ZTI9dThIcon_c, _ZTS9dThIcon_c) are dragged out by emitting the derived type-info and are dispositioned deadstrip-data: dThIcon_c's own TU homes them at ov001:0x020ad478/0x020ad480, outside both ranges this entry claims.",
     "config/arm9/overlays/ov004/symbols.txt loses one row: data_ov004_020bca7c, a zero-extent placeholder alias at the vtable's address point, which _ZTVN10dMgPsOpt_c11TouchIcon_cE at the same address already names. Nothing referenced the placeholder. Once this TU emits the vtable the placeholder name no longer appears in the linked binary, and `dsd check symbols` reports it with \"Possible name: _ZTVN10dMgPsOpt_c11TouchIcon_cE\"; removing the row is byte-neutral and returns that check to its 9 pre-existing tree-level errors, 0 new.",
     "Reconciled while folding: GetSoundMode and GetGameLanguage differed between legacy files only as `(void)` vs `()` and `s32` vs `int`, which are the same declaration in C++.",
-    "The six unlabelled members keep their ROM symbol names, C linkage, and the parameter spelling the rest of the tree already declares for them (include/decl_common.h, func_ov004_020ae858 and func_ov004_020aeb24 in src/minigames/d_s_mg_base.cpp). Each takes a typed dMgPsOpt_c/TouchIcon_c local on its first line instead, so the bodies read as class code without moving any other TU's declarations or call sites.",
-    "The shadow's shadow structs are gone: both icon loops now dispatch through real TouchIcon_c members (Render in ov004:0x020b8f18, Behavior in ov004:0x020b8f78) and still match byte-for-byte, so the earlier note claiming a retype would change their dispatch was wrong. One real lever did show up in func_ov004_020b8ee0: the loop bound has to be re-read as self->mSelectedIcon in the condition rather than cached in a local -- the legacy shard's cached `n` was an artefact of walking a single char* and costs 5 words.",
+    "The six unlabelled members keep their ROM symbol names, C linkage, and the parameter spelling the rest of the tree already declares for them (include/decl_common.h, Mg_DrawMenu and Mg_UpdateMenu in src/minigames/d_s_mg_base.cpp). Each takes a typed dMgPsOpt_c/TouchIcon_c local on its first line instead, so the bodies read as class code without moving any other TU's declarations or call sites.",
+    "The shadow's shadow structs are gone: both icon loops now dispatch through real TouchIcon_c members (Render in ov004:0x020b8f18, Behavior in ov004:0x020b8f78) and still match byte-for-byte, so the earlier note claiming a retype would change their dispatch was wrong. One real lever did show up in _ZN10dMgPsOpt_c6IsIdleEv: the loop bound has to be re-read as self->mSelectedIcon in the condition rather than cached in a local -- the legacy shard's cached `n` was an artefact of walking a single char* and costs 5 words.",
     "include/dMgPsOpt_c.h names one byte that was previously padding: offset 0x125 is a live close-delay countdown (ov004:0x020b8f78 stores 0x14 into it and decrements it), so `pad_125[0x3]` becomes `mCloseTimer` plus `pad_126[0x2]`. Size, offsets and every consumer's codegen are unchanged."
   ],
   "verification": {

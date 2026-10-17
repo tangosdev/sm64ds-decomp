@@ -8,7 +8,7 @@ local staging order, not a claim that either commit has landed on main.
 
 The accepted `Bombking` source, header and manifest are unchanged. In particular,
 the two state handlers retain calls to the local [ov078](../../../config/arm9/overlays/ov078/symbols.txt) helper
-[func_ov078_02123804](../../../src/actors/daBombking_c.cpp)(ROM Ordinal 2 used to assemble `daBombking_c.cpp`), rather than the unrelated [ov080](../../../config/arm9/overlays/ov080/symbols.txt) destructor at the same
+[func_ov078_02123804](../../../src/game/actors/d_a_bombking.cpp)(ROM Ordinal 2 used to assemble `daBombking_c.cpp`), rather than the unrelated [ov080](../../../config/arm9/overlays/ov080/symbols.txt) destructor at the same
 numeric address. The prior independent review covered all 52 functions and all
 427 emitted reference identities, including this module distinction.
 

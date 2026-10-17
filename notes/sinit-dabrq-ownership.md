@@ -1,6 +1,8 @@
 # daBrq static-initializer ownership and generation proof
 
-This is a production-boundary audit for [__sinit_ov070_02122d80](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp). It does not
+Current follow-up: [native Amp initialization](agents/handoffs/brq-sinit1015.md) now owns the initializer, ctor entry and BSS in the production TU. The assessment below records the earlier checkpoint; historical initializer links pin its original transcription.
+
+This is a production-boundary audit for [historical initializer](https://github.com/tangosdev/sm64ds-decomp/blob/c4cace0ee05f2c0b3c6536665e981927ead132e2/src/__sinit_ov070_02122d80.cpp). It does not
 change an enrolled source, linker configuration, or symbol name. The guarded
 probe in [notes/sinit-probes/dabrq.cpp](../notes/sinit-probes/dabrq.cpp) contains ordinary global C++ objects and
 no hand-written initializer.
@@ -10,17 +12,17 @@ no hand-written initializer.
 It is a proof note. It was first written on a branch named
 `cpp/dabrq-sinit-resource-tu`, and that name overstates the work: nothing here
 regenerates the initializer from a "resource TU", and the production enrolment
-of the initializer was never changed. On `main` today:
+of the initializer was never changed by that audit. At its audited `main` checkpoint:
 
-- [src/unnamed/ov070/__sinit_ov070_02122d80.cpp](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp) is still the hand-transcribed, separately
+- [historical initializer](https://github.com/tangosdev/sm64ds-decomp/blob/c4cace0ee05f2c0b3c6536665e981927ead132e2/src/__sinit_ov070_02122d80.cpp) is still the hand-transcribed, separately
   enrolled initializer, byte-identical to the version this audit was measured
   against;
-- [src/actors/daBrq_c.cpp](../src/actors/daBrq_c.cpp), described by
+- [src/game/actors/d_a_brq.cpp](../src/game/actors/d_a_brq.cpp), described by
   [config/tu_manifest.d/ov070/daBrq_c.json](../config/tu_manifest.d/ov070/daBrq_c.json), is the promoted class TU. Its
   manifest records that the initializer, its `.ctor` word, the PMF input
   table, the resource globals, and the state-table BSS remain separately
   enrolled;
-- [src/actors/daBrq_c.cpp](../src/actors/daBrq_c.cpp) now also holds the
+- [src/game/actors/d_a_brq.cpp](../src/game/actors/d_a_brq.cpp) now also holds the
   factory `daBrq_c_classInit` (historical project alias `Amp_Spawn`). That factory
   is the nineteenth `daBrq_c` symbol in the overlay; the manifest's eighteen
   functions plus this factory cover every one.
@@ -30,8 +32,8 @@ produced this initializer organically? It could, as shown below.
 
 ## Verdict
 
-[__sinit_ov070_02122d80](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp), its `.ctor` word, six PMF descriptors, and the BSS
-objects they initialize belong to the [ov070](../config/arm9/overlays/ov070/symbols.txt) [daBrq_c](../src/actors/daBrq_c.cpp) translation unit.
+[historical initializer](https://github.com/tangosdev/sm64ds-decomp/blob/c4cace0ee05f2c0b3c6536665e981927ead132e2/src/__sinit_ov070_02122d80.cpp), its `.ctor` word, six PMF descriptors, and the BSS
+objects they initialize belong to the [ov070](../config/arm9/overlays/ov070/symbols.txt) [daBrq_c](../src/game/actors/d_a_brq.cpp) translation unit.
 CodeWarrior 2004/b56 organically reproduces the entire initializer from five
 resource objects, three state-handler pairs, and one `Vector3`-shaped object:
 
@@ -94,7 +96,9 @@ Every object the initializer touches has its own symbol at the expected
 distance from its neighbours, so the six-entry PMF table and the three-pair
 state array are what the ROM lays out, not an artifact of the transcription.
 
-## Production boundary
+## Historical production boundary
+
+The native-initializer follow-up deliberately takes a narrower ABI-view approach instead of claiming recovered engine resource classes. Its inferred local C1/D1 spellings are exact manifest import aliases to the existing canonical helper symbols; no engine symbol is renamed. Strict destination-aware verification covers the complete production object and full ROM, beyond the neutral probe's slot-shape comparison. Original non-polymorphic resource class identities remain unrecovered, and engine-level wrapper reconstruction remains separate. The historical restriction below is retained as the earlier assessment, not presented as completed engine recovery.
 
 Do not replace the exact initializer with the neutral probe classes. The ROM
 does not preserve the original non-polymorphic resource class names, and the
@@ -113,7 +117,7 @@ without a hand-written `extern "C"` initializer.
 Compile the guarded probe with the pinned production C++ flags (the
 `CPP_FLAGS` string in [tools/swarm.py](../tools/swarm.py), through `compile_c` in
 [tools/match.py](../tools/match.py)) plus `-DSINIT_OWNERSHIP_PROBE`. Comparing `__sinit_dabrq.cpp`
-in that object with [__sinit_ov070_02122d80](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp) from the committed exact
+in that object with [historical initializer](https://github.com/tangosdev/sm64ds-decomp/blob/c4cace0ee05f2c0b3c6536665e981927ead132e2/src/__sinit_ov070_02122d80.cpp) from the committed exact
 transcription gives:
 
 ```text

@@ -1,19 +1,19 @@
 {
   "id": "ov006/dScMgJump_c",
   "module": "ov006",
-  "source": "src/actors/dScMgJump_c.cpp",
-  "promoted_source": "src/actors/dScMgJump_c.cpp",
+  "source": "src/minigames/d_s_mg_jump_methods.cpp",
+  "promoted_source": "src/minigames/d_s_mg_jump_methods.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x020edec0..0x020eeafc, 18 function(s), from build/tu_map.json (tools/tu_map.py).",
-    "WHOLE RUN. This entry licenses .text 0x020edec0-0x020eeafc, all 18 functions. Ordinal 17, _ZN11dScMgJump_c13OnYoshiTryEatEi at 0x020ee994 size 0x168, was the last shard: it carried a NONMATCHING marker (draft 0x164 against 0x168, the loop's three invariants hoisted into r6-r8) until 2026-10-12, when the `if (unk_0bc < 15) idx = unk_0bc; else { redraw }` arrangement reproduced it byte-exact inside this TU; the shard src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp is retired and the delinks .text end moved from 0x020ee994 to 0x020eeafc. The earlier partial-promotion note (17 of 18, cut at the top) is superseded by this one.",
-    "dScMgJump_c_classInit at 0x020eeafc is NOT part of this unit and is not a candidate to be: tools/tu_map.py cuts it into a separate unit, and delinks.txt homes it in src/d_s_mg_jump.cpp, which is the factory translation unit. The ov006 convention keeps the class TU in src/actors/ and the factory elsewhere (cf. src/actors/dScMgHanachan_c.cpp against src/minigames/d_s_mg_hanachan.cpp), so the promoted path here is src/actors/dScMgJump_c.cpp. That also avoids a basename collision with the existing src/d_s_mg_jump.cpp.",
+    "WHOLE RUN. This entry licenses .text 0x020edec0-0x020eeafc, all 18 functions. Ordinal 17, _ZN11dScMgJump_c10StartRoundEi at 0x020ee994 size 0x168, was the last shard: it carried a NONMATCHING marker (draft 0x164 against 0x168, the loop's three invariants hoisted into r6-r8) until 2026-10-12, when the `if (unk_0bc < 15) idx = unk_0bc; else { redraw }` arrangement reproduced it byte-exact inside this TU; the shard src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp is retired and the delinks .text end moved from 0x020ee994 to 0x020eeafc. The earlier partial-promotion note (17 of 18, cut at the top) is superseded by this one.",
+    "dScMgJump_c_classInit at 0x020eeafc is NOT part of this unit and is not a candidate to be: tools/tu_map.py cuts it into a separate unit, and delinks.txt homes it in src/minigames/d_s_mg_jump.cpp, which is the factory translation unit. The ov006 convention keeps the class TU in src/actors/ and the factory elsewhere (cf. src/minigames/d_s_mg_hanachan_methods.cpp against src/minigames/d_s_mg_hanachan.cpp), so the promoted path here is src/minigames/d_s_mg_jump_methods.cpp. That also avoids a basename collision with the existing src/minigames/d_s_mg_jump.cpp.",
     "class label(s): dScMgJump_c. The cartridge's own _ZTI11dScMgJump_c at 0x0213cb98 holds {0x0209a764, 0x0213cba4, 0x0213c5c8} -- __si_class_type_info, &_ZTS11dScMgJump_c, &_ZTI14dScMgD3DBase_c -- so the single public base at offset 0 is read off the ROM, and 0x0213cba4 spells the name 11dScMgJump_c, so the class name is transcribed and not coined.",
     "DESTRUCTOR EMISSION ORDER decided the header shape. config/arm9/overlays/ov006/symbols.txt puts _ZN11dScMgJump_cD1Ev at 0x020edec0 and _ZN11dScMgJump_cD0Ev at 0x020edf54, D1 BELOW D0. An out-of-line member definition makes mwccarm 2004/b56 emit the group D0-then-D1 plus a homeless D2, which cannot be linked as one ROM-ascending range; defining the destructor in the class body emits D1 then D0 and no D2, and no _ZN11dScMgJump_cD2Ev exists anywhere in config/, src/ or include/, which is the cartridge agreeing. tools/rtti_extract.py reports no class deriving from dScMgJump_c (dScMgJump2_c derives from dScMgD3DBase_c, not from this class), so moving the body into the header cannot perturb a descendant that inlines the vptr store, and no already-promoted descendant needed re-verification.",
-    "BYTE-LEVEL LEVER, and the one thing that decided this TU: the eight-byte state pair at +0x5004 must be spelled as a struct whose sole member is an ARRAY, struct Pair { int w[2]; }, not as two named scalars struct Pair { int a; int b; }. Seven members assign it (func_ov006_020ee2c4, 020ee3bc, 020ee3ec, 020ee44c, 020ee4e0, 020ee598, 020ee658) and with the two-scalar spelling all seven and only those seven came back DIFF at exactly 2 words: mwccarm scalarises the copy member-by-member and emits ldr/str/ldr/str, where the cartridge hoists both loads -- ldr r2,[r1]; ldr r1,[r1,#4]; str r2,[r0,#4]; str r1,[r0,#8]. The array member makes the compiler copy the object as a unit and reproduces the ROM's schedule; changing that one declaration took the TU from 10/17 to 17/17. The already-promoted twin src/minigames/d_s_mg_jump2.cpp uses the same array spelling for the same +0x5004 construct and matches 29/29, so this is the ov006 house form and not a one-off. The legacy shards disagreed among themselves -- 020ee3bc, 020ee4e0 and 020ee598 used the two-scalar form, 020ee3ec, 020ee44c and 020ee658 the array form -- and each was a separate compilation unit, so each matched alone; unifying them is what exposed the difference. Merging shards can surface a lever that no shard could see.",
-    "PRAGMA MEASURED, NOT ASSUMED. The legacy shard src/func_ov006_020ee5b8.c carried #pragma optimize_for_size on. It was dropped rather than bracketed, and func_ov006_020ee5b8 still MATCHes, so the pragma is not load-bearing for this range and no push/pop bracket is needed -- the same result dScMgRoulette_c measured. This TU sets no pragmas at all.",
+    "BYTE-LEVEL LEVER, and the one thing that decided this TU: the eight-byte state pair at +0x5004 must be spelled as a struct whose sole member is an ARRAY, struct Pair { int w[2]; }, not as two named scalars struct Pair { int a; int b; }. Seven members assign it (State_Final, 020ee3bc, 020ee3ec, 020ee44c, 020ee4e0, 020ee598, 020ee658) and with the two-scalar spelling all seven and only those seven came back DIFF at exactly 2 words: mwccarm scalarises the copy member-by-member and emits ldr/str/ldr/str, where the cartridge hoists both loads -- ldr r2,[r1]; ldr r1,[r1,#4]; str r2,[r0,#4]; str r1,[r0,#8]. The array member makes the compiler copy the object as a unit and reproduces the ROM's schedule; changing that one declaration took the TU from 10/17 to 17/17. The already-promoted twin src/minigames/d_s_mg_jump2.cpp uses the same array spelling for the same +0x5004 construct and matches 29/29, so this is the ov006 house form and not a one-off. The legacy shards disagreed among themselves -- 020ee3bc, 020ee4e0 and 020ee598 used the two-scalar form, 020ee3ec, 020ee44c and 020ee658 the array form -- and each was a separate compilation unit, so each matched alone; unifying them is what exposed the difference. Merging shards can surface a lever that no shard could see.",
+    "PRAGMA MEASURED, NOT ASSUMED. The legacy shard src/func_ov006_020ee5b8.c carried #pragma optimize_for_size on. It was dropped rather than bracketed, and State_Intro still MATCHes, so the pragma is not load-bearing for this range and no push/pop bracket is needed -- the same result dScMgRoulette_c measured. This TU sets no pragmas at all.",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step). This entry does not rest on it: the cut is decided by the tu_map run, the delinks gap above and the RTTI home, all of which are per-symbol."
   ],
   "sections": [
@@ -75,70 +75,70 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee2c0Ev",
+      "symbol": "_ZN11dScMgJump_c10State_IdleEv",
       "address": "0x020ee2c0",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020ee2c0.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee2c4Ev",
+      "symbol": "_ZN11dScMgJump_c11State_FinalEv",
       "address": "0x020ee2c4",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov006_020ee2c4.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee3bcEv",
+      "symbol": "_ZN11dScMgJump_c10BeginFinalEv",
       "address": "0x020ee3bc",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_020ee3bc.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee3ecEv",
+      "symbol": "_ZN11dScMgJump_c12State_ResultEv",
       "address": "0x020ee3ec",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020ee3ec.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee44cEv",
+      "symbol": "_ZN11dScMgJump_c9State_EndEv",
       "address": "0x020ee44c",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020ee44c.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee4e0Ev",
+      "symbol": "_ZN11dScMgJump_c8BeginEndEv",
       "address": "0x020ee4e0",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020ee4e0.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee508Ev",
+      "symbol": "_ZN11dScMgJump_c10State_PlayEv",
       "address": "0x020ee508",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020ee508.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee598Ev",
+      "symbol": "_ZN11dScMgJump_c9BeginPlayEv",
       "address": "0x020ee598",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_020ee598.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee5b8Ev",
+      "symbol": "_ZN11dScMgJump_c11State_IntroEv",
       "address": "0x020ee5b8",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020ee5b8.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN11dScMgJump_c19func_ov006_020ee658Ev",
+      "symbol": "_ZN11dScMgJump_c10BeginIntroEv",
       "address": "0x020ee658",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020ee658.c",
@@ -152,14 +152,14 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN11dScMgJump_c13OnTurnIntoEggEi",
+      "symbol": "_ZN11dScMgJump_c11CanEndStateEi",
       "address": "0x020ee8dc",
       "size": "0x000000b8",
       "legacy_source": "src/_ZN11dScMgJump_c13OnTurnIntoEggEi.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN11dScMgJump_c13OnYoshiTryEatEi",
+      "symbol": "_ZN11dScMgJump_c10StartRoundEi",
       "address": "0x020ee994",
       "size": "0x00000168",
       "legacy_source": "src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp",
@@ -169,18 +169,18 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov006_02142188",
+      "symbol": "gJumpBack02ModelFile",
       "address": "0x02142188",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x204; InitResources selects it through data_ov006_02142184"
+      "evidence": "model resource handle constructed with file ID 0x204; InitResources selects it through sJumpBackFile"
     },
     {
-      "symbol": "data_ov006_02142190",
+      "symbol": "gJumpBack01ModelFile",
       "address": "0x02142190",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x203; InitResources selects it through data_ov006_02142184"
+      "evidence": "model resource handle constructed with file ID 0x203; InitResources selects it through sJumpBackFile"
     },
     {
       "symbol": "@599",
@@ -199,13 +199,13 @@
   ],
   "notes": [
     "Merged by hand from 17 enrolled shards (the 18th, OnYoshiTryEat, folded in on 2026-10-12), in ROM-ascending order, over a skeleton from tools/tubuild.py create. The file is written highest-address-first because mwccarm emits one .text section per function in REVERSE source order; no defer_codegen pragma is used here.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020b0a54' differs between the legacy file that used to hold func_ov006_020ee2c4 and the one that held func_ov006_020ee3ec; kept the first at create time. Settled against neither: include/decl_common.h already declares it taking int, so this TU declares it not at all and uses the shared one. The shard spelling void * was the guess.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_SetSharedState' differs between the legacy file that used to hold State_Final and the one that held State_Result; kept the first at create time. Settled against neither: include/decl_common.h already declares it taking int, so this TU declares it not at all and uses the shared one. The shard spelling void * was the guess.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN11dScMgJump_c6RenderEv and the one that held _ZN11dScMgJump_c13InitResourcesEv; kept the first at create time. Settled on the single spelling both call sites accept; both members MATCH with it.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold _ZN11dScMgJump_c6RenderEv and the one that held _ZN11dScMgJump_c13InitResourcesEv; kept the first at create time. Settled on one spelling; both members MATCH with it.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN11dScMgJump_c6RenderEv and the one that held _ZN11dScMgJump_c13InitResourcesEv; kept the first at create time. Render spelled it int, InitResources spelled it a 12-word matrix. A symbol has one type: it is declared int once and the matrix use casts at the site. Both members MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold func_ov006_020ee3bc and the one that held func_ov006_020ee4e0; kept the first at create time. Settled on the ARRAY-member form for every site. This was not cosmetic: see the byte-level lever in boundary_evidence -- the two-scalar form changes the instruction schedule of the copy and breaks seven members.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold func_ov006_020ee3bc and the one that held func_ov006_020ee598; kept the first at create time. The second half of the same warning, recorded separately because the reconciliation key is (kind, key, losing function). Settled on the ARRAY-member form here too, for the reason on the note above.",
-    "Also reconciled by hand, not flagged by the generator: _Z15ApproachLinear2Rsss appeared with two spellings, int(short*,short,short) and short(short&,short,short). The mangled Rs proves a reference, so the reference form is kept and the 0x020ee44c call site dereferences at the call. data_ov004_020beb68 is already declared void * by include/dScMgBase_c.h, so this TU does not redeclare it and casts at the use site.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold BeginFinal and the one that held BeginEnd; kept the first at create time. Settled on the ARRAY-member form for every site. This was not cosmetic: see the byte-level lever in boundary_evidence -- the two-scalar form changes the instruction schedule of the copy and breaks seven members.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold BeginFinal and the one that held BeginPlay; kept the first at create time. The second half of the same warning, recorded separately because the reconciliation key is (kind, key, losing function). Settled on the ARRAY-member form here too, for the reason on the note above.",
+    "Also reconciled by hand, not flagged by the generator: _Z15ApproachLinear2Rsss appeared with two spellings, int(short*,short,short) and short(short&,short,short). The mangled Rs proves a reference, so the reference form is kept and the 0x020ee44c call site dereferences at the call. gMgScene is already declared void * by include/dScMgBase_c.h, so this TU does not redeclare it and casts at the use site.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
   "verification": {
@@ -523,14 +523,14 @@
     {
       "symbol": "_ZTV11dScMgJump_c",
       "disposition": "deadstrip-data",
-      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cbe4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213cbe4 is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213cbdc holds the offset-to-top 0 and 0x0213cbe0 holds 0x0213cb98, `&_ZTI11dScMgJump_c` -- and those two words lie outside the symbol's extent (they fall inside data_ov006_0213cbc8), so anchoring the comparison at the symbol leaves them uncompared; both were read out of extracted/dsd/arm9_overlays/ov006.bin by hand and hold exactly those values. The slots themselves are covered in full: the next symbol is data_ov006_0213cc74, so the _ZTV extent 0x0213cbe4-0x0213cc74 is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words. Slot 0 of that table reads 0x020ee690, which is InitResources -- the same address the key-function argument above rests on, confirmed from the cartridge rather than inferred.",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cbe4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213cbe4 is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213cbdc holds the offset-to-top 0 and 0x0213cbe0 holds 0x0213cb98, `&_ZTI11dScMgJump_c` -- and those two words lie outside the symbol's extent (they fall inside sJumpNcgByLanguage), so anchoring the comparison at the symbol leaves them uncompared; both were read out of extracted/dsd/arm9_overlays/ov006.bin by hand and hold exactly those values. The slots themselves are covered in full: the next symbol is pmf_dScMgJump2_c_State_Idle, so the _ZTV extent 0x0213cbe4-0x0213cc74 is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words. Slot 0 of that table reads 0x020ee690, which is InitResources -- the same address the key-function argument above rests on, confirmed from the cartridge rather than inferred.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213cbe4"
     }
   ],
   "init": [
     {
-      "symbol": "__sinit_dScMgJump_c.cpp",
+      "symbol": "__sinit_d_s_mg_jump_methods.cpp",
       "address": "0x02130e9c",
       "size": "0x64",
       "binding": "STB_GLOBAL",
@@ -539,7 +539,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_dScMgJump_c.cpp",
+      "symbol": ".p__sinit_d_s_mg_jump_methods.cpp",
       "address": "0x021335a4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -573,23 +573,23 @@
     {
       "from": "@646",
       "to": "@77",
-      "evidence": "emitted destructor-registration node name collides with the configured @600 on ov081 on main; @77 is unused everywhere and shorter than the original. Folding OnYoshiTryEat in (2026-10-12) shifted the per-TU @NNN uniquifier so mwcc now emits this node (the file-0x204 handle's, paired with data_ov006_02142188 in __sinit) as @646."
+      "evidence": "emitted destructor-registration node name collides with the configured @600 on ov081 on main; @77 is unused everywhere and shorter than the original. Folding OnYoshiTryEat in (2026-10-12) shifted the per-TU @NNN uniquifier so mwcc now emits this node (the file-0x204 handle's, paired with gJumpBack02ModelFile in __sinit) as @646."
     },
     {
       "from": "@645",
       "to": "@599",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, and folding OnYoshiTryEat in (2026-10-12) shifted it again, so mwcc emits this node (the file-0x203 handle's, paired with data_ov006_02142190 in __sinit) as @645 now; licensed under the existing pin @599"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, and folding OnYoshiTryEat in (2026-10-12) shifted it again, so mwcc emits this node (the file-0x203 handle's, paired with gJumpBack01ModelFile in __sinit) as @645 now; licensed under the existing pin @599"
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_dScMgJump_c.cpp",
+      "symbol": "__sinit_d_s_mg_jump_methods.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_dScMgJump_c.cpp",
+      "symbol": ".p__sinit_d_s_mg_jump_methods.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -653,7 +653,7 @@
       "source": "0x02130ee8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142190",
+      "symbol": "gJumpBack01ModelFile",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142190"
@@ -683,7 +683,7 @@
       "source": "0x02130ef8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142188",
+      "symbol": "gJumpBack02ModelFile",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142188"
@@ -703,7 +703,7 @@
       "source": "0x021335a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_dScMgJump_c.cpp",
+      "symbol": "__sinit_d_s_mg_jump_methods.cpp",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130e9c"

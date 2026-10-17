@@ -8,22 +8,19 @@ int func_0205c864(int *thiz)
     int notset, ret, b;
     int dummy1, dummy2, dummy3; // force push {r4, r5, r6, r7, r8, sb, lr}
     saved = (unsigned int)_ZN3IRQ7DisableEv();
+    /* notset/ret/b stay materialized 0/1 locals: folding any of them drops 3 insns */
     notset = (thiz[4] & 8) ? 1 : 0;
     ret = (notset == 0) ? 1 : 0;
     if (ret) {
         b = (*(int*)((char*)thiz + 0x10) & 0x10) ? 1 : 0; // force ldr r0, [r7, #0x10] instead of ands r0, r1, #0x10
-        if (b == 0) {
-            goto setflag;
+        if (b != 0) {
+            *(int *)((char *)thiz + 0x10) |= 0x40;
+            do {
+                OS_SleepThread((char *)thiz + 0xe);
+            } while ((*(int *)((char *)thiz + 0x10) & 0x40) ? 1 : 0);
+        } else {
+            *(int *)((char *)thiz + 0x10) |= 8;
         }
-        *(int *)((char*)thiz + 0x10) |= 0x40;
-        do {
-            OS_SleepThread((char*)thiz + 0xe);
-        } while ((*(int*)((char*)thiz + 0x10) & 0x40) ? 1 : 0);
-        goto done;
-    setflag:
-        *(int *)((char*)thiz + 0x10) |= 8;
-    done:
-        ;
     }
     _ZN3IRQ7RestoreEj(saved);
     return ret;

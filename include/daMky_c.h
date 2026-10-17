@@ -16,12 +16,13 @@
  *   _ZN7daMky_cD0Ev  four of the five destroyed in reverse (PathPtr is
  *       trivial, no dtor call), then ~dActor_c.
  *
- * SIZE 0x3cc is the factory's own literal; unk_3cb (1 byte, 0x3cb) closes
+ * SIZE 0x3cc is the factory's own literal; mResetTimer (1 byte, 0x3cb) closes
  * exactly on it under 4-byte alignment.
  *
  * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
- * names -- dActor_c ends at exactly 0x0d0, so pad_0d0 (unevidenced, 4 bytes)
- * is daMky_c's own first field. Consumers that used the old duplicated names
+ * names -- dActor_c ends at exactly 0x0d0. The first derived word is
+ * the Player pointer written by the mouth/grab machinery and read by
+ * func_ov030_02111bc4 when the mouth-state flag is set. Consumers that used the old duplicated names
  * were repointed to the inherited dActor_c/fBase_c names: mActorID ->
  * actorID, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
  * mFlags (mPosX/Y/Z, mScaleX/Y/Z, mAreaId already share dActor_c's names).
@@ -30,7 +31,7 @@
  * daMky_c_classInit_MONKEY_THIEF/_MONKEY_STAR call _ZN10dBgCh_ActrC1Ev at that
  * offset, so it is the real 0x1bc-byte member (0x194..0x350); the 0x30
  * bytes from 0x350..0x380 hold the matrix copied by func_ov030_02112094
- * in src/actors/daMky_c.cpp. Its original member name is unknown.
+ * in src/game/actors/d_a_mky.cpp. Its original member name is unknown.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. daMky_c overrides
  * slot 0 (InitResources), slot 3 (CleanupResources), slot 6 (Behavior),
@@ -38,36 +39,45 @@
  * is one `bx lr` -- the override exists only to occupy the slot), 18
  * (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot holds the base's
  * own word and is inherited, so it is deliberately not redeclared here.
- * All seven are defined in src/actors/daMky_c.cpp.
+ * All seven are defined in src/game/actors/d_a_mky.cpp.
  */
 struct daMky_c : dActor_c {
-    u8  pad_0d0[0x4];
+    /* Both halves target int-returning methods; their results are discarded.
+       The C static initializer installs eleven 16-byte pairs in .bss. */
+    typedef int (daMky_c::*StateFunction)();
+    struct StateFunctions {
+        StateFunction enter;
+        StateFunction update;
+    };
+
+    /* Member names below are inferred from use, not recovered identifiers. */
+    Player *mEatingPlayer; /* 0x0d0 -- player holding this actor in its mouth */
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
        checks. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* dExtShadowModel_c member, named by the class's own destructor calling
        dExtShadowModel_c's D1 at +0x138.
-       [src/actors/daMky_c.cpp: daMky_c::~daMky_c] */
+       [src/game/actors/d_a_mky.cpp: daMky_c::~daMky_c] */
     dExtShadowModel_c mShadowModel;            /* 0x138 */
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x160.
-       [src/actors/daMky_c.cpp: daMky_c::~daMky_c] */
+       [src/game/actors/d_a_mky.cpp: daMky_c::~daMky_c] */
     dCcAc_c mdCcAc_c;            /* 0x160 */
     /* dBgCh_Actr member, named by daMky_c_classInit_MONKEY_THIEF/_MONKEY_STAR's own
        C1 call and the class's own destructor's D1 call at +0x194.
-       [src/actors/daMky_c.cpp: daMky_c_classInit_MONKEY_THIEF,
+       [src/game/actors/d_a_mky.cpp: daMky_c_classInit_MONKEY_THIEF,
         daMky_c_classInit_MONKEY_STAR, daMky_c::~daMky_c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
-    /* 02112094 copies IDENTITY-rotated model matrix here and stores
+    /* 02112094 builds the cap attachment matrix here and stores
        &mCapMtx on the spawned cap at +0xc8. */
-    s32 mCapMtx[12];        /* 0x350 */
+    Matrix4x3 mCapMtx; /* 0x350 */
     /* Init copies mPos then adds 0x64000 to Y. 02111734 restores from here. */
     s32 mPerchPosX;         /* 0x380 */
     s32 mPerchPosY;         /* 0x384 */
     s32 mPerchPosZ;         /* 0x388 */
     /* Copy of mPosX/Y/Z seeded in InitResources. func_ov030_02111dd0 updates
        it after a ground check; func_ov030_02111734 also resets it.
-       [src/actors/daMky_c.cpp: InitResources, func_ov030_02111dd0,
+       [src/game/actors/d_a_mky.cpp: InitResources, func_ov030_02111dd0,
         func_ov030_02111734] */
     s32 mSpawnPosX;            /* 0x38c */
     s32 mSpawnPosY;            /* 0x390 */
@@ -76,35 +86,36 @@ struct daMky_c : dActor_c {
        call at +0x398. Trivial (no dtor), so _ZN7daMky_cD0Ev does not destroy
        it. */
     PathPtr mPathPtr;            /* 0x398 */
-    u32 mPathNode;          /* 0x3a0 -- 02111b20 GetNode index */
+    s32 mPathNode;               /* 0x3a0 -- 02111b20 GetNode index */
     /* 021141a8 stores &data_ov030_02115e0c[idx]; 02114170/02114134 call through. */
-    void *mStateDesc;       /* 0x3a4 */
-    void *unk_3a8;          /* 0x3a8 -- ClosestPlayer or pad_0d0 copy */
+    StateFunctions *mStateDesc; /* 0x3a4 */
+    Player *mPlayer;            /* 0x3a8 -- closest/contact player or mEatingPlayer copy */
     /* The cap-thief group. Only actor 0x10b (the MONKEY_THIEF profile) runs it: it reads the
        closest player's fBase_c::param1 (the character number, guarded < 3) into
        mCapPlayerNo, spawns actor 0x10d -- Mario's lost cap -- with
        (mCapPlayerNo << 8) | 2 as its spawn parameter, keeps the spawned actor's
-       fBase_c::uniqueID in mCapUniqueID, and latches mHasSpawnedCap so it never
-       spawns a second one. Behavior runs the same block again from raw offsets.
-       [src/actors/daMky_c.cpp: InitResources, Behavior] */
+       fBase_c::uniqueID in mCapUniqueID, and latches mHasSpawnedCap to suppress
+       repeated spawning until the state machine clears it. Behavior repeats
+       this check when it can respawn the cap.
+       [src/game/actors/d_a_mky.cpp: InitResources, Behavior] */
     s32 mCapUniqueID;            /* 0x3ac */
     u32 mCapPlayerNo;            /* 0x3b0 */
     s32 mState;             /* 0x3b4 -- EnterState0..10 each write 0..10 */
     s32 mPrevState;         /* 0x3b8 -- 02111bc4 snapshots mState; 021141a8(this, mPrevState) */
-    s32 unk_3bc;            /* 0x3bc */
+    s32 mCagePushProgress;  /* 0x3bc */
     u8  pad_3c0[6];
     u8  mActionTimer;       /* 0x3c6 -- EnterState10 arms 0x1e; DecIfAbove0_Byte */
-    u8  unk_3c7;            /* 0x3c7 -- this TU switches on it; not padding */
+    u8 mSubState;           /* 0x3c7 -- this TU switches on it; not padding */
     u8  mHasSpawnedCap;     /* 0x3c8 */
-    u8  mPlayerWasOwnCharacter; /* 0x3c9 -- Behavior case 0: Player mCharacter == param1 */
+    u8 mPlayerWasOwnCharacter; /* 0x3c9 -- state 3 update: Player mCharacter == param1 */
     u8  mAnimIdx;           /* 0x3ca -- 02111a00 indexes data_ov030_02115bc8 */
-    u8  unk_3cb;            /* 0x3cb */
+    u8 mResetTimer;         /* 0x3cb -- counts down from 0x96 before perch-reset checks */
 
     /* The state machine.  Entered through func_ov030_021141a8(this, N),
        which installs descriptor N at +0x3a4 and calls its first
        pointer-to-member; each of these writes its own N to mState.  The
        class name and the numbers are the cartridge's; the word
-       "EnterState" is coined.  See src/actors/daMky_c.cpp. */
+       "EnterState" is coined.  See src/game/actors/d_a_mky.cpp. */
     s32  EnterState0();        /* 0x02114124 -- PMF record 20 of 22 */
     s32  EnterState1();        /* 0x02113fd8 -- PMF record 5 of 22 */
     s32  EnterState2();        /* 0x02113be8 -- PMF record 7 of 22 */
@@ -157,6 +168,8 @@ struct daMky_c : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char
+    daMky_c_StateFunctions_size_must_be_0x10[sizeof(daMky_c::StateFunctions) == 0x10 ? 1 : -1];
 typedef char daMky_c_size_must_be_0x3cc[sizeof(daMky_c) == 0x3cc ? 1 : -1];
 #endif
 

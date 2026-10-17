@@ -1,13 +1,17 @@
 # Gate-3b slice: SharedFilePtr over the host card seam (port/hal/fs.cpp),
 # on top of gate 3a's heap (the smoke links slices 2 + 3a as well).
 #
-# Excluded on purpose:
-#   _ZN13SharedFilePtr9ConstructEj.c and func_02017e48.c -- on the DS they
-#   pass ov0FileID by leaving it in r1 across a one-argument call; the HAL
+# src/SharedFilePtr.cpp is the whole SharedFilePtr translation unit. On the
+# host it compiles only the refcounting core: func_02017e0c, func_02017c24,
+# SharedFilePtr::LoadFile and SharedFilePtr::Release. The rest is behind
+# #ifndef _MSC_VER in the file, on purpose:
+#   SharedFilePtr::Construct and func_02017e48 -- on the DS they pass
+#   ov0FileID by leaving it in r1 across a one-argument call; the HAL
 #   provides an ABI-portable Construct instead.
-#   _ZN13SharedFilePtr4LoadEv.cpp -- the seam itself (card hardware).
+#   SharedFilePtr::Load -- the seam itself (card hardware).
+# Model::LoadFile and dExtFrameCtrl_c::LoadFile compile only where
+# SM64DS_PORT_GATE4B is defined, and dBgW_Kc::LoadFile only where
+# SM64DS_PORT_GATE8 is (see CMakeLists.txt): they need the UpdateFileOffsets
+# members that only the gate-4b / gate-8 slices carry.
 
-src/_ZN13SharedFilePtr8LoadFileEv.cpp
-src/_ZN13SharedFilePtr7ReleaseEv.cpp
-src/func_02017c24.c
-src/func_02017e0c.c
+src/SharedFilePtr.cpp

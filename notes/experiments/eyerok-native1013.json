@@ -1,0 +1,473 @@
+{
+  "schema": 1,
+  "task": "eyerok-native1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
+  "base_commit": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
+  "producer_session": "codex-eyerok-native-producer1013",
+  "scope": "Use native dActor_c::Spawn for both IWANTE hands and return new Eyerok() for the factory; remove obsolete raw declarations and correct class/RTTI descriptions.",
+  "completion": "partial",
+  "source": "src/actors/Eyerok.cpp",
+  "manifest": "config/tu_manifest.d/ov066/Eyerok.json",
+  "source_sha256": "ccd727297d21b464a1c2cb64907dea0e79d82aa574ba183f8d01e3bf2409ea9a",
+  "manifest_sha256": "24ee8d238bac887c00708b17e7a67fe798c7c048d46a3d3be8169cf029d13ed6",
+  "production_inputs": "Pinned current main and actual merged production tooling; no private override or shared-header/symbol-ledger edit.",
+  "registration_mapping": [
+    {
+      "from": "@2179",
+      "to": "@2176",
+      "initializer_offset": "0x5cc",
+      "initializer_address": "0x211a9e4",
+      "canonical_address": "0x211aec4",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2180",
+      "to": "@2177",
+      "initializer_offset": "0x5d8",
+      "initializer_address": "0x211a9f0",
+      "canonical_address": "0x211afb4",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2181",
+      "to": "@2178",
+      "initializer_offset": "0x5e4",
+      "initializer_address": "0x211a9fc",
+      "canonical_address": "0x211aed0",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2182",
+      "to": "@2179",
+      "initializer_offset": "0x5f4",
+      "initializer_address": "0x211aa0c",
+      "canonical_address": "0x211aedc",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2183",
+      "to": "@2180",
+      "initializer_offset": "0x600",
+      "initializer_address": "0x211aa18",
+      "canonical_address": "0x211aee8",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2184",
+      "to": "@2181",
+      "initializer_offset": "0x60c",
+      "initializer_address": "0x211aa24",
+      "canonical_address": "0x211aef4",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2185",
+      "to": "@2182",
+      "initializer_offset": "0x614",
+      "initializer_address": "0x211aa2c",
+      "canonical_address": "0x211af00",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2186",
+      "to": "@2183",
+      "initializer_offset": "0x61c",
+      "initializer_address": "0x211aa34",
+      "canonical_address": "0x211af0c",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2187",
+      "to": "@2184",
+      "initializer_offset": "0x628",
+      "initializer_address": "0x211aa40",
+      "canonical_address": "0x211af18",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2188",
+      "to": "@2185",
+      "initializer_offset": "0x634",
+      "initializer_address": "0x211aa4c",
+      "canonical_address": "0x211af24",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2189",
+      "to": "@2186",
+      "initializer_offset": "0x63c",
+      "initializer_address": "0x211aa54",
+      "canonical_address": "0x211af30",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2190",
+      "to": "@2187",
+      "initializer_offset": "0x648",
+      "initializer_address": "0x211aa60",
+      "canonical_address": "0x211af3c",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2191",
+      "to": "@2188",
+      "initializer_offset": "0x654",
+      "initializer_address": "0x211aa6c",
+      "canonical_address": "0x211af48",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2192",
+      "to": "@2189",
+      "initializer_offset": "0x664",
+      "initializer_address": "0x211aa7c",
+      "canonical_address": "0x211af54",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2193",
+      "to": "@2190",
+      "initializer_offset": "0x66c",
+      "initializer_address": "0x211aa84",
+      "canonical_address": "0x211af60",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2194",
+      "to": "@2191",
+      "initializer_offset": "0x678",
+      "initializer_address": "0x211aa90",
+      "canonical_address": "0x211af6c",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2195",
+      "to": "@2192",
+      "initializer_offset": "0x684",
+      "initializer_address": "0x211aa9c",
+      "canonical_address": "0x211af78",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2196",
+      "to": "@2193",
+      "initializer_offset": "0x694",
+      "initializer_address": "0x211aaac",
+      "canonical_address": "0x211af84",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2197",
+      "to": "@2194",
+      "initializer_offset": "0x6a0",
+      "initializer_address": "0x211aab8",
+      "canonical_address": "0x211af90",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2198",
+      "to": "@2195",
+      "initializer_offset": "0x6a8",
+      "initializer_address": "0x211aac0",
+      "canonical_address": "0x211af9c",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2199",
+      "to": "@2196",
+      "initializer_offset": "0x6b4",
+      "initializer_address": "0x211aacc",
+      "canonical_address": "0x211afa8",
+      "raw_addend": 0,
+      "relocation_type": 2
+    },
+    {
+      "from": "@2200",
+      "to": "@2197",
+      "initializer_offset": "0x6c0",
+      "initializer_address": "0x211aad8",
+      "canonical_address": "0x211afc0",
+      "raw_addend": 0,
+      "relocation_type": 2
+    }
+  ],
+  "proof": {
+    "base": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
+    "historical_tool1c": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "actual_objisolate": "C:\\tmp\\sm64ds-eyerok-native1013\\tools\\objisolate.py",
+    "private_tool_override": false,
+    "source": "src/actors/Eyerok.cpp",
+    "manifest": "config/tu_manifest.d/ov066/Eyerok.json",
+    "input_mapping_count": 22,
+    "initializer_bytes": 1960,
+    "initializer_typed_edges": 149,
+    "initializer_all_bytes_identical": true,
+    "normalized_raw_equal": false,
+    "normal_prepared_equal": false,
+    "raw_sha256": {
+      "baseline": "b84732aba8c920a644bfee380e78b9fe18221cdc1341ba44c949c4186367746a",
+      "native": "949ddfb078be2078634e7a1ed5f826e2f650993e8d01ead09d3b76aa324d0761"
+    },
+    "prepared_sha256": "febe3f85adceb3fb6342915a29de09ebe3565dae3afdce3b70ee184ef779eae8",
+    "strict_rows": 66,
+    "bss_records": 63,
+    "bss_bytes": 744,
+    "metadata": [
+      {
+        "symbol": "_ZTV6Eyerok",
+        "bytes": 136,
+        "blind": 0,
+        "differing_offsets": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "candidate_prefix": "0000000000000000",
+        "retail_prefix": "0000000024ad1102",
+        "slots_equal": true
+      }
+    ],
+    "currentmain_refusals": {
+      "unmodified_manifest": "intact TU preparation refused: ov066/Eyerok compiler-only output: unlicensed function _ZN10dBgActor_cD2Ev has no compiler_only_output policy; unlicensed function _ZN7Vector3C1Ev has no compiler_only_output policy; unlicensed function _ZN9Matrix4x3D1Ev has no compiler_only_output policy",
+      "mapped_manifest_currentmain_tool": null
+    },
+    "source_sha256": "ccd727297d21b464a1c2cb64907dea0e79d82aa574ba183f8d01e3bf2409ea9a",
+    "manifest_sha256": "24ee8d238bac887c00708b17e7a67fe798c7c048d46a3d3be8169cf029d13ed6"
+  },
+  "graph_summary": {
+    "raw_baseline_edges": 801,
+    "raw_candidate_edges": 805,
+    "prepared_edges": 756,
+    "all_prepared_named_symbols_bytes_storage_graph_equal": true,
+    "all_relocations_accounted": true,
+    "raw_changed_existing_symbols": [
+      "daIwante_c_classInit"
+    ],
+    "raw_added_private_lifecycle_symbols": [
+      "_ZN10dBgActor_cD2Ev",
+      "_ZN7Vector3C1Ev",
+      "_ZN9Matrix4x3D1Ev"
+    ],
+    "bss_records_equal": 63,
+    "candidate_metadata_equal_to_baseline": true
+  },
+  "manifest_pairing": "Unchanged main source plus its unchanged manifest prepares normally. Combined native candidate with old manifest refuses three unlicensed lifecycle emissions. The measured 22 input-name mappings and exact compiler-output policies restore ordinary production. Complete ELF files differ structurally; every surviving named symbol, body, storage property and all 756 prepared edges equal baseline. Canonical names, addresses, bindings and storage remain unchanged.",
+  "metadata_limit": "RTTI off emits no _ZTI/_ZTS for the coined Eyerok name. The vtable preamble typeinfo word is zero instead of retail daIwante_c typeinfo 0x0211ad24; this inherited unowned-table mismatch is unchanged. All 128 slot bytes (32 entries) reproduce with zero blind words. Existing externalization keeps the complete retail table; this report does not claim complete emitted metadata equality.",
+  "native_factory_probe": {
+    "adopted": true,
+    "factory_bytes": 168,
+    "typed_edges": 12,
+    "destructor_bytes": 164,
+    "callback": "Emitted Vector3C1 is independently VERIFIED against complete 4-byte arm9:0x0203d384 body; standard canonical-duplicate policy retargets the real Vector3[20] constructor callback. Native vtable +8 is ordinarily rebased to the retail slot address point.",
+    "lifecycle_ownership": {
+      "_ZN10dBgActor_cD2Ev": {
+        "configured_homes": null,
+        "section_index": 120,
+        "section_name": ".text",
+        "size": 56,
+        "binding": "STB_LOPROC",
+        "occupants": [
+          "$a",
+          "$d",
+          "_ZN10dBgActor_cD2Ev"
+        ],
+        "incoming": [],
+        "outgoing": [
+          {
+            "source_section": 120,
+            "source_name": ".text",
+            "offset": 20,
+            "target": "_ZN10dBgW_KcMbgD1Ev",
+            "target_section": "SHN_UNDEF",
+            "type": 1,
+            "addend": -8
+          },
+          {
+            "source_section": 120,
+            "source_name": ".text",
+            "offset": 28,
+            "target": "_ZN5ModelD1Ev",
+            "target_section": "SHN_UNDEF",
+            "type": 1,
+            "addend": -8
+          },
+          {
+            "source_section": 120,
+            "source_name": ".text",
+            "offset": 36,
+            "target": "_ZN8dActor_cD2Ev",
+            "target_section": "SHN_UNDEF",
+            "type": 1,
+            "addend": -8
+          },
+          {
+            "source_section": 120,
+            "source_name": ".text",
+            "offset": 52,
+            "target": "_ZTV10dBgActor_c",
+            "target_section": "SHN_UNDEF",
+            "type": 2,
+            "addend": 8
+          }
+        ]
+      },
+      "_ZN9Matrix4x3D1Ev": {
+        "configured_homes": null,
+        "section_index": 119,
+        "section_name": ".text",
+        "size": 4,
+        "binding": "STB_LOPROC",
+        "occupants": [
+          "$a",
+          "_ZN9Matrix4x3D1Ev"
+        ],
+        "incoming": [],
+        "outgoing": []
+      },
+      "standard_plan": {
+        "keep": null,
+        "drop": [
+          119,
+          120,
+          121
+        ],
+        "externalise": [],
+        "dead": [
+          "_ZN10dBgActor_cD2Ev",
+          "_ZN9Matrix4x3D1Ev"
+        ],
+        "referenced": [],
+        "rebase": [
+          5,
+          7,
+          9
+        ],
+        "error": null
+      }
+    },
+    "historical_first_refusal": "Initial private policy omitted dBgActorD2 and Matrix4x3D1 and failed closed. The subsequent complete ownership audit proved both unreferenced, private and without configured homes; ordinary exact deadstrip policies resolved that proof gap. This was not a codegen matching floor."
+  },
+  "lineage": {
+    "original_private_source_candidate": {
+      "agent": "/root/camera_valueweb_pass",
+      "thread": "01a135f6-ffe2-7f12-a948-096399c6745c",
+      "recorded_creation_call_rollout_line": 2315
+    },
+    "mapping_and_refresh_contributor": "codex-ibl-interface-independent1013 / root/ibl_interface_independent",
+    "actual_prior_producer": "claude-prod-Y-0930c, produce output of fold-tails-ov026-ov055-eyerok-0930c",
+    "inherited_finding_ids": [],
+    "qualification": "Source-review findings and verification-only sessions are not authorship. Contributing authors cannot independently approve adoption."
+  },
+  "remaining_reconstruction": {
+    "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
+    "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
+    "items": [
+      "Coined Eyerok identity and RTTI-off metadata boundary remain.",
+      "Raw actor/player/dust-position walks, EVec3/M48/Vec4 scaffolding, PMF/state representation, scalar Fix12 ABI declarations and unnamed helpers remain partial."
+    ]
+  },
+  "pending": [
+    "Independent exact-final-head Source acceptance"
+  ],
+  "publication": "Producer offer for independent review; root owns PR publication after acceptance, no merge authorized.",
+  "tested_checkpoint": "b6db2d1fcfa6345557b45431aa73e044ffcc2fd1",
+  "tested_build_trees": {
+    "src": "702eddd3765cdfeec779fb86bf08fdbd638d08c9",
+    "include": "fdc69ac1ff6db68eafda1d937a288f9cbe020b7a",
+    "config": "324d3c5d1dd261ae562432650a87118ee0a2ab79",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "git_input_blobs": {
+    "src/actors/Eyerok.cpp": "c33e9c304c2978529c0179682c81493cd15988ee",
+    "config/tu_manifest.d/ov066/Eyerok.json": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664"
+  },
+  "hash_qualification": "source_sha256 and manifest_sha256 record Windows working-file bytes; git_input_blobs and tested_build_trees bind normalized committed inputs.",
+  "workflow_gates": {
+    "prepush_linkcheck": {
+      "exit_code": 0,
+      "checked": 65,
+      "verified": 63,
+      "warnings": [
+        {
+          "symbol": "daIwante_c_classInit",
+          "blind": 1
+        },
+        {
+          "symbol": "__sinit_Eyerok.cpp",
+          "blind": 48
+        }
+      ],
+      "qualification": "Stock raw-object checking does not apply all intact-TU policies. Ordinary merged production preparation resolves these exact constructor-callback and local registration inputs; all 66 prepared rows independently verify with zero blind words. This is not a zero-warning stock prepush result."
+    },
+    "declaration_agreement": {
+      "exit_code": 0,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_refcheck": {
+      "exit_code": 0,
+      "references": 267,
+      "stale": 0
+    },
+    "language_mode": {
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    "rombuild": {
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "exit_code": 0,
+      "result": "PASS",
+      "modules_exact": 106,
+      "modules_total": 106,
+      "source_functions_reproducing": 11334,
+      "source_functions_mismatching": 0,
+      "source_data_reproducing": 331,
+      "source_data_mismatching": 0,
+      "bss_claims": 239,
+      "bss_nobits_bytes": 30164,
+      "intact_new_symbol_errors": 0,
+      "intact_storage_alias_errors": 0,
+      "production_counts": "Final production analysis, after baseline control; baseline source count is not substituted.",
+      "inherited_controls": "Baseline control reproduces the known symbol-check errors. Global romdata inventory remains 969 verified, 1519 partial, 1 differ, 21 unnamed; this is not a claim that all inherited emitted metadata equals retail."
+    }
+  },
+  "proof_artifacts": [
+    "build/eyerok-native1013/proof-factory/proof.json",
+    "build/eyerok-native1013/proof-factory/complete-graph.json",
+    "build/eyerok-native1013/proof-factory/native/preparation.json",
+    "build/eyerok-native1013/proof-factory/native/checks.json",
+    "build/eyerok-native1013/lifecycle-ownership.json",
+    "build/eyerok-native1013/callback-proof.json"
+  ],
+  "historical_spawn_only_checkpoint": "2aea98e44d (superseded by combined native factory checkpoint; its whole-ELF identity evidence applies only to that narrower historical candidate).",
+  "registration_storage_proof": "All 22 mapping pairs are twelve-byte NOBITS nodes with unchanged value, size, alignment and binding; complete raw symbol inventories and initializer relocation positions establish identity. Symbol and section indices shift under native factory emission. Combined candidate inputs @2179..@2200 map to retail @2176..@2197.",
+  "gate_log_sha256": {
+    "rombuild": "cf656523601d201a7ba77c5dcdbe52a744e8ea1df6f3c86b899d0eb10c31269c",
+    "prepush": "03c66879a2a26bfcd031a98965ad76dfd2efdc4e50926426df98842808aa1437",
+    "declarations": "45c6cf4bfc5c5ae853cb470fcc7ec5fef90057d335abc29686a00769eaae1835",
+    "port": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+    "langmode": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+  }
+}

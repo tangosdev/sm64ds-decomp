@@ -72,7 +72,7 @@ extern "C" void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(
 extern "C" {
 void *data_020a0eac_c;
 }
-#pragma comment(linker, "/alternatename:?data_020a0eac@@3PAUHeap@@A=_data_020a0eac_c")
+#pragma comment(linker, "/alternatename:?data_020a0eac@@3PAUHeap_t@mHeap@@A=_data_020a0eac_c")
 #pragma comment(linker, "/alternatename:_data_020a0eac=_data_020a0eac_c")
 extern "C" void func_0206e2f8(void *p, int v, unsigned n)
 {
@@ -152,7 +152,7 @@ void Heap::_Destroy() { Heap_Destroy(this); }
 
 // fBase_c's local static-class shadow and the migrated namespace function are
 // both cdecl with the same two pointer arguments; only their decorations differ.
-#pragma comment(linker, "/alternatename:?Deallocate@Memory@@SAXPAXPAUHeap@@@Z=?Deallocate@Memory@@YAXPAXPAVHeap@@@Z")
+#pragma comment(linker, "/alternatename:?Deallocate@Memory@@SAXPAXPAUHeap_t@mHeap@@@Z=?Deallocate@Memory@@YAXPAXPAUHeap_t@mHeap@@@Z")
 
 extern "C" {
 void *_ZN5Model23AddToCommonModelDataArrER8BMD_File(void *file)

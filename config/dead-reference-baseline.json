@@ -71,7 +71,7 @@
   },
   {
    "file": "notes/agents/handoffs/fold-ov006-curling2-1005.md",
-   "ref": "src/actors/dScMgCurling2_c_upper.cpp"
+   "ref": "src/game/actors/dScMgCurling2_c_upper.cpp"
   },
   {
    "file": "notes/agents/handoffs/fold-ov009-sbird-1008.md",
@@ -642,6 +642,54 @@
    "ref": "nearmiss/ledger"
   },
   {
+   "file": "notes/experiments/batch2-2685-damip-matrix.md",
+   "ref": "src/actors/daMip_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch2-2685-damky-matrix.md",
+   "ref": "src/actors/daMky_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch2-2685-not-experimentable.md",
+   "ref": "src/actors/daBombking_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch2-2685-not-experimentable.md",
+   "ref": "src/actors/daMip_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch2-2685-not-experimentable.md",
+   "ref": "src/actors/daMky_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch2-2685-not-experimentable.md",
+   "ref": "src/actors/daObjLava_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch2-2685-not-experimentable.md",
+   "ref": "src/actors/daSanbo_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch3-2707-floatboard-5ab4-staged-locals.md",
+   "ref": "src/actors/daObjFloatBoard_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch3-2707-floatboard-atan2-6az.md",
+   "ref": "src/actors/daObjFloatBoard_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch3-2707-floatboard-bobphase-collapse.md",
+   "ref": "src/actors/daObjFloatBoard_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch3-2707-floatboard-isclsn-6az.md",
+   "ref": "src/actors/daObjFloatBoard_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch3-2707-floatboard-riderpos-ptr.md",
+   "ref": "src/actors/daObjFloatBoard_c.cpp"
+  },
+  {
    "file": "notes/experiments/batch3-2707-tree-clipper-6az.md",
    "ref": "include/Clipper.h"
   },
@@ -674,8 +722,184 @@
    "ref": "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp"
   },
   {
+   "file": "notes/experiments/dsn-2708-cleanup-reloads.md",
+   "ref": "src/actors/daDsnBase_c.cpp"
+  },
+  {
+   "file": "notes/experiments/dsn-2708-decifabove0.md",
+   "ref": "src/actors/daDsnBase_c.cpp"
+  },
+  {
+   "file": "notes/experiments/dsn-2708-dropshadow.md",
+   "ref": "src/actors/daDsnBase_c.cpp"
+  },
+  {
+   "file": "notes/experiments/dsn-2708-earthquake.md",
+   "ref": "src/actors/daDsnBase_c.cpp"
+  },
+  {
+   "file": "notes/experiments/dsn-2708-isdosun.md",
+   "ref": "src/actors/daDsnBase_c.cpp"
+  },
+  {
+   "file": "notes/experiments/dsn-2708-volatile-aimpos.md",
+   "ref": "src/actors/daDsnBase_c.cpp"
+  },
+  {
+   "file": "notes/experiments/feather-2713-dbgch-actr-init.md",
+   "ref": "src/game/actors/daFeather_c/daFeather_c.cpp"
+  },
+  {
+   "file": "notes/experiments/feather-2713-dccac-init.md",
+   "ref": "src/game/actors/daFeather_c/daFeather_c.cpp"
+  },
+  {
+   "file": "notes/experiments/feather-2713-dropshadow.md",
+   "ref": "src/game/actors/daFeather_c/daFeather_c.cpp"
+  },
+  {
+   "file": "notes/experiments/feather-2713-particle-newsimple.md",
+   "ref": "src/game/actors/daFeather_c/daFeather_c.cpp"
+  },
+  {
+   "file": "notes/experiments/feather-2713-swayangle-short.md",
+   "ref": "src/game/actors/daFeather_c/daFeather_c.cpp"
+  },
+  {
+   "file": "notes/experiments/feather-2713-swayangle-volatile.md",
+   "ref": "src/game/actors/daFeather_c/daFeather_c.cpp"
+  },
+  {
+   "file": "notes/experiments/gameover-2711-bg1scrptr-u16.md",
+   "ref": "src/actors/dScGameOver_c.cpp"
+  },
+  {
+   "file": "notes/experiments/gameover-2711-case1-gooff-spelling.md",
+   "ref": "src/actors/dScGameOver_c.cpp"
+  },
+  {
+   "file": "notes/experiments/gameover-2711-glyph-loop-skeleton.md",
+   "ref": "src/actors/dScGameOver_c.cpp"
+  },
+  {
+   "file": "notes/experiments/gameover-2711-oam-render-fix12.md",
+   "ref": "src/actors/dScGameOver_c.cpp"
+  },
+  {
+   "file": "notes/experiments/gameover-2711-scenegate-virtual-call.md",
+   "ref": "src/actors/dScGameOver_c.cpp"
+  },
+  {
+   "file": "notes/experiments/gameover-2711-strength-pragma-bracket.md",
+   "ref": "src/actors/dScGameOver_c.cpp"
+  },
+  {
+   "file": "notes/experiments/gameover-2711-strength-reduction-off.md",
+   "ref": "src/actors/dScGameOver_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-87d0-int-temp.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-common-first-matrix.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-enterhit-pmf-assign.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-enterhit-same-arms-select.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-members-vector3.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-mtx-intptr-zeroing.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-scratch-vector3.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-setanim-member-form.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-statehold-flag-reuse.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/jump3d-2711-statemove-volatile-store.md",
+   "ref": "src/actors/dMgJump3DMario_c.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-dropshadow-advance.md",
+   "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-dtor-split.md",
+   "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-factory.md",
+   "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-pianovec3.md",
+   "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-pmf-verified.md",
+   "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-setanim-6az.md",
+   "ref": "src/actors/daBmb_c.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-setanim-6az.md",
+   "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
    "file": "notes/experiments/piano-2712-sinit-split.md",
    "ref": "src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c"
+  },
+  {
+   "file": "notes/experiments/piano-2712-sinit-split.md",
+   "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
+   "file": "notes/experiments/trap-2709-dispatch.md",
+   "ref": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp"
+  },
+  {
+   "file": "notes/experiments/trap-2709-matrixd1.md",
+   "ref": "src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp"
+  },
+  {
+   "file": "notes/experiments/trap-2709-notexperimentable.md",
+   "ref": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp"
+  },
+  {
+   "file": "notes/experiments/trap-2709-offstable.md",
+   "ref": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp"
+  },
+  {
+   "file": "notes/experiments/trap-2709-setfile.md",
+   "ref": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp"
+  },
+  {
+   "file": "notes/experiments/trap-2709-statetimer.md",
+   "ref": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp"
+  },
+  {
+   "file": "notes/experiments/trap-2709-v16order.md",
+   "ref": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp"
   },
   {
    "file": "notes/ghidra-dsd-landscape.md",

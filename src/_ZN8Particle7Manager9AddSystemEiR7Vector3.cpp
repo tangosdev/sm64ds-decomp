@@ -1,5 +1,19 @@
 //cpp
 // @symbol _ZN8Particle7Manager9AddSystemEiR7Vector3
+/* Particle::Manager::AddSystem -- spawn a System, arm9
+ * 0x02049e0c..0x02049ee8. func_0204d958 pops one off mFreeSystems,
+ * func_0204ae2c initializes it from the indexed SystemDefinition, the
+ * manager's two flag words seed the system's flags, func_0204d9a0 pushes
+ * it onto mActiveSystems, and a definition whose flags carry the
+ * self-destruct bit fails the spawn.
+ *
+ * leftovers: `(flags << 17) >> 31` stays the arithmetic-shift bit-14 test
+ * -- `& 0x4000` emits a different sequence. flags.unk_000/unk_006/unk_00c
+ * and manager unk_02c/unk_02e keep their placeholder names: the manager
+ * ctor (func_0204a4c8) stores its third and fourth arguments there for
+ * AddSystem to loan into each new system's flags, but no consumer names
+ * what they index.
+ */
 #include "Particle__Manager.h"
 #include "Particle__System.h"
 

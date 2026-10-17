@@ -1,3 +1,41 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov002_02107370_AssetId {
+    ASSET_PEACH_ED_ENTER_WAIT_BCA = 0x03d6,
+    ASSET_PEACH_ED_ENTER_WAIT_BTP = 0x03d7,
+    ASSET_PEACH_ED_KISS_BCA = 0x03d8,
+    ASSET_PEACH_ED_KISS_BTP = 0x03d9,
+    ASSET_PEACH_ED_LANDING_BCA = 0x03da,
+    ASSET_PEACH_ED_LANDING_BTP = 0x03db,
+    ASSET_PEACH_ED_LOOKUP_BCA = 0x03dc,
+    ASSET_PEACH_ED_LOOKUP_BTP = 0x03dd,
+    ASSET_PEACH_ED_LOOKUP_TO_WAIT_BCA = 0x03de,
+    ASSET_PEACH_ED_LOOKUP_TO_WAIT_BTP = 0x03df,
+    ASSET_PEACH_ED_LOOK_ABOUT_BCA = 0x03e0,
+    ASSET_PEACH_ED_LOOK_ABOUT_BTP = 0x03e1,
+    ASSET_PEACH_ED_NOTICE_MARIO_BCA = 0x03e2,
+    ASSET_PEACH_ED_NOTICE_MARIO_BTP = 0x03e3,
+    ASSET_PEACH_ED_NOTICE_YOSHI_BCA = 0x03e4,
+    ASSET_PEACH_ED_NOTICE_YOSHI_BTP = 0x03e5,
+    ASSET_PEACH_ED_STEP_UP_BCA = 0x03e6,
+    ASSET_PEACH_ED_STEP_UP_BTP = 0x03e7,
+    ASSET_PEACH_ED_TURN_BCA = 0x03e8,
+    ASSET_PEACH_ED_TURN_BTP = 0x03e9,
+    ASSET_PEACH_ED_WAIT_BCA = 0x03ea,
+    ASSET_PEACH_ED_WAIT_BTP = 0x03eb,
+    ASSET_PEACH_ED_WALK_BCA = 0x03ec,
+    ASSET_PEACH_ED_WAVE_BCA = 0x03ed,
+    ASSET_PEACH_ED_WAVE_BTP = 0x03ee,
+    ASSET_PEACH_HIGH_BMD = 0x03ef,
+    ASSET_PEACH_LOW_BMD = 0x03f3,
+    ASSET_PEACH_OP_WAIT_BCA = 0x03f4,
+    ASSET_PEACH_OP_WINK_BTP = 0x03f5,
+    ASSET_PEACH_WAIT_BTP = 0x03f8,
+    ASSET_PEACH_WALK_BTP = 0x03fa,
+    ASSET_OBJ_DOKAN_BMD = 0x0461,
+    ASSET_OBJ_KUMO_BMD = 0x0475,
+    ASSET_PEACH_LETTER_US_BMD = 0x049b
+};
+
 extern int func_02017acc(void*, int);
 extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
@@ -162,73 +200,73 @@ extern S8 data_ov002_0210b6e0;
 
 void __sinit_ov002_02107370(void)
 {
-    func_02017acc(&data_ov002_02110b50, 0x49b);
+    func_02017acc(&data_ov002_02110b50, ASSET_PEACH_LETTER_US_BMD);
     func_020731dc(&data_ov002_02110b50, (void*)&func_02017ab4, (void**)&data_ov002_02110dc4);
-    func_02017acc(&data_ov002_02110b98, 0x3ef);
+    func_02017acc(&data_ov002_02110b98, ASSET_PEACH_HIGH_BMD);
     func_020731dc(&data_ov002_02110b98, (void*)&func_02017ab4, (void**)&data_ov002_02110c2c);
-    func_02017acc(&data_ov002_02110c18, 0x3f3);
+    func_02017acc(&data_ov002_02110c18, ASSET_PEACH_LOW_BMD);
     func_020731dc(&data_ov002_02110c18, (void*)&func_02017ab4, (void**)&data_ov002_02110c38);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bf8, 0x3f4);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bf8, ASSET_PEACH_OP_WAIT_BCA);
     func_020731dc(&data_ov002_02110bf8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c44);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110c10, 0x3d6);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110c10, ASSET_PEACH_ED_ENTER_WAIT_BCA);
     func_020731dc(&data_ov002_02110c10, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c50);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bd0, 0x3da);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bd0, ASSET_PEACH_ED_LANDING_BCA);
     func_020731dc(&data_ov002_02110bd0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c5c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b28, 0x3ea);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b28, ASSET_PEACH_ED_WAIT_BCA);
     func_020731dc(&data_ov002_02110b28, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c68);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bf0, 0x3e0);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bf0, ASSET_PEACH_ED_LOOK_ABOUT_BCA);
     func_020731dc(&data_ov002_02110bf0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c74);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b68, 0x3e2);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b68, ASSET_PEACH_ED_NOTICE_MARIO_BCA);
     func_020731dc(&data_ov002_02110b68, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c80);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110ba0, 0x3e4);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110ba0, ASSET_PEACH_ED_NOTICE_YOSHI_BCA);
     func_020731dc(&data_ov002_02110ba0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c8c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bb0, 0x3dc);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bb0, ASSET_PEACH_ED_LOOKUP_BCA);
     func_020731dc(&data_ov002_02110bb0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110c98);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b48, 0x3de);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b48, ASSET_PEACH_ED_LOOKUP_TO_WAIT_BCA);
     func_020731dc(&data_ov002_02110b48, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110ca4);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b30, 0x3e6);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110b30, ASSET_PEACH_ED_STEP_UP_BCA);
     func_020731dc(&data_ov002_02110b30, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110cb0);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110be8, 0x3d8);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110be8, ASSET_PEACH_ED_KISS_BCA);
     func_020731dc(&data_ov002_02110be8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110cbc);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110c08, 0x3e8);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110c08, ASSET_PEACH_ED_TURN_BCA);
     func_020731dc(&data_ov002_02110c08, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110cc8);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110c00, 0x3ec);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110c00, ASSET_PEACH_ED_WALK_BCA);
     func_020731dc(&data_ov002_02110c00, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110cd4);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bd8, 0x3ed);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov002_02110bd8, ASSET_PEACH_ED_WAVE_BCA);
     func_020731dc(&data_ov002_02110bd8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov002_02110ce0);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b60, 0x3d7);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b60, ASSET_PEACH_ED_ENTER_WAIT_BTP);
     func_020731dc(&data_ov002_02110b60, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110cec);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110be0, 0x3d9);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110be0, ASSET_PEACH_ED_KISS_BTP);
     func_020731dc(&data_ov002_02110be0, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110cf8);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b90, 0x3db);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b90, ASSET_PEACH_ED_LANDING_BTP);
     func_020731dc(&data_ov002_02110b90, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d04);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110bc0, 0x3dd);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110bc0, ASSET_PEACH_ED_LOOKUP_BTP);
     func_020731dc(&data_ov002_02110bc0, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d10);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b80, 0x3df);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b80, ASSET_PEACH_ED_LOOKUP_TO_WAIT_BTP);
     func_020731dc(&data_ov002_02110b80, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d1c);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b88, 0x3e1);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b88, ASSET_PEACH_ED_LOOK_ABOUT_BTP);
     func_020731dc(&data_ov002_02110b88, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110dd0);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b38, 0x3e3);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b38, ASSET_PEACH_ED_NOTICE_MARIO_BTP);
     func_020731dc(&data_ov002_02110b38, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d28);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110ba8, 0x3e5);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110ba8, ASSET_PEACH_ED_NOTICE_YOSHI_BTP);
     func_020731dc(&data_ov002_02110ba8, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d34);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b20, 0x3e7);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b20, ASSET_PEACH_ED_STEP_UP_BTP);
     func_020731dc(&data_ov002_02110b20, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d40);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b40, 0x3e9);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b40, ASSET_PEACH_ED_TURN_BTP);
     func_020731dc(&data_ov002_02110b40, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d4c);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b58, 0x3eb);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b58, ASSET_PEACH_ED_WAIT_BTP);
     func_020731dc(&data_ov002_02110b58, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d58);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110bb8, 0x3ee);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110bb8, ASSET_PEACH_ED_WAVE_BTP);
     func_020731dc(&data_ov002_02110bb8, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d64);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b10, 0x3f5);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b10, ASSET_PEACH_OP_WINK_BTP);
     func_020731dc(&data_ov002_02110b10, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d70);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110bc8, 0x3f8);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110bc8, ASSET_PEACH_WAIT_BTP);
     func_020731dc(&data_ov002_02110bc8, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d7c);
-    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b18, 0x3fa);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_02110b18, ASSET_PEACH_WALK_BTP);
     func_020731dc(&data_ov002_02110b18, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov002_02110d88);
-    func_02017acc(&data_ov002_02110b70, 0x461);
+    func_02017acc(&data_ov002_02110b70, ASSET_OBJ_DOKAN_BMD);
     func_020731dc(&data_ov002_02110b70, (void*)&func_02017ab4, (void**)&data_ov002_02110d94);
-    func_02017acc(&data_ov002_02110b78, 0x475);
+    func_02017acc(&data_ov002_02110b78, ASSET_OBJ_KUMO_BMD);
     func_020731dc(&data_ov002_02110b78, (void*)&func_02017ab4, (void**)&data_ov002_02110da0);
 
     data_ov002_02110f9c[0].x = data_ov002_0210b718;

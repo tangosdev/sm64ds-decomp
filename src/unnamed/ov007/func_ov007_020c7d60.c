@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef long long s64;
 typedef unsigned long long u64;
 typedef unsigned short u16;
@@ -47,7 +48,7 @@ void func_ov007_020c7d60(char **self, int r5, int r4)
     len = (sqrt_raw + 1) / 2;
 
     delta = len - rest;
-    r5 = (int)(((s64)delta * r5 + 0x800) >> 12);
+    r5 = FX_MUL(delta, r5);
     r5 = -r5;
 
     while (*(volatile u16 *)0x4000280 & 0x8000) {}

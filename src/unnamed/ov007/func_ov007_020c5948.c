@@ -38,31 +38,26 @@ void func_ov007_020c5948(char *self, struct Vec3 *src)
     vec[1] = src->y;
 
     mode = *(int *)(self + 4);
-    if (mode == 0)
-        goto do_mode0;
-    if (mode == 1)
-        goto do_mode1;
-    if (mode == 2) {
+    switch (mode) {
+    case 0:
+        *(struct Vec3 *)(self + 0x70) = *src;
+        break;
+    case 1:
+        dst = (int *)(int)LAUNDER(self + 0x70);
+        hi = (int *)(int)LAUNDER(self + 0xb8);
+        lo = (int *)(int)LAUNDER(self + 0xc4);
+        AddVec3(src, (struct Vec3 *)(self + 0x60), (struct Vec3 *)dst);
+        if (hi[0] > dst[0])
+            dst[0] = hi[0];
+        if (lo[0] < dst[0])
+            dst[0] = lo[0];
+        if (hi[1] > dst[1])
+            dst[1] = hi[1];
+        if (lo[1] < dst[1])
+            dst[1] = lo[1];
+        break;
+    case 2:
         *(struct Vec3 *)(self + 0x98) = *src;
+        break;
     }
-    return;
-
-do_mode0:
-    *(struct Vec3 *)(self + 0x70) = *src;
-    return;
-
-do_mode1:
-    dst = (int *)(int)LAUNDER(self + 0x70);
-    hi = (int *)(int)LAUNDER(self + 0xb8);
-    lo = (int *)(int)LAUNDER(self + 0xc4);
-    AddVec3(src, (struct Vec3 *)(self + 0x60), (struct Vec3 *)dst);
-    if (hi[0] > dst[0])
-        dst[0] = hi[0];
-    if (lo[0] < dst[0])
-        dst[0] = lo[0];
-    if (hi[1] > dst[1])
-        dst[1] = hi[1];
-    if (lo[1] < dst[1])
-        dst[1] = lo[1];
-    return;
 }

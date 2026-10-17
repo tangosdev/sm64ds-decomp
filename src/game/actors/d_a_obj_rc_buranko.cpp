@@ -51,6 +51,12 @@
  *   scalarises).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_rc_buranko_AssetId {
+    ASSET_RC_BURANKO_BMD = 0x0695,
+    ASSET_RC_BURANKO_KCL = 0x0696
+};
+
 #include "common.h"
 #include "daObjRcBuranko_c.h"
 #include "SharedFilePtr.h"
@@ -217,5 +223,5 @@ void func_ov036_0211123c(daObjRcBuranko_c *self)
 
 /* Source order is construction order: model file 1685, then the collision
  * file 1686. The compiler registers each destructor beside the object. */
-RcBurankoModelFilePtr data_ov036_02114028(1685);
-RcBurankoClsnFilePtr data_ov036_02114020(1686);
+RcBurankoModelFilePtr data_ov036_02114028(ASSET_RC_BURANKO_BMD);
+RcBurankoClsnFilePtr data_ov036_02114020(ASSET_RC_BURANKO_KCL);

@@ -25,7 +25,14 @@
  *   text-only so the definition here is a deadstripped duplicate.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km1_kurumajiku_AssetId {
+    ASSET_KM1_KURUMAJIKU_BMD = 0x0655,
+    ASSET_KM1_KURUMAJIKU_KCL = 0x0656
+};
+
 #include "daObjKm1_Kurumajiku_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
 struct CLPS_Block;
@@ -62,19 +69,6 @@ int func_ov002_020b6ac8(daObjKm1_Kurumajiku_c *self,
 extern ResourceDescriptor data_ov043_02112344;
 }
 
-struct KurumajikuSpawnInfo {
-    daObjKm1_Kurumajiku_c *(*classInit)();
-    s16 executePriority; /* +4: also KM1_KURUMAJIKU registry id 0x0089 = 137 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char KurumajikuSpawnInfo_size_must_be_0x1c[
-    sizeof(KurumajikuSpawnInfo) == 0x1c ? 1 : -1];
-
 /* KM1_KURUMA: the cart this axle drives. The helper Spawns four of them. */
 enum { kCartActorId = 0x88 };
 
@@ -85,9 +79,9 @@ extern "C" daObjKm1_Kurumajiku_c *daObjKm1_Kurumajiku_c_classInit()
 }
 
 // @symbol g_profile_KM1_KURUMAJIKU
-extern "C" KurumajikuSpawnInfo g_profile_KM1_KURUMAJIKU = {
+extern "C" SpawnInfo<daObjKm1_Kurumajiku_c> g_profile_KM1_KURUMAJIKU = {
     daObjKm1_Kurumajiku_c_classInit,
-    0x0089,
+    0x0089, /* KM1_KURUMAJIKU registry id 137 */
     0x00b2,
     2,
     0,
@@ -110,5 +104,5 @@ s32 daObjKm1_Kurumajiku_c::CleanupResources()
 
 /* The axle's model and collision file handles; data_ov043_02112344.model
  * and .kcl point at them. */
-Km1KurumajikuModelFilePtr data_ov043_02112610(1621);
-Km1KurumajikuCollisionFilePtr data_ov043_02112608(1622);
+Km1KurumajikuModelFilePtr gKm1KurumajikuModelFile(ASSET_KM1_KURUMAJIKU_BMD);
+Km1KurumajikuCollisionFilePtr gKm1KurumajikuCollisionFile(ASSET_KM1_KURUMAJIKU_KCL);

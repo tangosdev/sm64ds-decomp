@@ -253,130 +253,133 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
             }
             break;
         }
-        {
-            int w;
-            char *p;
-            unsigned int q;
-            unsigned int dig;
-            int n;
-            int len;
-        case 2:
-            *ap += 1;
-            n = (*ap)[-1];
-            if (n < 0) {
-                flags |= 0x4000;
-                n = -n;
-            }
-            flags |= 0x1000;
-            radix = 10;
-            goto number;
-        case 3:
-            *ap += 1;
-            n = (*ap)[-1];
-            flags |= 0x2000;
-            radix = 10;
-            goto number;
-        case 4:
-            *ap += 1;
-            n = (*ap)[-1];
-            flags |= 0x2000;
-            radix = 2;
-            goto number;
-        case 5:
-            *ap += 1;
-            n = (*ap)[-1];
-            flags |= 0x2000;
-            radix = 8;
-            goto number;
-        case 6:
-            *ap += 1;
-            n = (*ap)[-1];
-            flags |= 0x2000;
-            letteroff = 39;
-            radix = 16;
-            goto number;
-        case 7:
-            *ap += 1;
-            n = (*ap)[-1];
-            flags |= 0x2000;
-            radix = 16;
-            letteroff = 7;
-        number:
-            w = width;
-            if (width > 60)
-                w = 60;
-            p = buf + 63;
-            if (prec == -1)
-                prec = 1;
-            else if (prec > 58)
-                prec = 58;
-            while (prec-- > 0 || n != 0) {
-                q = func_0206c93c(n, radix);
-                dig = n - q * radix + '0';
-                if (dig > '9')
-                    dig += letteroff;
-                n = q;
-                WRITE8(p, dig);
-                p--;
-            }
-            npfx = 0;
-            if (radix != 10) {
-                if (flags & 0x10) {
-                    if (conv == 6) {
-                        pfx0 = '0';
-                        pfx1 = 'x';
-                        npfx = 2;
-                    } else if (conv == 7) {
-                        pfx0 = '0';
-                        pfx1 = 'X';
-                        npfx = 2;
-                    } else if (conv == 5) {
-                        pfx0 = '0';
-                        npfx = 1;
-                    } else if (conv == 4) {
-                        pfx0 = '0';
-                        pfx1 = 'b';
-                        npfx = 2;
-                    }
+            /* number gotos kept: cases 2-7 share the integer tail in ROM order; merging
+             * them under one label with a nested switch (0x12c4) or an if chain (0x129c)
+             * shrinks it */
+            {
+                int w;
+                char *p;
+                unsigned int q;
+                unsigned int dig;
+                int n;
+                int len;
+            case 2:
+                *ap += 1;
+                n = (*ap)[-1];
+                if (n < 0) {
+                    flags |= 0x4000;
+                    n = -n;
                 }
-            } else {
-                if (flags & 0x4000) {
-                    pfx0 = '-';
-                    npfx = 1;
-                } else if (flags & 2) {
-                    pfx0 = '+';
-                    npfx = 1;
-                } else if (flags & 8) {
-                    pfx0 = ' ';
-                    npfx = 1;
-                }
-            }
-            w -= (buf + 63 - p) - npfx;
-            if (w > 0 && (flags & 4)) {
-                i = 0;
-                if (w > 0) {
-                    for (; i < w; i++) {
-                        WRITE8(p, '0');
-                        p--;
-                    }
-                }
-            }
-            if (npfx != 0) {
-                if (npfx == 2) {
-                    WRITE8(p, pfx1);
+                flags |= 0x1000;
+                radix = 10;
+                goto number;
+            case 3:
+                *ap += 1;
+                n = (*ap)[-1];
+                flags |= 0x2000;
+                radix = 10;
+                goto number;
+            case 4:
+                *ap += 1;
+                n = (*ap)[-1];
+                flags |= 0x2000;
+                radix = 2;
+                goto number;
+            case 5:
+                *ap += 1;
+                n = (*ap)[-1];
+                flags |= 0x2000;
+                radix = 8;
+                goto number;
+            case 6:
+                *ap += 1;
+                n = (*ap)[-1];
+                flags |= 0x2000;
+                letteroff = 39;
+                radix = 16;
+                goto number;
+            case 7:
+                *ap += 1;
+                n = (*ap)[-1];
+                flags |= 0x2000;
+                radix = 16;
+                letteroff = 7;
+            number:
+                w = width;
+                if (width > 60)
+                    w = 60;
+                p = buf + 63;
+                if (prec == -1)
+                    prec = 1;
+                else if (prec > 58)
+                    prec = 58;
+                while (prec-- > 0 || n != 0) {
+                    q = func_0206c93c(n, radix);
+                    dig = n - q * radix + '0';
+                    if (dig > '9')
+                        dig += letteroff;
+                    n = q;
+                    WRITE8(p, dig);
                     p--;
                 }
-                WRITE8(p, pfx0);
-                p--;
+                npfx = 0;
+                if (radix != 10) {
+                    if (flags & 0x10) {
+                        if (conv == 6) {
+                            pfx0 = '0';
+                            pfx1 = 'x';
+                            npfx = 2;
+                        } else if (conv == 7) {
+                            pfx0 = '0';
+                            pfx1 = 'X';
+                            npfx = 2;
+                        } else if (conv == 5) {
+                            pfx0 = '0';
+                            npfx = 1;
+                        } else if (conv == 4) {
+                            pfx0 = '0';
+                            pfx1 = 'b';
+                            npfx = 2;
+                        }
+                    }
+                } else {
+                    if (flags & 0x4000) {
+                        pfx0 = '-';
+                        npfx = 1;
+                    } else if (flags & 2) {
+                        pfx0 = '+';
+                        npfx = 1;
+                    } else if (flags & 8) {
+                        pfx0 = ' ';
+                        npfx = 1;
+                    }
+                }
+                w -= (buf + 63 - p) - npfx;
+                if (w > 0 && (flags & 4)) {
+                    i = 0;
+                    if (w > 0) {
+                        for (; i < w; i++) {
+                            WRITE8(p, '0');
+                            p--;
+                        }
+                    }
+                }
+                if (npfx != 0) {
+                    if (npfx == 2) {
+                        WRITE8(p, pfx1);
+                        p--;
+                    }
+                    WRITE8(p, pfx0);
+                    p--;
+                }
+                len = buf + 63 - p;
+                if (w > 0 && !(flags & 5))
+                    func_0206c9f4(ctx, w);
+                WRITE_FN(ctx)(ctx, p + 1, len);
+                if (w > 0 && (flags & 1))
+                    func_0206c9f4(ctx, w);
+                break;
             }
-            len = buf + 63 - p;
-            if (w > 0 && !(flags & 5))
-                func_0206c9f4(ctx, w);
-            WRITE_FN(ctx)(ctx, p + 1, len);
-            if (w > 0 && (flags & 1))
-                func_0206c9f4(ctx, w);
-            break;
-        }
         case 8:
         case 9:
         case 10:

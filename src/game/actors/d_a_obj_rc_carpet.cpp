@@ -21,18 +21,22 @@
  *   (beforeClsnCallback). This TU calls it; naming belongs with
  *   dBgW in arm9.
  * Leftover: func_ov036_021122c0 / 0211224c keep ROM labels.
- * Leftover: 021122c0 / 0211224c translation stores stay
- *   `(char *)self + 0x490/0x494/0x498` (mModelAnim.mat4x3.t) and
- *   `+ 0x310/0x314/0x318` (mClsnMat.t). Nested-member stores make
- *   b56 materialise a second 0x46c base and grow the function.
  * Leftover: SharedFilePtr +4 BCA load (layout unrecovered).
  * Leftover: data_ov002_0210d9f0 and data_ov036_02112b28 CLPS stay
  *   outside this TU. The three ov036 handles are file-scope objects
  *   at the bottom of this file.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_rc_carpet_AssetId {
+    ASSET_RC_CARPET_BMD = 0x0697,
+    ASSET_RC_CARPET_KCL = 0x0698,
+    ASSET_RC_CARPET_WAIT_BCA = 0x0699
+};
+
 #include "common.h"
 #include "daObjRcCarpet_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
@@ -44,20 +48,6 @@ struct FlyingCarpetResources {
 
 typedef char FlyingCarpetResources_size_must_be_0x0c[
     sizeof(FlyingCarpetResources) == 0x0c ? 1 : -1];
-
-struct FlyingCarpetSpawnInfo {
-    daObjRcCarpet_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 farDistance;
-};
-
-typedef char FlyingCarpetSpawnInfo_size_must_be_0x1c[
-    sizeof(FlyingCarpetSpawnInfo) == 0x1c ? 1 : -1];
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -85,15 +75,15 @@ struct CarpetCollisionFilePtr : SharedFilePtr {
 
 extern "C" {
 extern SharedFilePtr data_ov002_0210d9f0;
-extern CarpetModelFilePtr data_ov036_021141a4;
-extern CarpetAnimationFilePtr data_ov036_0211419c;
-extern CarpetCollisionFilePtr data_ov036_021141ac;
+extern CarpetModelFilePtr gRcCarpetModelFile;
+extern CarpetAnimationFilePtr gRcCarpetWaitAnimationFile;
+extern CarpetCollisionFilePtr gRcCarpetCollisionFile;
 extern CLPS_Block data_ov036_02112b28;
 
 /* Retail resource-pointer table at ov036:0x02113f58. */
 FlyingCarpetResources data_ov036_02113f58 = {
-    &data_ov036_021141a4,
-    &data_ov036_021141ac,
+    &gRcCarpetModelFile,
+    &gRcCarpetCollisionFile,
     &data_ov036_02112b28
 };
 
@@ -143,7 +133,7 @@ extern "C" daObjRcCarpet_c *daObjRcCarpet_c_classInit()
     return actor;
 }
 
-extern "C" FlyingCarpetSpawnInfo g_profile_RC_CARPET = {
+extern "C" SpawnInfo<daObjRcCarpet_c> g_profile_RC_CARPET = {
     daObjRcCarpet_c_classInit,
     0x0082,
     0x0104,
@@ -151,7 +141,7 @@ extern "C" FlyingCarpetSpawnInfo g_profile_RC_CARPET = {
     0x00000000,
     0x00300000,
     0x01000000,
-    0x00000000
+    0x00000000,
 };
 
 // @symbol _ZN15daObjRcCarpet_c13InitResourcesEv
@@ -160,9 +150,9 @@ int daObjRcCarpet_c::InitResources()
     Model::LoadFile(data_ov002_0210d9f0);
     void *modelFile = Model::LoadFile(*data_ov036_02113f58.model);
     mModelAnim.SetFile((BMD_File *)modelFile, 1, -1);
-    dExtFrameCtrl_c::LoadFile(data_ov036_0211419c);
+    dExtFrameCtrl_c::LoadFile(gRcCarpetWaitAnimationFile);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, (BCA_File *)((int *)&data_ov036_0211419c)[1],
+        &mModelAnim, (BCA_File *)((int *)&gRcCarpetWaitAnimationFile)[1],
         0, 0x1000, 0);
     func_ov036_021122c0(this);
     UpdateClsnPosAndRot();
@@ -212,7 +202,7 @@ int daObjRcCarpet_c::CleanupResources()
     data_ov002_0210d9f0.Release();
     data_ov036_02113f58.model->Release();
     data_ov036_02113f58.collision->Release();
-    data_ov036_0211419c.Release();
+    gRcCarpetWaitAnimationFile.Release();
     return 1;
 }
 
@@ -222,29 +212,24 @@ extern "C" void func_ov036_021122c0(daObjRcCarpet_c *self)
     Matrix4x3_FromRotationXYZExt(
         &self->mModelAnim.mat4x3,
         self->mAngleX, self->mAngleY, self->mAngleZ);
-    /* Direct nested-member stores make b56 materialise a second 0x46c base
-       and grow this function. The retail form keeps `this` as the base for
-       the three translation stores, so preserve that measured expression. */
-    *(s32 *)((char *)self + 0x490) = self->mPosX >> 3;
-    *(s32 *)((char *)self + 0x494) =
-        (self->mPosY + self->unk_4bc) >> 3;
-    *(s32 *)((char *)self + 0x498) = self->mPosZ >> 3;
+    self->mModelAnim.mat4x3.m[9] = self->mPosX >> 3;
+    self->mModelAnim.mat4x3.m[10] = (self->mPosY + self->unk_4bc) >> 3;
+    self->mModelAnim.mat4x3.m[11] = self->mPosZ >> 3;
 }
 
 // @symbol func_ov036_0211224c
 extern "C" void func_ov036_0211224c(daObjRcCarpet_c *self)
 {
     self->mClsnMat = self->mModelAnim.mat4x3;
-    /* As above, retail keeps `this` live as the base for these stores. */
-    *(s32 *)((char *)self + 0x310) = self->mPosX;
-    *(s32 *)((char *)self + 0x314) = self->mPosY + self->unk_4bc;
-    *(s32 *)((char *)self + 0x318) = self->mPosZ;
+    self->mClsnMat.m[9] = self->mPosX;
+    self->mClsnMat.m[10] = self->mPosY + self->unk_4bc;
+    self->mClsnMat.m[11] = self->mPosZ;
     self->mMeshCollider.Transform(self->mClsnMat, self->mAngleY);
 }
 /* ROM ordinals 0/1 are emitted by the inline virtual destructor:*/
 // @symbol _ZN15daObjRcCarpet_cD1Ev
 // @symbol _ZN15daObjRcCarpet_cD0Ev
 
-CarpetModelFilePtr data_ov036_021141a4(1687);
-CarpetAnimationFilePtr data_ov036_0211419c(1689);
-CarpetCollisionFilePtr data_ov036_021141ac(1688);
+CarpetModelFilePtr gRcCarpetModelFile(ASSET_RC_CARPET_BMD);
+CarpetAnimationFilePtr gRcCarpetWaitAnimationFile(ASSET_RC_CARPET_WAIT_BCA);
+CarpetCollisionFilePtr gRcCarpetCollisionFile(ASSET_RC_CARPET_KCL);

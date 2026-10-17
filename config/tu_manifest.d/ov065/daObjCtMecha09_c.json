@@ -1,8 +1,8 @@
 {
   "id": "ov065/daObjCtMecha09_c",
   "module": "ov065",
-  "source": "src/actors/daObjCtMecha09_c.cpp",
-  "promoted_source": "src/actors/daObjCtMecha09_c.cpp",
+  "source": "src/game/actors/d_a_obj_ct_mecha09.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ct_mecha09.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -125,7 +125,7 @@
     "Widened from the six-function run 0x0211bbdc..0x0211bf04 to the whole unit. The folded files were _ZN16daObjCtMecha09_c13InitResourcesEv.cpp and d_a_obj_ct_mecha09.c (daObjCtMecha09_c_classInit, now `return new daObjCtMecha09_c();`); attribution.json keeps each one's credit through a path#symbol override.",
     "InitResources was not complete before: its literal pool loads 0x02112118, which dsd marks overlays(12,13,24,33,35,43,45,47,52,53,56). tools/overlay_residency.py settles that set to ov035, the only candidate that can be resident beside ov065, so the source names data_ov035_02112118 (the old shard used the placeholder func_02112118, which nothing defines).",
     "One out-of-line destructor under #pragma defer_codegen off. Text-only: the vtable and RTTI the key function emits are compiler-only output.",
-    "FOLD. The handwritten src/unnamed/ov065/__sinit_ov065_0211ca74.c is retired. Two file-scope resource handles in daObjCtMecha09_c.cpp make mwcc emit __sinit_daObjCtMecha09_c.cpp (0x6c) and .p__sinit_daObjCtMecha09_c.cpp. mwcc numbers the destructor-registration nodes @536/@537 per TU; @536 collides with ov080's fleet temp, so defined_symbol_renames maps it to the fleet-free @539 while @537 keeps its emitted name. The handles keep their data_ov065_0211d9cc/0x0211d9d4 spellings -- those are the only names in the tree. The new symbols.txt row data_ov065_0211d9f4 is a gap-owned bound: @537 is the module's last bss symbol, so without it the delinked object would extend past the claim to section end 0x0211da00. Class RTTI and the vtable stay externalized."
+    "FOLD. The handwritten src/unnamed/ov065/__sinit_ov065_0211ca74.c is retired. Two file-scope resource handles in d_a_obj_ct_mecha09.cpp make mwcc emit __sinit_d_a_obj_ct_mecha09.cpp (0x6c) and .p__sinit_d_a_obj_ct_mecha09.cpp. mwcc numbers the destructor-registration nodes @536/@537 per TU; @536 collides with ov080's fleet temp, so defined_symbol_renames maps it to the fleet-free @539 while @537 keeps its emitted name. The handles keep their data_ov065_0211d9cc/0x0211d9d4 spellings -- those are the only names in the tree. The new symbols.txt row data_ov065_0211d9f4 is a gap-owned bound: @537 is the module's last bss symbol, so without it the delinked object would extend past the claim to section end 0x0211da00. Class RTTI and the vtable stay externalized."
   ],
   "compiler_only_output": [
     {
@@ -467,7 +467,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daObjCtMecha09_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha09.cpp",
       "address": "0x0211ca74",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -476,7 +476,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjCtMecha09_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_mecha09.cpp",
       "address": "0x0211cb04",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -522,13 +522,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjCtMecha09_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha09.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjCtMecha09_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_mecha09.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -664,7 +664,7 @@
       "source": "0x0211cb04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjCtMecha09_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha09.cpp",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211ca74"

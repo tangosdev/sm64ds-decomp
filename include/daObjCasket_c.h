@@ -27,7 +27,7 @@ struct daObjCasket_c : dBgActor_c {
        allocation size. Nothing reads or writes it. */
 
     /* Inline is load-bearing: it makes InitResources the key function, so
-     * src/actors/daObjCasket_c.cpp emits the ROM's D1/D0 pair with the vtable
+     * src/game/actors/d_a_obj_casket.cpp emits the ROM's D1/D0 pair with the vtable
      * and no homeless D2. */
     virtual ~daObjCasket_c() {}
 

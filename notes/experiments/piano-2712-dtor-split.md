@@ -110,3 +110,6 @@ unlicensed content in text-only multi-symbol object: section[5] .data size 0x8 d
   objisolate reduces the object cleanly. The out-of-line spelling this note
   tested is still the wrong one: its own emission log shows D2 and D0 ahead
   of D1.
+
+Current source locations after PR #3840: [src/game/actors/d_a_piano.cpp](../../src/game/actors/d_a_piano.cpp).
+The experiment and commands above retain the paths at `tested_commit`.

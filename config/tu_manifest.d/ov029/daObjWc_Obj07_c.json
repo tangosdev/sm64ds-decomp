@@ -72,13 +72,13 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov029_021142d4",
+      "symbol": "gWcObj07CollisionFile",
       "address": "0x021142d4",
       "size": "0x8",
       "evidence": "collision resource handle constructed with file ID 1752; the descriptor at data_ov029_02113fd4 passes it to daObjKaitendai_c"
     },
     {
-      "symbol": "data_ov029_021142dc",
+      "symbol": "gWcObj07ModelFile",
       "address": "0x021142dc",
       "size": "0x8",
       "evidence": "model resource handle constructed with file ID 1751; the descriptor at data_ov029_02113fd4 passes it to daObjKaitendai_c"
@@ -573,7 +573,7 @@
       "source": "0x02112d70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov029_021142dc",
+      "symbol": "gWcObj07ModelFile",
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x021142dc"
@@ -603,7 +603,7 @@
       "source": "0x02112d80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov029_021142d4",
+      "symbol": "gWcObj07CollisionFile",
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x021142d4"

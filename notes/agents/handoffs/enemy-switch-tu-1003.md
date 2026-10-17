@@ -38,7 +38,7 @@ inline conversion helper each produced 0xc4 bytes instead of the ROM's 0xac.
 Their sources are retained in `build/enemy-switch-native-*-failed.cpp`. The retained
 bridge agrees with the current definition and eliminates raw object offsets.
 The spawn call still views the base class's scalar coordinate fields as vectors;
-[func_ov102_0214ad14](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 5. see [daBmb_c.json](../../../config/tu_manifest.d/ov102/daBmb_c.json) remains unresolved. Reconstruction is therefore partial.
+[func_ov102_0214ad14](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 5. see [daBmb_c.json](../../../config/tu_manifest.d/ov102/daBmb_c.json) remains unresolved. Reconstruction is therefore partial.
 
 ## Verification and limits
 

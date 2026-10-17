@@ -17,7 +17,7 @@
  * The seven daObjSimpleLift_c_classInit_* factories (0x021327e8..0x02132938,
  * one per registry profile) each allocate 0x330 and install this class's
  * cartridge vtable; they are `new daObjSimpleLift_c()` and live in
- * src/actors/daObjSimpleLift_c.cpp alongside the rest of the class. */
+ * src/game/actors/d_a_obj_simple_lift.cpp alongside the rest of the class. */
 
 #ifdef __cplusplus
 
@@ -56,7 +56,7 @@ typedef char daObjSimpleLift_c_size_must_be_0x330[sizeof(daObjSimpleLift_c) == 0
 /* The same object spelled flat, for any C translation unit that needs the
    layout. The destructor this branch was originally written for is no longer
    one of them: both variants are emitted from the promoted C++ TU. The header
-   has a single consumer today, src/actors/daObjSimpleLift_c.cpp, and it takes
+   has a single consumer today, src/game/actors/d_a_obj_simple_lift.cpp, and it takes
    the C++ branch above. */
 struct daObjSimpleLift_c {
     u8  pad_000[0xd4];

@@ -519,7 +519,7 @@
         }
       ],
       "current_factory_name": "dScBoot_c_classInit",
-      "current_factory_file": "src/d_s_boot.cpp",
+      "current_factory_file": "src/game/stages/d_s_boot.cpp",
       "proposed_factory_name": "dScBoot_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -755,7 +755,7 @@
         }
       ],
       "current_factory_name": "dScStage_c_classInit",
-      "current_factory_file": "src/d_s_stage.cpp",
+      "current_factory_file": "src/game/stages/d_s_stage.cpp",
       "proposed_factory_name": "dScStage_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -889,7 +889,7 @@
         }
       ],
       "current_factory_name": "dScMiniGm_c_classInit",
-      "current_factory_file": "src/actors/dScMiniGm_c.cpp",
+      "current_factory_file": "src/minigames/d_s_mini_gm.cpp",
       "proposed_factory_name": "dScMiniGm_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -1172,7 +1172,7 @@
         }
       ],
       "current_factory_name": "StarCamera_Spawn",
-      "current_factory_file": "src/actors/StarCamera_Spawn.cpp",
+      "current_factory_file": "src/game/actors/StarCamera_Spawn.cpp",
       "proposed_factory_name": "",
       "factory_shape": "uncertain",
       "factory_shape_evidence": "allocation is exact, but the called base constructor leaves the dActor_c vtable installed; no most-derived RTTI identity survives",
@@ -1261,7 +1261,7 @@
         }
       ],
       "current_factory_name": "daPly_c_classInit",
-      "current_factory_file": "src/d_a_ply.cpp",
+      "current_factory_file": "src/game/player/d_a_ply.cpp",
       "proposed_factory_name": "daPly_c_classInit",
       "factory_shape": "new_plus_ctor_call",
       "factory_shape_evidence": "operator new size is exact; final vptr recovered through ov002:_ZN6PlayerC1Ev",
@@ -1439,7 +1439,7 @@
         }
       ],
       "current_factory_name": "daKrb_c_classInit_KURIBO",
-      "current_factory_file": "src/actors/daKrb_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_krb.cpp",
       "proposed_factory_name": "daKrb_c_classInit_KURIBO",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -1529,7 +1529,7 @@
         }
       ],
       "current_factory_name": "daTrs_c_classInit_TERESA",
-      "current_factory_file": "src/actors/daTrs_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_trs.cpp",
       "proposed_factory_name": "daTrs_c_classInit_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -1619,7 +1619,7 @@
         }
       ],
       "current_factory_name": "daTrs_c_classInit_BOSS_TERESA",
-      "current_factory_file": "src/actors/daTrs_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_trs.cpp",
       "proposed_factory_name": "daTrs_c_classInit_BOSS_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -1797,7 +1797,7 @@
         }
       ],
       "current_factory_name": "daObj_Mip_Key_c_classInit",
-      "current_factory_file": "src/actors/daObj_Mip_Key_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_obj_mip_key.cpp",
       "proposed_factory_name": "daObj_Mip_Key_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2065,7 +2065,7 @@
         }
       ],
       "current_factory_name": "daBook_c_classInit_SHOOT_BOOK",
-      "current_factory_file": "src/actors/daBook_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_book.cpp",
       "proposed_factory_name": "daBook_c_classInit_SHOOT_BOOK",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2155,7 +2155,7 @@
         }
       ],
       "current_factory_name": "daBookGen_c_classInit",
-      "current_factory_file": "src/actors/daBook_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_book.cpp",
       "proposed_factory_name": "daBookGen_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2244,7 +2244,7 @@
         }
       ],
       "current_factory_name": "dScMgCup_c_classInit",
-      "current_factory_file": "src/actors/dScMgCup_c.cpp",
+      "current_factory_file": "src/minigames/d_s_mg_cup.cpp",
       "proposed_factory_name": "dScMgCup_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",

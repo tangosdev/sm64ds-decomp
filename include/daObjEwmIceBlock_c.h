@@ -16,7 +16,7 @@
  *
  * The reconstructed factory daObjEwmIceBlock_c_classInit (0x02111594,
  * historical alias BigMovingIceBlock_Spawn) installs this class's cartridge
- * vtable and lives in src/actors/daObjEwmIceBlock_c.cpp alongside the rest of
+ * vtable and lives in src/game/actors/d_a_obj_ewm_ice_block.cpp alongside the rest of
  * the class; the reconstructed profile global g_profile_EWM_ICE_BLOCK
  * (historical alias BigMovingIceBlock_SpawnInfo) is its registry descriptor.
  */
@@ -35,7 +35,7 @@ struct daObjEwmIceBlock_c : dBgActor_c {
     s32 mPathNodeIdx;       /* 0x328 */
     s32 mPathDir;           /* 0x32c */
 
-    /* Out of line in daObjEwmIceBlock_c.cpp: the key function, so that TU
+    /* Out of line in d_a_obj_ewm_ice_block.cpp: the key function, so that TU
      * emits _ZTV/_ZTI/_ZTS18daObjEwmIceBlock_c. */
     virtual ~daObjEwmIceBlock_c();
 

@@ -112,7 +112,7 @@ struct daKuriKing_c : dEnemyBase_c {
 
     virtual s32 Behavior();
     virtual s32 CleanupResources();
-    /* Declared here so InitResources (src/actors/daKuriKing_c.cpp) can be a real
+    /* Declared here so InitResources (src/game/actors/d_a_kuri_king.cpp) can be a real
        method rather than an extern "C" free function under the mangled name. Safe to
        declare virtual: ~daKuriKing_c is still the first virtual DECLARED, so the key
        function -- and with it _ZTV12daKuriKing_c -- stays where it already was. */

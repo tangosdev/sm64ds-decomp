@@ -42,6 +42,12 @@
  *   [6] 0x021128b8  src/daObjTdWater_c_classInit.c
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_td_water_AssetId {
+    ASSET_TD_OBJ_WATER_BMD = 0x06b7,
+    ASSET_TD_OBJ_WATER_KCL = 0x06b8
+};
+
 #include "common.h"
 #include "daObjTdWater_c.h"
 #include "SharedFilePtr.h"
@@ -173,5 +179,5 @@ s32 daObjTdWater_c::CleanupResources()
 
 /* File-scope objects, in __sinit_d_a_obj_td_water.cpp construction order:
  * the model's SharedFilePtr, then the collision file's. */
-TdWaterModelFilePtr data_ov032_02113afc(0x6b7);
-TdWaterClsnFileHandle data_ov032_02113af4(0x6b8);
+TdWaterModelFilePtr data_ov032_02113afc(ASSET_TD_OBJ_WATER_BMD);
+TdWaterClsnFileHandle data_ov032_02113af4(ASSET_TD_OBJ_WATER_KCL);

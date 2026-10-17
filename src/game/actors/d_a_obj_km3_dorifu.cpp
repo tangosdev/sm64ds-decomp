@@ -23,6 +23,20 @@
  *   and CLPS_Block are still data_ov047_*.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km3_dorifu_AssetId {
+    ASSET_KM3_DAN0_BMD = 0x066f,
+    ASSET_KM3_DAN0_KCL = 0x0670,
+    ASSET_KM3_DAN1_BMD = 0x0671,
+    ASSET_KM3_DAN1_KCL = 0x0672,
+    ASSET_KM3_DAN2_BMD = 0x0673,
+    ASSET_KM3_DAN2_KCL = 0x0674,
+    ASSET_KM3_DAN3_BMD = 0x0675,
+    ASSET_KM3_DAN3_KCL = 0x0676,
+    ASSET_KM3_DAN4_BMD = 0x0677,
+    ASSET_KM3_DAN4_KCL = 0x0678
+};
+
 #include "daObjKm3_Dorifu_c.h"
 #include "SharedFilePtr.h"
 
@@ -68,13 +82,13 @@ s32 daObjKm3_Dorifu_c::CleanupResources()
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_km3_dorifu.cpp. */
-DorifuModelFilePtr data_ov047_021126a0(0x66f);
-DorifuModelFilePtr data_ov047_02112680(0x671);
-DorifuModelFilePtr data_ov047_02112668(0x673);
-DorifuModelFilePtr data_ov047_02112688(0x675);
-DorifuModelFilePtr data_ov047_02112690(0x677);
-DorifuClsnFileHandle data_ov047_02112678(0x670);
-DorifuClsnFileHandle data_ov047_02112658(0x672);
-DorifuClsnFileHandle data_ov047_02112670(0x674);
-DorifuClsnFileHandle data_ov047_02112698(0x676);
-DorifuClsnFileHandle data_ov047_02112660(0x678);
+DorifuModelFilePtr gKm3Dan0ModelFile(ASSET_KM3_DAN0_BMD);
+DorifuModelFilePtr gKm3Dan1ModelFile(ASSET_KM3_DAN1_BMD);
+DorifuModelFilePtr gKm3Dan2ModelFile(ASSET_KM3_DAN2_BMD);
+DorifuModelFilePtr gKm3Dan3ModelFile(ASSET_KM3_DAN3_BMD);
+DorifuModelFilePtr gKm3Dan4ModelFile(ASSET_KM3_DAN4_BMD);
+DorifuClsnFileHandle gKm3Dan0CollisionFile(ASSET_KM3_DAN0_KCL);
+DorifuClsnFileHandle gKm3Dan1CollisionFile(ASSET_KM3_DAN1_KCL);
+DorifuClsnFileHandle gKm3Dan2CollisionFile(ASSET_KM3_DAN2_KCL);
+DorifuClsnFileHandle gKm3Dan3CollisionFile(ASSET_KM3_DAN3_KCL);
+DorifuClsnFileHandle gKm3Dan4CollisionFile(ASSET_KM3_DAN4_KCL);

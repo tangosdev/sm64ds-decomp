@@ -16,6 +16,12 @@
 
 /* daObjMc_Metalnet_c.h FIRST: it pulls in dBgActor_c.h, which must reach
    common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_mc_metalnet_AssetId {
+    ASSET_MC_METALNET_BMD = 0x0691,
+    ASSET_MC_METALNET_KCL = 0x0692
+};
+
 #include "daObjMc_Metalnet_c.h"
 #include "SharedFilePtr.h"
 
@@ -60,6 +66,12 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *clps);
 }
 
+/* data_0209f2d8 (CURRENT_GAMEMODE) is 1 in VS mode: PrepareVsMode stores it.
+   Both gates below skip in VS. Same predicate as CapIconMgr and d_meter. */
+static inline int IsVsMode(void) {
+    return data_0209f2d8 == 1;
+}
+
 // @symbol daObjMc_Metalnet_c_classInit
 /* Reconstructed source-style name. Historical alias: MetalNet_Spawn.
  *
@@ -100,16 +112,12 @@ s32 daObjMc_Metalnet_c::InitResources()
         &data_ov009_02112bf8);
 
     if ((param1 & 0xff) == 0xff) {
-        int b = (int)(data_0209f2d8 == 1);
-        if (b != 0) goto keep;
-        if ((data_0209caa0[2] & 0x80000) == 0) goto keep;
-        return 0;
+        if (!IsVsMode() && (data_0209caa0[2] & 0x80000) != 0)
+            return 0;
     } else {
-        int b = (int)(data_0209f2d8 == 1);
-        if (b != 0) goto keep;
-        if (NumStars() >= 0x96) return 0;
+        if (!IsVsMode() && NumStars() >= 0x96)
+            return 0;
     }
-keep:
     return 1;
 }
 
@@ -122,13 +130,10 @@ keep:
  * enable the mesh near the player and switch it off again far away. */
 s32 daObjMc_Metalnet_c::Behavior()
 {
-    int b;
-
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    b = (int)(data_0209f2d8 == 1);
-    if (b != 0) {
+    if (IsVsMode()) {
         if (mMeshCollider.IsEnabled() == 0)
             mMeshCollider.Enable(this);
     } else {
@@ -178,5 +183,5 @@ s32 daObjMc_Metalnet_c::CleanupResources()
    body -- then dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class
    adds no member with a destructor of its own. */
 
-McMetalnetModelFilePtr data_ov009_02113e90(0x691);
-McMetalnetClsnFileHandle data_ov009_02113e88(0x692);
+McMetalnetModelFilePtr data_ov009_02113e90(ASSET_MC_METALNET_BMD);
+McMetalnetClsnFileHandle data_ov009_02113e88(ASSET_MC_METALNET_KCL);

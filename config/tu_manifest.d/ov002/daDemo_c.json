@@ -1,8 +1,8 @@
 {
   "id": "ov002/daDemo_c",
   "module": "ov002",
-  "source": "src/actors/daDemo_c.cpp",
-  "promoted_source": "src/actors/daDemo_c.cpp",
+  "source": "src/game/actors/d_a_demo.cpp",
+  "promoted_source": "src/game/actors/d_a_demo.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

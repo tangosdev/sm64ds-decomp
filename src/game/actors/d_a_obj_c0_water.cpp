@@ -127,8 +127,7 @@ int daObjC0Water_c::Behavior()
     if (mPosY <= mLoweredY) {
         mPosY = mLoweredY;
     } else if (data_0209caa0[2] & 0x80000) {
-        mSoundID = Sound::PlayLong(
-            mSoundID, 3, 0x96, *(const Vector3 *)&mCamSpacePosX, 0);
+        mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
         mPosY -= 0x5000;
         mWasJustDrained = 1;
         if (mPosY <= mLoweredY) {

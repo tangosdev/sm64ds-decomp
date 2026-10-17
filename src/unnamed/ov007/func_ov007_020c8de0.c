@@ -30,66 +30,71 @@ struct T
   int f28;
 };
 
-int func_ov007_020c8de0(struct T *o)
-{
-  struct Vec3 tmp;
-  if (o->state == 2)
-  {
-    o->state = 3;
-  }
-  if (o->state != 1)
-  {
-    goto done;
-  }
-  switch (o->sub)
-  {
-    case 0:
-    {
-      int t0 = o->f_c;
-      int a0 = o->f20;
-      int b0 = o->f14;
-      o->f10[0] = (t0 >= 0x1000) ? (a0) : ((t0 <= 0) ? (b0) : (((((s64) (0x1000 - t0)) * b0) + (((s64) t0) * o->f20)) >> 0xc));
+int func_ov007_020c8de0(struct T *o) {
+    struct Vec3 tmp;
+    if (o->state == 2) {
+        o->state = 3;
     }
-    {
-      int t1 = o->f_c;
-      int a1 = o->f24;
-      int b1 = o->f18;
-      o->f10[1] = (t1 >= 0x1000) ? (a1) : ((t1 <= 0) ? (b1) : (((((s64) (0x1000 - t1)) * b1) + (((s64) t1) * o->f24)) >> 0xc));
-    }
-    {
-      int t2 = o->f_c;
-      int a2 = o->f28;
-      int b2 = o->f1c;
-      o->f10[2] = (t2 >= 0x1000) ? (a2) : ((t2 <= 0) ? (b2) : (((((s64) (0x1000 - t2)) * b2) + (((s64) t2) * o->f28)) >> 0xc));
-    }
-    func_ov007_020c90c0(o);
-    break;
+    if (o->state == 1) {
+        switch (o->sub) {
+        case 0: {
+            {
+                int t0 = o->f_c;
+                int a0 = o->f20;
+                int b0 = o->f14;
+                o->f10[0] =
+                    (t0 >= 0x1000)
+                        ? (a0)
+                        : ((t0 <= 0)
+                               ? (b0)
+                               : (((((s64)(0x1000 - t0)) * b0) + (((s64)t0) * o->f20)) >> 0xc));
+            }
+            {
+                int t1 = o->f_c;
+                int a1 = o->f24;
+                int b1 = o->f18;
+                o->f10[1] =
+                    (t1 >= 0x1000)
+                        ? (a1)
+                        : ((t1 <= 0)
+                               ? (b1)
+                               : (((((s64)(0x1000 - t1)) * b1) + (((s64)t1) * o->f24)) >> 0xc));
+            }
+            {
+                int t2 = o->f_c;
+                int a2 = o->f28;
+                int b2 = o->f1c;
+                o->f10[2] =
+                    (t2 >= 0x1000)
+                        ? (a2)
+                        : ((t2 <= 0)
+                               ? (b2)
+                               : (((((s64)(0x1000 - t2)) * b2) + (((s64)t2) * o->f28)) >> 0xc));
+            }
+            func_ov007_020c90c0(o);
+            break;
+        }
 
-    case 1:
-    {
-      int *dst = o->f10;
-      int r5 = *((int *) (((char *) o) + 8));
-      int ok;
-      SubVec3((struct Vec3 *) (&o->f20), (struct Vec3 *) dst, &tmp);
-      if (LenVec3(&tmp) <= r5)
-      {
-        *((struct Vec3 *) dst) = *((struct Vec3 *) (&o->f20));
-        ok = 1;
-      }
-      else
-      {
-        NormalizeVec3(&tmp, &tmp);
-        func_02053320(r5, (int *) (&tmp), dst, dst);
-        ok = 0;
-      }
-      if (ok)
-      {
-        o->state = 2;
-      }
-      break;
+        case 1: {
+            int *dst = o->f10;
+            int r5 = *((int *)(((char *)o) + 8));
+            int ok; /* stays a flag: setting state inside the arm shrinks it (0x170) */
+            SubVec3((struct Vec3 *)(&o->f20), (struct Vec3 *)dst, &tmp);
+            if (LenVec3(&tmp) <= r5) {
+                *((struct Vec3 *)dst) = *((struct Vec3 *)(&o->f20));
+                ok = 1;
+            } else {
+                NormalizeVec3(&tmp, &tmp);
+                func_02053320(r5, (int *)(&tmp), dst, dst);
+                ok = 0;
+            }
+            if (ok) {
+                o->state = 2;
+            }
+            break;
+        }
+        }
     }
-  }
 
-done:
-  return (o->state == 3) ? (1) : (0);
+    return (o->state == 3) ? (1) : (0);
 }

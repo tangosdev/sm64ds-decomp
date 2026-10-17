@@ -1,8 +1,8 @@
 {
   "id": "ov026/daObjWlKoopaShutter_c",
   "module": "ov026",
-  "source": "src/actors/daObjWlKoopaShutter_c.cpp",
-  "promoted_source": "src/actors/daObjWlKoopaShutter_c.cpp",
+  "source": "src/game/actors/d_a_obj_wl_koopa_shutter.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_wl_koopa_shutter.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x21116c8..0x2111888, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjWlKoopaShutter_c",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold: the daObjWlKoopaShutter_c_classInit registry factory (profile WL_KOOPA_SHUTTER, historical alias BowserShutter_Spawn), 0x02111888..0x021118b8, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daObjWlKoopaShutter_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x021116c8..0x021118b8, 7 functions, bounded above by daObjWlSubmarine_c's D1 at 0x021118b8 (src/actors/daObjWlSubmarine_c.cpp)."
+    "classInit fold: the daObjWlKoopaShutter_c_classInit registry factory (profile WL_KOOPA_SHUTTER, historical alias BowserShutter_Spawn), 0x02111888..0x021118b8, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daObjWlKoopaShutter_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x021116c8..0x021118b8, 7 functions, bounded above by daObjWlSubmarine_c's D1 at 0x021118b8 (src/game/actors/d_a_obj_wl_submarine.cpp)."
   ],
   "sections": [
     {
@@ -444,7 +444,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjWlKoopaShutter_c.cpp",
+      "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
       "address": "0x02112bbc",
       "size": "0x0000006c",
       "binding": "STB_GLOBAL",
@@ -453,7 +453,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjWlKoopaShutter_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_wl_koopa_shutter.cpp",
       "address": "0x02112da8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -499,13 +499,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjWlKoopaShutter_c.cpp",
+      "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjWlKoopaShutter_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_wl_koopa_shutter.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -641,7 +641,7 @@
       "source": "0x02112da8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjWlKoopaShutter_c.cpp",
+      "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02112bbc"

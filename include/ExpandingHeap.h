@@ -4,10 +4,9 @@
  *
  * class ExpandingHeap: 10 matched functions, 1 own field, 16 vtable slots.
  *
- * THE ROM'S NAME FOR THIS CLASS IS `mHeap::ExpHeap_t' (RTTI record at
- * arm9:0x02099cec, mangled N5mHeap9ExpHeap_tE). The tree calls it ExpandingHeap
- * and every symbol is spelled that way; see include/Heap.h for why renaming is
- * not done piecemeal.
+ * THE CLASS IS `mHeap::ExpHeap_t', THE ROM'S OWN NAME (RTTI record at
+ * arm9:0x02099cec, mangled N5mHeap9ExpHeap_tE). `ExpandingHeap' is a typedef
+ * kept for the tree's older spelling; see include/Heap.h.
  *
  * ==== IT DERIVES FROM Heap, AND IT DID NOT SAY SO ====
  *
@@ -18,7 +17,7 @@
  *   - The vtable at 0x02099dd8 is a full sixteen slots shadowing Heap's sixteen
  *     one for one: D1, D0, then the fourteen V* in Heap's slot order. Heap's own
  *     2..15 are null, so Heap is abstract and these are its implementations.
- *   - The constructor _ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator
+ *   - The constructor _ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator
  *     calls Heap's constructor first and only then writes 0x14.
  *
  * ==== WHAT AN EXPANDING HEAP IS, NEXT TO A SOLID ONE ====
@@ -65,7 +64,9 @@ struct ExpandingHeap {
     ExpandingHeapAllocator* allocator;  /* 0x14 */
 };
 #else
-struct ExpandingHeap : Heap {
+namespace mHeap {
+
+struct ExpHeap_t : Heap_t {
     /* The one field of its own. Everything below 0x14 belongs to the base. */
     ExpandingHeapAllocator* allocator;  /* 0x14 -- node-list allocator; it lives
                                            inside the arena it manages, which is
@@ -75,13 +76,13 @@ struct ExpandingHeap : Heap {
     /* The constructor's initializer list is the ROM body: construct Heap, then
        store the allocator pointer. No explicit vtable write belongs in source;
        CodeWarrior installs this class's vptr between those two steps. */
-    ExpandingHeap(void* start, u32 size, Heap* root,
-                  ExpandingHeapAllocator* allocator);
+    ExpHeap_t(void* start, u32 size, Heap_t* root,
+              ExpandingHeapAllocator* allocator);
 
     /* Defined as an empty real destructor in the independently enrolled D1 and
        D0 files. CodeWarrior supplies both this vptr transition and Heap's
        teardown; objisolate retains the lifecycle variant owned by each file. */
-    virtual ~ExpandingHeap();
+    virtual ~ExpHeap_t();
 
     virtual void  VDestroy();                       /*  2 */
     virtual void* VAllocate(u32 size, int align);   /*  3 */
@@ -98,6 +99,10 @@ struct ExpandingHeap : Heap {
     virtual u32   VGetNodeID();                     /* 14 */
     virtual u32   VResizeToFit();                   /* 15 */
 };
+
+} /* namespace mHeap */
+
+typedef mHeap::ExpHeap_t ExpandingHeap;
 #endif
 
 #endif

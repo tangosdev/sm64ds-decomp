@@ -1,6 +1,6 @@
 # fold/arm9-fddummy-1018 — arm9 dFdDummy_c shard fold
 
-> **Superseded.** The family-wide fader fold (`src/engine/fader/dFader_c.cpp`,
+> **Superseded.** The family-wide fader fold (`src/runtime/graphics/fader/d_fader.cpp`,
 > manifest `arm9/dFader_c`) absorbed this standalone TU and its range; the
 > constructor at `0x02017278` is now `_ZN10dFdDummy_cC1Ev`. Kept as the record
 > of the earlier step; the file and manifest named below no longer exist.

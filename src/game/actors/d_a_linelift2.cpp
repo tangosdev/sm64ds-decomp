@@ -33,17 +33,25 @@
 //   take Fix12<int> by value (notes/mwccarm-codegen.md 6az).
 // - func_020393d4 / func_020393c4 install dBgW's two callback words;
 //   dBgW carries no setter for them.
-// - (Vector3 *)&mPosX / &mTargetPosX / &unk_0a4: dActor_c and this class
-//   store the triples as scalars; the shared header has not named unk_0a4
-//   / unk_0ac yet.
+// - &mTargetPosX / &unk_0a4: this class and dActor_c store those triples
+//   as scalars; the shared header has not named unk_0a4 / unk_0ac yet.
 // - func_ov091_02131cb0 stays free: it is typed on dActor_c and its body
 //   only touches the base's velocity triples (unk_0a4 / unk_0ac).
 // - Behavior lowers mPosY by the sink offset and restores it before the
 //   model update, which the cartridge does too; the dead store is its own.
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_linelift2_AssetId {
+    ASSET_KM2_SUSUMU_BMD = 0x0669,
+    ASSET_KM2_SUSUMU_KCL = 0x066a,
+    ASSET_KM3_RIFT_BMD = 0x0683,
+    ASSET_KM3_RIFT_KCL = 0x0684
+};
+
 #include "daLinelift2_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "nitro/fx/fx.h"
 
 struct KCL_File;
 struct CLPS_Block;
@@ -286,7 +294,7 @@ int daLinelift2_c::func_ov091_02131db8()
 {
     int result;
     AddVec3((Vec3 *)&mPosX, (Vec3 *)&unk_0a4, (Vec3 *)&mPosX);
-    if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
+    if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePosX = mTargetPosX;
         mBasePosY = mTargetPosY;
@@ -334,14 +342,10 @@ extern "C" void func_ov091_02131cb0(dActor_c *self, const Vector3 *to, const Vec
     Vec3_Sub(&d, to, from);
     self->mPrevAngleY = _ZN4cstd5atan2E5Fix12IiES1_(d.x, d.z);
     self->mPrevAngleX = _ZN4cstd5atan2E5Fix12IiES1_(d.y, Vec3_HorzLen(&d));
-    s32 horz = (s32)(((long long)self->mHorzSpeed
-                      * data_02082214[((u16)self->mPrevAngleX >> 4) * 2 + 1] + 0x800) >> 12);
-    self->unk_0a4 = (s32)(((long long)horz
-                      * data_02082214[((u16)self->mPrevAngleY >> 4) * 2] + 0x800) >> 12);
-    self->mVertSpeed = (s32)(((long long)self->mHorzSpeed
-                      * data_02082214[((u16)self->mPrevAngleX >> 4) * 2] + 0x800) >> 12);
-    self->unk_0ac = (s32)(((long long)horz
-                      * data_02082214[((u16)self->mPrevAngleY >> 4) * 2 + 1] + 0x800) >> 12);
+    s32 horz = FX_MUL(self->mHorzSpeed, data_02082214[((u16)self->mPrevAngleX >> 4) * 2 + 1]);
+    self->unk_0a4 = FX_MUL(horz, data_02082214[((u16)self->mPrevAngleY >> 4) * 2]);
+    self->mVertSpeed = FX_MUL(self->mHorzSpeed, data_02082214[((u16)self->mPrevAngleX >> 4) * 2]);
+    self->unk_0ac = FX_MUL(horz, data_02082214[((u16)self->mPrevAngleY >> 4) * 2 + 1]);
 }
 
 // @symbol _ZN13daLinelift2_cD1Ev
@@ -361,10 +365,10 @@ extern StateFunc data_ov091_02134e4c;
  * emits the constructions, registers the destructors -- the registration
  * nodes are compiler temporaries -- and copies the records. */
 // @symbol __sinit_d_a_linelift2.cpp
-Linelift2ModelFilePtr     data_ov091_02135498(0x683);
-Linelift2ModelFilePtr     data_ov091_021354a8(0x669);
-Linelift2CollisionFilePtr data_ov091_021354a0(0x684);
-Linelift2CollisionFilePtr data_ov091_02135490(0x66a);
+Linelift2ModelFilePtr     gKm3RiftModelFile(ASSET_KM3_RIFT_BMD);
+Linelift2ModelFilePtr     gKm2SusumuModelFile(ASSET_KM2_SUSUMU_BMD);
+Linelift2CollisionFilePtr gKm3RiftCollisionFile(ASSET_KM3_RIFT_KCL);
+Linelift2CollisionFilePtr gKm2SusumuCollisionFile(ASSET_KM2_SUSUMU_KCL);
 
 StateFunc data_ov091_021354e0[3] = {
     data_ov091_02134e54,

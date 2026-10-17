@@ -5,12 +5,17 @@
   "promoted_source": "src/engine/heap/Heap.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x0203c1b4..0x0203c970. Memory::Allocate/Deallocate occupy 0x0203c1b4..0x0203c24c and abut Heap::InitializeGameHeap. Left edge begins where Matrix4x3_ApplyInPlaceToTranslation ends. Nine Heap members tile 0x0203c24c..0x0203c33c and 43 family leftovers (SolidHeap/ExpandingHeap virtual overrides, Heap guards/statics, ExpandingHeapAllocator::InvokeDeallocate) tile 0x0203c33c..0x0203c970 (config/arm9/delinks.txt, config/arm9/symbols.txt). Right edge ends where SolidHeap::D0 begins (the dtor/ctor cluster 0x0203c970..0x0203cbc0 stays separate: each D0/D1/D2 shard defines the same ~X(){}, so one TU cannot hold a pair).",
+  "boundary_evidence": "Contiguous .text span 0x0203c1b4..0x0203cbc0. Memory::Allocate/Deallocate occupy 0x0203c1b4..0x0203c24c and abut Heap::InitializeGameHeap. Left edge begins where Matrix4x3_ApplyInPlaceToTranslation ends. Nine Heap members tile 0x0203c24c..0x0203c33c, 43 family leftovers (SolidHeap/ExpandingHeap virtual overrides, Heap guards/statics, ExpandingHeapAllocator::InvokeDeallocate) tile 0x0203c33c..0x0203c970, and the three classes' structors plus the root-heap bootstrap tile 0x0203c970..0x0203cbc0 (config/arm9/delinks.txt, config/arm9/symbols.txt). The structor run is the plain out-of-line deferred-codegen signature of three empty destructors and three constructors in one TU: SolidHeap_t D0 D1, ExpHeap_t D0 D1, Heap_t D2 D0 D1, then SolidHeap_t C1, ExpHeap_t C1, Heap_t C2, with every homeless variant stripped. Right edge ends at func_0203cbc0, the first of the global operator new/delete veneers (not examined for membership here). .data: ~Heap_t is the family's key function, so this TU emits all three vtables and their type_info. Claimed: 0x02099d28..0x02099e18, the SolidHeap_t type-name string and the three vtables. The five records below it, 0x02099ce4..0x02099d28, are deadstrip-data against the ROM: the cartridge word-aligns each type-name string and mwccarm emits them align-1, so the 0x02099d27 pad byte cannot be reproduced.",
   "sections": [
     {
       "name": ".text",
       "start": "0x0203c1b4",
-      "end": "0x0203c970"
+      "end": "0x0203cc28"
+    },
+    {
+      "name": ".data",
+      "start": "0x02099d28",
+      "end": "0x02099e18"
     }
   ],
   "functions": [
@@ -36,172 +41,172 @@
       "legacy_source": "src/_ZN6Memory8AllocateEji.cpp"
     },
     {
-      "symbol": "_ZN6Memory10DeallocateEPvP4Heap",
+      "symbol": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
       "address": "0x0203c1e8",
       "size": "0x00000028",
       "ordinal": 3,
-      "legacy_source": "src/_ZN6Memory10DeallocateEPvP4Heap.cpp"
+      "legacy_source": "src/_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE.cpp"
     },
     {
-      "symbol": "_ZN6Memory8AllocateEjiP4Heap",
+      "symbol": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
       "address": "0x0203c210",
       "size": "0x0000003c",
       "ordinal": 4,
-      "legacy_source": "src/_ZN6Memory8AllocateEjiP4Heap.cpp"
+      "legacy_source": "src/_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE.cpp"
     },
     {
-      "symbol": "_ZN4Heap18InitializeGameHeapEjPS_",
+      "symbol": "_ZN5mHeap6Heap_t18InitializeGameHeapEjPS0_",
       "address": "0x0203c24c",
       "size": "0x28",
       "ordinal": 5,
-      "legacy_source": "src/_ZN4Heap18InitializeGameHeapEjPS_.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t18InitializeGameHeapEjPS0_.cpp"
     },
     {
-      "symbol": "_ZN4Heap7_SizeofEPv",
+      "symbol": "_ZN5mHeap6Heap_t7_SizeofEPv",
       "address": "0x0203c274",
       "size": "0xc",
       "ordinal": 6,
-      "legacy_source": "src/_ZN4Heap7_SizeofEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t7_SizeofEPv.cpp"
     },
     {
-      "symbol": "_ZN4Heap11_DeallocateEPv",
+      "symbol": "_ZN5mHeap6Heap_t11_DeallocateEPv",
       "address": "0x0203c280",
       "size": "0xc",
       "ordinal": 7,
-      "legacy_source": "src/_ZN4Heap11_DeallocateEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t11_DeallocateEPv.cpp"
     },
     {
-      "symbol": "_ZN4Heap8AllocateEj",
+      "symbol": "_ZN5mHeap6Heap_t8AllocateEj",
       "address": "0x0203c28c",
       "size": "0x10",
       "ordinal": 8,
-      "legacy_source": "src/_ZN4Heap8AllocateEj.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t8AllocateEj.cpp"
     },
     {
-      "symbol": "_ZN4Heap9_AllocateEji",
+      "symbol": "_ZN5mHeap6Heap_t9_AllocateEji",
       "address": "0x0203c29c",
       "size": "0xc",
       "ordinal": 9,
-      "legacy_source": "src/_ZN4Heap9_AllocateEji.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t9_AllocateEji.cpp"
     },
     {
-      "symbol": "_ZN4Heap20RestoreFromTemporaryEv",
+      "symbol": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
       "address": "0x0203c2a8",
       "size": "0x30",
       "ordinal": 10,
-      "legacy_source": "src/_ZN4Heap20RestoreFromTemporaryEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t20RestoreFromTemporaryEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i",
+      "symbol": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
       "address": "0x0203c2d8",
       "size": "0xc",
       "ordinal": 11,
-      "legacy_source": "src/_ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i.cpp"
     },
     {
-      "symbol": "_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i",
+      "symbol": "_ZN5mHeap6Heap_t23SetupSolidHeapAsDefaultEjPS0_i",
       "address": "0x0203c2e4",
       "size": "0x40",
       "ordinal": 12,
-      "legacy_source": "src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t23SetupSolidHeapAsDefaultEjPS0_i.cpp"
     },
     {
-      "symbol": "_ZN4Heap10SetDefaultEv",
+      "symbol": "_ZN5mHeap6Heap_t10SetDefaultEv",
       "address": "0x0203c324",
       "size": "0x18",
       "ordinal": 13,
-      "legacy_source": "src/_ZN4Heap10SetDefaultEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t10SetDefaultEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap12VResizeToFitEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t12VResizeToFitEv",
       "address": "0x0203c33c",
       "size": "0x4c",
       "ordinal": 14,
-      "legacy_source": "src/_ZN9SolidHeap12VResizeToFitEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t12VResizeToFitEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap12VResizeToFitEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t12VResizeToFitEv",
       "address": "0x0203c388",
       "size": "0x8",
       "ordinal": 15,
-      "legacy_source": "src/_ZN13ExpandingHeap12VResizeToFitEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t12VResizeToFitEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap11ResizeToFitEv",
+      "symbol": "_ZN5mHeap6Heap_t11ResizeToFitEv",
       "address": "0x0203c390",
       "size": "0x48",
       "ordinal": 16,
-      "legacy_source": "src/_ZN4Heap11ResizeToFitEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t11ResizeToFitEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap10VGetNodeIDEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t10VGetNodeIDEv",
       "address": "0x0203c3d8",
       "size": "0x8",
       "ordinal": 17,
-      "legacy_source": "src/_ZN9SolidHeap10VGetNodeIDEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t10VGetNodeIDEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap10VGetNodeIDEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t10VGetNodeIDEv",
       "address": "0x0203c3e0",
       "size": "0x10",
       "ordinal": 18,
-      "legacy_source": "src/_ZN13ExpandingHeap10VGetNodeIDEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t10VGetNodeIDEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap10VSetNodeIDEj",
+      "symbol": "_ZN5mHeap11SolidHeap_t10VSetNodeIDEj",
       "address": "0x0203c3f0",
       "size": "0x8",
       "ordinal": 19,
-      "legacy_source": "src/_ZN9SolidHeap10VSetNodeIDEj.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t10VSetNodeIDEj.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap10VSetNodeIDEj",
+      "symbol": "_ZN5mHeap9ExpHeap_t10VSetNodeIDEj",
       "address": "0x0203c3f8",
       "size": "0x10",
       "ordinal": 20,
-      "legacy_source": "src/_ZN13ExpandingHeap10VSetNodeIDEj.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t10VSetNodeIDEj.cpp"
     },
     {
-      "symbol": "_ZN4Heap9SetNodeIDEj",
+      "symbol": "_ZN5mHeap6Heap_t9SetNodeIDEj",
       "address": "0x0203c408",
       "size": "0x20",
       "ordinal": 21,
-      "legacy_source": "src/_ZN4Heap9SetNodeIDEj.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t9SetNodeIDEj.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap7VSizeofEPv",
+      "symbol": "_ZN5mHeap11SolidHeap_t7VSizeofEPv",
       "address": "0x0203c428",
       "size": "0x1c",
       "ordinal": 22,
-      "legacy_source": "src/_ZN9SolidHeap7VSizeofEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t7VSizeofEPv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap7VSizeofEPv",
+      "symbol": "_ZN5mHeap9ExpHeap_t7VSizeofEPv",
       "address": "0x0203c444",
       "size": "0x10",
       "ordinal": 23,
-      "legacy_source": "src/_ZN13ExpandingHeap7VSizeofEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t7VSizeofEPv.cpp"
     },
     {
-      "symbol": "_ZN4Heap6SizeofEPv",
+      "symbol": "_ZN5mHeap6Heap_t6SizeofEPv",
       "address": "0x0203c454",
       "size": "0x48",
       "ordinal": 24,
-      "legacy_source": "src/_ZN4Heap6SizeofEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t6SizeofEPv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap14VDeallocateAllEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t14VDeallocateAllEv",
       "address": "0x0203c49c",
       "size": "0x14",
       "ordinal": 25,
-      "legacy_source": "src/_ZN9SolidHeap14VDeallocateAllEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t14VDeallocateAllEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap14VDeallocateAllEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t14VDeallocateAllEv",
       "address": "0x0203c4b0",
       "size": "0x1c",
       "ordinal": 26,
-      "legacy_source": "src/_ZN13ExpandingHeap14VDeallocateAllEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t14VDeallocateAllEv.cpp"
     },
     {
       "symbol": "_ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j",
@@ -211,235 +216,872 @@
       "legacy_source": "src/_ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap11VDeallocateEPv",
+      "symbol": "_ZN5mHeap11SolidHeap_t11VDeallocateEPv",
       "address": "0x0203c4e4",
       "size": "0x28",
       "ordinal": 28,
-      "legacy_source": "src/_ZN9SolidHeap11VDeallocateEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t11VDeallocateEPv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap11VDeallocateEPv",
+      "symbol": "_ZN5mHeap9ExpHeap_t11VDeallocateEPv",
       "address": "0x0203c50c",
       "size": "0x2c",
       "ordinal": 29,
-      "legacy_source": "src/_ZN13ExpandingHeap11VDeallocateEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t11VDeallocateEPv.cpp"
     },
     {
-      "symbol": "_ZN4Heap10DeallocateEPv",
+      "symbol": "_ZN5mHeap6Heap_t10DeallocateEPv",
       "address": "0x0203c538",
       "size": "0x20",
       "ordinal": 30,
-      "legacy_source": "src/_ZN4Heap10DeallocateEPv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t10DeallocateEPv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap11VReallocateEPvj",
+      "symbol": "_ZN5mHeap11SolidHeap_t11VReallocateEPvj",
       "address": "0x0203c558",
       "size": "0x10",
       "ordinal": 31,
-      "legacy_source": "src/_ZN9SolidHeap11VReallocateEPvj.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t11VReallocateEPvj.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap11VReallocateEPvj",
+      "symbol": "_ZN5mHeap9ExpHeap_t11VReallocateEPvj",
       "address": "0x0203c568",
       "size": "0x10",
       "ordinal": 32,
-      "legacy_source": "src/_ZN13ExpandingHeap11VReallocateEPvj.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t11VReallocateEPvj.cpp"
     },
     {
-      "symbol": "_ZN4Heap10ReallocateEPvj",
+      "symbol": "_ZN5mHeap6Heap_t10ReallocateEPvj",
       "address": "0x0203c578",
       "size": "0x20",
       "ordinal": 33,
-      "legacy_source": "src/_ZN4Heap10ReallocateEPvj.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t10ReallocateEPvj.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap11VMemoryLeftEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t11VMemoryLeftEv",
       "address": "0x0203c598",
       "size": "0x14",
       "ordinal": 34,
-      "legacy_source": "src/_ZN9SolidHeap11VMemoryLeftEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t11VMemoryLeftEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap11VMemoryLeftEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t11VMemoryLeftEv",
       "address": "0x0203c5ac",
       "size": "0x10",
       "ordinal": 35,
-      "legacy_source": "src/_ZN13ExpandingHeap11VMemoryLeftEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t11VMemoryLeftEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap19VMaxAllocatableSizeEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t19VMaxAllocatableSizeEv",
       "address": "0x0203c5bc",
       "size": "0x14",
       "ordinal": 36,
-      "legacy_source": "src/_ZN9SolidHeap19VMaxAllocatableSizeEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t19VMaxAllocatableSizeEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap19VMaxAllocatableSizeEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t19VMaxAllocatableSizeEv",
       "address": "0x0203c5d0",
       "size": "0x14",
       "ordinal": 37,
-      "legacy_source": "src/_ZN13ExpandingHeap19VMaxAllocatableSizeEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t19VMaxAllocatableSizeEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap22VMaxAllocationUnitSizeEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t22VMaxAllocationUnitSizeEv",
       "address": "0x0203c5e4",
       "size": "0x14",
       "ordinal": 38,
-      "legacy_source": "src/_ZN9SolidHeap22VMaxAllocationUnitSizeEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t22VMaxAllocationUnitSizeEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap22VMaxAllocationUnitSizeEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t22VMaxAllocationUnitSizeEv",
       "address": "0x0203c5f8",
       "size": "0x14",
       "ordinal": 39,
-      "legacy_source": "src/_ZN13ExpandingHeap22VMaxAllocationUnitSizeEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t22VMaxAllocationUnitSizeEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap21MaxAllocationUnitSizeEv",
+      "symbol": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
       "address": "0x0203c60c",
       "size": "0x20",
       "ordinal": 40,
-      "legacy_source": "src/_ZN4Heap21MaxAllocationUnitSizeEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap7VRescueEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t7VRescueEv",
       "address": "0x0203c62c",
       "size": "0x4",
       "ordinal": 41,
-      "legacy_source": "src/_ZN9SolidHeap7VRescueEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t7VRescueEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap7VRescueEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t7VRescueEv",
       "address": "0x0203c630",
       "size": "0x4",
       "ordinal": 42,
-      "legacy_source": "src/_ZN13ExpandingHeap7VRescueEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t7VRescueEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap6RescueEv",
+      "symbol": "_ZN5mHeap6Heap_t6RescueEv",
       "address": "0x0203c634",
       "size": "0x20",
       "ordinal": 43,
-      "legacy_source": "src/_ZN4Heap6RescueEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t6RescueEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap7VIntactEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t7VIntactEv",
       "address": "0x0203c654",
       "size": "0x8",
       "ordinal": 44,
-      "legacy_source": "src/_ZN9SolidHeap7VIntactEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t7VIntactEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap7VIntactEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t7VIntactEv",
       "address": "0x0203c65c",
       "size": "0x8",
       "ordinal": 45,
-      "legacy_source": "src/_ZN13ExpandingHeap7VIntactEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t7VIntactEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap6IntactEv",
+      "symbol": "_ZN5mHeap6Heap_t6IntactEv",
       "address": "0x0203c664",
       "size": "0x48",
       "ordinal": 46,
-      "legacy_source": "src/_ZN4Heap6IntactEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t6IntactEv.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap9VAllocateEji",
+      "symbol": "_ZN5mHeap11SolidHeap_t9VAllocateEji",
       "address": "0x0203c6ac",
       "size": "0x10",
       "ordinal": 47,
-      "legacy_source": "src/_ZN9SolidHeap9VAllocateEji.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t9VAllocateEji.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap9VAllocateEji",
+      "symbol": "_ZN5mHeap9ExpHeap_t9VAllocateEji",
       "address": "0x0203c6bc",
       "size": "0x10",
       "ordinal": 48,
-      "legacy_source": "src/_ZN13ExpandingHeap9VAllocateEji.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t9VAllocateEji.cpp"
     },
     {
-      "symbol": "_ZN4Heap8AllocateEji",
+      "symbol": "_ZN5mHeap6Heap_t8AllocateEji",
       "address": "0x0203c6cc",
       "size": "0x40",
       "ordinal": 49,
-      "legacy_source": "src/_ZN4Heap8AllocateEji.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t8AllocateEji.cpp"
     },
     {
-      "symbol": "_ZN9SolidHeap8VDestroyEv",
+      "symbol": "_ZN5mHeap11SolidHeap_t8VDestroyEv",
       "address": "0x0203c70c",
       "size": "0x20",
       "ordinal": 50,
-      "legacy_source": "src/_ZN9SolidHeap8VDestroyEv.cpp"
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_t8VDestroyEv.cpp"
     },
     {
-      "symbol": "_ZN13ExpandingHeap8VDestroyEv",
+      "symbol": "_ZN5mHeap9ExpHeap_t8VDestroyEv",
       "address": "0x0203c72c",
       "size": "0x20",
       "ordinal": 51,
-      "legacy_source": "src/_ZN13ExpandingHeap8VDestroyEv.cpp"
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_t8VDestroyEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap8_DestroyEv",
+      "symbol": "_ZN5mHeap6Heap_t8_DestroyEv",
       "address": "0x0203c74c",
       "size": "0xc",
       "ordinal": 52,
-      "legacy_source": "src/_ZN4Heap8_DestroyEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t8_DestroyEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap7DestroyEv",
+      "symbol": "_ZN5mHeap6Heap_t7DestroyEv",
       "address": "0x0203c758",
       "size": "0x48",
       "ordinal": 53,
-      "legacy_source": "src/_ZN4Heap7DestroyEv.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t7DestroyEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap15CreateSolidHeapEjPS_i",
+      "symbol": "_ZN5mHeap6Heap_t15CreateSolidHeapEjPS0_i",
       "address": "0x0203c7a0",
       "size": "0xa4",
       "ordinal": 54,
-      "legacy_source": "src/_ZN4Heap15CreateSolidHeapEjPS_i.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t15CreateSolidHeapEjPS0_i.cpp"
     },
     {
-      "symbol": "_ZN4Heap19CreateExpandingHeapEjPS_i",
+      "symbol": "_ZN5mHeap6Heap_t19CreateExpandingHeapEjPS0_i",
       "address": "0x0203c844",
       "size": "0xa4",
       "ordinal": 55,
-      "legacy_source": "src/_ZN4Heap19CreateExpandingHeapEjPS_i.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t19CreateExpandingHeapEjPS0_i.cpp"
     },
     {
-      "symbol": "_ZN4Heap14CreateRootHeapEPvj",
+      "symbol": "_ZN5mHeap6Heap_t14CreateRootHeapEPvj",
       "address": "0x0203c8e8",
       "size": "0x88",
       "ordinal": 56,
-      "legacy_source": "src/_ZN4Heap14CreateRootHeapEPvj.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t14CreateRootHeapEPvj.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap11SolidHeap_tD0Ev",
+      "address": "0x0203c970",
+      "size": "0x2c",
+      "ordinal": 57,
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_tD0Ev.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap11SolidHeap_tD1Ev",
+      "address": "0x0203c99c",
+      "size": "0x24",
+      "ordinal": 58,
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_tD1Ev.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap9ExpHeap_tD0Ev",
+      "address": "0x0203c9c0",
+      "size": "0x2c",
+      "ordinal": 59,
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_tD0Ev.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap9ExpHeap_tD1Ev",
+      "address": "0x0203c9ec",
+      "size": "0x24",
+      "ordinal": 60,
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_tD1Ev.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap6Heap_tD2Ev",
+      "address": "0x0203ca10",
+      "size": "0x10",
+      "ordinal": 61,
+      "legacy_source": "src/_ZN5mHeap6Heap_tD2Ev.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap6Heap_tD0Ev",
+      "address": "0x0203ca20",
+      "size": "0x24",
+      "ordinal": 62,
+      "legacy_source": "src/_ZN5mHeap6Heap_tD0Ev.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap6Heap_tD1Ev",
+      "address": "0x0203ca44",
+      "size": "0x10",
+      "ordinal": 63,
+      "legacy_source": "src/_ZN5mHeap6Heap_tD1Ev.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator",
+      "address": "0x0203ca54",
+      "size": "0x2c",
+      "ordinal": 64,
+      "legacy_source": "src/_ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+      "address": "0x0203ca80",
+      "size": "0x2c",
+      "ordinal": 65,
+      "legacy_source": "src/_ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap6Heap_tC2EPvjPS0_",
+      "address": "0x0203caac",
+      "size": "0x3c",
+      "ordinal": 66,
+      "legacy_source": "src/_ZN5mHeap6Heap_tC2EPvjPS0_.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap6Heap_t18InitializeRootHeapEv",
+      "address": "0x0203cae8",
+      "size": "0x1c",
+      "ordinal": 67,
+      "legacy_source": "src/_ZN5mHeap6Heap_t18InitializeRootHeapEv.cpp"
+    },
+    {
+      "symbol": "_ZN5mHeap6Heap_t13SetupRootHeapEv",
+      "address": "0x0203cb04",
+      "size": "0xbc",
+      "ordinal": 68,
+      "legacy_source": "src/_ZN5mHeap6Heap_t13SetupRootHeapEv.cpp"
+    },
+    {
+      "symbol": "func_0203cbc0",
+      "address": "0x0203cbc0",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_0203cbc0.c",
+      "ordinal": 69
+    },
+    {
+      "symbol": "_ZN6Memory16operator_delete2EPv",
+      "address": "0x0203cbcc",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN6Memory16operator_delete2EPv.cpp",
+      "ordinal": 70
+    },
+    {
+      "symbol": "_ZN6Memory13operator_new2Ej",
+      "address": "0x0203cbd8",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN6Memory13operator_new2Ej.cpp",
+      "ordinal": 71
+    },
+    {
+      "symbol": "_Znwj",
+      "address": "0x0203cbe4",
+      "size": "0x0000000c",
+      "legacy_source": "src/_Znwj.cpp",
+      "ordinal": 72
+    },
+    {
+      "symbol": "_ZdlPv",
+      "address": "0x0203cbf0",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZdlPv.cpp",
+      "ordinal": 73
+    },
+    {
+      "symbol": "func_0203cc0c",
+      "address": "0x0203cc0c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_0203cc0c.c",
+      "ordinal": 74
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTSN5mHeap11SolidHeap_tE",
+      "address": "0x02099d28",
+      "size": "0x16",
+      "evidence": "ROM type-name string 'N5mHeap11SolidHeap_tE'; emitted .data section (0x16 bytes, align 1) lands at its anchor, and the vtable storage after it aligns up to 0x02099d40"
+    },
+    {
+      "symbol": "_ZTVN5mHeap11SolidHeap_tE",
+      "address": "0x02099d48",
+      "emitted_storage_address": "0x02099d40",
+      "address_point_bias": "0x8",
+      "size": "0x48",
+      "evidence": "two-word ABI preamble (offset-to-top 0, typeinfo _ZTIN5mHeap11SolidHeap_tE 0x02099cf8) + sixteen slots: D1 D0 VDestroy VAllocate VDeallocate VDeallocateAll VIntact VRescue VReallocate VSizeof VMaxAllocationUnitSize VMaxAllocatableSize VMemoryLeft VSetNodeID VGetNodeID VResizeToFit; public address point 0x02099d48"
+    },
+    {
+      "symbol": "_ZTVN5mHeap6Heap_tE",
+      "address": "0x02099d90",
+      "emitted_storage_address": "0x02099d88",
+      "address_point_bias": "0x8",
+      "size": "0x48",
+      "evidence": "two-word ABI preamble (offset-to-top 0, typeinfo _ZTIN5mHeap6Heap_tE 0x02099ce4) + sixteen slots: D1 D0, then fourteen null words -- Heap_t's V* slots are pure; public address point 0x02099d90"
+    },
+    {
+      "symbol": "_ZTVN5mHeap9ExpHeap_tE",
+      "address": "0x02099dd8",
+      "emitted_storage_address": "0x02099dd0",
+      "address_point_bias": "0x8",
+      "size": "0x48",
+      "evidence": "two-word ABI preamble (offset-to-top 0, typeinfo _ZTIN5mHeap9ExpHeap_tE 0x02099cec) + sixteen slots: D1 D0, then the same fourteen V* overrides in Heap_t's slot order; public address point 0x02099dd8"
+    }
+  ],
   "bss": [],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN5mHeap11SolidHeap_tD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of _ZN5mHeap11SolidHeap_tD1Ev (0x0203c99c): one out-of-line ~SolidHeap_t() emits D0, D1 and D2; nothing derives from SolidHeap_t, so the cartridge keeps only D1/D0 and this copy is homeless."
+    },
+    {
+      "symbol": "_ZN5mHeap9ExpHeap_tD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of _ZN5mHeap9ExpHeap_tD1Ev (0x0203c9ec): one out-of-line ~ExpHeap_t() emits D0, D1 and D2; nothing derives from ExpHeap_t, so the cartridge keeps only D1/D0 and this copy is homeless."
+    },
+    {
+      "symbol": "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP18SolidHeapAllocator",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of the complete-object ctor _ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator (0x0203ca54): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of the complete-object ctor _ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator (0x0203ca80): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN5mHeap6Heap_tC1EPvjPS0_",
+      "disposition": "deadstrip",
+      "reason": "Complete-object variant of _ZN5mHeap6Heap_tC2EPvjPS0_ (0x0203caac): Heap_t is abstract, so it is only ever constructed as a base subobject; the retail link kept only C2 and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZTIN5mHeap6Heap_tE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099ce4",
+      "reason": "key function ~Heap_t is defined in this TU, so it emits the family's class_type_info for the abstract base; canonical bytes verified, contribution is gap data. Not claimed: the cartridge starts each type-name string on a word (0x02099d27 is a pad byte between the ExpHeap_t and SolidHeap_t strings) and mwccarm emits them align-1, so this object cannot tile 0x02099ce4..0x02099d28."
+    },
+    {
+      "symbol": "_ZTIN5mHeap9ExpHeap_tE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099cec",
+      "reason": "key function ~Heap_t is defined in this TU, so it emits the family's si_class_type_info, base _ZTIN5mHeap6Heap_tE; canonical bytes verified, contribution is gap data. Not claimed: the cartridge starts each type-name string on a word (0x02099d27 is a pad byte between the ExpHeap_t and SolidHeap_t strings) and mwccarm emits them align-1, so this object cannot tile 0x02099ce4..0x02099d28."
+    },
+    {
+      "symbol": "_ZTIN5mHeap11SolidHeap_tE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099cf8",
+      "reason": "key function ~Heap_t is defined in this TU, so it emits the family's si_class_type_info, base _ZTIN5mHeap6Heap_tE; canonical bytes verified, contribution is gap data. Not claimed: the cartridge starts each type-name string on a word (0x02099d27 is a pad byte between the ExpHeap_t and SolidHeap_t strings) and mwccarm emits them align-1, so this object cannot tile 0x02099ce4..0x02099d28."
+    },
+    {
+      "symbol": "_ZTSN5mHeap6Heap_tE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099d04",
+      "reason": "key function ~Heap_t is defined in this TU, so it emits the family's type-name string 'N5mHeap6Heap_tE'; canonical bytes verified, contribution is gap data. Not claimed: the cartridge starts each type-name string on a word (0x02099d27 is a pad byte between the ExpHeap_t and SolidHeap_t strings) and mwccarm emits them align-1, so this object cannot tile 0x02099ce4..0x02099d28."
+    },
+    {
+      "symbol": "_ZTSN5mHeap9ExpHeap_tE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099d14",
+      "reason": "key function ~Heap_t is defined in this TU, so it emits the family's type-name string 'N5mHeap9ExpHeap_tE'; canonical bytes verified, contribution is gap data. Not claimed: the cartridge starts each type-name string on a word (0x02099d27 is a pad byte between the ExpHeap_t and SolidHeap_t strings) and mwccarm emits them align-1, so this object cannot tile 0x02099ce4..0x02099d28."
+    }
+  ],
   "notes": [
     "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main, so there was no candidate id to create from. The schema follows the arm9/ExpandingHeapAllocator entry, the sibling heap-family fold.",
     "Heap is the abstract base of the mHeap family (cartridge RTTI `N5mHeap6Heap_tE' at 0x02099ce4): this run is the bootstrap and the veneer layer -- InitializeGameHeap carves the game heap, RestoreFromTemporary / InitializeSolidHeapAsDefault / SetupSolidHeapAsDefault are the scratch-heap pop and push pair, SetDefault installs the process-wide default, and _Sizeof/_Deallocate/_Allocate/Allocate(u32) are the guards and tail-call veneers over slots implemented by the derived heaps.",
     "InitializeSolidHeapAsDefault is a ldr-ip/bx-ip tail-call veneer whose target SetupSolidHeapAsDefault sits twelve bytes later inside this same TU; the emitted veneer form is preserved because the call is extern-visible under -interworking.",
-    "No virtual member is defined here -- all sixteen slots are pure or defined in other TUs -- so no key function is emitted, no _ZTV4Heap/_ZTI4Heap output accompanies this TU, and no compiler-only deadstrip rows are needed.",
+    "~Heap_t is the family's key function -- the first virtual it does not define inline -- so defining the three empty destructors here makes this TU emit _ZTVN5mHeap6Heap_tE, _ZTVN5mHeap9ExpHeap_tE and _ZTVN5mHeap11SolidHeap_tE with their type_info. Their emitted spelling only agrees with the cartridge because the classes carry the ROM's own mHeap names; under the earlier coined Heap/SolidHeap/ExpandingHeap names this TU would have emitted _ZTS4Heap and siblings, which the image does not contain.",
     "The file is written ROM-descending because mwccarm emits .text in reverse source order under default deferred codegen; the emitted object carries the nine functions ascending 0x0203c24c..0x0203c33c.",
-    "absorb/Heap: folded the 43 family leftovers at 0x0203c33c..0x0203c970 into this TU, bodies verbatim (includes merged, externs kept), prepended in descending address order so mwccarm deferred codegen still emits ascending. No key function moves (dtors/ctors stay out), so no vtable/RTTI emission changes and no compiler-only rows are needed.",
-    "Memory::Allocate/Deallocate (0x0203c1b4..0x0203c24c) are folded here. The destructor cluster at 0x0203c970 stays in its shards: one ~SolidHeap() emits D2 then D0 then D1, and the typeinfo it emits is spelled _ZTI9SolidHeap while the cartridge record is _ZTIN5mHeap11SolidHeap_tE."
+    "absorb/Heap: folded the 43 family leftovers at 0x0203c33c..0x0203c970 into this TU, bodies verbatim (includes merged, externs kept), prepended in descending address order so mwccarm deferred codegen still emits ascending. That fold moved no key function; the structor fold below does.",
+    "Memory::Allocate/Deallocate (0x0203c1b4..0x0203c24c) are folded here.",
+    "absorb/structors: folded the twelve shards at 0x0203c970..0x0203cbc0 -- SolidHeap_t D0/D1, ExpHeap_t D0/D1, Heap_t D2/D0/D1, SolidHeap_t C1, ExpHeap_t C1, Heap_t C2, InitializeRootHeap and SetupRootHeap -- as three empty destructors, three constructors and the two root-heap functions, written at the top of the file so deferred codegen emits them last and ascending. They were separate files because each D0/D1/D2 shard defined the same ~X(){}; one definition per class emits every variant, and the manifest deadstrips the five the cartridge never kept.",
+    "The factories' `if (heap != 0)' before each constructor call is placement new's own null test: CreateSolidHeap, CreateExpandingHeap and CreateRootHeap now write `new (heap) X(...)' against a TU-local `operator new(size_t, void*)' and drop the explicit test, which had to be spelled out while the constructors lived in other files. Keeping both costs eight bytes per factory.",
+    "absorb/global-allocation: folded the six functions at 0x0203cbc0..0x0203cc28 -- the delete veneer func_0203cbc0, Memory::operator_delete2 and operator_new2, the global operator new (_Znwj) and operator delete (_ZdlPv), and the default-heap allocator func_0203cc0c -- written at the very top of the file so deferred codegen emits them last and ascending. The run ends there: func_0203cc28 is a vector rotate over the sine table, not heap code. On the host the global operators stay the CRT's; Heap.cpp gives the port only the two unnamed veneers, and port/slice_gate4b.txt drops the two shard paths."
   ],
-  "relocations": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02099d44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTIN5mHeap11SolidHeap_tE",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099cf8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_tD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c99c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_tD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c970"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t8VDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c70c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t9VAllocateEji",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c6ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t11VDeallocateEPv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c4e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t14VDeallocateAllEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c49c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t7VIntactEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c654"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t7VRescueEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c62c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t11VReallocateEPvj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c558"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t7VSizeofEPv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c428"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t22VMaxAllocationUnitSizeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c5e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t19VMaxAllocatableSizeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c5bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t11VMemoryLeftEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c598"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t10VSetNodeIDEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c3f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t10VGetNodeIDEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c3d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap11SolidHeap_t12VResizeToFitEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c33c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTIN5mHeap6Heap_tE",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099ce4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap6Heap_tD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203ca44"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099d94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap6Heap_tD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203ca20"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099dd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTIN5mHeap9ExpHeap_tE",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099cec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099dd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_tD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c9ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099ddc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_tD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c9c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099de0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t8VDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c72c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099de4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t9VAllocateEji",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c6bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099de8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t11VDeallocateEPv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c50c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099dec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t14VDeallocateAllEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c4b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099df0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t7VIntactEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c65c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099df4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t7VRescueEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c630"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099df8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t11VReallocateEPvj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c568"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099dfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t7VSizeofEPv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c444"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099e00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t22VMaxAllocationUnitSizeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c5f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099e04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t19VMaxAllocatableSizeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c5d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099e08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t11VMemoryLeftEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c5ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099e0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t10VSetNodeIDEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c3f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099e10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t10VGetNodeIDEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c3e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099e14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5mHeap9ExpHeap_t12VResizeToFitEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203c388"
+    }
+  ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-Heap/Heap.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 57,
-    "functions_declared": 57,
+    "functions_matched": 69,
+    "functions_declared": 69,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
+      "requested": [
+        "_ZN5mHeap11SolidHeap_tD2Ev",
+        "_ZN5mHeap9ExpHeap_tD2Ev",
+        "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP18SolidHeapAllocator",
+        "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+        "_ZN5mHeap6Heap_tC1EPvjPS0_"
+      ],
+      "deadstripped": [
+        "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP18SolidHeapAllocator",
+        "_ZN5mHeap11SolidHeap_tD2Ev",
+        "_ZN5mHeap6Heap_tC1EPvjPS0_",
+        "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+        "_ZN5mHeap9ExpHeap_tD2Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        122,
+        123,
+        128,
+        129,
+        142,
+        143,
+        146,
+        147,
+        148,
+        149
+      ],
+      "data": [
+        "_ZTIN5mHeap6Heap_tE",
+        "_ZTIN5mHeap9ExpHeap_tE",
+        "_ZTIN5mHeap11SolidHeap_tE",
+        "_ZTSN5mHeap6Heap_tE",
+        "_ZTSN5mHeap9ExpHeap_tE"
+      ],
+      "dataExternalized": [
+        "_ZTIN5mHeap11SolidHeap_tE",
+        "_ZTIN5mHeap6Heap_tE",
+        "_ZTIN5mHeap9ExpHeap_tE",
+        "_ZTSN5mHeap6Heap_tE",
+        "_ZTSN5mHeap9ExpHeap_tE"
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -447,6 +1089,103 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-Heap/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0203c1b4",
+        "end": "0x0203cc28",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0203c1b4",
+          "end": "0x0203cc28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02099d28",
+          "end": "0x02099e18",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 79
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              13,
+              14,
+              16,
+              18
+            ],
+            "desired": [
+              13,
+              14,
+              16,
+              18
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "production_mode": "intact-object"
 }

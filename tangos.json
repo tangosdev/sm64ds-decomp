@@ -5,15 +5,15 @@
     "title": "Super Mario 64 DS",
     "tagline": "matching C from the chaos",
     "github": "https://github.com/tangosdev/sm64ds-decomp",
-    "language": "C",
+    "language": "C++ (real classes, folded into translation units). Legacy one-function files may still be C.",
     "platform": "nds",
-    "compiler": "mwccarm 1.2/sp2p3. Flags (C): -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc",
-    "cppNote": "If a name starts with _Z (C++ mangled), write C++ with the FIRST LINE exactly //cpp",
+    "compiler": "mwccarm 2004/b56 is the canonical, pinned compiler (tools/match.py CANONICAL, tools/rombuild.py VERSION). A few files carry a per-file override in config/rombuild-versions.txt; the 1.2 and other builds are for sweeps only. Build flags (C): -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off. Flags (C++): the same with -lang c++ (tools/mangle.py and tools/match.py add it for you; a leading //cpp line selects it in a scratch file). 2004/b56 is not in the 1.2 sweep zip: tools/recover_cw2004.py produces it.",
+    "cppNote": "Real methods are compiler-spelled. Write the class and let mwccarm mangle it: python tools/mangle.py candidate.cpp --expect <symbol> asks the pinned compiler which symbols a source emits. Never hand-spell a _ZN... name or type this as int*. In a scratch file or a legacy one-function file the first line must be exactly //cpp (match.py ignores the extension); a promoted translation unit is a plain .cpp under src/.",
     "discord": "https://discord.gg/YpReERF4e3",
     "setup": "clone {github} and follow CONTRIBUTING.md (python deps + the 1.2 sweep trio from the DS-decomp Discord + python tools/recover_cw2004.py for the pinned 2004/b56, which is NOT in that zip + tools/unpack.py on YOUR OWN cartridge dump). Details in notes/setup-mwccarm.md.",
-    "verifyCommand": "python tools/match.py --c yourfile.c --func {name} --addr 0x{addrHex} --size 0x{sizeHex} --version 1.2/sp2p3",
-    "readFirst": "notes/mwccarm-codegen.md (esp. sec 6e-6g levers: u64-mask laundering for materialized bases, declaration/statement order for register coloring, //cpp dummy-vtable dispatch, struct-copy interleave) and notes/pret-idioms.md. Coordinate via the claims API (GET https://tangos.dev/api/claims/instructions).",
-    "submitting": "Before opening a PR read AGENTS.md in the repo root. Every file you add to src/ MUST byte-reproduce the ROM (pass the `validate` CI check) - green is the ONLY merge gate. NEVER commit a non-reproducing file to src/: a near-miss/WRONG-DEST file is a false match someone has to rip back out. Close-but-not-matching drafts go to nearmiss/db.jsonl via tools/nearmiss_db.py, NOT src/. src/ must be RECOVERED C, never a byte transcription: an `asm { dcd ... }` word dump of the ROM 'matches' vacuously and validation now rejects it as RAW-ASM. If you cannot recover C, bank the near-miss and move on. asm bodies are legal only under a HAND-ASM PRIMITIVE or NONMATCHING banner (notes/asm-policy.md). One matched function per src/<symbol>.c|.cpp (first line //cpp for C++). Take types from the real headers instead of declaring local struct bodies: #include \"common.h\" gives Vector3/Vector3_16/Fix12i and the fixed-width ints (C and C++ both) - the langmode ratchet counts every src file with a local `struct X { ... }` body as new shadow-decl debt and fails CI on any rise, even when the bytes match. Claim your span through the claims API first (POST https://tangos.dev/api/claims/try-lock; contract at GET https://tangos.dev/api/claims/instructions). PR title: 'Match N functions byte-identical (mwccarm 1.2/sp2p3)', src-only, no bundled tools/CI. How PRs are reviewed + merged: MERGE.md.",
+    "verifyCommand": "python tools/match.py --c yourfile.cpp --func {name} --addr 0x{addrHex} --size 0x{sizeHex} --version 2004/b56",
+    "readFirst": "AGENTS.md (what a change looks like, the gates, the PR format), notes/cpp-class-form.md (destructor variant order, vtable and RTTI ownership, struct copies, bool widening), notes/tu-promotion-conventions.md (the canonical promotion workflow), notes/src-domain-buckets.md (which src/ directory and file stem), notes/agents/PIPELINE.md and notes/agents/README.md (the v2 fleet protocol: queue claim, independent verification, one integrator), then notes/mwccarm-codegen.md and notes/pret-idioms.md for codegen levers. Read these from the live origin/main, not an old checkout. Coordinate through the v2 queue (MERGE.md section 1); the tangos.dev range-claims service is a separate best-effort fallback, not unified with it.",
+    "submitting": "Read AGENTS.md in the repo root before you start; if this text and AGENTS.md ever disagree, AGENTS.md wins. The work now is turning matched code into real C++ and folding it into the right translation units (every function is already matched: 11,389 of 11,389). Both halves are required: source that reads like it shipped in 2004 (idiomatic, period-accurate C++), and bytes that match the retail cartridge under 2004/b56. When they conflict, byte accuracy wins because it is the only half a machine can check.\nTHREE TIERS, three different numbers (python tools/tiers.py): MATCHED (the compiled bytes equal the ROM, 100%), CONVERTED (a person can read it: a real name, no raw offset arithmetic, no unk_ fields, no codegen tricks, calls by real names; this is the one that moves), LINKED (the matched translation unit reaches the PC port). They are not a funnel and have different denominators. A good change raises CONVERTED without moving a single matched byte.\nTWO SHAPES of change. (1) A shadow-struct file rewritten as a real C++ class: real member names, real base and vtable, real method calls instead of offset arithmetic and mangled-name free functions, still byte-identical (notes/cpp-class-form.md). (2) A promoted translation unit (a FOLDED TU): once a class's files are all real methods, the one-function files are merged into one genuine .cpp the way the original unit was shaped, verified by a partitioned link, then enrolled with tools/tu_promote.py (notes/tu-promotion-conventions.md). Who matched each function stays in function-authors.json by address; moving a file changes no credit. A brand-new match of a previously unclaimed ROM function still follows the old rule: one function per file, the file name is the symbol, .cpp with //cpp as the first line.\nWORKFLOW, class first, C++ from the start. (a) Recover the class: RTTI gives the real name and base (rtti_extract, rom_class_names), vtables give slot order and own overrides (rtti_vtables), tu_map and tu_names give the unit boundary and file stem. (b) Write the header with the real base and virtuals in vtable order; the base comes from RTTI, never guessed from field use. (c) Write the unit .cpp in ROM address order and ask the compiler for names with mangle, never by hand. (d) Iterate a method at a time with match (use --version 2004/b56), but the whole-unit compile is the truth: tubuild_verify (bytes, relocation type and destination), then tubuild_linkcheck. A masked byte match alone can pass a call to the wrong function. (e) Place with srcpath (python tools/srcpath.py <symbol>); do not compose a path, because delinks.txt is written from what srcpath returns and a wrong path silently falls back to ROM bytes. (f) Preview the enrollment with tu_promote_plan (a dry run). Applying it, and the pre-push gates (rombuild, prepush_linkcheck, port_refcheck for renames, check_decl_agreement, romdata_check for owned data), belong to the finishing step in your own worktree, not to a Console button.\nEvery file in src/ MUST reproduce the ROM bytes (the `validate` CI check) and must not carry a raw asm transcription. A byte pass says nothing about whether the C++ is acceptable: source acceptance is separate, done by someone who did not write it, and recorded in the v2 queue (check_pr_source_review --pr N before landing; there is no CI check for it). Header edits move the codegen of every consumer (python tools/affected_src.py <header> first). Take types from the real headers (#include \"common.h\") instead of declaring struct bodies locally; the langmode ratchet fails CI on new shadow declarations.\nPUBLISHING IS NOT YOURS. Class and translation-unit work lands through the v2 queue: a producer, an independent verifier, and one integrator who owns the order and publishes. Console does not open PRs for this work (autoPr is off for this project). Make local, focused commits in your worktree and hand the exact commit SHA plus the proof to the verifier. A PR title names the classes converted or functions matched; the body carries the proof (the RTTI and vtable evidence for a class-identity claim, the gate results for a promotion); one coherent change; tooling and CI changes go in a separate PR. How PRs are reviewed and merged: MERGE.md. Close-but-not-matching drafts go to nearmiss/db.jsonl via tools/nearmiss_db.py, never to src/. asm bodies are legal only under a HAND-ASM PRIMITIVE or NONMATCHING banner (notes/asm-policy.md).",
     "rules": "only your own legally dumped ROM; never commit the ROM, its assets, or extracted binaries - the one deliberate exception is the annotated disassembly TEXT of still-unmatched functions, published in the coordination data (chaos-data branch) so contributors can work, the same practice as decomp repos committing .s files; import struct/field knowledge (see CREDITS.md) but write all C from scratch.",
     "nearMissNote": "If a function will not fully match after real effort, do not discard your best attempt - it is still valuable. Store the closest compiling draft as a near-miss (highest-yield input to the refine tier); most matches now start from someone's stored near-miss. Log tries with tools/log_attempt.py (attempt tree); tip C still in nearmiss/db.jsonl via --src; final how via tools/stamp_provenance.py (not tools/bank.py fan-out).",
     "matchConventions": {
@@ -26,7 +26,9 @@
         "model": "grok-4.5",
         "reasoning": "high",
         "harness": "grok-build"
-      }
+      },
+      "autoPr": false,
+      "srcLayout": "Promoted translation units are filed by what the class is, under src/game/actors/ (d_a_foo.cpp), src/game/player/, src/game/stages/, src/minigames/, src/runtime/actor/, src/ui/hud/ and src/engine/<subsystem>/ (notes/src-domain-buckets.md). A class with a ROM RTTI name is filed under its snake_case stem (daFoo_c -> d_a_foo.cpp, tools/tu_names.py); a class we coined keeps its class name. Do not compose the path: ask python tools/srcpath.py <symbol> (new files: srcpath.new_path_for(symbol, 'cpp')). Legacy one-function files still sit flat as src/<symbol>.c|.cpp until their unit is promoted."
     },
     "knownWalls": "PROVEN unreachable from source (see notes/matching-style.md 'Known walls') - not an excuse to give up, but if your near-miss has collapsed to EXACTLY one of these, verify it, tell the user it's a known wall, and move on/hand to the permuter instead of grinding. (1) FIRST-ACCESS-FOLD: a single read-modify-write through base+offset (x->flag |= BIT) is 'add rN,base,#off; ldr [rN]; op; str [rN]' in the ROM but folds to 'ldr [base,#off]' from ALL C/C++ (array-index/pointer/(int)-cast/volatile/C++ inheritance, -O1..-O4, any version, permuter) - the whole tiny-arm9 flag-setter cluster (WithMeshClsn/BgCh setters, func_020353e0..func_02035784). If your ONLY divergence is that 1-instr materialization, it's the wall. (2) PURE SCHEDULING: same instructions reordered (load/store batching, cond-move polarity), same size, no statement/operand order changes it - the permuter can't flip it either."
   },
@@ -149,6 +151,12 @@
       "label": "Match logging",
       "order": 8,
       "description": "Attempt tree + provenance how-records (Console stack)."
+    },
+    {
+      "id": "classtu",
+      "label": "Class / TU",
+      "order": 3.5,
+      "description": "Convert matched code to real C++ classes and fold it into translation units: placement, compiler-spelled names, whole-unit verify, promotion plan, gates."
     }
   ],
   "console": {
@@ -452,7 +460,7 @@
     },
     {
       "id": "match",
-      "label": "Verify one function",
+      "label": "Verify one function or method",
       "category": "analysis",
       "readOnly": true,
       "command": "{python} tools/match.py {flags}",
@@ -460,14 +468,14 @@
         "rom",
         "compiler"
       ],
-      "description": "The oracle: compile a candidate C file with mwccarm and relocation-aware byte-compare it to the ROM. Without --version it sweeps the default version list and reports the best. This is the ground-truth verifier; it does not bank anything.",
+      "description": "The oracle for one function: compile a candidate C or C++ file with the pinned mwccarm and relocation-aware byte-compare it to the ROM. Without --version it compiles once with the canonical 2004/b56 (pass --all to sweep every build). A //cpp first line, or a .cpp scratch file marked //cpp, selects C++ with the build's -Cpp_exceptions off. This is the ground-truth verifier for a single function; it does not bank anything. A multi-function translation unit is verified as a unit with tubuild_verify, not with this.",
       "args": [
         {
           "name": "c",
           "type": "string",
           "flag": "--c",
           "required": true,
-          "description": "Path to the candidate C/C++ file."
+          "description": "Path to the candidate C/C++ file (a scratch file for a method of a class, or a legacy src/ file)."
         },
         {
           "name": "func",
@@ -494,8 +502,14 @@
           "name": "version",
           "type": "string",
           "flag": "--version",
-          "default": "1.2/sp2p3",
-          "description": "mwccarm version, e.g. 1.2/sp2p3. Omit to sweep."
+          "default": "2004/b56",
+          "description": "mwccarm version. Use the canonical 2004/b56 (the default the repo builds with); only sweep other builds deliberately."
+        },
+        {
+          "name": "all",
+          "type": "boolean",
+          "flag": "--all",
+          "description": "Sweep every known mwccarm build instead of the single canonical one."
         },
         {
           "name": "flags",
@@ -675,6 +689,681 @@
           "type": "string",
           "positional": true,
           "description": "One or more mangled names (space separated)."
+        }
+      ]
+    },
+    {
+      "id": "tiers",
+      "label": "Three tiers",
+      "category": "reporting",
+      "readOnly": true,
+      "command": "{python} tools/tiers.py {flags}",
+      "description": "Report the three independent progress numbers: MATCHED (bytes equal the ROM), CONVERTED (readable C++: real name, no raw offsets, no unk_ fields, no codegen tricks, real call names) and LINKED (the matched unit reaches the PC port). CONVERTED is the one that moves.",
+      "args": [
+        {
+          "name": "json",
+          "type": "boolean",
+          "flag": "--json",
+          "description": "Machine-readable output (the block chaos-db.json carries)."
+        }
+      ]
+    },
+    {
+      "id": "srcpath",
+      "label": "Where does this symbol live",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/srcpath.py {flags}",
+      "description": "Resolve a symbol to its src/ path. A function folded into a translation unit resolves to that unit's file, so several symbols can share one path. Never compose a src/ path yourself: delinks.txt is written from this tool's answer.",
+      "args": [
+        {
+          "name": "symbol",
+          "type": "string",
+          "positional": true,
+          "description": "Symbol to look up (the compiler-spelled name for a method)."
+        },
+        {
+          "name": "index",
+          "type": "boolean",
+          "flag": "--index",
+          "description": "Dump the whole symbol-to-path map as JSON."
+        }
+      ]
+    },
+    {
+      "id": "mangle",
+      "label": "Ask the compiler for symbol names",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "compiler"
+      ],
+      "command": "{python} tools/mangle.py {flags}",
+      "description": "Compiler oracle, not a hand mangler. Compiles a C++ source with the pinned 2004/b56 flags (-lang c++ -Cpp_exceptions off) and lists the symbols it defines, so substitutions, thunks and constructor/destructor variants are the compiler's answer. Use --expect to require an exact symbol.",
+      "args": [
+        {
+          "name": "file",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "C/C++ source with the definitions to compile as C++."
+        },
+        {
+          "name": "expect",
+          "type": "string",
+          "flag": "--expect",
+          "description": "Require this exact emitted symbol."
+        },
+        {
+          "name": "mangled_only",
+          "type": "boolean",
+          "flag": "--mangled-only",
+          "description": "Show only _Z-prefixed symbols."
+        },
+        {
+          "name": "details",
+          "type": "boolean",
+          "flag": "--details",
+          "description": "Also show ELF type, binding and size."
+        },
+        {
+          "name": "json",
+          "type": "boolean",
+          "flag": "--json",
+          "description": "Structured output."
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "flag": "--version",
+          "description": "mwccarm version. Default 2004/b56."
+        },
+        {
+          "name": "include_dir",
+          "type": "string",
+          "flag": "--include-dir",
+          "description": "Extra include directory before include/."
+        }
+      ]
+    },
+    {
+      "id": "tu_map",
+      "label": "Translation-unit map",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/tu_map.py {flags}",
+      "description": "Recover the original translation-unit boundaries the linker erased (build/tu_map.json). With --module and --verbose, lists a module's units and their functions. Needs build/rtti.json and build/rtti_vtables.json first: run rtti_extract, then rtti_vtables with out=build/rtti_vtables.json.",
+      "args": [
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Analyse one module and print it, e.g. ov045."
+        },
+        {
+          "name": "verbose",
+          "type": "boolean",
+          "flag": "--verbose",
+          "description": "List functions per unit."
+        },
+        {
+          "name": "check",
+          "type": "boolean",
+          "flag": "--check",
+          "description": "Run the validation gates."
+        }
+      ]
+    },
+    {
+      "id": "tubuild_list",
+      "label": "Unit candidates",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/tubuild.py list {flags}",
+      "description": "Candidate translation units from build/tu_map.json with their state (shadow, text-verified, link-verified, promoted).",
+      "args": [
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Restrict to one module, e.g. ov045."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit",
+          "description": "Max rows."
+        },
+        {
+          "name": "verify_sample",
+          "type": "integer",
+          "flag": "--verify-sample",
+          "description": "Sample N functions with build_pin.verify (default 5, 0 to skip)."
+        }
+      ]
+    },
+    {
+      "id": "tubuild_inspect",
+      "label": "Inspect one unit",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/tubuild.py inspect {flags}",
+      "description": "Full detail for one candidate unit: its functions, classes, manifest entry and state.",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "Translation-unit id as <module>/<unit>, e.g. ov045/PoleLift (python tools/tubuild.py list shows the candidates)."
+        }
+      ]
+    },
+    {
+      "id": "tubuild_create",
+      "label": "Create a shadow unit",
+      "category": "classtu",
+      "readOnly": false,
+      "command": "{python} tools/tubuild.py create {flags}",
+      "description": "Generate a shadow .cpp under src_tu/ plus a manifest entry from the existing one-function sources. Only when no usable candidate exists yet. Writes src_tu/ and config/tu_manifest.d/ (never src/).",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "Translation-unit id as <module>/<unit>, e.g. ov045/PoleLift (python tools/tubuild.py list shows the candidates)."
+        },
+        {
+          "name": "force",
+          "type": "boolean",
+          "flag": "--force",
+          "description": "Overwrite an existing shadow source."
+        }
+      ]
+    },
+    {
+      "id": "tubuild_compile",
+      "label": "Compile a unit",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom",
+        "compiler"
+      ],
+      "command": "{python} tools/tubuild.py compile {flags}",
+      "description": "Compile the unit's shadow .cpp with the pinned toolchain into build/tu/. No byte comparison; use tubuild_verify for that.",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "Translation-unit id as <module>/<unit>, e.g. ov045/PoleLift (python tools/tubuild.py list shows the candidates)."
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "flag": "--version",
+          "description": "Force a compiler version (exploratory only)."
+        }
+      ]
+    },
+    {
+      "id": "tubuild_verify",
+      "label": "Verify a whole unit",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom",
+        "compiler"
+      ],
+      "longRunning": true,
+      "command": "{python} tools/tubuild.py verify --no-write {flags}",
+      "description": "The whole-unit truth: one compile of the unit, then every member's bytes, relocation types and relocation destinations checked against the ROM (match.py, objisolate, reloc_audit). Runs with --no-write, so it never changes the manifest. A masked byte match is not enough; this is the check that catches a call to the wrong function.",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "Translation-unit id as <module>/<unit>, e.g. ov045/PoleLift (python tools/tubuild.py list shows the candidates)."
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "flag": "--version",
+          "description": "Force a compiler version (exploratory only)."
+        }
+      ]
+    },
+    {
+      "id": "tubuild_linkcheck",
+      "label": "Link-check a unit",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom",
+        "compiler"
+      ],
+      "longRunning": true,
+      "command": "{python} tools/tubuild.py linkcheck {flags}",
+      "description": "Whole-range link in a scratch tree: substitutes the unit and compares the linked module with the ROM. --baseline runs the same pipeline with no substitution (the control that says whether a failure belongs to the unit or the harness); --partitioned and --partial are the other link modes.",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "positional": true,
+          "description": "Translation-unit id as <module>/<unit>, e.g. ov045/PoleLift (python tools/tubuild.py list shows the candidates)."
+        },
+        {
+          "name": "baseline",
+          "type": "boolean",
+          "flag": "--baseline",
+          "description": "Control run with no unit substituted (needs --module)."
+        },
+        {
+          "name": "partial",
+          "type": "boolean",
+          "flag": "--partial",
+          "description": "Substitute N derived per-function objects."
+        },
+        {
+          "name": "partitioned",
+          "type": "boolean",
+          "flag": "--partitioned",
+          "description": "Retain N ROM-ordered text entries plus one exact data owner."
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Module for --baseline without an id."
+        },
+        {
+          "name": "jobs",
+          "type": "integer",
+          "flag": "-j",
+          "description": "Parallel compiles."
+        },
+        {
+          "name": "no_rom",
+          "type": "boolean",
+          "flag": "--no-rom",
+          "description": "Stop after the module comparison."
+        },
+        {
+          "name": "clean",
+          "type": "boolean",
+          "flag": "--clean",
+          "description": "Delete this unit's scratch tree first."
+        }
+      ]
+    },
+    {
+      "id": "tu_promote_plan",
+      "label": "Promotion plan (dry run)",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/tu_promote.py --dry-run {flags}",
+      "description": "Report what promoting a text-verified unit would touch (move the source to its production path, retire the absorbed one-function files, rewrite delinks.txt and the manifest) and change nothing. This entry is a dry run on purpose: tu_promote.py mutates by default, so applying it is done by hand in your own worktree, after tubuild_verify and tubuild_linkcheck, not through Console.",
+      "args": [
+        {
+          "name": "ids",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "Manifest entry id, e.g. ov045/PoleLift."
+        }
+      ]
+    },
+    {
+      "id": "rombuild",
+      "label": "Full ROM build and check",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom",
+        "compiler"
+      ],
+      "longRunning": true,
+      "command": "{python} tools/rombuild.py {flags}",
+      "description": "The pre-push gate: compile every enrolled source, link, and byte-diff every module against the retail ROM (106/106 modules exact, mismatching: 0). Compiled objects are cached by content in build/objcache, so only what a change reaches is recompiled. Writes only build/.",
+      "args": [
+        {
+          "name": "jobs",
+          "type": "integer",
+          "flag": "-j",
+          "description": "Parallel compiles, e.g. 16."
+        },
+        {
+          "name": "no_rom",
+          "type": "boolean",
+          "flag": "--no-rom",
+          "description": "Link and verify but skip .nds packaging (the usual pre-push form)."
+        },
+        {
+          "name": "partitioned_tu",
+          "type": "string",
+          "flag": "--partitioned-tu",
+          "description": "Verify one proven merged unit with the full production gates, e.g. ov002/daObjAbuku_c."
+        },
+        {
+          "name": "no_cache",
+          "type": "boolean",
+          "flag": "--no-cache",
+          "description": "Recompile everything, ignore build/objcache."
+        }
+      ]
+    },
+    {
+      "id": "prepush_linkcheck",
+      "label": "Pre-push link check",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom",
+        "compiler"
+      ],
+      "longRunning": true,
+      "command": "{python} tools/prepush_linkcheck.py {flags}",
+      "description": "Link-verify the matched src/ files in a commit range, consumers of changed headers included. match.py wildcards relocated words, so a call to the wrong function can match locally and fail CI as WRONG-DEST; this catches it. Inspects commits, not uncommitted edits.",
+      "args": [
+        {
+          "name": "range",
+          "type": "string",
+          "flag": "--range",
+          "description": "Git revision range, e.g. origin/main..HEAD."
+        },
+        {
+          "name": "files",
+          "type": "string",
+          "flag": "--files",
+          "description": "One explicit file (overrides --range)."
+        }
+      ]
+    },
+    {
+      "id": "port_refcheck",
+      "label": "Port reference check",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/port_refcheck.py {flags}",
+      "description": "Check port/'s literal src/ paths and symbol names for references stranded by a rename, a .c to .cpp migration or a file move. No compiler, no ROM, about a second. Run it before pushing anything that renames or moves a src/ or include/ file.",
+      "args": [
+        {
+          "name": "json",
+          "type": "string",
+          "flag": "--json",
+          "description": "Write the JSON report to this path."
+        }
+      ]
+    },
+    {
+      "id": "check_decl_agreement",
+      "label": "Declaration agreement",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/check_decl_agreement.py {flags}",
+      "description": "Do the tree's extern declarations of a symbol agree with its definition? A ratchet: existing disagreements are banked, a new one fails. --changed scopes it to what a branch can have broken. No compiler, no ROM, about twelve seconds. Include the real header instead of copying a declaration.",
+      "args": [
+        {
+          "name": "changed",
+          "type": "string",
+          "flag": "--changed",
+          "description": "Scan only what this branch can have broken; value is the base (default origin/main)."
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "flag": "--symbol",
+          "description": "Print every declaration and definition of one symbol."
+        },
+        {
+          "name": "inventory",
+          "type": "boolean",
+          "flag": "--inventory",
+          "description": "Headline counts and the worst offenders."
+        }
+      ]
+    },
+    {
+      "id": "romdata_check",
+      "label": "Owned data check",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom",
+        "compiler"
+      ],
+      "command": "{python} tools/romdata_check.py {flags}",
+      "description": "Compare the DATA a compiled source emits (vtables, typeinfo, static data) against the cartridge. A measurement, not a pass/fail gate: its exit status is not a verdict, read the per-symbol results and the emitted-symbol coverage. Use it for a unit that owns non-text data.",
+      "args": [
+        {
+          "name": "files",
+          "type": "string",
+          "flag": "--files",
+          "description": "The one source to compile without isolation, e.g. src/game/actors/d_a_foo.cpp."
+        }
+      ]
+    },
+    {
+      "id": "check_pr_source_review",
+      "label": "Source review evidence",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "network"
+      ],
+      "command": "{python} tools/check_pr_source_review.py {flags}",
+      "description": "Read the queue's independent source-review evidence for a PR: missing evidence, stale review, incomplete coverage and unresolved findings are blockers. Read-only (never publishes). Run immediately before landing a fleet PR.",
+      "args": [
+        {
+          "name": "pr",
+          "type": "string",
+          "flag": "--pr",
+          "required": true,
+          "description": "PR number."
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "flag": "--repo",
+          "description": "owner/repo if not the default."
+        }
+      ]
+    },
+    {
+      "id": "rtti_extract",
+      "label": "Class graph from RTTI",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom"
+      ],
+      "command": "{python} tools/rtti_extract.py {flags}",
+      "description": "Read the class graph out of the ROM's own RTTI (build/rtti.json): each polymorphic class's original name, vtable and base edges. Ground truth, not inference. The base of a class comes from here, never from field use.",
+      "args": [
+        {
+          "name": "report",
+          "type": "boolean",
+          "flag": "--report",
+          "description": "Print populations first."
+        },
+        {
+          "name": "check",
+          "type": "boolean",
+          "flag": "--check",
+          "description": "Fail unless the frozen census reproduces."
+        }
+      ]
+    },
+    {
+      "id": "rtti_vtables",
+      "label": "Vtable slots",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom"
+      ],
+      "command": "{python} tools/rtti_vtables.py {flags}",
+      "description": "Read each class's vtable and say which slots are its own code. --own CLASS lists one class's slots in order (the order the header must declare its virtuals).",
+      "args": [
+        {
+          "name": "report",
+          "type": "boolean",
+          "flag": "--report",
+          "description": "Summary report."
+        },
+        {
+          "name": "own",
+          "type": "string",
+          "flag": "--own",
+          "description": "One class: its own slots."
+        },
+        {
+          "name": "intermediates",
+          "type": "boolean",
+          "flag": "--intermediates",
+          "description": "Intermediate classes."
+        },
+        {
+          "name": "fields",
+          "type": "boolean",
+          "flag": "--fields",
+          "description": "Recover each intermediate's own fields from its own methods."
+        },
+        {
+          "name": "out",
+          "type": "string",
+          "flag": "--out",
+          "description": "Write the JSON here (build/rtti_vtables.json is what tu_map reads)."
+        }
+      ]
+    },
+    {
+      "id": "rtti_symbols",
+      "label": "Give RTTI records real symbols",
+      "category": "classtu",
+      "readOnly": false,
+      "apply": "--apply",
+      "command": "{python} tools/rtti_symbols.py {flags}",
+      "description": "Rename the ROM's type_info records and name strings to real symbols (_ZTI/_ZTS). Dry run by default; apply rewrites config/**/symbols.txt.",
+      "args": [
+        {
+          "name": "report",
+          "type": "boolean",
+          "flag": "--report",
+          "description": "Populations and deferred names."
+        },
+        {
+          "name": "revert",
+          "type": "boolean",
+          "flag": "--revert",
+          "description": "Plan the reverse rename."
+        },
+        {
+          "name": "include_referenced",
+          "type": "boolean",
+          "flag": "--include-referenced",
+          "description": "Also rename the deferred ones (does not rewrite src)."
+        }
+      ]
+    },
+    {
+      "id": "rom_class_names",
+      "label": "ROM class names",
+      "category": "classtu",
+      "readOnly": true,
+      "needs": [
+        "rom"
+      ],
+      "command": "{python} tools/rom_class_names.py {flags}",
+      "description": "Recover each class's ORIGINAL name from the cartridge's RTTI and say where the decomp's name agrees or was coined. A ROM-named class is filed under its snake_case stem; a coined name stays until the real one is recovered.",
+      "args": [
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Only this module, e.g. ov002."
+        },
+        {
+          "name": "all",
+          "type": "boolean",
+          "flag": "--all",
+          "description": "Include classes that agree."
+        },
+        {
+          "name": "json",
+          "type": "string",
+          "flag": "--json",
+          "description": "Write JSON to this path."
+        }
+      ]
+    },
+    {
+      "id": "tu_names",
+      "label": "Candidate file names",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/tu_names.py {flags}",
+      "description": "Candidate original file stems for the ROM's RTTI classes (daFoo_c -> d_a_foo). A naming convention, not a recovered __FILE__.",
+      "args": [
+        {
+          "name": "report",
+          "type": "boolean",
+          "flag": "--report",
+          "description": "Print the report."
+        },
+        {
+          "name": "check",
+          "type": "boolean",
+          "flag": "--check",
+          "description": "Validate."
+        }
+      ]
+    },
+    {
+      "id": "cpp_index",
+      "label": "Class index",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/cpp_index.py {flags}",
+      "description": "Class-level index of the tree: which classes exist, their methods, and which still have unmatched or near-miss symbols.",
+      "args": [
+        {
+          "name": "klass",
+          "type": "string",
+          "flag": "--class",
+          "description": "Filter by class name (case-insensitive)."
+        },
+        {
+          "name": "missing",
+          "type": "boolean",
+          "flag": "--missing",
+          "description": "Only classes with unmatched or near-miss symbols."
+        }
+      ]
+    },
+    {
+      "id": "langmode_audit",
+      "label": "Language-mode audit",
+      "category": "classtu",
+      "readOnly": true,
+      "command": "{python} tools/langmode_audit.py {flags}",
+      "description": "Static audit of the C/C++ gap: C++ symbols still built in C mode, hand-spelled mangled names, local shadow struct declarations, inline asm and laundering macros. Reads git-tracked files only, no compiler, no ROM. CI ratchets it.",
+      "args": [
+        {
+          "name": "by_class",
+          "type": "boolean",
+          "flag": "--by-class",
+          "description": "Group by class."
+        },
+        {
+          "name": "full",
+          "type": "boolean",
+          "flag": "--full",
+          "description": "Full listing."
         }
       ]
     },
@@ -934,7 +1623,7 @@
         "compiler"
       ],
       "longRunning": true,
-      "description": "Reconstruct the linked bytes of each banked match and byte-compare to the ROM with relocations resolved. Verdicts: VERIFIED, WRONG, BLIND-n, NO-REPRO, NO-SYM.",
+      "description": "Reconstruct the linked bytes of each banked match and byte-compare to the ROM with relocations resolved. Verdicts: VERIFIED, WRONG, BLIND-n, NO-REPRO, NO-SYM. For a multi-function unit use tubuild_linkcheck; before a push use prepush_linkcheck.",
       "args": [
         {
           "name": "module",

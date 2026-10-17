@@ -1,8 +1,8 @@
 {
   "id": "ov100/daBtfly_c",
   "module": "ov100",
-  "source": "src/actors/daBtfly_c.cpp",
-  "promoted_source": "src/actors/daBtfly_c.cpp",
+  "source": "src/game/actors/d_a_btfly.cpp",
+  "promoted_source": "src/game/actors/d_a_btfly.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -212,14 +212,14 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov100_02148600",
+      "symbol": "gButterflyFlyAnimationFile",
       "address": "0x02148600",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x43b; dExtFrameCtrl_c::LoadFile consumes it in InitResources and CleanupResources releases it"
     },
     {
-      "symbol": "data_ov100_02148608",
+      "symbol": "gButterflyModelFile",
       "address": "0x02148608",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -269,9 +269,9 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold _ZN9daBtfly_c6State6Ev and the one that held _ZN9daBtfly_c6State0Ev; kept the first, the other is commented out for review -- RESOLVED: no extern of this symbol survives in the cleaned TU. State0, State4 and State6 call the static dActor_c::Spawn method from the header. Verified: rombuild 106/106 exact, linkcheck 15/15.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold _ZN9daBtfly_c6State5Ev and the one that held _ZN9daBtfly_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the TU keeps one file-scope spelling, int RandomIntInternal(int *seed), shared by State0, State4, State5 and InitResources. Verified: rombuild 106/106 exact, linkcheck 15/15.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210d9d8' differs between the legacy file that used to hold _ZN9daBtfly_c16CleanupResourcesEv and the one that held _ZN9daBtfly_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the TU keeps one file-scope spelling, extern SharedFilePtr, used by InitResources and CleanupResources. Verified: rombuild 106/106 exact, linkcheck 15/15.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov100_02148600' differs between the legacy file that used to hold _ZN9daBtfly_c16CleanupResourcesEv and the one that held _ZN9daBtfly_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the TU keeps one file-scope spelling, extern SharedFilePtr, used by InitResources and CleanupResources. Verified: rombuild 106/106 exact, linkcheck 15/15.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gButterflyFlyAnimationFile' differs between the legacy file that used to hold _ZN9daBtfly_c16CleanupResourcesEv and the one that held _ZN9daBtfly_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the TU keeps one file-scope spelling, extern SharedFilePtr, used by InitResources and CleanupResources. Verified: rombuild 106/106 exact, linkcheck 15/15.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov100_02148668' differs between the legacy file that used to hold _ZN9daBtfly_c16CleanupResourcesEv and the one that held _ZN9daBtfly_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the TU keeps one file-scope spelling, extern SharedFilePtr, used by InitResources and CleanupResources. Verified: rombuild 106/106 exact, linkcheck 15/15.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov100_02148608' differs between the legacy file that used to hold _ZN9daBtfly_c16CleanupResourcesEv and the one that held _ZN9daBtfly_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the TU keeps one file-scope spelling, extern SharedFilePtr, used by InitResources and CleanupResources. Verified: rombuild 106/106 exact, linkcheck 15/15.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gButterflyModelFile' differs between the legacy file that used to hold _ZN9daBtfly_c16CleanupResourcesEv and the one that held _ZN9daBtfly_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the TU keeps one file-scope spelling, extern SharedFilePtr, used by InitResources and CleanupResources. Verified: rombuild 106/106 exact, linkcheck 15/15.",
     "RTTI/vtable licensing: this TU is the key-function TU for the class. Its object emits _ZTV9daBtfly_c (0x84) plus the ancestor RTTI chain (_ZTI/_ZTS for daBtfly_c, dActor_c, dBase_c, fBase_c) into .data. The manifest sections list is .text ONLY, so a later promotion will fail isolate with 'unlicensed content in text-only multi-symbol object' until a .data range is licensed here. Text-verification is unaffected.",
     "ROM homes, from config/arm9/overlays/ov100/symbols.txt: _ZTV9daBtfly_c at 0x02147e9c, aliased at the same address by _ZTV9daBtfly_c; the class's ROM RTTI name is daBtfly_c (_ZTS at 0x02147e60, _ZTI at 0x02147e6c). All sit in the ov100 .data range 0x02147e20..0x02148600, outside this TU's .text span. g_profile_BUTTERFLY at 0x02147e78 is interleaved between the RTTI records and the vtable, so a .data license here is not one contiguous interval.",
     "Vtable length discrepancy, unresolved and NOT specific to this class: the compiled object emits _ZTV9daBtfly_c at 0x84 (33 words), but in ROM the gap from 0x02147e9c to the next named symbol (data_ov100_02147f18) is 0x7c -- 8 bytes / 2 slots shorter. ov072/daBgSnmHed_c shows exactly the same 0x84-vs-0x7c gap. 31 words is the documented dActor_c vtable length, so the tree's dActor_c-derived class headers appear to declare two virtuals more than the ROM's. Measured by symbol adjacency only, not disassembled. It does not affect text verification (15/15 MATCH) but should be settled before anyone licenses a .data range for these TUs.",
@@ -281,7 +281,7 @@
     "Declarations reconciled by hand, from 23 conflicts tubuild flagged: (1) RandomIntInternal was declared 'int' by State5 and 'unsigned int' by State4, and State4 depends on the unsigned semantics -- it does % 3 and >> 0x10 on the result. Kept the int declaration and cast the five State4 call sites to unsigned int; that alone moved State4 from 9 words differing to MATCH. (2) Vec3_HorzAngle was kept with opaque const void* parameters, the spelling three of its four call sites use. (3) func_02035638's local void* redeclaration was dropped in favour of decl_common.h's int(u8*), with a cast at the one call site. (4) The four SharedFilePtr handles were declared as a local two-word SFP struct by InitResources and as SharedFilePtr by CleanupResources. include/SharedFilePtr.h is deliberately fieldless because the layout is not recovered, so the SFP shadow was dropped and the two '.b' reads rewritten as ((void**)and-sym)[1], which is the same address. The remaining flagged conflicts were parameter-name or discarded-return-type differences and needed no change.",
     "Promotion licensing (2026-09-22): the object's 11 unlicensed outputs are dispositioned through compiler_only_output rather than by licensing a .data section, which is the dominant landed shape for a text-only key-function TU (184 manifest entries carry deadstrip-data rows; ov002/daFeather_c is the same _ZTV/_ZTI/_ZTS + three-ancestor chain). A .data license is NOT possible at this boundary: the compiler emits _ZTS/_ZTI/_ZTV contiguously, but in ROM g_profile_BUTTERFLY (0x02147e78..0x02147e94) sits between _ZTI9daBtfly_c and the vtable storage start at _ZTV-8 = 0x02147e94, and g_profile_BUTTERFLY is emitted by daBtfly_c_classInit at 0x02141ea4, which is outside this TU's evidenced 15-function .text run. That supersedes the earlier 'not one contiguous interval' reading in the note above: with the two-word vtable preamble accounted for, _ZTI end (0x02147e78) and _ZTV-8 (0x02147e94) bracket the profile exactly, so the obstacle is factory ownership, not interval arithmetic. fold-lane-D-0929 folded daBtfly_c_classInit into this TU's .text (see the dedicated fold note below), which removes the factory-ownership obstacle described above; licensing the g_profile_BUTTERFLY/.data span itself is a separate, heavier data-owning promotion (reconstructing the registry-profile struct's real field values against ROM, as ov070/daBrq_c did for g_profile_BIRIKYU) and remains open follow-up work, NOT attempted by this fold.",
     "fold-lane-D-0929: folded the daBtfly_c_classInit registry factory (0x02141ea4..0x02141f04) into this already-promoted TU, widening the complete delinks.txt claim from 0x02140d80..0x02141ea4 to 0x02140d80..0x02141f04. The loose one-function source hand-called fBase_c::operator new(1012) + the inherited dActor_c ctor + this class's vtable store + six member subobjects in field order (ModelAnim, Model, dExtShadowModel_c x2, dBgCh_Actr, dCcAcPos_c); daBtfly_c has no user-declared constructor, so `new daBtfly_c()` reproduces the identical sequence with zero mangled calls. This TU's `#pragma defer_codegen off` (load-bearing for the opt_common_subs bracket around State2, per the header comment) never toggles back on, so it still governs emission for the new function too: source order equals ROM order, and the factory appends after InitResources. tools/tubuild.py verify reports 16/16 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (the existing _ZN9daBtfly_cD2Ev deadstrip row, from the out-of-line destructor, already covers the homeless base-object-destructor helper `return new` emits here). ov100's delinks.txt holds several unrelated classes (daIbl_c, daWanwan2_c, daWanwan2, daDoor_c, daStarGate_c, daFish_c, daObjPathLift_c); only daBtfly_c's hunk was touched. Retired: src/d_a_btfly.c (credited tangosdev, carried into attribution.json as a path#symbol override). This fold does NOT license g_profile_BUTTERFLY/.data -- see the promotion-licensing note above.",
-    "Static initializer folded: the BtflyModelFilePtr (file 0x43a) and BtflyAnimationFilePtr (file 0x43b) globals, their destructor-registration nodes, and the ButterflyState[8] table make mwcc emit __sinit_daBtfly_c.cpp itself (0x12c, raw-byte-identical to retail __sinit_ov100_021473bc with the same 19 relocation sites); the handwritten src/unnamed/ov100/__sinit_ov100_021473bc.c is retired. The eight descriptors live at 0x02147e20..0x02147e60 in slot-scrambled order (State5, State3, State4, State7, State1, State0, State2, State6); the initializer copies them into the table in slot order. This fold does NOT license g_profile_BUTTERFLY/.data -- see the promotion-licensing note above."
+    "Static initializer folded: the BtflyModelFilePtr (file 0x43a) and BtflyAnimationFilePtr (file 0x43b) globals, their destructor-registration nodes, and the ButterflyState[8] table make mwcc emit __sinit_d_a_btfly.cpp itself (0x12c, raw-byte-identical to retail __sinit_ov100_021473bc with the same 19 relocation sites); the handwritten src/unnamed/ov100/__sinit_ov100_021473bc.c is retired. The eight descriptors live at 0x02147e20..0x02147e60 in slot-scrambled order (State5, State3, State4, State7, State1, State0, State2, State6); the initializer copies them into the table in slot order. This fold does NOT license g_profile_BUTTERFLY/.data -- see the promotion-licensing note above."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -653,7 +653,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daBtfly_c.cpp",
+      "symbol": "__sinit_d_a_btfly.cpp",
       "address": "0x021473bc",
       "size": "0x12c",
       "binding": "STB_GLOBAL",
@@ -662,7 +662,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daBtfly_c.cpp",
+      "symbol": ".p__sinit_d_a_btfly.cpp",
       "address": "0x02147de8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -708,13 +708,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daBtfly_c.cpp",
+      "symbol": "__sinit_d_a_btfly.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daBtfly_c.cpp",
+      "symbol": ".p__sinit_d_a_btfly.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -826,7 +826,7 @@
       "source": "0x021474a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148608",
+      "symbol": "gButterflyModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148608"
@@ -856,7 +856,7 @@
       "source": "0x021474b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148600",
+      "symbol": "gButterflyFlyAnimationFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148600"
@@ -976,7 +976,7 @@
       "source": "0x02147de8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daBtfly_c.cpp",
+      "symbol": "__sinit_d_a_btfly.cpp",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021473bc"

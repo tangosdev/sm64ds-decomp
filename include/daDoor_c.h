@@ -8,7 +8,7 @@
 class Player;
 
 /* The plain warp door -- the leaf dActor_c child whose code is the ov100
- * linker unit 0x021443f4..0x021458d4, src/actors/daDoor_c.cpp (its registry
+ * linker unit 0x021443f4..0x021458d4, src/game/actors/d_a_door.cpp (its registry
  * factory included; daStarGate_c starts at 0x021458d4). Distinct from
  * StarDoor and daChRoom_c, which are their own classes/headers.
  *
@@ -34,14 +34,14 @@ class Player;
  *   9   Render             ov100 0x021454c8
  *   12  OnPendingDestroy   ov100 0x021454c4
  *
- * all five in src/actors/daDoor_c.cpp.
+ * all five in src/game/actors/d_a_door.cpp.
  *
  * (config/arm9/overlays/ov100/relocs.txt: 0x02148188/0x02148194/0x021481a0/
  * 0x021481ac/0x021481b8 -- the vtable words at slots 0/3/6/9/12 -- each load
  * exactly the addresses above.)
  *
  * REAL METHOD STATUS. The destructor and all five overrides are genuine
- * `daDoor_c::` definitions in src/actors/daDoor_c.cpp, byte-exact under the
+ * `daDoor_c::` definitions in src/game/actors/d_a_door.cpp, byte-exact under the
  * pinned 2004/b56 and built from that one translation unit. InitResources
  * was the last to convert: it was a C free function taking the object
  * explicitly, and its param1 shift keeps the redundant cast that reaches the
@@ -56,7 +56,7 @@ class Player;
  * (include/dActor_c.h) and ModelAnim is 0x64 (include/ModelAnim.h), so the
  * embedded ModelAnim runs 0xd4..0x138 (the same 4-byte alignment pad
  * include/dBgActor_c.h takes before its own Model member). That leaves
- * 0x138..0x147 (0x10 = 16 bytes) as this class's own storage, touched by the sources in src/actors/daDoor_c.cpp: two pointers at
+ * 0x138..0x147 (0x10 = 16 bytes) as this class's own storage, touched by the sources in src/game/actors/d_a_door.cpp: two pointers at
  * 0x138/0x13c, a state pointer at 0x140 (read in Behavior as a
  * pointer-to-member dispatch, written by func_ov100_021453d8), a key-model
  * index byte at 0x144 and a countdown byte at 0x145 (touched only by the
@@ -117,26 +117,26 @@ struct daDoor_c : dActor_c {
          mKeyModelIdx -- param1 - 8 for the 9..0xd range, re-zeroed for param1
                        0xc; mKeyModelIdx + 1 (taken before that re-zero, so
                        param1 - 7) indexes LoadKeyModels/data_ov089_02132894.
-       [src/actors/daDoor_c.cpp] */
+       [src/game/actors/d_a_door.cpp] */
     Model *mKeyModel;          /* 0x138 -- owned, see SIZE above */
     void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
     /* The current state: a 16-byte {enter, execute} pair of
        pointers-to-member, one of the nine tables data_ov100_021488a4 ..
        data_ov100_02148924. func_ov100_021453d8 stores it and calls the enter
        half; Behavior calls the execute half, a `void (daDoor_c::*)(int)` at
-       +0x8, on this daDoor_c. [src/actors/daDoor_c.cpp] */
+       +0x8, on this daDoor_c. [src/game/actors/d_a_door.cpp] */
     void *mState;                 /* 0x140 -- the state pair, see SIZE above */
     s8   mKeyModelIdx;            /* 0x144 -- key-model index */
     /* A countdown/phase byte. func_ov100_02144528 and func_ov100_02145080 tick
        it with DecIfAbove0_Byte and also set it directly (0x40 and 0x78 ticks,
        or the 0/1 result of Player::TryExitWhiteDoorWithStar), and it is zeroed
-       when a swing starts. The comments in src/actors/daDoor_c.cpp say what
+       when a swing starts. The comments in src/game/actors/d_a_door.cpp say what
        each does with it. */
     u8   mTimer;                  /* 0x145 */
     u8   pad_146[0x2];
 
     /* --- vtable. The out-of-line destructor is the key function:
-       src/actors/daDoor_c.cpp defines it, so that TU emits D1, D0, the vtable
+       src/game/actors/d_a_door.cpp defines it, so that TU emits D1, D0, the vtable
        and the RTTI. --- */
     virtual ~daDoor_c();
 

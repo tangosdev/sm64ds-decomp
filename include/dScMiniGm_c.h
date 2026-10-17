@@ -35,7 +35,7 @@ struct dScMiniGm_c : dScene_c {
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
 
-    void func_ov005_020c0378();
+    void UpdateGameSelect();
 };
 
 #ifndef SM64DS_PLATFORM_PC

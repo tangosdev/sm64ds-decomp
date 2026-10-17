@@ -27,7 +27,7 @@ This document describes this commit. The queue records its immutable output SHA.
   from the source branch and re-measured here rather than trusted (see ROM
   observations). dScStage_c artifacts present:
   `config/tu_manifest.d/ov078/daBombking_c.json`,
-  `src/actors/daBombking_c.cpp`, `include/daBombking_c.h`.
+  `src/game/actors/d_a_bombking.cpp`, `include/daBombking_c.h`.
 - Next action, responsible role and blockers: independent verification of this
   commit (verifier). No blocker is known for this class. Two conditions in the
   tree are recorded in Proof and belong to main, not to this candidate: a stale
@@ -46,10 +46,10 @@ This document describes this commit. The queue records its immutable output SHA.
   `ov078:[0x02123740,0x02126660)`, **52 functions**. Own metadata
   `_ZTS12daBombking_c` at 0x02126e18, `_ZTI12daBombking_c` at 0x02126e0c,
   vtable storage from 0x02126e44 with the address point at 0x02126e4c.
-  Fifty-two one-function sources become one `src/actors/daBombking_c.cpp`;
+  Fifty-two one-function sources become one `src/game/actors/d_a_bombking.cpp`;
   fifty-two `delinks.txt` entries become one `complete` span.
 - Reserved source/header/config surfaces actually touched by this commit:
-  `src/actors/daBombking_c.cpp` (new), the class header renamed from
+  `src/game/actors/d_a_bombking.cpp` (new), the class header renamed from
   `KingBobOmb.h` to `include/daBombking_c.h`,
   `config/tu_manifest.d/ov078/daBombking_c.json`
   (new), `config/arm9/overlays/ov078/delinks.txt`,
@@ -146,13 +146,13 @@ This document describes this commit. The queue records its immutable output SHA.
   confirms it: 0 DIFFERS.
 - Attribution preserved through each move/rename: the fold moves 52 symbols out
   of 52 one-function shards into one TU, which would otherwise hand their credit
-  to whoever pushed the fold. 52 `src/actors/daBombking_c.cpp#<symbol>`
+  to whoever pushed the fold. 52 `src/game/actors/d_a_bombking.cpp#<symbol>`
   override rows carry it instead, each holding the author `chaos_db_ci` resolves
   for that symbol's own legacy shard on the merge base. Of the 52, thirteen are
   owed to contributors other than the maintainer account: nine to `lunavyqo`,
   two to `ruspecial` and two to `andrewboudreau`. The rows were inserted
   **beside this class's sorted neighbours** (immediately after the
-  `src/actors/daBmb_c.cpp#...` block, indices 693-744 of 3,157) rather than
+  `src/game/actors/d_a_bmb.cpp#...` block, indices 693-744 of 3,157) rather than
   appended at the tail, so a concurrently landing PR appending at the tail does
   not collide with them -- and `516a883c4` did exactly that without conflict.
 - Remaining agreed issue scope: (1) turn the 44 free functions into members as
@@ -252,11 +252,11 @@ not committed.
     replay of the block the branch stored.
   - `python tools/linkcheck.py` driven **by symbol**, once per member with
     `--module ov078 --name <sym> --addr <a> --size <n> --c
-    src/actors/daBombking_c.cpp`: **52 VERIFIED, 0 BLIND, 0 anything else.**
+    src/game/actors/d_a_bombking.cpp`: **52 VERIFIED, 0 BLIND, 0 anything else.**
     Driven by symbol deliberately, because the file-stem path reports NO-SYM on
     a multi-symbol promoted TU.
-  - `python tools/pr_linkcheck.py --files src/actors/daBombking_c.cpp` -- exit
-    0, `ok  src/actors/daBombking_c.cpp (52 slot(s))`.
+  - `python tools/pr_linkcheck.py --files src/game/actors/d_a_bombking.cpp` -- exit
+    0, `ok  src/game/actors/d_a_bombking.cpp (52 slot(s))`.
   - `python tools/prepush_linkcheck.py --range origin/main..HEAD` -- exit 0;
     904 checked, 610 verified, 294 warnings, **0 blocking**. `daBombking_c`
     appears as `[WARN] NO-SYM`: that tool keys a file by its stem and a
@@ -274,7 +274,7 @@ not committed.
     candidate. For this route the whole-tree link proof is the full ROM build
     above. The manifest's stored `scratch-link-verified` block predates
     enrollment and is carried, not re-established, by this commit.
-  - `python tools/romdata_check.py --files src/actors/daBombking_c.cpp` -- exit
+  - `python tools/romdata_check.py --files src/game/actors/d_a_bombking.cpp` -- exit
     0. 11 data symbols emitted: **5 VERIFIED** (56 bytes equal), **6 PARTIAL**
     (172 bytes equal), **0 DIFFERS, 0 UNNAMED**. The five VERIFIED are every
     `_ZTI` record -- `_ZTI12daBombking_c` at ov078 0x02126e0c and the four
@@ -283,7 +283,7 @@ not committed.
     from `symbols.txt` because that extent runs to the next symbol. Short
     coverage, not a byte disagreement.
 - **Shared-header consumer expansion.** `python tools/affected_src.py
-  include/daBombking_c.h` -- the only consumer is `src/actors/daBombking_c.cpp`,
+  include/daBombking_c.h` -- the only consumer is `src/game/actors/d_a_bombking.cpp`,
   compiled by every check above. `python tools/check_header_offsets.py
   include/daBombking_c.h` -- exit 0, 23 commented fields, **0 mismatched**, 0
   unparsed, struct spans 0x50a.

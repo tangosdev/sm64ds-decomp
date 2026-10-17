@@ -48,11 +48,11 @@ struct dScMgCurling2_piece {
     u16 countdown3;     /* 0x18 */
     u8  pad1a[2];       /* 0x1a */
     u8  updateEnable;   /* 0x1c */
-    u8  modeIndex;      /* 0x1d, into data_ov006_02141988 */
-    u8  xIndex;         /* 0x1e, into data_ov006_021419f8 or _021419b8 */
-    u8  yIndex;         /* 0x1f, into data_ov006_021419a0 */
+    u8 modeIndex;       /* 0x1d, into sCurling2StepModeTable */
+    u8 xIndex;          /* 0x1e, into sCurling2StepXTable or _021419b8 */
+    u8 yIndex;          /* 0x1f, into sCurling2StepYTable */
     u8  drawEnable;     /* 0x20 */
-    u8  sprite0;        /* 0x21, into data_ov006_0213a5e0 */
+    u8 sprite0;         /* 0x21, into sCurlingBitSprites */
     u8  sprite1;        /* 0x22 */
     u8  pad23;          /* 0x23 */
 };
@@ -101,7 +101,7 @@ struct dScMgCurling2_c : dScMgBase_c {
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void StartRound(int arg);               /* slot 18 */
 
     /* Slot 18 left unnamed -- same reasoning as dScMgCurling_c.h. */
 
@@ -116,21 +116,21 @@ struct dScMgCurling2_c : dScMgBase_c {
      * Each name is derived from the byte the handler drives and from its index
      * in its own table, both read out of the cartridge:
      *
-     *   data_ov006_02141988 (+0x1d, the mode byte)
+     *   sCurling2StepModeTable (+0x1d, the mode byte)
      *     [0] PickStepMode   [1] StepXOnly   [2] StepXAndY
-     *   data_ov006_021419f8 (+0x1e, X increment, 8 a frame, +/-0x300)
+     *   sCurling2StepXTable (+0x1e, X increment, 8 a frame, +/-0x300)
      *     [0] StepXPick  [1] StepXPushPos  [2] StepXPushNeg  [3] StepXSettle
-     *   data_ov006_021419b8 (+0x1e, X increment, 0x20 a frame, +/-0x400)
+     *   sCurling2StepXFastTable (+0x1e, X increment, 0x20 a frame, +/-0x400)
      *     [0] StepXPickFast [1] StepXPushPosFast
      *     [2] StepXPushNegFast [3] StepXSettleFast
-     *   data_ov006_021419a0 (+0x1f, Y increment)
+     *   sCurling2StepYTable (+0x1f, Y increment)
      *     [0] StepYRestart   [1] StepYRampUp   [2] StepYRampDown
-     *   data_ov006_02141978 (the stylus drag)
+     *   sCurling2DragTable (the stylus drag)
      *     [0] DragBegin      [1] DragUpdate
      *
      * The index each handler writes back agrees with that layout in every case
      * -- the two pushers hand to 3, the settler hands to 0, the Y chain runs
-     * 0 -> 1 -> 2 -> 0 -- and data_ov006_0212e4f4/_0212e4f8/_0212e4fc, the ROM
+     * 0 -> 1 -> 2 -> 0 -- and sCurling2StepXPicks/_0212e4f8/_0212e4fc, the ROM
      * tables the two pickers and PickStepMode read from, hold exactly {1, 2}.
      * Those handlers step one dScMgCurling2_piece (the 0x48c0 array). The
      * method names are still coined; the ROM does not carry them.
@@ -161,8 +161,8 @@ struct dScMgCurling2_c : dScMgBase_c {
     void SpawnValue(int stone, int other);
 
     /* The rest of the class's members, proven the same way: the five
-     * Behavior-state handlers ride data_ov006_02141a18 on mState, the four
-     * stone-state handlers ride data_ov006_021419d8 on mStone[i].state, and
+     * Behavior-state handlers ride sCurling2BehaviorTable on mState, the four
+     * stone-state handlers ride sCurling2StoneTable on mStone[i].state, and
      * the remaining helpers take the object as their first argument. These
      * names are coined too; the ROM does not carry them. */
     void BeginRound();                 /* Behavior state 0 */
@@ -197,44 +197,44 @@ struct dScMgCurling2_c : dScMgBase_c {
     void DrawStones();
     void SeparateStones(int idx);
 
-    dScMgCurling2_stone mStone[11]; /* 0x4660, stride 0x30 */
-    dScMgCurling2_mark  mMark[5];      /* 0x4870 */
-    dScMgCurling2_piece mPiece[0x32];   /* 0x48c0 */
-    s32 bg2x;                /* 0x4fc8, BG2 scroll, 20.12 */
-    s32 bg2y;                /* 0x4fcc */
-    s32 scrollIdx;           /* 0x4fd0, scroll mode 0..3; 0xff repicks */
-    s32 bg0x;                /* 0x4fd4, BG0 scroll */
-    s32 bg0y;                /* 0x4fd8 */
-    u8  pad_4fdc[0x4];
-    dScMgCurling2_value mValue[0x3c];   /* 0x4fe0 */
-    s32 mState;              /* 0x5580, Behavior state, indexes data_ov006_02141a18 */
-    s32 unk_5584;            /* 0x5584, drag x (fx32) */
-    s32 unk_5588;            /* 0x5588, drag y */
-    s32 unk_558c;            /* 0x558c, drag x + grab x latch */
-    s32 unk_5590;            /* 0x5590, drag y at the last direction change */
-    s32 unk_5594;            /* 0x5594, drag x offset from the stylus */
-    s32 unk_5598;            /* 0x5598, drag y offset */
-    s32 unk_559c;            /* 0x559c, throw power */
-    s32 unk_55a0;            /* 0x55a0 */
-    s32 unk_55a4;            /* 0x55a4 */
-    s32 unk_55a8;            /* 0x55a8, last drag dy */
-    s32 unk_55ac;            /* 0x55ac */
-    u16 unk_55b0;            /* 0x55b0 */
-    u16 unk_55b2;            /* 0x55b2, throw angle */
-    u16 mSpawnTimer;         /* 0x55b4, counts down to the next stone */
-    u16 mStateTimer;         /* 0x55b6, state-entry countdown */
-    u8  unk_55b8;            /* 0x55b8, drag-state index into data_ov006_02141978 */
-    u8  unk_55b9;            /* 0x55b9 */
-    u8  thrown;              /* 0x55ba, stones thrown this round (0..5) */
-    u8  spawning;            /* 0x55bb, a stone is queued to spawn */
-    u8  gameOver;            /* 0x55bc, set once the last stone is thrown */
-    u8  sndCooldown;         /* 0x55bd, scrape-sound throttle */
-    u8  unk_55be;            /* 0x55be, drag phase */
-    u8  combo;               /* 0x55bf, collision-streak counter for SpawnValue */
-    u8  unk_55c0;            /* 0x55c0 */
-    u8  unk_55c1;            /* 0x55c1 */
-    u8  unk_55c2;            /* 0x55c2 */
-    u8  unk_55c3;            /* 0x55c3 */
+    dScMgCurling2_stone mStone[11];   /* 0x4660, stride 0x30 */
+    dScMgCurling2_mark mMark[5];      /* 0x4870 */
+    dScMgCurling2_piece mPiece[0x32]; /* 0x48c0 */
+    s32 bg2x;                         /* 0x4fc8, BG2 scroll, 20.12 */
+    s32 bg2y;                         /* 0x4fcc */
+    s32 scrollIdx;                    /* 0x4fd0, scroll mode 0..3; 0xff repicks */
+    s32 bg0x;                         /* 0x4fd4, BG0 scroll */
+    s32 bg0y;                         /* 0x4fd8 */
+    u8 pad_4fdc[0x4];
+    dScMgCurling2_value mValue[0x3c]; /* 0x4fe0 */
+    s32 mState;                       /* 0x5580, Behavior state, indexes sCurling2BehaviorTable */
+    s32 mDragX;                       /* 0x5584, drag point x (fx32) */
+    s32 mDragY;                       /* 0x5588, drag point y */
+    s32 mGrabX;                       /* 0x558c, drag x + grab offset, latched at the grab */
+    s32 mTurnY;                       /* 0x5590, drag y at the last direction change */
+    s32 mDragOffsetX;                 /* 0x5594, drag point x offset from the stylus */
+    s32 mDragOffsetY;                 /* 0x5598, drag point y offset */
+    s32 mThrowPower;                  /* 0x559c, throw power, capped at 0xc000 */
+    s32 unk_55a0;                     /* 0x55a0 */
+    s32 unk_55a4;                     /* 0x55a4 */
+    s32 mLastDragDy;                  /* 0x55a8, last vertical drag step */
+    s32 mTopRecord;                   /* 0x55ac, Mg_GetTopRecord() at round start */
+    u16 unk_55b0;                     /* 0x55b0 */
+    u16 mThrowAngle;                  /* 0x55b2, throw angle, clamped to 0x9800..0xe800 */
+    u16 mSpawnTimer;                  /* 0x55b4, counts down to the next stone */
+    u16 mStateTimer;                  /* 0x55b6, state-entry countdown */
+    u8 mDragState;                    /* 0x55b8, drag-state index into sCurling2DragTable */
+    u8 mShowCursor;                   /* 0x55b9, DrawCursor draws while set */
+    u8 thrown;                        /* 0x55ba, stones thrown this round (0..5) */
+    u8 spawning;                      /* 0x55bb, a stone is queued to spawn */
+    u8 gameOver;                      /* 0x55bc, set once the last stone is thrown */
+    u8 sndCooldown;                   /* 0x55bd, scrape-sound throttle */
+    u8 mDragPhase;                    /* 0x55be, vertical direction-change phase */
+    u8 combo;                         /* 0x55bf, collision-streak counter for SpawnValue */
+    u8 unk_55c0;                      /* 0x55c0 */
+    u8 unk_55c1;                      /* 0x55c1 */
+    u8 unk_55c2;                      /* 0x55c2 */
+    u8 mShowCounter;                  /* 0x55c3, DrawCounter draws while set */
 };
 
 #ifndef SM64DS_PLATFORM_PC

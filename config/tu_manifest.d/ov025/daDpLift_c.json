@@ -1,8 +1,8 @@
 {
   "id": "ov025/daDpLift_c",
   "module": "ov025",
-  "source": "src/actors/daDpLift_c.cpp",
-  "promoted_source": "src/actors/daDpLift_c.cpp",
+  "source": "src/game/actors/d_a_dp_lift.cpp",
+  "promoted_source": "src/game/actors/d_a_dp_lift.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -137,7 +137,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN10daDpLift_c8BehaviorEv and the one that held _ZN10daDpLift_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH mangled declarations (two void * spellings of the same call): the merged TU calls UpdateClsnPosAndRot() and UpdateModelPosAndRotY() as dBgActor_c members through dBgActor_c.h. No TUBUILD CONFLICT marker survives in the merged source.",
     "The legacy InitResources source carried `#pragma opt_strength_reduction off`. It is live (without it InitResources DIFFs) and is carried as a push/pop bracket around that one member, which binds only because the TU is under `#pragma defer_codegen off`.",
     "Retired helpers: the legacy D1/D0 sources were uncalled PyramidLift_EmitDestructor / PyramidLift_EmitDeletingDestructor helpers that forced one inline variant each; the TU defines the destructor once instead.",
-    "the compiler-generated __sinit_daDpLift_c.cpp is byte-identical to retail __sinit_ov025_02112aac (0x6c, ten relocations). It constructs the model handle at 0x02113ae0 (file 1505) and the collision handle at 0x02113ad8 (file 1506) and registers both destructors. The ctor word at 0x02112b24 points at that initializer."
+    "the compiler-generated __sinit_d_a_dp_lift.cpp is byte-identical to retail __sinit_ov025_02112aac (0x6c, ten relocations). It constructs the model handle at 0x02113ae0 (file 1505) and the collision handle at 0x02113ad8 (file 1506) and registers both destructors. The ctor word at 0x02112b24 points at that initializer."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -462,7 +462,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daDpLift_c.cpp",
+      "symbol": "__sinit_d_a_dp_lift.cpp",
       "address": "0x02112aac",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -471,7 +471,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daDpLift_c.cpp",
+      "symbol": ".p__sinit_d_a_dp_lift.cpp",
       "address": "0x02112b24",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -517,13 +517,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daDpLift_c.cpp",
+      "symbol": "__sinit_d_a_dp_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daDpLift_c.cpp",
+      "symbol": ".p__sinit_d_a_dp_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -647,7 +647,7 @@
       "source": "0x02112b24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daDpLift_c.cpp",
+      "symbol": "__sinit_d_a_dp_lift.cpp",
       "addend": 0,
       "target_module": "ov025",
       "target_address": "0x02112aac"

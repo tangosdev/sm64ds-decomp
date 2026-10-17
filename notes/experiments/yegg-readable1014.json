@@ -1,0 +1,428 @@
+{
+  "schema": 1,
+  "task_id": "yegg-readable1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3847",
+  "status": "locally proved producer candidate; independent Source review and final current-base acceptance pending",
+  "completion": "partial",
+  "formal_acceptance": false,
+  "identity": {
+    "actual_source_author_session": "codex-yegg-readable-producer1014",
+    "harness_agent": "Codex /root/scene_producer_recovery",
+    "same_actual_agent_aliases": [
+      "codex-fbase-dispatch-producer1014",
+      "codex-scene-report-recovery1014",
+      "codex-native-main-review1014"
+    ],
+    "role": "author of the private and adopted Yegg Source rewrite and descriptor-binding manifest update; not its independent reviewer",
+    "actual_producer_lease_id": "778ac34b-0e8d-4d40-b3ac-f9522981d46a",
+    "lease_is_not_a_model_session_UUID": true,
+    "inherited_queue_producer_sessions": [
+      "claude-producer-0930d",
+      "codex-yegg-readable-producer1014"
+    ],
+    "predecessor_tasks": [
+      "ov002-yegg-heyho-rename-0930d"
+    ],
+    "inherited_findings": {},
+    "matching_authorship": "Address-keyed function-authors.json and all credit/rename ledgers unchanged; previous Source producers retained."
+  },
+  "binding": {
+    "queue_claim_input": "1ea12ec7432b56ee8ebd8a783b68602781df59d7",
+    "queue_task_base": "1ea12ec7432b56ee8ebd8a783b68602781df59d7",
+    "tested_composed_source_base": "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2",
+    "tested_source_and_manifest_checkpoint": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+    "tested_five_trees": {
+      "src": "12d75393f639d59b2c00738c33114a2e60551dd0",
+      "include": "9a7fe3dd2d6c10927c6604d70dc4bfaca9c614ae",
+      "config": "84389aed858aaf0d981555c415ccb4ecb0fc523e",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "report_commit_binding": "This commit contains the report and the already tested Source/manifest checkpoint. Final five-tree equality is checked and retained privately after the report-only commit; queue records immutable final output.",
+    "selected_source_headers_manifest_unchanged_during_main_composition": true,
+    "upstream_source_changes_in_composition": [
+      "src/actors/dActor_c.cpp",
+      "src/actors/daPropeller_Heyho_Fire_c.cpp"
+    ],
+    "upstream_claim_limit": "This report judges/proves this Yegg slice; upstream Source judgments remain their independently accepted lineage, not newly authored or accepted here."
+  },
+  "change": {
+    "source": "src/actors/daYegg_c.cpp",
+    "manifest": "config/tu_manifest.d/ov002/daYegg_c.json",
+    "report": "notes/experiments/yegg-readable1014.json",
+    "source_sha256": "3c7e7786992ec03dbf8a28531f9be36358038aa68c95933ec26c3091fc61ae6a",
+    "manifest_sha256": "f4953e0bf6a666085fdd8107c3b547008304e5bff502e871fa111a1ac597abda",
+    "operations": [
+      "Use the real dActor_c virtual OnAimedAtWithEggReturnVec() and Vector3 result in 020ecd18; remove custom Vec3 and 31-slot VObj stand-ins.",
+      "Use the existing integer dActor_c::Virtual50() in 020edb3c; remove the 21-slot VObjQuery stand-in and preserve the variant-only query after prior actor/target guards.",
+      "Use real dBgCh_Gnd automatic lifetime in 020ed7f8, native SetObjAndPos/DetectClsn, and clsnY; remove opaque80B buffer, four replaced C-ABI declarations and manual lifecycle calls. Construct exactly after opacity guard and vector setup at the old C1 call, preserving early-return paths and final destruction.",
+      "Update only eight existing defined_symbol_renames from fields and evidence to bind the compiler-generated PMF descriptor names; original licensed to names/addresses, full claims and all metadata/canonical/deadstrip policy remain unchanged.",
+      "Repair the obsolete leftover prose about a raw ground-probe result."
+    ],
+    "no_shared_header_or_global_symbol_or_enrollment_changes": true,
+    "no_new_helper_class_or_function_alias_or_deadstrip_rule": true,
+    "new_real_member_definition_count": 0,
+    "interface_progress": "Existing real methods now replace fake virtual receiver views and an opaque manually managed object. This is a meaningful interface/lifetime reconstruction slice, not a claim that the entire already promoted TU is complete."
+  },
+  "source_evidence": {
+    "class_identity": "Existing daYegg_c RTTI length-prefixed class string and YOSHI_EGG registry profile; this slice adds no original-name inference.",
+    "virtual_receiver_contract": "dActor_c.h declares integer Virtual50 at slot20/+0x50 and Vector3 OnAimedAtWithEggReturnVec at slot30/+0x78. Preserve integer behavior rather than narrowing to bool. Current member identifiers are reconstructed, not recovered original method names.",
+    "ground_layout_lifetime": "Existing dBgCh_Gnd.h declares two real polymorphic bases and complete-object0x50 size, clsnY+0x44, constructor/destructor and typed methods. Actual target416B retains original guard, constructor point, reads and destructor schedule.",
+    "aggregate_return": "Target636B and all typed reference records match exactly; native Vector3 return has the same actual hidden-result/copy path here despite the removed custom-copy stand-in. No general claim about aggregate-return codegen elsewhere.",
+    "history": [
+      "ca232c8ef3 memberified24 self-first helpers",
+      "6c236e3939 folded the initializer",
+      "11817624cd adopted Player calls",
+      "notes/agents/handoffs/issue-2492-cup-source-review.md records the integer Virtual50/020edc28 actor-family contract"
+    ],
+    "independent_review_required": true
+  },
+  "object_proof": {
+    "compiler": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "canary": {
+      "source": "C:/tmp/sm64ds-yegg-readable1014/src/actors/dMgTrmpln2Mario_c.cpp",
+      "symbol": "func_ov006_020cb030",
+      "module": "ov006",
+      "addr": "0x020cb030",
+      "size": 260,
+      "result": [
+        true,
+        "2004/b56"
+      ]
+    },
+    "raw_sha256": "fae0ebdbbbc414f6720f22f1e61385cfa9564e49a1841d1ca817b9b65a5dad3c",
+    "prepared_sha256": "beec13f2ad3112592a96fb31254dfb6351306802db41076c722f3c449dc8f5f5",
+    "ordinary_prepared_entire_ELF_literal_equal_control": true,
+    "raw_allocated_bytes_graphs_defined_symbols_equal_control_after_exact8compiler_local_name_correspondence": true,
+    "raw_container_limit": "Raw ELF compiler temporary name strings differ legitimately. Global best-effort @ names may resolve unrelated TUs; proved descriptor identities use their actual local sections/bytes/target graphs. Ordinary prepared output is independently strict and literally equal.",
+    "unique_text_functions": 33,
+    "text_function_bytes": 7872,
+    "initializer_functions": 1,
+    "initializer_bytes": 220,
+    "unique_total_functions": 34,
+    "total_function_bytes": 8092,
+    "typed_function_refs": 231,
+    "initializer_refs": 9,
+    "strict_result": "34 VERIFIED, zero differing words and zero blind relocations",
+    "raw_allocated": {
+      "nonempty_allocated_sections": 57,
+      "allocated_bytes": 8541,
+      "nonexecutable_allocated_bytes": 373,
+      "all_allocated_relocation_count": 292
+    },
+    "prepared_allocated": {
+      "nonempty_allocated_sections": 44,
+      "allocated_bytes": 8224,
+      "nonexecutable_allocated_bytes": 132,
+      "all_allocated_relocation_count": 240
+    },
+    "canonical_metadata": {
+      "existing_externalized_records": 11,
+      "bytes": 241,
+      "refs": 46,
+      "new_records_or_policy": 0
+    },
+    "owned_auxiliary_sections": [
+      {
+        "section": ".init",
+        "bytes": 220,
+        "refs": 9,
+        "size_bytes_match": true,
+        "differing_words": 0
+      },
+      {
+        "section": ".ctor",
+        "bytes": 4,
+        "refs": 1,
+        "size_bytes_match": true,
+        "differing_words": 0
+      },
+      {
+        "section": ".data",
+        "bytes": 64,
+        "refs": 8,
+        "size_bytes_match": true,
+        "differing_words": 0
+      },
+      {
+        "section": ".bss",
+        "bytes": 64,
+        "refs": 0,
+        "size_bytes_match": true,
+        "differing_words": 0
+      }
+    ],
+    "storage_count_limit": "Four auxiliary manifest sections352B includes EXECUTABLE .init220B/9refs (already among34functions8092B), plus non-executable PMF.data64B/8refs, .ctor4B/1ref and .bss64B/0refs. Prepared non-executable storage132B, total allocated8224B, not352B of metadata.",
+    "all_owned_auxiliary_destination_refs": 18,
+    "old_policy_refusal": "The combined private Source initially fails the old @1562 mapping. The supported coordinator amendment reserved the manifest before its eight compiler-local from names were edited; that failure is preserved, not masked or called a pass.",
+    "descriptor_correspondence": [
+      {
+        "baseline_raw": "@1560",
+        "candidate_raw": "@1559",
+        "licensed_owned": "@1528",
+        "bytes": 8
+      },
+      {
+        "baseline_raw": "@1562",
+        "candidate_raw": "@1561",
+        "licensed_owned": "@1530",
+        "bytes": 8
+      },
+      {
+        "baseline_raw": "@1564",
+        "candidate_raw": "@1563",
+        "licensed_owned": "@1532",
+        "bytes": 8
+      },
+      {
+        "baseline_raw": "@1566",
+        "candidate_raw": "@1565",
+        "licensed_owned": "@1534",
+        "bytes": 8
+      },
+      {
+        "baseline_raw": "@1568",
+        "candidate_raw": "@1567",
+        "licensed_owned": "@1536",
+        "bytes": 8
+      },
+      {
+        "baseline_raw": "@1570",
+        "candidate_raw": "@1569",
+        "licensed_owned": "@1538",
+        "bytes": 8
+      },
+      {
+        "baseline_raw": "@1572",
+        "candidate_raw": "@1571",
+        "licensed_owned": "@1540",
+        "bytes": 8
+      },
+      {
+        "baseline_raw": "@1574",
+        "candidate_raw": "@1573",
+        "licensed_owned": "@1542",
+        "bytes": 8
+      }
+    ]
+  },
+  "validation": {
+    "all_required_gates_actual_terminal0": true,
+    "gates": [
+      {
+        "name": "whitespace",
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2..HEAD"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.212,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "port",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 2.984,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+      },
+      {
+        "name": "duplicate_sources",
+        "command": [
+          "python",
+          "tools/check_duplicate_sources.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.274,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "3c7d30e74da563c3759d899256bc6d497413d6fac97b5d50dde941fb71d9727d"
+      },
+      {
+        "name": "rename_ledger",
+        "command": [
+          "python",
+          "tools/check_rename_ledger.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.259,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "f8e4f26409a6cf7c024cdbc0f4b9afd5e99b2934b2ab390306fe8d8b29f3315e"
+      },
+      {
+        "name": "drafts",
+        "command": [
+          "python",
+          "tools/check_drafts_compile.py",
+          "--quiet"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 3.184,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "57fa687af6384a6588b7d6b58e1ff3ba4f8a3dbb81c5c0cb2d33813ceae86493"
+      },
+      {
+        "name": "declaration",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 22.296,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "84b6b91570c141c928d6e960e5dfae8d75ca534f8b27a009063e8c3aad8ca383"
+      },
+      {
+        "name": "prepush",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "c1734b1680b84d7ce8b4f561737d799e7b3ed8a2..HEAD",
+          "--json",
+          "build\\yegg-readable1014\\prepush-linkcheck.json"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 66.905,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "4736c7f2f2c450b3d086f428fa286caea670a15a936d99a6f56f65fb97c98661"
+      },
+      {
+        "name": "full_rom",
+        "command": [
+          "python",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 501.212,
+        "input_head": "294789d18aeacc0ea6befbb7be19af54360d5ed3",
+        "log_sha256": "92d41dd921d9792c77b0f204d6622573f06332ad319f7e45e6722364a8f35d17"
+      }
+    ],
+    "stock_prepush": "34 checked,34 verified,0 warnings,0 blocking",
+    "declaration": "7482 banked disagreements globally;504 files/4195 disagreements in changed scope;33 defined Source symbols; no new local header redeclarations or new disagreements. Removed shadow/local declarations broadened10 changed type names to119 dependent files for the ratchet; no shared header was edited.",
+    "port": "267 references all resolve",
+    "duplicate_sources": "2804 stems,none doubled",
+    "rename_ledger": "3655 live mangled/vtable rows agree;797 live coined rows remain outside that check;1345 earlier rows superseded history",
+    "drafts": "21/21 NONMATCHING drafts compile",
+    "full_ROM": {
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 501.212,
+      "normal_ROM_image_stage": "skipped --no-rom; scratch baseline control did build an image",
+      "profile": "stock",
+      "status": "passed",
+      "analysis_passed": true,
+      "module_fidelity": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11334,
+        "compiledBytes": 2225480,
+        "sourceFunctions": 11334,
+        "sourceBytes": 2225480,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.43577343005789,
+        "reproducingFunctions": 11334,
+        "reproducingBytes": 2225480,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "intact_link_ok": true,
+      "new_symbol_errors": [],
+      "storage_alias_errors": [],
+      "actual_symbol_errors_equal_same_run_baseline": true,
+      "actual_baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "global_data": {
+        "symbols": 2511,
+        "verified": 970,
+        "partial": 1519,
+        "differs": 1,
+        "unnamed": 21,
+        "totalRecords": 5285
+      },
+      "global_data_limit": "970verified/1519partial/1different/21unnamed is an actual global data diagnostic, not universal data acceptance; this slice does not repair those existing broader records."
+    }
+  },
+  "remaining_reconstruction": [
+    "Existing scalar ABI spellings of Fix12-valued callees, including ModelAnim/collision initialization, shadow/particle helpers, SpawnCoins and Player::Hurt, remain unchanged and qualified; no class-valued universal compiler-wall assertion added.",
+    "The raw spawned-coin fields, DOSUN byte, Player+0xc8 word, floor-result+4 view, array-backed matrices/vectors and address-based helper identifiers remain partial.",
+    "The existing two externally called free Player-entry helpers and constructor/factory alias boundaries remain; this slice adds no fake method identity or new mangled helper.",
+    "No original source filename or method/field identifiers recovered by byte equality; Source judgment remains separate from ROM correctness."
+  ],
+  "private_evidence": [
+    {
+      "path": "build/yegg-readable1014/baseline-inputs.json",
+      "sha256": "dbe2fcc438e652305f26ccdc9e3a54cfb6b1562d0cb1ede8edf3424b77785651"
+    },
+    {
+      "path": "build/yegg-readable1014/pre-edit-current-base.json",
+      "sha256": "da04e14e86e8abdfdca05b23bf97188e5bbaaf2d94da65ba07caf18581de6704"
+    },
+    {
+      "path": "build/yegg-readable1014/private-probe/proof.json",
+      "sha256": "dee5fd7130206ec1d8b4f8b9d93fd336fb8d598a61c2e93346dcd3ff5199292d"
+    },
+    {
+      "path": "build/yegg-readable1014/private-probe/counter-correspondence-proof.json",
+      "sha256": "66c7343ad99376f1201fb3eda1129eea0c417f75fd4292fda4cdd7bb4c1bf86b"
+    },
+    {
+      "path": "build/yegg-readable1014/production-focused-proof.json",
+      "sha256": "d1dbec6f211ae789be1dbb32ba3b0c7cdb427782c882b3e7e2022ae0d0b59320"
+    },
+    {
+      "path": "build/yegg-readable1014/gate-results.json",
+      "sha256": "69fceab6591c202b782e030229c591a7c01aea085f2f790223aa9e9f61140fa7"
+    },
+    {
+      "path": "build/rombuild-report.json",
+      "sha256": "ccca006d7293ca8d92512680176a95327a9c4c359cf40afd6233dfb5a2cd2365"
+    }
+  ],
+  "next_action": "Independent actual-session Source reviewer audits this exact immutable candidate and manifest with complete literal resource coverage and retained partial findings. Coordinator binds the candidate to the then-current PR base before any public action; producer does not self-accept."
+}

@@ -73,14 +73,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov045_02113248",
+      "symbol": "gKm2KuzureCollisionFile",
       "address": "0x02113248",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_km2_fall_block.cpp"
     },
     {
-      "symbol": "data_ov045_02113250",
+      "symbol": "gKm2KuzureModelFile",
       "address": "0x02113250",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -616,7 +616,7 @@
       "source": "0x0211240c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov045_02113250",
+      "symbol": "gKm2KuzureModelFile",
       "addend": 0,
       "target_module": "ov045",
       "target_address": "0x02113250"
@@ -646,7 +646,7 @@
       "source": "0x0211241c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov045_02113248",
+      "symbol": "gKm2KuzureCollisionFile",
       "addend": 0,
       "target_module": "ov045",
       "target_address": "0x02113248"

@@ -15,11 +15,17 @@
  *   (the base leaves those slots pure virtual). Naming belongs in ov002.
  *   The setup helper loads data_ov021_021148d0 slot 0 with Model::LoadFile,
  *   slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, and writes
- *   mTimer / mEventBit from param1.
+ *   daObjSwdoor_c's four byte fields from param1.
  * Leftover: data_ov021_021148d0 is overlay data; this TU is text-only so
  *   the table stays an extern. g_profile_CV_SHUTTER is the same.
  * Leftover: IsClsnInRange stays mangled (by-value Fix12<int>, wall 6az).
  */
+
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_cv_shutter_AssetId {
+    ASSET_CV_SHUTTER_BMD = 0x05d9,
+    ASSET_CV_SHUTTER_KCL = 0x05da
+};
 
 #include "daObjCvShutter_c.h"
 #include "SharedFilePtr.h"
@@ -105,5 +111,5 @@ s32 daObjCvShutter_c::CleanupResources()
 /* Definitions stay after the last .text function so they do not insert
  * a function into the ROM-ascending run. Construction order is the model
  * handle, then the collision handle. */
-CvShutterModelFilePtr data_ov021_02114a6c(1497);
-CvShutterCollisionFilePtr data_ov021_02114a64(1498);
+CvShutterModelFilePtr gCvShutterModelFile(ASSET_CV_SHUTTER_BMD);
+CvShutterCollisionFilePtr gCvShutterCollisionFile(ASSET_CV_SHUTTER_KCL);

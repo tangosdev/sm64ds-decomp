@@ -80,7 +80,7 @@ struct daObjBlockL_c : dBgActor_c {
        override adds no slot and no field, so the size assert is unaffected.
 
         NOT the key function: ~daObjBlockL_c() above is declared out of line and
-        is defined as a real method by src/actors/daObjBlockL_c.cpp, so the destructor stays the first
+        is defined as a real method by src/game/actors/d_a_obj_block_l.cpp, so the destructor stays the first
         non-inline virtual and that TU keeps emitting _ZTV13daObjBlockL_c.
         This one does not -- checked with objisolate, not assumed. */
     virtual void Kill();              /* slot 31 */
@@ -136,7 +136,7 @@ struct daObjBlockL_c {
     u8  pad_00e[0xc6];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13daObjBlockL_cD1Ev, now in src/actors/daObjBlockL_c.cpp] */
+       checks. Was a u8 marker. [_ZN13daObjBlockL_cD1Ev, now in src/game/actors/d_a_obj_block_l.cpp] */
     Model mModel;            /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~daObjBlockL_c calls _ZN10dBgW_KcMbgD1Ev
        at +0x124 (D0/D1), a relocation the ROM build checks; recovered by

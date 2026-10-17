@@ -46,7 +46,7 @@ is `False` for all 173 because the census joined on the wrong key. The real key 
 `link-verified` over `.text 0x020fe190..0x020fea4c`. The regenerated map cuts that range
 into `@0x20fe190` (2 files, class `dScStage_c`) + `@0x20fe3cc` (17 files, no class,
 medium/medium), and extends the second *past* the verified end to `0x20fea84`, sweeping
-in [func_ov002_020fea4c.c](../src/actors/dM3dGLin.cpp) and [func_ov002_020fea68.c](../src/actors/dM3dGLin.cpp).
+in [func_ov002_020fea4c.c](../src/engine/collision/d_m3d_g_lin.cpp) and [func_ov002_020fea68.c](../src/engine/collision/d_m3d_g_lin.cpp).
 
 In the one place where ground truth exists to check it, a **medium/medium** boundary is
 wrong in both directions. That is direct empirical support for the high/high +
@@ -717,7 +717,7 @@ Per `tubuild.py inspect` (authoritative over the census): **6 functions without
 [func_ov063_02117cdc](../config/arm9/overlays/ov063/symbols.txt), `_ZN3Boo6RenderEv`/`_ZN3Boo8BehaviorEv`/`_ZN3Boo13InitResourcesEv`
 region. Boo has no legacy source anywhere and no directory of its own; the nearest
 named relatives were the `daTrs_c` and `daTBasket_c` shard directories under
-`src/game/actors/`. (Since promoted as one TU: [src/actors/daTrs_c.cpp](../src/actors/daTrs_c.cpp).)
+`src/game/actors/`. (Since promoted as one TU: [src/game/actors/d_a_trs.cpp](../src/game/actors/d_a_trs.cpp).)
 3 members carry `opt_propagation off` / `opt_common_subs off` / `optimize_for_size on`.
 **Swallower: 97 functions, 69% of [ov063](../config/arm9/overlays/ov063/symbols.txt)**, carrying 4 class labels, **3 separate vtables**
 (`_ZTV3Boo`, `_ZTV7BooCage`, `_ZTV10BigBooIcon`) and 3 destructor pairs. 94 members is

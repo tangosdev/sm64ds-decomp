@@ -74,14 +74,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov043_02112630",
+      "symbol": "gKm1KurumaCollisionFile",
       "address": "0x02112630",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x654"
     },
     {
-      "symbol": "data_ov043_02112638",
+      "symbol": "gKm1KurumaModelFile",
       "address": "0x02112638",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -610,7 +610,7 @@
       "source": "0x02111920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov043_02112638",
+      "symbol": "gKm1KurumaModelFile",
       "addend": 0,
       "target_module": "ov043",
       "target_address": "0x02112638"
@@ -640,7 +640,7 @@
       "source": "0x02111930",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov043_02112630",
+      "symbol": "gKm1KurumaCollisionFile",
       "addend": 0,
       "target_module": "ov043",
       "target_address": "0x02112630"

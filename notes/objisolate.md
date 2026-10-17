@@ -74,7 +74,7 @@ obvious unseen case; refusing costs one function, guessing corrupts a module.
 standard `-8` pipeline addend. Those need nothing.)
 
 **4. Isolation applied where it is unsound.** func_ov002_020bd664 (then a one-function shard, since folded
-into [Player.cpp](../src/actors/Player.cpp) as `Player::func_ov002_020bd664`) had a
+into [Player.cpp](../src/game/player/Player.cpp) as `Player::func_ov002_020bd664`) had a
 function-local static — `table$8` and its guard `_ZGVtable$8`, both **STB_LOCAL** in
 `.bss`, both addressed by the kept function. Zeroing the section while leaving them
 defined pointed those loads at offset 0 of an empty section, which the lcf still

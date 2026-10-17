@@ -1,0 +1,6 @@
+# Advisory only until representative mwccarm translation units parse reliably.
+# No modernize-* checks or automatic fixes in the matching workflow.
+Checks: '-*,bugprone-sizeof-expression,bugprone-suspicious-memset-usage'
+WarningsAsErrors: ''
+HeaderFilterRegex: '(^|[\\/])(include|src)[\\/]'
+FormatStyle: none

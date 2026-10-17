@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "nitro/fx/fx.h"
 extern s16 data_02082214[];
 
 
@@ -45,9 +46,9 @@ void func_ov007_020baa10(void)
         s = data_02082214[((u16)((v * 0xffff) >> 12) >> 4) * 2];
         if (state == 2) {
             *(int*)(a + 0x88) = -dx / 48 + func_ov007_020c3ba8(dx / 48 - -dx / 48);
-            *(int*)(a + 0x8c) = (int)(((s64)s * (dy / 2 - dy / 8) + 0x800) >> 12);
+            *(int *)(a + 0x8c) = FX_MUL(s, (dy / 2 - dy / 8));
         } else if (state == 1) {
-            *(int*)(a + 0x88) = (int)(((s64)s * (dx / 3) + 0x800) >> 12);
+            *(int *)(a + 0x88) = FX_MUL(s, (dx / 3));
             *(int*)(a + 0x8c) = -dy / 32 + func_ov007_020c3ba8(dy / 32 - -dy / 32);
         }
         return;
@@ -63,8 +64,8 @@ void func_ov007_020baa10(void)
         if (*(s16*)*(char**)(data_ov007_02104ba0 + 0x10) == 4)
             v = 0x1000 - v;
         idx = ((u16)((v * 0xffff) >> 12) >> 4) * 2;
-        *(int*)(a + 0x88) = (int)(((s64)(dx / 4) * data_02082214[idx + 1] + 0x800) >> 12);
-        *(int*)(a + 0x8c) = (int)(((s64)(dy / 4) * data_02082214[idx] + 0x800) >> 12);
+        *(int *)(a + 0x88) = FX_MUL((dx / 4), data_02082214[idx + 1]);
+        *(int *)(a + 0x8c) = FX_MUL((dy / 4), data_02082214[idx]);
         return;
     }
     case 5:
@@ -78,9 +79,9 @@ void func_ov007_020baa10(void)
         if (counter == 0) {
             int t;
             t = -dx / 2 + func_ov007_020c3ba8(dx / 2 - -dx / 2);
-            *(int*)(a + 0x70) = (int)(((s64)t * 0x5dcLL + 0x800) >> 12);
+            *(int *)(a + 0x70) = FX_MUL(t, 0x5dcLL);
             t = -dy / 2 + func_ov007_020c3ba8(dy / 2 - -dy / 2);
-            *(int*)(a + 0x74) = (int)(((s64)t * 0x5dcLL + 0x800) >> 12);
+            *(int *)(a + 0x74) = FX_MUL(t, 0x5dcLL);
             *(int*)(a + 0x8c) = 0;
             *(int*)(a + 0x88) = *(int*)(a + 0x8c);
         }

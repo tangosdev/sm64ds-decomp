@@ -1,0 +1,340 @@
+{
+  "schema": 1,
+  "scope": "Name measured fields on Bubba resource handles",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3806",
+  "compiler": "2004/b56",
+  "source_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+  "production_source": "src/actors/daBakubaku_c.cpp",
+  "source_sha256": "90b2b208ab32ce7ab6f4fa4124fe11e81f39d37efa3ce643e8eda1363915478d",
+  "change": "Three actual resource handles use measured u16 fileID/u8 numRefs/pointer filePtr fields. Five BcaHandle casts become direct filePtr reads and the false s32-ID view is removed. Existing constructor/destructor aliases and all static lifecycle edges remain.",
+  "proof": {
+    "raw_entire_ELF_equal": true,
+    "production_entire_ELF_equal": true,
+    "normal_production_parity": true,
+    "raw_sha256": "7dcf4a7f862de6b46cda5fbf26631d11c81ec2a9e6c5a719ad81c55bc628582d",
+    "prepared_sha256": "e62839b05c483dfc55a60c2e8526198e72a072a1f9e513ddf27c590205b75db9",
+    "raw_bytes": 21864,
+    "prepared_bytes": 21864,
+    "strict_rows": 42,
+    "strict_functions": 24,
+    "strict_owned_storage_records": 18,
+    "blind": 0,
+    "diffs": [],
+    "bss_records": 11,
+    "bss_bytes": 140,
+    "raw_typed_refs": 269,
+    "prepared_typed_refs": 258,
+    "owned_nontext_typed_refs": 76,
+    "complete_metadata_records": 11,
+    "complete_metadata_bytes": 246,
+    "metadata": [
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "address": "0x2086d70",
+        "size": 8,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "address": "0x2086e60",
+        "size": 9,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e54",
+        "size": 9,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "address": "0x208e384",
+        "size": 10,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081c0",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "module": "ov002",
+        "address": "0x21081cc",
+        "size": 15,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "address": "0x208e390",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "address": "0x2086e78",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": false
+      },
+      {
+        "symbol": "_ZTI12daBakubaku_c",
+        "module": "ov032",
+        "address": "0x21137e4",
+        "size": 12,
+        "exact": true,
+        "blind": 0,
+        "owned": true
+      },
+      {
+        "symbol": "_ZTS12daBakubaku_c",
+        "module": "ov032",
+        "address": "0x21137f0",
+        "size": 15,
+        "exact": true,
+        "blind": 0,
+        "owned": true
+      },
+      {
+        "symbol": "_ZTV12daBakubaku_c",
+        "module": "ov032",
+        "address": "0x211381c",
+        "size": 132,
+        "exact": true,
+        "blind": 0,
+        "owned": true
+      }
+    ],
+    "canonical_duplicates": [
+      {
+        "name": "_ZN7Vector3D1Ev",
+        "module": "arm9",
+        "addr": "0x020072c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ],
+    "overrides": [],
+    "strict_bytes": 5596
+  },
+  "remaining": "SharedFilePtr remains globally layout-free and actual local resource subclasses retain their declared-only lifecycle aliases. Scalar Fix12 calls, local vectors and PMF forms remain partial reconstruction.",
+  "handle_layout": {
+    "actual_ds_measurements": {
+      "sizeof(BakubakuModelFilePtr)": 8,
+      "(unsigned)&((BakubakuModelFilePtr*)0)->fileID": 0,
+      "(unsigned)&((BakubakuModelFilePtr*)0)->numRefs": 2,
+      "(unsigned)&((BakubakuModelFilePtr*)0)->filePtr": 4,
+      "sizeof(BakubakuAnimationFileHandle)": 8,
+      "(unsigned)&((BakubakuAnimationFileHandle*)0)->fileID": 0,
+      "(unsigned)&((BakubakuAnimationFileHandle*)0)->numRefs": 2,
+      "(unsigned)&((BakubakuAnimationFileHandle*)0)->filePtr": 4
+    },
+    "host_claim": "None; natural pointer-width host layout is not DS equivalence"
+  },
+  "lifecycle_evidence": "Actual model and animation constructor paths reach02017e48 then02017e0c, writing fileID halfword+0, byte+2 and pointer+4. Their destructors reach02017e34 and record the ID; CleanupResources separately releases all three handles.",
+  "helper_source_receipts": [
+    {
+      "source": "src/unnamed/arm9/0201/func_02017acc.c",
+      "receipt": {
+        "name": "func_02017acc",
+        "module": "arm9",
+        "addr": "0x02017acc",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/unnamed/arm9/0201/func_02017ab4.c",
+      "receipt": {
+        "name": "func_02017ab4",
+        "module": "arm9",
+        "addr": "0x02017ab4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/unnamed/arm9/0201/func_02017e48.c",
+      "receipt": {
+        "name": "func_02017e48",
+        "module": "arm9",
+        "addr": "0x02017e48",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/func_02017e0c.c",
+      "receipt": {
+        "name": "func_02017e0c",
+        "module": "arm9",
+        "addr": "0x02017e0c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/unnamed/arm9/0201/func_02017e34.c",
+      "receipt": {
+        "name": "func_02017e34",
+        "module": "arm9",
+        "addr": "0x02017e34",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/func_02017c24.c",
+      "receipt": {
+        "name": "func_02017c24",
+        "module": "arm9",
+        "addr": "0x02017c24",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/_ZN13SharedFilePtr9ConstructEj.cpp",
+      "receipt": {
+        "name": "_ZN13SharedFilePtr9ConstructEj",
+        "module": "arm9",
+        "addr": "0x0201799c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/SharedFilePtr_Destruct_Anim.c",
+      "receipt": {
+        "name": "SharedFilePtr_Destruct_Anim",
+        "module": "arm9",
+        "addr": "0x02017984",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/_ZN13SharedFilePtr7ReleaseEv.cpp",
+      "receipt": {
+        "name": "_ZN13SharedFilePtr7ReleaseEv",
+        "module": "arm9",
+        "addr": "0x02017b64",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/_ZN13SharedFilePtr8LoadFileEv.cpp",
+      "receipt": {
+        "name": "_ZN13SharedFilePtr8LoadFileEv",
+        "module": "arm9",
+        "addr": "0x02017bc4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/_ZN5Model8LoadFileER13SharedFilePtr.cpp",
+      "receipt": {
+        "name": "_ZN5Model8LoadFileER13SharedFilePtr",
+        "module": "arm9",
+        "addr": "0x02017a3c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "source": "src/_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr.cpp",
+      "receipt": {
+        "name": "_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr",
+        "module": "arm9",
+        "addr": "0x0201794c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    }
+  ],
+  "full_ROM": {
+    "checkpoint": "f172c5e629a2552cb304f05d9432178a22e7a925",
+    "modules_exact": 106,
+    "modules_total": 106,
+    "exit_code": 0,
+    "log": "build\\bakubaku-handles1013\\full_rom.log",
+    "limits": "Full modules and owned storage exact. Pre-existing stock dsd missing ITCM symbols and one differing unenrolled ROM-data inventory entry remain distinct."
+  },
+  "committed_checks": {
+    "tested_commit": "f172c5e629a2552cb304f05d9432178a22e7a925",
+    "tested_base": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\bakubaku-handles1013\\full_rom.log"
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\bakubaku-handles1013\\range.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\bakubaku-handles1013\\port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\bakubaku-handles1013\\langmode.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\bakubaku-handles1013\\decl.log"
+      }
+    }
+  },
+  "stock_range": {
+    "checked": 25,
+    "verified": 24,
+    "warnings": [
+      {
+        "name": "__sinit_daBakubaku_c.cpp",
+        "verdict": "BLIND-8",
+        "blind": 8
+      }
+    ],
+    "blocking": 0
+  },
+  "binding": "This report-only descendant retains all src/include/config/tools/port trees from the tested full-ROM checkpoint. Independent final Source review is required separately."
+}

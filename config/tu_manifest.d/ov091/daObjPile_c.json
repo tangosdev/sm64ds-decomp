@@ -1,8 +1,8 @@
 {
   "id": "ov091/daObjPile_c",
   "module": "ov091",
-  "source": "src/actors/daObjPile_c.cpp",
-  "promoted_source": "src/actors/daObjPile_c.cpp",
+  "source": "src/game/actors/d_a_obj_pile.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_pile.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -11,7 +11,7 @@
     "class label(s): daObjPile_c",
     "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "classInit fold (0930c): the PILE registry factory daObjPile_c_classInit (0x02133938, 0x30) abuts the run's end 0x02133938 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x021333fc..0x02133968 (11 functions) ends where the next delinks entry, src/game/actors/d_a_hyuhyu.cpp, begins.",
-    "the compiler-generated __sinit_daObjPile_c.cpp is byte-identical to retail __sinit_ov091_021349c4 (0x6c, ten relocations). It constructs the model handle at 0x02135654 (file 1153) and the collision handle at 0x0213564c (file 1154) and registers both destructors. The ctor word at 0x02134b78 points at that initializer."
+    "the compiler-generated __sinit_d_a_obj_pile.cpp is byte-identical to retail __sinit_ov091_021349c4 (0x6c, ten relocations). It constructs the model handle at 0x02135654 (file 1153) and the collision handle at 0x0213564c (file 1154) and registers both destructors. The ctor word at 0x02134b78 points at that initializer."
   ],
   "sections": [
     {
@@ -116,7 +116,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjPile_c.cpp",
+      "symbol": "__sinit_d_a_obj_pile.cpp",
       "address": "0x021349c4",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -125,7 +125,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjPile_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_pile.cpp",
       "address": "0x02134b78",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -135,14 +135,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov091_0213564c",
+      "symbol": "gPileCollisionFile",
       "address": "0x0213564c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 1154"
     },
     {
-      "symbol": "data_ov091_02135654",
+      "symbol": "gPileModelFile",
       "address": "0x02135654",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -202,13 +202,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjPile_c.cpp",
+      "symbol": "__sinit_d_a_obj_pile.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjPile_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_pile.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -272,7 +272,7 @@
       "source": "0x02134a10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135654",
+      "symbol": "gPileModelFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135654"
@@ -302,7 +302,7 @@
       "source": "0x02134a20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_0213564c",
+      "symbol": "gPileCollisionFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x0213564c"
@@ -332,7 +332,7 @@
       "source": "0x02134b78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjPile_c.cpp",
+      "symbol": "__sinit_d_a_obj_pile.cpp",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x021349c4"
@@ -343,7 +343,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov091_021334b8' differs between the legacy file that used to hold _ZN11daObjPile_c15OnHitByMegaCharER6Player and the one that held _ZN11daObjPile_c15OnGroundPoundedER8dActor_c; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs' differs between the legacy file that used to hold func_ov091_021334b8 and the one that held _ZN11daObjPile_c8BehaviorEv; kept the first, the other is commented out for review",
     "classInit fold (0930c): daObjPile_c_classInit is folded in last, in ROM order, under the file's `#pragma defer_codegen off`, as `return new daObjPile_c();`. The retired one-function source hand-called fBase_c::operator new(816 = 0x330), dBgActor_c's C2 constructor and this class's vtable store; daObjPile_c has no user-declared constructor, so the synthesized one emits the identical sequence. The new-expression makes mwccarm emit _ZN10dBgActor_cD2Ev, licensed as a compiler_only_output deadstrip row. tubuild verify: 11/11 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_obj_pile.c; its credit carries in attribution.json as a path#symbol override.",
-    "The two file-scope handles data_ov091_02135654 (model, file 1153) and data_ov091_0213564c (collision, file 1154) are defined in this TU; mwcc emits __sinit_daObjPile_c.cpp, the ctor word, and the two anonymous registration nodes @783/@784. Class RTTI, profile and vtable stay externalized; the claim stops at _ZTI11daObjPile_c. The handwritten src/__sinit_ov091_021349c4.c is retired."
+    "The two file-scope handles gPileModelFile (model, file 1153) and gPileCollisionFile (collision, file 1154) are defined in this TU; mwcc emits __sinit_d_a_obj_pile.cpp, the ctor word, and the two anonymous registration nodes @783/@784. Class RTTI, profile and vtable stay externalized; the claim stops at _ZTI11daObjPile_c. The handwritten src/__sinit_ov091_021349c4.c is retired."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -673,7 +673,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "classInit fold (0930c): daObjPile_c_classInit's `new daObjPile_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/actors/daObjHatenaBlock_c.cpp). No configured ROM symbol of that name exists and nothing relocates to it once the licensed D1/D0 pair is retained."
+      "reason": "classInit fold (0930c): daObjPile_c_classInit's `new daObjPile_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/game/actors/d_a_obj_hatena_block.cpp). No configured ROM symbol of that name exists and nothing relocates to it once the licensed D1/D0 pair is retained."
     }
   ],
   "defined_symbol_renames": [

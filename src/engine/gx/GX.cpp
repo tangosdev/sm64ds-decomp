@@ -2,18 +2,13 @@
  * Owns .text 0x02056870..0x02056c1c: the palette/texture upload family
  * (LoadBGPltt .. BeginLoadTex). Below sits GXS::LoadBGPltt at 0x02056808;
  * above is Copy48BytesFixed at 0x02056c1c.
- *
- * Every member is a plain function; each old shard re-declared the shared
- * globals and DMA callees privately. They are unified here. Two spellings
- * are kept deliberately wide (local extern): a u16-typed SetBankForTex*
- * declaration makes mwccarm emit narrowing shifts at the call site, and a
- * u8-typed DMASyncWordTransfer channel does the same -- the shards' u32
- * spellings are what the bytes were built against.
- *
- * Definitions run descending (EndLoadTex above BeginLoadTex's callers, and so
- * on up from LoadBGPltt) because mwccarm emits .text in reverse source order;
- * the @symbol roster is what ties each one back to its ROM address.
  */
+// leftovers: the SetBankForTex* and DMASyncWordTransfer declarations stay
+// wide (local extern): the definitions' narrower params insert narrowing ops
+// at the call. LoadTex's base/top stay plain int (the register web the bytes
+// were built against). BeginLoadTex's byte-offset table reads stay a char *
+// tower (indexing reschedules the body). data_02099fd0 is the render DMA
+// channel, -1 if none.
 
 #include "types.h"
 
@@ -47,7 +42,7 @@ extern void _ZN2GX17SetBankForTexPlttEt(u32 bank);
 namespace GX {
 
 // @symbol _ZN2GX12BeginLoadTexEv
-void BeginLoadTex(){
+void BeginLoadTex() {
     int r = func_0205417c();
     int i = r * 6;
     data_020a60b8 = r;
@@ -58,10 +53,9 @@ void BeginLoadTex(){
 
 // VRAM texture upload with banked destination: below-top goes to the base
 // window, above-top to the secondary bank, straddling splits into two DMA (or
-// CPU copy) halves. Lever that matched: base/top typed as plain int (r4/r5 web
-// identity), comparisons left to natural unsigned promotion for lo/hs.
+// CPU copy) halves.
 // @symbol _ZN2GX7LoadTexEPKvjj
-void LoadTex(void const *src, unsigned int offset, unsigned int size) {
+void LoadTex(const void *src, unsigned int offset, unsigned int size) {
     unsigned int dst;
     int base = data_020a60bc;
     if (base == 0) {
@@ -105,11 +99,11 @@ void EndLoadTex()
     data_020a60c0 = 0;
     data_020a60bc = 0;
     data_020a60ac = 0;
-    data_020a60b8  = 0;
+    data_020a60b8 = 0;
 }
 
 // @symbol _ZN2GX16BeginLoadTexPlttEv
-void BeginLoadTexPltt(){
+void BeginLoadTexPltt() {
     int r = func_02054168();
     data_020a60b4 = r;
     data_020a60b0 = (int)data_02086314[r >> 4] << 12;

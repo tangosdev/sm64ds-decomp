@@ -451,19 +451,19 @@ compiling the same snippet under both compilers in isolation:
   two accesses with different expression shapes (`(char *)p + K` vs `(int)p + K`, or an
   index) stops it. Every sharing site has to be respelled together -- `func_02062428`
   has three, and respelling any one alone left the other two sharing. Fixed
-  [func_ov015_02111e80](../src/game/actors/d_a_obj_bk_dossunbar.cpp) (func 12 used to assemble the TU - `d_a_obj_bk_dossunbar`), [func_ov006_020ded00](../src/actors/dScMgCup_c.cpp) (part of `dScMgCup_c.cpp`, element 11 used to assemble the TU), `func_02062428`,
-  [func_ov006_02111e90](../src/actors/dScMgSmartball_c.cpp).
+  [func_ov015_02111e80](../src/game/actors/d_a_obj_bk_dossunbar.cpp) (func 12 used to assemble the TU - `d_a_obj_bk_dossunbar`), [func_ov006_020ded00](../src/minigames/d_s_mg_cup.cpp) (part of `d_s_mg_cup.cpp`, element 11 used to assemble the TU), `func_02062428`,
+  [func_ov006_02111e90](../src/minigames/d_s_mg_smartball.cpp).
 - **Prefer pointer arithmetic on a typed pointer over integer arithmetic then a cast.**
   `ldr` carries a 12-bit displacement and `ldrh`/`ldrsh`/`strh` only 8, so a large
   offset must be split. Given pointer arithmetic b56 splits it the ROM's way; given
   integer arithmetic it materialises the whole constant, from the literal pool if
   needed. In `func_0206a6d0` that one extra pool entry shifted every pc-relative load in
   the function by 4 -- a 52-word diff from a single spelling. Also fixed
-  `func_ov081_02127558` (weak ref to [daGmch_c.cpp](../src/actors/daGmch_c.cpp)), where the compound-assignment form is the only spelling b56
+  `func_ov081_02127558` (weak ref to [d_a_gmch.cpp](../src/game/actors/d_a_gmch.cpp)), where the compound-assignment form is the only spelling b56
   refuses to split; an explicit read-modify-write through a temporary reproduces, and
   pre-splitting the base in the source does NOT work -- b56 has to do its own splitting.
 
-[func_ov084_0212f460](../src/actors/daPkn_c.cpp) (local helper declaration of [Piranha Plant](../src/actors/daPkn_c.cpp)) was neither: a straight r6/r7 swap. Callee-saved registers are
+[func_ov084_0212f460](../src/game/actors/d_a_pkn.cpp) (local helper declaration of [Piranha Plant](../src/game/actors/d_a_pkn.cpp)) was neither: a straight r6/r7 swap. Callee-saved registers are
 handed out in **assignment order** under b56 -- declaration order moves nothing -- so
 hoisting the pointer's assignment above the other local's put them the ROM's way round.
 The ROM emits the two in the opposite order regardless, because the independent store
@@ -521,10 +521,10 @@ individually with `match.py` before the link confirmed them:
 | `_ZN9daPeach_c6RenderEv` | `CommonModel::Render` | `Model::Render` |
 | `_ZN7daTor_c6RenderEv`, `_ZN14daWater_Ring_c6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
 | `_ZN18daObjBkKillerdai_c4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
-| [func_ov085_0212e778](../src/actors/daC_Jugem_c.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
-| [func_ov006_0211a048](../src/actors/dScMgSound_c.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/actors/dScMgSound_c.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
+| [func_ov085_0212e778](../src/game/actors/d_a_c_jugem.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
+| [func_ov006_0211a048](../src/minigames/d_s_mg_sound.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/minigames/d_s_mg_sound.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
 | [func_ov006_02120c08](../src//minigames/d_s_mg_trampoline.cpp)(func 13 used to assemble TU) | [func_ov006_020eed68](../src\minigames\d_s_mg_jump2.cpp)(func 3 used to assemble TU) | [func_ov006_02120a64](../src\minigames\d_s_mg_trampoline.cpp)(func 8 used to assemble TU) |
-| [func_ov002_020f23d0](../src/actors/daDemo_c.cpp) | the veneer `func_0203cbc0` | `Memory::operator_delete2` |
+| [func_ov002_020f23d0](../src/game/actors/d_a_demo.cpp) | the veneer `func_0203cbc0` | `Memory::operator_delete2` |
 
 The `XYZExt` → `ZXYExt` one is a genuine behavioural bug, not just a naming slip.
 
@@ -587,7 +587,7 @@ Why the rest are not source-built yet:
 | count | reason |
 |---:|---|
 | 1,972 | references a symbol name `config/**/symbols.txt` does not define — the BLIND matches. No address means nothing to link to, and gap objects import weakly, so it would silently resolve to 0. |
-| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/actors/daDsn_c.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
+| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/game/actors/d_a_dsn.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
 | 70 | compiled `st_size` ≠ the size `symbols.txt` declares |
 | 301 | lives in a `.init` range, where a `File.o(.init)` selector would match nothing in an object whose code is in `.text` |
 | 88 | emits `.data` or `.bss` whose ROM address we do not know |

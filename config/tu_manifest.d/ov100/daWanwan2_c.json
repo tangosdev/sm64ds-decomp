@@ -1,16 +1,16 @@
 {
   "id": "ov100/daWanwan2_c",
   "module": "ov100",
-  "source": "src/actors/daWanwan2_c.cpp",
-  "promoted_source": "src/actors/daWanwan2_c.cpp",
+  "source": "src/game/actors/d_a_wanwan2.cpp",
+  "promoted_source": "src/game/actors/d_a_wanwan2.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "HISTORY: contiguous linker run: 0x21431c4..0x21442dc, 16 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daIbl_c_classInit (src/actors/daIbl_c.cpp) ends exactly at 0x021431c4 below it.",
+    "HISTORY: contiguous linker run: 0x21431c4..0x21442dc, 16 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daIbl_c_classInit (src/game/actors/d_a_ibl.cpp) ends exactly at 0x021431c4 below it.",
     "class label(s): daWanwan2_c (tu_map also tags daIbl_c, read from three words past daIbl_c's 31-slot vtable that are really this class's state-table pointer-to-member constants)",
     "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "HISTORY: upper edge: daWanwan2_c_classInit (src/d_a_wanwan2.cpp, 0x021442dc..0x021443f4) abuts this unit with no gap and stays a separate source: `return new daWanwan2_c;` omits its three __cxa_vec_ctor calls over the Vector3/Vector3s arrays (0xa4 bytes for 0x118). daDoor_c's D1 starts exactly at 0x021443f4 above it.",
-    "CLASSINIT TAIL FOLD (2026-10-09): daWanwan2_c_classInit (0x021442dc..0x021443f4) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off. `return new daWanwan2_c;` still comes out 0xa4 for 0x118 (no __cxa_vec_ctor over the Vector3/Vector3s arrays, since types.h's Vector3 and Vector3s declare no constructor), so the retired shard's hand-spelled C++ body moves in verbatim with its mangled externs kept TU-local. It builds only this class, for the WANWAN2 profile; the unit is 0x021431c4..0x021443f4, bounded above by src/actors/daDoor_c.cpp, which starts exactly at 0x021443f4."
+    "HISTORY before the classInit tail fold: the separate daWanwan2_c_classInit shard adjoined this text run and an older natural-new probe emitted 0xa4 bytes without its array construction calls. That measurement predates the current headers; current bounded probe details are recorded below.",
+    "CLASSINIT TAIL FOLD (2026-10-09): daWanwan2_c_classInit at 0x021442dc..0x021443f4 is the final function in this 17-function TU. The unit covers 0x021431c4..0x021443f4 and adjoins daDoor_c. The previously retained manual chain is now replaced by native new after composing the complete reviewed Vector3s lifecycle change from PR #3783. The factory retains all 0x118 bytes, all array construction calls, and their actual callback destinations."
   ],
   "sections": [
     {
@@ -229,9 +229,10 @@
     "func_ov100_02143b68 copies the identity matrix through a twelve-word array struct; the C++ Matrix4x3 copy is the struct-copy DIFF described in notes/cpp-class-form.md (0x184 bytes for 0x148 inside this TU).",
     "func_ov100_02143b18 and Behavior share one pointer-to-member pair type (ChompState: enter, execute) over a non-polymorphic stand-in class; the two legacy shards each spelled their own.",
     "func_ov100_02143aa4 is the execute member of the only state (pointer-to-member constant data_ov100_02147ff8, copied by the module's static initializer into data_ov100_021486f4), with func_ov100_02143ae0 as its enter (data_ov100_02148000). Those constants follow daIbl_c's 31-slot vtable directly, which is where tu_map's daIbl_c tag and the old 'RollingIronBall_Kill' label came from.",
-    "HISTORY: daWanwan2_c_classInit (0x021442dc..0x021443f4) is not folded: `return new daWanwan2_c;` emits 0xa4 bytes for 0x118, without the three __cxa_vec_ctor calls (func_0203d384 over the two Vector3 arrays, func_0203d73c over the Vector3s array), because types.h's Vector3 and Vector3s declare no constructor. src/d_a_wanwan2.cpp keeps it.",
-    "Static initializer folded: the two Wanwan2ModelFilePtr handles (files 0x9c02/0x9c01), the two Wanwan2AnimFileHandle handles (files 0x9c04/0x9c03), their destructor-registration nodes, and the ChompState walking record move out of the handwritten src/unnamed shard into src/actors/daWanwan2_c.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov100_021475a4 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. Unlike the stale fold/ov100-wanwan2-sinit attempt, the two state functions stay free functions and the record plain-copies the ROM PMF constants (curling precedent). @962/@963/@964/@965 all clashed with the fleet and are renamed (@962->@169, @963->@170, @964->@171, @965->@172). The .bss claim 0x021486a4..0x02148704 ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
-    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
+    "HISTORY before the classInit tail fold: an older default-new probe emitted 0xa4 without the three array construction calls. The factory is now folded and its pre-lifecycle probe emitted 0xec with two Vector3 array calls and one omitted Vector3s array call; see the lifecycle continuation below. The old no-Vector3-constructor explanation is superseded.",
+    "Static initializer folded: the two Wanwan2ModelFilePtr handles (files 0x9c02/0x9c01), the two Wanwan2AnimFileHandle handles (files 0x9c04/0x9c03), their destructor-registration nodes, and the ChompState walking record move out of the handwritten src/unnamed shard into src/game/actors/d_a_wanwan2.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov100_021475a4 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. Unlike the stale fold/ov100-wanwan2-sinit attempt, the two state functions stay free functions and the record plain-copies the ROM PMF constants (curling precedent). @962/@963/@964/@965 all clashed with the fleet and are renamed (@962->@169, @963->@170, @964->@171, @965->@172). The .bss claim 0x021486a4..0x02148704 ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
+    "Native factory continuation after the Vector3s lifecycle dependency: return new daWanwan2_c() retains the retail 0x118-byte factory and all five array-construction calls. The actual Vector3[6] arrays at +0x6d8/+0x720 use func_0203d384 with Vector3 D1; Vector3s[6] at+0x768 uses func_0203d73c with Vector3s D1. Existing canonical duplicate policy forms verify both complete emitted constructor bodies. Four raw destructor-registration node inputs are measured at @1007..@1010 instead of @1006..@1009; initializer offsets and canonical @169..@172 remain unchanged. Earlier factory measurements in this manifest are historical."
   ],
   "compiler_only_output": [
     {
@@ -256,7 +257,7 @@
     {
       "symbol": "_ZTV11daWanwan2_c",
       "disposition": "deadstrip-data",
-      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable. ov100:0x02148054 is in .data, outside the licensed text span 0x021431c4..0x021442dc. D1 and D0 store this vptr, as does the separate factory; text-only production discards the emitted copy and retains cartridge data.",
+      "reason": "The key-function destructor emits the full vtable including its ABI preamble. Canonical ov100:0x02148054 is the slot-array address point in unowned data, outside this TU text/init/ctor/BSS claims. Both destructors and the folded factory use this canonical vptr; ordinary production verifies all emitted metadata bytes and typed relocations before externalizing the unowned copy.",
       "canonical_module": "ov100",
       "canonical_address": "0x02148054"
     },
@@ -329,6 +330,22 @@
       "reason": "Owning the key function makes mwcc emit the whole inherited RTTI chain as vague linkage; this is the typeinfo name for an ancestor. The cartridge keeps the canonical copy at arm9:0x02086e60, outside this TU's licensed range (.text 0x021431c4-0x021442dc), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZN7Vector3C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "The retail factory and native destructor pair the same array offset, count 6 and element stride with this constructor and destructor. All 280 raw factory bytes and 18 other typed edges agree; emitted native constructor names at +0x108/+0x114 resolve to the original callbacks. The policy uses the same verified element lifecycles as the complete Wiggler dependency; complete constructor bodies are independently checked."
+    },
+    {
+      "symbol": "_ZN8Vector3sC1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d73c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d73c",
+      "reason": "The retail factory and native destructor pair the same array offset, count 6 and element stride with this constructor and destructor. All 280 raw factory bytes and 18 other typed edges agree; emitted native constructor names at +0x108/+0x114 resolve to the original callbacks. The policy uses the same verified element lifecycles as the complete Wiggler dependency; complete constructor bodies are independently checked."
     }
   ],
   "verification": {
@@ -591,7 +608,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daWanwan2_c.cpp",
+      "symbol": "__sinit_d_a_wanwan2.cpp",
       "address": "0x021475a4",
       "size": "0xf4",
       "binding": "STB_GLOBAL",
@@ -600,7 +617,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daWanwan2_c.cpp",
+      "symbol": ".p__sinit_d_a_wanwan2.cpp",
       "address": "0x02147df0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -646,35 +663,35 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1012",
+      "from": "@995",
       "to": "@169",
-      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1006, identified by .init ABS32 relocation at +0xbc; typed calls renumber it @1012. Preserve established linker identity @169."
+      "evidence": "Native factory constructor declarations change raw @1006 to @1007; identical complete initializer bytes and typed ABS32 edge at 0xbc identify this same 12B destructor-registration node. Canonical target @169 unchanged."
     },
     {
-      "from": "@1013",
+      "from": "@996",
       "to": "@170",
-      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1007, identified by .init ABS32 relocation at +0xc8; typed calls renumber it @1013. Preserve established linker identity @170."
+      "evidence": "Native factory constructor declarations change raw @1007 to @1008; identical complete initializer bytes and typed ABS32 edge at 0xc8 identify this same 12B destructor-registration node. Canonical target @170 unchanged."
     },
     {
-      "from": "@1014",
+      "from": "@997",
       "to": "@171",
-      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1008, identified by .init ABS32 relocation at +0xd8; typed calls renumber it @1014. Preserve established linker identity @171."
+      "evidence": "Native factory constructor declarations change raw @1008 to @1009; identical complete initializer bytes and typed ABS32 edge at 0xd8 identify this same 12B destructor-registration node. Canonical target @171 unchanged."
     },
     {
-      "from": "@1015",
+      "from": "@998",
       "to": "@172",
-      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1009, identified by .init ABS32 relocation at +0xe4; typed calls renumber it @1015. Preserve established linker identity @172."
+      "evidence": "Native factory constructor declarations change raw @1009 to @1010; identical complete initializer bytes and typed ABS32 edge at 0xe4 identify this same 12B destructor-registration node. Canonical target @172 unchanged."
     }
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daWanwan2_c.cpp",
+      "symbol": "__sinit_d_a_wanwan2.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daWanwan2_c.cpp",
+      "symbol": ".p__sinit_d_a_wanwan2.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -710,7 +727,7 @@
       "source": "0x02147df0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daWanwan2_c.cpp",
+      "symbol": "__sinit_d_a_wanwan2.cpp",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021475a4"

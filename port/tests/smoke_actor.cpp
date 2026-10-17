@@ -22,7 +22,7 @@ typedef unsigned int u32;
 
 extern "C" {
 int *ArrowSignRight_Spawn(void);
-void *_ZN4Heap13SetupRootHeapEv(void);
+void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 extern int data_0209b3ec[12];       /* camera matrix */
 /* the spawn context dBase_c::Spawn would have staged */
 struct SharedFilePtrC { unsigned short fileID; unsigned char numRefs;
@@ -77,7 +77,7 @@ int main(void)
     PORT_INSTALL_FAULT_PROBE();
     setvbuf(stdout, NULL, _IONBF, 0);
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(_ZN5mHeap6Heap_t13SetupRootHeapEv() != NULL);
     ident_fx(data_0209b3ec);
 
     /* stage the spawn context: actor 0x12b = ArrowSignRight, its SpawnInfo

@@ -148,9 +148,9 @@ The initial corpus was seven classes across six PRs:
 | --- | --- | --- |
 | #2000 | daKpFr_c | [src/game/actors/d_a_kp_fr.cpp](../src/game/actors/d_a_kp_fr.cpp) |
 | #2043 | daObjFm_Battan_c | [src/game/actors/d_a_obj_fm_battan.cpp](../src/game/actors/d_a_obj_fm_battan.cpp) |
-| #2045 | daBar_c | [src/actors/daBar_c.cpp](../src/actors/daBar_c.cpp) |
+| #2045 | daBar_c | [src/game/actors/d_a_bar.cpp](../src/game/actors/d_a_bar.cpp) |
 | #2047 | daObjCannonShutter_c | [src/game/actors/d_a_obj_cannon_shutter.cpp](../src/game/actors/d_a_obj_cannon_shutter.cpp) |
-| #2047 | daObjFl_Fall_Block_c | [src/game/actors/daObjFl_Fall_Block_c.cpp](../src/game/actors/daObjFl_Fall_Block_c.cpp) |
+| #2047 | daObjFl_Fall_Block_c | [src/game/actors/d_a_obj_fl_fall_block.cpp](../src/game/actors/d_a_obj_fl_fall_block.cpp) |
 | #2051 | daObjKinokoTag_c | [src/game/actors/d_a_obj_kinoko_tag.cpp](../src/game/actors/d_a_obj_kinoko_tag.cpp) |
 | #2055 | daEyBm_c | [src/game/actors/d_a_ey_bm.cpp](../src/game/actors/d_a_ey_bm.cpp) |
 
@@ -585,7 +585,7 @@ recorded as one -- but until the gate is fixed, brace position is load-bearing.
 ### A marker on a still-unnamed member buys nothing
 
 `score_member` recomputes `real_name` from the symbol, not from the fragment, so a member
-still called [func_ov006_0210a534](../src/minigames/d_s_mg_single3_d_base.cpp) (ROM Ordinal 2 used to assemble TU) fails that criterion whichever text it is scored
+still called [LoadCard2SubBg3](../src/minigames/d_s_mg_single3d_base.cpp) (ROM Ordinal 2 used to assemble TU) fails that criterion whichever text it is scored
 against. Marking it is still worth doing, because the boundary it creates is what protects
 its *neighbour* — that is the whole point of the rule above — but do not expect the marker
 to move that member's own score. Renaming it is the thing that does.
@@ -613,11 +613,11 @@ happened is that comment lines were traded for ledger rows.
   `volatile` is in one member. The other eight paid for it.
 - **#2064** (`dScMgSingle3DBase_c`, nine functions) adds **six** markers and **zero**
   backslide-exception rows. The three it leaves unmarked are the two destructor variants,
-  which is right, and one member still named [func_ov006_0210a534](../src/minigames/d_s_mg_single3_d_base.cpp), which is not.
+  which is right, and one member still named [LoadCard2SubBg3](../src/minigames/d_s_mg_single3d_base.cpp), which is not.
   Nothing backslides — neither it nor its neighbour was CONVERTED before — but the
   omission still costs, and it costs the *other* member: with no marker after it, the
-  preceding slot-26 fragment -- [func_ov006_0210a600](../src/minigames/d_s_mg_single3_d_base.cpp) (ROM Ordinal 3 used to assemble TU) at the time, since renamed to
-  `_ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv` and written as a real member
+  preceding slot-26 fragment -- [func_ov006_0210a600](../src/minigames/d_s_mg_single3d_base.cpp) (ROM Ordinal 3 used to assemble TU) at the time, since renamed to
+  `_ZN19dScMgSingle3DBase_c14GetDisplayModeEv` and written as a real member
   definition -- runs from its own marker to end of file and swallows a534's `volatile`
   body and raw addresses. That member is an eight-byte `return 1;` that can never score
   readable while that is true. This is the

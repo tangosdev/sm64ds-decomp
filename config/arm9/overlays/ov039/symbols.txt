@@ -51,6 +51,6 @@ g_profile_OBJ_KUMO kind:data(any) addr:0x02111834 ambiguous
 data_ov039_02111844 kind:data(any) addr:0x02111844 ambiguous
 _ZTV11daObjKumo_c kind:data(any) addr:0x02111858
 data_ov039_021118e0 kind:bss addr:0x021118e0
-data_ov039_021118e4 kind:bss addr:0x021118e4
+gOV039ObjKumoModelFile kind:bss addr:0x021118e4
 @273 kind:bss addr:0x021118ec
 data_ov039_021118f8 kind:bss addr:0x021118f8

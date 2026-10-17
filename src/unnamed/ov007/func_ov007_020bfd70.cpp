@@ -21,6 +21,7 @@
  * to `long` on top of it is byte-inert, and no launder, transposition or pragma reaches
  * it (492-cell pragma sweep and ~6,000 permuter iterations, both flat at 7).
  */
+#include "nitro/fx/fx.h"
 extern "C" {
 void MulVec3Mat4x3(void* v, void* m, void* out);
 int _ZN4cstd4fdivEii(int a, int b);
@@ -37,10 +38,10 @@ void func_ov007_020bfd70(char* actor, void* pos, int* outX, int* outY) {
     int j = i + 1;
     int cosv = base[i];
     int sinv = base[j];
-    int r = (int)(((long long)cosv * (long long)z + 0x800) >> 0xc);
+    int r = FX_MUL(cosv, z);
     int f = _ZN4cstd4fdivEii(sinv, r);
-    int a = (int)(((long long)f * (long long)out[1] + 0x800) >> 0xc);
-    int b = (int)(((long long)f * (long long)out[0] + 0x800) >> 0xc);
+    int a = FX_MUL(f, out[1]);
+    int b = FX_MUL(f, out[0]);
     outX[0] = ((b * 0x60) >> 0xc) + 0x80;
     outY[0] = ((-a * 0x60) >> 0xc) + 0x60;
 }

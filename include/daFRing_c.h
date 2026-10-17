@@ -62,7 +62,7 @@ struct daFRing_c : dActor_c {
     u16 mFrame;                                /* 0x214 */
     u8 pad_216[0x2];
 
-    /* Out of line in daFRing_c.cpp: the key function, so that TU emits
+    /* Out of line in d_a_f_ring.cpp: the key function, so that TU emits
      * _ZTV/_ZTI/_ZTS9daFRing_c. vtable slots 16 (D1) and 17 (D0). */
     virtual ~daFRing_c();
 

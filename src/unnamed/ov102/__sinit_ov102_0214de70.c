@@ -1,3 +1,9 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov102_0214de70_AssetId {
+    ASSET_BOMBHEI_CARRY_BCA = 0x02b7,
+    ASSET_BOMBHEI_WALK_BCA = 0x02b8
+};
+
 extern void _ZN13SharedFilePtr9ConstructEj();
 extern void func_020731dc(void*, void*, void*);
 extern void SharedFilePtr_Destruct_Anim();
@@ -19,9 +25,9 @@ extern V3 data_ov102_0214ea3c;
 
 void __sinit_ov102_0214de70(void)
 {
-    _ZN13SharedFilePtr9ConstructEj(data_ov102_0214e9c0, 0x2b8);
+    _ZN13SharedFilePtr9ConstructEj(data_ov102_0214e9c0, ASSET_BOMBHEI_WALK_BCA);
     func_020731dc(data_ov102_0214e9c0, SharedFilePtr_Destruct_Anim, data_ov102_0214e9d0);
-    _ZN13SharedFilePtr9ConstructEj(data_ov102_0214e9c8, 0x2b7);
+    _ZN13SharedFilePtr9ConstructEj(data_ov102_0214e9c8, ASSET_BOMBHEI_CARRY_BCA);
     func_020731dc(data_ov102_0214e9c8, SharedFilePtr_Destruct_Anim, data_ov102_0214e9dc);
 
     data_ov102_0214ea18.x = 0x1c000;

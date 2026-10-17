@@ -73,14 +73,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov015_02114aac",
+      "symbol": "gBkUkisimaModelFile",
       "address": "0x02114aac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "SharedFilePtr constructed by __sinit_d_a_obj_bk_ukisima.cpp"
     },
     {
-      "symbol": "data_ov015_02114ab4",
+      "symbol": "gBkUkisimaCollisionFile",
       "address": "0x02114ab4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -559,7 +559,7 @@
       "source": "0x02113388",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov015_02114aac",
+      "symbol": "gBkUkisimaModelFile",
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x02114aac"
@@ -589,7 +589,7 @@
       "source": "0x02113398",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov015_02114ab4",
+      "symbol": "gBkUkisimaCollisionFile",
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x02114ab4"

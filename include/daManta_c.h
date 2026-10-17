@@ -11,9 +11,9 @@
  *     0x150 dBgCh_Actr   0x1bc -> 0x30c
  *     0x30c ModelAnim    0x64  -> 0x370
  * classInit allocates 0x404. The tail through 0x400 is the ring challenge
- * (see src/actors/daManta_c.cpp); nothing past 0x400 is read.
+ * (see src/game/actors/d_a_manta.cpp); nothing past 0x400 is read.
  *
- * mState points at a two-pointer-to-member record. daManta_c.cpp defines
+ * mState points at a two-pointer-to-member record. d_a_manta.cpp defines
  * data_ov090_0213454c; the compiler copies the init PMF
  * (func_ov090_02132a58) and the execute PMF (func_ov090_021327e4) into it.
  * Behavior calls execute. The record type is completed in the TU.

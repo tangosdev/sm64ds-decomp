@@ -2,7 +2,7 @@
  * _ZTI13daObjBlockS_c (0x0213c4d4), whose name string at 0x0213c500 is
  * "13daObjBlockS_c". The tree used to spell the class Crate.
  *
- * SIZE 0x608, the literal daObjBlockS_c_classInit (src/actors/daObjBlockS_c.cpp) passes to
+ * SIZE 0x608, the literal daObjBlockS_c_classInit (src/game/actors/d_a_obj_block_s.cpp) passes to
  * fBase_c::operator new. dBgActor_c ends 0x320; everything from there down is
  * this class's own, confirmed by the destructor (D1) destroying
  * dCcAcPos_c x2, dExtShadowModel_c and dBgCh_Actr in reverse before
@@ -144,7 +144,7 @@ struct daObjBlockS_c : dBgActor_c {
     void func_ov098_02139850();
 
     /* The values of mState: each indexes one {enter, update} pair in the table
-       at data_ov098_0213c878 (see src/actors/daObjBlockS_c.cpp). The names
+       at data_ov098_0213c878 (see src/game/actors/d_a_obj_block_s.cpp). The names
        describe what the handlers do; the ROM stores none. */
     enum State {
         STATE_IDLE      = 0,    /* sitting where it was placed or landed */

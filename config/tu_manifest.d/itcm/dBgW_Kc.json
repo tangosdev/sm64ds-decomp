@@ -1,13 +1,13 @@
 {
   "id": "itcm/dBgW_Kc",
   "module": "itcm",
-  "source": "src/engine/collision/dBgW_Kc_itcm.cpp",
-  "promoted_source": "src/engine/collision/dBgW_Kc_itcm.cpp",
+  "source": "src/engine/collision/d_bg_w_kc_itcm.cpp",
+  "promoted_source": "src/engine/collision/d_bg_w_kc_itcm.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "CONTIGUOUS AND EXHAUSTIVE: 0x01ffb07c..0x01ffd97c is covered by exactly 14 config/arm9/itcm/symbols.txt function symbols with no gap and no overlap. 13 were already `complete` in config/arm9/itcm/delinks.txt; the 0x01ffb0fc..0x01ffb830 span (DetectClsn(dBgCh_Lin&), size 0x734) was the run's one un-enrolled piece and is now matched and folded in with the rest.",
-    "CLASS IDENTITY FROM ROM RTTI: these are the six ITCM-resident vtable slots _ZTV7dBgW_Kc (arm9:0x020993dc) points at -- GetSurfaceInfo (slot 3), GetNormal (4), GetTriangleOrigin (5), DetectClsn(Gnd/Lin/SphCrr) (6..8) -- plus the two const octree accessors and six flag/field helpers the derived classes' own code calls by raw address. The arm9 half of the same class lives in src/engine/collision/dBgW_Kc.cpp.",
+    "CLASS IDENTITY FROM ROM RTTI: these are the six ITCM-resident vtable slots _ZTV7dBgW_Kc (arm9:0x020993dc) points at -- GetSurfaceInfo (slot 3), GetNormal (4), GetTriangleOrigin (5), DetectClsn(Gnd/Lin/SphCrr) (6..8) -- plus the two const octree accessors and six flag/field helpers the derived classes' own code calls by raw address. The arm9 half of the same class lives in src/engine/collision/d_bg_w_kc.cpp.",
     "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order, so the file defines GetSurfaceInfo (0x01ffd920) first and func_01ffb07c (0x01ffb07c) last -- no lifecycle group exists in ITCM.",
     "HELPERS ARE THIS TU'S OWN: func_01ffb07c copies a Vector3 into the collider's 0x38 axis; func_01ffb098..0x01ffb0bc are the 0x34/0x35 flag pair accessors; func_01ffb0c8 returns kclFile. All six are dBgW_Kc workers called by raw address -- func_01ffb07c by the derived colliders' own TUs, the flag pairs likewise -- not vtable slots.",
     "NEIGHBOURS ARE OTHER SUBJECTS: below, func_01ffb030 (0x01ffb030..0x01ffb07c) is hand-written runtime support code, a different TU. Above, _ZN3IRQ20UserInterruptHandlerEv (0x01ffd97c..0x01ffd9d4) is the IRQ module's own function -- the ROM literally names it."

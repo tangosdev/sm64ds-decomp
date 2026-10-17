@@ -40,3 +40,6 @@
 ```
 
 - verdict: PACKAGING-LICENSED
+
+Current source locations after PR #3840: [src/game/actors/d_a_trs_trap_classinits.cpp](../../src/game/actors/d_a_trs_trap_classinits.cpp).
+The experiment and commands above retain the paths at `tested_commit`.

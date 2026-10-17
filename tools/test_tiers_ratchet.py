@@ -901,11 +901,11 @@ class SyntheticTree:
     FAILING_TWO_FN = ("//cpp\nint unk_18;\n"
                       "void First() { unk_18 = 1; }\nvoid Second() {}\n")
     # One member fails and the other passes -- the shape VFY-2543-15 is about, and
-    # the shape of the real src/actors/ActorDerived.cpp, where 1 of 5 members is still
+    # the shape of the real src/runtime/actor/ActorDerived.cpp, where 1 of 5 members is still
     # named func_02013edc. FAILING_TWO_FN cannot express it: a file-scope `unk_18`
     # fails BOTH members, so every earlier fixture had the file and its members
     # agreeing, which is exactly the case that hides this defect.
-    # Marked as the real src/actors/ActorDerived.cpp now is. The unbanked
+    # Marked as the real src/runtime/actor/ActorDerived.cpp now is. The unbanked
     # `func_02013edc` carries a marker too -- a fragment runs from its marker to the
     # NEXT one, so leaving it out would fold it into `Second`'s body and fail the
     # member this fixture exists to watch pass.
@@ -1209,7 +1209,7 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
         the banked one-function identity `_ZN7dBase_cD1Ev.cpp` -- then under src/ and
         absorbed since, so not spelled as a repo-rooted path for the same reason as the
         comment in test_the_manifest_clash_is_named_in_every_arm_that_can_carry_one --
-        rewritten onto src/actors/ActorDerived.cpp#_ZN7dBase_cD1Ev takes --check from 1
+        rewritten onto src/runtime/actor/ActorDerived.cpp#_ZN7dBase_cD1Ev takes --check from 1
         to 0 with no exception row written at all.
         """
         dest = "src/actors/TU.cpp"

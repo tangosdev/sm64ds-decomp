@@ -22,6 +22,14 @@
  * - pad_0d0 stays: untouched anywhere in this TU (Model opens at 0x0d4).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_hs_billboard_AssetId {
+    ASSET_HS_B_STAR_BMD = 0x061c,
+    ASSET_HS_MOON_BMD = 0x061d,
+    ASSET_HS_STAR_BMD = 0x061e,
+    ASSET_HS_Y_STAR_BMD = 0x0621
+};
+
 #include "daObjHsBillboard_c.h"
 #include "SharedFilePtr.h"
 #include "BMD_File.h"
@@ -121,7 +129,7 @@ extern "C" void func_ov031_02111214(daObjHsBillboard_c *self)
    inline `operator delete`, which is why nothing here names a heap. */
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_hs_billboard.cpp. */
-HsBillboardModelFilePtr data_ov031_02111a08(1565);
-HsBillboardModelFilePtr data_ov031_02111a00(1566);
-HsBillboardModelFilePtr data_ov031_02111a10(1569);
-HsBillboardModelFilePtr data_ov031_02111a18(1564);
+HsBillboardModelFilePtr gHsMoonModelFile(ASSET_HS_MOON_BMD);
+HsBillboardModelFilePtr gHsStarModelFile(ASSET_HS_STAR_BMD);
+HsBillboardModelFilePtr gHsYStarModelFile(ASSET_HS_Y_STAR_BMD);
+HsBillboardModelFilePtr gHsBStarModelFile(ASSET_HS_B_STAR_BMD);

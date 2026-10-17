@@ -1,3 +1,18 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov019_021127a4_AssetId {
+    ASSET_PENGUIN_BMD = 0x03fb,
+    ASSET_PENGUIN_ANGRY_BTP = 0x03fd,
+    ASSET_PENGUIN_DIVE_BCA = 0x0400,
+    ASSET_PENGUIN_JUMP_ED_BCA = 0x0401,
+    ASSET_PENGUIN_JUMP_ST_BCA = 0x0402,
+    ASSET_PENGUIN_SLIDER_BCA = 0x0403,
+    ASSET_PENGUIN_SLIDER_BTP = 0x0404,
+    ASSET_PENGUIN_STAND_UP_BCA = 0x0405,
+    ASSET_PENGUIN_WAIT1_BCA = 0x0406,
+    ASSET_PENGUIN_WAIT1_BTP = 0x0407,
+    ASSET_PENGUIN_WALK_BCA = 0x0408
+};
+
 extern int func_02017acc(void*, int);
 extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
@@ -9,25 +24,25 @@ extern void *_ZN7Vector3D1Ev(void *object);
 
 extern void* data_ov019_02113498;
 extern void* data_ov019_021134dc;
-extern struct SharedFilePtr data_ov019_02113470;
+extern struct SharedFilePtr gOV019PenguinWait1AnimationFile;
 extern void* data_ov019_021134f4;
-extern struct SharedFilePtr data_ov019_021134a0;
+extern struct SharedFilePtr gOV019PenguinWalkAnimationFile;
 extern void* data_ov019_02113500;
-extern struct SharedFilePtr data_ov019_02113478;
+extern struct SharedFilePtr gPenguinJumpStAnimationFile;
 extern void* data_ov019_0211350c;
-extern struct SharedFilePtr data_ov019_02113460;
+extern struct SharedFilePtr gPenguinJumpEdAnimationFile;
 extern void* data_ov019_02113524;
-extern struct SharedFilePtr data_ov019_02113480;
+extern struct SharedFilePtr gPenguinDiveAnimationFile;
 extern void* data_ov019_02113530;
-extern struct SharedFilePtr data_ov019_02113488;
+extern struct SharedFilePtr gPenguinSliderAnimationFile;
 extern void* data_ov019_02113548;
-extern struct SharedFilePtr data_ov019_02113490;
+extern struct SharedFilePtr gPenguinStandUpAnimationFile;
 extern void* data_ov019_02113554;
-extern struct SharedFilePtr data_ov019_021134a8;
+extern struct SharedFilePtr gOV019PenguinAngryTextureSequenceFile;
 extern void* data_ov019_02113560;
-extern struct SharedFilePtr data_ov019_021134b0;
+extern struct SharedFilePtr gPenguinSliderTextureSequenceFile;
 extern void* data_ov019_021134b8;
-extern struct SharedFilePtr data_ov019_02113468;
+extern struct SharedFilePtr gOV019PenguinWait1TextureSequenceFile;
 extern void* data_ov019_021134c4;
 
 struct P2 { int a, b; };
@@ -54,28 +69,28 @@ extern void* data_ov019_02113518;
 
 void __sinit_ov019_021127a4(void)
 {
-    func_02017acc(&data_ov019_02113498, 0x3fb);
+    func_02017acc(&data_ov019_02113498, ASSET_PENGUIN_BMD);
     func_020731dc(&data_ov019_02113498, (void*)&func_02017ab4, (void**)&data_ov019_021134dc);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov019_02113470, 0x406);
-    func_020731dc(&data_ov019_02113470, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_021134f4);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov019_021134a0, 0x408);
-    func_020731dc(&data_ov019_021134a0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113500);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov019_02113478, 0x402);
-    func_020731dc(&data_ov019_02113478, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_0211350c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov019_02113460, 0x401);
-    func_020731dc(&data_ov019_02113460, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113524);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov019_02113480, 0x400);
-    func_020731dc(&data_ov019_02113480, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113530);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov019_02113488, 0x403);
-    func_020731dc(&data_ov019_02113488, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113548);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov019_02113490, 0x405);
-    func_020731dc(&data_ov019_02113490, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113554);
-    SharedFilePtr_Construct_TexSeq(&data_ov019_021134a8, 0x3fd);
-    func_020731dc(&data_ov019_021134a8, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov019_02113560);
-    SharedFilePtr_Construct_TexSeq(&data_ov019_021134b0, 0x404);
-    func_020731dc(&data_ov019_021134b0, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov019_021134b8);
-    SharedFilePtr_Construct_TexSeq(&data_ov019_02113468, 0x407);
-    func_020731dc(&data_ov019_02113468, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov019_021134c4);
+    _ZN13SharedFilePtr9ConstructEj(&gOV019PenguinWait1AnimationFile, ASSET_PENGUIN_WAIT1_BCA);
+    func_020731dc(&gOV019PenguinWait1AnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_021134f4);
+    _ZN13SharedFilePtr9ConstructEj(&gOV019PenguinWalkAnimationFile, ASSET_PENGUIN_WALK_BCA);
+    func_020731dc(&gOV019PenguinWalkAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113500);
+    _ZN13SharedFilePtr9ConstructEj(&gPenguinJumpStAnimationFile, ASSET_PENGUIN_JUMP_ST_BCA);
+    func_020731dc(&gPenguinJumpStAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_0211350c);
+    _ZN13SharedFilePtr9ConstructEj(&gPenguinJumpEdAnimationFile, ASSET_PENGUIN_JUMP_ED_BCA);
+    func_020731dc(&gPenguinJumpEdAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113524);
+    _ZN13SharedFilePtr9ConstructEj(&gPenguinDiveAnimationFile, ASSET_PENGUIN_DIVE_BCA);
+    func_020731dc(&gPenguinDiveAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113530);
+    _ZN13SharedFilePtr9ConstructEj(&gPenguinSliderAnimationFile, ASSET_PENGUIN_SLIDER_BCA);
+    func_020731dc(&gPenguinSliderAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113548);
+    _ZN13SharedFilePtr9ConstructEj(&gPenguinStandUpAnimationFile, ASSET_PENGUIN_STAND_UP_BCA);
+    func_020731dc(&gPenguinStandUpAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov019_02113554);
+    SharedFilePtr_Construct_TexSeq(&gOV019PenguinAngryTextureSequenceFile, ASSET_PENGUIN_ANGRY_BTP);
+    func_020731dc(&gOV019PenguinAngryTextureSequenceFile, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov019_02113560);
+    SharedFilePtr_Construct_TexSeq(&gPenguinSliderTextureSequenceFile, ASSET_PENGUIN_SLIDER_BTP);
+    func_020731dc(&gPenguinSliderTextureSequenceFile, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov019_021134b8);
+    SharedFilePtr_Construct_TexSeq(&gOV019PenguinWait1TextureSequenceFile, ASSET_PENGUIN_WAIT1_BTP);
+    func_020731dc(&gOV019PenguinWait1TextureSequenceFile, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov019_021134c4);
 
     data_ov019_0211356c[0] = data_ov019_021132b8;
     data_ov019_0211356c[1] = data_ov019_02113280;

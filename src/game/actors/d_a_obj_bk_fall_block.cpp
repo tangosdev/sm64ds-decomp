@@ -23,6 +23,12 @@
  * Leftover: g_profile_BK_DOWN_B lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_bk_fall_block_AssetId {
+    ASSET_BK_DOWN_B_BMD = 0x058f,
+    ASSET_BK_DOWN_B_KCL = 0x0590
+};
+
 #include "daObjBk_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
@@ -80,5 +86,5 @@ s32 daObjBk_Fall_Block_c::CleanupResources()
 
 /* Retail construction order: model 1423, then collision 1424.
  * mwcc emits __sinit_d_a_obj_bk_fall_block.cpp. */
-FallBlockModelFilePtr data_ov015_02114adc(1423);
-FallBlockClsnFileHandle data_ov015_02114ad4(1424);
+FallBlockModelFilePtr gBkDownBModelFile(ASSET_BK_DOWN_B_BMD);
+FallBlockClsnFileHandle gBkDownBCollisionFile(ASSET_BK_DOWN_B_KCL);

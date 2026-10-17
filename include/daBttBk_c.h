@@ -27,7 +27,7 @@
  * mWithMeshClsn was mistyped `u8` at 0x180 in the generated header --
  * daBttBk_c_classInit calls _ZN10dBgCh_ActrC1Ev at that offset, so it is the
  * real 0x1bc-byte member (0x180..0x33c). The 0x38 bytes from 0x33c..0x374
- * are named from how daBttBk_c.cpp uses them: a shadow matrix at 0x33c
+ * are named from how d_a_btt_bk.cpp uses them: a shadow matrix at 0x33c
  * (func_ov080_02124c3c), the current state-table row at 0x36c and its index
  * at 0x370; mCarrier holds the carrier actor (func_ov080_02124acc stores it,
  * 02124c3c/02124edc read it).
@@ -48,17 +48,17 @@
 struct daBttBk_c : dActor_c {
     u8  pad_0d0[0x4];
     /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x0d4. [daBttBk_c D0, src/actors/daBttBk_c.cpp] */
+       Model's D1 at +0x0d4. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
     Model mModel;            /* 0x0d4 */
     /* dExtShadowModel_c member, named by the class's own destructor calling
-       dExtShadowModel_c's D1 at +0x124. [daBttBk_c D0, src/actors/daBttBk_c.cpp] */
+       dExtShadowModel_c's D1 at +0x124. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
     dExtShadowModel_c mShadowModel;            /* 0x124 */
     /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x14c. [daBttBk_c D0, src/actors/daBttBk_c.cpp] */
+       dCcAc_c's D1 at +0x14c. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
     dCcAc_c mdCcAc_c;            /* 0x14c */
     /* dBgCh_Actr member, named by daBttBk_c_classInit's own C1 call and the
        class's own destructor's D1 call at +0x180.
-       [daBttBk_c_classInit and D0, src/actors/daBttBk_c.cpp] */
+       [daBttBk_c_classInit and D0, src/game/actors/d_a_btt_bk.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x180 */
     u8  mShadowMtx[0x30];   /* 0x33c -- Matrix4x3 for the drop shadow (func_ov080_02124c3c) */
     char *mStateRow;        /* 0x36c -- current row of the state table */

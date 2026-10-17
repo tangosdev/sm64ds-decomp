@@ -1,22 +1,48 @@
 extern void Vec3_Sub(int *dest, const int *src1, const int *src2);
 
+/* File-local views (the class headers are C++): only the fields this helper
+ * touches. Camera names follow include/dCamera_c.h; the player's follow
+ * include/dActor_c.h (mPos spans its mPosX..mPosZ). */
+typedef struct {
+    int x, y, z;
+} Vec3;
+
+typedef struct {
+    unsigned char pad_000[0x5c];
+    Vec3 mPos; /* 0x05c */
+} PlayerView;
+
+typedef struct {
+    unsigned char pad_000[0x80];
+    Vec3 lookAt; /* 0x080 */
+    unsigned char pad_08c[0xc];
+    /* The target player's position, refreshed here every frame ... */
+    Vec3 mTargetPos; /* 0x098 */
+    /* ... and lookAt relative to it. */
+    Vec3 mLookAtOffset; /* 0x0a4 */
+    unsigned char pad_0b0[0x60];
+    PlayerView *mTargetPlayer; /* 0x110 */
+} CameraView;
+
 void func_020089f8(int *obj)
 {
-    int *ptr;
-    char *p;
+    CameraView *cam = (CameraView *)obj;
+    PlayerView *player;
+    Vec3 *p;
     int tmp[3];
 
-    ptr = *(int **)((char *)obj + 0x110);
-    if (ptr == 0) {
+    player = cam->mTargetPlayer;
+    if (player == 0) {
         return;
     }
-    p = (char *)((unsigned long long)((char *)ptr + 0x5c));
-    obj[0x98 / 4] = *(int *)p;
-    obj[0x9c / 4] = *(int *)(p + 4);
-    obj[0xa0 / 4] = *(int *)(p + 8);
-    Vec3_Sub(tmp, (int *)((char *)obj + 0x80), (int *)((char *)obj + 0x98));
-    obj[0xa4 / 4] = tmp[0];
-    obj[0xa8 / 4] = tmp[1];
-    obj[0xac / 4] = tmp[2];
+    p = &player->mPos;
+    cam->mTargetPos.x = p->x;
+    cam->mTargetPos.y = p->y;
+    cam->mTargetPos.z = p->z;
+    Vec3_Sub(tmp, &cam->lookAt.x, &cam->mTargetPos.x);
+    cam->mLookAtOffset.x = tmp[0];
+    cam->mLookAtOffset.y = tmp[1];
+    cam->mLookAtOffset.z = tmp[2];
+    /* 0x130 stays raw: zeroed here, read once as a scale on mLookTargetPos. */
     obj[0x130 / 4] = 0;
 }

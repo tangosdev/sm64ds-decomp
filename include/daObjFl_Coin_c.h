@@ -10,7 +10,7 @@
  * 0x0211bfb0 say daObjFl_Coin_c. The vtable at 0x0211c1d8 stores that
  * typeinfo, and daObjFl_Coin_c_classInit writes the same vtable after
  * operator new(0xd8). Three byte fields sit at 0xd4. daObjFl_Puzzle_c pieces
- * (src/actors/daObjFl_Coin_c.cpp) find the manager by actor ID, write the
+ * (src/game/actors/d_a_obj_fl_coin.cpp) find the manager by actor ID, write the
  * first and third and read the second; daCoin_c reads and decrements the
  * third.
  */

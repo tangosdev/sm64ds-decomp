@@ -1,0 +1,42 @@
+name: source style
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - '.clang-format'
+      - '.clang-tidy'
+      - 'config/source-style-exceptions.json'
+      - 'tools/source_style.py'
+      - 'tools/test_source_style.py'
+      - 'tools/audit_source_format.py'
+      - 'tools/test_audit_source_format.py'
+      - 'tools/style_fixtures/**'
+      - 'tools/requirements-style.txt'
+      - 'tools/delaunder.py'
+      - 'tools/msvc_arms.py'
+      - 'notes/source-style.md'
+      - '.github/workflows/source-style.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # A merge ref may include main commits newer than the event base.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r tools/requirements-style.txt -r tools/requirements.txt
+      - name: Checker regressions and real formatter fixtures
+        run: python -m unittest tools.test_source_style tools.test_audit_source_format -v
+      - name: New source patterns and changed-line formatting
+        if: github.event_name == 'pull_request'
+        env:
+          STYLE_BASE: ${{ github.event.pull_request.base.sha }}
+        run: python tools/source_style.py --base "$STYLE_BASE"

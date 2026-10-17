@@ -32,11 +32,11 @@ once, here, rather than per class.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x300 | `mState` (`State *`) | `src/actors/daWater_Hakidasi_c.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `daPropeller_Heyho_Fire_c::State` describes (`include/daPropeller_Heyho_Fire_c.h`, handler at +0x08) and the same `mState` spelling `daHolhei_c`, `daKing_Donketu_c` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
+| 0x300 | `mState` (`State *`) | `src/game/actors/d_a_water_hakidasi.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `daPropeller_Heyho_Fire_c::State` describes (`include/daPropeller_Heyho_Fire_c.h`, handler at +0x08) and the same `mState` spelling `daHolhei_c`, `daKing_Donketu_c` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
 
 Left `unk_`:
 
-* **0x314, 0x318** — `src/actors/daWater_Hakidasi_c.cpp` decodes both out of
+* **0x314, 0x318** — `src/game/actors/d_a_water_hakidasi.cpp` decodes both out of
   the spawn word: `unk_314 = (param1 >> 12) & 0xf`, `unk_318 = param1 & 1` and then
   `if ((param1 & 0xf) > 1) unk_318 = 0`. Nothing in the tree reads either back, so
   the bytes say how they are *built* but nothing about what they *select*. A name
@@ -49,7 +49,7 @@ Byte-neutral cleanups made in the same pass (each re-verified with
   stand-in in favour of the declared `mState`; collapsed
   `*(short*)((char*)&mAngleX) = *(short*)((char*)&mPrevAngleX)` (and Y, Z) to plain
   member assignments; `(unsigned short*)((char*)&(*(u8 *)&unk_100))` to
-  `(unsigned short*)&unk_100`; [func_ov064_0211987c](../src/actors/daWater_Hakidasi_c.cpp)`(((C*)this))` to `(this)`.
+  `(unsigned short*)&unk_100`; [func_ov064_0211987c](../src/game/actors/d_a_water_hakidasi.cpp)`(((C*)this))` to `(this)`.
 * `InitResources` — `(dCcAc_c*)((char*)&(*(u8 *)&mdCcAc_c))` to `&mdCcAc_c`,
   `(dActor_c*)((char*)this)` to `(dActor_c*)this`.
 
@@ -59,7 +59,7 @@ Byte-neutral cleanups made in the same pass (each re-verified with
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x5d0 | `mSpawnPosX` | `InitResources` ([src/actors/daKuriKing_c.cpp](../src/actors/daKuriKing_c.cpp)) copies `self+0x5c` (mPosX) into `self+0x5d0` once, immediately after the collision cylinders are sized, and nothing writes it again. |
+| 0x5d0 | `mSpawnPosX` | `InitResources` ([src/game/actors/d_a_kuri_king.cpp](../src/game/actors/d_a_kuri_king.cpp)) copies `self+0x5c` (mPosX) into `self+0x5d0` once, immediately after the collision cylinders are sized, and nothing writes it again. |
 | 0x5d4 | `mSpawnPosY` | same, from `self+0x60` (mPosY). |
 | 0x5d8 | `mSpawnPosZ` | same, from `self+0x64` (mPosZ). |
 
@@ -86,7 +86,7 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 shard `_ZN12daKuriKing_c13InitResourcesEv.cpp`, an `extern "C"` function over a
 bare `char *self` that never included the header, so its offsets were not member
 accesses to collapse. It has since been folded into
-[src/actors/daKuriKing_c.cpp](../src/actors/daKuriKing_c.cpp) as a real method.
+[src/game/actors/d_a_kuri_king.cpp](../src/game/actors/d_a_kuri_king.cpp) as a real method.
 
 ---
 
@@ -140,7 +140,7 @@ scores the source text and read the raw-offset cast as a backslide.
 
 Bodies read: `daBmb_c::InitResources`, `daBmb_c::Behavior`, `daBmb_c::Render`,
 `daBmb_c::OnYoshiTryEat` and `daBmb_c::OnTurnIntoEgg`, all now in the promoted
-translation unit `src/actors/daBmb_c.cpp`. The class was carried under the coined
+translation unit `src/game/actors/d_a_bmb.cpp`. The class was carried under the coined
 name `BobOmb` when these fields were named; ov102 0x0214e4fc holds `7daBmb_c`, so
 the class and its members were renamed to the cartridge's own spelling.
 
@@ -240,7 +240,7 @@ the offset better than `unk_100` does.
 
 ## daIbl_c (`include/daIbl_c.h`, ov100)
 
-Bodies read (all in `src/actors/daIbl_c.cpp`): `daIbl_c::InitResources`,
+Bodies read (all in `src/game/actors/d_a_ibl.cpp`): `daIbl_c::InitResources`,
 `daIbl_c::Behavior`, `daIbl_c::Render`.
 
 | offset | name | evidence |
@@ -309,11 +309,11 @@ Byte-neutral cleanup: `Behavior`'s
 ## daJango_c (`include/daJango_c.h`, [ov062](../config/arm9/overlays/ov062/symbols.txt))
 
 The cartridge class is daJango_c. The bodies below were read when they were
-still one file each; they now live in `src/actors/daJango_c.cpp`.
+still one file each; they now live in `src/game/actors/d_a_jango.cpp`.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x42c | `mState` (`void *`) | `Behavior` reads the word as a pointer, calls the pointer-to-member at its `+0x08` on `this` every frame, and compares it against the file-scope records [data_ov062_0211e14c](../config/arm9/overlays/ov062/symbols.txt) / [data_ov062_0211e15c](../config/arm9/overlays/ov062/symbols.txt) / [data_ov062_0211e17c](../config/arm9/overlays/ov062/symbols.txt) **by address**. `func_ov062_0211c658` in `src/actors/daJango_c.cpp` is the setter. |
+| 0x42c | `mState` (`void *`) | `Behavior` reads the word as a pointer, calls the pointer-to-member at its `+0x08` on `this` every frame, and compares it against the file-scope records [data_ov062_0211e14c](../config/arm9/overlays/ov062/symbols.txt) / [data_ov062_0211e15c](../config/arm9/overlays/ov062/symbols.txt) / [data_ov062_0211e17c](../config/arm9/overlays/ov062/symbols.txt) **by address**. `func_ov062_0211c658` in `src/game/actors/d_a_jango.cpp` is the setter. |
 | 0x430 | `mPathNodePosX` | `PathPtr::GetNode(path, &unk_430, mPathNodeIndex)` writes the node here, and the star-carrying branch then does `mPosX = unk_430; mPosY = unk_434; mPosZ = unk_438;`. |
 | 0x434 | `mPathNodePosY` | as above. |
 | 0x438 | `mPathNodePosZ` | as above. |

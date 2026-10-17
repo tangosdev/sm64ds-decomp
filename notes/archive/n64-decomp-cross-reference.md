@@ -77,7 +77,7 @@ tuning, not a natural constant. Re-emitted at 8 other Player sites.
 
 ### 2.3 Wing-cap flutter — same gate, same numbers
 
-DS [St_Shell_Main](../../src/actors/Player.cpp) (ROM ordinal 255) 0x020cc5cc-0x020cc5ec: `mHasWings` AND descending AND A-held →
+DS [St_Shell_Main](../../src/game/player/Player.cpp) (ROM ordinal 255) 0x020cc5cc-0x020cc5ec: `mHasWings` AND descending AND A-held →
 `mVertAccel = -2.0`, `mTerminalVelocity = -37.5`.
 
 N64 `mario_step.c`:[566](https://github.com/n64decomp/sm64/blob/master/src/game/mario_step.c#L566)-[574](https://github.com/n64decomp/sm64/blob/master/src/game/mario_step.c#L574) — `MARIO_WING_CAP && vel[1] < 0.0f && (input & INPUT_A_DOWN)`
@@ -161,7 +161,7 @@ a documented contamination vector worth a policy note. *This was not verified �
 
 ## 5. Defects found along the way (actionable)
 
-1. **`Player::St_WallJump_Init` ([src/actors/Player.cpp](../../src/actors/Player.cpp)) is misattributed.** Its own banner admits it is
+1. **`Player::St_WallJump_Init` ([src/game/player/Player.cpp](../../src/game/player/Player.cpp)) is misattributed.** Its own banner admits it is
    *"NOT a Player method"*; it dereferences `this+0x4eb0`, `+0x4eb4`, `+0x4ee5` — ~0x4700 bytes
    past the end of a 0x768-byte `Player`. The real `St_WallJump_Main` is in [ov002](../../config/arm9/overlays/ov002/symbols.txt); this one is in
    [ov006](../../config/arm9/overlays/ov006/symbols.txt). **The bad assumption has already leaked into `include/Player.h:536-540`** as a footnote
@@ -180,7 +180,7 @@ a documented contamination vector worth a policy note. *This was not verified �
 4. **[src/AngleDiff.c](../../src/AngleDiff.c)** has no header comment, no `@symbol` line, no matching claim — unlike every
    neighbour in the math set. Lowest-confidence file in that group.
 
-5. **`Player::ChangeState` ([src/actors/Player.cpp](../../src/actors/Player.cpp))** declares a local `struct State` and a
+5. **`Player::ChangeState` ([src/game/player/Player.cpp](../../src/game/player/Player.cpp))** declares a local `struct State` and a
    `struct C3;` inside the .cpp, and writes fields through `*(State**)((char*)&self->unk_378)`
    casts. The ROM confirms the 0x18/3-PMF layout, so the *shape* is right — but this is an
    un-recovered type re-declared per-file instead of living in a header.
@@ -195,8 +195,8 @@ a documented contamination vector worth a policy note. *This was not verified �
 | `data_02082214` | `FX_SinCosTable_` — 0x1000 interleaved fx16 sin/cos pairs, 0x4000 bytes, ends 0x02086214 | *NitroSDK* standard |
 | [data_ov002_0210a59c](../../config/arm9/overlays/ov002/symbols.txt) | `sJumpVelocities` / `sPlayerJumpComboVelY` | rodata {42.0, 52.0, 69.0} |
 | [data_ov002_0210a5a8](../../config/arm9/overlays/ov002/symbols.txt) | jump-combo animation IDs | rodata {0x53, 0x4f, 0x4b} |
-| [func_ov002_020e28d4](../../src/actors/Player.cpp) | `Player::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
-| [func_ov002_020bf2d8](../../src/actors/Player.cpp) (ROM ordinal 39 used to assemble `Player.cpp`) | `Player_SetVertSpeedByCharFactor` (sibling of `Player_ScaleByCharFactor` @0x020bf30c) | scales arg by per-char factor → `+0xa8` |
+| [func_ov002_020e28d4](../../src/game/player/Player.cpp) | `Player::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
+| [func_ov002_020bf2d8](../../src/game/player/Player.cpp) (ROM ordinal 39 used to assemble `Player.cpp`) | `Player_SetVertSpeedByCharFactor` (sibling of `Player_ScaleByCharFactor` @0x020bf30c) | scales arg by per-char factor → `+0xa8` |
 | `func_02037e38` | `CLPS::GetType` | the only CLPS getter used in a jump-table dispatch ([ov098](../../config/arm9/overlays/ov098/symbols.txt) @0x02139264) |
 | 0x02037e14–0x02037e90 | eight more CLPS bitfield getters | 3-instruction accessors, bit extents recovered |
 
@@ -292,7 +292,7 @@ than a cylinder (N64 `LOAD_COLLISION_DATA(whomp_seg6_collision_...)` - [behavior
 `MovingMeshCollider::SetFile`), and both encode regular-vs-King as **one class with a flag**, not
 two behaviors (N64 `oBhvParams2ndByte != WHOMP_BP_SMALL`; DS `mIsKing`).
 
-**daDonketu_c** — not recoverable; DS logic is behind unmatched [func_ov064_02116ec0](../../config/tu_manifest.d/ov064/daOts_c.json) - (`_ZN7daOts_c19InitResourcesCommonEv`, ROM ordinal 39 which assembles [daOts_c.cpp](../../src/actors/daOts_c.cpp)). N64 ground truth
+**daDonketu_c** — not recoverable; DS logic is behind unmatched [func_ov064_02116ec0](../../config/tu_manifest.d/ov064/daOts_c.json) - (`_ZN7daOts_c19InitResourcesCommonEv`, ROM ordinal 39 which assembles [d_a_ots.cpp](../../src/game/actors/d_a_ots.cpp)). N64 ground truth
 for future comparison (`bully.inc.c`:[3](https://github.com/n64decomp/sm64/blob/master/src/game/behaviors/bully.inc.c#L3)-[52](https://github.com/n64decomp/sm64/blob/master/src/game/behaviors/bully.inc.c#L52)): small 73/123/63/113, gravity 4.0, friction 0.91;
 big 115/235/105/225, gravity 5.0, friction 0.93.
 
@@ -458,8 +458,8 @@ at `0x020d3dcc`–`0x020d3de0`, threshold and factor both exact.
 
 Earlier notes described the [ov098](../../config/arm9/overlays/ov098/symbols.txt) jump table (30/45/60/100 → `+0x5f0`) as a surface-type→speed
 table. **It is quicksand sink depth.** [ov098](../../config/arm9/overlays/ov098/symbols.txt) is the Shifting Sand Land object overlay;
-[func_ov098_02139228](../../src/actors/daObjBlockS_c.cpp) = `Crate::UpdateQuicksand`. `+0x5f0` is target sink depth, `+0x5f4`([mClsnYOffset](../../include/daObjBlockS_c.h)) current,
-approached at 0.5/frame. Render position is built as `pos.y − this[0x5f4]` (`t.y - mClsnYOffset` in [the TU](../../src/actors/daObjBlockS_c.cpp)) — verbatim N64
+[func_ov098_02139228](../../src/game/actors/d_a_obj_block_s.cpp) = `Crate::UpdateQuicksand`. `+0x5f0` is target sink depth, `+0x5f4`([mClsnYOffset](../../include/daObjBlockS_c.h)) current,
+approached at 0.5/frame. Render position is built as `pos.y − this[0x5f4]` (`t.y - mClsnYOffset` in [the TU](../../src/game/actors/d_a_obj_block_s.cpp)) — verbatim N64
 `mario.c`:[1552](https://github.com/n64decomp/sm64/blob/master/src/game/mario.c#L1552) `o->header.gfx.pos[1] -= m->quicksandDepth`.
 
 | tier | N64 max | DS max (CLPS type) |
@@ -493,18 +493,18 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 | [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/unnamed/ov002/func_ov002_020f02c8.c) | `GetSlideAccelForClass` |
 | [`0x020f030c`](../../src/unnamed/ov002/func_ov002_020f030c.c) | `GetSlideLossFactorForClass` |
 | [`0x020f035c`](../../src/unnamed/ov002/func_ov002_020f035c.c) | `FloorIsSlope` |
-| [`0x020c031c`](../../src/actors/Player.cpp) (ROM ordinal 55) | `Player::GetFloorClass` |
-| [`0x020c04e0`](../../src/actors/Player.cpp) (ROM ordinal 59; currently [`_ZN6Player19func_ov002_020c04e0Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ApplySlopeAccel` |
-| [`0x020c06fc`](../../src/actors/Player.cpp) (ROM ordinal 61) | `Player::UpdateSliding` |
-| [`0x020bf56c`](../../src/actors/Player.cpp) (ROM ordinal 46; currently [`func_ov002_020bf56c`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::GetSlopeDecelCoef` |
-| [`0x020c16ec`](../../src/actors/Player.cpp) (ROM ordinal 68) | `Player::SetFloorSurfaceInfo` |
-| [`0x020d4d88`](../../src/actors/Player.cpp) | `Player::UpdateGroundSpeed` |
-| [`0x020d3b9c`](../../src/actors/Player.cpp) | `Player::UpdateWalkingSpeed` |
-| [`0x020d45c0`](../../src/actors/Player.cpp) | `Player::Walk_UpdateRunDustFx` |
-| [`0x020d413c`](../../src/actors/Player.cpp) | `Player::Walk_UpdateBodyLean` |
-| [`0x020bf30c`](../../src/actors/Player.cpp) (ROM ordinal 40; currently [`Player_ScaleByCharFactor`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ScaleSpeedByCharacter` |
-| [`0x020c29d4`](../../src/actors/Player.cpp) (ROM ordinal 81; currently [`_ZN6Player19func_ov002_020c29d4Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::UpdateQuicksandFlag` |
-| [ov098](../../config/arm9/overlays/ov098/symbols.txt):[`0x02139228`](../../src/actors/daObjBlockS_c.cpp) (ROM ordinal 25; currently [`func_ov098_02139228`](../../config/tu_manifest.d/ov098/daObjBlockS_c.json)) | `Crate::UpdateQuicksand` |
+| [`0x020c031c`](../../src/game/player/Player.cpp) (ROM ordinal 55) | `Player::GetFloorClass` |
+| [`0x020c04e0`](../../src/game/player/Player.cpp) (ROM ordinal 59; currently [`_ZN6Player19func_ov002_020c04e0Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ApplySlopeAccel` |
+| [`0x020c06fc`](../../src/game/player/Player.cpp) (ROM ordinal 61) | `Player::UpdateSliding` |
+| [`0x020bf56c`](../../src/game/player/Player.cpp) (ROM ordinal 46; currently [`func_ov002_020bf56c`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::GetSlopeDecelCoef` |
+| [`0x020c16ec`](../../src/game/player/Player.cpp) (ROM ordinal 68) | `Player::SetFloorSurfaceInfo` |
+| [`0x020d4d88`](../../src/game/player/Player.cpp) | `Player::UpdateGroundSpeed` |
+| [`0x020d3b9c`](../../src/game/player/Player.cpp) | `Player::UpdateWalkingSpeed` |
+| [`0x020d45c0`](../../src/game/player/Player.cpp) | `Player::Walk_UpdateRunDustFx` |
+| [`0x020d413c`](../../src/game/player/Player.cpp) | `Player::Walk_UpdateBodyLean` |
+| [`0x020bf30c`](../../src/game/player/Player.cpp) (ROM ordinal 40; currently [`Player_ScaleByCharFactor`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ScaleSpeedByCharacter` |
+| [`0x020c29d4`](../../src/game/player/Player.cpp) (ROM ordinal 81; currently [`_ZN6Player19func_ov002_020c29d4Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::UpdateQuicksandFlag` |
+| [ov098](../../config/arm9/overlays/ov098/symbols.txt):[`0x02139228`](../../src/game/actors/d_a_obj_block_s.cpp) (ROM ordinal 25; currently [`func_ov098_02139228`](../../config/tu_manifest.d/ov098/daObjBlockS_c.json)) | `Crate::UpdateQuicksand` |
 | [ov002](../../config/arm9/overlays/ov002/symbols.txt):`0x02110514` | `St_Crawl` state descriptor (data; [symbols/verified.tsv](../../symbols/verified.tsv) names it `_ZN6Player8ST_CRAWLE`) |
 
 **Player offsets recovered:**

@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 typedef struct { int x, y, z; } Vec3;
 
 typedef struct {
@@ -79,8 +80,6 @@ extern void MulVec3Mat4x3(Vec3 *v, int *m, Vec3 *dst);
 extern void func_02055388(int *m);
 extern void func_0204c24c(u8 a, u8 b);
 
-#define FX(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
-
 void func_0204b81c(Self *self, Node *node)
 {
     Ctx *c = self->p34;
@@ -115,11 +114,11 @@ void func_0204b81c(Self *self, Node *node)
     if (scale == 0)
         return;
 
-    v1w = (int)(((s64)node->p30 * node->p34 + 0x800) >> 12);
+    v1w = FX_MUL(node->p30, node->p34);
     trans.x = node->p14 + node->p8;
     trans.y = node->p18 + node->pc;
     trans.z = node->p1c + node->p10;
-    v2 = FX((int)v1w, q);
+    v2 = FX_MUL((int)v1w, q);
     cr = node->v20;
     col.x = mtx[2];
     col.y = mtx[5];
@@ -137,25 +136,25 @@ void func_0204b81c(Self *self, Node *node)
     NormalizeVec3(&nv, &nv);
 
     {
-        int d = FX(nv.x, -mtx[2]) + FX(nv.y, -mtx[5]) + FX(nv.z, -mtx[8]);
+        int d = FX_MUL(nv.x, -mtx[2]) + FX_MUL(nv.y, -mtx[5]) + FX_MUL(nv.z, -mtx[8]);
         int w;
         int s;
         int t;
         if (d < 0)
             d = -d;
         w = 0x1000 - d;
-        s = FX(w, (int)self->p34->p18->p0->val);
-        t = (int)((v1w * (s + 0x1000) + 0x800) >> 12);
+        s = FX_MUL(w, (int)self->p34->p18->p0->val);
+        t = FX_MUL(v1w, (s + 0x1000));
 
-        mat[0] = FX(cr.x, v2);
+        mat[0] = FX_MUL(cr.x, v2);
         mat[8] = 0x1000;
         mat[9] = trans.x;
         mat[10] = trans.y;
         mat[11] = trans.z;
-        mat[3] = FX(-cr.y, t);
-        mat[1] = FX(cr.y, v2);
+        mat[3] = FX_MUL(-cr.y, t);
+        mat[1] = FX_MUL(cr.y, v2);
         mat[6] = 0;
-        mat[4] = FX(cr.x, t);
+        mat[4] = FX_MUL(cr.x, t);
         mat[7] = 0;
         mat[2] = 0;
         mat[5] = 0;

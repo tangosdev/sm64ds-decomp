@@ -18,7 +18,7 @@
  */
 struct daBakubaku_c : dEnemyBase_c {
     /* The { enter, main } record the state machine runs; the five tables
-     * live in ov032 .bss, filled by __sinit_daBakubaku_c.cpp from the PMF
+     * live in ov032 .bss, filled by __sinit_d_a_bakubaku.cpp from the PMF
      * constants at 0x0211377c..0x021137c4. Both slots take the address
      * of int-returning members. */
     typedef int (daBakubaku_c::*StateFn)();

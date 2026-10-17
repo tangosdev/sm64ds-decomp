@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef short s16;
 typedef long long s64;
 
@@ -20,9 +21,9 @@ void func_0204cd5c(int *out, int *in, int sel, s16 *m)
         out[2] = 0;
         break;
     case 3:
-        out[0] = (int)(((s64)in[0] * m[0x2e] + 0x800) >> 12) + (int)(((s64)in[1] * m[0x31] + 0x800) >> 12);
-        out[1] = (int)(((s64)in[0] * m[0x2f] + 0x800) >> 12) + (int)(((s64)in[1] * m[0x32] + 0x800) >> 12);
-        out[2] = (int)(((s64)in[0] * m[0x30] + 0x800) >> 12) + (int)(((s64)in[1] * m[0x33] + 0x800) >> 12);
+        out[0] = FX_MUL(in[0], m[0x2e]) + FX_MUL(in[1], m[0x31]);
+        out[1] = FX_MUL(in[0], m[0x2f]) + FX_MUL(in[1], m[0x32]);
+        out[2] = FX_MUL(in[0], m[0x30]) + FX_MUL(in[1], m[0x33]);
         break;
     }
 }

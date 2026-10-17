@@ -12,7 +12,7 @@ src/minigames/d_s_mg_base.cpp:
     .data start:0x020bbf4c end:0x020bbf6c
     .bss start:0x020beb74 end:0x020bf3e8
 
-src/actors/unit020b2c84.cpp:
+src/minigames/unit020b2c84.cpp:
     complete
     .text start:0x020b2c84 end:0x020b4aa4
     .init start:0x020b955c end:0x020b9ad0
@@ -20,16 +20,16 @@ src/actors/unit020b2c84.cpp:
     .data start:0x020bc6e8 end:0x020bc7d0
     .bss start:0x020bf41c end:0x020bf9e4
 
-src/actors/unit020b4aa4.cpp:
+src/minigames/unit020b4aa4.cpp:
     complete
     .text start:0x020b4aa4 end:0x020b67e8
 
-src/actors/dMgState_c.cpp:
+src/minigames/d_mg_state.cpp:
     complete
     .text start:0x020b67e8 end:0x020b8c18
     .bss start:0x020bfd04 end:0x020bfda8
 
-src/actors/dMgPsOpt_c.cpp:
+src/minigames/d_mg_ps_opt.cpp:
     complete
     .text start:0x020b8c18 end:0x020b944c
     .data start:0x020bca68 end:0x020bcaa0

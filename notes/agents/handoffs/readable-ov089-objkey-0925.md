@@ -17,8 +17,8 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `ov089/daObjKey_c`, `src/actors/daObjKey_c.cpp`, ov089 .text 0x02131b18..0x021327d0 (10 functions). Promoted in #3126; this is its first readability pass. The issue carried no earlier finding list, so the list below is a self-audit of the base.
-- Reserved source/header/config surfaces actually touched: `src/actors/daObjKey_c.cpp`, `include/daObjKey_c.h`, `config/arm9/overlays/ov089/symbols.txt` (two rows renamed in place), `config/tu_manifest.d/ov089/daObjKey_c.json`, this handoff, and this class's two keys in the `attribution.json` ledger. `config/arm9/overlays/ov089/delinks.txt` is reserved but unchanged: it holds only address ranges.
+- Class/TU/symbol and module-qualified ROM scope: `ov089/daObjKey_c`, `src/game/actors/d_a_obj_key.cpp`, ov089 .text 0x02131b18..0x021327d0 (10 functions). Promoted in #3126; this is its first readability pass. The issue carried no earlier finding list, so the list below is a self-audit of the base.
+- Reserved source/header/config surfaces actually touched: `src/game/actors/d_a_obj_key.cpp`, `include/daObjKey_c.h`, `config/arm9/overlays/ov089/symbols.txt` (two rows renamed in place), `config/tu_manifest.d/ov089/daObjKey_c.json`, this handoff, and this class's two keys in the `attribution.json` ledger. `config/arm9/overlays/ov089/delinks.txt` is reserved but unchanged: it holds only address ranges.
 - ROM observations: ov089 relocs.txt has six of the eight state records point at 0x02131b18 (records 0x02132b00, 0x02132b08, 0x02132b10, 0x02132b20, 0x02132b28, 0x02132b38); 0x02132b18 points at 0x021311c0 and 0x02132b30 at 0x0213162c. `__sinit_ov089_021328d4` copies the records into the table at 0x02132cec, which Behavior indexes by the member at 0x444. No other reloc and no source names 0x02131b18. 0x02131f54 is called only from Behavior (relocs 0x021322f4, 0x02132364, 0x02132408). 0x02131dcc is also called from 0x021314dc (inside `func_ov089_021311c0`) and 0x02131df4 from 0x02131a78 (inside `func_ov089_0213162c`).
 - Lineage evidence or structural inference: field meanings come from their uses in this TU and in the `func_ov089_0213115c`, `func_ov089_021311c0` and `func_ov089_0213162c` shards. 0x110 is stored with the Player passed to `func_ov089_02131df4` and read back for its position and angle. 0x41c..0x424 copy mPos in InitResources, and `func_ov089_021311c0` clamps mPosY to 0x420. 0x434 is the Vector3 that `func_ov089_021311c0` eases and hands to dCamera_c::SetLookAt. 0x442 is the step counter each state switches on and increments. 0x443 counts bounces in `func_ov089_021311c0`. 0x448 is set by `func_ov089_0213115c` to an index into the collect-animation table (0 = none) and gates Render and Behavior. 0x44c and 0x458 hold dCamera_c::lookAt and dCamera_c::pos, restored when the key lands. 0x464..0x46c are the handles passed to and returned from Particle::System::New. 0x1f0 is the matrix handed to DropShadowRadHeight. 0x238, 0x240 and 0x244 are dCc_c::flags, hitFlags and otherOwner of the cylinder at 0x220.
 - Hypothesized names/filenames, explicitly not recovered facts: `StateDrop` (0x02131b18, `_ZN10daObjKey_c9StateDropEv`) and `UpdateModelTransform` (0x02131f54, `_ZN10daObjKey_c20UpdateModelTransformEv`) are coined, and so are `mPlayer`, `mShadowMatrix`, `mHomePos`, `mCamLookAt`, `mStep`, `mBounceCount`, `mAnimID`, `mSavedCamLookAt`, `mSavedCamPos` and `mParticleID`. `include/daObjKey_c.h` marks each as coined next to its declaration.
@@ -52,7 +52,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## Round 2
 
-Verifier findings on `be3560b713`. Only comment lines in `src/actors/daObjKey_c.cpp` and this handoff changed; `include/daObjKey_c.h` needed no change.
+Verifier findings on `be3560b713`. Only comment lines in `src/game/actors/d_a_obj_key.cpp` and this handoff changed; `include/daObjKey_c.h` needed no change.
 
 | ID | Finding | Outcome | Evidence |
 |---|---|---|---|
@@ -71,7 +71,7 @@ Round 2 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
 
 ## Round 3
 
-Verifier findings on `ccd7f8295b`. Changed: comment lines in `src/actors/daObjKey_c.cpp`, two words in `boundary_evidence[0]` of `config/tu_manifest.d/ov089/daObjKey_c.json`, and this handoff.
+Verifier findings on `ccd7f8295b`. Changed: comment lines in `src/game/actors/d_a_obj_key.cpp`, two words in `boundary_evidence[0]` of `config/tu_manifest.d/ov089/daObjKey_c.json`, and this handoff.
 
 | ID | Finding | Outcome | Evidence |
 |---|---|---|---|
@@ -93,7 +93,7 @@ Round 3 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
 
 ## Round 4
 
-Composition findings on `3a56f41023` against main `eb3bbdec33`. Changed: `src/actors/daObjKey_c.cpp` and this handoff; `git diff --name-only 3a56f41023..HEAD` lists exactly those two paths, and `include/daObjKey_c.h` needed no change.
+Composition findings on `3a56f41023` against main `eb3bbdec33`. Changed: `src/game/actors/d_a_obj_key.cpp` and this handoff; `git diff --name-only 3a56f41023..HEAD` lists exactly those two paths, and `include/daObjKey_c.h` needed no change.
 
 | ID | Finding | Outcome | Evidence |
 |---|---|---|---|
@@ -122,7 +122,7 @@ Self-audit of the base, R1 to R24. Deferred rows name the owner as the next prod
 |---|---|---|---|---|
 | R1 | extern "C" state bodies | `func_ov089_02131b18`, the state body for six key kinds, is a C-linkage free function on `char *` | Fixed | Member `StateDrop` (coined); symbols.txt row, manifest symbol and attribution key renamed in place. The state records reach it by address (see ROM observations). E1, E2. |
 | R2 | extern "C" helpers | `func_ov089_02131f54` is a C-linkage free function | Fixed | Member `UpdateModelTransform` (coined), renamed the same way. `include/decl_common.h` still declares `func_ov089_02131f54(void *)`; nothing uses that declaration, and the file is off limits (R20). E10. |
-| R3 | extern "C" helpers | `func_ov089_02131dcc` and `func_ov089_02131df4` are C-linkage on `char *` | Partially fixed | Bodies use typed locals, named fields and real calls (E6, E8). The names and `(char *, char *)` signature stay: the enrolled `func_ov089_021311c0.c` and `func_ov089_0213162c.c` shards (since folded into `src/actors/daObjKey_c.cpp`) call them by name, outside this reservation. Owner: next producer on #3154. |
+| R3 | extern "C" helpers | `func_ov089_02131dcc` and `func_ov089_02131df4` are C-linkage on `char *` | Partially fixed | Bodies use typed locals, named fields and real calls (E6, E8). The names and `(char *, char *)` signature stay: the enrolled `func_ov089_021311c0.c` and `func_ov089_0213162c.c` shards (since folded into `src/game/actors/d_a_obj_key.cpp`) call them by name, outside this reservation. Owner: next producer on #3154. |
 | R4 | mangled bridges | dCamera_c::SetLookAt and SetPos, dBgCh_Actr::JustHitGround, IsOnGround and SetLimMovFlag, dActor_c::FindWithID and UpdatePos, dEnemyBase_c::UpdateYoshiEat, dCc_c::Clear and Update, dCcAcPos_c::SetPosRelativeToActor, fBase_c::MarkForDestruction, Event::SetBit and ClearBit, Animation::LoadFile, ModelBase::SetFile, Sound::PlayBank3, ShadowModel::InitCylinder | Fixed | Real calls (E1, E13, E15, E20); Event is declared locally in namespace form as other sources do. Undefined-symbol set unchanged. |
 | R5 | mangled bridges | `ModelAnim::SetAnim`, `dCcAcPos_c::Init`, `dActor_c::DropShadowRadHeight`, `Particle::System::New` | Deferred: measured, no committed artifact | Fix12<int> by value: E11, E21. SetAnim as a real call: DIFF (E24). Particle::System::New is not declared by any header this TU may edit. Owner: next producer on #3154. |
 | R6 | mangled bridges | `dBgCh_Actr::Init` | Still deferred | `include/dBgCh_Actr.h` declares Init with `Fix12i`, which mangles to a different symbol; shared header outside this reservation. |
@@ -158,11 +158,11 @@ Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count
 
 | Path | Revision | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
 |---|---|---|---|---|---|---|
-| `src/actors/daObjKey_c.cpp` | base `c31f43bacf` | 520 | 17 | 30 | 5 | 83 |
-| `src/actors/daObjKey_c.cpp` | round 1 `be3560b713` | 456 | 0 | 20 | 3 | 38 |
-| `src/actors/daObjKey_c.cpp` | round 2 `ccd7f8295b` | 467 | 0 | 20 | 3 | 38 |
-| `src/actors/daObjKey_c.cpp` | round 3 `767919adc8`, and `3a56f41023` | 466 | 0 | 20 | 3 | 38 |
-| `src/actors/daObjKey_c.cpp` | this commit | 462 | 0 | 20 | 3 | 35 |
+| `src/game/actors/d_a_obj_key.cpp` | base `c31f43bacf` | 520 | 17 | 30 | 5 | 83 |
+| `src/game/actors/d_a_obj_key.cpp` | round 1 `be3560b713` | 456 | 0 | 20 | 3 | 38 |
+| `src/game/actors/d_a_obj_key.cpp` | round 2 `ccd7f8295b` | 467 | 0 | 20 | 3 | 38 |
+| `src/game/actors/d_a_obj_key.cpp` | round 3 `767919adc8`, and `3a56f41023` | 466 | 0 | 20 | 3 | 38 |
+| `src/game/actors/d_a_obj_key.cpp` | this commit | 462 | 0 | 20 | 3 | 35 |
 | `include/daObjKey_c.h` | base `c31f43bacf` | 92 | 13 | 0 | 0 | 1 |
 | `include/daObjKey_c.h` | this commit | 75 | 0 | 0 | 0 | 1 |
 
@@ -179,7 +179,7 @@ Of the 35 `_ZN` lines at this commit, 8 are symbol-marker comments and 8 are the
 | `config/tu_manifest.d/ov089/daObjKey_c.json` | `functions[0].symbol` and `functions[5].symbol` (the renames), `compiler_only_output[0].reason` (the Vector3 users by their current names), `notes[1]` added (the rename map and why 02131dcc and 02131df4 keep C linkage). `notes[0]`, `boundary_evidence`, `sections` and `verification` were reread against this commit and are unchanged; `droppedSections` stays `[7]`. |
 | `include/daObjKey_c.h` | field names and types, the two new member declarations, class comment shortened |
 | `notes/agents/handoffs/readable-ov089-objkey-0925.md` | this handoff |
-| `src/actors/daObjKey_c.cpp` | the source changes above |
+| `src/game/actors/d_a_obj_key.cpp` | the source changes above |
 
 ## Proof
 
@@ -200,7 +200,7 @@ Commands run in `C:/tmp/claude-rd-ov089` on the source of this commit (the hando
 | `python tools/queue_audit.py --check-promoted` | 0 | OK |
 | `python tools/port_refcheck.py` | 0 | 408 references, all resolve |
 | `the old credit check` | 0 | 7273 tracked, 0 changed, 0 lost |
-| `python tools/affected_src.py include/daObjKey_c.h` | 0 | `_ZN10daObjKey_cD0Ev.cpp`, `_ZN10daObjKey_cD1Ev.cpp` (both since folded into the TU), `src/actors/daObjKey_c.cpp` |
+| `python tools/affected_src.py include/daObjKey_c.h` | 0 | `_ZN10daObjKey_cD0Ev.cpp`, `_ZN10daObjKey_cD1Ev.cpp` (both since folded into the TU), `src/game/actors/d_a_obj_key.cpp` |
 | `git diff c31f43bacf -- include/decl_common.h config/dead-reference-baseline.json config/decl-agreement-baseline.json` | 0 | empty |
 | `python tools/check_references.py` | 1 | not run: it needs `build/rombuild-eligibility.json`, which this worktree does not have |
 

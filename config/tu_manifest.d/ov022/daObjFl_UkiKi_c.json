@@ -1,8 +1,8 @@
 {
   "id": "ov022/daObjFl_UkiKi_c",
   "module": "ov022",
-  "source": "src/actors/daObjFl_UkiKi_c.cpp",
-  "promoted_source": "src/actors/daObjFl_UkiKi_c.cpp",
+  "source": "src/game/actors/d_a_obj_fl_uki_ki.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_fl_uki_ki.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -80,7 +80,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN15daObjFl_UkiKi_c8BehaviorEv and the one that held _ZN15daObjFl_UkiKi_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH local declarations rather than keeping either: the Behavior source spelled it void(void*) and the InitResources source int(void*), and neither is needed -- dBgActor_c.h already declares it as a real member and the merged TU calls it that way, which is the spelling src/game/actors/d_a_obj_km1_ukishima.cpp proves. No TUBUILD CONFLICT marker survives in the merged source.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN15daObjFl_UkiKi_c8BehaviorEv and the one that held _ZN15daObjFl_UkiKi_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH local declarations rather than keeping either: the Behavior source spelled it void(void*) and the InitResources source int(void*), and neither is needed -- dBgActor_c.h already declares it as a real member and the merged TU calls it that way, which is the spelling src/game/actors/d_a_obj_km1_ukishima.cpp proves. No TUBUILD CONFLICT marker survives in the merged source.",
     "The two SharedFilePtr handles are declared here under their named ov022 rows, FloatingFloorLllBig_ModelFile (0x02114620) and FloatingFloorLllBig_ClsnFile (0x02114618), rather than their data_ov022_* address aliases. include/decl_common.h declares the aliases as `char[]`, which blocks the SharedFilePtr member calls this TU needs; the named rows are declared nowhere else once this promotion deletes the two legacy sources that used them, so the TU is their only declarer and contradicts nothing.",
-    "STYLE ORACLES: src/game/actors/daObjFl_Fall_Block_c.cpp (same overlay, same base, same inline-empty-destructor shape, same deadstrip-data RTTI licensing) and src/game/actors/d_a_obj_km1_ukishima.cpp (same class shape member for member)."
+    "STYLE ORACLES: src/game/actors/d_a_obj_fl_fall_block.cpp (same overlay, same base, same inline-empty-destructor shape, same deadstrip-data RTTI licensing) and src/game/actors/d_a_obj_km1_ukishima.cpp (same class shape member for member)."
   ],
   "compiler_only_output": [
     {

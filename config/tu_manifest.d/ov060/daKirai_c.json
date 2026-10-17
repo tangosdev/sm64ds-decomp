@@ -1,15 +1,15 @@
 {
   "id": "ov060/daKirai_c",
   "module": "ov060",
-  "source": "src/actors/daKirai_c.cpp",
-  "promoted_source": "src/actors/daKirai_c.cpp",
+  "source": "src/game/actors/d_a_kirai.cpp",
+  "promoted_source": "src/game/actors/d_a_kirai.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "HISTORY: contiguous linker run: 0x2118438..0x2118cbc, 15 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daKirai_c",
     "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-09): daKirai_c_classInit (0x02118cbc..0x02118cfc) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off and spelled `return new daKirai_c;` (operator new 0x1b0, dActor_c base ctor, _ZTV9daKirai_c vptr store, Model and dCcAcPos_c member ctors -- the retired shard's hand-spelled sequence). It builds only this class, for the KIRAI profile; the unit is 0x02118438..0x02118cfc, bounded above by src/actors/daFRing_c.cpp, which starts exactly at 0x02118cfc."
+    "CLASSINIT TAIL FOLD (2026-10-09): daKirai_c_classInit (0x02118cbc..0x02118cfc) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off and spelled `return new daKirai_c;` (operator new 0x1b0, dActor_c base ctor, _ZTV9daKirai_c vptr store, Model and dCcAcPos_c member ctors -- the retired shard's hand-spelled sequence). It builds only this class, for the KIRAI profile; the unit is 0x02118438..0x02118cfc, bounded above by src/game/actors/d_a_f_ring.cpp, which starts exactly at 0x02118cfc."
   ],
   "sections": [
     {
@@ -553,7 +553,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daKirai_c.cpp",
+      "symbol": "__sinit_d_a_kirai.cpp",
       "address": "0x0211a388",
       "size": "0xa0",
       "binding": "STB_GLOBAL",
@@ -562,7 +562,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daKirai_c.cpp",
+      "symbol": ".p__sinit_d_a_kirai.cpp",
       "address": "0x0211a4cc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -594,13 +594,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daKirai_c.cpp",
+      "symbol": "__sinit_d_a_kirai.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daKirai_c.cpp",
+      "symbol": ".p__sinit_d_a_kirai.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -742,7 +742,7 @@
       "source": "0x0211a4cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daKirai_c.cpp",
+      "symbol": "__sinit_d_a_kirai.cpp",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x0211a388"
@@ -790,29 +790,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@728",
+      "from": "@727",
       "to": "@707",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @728 now; licensed under the existing pin @707"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @727 now; licensed under the existing pin @707"
     },
     {
-      "from": "@734",
+      "from": "@733",
       "to": "@713",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @734 now; licensed under the existing pin @713"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @733 now; licensed under the existing pin @713"
     },
     {
-      "from": "@732",
+      "from": "@731",
       "to": "@711",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @732 now; licensed under the existing pin @711"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @731 now; licensed under the existing pin @711"
     },
     {
-      "from": "@730",
+      "from": "@729",
       "to": "@709",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @730 now; licensed under the existing pin @709"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @729 now; licensed under the existing pin @709"
     },
     {
-      "from": "@726",
+      "from": "@725",
       "to": "@705",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @726 now; licensed under the existing pin @705"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @725 now; licensed under the existing pin @705"
     }
   ]
 }

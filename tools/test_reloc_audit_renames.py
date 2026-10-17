@@ -5,7 +5,7 @@ mwcc numbers anonymous data (`@NNN`) per translation unit. When a fold makes a c
 TU emit an `@NNN` another module already defines globally, the manifest licenses a
 fleet-unique name and tu_production renames the definition before the link. The gate
 used to resolve the compiled name instead: it looked `@653` up in symbols.txt, found
-ov079's `@653`, and reported a correct ov002 `__sinit_dPathLiftActor_c.cpp` WRONG.
+ov079's `@653`, and reported a correct ov002 `__sinit_d_path_lift_actor.cpp` WRONG.
 
 No compiler and no ROM: the object is a hand-built ELF, one function `alpha` with
 one ABS32 relocation to a defined data temp `@653`.

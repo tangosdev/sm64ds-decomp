@@ -22,6 +22,12 @@
  * Leftover: g_profile_TH_DOWN_B lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_th_fall_block_AssetId {
+    ASSET_TH_DOWN_B_BMD = 0x06b9,
+    ASSET_TH_DOWN_B_KCL = 0x06ba
+};
+
 #include "daObjTh_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
@@ -81,5 +87,5 @@ struct ThFallBlockCollisionFilePtr : SharedFilePtr {
 // @symbol __sinit_d_a_obj_th_fall_block.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
-ThFallBlockModelFilePtr data_ov063_0211ef60(0x6b9);      /* model */
-ThFallBlockCollisionFilePtr data_ov063_0211ef58(0x6ba);  /* collision */
+ThFallBlockModelFilePtr gThDownBModelFile(ASSET_TH_DOWN_B_BMD);      /* model */
+ThFallBlockCollisionFilePtr gThDownBCollisionFile(ASSET_TH_DOWN_B_KCL);  /* collision */

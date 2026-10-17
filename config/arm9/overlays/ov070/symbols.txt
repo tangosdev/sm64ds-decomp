@@ -110,11 +110,11 @@ data_ov070_02122954 kind:data(any) addr:0x02122954 ambiguous
 data_ov070_02122968 kind:data(any) addr:0x02122968
 data_ov070_02122a6c kind:data(any) addr:0x02122a6c ambiguous
 __sinit_d_a_propeller_heyho.cpp kind:function(arm,size=0x284) addr:0x02122afc
-__sinit_ov070_02122d80 kind:function(arm,size=0x1b0) addr:0x02122d80
+__sinit_d_a_brq.cpp kind:function(arm,size=0x1b0) addr:0x02122d80
 __sinit_d_a_krpa.cpp kind:function(arm,size=0x100) addr:0x02122f30
 __sinit_d_a_kp_fr.cpp kind:function(arm,size=0x74) addr:0x02123030
 .p__sinit_d_a_propeller_heyho.cpp kind:data(word) addr:0x021230a4
-.p__sinit_ov070_02122d80 kind:data(word) addr:0x021230a8
+.p__sinit_d_a_brq.cpp kind:data(word) addr:0x021230a8
 .p__sinit_d_a_krpa.cpp kind:data(word) addr:0x021230ac
 .p__sinit_d_a_kp_fr.cpp kind:data(word) addr:0x021230b0
 data_ov070_021230c0 kind:data(any) addr:0x021230c0
@@ -194,15 +194,15 @@ data_ov070_021235f4 kind:bss addr:0x021235f4
 data_ov070_021235fc kind:bss addr:0x021235fc
 data_ov070_02123604 kind:bss addr:0x02123604
 data_ov070_0212360c kind:bss addr:0x0212360c
-data_ov070_02123614 kind:bss addr:0x02123614
-data_ov070_02123620 kind:bss addr:0x02123620
-data_ov070_0212362c kind:bss addr:0x0212362c
-data_ov070_02123638 kind:bss addr:0x02123638
-data_ov070_02123644 kind:bss addr:0x02123644
-data_ov070_02123650 kind:bss addr:0x02123650
+@228 kind:bss addr:0x02123614
+@229 kind:bss addr:0x02123620
+@230 kind:bss addr:0x0212362c
+@232 kind:bss addr:0x02123638
+@233 kind:bss addr:0x02123644
+@234 kind:bss addr:0x02123650
 data_ov070_0212365c kind:bss addr:0x0212365c
 data_ov070_02123668 kind:bss addr:0x02123668
-data_ov070_02123698 kind:bss addr:0x02123698
+gKeronpaModelFile kind:bss addr:0x02123698
 @676 kind:bss addr:0x021236a0
 data_ov070_021236ac kind:bss addr:0x021236ac
 data_ov070_021236ec kind:bss addr:0x021236ec

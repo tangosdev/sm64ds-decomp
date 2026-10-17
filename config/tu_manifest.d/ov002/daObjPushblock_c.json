@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjPushblock_c",
   "module": "ov002",
-  "source": "src/game/actors/daObjPushblock_c.cpp",
-  "promoted_source": "src/game/actors/daObjPushblock_c.cpp",
+  "source": "src/game/actors/d_a_obj_pushblock.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_pushblock.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
@@ -110,7 +110,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjPushblock_c.cpp",
+      "symbol": "__sinit_d_a_obj_pushblock.cpp",
       "address": "0x02101478",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -119,7 +119,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjPushblock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_pushblock.cpp",
       "address": "0x021080f4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -159,13 +159,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjPushblock_c.cpp",
+      "symbol": "__sinit_d_a_obj_pushblock.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjPushblock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_pushblock.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -290,7 +290,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "__sinit_daObjPushblock_c.cpp",
+      "symbol": "__sinit_d_a_obj_pushblock.cpp",
       "target_module": "ov002",
       "target_address": "0x02101478"
     }
@@ -338,7 +338,7 @@
     "Behavior's previous eight-byte wall disappears in the whole TU when the home-coordinate declarations remain beside their first uses, reproducing the retail load/register order.",
     "Leftover cleanup folded daObjPushblock_c_classInit (0x020b910c..0x020b9148) as return new daObjPushblock_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. Registry/factory-backed join: the factory sits immediately after InitResources and ends at daObjPowerUpItem_c D1.",
     "g_profile_PUSHBLOCK remains outside this manifest because data adjacency alone does not establish ownership.",
-    "The TU owns its two resource handles outright: PushblockModelFilePtr data_ov002_0210df9c(0x486) and PushblockClsnFilePtr data_ov002_0210df94(0x487) are defined at file end in retail initializer order, so mwcc emits __sinit_daObjPushblock_c.cpp itself; the handwritten src/unnamed/ov002/__sinit_ov002_02101478.c is retired.",
+    "The TU owns its two resource handles outright: PushblockModelFilePtr data_ov002_0210df9c(0x486) and PushblockClsnFilePtr data_ov002_0210df94(0x487) are defined at file end in retail initializer order, so mwcc emits __sinit_d_a_obj_pushblock.cpp itself; the handwritten src/unnamed/ov002/__sinit_ov002_02101478.c is retired.",
     "rom.sha256 records the shared stock SHA the other intact manifests carry (S38); this worktree's dump rebuilds sha256 ddab9300 with all module bytes and symbols byte-identical -- the same machine-local variance the dsd check-symbols errors come from."
   ],
   "compiler_only_output": [

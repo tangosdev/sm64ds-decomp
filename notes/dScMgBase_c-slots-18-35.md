@@ -1,5 +1,9 @@
 # dScMgBase_c slots 18-35 — the keystone map
 
+**Renamed 2026-10-14.** The slots now carry names coined from their bodies. The table
+below keeps the names they had at the time; [minigames/names.md](minigames/names.md) maps
+each old name to the new one with its evidence.
+
 **THE RANGE IS COMPLETE (2026-08-31).** All eighteen slots, 18 through 35, are
 declared on `dScMgBase_c` together with every descendant override, one slot per commit.
 `_ZTV11dScMgBase_c` and the tables of all 32 descendants are emitted from source at
@@ -96,14 +100,14 @@ slot 18, which is now **measured** rather than read off the legacy shape:
   actually reads a parameter is evidence, and it gives a **lower** bound.
   `include/dActor_c.h:131` declares it with no parameter and is therefore **wrong for
   this branch** — a naming hint, never a signature authority.
-- **Return type is `int`, not `void`.** `dScMgCoin_c::OnYoshiTryEat` is a real *member*
+- **Return type is `int`, not `void`.** `dScMgCoin_c::StartRound` is a real *member*
   definition ending `return 0;`; declaring `void` would have changed its bytes. The
   return type is not mangled, so the 24 free functions are unaffected. This is the same
   trap `dActor_c.h` documents for slots 21, 24 and 27 — re-measure each remaining slot
   against a real override before treating its legacy `void` as settled.
 
 [ov006](../config/arm9/overlays/ov006/symbols.txt) named Coin's override
-`_ZN11dScMgCoin_c13OnYoshiTryEatEv` — **wrong arity, corrected to `...Ei`.**
+`_ZN11dScMgCoin_c10StartRoundEv` — **wrong arity, corrected to `...Ei`.**
 
 For slots 24, 25, 27, 28, 29, 30, 33, 34 and 35 the leading parameter in the legacy
 source is really `this`; it becomes implicit when the free function turns into a method.
@@ -124,7 +128,7 @@ Two independent sources agree, and neither of them is this table:
    `_ZTV11dScMgBase_c` ([ov004](../config/arm9/overlays/ov004/symbols.txt):0x020bc0c0), 36 slots each, `dScMgCoin_c` overrides
    exactly three: 16 and 17 (the destructor pair) and **18, with [ov006](../config/arm9/overlays/ov006/symbols.txt):0x020de5b0** —
    which [ov006](../config/arm9/overlays/ov006/symbols.txt):545 **already names**
-   `_ZN11dScMgCoin_c13OnYoshiTryEatEv`. That name was recovered and landed before this
+   `_ZN11dScMgCoin_c10StartRoundEv`. That name was recovered and landed before this
    table existed, and it lands on this branch's slot 18.
 
 So the `Virtual48` placeholder was wrong. The claim further down — "slot 18 stays
@@ -323,7 +327,7 @@ base declaration and the [ov004](../config/arm9/overlays/ov004/symbols.txt) base
 **Where the base bodies for slots 31, 32 and 33 live.** They (0x020b2880, 0x020b27f4, 0x020b265c) are
 members of the promoted dScMgBase_c TU, `src/minigames/d_s_mg_base.cpp`
 ([config/tu_manifest.d/ov004/dScMgBase_c.json](../config/tu_manifest.d/ov004/dScMgBase_c.json)).
-They were folded in with the rest of the unit above func_ov004_020b2220 once that function
+They were folded in with the rest of the unit above Mg_DrawNumberRotated once that function
 byte-matched, so the TU now covers the whole ov004 unit 0x020ad660..0x020b2c58. The
 `src_tu/` candidate unit `unit020b0a38` that used to span the hole was retired earlier, so
 there is no stale shadow to regenerate.
@@ -333,7 +337,7 @@ the median slot touches six classes. **Slot 22 has no descendant overrides at al
 base declaration and base rename only, the smallest commit in the campaign.
 
 Four classes are intact TUs, so at every slot their override is renamed *inside*
-`src/actors/<class>.cpp` rather than through a standalone source file:
+`src/game/<dir>/<file>.cpp` rather than through a standalone source file:
 `dScMgBSC_c`, `dScMgCard_c`, `dScMgMCarlo_c`, `dScMgMCarlo2_c`.
 
 ## What it unlocks
@@ -354,8 +358,8 @@ precondition for `production_mode: "intact-object"` ownership of the minigame fa
 
 Two independent sources agree on 19 and 21. This table was built by walking
 `_ZTV11dScMgBase_c`; the override addresses come from walking `_ZTV10dScMgBSC_c`. The
-promoted source carries `// recovered name: dScMgBSC_c_OnTurnIntoEgg` and
-`dScMgBSC_c_OnGroundPounded` comments that were recovered *before* either walk and
+promoted source carries `// recovered name: dScMgBSC_c_CanEndState` and
+`dScMgBSC_c_OnDealDone` comments that were recovered *before* either walk and
 land on exactly those two addresses. Slot 18 carried no recovered name on either
 side, which read as consistency at the time; the section above shows it was simply
 absent from both, and the name is `OnYoshiTryEat`.

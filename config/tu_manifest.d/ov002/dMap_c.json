@@ -1,15 +1,15 @@
 {
   "id": "ov002/dMap_c",
   "module": "ov002",
-  "source": "src/actors/dMap_c.cpp",
-  "promoted_source": "src/actors/dMap_c.cpp",
+  "source": "src/ui/hud/d_map.cpp",
+  "promoted_source": "src/ui/hud/d_map.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20f975c..0x20fb8bc, 11 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): dMap_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit tail fold (0930c): dMap_c_classInit (0x020fb8bc..0x020fb8f8) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x020f975c..0x020fb8f8, bounded above by src/actors/dMeter_c.cpp, whose D1 starts exactly at 0x020fb8f8."
+    "classInit tail fold (0930c): dMap_c_classInit (0x020fb8bc..0x020fb8f8) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x020f975c..0x020fb8f8, bounded above by src/ui/hud/d_meter.cpp, whose D1 starts exactly at 0x020fb8f8."
   ],
   "sections": [
     {

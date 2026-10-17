@@ -45,6 +45,29 @@ typedef struct {
     u8 unk178[8];
 } Entry;
 
+static inline void RecordScannedParent(char *const g, char *arg0) {
+    Entry *tbl = (Entry *)(g + 0x1f00);
+    int i;
+    for (i = 0; i < *(u16 *)(g + 0x1e00 + 0xe0); i++) {
+        if (*(u16 *)(arg0 + 0xa) == tbl[i].m0 && *(u16 *)(arg0 + 0xc) == tbl[i].m1 &&
+            *(u16 *)(arg0 + 0xe) == tbl[i].m2) {
+            tbl[i].gameInfoLength = *(u16 *)(arg0 + 0x36);
+            *(GameInfo *)((char *)tbl + i * 0x180 + 0xf8) = *(GameInfo *)(arg0 + 0x38);
+            _ZN4CP1519InvalidateDataCacheEjj((u32)(g + 0x1f00 + i * 0x180), 0xc0);
+            DMASyncHalfTransfer(data_020a9db0, g + 0x1340, g + 0x1f00 + i * 0x180, 0xc0);
+            *(int *)(g + 0x1000 + 0xeec) = i;
+            return;
+        }
+    }
+    if (i < 0x10) {
+        *(u16 *)(g + 0x1e00 + 0xe0) = i + 1;
+        MultiCopyHalf(arg0, (char *)tbl + i * 0x180 + 0xc0, 0xb8);
+        _ZN4CP1519InvalidateDataCacheEjj((u32)(g + 0x1f00 + i * 0x180), 0xc0);
+        DMASyncHalfTransfer(data_020a9db0, g + 0x1340, g + 0x1f00 + i * 0x180, 0xc0);
+        *(int *)(g + 0x1000 + 0xeec) = i;
+    }
+}
+
 #define DISPATCH(a, b) (*(void (**)(int, void *))(g + 0x1000 + 0xe1c))((a), (b))
 
 void func_020690b0(char *arg0)
@@ -106,30 +129,7 @@ void func_020690b0(char *arg0)
             case 3:
                 return;
             case 5:
-                {
-                    Entry *tbl = (Entry *)(g + 0x1f00);
-                    int i;
-                    for (i = 0; i < *(u16 *)(g + 0x1e00 + 0xe0); i++) {
-                        if (*(u16 *)(arg0 + 0xa) == tbl[i].m0 &&
-                            *(u16 *)(arg0 + 0xc) == tbl[i].m1 &&
-                            *(u16 *)(arg0 + 0xe) == tbl[i].m2) {
-                            tbl[i].gameInfoLength = *(u16 *)(arg0 + 0x36);
-                            *(GameInfo *)((char *)tbl + i * 0x180 + 0xf8) = *(GameInfo *)(arg0 + 0x38);
-                            _ZN4CP1519InvalidateDataCacheEjj((u32)(g + 0x1f00 + i * 0x180), 0xc0);
-                            DMASyncHalfTransfer(data_020a9db0, g + 0x1340, g + 0x1f00 + i * 0x180, 0xc0);
-                            *(int *)(g + 0x1000 + 0xeec) = i;
-                            goto done;
-                        }
-                    }
-                    if (i < 0x10) {
-                        *(u16 *)(g + 0x1e00 + 0xe0) = i + 1;
-                        MultiCopyHalf(arg0, (char *)tbl + i * 0x180 + 0xc0, 0xb8);
-                        _ZN4CP1519InvalidateDataCacheEjj((u32)(g + 0x1f00 + i * 0x180), 0xc0);
-                        DMASyncHalfTransfer(data_020a9db0, g + 0x1340, g + 0x1f00 + i * 0x180, 0xc0);
-                        *(int *)(g + 0x1000 + 0xeec) = i;
-                    }
-                }
-            done:
+                RecordScannedParent(g, arg0);
                 DISPATCH(4, arg0);
                 if (*(int *)(g + 0x1000 + 0xee4) == 0) return;
                 if (*(int *)(g + 0x1000 + 0xee8) != 0 && func_0206a29c(data_020a9dc0) == 0)

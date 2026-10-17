@@ -84,7 +84,7 @@ Backport the star-ID argument correction from shadow PR #2829 into
 `daKinopio_c::St_Talk_Main`, then in its own file and now in
 `src/game/actors/d_a_kinopio.cpp`. Both the declaration and call now say
 that `IsStarCollectedInCurLevel` receives `int starID`, agreeing with its actual
-production definition in `src/IsStarCollectedInCurLevel.c` and the existing
+production definition (`IsStarCollectedInCurLevel`, now in `src/game/stages/d_s_stage_methods.cpp`) and the existing
 `daKinopio_c::InitResources` caller.
 
 The old zero-argument declaration happened to reproduce the retail instructions

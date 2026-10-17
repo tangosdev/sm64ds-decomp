@@ -12,7 +12,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `notes/agents/handoffs/issue-2410-daMky_c.md`.
 - Queue workflow/tool version: `d7e28406933497ff40150f9b912efe64666a00b2`.
   Source verification tools are the unmodified tools from the accepted source base.
-- Required artifacts: `src/actors/daMky_c.cpp`, `include/daMky_c.h`, and this handoff.
+- Required artifacts: `src/game/actors/d_a_mky.cpp`, `include/daMky_c.h`, and this handoff.
   No separate evidence commit is included.
 - Status: locally verified producer candidate; independent verification and
   integration remain pending. The next owner is the independent verifier after
@@ -39,9 +39,9 @@ finds the same 269 non-comment tokens before and after; no declaration, type, fi
 offset, signature, or layout changed.
 
 The evidence for these descriptions is already present in this TU and
-`notes/data/class-facts/daMky_c.json`: [func_ov030_02112094](../../../src/actors/daMky_c.cpp)(ROM Ordinal 12) copies the matrix,
-[func_ov030_02111734](../../../src/actors/daMky_c.cpp)(ROM Ordinal 3) reads the first triple and restores positions, and
-[func_ov030_02111dd0](../../../src/actors/daMky_c.cpp)(ROM Ordinal 9) updates the saved triple after a ground check. Original field
+`notes/data/class-facts/daMky_c.json`: [func_ov030_02112094](../../../src/game/actors/d_a_mky.cpp)(ROM Ordinal 12) copies the matrix,
+[func_ov030_02111734](../../../src/game/actors/d_a_mky.cpp)(ROM Ordinal 3) reads the first triple and restores positions, and
+[func_ov030_02111dd0](../../../src/game/actors/d_a_mky.cpp)(ROM Ordinal 9) updates the saved triple after a ground check. Original field
 names remain unknown. `mState` and `EnterState` retain their existing disclosed
 reconstruction names; this continuation introduces no recovered-name claim.
 
@@ -71,7 +71,7 @@ reconstruction names; this continuation introduces no recovered-name claim.
 Checks ran on the accepted base plus exactly the source/header contents committed
 here. Their Git blob identities are:
 
-- `src/actors/daMky_c.cpp`: `c90eb23a6e13491bbb296214607b933c93d28d5b`
+- `src/game/actors/d_a_mky.cpp`: `c90eb23a6e13491bbb296214607b933c93d28d5b`
 - `include/daMky_c.h`: `1269958abb0a8f9d635fbd30f84977b76c54db71`
 
 The ignored `build/humanizer/*.meta.json` records retain command arguments, UTC
@@ -81,16 +81,16 @@ and unchanged manifest hashes; those hashes were checked again before committing
 | Check | Command or exact API used | Result and evidence |
 | --- | --- | --- |
 | Compiler canary | `build_pin.verify(Path('src/func_ov006_020cb030.cpp'), 'func_ov006_020cb030', 0x020cb030, 0x104, 'ov006')` | Exit 0; `(True, '2004/b56')`; `build/humanizer/canary.log` |
-| Changed method | `python tools/linkcheck.py --name _ZN7daMky_c11EnterState0Ev --c src/actors/daMky_c.cpp --addr 0x02114124 --size 0x10 --module ov030 --json build/humanizer/state0-link.json` | Exit 0; VERIFIED, `diffs: []`, `blind: 0`; `build/humanizer/state0-link.log`. This CLI's single-symbol path prints JSON; the log is the actual artifact. |
+| Changed method | `python tools/linkcheck.py --name _ZN7daMky_c11EnterState0Ev --c src/game/actors/d_a_mky.cpp --addr 0x02114124 --size 0x10 --module ov030 --json build/humanizer/state0-link.json` | Exit 0; VERIFIED, `diffs: []`, `blind: 0`; `build/humanizer/state0-link.log`. This CLI's single-symbol path prints JSON; the log is the actual artifact. |
 | Complete TU | `python tools/tubuild.py --manifest build/humanizer/tu-manifest.json verify ov030/daMky_c --version 2004/b56` | Exit 0; 44/44 MATCH, isolation and destinations clean, all 44 in ROM order, no output-policy refusal; `build/humanizer/tu-verify.log`. The scratch manifest was copied from the committed entry so the check would not rewrite it. |
-| Every licensed member | `linkcheck.linkcheck(symbol, address, size, 'ov030', names, candidate='src/actors/daMky_c.cpp')` for all 44 manifest rows | Strict wrapper exit 0; 44 VERIFIED, 12,120 bytes, no blind or differing words; `build/humanizer/members-source-link.json` and `.log` |
-| Consumer expansion | `python tools/affected_src.py include/daMky_c.h --json` | Exit 0; only `src/actors/daMky_c.cpp`; `build/humanizer/affected.log`. All 44 consumer members are covered above. |
+| Every licensed member | `linkcheck.linkcheck(symbol, address, size, 'ov030', names, candidate='src/game/actors/d_a_mky.cpp')` for all 44 manifest rows | Strict wrapper exit 0; 44 VERIFIED, 12,120 bytes, no blind or differing words; `build/humanizer/members-source-link.json` and `.log` |
+| Consumer expansion | `python tools/affected_src.py include/daMky_c.h --json` | Exit 0; only `src/game/actors/d_a_mky.cpp`; `build/humanizer/affected.log`. All 44 consumer members are covered above. |
 | Full ROM | `python tools/rombuild.py -j 16 --no-rom --report-json build/humanizer/rombuild.json --data-json build/humanizer/romdata-full.json` | Exit 0; 106/106 modules exact; 11,192 source-built functions reproduce, zero mismatch; intact-TU gates pass with zero new symbol errors and exact storage aliases. 9,036 objects reused and one compiled; `build/humanizer/rombuild.log`. |
 | Metadata control | `python tools/romdata_check.py --files build/humanizer/baseline/daMky_c.cpp --json build/humanizer/romdata-baseline.json` | Exit 0; exact accepted source copied to ignored storage. `romdata_check.check_object` record comparison also finds all nine records identical to the current full-ROM records; `build/humanizer/metadata-comparison.json`. |
 | Header layout | `python tools/check_header_offsets.py include/daMky_c.h` | Exit 0; 17 commented fields, zero mismatched/unparsed, span 0x3cc; `build/humanizer/header-offsets-corrected.log`. An initial bare-class invocation was invalid and its exit 1 is retained separately. |
 | Port references | `python tools/port_refcheck.py` | Exit 0; 423 references resolve; `build/humanizer/port-refs.log` |
 | Language-mode ratchet | `python tools/langmode_audit.py --check langmode-baseline.json --json build/humanizer/langmode.json` | Exit 0, PASS; `build/humanizer/langmode.log` |
-| Legacy prepush check | `python tools/prepush_linkcheck.py --files src/actors/daMky_c.cpp --json build/humanizer/prepush-links.json` | Exit 0 but NO-SYM: zero verified. It is not this TU's proof; the 44 explicit source-backed checks above supply that coverage. |
+| Legacy prepush check | `python tools/prepush_linkcheck.py --files src/game/actors/d_a_mky.cpp --json build/humanizer/prepush-links.json` | Exit 0 but NO-SYM: zero verified. It is not this TU's proof; the 44 explicit source-backed checks above supply that coverage. |
 
 A diagnostic that passed the raw, unisolated TU object directly to linkcheck
 reported 42 VERIFIED and D1/D0 as BENIGN, with zero blind words. Its strict wrapper

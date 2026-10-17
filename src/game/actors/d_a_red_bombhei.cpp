@@ -142,6 +142,12 @@ void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES
 
 }
 
+/* This int-returning predicate is what makes the ROM materialize 0/1
+ * before testing it. */
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == kPlayerActorID;
+}
+
 // @symbol daRedBombhei_c_classInit
 extern "C" daRedBombhei_c *daRedBombhei_c_classInit()
 {
@@ -199,16 +205,16 @@ s32 daRedBombhei_c::Behavior()
     func_ov084_0212c9a8();
     player = ClosestPlayer();
     if (player != 0) {
-        Vector3 *src = (Vector3 *)&player->mPosX;
+        Vector3 *src = &player->mPos;
         playerPos = *src;
-        if (Vec3_HorzDist((Vector3 *)&mPosX, &playerPos) < 0x12c000) {
-            short angle = Vec3_HorzAngle((Vector3 *)&mPosX, &playerPos);
+        if (Vec3_HorzDist(&mPos, &playerPos) < 0x12c000) {
+            short angle = Vec3_HorzAngle(&mPos, &playerPos);
             ApproachLinear(mAngleY, angle, 0x100);
         }
     }
     mModelAnim.Advance();
     if ((unsigned short)(mModelAnim.currFrame >> 12) == 0)
-        func_02012694(0xd7, (Vector3 *)&mCamSpacePosX);
+        func_02012694(0xd7, &mCamSpacePos);
     func_ov084_0212ce50();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -267,7 +273,7 @@ int daRedBombhei_c::func_ov084_0212cda0(Vector3 *cur, Vector3 *target)
         cur->y = next.y;
         cur->z = next.z;
     }
-    return remaining == 0 ? 1 : 0;
+    return remaining == 0;
 }
 
 // @symbol _ZN14daRedBombhei_c19func_ov084_0212ccb4Ev
@@ -316,54 +322,69 @@ int daRedBombhei_c::func_ov084_0212cae0()
     cam = data_0209f318;
     if (id != 0) {
         shutter = dActor_c::FindWithID(id);
-        if (shutter != 0) goto body;
-    }
-    goto end;
-body:
-    lookAtDone = 0;
-    targetLookAt.x = lookAtDone; targetLookAt.y = 0x80000;  targetLookAt.z = -0xa000;
-    targetPos.x = lookAtDone;    targetPos.y = 0x200000;    targetPos.z = 0xc8000;
-    offset.x = lookAtDone; offset.y = lookAtDone; offset.z = lookAtDone;
-    Matrix4x3_FromRotationY(&data_020a0e68, shutter->mAngleY);
-    MulVec3Mat4x3(&targetLookAt, &data_020a0e68, &offset);
-    Vec3_Add(&sum, (Vector3 *)&shutter->mPosX, &offset);
-    {
-        int dx = sum.x; int dy = sum.y; int z = lookAtDone;
-        *(volatile int *)&offset.x = z; *(volatile int *)&targetLookAt.x = dx;
-        *(volatile int *)&offset.y = z; *(volatile int *)&targetLookAt.y = dy;
-        int dz = *(volatile int *)&sum.z;
-        *(volatile int *)&offset.z = z; *(volatile int *)&targetLookAt.z = dz;
-    }
-    MulVec3Mat4x3(&targetPos, &data_020a0e68, &offset);
-    Vec3_Add(&sum2, (Vector3 *)&shutter->mPosX, &offset);
-    {
-        int ey = sum2.y; int ex = sum2.x;
-        targetPos.y = ey;
-        int ez = sum2.z;
-        targetPos.x = ez ? ex : ex;
-        targetPos.z = ez;
-    }
-    {
-        int *camLookAt = (int *)(unsigned)&cam->lookAt;
-        lookAt.x = camLookAt[0];
-        {
-            int *camPos = (int *)(unsigned)&cam->pos;
-            lookAt.y = camLookAt[1]; lookAt.z = camLookAt[2];
-            pos.x = camPos[0]; pos.y = camPos[1]; pos.z = camPos[2];
+        if (shutter != 0) {
+            lookAtDone = 0;
+            targetLookAt.x = lookAtDone;
+            targetLookAt.y = 0x80000;
+            targetLookAt.z = -0xa000;
+            targetPos.x = lookAtDone;
+            targetPos.y = 0x200000;
+            targetPos.z = 0xc8000;
+            offset.x = lookAtDone;
+            offset.y = lookAtDone;
+            offset.z = lookAtDone;
+            Matrix4x3_FromRotationY(&data_020a0e68, shutter->mAngleY);
+            MulVec3Mat4x3(&targetLookAt, &data_020a0e68, &offset);
+            Vec3_Add(&sum, &shutter->mPos, &offset);
+            {
+                int dx = sum.x;
+                int dy = sum.y;
+                int z = lookAtDone;
+                *(volatile int *)&offset.x = z;
+                *(volatile int *)&targetLookAt.x = dx;
+                *(volatile int *)&offset.y = z;
+                *(volatile int *)&targetLookAt.y = dy;
+                int dz = *(volatile int *)&sum.z;
+                *(volatile int *)&offset.z = z;
+                *(volatile int *)&targetLookAt.z = dz;
+            }
+            MulVec3Mat4x3(&targetPos, &data_020a0e68, &offset);
+            Vec3_Add(&sum2, &shutter->mPos, &offset);
+            {
+                int ey = sum2.y;
+                int ex = sum2.x;
+                targetPos.y = ey;
+                int ez = sum2.z;
+                targetPos.x = ez ? ex : ex;
+                targetPos.z = ez;
+            }
+            {
+                int *camLookAt = (int *)(unsigned)&cam->lookAt;
+                lookAt.x = camLookAt[0];
+                {
+                    int *camPos = (int *)(unsigned)&cam->pos;
+                    lookAt.y = camLookAt[1];
+                    lookAt.z = camLookAt[2];
+                    pos.x = camPos[0];
+                    pos.y = camPos[1];
+                    pos.z = camPos[2];
+                }
+            }
+            lookAtDone = func_ov084_0212cda0(&lookAt, &targetLookAt);
+            posDone = func_ov084_0212cda0(&pos, &targetPos);
+            if ((this->mAngleX & 0xff) == kVariantCannonCut) {
+                lookAtDone = 1;
+                posDone = 1;
+                cam->SetLookAt(targetLookAt);
+                cam->SetPos(targetPos);
+            } else {
+                cam->SetLookAt(lookAt);
+                cam->SetPos(pos);
+            }
         }
     }
-    lookAtDone = func_ov084_0212cda0(&lookAt, &targetLookAt);
-    posDone = func_ov084_0212cda0(&pos, &targetPos);
-    if ((this->mAngleX & 0xff) == kVariantCannonCut) {
-        lookAtDone = 1; posDone = 1;
-        cam->SetLookAt(targetLookAt);
-        cam->SetPos(targetPos);
-    } else {
-        cam->SetLookAt(lookAt);
-        cam->SetPos(pos);
-    }
-end:
-    return (lookAtDone != 0 && posDone != 0) ? 1 : 0;
+    /* With no shutter, both flags are read uninitialized; the ROM does the same. */
+    return lookAtDone != 0 && posDone != 0;
 }
 
 // @symbol _ZN14daRedBombhei_c19func_ov084_0212cac0Ev
@@ -415,7 +436,7 @@ void daRedBombhei_c::func_ov084_0212c9f0(int msgID, unsigned int msgFlag)
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    func_02012694(0x108, (Vector3 *)&this->mCamSpacePosX);
+    func_02012694(0x108, &this->mCamSpacePos);
     _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, this, (s16)msgID, &pos, msgFlag, 0);
 }
 
@@ -452,11 +473,8 @@ void daRedBombhei_c::func_ov084_0212c8b0()
     other = dActor_c::FindWithID(this->mdCcAc_c.otherOwner);
     if (other == 0)
         return;
-    {
-        int isPlayer = (other->actorID == kPlayerActorID);
-        if (isPlayer == 0)
-            return;
-    }
+    if (!IsPlayerActor(other))
+        return;
     this->mTalkPlayer = (Player *)other;
     if (this->mTalkPlayer->StartTalk(*this, false) == 0)
         return;
@@ -494,7 +512,7 @@ void daRedBombhei_c::func_ov084_0212c508()
         int c = p[2];
         playerPos.z = c;
     }
-    angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, &playerPos);
+    angle = Vec3_HorzAngle(&this->mPos, &playerPos);
 
     if (func_ov084_0212cac0() != 0) {
         if (IsCannonOpenInCurLevel() == 0) {
@@ -560,17 +578,10 @@ void daRedBombhei_c::func_ov084_0212c508()
     {
         u8 pageState = data_0209d6bc;
         if (this->mPrevMsgPageState != pageState) {
-            if (pageState == 3)
-                goto do_inc;
-            if (pageState != 9)
-                goto skip_inc;
-        do_inc:
-            {
+            if (pageState == 3 || pageState == 9) {
                 u8 *page = &this->mMsgPage;
                 *page = (u8)(*page + 1);
             }
-        skip_inc:
-            ;
         }
     }
 
@@ -633,7 +644,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
     playerPos.x = src[0];
     playerPos.y = src[1];
     playerPos.z = src[2];
-    angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, &playerPos);
+    angle = Vec3_HorzAngle(&this->mPos, &playerPos);
 
     switch (this->mCutsceneStep) {
     case 0:

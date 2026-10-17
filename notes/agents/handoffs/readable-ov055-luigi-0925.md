@@ -14,19 +14,19 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `ov055/daLuigi_c`, `.text` 0x021111a0..0x02111860, 11 functions, in `src/actors/daLuigi_c.cpp` and `include/daLuigi_c.h`.
+- Class/TU/symbol and module-qualified ROM scope: `ov055/daLuigi_c`, `.text` 0x021111a0..0x02111860, 11 functions, in `src/game/actors/d_a_luigi.cpp` and `include/daLuigi_c.h`.
 - Reserved source/header/config surfaces actually touched (`git diff --name-only 7423f8d73f..HEAD`):
   - [attribution.json](../../../attribution.json) (this class's three renamed keys only)
   - [config/arm9/overlays/ov055/symbols.txt](../../../config/arm9/overlays/ov055/symbols.txt) (three rows renamed in place)
   - [config/tu_manifest.d/ov055/daLuigi_c.json](../../../config/tu_manifest.d/ov055/daLuigi_c.json) (three function symbols and the coined-names note)
   - [include/daLuigi_c.h](../../../include/daLuigi_c.h)
   - [notes/agents/handoffs/readable-ov055-luigi-0925.md](../../../notes/agents/handoffs/readable-ov055-luigi-0925.md)
-  - [src/actors/daLuigi_c.cpp](../../../src/actors/daLuigi_c.cpp)
+  - [src/game/actors/d_a_luigi.cpp](../../../src/game/actors/d_a_luigi.cpp)
 
   [config/arm9/overlays/ov055/delinks.txt](../../../config/arm9/overlays/ov055/delinks.txt) holds only address ranges and needed no edit. `include/decl_common.h` is untouched.
 - ROM observations:
   - [ov055 `relocs.txt`](../../../config/arm9/overlays/ov055/relocs.txt) reaches the state members by address: 0x02111a94 loads 0x021112bc, 0x02111a9c loads 0x02111288, and `InitResources` calls 0x021112c4 from 0x021117f8. Renaming the three symbol rows therefore moves no linked byte.
-  - The body model that [func_ov002_020e496c](../../../src/actors/Player.cpp) returns is read at +0x14 and +0x1c. Those are `Model::data.transforms` and `Model::mat4x3`. The bone copy reads `transforms[15]` (+0x2d0), and the loop bound is `BMD_File::numBones` (+0x4).
+  - The body model that [func_ov002_020e496c](../../../src/game/player/Player.cpp) returns is read at +0x14 and +0x1c. Those are `Model::data.transforms` and `Model::mat4x3`. The bone copy reads `transforms[15]` (+0x2d0), and the loop bound is `BMD_File::numBones` (+0x4).
   - The player byte at +0x6fb is `Player::mIsVanish` in `include/Player.h`.
   - 0x02111264 has one candidate caller: an `arm_call` at [ov063](../../../config/arm9/overlays/ov063/symbols.txt) 0x02118004. Its relocation is recorded as `module:overlays(27,55)`, so the call's target module is ambiguous.
 - Lineage evidence or structural inference: the parameter names `radius` and `depth` in the DropShadowRadHeight bridge follow the real declaration in `include/dActor_c.h`. The bridge used to call them `height, radius`, which was the wrong way round.
@@ -46,8 +46,8 @@ This document describes this commit. The queue records its immutable output SHA.
 - Exact function/byte and relocation coverage: 11 of 11 functions match, and every relocation destination is clean. The emitted object was compared before and after (`pyelftools`, `build/tu/ov055-daLuigi_c/daLuigi_c.o`). The 72 undefined symbols are identical. The defined globals are identical once the three renamed state symbols are mapped. All 21 PROGBITS and NOBITS sections are identical in bytes and relocations (offset, type and target, with the renames mapped).
 - Genuine methods; remaining free-function/ABI bridges:
   - 10 of 11 functions are now `daLuigi_c` members.
-  - [func_ov055_02111264](../../../src/actors/daLuigi_c.cpp)(ROM Ordinal 2) stays an `extern "C"` free function. Its only candidate caller relocates ambiguously, so its owner is unknown.
-  - The remaining bridges are the three Fix12 by-value mangled calls, the unnamed [arm9](../../../config/arm9/symbols.txt) helpers (`func_02016acc`, `func_02016b24`, `func_0201277c`, `func_0203c178`) and the [ov002](../../../config/arm9/overlays/ov002/symbols.txt) helpers [func_ov002_020e496c](../../../src/actors/Player.cpp) and [func_ov002_020e4374](../../../src/actors/Player.cpp).
+  - [func_ov055_02111264](../../../src/game/actors/d_a_luigi.cpp)(ROM Ordinal 2) stays an `extern "C"` free function. Its only candidate caller relocates ambiguously, so its owner is unknown.
+  - The remaining bridges are the three Fix12 by-value mangled calls, the unnamed [arm9](../../../config/arm9/symbols.txt) helpers (`func_02016acc`, `func_02016b24`, `func_0201277c`, `func_0203c178`) and the [ov002](../../../config/arm9/overlays/ov002/symbols.txt) helpers [func_ov002_020e496c](../../../src/game/player/Player.cpp) and [func_ov002_020e4374](../../../src/game/player/Player.cpp).
 - Recovered layout/fields; remaining shadow structs/raw offsets:
   - `Render` is now typed through `Player`, `Model`, `ModelComponents`, `BMD_File` and `Matrix4x3::t`.
   - Still raw: `FileOf` (the `SharedFilePtr` word at +4), the `Mtx` word copy, and `Behavior`'s store to [data_0209f318](../../../config/arm9/symbols.txt) + 0x114 (the camera, inside `dCamera_c::pad_114`).
@@ -65,15 +65,15 @@ This document describes this commit. The queue records its immutable output SHA.
 | R3 PMF bridge through the coined daLuigiStateHost | fixed | The states are daLuigi_c members, and the table holds `int (daLuigi_c::*)(Player *)`. The three [ov055](../../../config/arm9/overlays/ov055/symbols.txt) symbol rows were renamed in place. The object is byte and relocation identical. |
 | R4 FileOf SharedFilePtr accessor | still deferred | `include/SharedFilePtr.h` leaves the handle's layout unrecovered. It is a shared header that this task does not hold. |
 | R5 local Mtx copy struct | still deferred | `Matrix4x3` assignment was re-measured and DIFFs in both `InitResources` and `Render`. The comment now names both. |
-| R6 unnamed globals, raw +0x114 store | still deferred | [data_ov055_02111a90](#L1), [data_ov055_02111b60](../../../config/arm9/overlays/ov055/symbols.txt), [data_ov055_02111b64](../../../config/arm9/overlays/ov055/symbols.txt), [data_ov055_02111b68](../../../config/arm9/overlays/ov055/symbols.txt), [data_ov055_02111b6c](../../../config/arm9/overlays/ov055/symbols.txt) and [data_ov055_02111b70](../../../config/arm9/overlays/ov055/symbols.txt) are also declared in `include/decl_common.h` (off limits), func_ov002_020e3e00 in [src/actors/Player.cpp](../../../src/actors/Player.cpp) and [src/unnamed/ov055/__sinit_ov055_021118d4.c](../../../src/unnamed/ov055/__sinit_ov055_021118d4.c), and this task holds neither file. A comment records their observed roles, but that is prose only. +0x114 falls inside `dCamera_c::pad_114` in `include/dCamera_c.h`, which is not held. |
+| R6 unnamed globals, raw +0x114 store | still deferred | [data_ov055_02111a90](#L1), [data_ov055_02111b60](../../../config/arm9/overlays/ov055/symbols.txt), [data_ov055_02111b64](../../../config/arm9/overlays/ov055/symbols.txt), [data_ov055_02111b68](../../../config/arm9/overlays/ov055/symbols.txt), [data_ov055_02111b6c](../../../config/arm9/overlays/ov055/symbols.txt) and [data_ov055_02111b70](../../../config/arm9/overlays/ov055/symbols.txt) are also declared in `include/decl_common.h` (off limits), func_ov002_020e3e00 in [src/game/player/Player.cpp](../../../src/game/player/Player.cpp) and [src/unnamed/ov055/__sinit_ov055_021118d4.c](../../../src/unnamed/ov055/__sinit_ov055_021118d4.c), and this task holds neither file. A comment records their observed roles, but that is prose only. +0x114 falls inside `dCamera_c::pad_114` in `include/dCamera_c.h`, which is not held. |
 | R7 pad_0d0 | still deferred | Nothing in the TU reads or writes 0x0d0, so there is no evidence for a name. |
-| R8 two declaration-baseline keys against decl_common placeholders | still deferred | `include/decl_common.h` is held by `jump-contract-repair-0918`. Its line `extern int func_ov055_021112c4(void*, void*, int);` now names a symbol that nothing defines. The banked key [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player](../../../src/actors/daLuigi_c.cpp), ROM Ordinal 5) no longer fires (`--symbol` reports 0 disagreements), and it was left in place. |
-| R9 factory's mangled constructor calls and raw vtable store | still deferred | They are in `src/d_a_luigi.cpp`, which is outside this reservation. |
+| R8 two declaration-baseline keys against decl_common placeholders | still deferred | `include/decl_common.h` is held by `jump-contract-repair-0918`. Its line `extern int func_ov055_021112c4(void*, void*, int);` now names a symbol that nothing defines. The banked key [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player](../../../src/game/actors/d_a_luigi.cpp), ROM Ordinal 5) no longer fires (`--symbol` reports 0 disagreements), and it was left in place. |
+| R9 factory's mangled constructor calls and raw vtable store | still deferred | They are in `src/game/actors/d_a_luigi.cpp`, which is outside this reservation. |
 | R10 stale alias annotation in class-build-worklist.tsv | still deferred | `notes/data/class-build-worklist.tsv` line 133 still reads `[alias: header uses pre-rename name]`. That file is outside this reservation. |
 
 Residue, base `7423f8d73f` to this commit. Counts are the lines that contain the string (`git show <rev>:<path> | grep -c -F`, with `MSYS_NO_PATHCONV=1`), and the line totals are `wc -l`:
 
-| Measure | `src/actors/daLuigi_c.cpp` base | this commit | `include/daLuigi_c.h` base | this commit |
+| Measure | `src/game/actors/d_a_luigi.cpp` base | this commit | `include/daLuigi_c.h` base | this commit |
 |---|---|---|---|---|
 | lines | 231 | 232 | 74 | 82 |
 | `unk_` | 0 | 0 | 0 | 0 |
@@ -98,7 +98,7 @@ All commands were run in `C:/tmp/claude-rd-ov055` on the source commit this hand
   - `python tools/tubuild.py verify ov055/daLuigi_c`: 11/11 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. The baseline on the untouched tree was also 11/11, and it was re-run after every edit.
   - `python tools/prepush_linkcheck.py --range 7423f8d73f..HEAD` exit 0: 12 checked, 12 VERIFIED (the TU and `daLuigi_c_classInit`), 0 warnings, 0 blocking.
 - Complete emitted TU and data/metadata checks: the before-and-after object comparison described under Reconstruction dimensions. The 72 undefined symbols are identical, and the 21 sections are identical once the renames are mapped.
-- Shared-header consumer expansion: `python tools/affected_src.py include/daLuigi_c.h` lists `src/actors/daLuigi_c.cpp` and `src/d_a_luigi.cpp`. Both compiled in rombuild, and both are VERIFIED by linkcheck. `python tools/check_header_offsets.py include/daLuigi_c.h`: 6 commented fields, 0 mismatched.
+- Shared-header consumer expansion: `python tools/affected_src.py include/daLuigi_c.h` lists `src/game/actors/d_a_luigi.cpp` and `src/game/actors/d_a_luigi.cpp`. Both compiled in rombuild, and both are VERIFIED by linkcheck. `python tools/check_header_offsets.py include/daLuigi_c.h`: 6 commented fields, 0 mismatched.
 - Port/path/reference and other applicable static gates:
   - `the old credit check` exit 0: 0 changed, 0 lost.
   - `python tools/check_decl_agreement.py --changed 7423f8d73f` exit 0: no new declaration disagreements.

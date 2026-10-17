@@ -24,8 +24,8 @@ daOnms_c_classInit kind:function(arm,size=0x5c) addr:0x02132018
 _ZN8daOnms_c16sLaunchVertSpeedE kind:data(any) addr:0x02132074
 _ZN8daOnms_c16sLaunchHorzSpeedE kind:data(any) addr:0x02132080
 _ZN8daOnms_c9sBankAxisE kind:data(any) addr:0x0213208c
-__sinit_daOnms_c.cpp kind:function(arm,size=0x144) addr:0x021320cc
-.p__sinit_daOnms_c.cpp kind:data(word) addr:0x02132210
+__sinit_d_a_onms.cpp kind:function(arm,size=0x144) addr:0x021320cc
+.p__sinit_d_a_onms.cpp kind:data(word) addr:0x02132210
 data_ov092_02132220 kind:data(any) addr:0x02132220
 @972 kind:data(any) addr:0x02132240
 @978 kind:data(any) addr:0x02132248
@@ -44,8 +44,8 @@ _ZTV8daOnms_c kind:data(any) addr:0x021322d0
 data_ov092_02132350 kind:data(any) addr:0x02132350
 data_ov092_021323dc kind:data(any) addr:0x021323dc
 data_ov092_0213246c kind:data(any) addr:0x0213246c
-data_ov092_02132540 kind:bss addr:0x02132540
-data_ov092_02132548 kind:bss addr:0x02132548
+gOnimasuModelFile kind:bss addr:0x02132540
+gOnimasuCollisionFile kind:bss addr:0x02132548
 @964 kind:bss addr:0x02132550
 @214 kind:bss addr:0x0213255c
 data_ov092_02132568 kind:bss addr:0x02132568

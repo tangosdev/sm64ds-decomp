@@ -1,8 +1,8 @@
 {
   "id": "arm9/dGraph_c_callback_c",
   "module": "arm9",
-  "source": "src/engine/graph/dGraph_c_callback_c.cpp",
-  "promoted_source": "src/engine/graph/dGraph_c_callback_c.cpp",
+  "source": "src/engine/graph/d_graph_c_callback.cpp",
+  "promoted_source": "src/engine/graph/d_graph_c_callback.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

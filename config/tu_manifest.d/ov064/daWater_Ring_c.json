@@ -1,8 +1,8 @@
 {
   "id": "ov064/daWater_Ring_c",
   "module": "ov064",
-  "source": "src/actors/daWater_Ring_c.cpp",
-  "promoted_source": "src/actors/daWater_Ring_c.cpp",
+  "source": "src/game/actors/d_a_water_ring.cpp",
+  "promoted_source": "src/game/actors/d_a_water_ring.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x2119a58..0x211a1b0, 14 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daWater_Ring_c",
     "module sinit corroboration: 11 sinit(s) / 11 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit tail fold (0930c): daWater_Ring_c_classInit (0x0211a1b0..0x0211a200) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x02119a58..0x0211a200, bounded above by src/actors/daObjTbox_c.cpp, which starts exactly at 0x0211a200."
+    "classInit tail fold (0930c): daWater_Ring_c_classInit (0x0211a1b0..0x0211a200) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x02119a58..0x0211a200, bounded above by src/game/actors/d_a_obj_tbox.cpp, which starts exactly at 0x0211a200."
   ],
   "sections": [
     {
@@ -166,7 +166,7 @@
     "data_ov002_0210da10 is one extern SharedFilePtr. The char and char[] spellings were the same object.",
     "data_ov064_0211c3d0 is the int[3] InitResources indexes. func_ov064_02119afc copies it through a Vector3 cast.",
     "classInit tail fold (0930c): folded the registry factory daWater_Ring_c_classInit (0x0211a1b0..0x0211a200) into this promoted TU and widened the complete delinks.txt claim to 0x02119a58..0x0211a200. The loose source hand-called fBase_c::operator new(912), dEnemyBase_c's base constructor, stored _ZTV14daWater_Ring_c, then constructed the dCcAcPos_c, dBgCh_Actr, Model and TextureTransformer members. daWater_Ring_c declares no constructor, so the implicit one emits that sequence and the factory is `return new daWater_Ring_c();`. Under `#pragma defer_codegen off` it is written at the end of the file.",
-    "Static initializer folded: the two state tables plain-copied from the ROM member-function-pointer constants make mwcc emit __sinit_daWater_Ring_c.cpp itself (0x84, raw-byte-identical to retail __sinit_ov064_0211b518 with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. No @ temps, no renames. Each table is one State (init + execute), so the old State[2] declarations become scalar and the two installer call sites take addresses. This fold does NOT license the .data descriptor rows."
+    "Static initializer folded: the two state tables plain-copied from the ROM member-function-pointer constants make mwcc emit __sinit_d_a_water_ring.cpp itself (0x84, raw-byte-identical to retail __sinit_ov064_0211b518 with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. No @ temps, no renames. Each table is one State (init + execute), so the old State[2] declarations become scalar and the two installer call sites take addresses. This fold does NOT license the .data descriptor rows."
   ],
   "compiler_only_output": [
     {
@@ -480,7 +480,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daWater_Ring_c.cpp",
+      "symbol": "__sinit_d_a_water_ring.cpp",
       "address": "0x0211b518",
       "size": "0x84",
       "binding": "STB_GLOBAL",
@@ -489,7 +489,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daWater_Ring_c.cpp",
+      "symbol": ".p__sinit_d_a_water_ring.cpp",
       "address": "0x0211b74c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -498,13 +498,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daWater_Ring_c.cpp",
+      "symbol": "__sinit_d_a_water_ring.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daWater_Ring_c.cpp",
+      "symbol": ".p__sinit_d_a_water_ring.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -516,7 +516,7 @@
       "source": "0x0211b74c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daWater_Ring_c.cpp",
+      "symbol": "__sinit_d_a_water_ring.cpp",
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211b518"

@@ -151,9 +151,9 @@ class SrcPath(unittest.TestCase):
         self.assertEqual(SP.new_path_for("func_0205c410", "c"), SP.SRC / "func_0205c410.c")
 
     def test_unnamed_ignores_a_hand_placed_subsystem_directory(self):
-        """src/engine/message/ holds two arm9 func_* by deliberate choice. That must not
+        """src/ui/messages/ holds two arm9 func_* by deliberate choice. That must not
         drag every future arm9 function in after them."""
-        self.write("engine/message/func_0201cb2c.c")
+        self.write("ui/messages/func_0201cb2c.c")
         self.assertEqual(SP.new_path_for("func_02012345", "c"), SP.SRC / "func_02012345.c")
 
     def test_a_class_follows_its_siblings(self):
@@ -268,8 +268,8 @@ class SrcPath(unittest.TestCase):
     # --- the enrolment table: the answer the convention cannot give ---------
     def test_merged_tu_owns_both_of_its_symbols(self):
         """The case the whole index exists for. Neither symbol names the file."""
-        tu = self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        tu = self.write("runtime/actor/ActorBase_SceneNode.cpp")
+        self.enrol([("src/runtime/actor/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
                     ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
         self.assertEqual(SP.path_for("_ZN7fBase_c9SceneNode5ResetEv"), tu)
@@ -277,11 +277,11 @@ class SrcPath(unittest.TestCase):
 
     def test_symbols_for_lists_a_tus_functions_in_rom_order(self):
         """Written high-address-first in the source; ROM order is what is reported."""
-        self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.write("runtime/actor/ActorBase_SceneNode.cpp")
+        self.enrol([("src/runtime/actor/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4),
                     ("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
-        self.assertEqual(SP.symbols_for("src/actors/ActorBase_SceneNode.cpp"),
+        self.assertEqual(SP.symbols_for("src/runtime/actor/ActorBase_SceneNode.cpp"),
                          ["_ZN7fBase_c9SceneNode5ResetEv", "_ZN7fBase_c9SceneNodeC1Ev"])
 
     def test_symbols_for_falls_back_to_the_filename(self):
@@ -290,34 +290,34 @@ class SrcPath(unittest.TestCase):
 
     def test_build_index_names_the_symbols_inside_a_merged_tu(self):
         """A stem-keyed index cannot see either function; the enrolment pass adds both."""
-        self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.write("runtime/actor/ActorBase_SceneNode.cpp")
+        self.enrol([("src/runtime/actor/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
                     ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
         idx = SP.build_index()
         self.assertEqual(idx["_ZN7fBase_c9SceneNode5ResetEv"],
-                         "src/actors/ActorBase_SceneNode.cpp")
+                         "src/runtime/actor/ActorBase_SceneNode.cpp")
         self.assertEqual(idx["_ZN7fBase_c9SceneNodeC1Ev"],
-                         "src/actors/ActorBase_SceneNode.cpp")
+                         "src/runtime/actor/ActorBase_SceneNode.cpp")
 
     # --- owner_at: the nested-entry-point shape, by address instead of by name ---
     def test_owner_at_finds_a_consolidated_tus_interior_address(self):
         """A merged TU can own an address with no symbols.txt row of its own left --
         every symbol the merge kept is elsewhere in the range. path_for has nothing to
         key on there; owner_at answers off the delinks RANGE itself."""
-        self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.write("runtime/actor/ActorBase_SceneNode.cpp")
+        self.enrol([("src/runtime/actor/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
         # 0x0203b4c4 carries no symbols.txt row in this fixture, so a stale DB row
         # naming a placeholder there (func_0203b4c4) cannot be found by path_for --
         # this is exactly the shape a consolidated-TU ghost row would present.
         self.assertIsNone(SP.path_for("func_0203b4c4"))
         self.assertEqual(SP.owner_at("arm9", 0x0203b4c4),
-                         SP.SRC / "actors" / "ActorBase_SceneNode.cpp")
+                         SP.SRC / "runtime" / "actor" / "ActorBase_SceneNode.cpp")
 
     def test_owner_at_agrees_with_path_for_on_an_ordinary_symbol(self):
-        self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.write("runtime/actor/ActorBase_SceneNode.cpp")
+        self.enrol([("src/runtime/actor/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
         self.assertEqual(SP.owner_at("arm9", 0x0203b4ac), SP.path_for("_ZN7fBase_c9SceneNode5ResetEv"))
 
@@ -353,9 +353,9 @@ class SrcPath(unittest.TestCase):
     def test_enrolment_beats_a_stale_one_function_file(self):
         """A leftover src/<symbol>.c beside a promoted TU is a file nothing compiles.
         Answering with it would report a match the ROM build never made."""
-        tu = self.write("actors/ActorBase_SceneNode.cpp")
+        tu = self.write("runtime/actor/ActorBase_SceneNode.cpp")
         self.write("_ZN7fBase_c9SceneNodeC1Ev.c")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.enrol([("src/runtime/actor/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
         self.assertEqual(SP.path_for("_ZN7fBase_c9SceneNodeC1Ev"), tu)
         # ...and the duplicate stays visible to whoever looks for duplicates.

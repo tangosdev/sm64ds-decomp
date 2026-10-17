@@ -1,0 +1,1148 @@
+{
+  "schema": 1,
+  "task": "yurei-native-local-vectors1015",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+  "candidate": "This commit; immutable output is recorded by the coordination queue.",
+  "status": "Current-base producer proof complete; independent exact Source and byte reacceptance remains the next stage.",
+  "completion": "partial",
+  "source_checkpoint": "044aa9a973ec0c668ce2a0c9d0ca73aee5e755ea",
+  "registered_input_commit": "bbdf1582a3d75e377672d7e5262890064d4a9b7d",
+  "base_commit": "132347a5a8d617de18c0de31b0b598788fa08329",
+  "tooling_workflow_commit": "bbdf1582a3d75e377672d7e5262890064d4a9b7d",
+  "source_review_policy_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "producer_session": "codex-yurei-native-local-vectors-astra-producer1015",
+  "source_author": {
+    "session": "codex-yurei-native-local-vectors-astra-producer1015",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "label": "codex-enemy-frontier-astra1014"
+  },
+  "changes": [
+    "Use all five existing real vector types for automatic objects across the three target native methods.",
+    "Correct the local Hurt bridge to the actual current scalar definition while preserving every argument and discarded result.",
+    "Qualify scalar-interface and historical reconstruction prose without a compiler-wall claim."
+  ],
+  "scope": {
+    "source": "src/game/actors/d_a_yurei_mucho.cpp",
+    "manifest": "config/tu_manifest.d/ov065/daYurei_Mucho_c.json",
+    "manifest_changed": false,
+    "targets": [
+      {
+        "symbol": "_ZN15daYurei_Mucho_c19func_ov065_0211696cEv",
+        "address": "0x0211696c",
+        "size": 380,
+        "locals": [
+          "int v[3] -> Vector3 v"
+        ]
+      },
+      {
+        "symbol": "_ZN15daYurei_Mucho_c19func_ov065_02116744Ev",
+        "address": "0x02116744",
+        "size": 356,
+        "locals": [
+          "int in[3] -> Vector3 in",
+          "int dp[3] -> Vector3 dp"
+        ]
+      },
+      {
+        "symbol": "_ZN15daYurei_Mucho_c19func_ov065_02115ff0Ev",
+        "address": "0x02115ff0",
+        "size": 720,
+        "locals": [
+          "short v[3] -> Vector3_16 v",
+          "int hv[3] -> Vector3 hv"
+        ]
+      }
+    ],
+    "source_physical_sha256": "31a0e6c1c73fca7b86abeb1ffe4e5b68d2b3d1c5b192051fed9e05bbc38bbc32",
+    "source_git_lf_sha256": "31a0e6c1c73fca7b86abeb1ffe4e5b68d2b3d1c5b192051fed9e05bbc38bbc32",
+    "manifest_physical_sha256": "4a7241b7b7b97ef53fa97a4eb20eebd8971c22c05607469852be4ef8c601e73a",
+    "headers_changed": false,
+    "enrollment_changed": false,
+    "ledger_or_credit_changed": false,
+    "actual_source_measurement": {
+      "module": "ov065",
+      "start": "0x2115ee0",
+      "end": "0x2116f98",
+      "absorbed": [
+        "daYurei_Mucho_c_classInit"
+      ],
+      "run_functions": 23,
+      "src_files": 1,
+      "total_lines": 716,
+      "unmatched": 0,
+      "no_legacy_source": 0,
+      "sourceless": [],
+      "not_in_delinks": 0,
+      "orphans": [],
+      "pragma_files": 0,
+      "all_promoted": true
+    }
+  },
+  "lifetime_and_interface_evidence": {
+    "Vector3": "Existing12-byte non-POD type has empty constructors/destructor. New locals have genuine C++ subobject lifetimes; byte identity establishes unchanged emitted code/cleanup, not identical source-level lifetimes.",
+    "Vector3_16": "Actual common.h POD of three signed16-bit components, six bytes; distinct from Vector3s. No speculative alias, destructor or helper was added.",
+    "initialization": "Translation Vec3_Asr writesXYZ before translation; drift in initializedXYZ then z changed, dp writtenXYZ before distance; collision halfword velocity and hurt position writtenXYZ before use.",
+    "flat_boundary": "The actor and player scalar members are not recast as a real Vector3 subobject; existing helper/scalar views remain partial.",
+    "Hurt": "Matches current Player.cpp int(Player*,void*,u32,int,u8,u8,u8) scalar definition; no unique original ABI type-spelling inference."
+  },
+  "whole_object_proof": {
+    "compiler": "2004/b56 using official unchanged build_pin.flags_for(source)",
+    "raw_sha256": "96af81691393bba828ef553ad32b14d4f5ec67606e70a059ca859e8c21729372",
+    "prepared_sha256": "b71c6806dcff3085aefaf8e23629d617fcdf14829b280962463f6c02e5987216",
+    "raw_and_prepared_literal_equal_to_control": true,
+    "comparison": {
+      "comparison": {
+        "raw_sha256": true,
+        "prepared_sha256": true,
+        "raw_graph": true,
+        "prepared_graph": true,
+        "owned": true,
+        "metadata": true,
+        "callbacks": true,
+        "homeless_helpers": true,
+        "raw_literal": true,
+        "prepared_literal": true
+      },
+      "raw_bytes": 17416,
+      "prepared_bytes": 17416,
+      "raw_allocated_sections": 36,
+      "raw_symbols": 173,
+      "raw_typed_references": 202,
+      "prepared_typed_references": 156,
+      "complete_emitted_metadata": [
+        {
+          "symbol": "_ZTI7fBase_c",
+          "symbol_size": 8,
+          "entire_section_size": 8,
+          "section_alignment": 4,
+          "canonical_module": "arm9",
+          "canonical_start": "0x2086d70",
+          "typed_edges": 2
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "symbol_size": 9,
+          "entire_section_size": 9,
+          "section_alignment": 1,
+          "canonical_module": "arm9",
+          "canonical_start": "0x2086e60",
+          "typed_edges": 0
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "symbol_size": 9,
+          "entire_section_size": 9,
+          "section_alignment": 1,
+          "canonical_module": "arm9",
+          "canonical_start": "0x2086e54",
+          "typed_edges": 0
+        },
+        {
+          "symbol": "_ZTS8dActor_c",
+          "symbol_size": 10,
+          "entire_section_size": 10,
+          "section_alignment": 1,
+          "canonical_module": "arm9",
+          "canonical_start": "0x208e384",
+          "typed_edges": 0
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "symbol_size": 12,
+          "entire_section_size": 12,
+          "section_alignment": 4,
+          "canonical_module": "arm9",
+          "canonical_start": "0x2086e78",
+          "typed_edges": 3
+        },
+        {
+          "symbol": "_ZTI12dEnemyBase_c",
+          "symbol_size": 12,
+          "entire_section_size": 12,
+          "section_alignment": 4,
+          "canonical_module": "ov002",
+          "canonical_start": "0x21081c0",
+          "typed_edges": 3
+        },
+        {
+          "symbol": "_ZTS12dEnemyBase_c",
+          "symbol_size": 15,
+          "entire_section_size": 15,
+          "section_alignment": 1,
+          "canonical_module": "ov002",
+          "canonical_start": "0x21081cc",
+          "typed_edges": 0
+        },
+        {
+          "symbol": "_ZTI8dActor_c",
+          "symbol_size": 12,
+          "entire_section_size": 12,
+          "section_alignment": 4,
+          "canonical_module": "arm9",
+          "canonical_start": "0x208e390",
+          "typed_edges": 3
+        },
+        {
+          "symbol": "_ZTI15daYurei_Mucho_c",
+          "symbol_size": 12,
+          "entire_section_size": 12,
+          "section_alignment": 4,
+          "canonical_module": "ov065",
+          "canonical_start": "0x211cb60",
+          "typed_edges": 3
+        },
+        {
+          "symbol": "_ZTS15daYurei_Mucho_c",
+          "symbol_size": 18,
+          "entire_section_size": 18,
+          "section_alignment": 1,
+          "canonical_module": "ov065",
+          "canonical_start": "0x211cb6c",
+          "typed_edges": 0
+        },
+        {
+          "symbol": "_ZTV15daYurei_Mucho_c",
+          "symbol_size": 132,
+          "entire_section_size": 132,
+          "section_alignment": 4,
+          "canonical_module": "ov065",
+          "canonical_start": "0x211cb9c",
+          "typed_edges": 32
+        }
+      ],
+      "qualification": "Each metadata symbol exactly fills its emitted allocated section, including the132-byte vtable preamble+31slots. Unemitted retail named-extent padding is not newly reconstructed. Ordinary legacy text-only isolation remains unchanged; no init/data/BSS ownership is added."
+    },
+    "strict_owned_functions": 23,
+    "canonical_callbacks": [
+      {
+        "name": "_ZN7Vector3D1Ev",
+        "module": "arm9",
+        "addr": "0x020072c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ],
+    "homeless_helpers": [
+      {
+        "symbol": "_ZN7V3QuintD1Ev",
+        "entry": {
+          "st_name": 2588,
+          "st_value": 0,
+          "st_size": 4,
+          "st_info": {
+            "bind": "STB_LOPROC",
+            "type": "STT_FUNC"
+          },
+          "st_other": {
+            "local": 0,
+            "visibility": "STV_DEFAULT"
+          },
+          "st_shndx": 36
+        },
+        "body": "1eff2fe1",
+        "typed_edges": []
+      }
+    ],
+    "helper_policy": "Existing Vector3D1 duplicate and V3QuintD1 deadstrip only. Actual raw helper sections have zero direct or section-target inbound edges in both epochs. Normal ordinary preparation passed unchanged policy; no manifest edit needed.",
+    "metadata_records": 11,
+    "metadata_bytes": 249,
+    "metadata_reference_count": 46,
+    "ownership_limit": "Text-only production owner; data/BSS claims empty, separately enrolled initializer and external PMF/State/resource storage retained.",
+    "current_complete_comparison": {
+      "tested_checkpoint": "044aa9a973ec0c668ce2a0c9d0ca73aee5e755ea",
+      "old_accepted_input": "3b5d6bd7e447aee1e808c651068d263b11864930",
+      "proof_keys_equal_except_head": true,
+      "complete_raw_and_prepared_literal_equal": true,
+      "all_strict_metadata_helpers_sections_symbols_typed_edges_equal": true,
+      "old_proof_sha256": "dbc4936b89a2437f1c0ef0964292d28ebb350a3d5bfd2f6ce32c21cd7153fc51",
+      "fresh_proof_sha256": "85a365ceea0cb4475c4fcf9cf95ecdaf7ff9636a1951d97e6ff50eff7fa5f43d"
+    }
+  },
+  "gates": {
+    "rom": {
+      "base": "132347a5a8d617de18c0de31b0b598788fa08329",
+      "source_checkpoint": "044aa9a973ec0c668ce2a0c9d0ca73aee5e755ea",
+      "gates": [
+        {
+          "name": "rombuild",
+          "command": [
+            "python",
+            "tools/rombuild.py",
+            "-j16",
+            "--no-rom",
+            "--report-json",
+            "build\\yurei-native-local-vectors1015\\current132347\\rombuild.json",
+            "--data-json",
+            "build\\yurei-native-local-vectors1015\\current132347\\romdata-full.json"
+          ],
+          "exit_code": 0,
+          "seconds": 288.34,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\rombuild.log",
+          "log_sha256": "a5e05a9aa5ade0544111947c9b2e724167e7fe7b2d6a1fb1cb3aa7e4a7b960cb"
+        }
+      ]
+    },
+    "static": {
+      "base": "132347a5a8d617de18c0de31b0b598788fa08329",
+      "source_checkpoint": "044aa9a973ec0c668ce2a0c9d0ca73aee5e755ea",
+      "gates": [
+        {
+          "name": "prepush",
+          "command": [
+            "python",
+            "tools/prepush_linkcheck.py",
+            "--range",
+            "132347a5a8d617de18c0de31b0b598788fa08329..HEAD",
+            "--json",
+            "build\\yurei-native-local-vectors1015\\current132347\\prepush.json"
+          ],
+          "exit_code": 0,
+          "seconds": 17.4,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\prepush.log",
+          "log_sha256": "7c3cfe711285939505f6d88fdc903714a48b17ee1584c65a1de5a6720a370215"
+        },
+        {
+          "name": "decl-scoped",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--changed",
+            "132347a5a8d617de18c0de31b0b598788fa08329"
+          ],
+          "exit_code": 0,
+          "seconds": 10.7,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\decl-scoped.log",
+          "log_sha256": "54ef666f53aa2e311bd27c80443ef46a6d1fc635e0ebf900064b65a2fdfeac8e"
+        },
+        {
+          "name": "decl-global",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--check"
+          ],
+          "exit_code": 0,
+          "seconds": 8.4,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\decl-global.log",
+          "log_sha256": "1d5662a98665af4b5ab86365ae80de63ee7a8ef195828d06e99042a9a10fe7ad"
+        },
+        {
+          "name": "port",
+          "command": [
+            "python",
+            "tools/port_refcheck.py"
+          ],
+          "exit_code": 0,
+          "seconds": 1.61,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\port.log",
+          "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+        },
+        {
+          "name": "langmode",
+          "command": [
+            "python",
+            "tools/langmode_audit.py",
+            "--check",
+            "build\\yurei-native-local-vectors1015\\current132347\\langmode-baseline.json"
+          ],
+          "exit_code": 0,
+          "seconds": 11.19,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\langmode.log",
+          "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+        },
+        {
+          "name": "tu-conflicts",
+          "command": [
+            "python",
+            "tools/check_tubuild_conflicts.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.37,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\tu-conflicts.log",
+          "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521"
+        },
+        {
+          "name": "duplicates",
+          "command": [
+            "python",
+            "tools/check_duplicate_sources.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.37,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\duplicates.log",
+          "log_sha256": "3c7d30e74da563c3759d899256bc6d497413d6fac97b5d50dde941fb71d9727d"
+        },
+        {
+          "name": "drafts",
+          "command": [
+            "python",
+            "tools/check_drafts_compile.py",
+            "--quiet"
+          ],
+          "exit_code": 0,
+          "seconds": 0.97,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\drafts.log",
+          "log_sha256": "4eaa535d055ed5087222e0edd0bd5b993d5867d936e408203180cd0e578d5f99"
+        },
+        {
+          "name": "diff-check",
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "132347a5a8d617de18c0de31b0b598788fa08329..HEAD"
+          ],
+          "exit_code": 0,
+          "seconds": 0.05,
+          "log": "build\\yurei-native-local-vectors1015\\current132347\\diff-check.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "full_build_summary": [
+      "intact TU gates: dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+      "reproducing: 11,334",
+      "mismatching: 0",
+      "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+      "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "ROM-build analysis: PASS",
+      "ROM data from source: 970 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,285 object records)"
+    ],
+    "rom_data_advisory": {
+      "symbols": 2511,
+      "verified": 970,
+      "partial": 1519,
+      "differs": 1,
+      "unnamed": 21,
+      "verifiedBytes": 49040,
+      "partialBytes": 8144,
+      "verifiedRecords": 2327,
+      "partialRecords": 2819,
+      "differsRecords": 2,
+      "unnamedRecords": 137,
+      "totalRecords": 5285,
+      "differingSymbols": [
+        {
+          "module": "arm9",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "addr": 34137860,
+          "bytes": 16
+        }
+      ],
+      "qualification": "Summary counts retained here; full per-record advisory remains bound by the actual full-build report artifact."
+    },
+    "qualifications": [
+      "Actual normal full-ROM analysis ran at the committed Source checkpoint, not a historical transfer.",
+      "Baseline dsd symbols control reports9 inherited symbol errors; module comparison/zero-new errors are the operative gates. Stock control ROM hashd1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 is not a claim that the --no-rom candidate produced a new ROM file.",
+      "Global data advisory partial/differ/unnamed entries remain; this is not zero-global-data-debt acceptance.",
+      "Prepush ran only after actual Source commit terminal0 and checked23functions; declaration gates report no new disagreements, not universal agreement."
+    ]
+  },
+  "historical_provenance": {
+    "accepted_findings_preserved_exact": 22,
+    "historic_ids": [
+      "YUR-01",
+      "YUR-02",
+      "YUR-03",
+      "YUR-04",
+      "YUR-05",
+      "YUR-06",
+      "YUR-07",
+      "YUR-08",
+      "YUR-PARTIAL-2478",
+      "YUR-09",
+      "YUR-10",
+      "YUREI-MATRIX-CONTRACT-01",
+      "KP2864-01",
+      "KP2864-02",
+      "KP2864-03",
+      "KP2864-04",
+      "KP2864-05",
+      "KP2864-06",
+      "KP2864-07",
+      "KP2864-08",
+      "KP2864-09",
+      "KP2864-10"
+    ],
+    "prior_source_producers_and_integrators": [
+      {
+        "task": "yurei-ov065-0907b",
+        "stage": "revise",
+        "session": "rev-yurei-0907",
+        "commit": "b8539d885398004aa8e87e2643f7944b6a01faa4"
+      },
+      {
+        "task": "yurei-ov065-0907b",
+        "stage": "integrate",
+        "session": "int-yurei-0908",
+        "commit": "b8539d885398004aa8e87e2643f7944b6a01faa4"
+      },
+      {
+        "task": "pr2456-source-repair-0910",
+        "stage": "fix",
+        "session": "review-yurei-0910-producer",
+        "commit": "35188d5d3760316b5f9f0a19575dc63badeafcb5"
+      },
+      {
+        "task": "pr2456-final-restack-r2-0910",
+        "stage": "compose",
+        "session": "codex-integrator-yurei-final-0910",
+        "commit": "10428c5db32f8771a7c72c7b132de935ed82bbcf"
+      },
+      {
+        "task": "yurei-matrix-contract-repair-0910",
+        "stage": "fix",
+        "session": "codex-r2398-yurei-matrix-producer-0910",
+        "commit": "d71451dc07583d964a03bb4d60c3fcd8406b8b80"
+      },
+      {
+        "task": "yurei-matrix-final-main-0910",
+        "stage": "compose",
+        "session": "codex-integrator-yurei-matrix-final-0910",
+        "commit": "e10c1e5e15b0613ad8f180598e11621b6aa6ea3d"
+      },
+      {
+        "task": "pr2864-identity-promotion-0920",
+        "stage": "reconstruct",
+        "session": "codex-koopa-identity-producer-0920",
+        "commit": "d81de04a24a2c0059c6814c71bf512e1547e0e65"
+      },
+      {
+        "task": "pr2864-identity-promotion-0920",
+        "stage": "compose",
+        "session": "codex-integrator-0920",
+        "commit": "49cef799f87781b1cff4aa9c7af94fdf139fc537"
+      }
+    ],
+    "prior_independent_reviewers_not_source_authors": [
+      {
+        "task": "yurei-ov065-0907b",
+        "stage": "verify",
+        "session": "vfy-yurei-0907-ind",
+        "commit": "b8539d885398004aa8e87e2643f7944b6a01faa4"
+      },
+      {
+        "task": "pr2456-source-repair-0910",
+        "stage": "verify",
+        "session": "codex-r2445-0910",
+        "commit": "35188d5d3760316b5f9f0a19575dc63badeafcb5"
+      },
+      {
+        "task": "pr2456-final-restack-r2-0910",
+        "stage": "verify",
+        "session": "codex-r2445-0910",
+        "commit": "10428c5db32f8771a7c72c7b132de935ed82bbcf"
+      },
+      {
+        "task": "yurei-matrix-contract-repair-0910",
+        "stage": "verify",
+        "session": "codex-integrator-yurei-matrix-review-0910",
+        "commit": "d71451dc07583d964a03bb4d60c3fcd8406b8b80"
+      },
+      {
+        "task": "yurei-matrix-final-main-0910",
+        "stage": "verify",
+        "session": "codex-r2445-0910",
+        "commit": "e10c1e5e15b0613ad8f180598e11621b6aa6ea3d"
+      },
+      {
+        "task": "pr2864-identity-promotion-0920",
+        "stage": "verify",
+        "session": "codex-koopa2864-independent-review-0920",
+        "commit": "49cef799f87781b1cff4aa9c7af94fdf139fc537"
+      }
+    ],
+    "address_credit_rows": 23,
+    "address_credit_authors": [
+      "andrewboudreau",
+      "lunavyqo",
+      "tangosdev"
+    ],
+    "credit_policy": "Original module:address credit and all historical attempts retained unchanged; no new match or replacement matching credit claimed."
+  },
+  "findings": [
+    {
+      "disposition": "fixed",
+      "id": "YUR-01",
+      "kind": "correctness",
+      "location": "include/daYurei_Mucho_c.h; src/actors/daYurei_Mucho_c.cpp",
+      "reason": "Both renamed declaration and definition now use void; the superseded Snufit header and shard stay deleted, the shared Actor header equals the approved base, and the 44-byte body is independently VERIFIED.",
+      "summary": "The old egg override conflicts with the current void Actor contract."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-02",
+      "kind": "reconstruction",
+      "location": "include/daYurei_Mucho_c.h:39",
+      "reason": "mShotCount is s32 at3dc and mTargetAngle s16 at3e0; direct use matches signed loads/stores and the fresh full23-function proof. Eleven offsets and0x3e4 allocation match; only3e2..3e4 remains unobserved. Names are explicitly reconstructed.",
+      "summary": "Live shot counter and target-angle fields were described as padding."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-03",
+      "kind": "provenance",
+      "location": "include/daYurei_Mucho_c.h:18; notes/data/class-facts/daYurei_Mucho_c.json",
+      "reason": "The header and dated correction separate measured PMF layout/call roles from reconstructed names and signatures; they disclose the short-returning retained attack-entry helper and that r0 forwarding does not establish an original return type.",
+      "summary": "State int signatures were incorrectly claimed to be recovered from ROM."
+    },
+    {
+      "disposition": "deferred",
+      "id": "YUR-04",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+      "kind": "reconstruction",
+      "location": "src/actors/daYurei_Mucho_c.cpp:183",
+      "owner": "humanizer/integrator support session through @andrewboudreau",
+      "reason": "The real UpdateYoshiEat call and redundant-declaration removal are complete. dCcAc_c fixed-point aggregate probes change code size; dBgCh_Actr scalar prototype emits an unresolved different name. These two ABI bridges remain owned partial work under2478; no aliases or shared types were invented.",
+      "summary": "Unavailable-method claims are corrected and UpdateYoshiEat is a real call; two Init calls still use ABI bridges."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-05",
+      "kind": "provenance",
+      "location": "src/actors/daYurei_Mucho_c.cpp:15; config/tu_manifest.d/ov065/daYurei_Mucho_c.json",
+      "reason": "Existing Matrix4x3/Vector3 interfaces are acknowledged, with bounded measured code-size differences. Existing constructors and manual-factory incompleteness are disclosed. Inline destructor emissions are distinguished from key-function identity; historical facts are preserved with dated corrections.",
+      "summary": "Copy types, constructor availability and metadata/key-function explanations were inaccurate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-06",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/daYurei_Mucho_c-ov065.md:3",
+      "reason": "The opening now identifies the original handoff as historical and points to the current dated corrections and exact proof identities.",
+      "summary": "The handoff opening falsely presented all historical counts as current."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-07",
+      "kind": "provenance",
+      "location": "src/actors/daYurei_Mucho_c.cpp:324",
+      "reason": "The comment now says the body does not read the incoming object pointer or access instance fields; it makes no unsupported ABI inference.",
+      "summary": "CleanupResources incorrectly inferred that unused r0 meant the ROM took no this parameter."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-08",
+      "kind": "provenance",
+      "location": "src/actors/daYurei_Mucho_c.cpp:338",
+      "reason": "The producer corrected the source and dated handoff. My independent 2004/b56 probe wrapped OnYoshiTryEat in extern C and obtained an identical complete object; C++ linkage of class members is retained.",
+      "summary": "A class member definition was falsely claimed to be prohibited inside extern C."
+    },
+    {
+      "disposition": "deferred",
+      "id": "YUR-PARTIAL-2478",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+      "kind": "reconstruction",
+      "location": "src/actors/daYurei_Mucho_c.cpp; include/daYurei_Mucho_c.h",
+      "owner": "humanizer/integrator support session through @andrewboudreau",
+      "reason": "This is a text-only partial promotion with ten native method symbols and one manual factory. Existing issue2478 owns further member/field/interface reconstruction; byte matching does not close it.",
+      "summary": "Twelve address-named helpers, manual factory, raw storage and copy views remain incomplete."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-09",
+      "kind": "provenance",
+      "location": "src/actors/daYurei_Mucho_c.cpp:101; notes/agents/handoffs/pr2456-final-composition-0910.md:14",
+      "reason": "Current comment distinguishes the text-only class TU from ROM-supplied BSS. Fresh independent 408-byte initializer proof and eight ROM PMF source/destination pairs confirm the real behavior; corrected final handoff identifies separately enrolled src/__sinit_ov065_0211c110.c complete .init 0211c110..0211c2a8. Initial db4 handoff incorrectly grouped initializer with ROM storage; sole 69a0 delta corrects it.",
+      "summary": "The old claim that defining any State or handle storage necessarily emits another initializer was unsupported."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUR-10",
+      "kind": "provenance",
+      "location": "config/tu_manifest.d/ov065/daYurei_Mucho_c.json:9; notes/data/tu-promotion-queue.tsv",
+      "reason": "The manifest identifies the historical census and current 23 licensed functions including factory. Independent 41-path review accounts for all 23 retired spans; current generated queue row is one source and 776 actual lines.",
+      "summary": "The manifest presented the historical pre-fold 22-shard census as current."
+    },
+    {
+      "disposition": "fixed",
+      "id": "YUREI-MATRIX-CONTRACT-01",
+      "kind": "correctness",
+      "location": "src/actors/daYurei_Mucho_c.cpp:80",
+      "reason": "Independently inspected the complete exact two-path diff and real helper source/ROM. Own staged 380-byte caller and 544-byte helper reproduce exactly with seven module references. ROM r1/r2 alias and helper temporary/copy path establish writable third output. Complete base/head object is identical. Final head/base differ from the independently inspected staging pair only by the same live-main contributions.json blob; every source/compiler input and both accepted d714 correction blobs are unchanged. Argument values/order remain unchanged.",
+      "summary": "The matrix helper now declares its actual const inputs and writable third output."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:428,433; include/Koopa.h; include/ModelAnim.h",
+      "reason": "Named actor u16 mWalkState and mInvincibleTimer replace out-of-bounds ModelAnim-relative accesses. Header has measured ownership; source byte proof remains exact. Candidate header/handoff accurately describe ModelAnim and actor ownership; integrator must publish the matching revised PR body when updating the branch.",
+      "summary": "The new ModelAnim-relative writes point outside the 0x64-byte member."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-02",
+      "kind": "correctness",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:165-170,1102,1119,1401",
+      "reason": "Truthful helper contracts and void transition result are retained; original redundant/fake declarations disappear with retired shards. External death/unload dependency reconciliation is explicit, with current changed-scope declarations passing.",
+      "summary": "Namespace aliases hide contradictory call contracts for the same C symbol."
+    },
+    {
+      "disposition": "deferred",
+      "id": "KP2864-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2871",
+      "kind": "reconstruction",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:120-126,591 and the 27 free helpers",
+      "owner": "codex-integrator-0920",
+      "reason": "Real ModelAnim rendering and ordinary factories/destructor/member Release calls are present.27 free helpers, raw field/PMF/volatile/copy forms and bounded scalar ABI bridges remain partial reconstruction; no general compiler impossibility is asserted.",
+      "summary": "The TU still contains fabricated virtual dispatch and substantial shadow scaffolding."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-04",
+      "kind": "correctness",
+      "location": "config/tu_manifest.d/ov062/Koopa+KoopaSmall.json:verification",
+      "original_kind": "promotion",
+      "reason": "Fresh complete-object policy/order audit has no unlicensed outputs or policy failures, D1 precedes D0, and all39 strict functions/all11 complete metadata bodies verify. Normal text-only production control links the exact compiler-sourced span and whole ROM. The specialized intact-mode refusal is retained honestly, not labeled a pass.",
+      "schema_mapping_reason": "Schema1 has no promotion kind; retain original kind/history and map the fixed hard output/order/link blocker to correctness, never deferred reconstruction.",
+      "summary": "Stored verification is text-only and explicitly not a complete-object promotion pass."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-05",
+      "kind": "provenance",
+      "location": "include/Koopa.h; config/arm9/overlays/ov062/symbols.txt:165-170",
+      "reason": "Real daNknk_c emission now matches all11 complete canonical metadata records including10-byte RTTI name and132-byte vtable with preamble. Community Koopa is only a source typedef; no invented metadata home or altered retail address licenses the class.",
+      "summary": "The coined Koopa class identity does not reproduce the ROM RTTI identity."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-06",
+      "kind": "provenance",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp and promotion ledgers",
+      "reason": "All39 shards are retired into the one complete production text owner;39 original symbol credits and4 converted identities/positions remain.37 written markers plus actual inline lifecycle definitions cover39 bodies. Seven declaration-fingerprint path migrations are distinct from attribution, and five unchanged-main exceptions remain debt.",
+      "summary": "Accounting and source ownership still describe the unpromoted shadow."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-07",
+      "kind": "correctness",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Existing actual-symbol scalar bridge and real Vector3_16 replace the obsolete import. Independent normal production control resolves the actual ov002 callee at020ada40; whole object is unchanged across the cleanup successor. Canonical C++ signature equivalence is not claimed.",
+      "summary": "Obsolete address-shaped callee import passed local inference but failed the real linker."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-08",
+      "kind": "correctness",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Canonical existing Matrix4x3 is used by the callee and all13 measured affected callers, including omitted daMky locals;57 concrete diagnostics heal. Independent normal ROM covers enrolled output, while the unchanged ov006 draft remains excluded and the ov081 canonical weak body is accounted.",
+      "summary": "Matrix translation helper used incompatible private and shared pointer declarations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-09",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Restored3 native member calls, named fields, ordinary loop and this argument; fresh entire raw object equals the independently linked control. D1/D0 derive from actual inline destructor, and all4 original converted identities still score every criterion true.",
+      "summary": "Consolidated CleanupResources regressed genuine Release calls, and synthetic lifecycle markers obscured the real destructor source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-10",
+      "kind": "provenance",
+      "location": "symbols/actor_renames.tsv:1694-1700",
+      "reason": "Independently confirmed exactly seven fourth-column replacements to the actual native names; addresses, original-name columns, reasons, ordering, appended history and all other rows are unchanged. Fresh check_rename_ledger.py passes all2202 checked mangled/vtable rows;1520 coined rows remain explicitly outside that tool scope.",
+      "summary": "Seven active mangled rename targets retained obsolete Koopa names after native daNknk_c symbol promotion."
+    },
+    {
+      "id": "YUREI-NATIVE-LOCALS-01",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_yurei_mucho.cpp:func_ov065_0211696c,func_ov065_02116744,func_ov065_02115ff0",
+      "summary": "Five stack vector stand-ins now use the existing real vector types.",
+      "reason": "Four Vector3 objects and one existing POD Vector3_16 replace scalar arrays. Component stores, every call, control-flow path and output remain intact; all23 owned bodies and the complete raw/prepared objects are literally equal. The non-POD objects now have actual C++ lifetimes, while emitted cleanup code is unchanged."
+    },
+    {
+      "id": "YUREI-HURT-CONTRACT-01",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_yurei_mucho.cpp:Player::Hurt scalar declaration",
+      "summary": "The local Hurt bridge now agrees with its current reconstructed definition.",
+      "reason": "Actual Player.cpp defines int(Player*,void*,u32,int,u8,u8,u8). The previous void return, const-void position and unsigned trailing words disagree. The new declaration follows the definition, still discards the result, and preserves arguments2/0xc000/1/0/1. Whole-object identity and zero-new declaration gates pass. No unique original signature or native Fix12 call recovery is claimed."
+    },
+    {
+      "id": "YUREI-CURRENT-PROVENANCE-01",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "This report and inherited historical findings",
+      "summary": "Historical free-helper and manual-factory descriptions are distinguished from the current Source.",
+      "reason": "All22 predecessor dictionaries below remain exact historical accepted records. Current Source already has22 compiler-spelled class methods includingD1/D0 and one intentional C factory using new; this change does not claim authorship of those earlier conversions. Actual Tree.measure is one promoted716-line TU and23 owned functions. Historical ten-method/twelve-free-helper/manual-factory counts are not current."
+    },
+    {
+      "id": "YUREI-FLAT-COPY-BOUNDARIES-01",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_yurei_mucho.cpp and include/daYurei_Mucho_c.h",
+      "summary": "Existing flat scalar storage and matrix/vector aggregate views remain partial reconstruction.",
+      "reason": "No Vector3 is invented over the actor/player flat position members. The existing pos scalar-copy source, helper views, Mtx43/V3A aggregate copies, integer-cast field updates and raw resource accesses remain. Specific historical alternative experiments are not generalized to a compiler impossibility. This scope changes only actual automatic vector objects and the Hurt declaration.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+      "owner": "codex-yurei-native-local-vectors-root-coordinator1015",
+      "next_action": "Continue separately reserved field, aggregate-copy and resource interface reconstruction with exact current whole-object proof."
+    },
+    {
+      "id": "YUREI-ABI-STATE-BOUNDARIES-01",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_yurei_mucho.cpp scalar helper declarations and State/resource uses",
+      "summary": "Native fixed-point call contracts and external state/storage ownership remain separate work.",
+      "reason": "Other scalar ABI bridges and reconstructed PMF return contracts remain. This legacy text-only TU owns neither the separately enrolled initializer nor the ROM-supplied handles/State BSS/PMF records. Its existing two helper dispositions and11 metadata canonical homes remain unchanged. No shared header, canonical symbol, ledger, enrollment, storage ownership or attribution change is made.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+      "owner": "codex-yurei-native-local-vectors-root-coordinator1015",
+      "next_action": "Reconstruct genuine native interfaces or storage only under a coherent owned continuation and whole-caller/metadata proof."
+    }
+  ],
+  "source_preflight": {
+    "sha256": "df6f10ccbd0dd2af1c59ba47dc9ff2ac4e0722dd0d323a084bf82bf966008c0b",
+    "assessment": "Independent read-only Source preflight positive/partial; not formal acceptance, no independent byte compilation yet.",
+    "producer_Source_hash": "31a0e6c1c73fca7b86abeb1ffe4e5b68d2b3d1c5b192051fed9e05bbc38bbc32"
+  },
+  "future_scope_obligations": {
+    "write_intersections": [],
+    "read_dependency_intersections": [
+      "attribution.json",
+      "config/arm9/overlays/ov002/symbols.txt",
+      "config/arm9/symbols.txt",
+      "function-authors.json",
+      "include/dEnemyBase_c.h",
+      "include/decl_common.h",
+      "src/game/player/Player.cpp"
+    ],
+    "obligation": "No Yurei write path in retained144; shared dependency overlap still requires eventual fresh composition and proof. This proposal does not finish or shrink full144, nativeYegg3/308, Heap, Player lifecycle or ARM7."
+  },
+  "evidence": {
+    "build/yurei-native-local-vectors1015/baseline/proof.json": {
+      "sha256": "2427cf3d499c633aa4deacbc3980a0c803ad357e0cdf3d076df8147fb43fbe0d"
+    },
+    "build/yurei-native-local-vectors1015/native/proof.json": {
+      "sha256": "dbc4936b89a2437f1c0ef0964292d28ebb350a3d5bfd2f6ce32c21cd7153fc51"
+    },
+    "build/yurei-native-local-vectors1015/complete-comparison.json": {
+      "sha256": "9b01036ec8ab77581a939319e58a4934e9406ac42e672216c99cae212146aa5b"
+    },
+    "build/yurei-native-local-vectors1015/helper-inbound-comparison.json": {
+      "sha256": "ec51c0122e7ebc03bc463b6c9f81ef25419c9fc1ad5eab6f368bffdd49d818b0"
+    },
+    "build/yurei-native-local-vectors1015/canary.json": {
+      "sha256": "279b75ed41a1f827fc26e8265bddf3228363d886708ae0205b6a9f89b61afaab"
+    },
+    "build/yurei-native-local-vectors1015/compiler-inputs.json": {
+      "sha256": "755e69bc495fe74854ec46b312e90d3cc329ca77cd01fe2a8ebc93a9d6f590bf"
+    },
+    "build/yurei-native-local-vectors1015/gate-results-rom.json": {
+      "sha256": "1f3dfcbf38fe2e0d001d23105d240c3da1b1b05e8ce1593f055c0e542a221b98"
+    },
+    "build/yurei-native-local-vectors1015/gate-results-static.json": {
+      "sha256": "d2785279bb12f0c80f0a6ea3f9f45df242d69fe348b21e7f6fdaa113b4741392"
+    },
+    "build/yurei-native-local-vectors1015/actual-source-measurement.json": {
+      "sha256": "750e0f440cbb539f4ba2ff9147c18b546841567e9687b8c4f6af1ab6f54aa73a"
+    },
+    "build/yurei-native-local-vectors1015/prior-inherited-effective-findings.json": {
+      "sha256": "c8b9d6e283dd702aae5666def526afc631b73558ff4404f5d0ded23e04dc4409"
+    },
+    "build/yurei-native-local-vectors1015/prior-accepted-provenance.json": {
+      "sha256": "97eb6a85a2177b81fc3d079d29a4f1f4ac2016042a04a225d9a025b0e5105e76"
+    },
+    "build/yurei-native-local-vectors1015/prior-address-credit-preserved.json": {
+      "sha256": "c91b57ccca50217b79a66678c0d43534fe58f4ece6b7f878d5cdb3efd464c447"
+    },
+    "build/yurei-native-local-vectors1015/rombuild.json": {
+      "sha256": "9d974bcebdb894e7509efc038e6dcc630569f358f3827e840773e919232b572d"
+    },
+    "build/yurei-native-local-vectors1015/romdata-full.json": {
+      "sha256": "bd3e35d50952efdb5613e5c67e5c807cb8a0460198b5f7fed3edf7285990665f"
+    },
+    "build/yurei-native-local-vectors1015/current132347/precomposition.json": {
+      "sha256": "f2aaf8f4c7170dcda74b774f93a9253fef9cb1dd9c5a2364001368acd07904af"
+    },
+    "build/yurei-native-local-vectors1015/current132347/composition-binding.json": {
+      "sha256": "69618f4e498c6f0bb590dae42b9475f89e808244f7126ee8f9a90ae840b5e401"
+    },
+    "build/yurei-native-local-vectors1015/current132347/complete-comparison.json": {
+      "sha256": "713ded0388096cf7ec7f0a561b7d3d1edc6adef5e5018ddadc28ea2ff74f7214"
+    },
+    "build/yurei-native-local-vectors1015/current132347/native/proof.json": {
+      "sha256": "85a365ceea0cb4475c4fcf9cf95ecdaf7ff9636a1951d97e6ff50eff7fa5f43d"
+    },
+    "build/yurei-native-local-vectors1015/current132347/gate-results-rom.json": {
+      "sha256": "e88b2bc9fdba293781b333948994f040d97e324694a74a839d90dcf6f7e5a78b"
+    },
+    "build/yurei-native-local-vectors1015/current132347/gate-results-static.json": {
+      "sha256": "c422ea9a7a02f06382ec44412c9800f4d94dd0be799ff434dbcf8554f98053ba"
+    },
+    "build/yurei-native-local-vectors1015/current132347/rombuild.json": {
+      "sha256": "1cafaddcf77c0a11ed7e9a91b00773d66d5f38ee2f6e1c5033d8849b7c7b02cb"
+    },
+    "build/yurei-native-local-vectors1015/current132347/live-main-binding.json": {
+      "sha256": "abf774b633fc792810c3aeef70c007143cdb9bab399e96954d0e0a4591263e35"
+    },
+    "build/yurei-native-local-vectors1015/lineage-aggregate-delta.json": {
+      "sha256": "5343a41ac92bfa3f690ddece88e1c992807cae9449702a0a52fb09320b43104c"
+    }
+  },
+  "current_main_check": {
+    "tested_source_base": "132347a5a8d617de18c0de31b0b598788fa08329",
+    "live_main": "8312a7819ae2687e0a1173aad18fd5c11f72f415",
+    "changed_paths": [
+      "contributions.json"
+    ],
+    "five_production_trees": {
+      "src": {
+        "tested_base": "c8cf8de93bf2953914df8e6c73ace8122cc7d70a",
+        "live_main": "c8cf8de93bf2953914df8e6c73ace8122cc7d70a"
+      },
+      "include": {
+        "tested_base": "bbf6e0ac629c5caa508e068e86cc18dbafadbb59",
+        "live_main": "bbf6e0ac629c5caa508e068e86cc18dbafadbb59"
+      },
+      "config": {
+        "tested_base": "e0c82885336ffffaed69c9a01dc5053e94bd5f95",
+        "live_main": "e0c82885336ffffaed69c9a01dc5053e94bd5f95"
+      },
+      "tools": {
+        "tested_base": "55122625b2b352a5f15ea21d3d9baf1fdd6859b4",
+        "live_main": "55122625b2b352a5f15ea21d3d9baf1fdd6859b4"
+      },
+      "port": {
+        "tested_base": "c6bd95e7eb59d61c892c4eb233e85115eb4bc28c",
+        "live_main": "c6bd95e7eb59d61c892c4eb233e85115eb4bc28c"
+      }
+    },
+    "checked_at_utc": "2026-10-15T04:18:06.000909+00:00",
+    "qualification": "Live main advances only progress bookkeeping; this does not claim identical entire repository trees."
+  },
+  "not_claimed": [
+    "Formal independent acceptance",
+    "Complete class/ABI/field/storage reconstruction",
+    "Public push/PR/private validation/merge",
+    "Completion of retained Chomp20, Player lifecycle, full144, nativeYegg3/308, Heap or remainingARM7 work"
+  ],
+  "historical_original_epoch": {
+    "output_commit": "3b5d6bd7e447aee1e808c651068d263b11864930",
+    "source_checkpoint": "0d53a3937e4f7d05a0edace892b3ac749f05d863",
+    "base_commit": "bbdf1582a3d75e377672d7e5262890064d4a9b7d",
+    "gates": {
+      "rom": {
+        "base": "bbdf1582a3d75e377672d7e5262890064d4a9b7d",
+        "source_checkpoint": "0d53a3937e4f7d05a0edace892b3ac749f05d863",
+        "gates": [
+          {
+            "name": "rombuild",
+            "command": [
+              "python",
+              "tools/rombuild.py",
+              "-j16",
+              "--no-rom",
+              "--report-json",
+              "build\\yurei-native-local-vectors1015\\rombuild.json",
+              "--data-json",
+              "build\\yurei-native-local-vectors1015\\romdata-full.json"
+            ],
+            "exit_code": 0,
+            "seconds": 332.56,
+            "log": "build\\yurei-native-local-vectors1015\\rombuild.log",
+            "log_sha256": "df368414c2769d50b144233ad3f1608aceaa4d4a571073c51137e9afcb53a735"
+          }
+        ]
+      },
+      "static": {
+        "base": "bbdf1582a3d75e377672d7e5262890064d4a9b7d",
+        "source_checkpoint": "0d53a3937e4f7d05a0edace892b3ac749f05d863",
+        "gates": [
+          {
+            "name": "prepush",
+            "command": [
+              "python",
+              "tools/prepush_linkcheck.py",
+              "--range",
+              "bbdf1582a3d75e377672d7e5262890064d4a9b7d..HEAD",
+              "--json",
+              "build\\yurei-native-local-vectors1015\\prepush.json"
+            ],
+            "exit_code": 0,
+            "seconds": 19.18,
+            "log": "build\\yurei-native-local-vectors1015\\prepush.log",
+            "log_sha256": "7c3cfe711285939505f6d88fdc903714a48b17ee1584c65a1de5a6720a370215"
+          },
+          {
+            "name": "decl-scoped",
+            "command": [
+              "python",
+              "tools/check_decl_agreement.py",
+              "--changed",
+              "bbdf1582a3d75e377672d7e5262890064d4a9b7d"
+            ],
+            "exit_code": 0,
+            "seconds": 9.56,
+            "log": "build\\yurei-native-local-vectors1015\\decl-scoped.log",
+            "log_sha256": "e0a6d67f9cda6dc8a24eda12898ef9e748c248f54ddac350a426980f0271044b"
+          },
+          {
+            "name": "decl-global",
+            "command": [
+              "python",
+              "tools/check_decl_agreement.py",
+              "--check"
+            ],
+            "exit_code": 0,
+            "seconds": 9.09,
+            "log": "build\\yurei-native-local-vectors1015\\decl-global.log",
+            "log_sha256": "6bd7e5e9f83a1fa5aceac78fdf5fe9820e5766b1b9a00db9cd9baf4aabf0b173"
+          },
+          {
+            "name": "port",
+            "command": [
+              "python",
+              "tools/port_refcheck.py"
+            ],
+            "exit_code": 0,
+            "seconds": 1.79,
+            "log": "build\\yurei-native-local-vectors1015\\port.log",
+            "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+          },
+          {
+            "name": "langmode",
+            "command": [
+              "python",
+              "tools/langmode_audit.py",
+              "--check",
+              "build\\yurei-native-local-vectors1015\\langmode-baseline.json"
+            ],
+            "exit_code": 0,
+            "seconds": 12.74,
+            "log": "build\\yurei-native-local-vectors1015\\langmode.log",
+            "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+          },
+          {
+            "name": "tu-conflicts",
+            "command": [
+              "python",
+              "tools/check_tubuild_conflicts.py"
+            ],
+            "exit_code": 0,
+            "seconds": 0.31,
+            "log": "build\\yurei-native-local-vectors1015\\tu-conflicts.log",
+            "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521"
+          },
+          {
+            "name": "duplicates",
+            "command": [
+              "python",
+              "tools/check_duplicate_sources.py"
+            ],
+            "exit_code": 0,
+            "seconds": 0.36,
+            "log": "build\\yurei-native-local-vectors1015\\duplicates.log",
+            "log_sha256": "3c7d30e74da563c3759d899256bc6d497413d6fac97b5d50dde941fb71d9727d"
+          },
+          {
+            "name": "drafts",
+            "command": [
+              "python",
+              "tools/check_drafts_compile.py",
+              "--quiet"
+            ],
+            "exit_code": 0,
+            "seconds": 0.97,
+            "log": "build\\yurei-native-local-vectors1015\\drafts.log",
+            "log_sha256": "4eaa535d055ed5087222e0edd0bd5b993d5867d936e408203180cd0e578d5f99"
+          },
+          {
+            "name": "diff-check",
+            "command": [
+              "git",
+              "diff",
+              "--check",
+              "bbdf1582a3d75e377672d7e5262890064d4a9b7d..HEAD"
+            ],
+            "exit_code": 0,
+            "seconds": 0.05,
+            "log": "build\\yurei-native-local-vectors1015\\diff-check.log",
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "full_build_summary": [
+        "intact TU gates: dsd modules PASS, zero new symbol errors, storage aliases exact",
+        "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+        "reproducing: 11,334",
+        "mismatching: 0",
+        "source-owned data claims: 331  (reproducing 331, mismatching 0)",
+        "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "ROM-build analysis: PASS",
+        "ROM data from source: 970 symbol(s) verified, 1,519 partial, 1 differ, 21 unnamed by config (from 5,285 object records)"
+      ],
+      "rom_data_advisory": {
+        "symbols": 2511,
+        "verified": 970,
+        "partial": 1519,
+        "differs": 1,
+        "unnamed": 21,
+        "verifiedBytes": 49040,
+        "partialBytes": 8144,
+        "verifiedRecords": 2327,
+        "partialRecords": 2819,
+        "differsRecords": 2,
+        "unnamedRecords": 137,
+        "totalRecords": 5285,
+        "differingSymbols": [
+          {
+            "module": "arm9",
+            "symbol": "_ZTV10dCcAcPos_c",
+            "addr": 34137860,
+            "bytes": 16
+          }
+        ],
+        "qualification": "Summary counts retained here; full per-record advisory remains bound by the actual full-build report artifact."
+      },
+      "qualifications": [
+        "Actual normal full-ROM analysis ran at the committed Source checkpoint, not a historical transfer.",
+        "Baseline dsd symbols control reports9 inherited symbol errors; module comparison/zero-new errors are the operative gates. Stock control ROM hashd1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 is not a claim that the --no-rom candidate produced a new ROM file.",
+        "Global data advisory partial/differ/unnamed entries remain; this is not zero-global-data-debt acceptance.",
+        "Prepush ran only after actual Source commit terminal0 and checked23functions; declaration gates report no new disagreements, not universal agreement."
+      ],
+      "baseline_control_summary": [
+        "source-built functions: 5,888  (1,190,448 / 2,238,108 code bytes, 53.19%)",
+        "reproducing: 5,888",
+        "mismatching: 0",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "ROM-build analysis: PASS"
+      ],
+      "baseline_control_summary_qualification": "Independent scratch baseline with NO TU substitutions; its5888 source-built count is not the final candidate count. Final normal candidate analysis below is11334."
+    },
+    "report_physical_sha256": "46555eed9440d2ba6ada992cd302cea5e2ca7126b1be2e2dda2ca51af7229cc0",
+    "report_git_lf_sha256": "20c0b9874333123d7cfc51ea66c0d7d0aa47379184bec6556281fa744a1be45b",
+    "qualification": "Original full build and static proof are preserved historical evidence; the current composition has its own fresh runs."
+  },
+  "source_author_checkpoint": "0d53a3937e4f7d05a0edace892b3ac749f05d863",
+  "accepted_rework_input_commit": "3b5d6bd7e447aee1e808c651068d263b11864930",
+  "current_composition": {
+    "parents": [
+      "3b5d6bd7e447aee1e808c651068d263b11864930",
+      "132347a5a8d617de18c0de31b0b598788fa08329"
+    ],
+    "incoming_main_changes": [
+      "config/tu_manifest.d/ov030/daMky_c.json",
+      "notes/experiments/mky-native-normals1015.json",
+      "src/game/actors/d_a_mky.cpp"
+    ],
+    "required_incoming_inputs_literal": 58,
+    "required_candidate_inputs_literal": 58,
+    "Source_and_manifest_unchanged_since_rework_input": true,
+    "report_only_final_binding": "Final immutable output is recorded by the queue and ignored final-binding artifact; all five production trees must equal this tested checkpoint.",
+    "qualification": "Normal two-parent merge preserves both original Source history and accepted Monkey/main ancestry; original registered bbdf input/tooling provenance remains recorded."
+  },
+  "accepted_history_resolution": {
+    "effective_findings_preserved_exact": 27,
+    "accepted_predecessor_dicts": 22,
+    "current_findings": 5,
+    "raw_aggregate_difference_count": 3,
+    "evidence_sha256": "5343a41ac92bfa3f690ddece88e1c992807cae9449702a0a52fb09320b43104c",
+    "qualification": "Preserve actual later accepted VERIFY dictionaries, including KP2864-10 FIXED, separately from stale raw aggregate dispositions. Independent review must validate this history resolution; producer does not self-accept it."
+  }
+}

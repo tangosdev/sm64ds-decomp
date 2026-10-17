@@ -99,7 +99,7 @@ struct daDgr_c : dBgActor_c {
      * SIDE EFFECT, AND IT IS BENIGN: an inline destructor is skipped when the
      * key function is chosen, so the key function is now InitResources -- the
      * first non-inline virtual DECLARED below -- and no longer the destructor.
-     * Both live in src/actors/daDgr_c.cpp, so the same eleven data symbols
+     * Both live in src/game/actors/d_a_dgr.cpp, so the same eleven data symbols
      * (_ZTV7daDgr_c plus ten RTTI records) are emitted from the same TU either
      * way and the promotion's compiler_only_output stays at 12 rows; the
      * correction did not move the eligibility bracket. Declaring a new virtual

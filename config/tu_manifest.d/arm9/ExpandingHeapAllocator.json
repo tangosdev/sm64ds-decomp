@@ -85,11 +85,11 @@
       "legacy_source": "src/_ZN13HeapAllocator7DestroyEv.cpp"
     },
     {
-      "symbol": "_ZN4Heap28CreateExpandingHeapAllocatorEPvjj",
+      "symbol": "_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj",
       "address": "0x0204e3c0",
       "size": "0x4c",
       "ordinal": 10,
-      "legacy_source": "src/_ZN4Heap28CreateExpandingHeapAllocatorEPvjj.cpp"
+      "legacy_source": "src/_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj.cpp"
     },
     {
       "symbol": "_ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE",

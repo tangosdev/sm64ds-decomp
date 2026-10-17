@@ -1,3 +1,8 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov077_0212749c_AssetId {
+    ASSET_TOGEZO_WALK_BCA = 0x042b
+};
+
 extern int _ZN13SharedFilePtr9ConstructEj();
 extern void func_020731dc();
 extern void SharedFilePtr_Destruct_Anim(void);
@@ -36,7 +41,7 @@ extern struct Dst data_ov077_02127c28;
 
 void __sinit_ov077_0212749c(void)
 {
-    _ZN13SharedFilePtr9ConstructEj(data_ov077_02127c14, 0x42b);
+    _ZN13SharedFilePtr9ConstructEj(data_ov077_02127c14, ASSET_TOGEZO_WALK_BCA);
     func_020731dc(data_ov077_02127c14, &SharedFilePtr_Destruct_Anim, data_ov077_02127c1c);
     data_ov077_02127c28.p0 = data_ov077_02127928;
     data_ov077_02127c28.p1 = data_ov077_02127910;

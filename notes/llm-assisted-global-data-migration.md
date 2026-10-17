@@ -139,7 +139,7 @@ Matching the ROM may initially require an explicitly padded representation, with
 The current decompilation commonly stores one function per source file. The original game used normal translation units containing multiple functions and globals:
 
 ```cpp
-// Possible original shape: daMoray_c.cpp
+// Possible original shape: d_a_moray.cpp
 
 UnagiResources resources;
 int instanceCount;
@@ -294,7 +294,7 @@ Run D: Trigger another water enemy without daMoray_c present
 Run E: Leave and reload the stage
 ```
 
-The LLM can also recommend the next discriminating experiment. If two likely owners are `daMoray_c.cpp` and a shared water-enemy resource TU, running another water enemy without daMoray_c may separate the hypotheses.
+The LLM can also recommend the next discriminating experiment. If two likely owners are `d_a_moray.cpp` and a shared water-enemy resource TU, running another water enemy without daMoray_c may separate the hypotheses.
 
 ## 10. Proposed ownership manifest
 
@@ -307,7 +307,7 @@ address: 0x02114d4c
 inferred_stride: 0x0c
 
 candidate_owners:
-  - tu: daMoray_c.cpp
+  - tu: d_a_moray.cpp
     confidence: 0.91
     evidence:
       - constructed by __sinit_ov016_02114c20

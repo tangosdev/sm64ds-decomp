@@ -1,0 +1,377 @@
+{
+  "task": "tatefuda-cpp1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3778",
+  "identity": "daObjTatefuda_c, wooden signpost (TATEFUDA profile)",
+  "status": "producer-verified candidate; independent acceptance pending",
+  "completion": "partial",
+  "producer_session": "codex-camera-remaining-fresh-tatefuda1013",
+  "contributing_producer_sessions": [
+    "codex-tatefuda-root-scout1013"
+  ],
+  "harness": "Codex",
+  "branch": "cpp/tatefuda-cpp1013",
+  "base": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source_checkpoint": "89cd77ef09856dc54506e24aa1c746f6c8137856",
+  "report_scope": "This commit describes the source checkpoint; the final report-only descendant preserves these three compile-input blobs. Queue output identifies the immutable offered commit.",
+  "input_blobs": {
+    "src/actors/daObjTatefuda_c.cpp": "00003dc102f83ebdc0a14e7e76b08e931fa7f3ae",
+    "include/daObjTatefuda_c.h": "61698bde270360498b9b6ce666a79f4c2e436f9a",
+    "config/tu_manifest.d/ov002/daObjTatefuda_c.json": "25276d0cd0065dec0867f1cab3569eacd792b542"
+  },
+  "changes": [
+    "Both matrix helpers compile as C++ after deleting four C-mode pragmas. Existing free C-linkage symbols are preserved.",
+    "Use Player::IsFrontSliding, Player::LostGrabbedObject and the native short-reference ApproachLinear overload; remove three obsolete local mangled declarations. Both Talk call sites are updated as well.",
+    "Retain the measured twelve-word array copy view for block copies. Correct stale source and header comments; header tokens outside comments are identical.",
+    "Refresh twelve existing manifest compiler-local input names; canonical identities and all other production policies remain unchanged."
+  ],
+  "rom_identity_evidence": "Existing RTTI: ov002 _ZTS15daObjTatefuda_c at0x02109ac0, _ZTI at0x02109ab4, _ZTV at0x02109af8; factory binds the TATEFUDA profile. No new class naming claim.",
+  "owned_ranges": [
+    {
+      "name": ".text",
+      "start": "0x020badd0",
+      "end": "0x020bc414"
+    },
+    {
+      "name": ".init",
+      "start": "0x02101738",
+      "end": "0x02101894"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02108100",
+      "end": "0x02108104"
+    },
+    {
+      "name": ".data",
+      "start": "0x02109a64",
+      "end": "0x02109ab4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0210e05c",
+      "end": "0x0210e0d4"
+    }
+  ],
+  "exact_helper_checks": [
+    {
+      "name": "RebuildModelMatrix",
+      "module": "ov002",
+      "addr": "0x020bafc0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "typed_relocations": 6
+    },
+    {
+      "name": "AttachToHolder",
+      "module": "ov002",
+      "addr": "0x020bb060",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "typed_relocations": 16
+    }
+  ],
+  "ordinary_production_proof": {
+    "command": "python build/committed-proof.py",
+    "entrypoint": "tu_production.prepare_intact_object",
+    "tools_source_commit": "08b118098ecb7ce86b85f1215886a4618e268a86",
+    "compiler": "2004/b56",
+    "tested_commit": "89cd77ef09856dc54506e24aa1c746f6c8137856",
+    "exit_code": 0,
+    "full_prepared_elf_identical_to_base": true,
+    "size_bytes": 24136,
+    "sha256": "fbedf3808a56b0b4c4ae9d65777d309b0b4578c284cd26598550bb8831e34c0e",
+    "functions": 29,
+    "initializers": 1,
+    "strict_verified": 30,
+    "typed_relocations": 203,
+    "blind": 0,
+    "nontext": [
+      {
+        "section": ".init",
+        "start": "0x02101738",
+        "end": "0x02101894",
+        "emittedBytes": 348,
+        "sizeOk": true,
+        "bytesOk": true,
+        "differingWords": 0,
+        "relocCount": 21
+      },
+      {
+        "section": ".ctor",
+        "start": "0x02108100",
+        "end": "0x02108104",
+        "emittedBytes": 4,
+        "sizeOk": true,
+        "bytesOk": true,
+        "differingWords": 0,
+        "relocCount": 1
+      },
+      {
+        "section": ".data",
+        "start": "0x02109a64",
+        "end": "0x02109ab4",
+        "emittedBytes": 80,
+        "sizeOk": true,
+        "bytesOk": true,
+        "differingWords": 0,
+        "relocCount": 10
+      },
+      {
+        "section": ".bss",
+        "start": "0x0210e05c",
+        "end": "0x0210e0d4",
+        "emittedBytes": 120,
+        "sizeOk": true,
+        "bytesOk": true,
+        "differingWords": 0,
+        "relocCount": 0
+      }
+    ],
+    "compiler_only_policy_entries": 14,
+    "no_new_tool_policy": true,
+    "no_retarget_or_isolation": true,
+    "log": "build/tatefuda-committed-proof.json"
+  },
+  "temporary_identity_proof": {
+    "raw_symbol_metadata_rows": 229,
+    "all_raw_relocation_edges": 265,
+    "anonymous_reference_edges": 12,
+    "method": "Bijective anonymous-name correspondence by exact symbol section index, offset, size, type and binding; all section metadata/content and all relocation source/target/type/addend edges agree after that correspondence. Ordinary final ELFs are byte-identical.",
+    "mapping": [
+      {
+        "previous_input": "@1149",
+        "candidate_input": "@1146",
+        "canonical_symbol": "@1128"
+      },
+      {
+        "previous_input": "@1150",
+        "candidate_input": "@1147",
+        "canonical_symbol": "@1129"
+      },
+      {
+        "previous_input": "@1152",
+        "candidate_input": "@1149",
+        "canonical_symbol": "@1131"
+      },
+      {
+        "previous_input": "@1154",
+        "candidate_input": "@1151",
+        "canonical_symbol": "@1133"
+      },
+      {
+        "previous_input": "@1156",
+        "candidate_input": "@1153",
+        "canonical_symbol": "@2760"
+      },
+      {
+        "previous_input": "@1158",
+        "candidate_input": "@1155",
+        "canonical_symbol": "@2156"
+      },
+      {
+        "previous_input": "@1160",
+        "candidate_input": "@1157",
+        "canonical_symbol": "@2155"
+      },
+      {
+        "previous_input": "@1162",
+        "candidate_input": "@1159",
+        "canonical_symbol": "@2161"
+      },
+      {
+        "previous_input": "@1164",
+        "candidate_input": "@1161",
+        "canonical_symbol": "@2158"
+      },
+      {
+        "previous_input": "@1166",
+        "candidate_input": "@1163",
+        "canonical_symbol": "@2159"
+      },
+      {
+        "previous_input": "@1168",
+        "candidate_input": "@1165",
+        "canonical_symbol": "@2160"
+      },
+      {
+        "previous_input": "@1170",
+        "candidate_input": "@1167",
+        "canonical_symbol": "@2157"
+      }
+    ],
+    "canonical_symbols_unchanged": true,
+    "private_graph_log": "C:\\tmp\\sm64ds-camfresh1013\\build\\tatefuda-cleanup1013\\temporary-reference-proof.json"
+  },
+  "header_change": {
+    "path": "include/daObjTatefuda_c.h",
+    "comments_only": true,
+    "affected_source_files": [
+      "src/actors/daObjTatefuda_c.cpp"
+    ],
+    "command": "python tools/affected_src.py include/daObjTatefuda_c.h",
+    "exit_code": 0,
+    "log": "build/affected-header-before.txt"
+  },
+  "gates": {
+    "production_rom": {
+      "command": "python tools/rombuild.py -j 16 --no-rom --report-json build/tatefuda-rom-report.json",
+      "tested_commit": "89cd77ef09856dc54506e24aa1c746f6c8137856",
+      "exit_code": 0,
+      "result": "PASS",
+      "functions_reproduced": 11332,
+      "functions_mismatched": 0,
+      "data_claims_reproduced": 331,
+      "data_claims_mismatched": 0,
+      "bss_claims": 239,
+      "bss_bytes": 30164,
+      "modules_exact": 106,
+      "modules_checked": 106,
+      "module_bytes": 3049600,
+      "differing_module_bytes": 0,
+      "module_set_sha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "enrolled_source_files": 2750,
+      "object_cache": {
+        "reused": 2749,
+        "compiled": 1
+      },
+      "intact_tu_link": {
+        "ok": true,
+        "modulesOk": true,
+        "symbolsCommandOk": true,
+        "symbolErrors": [
+          "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+          "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+          "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+        ],
+        "baselineSymbolErrors": [
+          "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+          "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+          "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+          "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+          "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+        ],
+        "newSymbolErrors": [],
+        "storageAliasErrors": []
+      },
+      "coverage_limits": [
+        "--no-rom skips final .nds packaging; all executable modules are linked and checked. Fresh stock-control bootstrap separately built its .nds.",
+        "Tree-wide auxiliary ROM-data inventory reports 969 verified symbols,1519 partial,1 differing symbol,21 unnamed. The differing symbol is _ZTV10dCcAcPos_c from two unrelated destructor records; it is not a signpost owned-section failure."
+      ],
+      "terminal_source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11332,
+        "compiledBytes": 2220756,
+        "sourceFunctions": 11332,
+        "sourceBytes": 2220756,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 99.22470229318692,
+        "reproducingFunctions": 11332,
+        "reproducingBytes": 2220756,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "logs": [
+        "build/tatefuda-rom.log",
+        "build/tatefuda-rom-report.json"
+      ]
+    },
+    "prepush_raw": {
+      "command": "python tools/prepush_linkcheck.py --range 08b118098ecb7ce86b85f1215886a4618e268a86..HEAD --json build/tatefuda-prepush.json",
+      "tested_commit": "89cd77ef09856dc54506e24aa1c746f6c8137856",
+      "exit_code": 0,
+      "checked": 30,
+      "verified": 29,
+      "warnings": [
+        {
+          "file": "src/actors/daObjTatefuda_c.cpp",
+          "name": "__sinit_daObjTatefuda_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101738",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "qualification": "Raw initializer has six unresolved compiler-local names. Ordinary production preparation applies the existing manifest mapping; all30 contributions then strictly verify with zero blind slots, and the complete object equals baseline.",
+      "log": "build/tatefuda-prepush.log"
+    },
+    "declaration": {
+      "command": "python tools/check_decl_agreement.py --changed 08b118098ecb7ce86b85f1215886a4618e268a86",
+      "tested_commit": "89cd77ef09856dc54506e24aa1c746f6c8137856",
+      "exit_code": 0,
+      "scope_files": 1122,
+      "new_local_redeclarations": 0,
+      "new_disagreements": 0,
+      "log": "build/tatefuda-decl.log"
+    },
+    "port": {
+      "command": "python tools/port_refcheck.py",
+      "tested_commit": "89cd77ef09856dc54506e24aa1c746f6c8137856",
+      "exit_code": 0,
+      "checked": 267,
+      "stale": 0,
+      "log": "build/tatefuda-port.log"
+    },
+    "language_mode": {
+      "command": "python tools/langmode_audit.py --check build/langmode-baseline.json",
+      "baseline_ref": "origin/chaos-data:langmode-baseline.json",
+      "tested_commit": "89cd77ef09856dc54506e24aa1c746f6c8137856",
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "build/tatefuda-langmode.log"
+    }
+  },
+  "remaining_scope": {
+    "owner": "Root coordinator and future explicitly claimed class producer",
+    "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3778",
+    "items": [
+      "AttachToHolder and RebuildModelMatrix retain free C-linkage entry points.",
+      "RawMatrix4x3 remains an array-backed block-copy view.",
+      "Holder body-model accesses retain +0x14,+0x1c,+0x58,+0x2a0 offsets and func_ov002_020e496c bridge.",
+      "Other pre-existing scalar ABI bridges, shadow types, unnamed flags and raw accesses are outside this partial cleanup."
+    ],
+    "next_action": "Investigate typed holder-model access and helper interfaces with pinned byte proof; no unmeasured compiler-floor claim."
+  },
+  "attribution": "No moves, symbol renames or function-authors changes. Existing address-based matching attribution preserved.",
+  "handoff": {
+    "next_role": "independent verifier",
+    "coordinator": "Root",
+    "instruction": "Independently review literal source/header-comment/manifest/report diff and verify exact offered descendant against the recorded base. Root publishes PR only after acceptance.",
+    "public_pr_published": false,
+    "merge_authorized": false
+  },
+  "private_artifacts": "C:\\tmp\\sm64ds-camfresh1013\\build\\tatefuda-cleanup1013",
+  "private_log_hashes": {
+    "tatefuda-rom-report.json": "d63b02fb1eec4f9d9f0f049415e11935b81fb68af0aa442eff67bd0946bfc07b",
+    "tatefuda-rom.log": "ba416eba5a477e6e460f624fc6748c031c1534cbb09f60a28ea7b40910d584d6",
+    "tatefuda-prepush.json": "28608ce988ff3dfc9bda73cbb41ea7d3490e6d4be73d96dd17914be9c801c30e",
+    "tatefuda-decl.log": "4938cb2ec7fbe85fa3e185458cf7e348e57ae1b6ebfb54a7c4a36b3de63820a1",
+    "tatefuda-port.log": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+    "tatefuda-langmode.log": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+    "tatefuda-committed-proof.json": "6135a90b98f26e297d1f473e5b0553e7df018f884ca11b4c77494dfe350eacb5"
+  }
+}

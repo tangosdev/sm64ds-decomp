@@ -16,6 +16,12 @@
  * Leftover: g_profile_WC_OBJ01 is ov029 data outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wc_obj01_AssetId {
+    ASSET_WC_OBJ01_BMD = 0x06cc,
+    ASSET_WC_OBJ01_KCL = 0x06cd
+};
+
 #include "daObjWcObj01_c.h"
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
@@ -80,10 +86,9 @@ int daObjWcObj01_c::InitResources()
                 mPosY = hit.y;
             }
         }
-        /* pad_320 lives in dBgActor_c tail padding at 0x31e, not here. */
-        *(int *)((char *)this + 0x320) = mPosX;
+        mRestPosX = mPosX;
         mWaterY = mPosY;
-        *(int *)((char *)this + 0x328) = mPosZ;
+        mRestPosZ = mPosZ;
         return 1;
     }
     return 0;
@@ -91,5 +96,5 @@ int daObjWcObj01_c::InitResources()
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj01.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj01ModelFilePtr data_ov029_02114220(0x6cc);
-WcObj01CollisionFilePtr data_ov029_02114228(0x6cd);
+WcObj01ModelFilePtr gWcObj01ModelFile(ASSET_WC_OBJ01_BMD);
+WcObj01CollisionFilePtr gWcObj01CollisionFile(ASSET_WC_OBJ01_KCL);

@@ -21,7 +21,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Separate evidence commits and required artifacts in this commit: none pinned
   separately. `notes/data/class-facts/daBmb_c.json`,
   [config/tu_manifest.d/ov102/daBmb_c.json](../../../config/tu_manifest.d/ov102/daBmb_c.json), `include/daBmb_c.h` and
-  `src/actors/daBmb_c.cpp` are all in this commit.
+  `src/game/actors/d_a_bmb.cpp` are all in this commit.
 - Next action, responsible role and blockers: independent verification
   (`verifier`). One blocker stands between this candidate and a green PR, and it
   is a gate defect, not a source defect — see "Blocker" below.
@@ -38,7 +38,7 @@ This document describes this commit. The queue records its immutable output SHA.
   [ov102](../../../config/arm9/overlays/ov102/symbols.txt) data records `_ZTV7daBmb_c` (`0x0214e558`) and `_ZTI7daBmb_c`
   (`0x0214e508`).
 - Reserved source/header/config surfaces actually touched:
-  `src/actors/daBmb_c.cpp`, `include/daBmb_c.h`,
+  `src/game/actors/d_a_bmb.cpp`, `include/daBmb_c.h`,
   [config/tu_manifest.d/ov102/daBmb_c.json](../../../config/tu_manifest.d/ov102/daBmb_c.json),
   [config/arm9/overlays/ov102/symbols.txt](../../../config/arm9/overlays/ov102/symbols.txt),
   [config/arm9/overlays/ov102/delinks.txt](../../../config/arm9/overlays/ov102/delinks.txt).
@@ -63,13 +63,13 @@ This document describes this commit. The queue records its immutable output SHA.
   `dCcAc_c`, `dBgCh_Actr`, `ModelAnim` and `ShadowModel`.
 - Hypothesized names/filenames, explicitly not recovered facts: `State1`,
   `State3`, `State4`, `State5` are coined; the cartridge proves only that
-  [func_ov102_0214b03c](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 9 used for `daBmb_c.cpp`) switches on `mState` and dispatches six bodies for 0..5.
+  [func_ov102_0214b03c](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 9 used for `daBmb_c.cpp`) switches on `mState` and dispatches six bodies for 0..5.
   `daBmb_c_classInit` is a reconstructed source-style spelling (historical alias
   `BobOmb_Spawn`); the ROM symbol is the bare name and nothing more. The file path
-  `src/actors/daBmb_c.cpp` is this tree's convention, not a recovered filename.
+  `src/game/actors/d_a_bmb.cpp` is this tree's convention, not a recovered filename.
 - Compiler experiments and measured barriers, this stage: the vtable declaration
   `extern int _ZTV7daBmb_c[];` was moved from the body of
-  `src/actors/daBmb_c.cpp` into `include/daBmb_c.h`. The compiled object is
+  `src/game/actors/d_a_bmb.cpp` into `include/daBmb_c.h`. The compiled object is
   byte-identical across the move under the pinned mwccarm 2004/b56 —
   `build/src/actors/daBmb_c.o` sha256
   `7f2d71307a287beb07992fb5a409d82402e6ce730c509f24808a7bd77b4820eb` before and
@@ -92,13 +92,13 @@ This document describes this commit. The queue records its immutable output SHA.
   every sense but keeps C linkage because the cartridge's symbol is the bare
   name. The remaining 21 stay `func_ov102_*` free functions. The wall is one of
   exactly two things and never codegen:
-  - SCOPE, for [func_ov102_0214bf64](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 27) and [func_ov102_0214bd90](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 24) (state arms 0 and
+  - SCOPE, for [func_ov102_0214bf64](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 27) and [func_ov102_0214bd90](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 24) (state arms 0 and
     2). Both compile to the ROM's exact size as members and the TU then fails to
     LINK: as members they lose their own block-scope `extern "C"` declarations,
     and the single file-scope linkage region cannot take them because other
     members already own contradicting spellings of the same symbols — decisively
     `func_0200fc44`, which arm 2 recovered with four parameters and
-    [func_ov102_0214aa18](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 3) with three. `tubuild.py verify` calls the broken form
+    [func_ov102_0214aa18](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 3) with three. `tubuild.py verify` calls the broken form
     35/35 MATCH with clean relocations; only `mwldarm` sees it.
   - NAMING, for the other 19. The cartridge carries their addresses and no
     identifier. Three are also called from outside [ov102](../../../config/arm9/overlays/ov102/symbols.txt)
@@ -108,13 +108,13 @@ This document describes this commit. The queue records its immutable output SHA.
   the four subobjects at `0x110`, `0x144`, `0x300`, `0x364` and names 17 further
   fields from `0x390` up, with the padding runs explicit. Three shadow types
   survive in the TU body — `Bmb_Vec3` and `Bmb_Bf64Obj`, which are
-  [func_ov102_0214bf64](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 27)'s own fifteen-field view of the object, and `Bmb_VBase`,
+  [func_ov102_0214bf64](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 27)'s own fifteen-field view of the object, and `Bmb_VBase`,
   an abstract dispatch shim `Render` uses to reach slot 5 of the model object at
   `+0x300`. Those three are the measured spellings the members byte-match in.
   Byte-offset casts (`(char *)this + N`) remain throughout the free-function
   half. **Counted, because "some remain" understates it:** 303 expressions of
   the form `<identifier> + 0x<literal>` survive in
-  `src/actors/daBmb_c.cpp`, of which 295 displace an object handle
+  `src/game/actors/d_a_bmb.cpp`, of which 295 displace an object handle
   (`c` ×194, `self` ×50, `s` ×13, `p` ×10, `r4` ×7, `p2` ×6, `this` ×3,
   `into` ×3, and nine further handles once or twice each); the other 8 are
   scalar arithmetic. Eight more accesses use a hex word subscript. Every one of
@@ -225,8 +225,8 @@ already uses for `src/game/actors/d_a_obj_abuku.cpp`:
 | `func_ov102_0214bf64`(ROM Ordinal 27) | tangosdev |
 | `func_ov102_0214c0b8`(ROM Ordinal 28) | tangosdev |
 
-Each key is that symbol prefixed with `src/actors/daBmb_c.cpp#`. The three
-functions of the 35 not listed — [func_ov102_0214ab1c](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 4), [func_ov102_0214bc20](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 21) and
+Each key is that symbol prefixed with `src/game/actors/d_a_bmb.cpp#`. The three
+functions of the 35 not listed — [func_ov102_0214ab1c](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 4), [func_ov102_0214bc20](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 21) and
 `_ZN7daBmb_c13OnYoshiTryEatEv` — already credit the promoter and need no row.
 
 ## Proof
@@ -248,7 +248,7 @@ commit's tree unless a base tree is named. Base is `origin/main` at
 - Explicit function/consumer relocation checks:
   `python tools/pr_linkcheck.py --base origin/main -j16` — exit 0. Two changed
   headers fan out to 926 further sources; 927 files and 2,055 slots checked;
-  `src/actors/daBmb_c.cpp` reports ok on all 35 slots. Tally 2,050 VERIFIED,
+  `src/game/actors/d_a_bmb.cpp` reports ok on all 35 slots. Tally 2,050 VERIFIED,
   1 DRAFT, 4 BLIND. None of those five is a file this branch changes, none of
   them references any symbol this branch renames, and all five are in modules
   this branch does not touch ([ov003](../../../config/arm9/overlays/ov003/symbols.txt), [ov100](../../../config/arm9/overlays/ov100/symbols.txt), [ov002](../../../config/arm9/overlays/ov002/symbols.txt), [ov007](../../../config/arm9/overlays/ov007/symbols.txt), [ov089](../../../config/arm9/overlays/ov089/symbols.txt)). Their
@@ -259,13 +259,13 @@ commit's tree unless a base tree is named. Base is `origin/main` at
   filename convention, so a promoted multi-function TU is reported NO-SYM and is
   NOT checked by this tool. `pr_linkcheck` above is what actually covers it.
 - Complete emitted TU and data/metadata checks:
-  `python tools/romdata_check.py --files src/actors/daBmb_c.cpp` — exit 0.
+  `python tools/romdata_check.py --files src/game/actors/d_a_bmb.cpp` — exit 0.
   11 data symbols emitted; VERIFIED 6 (180 bytes), PARTIAL 5 (44 bytes),
   DIFFERS 0, UNNAMED 0. The verified set includes [ov102](../../../config/arm9/overlays/ov102/symbols.txt):`_ZTV7daBmb_c` and
   [ov102](../../../config/arm9/overlays/ov102/symbols.txt):`_ZTI7daBmb_c`.
 - Shared-header consumer expansion:
   `python tools/affected_src.py include/daBmb_c.h` — exit 0, one consumer,
-  `src/actors/daBmb_c.cpp`, which the full-ROM build compiles. The wider
+  `src/game/actors/d_a_bmb.cpp`, which the full-ROM build compiles. The wider
   `include/decl_common.h` fan-out is covered by the 927-file `pr_linkcheck` run.
 - Object identity across the header move: `build/src/actors/daBmb_c.o` compared
   before and after with `cmp` — identical, sha256
@@ -337,7 +337,7 @@ its edits to this class's own rows and reformats nothing:
 
 | file | this branch's change |
 |---|---|
-| `attribution.json` | +32 lines, 0 removed, one hunk, inserted beside this class's existing retired-shard rows — the same placement the tree already uses for `src/actors/daDgr_c.cpp#…` and `src/actors/dScGameOver_c.cpp#…` |
+| `attribution.json` | +32 lines, 0 removed, one hunk, inserted beside this class's existing retired-shard rows — the same placement the tree already uses for `src/game/actors/d_a_dgr.cpp#…` and `src/game/stages/d_s_game_over.cpp#…` |
 | `config/converted-baseline.json` | 6 whole-file identities out, 6 `path#symbol` identities in; `count` stays 2696 and the list stays sorted and duplicate-free |
 | `config/converted-backslide-exceptions.jsonl` | +6 rows appended, one per retired one-function shard of this class |
 | `symbols/actor_renames.tsv` | 7 [ov102](../../../config/arm9/overlays/ov102/symbols.txt) rows re-spelled in place, +14 appended |
@@ -352,12 +352,12 @@ composed tree against `origin/main` reports **32 changed, 0 lost**, and each
 changed address maps through [config/arm9/overlays/ov102/symbols.txt](../../../config/arm9/overlays/ov102/symbols.txt) to a head
 symbol. That derivation reproduces the producer's table exactly — same 32
 symbols, same 32 authors, **zero mismatches** — so the table was applied verbatim
-to `attribution.json` under the `src/actors/daBmb_c.cpp#<symbol>` key form.
+to `attribution.json` under the `src/game/actors/d_a_bmb.cpp#<symbol>` key form.
 
 Credit preserved: **lunavyqo ×3** (`_ZN7daBmb_c8BehaviorEv`),
-[func_ov102_0214b248](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 11), [func_ov102_0214b53c](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 16), **ruspecial ×1**
-([func_ov102_0214b384](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 12)), **aitddlabs ×1** ([func_ov102_0214baa0](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 19)), tangosdev ×27.
-[func_ov102_0214ab1c](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 4 - zero-based index, see [daBmb_c.json](../../../config/tu_manifest.d/ov102/daBmb_c.json)), [func_ov102_0214bc20](../../../src/actors/daBmb_c.cpp)(ROM Ordinal 21) and
+[func_ov102_0214b248](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 11), [func_ov102_0214b53c](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 16), **ruspecial ×1**
+([func_ov102_0214b384](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 12)), **aitddlabs ×1** ([func_ov102_0214baa0](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 19)), tangosdev ×27.
+[func_ov102_0214ab1c](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 4 - zero-based index, see [daBmb_c.json](../../../config/tu_manifest.d/ov102/daBmb_c.json)), [func_ov102_0214bc20](../../../src/game/actors/d_a_bmb.cpp)(ROM Ordinal 21) and
 `_ZN7daBmb_c13OnYoshiTryEatEv` already credit andrewboudreau at the base and get
 no row. After the rows are applied the same tool reports **0 changed, 0 lost**.
 
@@ -368,7 +368,7 @@ no row. After the rows are applied the same tool reports **0 changed, 0 lost**.
 | `rombuild.py -j16 --no-rom` | head | 0 | 106/106 modules exact; 11,191 source-built functions reproducing, 0 mismatching; ROM data 686 verified / 44,276 bytes / 5 differ |
 | `rombuild.py -j16 --no-rom` | base `31f53c18d` | 0 | 106/106 exact; 11,191 reproducing, 0 mismatching; 685 verified / 44,264 bytes / 5 differ |
 | `build/src/actors/daBmb_c.o` | head | — | sha256 `7f2d71307a287beb07992fb5a409d82402e6ce730c509f24808a7bd77b4820eb`, the value the producer and verifier both measured |
-| `pr_linkcheck.py --base origin/main -j16` | head | 0 | 2 changed headers fan out to 926 further sources, 927 files checked; `src/actors/daBmb_c.cpp` ok on all 35 slots; 5 non-`ok` rows, the same 1 DRAFT + 4 BLIND files the verifier measured at the base |
+| `pr_linkcheck.py --base origin/main -j16` | head | 0 | 2 changed headers fan out to 926 further sources, 927 files checked; `src/game/actors/d_a_bmb.cpp` ok on all 35 slots; 5 non-`ok` rows, the same 1 DRAFT + 4 BLIND files the verifier measured at the base |
 | `port_refcheck.py` | head | 0 | 423 references checked, 0 stale |
 
 Both ROM reports were produced by `tools/romdata_check.py` blob `346b04c2`, which

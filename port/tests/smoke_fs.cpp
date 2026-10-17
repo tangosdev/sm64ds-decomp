@@ -18,7 +18,7 @@ typedef unsigned char u8;
 struct SharedFilePtr { u16 fileID; u8 numRefs; void *filePtr; };
 struct HeapS;
 extern "C" {
-HeapS *_ZN4Heap13SetupRootHeapEv(void);
+HeapS *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 SharedFilePtr *_ZN13SharedFilePtr9ConstructEj(SharedFilePtr *self, u32 ov0FileID);
 void *_ZN13SharedFilePtr8LoadFileEv(SharedFilePtr *self);
 void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtr *self);
@@ -42,7 +42,7 @@ static u32 sum32(const void *p, u32 n)
 
 int main(void)
 {
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(_ZN5mHeap6Heap_t13SetupRootHeapEv() != NULL);
 
     /* raw file: bytes arrive exactly as on disk */
     SharedFilePtr raw;

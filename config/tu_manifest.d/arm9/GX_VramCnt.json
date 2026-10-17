@@ -1,0 +1,344 @@
+{
+  "id": "arm9/GX_VramCnt",
+  "module": "arm9",
+  "source": "src/engine/gx/GX_VramCnt.cpp",
+  "promoted_source": "src/engine/gx/GX_VramCnt.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's VRAM bank control (gx_vramcnt.c), 0x02053e1c..0x02054d38: 41 functions, gapless in config/arm9/delinks.txt, each one reads or writes the VRAM state block at data_020a6088 or the VRAMCNT registers 0x04000240..0x04000249, except the size helper func_02053e4c, which turns a bank mask into bytes for its two getters.",
+    "mwccarm emits .text in reverse source order, and the run reads as the SDK file top-down from the highest address: GX_VRAMCNT_SetLCDC_ (Vram__Map, 0x02054c80), the setters BG, OBJ, BGExtPltt, Tex, TexPltt, LCDC, SubBG, SubOBJ, SubBGExtPltt, SubOBJExtPltt, then resetBankForX_ (func_020541b8) and its wrappers, disableBankForX_ (DisableVramBanks) and its wrappers, the bank getters, and the size helper with its two callers at the bottom. Setters and wrappers the game never calls (OBJExtPltt, ClearImage, ARM7, ...) are absent, as a dead-stripped link leaves them.",
+    "The disable wrappers name all thirteen u16 fields of the state block in the SDK's order (BG, OBJ, BGExtPltt, OBJExtPltt, Tex, TexPltt, ClearImage, ARM7, LCDC, SubBG, SubOBJ, SubBGExtPltt, SubOBJExtPltt at offsets 2, 4, 0xe, 0x10, 8, 0xa, 0xc, 6, 0, 0x12, 0x14, 0x16, 0x18); the ext-palette ones also clear DISPCNT bit 30/31 of the matching engine. That fixes the layout of the block every member uses.",
+    "TOP EDGE: G2S::GetBG3CharPtr at 0x02054d38 is the first function of the promoted arm9/G2 TU (src/engine/gx/G2.cpp, the SDK's BG-control getters).",
+    "BOTTOM EDGE: func_02053d9c (0x02053d9c..0x02053e1c) zeroes the thirteen state fields and the VRAMCNT A-I registers -- the SDK's GX_InitGXState, which lives with the state block in its own file (gx_state.c), not in gx_vramcnt.c. Below it, GX_Init (func_02053c40) calls it, then GX_HBlankIntr/GX_VBlankIntr, GX_DispOff, GX::DispOn, GX::SetGraphicsMode, GXS::SetGraphicsMode: gx.c, also reverse-ordered. Neither file is absorbed here.",
+    "No data, bss or RTTI: the state block is defined by the file below, and nothing but the 41 functions emits."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02053e1c",
+      "end": "0x02054d38"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_02053e1c",
+      "address": "0x02053e1c",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053e1c.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_02053e34",
+      "address": "0x02053e34",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053e34.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_02053e4c",
+      "address": "0x02053e4c",
+      "size": "0x00000054",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053e4c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_02053ea0",
+      "address": "0x02053ea0",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053ea0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_02053eb0",
+      "address": "0x02053eb0",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053eb0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_02053ec0",
+      "address": "0x02053ec0",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053ec0.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_02053ed0",
+      "address": "0x02053ed0",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053ed0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_02053ee0",
+      "address": "0x02053ee0",
+      "size": "0x00000028",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053ee0.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_02053f08",
+      "address": "0x02053f08",
+      "size": "0x00000028",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053f08.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_02053f30",
+      "address": "0x02053f30",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053f30.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_02053f44",
+      "address": "0x02053f44",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053f44.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_02053f58",
+      "address": "0x02053f58",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053f58.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_02053f6c",
+      "address": "0x02053f6c",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053f6c.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_02053f80",
+      "address": "0x02053f80",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053f80.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_02053f94",
+      "address": "0x02053f94",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053f94.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_02053fa8",
+      "address": "0x02053fa8",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053fa8.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_02053fbc",
+      "address": "0x02053fbc",
+      "size": "0x00000024",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053fbc.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_02053fe0",
+      "address": "0x02053fe0",
+      "size": "0x00000024",
+      "legacy_source": "src/unnamed/arm9/0205/func_02053fe0.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_02054004",
+      "address": "0x02054004",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054004.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_02054018",
+      "address": "0x02054018",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054018.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "DisableVramBanks",
+      "address": "0x0205402c",
+      "size": "0x000000c4",
+      "legacy_source": "src/DisableVramBanks.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_020540f0",
+      "address": "0x020540f0",
+      "size": "0x00000028",
+      "legacy_source": "src/unnamed/arm9/0205/func_020540f0.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_02054118",
+      "address": "0x02054118",
+      "size": "0x00000028",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054118.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_02054140",
+      "address": "0x02054140",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054140.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_02054154",
+      "address": "0x02054154",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054154.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_02054168",
+      "address": "0x02054168",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054168.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_0205417c",
+      "address": "0x0205417c",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_0205417c.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_02054190",
+      "address": "0x02054190",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054190.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_020541a4",
+      "address": "0x020541a4",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0205/func_020541a4.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_020541b8",
+      "address": "0x020541b8",
+      "size": "0x00000038",
+      "legacy_source": "src/unnamed/arm9/0205/func_020541b8.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN2GX23SetBankForSubOBJExtPlttEt",
+      "address": "0x020541f0",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN2GX23SetBankForSubOBJExtPlttEt.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN2GX22SetBankForSubBGExtPlttEt",
+      "address": "0x0205427c",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN2GX22SetBankForSubBGExtPlttEt.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN2GX16SetBankForSubOBJEt",
+      "address": "0x02054308",
+      "size": "0x0000007c",
+      "legacy_source": "src/_ZN2GX16SetBankForSubOBJEt.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN2GX15SetBankForSubBGEt",
+      "address": "0x02054384",
+      "size": "0x000000ac",
+      "legacy_source": "src/_ZN2GX15SetBankForSubBGEt.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_02054430",
+      "address": "0x02054430",
+      "size": "0x00000020",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054430.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN2GX17SetBankForTexPlttEt",
+      "address": "0x02054450",
+      "size": "0x000000f4",
+      "legacy_source": "src/_ZN2GX17SetBankForTexPlttEt.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN2GX13SetBankForTexEt",
+      "address": "0x02054544",
+      "size": "0x00000204",
+      "legacy_source": "src/_ZN2GX13SetBankForTexEt.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_02054748",
+      "address": "0x02054748",
+      "size": "0x00000114",
+      "legacy_source": "src/unnamed/arm9/0205/func_02054748.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "_ZN2GX13SetBankForOBJEt",
+      "address": "0x0205485c",
+      "size": "0x0000016c",
+      "legacy_source": "src/_ZN2GX13SetBankForOBJEt.cpp",
+      "ordinal": 38
+    },
+    {
+      "symbol": "_ZN2GX12SetBankForBGEt",
+      "address": "0x020549c8",
+      "size": "0x000002b8",
+      "legacy_source": "src/_ZN2GX12SetBankForBGEt.cpp",
+      "ordinal": 39
+    },
+    {
+      "symbol": "Vram__Map",
+      "address": "0x02054c80",
+      "size": "0x000000b8",
+      "legacy_source": "src/Vram__Map.c",
+      "ordinal": 40
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main, so there was no candidate id to create from. The schema follows arm9/G2.",
+    "Every existing linker name is kept: the eight GX:: setters keep their namespace spelling (_ZN2GX..Et, u16 parameter), and the address-named members, DisableVramBanks and Vram__Map stay under extern \"C\" because their callers name them that way. Renaming them to their SDK names is a separate change across those callers.",
+    "The state block keeps its ROM name data_020a6088; its thirteen u16 fields are named after the SDK's VRAM users. The per-field data_020a608a..data_020a60a0 symbols are untouched; the wrappers reach them as fields of the block.",
+    "The file is written ROM-descending because mwccarm emits .text in reverse source order; the emitted object carries the 41 functions ascending 0x02053e1c..0x02054d38."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-GX_VramCnt/GX_VramCnt.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 41,
+    "functions_declared": 41,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

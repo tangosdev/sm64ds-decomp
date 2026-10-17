@@ -14,8 +14,8 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `ov084/daFPkn_c`, `src/actors/daFPkn_c.cpp`, ov084 .text 0x0212d248..0x0212ea18 (18 functions). Promoted in #3115; this is its first readability pass.
-- Reserved source/header/config surfaces actually touched: `src/actors/daFPkn_c.cpp`, `include/daFPkn_c.h`, `config/arm9/overlays/ov084/symbols.txt` (nine rows renamed in place), `config/tu_manifest.d/ov084/daFPkn_c.json` (see Changed paths), this handoff, and this class's nine keys in the `attribution.json` ledger. `config/arm9/overlays/ov084/delinks.txt` is reserved but unchanged: it holds only address ranges.
+- Class/TU/symbol and module-qualified ROM scope: `ov084/daFPkn_c`, `src/game/actors/d_a_f_pkn.cpp`, ov084 .text 0x0212d248..0x0212ea18 (18 functions). Promoted in #3115; this is its first readability pass.
+- Reserved source/header/config surfaces actually touched: `src/game/actors/d_a_f_pkn.cpp`, `include/daFPkn_c.h`, `config/arm9/overlays/ov084/symbols.txt` (nine rows renamed in place), `config/tu_manifest.d/ov084/daFPkn_c.json` (see Changed paths), this handoff, and this class's nine keys in the `attribution.json` ledger. `config/arm9/overlays/ov084/delinks.txt` is reserved but unchanged: it holds only address ranges.
 - ROM observations: none new. The nine helpers are reached only by `bl` from inside this run (the manifest's boundary evidence: ov084 relocs.txt has no caller outside it), so an in-place rename of their symbols.txt rows keeps every destination address.
 - Lineage evidence or structural inference: the helpers take the object in r0 and read only its fields, so they are written as members. Field meanings come from their uses. 0x1f4: StateInit seeds the leader's copy with its own uniqueID, and StateWait writes the uniqueID of the member it hands the star marker to. 0x218: set to 0x1f40 on a hit, added to mAngleY every frame and run down to 0 by ApproachLinear (the spin). 0x21d: set to 10 on a hit and counted down once per finished animation (the spin count). 0x21c: set to 1 when the plant emerges, cleared once it is back under. 0x221: the leader's star-marker slot, set to -1 by StateInit and passed to SetStarMarker when non-negative. 0x224 and 0x228: `Particle::System::New` handles, fed back into New and zeroed together.
 - Hypothesized names/filenames, explicitly not recovered facts: `SpawnDeathSmoke` (0x0212d2dc, `_ZN8daFPkn_c15SpawnDeathSmokeEv`), `SpawnDeathBurst` (0x0212d42c, `_ZN8daFPkn_c15SpawnDeathBurstEv`), `OnGroupMemberDefeated` (0x0212d560, `_ZN8daFPkn_c21OnGroupMemberDefeatedEv`), `UpdateClsnOffset` (0x0212d564, `_ZN8daFPkn_c16UpdateClsnOffsetEv`), `CheckClsnHits` (0x0212d86c, `_ZN8daFPkn_c13CheckClsnHitsEv`), `StateGrow` (0x0212dc30, `_ZN8daFPkn_c9StateGrowEv`), `StateSpit` (0x0212ddbc, `_ZN8daFPkn_c9StateSpitEv`), `StateWait` (0x0212e010, `_ZN8daFPkn_c9StateWaitEv`) and `StateInit` (0x0212e4e0, `_ZN8daFPkn_c9StateInitEv`) are coined. So are the field names `mMarkedMemberID`, `mSpinSpeed`, `mEmerged`, `mSpinCount`, `mStarMarkerIdx`, `mParticleHandle1` and `mParticleHandle2`. `include/daFPkn_c.h` marks both groups as coined next to the declarations.
@@ -101,12 +101,12 @@ Self-audit of the base, numbered R1 to R24. Issue #3148 lists categories rather 
 - Attribution preserved through each move/rename: the nine `attribution.json` keys follow the renamed symbols with the same authors (`tangosdev` keeps SpawnDeathSmoke, OnGroupMemberDefeated, StateWait and StateInit; `lunavyqo` keeps SpawnDeathBurst, CheckClsnHits and StateSpit; `ruspecial` keeps UpdateClsnOffset; `andrewboudreau` keeps StateGrow).
 - Remaining agreed issue scope: R2, R3, R5, R6, R8, R10 to R17, R19, R21, R22.
 
-Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; both revisions end in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. For `src/actors/daFPkn_c.cpp`, occurrences (`grep -o -F | wc -l`) are 6, 47, 3 and 87 at base and 1, 15, 1 and 43 at this commit.
+Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; both revisions end in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. For `src/game/actors/d_a_f_pkn.cpp`, occurrences (`grep -o -F | wc -l`) are 6, 47, 3 and 87 at base and 1, 15, 1 and 43 at this commit.
 
 | Path | Revision | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
 |---|---|---|---|---|---|---|
-| `src/actors/daFPkn_c.cpp` | base `c31f43bacf` | 904 | 5 | 47 | 3 | 87 |
-| `src/actors/daFPkn_c.cpp` | this commit | 813 | 1 | 15 | 1 | 43 |
+| `src/game/actors/d_a_f_pkn.cpp` | base `c31f43bacf` | 904 | 5 | 47 | 3 | 87 |
+| `src/game/actors/d_a_f_pkn.cpp` | this commit | 813 | 1 | 15 | 1 | 43 |
 | `include/daFPkn_c.h` | base `c31f43bacf` | 92 | 9 | 0 | 0 | 1 |
 | `include/daFPkn_c.h` | this commit | 110 | 4 | 0 | 0 | 1 |
 
@@ -123,7 +123,7 @@ At this commit the one `unk_` line in the source is `unk_108` (R8). The 15 `func
 | `config/tu_manifest.d/ov084/daFPkn_c.json` | the keys below |
 | `include/daFPkn_c.h` | field names and types, the nine member declarations, coined-name comments |
 | `notes/agents/handoffs/readable-ov084-fpkn-0925b.md` | this handoff |
-| `src/actors/daFPkn_c.cpp` | the source changes above |
+| `src/game/actors/d_a_f_pkn.cpp` | the source changes above |
 
 Changed keys in `config/tu_manifest.d/ov084/daFPkn_c.json`: `functions[2..10].symbol` (the nine renames), `boundary_evidence[0]` and `[1]`, `notes[1]` and `notes[2]` (current names, what the rename did), and `compiler_only_output[1].reason` (the current Vector3 users). `verification.compilerOnlyOutput.droppedSections[2]` went from 22 to 15: `tools/tubuild.py verify` rewrites that list from the object it compiles, and the value is the section index of the dropped `_ZN7Vector3D1Ev` .text, which moved because SpawnDeathBurst now holds the first Vector3 local in the file. Both objects have 57 sections. `notes[0]`, `sections`, the other `verification` keys and the other `compiler_only_output` entries are unchanged; each was reread against this commit.
 
@@ -146,12 +146,12 @@ All commands were run in `C:/tmp/claude-rd-ov084` on the source of this commit (
 | `python tools/queue_audit.py --check-promoted` | 0 | OK |
 | `python tools/check_src_tu_compiles.py` | 0 | 299/299 translation units compile |
 | `python tools/port_refcheck.py` | 0 | 408 references, all resolve |
-| `python tools/affected_src.py include/daFPkn_c.h` | 0 | `src/actors/daFPkn_c.cpp` only |
+| `python tools/affected_src.py include/daFPkn_c.h` | 0 | `src/game/actors/d_a_f_pkn.cpp` only |
 | `git diff c31f43bacf..HEAD -- include/decl_common.h config/dead-reference-baseline.json config/decl-agreement-baseline.json` | 0 | empty |
 
 - Full-ROM build: see the rombuild row.
 - Explicit function/consumer relocation checks: tubuild verify and prepush_linkcheck, above.
 - Complete emitted TU and data/metadata checks: the object comparison above covers every function, relocation and symbol of the TU object. This TU licenses .text only; the vtable, RTTI and romdata checks from the promotion were not rerun, and the class's data and virtual members are unchanged.
-- Shared-header consumer expansion: `include/daFPkn_c.h` has one consumer, `src/actors/daFPkn_c.cpp`. No shared header changed; `include/Particle__System.h` is newly included, unchanged.
+- Shared-header consumer expansion: `include/daFPkn_c.h` has one consumer, `src/game/actors/d_a_f_pkn.cpp`. No shared header changed; `include/Particle__System.h` is newly included, unchanged.
 - Port/path/reference and other applicable static gates: above.
 - Private validation, if run, and the exact PR head/base it tested: not run.

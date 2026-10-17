@@ -1,19 +1,19 @@
 {
  "id": "ov006/dScMgCurling2_c",
  "module": "ov006",
- "source": "src/actors/dScMgCurling2_c.cpp",
- "promoted_source": "src/actors/dScMgCurling2_c.cpp",
+ "source": "src/minigames/d_s_mg_curling2.cpp",
+ "promoted_source": "src/minigames/d_s_mg_curling2.cpp",
  "status": "promoted",
  "production_mode": "intact-object",
  "boundary_confidence": "medium",
  "boundary_evidence": [
   "HISTORY: PARTIAL RUN, 31 of 52. tools/tu_map.py calls 0x020e3854..0x020e6bf4 one contiguous linker run of 52 function(s) (build/tu_map.json), and queue_audit.py extends it over the zero-gap factory dScMgCurling2_c_classInit at 0x020e6bf4 for 53 in a 0x020e3854..0x020e6c28 span. This TU licenses 0x020e3854..0x020e5450, 31 function(s), ROM ordinals 0..30. The other 21 keep their own shards and their own delinks.txt entries; the 22nd is the sourceless hole in EDGE 1 below, which has neither.",
   "class label(s): dScMgCurling2_c",
-  "HISTORY: EDGE 1 -- a sourceless hole splits the run, and it is the only edge. ROM ordinal 31, func_ov006_020e5450 (0x020e5450, size 0x560), has no source anywhere in the tree: it carries a symbols.txt row but NO src/ file and NO entry in config/arm9/overlays/ov006/delinks.txt at all (the blocks jump from 0x020e513c-0x020e5450 straight to 0x020e59b0), so the cartridge's own bytes cover that range. It is a banked near-miss measured at 191 divergent words of 344 at the exact size 0x560 (nearmiss/db.jsonl). An older config/match_attempts.jsonl row read 29, but that attempt was scored over a 0x52c candidate against the 0x560 target, so the 29 was a truncated verdict and not a divergence count for this function; that row's divergences field has been cleared. It sits in the MIDDLE of the run, and no delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of its two contiguous sides.",
+  "HISTORY: EDGE 1 -- a sourceless hole splits the run, and it is the only edge. ROM ordinal 31, Curling2_ResolveStoneCollision (0x020e5450, size 0x560), has no source anywhere in the tree: it carries a symbols.txt row but NO src/ file and NO entry in config/arm9/overlays/ov006/delinks.txt at all (the blocks jump from 0x020e513c-0x020e5450 straight to 0x020e59b0), so the cartridge's own bytes cover that range. It is a banked near-miss measured at 191 divergent words of 344 at the exact size 0x560 (nearmiss/db.jsonl). An older config/match_attempts.jsonl row read 29, but that attempt was scored over a 0x52c candidate against the 0x560 target, so the 29 was a truncated verdict and not a divergence count for this function; that row's divergences field has been cleared. It sits in the MIDDLE of the run, and no delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of its two contiguous sides.",
   "WHY THE LOWER SIDE. This TU is the larger side by member count: 31 below the hole against 21 above it. It is also the side that holds the class's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so it is the side that can emit and license the class's _ZTV/_ZTI/_ZTS. It is the larger side in bytes too: 0x1bfc against the upper side's 0x1278. The upper side holds four of the six own vtable overrides (InitResources, Behavior, Render, OnYoshiTryEat) and the classInit factory, but not the key function, so a promotion there would carry compiler_only_output: 0 -- the dScMgCoin_c outcome -- and would leave the destructor pair enrolled as shards.",
   "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-  "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this TU, func_ov006_020e5450 (0x020e5450, size 0x560, formerly src/unnamed/ov006/func_ov006_020e5450.cpp), abuts its .text end with no gap and is now inside it; the TU now ends at 0x020e59b0, exactly where src/actors/dScMgCurling2_c_upper.cpp (StoneSpin) begins, so the sourceless hole EDGE 1 describes is closed and this class's run 0x020e3854..0x020e6bf4 is now two abutting promoted TUs, with the factory dScMgCurling2_c_classInit still its own file above them (merging the halves is a separate step, and the one that lets the factory fold: see the upper manifest). Membership: it is the stone-collision step of this class -- its only parameter types are dScMgCurling2_c * and the stone index, it walks mStone[0..10] and ends in this->SpawnValue(idx, i), and its only two references in the image are both in this class's upper half (0x020e5b78, the literal of StoneRest's veneer, and 0x020e5d8c, StoneSlide's direct call). It byte-matched as its own file first and folds in unchanged except that the TU's declarations are used (cstd::sqrt, the int-returning _ZN4cstd5atan2E5Fix12IiES1_, func_02012718(int, int)); written after SeparateStones, ahead of the static-init tables, because defer_codegen off emits .text in source order. It keeps C linkage because the upper TU calls it by its address-derived name. No @NNN or compiler-only change.",
-  "FULL-RUN FOLD (U01): the run 0x020e3854..0x020e6c28 is now ONE file. The upper half (formerly src/actors/dScMgCurling2_c_upper.cpp, ordinals 32..51) and the registry factory dScMgCurling2_c_classInit (formerly src/d_s_mg_curling2.cpp, ordinal 52) folded into this TU; their delinks.txt entries merged into the single 0x020e3854..0x020e6c28 .text claim above. The fold is the step the upper manifest already described: inside one TU, classInit's _ZTV15dScMgCurling2_c reference resolves against this object's own emitted vtable (deadstrip-data; canonical copy at ov006 .data) instead of an undefined cross-object reference. TOP EDGE: src/actors/dScMgCurling_c.cpp ends at 0x020e3854 exactly. BOTTOM EDGE: src/actors/dScMgD3DBase_c.cpp begins at 0x020e6c28 exactly."
+  "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this TU, Curling2_ResolveStoneCollision (0x020e5450, size 0x560, formerly src/unnamed/ov006/func_ov006_020e5450.cpp), abuts its .text end with no gap and is now inside it; the TU now ends at 0x020e59b0, exactly where src/actors/dScMgCurling2_c_upper.cpp (StoneSpin) begins, so the sourceless hole EDGE 1 describes is closed and this class's run 0x020e3854..0x020e6bf4 is now two abutting promoted TUs, with the factory dScMgCurling2_c_classInit still its own file above them (merging the halves is a separate step, and the one that lets the factory fold: see the upper manifest). Membership: it is the stone-collision step of this class -- its only parameter types are dScMgCurling2_c * and the stone index, it walks mStone[0..10] and ends in this->SpawnValue(idx, i), and its only two references in the image are both in this class's upper half (0x020e5b78, the literal of StoneRest's veneer, and 0x020e5d8c, StoneSlide's direct call). It byte-matched as its own file first and folds in unchanged except that the TU's declarations are used (cstd::sqrt, the int-returning _ZN4cstd5atan2E5Fix12IiES1_, func_02012718(int, int)); written after SeparateStones, ahead of the static-init tables, because defer_codegen off emits .text in source order. It keeps C linkage because the upper TU calls it by its address-derived name. No @NNN or compiler-only change.",
+  "FULL-RUN FOLD (U01): the run 0x020e3854..0x020e6c28 is now ONE file. The upper half (formerly src/actors/dScMgCurling2_c_upper.cpp, ordinals 32..51) and the registry factory dScMgCurling2_c_classInit (formerly src/d_s_mg_curling2.cpp, ordinal 52) folded into this TU; their delinks.txt entries merged into the single 0x020e3854..0x020e6c28 .text claim above. The fold is the step the upper manifest already described: inside one TU, classInit's _ZTV15dScMgCurling2_c reference resolves against this object's own emitted vtable (deadstrip-data; canonical copy at ov006 .data) instead of an undefined cross-object reference. TOP EDGE: src/minigames/d_s_mg_curling.cpp ends at 0x020e3854 exactly. BOTTOM EDGE: src/minigames/d_s_mg_d3d_base.cpp begins at 0x020e6c28 exactly."
  ],
  "sections": [
   {
@@ -256,7 +256,7 @@
    "ordinal": 30
   },
   {
-   "symbol": "func_ov006_020e5450",
+   "symbol": "Curling2_ResolveStoneCollision",
    "address": "0x020e5450",
    "size": "0x00000560",
    "legacy_source": "src/unnamed/ov006/func_ov006_020e5450.cpp",
@@ -375,7 +375,7 @@
    "ordinal": 47
   },
   {
-   "symbol": "_ZN15dScMgCurling2_c13OnYoshiTryEatEi",
+   "symbol": "_ZN15dScMgCurling2_c10StartRoundEi",
    "address": "0x020e6774",
    "size": "0x0000007c",
    "legacy_source": "src/actors/dScMgCurling2_c_upper.cpp",
@@ -413,49 +413,49 @@
  "data": [],
  "bss": [
   {
-   "symbol": "data_ov006_02141978",
+   "symbol": "sCurling2DragTable",
    "address": "0x02141978",
    "size": "0x10",
    "binding": "STB_GLOBAL",
    "evidence": "two no-arg scene states (upper half dispatches through this), plain-copied from the ROM PMF constants"
   },
   {
-   "symbol": "data_ov006_02141988",
+   "symbol": "sCurling2StepModeTable",
    "address": "0x02141988",
    "size": "0x18",
    "binding": "STB_GLOBAL",
    "evidence": "three kind states, plain-copied from the ROM PMF constants"
   },
   {
-   "symbol": "data_ov006_021419a0",
+   "symbol": "sCurling2StepYTable",
    "address": "0x021419a0",
    "size": "0x18",
    "binding": "STB_GLOBAL",
    "evidence": "three state2 states, plain-copied from the ROM PMF constants"
   },
   {
-   "symbol": "data_ov006_021419b8",
+   "symbol": "sCurling2StepXFastTable",
    "address": "0x021419b8",
    "size": "0x20",
    "binding": "STB_GLOBAL",
    "evidence": "four Entry states, plain-copied from the ROM PMF constants"
   },
   {
-   "symbol": "data_ov006_021419d8",
+   "symbol": "sCurling2StoneTable",
    "address": "0x021419d8",
    "size": "0x20",
    "binding": "STB_GLOBAL",
    "evidence": "four per-state handlers (upper half dispatches through this), plain-copied from the ROM PMF constants"
   },
   {
-   "symbol": "data_ov006_021419f8",
+   "symbol": "sCurling2StepXTable",
    "address": "0x021419f8",
    "size": "0x20",
    "binding": "STB_GLOBAL",
    "evidence": "four reveal states, plain-copied from the ROM PMF constants"
   },
   {
-   "symbol": "data_ov006_02141a18",
+   "symbol": "sCurling2BehaviorTable",
    "address": "0x02141a18",
    "size": "0x28",
    "binding": "STB_GLOBAL",
@@ -536,7 +536,7 @@
   {
    "symbol": "_ZTV15dScMgCurling2_c",
    "disposition": "deadstrip-data",
-   "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways, per notes/agents/roles/writer.md: (a) the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213c50c (the typeinfo word of the 8-byte offset-to-top/typeinfo preamble) through 0x0213c59c, with the first gap at 0x0213c5a0 and the next relocation not until 0x0213c5c8; (b) tools/rtti_vtables.py --own dScMgCurling2_c reports 36 slots (base dScMgBase_c also 36, six of them overridden: slots 0, 6, 9, 16, 17, 18); (c) the next symbols.txt row after the address point is data_ov006_0213c5a0 at 0x0213c5a0. All three give symbol extent 0x0213c510..0x0213c5a0 = 0x90 = 36 slots, and STORAGE 0x0213c508..0x0213c5a0 = 0x98, which is exactly the size tubuild verify reports for the .data section this TU emits (EXTRA .data _ZTV15dScMgCurling2_c size=0x98). (The naive next-symbol read happens to be RIGHT here: this table's phantom interior symbol, data_ov006_0213c510, sits ON the address point rather than inside the table.) The cartridge keeps its canonical copy at ov006:0x0213c510, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
+   "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways, per notes/agents/roles/writer.md: (a) the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213c50c (the typeinfo word of the 8-byte offset-to-top/typeinfo preamble) through 0x0213c59c, with the first gap at 0x0213c5a0 and the next relocation not until 0x0213c5c8; (b) tools/rtti_vtables.py --own dScMgCurling2_c reports 36 slots (base dScMgBase_c also 36, six of them overridden: slots 0, 6, 9, 16, 17, 18); (c) the next symbols.txt row after the address point is sCurling2BgJokyuNcgPath at 0x0213c5a0. All three give symbol extent 0x0213c510..0x0213c5a0 = 0x90 = 36 slots, and STORAGE 0x0213c508..0x0213c5a0 = 0x98, which is exactly the size tubuild verify reports for the .data section this TU emits (EXTRA .data _ZTV15dScMgCurling2_c size=0x98). (The naive next-symbol read happens to be RIGHT here: this table's phantom interior symbol, data_ov006_0213c510, sits ON the address point rather than inside the table.) The cartridge keeps its canonical copy at ov006:0x0213c510, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
    "canonical_module": "ov006",
    "canonical_address": "0x0213c510"
   },
@@ -549,19 +549,19 @@
  "externalized_output": [],
  "notes": [
   "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-  "tubuild create warning: SOURCELESS: func_ov006_020e5450 has no legacy file under src/; a banner marks its slot and verify will report the member MISSING",
-  "tubuild create warning: RAW: src/_ZN15dScMgCurling2_c13OnYoshiTryEatEi.cpp (_ZN15dScMgCurling2_c13OnYoshiTryEatEi) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+  "tubuild create warning: SOURCELESS: Curling2_ResolveStoneCollision has no legacy file under src/; a banner marks its slot and verify will report the member MISSING",
+  "tubuild create warning: RAW: src/_ZN15dScMgCurling2_c13OnYoshiTryEatEi.cpp (_ZN15dScMgCurling2_c10StartRoundEi) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
   "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020e3ce0 and the one that held func_ov006_020e3db4; kept the first, the other is commented out for review. RESOLVED: the four recovered spellings differ only in where the `*` sits (`int *seed` vs `int* seed`) and one carried a redundant `extern \"C\"`; they name one type. This TU declares it once, `extern int RandomIntInternal(int *seed);`, inside the file-scope extern \"C\" region.",
   "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020e3ce0 and the one that held func_ov006_020e4800; kept the first, the other is commented out for review. RESOLVED: the four recovered spellings differ only in where the `*` sits (`int *seed` vs `int* seed`) and one carried a redundant `extern \"C\"`; they name one type. This TU declares it once, `extern int RandomIntInternal(int *seed);`, inside the file-scope extern \"C\" region.",
   "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold func_ov006_020e4bd4 and the one that held func_ov006_020e4ed4; kept the first, the other is commented out for review. RESOLVED: a real disagreement -- func_ov006_020e4bd4 and func_ov006_020e513c recovered `void func_02012718(int id, int v)` while func_ov006_020e4ed4 recovered `void func_02012718(void *a, int b)`. The int spelling is kept and func_ov006_020e4ed4's one call site drops its `(void *)` cast on the 0x1d2 literal, which is the same immediate either way.",
-  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020b2444' differs between the legacy file that used to hold func_ov006_020e4a84 and the one that held func_ov006_020e4fe8; kept the first, the other is commented out for review. RESOLVED: both spellings are `void func_ov004_020b2444(int, int, int, int, int, int, int)` and differ only in parameter names; declared once.",
+  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_DrawBigNumber' differs between the legacy file that used to hold func_ov006_020e4a84 and the one that held func_ov006_020e4fe8; kept the first, the other is commented out for review. RESOLVED: both spellings are `void Mg_DrawBigNumber(int, int, int, int, int, int, int)` and differ only in parameter names; declared once.",
   "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_020e5ffc and the one that held func_ov006_020e628c; kept the first, the other is commented out for review. RESOLVED: both members are above the sourceless hole and are not in this TU. Nothing in the licensed range references the symbol under either spelling.",
   "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020e3ce0 and the one that held func_ov006_020e6528; kept the first, the other is commented out for review. RESOLVED: the four recovered spellings differ only in where the `*` sits (`int *seed` vs `int* seed`) and one carried a redundant `extern \"C\"`; they name one type. This TU declares it once, `extern int RandomIntInternal(int *seed);`, inside the file-scope extern \"C\" region.",
-  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020adc1c' differs between the legacy file that used to hold _ZN15dScMgCurling2_c6RenderEv and the one that held _ZN15dScMgCurling2_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: both members are above the sourceless hole and are not in this TU.",
+  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_GetTopRecord' differs between the legacy file that used to hold _ZN15dScMgCurling2_c6RenderEv and the one that held _ZN15dScMgCurling2_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: both members are above the sourceless hole and are not in this TU.",
   "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d45c' differs between the legacy file that used to hold func_ov006_020e6528 and the one that held _ZN15dScMgCurling2_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: both members are above the sourceless hole and are not in this TU.",
   "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_020e42b4 and the one that held func_ov006_020e6354; kept the first, the other is commented out for review. RESOLVED: func_ov006_020e6354 is above the sourceless hole and is not in this TU. Only func_ov006_020e42b4's `typedef void (C::*PMF)(int);` survives, and func_ov006_020e4744 and func_ov006_020e4800 recovered it identically, so one file-scope declaration serves all three. `struct C` is left INCOMPLETE, as all three shards had it: completing it would change mwccarm's pointer-to-member representation.",
   "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_020e42b4 and the one that held func_ov006_020e6354; kept the first, the other is commented out for review. RESOLVED: func_ov006_020e6354 is above the sourceless hole and is not in this TU. Only func_ov006_020e42b4's `typedef void (C::*PMF)(int);` survives, and func_ov006_020e4744 and func_ov006_020e4800 recovered it identically, so one file-scope declaration serves all three. `struct C` is left INCOMPLETE, as all three shards had it: completing it would change mwccarm's pointer-to-member representation.",
-  "SOURCELESS and RAW above both name members ABOVE the sourceless hole (func_ov006_020e5450 itself, and _ZN15dScMgCurling2_c13OnYoshiTryEatEi at 0x020e6774). Neither is in this TU's licensed range; both keep their own shard and their own delinks.txt entry.",
+  "SOURCELESS and RAW above both name members ABOVE the sourceless hole (Curling2_ResolveStoneCollision itself, and _ZN15dScMgCurling2_c10StartRoundEi at 0x020e6774). Neither is in this TU's licensed range; both keep their own shard and their own delinks.txt entry.",
   "The generated preamble was discarded and the TU hand-curated, per notes/agents/roles/writer.md: create's shared block carried a nested extern \"C\", two contradictory declarations of data_0209d4b8 (scalar and array) and of data_02082214 and data_020a0e40, and PMF0/PMF1 typedefs that its own CONFLICT comments had removed. Each member's own recovered declarations were re-merged by hand into one file-scope extern \"C\" region.",
   "decl_common.h is deliberately NOT included. It declares nine of this TU's 31 members (func_ov006_020e38b0, 020e3948, 020e3bc4, 020e4800, 020e4a84, 020e4b78, 020e4fe8, 020e507c as `void*`/`int` and 020e48d4 as `char*`), and eight of the nine contradict the byte-matched shard. Including it would raise `illegal function overloading` against code that already matches. Precedent: ov006/dScMgPanel_c, ov002/Player.",
   "func_ov006_020e4b00 and func_ov006_020e4ed4 each spelled their receiver parameter `this`, which mwccarm 2004/b56 rejects in a C++ TU; both were renamed to `self`. func_ov006_020e4ed4 has since become dScMgCurling2_c::DragBegin, so its receiver really is `this` again.",
@@ -569,8 +569,8 @@
   "SYMBOLS.TXT IS PART OF THIS EDIT. Sixteen of the seventeen renamed members are the target of an 8-byte {code pointer, zero adjustment} pointer-to-member record in unowned ov006 .data (0x0213c40c..0x0213c4b4), which __sinit_ov006_02130758 copies into the BSS dispatch arrays. dsd resolves those records BY SYMBOL NAME, so all seventeen rows in config/arm9/overlays/ov006/symbols.txt move to the mangled spelling in the same commit; a row left behind would link its .data code word as 0x00000000 with a green compile. SpawnValue is the seventeenth: it carries no .data record and is reached only from inside this TU and from the sourceless hole's own cartridge bytes.",
   "TWELVE MEMBERS REFUSED CONVERSION, AND THE REASON IS MEASURED AND IS NOT BYTES. With all 29 converted the TU still reports 31/31 MATCH / objisolate clean / ROM-ascending, but `python tools/rombuild.py -j 6 --no-rom` fails with exactly twelve `mwldarm.exe: Undefined` lines: func_ov006_020e38b0, _020e3948, _020e3bc4, _020e4a84, _020e4b78, _020e4fe8, _020e507c (referenced from dScMgCurling2_c::Render()), _020e4800 and _020e3948 (Behavior()), _020e48d4 (InitResources()), _020e3b9c (func_ov006_020e668c), _020e4b00 (func_ov006_020e628c) and _020e513c (func_ov006_020e5e3c). Those callers are still one-function shards above the sourceless hole, and they -- and include/decl_common.h -- spell the target by its C name. The twelve convert byte-neutrally the day segment B is promoted; nothing else blocks them.",
   "THE SEVENTEEN NAMES ARE COINED. The ROM proves member-ness (a zero-adjustment pointer-to-member record) and each handler's index in its own table, both read out of __sinit_ov006_02130758 and quoted in include/dScMgCurling2_c.h. It does not carry the original identifiers, and the gameplay semantics of the 0x48c0 and 0x4fe0 record arrays remain on the scout's `unproven` list; no name asserts them.",
-  "UPPER SIDE PROMOTED (segment B, fold/ov006-curling2-1005). The 20-member run above the func_ov006_020e5450 hole is src/actors/dScMgCurling2_c_upper.cpp under config/tu_manifest.d/ov006/dScMgCurling2_c_upper.json -- the second half of this same linker run, licensed as its own TU because no manifest shape expresses a .text claim with a hole in it. With every C-name caller folded, the twelve members this manifest's earlier notes marked byte-neutrally convertible all took their real dScMgCurling2_c:: names in the same edit (DrawValues, AgeValues, ClearValues, DrawPieces, StepPieces, SeedPieces, DrawMarks, AgeMarks, DrawCursor, DrawCounter, DrawStones, SeparateStones), 31/31 MATCH unchanged. The decl_common.h decls note 101 enumerates are gone with them; note 105's migration is complete. The eight new names are coined the same way note 106 records for the first seventeen: .data pointer-to-member records prove member-ness, the ROM preserves no identifiers.",
-  "Static initializer folded: all seven PMF state tables (0x02141978..0x02141a40) move out of the handwritten src/unnamed shard into src/actors/dScMgCurling2_c.cpp, defined through the existing PMF typedef (plus a TU-local PMF0 for the two no-arg tables) and plain-copied from the ROM PMF constants at data_ov006_0213c3d4..0x0213c4b4. The block is one contiguous .bss run shared with the upper half of this class, so every table is defined here and the upper TU externs resolve to these definitions. The emitted .init, .ctor and .bss are byte-identical to retail; no handles, no compiler temporaries, no renames. Table definition order is the retail initializer copy order.",
+  "UPPER SIDE PROMOTED (segment B, fold/ov006-curling2-1005). The 20-member run above the Curling2_ResolveStoneCollision hole is src/actors/dScMgCurling2_c_upper.cpp under config/tu_manifest.d/ov006/dScMgCurling2_c_upper.json -- the second half of this same linker run, licensed as its own TU because no manifest shape expresses a .text claim with a hole in it. With every C-name caller folded, the twelve members this manifest's earlier notes marked byte-neutrally convertible all took their real dScMgCurling2_c:: names in the same edit (DrawValues, AgeValues, ClearValues, DrawPieces, StepPieces, SeedPieces, DrawMarks, AgeMarks, DrawCursor, DrawCounter, DrawStones, SeparateStones), 31/31 MATCH unchanged. The decl_common.h decls note 101 enumerates are gone with them; note 105's migration is complete. The eight new names are coined the same way note 106 records for the first seventeen: .data pointer-to-member records prove member-ness, the ROM preserves no identifiers.",
+  "Static initializer folded: all seven PMF state tables (0x02141978..0x02141a40) move out of the handwritten src/unnamed shard into src/minigames/d_s_mg_curling2.cpp, defined through the existing PMF typedef (plus a TU-local PMF0 for the two no-arg tables) and plain-copied from the ROM PMF constants at pmf_dScMgCurling2_c_StoneRest..0x0213c4b4. The block is one contiguous .bss run shared with the upper half of this class, so every table is defined here and the upper TU externs resolve to these definitions. The emitted .init, .ctor and .bss are byte-identical to retail; no handles, no compiler temporaries, no renames. Table definition order is the retail initializer copy order.",
   "FULL-RUN FOLD (U01, 2026-10-11): src/actors/dScMgCurling2_c_upper.cpp (the 20-member upper half) and src/d_s_mg_curling2.cpp (the registry factory) merged into this file -- one contiguous .text block 0x020e3854..0x020e6c28, 53 functions. Their delinks entries merged into this TU's single entry; the upper manifest was retired. The fold is the step the upper manifest already prescribed: classInit's _ZTV15dScMgCurling2_c reference now resolves against this object's own emitted (deadstrip-data) vtable. verify: 53/53 MATCH, emission order clean; linkcheck SCRATCH-DATA-VERIFIED, all four licensed ranges IDENTICAL.",
   "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
  ],
@@ -817,7 +817,7 @@
  },
  "init": [
   {
-   "symbol": "__sinit_dScMgCurling2_c.cpp",
+   "symbol": "__sinit_d_s_mg_curling2.cpp",
    "address": "0x02130758",
    "size": "0x2ac",
    "binding": "STB_GLOBAL",
@@ -826,7 +826,7 @@
  ],
  "ctor": [
   {
-   "symbol": ".p__sinit_dScMgCurling2_c.cpp",
+   "symbol": ".p__sinit_d_s_mg_curling2.cpp",
    "address": "0x02133594",
    "size": "0x4",
    "binding": "STB_GLOBAL",
@@ -835,13 +835,13 @@
  ],
  "symbol_binding_rewrites": [
   {
-   "symbol": "__sinit_dScMgCurling2_c.cpp",
+   "symbol": "__sinit_d_s_mg_curling2.cpp",
    "from": "STB_LOCAL",
    "to": "STB_GLOBAL",
    "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
   },
   {
-   "symbol": ".p__sinit_dScMgCurling2_c.cpp",
+   "symbol": ".p__sinit_d_s_mg_curling2.cpp",
    "from": "STB_LOCAL",
    "to": "STB_GLOBAL",
    "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -853,7 +853,7 @@
    "source": "0x02133594",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "__sinit_dScMgCurling2_c.cpp",
+   "symbol": "__sinit_d_s_mg_curling2.cpp",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x02130758"
@@ -863,7 +863,7 @@
    "source": "0x02130984",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c47c",
+   "symbol": "pmf_dScMgCurling2_c_BeginRound",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c47c"
@@ -873,7 +873,7 @@
    "source": "0x02130988",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c414",
+   "symbol": "pmf_dScMgCurling2_c_Play",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c414"
@@ -883,7 +883,7 @@
    "source": "0x0213098c",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_02141a18",
+   "symbol": "sCurling2BehaviorTable",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x02141a18"
@@ -893,7 +893,7 @@
    "source": "0x02130990",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c404",
+   "symbol": "pmf_dScMgCurling2_c_NextThrow",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c404"
@@ -903,7 +903,7 @@
    "source": "0x02130994",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c424",
+   "symbol": "pmf_dScMgCurling2_c_EndRound",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c424"
@@ -913,7 +913,7 @@
    "source": "0x02130998",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c3f4",
+   "symbol": "pmf_dScMgCurling2_c_Idle",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c3f4"
@@ -923,7 +923,7 @@
    "source": "0x0213099c",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c3e4",
+   "symbol": "pmf_dScMgCurling2_c_StoneWait",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c3e4"
@@ -933,7 +933,7 @@
    "source": "0x021309a0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c3dc",
+   "symbol": "pmf_dScMgCurling2_c_StoneSlide",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c3dc"
@@ -943,7 +943,7 @@
    "source": "0x021309a4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_021419d8",
+   "symbol": "sCurling2StoneTable",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x021419d8"
@@ -953,7 +953,7 @@
    "source": "0x021309a8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c3d4",
+   "symbol": "pmf_dScMgCurling2_c_StoneRest",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c3d4"
@@ -963,7 +963,7 @@
    "source": "0x021309ac",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c3ec",
+   "symbol": "pmf_dScMgCurling2_c_StoneSteer",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c3ec"
@@ -973,7 +973,7 @@
    "source": "0x021309b0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c4b4",
+   "symbol": "pmf_dScMgCurling2_c_DragBegin",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c4b4"
@@ -983,7 +983,7 @@
    "source": "0x021309b4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_02141978",
+   "symbol": "sCurling2DragTable",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x02141978"
@@ -993,7 +993,7 @@
    "source": "0x021309b8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c4ac",
+   "symbol": "pmf_dScMgCurling2_c_DragUpdate",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c4ac"
@@ -1003,7 +1003,7 @@
    "source": "0x021309bc",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c42c",
+   "symbol": "pmf_dScMgCurling2_c_PickStepMode",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c42c"
@@ -1013,7 +1013,7 @@
    "source": "0x021309c0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_02141988",
+   "symbol": "sCurling2StepModeTable",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x02141988"
@@ -1023,7 +1023,7 @@
    "source": "0x021309c4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c494",
+   "symbol": "pmf_dScMgCurling2_c_StepXOnly",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c494"
@@ -1033,7 +1033,7 @@
    "source": "0x021309c8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c48c",
+   "symbol": "pmf_dScMgCurling2_c_StepXAndY",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c48c"
@@ -1043,7 +1043,7 @@
    "source": "0x021309cc",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c474",
+   "symbol": "pmf_dScMgCurling2_c_StepXPickFast",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c474"
@@ -1053,7 +1053,7 @@
    "source": "0x021309d0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c40c",
+   "symbol": "pmf_dScMgCurling2_c_StepXPushPosFast",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c40c"
@@ -1063,7 +1063,7 @@
    "source": "0x021309d4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c464",
+   "symbol": "pmf_dScMgCurling2_c_StepXPushNegFast",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c464"
@@ -1073,7 +1073,7 @@
    "source": "0x021309d8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_021419b8",
+   "symbol": "sCurling2StepXFastTable",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x021419b8"
@@ -1083,7 +1083,7 @@
    "source": "0x021309dc",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c45c",
+   "symbol": "pmf_dScMgCurling2_c_StepXSettleFast",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c45c"
@@ -1093,7 +1093,7 @@
    "source": "0x021309e0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c49c",
+   "symbol": "pmf_dScMgCurling2_c_StepXPick",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c49c"
@@ -1103,7 +1103,7 @@
    "source": "0x021309e4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c444",
+   "symbol": "pmf_dScMgCurling2_c_StepXPushPos",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c444"
@@ -1113,7 +1113,7 @@
    "source": "0x021309e8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c43c",
+   "symbol": "pmf_dScMgCurling2_c_StepXPushNeg",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c43c"
@@ -1123,7 +1123,7 @@
    "source": "0x021309ec",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_021419f8",
+   "symbol": "sCurling2StepXTable",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x021419f8"
@@ -1133,7 +1133,7 @@
    "source": "0x021309f0",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c4a4",
+   "symbol": "pmf_dScMgCurling2_c_StepXSettle",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c4a4"
@@ -1143,7 +1143,7 @@
    "source": "0x021309f4",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c41c",
+   "symbol": "pmf_dScMgCurling2_c_StepYRestart",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c41c"
@@ -1153,7 +1153,7 @@
    "source": "0x021309f8",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c484",
+   "symbol": "pmf_dScMgCurling2_c_StepYRampUp",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c484"
@@ -1163,7 +1163,7 @@
    "source": "0x021309fc",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_0213c46c",
+   "symbol": "pmf_dScMgCurling2_c_StepYRampDown",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x0213c46c"
@@ -1173,7 +1173,7 @@
    "source": "0x02130a00",
    "type": "R_ARM_ABS32",
    "kind": "load",
-   "symbol": "data_ov006_021419a0",
+   "symbol": "sCurling2StepYTable",
    "addend": 0,
    "target_module": "ov006",
    "target_address": "0x021419a0"

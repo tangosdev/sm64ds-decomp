@@ -5,13 +5,10 @@
 src/_ZN9ModelAnimC1Ev.cpp
 src/_ZN9ModelAnimC2Ev.cpp
 src/engine/model/ModelAnim.cpp
-src/_ZN15dExtFrameCtrl_cC1Ev.cpp
-# src/_ZN15dExtFrameCtrl_cC2Ev.cpp is the C2 sibling of the C1 above and has the
-# identical body. Itanium keeps them as two symbols; MSVC has one, so
-# building both is a duplicate definition. The host builds C1 and
-# hal/ctor_bridge.cpp defines the C2 name.
-src/engine/animation/dExtFrameCtrl_c.cpp
-src/_ZN15dExtFrameCtrl_cD1Ev.cpp
+# d_ext_frame_ctrl.cpp is the whole class, constructor and destructor
+# included. mwcc emits C1 and C2 from its one constructor; MSVC emits one
+# symbol, so hal/anim_ctor_bridge.cpp defines the C2 name.
+src/engine/animation/d_ext_frame_ctrl.cpp
 
 # ModelAnim comes across whole now that its constructor is real C++: the TU
 # is the vtable's key function for MSVC too, so every virtual has to be

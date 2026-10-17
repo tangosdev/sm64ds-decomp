@@ -32,9 +32,32 @@ struct dCamera_c : dView_c {
        too narrow -- they are the z of their respective vectors. */
     Vector3 savedLookAt;            /* 0x0b0 */
     Vector3 savedPos;            /* 0x0bc */
-    u8  pad_0c8[0x48];
+    /* Last frame's pair: Behavior copies lookAt and pos here before it moves
+       them, and Render keeps these instead when both have moved by less than
+       0x1000. */
+    Vector3 mPrevLookAt; /* 0x0c8 */
+    Vector3 mPrevPos;    /* 0x0d4 */
+    u8 pad_0e0[0x18];
+    /* Render passes these three as G3i::PerspectiveW_'s aspect, near and far
+       arguments; func_0200cf40 seeds them with 0x1555, 0x1000 and 0x1388000. */
+    s32 mAspect; /* 0x0f8 */
+    s32 mNear;   /* 0x0fc */
+    s32 mFar;    /* 0x100 */
+    u8 pad_104[0x8];
+    /* Render packs these four bytes into the VIEWPORT register (0x04000580). */
+    u8 mViewport[4];              /* 0x10c */
     s32 mTargetPlayer;            /* 0x110 */
-    u8  pad_114[0x24];
+    /* d_a_btn.cpp stores an actor pointer through pad_114 by name, so that
+       word stays a pad. */
+    u8 pad_114[0x8];
+    /* LookAtExit points this at the actor's position and copies that
+       position into mLookTargetPos. */
+    s32 *mLookTarget;       /* 0x11c */
+    Vector3 mLookTargetPos; /* 0x120 */
+    u8 pad_12c[0x8];
+    /* Vertical shake: Render adds it to both lookAt.y and pos.y; Behavior
+       eases it toward zero and flips its sign every frame. */
+    s32 mShakeY; /* 0x134 */
     /* Current state. ChangeState compares its argument against this, and only
        swaps it -- and clears unk_1a6 -- when they differ. */
     struct State* mState;            /* 0x138 */
@@ -47,16 +70,32 @@ struct dCamera_c : dView_c {
        masked, not normalised); 0x10 vetoes a state change; 0x4000 records
        that the pre-talk save has been taken. */
     u32 mFlags;            /* 0x154 */
-    u8  pad_158[0x24];
+    u8 pad_158[0x10];
+    /* Behavior eases it toward 0x1000 while flag 0x2000 is set and toward 0
+       otherwise; Render blends the field of view toward 0xaaa by it. */
+    s32 mFovBlend; /* 0x168 */
+    u8 pad_16c[0xc];
+    /* Render feeds mAngleZ to Matrix4x3_FromRotationZ for the view roll, and
+       looks mFovAngle up in the sine table for PerspectiveW_'s sin/cos. */
+    s16 mAngleZ;   /* 0x178 */
+    s16 mFovAngle; /* 0x17a */
     /* The camera's horizontal facing angle. Width is observed, not assumed:
      * every reader in the tree loads it with a 16-bit access --
      * daMugenBGM_c::Behavior and daObjPowerUpItem_c::BeginOpening read it plain,
      * WingFeather::Behavior and func_ov102_021492d4 add 0x4000 to turn it
      * into a billboard facing, and daTree_c::Render feeds it straight to
-     * Matrix4x3_FromRotationY. Nothing in the tree touches 0x17e, so only
-     * these two bytes come out of the pad. */
+     * Matrix4x3_FromRotationY. Behavior and func_0200cbe0 write it from
+     * Vec3_HorzAngle(lookAt, pos), and mAngleX beside it from
+     * Vec3_VertAngle. */
     s16 mAngleY;            /* 0x17c */
-    u8  pad_17e[0x28];
+    s16 mAngleX;            /* 0x17e */
+    u8 pad_180[0xc];
+    /* Shake amplitudes. Render adds mRollShake times the sine of the phase at
+       0x18a to the roll, and mFovShake times the cosine of the phase at 0x192
+       to the field of view; Behavior decays both. */
+    s16 mRollShake; /* 0x18c */
+    s16 mFovShake;  /* 0x18e */
+    u8 pad_190[0x16];
     u8  unk_1a6;            /* 0x1a6 */
     dCamera_c();
     virtual ~dCamera_c();

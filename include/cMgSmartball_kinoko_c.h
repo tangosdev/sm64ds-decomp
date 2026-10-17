@@ -17,7 +17,7 @@
  * written exactly twice in the whole tree, both by the spawner
  * dScMgSmartball_c::SpawnObjects, which walks two different tilemap layers looking for
  * the same tile id 0x328: the objects it builds from the first layer get 0,
- * the ones from the second get 1. The constructor func_ov006_02111b40 leaves
+ * the ones from the second get 1. The constructor cMgSmartball_kinoko_c_Construct leaves
  * 2 behind, which is the value Update has no case for -- a kinoko the spawner
  * never claimed renders nothing. Update switches on it and SaveSnapshot only
  * reads it; nothing ever assigns it at runtime.
@@ -49,7 +49,7 @@
  * touches it (house style: explicit pad over an implicit compiler-inserted
  * one).
  *
- * CONSTRUCTED BY func_ov006_02111b40, left a free function per the recipe
+ * CONSTRUCTED BY cMgSmartball_kinoko_c_Construct, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
  * reference renamed. It sets the base's mRadius to 0x7000 and mVariant to 2;
  * it does not touch mWasHit or mHitTimer. */

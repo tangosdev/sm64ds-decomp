@@ -77,7 +77,7 @@ proof. The documentation corrections in this revision do not resolve them.
   evidence commit. Scout facts are in this commit at
   `notes/data/class-facts/OneUpMushroom.json` (file named for the old queue
   row; its `class` field is `da1up_c`). Required artifacts present:
-  `src/actors/da1up_c.cpp`, `include/da1up_c.h`,
+  `src/game/actors/d_a_1up.cpp`, `include/da1up_c.h`,
   [config/tu_manifest.d/ov002/da1up_c.json](../../../config/tu_manifest.d/ov002/da1up_c.json).
 - Next action, responsible role and blockers: verifier claims the `verify`
   stage on this exact commit and re-runs the proof below in its own worktree.
@@ -126,16 +126,16 @@ proof. The documentation corrections in this revision do not resolve them.
   a current base containing `abda09fdd` -- an integration-lane merge with its
   own gate run, not a rebase this task should perform.
 - Source placement (raised as blocking by the first verification, overturned):
-  the TU stays at `src/actors/da1up_c.cpp`. The measurement behind that ruling,
+  the TU stays at `src/game/actors/d_a_1up.cpp`. The measurement behind that ruling,
   made by the domain coordinator and posted on
   https://github.com/tangosdev/sm64ds-decomp/issues/2426, is that all 18 most
-  recently landed promoted TUs on main sit at `src/actors/<Class>.cpp`, with
+  recently landed promoted TUs on main sit at `src/game/<dir>/<file>.cpp`, with
   none landing under `src/game/actors/` as `d_a_<snake>.cpp` since
   https://github.com/tangosdev/sm64ds-decomp/pull/2270; that
   `tools/srcpath.py`, the resolver this workflow designates, returns the flat
   path for this class (re-checked **[rev b]**:
-  `python tools/srcpath.py _ZN7da1up_c6RenderEv` -> `src/actors/da1up_c.cpp`);
-  and that no gate rejects `src/actors/`. The forward convention for new class
+  `python tools/srcpath.py _ZN7da1up_c6RenderEv` -> `src/game/actors/d_a_1up.cpp`);
+  and that no gate rejects `src/game/actors/`. The forward convention for new class
   TUs -- flat versus a nested `src/game/actors/` stem such as `d_a_1up` -- is
   being decided on issue #2426 and is not this task's to settle. A later
   reviewed convention change would move this file with every other one.
@@ -175,7 +175,7 @@ proof. The documentation corrections in this revision do not resolve them.
 
 - Class/TU/symbol and module-qualified ROM scope: `da1up_c`, [ov002](../../../config/arm9/overlays/ov002/symbols.txt), the
   contiguous `.text` run [ov002](../../../config/arm9/overlays/ov002/symbols.txt):[0x020aee40,0x020b0530) (36 functions, ROM
-  ordinals 0..35) promoted into `src/actors/da1up_c.cpp`. The two factories
+  ordinals 0..35) promoted into `src/game/actors/d_a_1up.cpp`. The two factories
   [ov002](../../../config/arm9/overlays/ov002/symbols.txt):[0x020b0530,0x020b05d0) now live in that same cpp with the rest of
   the class; only their vtable reference moved to the ROM name.
   Data of this class (`_ZTV7da1up_c` 0x021083c8, `_ZTI7da1up_c` 0x0210837c,
@@ -183,7 +183,7 @@ proof. The documentation corrections in this revision do not resolve them.
   0x02108300..0x02108370 and the bss dispatch array at 0x0210dc00) remains owned
   by the existing shards; the TU claims `.text` only.
 - Reserved source/header/config surfaces actually touched:
-  `src/actors/da1up_c.cpp` (new), `include/da1up_c.h` (new; replaces the coined
+  `src/game/actors/d_a_1up.cpp` (new), `include/da1up_c.h` (new; replaces the coined
   header OneUpMushroom.h, deleted), [config/tu_manifest.d/ov002/da1up_c.json](../../../config/tu_manifest.d/ov002/da1up_c.json) (new; replaces the coined manifest,
   [config/arm9/overlays/ov002/delinks.txt](../../../config/arm9/overlays/ov002/delinks.txt),
   [config/arm9/overlays/ov002/symbols.txt](../../../config/arm9/overlays/ov002/symbols.txt) (nine mangled members renamed at their
@@ -208,7 +208,7 @@ proof. The documentation corrections in this revision do not resolve them.
   `fBase_c::operator new` and store `_ZTV7da1up_c`; the vtable is 31 slots with
   nine own overrides (0, 3, 6, 9, 12, 16, 17, 18, 19); D1 (0x020aee40) precedes
   D0 (0x020aee88), no D2; fourteen `{fn, 0}` pointer-to-member records at
-  0x02108300 are copied by [__sinit_ov002_02100adc](../../../src/actors/da1up_c.cpp) into a 14-element array
+  0x02108300 are copied by [__sinit_ov002_02100adc](../../../src/game/actors/d_a_1up.cpp) into a 14-element array
   that only `Behavior` reads.
 - Lineage evidence or structural inference: base `dEnemyBase_c` from RTTI;
   member layout 0x110 dCcAc_c / 0x144 dBgCh_Actr / 0x300 Model / 0x350
@@ -275,7 +275,7 @@ proof. The documentation corrections in this revision do not resolve them.
   regex-dependent and only its order of magnitude should be relied on -- plus
   **33** block-scope mangled `extern` declarations (an earlier revision said 32;
   counting indented `extern` lines naming a `_Z` symbol in
-  `src/actors/da1up_c.cpp` gives 33 declarations of only **16 distinct**
+  `src/game/actors/d_a_1up.cpp` gives 33 declarations of only **16 distinct**
   symbols -- `_ZN5Sound9PlayBank3EjRK7Vector3` is redeclared 7 times and
   `_ZN8dActor_c15IsPlayerInRangeEi` 5, each local block spelling its own
   parameter types, which is itself part of the remaining cleanup)
@@ -295,7 +295,7 @@ proof. The documentation corrections in this revision do not resolve them.
   array and profiles are not owned by the TU.
 - Attribution preserved through each move/rename: **partially, and the exact
   gap is measured below.** `attribution.json` carries
-  `src/actors/da1up_c.cpp#<symbol>` overrides for **26 of the 36** folded
+  `src/game/actors/d_a_1up.cpp#<symbol>` overrides for **26 of the 36** folded
   shards (commit `bc83b2fd` on the input branch) -- 33 rows on that path in
   all, because the 7 renamed members that have rows each carry one under both
   the old `OneUpMushroom` and the new `da1up_c` mangled spelling (7x2 = 14),
@@ -306,14 +306,14 @@ proof. The documentation corrections in this revision do not resolve them.
   26 consolidated with credit intact, 0 changed, 0 lost` -- the 26 with rows.
   The remaining **10** symbols have no `#symbol` override row. For the private
   validator, which resolves on the HEAD path, they miss
-  `overrides[src/actors/da1up_c.cpp#<sym>]`, miss the bare TU path, and land on
-  `the old credit check[src/actors/da1up_c.cpp]` -- a path created by this fold --
+  `overrides[src/game/actors/d_a_1up.cpp#<sym>]`, miss the bare TU path, and land on
+  `the old credit check[src/game/actors/d_a_1up.cpp]` -- a path created by this fold --
   so it credits them to the TU's adder (`andrewboudreau`). They are
   `_ZN7da1up_cD0Ev`, `_ZN7da1up_c8BehaviorEv`,
-  [func_ov002_020aeee4](../../../src/actors/da1up_c.cpp), [func_ov002_020aefa4](../../../src/actors/da1up_c.cpp), [func_ov002_020aefb8](../../../src/actors/da1up_c.cpp),
-  [func_ov002_020af724](../../../src/actors/da1up_c.cpp), [func_ov002_020af950](../../../src/actors/da1up_c.cpp), [func_ov002_020afc68](../../../src/actors/da1up_c.cpp),
-  [func_ov002_020afd10](../../../src/actors/da1up_c.cpp) and [func_ov002_020aff10](../../../src/actors/da1up_c.cpp). For two of them
-  ([func_ov002_020aeee4](../../../src/actors/da1up_c.cpp), [func_ov002_020afd10](../../../src/actors/da1up_c.cpp)) the base matcher IS the adder,
+  [func_ov002_020aeee4](../../../src/game/actors/d_a_1up.cpp), [func_ov002_020aefa4](../../../src/game/actors/d_a_1up.cpp), [func_ov002_020aefb8](../../../src/game/actors/d_a_1up.cpp),
+  [func_ov002_020af724](../../../src/game/actors/d_a_1up.cpp), [func_ov002_020af950](../../../src/game/actors/d_a_1up.cpp), [func_ov002_020afc68](../../../src/game/actors/d_a_1up.cpp),
+  [func_ov002_020afd10](../../../src/game/actors/d_a_1up.cpp) and [func_ov002_020aff10](../../../src/game/actors/d_a_1up.cpp). For two of them
+  ([func_ov002_020aeee4](../../../src/game/actors/d_a_1up.cpp), [func_ov002_020afd10](../../../src/game/actors/d_a_1up.cpp)) the base matcher IS the adder,
   so nothing moves. For the other **8** the base matcher is someone else, and
   those 8 are exactly the "8 changed credits" the predecessor's private
   validation reported. This is owed work, not a resolved item.
@@ -349,7 +349,7 @@ proof. The documentation corrections in this revision do not resolve them.
   this session; see the `the old credit check` entry under Proof for the exit
   codes.
 
-  | # | Ordinal | Address | Override key(s) to add on [src/actors/da1up_c.cpp](../../../src/actors/da1up_c.cpp) | Value | Where the base credit comes from |
+  | # | Ordinal | Address | Override key(s) to add on [src/game/actors/d_a_1up.cpp](../../../src/game/actors/d_a_1up.cpp) | Value | Where the base credit comes from |
   |---|---|---|---|---|---|
   | 1 | 1 | 0x020aee88 | `#_ZN7da1up_cD0Ev` **and** `#_ZN13OneUpMushroomD0Ev` | `tangosdev` | an `attribution.json` **bare-path** override keyed on the deleted shard `_ZN13OneUpMushroomD0Ev.cpp`; drop that row |
   | 2 | 3 | 0x020aefa4 | `#func_ov002_020aefa4` | `ruspecial` | an `attribution.json` **bare-path** override keyed on the deleted shard `func_ov002_020aefa4.c`; drop that row |
@@ -388,8 +388,8 @@ proof. The documentation corrections in this revision do not resolve them.
   it is the same person as `ruspecial`, and `lunavyqo` is not aliased to
   anyone.
 
-  For completeness the integrator may also add rows for [func_ov002_020aeee4](../../../src/actors/da1up_c.cpp)
-  (ordinal 2, 0x020aeee4) and [func_ov002_020afd10](../../../src/actors/da1up_c.cpp) (ordinal 27, 0x020afd10),
+  For completeness the integrator may also add rows for [func_ov002_020aeee4](../../../src/game/actors/d_a_1up.cpp)
+  (ordinal 2, 0x020aeee4) and [func_ov002_020afd10](../../../src/game/actors/d_a_1up.cpp) (ordinal 27, 0x020afd10),
   both `andrewboudreau`: no credit moves today, but a row makes them durable
   against a later move of this file. That would bring the TU to 36/36 shards
   covered, on 45 rows -- the 9 renamed members at two spellings each plus the
@@ -428,7 +428,7 @@ worktree's ignored `build/`; they are not committed.
   `3 changed header(s) fan out to 928 source file(s)`; `927 checked - 629
   verified, 298 warning(s), 0 blocking`, 1 NONMATCHING draft skipped. The five
   `daTBasket_c` consumers of `include/daTBasket_c.h` are VERIFIED. Coverage
-  limit: this tool keys a file by its stem, so `src/actors/da1up_c.cpp` and the
+  limit: this tool keys a file by its stem, so `src/game/actors/d_a_1up.cpp` and the
   two factory files report `NO-SYM` (a warning, not a verdict) like every other
   promoted TU and `d_a_*` factory in the tree; the three BLIND rows are the
   same `RollingIronBall`, `daObjMarioCap_c` and `dScDSMT_c` shards the private
@@ -438,7 +438,7 @@ worktree's ignored `build/`; they are not committed.
 - Per-symbol link verification, which is what closes that `NO-SYM` gap
   **[verifier]**: `python tools/linkcheck.py --module ov002 --name <sym>
   --addr <a> --size <s> --c <file>` driven once for each of the 36 TU functions
-  against `src/actors/da1up_c.cpp` and once for each of the two factories
+  against `src/game/actors/d_a_1up.cpp` and once for each of the two factories
   now also in that cpp -> exit 0,
   **38/38 VERIFIED, 0 BLIND, 0 diffs**: every relocation slot in all 38 symbols
   links to bytes identical to the cartridge. Same tool `prepush_linkcheck`
@@ -453,7 +453,7 @@ worktree's ignored `build/`; they are not committed.
   type/addend), `emission order: all 36 function(s) in the expected
   ROM-ascending section order`, reloc-destinations clean ->
   `TEXT-VERIFIED`. Log `build/tubuild-verify.log`.
-  `python tools/romdata_check.py --files src/actors/da1up_c.cpp --json
+  `python tools/romdata_check.py --files src/game/actors/d_a_1up.cpp --json
   build/romdata-da1up.json` -> exit 0: 11 data symbols emitted, `VERIFIED 6
   (180 bytes equal to the cartridge)`, `PARTIAL 5 (44 bytes equal, coverage
   short of the ROM's extent)`, `DIFFERS 0`, `UNNAMED 0`. The six VERIFIED are
@@ -463,7 +463,7 @@ worktree's ignored `build/`; they are not committed.
   emitted names are the manifest's `compiler_only_output` list). Nothing
   differs from the cartridge.
   `python tools/tubuild.py linkcheck ov002/da1up_c` -> **exit 1, REFUSED** at
-  step `[4/8]` before any byte comparison: `FAIL src/actors/da1up_c.cpp:
+  step `[4/8]` before any byte comparison: `FAIL src/game/actors/d_a_1up.cpp:
   isolate: intact TU preparation refused: ov002/da1up_c: intact production
   requires one .text claim and at least one non-text claim`. Re-run and
   reproduced verbatim **[rev b]** at this tree. This is a tool-shape
@@ -488,7 +488,7 @@ worktree's ignored `build/`; they are not committed.
   38/38 by-symbol link verification above. Logs
   `build/tubuild-linkcheck.log` and `build/tubuild-linkcheck-rerun.log`.
 - Shared-header consumer expansion: `python tools/affected_src.py
-  include/da1up_c.h` -> `src/actors/da1up_c.cpp` only; `include/daTBasket_c.h`
+  include/da1up_c.h` -> `src/game/actors/d_a_1up.cpp` only; `include/daTBasket_c.h`
   -> five daTBasket_c shards (the edit is comment-only); both headers pass
   `python tools/check_header_offsets.py include/da1up_c.h include/daTBasket_c.h`
   -> exit 0 (13 and 7 commented fields, 0 mismatched, spans 0x398 / 0x380).
@@ -526,7 +526,7 @@ worktree's ignored `build/`; they are not committed.
     VANISHED, not because the gate can see them.
   - **10 of the 10** unrowed shards DO appear in the HEAD ledger: 8 because
     `the old credit check` never expires a deleted source path, and 2
-    (`_ZN13OneUpMushroomD0Ev`, [func_ov002_020aefa4](../../../src/actors/da1up_c.cpp)) through the stale
+    (`_ZN13OneUpMushroomD0Ev`, [func_ov002_020aefa4](../../../src/game/actors/d_a_1up.cpp)) through the stale
     bare-path overrides that rows 1 and 2 of the owed table remove. Being
     present at head with the same handle as at base, they compare equal and are
     reported as nothing at all.
@@ -549,13 +549,13 @@ worktree's ignored `build/`; they are not committed.
     both bare-path overrides dropped) -> **exit 1**, `27 consolidated with
     credit intact, 0 changed, 1 lost`, and the line
     `CREDIT LOST     _ZN13OneUpMushroomD0Ev`, whose tail names the deleted
-    shard stem and `tangosdev`. [func_ov002_020aefa4](../../../src/actors/da1up_c.cpp) is rescued (its shard
+    shard stem and `tangosdev`. [func_ov002_020aefa4](../../../src/game/actors/d_a_1up.cpp) is rescued (its shard
     basename and its symbol are the same string); the renamed destructor is not.
   - The table **as corrected above** (both spellings for rows 1 and 8) ->
     **exit 0**, `9718 tracked, 0 moved with credit intact, 0 renamed with
     credit intact, 28 consolidated with credit intact, 0 changed, 0 lost`. The
     two extra consolidations over the 26 baseline are exactly
-    `_ZN13OneUpMushroomD0Ev` and [func_ov002_020aefa4](../../../src/actors/da1up_c.cpp); `tracked` falls by 2
+    `_ZN13OneUpMushroomD0Ev` and [func_ov002_020aefa4](../../../src/game/actors/d_a_1up.cpp); `tracked` falls by 2
     because dropping the two stale bare-path overrides removes two names from
     the head ledger. Rows 3-8 change this gate's tally by nothing, for the
     reason in the coverage limit above -- their names never leave the ledger.

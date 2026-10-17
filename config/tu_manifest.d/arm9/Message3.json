@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x02031b84..0x02034a78, 26 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
-    "TOP EDGE: src/unnamed/arm9/0203/func_020319fc.c (0x020319fc..0x02031b84) ends exactly where the run begins -- an address-named helper of the surrounding block, not folded here. BOTTOM EDGE: src/actors/dScMB_c.cpp begins exactly at 0x02034a78 -- a different class TU, not part of the run.",
+    "TOP EDGE: src/unnamed/arm9/0203/func_020319fc.c (0x020319fc..0x02031b84) ends exactly where the run begins -- an address-named helper of the surrounding block, not folded here. BOTTOM EDGE: src/game/stages/d_s_mb.cpp begins exactly at 0x02034a78 -- a different class TU, not part of the run.",
     "CLASS-LOCAL COMPLETE: the run is every VS-mode text path -- the four Message::*VS members (SetTextGlobalsVS, DisplayVsExitText, DisplayPauseTextVS, LoadTextVS) plus the tile/pixel helpers and the state machine they all drive (func_02034504 reset, func_02031e00 op walker, func_020326ac input/blit switch), ending at LoadFont3D + LoadTextVS which load the font and pick the language table. Internal calls (func_02031b84/31cd4/31e00/33e50/34098/341a8/34504) resolve inside the TU."
   ],
   "sections": [

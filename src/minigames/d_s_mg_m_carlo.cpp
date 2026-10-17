@@ -15,6 +15,11 @@
  *     because the ROM has no dScMgMCarlo_c C1.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_s_mg_m_carlo_AssetId {
+    ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb
+};
+
 #include "dScMgMCarlo_c.h"
 #include "types.h"
 #include "decl_common.h"
@@ -40,51 +45,51 @@ int  ApproachLinear(int &value, int target, int step);
 int  ApproachLinear2(s16 &value, s16 target, s16 step);
 
 extern "C" {
-extern dMgMCarloCardObj_c *data_ov006_021424fc; /* first pick */
-extern dMgMCarloCardObj_c *data_ov006_02142500; /* board list head */
-extern dMgMCarloCardObj_c *data_ov006_02142504; /* board list tail */
-extern dMgMCarloCardObj_c *data_ov006_02142508; /* second pick */
-extern short data_ov006_021424ec;
-extern int data_ov006_0213d570;
-extern int data_ov006_0213d574;
+extern dMgMCarloCardObj_c *sMCarloFirstPick;  /* first pick */
+extern dMgMCarloCardObj_c *sMCarloCards;      /* board list head */
+extern dMgMCarloCardObj_c *sMCarloCardsTail;  /* board list tail */
+extern dMgMCarloCardObj_c *sMCarloSecondPick; /* second pick */
+extern short sMCarloBoardDelay;
+extern int sMCarloCardTotal;
+extern int sMCarloDealProgress;
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
-extern int data_ov006_021424f4;
-extern int data_ov006_021424f8;
-extern int data_ov006_021424f0;
-extern int data_ov006_0213d568;
-extern int data_ov006_0213d56c;
-extern int data_ov006_0213d5e0[8]; /* the eight face weights */
+extern int sMCarloCardsMoving;
+extern int sMCarloCols;
+extern int sMCarloRows;
+extern int sMCarloPayout;
+extern int sMCarloDeckSize;
+extern int sMCarloFaceCounts[8]; /* the eight face weights */
 extern int data_020a0db0;
-extern unsigned short data_ov006_0213d600[];
-extern int data_ov006_02133810[];
-extern int data_ov006_0214250c[];
+extern unsigned short sMCarloCardFrameSprites[];
+extern int sMgCardSprites[];
+extern int sMCarloCardSprites[];
 extern void Vec2_Sub(int* o, int* a, int* b);
 extern void func_0203d630(int *p, int m);
-extern int data_ov004_020bf9ec;
+extern int sMgCoinsBetPlaced;
 extern unsigned int func_02012790(unsigned int a);
 extern int func_0203d5dc(void *a, void *b);
-extern int data_ov006_02133f18;
-extern void func_ov004_020b1ea4(int a, int b, int c, int d, int e, int f, int g);
+extern int sMCarloHudSprite;
+extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
-void func_ov006_020c0aa8(void* p);
-void func_ov004_020b1bc8(char* a0, int a1, int a2, int a3);
-void func_ov004_020b6430(void);
-void func_ov004_020b1e34(char* a0, int a1, int a2, int a3);
-void func_ov006_020c1804(void* p);
-int func_ov006_020c1718(void* p);
-void func_ov004_020b65e4(void);
-void func_ov006_020c19d0(void* c);
-void func_ov006_020c1604(char* c, int unused, short a2, int a3);
-void func_ov004_020b66d4(char* p);
+void Camera_InitDealerView(void* p);
+void Mg_DrawCredits(char* a0, int a1, int a2, int a3);
+void MgCoins_Draw(void);
+void Mg_DrawScoreTally(char* a0, int a1, int a2, int a3);
+void Dealer_Draw(void* p);
+int Dealer_IsIdle(void* p);
+void MgCoins_Update(void);
+void Dealer_Update(void* c);
+void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
+void MgCoins_Reset(char* p);
 void FreeGfxSlotsById(int arg);
-void func_ov004_020b56c8(char* p);
-extern unsigned short data_ov004_020bf9e4;
-extern void func_ov006_0210a534(void *c);
+void MgCoins_StartPayout(char* p);
+extern unsigned short gMgCoinsStatus;
+extern void LoadCard2SubBg3(void *c);
 extern int GetGameLanguage(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern int func_ov006_020c1a88(char *p);
+extern int Dealer_Load(char *p);
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 void *_ZN11dScMgBase_cC2Ev(void*);
@@ -110,7 +115,7 @@ extern "C" void* dScMgMCarlo_c_classInit()
         *(int*)raw = (int)&_ZTV19dScMgSingle3DBase_c;
         _ZN8Particle10SysTrackerC1Ev(raw + 0x471c);
         *(int*)raw = (int)&_ZTV13dScMgMCarlo_c[2];
-        func_ov006_020c1d80(raw + 0x4f38);
+        Dealer_Construct(raw + 0x4f38);
         __cxa_vec_ctor(raw + 0x51a8, 0x50, 0x30,
                      (void*)_ZN18dMgMCarloCardObj_cC1Ev,
                      (void*)_ZN18dMgMCarloCardObj_cD1Ev);
@@ -122,16 +127,16 @@ extern "C" void* dScMgMCarlo_c_classInit()
 /* Slot 0. Loads the language's board graphics and the shared palette
  * (0xbb), sets the engine mode bytes, parks the 3D matrix at the family
  * camera and arms mShared. The round starts with the virtual
- * OnYoshiTryEat(-1), which deals the first board. */
+ * StartRound(-1), which deals the first board. */
 s32 dScMgMCarlo_c::InitResources()
 {
     void *chr;
     void *pal;
 
-    func_ov004_020b04d0(0x20);
-    func_ov006_0210a534(this);
-    chr = (void *)LoadFile(data_ov006_0213d5b4[GetGameLanguage()]);
-    pal = (void *)LoadFile(0xbb);
+    Mg_SetTopScreenYOffset(0x20);
+    LoadCard2SubBg3(this);
+    chr = (void *)LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
+    pal = (void *)LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(chr, (void *)0x6600000);
     GXS::LoadOBJPltt(pal, 0, 0x100);
     Deallocate(chr);
@@ -141,103 +146,103 @@ s32 dScMgMCarlo_c::InitResources()
     data_0209d454 = 0x18;
     *(unsigned short *)0x4000008 = (*(unsigned short *)0x4000008 & ~3) | 1;
     *(unsigned short *)0x400100a = *(unsigned short *)0x400100a & ~3;
-    func_ov006_020c0aa8(pad_4660);
-    if (func_ov006_020c1a88((char *)&mShared) == 0) return 0;
+    Camera_InitDealerView(pad_4660);
+    if (Dealer_Load((char *)&mShared) == 0) return 0;
 
-    func_ov004_020b682c();
-    unk_0a8 = func_ov004_020ad8b8();
-    unk_0ac = unk_0a8;
+    Mg_PlaceBannersOnTopScreen();
+    mCredits = Mg_GetSavedRecord0();
+    mCreditsShown = mCredits;
     {
-        int score = func_ov004_020ad878();
-        if (data_ov004_020beb68 != 0) ((dScMgBase_c *)data_ov004_020beb68)->mHudScore = score;
+        int score = Mg_GetSavedRecord1();
+        if (gMgScene != 0) gMgScene->mHudScore = score;
     }
-    OnYoshiTryEat(-1);
-    this->unk_60aa = 0;
+    StartRound(-1);
+    this->mTimer = 0;
     return 1;
 }
 
-// @symbol _ZN13dScMgMCarlo_c13OnYoshiTryEatEi
+// @symbol _ZN13dScMgMCarlo_c10StartRoundEi
 /* Slot 18: restart the round from a fresh board. SetupBoard deals a new
- * layout, the round state re-arms (unk_60a8 = 1), and the shared prompt
- * window re-opens watching unk_60ae.
+ * layout, the round state re-arms (mRoundState = 1), and the shared prompt
+ * window re-opens watching mDealCount.
  *
- * func_ov004_020b66d4 never reads its argument, but the ROM still computes
+ * MgCoins_Reset never reads its argument, but the ROM still computes
  * this + 0x6000 for it, which is mArray[76].mTargetY. */
-void dScMgMCarlo_c::OnYoshiTryEat(int arg)
+void dScMgMCarlo_c::StartRound(int arg)
 {
     SetupBoard(mArray);
-    data_ov006_0213d564 = 0;
-    unk_60ae = 0;
+    sMCarloPickAllowed = 0;
+    mDealCount = 0;
     mShared.unk_1e6 = 1;
-    func_ov006_020c1604((char *)&mShared, 4, 4, (int)&unk_60ae);
+    Dealer_StartShuffle((char *)&mShared, 4, 4, (int)&mDealCount);
     mShared.unk_01a = 1;
-    unk_60aa = 0;
-    unk_60a8 = 1;
-    func_ov004_020b66d4((char *)&mArray[76].mTargetY);
-    data_ov004_020bc7d4 = 1;
+    mTimer = 0;
+    mRoundState = 1;
+    MgCoins_Reset((char *)&mArray[76].mTargetY);
+    gMgCoinsShowDelta = 1;
 }
 
-// @symbol _ZN13dScMgMCarlo_c13OnTurnIntoEggEi
-/* Slot 19: the egg-exit sequence, run on the same round state (unk_60a8)
+// @symbol _ZN13dScMgMCarlo_c11CanEndStateEi
+/* Slot 19: the egg-exit sequence, run on the same round state (mRoundState)
  * as Behavior. 4 frees the Gfx slots. 5 waits for the shared window, then
  * hands the dealt total on (or plays the wrap-up cue). 6 hides the board
  * one card at a time from the tail. 7 waits for the active scene, then
  * flips every dealt card away. 8 runs the 0x1e timer out. Returns 1 while
  * frames remain. */
-int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
+int dScMgMCarlo_c::CanEndState(int mode)
 {
-    switch (unk_60a8) {
+    switch (mRoundState) {
     case 4:
         FreeGfxSlotsById(0x1d);
-        unk_60a8 += 1;
+        mRoundState += 1;
         break;
     case 5:
-        if (func_ov006_020c1718(&mShared) != 0) {
-            int dealt = data_ov006_0213d570;
+        if (Dealer_IsIdle(&mShared) != 0) {
+            int dealt = sMCarloCardTotal;
             if (dealt != 0) {
-                func_ov004_020b5e40(dealt);
-                unk_60aa = -1;
+                MgCoins_StartSpend(dealt);
+                mTimer = -1;
             } else {
-                func_ov004_020b56c8((char*)data_ov006_0213d568);
+                MgCoins_StartPayout((char *)sMCarloPayout);
             }
-            unk_60ae = 0;
-            unk_60a8 += 1;
+            mDealCount = 0;
+            mRoundState += 1;
         }
         break;
     case 6: {
-        dMgMCarloCardObj_c *head = data_ov006_02142500;
+        dMgMCarloCardObj_c *head = sMCarloCards;
         if (head != 0 && head->mVisible != 0) {
-            if (ApproachLinear2(unk_60aa, 0, 1) != 0) {
+            if (ApproachLinear2(mTimer, 0, 1) != 0) {
                 dMgMCarloCardObj_c *card;
                 int i;
                 int n;
-                unk_60aa = 0x10;
-                n = unk_60ae;
-                card = data_ov006_02142504;
+                mTimer = 0x10;
+                n = mDealCount;
+                card = sMCarloCardsTail;
                 for (i = 0; i < n; i++) {
                     if (card == 0) break;
                     card = card->mPrev;
                 }
                 if (card != 0) card->mVisible = 0;
-                unk_60ae += 1;
+                mDealCount += 1;
             }
         } else {
-            if (data_ov004_020bf9e4 <= 1)
-                unk_60a8 += 1;
+            if (gMgCoinsStatus <= 1)
+                mRoundState += 1;
         }
         break;
     }
     case 7: {
-        dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
-        if ((active != 0 ? active->unk_0a8 : 0) != 0)
+        dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+        if ((active != 0 ? active->mCredits : 0) != 0)
             return 1;
         dScMgMCarlo_c::FlipDealtCards();
-        unk_60aa = 0x1e;
-        unk_60a8 += 1;
+        mTimer = 0x1e;
+        mRoundState += 1;
         break;
     }
     case 8:
-        if (ApproachLinear2(unk_60aa, 0, 1) != 0)
+        if (ApproachLinear2(mTimer, 0, 1) != 0)
             return 1;
         break;
     }
@@ -245,15 +250,15 @@ int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
 }
 
 // @symbol _ZN13dScMgMCarlo_c8BehaviorEv
-/* Slot 6: the round, on the s16 state at unk_60a8. Case 1 arms the prompt
- * blink and falls through into case 2 on purpose. data_ov004_020beb68 is
+/* Slot 6: the round, on the s16 state at mRoundState. Case 1 arms the prompt
+ * blink and falls through into case 2 on purpose. gMgScene is
  * the active scene (dScMgBase_c.h declares it void *), so it is cast at
  * each use. */
 s32 dScMgMCarlo_c::Behavior()
 {
-    switch (unk_60a8) {
+    switch (mRoundState) {
     case 1:
-        unk_60a8++;
+        mRoundState++;
         if (mPromptBlinkCount == 0) {
             mPromptEnabled = 1;
             mPromptBlinkCount = 1;
@@ -261,94 +266,93 @@ s32 dScMgMCarlo_c::Behavior()
         }
         /* fall through */
     case 2:
-        data_ov006_0213d574 = unk_60ae * 5 << 12;
-        if (unk_60ae == 4) {
+        sMCarloDealProgress = mDealCount * 5 << 12;
+        if (mDealCount == 4) {
             if (dScMgMCarlo_c::BoardBusy() == 0) {
-                unk_60ae = 0;
-                unk_60a8++;
+                mDealCount = 0;
+                mRoundState++;
             }
         }
         break;
     case 3:
         if (dScMgMCarlo_c::BoardReady() == 0) {
             int shown;
-            if (data_ov006_0213d564 == 1)
-                data_ov006_0213d564 = 0;
-            shown = data_ov006_0213d574 >> 12;
-            if (data_ov006_0213d56c != 0 && shown > 10 && shown <= 18
-                && func_ov006_020c1718(&mShared) != 0) {
-                unk_60ae = 0;
+            if (sMCarloPickAllowed == 1)
+                sMCarloPickAllowed = 0;
+            shown = sMCarloDealProgress >> 12;
+            if (sMCarloDeckSize != 0 && shown > 10 && shown <= 18 && Dealer_IsIdle(&mShared) != 0) {
+                mDealCount = 0;
                 mShared.unk_1e6 = 0;
-                func_ov006_020c1164(&mShared, 2, &unk_60ae);
-                if (data_ov006_0213d56c == 2)
+                Dealer_StartReveal(&mShared, 2, &mDealCount);
+                if (sMCarloDeckSize == 2)
                     mShared.unk_01a = 0;
             } else {
-                int lim = unk_60ae + 18;
+                int lim = mDealCount + 18;
                 if (shown >= lim) {
-                    int flag = (data_ov006_021424fc != 0 && data_ov006_02142508 != 0);
+                    int flag = (sMCarloFirstPick != 0 && sMCarloSecondPick != 0);
                     if (flag == 0)
-                        data_ov006_0213d574 = lim << 12;
+                        sMCarloDealProgress = lim << 12;
                 }
             }
         } else {
-            if (data_ov006_0213d564 == 0) {
+            if (sMCarloPickAllowed == 0) {
                 if (dScMgMCarlo_c::HasRemovablePair() != 0) {
-                    data_ov006_0213d564 = 1;
+                    sMCarloPickAllowed = 1;
                 } else {
-                    if (data_ov006_0213d570 != 0) {
+                    if (sMCarloCardTotal != 0) {
                         if (mShared.unk_01a == 1) {
                             mShared.unk_01a = 0;
-                        } else if (func_ov006_020c16b4(&mShared) != 0) {
+                        } else if (Dealer_IsIdleAtRest(&mShared) != 0) {
                             {
-                                dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
+                                dScMgBase_c *active = (dScMgBase_c *)gMgScene;
                                 if (active != 0) {
                                     if (active->mHudScore > 0)
                                         active->mHudScore = active->mHudScore - 1;
                                 }
                             }
-                            func_ov006_020c0d68(&mShared);
-                            func_ov004_020b0a54(5);
+                            Dealer_PlayLose(&mShared);
+                            Mg_SetSharedState(MG_STATE_LOSE);
                             {
-                                int dealt = data_ov006_0213d570;
-                                dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
-                                int left = ((active != 0) ? active->unk_0a8 : 0) - dealt;
+                                int dealt = sMCarloCardTotal;
+                                dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+                                int left = ((active != 0) ? active->mCredits : 0) - dealt;
                                 int score = (active != 0) ? active->mHudScore : 0;
-                                func_ov004_020ad79c(left, score);
+                                Mg_SaveRecordPair(left, score);
                             }
                             mPromptEnabled = 0;
-                            unk_60a8++;
+                            mRoundState++;
                         }
                     } else {
                         {
-                            dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
+                            dScMgBase_c *active = (dScMgBase_c *)gMgScene;
                             if (active != 0) {
                                 if (active->mHudScore < 0x270f)
                                     active->mHudScore = active->mHudScore + 1;
-                                if (active->mHudScore > active->unk_0b8)
-                                    active->unk_0b8 = active->mHudScore;
+                                if (active->mHudScore > active->mBestHudScore)
+                                    active->mBestHudScore = active->mHudScore;
                             }
                         }
-                        func_ov004_020adb1c(mHudScore);
-                        func_ov006_020c0c80(&mShared);
-                        func_ov004_020b0a54(4);
+                        Mg_SubmitScore(mHudScore);
+                        Dealer_PlayWin(&mShared);
+                        Mg_SetSharedState(MG_STATE_WIN);
                         {
-                            dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
-                            int base = (active != 0) ? active->unk_0a8 : 0;
-                            func_ov004_020ad79c(data_ov006_0213d568 + base,
-                                                (active != 0) ? active->mHudScore : 0);
+                            dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+                            int base = (active != 0) ? active->mCredits : 0;
+                            Mg_SaveRecordPair(sMCarloPayout + base,
+                                              (active != 0) ? active->mHudScore : 0);
                         }
                         mPromptEnabled = 0;
-                        unk_60a8++;
+                        mRoundState++;
                     }
-                    data_ov006_0213d564 = 0;
+                    sMCarloPickAllowed = 0;
                 }
             }
         }
         break;
     }
 
-    func_ov004_020b65e4();
-    func_ov006_020c19d0(&mShared);
+    MgCoins_Update();
+    Dealer_Update(&mShared);
     dScMgMCarlo_c::UpdateBoard();
     return 1;
 }
@@ -358,13 +362,13 @@ s32 dScMgMCarlo_c::Behavior()
  * cards still rising (positive mYStep) first, then the settled ones. */
 s32 dScMgMCarlo_c::Render()
 {
-    func_ov006_020c0aa8(pad_4660);
-    func_ov004_020b1bc8((char *)this, 0xc, 0xc, 0);
-    func_ov004_020b6430();
-    func_ov004_020b1e34((char *)this, 0xe0, 0x14, 1);
+    Camera_InitDealerView(pad_4660);
+    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    MgCoins_Draw();
+    Mg_DrawScoreTally((char *)this, 0xe0, 0x14, 1);
 
     {
-        dMgMCarloCardObj_c *n = data_ov006_02142504;
+        dMgMCarloCardObj_c *n = sMCarloCardsTail;
         int i = 0;
         for (;;) {
             if (n == 0) break;
@@ -376,7 +380,7 @@ s32 dScMgMCarlo_c::Render()
     }
     {
         int i = 0;
-        dMgMCarloCardObj_c *n = data_ov006_02142504;
+        dMgMCarloCardObj_c *n = sMCarloCardsTail;
         for (;;) {
             if (n == 0) break;
             if (n->mYStep == 0) n->Render();
@@ -386,22 +390,22 @@ s32 dScMgMCarlo_c::Render()
         }
     }
     RenderHud();
-    func_ov006_020c1804(&mShared);
+    Dealer_Draw(&mShared);
     return 1;
 }
 
 // @symbol _ZN13dScMgMCarlo_c9RenderHudEv
 /* The ROM passes `this` and the body never reads it. Draw the deck
- * gauge while cards remain in the deck: the count -- data_ov006_0213d56c,
+ * gauge while cards remain in the deck: the count -- sMCarloDeckSize,
  * seeded with the deck size by SetupBoard and drained one card at a time
  * as the deal proceeds -- drawn as a number at (0xe8, 0x28), with the
  * gauge's frame sprite behind it at (0xe8, 0x18). */
 void dScMgMCarlo_c::RenderHud(void)
 {
-    int deck = data_ov006_0213d56c;
+    int deck = sMCarloDeckSize;
     if (deck == 0) return;
-    func_ov004_020b1ea4(0xe8, 0x28, deck, -1, -1, 0, 0);
-    Hud_RenderSprite((void*)data_ov006_02133f18, 0xe8, 0x18, -1, -1);
+    Mg_DrawNumber(0xe8, 0x28, deck, -1, -1, 0, 0);
+    Hud_RenderSprite((void *)sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c4InitEi
@@ -415,7 +419,8 @@ void dMgMCarloCardObj_c::Init(int slot) {
     mDealDelay = (short)((slot % 5) * 2 + 1);
   }
   mLift = 0;
-  if (slot == 0x13) data_ov006_02142504 = this;
+  if (slot == 0x13)
+      sMCarloCardsTail = this;
   mVisible = 1;
   mXStep = 0;
   mYStep = 0;
@@ -438,18 +443,18 @@ void dMgMCarloCardObj_c::DealIn(int slot)
     }
 
     if (mSlot >= 0x14) {
-        mX = (0x70 - ((data_ov006_0213d56c >> 2) << 1)) << 12;
+        mX = (0x70 - ((sMCarloDeckSize >> 2) << 1)) << 12;
         mY = -0x30000;
-        data_ov006_02142504 = this;
+        sMCarloCardsTail = this;
         mState = CARD_ENTERING;
     } else if (mState == CARD_WAITING) {
-        mX = (0x70 - ((data_ov006_0213d56c >> 2) << 1)) << 12;
+        mX = (0x70 - ((sMCarloDeckSize >> 2) << 1)) << 12;
         mY = -0x30000;
         mState = CARD_MOVING;
-        data_ov006_021424f4++;
+        sMCarloCardsMoving++;
     } else {
         mState = CARD_MOVING;
-        data_ov006_021424f4++;
+        sMCarloCardsMoving++;
     }
 
     mTargetX = ((slot % 5) * 32 + 0x30) << 12;
@@ -506,7 +511,7 @@ fail:
 
 // @symbol _ZN18dMgMCarloCardObj_c7HitTestEv
 /* Is this card the one under the stylus?
- * Only when the round is armed (data_ov006_0213d564) and the board is
+ * Only when the round is armed (sMCarloPickAllowed) and the board is
  * settled (no card still flying or flipping in), the touch panel has to
  * report an active press, and this card's on-screen position (fixed-point
  * >> 12) has to fall in the 0x20-by-0x30 window around the reported touch
@@ -518,7 +523,8 @@ int dMgMCarloCardObj_c::HitTest(void)
     int touching;
     int touchXOffset, touchYOffset;
 
-    if (data_ov006_0213d564 == 0) return 0;
+    if (sMCarloPickAllowed == 0)
+        return 0;
     if (dScMgMCarlo_c::BoardBusy() != 0) goto fail;
 
     touchSlot = gActivePlayerSlot;
@@ -549,7 +555,7 @@ void dMgMCarloCardObj_c::Update(int slot)
         mDealDelay -= 1;
         if (mDealDelay != 0)
             return;
-        data_ov006_0213d56c--;
+        sMCarloDeckSize--;
         DealIn(slot);
         return;
 
@@ -560,39 +566,39 @@ void dMgMCarloCardObj_c::Update(int slot)
         }
         if (HitTest() == 0)
             return;
-        if (data_ov006_021424fc == 0) {
-            data_ov006_021424fc = this;
+        if (sMCarloFirstPick == 0) {
+            sMCarloFirstPick = this;
             mState = CARD_SELECTED;
             Sound::PlayBank2_2D(0x153);
             return;
         }
-        if (IsPairWith(data_ov006_021424fc) != 0) {
-            data_ov006_02142508 = this;
-            data_ov006_021424ec = 0x20;
+        if (IsPairWith(sMCarloFirstPick) != 0) {
+            sMCarloSecondPick = this;
+            sMCarloBoardDelay = 0x20;
             mState = CARD_SELECTED;
             Sound::PlayBank2_2D(0x154);
-            if (data_ov004_020bf9ec == 0)
-                data_ov004_020bf9ec = 1;
+            if (sMgCoinsBetPlaced == 0)
+                sMgCoinsBetPlaced = 1;
             return;
         }
         func_02012790(0xe);
         {
-            dMgMCarloCardObj_c *first = data_ov006_021424fc;
+            dMgMCarloCardObj_c *first = sMCarloFirstPick;
             first->mState = CARD_IDLE;
         }
-        data_ov006_021424fc = 0;
+        sMCarloFirstPick = 0;
         return;
 
     case CARD_SELECTED:
         if (HitTest() == 0)
             return;
         mState = CARD_IDLE;
-        if (data_ov006_021424fc != this)
+        if (sMCarloFirstPick != this)
             return;
-        if (data_ov006_02142508 != 0)
+        if (sMCarloSecondPick != 0)
             return;
         Sound::PlayBank2_2D(0x155);
-        data_ov006_021424fc = 0;
+        sMCarloFirstPick = 0;
         return;
 
     case CARD_ENTERING:
@@ -605,7 +611,7 @@ void dMgMCarloCardObj_c::Update(int slot)
         if (mLift != 0x4000)
             return;
         mState = CARD_IDLE;
-        ApproachLinear(data_ov006_021424f4, 0, 1);
+        ApproachLinear(sMCarloCardsMoving, 0, 1);
         mXStep = 0;
         mYStep = 0;
         return;
@@ -642,13 +648,9 @@ void dMgMCarloCardObj_c::Render(void)
     {
         int idx = (mFace + 1) * 5
                   + (mLift >> 12);
-        unsigned short sprite = data_ov006_0213d600[idx];
-        Hud_RenderSprite(
-            (void*)data_ov006_0214250c[sprite],
-            (mX >> 12) + 24,
-            (mY >> 12) + 24,
-            -1,
-            -1);
+        unsigned short sprite = sMCarloCardFrameSprites[idx];
+        Hud_RenderSprite((void *)sMCarloCardSprites[sprite], (mX >> 12) + 24, (mY >> 12) + 24, -1,
+                         -1);
     }
 }
 
@@ -677,34 +679,34 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
     dMgMCarloCardObj_c *linkTail;
     dMgMCarloCardObj_c *savedNext;
 
-    active = (dScMgBase_c *)data_ov004_020beb68;
+    active = (dScMgBase_c *)gMgScene;
     stars = (active != 0) ? active->mHudScore : 0;
 
     if (stars < 5) {
-        data_ov006_021424f8 = 6;
-        data_ov006_021424f0 = 6;
-        data_ov006_0213d568 = 5;
+        sMCarloCols = 6;
+        sMCarloRows = 6;
+        sMCarloPayout = 5;
     } else if (stars < 0xa) {
-        data_ov006_021424f8 = 8;
-        data_ov006_021424f0 = 7;
-        data_ov006_0213d568 = 8;
+        sMCarloCols = 8;
+        sMCarloRows = 7;
+        sMCarloPayout = 8;
     } else {
-        data_ov006_021424f8 = 0xa;
-        data_ov006_021424f0 = 8;
-        data_ov006_0213d568 = 0xa;
+        sMCarloCols = 0xa;
+        sMCarloRows = 8;
+        sMCarloPayout = 0xa;
     }
 
-    data_ov006_0213d56c = data_ov006_021424f0 * data_ov006_021424f8;
-    data_ov006_0213d570 = data_ov006_021424f0 * data_ov006_021424f8;
+    sMCarloDeckSize = sMCarloRows * sMCarloCols;
+    sMCarloCardTotal = sMCarloRows * sMCarloCols;
 
     do
     {
         for (face = 0; face < 8; face++)
         {
-            if (face < data_ov006_021424f0)
-                data_ov006_0213d5e0[face] = data_ov006_021424f8;
+            if (face < sMCarloRows)
+                sMCarloFaceCounts[face] = sMCarloCols;
             else
-                data_ov006_0213d5e0[face] = 0;
+                sMCarloFaceCounts[face] = 0;
         }
 
         cardIndex = 0;
@@ -712,23 +714,21 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
         for (; cardIndex < 0x50; cardIndex++)
         {
             card->Init(cardIndex);
-            if (cardIndex < data_ov006_0213d570)
-            {
+            if (cardIndex < sMCarloCardTotal) {
                 card->mFace = (unsigned char)dScMgMCarlo_c::DrawCardValue();
             }
             card++;
         }
 
         slot = 0;
-        data_ov006_021424fc = 0;
-        data_ov006_02142508 = 0;
-        data_ov006_021424ec = 0;
-        data_ov006_021424f4 = 0;
-        data_ov006_0213d574 = 0;
-        data_ov006_02142500 = cards;
+        sMCarloFirstPick = 0;
+        sMCarloSecondPick = 0;
+        sMCarloBoardDelay = 0;
+        sMCarloCardsMoving = 0;
+        sMCarloDealProgress = 0;
+        sMCarloCards = cards;
 
-        if (data_ov006_0213d570 - 1 > 0)
-        {
+        if (sMCarloCardTotal - 1 > 0) {
             previous = cards;
             do
             {
@@ -743,7 +743,7 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
                 linkTail->mNext = savedNext;
                 previous++;
                 slot++;
-            } while (slot < data_ov006_0213d570 - 1);
+            } while (slot < sMCarloCardTotal - 1);
         }
     } while (dScMgMCarlo_c::HasRemovablePair() == 0);
 }
@@ -758,7 +758,7 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
 int dScMgMCarlo_c::HasRemovablePair(void)
 {
     dMgMCarloCardObj_c *first, *second;
-    first = data_ov006_02142500;
+    first = sMCarloCards;
     while (first != 0 && first->mSlot < 0x14) {
         second = first->mNext;
         while (second != 0 && second->mSlot < 0x14) {
@@ -778,15 +778,14 @@ int dScMgMCarlo_c::BoardBusy(void)
     int busy = 1;
     short target;
     short shown;
-    shown = (short)(data_ov006_0213d574 >> 12);
-    target = (short)data_ov006_0213d570;
+    shown = (short)(sMCarloDealProgress >> 12);
+    target = (short)sMCarloCardTotal;
     if (target > 20)
         target = 20;
     if (shown == target)
     {
-        if (data_ov006_021424f4 == 0)
-        {
-            if (data_ov006_021424fc == 0 || data_ov006_02142508 == 0)
+        if (sMCarloCardsMoving == 0) {
+            if (sMCarloFirstPick == 0 || sMCarloSecondPick == 0)
                 busy = 0;
         }
     }
@@ -801,15 +800,14 @@ int dScMgMCarlo_c::BoardReady(void)
     int ready = 0;
     short target;
     short shown;
-    shown = (short)(data_ov006_0213d574 >> 12);
-    target = (short)data_ov006_0213d570;
+    shown = (short)(sMCarloDealProgress >> 12);
+    target = (short)sMCarloCardTotal;
     if (target > 20)
         target = 20;
     if (shown == target)
     {
-        if (data_ov006_021424f4 == 0)
-        {
-            if (data_ov006_021424fc == 0 || data_ov006_02142508 == 0)
+        if (sMCarloCardsMoving == 0) {
+            if (sMCarloFirstPick == 0 || sMCarloSecondPick == 0)
                 ready = 1;
         }
     }
@@ -830,14 +828,14 @@ int dScMgMCarlo_c::DrawCardValue(void)
     int face;
     int roll;
     for (face = 0; face < 8; face++)
-        total += data_ov006_0213d5e0[face];
+        total += sMCarloFaceCounts[face];
     roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
     for (face = 0; face < 8; face++) {
-        total -= data_ov006_0213d5e0[face];
+        total -= sMCarloFaceCounts[face];
         if (total < 0) {
             drawnFace = (unsigned char)face;
-            data_ov006_0213d5e0[face]--;
+            sMCarloFaceCounts[face]--;
             break;
         }
     }
@@ -850,15 +848,16 @@ int dScMgMCarlo_c::DrawCardValue(void)
  * tail and numbering the walk so FlipAway's flip stagger mirrors the deal
  * stagger card by card. */
 void dScMgMCarlo_c::FlipDealtCards(void) {
-    dMgMCarloCardObj_c* node = data_ov006_02142500;
+    dMgMCarloCardObj_c *node = sMCarloCards;
     short i = 0;
-    if((data_ov006_0213d574>>12) <= 0) return;
+    if ((sMCarloDealProgress >> 12) <= 0)
+        return;
     do {
         if(node == 0) return;
         node->FlipAway(i);
         i = i+1;
         node = node->mNext;
-    } while(i < (data_ov006_0213d574>>12));
+    } while (i < (sMCarloDealProgress >> 12));
 }
 
 // @symbol _ZN13dScMgMCarlo_c11UpdateBoardEv
@@ -867,43 +866,47 @@ void dScMgMCarlo_c::FlipDealtCards(void) {
  * While a pair is selected, update only cards entering from reserve. Otherwise
  * advance the visible-card count and update every card in that prefix. */
 void dScMgMCarlo_c::UpdateBoard(void) {
-    dMgMCarloCardObj_c* head = data_ov006_02142500;
+    dMgMCarloCardObj_c *head = sMCarloCards;
     dMgMCarloCardObj_c* card;
     short slot;
 
-    if (data_ov006_021424fc != 0) {
-        if (data_ov006_02142508 != 0) {
-            if (--data_ov006_021424ec == 0) {
-                if (data_ov006_021424fc->mSlot > data_ov006_02142508->mSlot)
-                    data_ov006_0213d574 = data_ov006_02142508->mSlot << 12;
+    if (sMCarloFirstPick != 0) {
+        if (sMCarloSecondPick != 0) {
+            if (--sMCarloBoardDelay == 0) {
+                if (sMCarloFirstPick->mSlot > sMCarloSecondPick->mSlot)
+                    sMCarloDealProgress = sMCarloSecondPick->mSlot << 12;
                 else
-                    data_ov006_0213d574 = data_ov006_021424fc->mSlot << 12;
+                    sMCarloDealProgress = sMCarloFirstPick->mSlot << 12;
 
                 {
-                    dMgMCarloCardObj_c* first = data_ov006_021424fc;
-                    if (data_ov006_02142500 == first) data_ov006_02142500 = first->mNext;
-                    if (data_ov006_02142504 == first) data_ov006_02142504 = first->mPrev;
+                    dMgMCarloCardObj_c *first = sMCarloFirstPick;
+                    if (sMCarloCards == first)
+                        sMCarloCards = first->mNext;
+                    if (sMCarloCardsTail == first)
+                        sMCarloCardsTail = first->mPrev;
                     if (first->mPrev != 0) first->mPrev->mNext = first->mNext;
                     if (first->mNext != 0) first->mNext->mPrev = first->mPrev;
                     first->mNext = 0;
                     first->mPrev = first->mNext;
                 }
                 {
-                    dMgMCarloCardObj_c* second = data_ov006_02142508;
-                    if (data_ov006_02142500 == second) data_ov006_02142500 = second->mNext;
-                    if (data_ov006_02142504 == second) data_ov006_02142504 = second->mPrev;
+                    dMgMCarloCardObj_c *second = sMCarloSecondPick;
+                    if (sMCarloCards == second)
+                        sMCarloCards = second->mNext;
+                    if (sMCarloCardsTail == second)
+                        sMCarloCardsTail = second->mPrev;
                     if (second->mPrev != 0) second->mPrev->mNext = second->mNext;
                     if (second->mNext != 0) second->mNext->mPrev = second->mPrev;
                     second->mNext = 0;
                     second->mPrev = second->mNext;
                 }
 
-                data_ov006_02142508 = 0;
-                data_ov006_021424fc = 0;
-                ApproachLinear(data_ov006_0213d570, 0, 2);
+                sMCarloSecondPick = 0;
+                sMCarloFirstPick = 0;
+                ApproachLinear(sMCarloCardTotal, 0, 2);
             }
             card = head;
-            for (slot = 0; slot < (data_ov006_0213d574 >> 12); slot++) {
+            for (slot = 0; slot < (sMCarloDealProgress >> 12); slot++) {
                 if (card == 0) return;
                 if (card->mState == CARD_ENTERING) card->Update(slot);
                 card = card->mNext;
@@ -913,12 +916,12 @@ void dScMgMCarlo_c::UpdateBoard(void) {
     }
 
     {
-        int target = (short)data_ov006_0213d570;
+        int target = (short)sMCarloCardTotal;
         if (target > 0x14) target = 0x14;
-        ApproachLinear(data_ov006_0213d574, target << 12, 0x800);
+        ApproachLinear(sMCarloDealProgress, target << 12, 0x800);
     }
     card = head;
-    for (slot = 0; slot < (data_ov006_0213d574 >> 12); slot++) {
+    for (slot = 0; slot < (sMCarloDealProgress >> 12); slot++) {
         if (card == 0) return;
         card->Update(slot);
         card = card->mNext;
@@ -939,24 +942,10 @@ dMgMCarloCardObj_c::~dMgMCarloCardObj_c()
 /* The sprite-index remap table. Its initializer reads the retail table, so
  * it is not a constant expression: the compiler emits
  * __sinit_d_s_mg_m_carlo.cpp to copy the 19 words at overlay load. */
-int data_ov006_0214250c[19] = {
-    data_ov006_02133810[0],
-    data_ov006_02133810[1],
-    data_ov006_02133810[2],
-    data_ov006_02133810[11],
-    data_ov006_02133810[12],
-    data_ov006_02133810[13],
-    data_ov006_02133810[14],
-    data_ov006_02133810[3],
-    data_ov006_02133810[4],
-    data_ov006_02133810[5],
-    data_ov006_02133810[6],
-    data_ov006_02133810[9],
-    data_ov006_02133810[10],
-    data_ov006_02133810[7],
-    data_ov006_02133810[8],
-    data_ov006_02133810[15],
-    data_ov006_02133810[16],
-    data_ov006_02133810[17],
-    data_ov006_02133810[18],
+int sMCarloCardSprites[19] = {
+    sMgCardSprites[0],  sMgCardSprites[1],  sMgCardSprites[2],  sMgCardSprites[11],
+    sMgCardSprites[12], sMgCardSprites[13], sMgCardSprites[14], sMgCardSprites[3],
+    sMgCardSprites[4],  sMgCardSprites[5],  sMgCardSprites[6],  sMgCardSprites[9],
+    sMgCardSprites[10], sMgCardSprites[7],  sMgCardSprites[8],  sMgCardSprites[15],
+    sMgCardSprites[16], sMgCardSprites[17], sMgCardSprites[18],
 };

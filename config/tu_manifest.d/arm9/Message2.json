@@ -6,15 +6,15 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x0201ab04..0x0201adfc, 5 function(s), gapless in config/arm9/delinks.txt.",
-    "TOP EDGE: src/unnamed/arm9/0201/func_0201aaec.c (0x0201aaec..0x0201ab04) ends where Message::EndTalk begins. BOTTOM EDGE: src/unnamed/arm9/0201/func_0201adfc.c begins at 0x0201adfc. That C file does not reproduce on mwccarm 2004/b56 (object 0x304 against the ROM's 0x104), so it is the stop. The Message talk-window run is 0x0201AB04..0x0201CB2C; this file is the matched prefix of that run.",
-    "EndTalk and PrepareTalk are Message methods already declared in include/Message.h. The three address-named helpers stay extern \"C\" under their existing names."
+    "contiguous linker run: 0x0201ab04..0x0201cb2c, 13 function(s), gapless in config/arm9/delinks.txt.",
+    "TOP EDGE: src/unnamed/arm9/0201/func_0201aaec.c (0x0201aaec..0x0201ab04) ends where Message::EndTalk begins. BOTTOM EDGE: src/ui/messages/func_0201cb2c.c (ParseMessageBankSections, the message-bank parser) begins at 0x0201cb2c. The Message talk-window run is 0x0201AB04..0x0201CB2C, and this file now covers all of it.",
+    "EndTalk, PrepareTalk, AddChar, UpdateWindow and Update are Message methods declared in include/Message.h (AddChar, UpdateWindow and Update were added to it by this extension). The eight address-named helpers stay extern \"C\" under their existing names."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0201ab04",
-      "end": "0x0201adfc"
+      "end": "0x0201cb2c"
     }
   ],
   "functions": [
@@ -52,6 +52,62 @@
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0201/func_0201adac.c",
       "ordinal": 4
+    },
+    {
+      "symbol": "func_0201adfc",
+      "address": "0x0201adfc",
+      "size": "0x00000304",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201adfc.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_0201b100",
+      "address": "0x0201b100",
+      "size": "0x00000288",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201b100.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_0201b388",
+      "address": "0x0201b388",
+      "size": "0x00000220",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201b388.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN7Message7AddCharEc",
+      "address": "0x0201b5a8",
+      "size": "0x00000150",
+      "legacy_source": "src/_ZN7Message7AddCharEc.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_0201b6f8",
+      "address": "0x0201b6f8",
+      "size": "0x000000d4",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201b6f8.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_0201b7cc",
+      "address": "0x0201b7cc",
+      "size": "0x000003fc",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201b7cc.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN7Message12UpdateWindowEv",
+      "address": "0x0201bbc8",
+      "size": "0x000004f0",
+      "legacy_source": "src/_ZN7Message12UpdateWindowEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN7Message6UpdateEv",
+      "address": "0x0201c0b8",
+      "size": "0x00000a74",
+      "legacy_source": "src/_ZN7Message6UpdateEv.cpp",
+      "ordinal": 12
     }
   ],
   "data": [],
@@ -59,8 +115,8 @@
   "compiler_only_output": [],
   "notes": [
     "Message2 is the name the talk-window job reserved (tree Name2 style). It is not the menu-text TU src/Message.cpp.",
-    "Definitions are written descending. Default mwccarm emission is reverse source order, so .text is ROM-ascending. No file-wide optimization pragma.",
-    "func_0201adfc.c is the stop: it does not byte-match 2004/b56 from the source on main. The functions above it are a separate contiguous span and are not in this file."
+    "Definitions are written ROM-ascending under #pragma defer_codegen off, so .text emits in source order. func_0201b388's opt_common_subs off is a push/pop bracket; under deferred codegen it would apply last-wins to the whole file.",
+    "EXTENDED 2026-10-15 through 0x0201cb2c: func_0201adfc, func_0201b100, func_0201b388, Message::AddChar, func_0201b6f8, func_0201b7cc, Message::UpdateWindow and Message::Update folded in from their per-function shards. The earlier stop note (func_0201adfc.c not reproducing on 2004/b56) was stale: that shard byte-matched on main, and it matches inside this TU as well. The callers keep the byte-forced _ZN7Message7AddCharEc(int) spelling, because a char parameter makes every call site narrow its argument and the ROM's call sites don't."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -68,8 +124,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-Message2/Message2.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 5,
-    "functions_declared": 5,
+    "functions_matched": 13,
+    "functions_declared": 13,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],

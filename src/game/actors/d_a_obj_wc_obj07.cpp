@@ -21,6 +21,12 @@
  * Leftover: g_profile_WC_UKISIMA lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wc_obj07_AssetId {
+    ASSET_WC_OBJ07_BMD = 0x06d7,
+    ASSET_WC_OBJ07_KCL = 0x06d8
+};
+
 #include "daObjWc_Obj07_c.h"
 #include "SharedFilePtr.h"
 
@@ -79,5 +85,5 @@ s32 daObjWc_Obj07_c::CleanupResources()
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj07.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj07ModelFilePtr data_ov029_021142dc(0x6d7);
-WcObj07CollisionFilePtr data_ov029_021142d4(0x6d8);
+WcObj07ModelFilePtr gWcObj07ModelFile(ASSET_WC_OBJ07_BMD);
+WcObj07CollisionFilePtr gWcObj07CollisionFile(ASSET_WC_OBJ07_KCL);

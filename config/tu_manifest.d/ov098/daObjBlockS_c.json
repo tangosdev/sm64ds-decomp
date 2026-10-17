@@ -1,13 +1,13 @@
 {
   "id": "ov098/daObjBlockS_c",
   "module": "ov098",
-  "source": "src/actors/daObjBlockS_c.cpp",
-  "promoted_source": "src/actors/daObjBlockS_c.cpp",
+  "source": "src/game/actors/d_a_obj_block_s.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_block_s.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "The whole daObjBlockS_c run of ov098 .text, 0x02138040..0x02139f70: from D1 (0x02138040) to daObjBlockS_c_classInit (0x02139f04, 0x6c). The previous delinks entry, src/actors/daObjYajirusi_c.cpp, ends at 0x02138040 and the next one, src/_ZN16daObjFallBlock_cD0Ev.cpp, starts at 0x02139f70, so the unit is bounded by two other classes on both sides.",
+    "The whole daObjBlockS_c run of ov098 .text, 0x02138040..0x02139f70: from D1 (0x02138040) to daObjBlockS_c_classInit (0x02139f04, 0x6c). The previous delinks entry, src/game/actors/d_a_obj_yajirusi.cpp, ends at 0x02138040 and the next one, src/_ZN16daObjFallBlock_cD0Ev.cpp, starts at 0x02139f70, so the unit is bounded by two other classes on both sides.",
     "Every helper between the destructors and the methods is reached only from this class: the state table at data_ov098_0213c878 (Crate_SetState and func_ov098_02138b70 index it by mState) and the calls among the helpers themselves. No source outside this unit calls any of them.",
     "class label: daObjBlockS_c (_ZTI13daObjBlockS_c at 0x0213c4d4, name string 13daObjBlockS_c at 0x0213c500, pointed at from the word before _ZTV13daObjBlockS_c 0x0213c534).",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
@@ -298,14 +298,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov098_0213c850",
+      "symbol": "gBrokenBlockSModelFile",
       "address": "0x0213c850",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x458"
     },
     {
-      "symbol": "data_ov098_0213c858",
+      "symbol": "gBrokenBlockSCollisionFile",
       "address": "0x0213c858",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -674,7 +674,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjBlockS_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_s.cpp",
       "address": "0x0213c058",
       "size": "0x1bc",
       "binding": "STB_GLOBAL",
@@ -683,7 +683,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjBlockS_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_block_s.cpp",
       "address": "0x0213c340",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -729,13 +729,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjBlockS_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_s.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjBlockS_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_block_s.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -759,7 +759,7 @@
       "source": "0x0213c340",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjBlockS_c.cpp",
+      "symbol": "__sinit_d_a_obj_block_s.cpp",
       "addend": 0,
       "target_module": "ov098",
       "target_address": "0x0213c058"
@@ -809,7 +809,7 @@
       "source": "0x213c1b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov098_0213c850",
+      "symbol": "gBrokenBlockSModelFile",
       "addend": 0,
       "target_module": "ov098",
       "target_address": "0x0213c850"
@@ -839,7 +839,7 @@
       "source": "0x213c1c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov098_0213c858",
+      "symbol": "gBrokenBlockSCollisionFile",
       "addend": 0,
       "target_module": "ov098",
       "target_address": "0x0213c858"
@@ -1018,12 +1018,12 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@1589",
+      "from": "@1566",
       "to": "@1560",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1590",
+      "from": "@1567",
       "to": "@1561",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

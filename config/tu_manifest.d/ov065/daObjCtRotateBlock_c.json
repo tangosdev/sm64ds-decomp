@@ -1,8 +1,8 @@
 {
   "id": "ov065/daObjCtRotateBlock_c",
   "module": "ov065",
-  "source": "src/actors/daObjCtRotateBlock_c.cpp",
-  "promoted_source": "src/actors/daObjCtRotateBlock_c.cpp",
+  "source": "src/game/actors/d_a_obj_ct_rotate_block.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ct_rotate_block.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x21196d8..0x2119ebc, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjCtRotateBlock_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold (0930c): the two registry factories daObjCtRotateBlock_c_classInit_CT_MECHA02 (0x02119ebc, 0x40) and daObjCtRotateBlock_c_classInit_CT_MECHA01 (0x02119efc, 0x40) abut this TU's former end 0x02119ebc with no gap and nothing between them; tu_map left them in their own unlabelled unit because it cuts on symbol name. Both construct this class (operator new(0x3d8), dBgActor_c C2, _ZTV20daObjCtRotateBlock_c store, Model and dExtShadowModel_c C1). The widened range 0x021196d8..0x02119f3c ends where the daObjCtMecha03_c TU (src/actors/daObjCtMecha03_c.cpp) begins."
+    "classInit fold (0930c): the two registry factories daObjCtRotateBlock_c_classInit_CT_MECHA02 (0x02119ebc, 0x40) and daObjCtRotateBlock_c_classInit_CT_MECHA01 (0x02119efc, 0x40) abut this TU's former end 0x02119ebc with no gap and nothing between them; tu_map left them in their own unlabelled unit because it cuts on symbol name. Both construct this class (operator new(0x3d8), dBgActor_c C2, _ZTV20daObjCtRotateBlock_c store, Model and dExtShadowModel_c C1). The widened range 0x021196d8..0x02119f3c ends where the daObjCtMecha03_c TU (src/game/actors/d_a_obj_ct_mecha03.cpp) begins."
   ],
   "sections": [
     {
@@ -116,42 +116,42 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov065_0211d814",
+      "symbol": "gCtMechaObj01ModelFile",
       "address": "0x0211d814",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x5b6"
     },
     {
-      "symbol": "data_ov065_0211d81c",
+      "symbol": "gCtMechaObj02aModelFile",
       "address": "0x0211d81c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x5bb"
     },
     {
-      "symbol": "data_ov065_0211d824",
+      "symbol": "gCtMechaObj02ModelFile",
       "address": "0x0211d824",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x5b9"
     },
     {
-      "symbol": "data_ov065_0211d82c",
+      "symbol": "gCtMechaObj02CollisionFile",
       "address": "0x0211d82c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x5ba"
     },
     {
-      "symbol": "data_ov065_0211d834",
+      "symbol": "gCtMechaObj01CollisionFile",
       "address": "0x0211d834",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x5b7"
     },
     {
-      "symbol": "data_ov065_0211d83c",
+      "symbol": "gCtMechaObj01aModelFile",
       "address": "0x0211d83c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -216,7 +216,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "classInit fold (0930c): each daObjCtRotateBlock_c_classInit_* factory's `new daObjCtRotateBlock_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/actors/daObjHatenaBlock_c.cpp). No configured ROM symbol of that name exists and nothing relocates to it once the licensed D1/D0 pair is retained."
+      "reason": "classInit fold (0930c): each daObjCtRotateBlock_c_classInit_* factory's `new daObjCtRotateBlock_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/game/actors/d_a_obj_hatena_block.cpp). No configured ROM symbol of that name exists and nothing relocates to it once the licensed D1/D0 pair is retained."
     },
     {
       "symbol": "_ZTV20daObjCtRotateBlock_c",
@@ -302,7 +302,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold _ZN20daObjCtRotateBlock_c12UpdateShadowEv and the one that held _ZN20daObjCtRotateBlock_c13InitResourcesEv; kept the first, the other is commented out for review",
     "fold branch tu/fold-highov-0921: 9/9 MATCH. The out-of-line destructor is the key function: D2 is homeless deadstrip, Vector3D1 is the arm9 duplicate, and the _ZTV/_ZTI/_ZTS chain is deadstrip-data. Matrix4x3_FromRotationY keeps the short angle from UpdateShadow.",
     "classInit fold (0930c): both factories are folded in last, in ROM order (CT_MECHA02 then CT_MECHA01), under the file's `#pragma defer_codegen off`, each as `return new daObjCtRotateBlock_c();` (no user-declared constructor, so the synthesized one reproduces the hand-called sequence). The new-expression makes mwccarm emit _ZN10dBgActor_cD2Ev, licensed as a compiler_only_output deadstrip row. tubuild verify: 11/11 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_obj_ct_rotate_block_ct_mecha02.c and src/d_a_obj_ct_rotate_block_ct_mecha01.c; their credit carries in attribution.json as path#symbol overrides.",
-    "Static initializer folded: the four RotateBlockModelFile handles (files 0x5b6/0x5b9/0x5b8/0x5bb), the two RotateBlockCollisionFilePtr handles (files 0x5b7/0x5ba) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/actors/daObjCtRotateBlock_c.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov065_0211c660 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @627/@629/@631 clashed with the fleet and are renamed (@627->@951, @629->@895, @631->@891); @628/@630/@632 were free and are kept.",
+    "Static initializer folded: the four RotateBlockModelFile handles (files 0x5b6/0x5b9/0x5b8/0x5bb), the two RotateBlockCollisionFilePtr handles (files 0x5b7/0x5ba) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/game/actors/d_a_obj_ct_rotate_block.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov065_0211c660 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @627/@629/@631 clashed with the fleet and are renamed (@627->@951, @629->@895, @631->@891); @628/@630/@632 were free and are kept.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
   "verification": {
@@ -580,7 +580,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjCtRotateBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_rotate_block.cpp",
       "address": "0x0211c660",
       "size": "0x10c",
       "binding": "STB_GLOBAL",
@@ -589,7 +589,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjCtRotateBlock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_rotate_block.cpp",
       "address": "0x0211caec",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -667,13 +667,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjCtRotateBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_rotate_block.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjCtRotateBlock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_rotate_block.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -721,7 +721,7 @@
       "source": "0x0211caec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjCtRotateBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_rotate_block.cpp",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211c660"
@@ -851,7 +851,7 @@
       "source": "0x0211c71c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d814",
+      "symbol": "gCtMechaObj01ModelFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d814"
@@ -881,7 +881,7 @@
       "source": "0x0211c72c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d824",
+      "symbol": "gCtMechaObj02ModelFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d824"
@@ -901,7 +901,7 @@
       "source": "0x0211c738",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d83c",
+      "symbol": "gCtMechaObj01aModelFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d83c"
@@ -921,7 +921,7 @@
       "source": "0x0211c744",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d81c",
+      "symbol": "gCtMechaObj02aModelFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d81c"
@@ -941,7 +941,7 @@
       "source": "0x0211c750",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d834",
+      "symbol": "gCtMechaObj01CollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d834"
@@ -971,7 +971,7 @@
       "source": "0x0211c760",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d82c",
+      "symbol": "gCtMechaObj02CollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d82c"

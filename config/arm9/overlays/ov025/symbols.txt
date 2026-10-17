@@ -40,14 +40,14 @@ data_ov025_02112658 kind:data(any) addr:0x02112658
 data_ov025_0211265c kind:data(any) addr:0x0211265c
 data_ov025_02112694 kind:data(any) addr:0x02112694
 data_ov025_02112968 kind:data(any) addr:0x02112968 ambiguous
-__sinit_daDgr_c.cpp kind:function(arm,size=0x6c) addr:0x02112970
-__sinit_daDkk_c.cpp kind:function(arm,size=0x68) addr:0x021129dc
-__sinit_daObjDpBrock_c.cpp kind:function(arm,size=0x68) addr:0x02112a44
-__sinit_daDpLift_c.cpp kind:function(arm,size=0x6c) addr:0x02112aac
-.p__sinit_daDgr_c.cpp kind:data(word) addr:0x02112b18
-.p__sinit_daDkk_c.cpp kind:data(word) addr:0x02112b1c
-.p__sinit_daObjDpBrock_c.cpp kind:data(word) addr:0x02112b20
-.p__sinit_daDpLift_c.cpp kind:data(word) addr:0x02112b24
+__sinit_d_a_dgr.cpp kind:function(arm,size=0x6c) addr:0x02112970
+__sinit_d_a_dkk.cpp kind:function(arm,size=0x68) addr:0x021129dc
+__sinit_d_a_obj_dp_brock.cpp kind:function(arm,size=0x68) addr:0x02112a44
+__sinit_d_a_dp_lift.cpp kind:function(arm,size=0x6c) addr:0x02112aac
+.p__sinit_d_a_dgr.cpp kind:data(word) addr:0x02112b18
+.p__sinit_d_a_dkk.cpp kind:data(word) addr:0x02112b1c
+.p__sinit_d_a_obj_dp_brock.cpp kind:data(word) addr:0x02112b20
+.p__sinit_d_a_dp_lift.cpp kind:data(word) addr:0x02112b24
 data_ov025_02112b40 kind:data(any) addr:0x02112b40
 data_ov025_02112b44 kind:data(any) addr:0x02112b44
 data_ov025_02112b4c kind:data(any) addr:0x02112b4c
@@ -148,8 +148,8 @@ data_ov025_02113a60 kind:bss addr:0x02113a60
 data_ov025_02113a68 kind:bss addr:0x02113a68
 @148 kind:bss addr:0x02113a70
 @147 kind:bss addr:0x02113a7c
-data_ov025_02113a88 kind:bss addr:0x02113a88
-data_ov025_02113a90 kind:bss addr:0x02113a90
+gDonkakuModelFile kind:bss addr:0x02113a88
+gDonkakuCollisionFile kind:bss addr:0x02113a90
 @163 kind:bss addr:0x02113a98
 @164 kind:bss addr:0x02113aa4
 data_ov025_02113ab0 kind:bss addr:0x02113ab0

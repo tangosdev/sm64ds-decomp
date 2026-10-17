@@ -1,16 +1,16 @@
 {
   "id": "arm9/dBgCh_SphCrr_query",
   "module": "arm9",
-  "source": "src/engine/collision/dBgCh_SphCrr_query.cpp",
-  "promoted_source": "src/engine/collision/dBgCh_SphCrr_query.cpp",
+  "source": "src/engine/collision/d_bg_ch_sph_crr_query.cpp",
+  "promoted_source": "src/engine/collision/d_bg_ch_sph_crr_query.cpp",
   "status": "promoted",
   "production_mode": "text-only",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous run 0x02037dc4..0x02039140: 57 functions, no hole. This is the thunk-free middle of the collision checkers.",
-    "TOP EDGE: dBgCh_SphCrr.cpp ends at 0x02037dc4. That file keeps the sphere query's lifecycle and its this-adjustment thunks. It is a different object.",
+    "TOP EDGE: d_bg_ch_sph_crr.cpp ends at 0x02037dc4. That file keeps the sphere query's lifecycle and its this-adjustment thunks. It is a different object.",
     "BOTTOM EDGE: dBgW::Disable begins at 0x02039140 and starts the next file.",
-    "dBgCh_Lin.cpp stays the line-query file below this run. dBgW::Disable at 0x02039140 starts the next file."
+    "d_bg_ch_lin.cpp stays the line-query file below this run. dBgW::Disable at 0x02039140 starts the next file."
   ],
   "sections": [
     {
@@ -406,7 +406,7 @@
       "ordinal": 54
     },
     {
-      "symbol": "func_02038ea4",
+      "symbol": "_ZN9dBgCh_Gnd15DetectClsnSlot0Ev",
       "address": "0x02038ea4",
       "size": "0x000000a0",
       "legacy_source": "src/unnamed/arm9/0203/func_02038ea4.cpp",

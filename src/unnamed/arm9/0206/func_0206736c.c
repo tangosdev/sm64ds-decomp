@@ -21,10 +21,9 @@ int func_0206736c(u32 idx, u32 addr, u32 size)
             return 0;
         }
         if (addr >= 0x37f8000 && addr < 0x380f000) return addr + size <= 0x380f000;
-        goto fail;
+        break;
     default:
         return 0;
     }
-fail:
     return 0;
 }

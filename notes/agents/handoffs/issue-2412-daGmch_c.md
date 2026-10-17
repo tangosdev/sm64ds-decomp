@@ -22,7 +22,7 @@ This document describes this commit. The queue records its immutable output SHA.
   integration-lane state this task does not own.
 - Separate evidence commits and required artifacts in this commit: no separate
   evidence commit. Facts: `notes/data/class-facts/daGmch_c.json` (unchanged from
-  the input). dScStage_c artifacts present: `src/actors/daGmch_c.cpp`,
+  the input). dScStage_c artifacts present: `src/game/actors/d_a_gmch.cpp`,
   [config/tu_manifest.d/ov081/daGmch_c.json](../../../config/tu_manifest.d/ov081/daGmch_c.json).
 - Next action, responsible role and blockers: independent verification of this
   commit (verifier). Blocker for integration only, not for verification:
@@ -43,7 +43,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `_ZTS8daGmch_c` at 0x02128bc8, `_ZTI8daGmch_c` at 0x02128bd4, vtable storage
   [ov081](../../../config/arm9/overlays/ov081/symbols.txt):`[0x02128bfc,0x02128c80)` with the public address point at 0x02128c04.
 - Reserved source/header/config surfaces actually touched by this commit:
-  `src/actors/daGmch_c.cpp` and `include/daGmch_c.h` only. Two generated notes
+  `src/game/actors/d_a_gmch.cpp` and `include/daGmch_c.h` only. Two generated notes
   were re-derived because this edit changed what they measure (the TU's line
   count in `notes/data/tu-promotion-queue.tsv`, 1207 -> 1119; the strict
   CONVERTED count in `notes/cpp-tu-current-state.md`, 2698 -> 2700); each diff is
@@ -156,7 +156,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Proof
 
 All checks below ran in a private wired worktree on this commit's tree
-(`include/daGmch_c.h`, `src/actors/daGmch_c.cpp` and the two regenerated notes
+(`include/daGmch_c.h`, `src/game/actors/d_a_gmch.cpp` and the two regenerated notes
 staged; nothing else differs from the input), pinned compiler mwccarm 2004/b56,
 base for `--changed`/ratchet comparisons `2996608719a316a98d0c5da24ff90e45b00ac550`.
 Logs are private `build/` files named below; they are not committed.
@@ -175,7 +175,7 @@ Logs are private `build/` files named below; they are not committed.
   TEXT-VERIFIED; manifest byte-identical after the run (`verify-batch2.log`).
   `python tools/tu_order_check.py ov081/daGmch_c` -- exit 0, all 37 in ROM
   order, the two extras (`_ZN8daGmch_cD2Ev`, `_ZN7Vector3D1Ev`) licensed by the
-  manifest. `python tools/prepush_linkcheck.py --files src/actors/daGmch_c.cpp`
+  manifest. `python tools/prepush_linkcheck.py --files src/game/actors/d_a_gmch.cpp`
   -- exit 0 but NOT a proof for this shape: it keys files by symbol and reports
   `NO-SYM` for a promoted TU (1 checked, 0 verified, 0 blocking). Consumers:
   `python tools/affected_src.py include/daGmch_c.h` (and the retired coined
@@ -192,7 +192,7 @@ Logs are private `build/` files named below; they are not committed.
   baseline control and compares every module. The manifest's stored
   `scratch-link-verified` block dates from before enrollment and is carried,
   not re-established, by this commit.
-  `python tools/romdata_check.py --files src/actors/daGmch_c.cpp` -- exit 0; 9
+  `python tools/romdata_check.py --files src/game/actors/d_a_gmch.cpp` -- exit 0; 9
   data symbols emitted, 5 VERIFIED (168 bytes equal), 4 PARTIAL, 0 DIFFERS,
   0 UNNAMED (`gate-romdata.log`, `romdata-batch2.json`). The wording "the
   ancestor `_ZTI/_ZTS` records" was inexact: every `_ZTI` record is VERIFIED
@@ -255,7 +255,7 @@ integration stage added on top of it; it changes no source, header or manifest.
 - **`attribution.json`**: the producer correctly left this file alone as
   integration-lane state. The fold moves 37 symbols out of 37 one-function shards
   into one TU, which hands their credit to whoever pushed the fold. 37
-  `src/actors/daGmch_c.cpp#<symbol>` override rows are added here, each carrying
+  `src/game/actors/d_a_gmch.cpp#<symbol>` override rows are added here, each carrying
   the author `chaos_db_ci` resolves for that symbol's own legacy shard on the
   merge base -- the same key form and the same lineage computation
   `tools/tu_promote.py` would have written. Of the 37, six are owed to named

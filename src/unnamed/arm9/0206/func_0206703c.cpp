@@ -18,16 +18,14 @@ int func_0206703c(unsigned int arg0, int sel) {
         _ZN3IRQ7RestoreEj(saved);
         return 0;
     }
-    if (data_020a9db8 == 0) goto fail;
-    if (func_02065edc(arg0) == 0) goto fail;
-    {
+    if (data_020a9db8 != 0 && func_02065edc(arg0) != 0) {
         unsigned int i = arg0 - 1;
-        if (*(int*)((char*)data_020a9db8 + i * 4 + 0x14e8) != code) goto fail;
-        *(short*)((char*)data_020a9db8 + i * 2 + 0x1754) = (short)val;
+        if (*(int *)((char *)data_020a9db8 + i * 4 + 0x14e8) == code) {
+            *(short *)((char *)data_020a9db8 + i * 2 + 0x1754) = (short)val;
+            _ZN3IRQ7RestoreEj(saved);
+            return 1;
+        }
     }
-    _ZN3IRQ7RestoreEj(saved);
-    return 1;
-fail:
     _ZN3IRQ7RestoreEj(saved);
     return 0;
 }

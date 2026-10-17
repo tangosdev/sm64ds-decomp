@@ -18,6 +18,7 @@ Without --version, compiles once with the canonical version (2004/b56). Use
 ``--all`` to sweep every known mwccarm version, or ``--trio`` for the 1.2 trio.
 """
 import argparse
+import hashlib
 import pathlib
 import subprocess
 import tempfile
@@ -149,6 +150,33 @@ def target_bytes(addr: int, size: int, bin_path: pathlib.Path = ARM9, base: int 
     return data[off:off + size]
 
 
+# Off unless a caller that holds the tree still turns it on; see memoize_compiles.
+_COMPILE_MEMO = None
+
+
+def memoize_compiles(enabled=True):
+    """Reuse compile_c results for the rest of this process.
+
+    For a caller that checks ONE fixed tree. pr_linkcheck builds one object per owned
+    symbol, and reloc_audit.winning_object hands each of those a fresh temp copy of the
+    source -- so a translation unit owning 612 functions (src/game/player/Player.cpp)
+    was compiled 612+ times, once per symbol, for the same bytes every time. Under Wine
+    on the validator that was a 40-minute link check for a one-file PR.
+
+    The key is what reaches the compiler: the source's bytes and basename (mwcc names a
+    TU's static initializer after the file), the version, the flags and the include
+    search path. Header CONTENTS are not in it, which is why this is opt-in: match.py,
+    wallcrack and swarm edit headers between compiles in one process and must not see
+    a stale object. A tree that is not being edited cannot hit that.
+
+    Compile failures are remembered too -- a version that rejects the source rejects it
+    on every symbol -- but a timeout is not, since that says more about the box's load
+    than about the source.
+    """
+    global _COMPILE_MEMO
+    _COMPILE_MEMO = {} if enabled else None
+
+
 def compile_c(cfile: pathlib.Path, version: str, flags: str,
               include_dirs=()) -> bytes | None:
     """Compile C -> object with the given mwccarm version. Returns object bytes."""
@@ -156,6 +184,32 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
     if not exe.is_file():
         print(f"  ! no compiler at {version}")
         return None
+    # Candidate-specific includes come first so an external workbench can be
+    # verified against its own headers. The canonical repository include tree
+    # is always available and is the normal path used by committed sources.
+    search = [pathlib.Path(p).resolve() for p in include_dirs]
+    canonical = INCLUDE.resolve()
+    if canonical not in search:
+        search.append(canonical)
+    memo, key = _COMPILE_MEMO, None
+    if memo is not None:
+        try:
+            key = (hashlib.sha256(pathlib.Path(cfile).read_bytes()).hexdigest(),
+                   pathlib.Path(cfile).name, version, flags, tuple(map(str, search)))
+        except OSError:
+            key = None
+        if key is not None and key in memo:
+            return memo[key]
+    obj = _compile_c_uncached(cfile, exe, version, flags, search)
+    if key is not None and obj is not _TIMED_OUT:
+        memo[key] = obj
+    return None if obj is _TIMED_OUT else obj
+
+
+_TIMED_OUT = object()
+
+
+def _compile_c_uncached(cfile, exe, version, flags, search):
     # Cross-run the Windows compiler under an emulator when asked: the PR-validator
     # sandbox runs this in a Linux container and sets MWCCARM_LAUNCHER=wine so the PE is
     # invoked via Wine. Unset on native Windows -> the exe is run directly, so this is a
@@ -174,13 +228,6 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
     with tempfile.TemporaryDirectory() as td:
         out_o = pathlib.Path(td) / "out.o"
         env = dict(os.environ, LM_LICENSE_FILE=str(LICENSE))
-        # Candidate-specific includes come first so an external workbench can be
-        # verified against its own headers. The canonical repository include tree
-        # is always available and is the normal path used by committed sources.
-        search = [pathlib.Path(p).resolve() for p in include_dirs]
-        canonical = INCLUDE.resolve()
-        if canonical not in search:
-            search.append(canonical)
         cmd = [*launcher, str(exe), *flags.split()]
         for inc in search:
             cmd.extend(["-i", str(inc)])
@@ -189,7 +236,7 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
             r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=90)
         except subprocess.TimeoutExpired:
             print(f"  ! compile timed out ({version})")
-            return None
+            return _TIMED_OUT
         if r.returncode != 0 or not out_o.is_file():
             detail = "\n".join(s for s in (r.stdout.strip(), r.stderr.strip()) if s)
             print(f"  ! compile failed ({version}): {detail[:500]}")

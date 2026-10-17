@@ -7,7 +7,7 @@ No PR, remote source publication, or merge is authorized by this handoff.
 
 ## Production result
 
-`src/actors/dScene_c.cpp` replaces 21 per-function sources in the default stock
+`src/game/stages/d_scene.cpp` replaces 21 per-function sources in the default stock
 build. The complete arm9 text entry owns exactly `0x0202e140..0x0202ec9c`
 (2,908 bytes, 21 functions). The shadow source is retired. Tracked C/C++ files
 under `src` fall from 5,148 to 5,128; no source coverage is relinquished.

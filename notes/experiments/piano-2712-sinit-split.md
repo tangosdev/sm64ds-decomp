@@ -110,3 +110,6 @@ unlicensed content in text-only multi-symbol object: section[5] .text size 0x100
   walls for the move itself. The file's comment names only the packaging
   wall; the experiment shows two more in front of it.
 - verdict: CONSTRAINT SUPPORTED
+
+Current source locations after PR #3840: [src/game/actors/d_a_piano.cpp](../../src/game/actors/d_a_piano.cpp).
+The experiment and commands above retain the paths at `tested_commit`.

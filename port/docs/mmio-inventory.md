@@ -80,8 +80,8 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 ## Address-passed sites (not lvalue-redirectable)
 
 - `src/game/actors/d_a_obj_fm_battan.cpp:148` — `_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &pos, 0x04000000);`
-- `src/func_02053c40.c:19` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4000008, 0, 0x60);`
-- `src/func_02053c40.c:21` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4001000, 0, 0x70);`
+- `src/engine/gx/GX_Init.cpp:87` — `DMASyncFillTransfer(data_02099fd0, REG_BG0CNT_ADDR, 0, 0x60);`
+- `src/engine/gx/GX_Init.cpp:89` — `DMASyncFillTransfer(data_02099fd0, REG_DB_DISPCNT_ADDR, 0, 0x70);`
 - `src/engine/gx/G3X.cpp:83` — `func_0205a064((&data_02099fd0)[0], 0x4000330, 0, 0x10, 0, 0);`
 - `src/engine/gx/G3X.cpp:84` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4000360, 0, 0x50);`
 - `src/func_02055780.c:4` — `func_020553c0(0x4000400);`

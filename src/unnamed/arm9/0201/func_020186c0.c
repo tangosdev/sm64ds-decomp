@@ -18,17 +18,17 @@ int func_020186c0(unsigned int val)
     if (val < 0x8000) return 0;
     e = data_0208ecf4;
     for (i = 0; i < 0xd; i++) {
-        if (e->f8 > val) goto next;
-        if (val >= e->fa) goto next;
-        if (e->f0 == 0) {
-            if (LoadArchive(i)) data_0208eb54 = (unsigned char)i;
+        if (e->f8 <= val && val < e->fa) {
             if (e->f0 == 0) {
-                Crash();
-                return 0;
+                if (LoadArchive(i))
+                    data_0208eb54 = (unsigned char)i;
+                if (e->f0 == 0) {
+                    Crash();
+                    return 0;
+                }
             }
+            return func_0204ede8(e->f0, val - e->f8);
         }
-        return func_0204ede8(e->f0, val - e->f8);
-    next:
         e++;
     }
     Crash();

@@ -184,7 +184,7 @@ def check_file(path, idx, ledger):
 
     WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For a legacy
     one-function source those are the same string. For a merged translation unit
-    they are not: `src/actors/ActorBase_SceneNode.cpp` holds two functions and is named
+    they are not: `src/runtime/actor/ActorBase_SceneNode.cpp` holds two functions and is named
     after neither, so the stem resolved to nothing and the whole file was reported
     `unresolved` with `0` slots checked -- a file the PR comment listed as examined and
     that nothing had looked at. It could not fall through to the passenger loop either,
@@ -349,6 +349,12 @@ def main():
                     help="files to link-check in parallel")
     args = ap.parse_args()
 
+    # This run checks one tree that nothing edits underneath it, so an identical compile
+    # can be reused -- and a many-function TU otherwise recompiles once per symbol. See
+    # match.memoize_compiles.
+    import match as M
+    M.memoize_compiles()
+
     import reloc_audit as RA
     _NAME_INDEX = RA.build_name_index()
     idx = build_symbol_index()
@@ -396,7 +402,7 @@ def main():
     # NO-SYM is the fourth, and it was missing. A file that does not compile, or compiles
     # without emitting its symbol, is graded NO-SYM — and NO-SYM was not in this set, so
     # the worst possible outcome scored as a pass. The func_ov002_020d6c60 shard (since
-    # folded into src/actors/Player.cpp) was unbuildable from #866 (`illegal function
+    # folded into src/game/player/Player.cpp) was unbuildable from #866 (`illegal function
     # overloading`, its local declaration disagreeing with decl_common.h), carried no
     # NONMATCHING banner, and was edited by a merged PR while broken. A gate that cannot fail the file it could not even build is
     # not gating; a self-declared draft still gets the DRAFT pass below.

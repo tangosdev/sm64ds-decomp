@@ -4,8 +4,8 @@ extern u64 func_020427c4(void);
 extern void *func_0202e118(void);
 extern int func_020441bc(int i);
 extern int GetActorDebugName(unsigned int i);
-extern int _ZN4Heap6IntactEv(void *heap);
-extern int _ZN4Heap21MaxAllocationUnitSizeEv(void *heap);
+extern int _ZN5mHeap6Heap_t6IntactEv(void *heap);
+extern int _ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv(void *heap);
 
 extern void nds_printt(void *dst, const char *fmt, u32 v);
 extern void nds_print(void *dst, const void *str);
@@ -97,16 +97,16 @@ void ShowCrashScreen(void)
         nds_print(scr + 0x400, (const void *)data_0209cdd4);
     }
 
-    if (_ZN4Heap6IntactEv(data_020a0e9c)) {
-        int mx = _ZN4Heap21MaxAllocationUnitSizeEv(data_020a0e9c);
+    if (_ZN5mHeap6Heap_t6IntactEv(data_020a0e9c)) {
+        int mx = _ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv(data_020a0e9c);
         nds_printf(scr + 0x500, data_0208e610,
             (*(int *)((char *)data_020a0e9c + 8) - mx) / 1024, mx / 1024);
     } else {
         nds_print(scr + 0x500, data_0208e624);
     }
 
-    if (_ZN4Heap6IntactEv(data_020a0eac)) {
-        int mx = _ZN4Heap21MaxAllocationUnitSizeEv(data_020a0eac);
+    if (_ZN5mHeap6Heap_t6IntactEv(data_020a0eac)) {
+        int mx = _ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv(data_020a0eac);
         nds_printf(scr + 0x540, data_0208e634,
             (*(int *)((char *)data_020a0eac + 8) - mx) / 1024, mx / 1024);
     } else {

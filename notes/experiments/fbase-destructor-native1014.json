@@ -1,0 +1,525 @@
+{
+  "task_id": "fbase-destructor-native1014",
+  "base": "85c0c53d72e4a15537f1162272383752f63a2fd1",
+  "checkpoint": "094e66f11ea750bc92d89249d6d205c2c8b91818",
+  "state": "Current production byte/object, scoped/global declaration and static gates passed. Exact-final independent Source acceptance remains pending.",
+  "author": "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+  "issue_url": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+  "predecessor_tasks": [
+    "fbase-process-readable-0923",
+    "fbase-process-pr3144-composition-0925"
+  ],
+  "source_quality": "partial",
+  "source_sha256": "ced8474f887b23ca7cb71fa860979050c2f8b3ac3731de65d14383dbebee0710",
+  "manifest_sha256": "d5cf95ed3f59bff646b28e919f9e3a800105beadbfbb1d96fab006ec7c80e21b",
+  "source_delta": "Replace three handwritten D1/D0/D2 wrappers with the genuine empty destructor. Remove unused raw node-destructor and vtable externs. Correct the Source banner/group comments. Compiler owns Manager/process-node teardown and actor-heap delete. Other27 function bodies unchanged.",
+  "manifest_delta": "Only boundary_evidence entries5/6 wording: retain existing free InitResources ownership and document measured raw+8 to prepared slot-array rebiasing. No policies, names, aliases, storage, enrollment or ranges change.",
+  "current_scoped_assessment": {
+    "summary": "Restore the previously native sharded fBase destructor form into the promoted ActorBase TU.",
+    "completion": "partial",
+    "native_group": [
+      {
+        "symbol": "_ZN7fBase_cD2Ev",
+        "address": "0x02043d48",
+        "bytes": 48
+      },
+      {
+        "symbol": "_ZN7fBase_cD0Ev",
+        "address": "0x02043d78",
+        "bytes": 68
+      },
+      {
+        "symbol": "_ZN7fBase_cD1Ev",
+        "address": "0x02043dbc",
+        "bytes": 48
+      }
+    ],
+    "semantics": "The actual Manager member owns behaviorNode then renderNode, so native destruction tears down render then behavior; fBase_c inline operator delete selects the actor heap for D0. SceneNode remains trivially destructible. Raw vptr writes, manual node-destructor calls and three hand-spelled function bodies are removed.",
+    "historical_scope": "The exact two original finding dictionaries remain historical. Their old25-function counts and explicit-destructor partial subclaim are superseded by this measured30-function native-destructor slice. Their callback and broader reconstruction deferrals remain."
+  },
+  "restoration_provenance": {
+    "classification": "Restoration of previously native sharded destructor forms into the promoted ActorBase TU, not first recovery.",
+    "prepromotion_source": "a7193a0ec75a46c652ca629c8223fdbd59acef6a^:src/_ZN7fBase_cD1Ev.cpp",
+    "actual_source": "#include fBase_c.h; fBase_c::~fBase_c() {}",
+    "recovery_main_ancestor": "67ea7a470aa430070c7d259269a819c7ce470ee7",
+    "recovery_author": "Andrew <andrewboudreau@gmail.com>",
+    "earlier_node_lifetime_commit": "19f4cbf16d653c8c2313722bb874aafe7e6c84e3",
+    "earlier_manager_commit": "c7ba004d5daf25d89074eb51f0b630ad466677cb",
+    "earlier_recorded_author": "= <andrewboudreau@gmail.com>",
+    "earlier_commit_scope": "Historical recovered-branch records, not ancestors of current main. Main recovery is67ea7a47; duplicate1c3cbdac and earlier19f/c7ba ancestry checks return1.",
+    "process_adoption_commit": "b88dbbebdfcb4f61f41480e0302283c4ca0b7486",
+    "process_adoption_pr": 3144
+  },
+  "historical_findings": [
+    {
+      "disposition": "deferred",
+      "id": "FBASE-CALLBACK-CONTRACT-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+      "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+    },
+    {
+      "disposition": "deferred",
+      "id": "FBASE-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+      "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+    }
+  ],
+  "historical_lineage": {
+    "historical_task": "fbase-process-readable-0923",
+    "historical_task_phase": "cancelled",
+    "historical_reviewed_commit": "52a60fd1cf62315fea3aea36a26dc871fc1dc3ae",
+    "historical_reviewed_base": "83dbedd19f176eb6e2e2e677689ac9fb73f7999e",
+    "producer_sessions": [
+      "codex-root-fbase-readable-0923"
+    ],
+    "reviewer_session": "codex-fbase-verifier-0923",
+    "findings": [
+      {
+        "disposition": "deferred",
+        "id": "FBASE-CALLBACK-CONTRACT-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+        "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+      },
+      {
+        "disposition": "deferred",
+        "id": "FBASE-RECONSTRUCTION-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+        "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+      }
+    ],
+    "scope": "Preserve historical dictionaries verbatim; old25-function/no-native-destructor statements are historical, and current30-function/dtor scope must be recorded separately."
+  },
+  "historical_failed_composition": {
+    "task": "fbase-process-pr3144-composition-0925",
+    "phase": "cancelled",
+    "input_commit": "c50c07bac79b8b2b5c88604321d6f7cb60ff6f34",
+    "base": "7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f",
+    "reported_finding_id": "FBASE-COMPOSITION-DAONMS-01",
+    "exact_queue_next_action": "Superseded by explicit producer continuation for PR3144. Independent verifier preserved failed c50c07bac79b8b2b5c88604321d6f7cb60ff6f34/base7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f report SHA256 b46f80ec9c93ad85aecdccab387822cfff17d952a54b4db96b36033fe27b22a7 and released own lease. FBASE-COMPOSITION-DAONMS-01 requires exact measured Frame515-to518 manifest identity repair plus fresh independent all12-path/current-consumer/fullROM verification. Preserve original source authors, accepted historical52a proof, prior findings and PR3144; no main merge.",
+    "recorded_reviewer": "codex-fbase-composition-verifier-0925",
+    "artifact_status": "The recorded C:/tmp/sm64ds-fbasev0923/build worktree is absent. Exact finding dictionary is not present in this task outputs (empty); preserve the reported ID and failure facts without inventing a dictionary or acceptance.",
+    "current_scope": "Historical header-fanout/Frame515-to518 composition failure. Main PR3144 commitb88dbbeb explicitly includes that manifest identity repair; current destructor-only winner changes no header. No new whole-daOnms review is claimed."
+  },
+  "base_input_comparison": {
+    "scout_base": "efd33df972c9475494a18548d0248454c0e2668f",
+    "production_base": "85c0c53d72e4a15537f1162272383752f63a2fd1",
+    "blobs": {
+      "src/actors/ActorBase.cpp": {
+        "scout": "d183c6cade102e05711e48f29a3c4ba5c60a362b",
+        "production": "d183c6cade102e05711e48f29a3c4ba5c60a362b"
+      },
+      "config/tu_manifest.d/arm9/ActorBase.json": {
+        "scout": "58871db14b8a0fdbc9aaa49bf30f9e32303ef4df",
+        "production": "58871db14b8a0fdbc9aaa49bf30f9e32303ef4df"
+      },
+      "include": {
+        "scout": "c79a00fb061e7ba1710053ccfe5ee542cdc6914c",
+        "production": "c79a00fb061e7ba1710053ccfe5ee542cdc6914c"
+      },
+      "tools": {
+        "scout": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+        "production": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec"
+      },
+      "config": {
+        "scout": "df77857bea28beb682e2150b64dc0fce2f18450b",
+        "production": "df77857bea28beb682e2150b64dc0fce2f18450b"
+      },
+      "port": {
+        "scout": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33",
+        "production": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+      }
+    },
+    "delta": [
+      "notes/experiments/player-file-handles1014.json",
+      "src/unnamed/ov002/__sinit_ov002_021019d0.c"
+    ],
+    "canary": [
+      true,
+      "2004/b56"
+    ]
+  },
+  "input_blobs": {
+    "src/actors/ActorBase.cpp": {
+      "base": "d183c6cade102e05711e48f29a3c4ba5c60a362b",
+      "checkpoint": "25e39ee7cd6da91c4d05786b1205ded7f1400f13"
+    },
+    "config/tu_manifest.d/arm9/ActorBase.json": {
+      "base": "58871db14b8a0fdbc9aaa49bf30f9e32303ef4df",
+      "checkpoint": "cd1fbbc301e157d059e69d11bf6a88eb8807df2e"
+    },
+    "include/fBase_c.h": {
+      "base": "36447600658789ad718af7f0899c0dfddb0d3b37",
+      "checkpoint": "36447600658789ad718af7f0899c0dfddb0d3b37"
+    },
+    "include/fListNode.h": {
+      "base": "f06e4696d2de7d8c5cc65334226c24d2949a4a03",
+      "checkpoint": "f06e4696d2de7d8c5cc65334226c24d2949a4a03"
+    },
+    "include/Heap.h": {
+      "base": "4d08589b867d6dee3c40e7d6cd571b909623cd9f",
+      "checkpoint": "4d08589b867d6dee3c40e7d6cd571b909623cd9f"
+    },
+    "src/_ZN11fLiNdBaPr_cD1Ev.cpp": {
+      "base": "58eaf98e2561a954eda8586cff7f65db81395bd2",
+      "checkpoint": "58eaf98e2561a954eda8586cff7f65db81395bd2"
+    },
+    "src/engine/heap/Heap.cpp": {
+      "base": "f242ddf8d69236ae1f30471d03d95e7fb02ee039",
+      "checkpoint": "f242ddf8d69236ae1f30471d03d95e7fb02ee039"
+    }
+  },
+  "verification": {
+    "whole_object": {
+      "base": "85c0c53d72e4a15537f1162272383752f63a2fd1",
+      "candidate": "src\\actors\\ActorBase.cpp",
+      "candidate_sha256": "ced8474f887b23ca7cb71fa860979050c2f8b3ac3731de65d14383dbebee0710",
+      "manifest": "config/tu_manifest.d/arm9/ActorBase.json",
+      "manifest_policy_and_ownership_unchanged": true,
+      "manifest_prose_entries_changed": [
+        5,
+        6
+      ],
+      "header_unchanged": true,
+      "strict_rows": 30,
+      "blind": 0,
+      "raw_bytes": 11336,
+      "prepared_bytes": 11336,
+      "baseline_raw_sha256": "e12f688685e6dd84fb9898936b841438ad2dd1aa632c609cce53e750469db351",
+      "candidate_raw_sha256": "691f53b733dbe6b65366f5d04e6d056acade50ed3184e1d6e68f3dde2e637efb",
+      "prepared_sha256": "16d6a44ef68b4e8c01611a6ff35a41262fa8534135f0e5df54a5c09dd0dff5ac",
+      "whole_prepared_container_identical": true,
+      "whole_prepared_graph_identical": true,
+      "raw_symbol_entries_identical": true,
+      "raw_relocations": 111,
+      "prepared_relocations": 98,
+      "raw_relocation_differences": [
+        {
+          "before": {
+            "section": 35,
+            "offset": 44,
+            "type": 2,
+            "target": "_ZTV7fBase_c",
+            "index": 91,
+            "addend": 0
+          },
+          "after": {
+            "section": 35,
+            "offset": 44,
+            "type": 2,
+            "target": "_ZTV7fBase_c",
+            "index": 91,
+            "addend": 8
+          }
+        },
+        {
+          "before": {
+            "section": 37,
+            "offset": 60,
+            "type": 2,
+            "target": "_ZTV7fBase_c",
+            "index": 91,
+            "addend": 0
+          },
+          "after": {
+            "section": 37,
+            "offset": 60,
+            "type": 2,
+            "target": "_ZTV7fBase_c",
+            "index": 91,
+            "addend": 8
+          }
+        },
+        {
+          "before": {
+            "section": 39,
+            "offset": 44,
+            "type": 2,
+            "target": "_ZTV7fBase_c",
+            "index": 91,
+            "addend": 0
+          },
+          "after": {
+            "section": 39,
+            "offset": 44,
+            "type": 2,
+            "target": "_ZTV7fBase_c",
+            "index": 91,
+            "addend": 8
+          }
+        }
+      ],
+      "owned_data_bss_init_ctor_metadata": 0,
+      "emitted_nontext": [],
+      "vtable": "_ZTV7fBase_c remains SHN_UNDEF; native InitResources is not adopted, so no key-function or vtable/RTTI storage ownership change.",
+      "standard_existing_compiler_only_policies": [
+        {
+          "symbol": "_ZN7fBase_cC1Ev",
+          "disposition": "deadstrip",
+          "reason": "mwccarm emits the complete-object constructor beside the licensed base-object C2; the ROM has no configured C1 home and this TU's surviving functions do not reference it"
+        },
+        {
+          "symbol": "_ZN7fBase_c7ManagerD1Ev",
+          "disposition": "deadstrip",
+          "reason": "mwccarm emits the inline Manager cleanup helper while lowering fBase_c's constructor; it has no configured ROM home and no surviving reference"
+        }
+      ],
+      "source_benefit": "One actual destructor definition replaces three handwritten extern-C ABI bodies. Actual Manager/fLiNdBaPr_c lifetimes emit reverse node destruction and existing fBase_c::operator delete emits actor-heap release; no raw vptr or fake wrapper.",
+      "source_scope": "Production Source plus two manifest provenance entries and report only; header, policies, ledger and enrollment unchanged.",
+      "checkpoint": "094e66f11ea750bc92d89249d6d205c2c8b91818"
+    },
+    "canonical_node_and_deallocator": [
+      {
+        "source": "src/_ZN11fLiNdBaPr_cD1Ev.cpp",
+        "result": {
+          "name": "_ZN11fLiNdBaPr_cD1Ev",
+          "module": "arm9",
+          "addr": "0x020440e8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      },
+      {
+        "source": "src/engine/heap/Heap.cpp",
+        "result": {
+          "name": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
+          "module": "arm9",
+          "addr": "0x0203c1e8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      }
+    ],
+    "rombuild": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "log": "build/fbase-destructor-native1014/rombuild.log",
+      "log_sha256": "b053707644d0e877cf9c62c78186ec68a1de0b6b125f11ef77fd3f0f0f2f92c9",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "source_function_counts_observed": [
+        5888,
+        11334
+      ],
+      "count_scope": "Official final production analysis.sourceBuild, with any earlier baseline count separately observed.",
+      "baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "new_symbol_errors": [],
+      "official_report_sha256": "7ae72b615496481af910b7fc05724c5faa3e65ba7a69b53b397ff3705e4ddcfc",
+      "baseline_report_sha256": "b86b47084f93c8276d52a6776b1bffa36f43920a4cfc48ef2860960be5d443bc",
+      "baseline_control_scope": "Fresh official baseline control ran; modules pass and its pre-existing DSD symbol errors are retained.",
+      "no_rom_scope": "--no-rom does not claim a newly assembled final candidate cartridge image."
+    },
+    "whole-proof": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "build\\fbase-destructor-native1014\\run-whole.py"
+      ],
+      "log": "build/fbase-destructor-native1014/whole-proof.log",
+      "log_sha256": "152f4af53d01553d12137092cf15f929add695691139b2bee41cb910c826989f"
+    },
+    "stock": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "85c0c53d72e4a15537f1162272383752f63a2fd1..094e66f11ea750bc92d89249d6d205c2c8b91818",
+        "--json",
+        "build\\fbase-destructor-native1014\\stock.json"
+      ],
+      "log": "build/fbase-destructor-native1014/stock.log",
+      "log_sha256": "3ee60d615b0c2f9913a781f730a5158fef517eafbdc76ee11588613a57e2f6e8",
+      "literal_range": "85c0c53d72e4a15537f1162272383752f63a2fd1..094e66f11ea750bc92d89249d6d205c2c8b91818",
+      "checked": 30,
+      "verified": 30,
+      "warnings": 0,
+      "blocking": 0
+    },
+    "decl": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "85c0c53d72e4a15537f1162272383752f63a2fd1"
+      ],
+      "log": "build/fbase-destructor-native1014/decl.log",
+      "log_sha256": "5ab1d801469f1c3d935afb921d699a19508eef32ffa2c3d2acc3e21055b11bf1",
+      "scope": "468 files, including114 reached through12 changed type names;3263 scoped disagreements.",
+      "direct_native_destructor_collection": [
+        {
+          "symbol": "_ZN7fBase_cD1Ev",
+          "return_type": "<destructor fBase_c>",
+          "params": [],
+          "is_member": true
+        }
+      ],
+      "whole_comparison": {
+        "before": 7495,
+        "after": 7495,
+        "new": [],
+        "removed": [],
+        "native_destructor_collection": [
+          {
+            "symbol": "_ZN7fBase_cD1Ev",
+            "return_type": "<destructor fBase_c>",
+            "params": [],
+            "is_member": true
+          }
+        ]
+      },
+      "result": "No new disagreement keys or local header redeclarations."
+    },
+    "decl-global": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--check"
+      ],
+      "log": "build/fbase-destructor-native1014/decl-global.log",
+      "log_sha256": "5b41becd657c00d7bb65d689f3722e30dce2b9d6898dec715cb6dfe55aa4da92",
+      "result": "PASS on actual85c base containing mergedPR3829. Existing banked disagreements remain; no baseline update.",
+      "prerequisite_scope": "The merged opaque initializer repair remains independently owned. Its collector-omission/layout qualification is in unchanged notes/experiments/player-file-handles1014.json, not claimed as this destructor work."
+    },
+    "port": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/port_refcheck.py"
+      ],
+      "log": "build/fbase-destructor-native1014/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "references_checked": 267
+    },
+    "langmode": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "log": "build/fbase-destructor-native1014/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+    },
+    "conflict": {
+      "exit_code": 0,
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_tubuild_conflicts.py"
+      ],
+      "log": "build/fbase-destructor-native1014/conflict.log",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "manifest_entries": 429,
+      "sources_read": 429,
+      "recorded_conflicts": 6
+    }
+  },
+  "global_data_advisory": {
+    "verified": 969,
+    "partial": 1519,
+    "differs": 1,
+    "unnamed": 21,
+    "totalRecords": 5282
+  },
+  "metadata_ownership": "This object emits and owns zero data/BSS/init/ctor/RTTI records. _ZTV7fBase_c remains an undefined import. Existing free InitResources remains, so native destructor adoption does not change key-function or vtable storage ownership. Complete prepared relocation graph and all30strict checks prove the canonical vptr and call destinations.",
+  "compiler_only_policy": [
+    {
+      "symbol": "_ZN7fBase_cC1Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the complete-object constructor beside the licensed base-object C2; the ROM has no configured C1 home and this TU's surviving functions do not reference it"
+    },
+    {
+      "symbol": "_ZN7fBase_c7ManagerD1Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the inline Manager cleanup helper while lowering fBase_c's constructor; it has no configured ROM home and no surviving reference"
+    }
+  ],
+  "deadstrip_plan": {
+    "keep": null,
+    "drop": [
+      41,
+      42,
+      43,
+      44
+    ],
+    "externalise": [],
+    "dead": [
+      "_ZN7fBase_c7ManagerD1Ev",
+      "_ZN7fBase_cC1Ev"
+    ],
+    "referenced": [],
+    "rebase": [
+      35,
+      37,
+      39,
+      45
+    ],
+    "error": null
+  },
+  "tested_build_trees": {
+    "src": "7d341050a9382f206e3fc6329b353326fe9f013e",
+    "include": "c79a00fb061e7ba1710053ccfe5ee542cdc6914c",
+    "config": "ce31c157f04b3e29b3b6fcaffab7f98bf3100b95",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "artifacts": {
+    "winner/proof.json": "47a67f58d01f1b840fb84aba77912486774f4d643299f1a24795aab7e336f17e",
+    "winner/checks.json": "1b44afab3b9cfae3dc562d04321620ae93755057b0c83a58a5bc5d29fe14460f",
+    "winner/graphs.json": "33983e015877c1fcc2843f21a5ed9a224f304ed91aaf0447c4b4949c5ebd44d5",
+    "winner/deadstrip-plan.json": "15e2f15476aa2b1213ec3c7300e62124e71287992bf5111ba4c6e7d4343e056a",
+    "canonical-contracts.json": "257caede45d17d766c4401359f183ee70e6853e2509798bb3b8a94e1742864ff",
+    "decl-comparison.json": "27a0884d571798bec9396c70cd777d7598851574122a879586a2c5fc39b7fb03",
+    "stock.json": "7518090cfa1dabc86b86313b1d7dd31fefa81ce685d79544862b85cc36b93d7f",
+    "rombuild-report.json": "7ae72b615496481af910b7fc05724c5faa3e65ba7a69b53b397ff3705e4ddcfc"
+  },
+  "limitations": [
+    "Raw ELF identity is not claimed: exactly three _ZTV7fBase_c relocation addends change0to8. Actual unchanged ordinary rebiasing makes the complete prepared container identical.",
+    "Native InitResources and metadata data-policy experiments remain private and excluded; no ownership/enrollment/policy expansion.",
+    "The unsigned allocator bridge, callback int/bool contract boundary, list/heap raw views and broader root reconstruction remain partial under issue3012.",
+    "The two historical task records are cancelled, with accepted earlier outputs retained; no DONE claim is invented. The missing3144 failed-composition artifact and its reported finding ID remain explicitly recorded.",
+    "No shared header edits or header-fanout declaration changes. Existing compiler-only C1 and ManagerD1 dispositions are unchanged and rechecked by the standard whole-object graph predicate.",
+    "The historical mainancestor67ea7a47/PR1960 already supplied native sharded lifetimes; this restores their form into the promoted TU, not first recovery.",
+    "Baseline DSD symbol errors and global data advisory inventory remain; the production gate establishes zero new symbol errors.",
+    "Producer proof does not substitute for independent Source acceptance or publication approval."
+  ],
+  "report_only_finalization": "Only this report changes after checkpoint 094e66f11ea750bc92d89249d6d205c2c8b91818. Private build/fbase-destructor-native1014/final-binding.json binds final src/include/config/tools/port trees.",
+  "publication": "Queue producer offer remains held for root serialization. No public push, PR or main merge by this author."
+}

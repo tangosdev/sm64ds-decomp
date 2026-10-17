@@ -9,7 +9,7 @@
  * the base's 0x31-0x33 region, so no raw cast is needed anywhere here
  * (unlike wing_c/ana_c/board_c).
  *
- * FIELD EVIDENCE. The constructor (func_ov006_021101bc) placement-constructs
+ * FIELD EVIDENCE. The constructor (cMgSmartball_slot_c_Construct) placement-constructs
  * two 3-element, 8-byte-stride arrays via __cxa_vec_ctor(this+0x34,3,8,...)
  * and __cxa_vec_ctor(this+0x4c,3,8,...) -- that call is the source of the
  * two arrays' bounds and 8-byte stride. RestoreInitial is exhaustive over
@@ -53,7 +53,7 @@
  * zero pass jumps straight from the three flag bytes at 0x73-0x75 to the
  * s32 countdown at 0x78, skipping it entirely. UNMODELLED, NOT UNREAD.
  *
- * CONSTRUCTED BY func_ov006_021101bc, left a free function per the recipe
+ * CONSTRUCTED BY cMgSmartball_slot_c_Construct, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
  * reference renamed. */
 #ifndef CMGSMARTBALL_SLOT_C_H

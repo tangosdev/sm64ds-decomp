@@ -14,7 +14,7 @@
  * ABSTRACT: no classInit in this TU. The leaves own the factories
  * (ov022 daObjFlMaruta_c, ov030 daObjHmMaruta_c).
  *
- * deslop
+ * Remaining interfaces:
  * Leftover: func_ov080_021274ac / 0212714c / 021270dc keep C linkage.
  *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward InitResources,
  *   Behavior and CleanupResources into these exact symbols. No ROM-proven
@@ -35,11 +35,8 @@
  * Leftover: Matrix4x3_FromRotationXYZExt has no shared header.
  * Leftover: Vec3_Sub / LenVec3 / Vec3_HorzAngle / Vec3_Dist / AngleDiff:
  *   no shared header this TU can take without a campaign.
- * Leftover: (Vector3 *)&mPosX / &mRestPosX / &mHitPosX / &mCamSpacePosX:
- *   dActor_c stores the triples as scalars (issue #2566).
- * Leftover: Behavior's mRollAngVel / mSoundTimer walks keep
- *   (s16*)((c+0x300)+0x3c) / (c+0x33c) -- named mRollAngVel CSE's the
- *   field address (same class as daObjBC_Switch_c 0x32a).
+ * Leftover: (Vector3 *)&mRestPosX / &mHitPosX: the class stores those
+ *   triples as scalars (issue #2566).
  * Leftover: sine table data_02082214 (arm9).
  * Leftover: no return new -- this class is abstract; the leaves own
  *   classInit.
@@ -56,6 +53,7 @@
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "dBgW.h"
+#include "nitro/fx/fx.h"
 
 struct CLPS_Block;
 
@@ -93,7 +91,7 @@ extern s16 data_02082214[];
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
-void func_ov080_0212758c(daObjMaruta_c *self, char *other);
+void func_ov080_0212758c(daObjMaruta_c *self, dActor_c *other);
 void func_ov080_02127658(void *a, void *b, void *c);
 }
 
@@ -185,8 +183,7 @@ s32 daObjMaruta_c::Render()
 // @symbol func_ov080_0212714c
 extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
 {
-    char *c = (char *)self;
-    int tmp[3];
+    Vector3 tmp;
     int len;
     int ang;
     s16 v;
@@ -199,46 +196,40 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
         return 1;
 
     if (self->mHitByPlayer == 0) {
-        if (DecIfAbove0_Byte((u8 *)((int)c + 0x33e))) {
-            if (*(s16 *)((c + 0x300) + 0x3c) > 0) {
-                s16 *p = (s16 *)(int)(c + 0x33c);
-                *p = (s16)(*p - 0x10);
+        if (DecIfAbove0_Byte(&self->mHitTimer)) {
+            if (self->mRollAngVel > 0) {
+                self->mRollAngVel -= 0x10;
             } else {
-                s16 *p = (s16 *)(int)(c + 0x33c);
-                *p = (s16)(*p + 0x10);
+                self->mRollAngVel += 0x10;
             }
-            v = *(s16 *)((c + 0x300) + 0x3c);
+            v = self->mRollAngVel;
             if (v <= 0x10 && v >= (s16)-0x10)
-                *(s16 *)((c + 0x300) + 0x3c) = 0;
+                self->mRollAngVel = 0;
         } else {
-            v = *(s16 *)((c + 0x300) + 0x3c);
+            v = self->mRollAngVel;
             if (v != 0x100) {
                 if (v > 0x100) {
-                    s16 *p = (s16 *)(int)(c + 0x33c);
-                    *p = (s16)(*p - 0x10);
+                    self->mRollAngVel -= 0x10;
                 } else {
-                    s16 *p = (s16 *)(int)(c + 0x33c);
-                    *p = (s16)(*p + 0x10);
+                    self->mRollAngVel += 0x10;
                 }
-                v = *(s16 *)((c + 0x300) + 0x3c);
+                v = self->mRollAngVel;
                 if (v < 0x110 && v > 0xf0)
-                    *(s16 *)((c + 0x300) + 0x3c) = 0x100;
+                    self->mRollAngVel = 0x100;
             }
         }
-        if (Vec3_Dist((Vector3 *)&self->mPosX, (Vector3 *)&self->mRestPosX) < 0x2000)
-            *(s16 *)((c + 0x300) + 0x3c) = 0;
+        if (Vec3_Dist(&self->mPos, (Vector3 *)&self->mRestPosX) < 0x2000)
+            self->mRollAngVel = 0;
     } else {
-        horz = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mHitPosX);
+        horz = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mHitPosX);
         AngleDiff(horz, self->mAngleY);
         ang = AngleDiff(horz, self->mAngleY);
         if (ang > 0x4000) {
-            s16 *p = (s16 *)(int)(c + 0x33c);
-            *p = (s16)(*p - 0x10);
+            self->mRollAngVel -= 0x10;
         } else {
-            s16 *p = (s16 *)(int)(c + 0x33c);
-            *p = (s16)(*p + 0x10);
+            self->mRollAngVel += 0x10;
         }
-        v = *(s16 *)((c + 0x300) + 0x3c);
+        v = self->mRollAngVel;
         {
             int lim = 0x200;
             int nlim = -lim;
@@ -247,18 +238,17 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
             else if (v > lim)
                 v = (s16)lim;
         }
-        *(s16 *)((c + 0x300) + 0x3c) = v;
+        self->mRollAngVel = v;
     }
 
     {
-        int d = *(s16 *)((c + 0x300) + 0x3c);
-        int t = d + ((unsigned)(d >> 5) >> 26);
-        self->mHorzSpeed = (t >> 6) << 12;
+        int d = self->mRollAngVel;
+        self->mHorzSpeed = (d / 64) << 12;
     }
     self->UpdatePos(0);
-    Vec3_Sub(tmp, (Vector3 *)&self->mPosX, (Vector3 *)&self->mRestPosX);
-    len = LenVec3(tmp);
-    ang = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mRestPosX);
+    Vec3_Sub(&tmp, &self->mPos, (Vector3 *)&self->mRestPosX);
+    len = LenVec3(&tmp);
+    ang = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mRestPosX);
     ang = AngleDiff(ang, self->mAngleY);
     if (ang >= 0x7f00)
         ang = 0x8000;
@@ -275,19 +265,16 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
         self->mPosZ = self->mPrevPosZ;
         self->mHitTimer = 0xa;
     }
-    {
-        s16 *px = (s16 *)(int)(c + 0x8c);
-        *px = (s16)(*px + *(s16 *)((c + 0x300) + 0x3c));
-    }
+    self->mAngleX += self->mRollAngVel;
     {
         int mask = 0x1fff;
-        if ((self->mAngleX & mask) < 0x210 && *(s16 *)((c + 0x300) + 0x3c) != 0) {
-            if (*(u16 *)((c + 0x300) + 0x40) == 0) {
-                Sound::PlayBank3(0x25, *(const Vector3 *)&self->mCamSpacePosX);
-                *(u16 *)((c + 0x300) + 0x40) = 0xe;
+        if ((self->mAngleX & mask) < 0x210 && self->mRollAngVel != 0) {
+            if (self->mSoundTimer == 0) {
+                Sound::PlayBank3(0x25, self->mCamSpacePos);
+                self->mSoundTimer = 0xe;
             }
         } else {
-            DecIfAbove0_Short((u16 *)(c + 0x340));
+            DecIfAbove0_Short(&self->mSoundTimer);
         }
     }
     self->func_ov080_02127094();
@@ -326,11 +313,10 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
     self->mRestPosZ = self->mPosZ;
-    Vec3_Sub(&d, (Vector3 *)&self->mPosX, (Vector3 *)&self->mRestPosX);
+    Vec3_Sub(&d, &self->mPos, (Vector3 *)&self->mRestPosX);
     LenVec3(&d);
-    self->mPathAngDiff = AngleDiff(
-        Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mRestPosX),
-        self->mAngleY);
+    self->mPathAngDiff =
+        AngleDiff(Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mRestPosX), self->mAngleY);
     return 1;
 }
 
@@ -340,19 +326,19 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
 // @symbol func_ov080_0212758c
 /* BeforeClsn helper: if the other actor's actorID is PLAYER (0xbf), copy
    its mPos into mHitPos, arm mHitByPlayer / mHitTimer, and shove that
-   actor along mAngleY by half of mHorzSpeed. The volatile load and the
-   a1 rebase onto +0x5c are load-bearing. */
-extern "C" void func_ov080_0212758c(daObjMaruta_c *self, char *a1)
+   actor along mAngleY by half of mHorzSpeed. Retain the volatile actor-ID
+   read and the position view: separate scalar member loads change codegen. */
+extern "C" void func_ov080_0212758c(daObjMaruta_c *self, dActor_c *other)
 {
     int t;
     int half;
 
-    t = (*(volatile u16 *)(a1 + 0xc) == 0xbf);
+    t = (*(volatile u16 *)&other->actorID == 0xbf);
     if (t != 0) {
-        a1 = (char *)(int)(a1 + 0x5c);
-        self->mHitPosX = *(int *)a1;
-        self->mHitPosY = *(int *)(a1 + 4);
-        self->mHitPosZ = *(int *)(a1 + 8);
+        Vector3 *position = &other->mPos;
+        self->mHitPosX = position->x;
+        self->mHitPosY = position->y;
+        self->mHitPosZ = position->z;
         self->mHitByPlayer = 1;
         self->mHitTimer = 0x78;
 
@@ -361,16 +347,15 @@ extern "C" void func_ov080_0212758c(daObjMaruta_c *self, char *a1)
         {
             int idx = ((u16)self->mAngleY) >> 4;
             int sc = data_02082214[idx * 2];
-            int v = *(int *)a1;
-            *(int *)a1 = v + (int)(((long long)half * sc + 0x800) >> 12);
+            int v = position->x;
+            position->x = v + FX_MUL(half, sc);
         }
 
-        a1 = (char *)(int)(a1 + 8);
         {
             int idx = ((u16)self->mAngleY) >> 4;
             int sc = data_02082214[idx * 2 + 1];
-            int v = *(int *)a1;
-            *(int *)a1 = v + (int)(((long long)half * sc + 0x800) >> 12);
+            int v = position->z;
+            position->z = v + FX_MUL(half, sc);
         }
     }
 }
@@ -386,6 +371,6 @@ extern "C" void func_ov080_0212758c(daObjMaruta_c *self, char *a1)
 #pragma long_calls on
 extern "C" void func_ov080_02127658(void *a, void *b, void *c)
 {
-    func_ov080_0212758c((daObjMaruta_c *)b, (char *)c);
+    func_ov080_0212758c((daObjMaruta_c *)b, (dActor_c *)c);
 }
 #pragma long_calls off

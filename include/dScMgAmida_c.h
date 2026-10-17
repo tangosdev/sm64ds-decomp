@@ -5,7 +5,7 @@
 /* The destructor tears down four arrays with __cxa_vec_cleanup; both
    per-element destructors are no-ops. */
 extern "C" void __cxa_vec_cleanup(void *arr, int count, int elemSize, void *dtor);
-extern "C" void func_ov006_020d116c(void);
+extern "C" void AmidaPiece_ElemDtor(void);
 extern "C" void NullDestructor_0203d47c(void);
 
 /* One of the 0x80 falling pieces. Behavior adds vel into pos once a tick
@@ -27,14 +27,14 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    Field evidence and the full vtable census live in
    notes/minigame-provenance.md.
 
-   Unk36 (slot 36) is called directly. That only lands on the right
+   IsVariant2 (slot 36) is called directly. That only lands on the right
    slot because dScMgBase_c declares every virtual from 18 to 35; with a
-   gap there, mwcc gives Unk36 an earlier slot and Render grows by 0xc.
+   gap there, mwcc gives IsVariant2 an earlier slot and Render grows by 0xc.
 
    AfterCleanupResources returns early when vfSuccess != 2, which skips
    the base-class call as well. That is what the ROM does. Keep it.
 
-   Slot 35 is declared and renamed now -- `Virtual8C`, this class's override
+   Slot 35 is declared and renamed now -- `IsAltVariant`, this class's override
    at ov006:0x020d1170.  Nothing in THIS class calls it, which is why it was
    left alone for so long; the thirteen call sites are in four other leaves
    (dScMgCoin_c, dScMgPanel_c, dScMgSound_c, dScMgSnowball_c), each asking the
@@ -70,19 +70,19 @@ struct dScMgAmida_c : dScMgBase_c {
     virtual void AfterCleanupResources(u32 vfSuccess);   /* slot  5 */
     virtual s32  Behavior();                             /* slot  6 */
     virtual s32  Render();                               /* slot  9 */
-    /* Overrides dScMgBase_c's slot 18, so the base fixes its index.  Unk36
+    /* Overrides dScMgBase_c's slot 18, so the base fixes its index.  IsVariant2
        below is NOT an override: it is this class's own brand-new slot.
-       dScMgBase_c declares all eighteen of 18-35 now, so mwcc lands Unk36 on
+       dScMgBase_c declares all eighteen of 18-35 now, so mwcc lands IsVariant2 on
        36, which is where the ROM puts it.  That was the last DIFFERS in the
        minigame family and it is closed -- not by anything local to this
        header, but by the base finally spelling the slots underneath it.
-       Keep Unk36 LAST all the same: any further virtual added to dScMgBase_c
+       Keep IsVariant2 LAST all the same: any further virtual added to dScMgBase_c
        would take 36 and push it out again. */
-    virtual void OnYoshiTryEat(int arg);                 /* slot 18 */
-    virtual int  Virtual7C();                            /* slot 31 */
-    virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
-    virtual int  Virtual8C();                          /* slot 35 */
-    virtual int  Unk36();                                /* slot 36 */
+    virtual void StartRound(int arg);                 /* slot 18 */
+    virtual int  InitSubScreenBg();                            /* slot 31 */
+    virtual void PaintSquare(int cx, int cy, int colour, int size); /* slot 34 */
+    virtual int  IsAltVariant();                          /* slot 35 */
+    virtual int IsVariant2();                             /* slot 36 */
 
     void ShuffleGoals(int count);
     void ClearStroke();
@@ -134,7 +134,7 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  mLineEndSet;          /* 0x4705 -- mLineX2/Y2 accepted by the probe */
     u8  mLineCommit;          /* 0x4706 -- set while the accepted rung is painted */
     u8  mSetupInk;            /* 0x4707 -- set while SetupRound paints the
-                                 board; Virtual88 commits straight to the
+                                 board; PaintSquare commits straight to the
                                  ink grid instead of probing */
     u8  mProbeMode;           /* 0x4708 -- slot 34 tests the grid instead of painting */
     u8  mProbeHit;            /* 0x4709 -- slot 34 found an occupied cell */
@@ -144,7 +144,7 @@ struct dScMgAmida_c : dScMgBase_c {
                                  provisional stroke grid slot 34 paints
                                  into; y indexes rows at 0x158 stride */
     u8 *mInkGrid;             /* 0x4710 -- the committed occupancy grid;
-                                 Virtual88 probes it for collisions */
+                                 PaintSquare probes it for collisions */
     s32 mLaneResult[4];       /* 0x4714 -- ShuffleGoals' result table: which
                                  lanes win (mode 1) or each lane's goal */
     s32 mLanePos[4][2];       /* 0x4724 -- Fix12 {x,y} of the four lane
@@ -165,10 +165,10 @@ struct dScMgAmida_c : dScMgBase_c {
     s32 mLaneFlashFrame[4];   /* 0x5388 -- flash animation frames */
     u8  mLaneFlashFlag[4];    /* 0x5398 -- flash armed (StepWalkers sets
                                  when a walker's goal mismatches) */
-    s32 mLaneAnimTimer[4];     /* 0x539c -- per lane; wraps on the per-lane
-                                 period in data_ov006_0213b880 */
-    s32 mLaneAnimFrame[4];     /* 0x53ac -- per lane, cycles 0..0xd into the
-                                 sprite table data_ov006_0213a458 */
+    s32 mLaneAnimTimer[4];    /* 0x539c -- per lane; wraps on the per-lane
+                                 period in sAmidaRenderPeriods */
+    s32 mLaneAnimFrame[4];    /* 0x53ac -- per lane, cycles 0..0xd into the
+                                 sprite table sAmidaLaneAnimSprites */
     u16 mBgScrollPhase;        /* 0x53bc -- += 0xc0 a frame; indexes the sine
                                  table for the sub-screen BG2 offset */
     u8  pad_53be[0x2];
@@ -192,7 +192,7 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  pad_53df;
     s32 mRoundTimer;             /* 0x53e0 -- counts down; expiry ends the
                                  round and picks replay or finish */
-    s32 unk_53e4;                /* 0x53e4 */
+    s32 mLineColor;              /* 0x53e4 -- colour of every Mg_DrawLine stroke; always 2 */
     s32 mScore;                  /* 0x53e8 -- mLevel * 5, clamped to 9999;
                                  pushed to the dMeter_c every Behavior tick */
     u8  pad_53ec[0x10];          /* tail padding to the 0x53fc allocation */

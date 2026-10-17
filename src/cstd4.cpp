@@ -1,40 +1,29 @@
 //cpp
 /* cstd tail -- MSL runtime helpers, 0x0206dab4..0x0206ece0.
-   __builtin_trap through __pformatter. The five CP15 coprocessor functions
-   ahead of this run live in src/engine/cp15/CP154.cpp.
-
-   leftovers: func_0206ece0..func_0206fb08 stay one-function sources. They
-   match under -lang c++, but enrolling them is unresolvable: func_0206ece0
-   calls func_01ff9e2c and func_0206f46c calls _deq, both inner addresses of
-   the enrolled itcm asm blob func_01ff97d8.o, which exports only its outer
-   symbol. A TU claims one contiguous .text span, so those two walls stop the
-   absorb before func_0206f338/func_0206f820/func_0206fb08 as well.
-   func_0206fd6c (parse_format) is C-only under -lang c++ and stays a
-   one-function source; cstd6 (0x02070348..0x020707a4) sits beyond it. Whole-
-   function asm is emitted in source order; compiled bodies are too, under a
-   per-function defer_codegen off. */
+ * __builtin_trap through __pformatter. The five CP15 coprocessor functions
+ * ahead of this run live in src/engine/cp15/CP154.cpp. */
+/* leftovers: func_0206ece0..func_0206fb08 stay one-function sources. They
+ * match under -lang c++, but enrolling them is unresolvable: func_0206ece0
+ * calls func_01ff9e2c and func_0206f46c calls _deq, both inner addresses of
+ * the enrolled itcm asm blob func_01ff97d8.o, which exports only its outer
+ * symbol. A TU claims one contiguous .text span, so those two walls stop the
+ * absorb before func_0206f338/func_0206f820/func_0206fb08 as well.
+ * func_0206fd6c (parse_format) is C-only under -lang c++ and stays a
+ * one-function source; cstd6 (0x02070348..0x020707a4) sits beyond it. Whole-
+ * function asm is emitted in source order; compiled bodies are too, under a
+ * per-function defer_codegen off. */
 #include "types.h"
 
 extern "C" {
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match. The `swp` atomic swap has no C
-// equivalent under mwccarm (predates C11 _Atomic), so this was assembly in the original --
-// the asm block is the faithful source. Counts as matched (asm-primitive policy).
+// HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
 // @symbol func_0206dab4
 asm void func_0206dab4(void) { swp r0, r0, [r1]; bx lr }
 }
 
 #pragma push
 #pragma defer_codegen off
+// HAND-ASM PRIMITIVE: compiler trap builtin; the asm block is the source.
 // @symbol _ZN4cstd14__builtin_trapEv
-//
-// Language-mode flip only: the compiler mangles the name, it is no longer
-// spelled by hand. Signature and body preserved exactly; no codegen intent.
-// See notes/plan-cpp-language-mode.md phase 1 (layout-free SDK namespaces).
-//
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match. This function was assembly
-// in the original (compiler trap builtin), so there is no C to decompile it to
-// -- the asm block is the faithful source.
-
 namespace cstd {
 
 void __builtin_trap(void)
@@ -133,11 +122,9 @@ void func_0206dc4c(void) {
 typedef struct Pair { int x, y; } Pair;
 void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags);
 
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match. Prebuilt SDK/MSL softfloat
-// runtime glue: double OP double -> float wrapper forwarding to the per-thread
-// FP-operation dispatcher func_0206de14. Ships as ADS-era library code (below-sp
-// argument staging with NO sp adjustment) that no mwccarm build/flags reproduces
-// from C. Per asm policy; sibling of matched func_0206da64 in the same library.
+// HAND-ASM PRIMITIVE: softfloat glue, double OP double -> float, forwarding to func_0206de14.
+// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
+// reproduces from C.
 
 // @symbol func_0206dc7c
 asm float func_0206dc7c(double a, double b, int op) {
@@ -165,11 +152,9 @@ asm float func_0206dc7c(double a, double b, int op) {
     bx lr
 }
 
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match. Prebuilt SDK/MSL softfloat
-// runtime glue: double OP double -> double wrapper forwarding to the per-thread
-// FP-operation dispatcher func_0206de14. Ships as ADS-era library code (below-sp
-// argument staging with NO sp adjustment) that no mwccarm build/flags reproduces
-// from C. Per asm policy; sibling of matched func_0206da64 in the same library.
+// HAND-ASM PRIMITIVE: softfloat glue, double OP double -> double, forwarding to func_0206de14.
+// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
+// reproduces from C.
 
 // @symbol func_0206dcd4
 asm double func_0206dcd4(double a, double b, int op) {
@@ -198,12 +183,9 @@ asm double func_0206dcd4(double a, double b, int op) {
     bx lr
 }
 
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match. Prebuilt SDK/MSL softfloat
-// runtime glue: float OP float -> float wrapper (floats widened in-place into
-// uninitialized double slots) forwarding to the per-thread FP-operation
-// dispatcher func_0206de14. Ships as ADS-era library code (below-sp argument
-// staging with NO sp adjustment) that no mwccarm build/flags reproduces from C.
-// Per asm policy; sibling of matched func_0206da64 in the same library.
+// HAND-ASM PRIMITIVE: softfloat glue, float OP float -> float, forwarding to func_0206de14.
+// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
+// reproduces from C.
 
 // @symbol func_0206dd30
 asm float func_0206dd30(float a, float b, int op) {
@@ -228,12 +210,9 @@ asm float func_0206dd30(float a, float b, int op) {
     bx lr
 }
 
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match. Prebuilt SDK/MSL softfloat
-// runtime glue: unary double -> double wrapper (operand duplicated into both
-// dispatcher slots) forwarding to the per-thread FP-operation dispatcher
-// func_0206de14. Ships as ADS-era library code (below-sp argument staging with
-// NO sp adjustment) that no mwccarm build/flags reproduces from C. Per asm
-// policy; sibling of matched func_0206da64 in the same library.
+// HAND-ASM PRIMITIVE: softfloat glue, unary double -> double, forwarding to func_0206de14.
+// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
+// reproduces from C.
 
 // @symbol func_0206dd7c
 asm double func_0206dd7c(double a, int op) {
@@ -259,13 +238,9 @@ asm double func_0206dd7c(double a, int op) {
     bx lr
 }
 
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match. Prebuilt SDK/MSL softfloat
-// runtime glue: unary float -> float wrapper (float widened in-place into an
-// uninitialized double slot, duplicated into both dispatcher operand slots)
-// forwarding to the per-thread FP-operation dispatcher func_0206de14. Ships as
-// ADS-era library code (below-sp argument staging with NO sp adjustment) that
-// no mwccarm build/flags reproduces from C. Per asm policy; sibling of matched
-// func_0206da64 in the same library.
+// HAND-ASM PRIMITIVE: softfloat glue, unary float -> float, forwarding to func_0206de14.
+// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
+// reproduces from C.
 
 // @symbol func_0206ddcc
 asm float func_0206ddcc(float a, int op) {
@@ -357,10 +332,8 @@ void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags)
 
 #pragma push
 #pragma defer_codegen off
-/* func_0206df14 at 0x0206df14
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
- */
+// @symbol func_0206df14
+/* Heap-walk helper: consults func_0206e06c for each of three records. */
 extern char data_0209a330[];
 typedef struct S6e06c S6e06c;
 int func_0206e06c(S6e06c *p);
@@ -386,12 +359,6 @@ int func_0206df14(void) {
 #pragma push
 #pragma defer_codegen off
 // @symbol _ZN4cstd3absEi
-//
-// Language-mode flip only: the compiler mangles the name, it is no longer
-// spelled by hand. Signature and body preserved exactly; no codegen intent.
-// See notes/plan-cpp-language-mode.md phase 1 (layout-free SDK namespaces).
-
-
 namespace cstd {
 
 int abs(int x)
@@ -613,21 +580,9 @@ u8 *func_0206e2cc(u8 *p, int c, unsigned int n)
 #pragma push
 #pragma defer_codegen off
 // @symbol func_0206e2f8
-/* recovered: MSL memset -- the thin wrapper over __fill_mem.
- *
- * The return type is `void *`, not `int`. func_0206e330, already recovered in
- * this file as the MSL byte-head / 32-byte-block / word-tail fill
- * loop, is __fill_mem(void *dst, int val, u32 n); this function forwards all
- * three arguments to it unchanged and returns its own first argument, which is
- * exactly memset's contract. The one caller in the tree, _ZN7fBase_cnwEj,
- * calls it as func_0206e2f8(p, 0, size) with p a void *.
- *
- * include/decl_common.h carried `int` here after the bulk correction in
- * 2bcc1b99c ("32 rows declared void over a value"), which established only
- * that r0 holds a value and picked int as the generic value type. That is
- * refined to the pointer the body actually returns. Both spellings are one
- * word in r0, so the row is byte-neutral either way.
- */
+/* MSL memset: forwards all three args to __fill_mem (func_0206e330) and
+ * returns the destination. The return is void *, the pointer the body hands
+ * back in r0. */
 extern void func_0206e330(void *dst, int val, unsigned int n);
 void *func_0206e2f8(void *dst, int val, unsigned int n) { func_0206e330(dst, val, n); return dst; }
 #pragma pop
@@ -992,6 +947,8 @@ int func_0206e4a4(int (*WriteProc)(void *, const char *, size_t), void *WritePro
 
         case 0xFF:
         default:
+        /* invalid_conversion gotos kept, as in MSL's __pformatter: a failed-conversion
+           test after the switch instead grows it (0x848) */
         invalid_conversion:
             num_chars += (n = _ZN4cstd6strlenEPKc((const char *)curr_format));
             if (n && !(*WriteProc)(WriteProcArg, (const char *)curr_format, n))

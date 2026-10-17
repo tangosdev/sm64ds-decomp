@@ -1,8 +1,8 @@
 {
   "id": "ov085/daObj_Mip_Key_c",
   "module": "ov085",
-  "source": "src/actors/daObj_Mip_Key_c.cpp",
-  "promoted_source": "src/actors/daObj_Mip_Key_c.cpp",
+  "source": "src/game/actors/d_a_obj_mip_key.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_mip_key.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -143,7 +143,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObj_Mip_Key_c.cpp",
+      "symbol": "__sinit_d_a_obj_mip_key.cpp",
       "address": "0x0212f9bc",
       "size": "0x84",
       "binding": "STB_GLOBAL",
@@ -152,7 +152,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObj_Mip_Key_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_mip_key.cpp",
       "address": "0x0212fdfc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -178,13 +178,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObj_Mip_Key_c.cpp",
+      "symbol": "__sinit_d_a_obj_mip_key.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObj_Mip_Key_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_mip_key.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -256,7 +256,7 @@
       "source": "0x0212fdfc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObj_Mip_Key_c.cpp",
+      "symbol": "__sinit_d_a_obj_mip_key.cpp",
       "addend": 0,
       "target_module": "ov085",
       "target_address": "0x0212f9bc"

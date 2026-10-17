@@ -9,7 +9,7 @@ extern void InitCrashScreen(void);
 extern void ShowCrashScreen(void);
 extern void func_01ffdd98(int a);
 extern int func_0205f958(void);
-extern void _ZN4Heap6RescueEv(void* self);
+extern void _ZN5mHeap6Heap_t6RescueEv(void* self);
 
 void func_02013f4c(void)
 {
@@ -75,11 +75,11 @@ void func_02013f4c(void)
                 void* pb = data_020a0ea0;
                 void* pc = data_020a0eac;
                 if (cur & 0x20) {
-                    _ZN4Heap6RescueEv(pa);
+                    _ZN5mHeap6Heap_t6RescueEv(pa);
                 } else if (cur & 0x10) {
-                    _ZN4Heap6RescueEv(pc);
+                    _ZN5mHeap6Heap_t6RescueEv(pc);
                 } else if (cur & 0x40) {
-                    _ZN4Heap6RescueEv(pb);
+                    _ZN5mHeap6Heap_t6RescueEv(pb);
                 }
             }
         }

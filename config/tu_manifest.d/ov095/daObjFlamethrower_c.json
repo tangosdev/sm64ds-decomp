@@ -1,8 +1,8 @@
 {
   "id": "ov095/daObjFlamethrower_c",
   "module": "ov095",
-  "source": "src/actors/daObjFlamethrower_c.cpp",
-  "promoted_source": "src/actors/daObjFlamethrower_c.cpp",
+  "source": "src/game/actors/d_a_obj_flamethrower.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_flamethrower.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

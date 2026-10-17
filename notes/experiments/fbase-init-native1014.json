@@ -1,0 +1,4623 @@
+{
+  "task": "fbase-init-native1014",
+  "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+  "current_main_base": "509459cc2c52f2e5384aa66990b074f7528d5f13",
+  "producer": "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+  "actual_source_author": "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+  "predecessor_tasks": [
+    "fbase-destructor-king-delivery1014"
+  ],
+  "source_completion": "partial",
+  "source_checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+  "status": "All current production byte, metadata,397consumer, stock, scoped/global declaration and static gates passed; independent exact-final Source acceptance remains pending.",
+  "scope": [
+    "src/actors/ActorBase.cpp",
+    "config/tu_manifest.d/arm9/ActorBase.json",
+    "include/fBase_c.h",
+    "notes/experiments/fbase-init-native1014.json"
+  ],
+  "change": "Use genuine int fBase_c::InitResources() returning1; add three ordinary canonical metadata externalization policies after complete metadata proof; correct only the obsolete key-function prohibition in the header.",
+  "header_scope": "Only the key-function explanatory comment changes. Noncomment tokens, declarations, layout, allocator signature and historical span prose are unchanged. All397 actual control/candidate consumers compiled;396 non-ActorBase whole raw objects are identical.",
+  "historical_findings": [
+    {
+      "disposition": "deferred",
+      "id": "FBASE-CALLBACK-CONTRACT-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+      "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+    },
+    {
+      "disposition": "deferred",
+      "id": "FBASE-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+      "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+    }
+  ],
+  "historical_failed_composition": {
+    "task": "fbase-process-pr3144-composition-0925",
+    "phase": "cancelled",
+    "input_commit": "c50c07bac79b8b2b5c88604321d6f7cb60ff6f34",
+    "base": "7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f",
+    "reported_finding_id": "FBASE-COMPOSITION-DAONMS-01",
+    "exact_queue_next_action": "Superseded by explicit producer continuation for PR3144. Independent verifier preserved failed c50c07bac79b8b2b5c88604321d6f7cb60ff6f34/base7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f report SHA256 b46f80ec9c93ad85aecdccab387822cfff17d952a54b4db96b36033fe27b22a7 and released own lease. FBASE-COMPOSITION-DAONMS-01 requires exact measured Frame515-to518 manifest identity repair plus fresh independent all12-path/current-consumer/fullROM verification. Preserve original source authors, accepted historical52a proof, prior findings and PR3144; no main merge.",
+    "recorded_reviewer": "codex-fbase-composition-verifier-0925",
+    "artifact_status": "The recorded C:/tmp/sm64ds-fbasev0923/build worktree is absent. Exact finding dictionary is not present in this task outputs (empty); preserve the reported ID and failure facts without inventing a dictionary or acceptance.",
+    "current_scope": "The earlier native-destructor continuation changed no header and retained the historical Frame515-to518 repair and missing3144-artifact qualification. This current InitResources continuation edits only the fBase_c.h key-function comments: noncomment tokens/layout/signatures are unchanged, all397 actual control/candidate sources compile, and396 non-ActorBase complete raw objects are identical. ActorBase intentionally emits metadata and has separate30-owned-body/98-reference plus full97B canonical metadata proof. Current official stock symbol coverage is reported separately, with every advisory preserved; no unperformed whole-daOnms metadata ownership review is inferred."
+  },
+  "historical_lineage": {
+    "historical_task": "fbase-process-readable-0923",
+    "historical_task_phase": "cancelled",
+    "historical_reviewed_commit": "52a60fd1cf62315fea3aea36a26dc871fc1dc3ae",
+    "historical_reviewed_base": "83dbedd19f176eb6e2e2e677689ac9fb73f7999e",
+    "producer_sessions": [
+      "codex-root-fbase-readable-0923"
+    ],
+    "reviewer_session": "codex-fbase-verifier-0923",
+    "findings": [
+      {
+        "disposition": "deferred",
+        "id": "FBASE-CALLBACK-CONTRACT-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+        "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+      },
+      {
+        "disposition": "deferred",
+        "id": "FBASE-RECONSTRUCTION-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+        "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+      }
+    ],
+    "scope": "Exact historical dictionaries are unchanged. Their old25-function and no-native-destructor statements describe historical process work. The accepted predecessor restores the destructor; this current continuation adds native InitResources, canonical metadata externalization and comment-only header proof."
+  },
+  "restoration_provenance": {
+    "classification": "Restoration of previously native sharded destructor forms into the promoted ActorBase TU, not first recovery.",
+    "prepromotion_source": "a7193a0ec75a46c652ca629c8223fdbd59acef6a^:src/_ZN7fBase_cD1Ev.cpp",
+    "actual_source": "#include fBase_c.h; fBase_c::~fBase_c() {}",
+    "recovery_main_ancestor": "67ea7a470aa430070c7d259269a819c7ce470ee7",
+    "recovery_author": "Andrew <andrewboudreau@gmail.com>",
+    "earlier_node_lifetime_commit": "19f4cbf16d653c8c2313722bb874aafe7e6c84e3",
+    "earlier_manager_commit": "c7ba004d5daf25d89074eb51f0b630ad466677cb",
+    "earlier_recorded_author": "= <andrewboudreau@gmail.com>",
+    "earlier_commit_scope": "Historical recovered-branch records, not ancestors of current main. Main recovery is67ea7a47; duplicate1c3cbdac and earlier19f/c7ba ancestry checks return1.",
+    "process_adoption_commit": "b88dbbebdfcb4f61f41480e0302283c4ca0b7486",
+    "process_adoption_pr": 3144
+  },
+  "historical_destructor_report": "notes/experiments/fbase-destructor-native1014.json remains unchanged and retains its85c original measurements; current continuation is stacked on independently accepted2c689/PR3836.",
+  "scout_proof_historical": {
+    "strict_functions": 30,
+    "owned_bytes": 3376,
+    "all_owned_function_bytes_and_98_references_identical": true,
+    "all_retained_sized_definitions_bindings_and_allocated_sections_identical": true,
+    "raw_refs_control": 111,
+    "raw_refs_candidate": 132,
+    "prepared_refs_control_and_candidate": 98,
+    "metadata_records": 3,
+    "metadata_bytes": 97,
+    "metadata_refs": 21,
+    "metadata_full_bytes_preamble_and_destinations_blind": 0,
+    "post_prepare_data_bss_init_bytes": 0,
+    "raw_container_identical": false,
+    "prepared_container_identical": false,
+    "prepared_container_note": "New undefined metadata/runtime-typeinfo symbol entries and empty section records remain. All live function sections, definitions and references equal control.",
+    "full_rom": "Not run for this private continuation."
+  },
+  "scout_source_sha256": "f38c3ae3aaf9862529449bcddcfee643d060d44c7a2b5f3c0867d241ead5d110",
+  "scout_manifest_sha256": "830fbaa6e9e541a306c4666ff2e74d1bcc4f0ed6c18f4d42929522a176e8fa31",
+  "current_scoped_assessment": [
+    "The genuine int fBase_c::InitResources() member returns1 and replaces the hand-spelled raw ABI function; actual declaration collection recognizes the implicit receiver. No wrapper or alias is added.",
+    "All30 owned bodies3376B and98 prepared references equal the claimed-base control. Complete retained definitions, bindings and allocated sections also agree; raw and prepared whole ELF containers intentionally differ.",
+    "All three emitted metadata records97B/21references, including the complete80B vtable with18slots72B plus8B preamble, strictly reproduce canonical retail bytes and destinations before standard externalization. This TU acquires no retained metadata/data/BSS/init storage ownership or enrollment.",
+    "The unsigned/Ej allocator bridge versus size_t/Em overload, callback int/bool contracts, PMF/list/heap boundaries and broader class reconstruction remain partial under issue3012. No compiler impossibility is inferred.",
+    "The predecessor restores previously native destructor forms from main-ancestor67ea/PR1960. This continuation preserves that provenance and claims no first recovery."
+  ],
+  "verification": {
+    "whole_object": {
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "context": "Actual claimed-base control snapshot and tracked native InitResources candidate with ordinary on-disk manifest policies.",
+      "source_sha256": "f38c3ae3aaf9862529449bcddcfee643d060d44c7a2b5f3c0867d241ead5d110",
+      "candidate_manifest_sha256": "830fbaa6e9e541a306c4666ff2e74d1bcc4f0ed6c18f4d42929522a176e8fa31",
+      "control_raw_sha256": "691f53b733dbe6b65366f5d04e6d056acade50ed3184e1d6e68f3dde2e637efb",
+      "candidate_raw_sha256": "9b73570275d39aef46c4b94b4d6c85963e47ba51e55fdf09a4d37d1bd92f88b1",
+      "control_prepared_sha256": "16d6a44ef68b4e8c01611a6ff35a41262fa8534135f0e5df54a5c09dd0dff5ac",
+      "candidate_prepared_sha256": "137165db1189a5fa603d7e179f94eeea5c937828fdd5dc10692b392b2c65c704",
+      "raw_container_identical": false,
+      "prepared_container_identical": false,
+      "ordinary_preparation_error": null,
+      "candidate_with_old_policy_refusal": "unlicensed content in text-only multi-symbol object: section[5] .data size 0x8 defines ['_ZTI7fBase_c']; section[7] .data size 0x9 defines ['_ZTS7fBase_c']; section[8] .data size 0x50 defines ['_ZTV7fBase_c']",
+      "unchanged_control_prepares": true,
+      "strict_rows": 30,
+      "blind": 0,
+      "checks": [
+        {
+          "name": "func_020433b8",
+          "module": "arm9",
+          "addr": "0x020433b8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cnwEj",
+          "module": "arm9",
+          "addr": "0x02043444",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c13OnHeapCreatedEv",
+          "module": "arm9",
+          "addr": "0x02043494",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c9Virtual38Ejj",
+          "module": "arm9",
+          "addr": "0x0204349c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c9Virtual34Ejj",
+          "module": "arm9",
+          "addr": "0x0204357c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043810",
+          "module": "arm9",
+          "addr": "0x02043810",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c18MarkForDestructionEv",
+          "module": "arm9",
+          "addr": "0x02043824",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043880",
+          "module": "arm9",
+          "addr": "0x02043880",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c16OnPendingDestroyEv",
+          "module": "arm9",
+          "addr": "0x02043ac0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c11AfterRenderEj",
+          "module": "arm9",
+          "addr": "0x02043ac4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c12BeforeRenderEv",
+          "module": "arm9",
+          "addr": "0x02043ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c6RenderEv",
+          "module": "arm9",
+          "addr": "0x02043af0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c13AfterBehaviorEj",
+          "module": "arm9",
+          "addr": "0x02043af8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c14BeforeBehaviorEv",
+          "module": "arm9",
+          "addr": "0x02043afc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c8BehaviorEv",
+          "module": "arm9",
+          "addr": "0x02043b24",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c21AfterCleanupResourcesEj",
+          "module": "arm9",
+          "addr": "0x02043b2c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043bac",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c16CleanupResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043bf0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c18AfterInitResourcesEj",
+          "module": "arm9",
+          "addr": "0x02043bf8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c19BeforeInitResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043c78",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c13InitResourcesEv",
+          "module": "arm9",
+          "addr": "0x02043c80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE",
+          "module": "arm9",
+          "addr": "0x02043c88",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cD2Ev",
+          "module": "arm9",
+          "addr": "0x02043d48",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cD0Ev",
+          "module": "arm9",
+          "addr": "0x02043d78",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cD1Ev",
+          "module": "arm9",
+          "addr": "0x02043dbc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN7fBase_cC2Ev",
+          "module": "arm9",
+          "addr": "0x02043dec",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043f4c",
+          "module": "arm9",
+          "addr": "0x02043f4c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043f98",
+          "module": "arm9",
+          "addr": "0x02043f98",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_02043fdc",
+          "module": "arm9",
+          "addr": "0x02043fdc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_0204405c",
+          "module": "arm9",
+          "addr": "0x0204405c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "owned_functions": [
+        {
+          "symbol": "func_020433b8",
+          "bytes": 140,
+          "body_sha256": "e1b3c3097b346b849509aa155e08fb433d94f11dbeedb2d3804b234fc02174ee",
+          "relocations": [
+            {
+              "off": 8,
+              "type": 1,
+              "sym": "func_0204335c",
+              "addr": 33829724,
+              "add": -8
+            },
+            {
+              "off": 120,
+              "type": 1,
+              "sym": "func_0203b244",
+              "addr": 33796676,
+              "add": -8
+            },
+            {
+              "off": 132,
+              "type": 2,
+              "sym": "data_02099f24",
+              "addr": 34184996,
+              "add": 0
+            },
+            {
+              "off": 136,
+              "type": 2,
+              "sym": "data_020a4b88",
+              "addr": 34229128,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cnwEj",
+          "bytes": 80,
+          "body_sha256": "dd467f3fd8be92371429f20a42233fe70e1808d9309a84fd298741e2a3f016fc",
+          "relocations": [
+            {
+              "off": 24,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "func_0206e2f8",
+              "addr": 34005752,
+              "add": -8
+            },
+            {
+              "off": 76,
+              "type": 2,
+              "sym": "data_020a0eac",
+              "addr": 34213548,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c9Virtual38Ejj",
+          "bytes": 224,
+          "body_sha256": "d7a6c0ed6593a62465b6f3d4df66699b755388abb3f0e53132c46bc8fe68b7dc",
+          "relocations": [
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 92,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 136,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 152,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 156,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 172,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 204,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c9Virtual34Ejj",
+          "bytes": 660,
+          "body_sha256": "fdc59ee52a821dcbef907a22defa7bae83a52d6028a50ee7b1e055098192faf7",
+          "relocations": [
+            {
+              "off": 60,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 96,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 140,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 152,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 168,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 188,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 216,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t11ResizeToFitEv",
+              "addr": 33801104,
+              "add": -8
+            },
+            {
+              "off": 256,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 288,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 332,
+              "type": 1,
+              "sym": "_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE",
+              "addr": 33800720,
+              "add": -8
+            },
+            {
+              "off": 344,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 360,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 368,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            },
+            {
+              "off": 392,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 428,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 440,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t21MaxAllocationUnitSizeEv",
+              "addr": 33801740,
+              "add": -8
+            },
+            {
+              "off": 476,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t28InitializeSolidHeapAsDefaultEjPS0_i",
+              "addr": 33800920,
+              "add": -8
+            },
+            {
+              "off": 504,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 532,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 548,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 560,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t20RestoreFromTemporaryEv",
+              "addr": 33800872,
+              "add": -8
+            },
+            {
+              "off": 568,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 588,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t11ResizeToFitEv",
+              "addr": 33801104,
+              "add": -8
+            },
+            {
+              "off": 620,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t11ResizeToFitEv",
+              "addr": 33801104,
+              "add": -8
+            },
+            {
+              "off": 644,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043810",
+          "bytes": 20,
+          "body_sha256": "78a9ebd475edc16ff177f2bbb1f7c3dd3470a0c4c7ec3240718a02fc4170ae7f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c18MarkForDestructionEv",
+          "bytes": 92,
+          "body_sha256": "385dc1d93a4f65b632d93ee5a7b1724b1c259c91067fa4a51d51c29f0c86f21e",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043880",
+          "bytes": 576,
+          "body_sha256": "d1ad7589b4947a38922f955cec4de83c09829e66a9e3ddfaf493bcbed62cb9a3",
+          "relocations": [
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 68,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 84,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 96,
+              "type": 1,
+              "sym": "func_0203b20c",
+              "addr": 33796620,
+              "add": -8
+            },
+            {
+              "off": 124,
+              "type": 1,
+              "sym": "_ZN7fBase_c18MarkForDestructionEv",
+              "addr": 33830948,
+              "add": -8
+            },
+            {
+              "off": 144,
+              "type": 1,
+              "sym": "func_02043810",
+              "addr": 33830928,
+              "add": -8
+            },
+            {
+              "off": 348,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 368,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 412,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 432,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 488,
+              "type": 1,
+              "sym": "func_0203b244",
+              "addr": 33796676,
+              "add": -8
+            },
+            {
+              "off": 524,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 536,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 560,
+              "type": 2,
+              "sym": "data_020a4b78",
+              "addr": 34229112,
+              "add": 0
+            },
+            {
+              "off": 564,
+              "type": 2,
+              "sym": "data_020a4b98",
+              "addr": 34229144,
+              "add": 0
+            },
+            {
+              "off": 568,
+              "type": 2,
+              "sym": "data_020a4b88",
+              "addr": 34229128,
+              "add": 0
+            },
+            {
+              "off": 572,
+              "type": 2,
+              "sym": "data_020a4ba8",
+              "addr": 34229160,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+          "bytes": 4,
+          "body_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c11AfterRenderEj",
+          "bytes": 4,
+          "body_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c12BeforeRenderEv",
+          "bytes": 40,
+          "body_sha256": "bdd51e5e8f4bc1672281605012c408cd8eb82bc474225bd66db2943301b169e4",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c6RenderEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c13AfterBehaviorEj",
+          "bytes": 4,
+          "body_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c14BeforeBehaviorEv",
+          "bytes": 40,
+          "body_sha256": "5bc62a57cf433e90fc40f5e2b7f9505ed5b3806b29d8a48cd6295c994dcd420c",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c8BehaviorEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c21AfterCleanupResourcesEj",
+          "bytes": 128,
+          "body_sha256": "cf02ef0e60ab36ce63b67c1c5d03e37f79e91f81b029458ddab23fffc4392310",
+          "relocations": [
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "func_0203b3c0",
+              "addr": 33797056,
+              "add": -8
+            },
+            {
+              "off": 40,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 56,
+              "type": 1,
+              "sym": "_ZN5mHeap6Heap_t8_DestroyEv",
+              "addr": 33802060,
+              "add": -8
+            },
+            {
+              "off": 72,
+              "type": 1,
+              "sym": "func_02044334",
+              "addr": 33833780,
+              "add": -8
+            },
+            {
+              "off": 104,
+              "type": 1,
+              "sym": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
+              "addr": 33800680,
+              "add": -8
+            },
+            {
+              "off": 116,
+              "type": 2,
+              "sym": "data_020a4b6c",
+              "addr": 34229100,
+              "add": 0
+            },
+            {
+              "off": 120,
+              "type": 2,
+              "sym": "data_020a4ba8",
+              "addr": 34229160,
+              "add": 0
+            },
+            {
+              "off": 124,
+              "type": 2,
+              "sym": "data_020a0eac",
+              "addr": 34213548,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+          "bytes": 68,
+          "body_sha256": "ef27e2f36c30cd9437dd62a7852ee0521e03388e8a9f2187090937590017a325",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "func_0204424c",
+              "addr": 33833548,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c16CleanupResourcesEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c18AfterInitResourcesEj",
+          "bytes": 128,
+          "body_sha256": "d29504989a66c44e522a559621898600802b3726c4978313ee58dbeea89a0a0b",
+          "relocations": [
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "func_0203b27c",
+              "addr": 33796732,
+              "add": -8
+            },
+            {
+              "off": 80,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 92,
+              "type": 1,
+              "sym": "func_0204405c",
+              "addr": 33833052,
+              "add": -8
+            },
+            {
+              "off": 112,
+              "type": 2,
+              "sym": "data_020a4b88",
+              "addr": 34229128,
+              "add": 0
+            },
+            {
+              "off": 116,
+              "type": 2,
+              "sym": "data_02099f24",
+              "addr": 34184996,
+              "add": 0
+            },
+            {
+              "off": 120,
+              "type": 2,
+              "sym": "data_020a4b78",
+              "addr": 34229112,
+              "add": 0
+            },
+            {
+              "off": 124,
+              "type": 2,
+              "sym": "data_020a4b98",
+              "addr": 34229144,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c19BeforeInitResourcesEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c13InitResourcesEv",
+          "bytes": 8,
+          "body_sha256": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE",
+          "bytes": 192,
+          "body_sha256": "97be9e9481e520004c748417f3408881cf9e8cffe7d0df642eda1d75c3469269",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cD2Ev",
+          "bytes": 48,
+          "body_sha256": "476c0bdcad35d3d7f5935b8e642701cb1d1d4ebe83065c00e9cbbf34218171c3",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cD0Ev",
+          "bytes": 68,
+          "body_sha256": "bca25989fa5391528b1f043fc0937be31100d4df3ed6d1f218c609ff72753ccc",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 44,
+              "type": 1,
+              "sym": "_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE",
+              "addr": 33800680,
+              "add": -8
+            },
+            {
+              "off": 60,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            },
+            {
+              "off": 64,
+              "type": 2,
+              "sym": "data_020a0eac",
+              "addr": 34213548,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cD1Ev",
+          "bytes": 48,
+          "body_sha256": "476c0bdcad35d3d7f5935b8e642701cb1d1d4ebe83065c00e9cbbf34218171c3",
+          "relocations": [
+            {
+              "off": 20,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN11fLiNdBaPr_cD1Ev",
+              "addr": 33833192,
+              "add": -8
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "_ZN7fBase_cC2Ev",
+          "bytes": 352,
+          "body_sha256": "56e125529a5bd0a5755f76736d9933d18f62a5e53a588ab97ddf8da482116644",
+          "relocations": [
+            {
+              "off": 28,
+              "type": 1,
+              "sym": "_ZN7fBase_c9SceneNodeC1Ev",
+              "addr": 33797316,
+              "add": -8
+            },
+            {
+              "off": 164,
+              "type": 1,
+              "sym": "func_0203b438",
+              "addr": 33797176,
+              "add": -8
+            },
+            {
+              "off": 220,
+              "type": 1,
+              "sym": "func_02043810",
+              "addr": 33830928,
+              "add": -8
+            },
+            {
+              "off": 320,
+              "type": 2,
+              "sym": "_ZTV7fBase_c",
+              "addr": 34184924,
+              "add": 0
+            },
+            {
+              "off": 324,
+              "type": 2,
+              "sym": "data_02099e70",
+              "addr": 34184816,
+              "add": 0
+            },
+            {
+              "off": 328,
+              "type": 2,
+              "sym": "data_020a4b60",
+              "addr": 34229088,
+              "add": 0
+            },
+            {
+              "off": 332,
+              "type": 2,
+              "sym": "data_020a4b54",
+              "addr": 34229076,
+              "add": 0
+            },
+            {
+              "off": 336,
+              "type": 2,
+              "sym": "data_020a4b64",
+              "addr": 34229092,
+              "add": 0
+            },
+            {
+              "off": 340,
+              "type": 2,
+              "sym": "data_020a4b48",
+              "addr": 34229064,
+              "add": 0
+            },
+            {
+              "off": 344,
+              "type": 2,
+              "sym": "data_020a4b6c",
+              "addr": 34229100,
+              "add": 0
+            },
+            {
+              "off": 348,
+              "type": 2,
+              "sym": "data_020a4bb8",
+              "addr": 34229176,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043f4c",
+          "bytes": 76,
+          "body_sha256": "c4fc78c89417c72200ea66f28db40058a080ac7366d7ce66eef557a5050ffad2",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043f98",
+          "bytes": 68,
+          "body_sha256": "9c2ea0729c8606f5bf09b20ef5b510f76eae39471ac87a5a8dccfc1f573e0582",
+          "relocations": [],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_02043fdc",
+          "bytes": 128,
+          "body_sha256": "8d68151e3bb86c0122d20e14431edbd0bf458724ccf9cb208ad04ee81cbeea46",
+          "relocations": [
+            {
+              "off": 124,
+              "type": 2,
+              "sym": "data_020a4b68",
+              "addr": 34229096,
+              "add": 0
+            }
+          ],
+          "body_and_graph_equal": true
+        },
+        {
+          "symbol": "func_0204405c",
+          "bytes": 140,
+          "body_sha256": "b126eec3e0c5745a6b98b5274114c6512d84d5387141ba6a00bae7038f4f6ec6",
+          "relocations": [
+            {
+              "off": 40,
+              "type": 1,
+              "sym": "func_0203b244",
+              "addr": 33796676,
+              "add": -8
+            },
+            {
+              "off": 76,
+              "type": 1,
+              "sym": "func_0203b2ec",
+              "addr": 33796844,
+              "add": -8
+            },
+            {
+              "off": 124,
+              "type": 1,
+              "sym": "func_0203b2ec",
+              "addr": 33796844,
+              "add": -8
+            }
+          ],
+          "body_and_graph_equal": true
+        }
+      ],
+      "metadata": [
+        {
+          "symbol": "_ZTI7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2086d70",
+          "complete_storage_address": "0x2086d70",
+          "bytes": 8,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS7fBase_c",
+              "addr": 34106976,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi17__class_type_infoE",
+              "addr": 34187124,
+              "add": 0
+            }
+          ],
+          "linked_sha256": "39f79d4d5b6c41e7d4c54ed04d1651545b39f777e23266ae31b48870bdf7317b"
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2086e60",
+          "complete_storage_address": "0x2086e60",
+          "bytes": 9,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [],
+          "linked_sha256": "5cfafe50bce0f8a1bbf72273ce4858cdd54dbfb20ac88c2d0b562f8d5f4165d5"
+        },
+        {
+          "symbol": "_ZTV7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2099edc",
+          "complete_storage_address": "0x2099ed4",
+          "bytes": 80,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTI7fBase_c",
+              "addr": 34106736,
+              "add": 0
+            },
+            {
+              "off": 76,
+              "type": 2,
+              "sym": "_ZN7fBase_cD0Ev",
+              "addr": 33832312,
+              "add": 0
+            },
+            {
+              "off": 72,
+              "type": 2,
+              "sym": "_ZN7fBase_cD1Ev",
+              "addr": 33832380,
+              "add": 0
+            },
+            {
+              "off": 68,
+              "type": 2,
+              "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+              "addr": 33830036,
+              "add": 0
+            },
+            {
+              "off": 64,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual38Ejj",
+              "addr": 33830044,
+              "add": 0
+            },
+            {
+              "off": 60,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual34Ejj",
+              "addr": 33830268,
+              "add": 0
+            },
+            {
+              "off": 56,
+              "type": 2,
+              "sym": "_ZN7fBase_c16OnPendingDestroyEv",
+              "addr": 33831616,
+              "add": 0
+            },
+            {
+              "off": 52,
+              "type": 2,
+              "sym": "_ZN7fBase_c11AfterRenderEj",
+              "addr": 33831620,
+              "add": 0
+            },
+            {
+              "off": 48,
+              "type": 2,
+              "sym": "_ZN7fBase_c12BeforeRenderEv",
+              "addr": 33831624,
+              "add": 0
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZN7fBase_c6RenderEv",
+              "addr": 33831664,
+              "add": 0
+            },
+            {
+              "off": 40,
+              "type": 2,
+              "sym": "_ZN7fBase_c13AfterBehaviorEj",
+              "addr": 33831672,
+              "add": 0
+            },
+            {
+              "off": 36,
+              "type": 2,
+              "sym": "_ZN7fBase_c14BeforeBehaviorEv",
+              "addr": 33831676,
+              "add": 0
+            },
+            {
+              "off": 32,
+              "type": 2,
+              "sym": "_ZN7fBase_c8BehaviorEv",
+              "addr": 33831716,
+              "add": 0
+            },
+            {
+              "off": 28,
+              "type": 2,
+              "sym": "_ZN7fBase_c21AfterCleanupResourcesEj",
+              "addr": 33831724,
+              "add": 0
+            },
+            {
+              "off": 24,
+              "type": 2,
+              "sym": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+              "addr": 33831852,
+              "add": 0
+            },
+            {
+              "off": 20,
+              "type": 2,
+              "sym": "_ZN7fBase_c16CleanupResourcesEv",
+              "addr": 33831920,
+              "add": 0
+            },
+            {
+              "off": 16,
+              "type": 2,
+              "sym": "_ZN7fBase_c18AfterInitResourcesEj",
+              "addr": 33831928,
+              "add": 0
+            },
+            {
+              "off": 12,
+              "type": 2,
+              "sym": "_ZN7fBase_c19BeforeInitResourcesEv",
+              "addr": 33832056,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZN7fBase_c13InitResourcesEv",
+              "addr": 33832064,
+              "add": 0
+            }
+          ],
+          "linked_sha256": "14718669e1616f96d10fcfff115b00aa288e0c67d21555632d5f9b34b68a8d8c"
+        }
+      ],
+      "raw_storage": [
+        {
+          "name": ".data",
+          "size": 8,
+          "type": "SHT_PROGBITS"
+        },
+        {
+          "name": ".data",
+          "size": 9,
+          "type": "SHT_PROGBITS"
+        },
+        {
+          "name": ".data",
+          "size": 80,
+          "type": "SHT_PROGBITS"
+        }
+      ],
+      "prepared_storage": [],
+      "raw_relocations": 132,
+      "prepared_relocations": 98,
+      "control_raw_relocations": 111,
+      "control_prepared_relocations": 98,
+      "policy_qualification": "Normal unmodified loader/retarget/isolate with proposed three deadstrip-data rows; independent complete metadata proof supplements standard policy PARTIAL tolerance. No canonical storage owned by this TU.",
+      "complete_retained_definitions_allocated_sections_and_graphs_equal": true,
+      "header_only_reserved_keyfunction_comment_changed": true,
+      "source_hash_bound_after_proof": true
+    },
+    "header_consumers": {
+      "count": 397,
+      "baseline_compiles": 397,
+      "candidate_compiles": 397,
+      "non_ActorBase_complete_raw_equal": 396,
+      "ActorBase_exception": "Intentional key-function metadata emission; all30 bodies/98live refs and full97B/21metadata refs independently proved.",
+      "qualification": "Compiler uses one private TemporaryDirectory per invocation; baseline source paths explicitly mapped to actual original production flags; original header snapshot used for baseline. Candidate expects396whole raw identities; ActorBase has intentional metadata emission covered by separate full ordinary30body/98ref proof."
+    },
+    "rombuild": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit_code": 0,
+      "seconds": 556.3503589630127,
+      "log": "build\\fbase-init-native1014\\rombuild.log",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "log_sha256": "c087b93386da9d550c6aef4abb321ab94957b1d09380ca357c2fa146fe20d398",
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "owned_data_claims": 331,
+      "owned_bss_claims": 239,
+      "source_function_counts_observed": [
+        5888,
+        11334
+      ],
+      "count_scope": "Official final production analysis.sourceBuild; earlier baseline counts are not production counts.",
+      "baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "new_symbol_errors": [],
+      "baseline_control_scope": "Fresh official baseline control ran; retail baseline ROM assembled, its nine inherited DSD symbol errors retained.",
+      "no_rom_scope": "Candidate --no-rom run verifies linked modules; no newly assembled final candidate cartridge is claimed.",
+      "official_report_sha256": "2a605aa5f90c35d264c944b4aff4938ba77f14465867de2639b893a179ca1612",
+      "baseline_report_sha256": "d5660d3201dbca353d4360a8c19fd5209739c114cea4f1901abb9a429f244530"
+    },
+    "stock": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "build\\fbase-init-native1014\\stock-batches.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1274.174242258072,
+      "log": "build\\fbase-init-native1014\\stock.log",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "log_sha256": "09dedcbd07ebe60e148f25c780ae6893c69c351f1ba2a589217aac5588cfe1f7",
+      "coverage": {
+        "range": "2c689bff2c9b839582f90438da718a82b19ff207..87457bcf4376f635eea96e0dde513f29cdcd55c3",
+        "files": [
+          "src/_ZN10ScuttlebugD0Ev.cpp",
+          "src/_ZN10ScuttlebugD1Ev.cpp",
+          "src/_ZN10dScEntry_c13InitResourcesEv.cpp",
+          "src/_ZN10dScEntry_c16CleanupResourcesEv.cpp",
+          "src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp",
+          "src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp",
+          "src/_ZN10dScEntry_c6RenderEv.cpp",
+          "src/_ZN10dScEntry_c6icon_cC1Ev.cpp",
+          "src/_ZN10dScEntry_c8BehaviorEv.cpp",
+          "src/_ZN10dScStage_c10CheckInputEv.cpp",
+          "src/_ZN10dScStage_c10LoadSkyboxEv.cpp",
+          "src/_ZN10dScStage_c11GetSkyboxIDEv.cpp",
+          "src/_ZN10dScStage_c11RenderModelEv.cpp",
+          "src/_ZN10dScStage_c14GraphCallback1Ev.cpp",
+          "src/_ZN10dScStage_c14GraphCallback2Ev.cpp",
+          "src/_ZN10dScStage_c15IsPauseDisabledEv.cpp",
+          "src/_ZN10dScStage_c16CleanupResourcesEv.cpp",
+          "src/_ZN10dScStage_c16OnPendingDestroyEv.cpp",
+          "src/_ZN10dScStage_c19BeforeInitResourcesEv.cpp",
+          "src/_ZN10dScStage_c19RenderVsModeNewStarEv.cpp",
+          "src/_ZN10dScStage_c21RenderVsModeCountdownEv.cpp",
+          "src/_ZN10dScStage_c22RenderModelTransparentEv.cpp",
+          "src/_ZN10dScStage_c23LoadTextureTransformersEv.cpp",
+          "src/_ZN10dScStage_c7LoadFogEv.cpp",
+          "src/_ZN10dScStage_c8CanPauseEv.cpp",
+          "src/_ZN10dScStage_c9LoadModelEv.cpp",
+          "src/_ZN10dScStage_c9RenderFogEv.cpp",
+          "src/_ZN11dCapEnemy_cC2Ev.cpp",
+          "src/_ZN11dCapEnemy_cD1Ev.cpp",
+          "src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp",
+          "src/_ZN12dScStarSel_c13InitResourcesEv.cpp",
+          "src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp",
+          "src/_ZN12dScStarSel_c8BehaviorEv.cpp",
+          "src/_ZN6Player13OnYoshiTryEatEv.cpp",
+          "src/_ZN6PlayerC1Ev.cpp",
+          "src/_ZN6PlayerD0Ev.cpp",
+          "src/_ZN6PlayerD1Ev.cpp",
+          "src/_ZN8dActor_cC1Ev.cpp",
+          "src/_ZN8dActor_cC2Ev.cpp",
+          "src/_ZN8dActor_cD0Ev.cpp",
+          "src/_ZN8dActor_cD1Ev.cpp",
+          "src/_ZN8dActor_cD2Ev.cpp",
+          "src/_ZN9dCamera_cD0Ev.cpp",
+          "src/_ZN9dCamera_cD1Ev.cpp",
+          "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
+          "src/actors/ActorBase.cpp",
+          "src/actors/ActorBase_SceneNode.cpp",
+          "src/actors/ActorDerived.cpp",
+          "src/actors/CapIconMgr.cpp",
+          "src/actors/Eyerok.cpp",
+          "src/actors/Player.cpp",
+          "src/actors/Scuttlebug.cpp",
+          "src/actors/StarCamera_Spawn.cpp",
+          "src/actors/dActor_c.cpp",
+          "src/actors/dBgActor_c.cpp",
+          "src/actors/dCapEnemy_c.cpp",
+          "src/actors/dCapEnemy_c_arm9.cpp",
+          "src/actors/dEnemyBase_c.cpp",
+          "src/actors/dEntObj_c.cpp",
+          "src/actors/dMap_c.cpp",
+          "src/actors/dMeter_c.cpp",
+          "src/actors/dMg3DEspAnimSet_c.cpp",
+          "src/actors/dMgJump3DMario_c.cpp",
+          "src/actors/dMgState_c.cpp",
+          "src/actors/dPathLiftActor_c.cpp",
+          "src/actors/dScBoot_c.cpp",
+          "src/actors/dScDSMT_c.cpp",
+          "src/actors/dScEntry_c.cpp",
+          "src/actors/dScGameOver_c.cpp",
+          "src/actors/dScMB_c.cpp",
+          "src/actors/dScMgAmida_c.cpp",
+          "src/actors/dScMgBomroom_c.cpp",
+          "src/actors/dScMgCoin_c.cpp",
+          "src/actors/dScMgCup_c.cpp",
+          "src/actors/dScMgCurling2_c.cpp",
+          "src/actors/dScMgCurling_c.cpp",
+          "src/actors/dScMgD3DBase_c.cpp",
+          "src/actors/dScMgFlower_c.cpp",
+          "src/actors/dScMgHanachan_c.cpp",
+          "src/actors/dScMgJump_c.cpp",
+          "src/actors/dScMgLuigi_c.cpp",
+          "src/actors/dScMgMemory2_c.cpp",
+          "src/actors/dScMgPachinko2_c.cpp",
+          "src/actors/dScMgPachinko_c.cpp",
+          "src/actors/dScMgPanel_c.cpp",
+          "src/actors/dScMgRoulette_c.cpp",
+          "src/actors/dScMgSlots.cpp",
+          "src/actors/dScMgSmartball_c.cpp",
+          "src/actors/dScMgSnowball_c.cpp",
+          "src/actors/dScMgSound_c.cpp",
+          "src/actors/dScMgTeresa_c.cpp",
+          "src/actors/dScMiniGm_c.cpp",
+          "src/actors/dScStage_c.cpp",
+          "src/actors/dScStarSel_c.cpp",
+          "src/actors/dScTitle_c.cpp",
+          "src/actors/dScene_c.cpp",
+          "src/actors/da1up_c.cpp",
+          "src/actors/daBDonketu_c.cpp",
+          "src/actors/daBakubaku_c.cpp",
+          "src/actors/daBar_c.cpp",
+          "src/actors/daBasabasa_c.cpp",
+          "src/actors/daBbl_c.cpp",
+          "src/actors/daBgSnmBdy_c.cpp",
+          "src/actors/daBgSnmHed_c.cpp",
+          "src/actors/daBgSnwmn_c.cpp",
+          "src/actors/daBmb_c.cpp",
+          "src/actors/daBombking_c.cpp",
+          "src/actors/daBook_c.cpp",
+          "src/actors/daBrq_c.cpp",
+          "src/actors/daBtfly_c.cpp",
+          "src/actors/daBttBk_c.cpp",
+          "src/actors/daC_Jugem_c.cpp",
+          "src/actors/daChRoom_c.cpp",
+          "src/actors/daChair_c.cpp",
+          "src/actors/daChoropu_c.cpp",
+          "src/actors/daCoin_c.cpp",
+          "src/actors/daDemo_c.cpp",
+          "src/actors/daDgr_c.cpp",
+          "src/actors/daDkk_c.cpp",
+          "src/actors/daDonketu_c.cpp",
+          "src/actors/daDoor_c.cpp",
+          "src/actors/daDossy_c.cpp",
+          "src/actors/daDpLift_c.cpp",
+          "src/actors/daDsnBase_c.cpp",
+          "src/actors/daDsn_c.cpp",
+          "src/actors/daEykn_c.cpp",
+          "src/actors/daFPknBall_c.cpp",
+          "src/actors/daFPkn_c.cpp",
+          "src/actors/daFRing_c.cpp",
+          "src/actors/daGmch_c.cpp",
+          "src/actors/daGrock_c.cpp",
+          "src/actors/daHanachan_c.cpp",
+          "src/actors/daHuwa_c.cpp",
+          "src/actors/daIbl_c.cpp",
+          "src/actors/daJango_c.cpp",
+          "src/actors/daKing_Donketu_c.cpp",
+          "src/actors/daKirai_c.cpp",
+          "src/actors/daKpa2Bg_c.cpp",
+          "src/actors/daKpa3Bg_c.cpp",
+          "src/actors/daKpaFire_c.cpp",
+          "src/actors/daKpa_c.cpp",
+          "src/actors/daKrb_c.cpp",
+          "src/actors/daKuriKing_c.cpp",
+          "src/actors/daLuigi_c.cpp",
+          "src/actors/daManta_c.cpp",
+          "src/actors/daMenbo_c.cpp",
+          "src/actors/daMip_c.cpp",
+          "src/actors/daMky_c.cpp",
+          "src/actors/daMoray_c.cpp",
+          "src/actors/daMugenBGM_c.cpp",
+          "src/actors/daObj1UpLogo_c.cpp",
+          "src/actors/daObjBkKillerdai_c.cpp",
+          "src/actors/daObjBk_Botaosi_c.cpp",
+          "src/actors/daObjBk_Kabe_c.cpp",
+          "src/actors/daObjBk_Lift_c.cpp",
+          "src/actors/daObjBlockItemTag_c.cpp",
+          "src/actors/daObjBlockL_c.cpp",
+          "src/actors/daObjBlockS_c.cpp",
+          "src/actors/daObjC1Peach_c.cpp",
+          "src/actors/daObjCasket_c.cpp",
+          "src/actors/daObjClock_c.cpp",
+          "src/actors/daObjCloset_c.cpp",
+          "src/actors/daObjCtKaitendai_c.cpp",
+          "src/actors/daObjCtMecha03_c.cpp",
+          "src/actors/daObjCtMecha04_c.cpp",
+          "src/actors/daObjCtMecha08_c.cpp",
+          "src/actors/daObjCtMecha09_c.cpp",
+          "src/actors/daObjCtMecha10_c.cpp",
+          "src/actors/daObjCtMecha11_c.cpp",
+          "src/actors/daObjCtRotateBlock_c.cpp",
+          "src/actors/daObjCvNewsLift_c.cpp",
+          "src/actors/daObjDlPyramid_c.cpp",
+          "src/actors/daObjDorifu_c.cpp",
+          "src/actors/daObjDpBrock_c.cpp",
+          "src/actors/daObjEmmYuka_c.cpp",
+          "src/actors/daObjEwbIce_c.cpp",
+          "src/actors/daObjEwmIceBlock_c.cpp",
+          "src/actors/daObjFallBlock_c.cpp",
+          "src/actors/daObjFire_c.cpp",
+          "src/actors/daObjFl_Amilift_c.cpp",
+          "src/actors/daObjFl_Block_c.cpp",
+          "src/actors/daObjFl_Coin_c.cpp",
+          "src/actors/daObjFl_KomaU_c.cpp",
+          "src/actors/daObjFl_Koma_D_c.cpp",
+          "src/actors/daObjFl_London_c.cpp",
+          "src/actors/daObjFl_Ring_c.cpp",
+          "src/actors/daObjFl_Seesaw_c.cpp",
+          "src/actors/daObjFl_UkiKi_c.cpp",
+          "src/actors/daObjFl_Ukiyuka_c.cpp",
+          "src/actors/daObjFlamethrower_c.cpp",
+          "src/actors/daObjFloatBoard_c.cpp",
+          "src/actors/daObjGuragura_c.cpp",
+          "src/actors/daObjHatenaBlock_c.cpp",
+          "src/actors/daObjHeart_c.cpp",
+          "src/actors/daObjHmMaruta_c.cpp",
+          "src/actors/daObjKaitendai_c.cpp",
+          "src/actors/daObjKanban_c.cpp",
+          "src/actors/daObjKey_c.cpp",
+          "src/actors/daObjKi_Hasira_c.cpp",
+          "src/actors/daObjKm2_Nobiru_c.cpp",
+          "src/actors/daObjKuruma_c.cpp",
+          "src/actors/daObjKurumajiku_c.cpp",
+          "src/actors/daObjLava_c.cpp",
+          "src/actors/daObjMarioCap_c.cpp",
+          "src/actors/daObjPile_c.cpp",
+          "src/actors/daObjPowerUpItem_c.cpp",
+          "src/actors/daObjRc_Tikuwa_c.cpp",
+          "src/actors/daObjRotateUpdownLift_c.cpp",
+          "src/actors/daObjSeesaw_c.cpp",
+          "src/actors/daObjShell_c.cpp",
+          "src/actors/daObjSimpleBg_c.cpp",
+          "src/actors/daObjSimpleLift_c.cpp",
+          "src/actors/daObjSlIceBlock_c.cpp",
+          "src/actors/daObjSm_Lift_c.cpp",
+          "src/actors/daObjSwdoor_c.cpp",
+          "src/actors/daObjSwitch_c.cpp",
+          "src/actors/daObjTatefuda_c.cpp",
+          "src/actors/daObjTbox_c.cpp",
+          "src/actors/daObjTtFuta_c.cpp",
+          "src/actors/daObjTtWater_c.cpp",
+          "src/actors/daObjUkiyuka_c.cpp",
+          "src/actors/daObjWlKoopaShutter_c.cpp",
+          "src/actors/daObjWlSubmarine_c.cpp",
+          "src/actors/daObjYajirusi_c.cpp",
+          "src/actors/daObj_Mip_Key_c.cpp",
+          "src/actors/daOnms_c.cpp",
+          "src/actors/daOts_c.cpp",
+          "src/actors/daOwl_c.cpp",
+          "src/actors/daPeach_c.cpp",
+          "src/actors/daPgDfdr_c.cpp",
+          "src/actors/daPicGate_c.cpp",
+          "src/actors/daPkn_c.cpp",
+          "src/actors/daPopoi_c.cpp",
+          "src/actors/daPropeller_Heyho_Fire_c.cpp",
+          "src/actors/daPukupuku_c.cpp",
+          "src/actors/daRFlag_c.cpp",
+          "src/actors/daRNk_c.cpp",
+          "src/actors/daSCoin_c.cpp",
+          "src/actors/daSanbo_c.cpp",
+          "src/actors/daShark_c.cpp",
+          "src/actors/daSlide_Box_c.cpp",
+          "src/actors/daSnmBth_c.cpp",
+          "src/actors/daSnowball_c.cpp",
+          "src/actors/daSnowman_c.cpp",
+          "src/actors/daStar_c.cpp",
+          "src/actors/daTgz_c.cpp",
+          "src/actors/daTor_c.cpp",
+          "src/actors/daTrs_c.cpp",
+          "src/actors/daUdlift_c.cpp",
+          "src/actors/daWanwan2_c.cpp",
+          "src/actors/daWater_Hakidasi_c.cpp",
+          "src/actors/daWater_Ring_c.cpp",
+          "src/actors/daWater_Suikomi_c.cpp",
+          "src/actors/daWater_Tatumaki_c.cpp",
+          "src/actors/daWbm_c.cpp",
+          "src/actors/daYegg_c.cpp",
+          "src/actors/daYurei_Mucho_c.cpp",
+          "src/d_a_ply.cpp",
+          "src/d_s_boot.cpp",
+          "src/d_s_entry_entry.cpp",
+          "src/d_s_entry_result.cpp",
+          "src/d_s_stage.cpp",
+          "src/engine/collision/dBgCh_Actr.cpp",
+          "src/engine/collision/dBgCh_SphCrr_query.cpp",
+          "src/engine/collision/dBgW.cpp",
+          "src/engine/collision/dCcAc_c.cpp",
+          "src/engine/collision/dCc_c.cpp",
+          "src/engine/fader/StartEntranceFaderWipe.cpp",
+          "src/engine/fader/StartExitFaderWipe.cpp",
+          "src/engine/view/dCamera_c.cpp",
+          "src/engine/view/dView_c.cpp",
+          "src/game/actors/d_a_btn.cpp",
+          "src/game/actors/d_a_cam_tag.cpp",
+          "src/game/actors/d_a_ch_scene.cpp",
+          "src/game/actors/d_a_cnn.cpp",
+          "src/game/actors/d_a_e_switch.cpp",
+          "src/game/actors/d_a_ey_bm.cpp",
+          "src/game/actors/d_a_fish.cpp",
+          "src/game/actors/d_a_holhei.cpp",
+          "src/game/actors/d_a_hyuhyu.cpp",
+          "src/game/actors/d_a_i_donketu.cpp",
+          "src/game/actors/d_a_jgm.cpp",
+          "src/game/actors/d_a_kinopio.cpp",
+          "src/game/actors/d_a_klr.cpp",
+          "src/game/actors/d_a_kp_fr.cpp",
+          "src/game/actors/d_a_krpa.cpp",
+          "src/game/actors/d_a_linelift2.cpp",
+          "src/game/actors/d_a_mc_flag.cpp",
+          "src/game/actors/d_a_nknk.cpp",
+          "src/game/actors/d_a_obj_abuku.cpp",
+          "src/game/actors/d_a_obj_b_swdoor.cpp",
+          "src/game/actors/d_a_obj_bc_switch.cpp",
+          "src/game/actors/d_a_obj_bk_billboard.cpp",
+          "src/game/actors/d_a_obj_bk_dossunbar.cpp",
+          "src/game/actors/d_a_obj_bk_fall_block.cpp",
+          "src/game/actors/d_a_obj_bk_rotebar.cpp",
+          "src/game/actors/d_a_obj_bk_ukisima.cpp",
+          "src/game/actors/d_a_obj_c0_switch.cpp",
+          "src/game/actors/d_a_obj_c0_water.cpp",
+          "src/game/actors/d_a_obj_c1_hikari.cpp",
+          "src/game/actors/d_a_obj_c1_trap.cpp",
+          "src/game/actors/d_a_obj_cannon_shutter.cpp",
+          "src/game/actors/d_a_obj_clock_huriko.cpp",
+          "src/game/actors/d_a_obj_cv_shutter.cpp",
+          "src/game/actors/d_a_obj_emm_log.cpp",
+          "src/game/actors/d_a_obj_fl_gura.cpp",
+          "src/game/actors/d_a_obj_fl_maruta.cpp",
+          "src/game/actors/d_a_obj_fm_battan.cpp",
+          "src/game/actors/d_a_obj_hatena_switch.cpp",
+          "src/game/actors/d_a_obj_hm_bskt.cpp",
+          "src/game/actors/d_a_obj_hs_billboard.cpp",
+          "src/game/actors/d_a_obj_ice_block.cpp",
+          "src/game/actors/d_a_obj_ice_board.cpp",
+          "src/game/actors/d_a_obj_kb1_billboard.cpp",
+          "src/game/actors/d_a_obj_ki_fune.cpp",
+          "src/game/actors/d_a_obj_ki_ita.cpp",
+          "src/game/actors/d_a_obj_kinoko_tag.cpp",
+          "src/game/actors/d_a_obj_km1_dorifu.cpp",
+          "src/game/actors/d_a_obj_km1_kuruma.cpp",
+          "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
+          "src/game/actors/d_a_obj_km1_ukishima.cpp",
+          "src/game/actors/d_a_obj_km2_agaru.cpp",
+          "src/game/actors/d_a_obj_km2_ami_bou.cpp",
+          "src/game/actors/d_a_obj_km2_fall_block.cpp",
+          "src/game/actors/d_a_obj_km2_gura.cpp",
+          "src/game/actors/d_a_obj_km2_ukishima.cpp",
+          "src/game/actors/d_a_obj_km3_dorifu.cpp",
+          "src/game/actors/d_a_obj_km3_kaitendai.cpp",
+          "src/game/actors/d_a_obj_km3_kuruma.cpp",
+          "src/game/actors/d_a_obj_km3_kurumajiku.cpp",
+          "src/game/actors/d_a_obj_ks_water.cpp",
+          "src/game/actors/d_a_obj_kumo.cpp",
+          "src/game/actors/d_a_obj_maruta.cpp",
+          "src/game/actors/d_a_obj_mc_metalnet.cpp",
+          "src/game/actors/d_a_obj_mc_water.cpp",
+          "src/game/actors/d_a_obj_number.cpp",
+          "src/game/actors/d_a_obj_rc_buranko.cpp",
+          "src/game/actors/d_a_obj_rc_carpet.cpp",
+          "src/game/actors/d_a_obj_rc_dorifu.cpp",
+          "src/game/actors/d_a_obj_rc_guruguru.cpp",
+          "src/game/actors/d_a_obj_rc_hane.cpp",
+          "src/game/actors/d_a_obj_rc_kaitendai.cpp",
+          "src/game/actors/d_a_obj_td_futa.cpp",
+          "src/game/actors/d_a_obj_td_water.cpp",
+          "src/game/actors/d_a_obj_th_fall_block.cpp",
+          "src/game/actors/d_a_obj_wakame.cpp",
+          "src/game/actors/d_a_obj_wanwan_shutter.cpp",
+          "src/game/actors/d_a_obj_waterfall.cpp",
+          "src/game/actors/d_a_obj_wc_mizu.cpp",
+          "src/game/actors/d_a_obj_wc_obj01.cpp",
+          "src/game/actors/d_a_obj_wc_obj02.cpp",
+          "src/game/actors/d_a_obj_wc_obj03.cpp",
+          "src/game/actors/d_a_obj_wc_obj04.cpp",
+          "src/game/actors/d_a_obj_wc_obj05.cpp",
+          "src/game/actors/d_a_obj_wc_obj06.cpp",
+          "src/game/actors/d_a_obj_wc_obj07.cpp",
+          "src/game/actors/d_a_obj_wl_polelift.cpp",
+          "src/game/actors/d_a_pg_bby.cpp",
+          "src/game/actors/d_a_pg_mthr.cpp",
+          "src/game/actors/d_a_pg_rcer.cpp",
+          "src/game/actors/d_a_pic_gate.cpp",
+          "src/game/actors/d_a_propeller_heyho.cpp",
+          "src/game/actors/d_a_red_bombhei.cpp",
+          "src/game/actors/d_a_s_bird.cpp",
+          "src/game/actors/d_a_s_bird_head.cpp",
+          "src/game/actors/d_a_s_cre.cpp",
+          "src/game/actors/d_a_set_se.cpp",
+          "src/game/actors/d_a_shl.cpp",
+          "src/game/actors/d_a_sld_mng.cpp",
+          "src/game/actors/d_a_sound_obj.cpp",
+          "src/game/actors/d_a_star_gate.cpp",
+          "src/game/actors/d_a_tree.cpp",
+          "src/game/actors/d_a_wanwan.cpp",
+          "src/game/actors/d_a_warpkun.cpp",
+          "src/game/actors/daFeather_c/daFeather_c.cpp",
+          "src/game/actors/daObjCtMecha05_c.cpp",
+          "src/game/actors/daObjFl_Fall_Block_c.cpp",
+          "src/game/actors/daObjPathLift_c.cpp",
+          "src/game/actors/daObjPushblock_c.cpp",
+          "src/game/actors/daPiano_c/d_a_piano.cpp",
+          "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp",
+          "src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp",
+          "src/minigames/d_s_mg_base.cpp",
+          "src/minigames/d_s_mg_bsc.cpp",
+          "src/minigames/d_s_mg_card.cpp",
+          "src/minigames/d_s_mg_hanachan.cpp",
+          "src/minigames/d_s_mg_jump2.cpp",
+          "src/minigames/d_s_mg_m_carlo.cpp",
+          "src/minigames/d_s_mg_m_carlo2.cpp",
+          "src/minigames/d_s_mg_memory.cpp",
+          "src/minigames/d_s_mg_roulette.cpp",
+          "src/minigames/d_s_mg_single3_d_base.cpp",
+          "src/minigames/d_s_mg_trampoline.cpp",
+          "src/minigames/d_s_mg_trampoline2.cpp",
+          "src/stage/LevelObjects.cpp",
+          "src/unnamed/arm9/0202/func_02029408.cpp",
+          "src/unnamed/ov009/func_ov009_0211145c.cpp"
+        ],
+        "files_count": 397,
+        "batches": [
+          {
+            "index": 0,
+            "files": [
+              "src/actors/Player.cpp",
+              "src/actors/daObjSwdoor_c.cpp",
+              "src/game/actors/d_a_obj_km3_kaitendai.cpp",
+              "src/game/actors/d_a_obj_ki_ita.cpp",
+              "src/actors/dScBoot_c.cpp",
+              "src/_ZN10dScEntry_c8BehaviorEv.cpp",
+              "src/_ZN10dScStage_c21RenderVsModeCountdownEv.cpp",
+              "src/_ZN12dScStarSel_c8BehaviorEv.cpp",
+              "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 1,
+            "files": [
+              "src/actors/daDemo_c.cpp",
+              "src/actors/dScMgMemory2_c.cpp",
+              "src/actors/dScMgSlots.cpp",
+              "src/actors/daHanachan_c.cpp",
+              "src/game/actors/d_a_jgm.cpp",
+              "src/actors/daKpaFire_c.cpp",
+              "src/actors/daMenbo_c.cpp",
+              "src/game/actors/d_a_shl.cpp",
+              "src/game/actors/d_a_hyuhyu.cpp",
+              "src/actors/daBgSnmHed_c.cpp",
+              "src/actors/daBtfly_c.cpp",
+              "src/actors/daSnmBth_c.cpp",
+              "src/actors/daChair_c.cpp",
+              "src/actors/daObjBk_Botaosi_c.cpp",
+              "src/actors/dScMB_c.cpp",
+              "src/actors/daObjSm_Lift_c.cpp",
+              "src/actors/daDgr_c.cpp",
+              "src/actors/dScGameOver_c.cpp",
+              "src/actors/daObjCtMecha03_c.cpp",
+              "src/game/actors/d_a_obj_km2_agaru.cpp",
+              "src/actors/daObj1UpLogo_c.cpp",
+              "src/actors/daObjTtFuta_c.cpp",
+              "src/game/actors/d_a_obj_kumo.cpp",
+              "src/actors/daObjEwmIceBlock_c.cpp",
+              "src/game/actors/d_a_obj_c0_water.cpp",
+              "src/game/actors/d_a_set_se.cpp",
+              "src/actors/daObjDorifu_c.cpp",
+              "src/game/actors/d_a_obj_bk_ukisima.cpp",
+              "src/game/actors/d_a_obj_rc_dorifu.cpp",
+              "src/engine/view/dView_c.cpp",
+              "src/_ZN10dScStage_c10CheckInputEv.cpp",
+              "src/_ZN10dScStage_c22RenderModelTransparentEv.cpp",
+              "src/_ZN6Player13OnYoshiTryEatEv.cpp",
+              "src/actors/StarCamera_Spawn.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 2,
+            "files": [
+              "src/actors/dScMgSmartball_c.cpp",
+              "src/actors/daKuriKing_c.cpp",
+              "src/actors/dScMgSnowball_c.cpp",
+              "src/actors/daObjBlockS_c.cpp",
+              "src/actors/daTgz_c.cpp",
+              "src/minigames/d_s_mg_jump2.cpp",
+              "src/actors/daChoropu_c.cpp",
+              "src/actors/daPeach_c.cpp",
+              "src/actors/daYurei_Mucho_c.cpp",
+              "src/minigames/d_s_mg_bsc.cpp",
+              "src/actors/daKirai_c.cpp",
+              "src/actors/daUdlift_c.cpp",
+              "src/actors/daObjBlockItemTag_c.cpp",
+              "src/actors/daObjRotateUpdownLift_c.cpp",
+              "src/actors/daKpa3Bg_c.cpp",
+              "src/actors/daObjYajirusi_c.cpp",
+              "src/actors/daKpa2Bg_c.cpp",
+              "src/actors/daBgSnwmn_c.cpp",
+              "src/actors/daObjCtMecha10_c.cpp",
+              "src/game/actors/d_a_obj_maruta.cpp",
+              "src/actors/daObjBkKillerdai_c.cpp",
+              "src/actors/daRFlag_c.cpp",
+              "src/game/actors/d_a_obj_mc_metalnet.cpp",
+              "src/actors/daObjFire_c.cpp",
+              "src/game/actors/d_a_obj_emm_log.cpp",
+              "src/game/actors/d_a_tree.cpp",
+              "src/actors/daObjFl_Koma_D_c.cpp",
+              "src/game/actors/d_a_obj_fl_gura.cpp",
+              "src/game/actors/d_a_obj_rc_kaitendai.cpp",
+              "src/game/actors/d_a_s_bird_head.cpp",
+              "src/_ZN10dScStage_c10LoadSkyboxEv.cpp",
+              "src/_ZN10dScStage_c23LoadTextureTransformersEv.cpp",
+              "src/_ZN6PlayerC1Ev.cpp",
+              "src/d_a_ply.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 3,
+            "files": [
+              "src/minigames/d_s_mg_base.cpp",
+              "src/engine/collision/dBgCh_SphCrr_query.cpp",
+              "src/actors/dEntObj_c.cpp",
+              "src/actors/daGmch_c.cpp",
+              "src/actors/daC_Jugem_c.cpp",
+              "src/game/actors/d_a_pg_bby.cpp",
+              "src/actors/dScMgD3DBase_c.cpp",
+              "src/actors/daObjSwitch_c.cpp",
+              "src/actors/daPopoi_c.cpp",
+              "src/game/actors/d_a_star_gate.cpp",
+              "src/actors/daObjCvNewsLift_c.cpp",
+              "src/actors/daObj_Mip_Key_c.cpp",
+              "src/actors/daObjCasket_c.cpp",
+              "src/actors/daObjSimpleLift_c.cpp",
+              "src/actors/daLuigi_c.cpp",
+              "src/actors/daPicGate_c.cpp",
+              "src/actors/daObjBk_Kabe_c.cpp",
+              "src/actors/daDkk_c.cpp",
+              "src/actors/daObjCtMecha11_c.cpp",
+              "src/game/actors/d_a_obj_rc_carpet.cpp",
+              "src/actors/daObjC1Peach_c.cpp",
+              "src/actors/daSCoin_c.cpp",
+              "src/game/actors/d_a_obj_rc_buranko.cpp",
+              "src/actors/daObjFl_KomaU_c.cpp",
+              "src/game/actors/d_a_obj_kb1_billboard.cpp",
+              "src/game/actors/d_a_warpkun.cpp",
+              "src/actors/daObjKaitendai_c.cpp",
+              "src/game/actors/d_a_obj_km1_dorifu.cpp",
+              "src/game/actors/d_a_obj_th_fall_block.cpp",
+              "src/game/actors/d_a_s_cre.cpp",
+              "src/_ZN10dScStage_c11GetSkyboxIDEv.cpp",
+              "src/_ZN10dScStage_c7LoadFogEv.cpp",
+              "src/_ZN6PlayerD0Ev.cpp",
+              "src/d_s_entry_entry.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 4,
+            "files": [
+              "src/actors/daTrs_c.cpp",
+              "src/engine/collision/dBgCh_Actr.cpp",
+              "src/actors/daMky_c.cpp",
+              "src/actors/da1up_c.cpp",
+              "src/actors/daKrb_c.cpp",
+              "src/actors/daBook_c.cpp",
+              "src/actors/ActorBase.cpp",
+              "src/minigames/d_s_mg_m_carlo.cpp",
+              "src/actors/daBasabasa_c.cpp",
+              "src/actors/daBttBk_c.cpp",
+              "src/actors/daObjBlockL_c.cpp",
+              "src/actors/daObjDlPyramid_c.cpp",
+              "src/game/actors/d_a_obj_fl_maruta.cpp",
+              "src/actors/daObjFallBlock_c.cpp",
+              "src/actors/daPropeller_Heyho_Fire_c.cpp",
+              "src/actors/daObjBk_Lift_c.cpp",
+              "src/actors/daTor_c.cpp",
+              "src/actors/daObjKm2_Nobiru_c.cpp",
+              "src/actors/daDpLift_c.cpp",
+              "src/actors/daObjDpBrock_c.cpp",
+              "src/game/actors/d_a_obj_wc_mizu.cpp",
+              "src/actors/daObjCtMecha08_c.cpp",
+              "src/actors/daSlide_Box_c.cpp",
+              "src/game/actors/d_a_obj_rc_hane.cpp",
+              "src/actors/daObjKanban_c.cpp",
+              "src/game/actors/d_a_obj_km1_ukishima.cpp",
+              "src/game/actors/daFeather_c/daFeather_c.cpp",
+              "src/actors/daObjKuruma_c.cpp",
+              "src/game/actors/d_a_obj_km1_kuruma.cpp",
+              "src/game/actors/d_a_obj_wc_obj07.cpp",
+              "src/d_s_boot.cpp",
+              "src/_ZN10dScEntry_c16CleanupResourcesEv.cpp",
+              "src/_ZN10dScStage_c11RenderModelEv.cpp",
+              "src/_ZN10dScStage_c8CanPauseEv.cpp",
+              "src/_ZN6PlayerD1Ev.cpp",
+              "src/d_s_entry_result.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 5,
+            "files": [
+              "src/actors/dActor_c.cpp",
+              "src/actors/dScMgLuigi_c.cpp",
+              "src/actors/daBombking_c.cpp",
+              "src/game/actors/d_a_nknk.cpp",
+              "src/actors/daSnowman_c.cpp",
+              "src/actors/daCoin_c.cpp",
+              "src/actors/daDossy_c.cpp",
+              "src/minigames/d_s_mg_m_carlo2.cpp",
+              "src/actors/daOwl_c.cpp",
+              "src/actors/daMoray_c.cpp",
+              "src/actors/daObjPowerUpItem_c.cpp",
+              "src/actors/daObjTbox_c.cpp",
+              "src/game/actors/d_a_pic_gate.cpp",
+              "src/actors/daObjFl_Amilift_c.cpp",
+              "src/actors/daShark_c.cpp",
+              "src/actors/daObjSimpleBg_c.cpp",
+              "src/engine/collision/dCcAc_c.cpp",
+              "src/actors/daObjRc_Tikuwa_c.cpp",
+              "src/actors/daFPknBall_c.cpp",
+              "src/actors/daObjFl_Block_c.cpp",
+              "src/game/actors/d_a_obj_wc_obj02.cpp",
+              "src/actors/daObjCtMecha09_c.cpp",
+              "src/game/actors/d_a_ch_scene.cpp",
+              "src/game/actors/d_a_obj_wakame.cpp",
+              "src/actors/daObjTtWater_c.cpp",
+              "src/game/actors/d_a_obj_km2_ami_bou.cpp",
+              "src/actors/daObjFl_UkiKi_c.cpp",
+              "src/actors/daObjWlSubmarine_c.cpp",
+              "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
+              "src/game/actors/d_a_sld_mng.cpp",
+              "src/actors/dCapEnemy_c.cpp",
+              "src/_ZN10ScuttlebugD0Ev.cpp",
+              "src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp",
+              "src/_ZN10dScStage_c14GraphCallback1Ev.cpp",
+              "src/_ZN10dScStage_c9LoadModelEv.cpp",
+              "src/_ZN8dActor_cC1Ev.cpp",
+              "src/d_s_stage.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 6,
+            "files": [
+              "src/actors/dScMgTeresa_c.cpp",
+              "src/actors/dScMgHanachan_c.cpp",
+              "src/actors/dScMgCurling2_c.cpp",
+              "src/minigames/d_s_mg_trampoline2.cpp",
+              "src/game/actors/d_a_holhei.cpp",
+              "src/actors/daObjMarioCap_c.cpp",
+              "src/actors/daObjTatefuda_c.cpp",
+              "src/actors/daBakubaku_c.cpp",
+              "src/actors/daOnms_c.cpp",
+              "src/actors/daObjEwbIce_c.cpp",
+              "src/actors/daObjSeesaw_c.cpp",
+              "src/actors/daPgDfdr_c.cpp",
+              "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp",
+              "src/actors/daWater_Tatumaki_c.cpp",
+              "src/actors/daSnowball_c.cpp",
+              "src/actors/daWater_Hakidasi_c.cpp",
+              "src/game/actors/d_a_e_switch.cpp",
+              "src/engine/collision/dCc_c.cpp",
+              "src/actors/daObjClock_c.cpp",
+              "src/actors/daObjFl_Ring_c.cpp",
+              "src/game/actors/d_a_obj_wc_obj04.cpp",
+              "src/actors/daObjFl_London_c.cpp",
+              "src/game/actors/d_a_obj_c0_switch.cpp",
+              "src/game/actors/d_a_obj_wanwan_shutter.cpp",
+              "src/actors/daObjWlKoopaShutter_c.cpp",
+              "src/game/actors/d_a_obj_ks_water.cpp",
+              "src/actors/daObjFl_Ukiyuka_c.cpp",
+              "src/game/actors/d_a_obj_abuku.cpp",
+              "src/game/actors/d_a_obj_km2_fall_block.cpp",
+              "src/game/actors/daObjFl_Fall_Block_c.cpp",
+              "src/minigames/d_s_mg_hanachan.cpp",
+              "src/_ZN10ScuttlebugD1Ev.cpp",
+              "src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp",
+              "src/_ZN10dScStage_c14GraphCallback2Ev.cpp",
+              "src/_ZN10dScStage_c9RenderFogEv.cpp",
+              "src/_ZN8dActor_cC2Ev.cpp",
+              "src/engine/fader/StartEntranceFaderWipe.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 7,
+            "files": [
+              "src/actors/dScMgSound_c.cpp",
+              "src/actors/Eyerok.cpp",
+              "src/actors/dMgState_c.cpp",
+              "src/actors/daObjHatenaBlock_c.cpp",
+              "src/actors/Scuttlebug.cpp",
+              "src/actors/daYegg_c.cpp",
+              "src/game/actors/d_a_propeller_heyho.cpp",
+              "src/actors/daObjFl_Coin_c.cpp",
+              "src/actors/daOts_c.cpp",
+              "src/game/actors/d_a_kp_fr.cpp",
+              "src/actors/dScMgJump_c.cpp",
+              "src/actors/daRNk_c.cpp",
+              "src/actors/daPukupuku_c.cpp",
+              "src/actors/daWbm_c.cpp",
+              "src/actors/daWater_Suikomi_c.cpp",
+              "src/actors/dCapEnemy_c_arm9.cpp",
+              "src/actors/daDsnBase_c.cpp",
+              "src/actors/CapIconMgr.cpp",
+              "src/game/actors/d_a_obj_ice_block.cpp",
+              "src/actors/daObjFloatBoard_c.cpp",
+              "src/game/actors/d_a_obj_wc_obj05.cpp",
+              "src/actors/daObjFl_Seesaw_c.cpp",
+              "src/game/actors/d_a_obj_c1_hikari.cpp",
+              "src/game/actors/d_a_s_bird.cpp",
+              "src/game/actors/d_a_cam_tag.cpp",
+              "src/game/actors/d_a_obj_mc_water.cpp",
+              "src/actors/daObjHmMaruta_c.cpp",
+              "src/game/actors/d_a_obj_b_swdoor.cpp",
+              "src/game/actors/d_a_obj_km2_gura.cpp",
+              "src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp",
+              "src/minigames/d_s_mg_roulette.cpp",
+              "src/_ZN10dScEntry_c13InitResourcesEv.cpp",
+              "src/_ZN10dScEntry_c6RenderEv.cpp",
+              "src/_ZN10dScStage_c15IsPauseDisabledEv.cpp",
+              "src/_ZN11dCapEnemy_cC2Ev.cpp",
+              "src/_ZN8dActor_cD0Ev.cpp",
+              "src/engine/fader/StartExitFaderWipe.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 8,
+            "files": [
+              "src/actors/daKpa_c.cpp",
+              "src/actors/dScMgCoin_c.cpp",
+              "src/engine/view/dCamera_c.cpp",
+              "src/actors/dMgJump3DMario_c.cpp",
+              "src/actors/daSanbo_c.cpp",
+              "src/actors/dEnemyBase_c.cpp",
+              "src/game/actors/d_a_pg_rcer.cpp",
+              "src/actors/daEykn_c.cpp",
+              "src/actors/daPkn_c.cpp",
+              "src/actors/dScene_c.cpp",
+              "src/actors/dBgActor_c.cpp",
+              "src/game/actors/d_a_fish.cpp",
+              "src/actors/daWater_Ring_c.cpp",
+              "src/game/actors/d_a_kinopio.cpp",
+              "src/game/actors/d_a_cnn.cpp",
+              "src/actors/dMap_c.cpp",
+              "src/actors/daObjCtMecha04_c.cpp",
+              "src/actors/dScMgFlower_c.cpp",
+              "src/game/actors/d_a_obj_ice_board.cpp",
+              "src/actors/daObjSlIceBlock_c.cpp",
+              "src/game/actors/d_a_obj_wl_polelift.cpp",
+              "src/actors/daObjGuragura_c.cpp",
+              "src/game/actors/d_a_obj_cannon_shutter.cpp",
+              "src/minigames/d_s_mg_single3_d_base.cpp",
+              "src/game/actors/d_a_i_donketu.cpp",
+              "src/game/actors/d_a_obj_number.cpp",
+              "src/actors/daObjKurumajiku_c.cpp",
+              "src/game/actors/d_a_obj_cv_shutter.cpp",
+              "src/game/actors/d_a_obj_km2_ukishima.cpp",
+              "src/actors/daObjFlamethrower_c.cpp",
+              "src/game/actors/d_a_obj_waterfall.cpp",
+              "src/_ZN10dScStage_c16CleanupResourcesEv.cpp",
+              "src/_ZN11dCapEnemy_cD1Ev.cpp",
+              "src/_ZN8dActor_cD1Ev.cpp",
+              "src/unnamed/arm9/0202/func_02029408.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 9,
+            "files": [
+              "src/actors/dScMgBomroom_c.cpp",
+              "src/actors/dMg3DEspAnimSet_c.cpp",
+              "src/actors/dScMgCurling_c.cpp",
+              "src/minigames/d_s_mg_trampoline.cpp",
+              "src/actors/daBmb_c.cpp",
+              "src/actors/dScMgCup_c.cpp",
+              "src/game/actors/d_a_wanwan.cpp",
+              "src/actors/daJango_c.cpp",
+              "src/game/actors/d_a_pg_mthr.cpp",
+              "src/actors/daFPkn_c.cpp",
+              "src/actors/dMeter_c.cpp",
+              "src/actors/daWanwan2_c.cpp",
+              "src/stage/LevelObjects.cpp",
+              "src/actors/daGrock_c.cpp",
+              "src/actors/daHuwa_c.cpp",
+              "src/game/actors/d_a_obj_hatena_switch.cpp",
+              "src/game/actors/d_a_klr.cpp",
+              "src/game/actors/d_a_obj_hs_billboard.cpp",
+              "src/actors/daObjCtKaitendai_c.cpp",
+              "src/game/actors/d_a_obj_bc_switch.cpp",
+              "src/game/actors/daObjCtMecha05_c.cpp",
+              "src/actors/daObjHeart_c.cpp",
+              "src/game/actors/d_a_obj_clock_huriko.cpp",
+              "src/actors/daBar_c.cpp",
+              "src/actors/daDsn_c.cpp",
+              "src/game/actors/d_a_mc_flag.cpp",
+              "src/game/actors/d_a_obj_rc_guruguru.cpp",
+              "src/game/actors/d_a_sound_obj.cpp",
+              "src/game/actors/d_a_obj_km3_dorifu.cpp",
+              "src/actors/daObjLava_c.cpp",
+              "src/game/actors/d_a_obj_wc_obj01.cpp",
+              "src/_ZN10dScStage_c16OnPendingDestroyEv.cpp",
+              "src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp",
+              "src/_ZN8dActor_cD2Ev.cpp",
+              "src/unnamed/ov009/func_ov009_0211145c.cpp"
+            ],
+            "nominal_symbols": 637
+          },
+          {
+            "index": 10,
+            "files": [
+              "src/actors/daStar_c.cpp",
+              "src/actors/dScMgPanel_c.cpp",
+              "src/actors/daKing_Donketu_c.cpp",
+              "src/actors/dScMgRoulette_c.cpp",
+              "src/minigames/d_s_mg_card.cpp",
+              "src/actors/daDoor_c.cpp",
+              "src/actors/daBgSnmBdy_c.cpp",
+              "src/game/actors/d_a_krpa.cpp",
+              "src/actors/dPathLiftActor_c.cpp",
+              "src/game/actors/d_a_red_bombhei.cpp",
+              "src/actors/daBrq_c.cpp",
+              "src/game/actors/d_a_obj_c1_trap.cpp",
+              "src/actors/dScStage_c.cpp",
+              "src/game/actors/d_a_linelift2.cpp",
+              "src/game/actors/d_a_ey_bm.cpp",
+              "src/actors/daDonketu_c.cpp",
+              "src/actors/daObjCtRotateBlock_c.cpp",
+              "src/actors/dScStarSel_c.cpp",
+              "src/game/actors/d_a_obj_wc_obj03.cpp",
+              "src/game/actors/d_a_obj_fm_battan.cpp",
+              "src/game/actors/daObjPathLift_c.cpp",
+              "src/actors/daObjKi_Hasira_c.cpp",
+              "src/game/actors/d_a_obj_hm_bskt.cpp",
+              "src/actors/daChRoom_c.cpp",
+              "src/actors/daFRing_c.cpp",
+              "src/game/actors/d_a_obj_bk_billboard.cpp",
+              "src/game/actors/d_a_obj_td_futa.cpp",
+              "src/actors/ActorDerived.cpp",
+              "src/actors/daObjUkiyuka_c.cpp",
+              "src/game/actors/d_a_obj_km3_kuruma.cpp",
+              "src/game/actors/d_a_obj_wc_obj06.cpp",
+              "src/_ZN10dScStage_c19BeforeInitResourcesEv.cpp",
+              "src/_ZN12dScStarSel_c13InitResourcesEv.cpp",
+              "src/_ZN9dCamera_cD0Ev.cpp"
+            ],
+            "nominal_symbols": 636
+          },
+          {
+            "index": 11,
+            "files": [
+              "src/actors/dScMgPachinko_c.cpp",
+              "src/actors/dScMgPachinko2_c.cpp",
+              "src/minigames/d_s_mg_memory.cpp",
+              "src/engine/collision/dBgW.cpp",
+              "src/game/actors/d_a_btn.cpp",
+              "src/actors/daMip_c.cpp",
+              "src/actors/dScMgAmida_c.cpp",
+              "src/actors/dScMiniGm_c.cpp",
+              "src/game/actors/d_a_obj_bk_dossunbar.cpp",
+              "src/actors/daObjKey_c.cpp",
+              "src/actors/dScDSMT_c.cpp",
+              "src/game/actors/daPiano_c/d_a_piano.cpp",
+              "src/actors/daIbl_c.cpp",
+              "src/actors/daBbl_c.cpp",
+              "src/actors/daManta_c.cpp",
+              "src/actors/dScEntry_c.cpp",
+              "src/actors/daObjPile_c.cpp",
+              "src/actors/dScTitle_c.cpp",
+              "src/game/actors/daObjPushblock_c.cpp",
+              "src/game/actors/d_a_obj_ki_fune.cpp",
+              "src/actors/daBDonketu_c.cpp",
+              "src/actors/daMugenBGM_c.cpp",
+              "src/actors/daObjShell_c.cpp",
+              "src/game/actors/d_a_obj_kinoko_tag.cpp",
+              "src/actors/daObjEmmYuka_c.cpp",
+              "src/game/actors/d_a_obj_bk_rotebar.cpp",
+              "src/game/actors/d_a_obj_td_water.cpp",
+              "src/actors/daObjCloset_c.cpp",
+              "src/game/actors/d_a_obj_bk_fall_block.cpp",
+              "src/game/actors/d_a_obj_km3_kurumajiku.cpp",
+              "src/actors/ActorBase_SceneNode.cpp",
+              "src/_ZN10dScEntry_c6icon_cC1Ev.cpp",
+              "src/_ZN10dScStage_c19RenderVsModeNewStarEv.cpp",
+              "src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp",
+              "src/_ZN9dCamera_cD1Ev.cpp"
+            ],
+            "nominal_symbols": 636
+          }
+        ],
+        "execution": "Official prepush_linkcheck.py --files batches cover the exact actual --range expanded source list. No serial --range run is claimed. Compiler and isolation scratch use mkstemp/mkdtemp/TemporaryDirectory; JSON/log outputs are unique per batch.",
+        "drafts": []
+      },
+      "checked": 7642,
+      "verified": 7422,
+      "warnings": [
+        {
+          "file": "src/game/actors/d_a_obj_km3_kaitendai.cpp",
+          "name": "__sinit_d_a_obj_km3_kaitendai.cpp",
+          "module": "ov047",
+          "addr": "0x2111748",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_ki_ita.cpp",
+          "name": "__sinit_d_a_obj_ki_ita.cpp",
+          "module": "ov016",
+          "addr": "0x21139e4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDemo_c.cpp",
+          "name": "_ZN8daDemo_c10anmModel_cD0Ev",
+          "module": "ov002",
+          "addr": "0x20f6778",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDemo_c.cpp",
+          "name": "_ZN8daDemo_c10anmModel_cD1Ev",
+          "module": "ov002",
+          "addr": "0x20f6870",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDemo_c.cpp",
+          "name": "_ZN8daDemo_c13simpleModel_cD0Ev",
+          "module": "ov002",
+          "addr": "0x20f69a8",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDemo_c.cpp",
+          "name": "_ZN8daDemo_c13simpleModel_cD1Ev",
+          "module": "ov002",
+          "addr": "0x20f6a00",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daHanachan_c.cpp",
+          "name": "daHanachan_c_classInit",
+          "module": "ov034",
+          "addr": "0x21136a4",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daHanachan_c.cpp",
+          "name": "__sinit_daHanachan_c.cpp",
+          "module": "ov034",
+          "addr": "0x21138ec",
+          "verdict": "BLIND-73",
+          "blind": 73,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_jgm.cpp",
+          "name": "__sinit_d_a_jgm.cpp",
+          "module": "ov077",
+          "addr": "0x2127240",
+          "verdict": "BLIND-19",
+          "blind": 19,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMenbo_c.cpp",
+          "name": "__sinit_daMenbo_c.cpp",
+          "module": "ov090",
+          "addr": "0x2133ce8",
+          "verdict": "BLIND-12",
+          "blind": 12,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_hyuhyu.cpp",
+          "name": "__sinit_d_a_hyuhyu.cpp",
+          "module": "ov091",
+          "addr": "0x2134a30",
+          "verdict": "BLIND-8",
+          "blind": 8,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBtfly_c.cpp",
+          "name": "__sinit_daBtfly_c.cpp",
+          "module": "ov100",
+          "addr": "0x21473bc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daChair_c.cpp",
+          "name": "__sinit_daChair_c.cpp",
+          "module": "ov020",
+          "addr": "0x211372c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBk_Botaosi_c.cpp",
+          "name": "__sinit_daObjBk_Botaosi_c.cpp",
+          "module": "ov015",
+          "addr": "0x2112fdc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/dScMB_c.cpp",
+          "name": "func_02034fbc",
+          "module": "arm9",
+          "addr": "0x2034fbc",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSm_Lift_c.cpp",
+          "name": "__sinit_daObjSm_Lift_c.cpp",
+          "module": "ov018",
+          "addr": "0x2112c14",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDgr_c.cpp",
+          "name": "__sinit_daDgr_c.cpp",
+          "module": "ov025",
+          "addr": "0x2112970",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtMecha03_c.cpp",
+          "name": "__sinit_daObjCtMecha03_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c76c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km2_agaru.cpp",
+          "name": "__sinit_d_a_obj_km2_agaru.cpp",
+          "module": "ov045",
+          "addr": "0x21121a8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObj1UpLogo_c.cpp",
+          "name": "__sinit_daObj1UpLogo_c.cpp",
+          "module": "ov002",
+          "addr": "0x2107298",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjTtFuta_c.cpp",
+          "name": "__sinit_daObjTtFuta_c.cpp",
+          "module": "ov033",
+          "addr": "0x21119e8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_kumo.cpp",
+          "name": "__sinit_d_a_obj_kumo.cpp",
+          "module": "ov039",
+          "addr": "0x21113b4",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjEwmIceBlock_c.cpp",
+          "name": "__sinit_daObjEwmIceBlock_c.cpp",
+          "module": "ov056",
+          "addr": "0x2112b48",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_c0_water.cpp",
+          "name": "__sinit_d_a_obj_c0_water.cpp",
+          "module": "ov012",
+          "addr": "0x2111af4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_bk_ukisima.cpp",
+          "name": "__sinit_d_a_obj_bk_ukisima.cpp",
+          "module": "ov015",
+          "addr": "0x211333c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_rc_dorifu.cpp",
+          "name": "__sinit_d_a_obj_rc_dorifu.cpp",
+          "module": "ov036",
+          "addr": "0x211279c",
+          "verdict": "BLIND-22",
+          "blind": 22,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKuriKing_c.cpp",
+          "name": "daKuriKing_c_classInit_KURIKING_VANISH",
+          "module": "ov074",
+          "addr": "0x2122764",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKuriKing_c.cpp",
+          "name": "daKuriKing_c_classInit_KURIKING",
+          "module": "ov074",
+          "addr": "0x2122838",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKuriKing_c.cpp",
+          "name": "__sinit_daKuriKing_c.cpp",
+          "module": "ov074",
+          "addr": "0x2122978",
+          "verdict": "BLIND-31",
+          "blind": 31,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBlockS_c.cpp",
+          "name": "__sinit_daObjBlockS_c.cpp",
+          "module": "ov098",
+          "addr": "0x213c058",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/minigames/d_s_mg_jump2.cpp",
+          "name": "__sinit_d_s_mg_jump2.cpp",
+          "module": "ov006",
+          "addr": "0x2130f00",
+          "verdict": "BLIND-5",
+          "blind": 5,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daChoropu_c.cpp",
+          "name": "__sinit_daChoropu_c.cpp",
+          "module": "ov080",
+          "addr": "0x21278c0",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKirai_c.cpp",
+          "name": "__sinit_daKirai_c.cpp",
+          "module": "ov060",
+          "addr": "0x211a388",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daUdlift_c.cpp",
+          "name": "__sinit_daUdlift_c.cpp",
+          "module": "ov095",
+          "addr": "0x213722c",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjRotateUpdownLift_c.cpp",
+          "name": "__sinit_daObjRotateUpdownLift_c.cpp",
+          "module": "ov091",
+          "addr": "0x2134524",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKpa3Bg_c.cpp",
+          "name": "__sinit_daKpa3Bg_c.cpp",
+          "module": "ov060",
+          "addr": "0x211a000",
+          "verdict": "BLIND-42",
+          "blind": 42,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKpa2Bg_c.cpp",
+          "name": "__sinit_daKpa2Bg_c.cpp",
+          "module": "ov060",
+          "addr": "0x2119f94",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBgSnwmn_c.cpp",
+          "name": "__sinit_daBgSnwmn_c.cpp",
+          "module": "ov072",
+          "addr": "0x2122350",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtMecha10_c.cpp",
+          "name": "__sinit_daObjCtMecha10_c.cpp",
+          "module": "ov035",
+          "addr": "0x2111f04",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daRFlag_c.cpp",
+          "name": "__sinit_daRFlag_c.cpp",
+          "module": "ov062",
+          "addr": "0x211d690",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_mc_metalnet.cpp",
+          "name": "__sinit_d_a_obj_mc_metalnet.cpp",
+          "module": "ov009",
+          "addr": "0x2112a5c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_emm_log.cpp",
+          "name": "__sinit_d_a_obj_emm_log.cpp",
+          "module": "ov052",
+          "addr": "0x2111b64",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_Koma_D_c.cpp",
+          "name": "__sinit_daObjFl_Koma_D_c.cpp",
+          "module": "ov022",
+          "addr": "0x2112d14",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_fl_gura.cpp",
+          "name": "__sinit_d_a_obj_fl_gura.cpp",
+          "module": "ov064",
+          "addr": "0x211b078",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_rc_kaitendai.cpp",
+          "name": "__sinit_d_a_obj_rc_kaitendai.cpp",
+          "module": "ov036",
+          "addr": "0x211261c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/minigames/d_s_mg_base.cpp",
+          "name": "__sinit_d_s_mg_base.cpp",
+          "module": "ov004",
+          "addr": "0x20b948c",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/dEntObj_c.cpp",
+          "name": "__sinit_dEntObj_c.cpp",
+          "module": "ov075",
+          "addr": "0x211b5e0",
+          "verdict": "BLIND-47",
+          "blind": 47,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daGmch_c.cpp",
+          "name": "__sinit_daGmch_c.cpp",
+          "module": "ov081",
+          "addr": "0x21284f0",
+          "verdict": "BLIND-13",
+          "blind": 13,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daC_Jugem_c.cpp",
+          "name": "__sinit_daC_Jugem_c.cpp",
+          "module": "ov085",
+          "addr": "0x212fa40",
+          "verdict": "BLIND-12",
+          "blind": 12,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSwitch_c.cpp",
+          "name": "__sinit_daObjSwitch_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101588",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daPopoi_c.cpp",
+          "name": "__sinit_daPopoi_c.cpp",
+          "module": "ov077",
+          "addr": "0x21275fc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_star_gate.cpp",
+          "name": "__sinit_d_a_star_gate.cpp",
+          "module": "ov100",
+          "addr": "0x2147a70",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCasket_c.cpp",
+          "name": "__sinit_daObjCasket_c.cpp",
+          "module": "ov071",
+          "addr": "0x2122a64",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSimpleLift_c.cpp",
+          "name": "__sinit_daObjSimpleLift_c.cpp",
+          "module": "ov091",
+          "addr": "0x21346e8",
+          "verdict": "BLIND-30",
+          "blind": 30,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daPicGate_c.cpp",
+          "name": "__sinit_daPicGate_c.cpp",
+          "module": "ov080",
+          "addr": "0x2127b2c",
+          "verdict": "BLIND-39",
+          "blind": 39,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBk_Kabe_c.cpp",
+          "name": "__sinit_daObjBk_Kabe_c.cpp",
+          "module": "ov079",
+          "addr": "0x2127acc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDkk_c.cpp",
+          "name": "__sinit_daDkk_c.cpp",
+          "module": "ov025",
+          "addr": "0x21129dc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtMecha11_c.cpp",
+          "name": "__sinit_daObjCtMecha11_c.cpp",
+          "module": "ov035",
+          "addr": "0x2111fc0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_rc_carpet.cpp",
+          "name": "__sinit_d_a_obj_rc_carpet.cpp",
+          "module": "ov036",
+          "addr": "0x2112944",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjC1Peach_c.cpp",
+          "name": "__sinit_daObjC1Peach_c.cpp",
+          "module": "ov010",
+          "addr": "0x211215c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_rc_buranko.cpp",
+          "name": "__sinit_d_a_obj_rc_buranko.cpp",
+          "module": "ov036",
+          "addr": "0x21125b0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_KomaU_c.cpp",
+          "name": "__sinit_daObjFl_KomaU_c.cpp",
+          "module": "ov064",
+          "addr": "0x211b0e4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_kb1_billboard.cpp",
+          "name": "__sinit_d_a_obj_kb1_billboard.cpp",
+          "module": "ov044",
+          "addr": "0x2111314",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km1_dorifu.cpp",
+          "name": "__sinit_d_a_obj_km1_dorifu.cpp",
+          "module": "ov043",
+          "addr": "0x2111940",
+          "verdict": "BLIND-22",
+          "blind": 22,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_th_fall_block.cpp",
+          "name": "__sinit_d_a_obj_th_fall_block.cpp",
+          "module": "ov063",
+          "addr": "0x211e590",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daTrs_c.cpp",
+          "name": "_ZN7daTrs_c19func_ov063_0211ab68Ev",
+          "module": "ov063",
+          "addr": "0x211ab68",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daTrs_c.cpp",
+          "name": "__sinit_daTrs_c.cpp",
+          "module": "ov063",
+          "addr": "0x211e29c",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKrb_c.cpp",
+          "name": "__sinit_daKrb_c.cpp",
+          "module": "ov084",
+          "addr": "0x213035c",
+          "verdict": "BLIND-20",
+          "blind": 20,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBook_c.cpp",
+          "name": "__sinit_daBook_c.cpp",
+          "module": "ov020",
+          "addr": "0x2113674",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBasabasa_c.cpp",
+          "name": "__sinit_daBasabasa_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c2a8",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBttBk_c.cpp",
+          "name": "__sinit_daBttBk_c.cpp",
+          "module": "ov080",
+          "addr": "0x2127a60",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBlockL_c.cpp",
+          "name": "__sinit_daObjBlockL_c.cpp",
+          "module": "ov002",
+          "addr": "0x2100d44",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjDlPyramid_c.cpp",
+          "name": "__sinit_daObjDlPyramid_c.cpp",
+          "module": "ov024",
+          "addr": "0x2112808",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjBk_Lift_c.cpp",
+          "name": "__sinit_daObjBk_Lift_c.cpp",
+          "module": "ov015",
+          "addr": "0x2113264",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daTor_c.cpp",
+          "name": "__sinit_daTor_c.cpp",
+          "module": "ov096",
+          "addr": "0x2137894",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjKm2_Nobiru_c.cpp",
+          "name": "__sinit_daObjKm2_Nobiru_c.cpp",
+          "module": "ov045",
+          "addr": "0x2112280",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDpLift_c.cpp",
+          "name": "__sinit_daDpLift_c.cpp",
+          "module": "ov025",
+          "addr": "0x2112aac",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjDpBrock_c.cpp",
+          "name": "__sinit_daObjDpBrock_c.cpp",
+          "module": "ov025",
+          "addr": "0x2112a44",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_mizu.cpp",
+          "name": "__sinit_d_a_obj_wc_mizu.cpp",
+          "module": "ov029",
+          "addr": "0x2112d90",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtMecha08_c.cpp",
+          "name": "__sinit_daObjCtMecha08_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c9b8",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daSlide_Box_c.cpp",
+          "name": "__sinit_daSlide_Box_c.cpp",
+          "module": "ov016",
+          "addr": "0x2113a50",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_rc_hane.cpp",
+          "name": "__sinit_d_a_obj_rc_hane.cpp",
+          "module": "ov036",
+          "addr": "0x2112688",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjKanban_c.cpp",
+          "name": "__sinit_daObjKanban_c.cpp",
+          "module": "ov085",
+          "addr": "0x212fdb0",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km1_ukishima.cpp",
+          "name": "__sinit_d_a_obj_km1_ukishima.cpp",
+          "module": "ov043",
+          "addr": "0x21117fc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km1_kuruma.cpp",
+          "name": "__sinit_d_a_obj_km1_kuruma.cpp",
+          "module": "ov043",
+          "addr": "0x21118d4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_obj07.cpp",
+          "name": "__sinit_d_a_obj_wc_obj07.cpp",
+          "module": "ov029",
+          "addr": "0x2112d24",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_nknk.cpp",
+          "name": "__sinit_d_a_nknk.cpp",
+          "module": "ov062",
+          "addr": "0x211d2d8",
+          "verdict": "BLIND-24",
+          "blind": 24,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daSnowman_c.cpp",
+          "name": "__sinit_daSnowman_c.cpp",
+          "module": "ov081",
+          "addr": "0x2128154",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDossy_c.cpp",
+          "name": "__sinit_daDossy_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c440",
+          "verdict": "BLIND-25",
+          "blind": 25,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daOwl_c.cpp",
+          "name": "__sinit_daOwl_c.cpp",
+          "module": "ov094",
+          "addr": "0x21367e8",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMoray_c.cpp",
+          "name": "daMoray_c_classInit",
+          "module": "ov016",
+          "addr": "0x2112588",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMoray_c.cpp",
+          "name": "__sinit_daMoray_c.cpp",
+          "module": "ov016",
+          "addr": "0x21136ec",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjTbox_c.cpp",
+          "name": "__sinit_daObjTbox_c.cpp",
+          "module": "ov064",
+          "addr": "0x211b59c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_Amilift_c.cpp",
+          "name": "__sinit_daObjFl_Amilift_c.cpp",
+          "module": "ov064",
+          "addr": "0x211afc0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daShark_c.cpp",
+          "name": "__sinit_daShark_c.cpp",
+          "module": "ov090",
+          "addr": "0x2134020",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSimpleBg_c.cpp",
+          "name": "__sinit_daObjSimpleBg_c.cpp",
+          "module": "ov102",
+          "addr": "0x214d714",
+          "verdict": "BLIND-26",
+          "blind": 26,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjRc_Tikuwa_c.cpp",
+          "name": "__sinit_daObjRc_Tikuwa_c.cpp",
+          "module": "ov036",
+          "addr": "0x21126c8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_Block_c.cpp",
+          "name": "__sinit_daObjFl_Block_c.cpp",
+          "module": "ov022",
+          "addr": "0x2112d80",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_obj02.cpp",
+          "name": "__sinit_d_a_obj_wc_obj02.cpp",
+          "module": "ov029",
+          "addr": "0x2112ba4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtMecha09_c.cpp",
+          "name": "__sinit_daObjCtMecha09_c.cpp",
+          "module": "ov065",
+          "addr": "0x211ca74",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wakame.cpp",
+          "name": "__sinit_d_a_obj_wakame.cpp",
+          "module": "ov002",
+          "addr": "0x2101894",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjTtWater_c.cpp",
+          "name": "__sinit_daObjTtWater_c.cpp",
+          "module": "ov033",
+          "addr": "0x2111a54",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km2_ami_bou.cpp",
+          "name": "__sinit_d_a_obj_km2_ami_bou.cpp",
+          "module": "ov045",
+          "addr": "0x2112214",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjWlSubmarine_c.cpp",
+          "name": "__sinit_daObjWlSubmarine_c.cpp",
+          "module": "ov026",
+          "addr": "0x2112c28",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
+          "name": "__sinit_d_a_obj_km1_kurumajiku.cpp",
+          "module": "ov043",
+          "addr": "0x2111868",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_sld_mng.cpp",
+          "name": "__sinit_d_a_sld_mng.cpp",
+          "module": "ov019",
+          "addr": "0x2112b14",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/minigames/d_s_mg_trampoline2.cpp",
+          "name": "__sinit_d_s_mg_trampoline2.cpp",
+          "module": "ov006",
+          "addr": "0x213322c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjMarioCap_c.cpp",
+          "name": "__sinit_daObjMarioCap_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101064",
+          "verdict": "BLIND-27",
+          "blind": 27,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjTatefuda_c.cpp",
+          "name": "__sinit_daObjTatefuda_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101738",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBakubaku_c.cpp",
+          "name": "__sinit_daBakubaku_c.cpp",
+          "module": "ov032",
+          "addr": "0x2112c10",
+          "verdict": "BLIND-8",
+          "blind": 8,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daOnms_c.cpp",
+          "name": "__sinit_daOnms_c.cpp",
+          "module": "ov092",
+          "addr": "0x21320cc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjEwbIce_c.cpp",
+          "name": "__sinit_daObjEwbIce_c.cpp",
+          "module": "ov073",
+          "addr": "0x2122d48",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSeesaw_c.cpp",
+          "name": "__sinit_daObjSeesaw_c.cpp",
+          "module": "ov095",
+          "addr": "0x2136fe0",
+          "verdict": "BLIND-30",
+          "blind": 30,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daPgDfdr_c.cpp",
+          "name": "__sinit_daPgDfdr_c.cpp",
+          "module": "ov027",
+          "addr": "0x2112df8",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp",
+          "name": "__sinit_d_a_trs_trap.cpp",
+          "module": "ov063",
+          "addr": "0x211e3cc",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWater_Tatumaki_c.cpp",
+          "name": "__sinit_daWater_Tatumaki_c.cpp",
+          "module": "ov026",
+          "addr": "0x2112c94",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjClock_c.cpp",
+          "name": "__sinit_daObjClock_c.cpp",
+          "module": "ov013",
+          "addr": "0x21116f8",
+          "verdict": "BLIND-5",
+          "blind": 5,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_Ring_c.cpp",
+          "name": "__sinit_daObjFl_Ring_c.cpp",
+          "module": "ov022",
+          "addr": "0x2112ca8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_obj04.cpp",
+          "name": "__sinit_d_a_obj_wc_obj04.cpp",
+          "module": "ov029",
+          "addr": "0x2112dfc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_London_c.cpp",
+          "name": "__sinit_daObjFl_London_c.cpp",
+          "module": "ov022",
+          "addr": "0x2112dec",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_c0_switch.cpp",
+          "name": "__sinit_d_a_obj_c0_switch.cpp",
+          "module": "ov012",
+          "addr": "0x2111a88",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wanwan_shutter.cpp",
+          "name": "__sinit_d_a_obj_wanwan_shutter.cpp",
+          "module": "ov014",
+          "addr": "0x21132fc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjWlKoopaShutter_c.cpp",
+          "name": "__sinit_daObjWlKoopaShutter_c.cpp",
+          "module": "ov026",
+          "addr": "0x2112bbc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_ks_water.cpp",
+          "name": "__sinit_d_a_obj_ks_water.cpp",
+          "module": "ov017",
+          "addr": "0x211198c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_Ukiyuka_c.cpp",
+          "name": "__sinit_daObjFl_Ukiyuka_c.cpp",
+          "module": "ov022",
+          "addr": "0x2112ec0",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km2_fall_block.cpp",
+          "name": "__sinit_d_a_obj_km2_fall_block.cpp",
+          "module": "ov045",
+          "addr": "0x21123c0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daObjFl_Fall_Block_c.cpp",
+          "name": "__sinit_daObjFl_Fall_Block_c.cpp",
+          "module": "ov022",
+          "addr": "0x2112fe4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/Eyerok.cpp",
+          "name": "daIwante_c_classInit",
+          "module": "ov066",
+          "addr": "0x211a370",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/Eyerok.cpp",
+          "name": "__sinit_Eyerok.cpp",
+          "module": "ov066",
+          "addr": "0x211a418",
+          "verdict": "BLIND-48",
+          "blind": 48,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjHatenaBlock_c.cpp",
+          "name": "__sinit_daObjHatenaBlock_c.cpp",
+          "module": "ov102",
+          "addr": "0x214d908",
+          "verdict": "BLIND-19",
+          "blind": 19,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/Scuttlebug.cpp",
+          "name": "__sinit_Scuttlebug.cpp",
+          "module": "ov071",
+          "addr": "0x21226ac",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_propeller_heyho.cpp",
+          "name": "__sinit_d_a_propeller_heyho.cpp",
+          "module": "ov070",
+          "addr": "0x2122afc",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_Coin_c.cpp",
+          "name": "__sinit_daObjFl_Coin_c.cpp",
+          "module": "ov064",
+          "addr": "0x211b1d4",
+          "verdict": "BLIND-32",
+          "blind": 32,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/dScMgJump_c.cpp",
+          "name": "__sinit_dScMgJump_c.cpp",
+          "module": "ov006",
+          "addr": "0x2130e9c",
+          "verdict": "BLIND-5",
+          "blind": 5,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daRNk_c.cpp",
+          "name": "__sinit_daRNk_c.cpp",
+          "module": "ov062",
+          "addr": "0x211d4a0",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daPukupuku_c.cpp",
+          "name": "__sinit_daPukupuku_c.cpp",
+          "module": "ov090",
+          "addr": "0x2133f4c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWbm_c.cpp",
+          "name": "__sinit_daWbm_c.cpp",
+          "module": "ov098",
+          "addr": "0x213c2b4",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_ice_block.cpp",
+          "name": "__sinit_d_a_obj_ice_block.cpp",
+          "module": "ov081",
+          "addr": "0x21287b8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_obj05.cpp",
+          "name": "__sinit_d_a_obj_wc_obj05.cpp",
+          "module": "ov029",
+          "addr": "0x2112c4c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFl_Seesaw_c.cpp",
+          "name": "__sinit_daObjFl_Seesaw_c.cpp",
+          "module": "ov022",
+          "addr": "0x2112e58",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_c1_hikari.cpp",
+          "name": "__sinit_d_a_obj_c1_hikari.cpp",
+          "module": "ov010",
+          "addr": "0x211211c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_s_bird.cpp",
+          "name": "__sinit_d_a_s_bird.cpp",
+          "module": "ov009",
+          "addr": "0x2112458",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjHmMaruta_c.cpp",
+          "name": "__sinit_daObjHmMaruta_c.cpp",
+          "module": "ov030",
+          "addr": "0x21148b8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_b_swdoor.cpp",
+          "name": "__sinit_d_a_obj_b_swdoor.cpp",
+          "module": "ov014",
+          "addr": "0x21130ac",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km2_gura.cpp",
+          "name": "__sinit_d_a_obj_km2_gura.cpp",
+          "module": "ov045",
+          "addr": "0x2112358",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKpa_c.cpp",
+          "name": "__sinit_daKpa_c.cpp",
+          "module": "ov060",
+          "addr": "0x21195dc",
+          "verdict": "BLIND-73",
+          "blind": 73,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/dMgJump3DMario_c.cpp",
+          "name": "__sinit_dMgJump3DMario_c.cpp",
+          "module": "ov006",
+          "addr": "0x212f52c",
+          "verdict": "BLIND-16",
+          "blind": 16,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daSanbo_c.cpp",
+          "name": "__sinit_daSanbo_c.cpp",
+          "module": "ov096",
+          "addr": "0x213770c",
+          "verdict": "BLIND-5",
+          "blind": 5,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_fish.cpp",
+          "name": "__sinit_d_a_fish.cpp",
+          "module": "ov100",
+          "addr": "0x2147bc0",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_cnn.cpp",
+          "name": "__sinit_d_a_cnn.cpp",
+          "module": "ov098",
+          "addr": "0x213c214",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtMecha04_c.cpp",
+          "name": "__sinit_daObjCtMecha04_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c7d8",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_ice_board.cpp",
+          "name": "__sinit_d_a_obj_ice_board.cpp",
+          "module": "ov018",
+          "addr": "0x2112e00",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjSlIceBlock_c.cpp",
+          "name": "__sinit_daObjSlIceBlock_c.cpp",
+          "module": "ov027",
+          "addr": "0x2112cb0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wl_polelift.cpp",
+          "name": "__sinit_d_a_obj_wl_polelift.cpp",
+          "module": "ov026",
+          "addr": "0x2112b7c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_cannon_shutter.cpp",
+          "name": "__sinit_d_a_obj_cannon_shutter.cpp",
+          "module": "ov002",
+          "addr": "0x2101968",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_i_donketu.cpp",
+          "name": "__sinit_d_a_i_donketu.cpp",
+          "module": "ov027",
+          "addr": "0x2112d1c",
+          "verdict": "BLIND-12",
+          "blind": 12,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_cv_shutter.cpp",
+          "name": "__sinit_d_a_obj_cv_shutter.cpp",
+          "module": "ov021",
+          "addr": "0x21136c8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km2_ukishima.cpp",
+          "name": "__sinit_d_a_obj_km2_ukishima.cpp",
+          "module": "ov045",
+          "addr": "0x21122ec",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjFlamethrower_c.cpp",
+          "name": "daObjFlamethrower_c_classInit",
+          "module": "ov095",
+          "addr": "0x2136ed4",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/dMg3DEspAnimSet_c.cpp",
+          "name": "__sinit_dMg3DEspAnimSet_c.cpp",
+          "module": "ov006",
+          "addr": "0x2130a08",
+          "verdict": "BLIND-23",
+          "blind": 23,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_wanwan.cpp",
+          "name": "daWanwan_c_classInit",
+          "module": "ov014",
+          "addr": "0x2112d1c",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_wanwan.cpp",
+          "name": "__sinit_d_a_wanwan.cpp",
+          "module": "ov014",
+          "addr": "0x2113118",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daJango_c.cpp",
+          "name": "__sinit_daJango_c.cpp",
+          "module": "ov062",
+          "addr": "0x211d6fc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_pg_mthr.cpp",
+          "name": "__sinit_d_a_pg_mthr.cpp",
+          "module": "ov018",
+          "addr": "0x2112c80",
+          "verdict": "BLIND-13",
+          "blind": 13,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWanwan2_c.cpp",
+          "name": "daWanwan2_c_classInit",
+          "module": "ov100",
+          "addr": "0x21442dc",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daWanwan2_c.cpp",
+          "name": "__sinit_daWanwan2_c.cpp",
+          "module": "ov100",
+          "addr": "0x21475a4",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daGrock_c.cpp",
+          "name": "__sinit_daGrock_c.cpp",
+          "module": "ov021",
+          "addr": "0x2113688",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daHuwa_c.cpp",
+          "name": "__sinit_daHuwa_c.cpp",
+          "module": "ov081",
+          "addr": "0x21280e8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_hatena_switch.cpp",
+          "name": "__sinit_d_a_obj_hatena_switch.cpp",
+          "module": "ov002",
+          "addr": "0x2100ec4",
+          "verdict": "BLIND-11",
+          "blind": 11,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_hs_billboard.cpp",
+          "name": "__sinit_d_a_obj_hs_billboard.cpp",
+          "module": "ov031",
+          "addr": "0x2111434",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtKaitendai_c.cpp",
+          "name": "__sinit_daObjCtKaitendai_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c8fc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_bc_switch.cpp",
+          "name": "__sinit_d_a_obj_bc_switch.cpp",
+          "module": "ov002",
+          "addr": "0x2107304",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daObjCtMecha05_c.cpp",
+          "name": "__sinit_daObjCtMecha05_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c890",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjHeart_c.cpp",
+          "name": "__sinit_daObjHeart_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101900",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_clock_huriko.cpp",
+          "name": "__sinit_d_a_obj_clock_huriko.cpp",
+          "module": "ov013",
+          "addr": "0x21116b8",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDsn_c.cpp",
+          "name": "__sinit_daDsn_c.cpp",
+          "module": "ov091",
+          "addr": "0x2134930",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_mc_flag.cpp",
+          "name": "__sinit_d_a_mc_flag.cpp",
+          "module": "ov009",
+          "addr": "0x2112ac8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_rc_guruguru.cpp",
+          "name": "__sinit_d_a_obj_rc_guruguru.cpp",
+          "module": "ov036",
+          "addr": "0x2112730",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km3_dorifu.cpp",
+          "name": "__sinit_d_a_obj_km3_dorifu.cpp",
+          "module": "ov047",
+          "addr": "0x211181c",
+          "verdict": "BLIND-22",
+          "blind": 22,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_obj01.cpp",
+          "name": "__sinit_d_a_obj_wc_obj01.cpp",
+          "module": "ov029",
+          "addr": "0x2112b38",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daStar_c.cpp",
+          "name": "__sinit_daStar_c.cpp",
+          "module": "ov002",
+          "addr": "0x2106e40",
+          "verdict": "BLIND-20",
+          "blind": 20,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKing_Donketu_c.cpp",
+          "name": "daKing_Donketu_c_classInit",
+          "module": "ov073",
+          "addr": "0x2121ec8",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daKing_Donketu_c.cpp",
+          "name": "__sinit_daKing_Donketu_c.cpp",
+          "module": "ov073",
+          "addr": "0x2122874",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "_ZN8daDoor_c19func_ov100_02144a38EP6Player",
+          "module": "ov100",
+          "addr": "0x2144a38",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "_ZN8daDoor_c19func_ov100_021451c4EPvP6Player",
+          "module": "ov100",
+          "addr": "0x21451c4",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "_ZN8daDoor_c13InitResourcesEv",
+          "module": "ov100",
+          "addr": "0x21455a0",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDoor_c.cpp",
+          "name": "__sinit_daDoor_c.cpp",
+          "module": "ov100",
+          "addr": "0x2147698",
+          "verdict": "BLIND-26",
+          "blind": 26,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_krpa.cpp",
+          "name": "__sinit_d_a_krpa.cpp",
+          "module": "ov070",
+          "addr": "0x2122f30",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_c1_trap.cpp",
+          "name": "__sinit_d_a_obj_c1_trap.cpp",
+          "module": "ov010",
+          "addr": "0x211203c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_linelift2.cpp",
+          "name": "__sinit_d_a_linelift2.cpp",
+          "module": "ov091",
+          "addr": "0x21345dc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_ey_bm.cpp",
+          "name": "__sinit_d_a_ey_bm.cpp",
+          "module": "ov071",
+          "addr": "0x2122a1c",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daDonketu_c.cpp",
+          "name": "__sinit_daDonketu_c.cpp",
+          "module": "ov064",
+          "addr": "0x211ae00",
+          "verdict": "BLIND-12",
+          "blind": 12,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjCtRotateBlock_c.cpp",
+          "name": "__sinit_daObjCtRotateBlock_c.cpp",
+          "module": "ov065",
+          "addr": "0x211c660",
+          "verdict": "BLIND-14",
+          "blind": 14,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_obj03.cpp",
+          "name": "__sinit_d_a_obj_wc_obj03.cpp",
+          "module": "ov029",
+          "addr": "0x2112c10",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_fm_battan.cpp",
+          "name": "__sinit_d_a_obj_fm_battan.cpp",
+          "module": "ov023",
+          "addr": "0x2111aa8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daObjPathLift_c.cpp",
+          "name": "__sinit_daObjPathLift_c.cpp",
+          "module": "ov100",
+          "addr": "0x2147d7c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjKi_Hasira_c.cpp",
+          "name": "__sinit_daObjKi_Hasira_c.cpp",
+          "module": "ov016",
+          "addr": "0x2113978",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_hm_bskt.cpp",
+          "name": "__sinit_d_a_obj_hm_bskt.cpp",
+          "module": "ov030",
+          "addr": "0x211484c",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daFRing_c.cpp",
+          "name": "__sinit_daFRing_c.cpp",
+          "module": "ov060",
+          "addr": "0x211a428",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_bk_billboard.cpp",
+          "name": "__sinit_d_a_obj_bk_billboard.cpp",
+          "module": "ov015",
+          "addr": "0x2112f9c",
+          "verdict": "BLIND-3",
+          "blind": 3,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_td_futa.cpp",
+          "name": "__sinit_d_a_obj_td_futa.cpp",
+          "module": "ov032",
+          "addr": "0x2112dbc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km3_kuruma.cpp",
+          "name": "__sinit_d_a_obj_km3_kuruma.cpp",
+          "module": "ov047",
+          "addr": "0x21117b4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_wc_obj06.cpp",
+          "name": "__sinit_d_a_obj_wc_obj06.cpp",
+          "module": "ov029",
+          "addr": "0x2112cb8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_btn.cpp",
+          "name": "__sinit_d_a_btn.cpp",
+          "module": "ov079",
+          "addr": "0x2127618",
+          "verdict": "BLIND-36",
+          "blind": 36,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daMip_c.cpp",
+          "name": "__sinit_daMip_c.cpp",
+          "module": "ov085",
+          "addr": "0x212f5ec",
+          "verdict": "BLIND-21",
+          "blind": 21,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjKey_c.cpp",
+          "name": "__sinit_daObjKey_c.cpp",
+          "module": "ov089",
+          "addr": "0x21328d4",
+          "verdict": "BLIND-18",
+          "blind": 18,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/dScDSMT_c.cpp",
+          "name": "_ZN9dScDSMT_c8BehaviorEv",
+          "module": "ov007",
+          "addr": "0x20cc2cc",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/dScDSMT_c.cpp",
+          "name": "_ZN9dScDSMT_c13InitResourcesEv",
+          "module": "ov007",
+          "addr": "0x20cc4c0",
+          "verdict": "BLIND-2",
+          "blind": 2,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daPiano_c/d_a_piano.cpp",
+          "name": "__sinit_d_a_piano.cpp",
+          "module": "ov063",
+          "addr": "0x211e5fc",
+          "verdict": "BLIND-9",
+          "blind": 9,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daManta_c.cpp",
+          "name": "__sinit_daManta_c.cpp",
+          "module": "ov090",
+          "addr": "0x2133ea8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjPile_c.cpp",
+          "name": "__sinit_daObjPile_c.cpp",
+          "module": "ov091",
+          "addr": "0x21349c4",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/daObjPushblock_c.cpp",
+          "name": "__sinit_daObjPushblock_c.cpp",
+          "module": "ov002",
+          "addr": "0x2101478",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_ki_fune.cpp",
+          "name": "__sinit_d_a_obj_ki_fune.cpp",
+          "module": "ov016",
+          "addr": "0x21138bc",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daBDonketu_c.cpp",
+          "name": "__sinit_daBDonketu_c.cpp",
+          "module": "ov064",
+          "addr": "0x211aee0",
+          "verdict": "BLIND-12",
+          "blind": 12,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjShell_c.cpp",
+          "name": "__sinit_daObjShell_c.cpp",
+          "module": "ov064",
+          "addr": "0x211b698",
+          "verdict": "BLIND-8",
+          "blind": 8,
+          "diffs": []
+        },
+        {
+          "file": "src/actors/daObjEmmYuka_c.cpp",
+          "name": "__sinit_daObjEmmYuka_c.cpp",
+          "module": "ov052",
+          "addr": "0x2111bd0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_bk_rotebar.cpp",
+          "name": "__sinit_d_a_obj_bk_rotebar.cpp",
+          "module": "ov015",
+          "addr": "0x21132d0",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_td_water.cpp",
+          "name": "__sinit_d_a_obj_td_water.cpp",
+          "module": "ov032",
+          "addr": "0x2112e28",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_bk_fall_block.cpp",
+          "name": "__sinit_d_a_obj_bk_fall_block.cpp",
+          "module": "ov015",
+          "addr": "0x21133a8",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        },
+        {
+          "file": "src/game/actors/d_a_obj_km3_kurumajiku.cpp",
+          "name": "__sinit_d_a_obj_km3_kurumajiku.cpp",
+          "module": "ov047",
+          "addr": "0x21116dc",
+          "verdict": "BLIND-6",
+          "blind": 6,
+          "diffs": []
+        }
+      ],
+      "blocking": [],
+      "baseline_warning_controls": {
+        "count": 220,
+        "all_identical": true,
+        "method": "Actual same stock _load_symbol/_run_linkcheck logic for each advisory symbol, including its ERROR retry, in a separate wired exact-base control tree. Completed candidate batches were checked as available; final complete warning set is required. Positive controls do not turn warnings into strict metadata proof.",
+        "artifact_sha256": "86aeeeac5bcec5e51b0b893fc33a9a66dde1a5c4e58bb04b641e291582d9c461"
+      },
+      "qualification": "Actual official --files batches cover the exact397-source literal-range expansion. No serial --range execution is claimed. Every warning retains its source, symbol, verdict, blind count and diffs; equivalent baseline warnings remain advisory, not strict whole-metadata proof."
+    },
+    "decl": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "2c689bff2c9b839582f90438da718a82b19ff207"
+      ],
+      "exit_code": 0,
+      "seconds": 17.614267349243164,
+      "log": "build\\fbase-init-native1014\\decl.log",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "log_sha256": "9919e642831085403c26c30276f24cb4b1e39a045d917ee8d82f993729e7b008",
+      "positive_native_collection": {
+        "baseline_count": 7495,
+        "candidate_count": 7495,
+        "new": [],
+        "removed": [],
+        "native_definition": {
+          "symbol": "_ZN7fBase_c13InitResourcesEv",
+          "signature": "int (<this>)",
+          "is_member": true,
+          "file": "src/actors/ActorBase.cpp",
+          "line": 245
+        },
+        "qualification": "Header comments do not change tokens or signatures; baseline Source was parsed from the exact claimed-base snapshot with identical scalar/type/static-member inputs."
+      },
+      "scope": "564 files,49 changed symbols,127 files reached via17 type names;3999 scoped disagreements; no new disagreements or local header redeclarations."
+    },
+    "decl-global": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_decl_agreement.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 12.694640874862671,
+      "log": "build\\fbase-init-native1014\\decl-global.log",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "log_sha256": "79a2b4156fa3aa9c2e7d85e8738bbe1d857937e95b5b71413d260972ad11aebd",
+      "qualification": "7495 pre-existing banked disagreements retained; no baseline file edits. A passing ratchet is not global declaration agreement."
+    },
+    "port": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3685455322265625,
+      "log": "build\\fbase-init-native1014\\port.log",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "references_checked": 267
+    },
+    "langmode": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "exit_code": 0,
+      "seconds": 17.650331497192383,
+      "log": "build\\fbase-init-native1014\\langmode.log",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+    },
+    "conflict": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_tubuild_conflicts.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5659143924713135,
+      "log": "build\\fbase-init-native1014\\conflict.log",
+      "checkpoint": "87457bcf4376f635eea96e0dde513f29cdcd55c3",
+      "base": "2c689bff2c9b839582f90438da718a82b19ff207",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "manifests": 429,
+      "sources_read": 429,
+      "recorded_notes": 6
+    }
+  },
+  "global_data_advisory": {
+    "verified": 970,
+    "partial": 1519,
+    "differs": 1,
+    "unnamed": 21,
+    "totalRecords": 5285
+  },
+  "tested_build_trees": {
+    "src": "a73e937cf2e4cb035cb6c6e5be7ac82488d54869",
+    "include": "9a7fe3dd2d6c10927c6604d70dc4bfaca9c614ae",
+    "config": "166c69696a91529cd4ccf3fdd9e4269fed031518",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "source_sha256": "f38c3ae3aaf9862529449bcddcfee643d060d44c7a2b5f3c0867d241ead5d110",
+  "manifest_sha256": "830fbaa6e9e541a306c4666ff2e74d1bcc4f0ed6c18f4d42929522a176e8fa31",
+  "compiler_only_policy": [
+    {
+      "symbol": "_ZN7fBase_cC1Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the complete-object constructor beside the licensed base-object C2; the ROM has no configured C1 home and this TU's surviving functions do not reference it"
+    },
+    {
+      "symbol": "_ZN7fBase_c7ManagerD1Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the inline Manager cleanup helper while lowering fBase_c's constructor; it has no configured ROM home and no surviving reference"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Native InitResources key-function emission: complete emitted metadata including vtable preamble and canonical references matches retail. Verify before externalizing to unchanged ROM storage outside this TU owned text.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Native InitResources key-function emission: complete emitted metadata including vtable preamble and canonical references matches retail. Verify before externalizing to unchanged ROM storage outside this TU owned text.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTV7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Native InitResources key-function emission: complete emitted metadata including vtable preamble and canonical references matches retail. Verify before externalizing to unchanged ROM storage outside this TU owned text.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099edc"
+    }
+  ],
+  "deadstrip_plan": {
+    "keep": null,
+    "drop": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      46,
+      47,
+      48,
+      49
+    ],
+    "externalise": [
+      "_ZTI7fBase_c",
+      "_ZTS7fBase_c",
+      "_ZTV7fBase_c"
+    ],
+    "dead": [
+      "_ZN7fBase_c7ManagerD1Ev",
+      "_ZN7fBase_cC1Ev"
+    ],
+    "referenced": [],
+    "rebase": [
+      40,
+      42,
+      44,
+      50
+    ],
+    "error": null
+  },
+  "artifacts": {
+    "proof.json": "527c978c4d66dcbe5dedd9f8d9e97e001c9764669e5c57b43755b65b31fe65aa",
+    "graphs.json": "65fbe6404cf391be3ed177443e41d815cec656fde513f3a168332b13894bfea5",
+    "deadstrip-plan.json": "cdc39e12d37cda4168dcb7da39c03dc9c9d5d4ef4b906750a331c9f4c0a0f159",
+    "consumers-baseline.json": "b54838a21d05744b5ee89c23d683c885318988ff63fd37d5117fafd547ba48a3",
+    "consumers-candidate.json": "973748c7958de1876f5e05e841b0c7a503ddd76461b7c55ab27d2f8b5889c19e",
+    "header-consumers.json": "2fbbaefdbaea5f7f46314d2fe76cfaee022acbff9999faa3cec26902d20acb2d",
+    "declaration-proof.json": "db90c1d75e8810eea42c26f3d38e50a51be0c4965d47d5146fd1477d37e5fde2",
+    "stock-coverage.json": "689bdb4c3ef5ff72357ff1cb81a1b108cf8f069a1efb8ca520197565388b04a8",
+    "stock-results.json": "f4af08187ddd44ae7e6fa9c78404535fd73767892ef190c0c63d07591e66febd",
+    "stock-summary.json": "45d957741625cadf540e4582792d6d007f99643f8cc423ea66bc6793e505a284",
+    "stock-warning-controls.json": "86aeeeac5bcec5e51b0b893fc33a9a66dde1a5c4e58bb04b641e291582d9c461",
+    "rombuild-report.json": "2a605aa5f90c35d264c944b4aff4938ba77f14465867de2639b893a179ca1612",
+    "baseline-linkcheck.json": "d5660d3201dbca353d4360a8c19fd5209739c114cea4f1901abb9a429f244530",
+    "gate-results.json": "f2cf81e39893d981902b161e04afe3f29a72c87f1930a859bccdaf2d11c065e9"
+  },
+  "report_only_finalization": "Only this report changes after 87457bcf4376f635eea96e0dde513f29cdcd55c3; private final-binding.json binds identical src/include/config/tools/port trees.",
+  "publication": "Producer proof is not independent Source acceptance. Queue offer requires root serialization; no public push, PR or main merge by this author."
+}

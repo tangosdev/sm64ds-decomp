@@ -22,7 +22,14 @@
  *   is a deadstripped duplicate.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km1_kuruma_AssetId {
+    ASSET_KM1_KURUMA_BMD = 0x0653,
+    ASSET_KM1_KURUMA_KCL = 0x0654
+};
+
 #include "daObjKm1_Kuruma_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
 struct CLPS_Block;
@@ -62,19 +69,6 @@ int func_ov002_020b68b0(daObjKuruma_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov043_02112418;
 }
 
-struct KurumaSpawnInfo {
-    daObjKm1_Kuruma_c *(*classInit)();
-    s16 executePriority; /* +4: also KM1_KURUMA registry id 0x0088 = 136 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char KurumaSpawnInfo_size_must_be_0x1c[
-    sizeof(KurumaSpawnInfo) == 0x1c ? 1 : -1];
-
 // @symbol daObjKm1_Kuruma_c_classInit
 extern "C" daObjKm1_Kuruma_c *daObjKm1_Kuruma_c_classInit()
 {
@@ -82,9 +76,9 @@ extern "C" daObjKm1_Kuruma_c *daObjKm1_Kuruma_c_classInit()
 }
 
 // @symbol g_profile_KM1_KURUMA
-extern "C" KurumaSpawnInfo g_profile_KM1_KURUMA = {
+extern "C" SpawnInfo<daObjKm1_Kuruma_c> g_profile_KM1_KURUMA = {
     daObjKm1_Kuruma_c_classInit,
-    0x0088,
+    0x0088, /* KM1_KURUMA registry id 136 */
     0x00b1,
     2,
     0,
@@ -107,5 +101,5 @@ s32 daObjKm1_Kuruma_c::CleanupResources()
 
 /* Static-init globals (was the handwritten __sinit_ov043_021118d4 shard).
  * Definition order is the retail initializer's construction order. */
-Km1KurumaModelFile data_ov043_02112638(0x653);
-Km1KurumaCollisionFilePtr data_ov043_02112630(0x654);
+Km1KurumaModelFile gKm1KurumaModelFile(ASSET_KM1_KURUMA_BMD);
+Km1KurumaCollisionFilePtr gKm1KurumaCollisionFile(ASSET_KM1_KURUMA_KCL);

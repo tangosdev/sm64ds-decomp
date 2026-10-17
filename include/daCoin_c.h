@@ -45,7 +45,7 @@ struct daStarBase_c;
  * (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot holds the base's
  * own word and is inherited, so it is deliberately not redeclared here.
  * Every override, InitResources and CleanupResources included, is defined as
- * a real member in src/actors/daCoin_c.cpp. The out-of-line destructor is the
+ * a real member in src/game/actors/d_a_coin.cpp. The out-of-line destructor is the
  * key function, so that TU owns the vtable.
  */
 struct daCoin_c : dActor_c {
@@ -53,23 +53,23 @@ struct daCoin_c : dActor_c {
     s32 mPuzzleManagerID;            /* 0x0d4 */
     /* dExtCommonModel_c member, named by the class's own destructor calling
        dExtCommonModel_c's D1 at +0x0d8 -- a relocation the ROM build
-       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/actors/daCoin_c.cpp] */
+       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/game/actors/d_a_coin.cpp] */
     dExtCommonModel_c mCommonModel1;            /* 0x0d8 */
     /* dExtCommonModel_c member, named by the class's own destructor calling
        dExtCommonModel_c's D1 at +0x114 -- a relocation the ROM build
-       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/actors/daCoin_c.cpp] */
+       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/game/actors/d_a_coin.cpp] */
     dExtCommonModel_c mCommonModel2;            /* 0x114 */
     /* dExtShadowModel_c member, named by the class's own destructor calling
        dExtShadowModel_c's D1 at +0x150 -- a relocation the ROM build
-       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/actors/daCoin_c.cpp] */
+       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/game/actors/d_a_coin.cpp] */
     dExtShadowModel_c mShadowModel;            /* 0x150 */
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x178 -- a relocation the ROM build
-       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/actors/daCoin_c.cpp] */
+       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/game/actors/d_a_coin.cpp] */
     dCcAc_c mdCc_c;            /* 0x178 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x1ac -- a relocation the ROM build
-       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/actors/daCoin_c.cpp] */
+       checks. Was a u8 marker. [daCoin_c::~daCoin_c, src/game/actors/d_a_coin.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1ac */
     Matrix4x3 mShadowMat;        /* 0x368 */
     s32 mFloorPosY;            /* 0x398 */
@@ -90,9 +90,9 @@ struct daCoin_c : dActor_c {
     u8  mSpawnFilter;            /* 0x3ab */
     s8  mTrackStarID;            /* 0x3ac */
     u8  pad_3ad[0x1];
-    /* Packed flags; the bit layout is CoinFlagBits in daCoin_c.cpp. Bit 0
-       gates Render entirely; Behavior tests bits 0 and 1. The read-modify-write
-       sites keep a raw `*(u8*)((int)this + 0x3ae)` spelling. */
+    /* Packed flags; the bit layout is CoinFlagBits in d_a_coin.cpp. Bit 0
+       gates Render entirely; Behavior tests bits 0 and 1. InitResources'
+       three masked stores keep a `*(u8 *)((int)&mCoinFlags)` launder. */
     u8  mCoinFlags;            /* 0x3ae */
     /* Set to 1 by func_ov002_020b1008 once it has looked for a BLOCK_L
        actor near a red coin, so the search runs one time. */

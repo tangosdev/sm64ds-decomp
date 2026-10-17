@@ -1,0 +1,618 @@
+{
+  "task": "fbase-dispatch-readable1014",
+  "base": "abda847a033878471ed46708503a59c08037f3f4",
+  "source_author_session": "codex-fbase-dispatch-producer1014",
+  "same_actual_agent_aliases": [
+    "codex-scene-report-recovery1014",
+    "codex-native-main-review1014",
+    "codex-fbase-dispatch-producer1014"
+  ],
+  "same_agent_disclosure": "Same actual agent previously ran the private int-PMF scout, finalized the separate scene report as codex-scene-report-recovery1014, and independently reviewed native-main composition as codex-native-main-review1014. This dispatcher candidate is this agent authored source and must be independently reviewed by another actual session.",
+  "prior_source_sessions": [
+    "01a13751-2d56-7901-a14d-9543eb0dbf2e",
+    "codex-delivery-integrator1014",
+    "codex-fbase-integrator-0923",
+    "codex-root-fbase-readable-0923",
+    "codex-root-fbase-scene-scout1014",
+    "codex-scene-current-integrator1014",
+    "codex-scene-report-recovery1014"
+  ],
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+  "predecessor_tasks": [
+    "fbase-scene-current-compose1014"
+  ],
+  "scope": [
+    "src/actors/ActorBase.cpp",
+    "notes/experiments/fbase-dispatch-readable1014.json"
+  ],
+  "source_completion": "partial",
+  "change": "Replace the fake Obj class and Node view in func_02043fdc with existing fBase_c owner and fLiNdBaPr_c nodes, use int-return ProcessCallback matching current four wrapper results, and name the local process-list descriptor/head/tail/callback and list parameter. Preserve iteration, free/C entrypoint, ignored callback result and every ordinary production input policy.",
+  "evidence_classification": {
+    "rom_facts": "Four eight-byte callback records hold actual direct callback addresses plus zero receiver adjustment; constructor owns behavior/render process nodes at actor+0x28/+0x38 with next+4 and owner+8. Each wrapper forwards Process result; cleanup also tests result==1.",
+    "inferred_names": "ProcessListDescriptor and ProcessCallback are descriptive local identifiers. Existing fLiNdBaPr_c spelling is lineage inferred, with ROM-proven layout; no original identifier claim.",
+    "remaining_abi_boundary": "The runtime records name address-named free ABI wrappers int(void*), viewed here through int(fBase_c::*)(). This is a retained ABI reconstruction view, not proof those wrappers were native members or proof of a unique original return type. No new member declaration, forged mangled name or additional wrapper is introduced."
+  },
+  "descriptor_callbacks": [
+    {
+      "family": "cleanup",
+      "list_descriptor": "0x20a4ba8",
+      "rom_constant": "0x2099f50",
+      "actual_words": [
+        "0x20432e4",
+        "0x0"
+      ],
+      "callback_address": "0x20432e4",
+      "actual_source_contract": "int func_20432e4(void*)"
+    },
+    {
+      "family": "init",
+      "list_descriptor": "0x20a4b88",
+      "rom_constant": "0x2099f70",
+      "actual_words": [
+        "0x204335c",
+        "0x0"
+      ],
+      "callback_address": "0x204335c",
+      "actual_source_contract": "int func_204335c(void*)"
+    },
+    {
+      "family": "behavior",
+      "list_descriptor": "0x20a4b78",
+      "rom_constant": "0x2099f48",
+      "actual_words": [
+        "0x2043288",
+        "0x0"
+      ],
+      "callback_address": "0x2043288",
+      "actual_source_contract": "int func_2043288(void*)"
+    },
+    {
+      "family": "render",
+      "list_descriptor": "0x20a4b98",
+      "rom_constant": "0x2099f68",
+      "actual_words": [
+        "0x204322c",
+        "0x0"
+      ],
+      "callback_address": "0x204322c",
+      "actual_source_contract": "int func_204322c(void*)"
+    }
+  ],
+  "owner_evidence": {
+    "type": "fLiNdBaPr_c",
+    "node_offsets_in_actor": [
+      "0x28",
+      "0x38"
+    ],
+    "prev_offset": 0,
+    "next_offset": 4,
+    "owner_offset": 8,
+    "priority_halfwords": [
+      "0x0c",
+      "0x0e"
+    ],
+    "owner_store_rom_addresses": [
+      "0x02043e20",
+      "0x02043e38"
+    ],
+    "scope": "Four process/lifecycle descriptors invoke func02043fdc on these behavior/render process nodes. Separate scene descriptor data020a4b6c invokes func020441cc; actor-lookup helpers02043f4c/02043f98 remain independently scoped."
+  },
+  "semantics": [
+    "Return existing pointer-shaped constant1 when callback is null or traversal completes.",
+    "Publish each current node to data_020a4b68, save next before callback, invoke owner callback and discard result, then advance using the saved successor. Callback may unlink or destroy its actor.",
+    "Frame caller invokes cleanup/init/behavior/render descriptors in that order; scene traversal uses a separate routine and node family."
+  ],
+  "historical_findings": [
+    {
+      "disposition": "deferred",
+      "id": "FBASE-CALLBACK-CONTRACT-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+      "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+    },
+    {
+      "disposition": "deferred",
+      "id": "FBASE-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+      "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+    }
+  ],
+  "historical_failed_composition": {
+    "task": "fbase-process-pr3144-composition-0925",
+    "phase": "cancelled",
+    "input_commit": "c50c07bac79b8b2b5c88604321d6f7cb60ff6f34",
+    "base": "7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f",
+    "reported_finding_id": "FBASE-COMPOSITION-DAONMS-01",
+    "exact_queue_next_action": "Superseded by explicit producer continuation for PR3144. Independent verifier preserved failed c50c07bac79b8b2b5c88604321d6f7cb60ff6f34/base7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f report SHA256 b46f80ec9c93ad85aecdccab387822cfff17d952a54b4db96b36033fe27b22a7 and released own lease. FBASE-COMPOSITION-DAONMS-01 requires exact measured Frame515-to518 manifest identity repair plus fresh independent all12-path/current-consumer/fullROM verification. Preserve original source authors, accepted historical52a proof, prior findings and PR3144; no main merge.",
+    "recorded_reviewer": "codex-fbase-composition-verifier-0925",
+    "artifact_status": "The recorded C:/tmp/sm64ds-fbasev0923/build worktree is absent. Exact finding dictionary is not present in this task outputs (empty); preserve the reported ID and failure facts without inventing a dictionary or acceptance.",
+    "current_scope": "The recorded3144 failure and missing artifact remain historical. Accepted predecessor reports retain their exact proof epochs. This scene continuation changes no header or manifest and claims no new header-fanout or whole-daOnms review; its own current ActorBase/metadata/declaration/ROM proof is recorded separately."
+  },
+  "historical_lineage": {
+    "historical_task": "fbase-process-readable-0923",
+    "historical_task_phase": "cancelled",
+    "historical_reviewed_commit": "52a60fd1cf62315fea3aea36a26dc871fc1dc3ae",
+    "historical_reviewed_base": "83dbedd19f176eb6e2e2e677689ac9fb73f7999e",
+    "producer_sessions": [
+      "codex-root-fbase-readable-0923"
+    ],
+    "reviewer_session": "codex-fbase-verifier-0923",
+    "findings": [
+      {
+        "disposition": "deferred",
+        "id": "FBASE-CALLBACK-CONTRACT-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+        "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+      },
+      {
+        "disposition": "deferred",
+        "id": "FBASE-RECONSTRUCTION-01",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+        "kind": "reconstruction",
+        "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+        "owner": "codex-root-fbase-readable-0923",
+        "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+        "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+      }
+    ],
+    "scope": "Exact dictionaries remain historical. Prior native-destructor and InitResources continuations supersede their narrow explicit-wrapper/key-function subclaims. This scene-only continuation removes one local shadow-layout boundary; unrelated dispatcher/heap/ABI reconstruction remains deferred."
+  },
+  "remaining_reconstruction": "Local descriptor/free-callback ABI view, unrelated dispatcher/lookup helpers, allocator bridge, int/bool guard mismatch, heap/list boundaries remain partial under issue3012; no compiler floor or complete-class claim.",
+  "source_sha256": "fa473776afa7ba61c2af904a21911e8722ecc889f471ec771a863c53edda5bb8",
+  "scout_provenance": {
+    "private_contract_probe": "C:\\tmp\\sm64ds-fbase-scene-current1014\\build\\fbase-dispatch-contract-scout1014\\proof.json",
+    "private_probe_sha256": "87f4b1406efe16bc0621e07073205fadba9a9d9f34972aba9b67d17e27f3f099",
+    "private_candidate_author": "Same actual agent as source_author_session; not independent review.",
+    "scope": "Earlier private probe had literal raw/prepared equality and30strict0blind; production naming candidate needs its own fresh proof."
+  },
+  "verification": {
+    "canary": {
+      "symbol": "func_0203d384",
+      "result": [
+        true,
+        "2004/b56"
+      ]
+    },
+    "whole_object": {
+      "base": "abda847a033878471ed46708503a59c08037f3f4",
+      "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+      "context": "Actual claimed ABDA scene control and tracked typed actor-owner/process-node/int-callback dispatcher candidate; all inherited metadata policies unchanged.",
+      "control_raw_sha256": "9b73570275d39aef46c4b94b4d6c85963e47ba51e55fdf09a4d37d1bd92f88b1",
+      "candidate_raw_sha256": "9b73570275d39aef46c4b94b4d6c85963e47ba51e55fdf09a4d37d1bd92f88b1",
+      "control_prepared_sha256": "137165db1189a5fa603d7e179f94eeea5c937828fdd5dc10692b392b2c65c704",
+      "candidate_prepared_sha256": "137165db1189a5fa603d7e179f94eeea5c937828fdd5dc10692b392b2c65c704",
+      "raw_container_identical": true,
+      "prepared_container_identical": true,
+      "strict_rows": 30,
+      "blind": 0,
+      "raw_relocations": 132,
+      "prepared_relocations": 98,
+      "metadata": [
+        {
+          "symbol": "_ZTI7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2086d70",
+          "complete_storage_address": "0x2086d70",
+          "bytes": 8,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS7fBase_c",
+              "addr": 34106976,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi17__class_type_infoE",
+              "addr": 34187124,
+              "add": 0
+            }
+          ],
+          "linked_sha256": "39f79d4d5b6c41e7d4c54ed04d1651545b39f777e23266ae31b48870bdf7317b"
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2086e60",
+          "complete_storage_address": "0x2086e60",
+          "bytes": 9,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [],
+          "linked_sha256": "5cfafe50bce0f8a1bbf72273ce4858cdd54dbfb20ac88c2d0b562f8d5f4165d5"
+        },
+        {
+          "symbol": "_ZTV7fBase_c",
+          "canonical_module": "arm9",
+          "canonical_symbol_address": "0x2099edc",
+          "complete_storage_address": "0x2099ed4",
+          "bytes": 80,
+          "blind": 0,
+          "diffs": [],
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTI7fBase_c",
+              "addr": 34106736,
+              "add": 0
+            },
+            {
+              "off": 76,
+              "type": 2,
+              "sym": "_ZN7fBase_cD0Ev",
+              "addr": 33832312,
+              "add": 0
+            },
+            {
+              "off": 72,
+              "type": 2,
+              "sym": "_ZN7fBase_cD1Ev",
+              "addr": 33832380,
+              "add": 0
+            },
+            {
+              "off": 68,
+              "type": 2,
+              "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+              "addr": 33830036,
+              "add": 0
+            },
+            {
+              "off": 64,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual38Ejj",
+              "addr": 33830044,
+              "add": 0
+            },
+            {
+              "off": 60,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual34Ejj",
+              "addr": 33830268,
+              "add": 0
+            },
+            {
+              "off": 56,
+              "type": 2,
+              "sym": "_ZN7fBase_c16OnPendingDestroyEv",
+              "addr": 33831616,
+              "add": 0
+            },
+            {
+              "off": 52,
+              "type": 2,
+              "sym": "_ZN7fBase_c11AfterRenderEj",
+              "addr": 33831620,
+              "add": 0
+            },
+            {
+              "off": 48,
+              "type": 2,
+              "sym": "_ZN7fBase_c12BeforeRenderEv",
+              "addr": 33831624,
+              "add": 0
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZN7fBase_c6RenderEv",
+              "addr": 33831664,
+              "add": 0
+            },
+            {
+              "off": 40,
+              "type": 2,
+              "sym": "_ZN7fBase_c13AfterBehaviorEj",
+              "addr": 33831672,
+              "add": 0
+            },
+            {
+              "off": 36,
+              "type": 2,
+              "sym": "_ZN7fBase_c14BeforeBehaviorEv",
+              "addr": 33831676,
+              "add": 0
+            },
+            {
+              "off": 32,
+              "type": 2,
+              "sym": "_ZN7fBase_c8BehaviorEv",
+              "addr": 33831716,
+              "add": 0
+            },
+            {
+              "off": 28,
+              "type": 2,
+              "sym": "_ZN7fBase_c21AfterCleanupResourcesEj",
+              "addr": 33831724,
+              "add": 0
+            },
+            {
+              "off": 24,
+              "type": 2,
+              "sym": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+              "addr": 33831852,
+              "add": 0
+            },
+            {
+              "off": 20,
+              "type": 2,
+              "sym": "_ZN7fBase_c16CleanupResourcesEv",
+              "addr": 33831920,
+              "add": 0
+            },
+            {
+              "off": 16,
+              "type": 2,
+              "sym": "_ZN7fBase_c18AfterInitResourcesEj",
+              "addr": 33831928,
+              "add": 0
+            },
+            {
+              "off": 12,
+              "type": 2,
+              "sym": "_ZN7fBase_c19BeforeInitResourcesEv",
+              "addr": 33832056,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZN7fBase_c13InitResourcesEv",
+              "addr": 33832064,
+              "add": 0
+            }
+          ],
+          "linked_sha256": "14718669e1616f96d10fcfff115b00aa288e0c67d21555632d5f9b34b68a8d8c"
+        }
+      ],
+      "raw_storage": [
+        {
+          "name": ".data",
+          "size": 8,
+          "type": "SHT_PROGBITS"
+        },
+        {
+          "name": ".data",
+          "size": 9,
+          "type": "SHT_PROGBITS"
+        },
+        {
+          "name": ".data",
+          "size": 80,
+          "type": "SHT_PROGBITS"
+        }
+      ],
+      "prepared_storage": [],
+      "complete_retained_definitions_allocated_sections_and_graphs_equal": true,
+      "headers_manifest_policies_unchanged": true,
+      "policy_qualification": "Normal unmodified loader/retarget/isolate with unchanged inherited metadata policies. Complete metadata proof supplements standard policy PARTIAL tolerance. No canonical storage owned by this TU."
+    },
+    "owned_functions": 30,
+    "owned_bytes": 3376,
+    "metadata_complete_bytes": 97,
+    "metadata_typed_edges": 21,
+    "production_gates": {
+      "rombuild": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ],
+        "exit_code": 0,
+        "seconds": 366.6570000000065,
+        "log": "build\\fbase-dispatch-readable1014\\rombuild.log",
+        "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+        "base": "abda847a033878471ed46708503a59c08037f3f4",
+        "terminal_sha256": "c190db878ae4ac312d6bc3e405e63ef3cc66a0a19f91bdc6d772456bcef7a3f4",
+        "log_sha256": "9baa256af250db3a01b1c939e99a60c367f2ffbc106a022db91a5ab31b93c68b"
+      },
+      "stock": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "abda847a033878471ed46708503a59c08037f3f4..1aae6f923bda21c5f16e5313654c05a78113d817",
+          "--json",
+          "build\\fbase-dispatch-readable1014\\stock.json"
+        ],
+        "exit_code": 0,
+        "seconds": 30.93800000002375,
+        "log": "build\\fbase-dispatch-readable1014\\stock.log",
+        "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+        "base": "abda847a033878471ed46708503a59c08037f3f4",
+        "terminal_sha256": "ab228a3e3c69ae0782295f2ad487e130cb6d0e4d5e03d05880d1247f3416908d",
+        "log_sha256": "3ee60d615b0c2f9913a781f730a5158fef517eafbdc76ee11588613a57e2f6e8"
+      },
+      "decl": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "abda847a033878471ed46708503a59c08037f3f4"
+        ],
+        "exit_code": 0,
+        "seconds": 15.14100000000326,
+        "log": "build\\fbase-dispatch-readable1014\\decl.log",
+        "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+        "base": "abda847a033878471ed46708503a59c08037f3f4",
+        "terminal_sha256": "c95d6be4c455ab61ad2249081c15c0646b74c70ec91f112ea6c3e9d3d1a033eb",
+        "log_sha256": "6f775d6c7b7d32587d4352ee00afbf664e9b1d11ad888291d6ade871d1fbab9c"
+      },
+      "decl-global": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 13.797000000020489,
+        "log": "build\\fbase-dispatch-readable1014\\decl-global.log",
+        "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+        "base": "abda847a033878471ed46708503a59c08037f3f4",
+        "terminal_sha256": "9b5e14a9f458637599b3eca0a989ec141e11f5225e8babfe818f7691b6764f34",
+        "log_sha256": "4060f89fb81f6fd86ef546bc99ece9cb2ae6d81084c39419b678de38fe8321ac"
+      },
+      "port": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.875,
+        "log": "build\\fbase-dispatch-readable1014\\port.log",
+        "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+        "base": "abda847a033878471ed46708503a59c08037f3f4",
+        "terminal_sha256": "b546bb6385576c3f3460a5ee6ec063352f3e3518230636a83f7073617f0029d7",
+        "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e"
+      },
+      "langmode": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/langmode_audit.py",
+          "--check",
+          "langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "seconds": 17.0,
+        "log": "build\\fbase-dispatch-readable1014\\langmode.log",
+        "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+        "base": "abda847a033878471ed46708503a59c08037f3f4",
+        "terminal_sha256": "8193da1c8a80d1c1809f15b4a8e3272d23b975b568488686b96471bee4877db4",
+        "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+      },
+      "conflict": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_tubuild_conflicts.py"
+        ],
+        "exit_code": 0,
+        "seconds": 4.827999999979511,
+        "log": "build\\fbase-dispatch-readable1014\\conflict.log",
+        "checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+        "base": "abda847a033878471ed46708503a59c08037f3f4",
+        "terminal_sha256": "d48cd3edf9a3c599d6f865d7c3101c7a5cb57ea7fa3233fc514f97b31e916261",
+        "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521"
+      }
+    },
+    "official_range": "abda847a033878471ed46708503a59c08037f3f4..1aae6f923bda21c5f16e5313654c05a78113d817",
+    "stock": {
+      "checked": 30,
+      "verified": 30,
+      "warnings": 0,
+      "blocking": 0
+    },
+    "declaration_agreement": {
+      "baseline": 7491,
+      "candidate": 7491,
+      "new": 0,
+      "removed": 0,
+      "scoped_files": 468,
+      "scoped_disagreements": 3259,
+      "new_local_header_copies": 0,
+      "target_banked_disagreements": [
+        {
+          "symbol": "func_02043fdc",
+          "kind": "return",
+          "file": "src/unnamed/arm9/0204/func_02044120.c",
+          "line": 3,
+          "decl": "void (int *)",
+          "got": "void",
+          "want": "void *",
+          "basis": "definition",
+          "ref_file": "src/actors/ActorBase.cpp",
+          "ref_line": 138,
+          "ref": "void * (ProcessListDescriptor *)"
+        },
+        {
+          "symbol": "func_02043fdc",
+          "kind": "param",
+          "file": "src/unnamed/arm9/0204/func_02044120.c",
+          "line": 3,
+          "decl": "void (int *)",
+          "got": "#1 int *",
+          "want": "#1 ProcessListDescriptor *",
+          "basis": "definition",
+          "ref_file": "src/actors/ActorBase.cpp",
+          "ref_line": 138,
+          "ref": "void * (ProcessListDescriptor *)"
+        }
+      ],
+      "qualification": "All four callback wrappers positively collected as int(void*) free definitions. Dispatcher stays a void*-return C/free definition; frame caller uses its pre-existing void(int*) declaration. Any banked agreement gaps remain explicit; no unique original member or return-type recovery is inferred."
+    },
+    "port_references": 267,
+    "manifest_conflicts": {
+      "entries": 429,
+      "sources": 429,
+      "recorded_notes": 6
+    },
+    "full_rom": {
+      "actual_terminal": true,
+      "modules_exact": 106,
+      "source_functions": 11334,
+      "source_data_claims": 331,
+      "source_bss_claims": 239,
+      "baseline_symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "new_symbol_errors": [],
+      "no_rom_scope": "Actual --no-rom production module/link verification, not a newly assembled candidate cartridge. Official baseline pipeline was freshly executed and its existing DSD errors are preserved."
+    }
+  },
+  "formal_acceptance": false,
+  "publication": "No public branch push, PR or main merge; producer offer only after actual proof and root queue serialization.",
+  "source_checkpoint": "1aae6f923bda21c5f16e5313654c05a78113d817",
+  "status": "Fresh actual production proof passed at the exact ABDA-parent dispatcher checkpoint; independent Source acceptance pending.",
+  "manifest_sha256": "799fa9735bbb7d245cc59fb1247af8671863d8bef8cd5de9ef0061a46d86fc22",
+  "tested_build_trees": {
+    "src": "9ca4122b4173b4987e07e5834e04d7e259478f90",
+    "include": "9a7fe3dd2d6c10927c6604d70dc4bfaca9c614ae",
+    "config": "90bf84d569cd549c53ca5d06180145c10e78d62e",
+    "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+    "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+  },
+  "global_data_advisory": {
+    "verified": 970,
+    "partial": 1519,
+    "differs": 1,
+    "unnamed": 21,
+    "totalRecords": 5285
+  },
+  "proof_scope": "All byte inputs and policies proven here are from accepted ABDA and checkpoint 1aae6f923bda21c5f16e5313654c05a78113d817. Header/config/tools/port trees are unchanged; no new header fanout claimed. This source check does not accept a future updated-parent/current-main composition.",
+  "finalization": "Only this report changes after the source checkpoint; private final-binding.json will bind all five src/include/config/tools/port trees to this commit.",
+  "artifacts": {
+    "proof.json": "8d90b80f6fe1c0321bf20675ef888504a6621c4a227ed44c9dec6e9b920c7be6",
+    "graphs.json": "e4a835bb95bc66752ea152e81d58093dbbc91b0a0a2de3d809143dad2a66254d",
+    "deadstrip-plan.json": "cdc39e12d37cda4168dcb7da39c03dc9c9d5d4ef4b906750a331c9f4c0a0f159",
+    "declaration-proof.json": "ef377ead08acf2739cc5d655f5f1de0887148e0aa176cd92d34563f9bc3f7bbb",
+    "stock.json": "7518090cfa1dabc86b86313b1d7dd31fefa81ce685d79544862b85cc36b93d7f",
+    "rombuild-report.json": "2d5b1a3a08a15fdee7c7a8d90642e6f1f29b6c978ea2c6ea1c0c5325dc5aa20f",
+    "baseline-linkcheck.json": "6d9aeba7bb59b25442d5593a808aeb551cdd28d54241b09d8015730cecda88d3",
+    "gate-results.json": "3a1b9a7a0024fe7fefdb4656cc215986a0e7b41083c0389541f98c478ad621a1"
+  }
+}

@@ -41,20 +41,24 @@ struct ModelComponents;
 struct BMD_File;
 struct SharedFilePtr;
 
-/* Only the header words UpdateFileOffsets touches are typed. */
+/* Only the header words UpdateFileOffsets touches are typed. texRecords
+   and palRecords are the name-lookup tables Prepare indexes -- 8-byte
+   { s16 resourceId; u16 pad; char *name; } records per func_02046d50's
+   Tbl view -- and seqRecords the 0xc-byte sequence table alongside them;
+   each holds file-relative offsets that UpdateFileOffsets rebases. */
 struct BTP_File {
     u16 unk_00;
-    u16 numTexRecords;         /* 0x02 - 8-byte records at unk_04 */
-    char *unk_04;              /* 0x04 - fixed up on load */
-    u16 numPalRecords;         /* 0x08 - 8-byte records at unk_0c */
+    u16 numTexRecords;         /* 0x02 - 8-byte records at texRecords */
+    char *texRecords;          /* 0x04 - fixed up on load */
+    u16 numPalRecords;         /* 0x08 - 8-byte records at palRecords */
     u16 pad_0a;
-    char *unk_0c;              /* 0x0c */
+    char *palRecords;          /* 0x0c */
     char *unk_10;              /* 0x10 */
     char *unk_14;              /* 0x14 */
     char *unk_18;              /* 0x18 */
-    u16 numSeqRecords;         /* 0x1c - 0xc-byte records at unk_20; the ROM reads a halfword */
+    u16 numSeqRecords;         /* 0x1c - 0xc-byte records at seqRecords; the ROM reads a halfword */
     u16 pad_1e;
-    char *unk_20;              /* 0x20 */
+    char *seqRecords;          /* 0x20 */
 };
 struct TextureSequence : dExtFrameCtrl_c {
     BTP_File *file;           /* 0x10 */

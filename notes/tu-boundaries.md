@@ -232,7 +232,7 @@ so `daDossyCap_c_classInit` is inside the unit but so is a second class's.
 The unit is 0x02117f40..0x021196d8 — 29 functions, 3 classes — which is what
 `notes/data/tu-promotion-queue.tsv` already calls `daDossy_c+DorriePlatform+daDossyCap_c`.
 
-The unit is now promoted as one file, `src/actors/daDossy_c.cpp` (29/29; its manifest entry is
+The unit is now promoted as one file, `src/game/actors/d_a_dossy.cpp` (29/29; its manifest entry is
 `ov065/DorriePlatform+daDossyCap_c+daDossy_c`). The two blockers
 this section used to list, and how each resolved:
 

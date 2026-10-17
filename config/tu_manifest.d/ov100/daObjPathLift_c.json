@@ -1,8 +1,8 @@
 {
   "id": "ov100/daObjPathLift_c",
   "module": "ov100",
-  "source": "src/game/actors/daObjPathLift_c.cpp",
-  "promoted_source": "src/game/actors/daObjPathLift_c.cpp",
+  "source": "src/game/actors/d_a_obj_path_lift.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_path_lift.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
@@ -237,7 +237,7 @@
     "decl_common.h dropped from this TU (both places it was included): it declares data_ov100_02148a54/data_ov100_02148a5c as plain `int`, less complete than the real SharedFilePtr type this TU's own InitResources/CleanupResources need to call through Model::LoadFile/SharedFilePtr::Release as real members -- same class of conflict as daObjYajirusi_c's data_ov098_0213c380. The five other symbols/functions decl_common.h would have supplied (data_ov100_0214857c, data_ov002_0210d7d4, func_ov002_020efcf4, func_ov002_020efc74, func_ov100_02146e70) are restated locally at the same type it used, since nothing else in this TU needed a more complete type for them.",
     "PROMOTED. The eight per-function sources and their eight delinks entries are one TU and one .text span (ov100 0x02146d7c-0x02147328); the compiler places the D1/D0 pair itself, so the two hand-written files carrying `// @symbol _ZN15daObjPathLift_cD1Ev` and D0 are gone. The blocker was never codegen -- text-verification already proved every function's bytes and relocations from a single compile -- it was that isolation refused the object over _ZN7Vector3D1Ev, four bytes of vague linkage with a ROM home that neither policy schema could license. compiler_only_output now carries it as disposition deadstrip-duplicate, with the cartridge's own body at arm9:0x020072c0 checked against this object's copy before anything is discarded. 106/106 exact, mismatching 0, and no ROM data symbol changed grade.",
     "classInit fold (2026-09-29): folded the loose src/d_a_obj_path_lift.cpp (daObjPathLift_c_classInit, ov100 0x02147328-0x021473a4, historical alias PathLift_Spawn) into this TU as its ninth function, at the top of source (mwccarm emits ordinary sections in reverse source order and classInit is this TU's highest ROM address). Kept the loose file's exact typed C-ABI implementation rather than converting to `return new daObjPathLift_c()`, matching the precedent already landed for this same dPathLiftActor_c base in src/game/actors/d_a_obj_rc_carpet.cpp (daObjRcCarpet_c_classInit): the intermediate dPathLiftActor_c vtable store stays the raw `data_ov002_0210af70` address (that ov002 symbol already names the address point, no offset needed), but the class's own vtable store changed from `_ZTV15daObjPathLift_c[0]` to `_ZTV15daObjPathLift_c[2]` (addend 8): this TU already emits (and deadstrips) its own _ZTV15daObjPathLift_c as compiler_only_output because the out-of-line destructor is the key function, so once the factory moved into this same emitting TU, the compiler's own `_ZTV15daObjPathLift_c` label names the two-word RTTI header start rather than the address point the ROM store actually needs -- the loose file's own comment anticipated exactly this ([2] is the emitting-TU spelling). daObjPathLift_c_classInit therefore correctly fails tools/tiers.py::score_member on no_mangled_refs/no_raw_offset and is not added to config/converted-baseline.json. tools/tubuild.py verify: 9/9 MATCH, TEXT-VERIFIED; no new compiler_only_output entry needed (the existing _ZTV15daObjPathLift_c and Vector3 D1 entries already covered everything the merged factory touches). Credited to tangosdev in attribution.json (src/d_a_obj_path_lift.cpp had no prior individual credit in chaos_db_ci the old credit check).",
-    "Static initializer folded: the PathLiftModelFile handle (file 0x9c0d), the PathLiftCollisionFilePtr handle (file 0x9c0e) and their destructor-registration nodes make mwcc emit __sinit_daObjPathLift_c.cpp itself (0x6c, raw-byte-identical to retail __sinit_ov100_02147d7c with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @516-@517 clashed with the fleet and are renamed (@516->@128, @517->@129)."
+    "Static initializer folded: the PathLiftModelFile handle (file 0x9c0d), the PathLiftCollisionFilePtr handle (file 0x9c0e) and their destructor-registration nodes make mwcc emit __sinit_d_a_obj_path_lift.cpp itself (0x6c, raw-byte-identical to retail __sinit_ov100_02147d7c with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @516-@517 clashed with the fleet and are renamed (@516->@128, @517->@129)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -498,7 +498,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjPathLift_c.cpp",
+      "symbol": "__sinit_d_a_obj_path_lift.cpp",
       "address": "0x02147d7c",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -507,7 +507,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjPathLift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_path_lift.cpp",
       "address": "0x02147e00",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -565,13 +565,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjPathLift_c.cpp",
+      "symbol": "__sinit_d_a_obj_path_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjPathLift_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_path_lift.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -595,7 +595,7 @@
       "source": "0x02147e00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjPathLift_c.cpp",
+      "symbol": "__sinit_d_a_obj_path_lift.cpp",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02147d7c"

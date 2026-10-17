@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgSmartball_c",
   "module": "ov006",
-  "source": "src/actors/dScMgSmartball_c.cpp",
-  "promoted_source": "src/actors/dScMgSmartball_c.cpp",
+  "source": "src/minigames/d_s_mg_smartball.cpp",
+  "promoted_source": "src/minigames/d_s_mg_smartball.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_0210d894",
+      "symbol": "SmartballObj_ElemDtor",
       "address": "0x0210d894",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0210d894.c",
@@ -89,7 +89,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_0210e0d0",
+      "symbol": "cMgSmartball_wing_c_Construct",
       "address": "0x0210e0d0",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0210e0d0.c",
@@ -131,7 +131,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov006_0210e480",
+      "symbol": "cMgSmartball_pushswitch_c_Construct",
       "address": "0x0210e480",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0210e480.c",
@@ -187,7 +187,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "func_ov006_0210f9f8",
+      "symbol": "cMgSmartball_board_c_Construct",
       "address": "0x0210f9f8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0210f9f8.c",
@@ -243,7 +243,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "func_ov006_021101bc",
+      "symbol": "cMgSmartball_slot_c_Construct",
       "address": "0x021101bc",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_021101bc.cpp",
@@ -278,7 +278,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "func_ov006_02110874",
+      "symbol": "cMgSmartball_pakkun_c_Construct",
       "address": "0x02110874",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02110874.c",
@@ -313,7 +313,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "func_ov006_02110bc0",
+      "symbol": "cMgSmartball_dokan_c_Construct",
       "address": "0x02110bc0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02110bc0.c",
@@ -355,7 +355,7 @@
       "ordinal": 47
     },
     {
-      "symbol": "func_ov006_02111220",
+      "symbol": "cMgSmartball_propeller_c_Construct",
       "address": "0x02111220",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02111220.c",
@@ -383,7 +383,7 @@
       "ordinal": 51
     },
     {
-      "symbol": "func_ov006_0211157c",
+      "symbol": "cMgSmartball_spring_c_Construct",
       "address": "0x0211157c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0211157c.c",
@@ -425,7 +425,7 @@
       "ordinal": 57
     },
     {
-      "symbol": "func_ov006_02111774",
+      "symbol": "cMgSmartball_ana_c_Construct",
       "address": "0x02111774",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02111774.c",
@@ -453,7 +453,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "func_ov006_02111b40",
+      "symbol": "cMgSmartball_kinoko_c_Construct",
       "address": "0x02111b40",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_02111b40.c",
@@ -593,7 +593,7 @@
       "ordinal": 81
     },
     {
-      "symbol": "func_ov006_02112ad8",
+      "symbol": "SmartballBall_UpdatePhysics",
       "address": "0x02112ad8",
       "size": "0x0000113c",
       "legacy_source": "src/func_ov006_02112ad8.c",
@@ -628,7 +628,7 @@
       "ordinal": 86
     },
     {
-      "symbol": "func_ov006_02114548",
+      "symbol": "cMgSmartball_ball_c_Construct",
       "address": "0x02114548",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02114548.c",
@@ -698,14 +698,14 @@
       "ordinal": 96
     },
     {
-      "symbol": "func_ov006_0211474c",
+      "symbol": "cMgSmartball_object_c_Construct",
       "address": "0x0211474c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_0211474c.c",
       "ordinal": 97
     },
     {
-      "symbol": "_ZN16dScMgSmartball_c8OnPushedEv",
+      "symbol": "_ZN16dScMgSmartball_c16OnGraphCallback3Ev",
       "address": "0x021147ac",
       "size": "0x00000024",
       "legacy_source": "src/_ZN16dScMgSmartball_c8OnPushedEv.cpp",
@@ -901,14 +901,14 @@
       "ordinal": 125
     },
     {
-      "symbol": "_ZN16dScMgSmartball_c13OnYoshiTryEatEi",
+      "symbol": "_ZN16dScMgSmartball_c10StartRoundEi",
       "address": "0x02118a8c",
       "size": "0x00000058",
       "legacy_source": "src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp",
       "ordinal": 126
     },
     {
-      "symbol": "_ZN16dScMgSmartball_c9Virtual7CEv",
+      "symbol": "_ZN16dScMgSmartball_c15InitSubScreenBgEv",
       "address": "0x02118ae4",
       "size": "0x0000008c",
       "legacy_source": "src/_ZN16dScMgSmartball_c9Virtual7CEv.cpp",
@@ -936,7 +936,7 @@
       "ordinal": 130
     },
     {
-      "symbol": "func_ov006_02119900",
+      "symbol": "SmartballObj_ElemCtor",
       "address": "0x02119900",
       "size": "0x00000004",
       "legacy_source": "src/minigames/d_s_mg_smartball.cpp",
@@ -949,7 +949,7 @@
     "Completes the existing Smartball candidate using the current production function bodies and class headers; the full default-production promotion is performed by tools/tu_promote.py after independent proof.",
     "Immediate code generation and ROM-ascending source order preserve the 2004/b56 per-function optimizer settings. Push/pop alone is ineffective under deferred code generation.",
     "Constructor and teardown bridges explicitly use compiler vtable address point +8. All virtual methods remain real class members; the existing C ABI helpers, local layout views and manual scene factory remain partial source reconstruction.",
-    "The generated candidate confused scalar data_ov006_0212edfc with its array address; the board helper now loads element zero, matching the production control.",
+    "The generated candidate confused scalar sSmartballCellScores with its array address; the board helper now loads element zero, matching the production control.",
     "_ZN16dScMgSmartball_c10EmitSparksEPii preserves both unsigned and signed angle narrowing before the actual int-parameter rotation interface. _ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_ uses the existing local TVec2 lifetime-bearing pair and scoped opt_common_subs off to preserve its stack copy and separate signed narrowings; without the pair 8 bytes disappear, without the pragma six instructions differ.",
     "Metadata ownership remains in the existing ROM data gaps. Every exact emitted RTTI/vtable record is declared below for independently byte-checked compiler-only reduction. No new metadata ownership is claimed.",
     "The 12 PARTIAL romdata_check records are null-terminated RTTI name strings shorter than their alignment-rounded configured extents. All full words match with zero blind words; the producer separately checks all emitted string bytes including the trailing null. Padding remains owned by the existing data gaps."

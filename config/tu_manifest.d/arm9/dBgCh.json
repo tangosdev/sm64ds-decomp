@@ -1,12 +1,12 @@
 {
   "id": "arm9/dBgCh",
   "module": "arm9",
-  "source": "src/engine/collision/dBgCh.cpp",
-  "promoted_source": "src/engine/collision/dBgCh.cpp",
+  "source": "src/engine/collision/d_bg_ch.cpp",
+  "promoted_source": "src/engine/collision/d_bg_ch.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "CONTIGUOUS AND EXHAUSTIVE: 0x02035448..0x0203553c is twelve complete .text entries in config/arm9/delinks.txt with no gap and no other section. The low edge is func_0203543c (0x0203543c..0x02035448), which is not a dBgCh member. The high edge is src/engine/collision/dBgCh_Actr.cpp, which starts at 0x0203553c.",
+    "CONTIGUOUS AND EXHAUSTIVE: 0x02035448..0x0203553c is twelve complete .text entries in config/arm9/delinks.txt with no gap and no other section. The low edge is func_0203543c (0x0203543c..0x02035448), which is not a dBgCh member. The high edge is src/engine/collision/d_bg_ch_actr.cpp, which starts at 0x0203553c.",
     "CLASS IDENTITY FROM ROM RTTI: _ZTS5dBgCh at arm9 0x020991c0 names this class dBgCh. The tree already spells that name in include/dBgCh.h. This is the class's only run and it had no home TU.",
     "EMISSION ORDER: mwccarm 2004/b56 emits plain members in reverse source order and the lifecycle group in fixed order at the tail. One constructor and one destructor, defined first, land as D2 0x020354d0, D0 0x020354e0, D1 0x02035504, C2 0x02035514. C1 is emitted and deadstripped."
   ],

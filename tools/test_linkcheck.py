@@ -529,8 +529,8 @@ class WinningObjectSourceName(unittest.TestCase):
     """The copy winning_object compiles is named like the source it copies.
 
     mwcc names a TU's static initializer after the file it compiles, and the ROM build
-    compiles src/actors/dPathLiftActor_c.cpp, so the ROM symbol is
-    __sinit_dPathLiftActor_c.cpp. A temp copy named tmpXXXX.cpp emits
+    compiles src/runtime/actor/d_path_lift_actor.cpp, so the ROM symbol is
+    __sinit_d_path_lift_actor.cpp. A temp copy named tmpXXXX.cpp emits
     __sinit_tmpXXXX.cpp instead; isolation asked for the real name then keeps the
     whole TU, and the destructors it emits for their legacy sources were checked with
     their raw +8 vtable addend and reported WRONG (#3708).
@@ -555,8 +555,8 @@ class WinningObjectSourceName(unittest.TestCase):
 
     def test_the_temp_copy_keeps_the_source_basename(self):
         src = "//cpp\nvoid wanted() {}\n"
-        seen = self.compiled_names([(src, pathlib.Path("src/actors/dPathLiftActor_c.cpp"))])
-        self.assertEqual(seen, [("dPathLiftActor_c.cpp", src)])
+        seen = self.compiled_names([(src, pathlib.Path("src/runtime/actor/d_path_lift_actor.cpp"))])
+        self.assertEqual(seen, [("d_path_lift_actor.cpp", src)])
 
     def test_a_c_source_compiled_as_cpp_takes_the_attempts_suffix(self):
         seen = self.compiled_names([("void wanted(void) {}\n", pathlib.Path("src/wanted.c"))])

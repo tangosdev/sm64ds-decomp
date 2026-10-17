@@ -1,5 +1,6 @@
 // @symbol func_ov007_020c6e68
 #include "common.h"
+#include "nitro/fx/fx.h"
 
 /* Builds the per-group render state for path group `idx`: allocates the
  * group's node, three per-point arrays (position source, position copy, and
@@ -22,7 +23,6 @@ extern void func_ov007_020c8010(void *a, int *b, int *c);
 extern void func_ov007_020bfe4c(char *thiz, int a, int b, int c, Vector3 *out);
 extern void func_ov007_020c7804(void *self);
 
-#define FIXMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
 void func_ov007_020c6e68(char *self, int idx)
 {
@@ -48,10 +48,10 @@ void func_ov007_020c6e68(char *self, int idx)
     px = *(int **)(grp + 0x24);
     pz = *(int **)(grp + 0x28);
     last = count - 1;
-    proj = FIXMUL(scale, *(int *)(owner + 0x1c));
+    proj = FX_MUL(scale, *(int *)(owner + 0x1c));
     dx = px[0] - px[last];
     dz = pz[0] - pz[last];
-    lensq = FIXMUL(dx, dx) + FIXMUL(dz, dz);
+    lensq = FX_MUL(dx, dx) + FX_MUL(dz, dz);
     if (func_020531a4(lensq) <= proj)
         flag |= 2;
 

@@ -28,7 +28,7 @@ void _ZN5ModelC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtrC *self);
-void *_ZN4Heap13SetupRootHeapEv(void);
+void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 extern Matrix4x3 data_0209b3ec;
 /* per-model resets */
 extern u32 data_020a4bc8, data_020a4be8, data_020a4be0, data_020a4bdc;
@@ -91,7 +91,7 @@ static int run_one_seh(unsigned handle, size_t *tris, unsigned *code)
 int main(int argc, char **argv)
 {
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    if (!_ZN4Heap13SetupRootHeapEv()) { fprintf(stderr, "no heap\n"); return 2; }
+    if (!_ZN5mHeap6Heap_t13SetupRootHeapEv()) { fprintf(stderr, "no heap\n"); return 2; }
     ident_fx(&data_0209b3ec);
 
     char path[512];

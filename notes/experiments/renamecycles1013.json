@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "task_id": "renamecycles1013",
+  "base_commit": "1d76f967993874f77af8de4d744e138eb3084cec",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3790",
+  "change": "Validate simultaneous renames against all original symbol indices. A source name may legitimately be another planned destination. All preflight guards and non-string-table bytes remain unchanged.",
+  "completion": "complete for this verifier defect; actor adoption is separate",
+  "regression_before": "Three valid compiler-backed swap/chain cases fail on the original postcheck; two refusal controls pass.",
+  "tests": {
+    "objisolate": {
+      "passed": 48,
+      "skipped": 0
+    },
+    "related_tu_and_rename": {
+      "passed": 47
+    },
+    "port_references": 267,
+    "language_mode": "PASS root committed baseline",
+    "declaration_agreement": "PASS no source or header changes"
+  },
+  "real_actor_control": {
+    "source_is_private_input": true,
+    "source_sha256": "d97ed103bc6844ffde14dfe9e454d037fdf6a84cff701d01f42fcb50d27847e8",
+    "old_refusal": "post-rewrite symbol verification failed for @1027",
+    "mapping": "Exactly twelve existing source-name keys decrease by six; canonical targets, section homes, policies and ownership unchanged.",
+    "normal_production_prepared_equal": true,
+    "prepared_sha256": "a5229b8b194e81a310df536c8c47faf943f55e16a5c30ea11dfd43b1353ad9c0",
+    "strict_rom_rows": 34,
+    "blind": 0,
+    "bss_rows": 13,
+    "bss_bytes": 168,
+    "owned_nontext_typed_relocations": 40,
+    "prepared_typed_references": 199
+  },
+  "full_production": {
+    "command": "python tools/rombuild.py -j16 --no-rom",
+    "exit_code": 0,
+    "modules_exact": 106,
+    "modules_total": 106,
+    "functions_reproducing": 11332,
+    "functions_mismatching": 0,
+    "data_claims_reproducing": 331,
+    "bss_claims": 239,
+    "baseline_limits": "Baseline dsd symbol check reports pre-existing errors; zero new errors. Aggregate ROM-data inventory retains one differing unenrolled record. No unchanged-tree inventory cleanup is claimed.",
+    "binding": "Terminal full-ROM and scoped/static checks ran at production_checkpoint on current main. This descendant changes the report only; code, headers, production config, tools and port trees are identical."
+  },
+  "private_artifacts": [
+    "build/renamecycles1013/regressions-before.log",
+    "build/renamecycles1013/objisolate-tests.log",
+    "build/renamecycles1013/rename-consumer-tests.log",
+    "build/renamecycles1013/actual-actor-proof.json",
+    "build/renamecycles1013/full-rom.log"
+  ],
+  "publication": "Tools-only candidate; independent exact-commit review follows. No actor source or manifest is changed.",
+  "initial_control_base": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "production_checkpoint": "c12f9af5b458edd088ea4a08450486b668ebafc4",
+  "current_main_validation": {
+    "tested_commit": "c12f9af5b458edd088ea4a08450486b668ebafc4",
+    "tested_base": "1d76f967993874f77af8de4d744e138eb3084cec",
+    "results": {
+      "full_rom": {
+        "exit_code": 0,
+        "log": "build\\renamecycles1013\\current-main-full_rom.log"
+      },
+      "range": {
+        "exit_code": 0,
+        "log": "build\\renamecycles1013\\current-main-range.log"
+      },
+      "port": {
+        "exit_code": 0,
+        "log": "build\\renamecycles1013\\current-main-port.log"
+      },
+      "langmode": {
+        "exit_code": 0,
+        "log": "build\\renamecycles1013\\current-main-langmode.log"
+      },
+      "decl": {
+        "exit_code": 0,
+        "log": "build\\renamecycles1013\\current-main-decl.log"
+      }
+    }
+  }
+}

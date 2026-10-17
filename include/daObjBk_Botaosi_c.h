@@ -45,7 +45,7 @@ struct daObjBk_Botaosi_c : dBgActor_c {
 
     /* --- vtable --- */
     /* The key function: declared first and defined first in
-       src/actors/daObjBk_Botaosi_c.cpp, so that TU emits the vtable and RTTI.
+       src/game/actors/d_a_obj_bk_botaosi.cpp, so that TU emits the vtable and RTTI.
        Under its `#pragma defer_codegen off` the out-of-line definition comes
        out D1 (0x02111314) then D0 (0x02111360), the cartridge's order. */
     virtual ~daObjBk_Botaosi_c();

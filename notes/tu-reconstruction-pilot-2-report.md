@@ -10,7 +10,7 @@ found. This is that candidate.
 
 **Status update — the TU has since been promoted.** Everything below is the
 pilot's own record and is left as it was written. What has changed since: the
-reconstructed source now lives at `src/stage/LevelObjects.cpp`,
+reconstructed source now lives at `src/game/stages/LevelObjects.cpp`,
 `config/arm9/overlays/ov002/delinks.txt` carries one `complete` entry for it
 over `0x020fe190..0x020fea4c`, and the seventeen one-function sources are gone.
 The two vague-linkage Vector3 destructors §7 reports as unlicensed are now
@@ -202,8 +202,8 @@ group, not loaders:
 
 | addr | function | what it does |
 | --- | --- | --- |
-| `0x020fea4c` | [func_ov002_020fea4c](../src/actors/dM3dGLin.cpp) | copies a `Vector3` out of offset `0x0c` |
-| `0x020fea68` | [func_ov002_020fea68](../src/actors/dM3dGLin.cpp) | copies a `Vector3` out of offset `0x00` |
+| `0x020fea4c` | [func_ov002_020fea4c](../src/engine/collision/d_m3d_g_lin.cpp) | copies a `Vector3` out of offset `0x0c` |
+| `0x020fea68` | [func_ov002_020fea68](../src/engine/collision/d_m3d_g_lin.cpp) | copies a `Vector3` out of offset `0x00` |
 | `0x020fea84` | `RaycastLine::Line::Set` | writes a `Vector3` **at** `0x00` and another **at** `0x0c` |
 | `0x020feab8` | `func_ov002_020feab8` | empty stub |
 
@@ -266,7 +266,7 @@ easy to get backwards:
 ```text
 compiled section order = ROM address order = reverse of SOURCE order
   =>  the ORIGINAL file's reading order = reverse of the ROM's addresses
-  =>  the original file read exactly the way src/stage/LevelObjects.cpp
+  =>  the original file read exactly the way src/game/stages/LevelObjects.cpp
       reads top-to-bottom
 ```
 
@@ -635,7 +635,7 @@ efforts will need reconciling — a useful first test for it would be whether
 
 | Path | |
 | --- | --- |
-| [src/stage/LevelObjects.cpp](../src/stage/LevelObjects.cpp) | new — the shadow TU, not enrolled at the time; it lived under `src_tu/` until the promotion recorded at the top of this file |
+| [src/game/stages/LevelObjects.cpp](../src/game/stages/LevelObjects.cpp) | new — the shadow TU, not enrolled at the time; it lived under `src_tu/` until the promotion recorded at the top of this file |
 | [config/tu_manifest.d/](../config/tu_manifest.d/) | modified — one entry appended, [ov002](../config/arm9/overlays/ov002/symbols.txt)/`LevelObjects`, status `text-verified` |
 | [notes/tu-reconstruction-pilot-2-report.md](../notes/tu-reconstruction-pilot-2-report.md) | new — this file |
 

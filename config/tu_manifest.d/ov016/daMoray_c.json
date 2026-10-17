@@ -1,8 +1,8 @@
 {
   "id": "ov016/daMoray_c",
   "module": "ov016",
-  "source": "src/actors/daMoray_c.cpp",
-  "promoted_source": "src/actors/daMoray_c.cpp",
+  "source": "src/game/actors/d_a_moray.cpp",
+  "promoted_source": "src/game/actors/d_a_moray.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -300,7 +300,7 @@
       "address": "0x02114d4c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "three-int cylinder offset shared by the two dCcAcPos Init calls; parsed in C mode so Vector3 emits a plain .bss object with no retail-absent destructor registration"
+      "evidence": "Three signed components shared by the two dCcAcPos Init calls; a local POD MorayCylinderOffset keeps the observed 12-byte zero BSS storage without constructor or destructor registration."
     },
     {
       "symbol": "@1090",
@@ -361,9 +361,9 @@
   ],
   "notes": [
     "Twenty-one-function unit 0x021111a0..0x0211260c: D1 and D0 from the out-of-line destructor, daMoray_c::func_ov016_02111284 (the hit cylinders), the retreat pair daMoray_c::func_ov016_02111534 / daMoray_c::BookSwitch_Spawn, then the fifteen functions from daMoray_c::func_ov016_021115c0 to InitResources, then the registry factory daMoray_c_classInit.",
-    "daMoray_c_classInit (0x02112588..0x0211260c) is folded but not written as `new daMoray_c()`: that does not emit the ROM's __cxa_vec_ctor(..., func_0203d384, ...) over mSegmentPos, because include/types.h's Vector3 has no user-declared constructor. Same limit and same verbatim hand-built factory as ov095/daObjFlamethrower_c's, with the vptr store reading &_ZTV9daMoray_c[2] because this key-function TU defines the vtable object from its RTTI header.",
-    "classInit tail fold (0930c): folded the registry factory daMoray_c_classInit (0x02112588..0x0211260c) into this promoted TU and widened the complete delinks.txt claim to 0x021111a0..0x0211260c. Written at the end of the file under `#pragma defer_codegen off`. It keeps the loose source's hand-built sequence (fBase_c::operator new, dEnemyBase_c's base constructor, the vptr store, the two dCcAcPos_c, the dBgCh_Actr, the BlendModelAnim, then __cxa_vec_ctor over mSegmentPos with func_0203d384 and Vector3's destructor), now addressing the members by name instead of raw offsets.",
-    "Static-initializer fold (re-recorded on top of #3707's methodized daMoray_c): src/unnamed/ov016/__sinit_ov016_021136ec.c is retired; its four file handles (model file 0x3b5, animations 0x3b6..0x3b8), four registration nodes, ten PMF descriptors, five State rows and the shared cylinder-offset Vector3 are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_daMoray_c.cpp. The cylinder offset is defined under '#pragma cplusplus off': retail has no destructor registration for it and C mode treats Vector3 as POD. Emitted temps need no defined_symbol_renames on this base (@1090-@1093, @1095-@1113 odd are all unused).",
+    "daMoray_c_classInit uses the real new daMoray_c factory. The existing compiler-only constructor policy verifies the empty Vector3 constructor against the canonical func_0203d384 callback used by the mSegmentPos array. This supersedes the earlier hand-built factory and no-user-constructor explanation.",
+    "Historical classInit tail fold (0930c) absorbed daMoray_c_classInit and widened the complete text claim through 0x0211260c. The current native factory constructs the real members and segment array; the former hand-built sequence is historical. The text, storage and canonical callback ownership remain unchanged.",
+    "Static-initializer fold (re-recorded on top of #3707's methodized daMoray_c): src/unnamed/ov016/__sinit_ov016_021136ec.c is retired; its four file handles (model file 0x3b5, animations 0x3b6..0x3b8), four registration nodes, ten PMF descriptors, five State rows and the shared cylinder-offset storage are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_moray.cpp. The cylinder offset uses a local POD MorayCylinderOffset with three signed components and explicit member copies into the collision API's Vector3 locals. It retains the retail zero BSS storage with no constructor or destructor registration. The 14 existing defined_symbol_renames source keys are refreshed by full raw-object/reference identity; canonical targets and policies remain unchanged.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "compiler_only_output": [
@@ -820,7 +820,7 @@
   "production_mode": "intact-object",
   "init": [
     {
-      "symbol": "__sinit_daMoray_c.cpp",
+      "symbol": "__sinit_d_a_moray.cpp",
       "address": "0x021136ec",
       "size": "0x1d0",
       "binding": "STB_GLOBAL",
@@ -829,7 +829,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daMoray_c.cpp",
+      "symbol": ".p__sinit_d_a_moray.cpp",
       "address": "0x02113abc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -879,7 +879,7 @@
       "source": "0x02113abc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daMoray_c.cpp",
+      "symbol": "__sinit_d_a_moray.cpp",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x021136ec"
@@ -1317,13 +1317,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daMoray_c.cpp",
+      "symbol": "__sinit_d_a_moray.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daMoray_c.cpp",
+      "symbol": ".p__sinit_d_a_moray.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1415,72 +1415,72 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1132",
+      "from": "@1086",
       "to": "@1090",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1133",
+      "from": "@1087",
       "to": "@1091",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1134",
+      "from": "@1088",
       "to": "@1092",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1135",
+      "from": "@1089",
       "to": "@1093",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1137",
+      "from": "@1091",
       "to": "@1095",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1139",
+      "from": "@1093",
       "to": "@1097",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1141",
+      "from": "@1095",
       "to": "@1099",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1143",
+      "from": "@1097",
       "to": "@1101",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1145",
+      "from": "@1099",
       "to": "@1103",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1147",
+      "from": "@1101",
       "to": "@1105",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1149",
+      "from": "@1103",
       "to": "@1107",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1151",
+      "from": "@1105",
       "to": "@1109",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1153",
+      "from": "@1107",
       "to": "@1111",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1155",
+      "from": "@1109",
       "to": "@1113",
       "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     }

@@ -4,21 +4,21 @@
     .ctor       start:0x0214e0a0 end:0x0214e0b0 kind:rodata align:4
     .data       start:0x0214e0c0 end:0x0214e6e0 kind:data align:32
     .bss        start:0x0214e6e0 end:0x0214eaa0 kind:bss align:32
-src/actors/daObjSimpleBg_c.cpp:
+src/game/actors/d_a_obj_simple_bg.cpp:
     complete
     .text start:0x02148a80 end:0x02148fbc
     .init start:0x0214d714 end:0x0214d908
     .ctor start:0x0214e0a0 end:0x0214e0a4
     .bss start:0x0214e6e0 end:0x0214e7d0
 
-src/actors/daObjHatenaBlock_c.cpp:
+src/game/actors/d_a_obj_hatena_block.cpp:
     complete
     .text start:0x02148fbc end:0x0214a96c
     .init start:0x0214d908 end:0x0214de70
     .ctor start:0x0214e0a4 end:0x0214e0a8
     .bss start:0x0214e7d0 end:0x0214e9c0
 
-src/actors/daBmb_c.cpp:
+src/game/actors/d_a_bmb.cpp:
     complete
     .text start:0x0214a96c end:0x0214c748
     .data start:0x0214e4fc end:0x0214e5d4

@@ -21,8 +21,8 @@ daObjKey_c_classInit_OBJ_KEY kind:function(arm,size=0x58) addr:0x02132828
 data_ov089_02132880 kind:data(any) addr:0x02132880
 data_ov089_02132894 kind:data(any) addr:0x02132894
 data_ov089_021328b4 kind:data(any) addr:0x021328b4
-__sinit_daObjKey_c.cpp kind:function(arm,size=0x220) addr:0x021328d4
-.p__sinit_daObjKey_c.cpp kind:data(word) addr:0x02132af4
+__sinit_d_a_obj_key.cpp kind:function(arm,size=0x220) addr:0x021328d4
+.p__sinit_d_a_obj_key.cpp kind:data(word) addr:0x02132af4
 @700 kind:data(any) addr:0x02132b08
 @702 kind:data(any) addr:0x02132b10
 @704 kind:data(any) addr:0x02132b20
@@ -40,11 +40,11 @@ _ZTV10daObjKey_c kind:data(any) addr:0x02132ba8
 data_ov089_02132c40 kind:bss addr:0x02132c40
 data_ov089_02132c48 kind:bss addr:0x02132c48
 data_ov089_02132c50 kind:bss addr:0x02132c50
-data_ov089_02132c58 kind:bss addr:0x02132c58
+gWarioKeyModelFile kind:bss addr:0x02132c58
 data_ov089_02132c60 kind:bss addr:0x02132c60
-data_ov089_02132c68 kind:bss addr:0x02132c68
+gMarioKeyModelFile kind:bss addr:0x02132c68
 data_ov089_02132c70 kind:bss addr:0x02132c70
-data_ov089_02132c78 kind:bss addr:0x02132c78
+gLuigiKeyModelFile kind:bss addr:0x02132c78
 @1180 kind:bss addr:0x02132c80
 @1181 kind:bss addr:0x02132c8c
 @1179 kind:bss addr:0x02132c98

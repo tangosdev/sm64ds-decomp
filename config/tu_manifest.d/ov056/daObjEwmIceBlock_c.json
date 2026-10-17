@@ -1,8 +1,8 @@
 {
   "id": "ov056/daObjEwmIceBlock_c",
   "module": "ov056",
-  "source": "src/actors/daObjEwmIceBlock_c.cpp",
-  "promoted_source": "src/actors/daObjEwmIceBlock_c.cpp",
+  "source": "src/game/actors/d_a_obj_ewm_ice_block.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ewm_ice_block.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -88,14 +88,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov056_02113400",
+      "symbol": "gEwmIceBrockModelFile",
       "address": "0x02113400",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x5ed"
     },
     {
-      "symbol": "data_ov056_02113408",
+      "symbol": "gEwmIceBrockCollisionFile",
       "address": "0x02113408",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -132,7 +132,7 @@
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "fold-lane-D-0929: the classInit factory's `new daObjEwmIceBlock_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct documented in src/actors/daObjHatenaBlock_c.cpp). No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
+      "reason": "fold-lane-D-0929: the classInit factory's `new daObjEwmIceBlock_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct documented in src/game/actors/d_a_obj_hatena_block.cpp). No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
     },
     {
       "symbol": "_ZTV18daObjEwmIceBlock_c",
@@ -217,7 +217,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN18daObjEwmIceBlock_c8BehaviorEv and the one that held _ZN18daObjEwmIceBlock_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN18daObjEwmIceBlock_c8BehaviorEv and the one that held _ZN18daObjEwmIceBlock_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
     "fold branch tu/fold-highov-0921: 6/6 MATCH, objisolate clean, reloc-destinations clean -> text-verified. 12 UNLICENSED OUTPUT symbols (1 .text: _ZN18daObjEwmIceBlock_cD2Ev; 11 .data: the _ZTV/_ZTI/_ZTS group for daObjEwmIceBlock_c and its ancestor chain). Key-function TU, .data RTTI emission expected; .data licensing NOT attempted here. Hand fixes over tubuild create: (1) removed the duplicate D0 destructor body; (2) data_ov056_02113314 had two spellings of one object - 'SharedFilePtr *[]' (first, used as [0]->Release()) and a local 'struct SFP { void*a,b,c; }' (used as .a/.b/.c). Kept the first, more complete spelling (it names SharedFilePtr) and rewrote .a/.b/.c as [0]/[1]/[2], which is the identical address math. The two create-time conflicts on _ZN10dBgActor_c21UpdateModelPosAndRotYEv / _ZN10dBgActor_c19UpdateClsnPosAndRotEv were a void-vs-int return type only, immaterial at these call sites (return value unused). Byte-neutral.",
-    "fold-lane-D-0929: folded the daObjEwmIceBlock_c_classInit registry factory (0x02111594..0x021115cc) into this already-promoted TU, widening the complete delinks.txt claim from 0x021111a0..0x02111594 to 0x021111a0..0x021115cc. The loose one-function source called fBase_c::operator new(0x330) + dBgActor_c::dBgActor_c(p) + a manual vtable store + PathPtr::PathPtr() at +0x320; daObjEwmIceBlock_c has no user-declared constructor, so `new daObjEwmIceBlock_c()` reproduces the identical sequence with zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the factory appends after InitResources. `tubuild.py verify` reports 7/7 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, adding one new compiler_only_output deadstrip entry (_ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/actors/daObjHatenaBlock_c.cpp already documents and licenses). Retired: src/d_a_obj_ewm_ice_block.c (credited tangosdev, carried into attribution.json as a path#symbol override).",
+    "fold-lane-D-0929: folded the daObjEwmIceBlock_c_classInit registry factory (0x02111594..0x021115cc) into this already-promoted TU, widening the complete delinks.txt claim from 0x021111a0..0x02111594 to 0x021111a0..0x021115cc. The loose one-function source called fBase_c::operator new(0x330) + dBgActor_c::dBgActor_c(p) + a manual vtable store + PathPtr::PathPtr() at +0x320; daObjEwmIceBlock_c has no user-declared constructor, so `new daObjEwmIceBlock_c()` reproduces the identical sequence with zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the factory appends after InitResources. `tubuild.py verify` reports 7/7 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, adding one new compiler_only_output deadstrip entry (_ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/game/actors/d_a_obj_hatena_block.cpp already documents and licenses). Retired: src/d_a_obj_ewm_ice_block.c (credited tangosdev, carried into attribution.json as a path#symbol override).",
     "Folded __sinit_ov056_02112b48: two file-scope resource handles (model 0x5ed, collision file 0x5ee) are defined for real through declared-only SharedFilePtr subclasses whose constructor and destructor alias the retail veneer pairs (func_02017acc/func_02017ab4 for the model, func_02017b4c/SharedFilePtr_Destruct_Clsn for the collision). The claims pick up .init 0x02112b48..0x02112bb4, .ctor 0x02112bb4..0x02112bb8 and .bss 0x02113400..0x02113428; the boundary label data_ov056_02113428 was added so the delinker keeps @60 at 12 bytes instead of sizing it to the next ambiguous symbol at 0x02113434; the two destructor-registration nodes keep emitted @490 and renumber @491 -> @60 via defined_symbol_renames (ov100 already defines a global @491). Retired src/unnamed/ov056/__sinit_ov056_02112b48.c.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
@@ -456,7 +456,7 @@
   },
   "init": [
     {
-      "symbol": "__sinit_daObjEwmIceBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_ewm_ice_block.cpp",
       "address": "0x02112b48",
       "size": "0x0000006c",
       "binding": "STB_GLOBAL",
@@ -465,7 +465,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjEwmIceBlock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ewm_ice_block.cpp",
       "address": "0x02112bb4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -511,13 +511,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjEwmIceBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_ewm_ice_block.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjEwmIceBlock_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ewm_ice_block.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -581,7 +581,7 @@
       "source": "0x02112b94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov056_02113400",
+      "symbol": "gEwmIceBrockModelFile",
       "addend": 0,
       "target_module": "ov056",
       "target_address": "0x02113400"
@@ -611,7 +611,7 @@
       "source": "0x02112ba4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov056_02113408",
+      "symbol": "gEwmIceBrockCollisionFile",
       "addend": 0,
       "target_module": "ov056",
       "target_address": "0x02113408"
@@ -641,7 +641,7 @@
       "source": "0x02112bb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjEwmIceBlock_c.cpp",
+      "symbol": "__sinit_d_a_obj_ewm_ice_block.cpp",
       "addend": 0,
       "target_module": "ov056",
       "target_address": "0x02112b48"

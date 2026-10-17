@@ -1,22 +1,25 @@
 {
   "id": "arm9/dScStage_c",
   "module": "arm9",
-  "source": "src/actors/dScStage_c.cpp",
-  "promoted_source": "src/actors/dScStage_c.cpp",
+  "source": "src/game/stages/d_s_stage_methods.cpp",
+  "promoted_source": "src/game/stages/d_s_stage_methods.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x02023688..0x02029408, 16 function(s), gapless in config/arm9/delinks.txt, every entry complete.",
-    "The run is one class. The destructor pair opens it and the VE_ (VS exit), LC_ (level clear) and PS_ (pause screen) groups follow in ROM order; every function is a dScStage_c static or the destructor.",
-    "d_s_boot.c ends exactly at 0x02023688 and func_02029408.c (a foreign 0x24-byte helper) begins at 0x02029408, so the run is bounded by other TUs on both sides.",
-    "The rest of the class -- InitResources 0x0202cc0c, Behavior, Render, UpdateMessage, the graph callbacks, the factory dScStage_c_classInit 0x0202e088 -- sits in later ranges interleaved with the message and camera systems and is not claimed here.",
+    "contiguous linker run: 0x02023688..0x0202e118, 123 function(s), gapless in config/arm9/symbols.txt (every function ARM) and tiled with no gap by the 105 delinks entries this TU replaces.",
+    "BOTTOM EDGE: d_s_boot.c ends exactly at 0x02023688, where the destructor pair opens the run. TOP EDGE: the factory dScStage_c_classInit (0x0202e088..0x0202e118) closes it, the way every scene TU in this module ends (dScBoot_c, dScene_c, dScGameOver_c); func_0202e118 and then src/game/stages/d_scene.cpp (dScene_c, 0x0202e140) begin the next TU.",
+    "ONE TU, not several: the only non-.text relocations into the range are the class's own -- g_profile_STAGE (to the factory), the graph-callback table data_02092188 (to GraphCallback1/2) and _ZTV10dScStage_c (to InitResources, BeforeInitResources, CleanupResources, Behavior, Render, OnPendingDestroy). No other class's vtable, RTTI or profile points into the run.",
+    "The ~80 interleaved C free functions share the stage's .bss block 0x0209f1ec..0x0209f5xx with the members (level ID data_0209f2f8, the per-level table pointers and counts their setters store, data_0209f314 = this->mTexAnimSlots, data_0209f340 = the level record InitResources loads), so they are the class's file-scope layer, not a foreign TU interleaved by the linker.",
+    "Event's three bit accessors (0x02029ea4..0x02029ef8) sit mid-run over data_0209f34c, a stage .bss word InitResources clears; the old standalone arm9/Event manifest is subsumed. Fog::Init (0x0202c830) is a non-virtual member of the Fog record dScStage_c embeds twice (mFog at 0x96c); LoadFog is its caller here (daMugenBGM reuses it on its own fog), and it sits between LoadFog and Render with no foreign neighbour.",
+    "UpdateMessage (0x0201cb7c) is a dScStage_c static that the linker placed with the message system, far below this range; it is not claimed here.",
+    "func_02029408, previously described as a foreign helper, is the pause-gate query (Player::CanPause on the current player, data_0209f394[data_0209f250]) that PS_Init opens with.",
     "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02023688",
-      "end": "0x02029408"
+      "end": "0x0202e118"
     }
   ],
   "functions": [
@@ -131,6 +134,755 @@
       "size": "0x000030ac",
       "legacy_source": "src/_ZN10dScStage_c9PS_UpdateEv.cpp",
       "ordinal": 15
+    },
+    {
+      "symbol": "func_02029408",
+      "address": "0x02029408",
+      "size": "0x00000024",
+      "legacy_source": "src/unnamed/arm9/0202/func_02029408.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN10dScStage_c7PS_InitEv",
+      "address": "0x0202942c",
+      "size": "0x000001d4",
+      "legacy_source": "src/_ZN10dScStage_c7PS_InitEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_02029600",
+      "address": "0x02029600",
+      "size": "0x00000054",
+      "legacy_source": "src/unnamed/arm9/0202/func_02029600.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "IsButtonInputValid",
+      "address": "0x02029654",
+      "size": "0x000001a0",
+      "legacy_source": "src/IsButtonInputValid.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN10dScStage_c14GraphCallback2Ev",
+      "address": "0x020297f4",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN10dScStage_c14GraphCallback2Ev.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN10dScStage_c14GraphCallback1Ev",
+      "address": "0x02029838",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN10dScStage_c14GraphCallback1Ev.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "UpdateMinimap",
+      "address": "0x02029854",
+      "size": "0x0000004c",
+      "legacy_source": "src/UpdateMinimap.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "StartEntranceFaderWipe",
+      "address": "0x020298a0",
+      "size": "0x00000038",
+      "legacy_source": "src/runtime/graphics/fader/StartEntranceFaderWipe.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "StartExitCharacterWipe",
+      "address": "0x020298d8",
+      "size": "0x00000024",
+      "legacy_source": "src/StartExitCharacterWipe.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "StartExitFaderWipe",
+      "address": "0x020298fc",
+      "size": "0x00000038",
+      "legacy_source": "src/runtime/graphics/fader/StartExitFaderWipe.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "FUN_02029934",
+      "address": "0x02029934",
+      "size": "0x0000004c",
+      "legacy_source": "src/unnamed/arm9/0202/FUN_02029934.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "FUN_02029980",
+      "address": "0x02029980",
+      "size": "0x00000074",
+      "legacy_source": "src/unnamed/arm9/0202/FUN_02029980.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "FUN_020299f4",
+      "address": "0x020299f4",
+      "size": "0x00000074",
+      "legacy_source": "src/unnamed/arm9/0202/FUN_020299f4.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "FUN_02029a68",
+      "address": "0x02029a68",
+      "size": "0x00000048",
+      "legacy_source": "src/unnamed/arm9/0202/FUN_02029a68.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "FUN_02029ab0",
+      "address": "0x02029ab0",
+      "size": "0x00000054",
+      "legacy_source": "src/unnamed/arm9/0202/FUN_02029ab0.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "EnterBigBoosHaunt",
+      "address": "0x02029b04",
+      "size": "0x0000002c",
+      "legacy_source": "src/EnterBigBoosHaunt.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "KillPlayer",
+      "address": "0x02029b30",
+      "size": "0x00000054",
+      "legacy_source": "src/KillPlayer.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "HitDeathPlane",
+      "address": "0x02029b84",
+      "size": "0x00000050",
+      "legacy_source": "src/HitDeathPlane.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "ExitLevel",
+      "address": "0x02029bd4",
+      "size": "0x00000020",
+      "legacy_source": "src/ExitLevel.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "SetNextLevel",
+      "address": "0x02029bf4",
+      "size": "0x00000128",
+      "legacy_source": "src/SetNextLevel.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "SetNextStar",
+      "address": "0x02029d1c",
+      "size": "0x000000a0",
+      "legacy_source": "src/SetNextStar.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "DeathTable_ClearBit",
+      "address": "0x02029dbc",
+      "size": "0x00000050",
+      "legacy_source": "src/DeathTable_ClearBit.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "DeathTable_SetBit",
+      "address": "0x02029e0c",
+      "size": "0x0000004c",
+      "legacy_source": "src/DeathTable_SetBit.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "DeathTable_GetBit",
+      "address": "0x02029e58",
+      "size": "0x0000004c",
+      "legacy_source": "src/DeathTable_GetBit.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "_ZN5Event8ClearBitEj",
+      "address": "0x02029ea4",
+      "size": "0x00000020",
+      "legacy_source": "src/Event.cpp",
+      "ordinal": 40
+    },
+    {
+      "symbol": "_ZN5Event6SetBitEj",
+      "address": "0x02029ec4",
+      "size": "0x0000001c",
+      "legacy_source": "src/Event.cpp",
+      "ordinal": 41
+    },
+    {
+      "symbol": "_ZN5Event6GetBitEj",
+      "address": "0x02029ee0",
+      "size": "0x00000018",
+      "legacy_source": "src/Event.cpp",
+      "ordinal": 42
+    },
+    {
+      "symbol": "_ZN10dScStage_c19RenderVsModeNewStarEv",
+      "address": "0x02029ef8",
+      "size": "0x00000238",
+      "legacy_source": "src/_ZN10dScStage_c19RenderVsModeNewStarEv.cpp",
+      "ordinal": 43
+    },
+    {
+      "symbol": "FUN_0202a130",
+      "address": "0x0202a130",
+      "size": "0x00000038",
+      "legacy_source": "src/unnamed/arm9/0202/FUN_0202a130.c",
+      "ordinal": 44
+    },
+    {
+      "symbol": "_ZN10dScStage_c21RenderVsModeCountdownEv",
+      "address": "0x0202a168",
+      "size": "0x000003f4",
+      "legacy_source": "src/_ZN10dScStage_c21RenderVsModeCountdownEv.cpp",
+      "ordinal": 45
+    },
+    {
+      "symbol": "NumVsStarsObtained",
+      "address": "0x0202a55c",
+      "size": "0x00000050",
+      "legacy_source": "src/NumVsStarsObtained.c",
+      "ordinal": 46
+    },
+    {
+      "symbol": "GiveVsStars",
+      "address": "0x0202a5ac",
+      "size": "0x00000018",
+      "legacy_source": "src/GiveVsStars.c",
+      "ordinal": 47
+    },
+    {
+      "symbol": "_ZN10dScStage_c15IsPauseDisabledEv",
+      "address": "0x0202a5c4",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN10dScStage_c15IsPauseDisabledEv.cpp",
+      "ordinal": 48
+    },
+    {
+      "symbol": "ClearSpikeBomb",
+      "address": "0x0202a608",
+      "size": "0x00000020",
+      "legacy_source": "src/ClearSpikeBomb.c",
+      "ordinal": 49
+    },
+    {
+      "symbol": "AddSpikeBomb",
+      "address": "0x0202a628",
+      "size": "0x00000038",
+      "legacy_source": "src/AddSpikeBomb.c",
+      "ordinal": 50
+    },
+    {
+      "symbol": "SetStarMarker",
+      "address": "0x0202a660",
+      "size": "0x0000001c",
+      "legacy_source": "src/SetStarMarker.c",
+      "ordinal": 51
+    },
+    {
+      "symbol": "OpenCannonInCurLevel",
+      "address": "0x0202a67c",
+      "size": "0x00000018",
+      "legacy_source": "src/OpenCannonInCurLevel.c",
+      "ordinal": 52
+    },
+    {
+      "symbol": "IsCannonOpenInCurLevel",
+      "address": "0x0202a694",
+      "size": "0x00000018",
+      "legacy_source": "src/IsCannonOpenInCurLevel.c",
+      "ordinal": 53
+    },
+    {
+      "symbol": "CollectStarInCurLevel",
+      "address": "0x0202a6ac",
+      "size": "0x0000001c",
+      "legacy_source": "src/CollectStarInCurLevel.c",
+      "ordinal": 54
+    },
+    {
+      "symbol": "IsStarCollectedInCurLevel",
+      "address": "0x0202a6c8",
+      "size": "0x0000001c",
+      "legacy_source": "src/IsStarCollectedInCurLevel.c",
+      "ordinal": 55
+    },
+    {
+      "symbol": "NumRedCoins",
+      "address": "0x0202a6e4",
+      "size": "0x00000050",
+      "legacy_source": "src/NumRedCoins.c",
+      "ordinal": 56
+    },
+    {
+      "symbol": "GiveRedCoins",
+      "address": "0x0202a734",
+      "size": "0x0000003c",
+      "legacy_source": "src/GiveRedCoins.c",
+      "ordinal": 57
+    },
+    {
+      "symbol": "NumCoins",
+      "address": "0x0202a770",
+      "size": "0x00000048",
+      "legacy_source": "src/NumCoins.c",
+      "ordinal": 58
+    },
+    {
+      "symbol": "GiveCoins",
+      "address": "0x0202a7b8",
+      "size": "0x0000005c",
+      "legacy_source": "src/GiveCoins.c",
+      "ordinal": 59
+    },
+    {
+      "symbol": "GiveHealth",
+      "address": "0x0202a814",
+      "size": "0x0000003c",
+      "legacy_source": "src/GiveHealth.c",
+      "ordinal": 60
+    },
+    {
+      "symbol": "func_0202a850",
+      "address": "0x0202a850",
+      "size": "0x0000002c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202a850.c",
+      "ordinal": 61
+    },
+    {
+      "symbol": "InitControllerMode",
+      "address": "0x0202a87c",
+      "size": "0x00000034",
+      "legacy_source": "src/InitControllerMode.c",
+      "ordinal": 62
+    },
+    {
+      "symbol": "SetControllerMode",
+      "address": "0x0202a8b0",
+      "size": "0x00000030",
+      "legacy_source": "src/SetControllerMode.c",
+      "ordinal": 63
+    },
+    {
+      "symbol": "func_0202a8e0",
+      "address": "0x0202a8e0",
+      "size": "0x0000005c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202a8e0.c",
+      "ordinal": 64
+    },
+    {
+      "symbol": "_ZN10dScStage_c11GetSkyboxIDEv",
+      "address": "0x0202a93c",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN10dScStage_c11GetSkyboxIDEv.cpp",
+      "ordinal": 65
+    },
+    {
+      "symbol": "func_0202a958",
+      "address": "0x0202a958",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202a958.c",
+      "ordinal": 66
+    },
+    {
+      "symbol": "func_0202a96c",
+      "address": "0x0202a96c",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202a96c.c",
+      "ordinal": 67
+    },
+    {
+      "symbol": "func_0202a980",
+      "address": "0x0202a980",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202a980.c",
+      "ordinal": 68
+    },
+    {
+      "symbol": "_Z23LoadMinimapChangeObjecti5Fix12IiEh",
+      "address": "0x0202a994",
+      "size": "0x00000098",
+      "legacy_source": "src/_Z23LoadMinimapChangeObjecti5Fix12IiEh.c",
+      "ordinal": 69
+    },
+    {
+      "symbol": "HideArea",
+      "address": "0x0202aa2c",
+      "size": "0x00000020",
+      "legacy_source": "src/HideArea.c",
+      "ordinal": 70
+    },
+    {
+      "symbol": "ShowArea",
+      "address": "0x0202aa4c",
+      "size": "0x00000020",
+      "legacy_source": "src/ShowArea.c",
+      "ordinal": 71
+    },
+    {
+      "symbol": "IsAreaShowing",
+      "address": "0x0202aa6c",
+      "size": "0x0000001c",
+      "legacy_source": "src/IsAreaShowing.c",
+      "ordinal": 72
+    },
+    {
+      "symbol": "ChangeArea",
+      "address": "0x0202aa88",
+      "size": "0x00000038",
+      "legacy_source": "src/ChangeArea.c",
+      "ordinal": 73
+    },
+    {
+      "symbol": "GiveLives",
+      "address": "0x0202aac0",
+      "size": "0x0000002c",
+      "legacy_source": "src/GiveLives.c",
+      "ordinal": 74
+    },
+    {
+      "symbol": "LoadLevel",
+      "address": "0x0202aaec",
+      "size": "0x000001d4",
+      "legacy_source": "src/LoadLevel.c",
+      "ordinal": 75
+    },
+    {
+      "symbol": "LoadLevelNoReturn",
+      "address": "0x0202acc0",
+      "size": "0x0000003c",
+      "legacy_source": "src/LoadLevelNoReturn.c",
+      "ordinal": 76
+    },
+    {
+      "symbol": "SetPlayerGlobals",
+      "address": "0x0202acfc",
+      "size": "0x0000007c",
+      "legacy_source": "src/SetPlayerGlobals.c",
+      "ordinal": 77
+    },
+    {
+      "symbol": "ExitMinigameMenu",
+      "address": "0x0202ad78",
+      "size": "0x0000007c",
+      "legacy_source": "src/ExitMinigameMenu.c",
+      "ordinal": 78
+    },
+    {
+      "symbol": "StartMinigameMenu",
+      "address": "0x0202adf4",
+      "size": "0x00000038",
+      "legacy_source": "src/StartMinigameMenu.c",
+      "ordinal": 79
+    },
+    {
+      "symbol": "PrepareVsMode",
+      "address": "0x0202ae2c",
+      "size": "0x00000048",
+      "legacy_source": "src/PrepareVsMode.c",
+      "ordinal": 80
+    },
+    {
+      "symbol": "func_0202ae74",
+      "address": "0x0202ae74",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202ae74.c",
+      "ordinal": 81
+    },
+    {
+      "symbol": "StartFile",
+      "address": "0x0202ae88",
+      "size": "0x00000080",
+      "legacy_source": "src/StartFile.c",
+      "ordinal": 82
+    },
+    {
+      "symbol": "StartWithFarCamera",
+      "address": "0x0202af08",
+      "size": "0x00000020",
+      "legacy_source": "src/StartWithFarCamera.c",
+      "ordinal": 83
+    },
+    {
+      "symbol": "GetStarCameraSetting",
+      "address": "0x0202af28",
+      "size": "0x00000020",
+      "legacy_source": "src/GetStarCameraSetting.c",
+      "ordinal": 84
+    },
+    {
+      "symbol": "GetMinimapScale",
+      "address": "0x0202af48",
+      "size": "0x00000038",
+      "legacy_source": "src/GetMinimapScale.c",
+      "ordinal": 85
+    },
+    {
+      "symbol": "func_0202af80",
+      "address": "0x0202af80",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202af80.c",
+      "ordinal": 86
+    },
+    {
+      "symbol": "GetMinimapID",
+      "address": "0x0202af9c",
+      "size": "0x000000a8",
+      "legacy_source": "src/GetMinimapID.c",
+      "ordinal": 87
+    },
+    {
+      "symbol": "func_0202b044",
+      "address": "0x0202b044",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202b044.c",
+      "ordinal": 88
+    },
+    {
+      "symbol": "func_0202b060",
+      "address": "0x0202b060",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202b060.c",
+      "ordinal": 89
+    },
+    {
+      "symbol": "GetTeleportDestObj",
+      "address": "0x0202b07c",
+      "size": "0x00000014",
+      "legacy_source": "src/GetTeleportDestObj.c",
+      "ordinal": 90
+    },
+    {
+      "symbol": "func_0202b090",
+      "address": "0x0202b090",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202b090.c",
+      "ordinal": 91
+    },
+    {
+      "symbol": "GetViewObj",
+      "address": "0x0202b0ac",
+      "size": "0x00000018",
+      "legacy_source": "src/GetViewObj.c",
+      "ordinal": 92
+    },
+    {
+      "symbol": "func_0202b0c4",
+      "address": "0x0202b0c4",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202b0c4.c",
+      "ordinal": 93
+    },
+    {
+      "symbol": "func_0202b0e0",
+      "address": "0x0202b0e0",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202b0e0.c",
+      "ordinal": 94
+    },
+    {
+      "symbol": "_ZN10dScStage_c10LoadSkyboxEv",
+      "address": "0x0202b0fc",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN10dScStage_c10LoadSkyboxEv.cpp",
+      "ordinal": 95
+    },
+    {
+      "symbol": "_ZN10dScStage_c22RenderModelTransparentEv",
+      "address": "0x0202b164",
+      "size": "0x00000104",
+      "legacy_source": "src/_ZN10dScStage_c22RenderModelTransparentEv.cpp",
+      "ordinal": 96
+    },
+    {
+      "symbol": "_ZN10dScStage_c11RenderModelEv",
+      "address": "0x0202b268",
+      "size": "0x00000170",
+      "legacy_source": "src/_ZN10dScStage_c11RenderModelEv.cpp",
+      "ordinal": 97
+    },
+    {
+      "symbol": "CopyTexPalFromLevelModel",
+      "address": "0x0202b3d8",
+      "size": "0x0000015c",
+      "legacy_source": "src/CopyTexPalFromLevelModel.c",
+      "ordinal": 98
+    },
+    {
+      "symbol": "_ZN10dScStage_c23LoadTextureTransformersEv",
+      "address": "0x0202b534",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN10dScStage_c23LoadTextureTransformersEv.cpp",
+      "ordinal": 99
+    },
+    {
+      "symbol": "_ZN10dScStage_c9LoadModelEv",
+      "address": "0x0202b5ec",
+      "size": "0x00000090",
+      "legacy_source": "src/_ZN10dScStage_c9LoadModelEv.cpp",
+      "ordinal": 100
+    },
+    {
+      "symbol": "_ZN10dScStage_c9RenderFogEv",
+      "address": "0x0202b67c",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN10dScStage_c9RenderFogEv.cpp",
+      "ordinal": 101
+    },
+    {
+      "symbol": "_ZN10dScStage_c7LoadFogEv",
+      "address": "0x0202b710",
+      "size": "0x00000108",
+      "legacy_source": "src/_ZN10dScStage_c7LoadFogEv.cpp",
+      "ordinal": 102
+    },
+    {
+      "symbol": "_ZN10dScStage_c8CanPauseEv",
+      "address": "0x0202b818",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN10dScStage_c8CanPauseEv.cpp",
+      "ordinal": 103
+    },
+    {
+      "symbol": "_ZN10dScStage_c16OnPendingDestroyEv",
+      "address": "0x0202b8a0",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN10dScStage_c16OnPendingDestroyEv.cpp",
+      "ordinal": 104
+    },
+    {
+      "symbol": "_ZN10dScStage_c6RenderEv",
+      "address": "0x0202b8a4",
+      "size": "0x00000318",
+      "legacy_source": "src/_ZN10dScStage_c6RenderEv.cpp",
+      "ordinal": 105
+    },
+    {
+      "symbol": "_ZN10dScStage_c8BehaviorEv",
+      "address": "0x0202bbbc",
+      "size": "0x000006f0",
+      "legacy_source": "src/_ZN10dScStage_c8BehaviorEv.cpp",
+      "ordinal": 106
+    },
+    {
+      "symbol": "_ZN10dScStage_c10CheckInputEv",
+      "address": "0x0202c2ac",
+      "size": "0x00000584",
+      "legacy_source": "src/_ZN10dScStage_c10CheckInputEv.cpp",
+      "ordinal": 107
+    },
+    {
+      "symbol": "_ZN3Fog4InitEt5Fix12IiES1_",
+      "address": "0x0202c830",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN3Fog4InitEt5Fix12IiES1_.cpp",
+      "ordinal": 108
+    },
+    {
+      "symbol": "SetTouchScreenDelay",
+      "address": "0x0202c8b8",
+      "size": "0x00000040",
+      "legacy_source": "src/SetTouchScreenDelay.c",
+      "ordinal": 109
+    },
+    {
+      "symbol": "ResetInput",
+      "address": "0x0202c8f8",
+      "size": "0x000000b0",
+      "legacy_source": "src/ResetInput.c",
+      "ordinal": 110
+    },
+    {
+      "symbol": "_ZN10dScStage_c16CleanupResourcesEv",
+      "address": "0x0202c9a8",
+      "size": "0x00000264",
+      "legacy_source": "src/_ZN10dScStage_c16CleanupResourcesEv.cpp",
+      "ordinal": 111
+    },
+    {
+      "symbol": "_ZN10dScStage_c13InitResourcesEv",
+      "address": "0x0202cc0c",
+      "size": "0x00000a84",
+      "legacy_source": "src/_ZN10dScStage_c13InitResourcesEv.cpp",
+      "ordinal": 112
+    },
+    {
+      "symbol": "_ZN10dScStage_c14LoadGraphics2DEbi",
+      "address": "0x0202d690",
+      "size": "0x00000738",
+      "legacy_source": "src/_ZN10dScStage_c14LoadGraphics2DEbi.cpp",
+      "ordinal": 113
+    },
+    {
+      "symbol": "_ZN10dScStage_c19BeforeInitResourcesEv",
+      "address": "0x0202ddc8",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN10dScStage_c19BeforeInitResourcesEv.cpp",
+      "ordinal": 114
+    },
+    {
+      "symbol": "IsLevelTinyHugeIslandOutside",
+      "address": "0x0202ddd4",
+      "size": "0x00000020",
+      "legacy_source": "src/IsLevelTinyHugeIslandOutside.c",
+      "ordinal": 115
+    },
+    {
+      "symbol": "IsLevelInsideCastle",
+      "address": "0x0202ddf4",
+      "size": "0x00000030",
+      "legacy_source": "src/IsLevelInsideCastle.c",
+      "ordinal": 116
+    },
+    {
+      "symbol": "GetSoundGroupID",
+      "address": "0x0202de24",
+      "size": "0x00000040",
+      "legacy_source": "src/GetSoundGroupID.c",
+      "ordinal": 117
+    },
+    {
+      "symbol": "_Z19UnloadLevelOverlaysi",
+      "address": "0x0202de64",
+      "size": "0x00000048",
+      "legacy_source": "src/_Z19UnloadLevelOverlaysi.cpp",
+      "ordinal": 118
+    },
+    {
+      "symbol": "func_0202deac",
+      "address": "0x0202deac",
+      "size": "0x00000028",
+      "legacy_source": "src/unnamed/arm9/0202/func_0202deac.c",
+      "ordinal": 119
+    },
+    {
+      "symbol": "_Z17LoadLevelOverlaysi",
+      "address": "0x0202ded4",
+      "size": "0x0000009c",
+      "legacy_source": "src/_Z17LoadLevelOverlaysi.cpp",
+      "ordinal": 120
+    },
+    {
+      "symbol": "_Z26LoadOrUnloadObjectOverlaysPFviEi",
+      "address": "0x0202df70",
+      "size": "0x00000118",
+      "legacy_source": "src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp",
+      "ordinal": 121
+    },
+    {
+      "symbol": "dScStage_c_classInit",
+      "address": "0x0202e088",
+      "size": "0x00000090",
+      "legacy_source": "src/game/stages/d_s_stage.cpp",
+      "ordinal": 122
     }
   ],
   "data": [],
@@ -138,6 +890,8 @@
   "notes": [
     "Text-only. The class's _ZTV/_ZTI/_ZTS stay in the cartridge .data at 0x02092158..0x02092208; this TU re-emits them and deadstrips the copies.",
     "Destructor is the key function, defined out of line under defer_codegen off, so the file is ROM-ascending. D2 is deadstripped.",
+    "The factory's `new dScStage_c()` inlines the base constructor chain, which makes the compiler emit dScene_c's and dBase_c's D2 as standalone fallback bodies; neither has a cartridge home, so both are deadstripped (the same cell as arm9/dScBoot_c_classInit).",
+    "The free functions keep their unmangled C names through extern \"C\"; Event's accessors stay in `namespace Event`; Fog::Init stays a mangled-name extern \"C\" definition (Fix12 by value).",
     "ROMBUILD NOTE: the intact-TU link control refuses on stock-ROM sha256 ddab9300... != admitted bootstrap proof d1506e9018.... Pre-existing tree rot, not this TU: a clean checkout of main (2ecca74c0d) builds the identical ddab9300... and is refused the same way; the baseline control's module fidelity is PASS and dsd check symbols --fail shows the same 9 pre-existing ITCM/ARM9-main lines on both trees."
   ],
   "compiler_only_output": [
@@ -145,6 +899,16 @@
       "symbol": "_ZN10dScStage_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Compiler-generated base-object destructor. dScStage_c is never a base subobject. The cartridge carries D1 at 0x02023688 and D0 at 0x020236f0; no symbols.txt row defines a D2 and nothing relocates to one."
+    },
+    {
+      "symbol": "_ZN8dScene_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "The factory's `new dScStage_c()` inlines the base constructor chain; the compiler emits dScene_c's D2 as a standalone fallback body alongside it. Unreferenced, homeless, drops at link; the cartridge has no D2 here. Same cell as arm9/dScBoot_c_classInit."
+    },
+    {
+      "symbol": "_ZN7dBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "same cell: dBase_c's D2 fallback body emitted alongside the inlined chain. Unreferenced and homeless."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -214,34 +978,42 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-dScStage_c/dScStage_c.o (gitignored)",
+    "object": "build/tu/arm9-dScStage_c/d_s_stage_methods.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 16,
-    "functions_declared": 16,
+    "functions_matched": 123,
+    "functions_declared": 123,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN10dScStage_cD2Ev"
+        "_ZN10dScStage_cD2Ev",
+        "_ZN8dScene_cD2Ev",
+        "_ZN7dBase_cD2Ev"
       ],
       "deadstripped": [
-        "_ZN10dScStage_cD2Ev"
+        "_ZN10dScStage_cD2Ev",
+        "_ZN7dBase_cD2Ev",
+        "_ZN8dScene_cD2Ev"
       ],
       "droppedSections": [
         9,
         10,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45,
-        46,
-        47,
-        48,
-        49,
-        50,
-        51,
-        52
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -264,7 +1036,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV10dScStage_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

@@ -82,7 +82,7 @@ declared `virtual ~dScene_c();` cannot be inlined and emits `bl _ZN8dScene_cD2Ev
 the ROM has none (measured on a `dScStage_c` trial: 80 bytes with the call vs the ROM's 104
 with none).
 
-The production [Scene TU](../src/actors/dScene_c.cpp) defines the key function,
+The production [Scene TU](../src/game/stages/d_scene.cpp) defines the key function,
 `BeforeInitResources`. Its vtable references emit both out-of-line copies of the
 inline destructor in ROM order. The former per-function forcing calls are no
 longer needed. The emitted metadata is checked against its existing ROM homes
@@ -153,7 +153,7 @@ colliding with the copy the module's gap object supplies from ROM data. The dest
 is declared first, which is free for a derived class (an override takes its base's slot
 wherever it is written) and pins the role to `~dScStage_c`. `tools/objisolate.py` makes that
 TU eligible anyway, so `~dScStage_c` is a real method, defined identically —
-`dScStage_c::~dScStage_c() {}` — in both of its destructor variants in `src/actors/dScStage_c.cpp`.
+`dScStage_c::~dScStage_c() {}` — in both of its destructor variants in `src/game/stages/d_s_stage_methods.cpp`.
 Unlike `dScene_c`, `dScStage_c` does not need to define it inline in the class body: `dScStage_c`
 is a leaf, so nothing derives from it that would need to inline *its* destructor in
 turn.
@@ -203,17 +203,15 @@ object and no other argument; `GraphCallback2` reads its fields (fixed-point mat
 `dScStage_c`; non-static because slot 2 needs `this`, non-virtual to keep their TUs from
 emitting a vtable the delink ranges do not own.
 
-**`PS_Init` is deliberately not declared in the header**, even though
-`src/_ZN10dScStage_c7PS_InitEv.cpp` defines `dScStage_c::PS_Init()` and is byte-verified and
-enrolled. It uses its own local shadow `class dScStage_c` (the same pattern
-`src/_ZN10dScStage_c8BehaviorEv.cpp` uses) on purpose: a real landmine lived at that exact
+**`PS_Init` is now declared in the header** (static, like the rest of the pause-screen
+family) and defined in `src/game/stages/d_s_stage_methods.cpp` with the rest of the class. Its old standalone
+shard used a local shadow `class dScStage_c` on purpose: a real landmine had lived at that
 filename — an untracked, un-enrolled second `.cpp` for the symbol whose private
 `struct G2x` declared `SetBlendBrightness`'s middle parameter as `int`, mangling to
 `_ZN3G2x18SetBlendBrightnessEPVtis`, which resolves to nothing and would silently *not*
-be what byte-matches. The surviving file never declares a `G2x` type at all — it calls
-the correctly-mangled `_ZN3G2x18SetBlendBrightnessEPVtts` symbol directly, as the `.c`
-file it replaced did — so the landmine cannot recur through it. Wiring `PS_Init` to the
-header is a separate, low-risk change.
+be what byte-matches. The TU still calls the correctly-mangled
+`_ZN3G2x18SetBlendBrightnessEPVtts` symbol directly (the ROM passes an unnarrowed int
+where `G2x.h` declares `unsigned short`), so the landmine cannot recur through it.
 
 ---
 
@@ -237,11 +235,11 @@ the destructor pair at 16/17. Confirmed against [config/arm9/relocs.txt](../conf
 at 0x02091528 and 0x02091540.
 
 **Converted 2026-08-22.** Both overrides are now real `dScBoot_c::` methods
-(`src/actors/dScBoot_c.cpp`), both
+(`src/game/stages/d_s_boot_methods.cpp`), both
 byte-exact. A previous revision of
 the header said they were "NOT CONVERTED BY THIS PASS", which was later read as saying
 they *could not* be. The key function is the first non-inline virtual *declared*, which
-is `~dScBoot_c`, defined out of line in `src/d_s_boot.cpp`; where `InitResources`
+is `~dScBoot_c`, defined out of line in `src/game/stages/d_s_boot.cpp`; where `InitResources`
 is defined cannot move that. Bracketing `eligible.py` across the conversion returned a
 byte-identical name list, which is the gate that would show a `_ZTV` appearing.
 
@@ -283,8 +281,8 @@ inherited at 0x0c).
 [data_ov075_0211d304](../config/arm9/overlays/ov075/symbols.txt) (18 slots) against `_ZTV8dScene_c` slot for slot, `dScEntry_c`
 overrides exactly eight — 0, 1, 3, 6, 9, 12, 16, 17.
 
-**Construction.** Two real Spawn-style factories, [func_ov075_0211a740](../src/d_s_entry_result.cpp)(reconstructed names as `dScEntry_c_classInit_RESULT` in `d_s_entry_result.cpp`) and
-[func_ov075_0211a854](../src/d_s_entry_entry.cpp)(reconstructed name as `dScEntry_c_classInit_ENTRY` in `d_s_entry_entry.cpp`), both open with `_ZN7fBase_cnwEj(0x288)`, i.e.
+**Construction.** Two real Spawn-style factories, [func_ov075_0211a740](../src/game/stages/d_s_entry_methods.cpp)(reconstructed name as `dScEntry_c_classInit_RESULT` in `d_s_entry_methods.cpp`) and
+[func_ov075_0211a854](../src/game/stages/d_s_entry_entry.cpp)(reconstructed name as `dScEntry_c_classInit_ENTRY` in `d_s_entry_entry.cpp`), both open with `_ZN7fBase_cnwEj(0x288)`, i.e.
 `fBase_c::operator new(0x288)`. They are not C1/C2 variants: both allocate and return
 a new object. Size 0x288 is read directly off the allocator call, not inferred from
 field span.
@@ -365,7 +363,7 @@ same slot. Two of the ten (`SetToEnd`, `SetToStart`) are pure tail-call veneers 
 `dFdBrightness_c`/`dFdColor_c` bodies and otherwise run the hardware-capture path.
 
 **`SetBackwardTime` stays plain C — measured, do not "fix".** The full record:
-`src/engine/fader/dWipe_c.cpp` takes a third parameter that arrives in r2 and is
+`src/runtime/graphics/fader/d_wipe.cpp` takes a third parameter that arrives in r2 and is
 forwarded to the guard call with zero instructions, which keeps r2 live from entry to
 the call and forces the cached `type` into r3 as in the ROM. As a real method the
 mangled name fixes the arity at one (`Ej`), so the r2-holding parameter cannot exist,

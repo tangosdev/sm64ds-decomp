@@ -49,6 +49,11 @@
 /* Class header first: Model.h pulls the structured Matrix4x3 (`.t`) that
  * UpdateModelTransform writes. daObjWc_Mizu_c.h -> dBgActor_c.h would otherwise
  * reach common.h's flat `s32 m[12]` spelling first. */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wc_obj03_AssetId {
+    ASSET_WC_OBJ03_BMD = 0x06d0
+};
+
 #include "daObjWc_Obj03_c.h"
 #include "daObjWc_Mizu_c.h"
 #include "SharedFilePtr.h"
@@ -79,6 +84,11 @@ extern WcObj03ModelFilePtr data_ov029_02114270;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
+/* Actor 0xbf is the player. */
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 // @symbol daObjWc_Obj03_c_classInit
 /* Historical alias: WaterDiamond_Spawn -- this entry point carried the
  * project's coined class name until the ROM's RTTI name was adopted.
@@ -187,11 +197,13 @@ void daObjWc_Obj03_c::SetWaterID()
   water = 0;
   for (;;) {
     water = dActor_c::FindWithActorID(0x65, water);
-    if (water == 0) goto done;
-    if (mWaterParam == ((daObjWc_Mizu_c *)water)->mUseSpawnPosY) break;
+    if (water == 0)
+        break;
+    if (mWaterParam == ((daObjWc_Mizu_c *)water)->mUseSpawnPosY) {
+        mWaterID = water->uniqueID;
+        break;
+    }
   }
-  mWaterID = water->uniqueID;
-done:
   if (mWaterID != 0) return;
   MarkForDestruction();
 }
@@ -209,8 +221,7 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
     dActor_c *actor = dActor_c::FindWithID(id);
     if (actor == 0)
         return;
-    int isPlayer = (int)(actor->actorID == 0xbf);
-    if (isPlayer == 0)
+    if (!IsPlayerActor(actor))
         return;
     daObjWc_Mizu_c *water = (daObjWc_Mizu_c *)dActor_c::FindWithID(mWaterID);
     int targetPosY = water->mTargetPosY;
@@ -220,7 +231,7 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
         return;
     mActive = 1;
     water->mTargetPosY = mPosY;
-    Sound::PlayBank3(0x63, *(Vector3 *)&mCamSpacePosX);
+    Sound::PlayBank3(0x63, mCamSpacePos);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -242,4 +253,4 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
  * the actor heap through dActor_c's inline operator delete.
  */
 
-WcObj03ModelFilePtr data_ov029_02114270(0x6d0);
+WcObj03ModelFilePtr data_ov029_02114270(ASSET_WC_OBJ03_BMD);

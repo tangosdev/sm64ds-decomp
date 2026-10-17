@@ -110,7 +110,7 @@
     "D2_evidence": "No D2 exists. Three independent checks. (1) A case-sensitive grep for both `daPkn_c` and `PiranhaPlant` across all 106 config/**/symbols.txt files returns 23 rows and none is a D2, C1 or C2. (2) Every one of the 24 functions in the class's .text run is accounted for -- 8 by a vtable slot, 9 by a pointer-to-member record, 6 by an intra-overlay BL, 1 by the profile descriptor -- so no unnamed function is available to be a D2. (3) Nothing derives from daPkn_c (0 edges in build/rtti.json), so no derived class could need one.",
     "shape": "D0 is NOT a thunk that calls D1. It is a full inline duplicate of D1's body -- same vptr store, same six member destructor calls in the same order, same dEnemyBase_c::~dEnemyBase_c call -- followed by Memory::Deallocate. Both are 0x58/0x6c bytes of real code.",
     "order": "Both store the vptr (0x02130c28) into [this] first, then destroy members in REVERSE declaration order: +0x3e8 dCcAcPos_c::~dCcAcPos_c, +0x3b4 dCcAc_c::~dCcAc_c, +0x380 dCcAc_c::~dCcAc_c, +0x1c4 dBgCh_Actr::~dBgCh_Actr, +0x174 Model::~Model, +0x110 ModelAnim::~ModelAnim, then _ZN12dEnemyBase_cD2Ev (ov002:0x020aed18) on this.",
-    "D0_delete": "D0 tail: `ldr r1,[0x020a0eac]; ldr r1,[r1]` then bl 0x0203c1e8 = _ZN6Memory10DeallocateEPvP4Heap, with the heap taken from arm9's GAME_HEAP_PTR (data_020a0eac)."
+    "D0_delete": "D0 tail: `ldr r1,[0x020a0eac]; ldr r1,[r1]` then bl 0x0203c1e8 = _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE, with the heap taken from arm9's GAME_HEAP_PTR (data_020a0eac)."
   },
 
   "size": "0x47c",
@@ -194,9 +194,9 @@
     "queue_row_as_shipped": "PiranhaPlant\t23\t921\tov084\tyes\tno\tcompiler-only:>=11(...)\t-\ttext-only",
     "shard_count": "23 -> 24 measured. tools/tu_map.py splits daPkn_c_classInit (0x02130110) into its own single-function unit because `_classInit` is an unhandled factory spelling, so the queue's PiranhaPlant unit is 0x0212eaf0..0x02130110 = 23 functions. src/d_a_pkn.c is the 24th and belongs to the class: it is the only thing that installs the vtable and it is the target of g_profile_PAKUN.",
     "total_lines": "921 -> 952 measured. 952 - 31 (src/d_a_pkn.c) = 921 exactly, confirming the same off-by-one shard.",
-    "sibling_oracle": "`-` is wrong at this base. Two promoted TUs share daPkn_c's exact ancestor chain X -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c: src/actors/daOts_c.cpp (ov064, 22 functions, config/tu_manifest.d/ov064/daOts_c.json) and src/actors/daObjMarioCap_c.cpp (ov002, 29 of 30 functions). Both are text-only promotions -- daOts_c's manifest has sections = [.text] only, data = [] and bss = [] -- and both handle the vtable through the manifest's compiler_only_output list rather than by owning .data.",
+    "sibling_oracle": "`-` is wrong at this base. Two promoted TUs share daPkn_c's exact ancestor chain X -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c: src/game/actors/d_a_ots.cpp (ov064, 22 functions, config/tu_manifest.d/ov064/daOts_c.json) and src/game/actors/d_a_obj_mario_cap.cpp (ov002, 29 of 30 functions). Both are text-only promotions -- daOts_c's manifest has sections = [.text] only, data = [] and bss = [] -- and both handle the vtable through the manifest's compiler_only_output list rather than by owning .data.",
     "compiler_only": ">=11 is an ESTIMATE carried in the queue file, not a measurement. This scout did not measure it; doing so requires building the TU, which is stage 2.",
-    "no_promoted_class_in_ov084": "0 of the 31 files in src/actors/ is an ov084 class. src/actors/daKuriKing_c.cpp merely declares func_ov084_021296b0 and data_ov084_02130cf8 as externs -- that is the ov074 -> daKrb_c call, unrelated to this class."
+    "no_promoted_class_in_ov084": "0 of the 31 files in src/actors/ is an ov084 class. src/game/actors/d_a_kuri_king.cpp merely declares func_ov084_021296b0 and data_ov084_02130cf8 as externs -- that is the ov074 -> daKrb_c call, unrelated to this class."
   },
 
   "state_machine": {

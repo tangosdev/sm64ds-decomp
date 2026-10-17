@@ -44,6 +44,13 @@
  *   spelled through handles: SharedFilePtr has no recovered fields.
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_hyuhyu_AssetId {
+    ASSET_HYUHYU_BMD = 0x032f,
+    ASSET_HYUHYU_ATTACK_BCA = 0x0330,
+    ASSET_HYUHYU_WAIT_BCA = 0x0331
+};
+
 #include "common.h"
 #include "daHyuhyu_c.h"
 #include "Player.h"
@@ -108,10 +115,21 @@ extern HyuhyuModelFilePtr data_ov091_02135674;    /* BMD */
 extern HyuhyuAnimationFileHandle data_ov091_0213567c;  /* BCA: blow */
 extern HyuhyuAnimationFileHandle data_ov091_02135684;  /* BCA: wait */
 
+/* Actor ID 0xbf is PLAYER; dActor_c::mFlags bit 0x40000 is set while the
+ * actor is in Yoshi's mouth. int-returning, so the ROM materializes the 0/1
+ * before testing it; a direct test does not. */
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 // @symbol __sinit_d_a_hyuhyu.cpp
-HyuhyuModelFilePtr data_ov091_02135674(0x32f);    /* BMD */
-HyuhyuAnimationFileHandle data_ov091_0213567c(0x330);  /* BCA: blow */
-HyuhyuAnimationFileHandle data_ov091_02135684(0x331);  /* BCA: wait */
+HyuhyuModelFilePtr data_ov091_02135674(ASSET_HYUHYU_BMD);    /* BMD */
+HyuhyuAnimationFileHandle data_ov091_0213567c(ASSET_HYUHYU_ATTACK_BCA);  /* BCA: blow */
+HyuhyuAnimationFileHandle data_ov091_02135684(ASSET_HYUHYU_WAIT_BCA);  /* BCA: wait */
 
 typedef int (daHyuhyu_c::*HyuhyuStateFn)();
 
@@ -234,8 +252,7 @@ int daHyuhyu_c::Render()
 {
     if (mVariant == 1)
         return 1;
-    int hidden = (mFlags & 0x40000) != 0;
-    if (hidden)
+    if (IsInYoshiMouth(this))
         return 1;
     mModelAnim.Render(0);
     return 1;
@@ -265,7 +282,7 @@ int daHyuhyu_c::CleanupResources()
 void daHyuhyu_c::func_ov091_02134094()
 {
     Vector3 pos;
-    Vec3_Asr(&pos, (Vector3 *)&this->mPosX, 3);
+    Vec3_Asr(&pos, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         this->mAngleX, this->mAngleY, this->mAngleZ);
@@ -299,27 +316,22 @@ int daHyuhyu_c::func_ov091_0213400c()
 int daHyuhyu_c::func_ov091_02133f60()
 {
     Player *player = this->ClosestPlayer();
-    Vector3 target;
-    s16 angle;
 
-    if (player == 0)
-        goto done;
-    {
-        Vector3 *pos = (Vector3 *)&player->mPosX;
-        target.x = pos->x;
-        target.y = pos->y;
-        target.z = pos->z;
+    if (player != 0) {
+        Vector3 target;
+        s16 angle;
+        {
+            Vector3 *pos = &player->mPos;
+            target.x = pos->x;
+            target.y = pos->y;
+            target.z = pos->z;
+        }
+        angle = Vec3_HorzAngle(&this->mPos, &target);
+        ApproachAngle(&this->mPrevAngleY, angle, 0xa, 0x200, 0x100);
+        if ((u16)this->mStateTimer == 0 && Vec3_Dist(&this->mPos, &target) < 0x3e8000 &&
+            angle < 0x1000)
+            func_ov091_02134044(&data_ov091_021356b0);
     }
-    angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, &target);
-    ApproachAngle(&this->mPrevAngleY, angle, 0xa, 0x200, 0x100);
-    if ((u16)this->mStateTimer != 0)
-        goto done;
-    if (Vec3_Dist((Vector3 *)&this->mPosX, &target) >= 0x3e8000)
-        goto done;
-    if (angle >= 0x1000)
-        goto done;
-    func_ov091_02134044(&data_ov091_021356b0);
-done:
     return 1;
 }
 
@@ -366,11 +378,11 @@ int daHyuhyu_c::func_ov091_02133d30()
             this->mGustParticle2, 0x73, pos.x, pos.y, pos.z, &rot, 0);
 
         if (!((u16)(this->mModelAnim.currFrame >> 12) & 1)) {
-            gust = dActor_c::Spawn(0xe7, 1, *(Vector3 *)&this->mPosX, 0, this->mAreaId, -1);
+            gust = dActor_c::Spawn(0xe7, 1, this->mPos, 0, this->mAreaId, -1);
             if (gust != 0) {
                 player = this->ClosestPlayer();
                 if (player != 0) {
-                    Vector3 *ppos = (Vector3 *)&player->mPosX;
+                    Vector3 *ppos = &player->mPos;
                     target.x = ppos->x;
                     target.y = ppos->y;
                     target.z = ppos->z;
@@ -381,7 +393,7 @@ int daHyuhyu_c::func_ov091_02133d30()
                         heading = base + (s16)(0x2000 - ((((u32)RandomIntInternal(&data_0209e650) >> 8) & 3) << 0xc));
                     }
 
-                    gust->mPrevAngleX = Vec3_VertAngle((Vector3 *)&this->mPosX, &target);
+                    gust->mPrevAngleX = Vec3_VertAngle(&this->mPos, &target);
                     gust->mPrevAngleY = heading;
                     gust->mPrevAngleZ = 0;
                 }
@@ -434,8 +446,8 @@ int daHyuhyu_c::func_ov091_02133c6c()
    Wings and balloon form prevent the subsequent cap loss. When mCharacter
    and the player's param1 differ the player is switched back with
    SetNewHatCharacter; otherwise the cap is recorded as lost (once). Either
-   way an OBJ_MARIO_CAP is dropped and flies off along the gust. The
-   isPlayer temporaries are the ROM's shape: a plain `!=` test misses. */
+   way an OBJ_MARIO_CAP is dropped and flies off along the gust. The player
+   tests go through the int-returning IsPlayerActor: a plain `!=` misses. */
 void daHyuhyu_c::func_ov091_021339fc()
 {
     u32 hitFlags;
@@ -457,11 +469,8 @@ void daHyuhyu_c::func_ov091_021339fc()
             this->MarkForDestruction();
             return;
         }
-        {
-            int isPlayer = (int)(player->actorID == 0xbf);
-            if (isPlayer == 0)
-                return;
-        }
+        if (!IsPlayerActor(player))
+            return;
         if (player->mIsMetal == 1) {
             this->PoofDust();
             this->MarkForDestruction();
@@ -477,11 +486,8 @@ void daHyuhyu_c::func_ov091_021339fc()
         return;
     }
 
-    {
-        int isPlayer = (int)(player->actorID == 0xbf);
-        if (isPlayer == 0)
-            return;
-    }
+    if (!IsPlayerActor(player))
+        return;
     if (player->mIsMetal != 0)
         return;
     if (player->mIsMega != 0)
@@ -515,8 +521,7 @@ void daHyuhyu_c::func_ov091_021339fc()
                 rot.z = 0;
                 rot.y = this->mPrevAngleY;
                 capParam = capParam | (capChar << 8);
-                cap = dActor_c::Spawn(0x10d, capParam, *(Vector3 *)&this->mPosX, &rot,
-                    this->mAreaId, -1);
+                cap = dActor_c::Spawn(0x10d, capParam, this->mPos, &rot, this->mAreaId, -1);
                 if (cap == 0)
                     return;
                 cap->mHorzSpeed = 0x32000;

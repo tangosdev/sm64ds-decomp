@@ -1,15 +1,15 @@
 {
   "id": "arm9/dBgW",
   "module": "arm9",
-  "source": "src/engine/collision/dBgW.cpp",
-  "promoted_source": "src/engine/collision/dBgW.cpp",
+  "source": "src/engine/collision/d_bg_w.cpp",
+  "promoted_source": "src/engine/collision/d_bg_w.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "CONTIGUOUS AND EXHAUSTIVE: 0x02039140..0x020396d8 is covered by exactly 40 config/arm9/symbols.txt function symbols with no gap and no overlap, every one delinked to its own per-function object in config/arm9/delinks.txt with a .text section and nothing else.",
     "CLASS IDENTITY FROM ROM RTTI: _ZTS4dBgW at arm9 0x02099370, _ZTI4dBgW at 0x02099378 (root __class_type_info, pointing at __class_type_info vtable 0x0209a774), _ZTV4dBgW address point at 0x02099388 naming 13 slots: D1+D0, Virtual08, three pure-virtual nulls, the DetectClsn triple, BeforeClsn, TransformPos, GetAngularVelY and GetVelocity -- the members in this run.",
     "MIXED-TU MEMBERSHIP IS ROM-PROVEN: the contiguous run also contains _ZN10dScStage_c18ResetMeshCollidersEv and _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b, so the original TU defined members of three collision-family classes. ResetMeshColliders clears the same data_020a0c80 registry dBgW::Enable fills.",
-    "NEXT TU: src/engine/collision/dBgW_Kc.cpp enrolls .text 0x020396d8..0x020398fc immediately after this run."
+    "NEXT TU: src/engine/collision/d_bg_w_kc.cpp enrolls .text 0x020396d8..0x020398fc immediately after this run."
   ],
   "sections": [
     {

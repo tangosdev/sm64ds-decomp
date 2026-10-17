@@ -4,25 +4,25 @@
     .ctor       start:0x0211b72c end:0x0211b758 kind:rodata align:4
     .data       start:0x0211b760 end:0x0211c660 kind:data align:32
     .bss        start:0x0211c660 end:0x0211ca00 kind:bss align:32
-src/actors/daOts_c.cpp:
+src/game/actors/d_a_ots.cpp:
     complete
     .text start:0x02115ee0 end:0x02117070
 
-src/actors/daDonketu_c.cpp:
+src/game/actors/d_a_donketu.cpp:
     complete
     .text start:0x02117070 end:0x021174a0
     .init start:0x0211ae00 end:0x0211aee0
     .ctor start:0x0211b72c end:0x0211b730
     .bss start:0x0211c660 end:0x0211c6c4
 
-src/actors/daBDonketu_c.cpp:
+src/game/actors/d_a_b_donketu.cpp:
     complete
     .text start:0x021174a0 end:0x02117978
     .init start:0x0211aee0 end:0x0211afc0
     .ctor start:0x0211b730 end:0x0211b734
     .bss start:0x0211c6c4 end:0x0211c728
 
-src/actors/daObjFl_Amilift_c.cpp:
+src/game/actors/d_a_obj_fl_amilift.cpp:
     complete
     .text start:0x02117978 end:0x02118020
     .init start:0x0211afc0 end:0x0211b078
@@ -37,42 +37,42 @@ src/game/actors/d_a_obj_fl_gura.cpp:
     .ctor start:0x0211b738 end:0x0211b73c
     .bss start:0x0211c768 end:0x0211c790
 
-src/actors/daObjFl_KomaU_c.cpp:
+src/game/actors/d_a_obj_fl_koma_u.cpp:
     complete
     .text start:0x02118138 end:0x021185c0
     .init start:0x0211b0e4 end:0x0211b150
     .ctor start:0x0211b73c end:0x0211b740
     .bss start:0x0211c790 end:0x0211c7b8
 
-src/actors/daBbl_c.cpp:
+src/game/actors/d_a_bbl.cpp:
     complete
     .text start:0x021185c0 end:0x02118b50
     .init start:0x0211b150 end:0x0211b1d4
     .ctor start:0x0211b740 end:0x0211b744
     .bss start:0x0211c7b8 end:0x0211c7d8
 
-src/actors/daObjFl_Coin_c.cpp:
+src/game/actors/d_a_obj_fl_coin.cpp:
     complete
     .text start:0x02118b50 end:0x02119330
     .init start:0x0211b1d4 end:0x0211b4dc
     .ctor start:0x0211b744 end:0x0211b748
     .bss start:0x0211c7d8 end:0x0211c934
 
-src/actors/daWater_Hakidasi_c.cpp:
+src/game/actors/d_a_water_hakidasi.cpp:
     complete
     .text start:0x02119330 end:0x02119a58
     .init start:0x0211b4dc end:0x0211b518
     .ctor start:0x0211b748 end:0x0211b74c
     .bss start:0x0211c934 end:0x0211c944
 
-src/actors/daWater_Ring_c.cpp:
+src/game/actors/d_a_water_ring.cpp:
     complete
     .text start:0x02119a58 end:0x0211a200
     .init start:0x0211b518 end:0x0211b59c
     .ctor start:0x0211b74c end:0x0211b750
     .bss start:0x0211c944 end:0x0211c964
 
-src/actors/daObjTbox_c.cpp:
+src/game/actors/d_a_obj_tbox.cpp:
     complete
     .text start:0x0211a200 end:0x0211a930
     .init start:0x0211b59c end:0x0211b698
@@ -80,7 +80,7 @@ src/actors/daObjTbox_c.cpp:
     .data start:0x0211c49c end:0x0211c4cc
     .bss start:0x0211c964 end:0x0211c9bc
 
-src/actors/daObjShell_c.cpp:
+src/game/actors/d_a_obj_shell.cpp:
     complete
     .text start:0x0211a930 end:0x0211adb0
     .init start:0x0211b698 end:0x0211b72c

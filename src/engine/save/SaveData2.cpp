@@ -91,23 +91,16 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
     v10 = 0;
     hdrOff = need + 2;
     dataOff = need + 10;
-    goto body1;
-
-inc1:
-    retry++;
-    if (retry <= 0)
-        goto body1;
-    func_0205ff70((u16)lockID);
-    func_02057078((u16)lockID);
-    return 1;
-
-body1:
-    if (func_02060484(need, (int)&sum, 2, v10, v10, v10) != 1)
-        goto inc1;
-    if (func_02060484(hdrOff, (int)data_020a4b40, 8, v14, v14, v14) != 1)
-        goto inc1;
-    if (func_02060484(dataOff, (int)data, (int)size, v18, v18, v18) != 1)
-        goto inc1;
+    while (func_02060484(need, (int)&sum, 2, v10, v10, v10) != 1 ||
+           func_02060484(hdrOff, (int)data_020a4b40, 8, v14, v14, v14) != 1 ||
+           func_02060484(dataOff, (int)data, (int)size, v18, v18, v18) != 1) {
+        retry++;
+        if (retry > 0) {
+            func_0205ff70((u16)lockID);
+            func_02057078((u16)lockID);
+            return 1;
+        }
+    }
 
     func_0205ff70((u16)lockID);
     func_0205ff80((u16)lockID);
@@ -119,23 +112,16 @@ body1:
     v1c = 0;
     hdrOff2 = newBase + 2;
     dataOff2 = newBase + 10;
-    goto body2;
-
-inc2:
-    retry2++;
-    if (retry2 <= 0)
-        goto body2;
-    func_0205ff70((u16)lockID);
-    func_02057078((u16)lockID);
-    return 1;
-
-body2:
-    if (func_02060484(newBase, (int)&sum, 2, v1c, v1c, v1c) != 1)
-        goto inc2;
-    if (func_02060484(hdrOff2, (int)data_020a4b40, 8, v20, v20, v20) != 1)
-        goto inc2;
-    if (func_02060484(dataOff2, (int)data, (int)size, v24, v24, v24) != 1)
-        goto inc2;
+    while (func_02060484(newBase, (int)&sum, 2, v1c, v1c, v1c) != 1 ||
+           func_02060484(hdrOff2, (int)data_020a4b40, 8, v20, v20, v20) != 1 ||
+           func_02060484(dataOff2, (int)data, (int)size, v24, v24, v24) != 1) {
+        retry2++;
+        if (retry2 > 0) {
+            func_0205ff70((u16)lockID);
+            func_02057078((u16)lockID);
+            return 1;
+        }
+    }
 
     func_0205ff70((u16)lockID);
     func_02057078((u16)lockID);

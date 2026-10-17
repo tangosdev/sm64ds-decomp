@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "task_id": "player-anim-copy-cpp1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
+  "base_commit": "08b118098ecb7ce86b85f1215886a4618e268a86",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src/actors/Player.cpp",
+  "source_sha256": "b0781ffde951ead1db39a7fca80d1f7d01255c7129b845016a0d8a3728a8a321",
+  "manifest": "config/tu_manifest.d/ov002/Player.json",
+  "manifest_sha256": "cedd711451b7e760295a4b54509576c1d6b0f940dc886fe4069c3f94006aa0ce",
+  "change": "Compile Player script-animation helper func_ov002_020bcdf0 as C++ with C linkage. Use an actual int[2] animation entry to preserve the retail stack snapshot and native Player, frame-controller and Sound calls and existing fields.",
+  "receiver": "Player, established by St_Wait_Main call and existing script-command evidence; original free C-linkage entry preserved.",
+  "production": {
+    "mode": "ordinary text-only promoted TU",
+    "range": [
+      "ov002",
+      "0x020bccfc",
+      "0x020e67a8"
+    ],
+    "functions": 612,
+    "preparation": "rombuild.compiler_only_policies plus rombuild._isolate",
+    "compiler_only_function_policies": 6,
+    "policies_changed": false,
+    "temporary_pins_changed": false,
+    "header_changes": false,
+    "manifest_delta": "boundary_evidence prose only; all other manifest keys equal",
+    "initializers": 0,
+    "owned_nontext": 0,
+    "allocated_nontext": 0,
+    "metadata_records": 0
+  },
+  "bounded_experiments": {
+    "constructs": 12,
+    "plain_scalar_cpp_size": 596,
+    "required_size": 636,
+    "copy_site_array_cast_diffs": 18,
+    "exact_entry_types": [
+      "int[2]",
+      "unsigned[2]"
+    ],
+    "native_api_models": "Player methods, existing fields, real dExtFrameCtrl_c base reference and WillHitFrame all strict-match",
+    "new_volatile": false,
+    "new_assembly": false,
+    "dummy_declarations": false,
+    "address_overrides": false
+  },
+  "whole_object": {
+    "actual_tracked_source_freshly_compiled": true,
+    "compiler": "2004/b56",
+    "raw_size": 364400,
+    "raw_sha256": "8578494b097f2690c70bd21119d794a87a1ecd73f115dba65edadb3255190132",
+    "prepared_sha256": "285238d9b2627e66076e7f73d947bb9346188968fb7d3c5d0c87e42152da23d6",
+    "whole_raw_elf_equal": true,
+    "whole_prepared_elf_equal": true,
+    "raw_symbol_rows": 2287,
+    "raw_defined_entries": 1664,
+    "unique_defined_names": 620,
+    "raw_typed_relocation_edges": 4974,
+    "helper_relocations": 13,
+    "anonymous_symbols": [],
+    "strict_functions": 612,
+    "strict_verdict": "VERIFIED",
+    "diffs": [],
+    "blind": 0
+  },
+  "volatile_boundary": {
+    "inherited": true,
+    "added_by_this_change": false,
+    "rom_store": "0x020bcf98 stores X at sp+0x20",
+    "rom_reload": "0x020bcfb8 reloads X into r2 from sp+0x20 before Particle::System::New at0x020bcfc4",
+    "removal_control_size": 604,
+    "required_size": 636,
+    "interpretation": "A measured retained reconstruction boundary; no claim retail source literally used volatile."
+  },
+  "gates": {
+    "whole_tu": "pass:612 strict functions,4974 typed edges and entire raw/prepared ELF identical",
+    "full_rom": {
+      "command": "python -u tools/rombuild.py -j16 --no-rom",
+      "exit_code": 0,
+      "source_checkpoint": "81f59c3228c6009b102d73a86f9f2409bedd47ce",
+      "functions": 11332,
+      "mismatches": 0,
+      "data_claims": 331,
+      "bss_claims": 239,
+      "exact_modules": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "baseline_control": "Nine inherited interior-symbol dsd diagnostics; final intact gate introduces none.",
+      "romdata_inventory": "969 verified,1519 partial,1 inherited differ,21 unnamed; advisory inventory is not full data reconstruction."
+    },
+    "prepush_range": {
+      "command": "python -u tools/prepush_linkcheck.py --range 08b118098ecb7ce86b85f1215886a4618e268a86..HEAD",
+      "exit_code": 0,
+      "checked": 612,
+      "verified": 612,
+      "warnings": 0,
+      "blocking": 0,
+      "blind": 0
+    },
+    "declaration_agreement": "pass:1993files scoped,6952inherited disagreements,0new disagreements or header redeclarations",
+    "port_references": "pass:267 resolve",
+    "language_mode": "pass against current banked chaos-data baseline"
+  },
+  "completion": "partial",
+  "remaining_work": [
+    {
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "detail": "Scalar SetAnim/particle Fix12 ABI calls, raw spawned-prop and selected frame views, free pointer boundary and inherited volatile reload remain.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
+      "owner": "codex-player-anim-coordinator1013"
+    }
+  ],
+  "artifact_paths": [
+    "build/playercopy/whole-tu-proof.json",
+    "build/playercopy/sweep.json",
+    "build/playercopy/native-sweep.json",
+    "build/playercopy/helper-retail.asm",
+    "build/player-anim1013/full-rom.log",
+    "build/player-anim1013/decl.log",
+    "build/player-anim1013/langmode.log"
+  ],
+  "source_git_blob_sha256": "b1048009b7f7e4c07992edb11f099295055bc1575c388317fbb969084643ba57",
+  "manifest_git_blob_sha256": "0209be6396cd8149c067a4893f5d1adcfb373fc181115ea96e999d09c7f6c66c",
+  "binding": "Final report-only descendant retains the exact src/include/config/tools/port trees of the tested source checkpoint; independent review accepts this commit explicitly."
+}

@@ -27,7 +27,7 @@ extern "C" {
 void *_ZN9ModelAnimC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
-void *_ZN4Heap13SetupRootHeapEv(void);
+void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca,
                                                  int flags, int speed, u16 start);
 extern Matrix4x3 data_0209b3ec;
@@ -94,7 +94,7 @@ int main(void)
 {
     PORT_INSTALL_FAULT_PROBE();
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(_ZN5mHeap6Heap_t13SetupRootHeapEv() != NULL);
     ident_fx(&data_0209b3ec);
 
     SharedFilePtrC mp;

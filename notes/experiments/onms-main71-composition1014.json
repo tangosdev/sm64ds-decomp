@@ -1,0 +1,701 @@
+{
+  "task": "onms-main71-composition1014",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+  "protocol_ancestral_base": "426de36be0d6edf9dcc44f6cb2ddd555cc14c75f",
+  "tested_current_base": "71afe50de65c8e5d9b3d3147aec090698074c50d",
+  "accepted_input": "cf10a96b44e876f93202199a38aabb48ecdb1748",
+  "composition_checkpoint": "4b771cf964a6df61f074c3ea6ac2cee0281dc9e2",
+  "composition_parents": [
+    "cf10a96b44e876f93202199a38aabb48ecdb1748",
+    "71afe50de65c8e5d9b3d3147aec090698074c50d"
+  ],
+  "source_completion": "partial",
+  "change": "Normally compose the independently accepted Onimasu native floor/member access with current main. Original Source/header/manifest/report are literal. This continuation adds only this composition report beyond the imported upstream changes.",
+  "authorship": {
+    "source_author_session": "codex-onms-native-floor-astra-producer1014",
+    "composition_author_session": "codex-onms-main71-astra-producer1014",
+    "actual_agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "model": "GPT-6 Astra",
+    "qualification": "Same actual Source author as accepted predecessor; no independent self-acceptance. Root coordinates; independent verifier remains required for this exact composition."
+  },
+  "predecessor_task": "onms-native-floor1014",
+  "accepted_predecessor_verification": {
+    "commit": "cf10a96b44e876f93202199a38aabb48ecdb1748",
+    "session": "codex-onms-native-independent1014",
+    "stage": "verify",
+    "artifact_sha256": "1144797ed56d22ec24d79280895399c44707c53b2e5c32e263ff00068272efbf",
+    "tested_base": "426de36be0d6edf9dcc44f6cb2ddd555cc14c75f",
+    "source_result": "pass"
+  },
+  "accepted_effective_findings": {
+    "R1": {
+      "disposition": "fixed",
+      "id": "R1",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "Eight state bodies are daOnms_c members; symbols.txt, manifest and attribution renamed in place; state order confirmed from ov092 relocs.txt records 0x02132240..0x02132280 and the __sinit copy order. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R1 (handoff findings table)"
+    },
+    "R10": {
+      "disposition": "fixed",
+      "id": "R10",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "No raw this offset remains; V4 records a non-this offset. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R10 (handoff findings table)"
+    },
+    "R11": {
+      "disposition": "deferred",
+      "id": "R11",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "dActor_c.h declares the scalars; shared header outside the reservation. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R11 (handoff findings table)"
+    },
+    "R12": {
+      "disposition": "deferred",
+      "id": "R12",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Vec3 must agree with src/Vec3_Asr.c; E4 has no artifact. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R12 (handoff findings table)"
+    },
+    "R13": {
+      "disposition": "fixed",
+      "id": "R13",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "volatile saved, the Frame struct, the long long launder and LA() are gone; the Frame destructor removal is proven compiler-only. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R13 (handoff findings table)"
+    },
+    "R14": {
+      "disposition": "fixed",
+      "id": "R14",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "The temporaries are removed as described. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R14 (handoff findings table)"
+    },
+    "R15": {
+      "disposition": "deferred",
+      "id": "R15",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Measured forms with no committed artifact; E11 and E15 independently spot-checked (each revert gives DIFF). Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R15 (handoff findings table)"
+    },
+    "R16": {
+      "disposition": "fixed",
+      "id": "R16",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "Not applicable: no goto at base or candidate. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R16 (handoff findings table)"
+    },
+    "R17": {
+      "disposition": "fixed",
+      "id": "R17",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "Dead local declarations and the C shadow struct are removed; the #else branch had no C consumer (affected_src lists two C++ files). Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R17 (handoff findings table)"
+    },
+    "R18": {
+      "disposition": "deferred",
+      "id": "R18",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "No included header declares them; no new local redeclaration reported. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R18 (handoff findings table)"
+    },
+    "R19": {
+      "disposition": "fixed",
+      "id": "R19",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "Static const members; ROM bytes at 0x02132074, 0x02132080 and 0x0213208c confirmed (0x7c000, 0x7c000, 0x8c000; 0x3c000, 0x3c000, 0xc000; 64 s8 in -3..2); undefined in the object before and after, relocations identical under the rename. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R19 (handoff findings table)"
+    },
+    "R2": {
+      "disposition": "fixed",
+      "id": "R2",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "NextMove, Roll, Launch, CheckPlayerHit and UpdateModelMtx are members; Roll step signs match the state names. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R2 (handoff findings table)"
+    },
+    "R20": {
+      "disposition": "deferred",
+      "id": "R20",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "True: __sinit_ov092_021320cc.c and decl_common.h name them. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R20 (handoff findings table)"
+    },
+    "R21": {
+      "disposition": "deferred",
+      "id": "R21",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "arm9 rows, outside ov092. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R21 (handoff findings table)"
+    },
+    "R22": {
+      "disposition": "fixed",
+      "id": "R22",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "Unmeasured notes removed; one measured comment per kept form (V3 records a leftover recovered: banner). Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R22 (handoff findings table)"
+    },
+    "R23": {
+      "disposition": "fixed",
+      "id": "R23",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "Manifest notes and the Frame entry are updated and reproduced by tubuild verify. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R23 (handoff findings table)"
+    },
+    "R24": {
+      "disposition": "deferred",
+      "id": "R24",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "The notes and ledgers are outside the reservation. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R24 (handoff findings table)"
+    },
+    "R3": {
+      "disposition": "deferred",
+      "id": "R3",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "True: include/decl_common.h lines 2764-2766 declare func_ov092_021313b0, 02131578 and 02131a88 by name, and decl_common is off limits. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R3 (handoff findings table)"
+    },
+    "R4": {
+      "disposition": "fixed",
+      "id": "R4",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "The E1 callee bridges are real calls; undefined set unchanged. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R4 (handoff findings table)"
+    },
+    "R5": {
+      "disposition": "deferred",
+      "id": "R5",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "E5 and E6 were measured by the producer but have no committed experiment artifact, so they are not compiler_constraint. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R5 (handoff findings table)"
+    },
+    "R6": {
+      "disposition": "deferred",
+      "id": "R6",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "True: Earthquake and NewSimple are declared in no header; dBgCh_Actr::Init is declared with Fix12i, which mangles to i. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R6 (handoff findings table)"
+    },
+    "R7": {
+      "disposition": "deferred",
+      "id": "R7",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "The definitions are in files outside the reservation; E2 and E3 have no artifact. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Producer self-audit finding R7 (handoff findings table)"
+    },
+    "R8": {
+      "disposition": "fixed",
+      "id": "R8",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "mTumbling and mRollDone are evidenced by Behavior, func_ov092_02131578, UpdateModelMtx and Roll; the missing coined marking is V1. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R8 (handoff findings table)"
+    },
+    "R9": {
+      "disposition": "fixed",
+      "id": "R9",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp; include/daOnms_c.h",
+      "reason": "mTumbleVelX, Y and Z are evidenced by StateKnocked, StateBounce and Launch; the missing coined marking is V1. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Producer self-audit finding R9 (handoff findings table)"
+    },
+    "V1": {
+      "disposition": "fixed",
+      "id": "V1",
+      "kind": "provenance",
+      "location": "include/daOnms_c.h:1-3,34-36,49-50; notes/agents/handoffs/readable-ov092-onms-0925b.md",
+      "reason": "Inspected at aa8829319b: mTumbleVelX, mTumbleVelY, mTumbleVelZ (lines 34-36) and mTumbling, mRollDone (49-50) each carry /* coined */; the banner reads 'The cartridge keeps no field names, so all are coined; the ones marked coined were named here from their uses', which is true; the handoff's claim (13 member functions and 5 fields marked on their lines, 3 statics covered by the 'Coined names.' comment) matches the header. The names remain evidenced by their uses (round 1). Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "The five fields this candidate names (mTumbleVelX, mTumbleVelY, mTumbleVelZ, mTumbling, mRollDone) are not marked coined, and the header banner says field names are \"recovered from the bodies\". The handoff states \"every new member name is coined, and include/daOnms_c.h marks each one \\\"coined\\\" next to its declaration ... and the fields are mTumbling, mRollDone and mTumbleVelX, mTumbleVelY and mTumbleVelZ\"; the declarations at header lines 34-36 and 49-50 carry no coined mark, which contradicts it."
+    },
+    "V2": {
+      "disposition": "deferred",
+      "id": "V2",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp:8-9; include/daOnms_c.h:13",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Pre-existing; states nothing false. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Process-history narration kept from base: \"The class was coined ToxBox before the ROM name was read (factory alias ToxBox_Spawn)\" and \"historical alias ToxBox_Spawn\"."
+    },
+    "V3": {
+      "disposition": "fixed",
+      "id": "V3",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp:74-77",
+      "reason": "Inspected at aa8829319b: the destructor comment opens 'Complete destructor:' and reads 'dCcAcPos_c and dBgCh_Actr teardown'; no 'recovered:' banner or slash remains there. Re-inspected at 50680db6cc: include/daOnms_c.h and src/actors/daOnms_c.cpp are unchanged from aa8829319b (main 9a3e32b4a7 does not touch them), so the fix stands.",
+      "summary": "Destructor comment keeps a \"recovered:\" banner and a prose slash (\"dCcAcPos_c/dBgCh_Actr teardown\")."
+    },
+    "V4": {
+      "disposition": "deferred",
+      "id": "V4",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_onms.cpp:256; include/dBgCh_Actr.h:157",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Fresh independent full allocated/symbol/typed-edge comparison verifies this caller access repair. The existing wrapper forwards the sphere dBgPi result but its shared signature remains void*; no fully typed result API or unique original declaration is claimed. Historical V4 dictionary remains verbatim in historical_accepted_findings.",
+      "summary": "Caller raw+4 access is removed using the real floor member call, dBgPi local and surface.clps.w0 fields. The const-qualified dBgCh_Actr wrapper still returns mutable void*, so the shared result API remains partial."
+    },
+    "V5": {
+      "disposition": "deferred",
+      "id": "V5",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "include/daOnms_c.h:75; src/actors/daOnms_c.cpp:31",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "The table is ROM data filled by the static initializer; the int return is what the body returns. Nothing false stated. Reason rechecked at 50680db6cc: still true.",
+      "summary": "StateBounce is declared int while the state-table member-pointer type is void (daOnms_c::*)(); a source-level table initializer could not name it."
+    },
+    "V6": {
+      "disposition": "deferred",
+      "id": "V6",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "include/daOnms_c.h:84-86; src/actors/daOnms_c.cpp:384-385",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Phrasing; the bit table is labelled best-effort where it lives. Reason rechecked at 50680db6cc: still true.",
+      "summary": "The punch, kick and bump reading of hitFlags 0x40 and 0x380 rests on the best-effort bit table in include/dCc_c.h (0x380 there is kick, breakdance and slide kick)."
+    },
+    "V7": {
+      "disposition": "deferred",
+      "id": "V7",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "src/actors/daOnms_c.cpp:151-152",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Phrasing; accessor meanings unrecovered. Reason rechecked at 50680db6cc: still true.",
+      "summary": "\"floor type 9\" and \"floor type 8\" come from two different accessors (func_02037e38 and func_02037e84), so \"type\" conflates two floor attributes."
+    },
+    "V8": {
+      "disposition": "deferred",
+      "id": "V8",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "include/daOnms_c.h:34-36,49-50",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Formatting only; states nothing false. Fold into one comment in a later pass. Reason rechecked at 50680db6cc: still true.",
+      "summary": "Each coined field line now ends with two adjacent comments (/* 0x4e0 - ... */ /* coined */) where the member functions fold the mark into one comment (/* 0 - coined */)."
+    },
+    "V9": {
+      "disposition": "fixed",
+      "id": "V9",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3161",
+      "kind": "reconstruction",
+      "location": "include/daOnms_c.h:32",
+      "owner": "next producer the coordinator assigns on #3161",
+      "reason": "Independently confirmed exact comment-only replacement with last player that hit the box. CheckPlayerHit stores that player after Launch returns even when orientation/param1/range rejects launch, and on a path without Launch. No field, API or hit/launch behavior change. Historical V9 dictionary remains verbatim in historical_accepted_findings.",
+      "summary": "mPlayerActor's comment reads 'player that knocked the box away', but CheckPlayerHit stores any hitting actor with actorID 0xbf in mPlayerActor after the Launch tests, including when Launch returns early (box not flat side down, param1 test, or out of range). It is the last player to hit the box."
+    }
+  },
+  "findings_qualification": "All33 effective dictionaries from the accepted predecessor VERIFY are retained exactly. V4 remains deferred: caller raw access is repaired but shared const wrapper returns mutable void*. V9 is fixed provenance only. Older33 historical dictionaries remain unchanged inside the original accepted report; they are not substituted for current accepted dispositions.",
+  "original_artifacts_literal": {
+    "src/game/actors/d_a_onms.cpp": {
+      "accepted_blob": "5068623d6a922dba1ae99f8ad803d39845968273",
+      "composition_blob": "5068623d6a922dba1ae99f8ad803d39845968273",
+      "sha256": "b862c58ab493b5b270522709da644c60421066f3affac20e93debff68212235f"
+    },
+    "include/daOnms_c.h": {
+      "accepted_blob": "376861dc4a2edb88166a1993afbdbf5d8a66ce0a",
+      "composition_blob": "376861dc4a2edb88166a1993afbdbf5d8a66ce0a",
+      "sha256": "1e5b3c09ec6381969efe7385bcc2ce298fe893b48ff76005ec847582d686f4cf"
+    },
+    "config/tu_manifest.d/ov092/daOnms_c.json": {
+      "accepted_blob": "364d64255164e74e1e117081403d6f9878e01cc0",
+      "composition_blob": "364d64255164e74e1e117081403d6f9878e01cc0",
+      "sha256": "b9e5deed738c3960aab207122b56df538efcdfe31a5c0c74ceb7e3e31d6cb1ad"
+    },
+    "notes/experiments/onms-native-floor1014.json": {
+      "accepted_blob": "c3f5d225fa7fa0e4b775b24144eb7bceb564644b",
+      "composition_blob": "c3f5d225fa7fa0e4b775b24144eb7bceb564644b",
+      "sha256": "3a0072e55d3b103636edff3503dac12018b0bd9be1143568a6265b9c2e56da00"
+    }
+  },
+  "all47_stage_requires_literal": {
+    "proof": "build/onms-main71-composition1014/required-inputs.json",
+    "sha256": "af9bf61f4dfaebe173939ec2d6ba9804ac9090177e74e8087c2e463dfb8f2da2",
+    "count": 47
+  },
+  "fresh_owned_object_proof": {
+    "head": "4b771cf964a6df61f074c3ea6ac2cee0281dc9e2",
+    "parents": [
+      "cf10a96b44e876f93202199a38aabb48ecdb1748",
+      "71afe50de65c8e5d9b3d3147aec090698074c50d"
+    ],
+    "tested_main": "71afe50de65c8e5d9b3d3147aec090698074c50d",
+    "accepted_input": "cf10a96b44e876f93202199a38aabb48ecdb1748",
+    "canary": {
+      "path": "C:\\tmp\\sm64ds-onms-native-floor1014\\src\\minigames\\d_mg_trmpln2_mario.cpp",
+      "result": [
+        true,
+        "2004/b56"
+      ]
+    },
+    "all_required_inputs_literal": true,
+    "required_input_count": 47,
+    "whole_raw_literal_to_accepted": true,
+    "raw_bytes": 20280,
+    "raw_sha256": "cea1987ac34e7610fe337ac8b72c0cbfd85ae1e8f4d15cc01dc0a4e84b685154",
+    "whole_normal_literal_to_accepted": true,
+    "normal_bytes": 20280,
+    "normal_sha256": "fb85a73581ebec847cb8d4c1c870ebb40fff180b68ed0e547bb5542c951b9307",
+    "graph_counts": {
+      "raw": {
+        "sections": 53,
+        "symbols": 196,
+        "edges": 203
+      },
+      "normal": {
+        "sections": 53,
+        "symbols": 196,
+        "edges": 145
+      }
+    },
+    "metadata": [
+      {
+        "symbol": "_ZTI7fBase_c",
+        "address": "0x2086d70",
+        "full_bytes": 8,
+        "refs": 2,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "address": "0x2086e60",
+        "full_bytes": 9,
+        "refs": 0,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "address": "0x2086e78",
+        "full_bytes": 12,
+        "refs": 3,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "address": "0x2086e54",
+        "full_bytes": 9,
+        "refs": 0,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "address": "0x208e390",
+        "full_bytes": 12,
+        "refs": 3,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "address": "0x208e384",
+        "full_bytes": 10,
+        "refs": 0,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "address": "0x21089ec",
+        "full_bytes": 12,
+        "refs": 3,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "address": "0x2108a04",
+        "full_bytes": 13,
+        "refs": 0,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTI8daOnms_c",
+        "address": "0x21322a0",
+        "full_bytes": 12,
+        "refs": 3,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTS8daOnms_c",
+        "address": "0x2132288",
+        "full_bytes": 10,
+        "refs": 0,
+        "blind": 0,
+        "literal_retail_equal": true
+      },
+      {
+        "symbol": "_ZTV8daOnms_c",
+        "address": "0x21322c8",
+        "full_bytes": 136,
+        "refs": 33,
+        "blind": 0,
+        "literal_retail_equal": true
+      }
+    ],
+    "metadata_summary": {
+      "count": 11,
+      "full_bytes": 243,
+      "refs": 47
+    },
+    "owned_before_after": [
+      true,
+      true
+    ],
+    "qualification": "Literal whole objects compare accepted native candidate to composed candidate, not pre-native baseline. The historical pre-native vs native container difference remains explicitly retained."
+  },
+  "strict_summary": {
+    "unique_functions": 24,
+    "zero_blind": true,
+    "zero_differences": true,
+    "initializer_included": true
+  },
+  "upstream_input_composition": {
+    "426_to_296": "Only README.md and contributions.json changed; all five production trees literal in this initial interval.",
+    "296_to_71": {
+      "proof": "build/main71afe-production-input1014/PROOF.json",
+      "sha256": "9e9cc91f16e43217c68cf29ec120dfc79a08d79012c5579495f98035b364e756",
+      "manifest_changed_leaf_count": 20,
+      "manifest_count": 6,
+      "four_src_include_tools_port_trees_literal": true,
+      "config_tree_literal": false,
+      "all_other_config_paths_literal": true,
+      "exact_changed_config_paths": [
+        "config/dead-reference-baseline.json",
+        "config/tu_manifest.d/ov030/daMky_c.json",
+        "config/tu_manifest.d/ov075/dScEntry_c.json",
+        "config/tu_manifest.d/ov085/daObjKanban_c.json",
+        "config/tu_manifest.d/ov091/daDsnBase_c.json",
+        "config/tu_manifest.d/ov091/daObjPile_c.json",
+        "config/tu_manifest.d/ov100/daStarGate_c.json"
+      ],
+      "documentation_baseline_added_pairs": 56,
+      "notes_changed": 51,
+      "qualification": "Exact changed leaves are prose or dated result records, except deadstrip reason whose consumed nonempty predicate is preserved. All remaining recursive manifest values including live functions/maps/from/to/ranges/ownership/helper dispositions and active structured admission are identical. Supports a qualified 296->71 build-semantic transfer in conjunction with each candidate own proof; does not prove an uncomposed candidate or replace independent review."
+    },
+    "review_context": "The51 historical notes including7Piano dependencies changed. Their new historical-path annotations need review, and cannot be called literal old review inputs. They do not change Onms47requires. Dead-reference ratchet now has56 additional historical-prose allowances; current actual check is separately recorded."
+  },
+  "full_rom_evidence_transfer": {
+    "producer_actual_build_checkpoint": "1c8515046ac421f079a619848cc59673aecba59f",
+    "producer_terminal": {
+      "name": "rombuild",
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom",
+        "--report-json",
+        "build\\onms-native-floor1014\\rombuild.json",
+        "--data-json",
+        "build\\onms-native-floor1014\\romdata-full.json"
+      ],
+      "exit_code": 0,
+      "seconds": 307.83,
+      "log": "build\\onms-native-floor1014\\rombuild.log"
+    },
+    "producer_result_sha256": "c541ba3aabdccfa712bf3ce5de824ad9565d827dac7ba645fc7c8ed8a0feb437",
+    "independent_accepted_actual_build": {
+      "global_data": {
+        "differs": 1,
+        "partial": 1519,
+        "unnamed": 21,
+        "verified": 970
+      },
+      "module_fidelity": {
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "percent": 100.0,
+        "unexpectedDifferingBytes": 0
+      },
+      "new_symbol_errors": [],
+      "source_build": {
+        "compiledBytes": 2225480,
+        "compiledFunctions": 11334,
+        "differingSourceBytes": 0,
+        "mismatchingDataClaimBytes": 0,
+        "mismatchingDataClaims": 0,
+        "mismatchingFunctionBytes": 0,
+        "mismatchingFunctions": 0,
+        "modBytes": 0,
+        "modFunctions": 0,
+        "reproducingBytes": 2225480,
+        "reproducingDataClaimBytes": 13020,
+        "reproducingDataClaims": 331,
+        "reproducingFunctions": 11334,
+        "sourceBssBytes": 30164,
+        "sourceBssClaims": 239,
+        "sourceBytes": 2225480,
+        "sourceBytesPercent": 99.43577343005789,
+        "sourceDataClaims": 331,
+        "sourceFunctions": 11334,
+        "totalCodeBytes": 2238108,
+        "totalCodeFunctions": 11397
+      },
+      "symbol_errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "terminal": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom",
+          "--report-json",
+          "build\\onms-native-independent1014\\rombuild.json",
+          "--data-json",
+          "build\\onms-native-independent1014\\romdata.json"
+        ],
+        "exit_code": 0,
+        "seconds": 307.7146339416504
+      }
+    },
+    "basis": "Exact own actor Source/header/manifest/report and47requires; whole freshly compiled raw and normally prepared objects literally equal accepted objects; all other Source/header/tools/port trees equal; all other config literal except enumerated20 provenance leaves with unchanged consumed build semantics and independent documentation ratchet. Both historical actual full106 results positively transfer for this composition.",
+    "limits": "No new full-ROM command was run on71. This is qualified input/whole-object proof transfer, not universal five-tree equality. Nine inherited stock-symbol errors and global970verified/1519partial/1differ/21unnamed remain; zero new symbol errors in actual historical runs."
+  },
+  "fresh_scoped_gates": {
+    "tested_head": "4b771cf964a6df61f074c3ea6ac2cee0281dc9e2",
+    "tested_base": "71afe50de65c8e5d9b3d3147aec090698074c50d",
+    "checks": [
+      {
+        "name": "prepush",
+        "command": [
+          "python",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "71afe50de65c8e5d9b3d3147aec090698074c50d..HEAD",
+          "--json",
+          "build\\onms-main71-composition1014\\prepush.json"
+        ],
+        "exit_code": 0,
+        "seconds": 16.43,
+        "log": "build\\onms-main71-composition1014\\prepush.log"
+      },
+      {
+        "name": "decl-scoped",
+        "command": [
+          "python",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "71afe50de65c8e5d9b3d3147aec090698074c50d"
+        ],
+        "exit_code": 0,
+        "seconds": 10.27,
+        "log": "build\\onms-main71-composition1014\\decl-scoped.log"
+      },
+      {
+        "name": "dead-references",
+        "command": [
+          "python",
+          "tools/check_dead_references.py"
+        ],
+        "exit_code": 0,
+        "seconds": 9.51,
+        "log": "build\\onms-main71-composition1014\\dead-references.log"
+      },
+      {
+        "name": "port",
+        "command": [
+          "python",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.58,
+        "log": "build\\onms-main71-composition1014\\port.log"
+      },
+      {
+        "name": "diff",
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "71afe50de65c8e5d9b3d3147aec090698074c50d"
+        ],
+        "exit_code": 0,
+        "seconds": 0.06,
+        "log": "build\\onms-main71-composition1014\\diff.log"
+      }
+    ]
+  },
+  "gate_qualifications": [
+    "Current prepush retains23VERIFIED plus initializerBLIND6 warning; fresh separate ordinary24strict proof covers initializer0blind0diff.",
+    "Current scoped declaration ratchet passes with inherited disagreements; no declaration baseline edits.",
+    "Current dead-reference ratchet is actually rerun after upstream allowance/note changes. Other old static gates transfer only where their executable/config inputs are unchanged; no claim all static inputs literal."
+  ],
+  "retained_local_failures": [
+    "Pre-claim local preflight used ordered resource-list equality; queue normalized ordering differed but exact sets matched. Assertion failed before claim. Corrected set comparison then actualclaim succeeded; no scope or policy change.",
+    "An attempted one-line PowerShell/Python quote replacement failed before mutation; literal here-string correction succeeded. No Source or receipt was affected."
+  ],
+  "independent_acceptance": "Pending distinct current exact-head/base71 review; predecessor acceptance is historical, not current composition approval.",
+  "artifact_hashes": {
+    "build/onms-main71-composition1014/fresh-proof.json": "a45030e508bb4bdbccb8c9563a40bd05acc5fa6db8a21c0bf6381c39b0e7be15",
+    "build/onms-main71-composition1014/preparation.json": "779ace43ecc7533ba3ef69e2ac3aa3a1a420e772e637750995aa86cbc1d679b4",
+    "build/onms-main71-composition1014/raw-graph.json": "865f49f1da67c5acd11bb438f4ee9604cc028adc53afec5f6ff15e3b3cc24684",
+    "build/onms-main71-composition1014/normal-graph.json": "94185d1fe5ba965e9dca35e4b4bca89d45845b546178bf96da002c20a23b049b",
+    "build/onms-main71-composition1014/gates.json": "b7ae3b9fa09698ef553cb56b2d12e4ac7c35d60256e8cc6f2a4bc5d69e694293",
+    "build/onms-main71-composition1014/required-inputs.json": "af9bf61f4dfaebe173939ec2d6ba9804ac9090177e74e8087c2e463dfb8f2da2",
+    "build/onms-main71-composition1014/accepted-effective-findings.json": "797c370e450bd840776669fa10ad3cb489471af2d629b327882083f51e1e4271",
+    "build/onms-main71-composition1014/accepted-predecessor-verification.json": "1144797ed56d22ec24d79280895399c44707c53b2e5c32e263ff00068272efbf",
+    "build/main71afe-production-input1014/PROOF.json": "9e9cc91f16e43217c68cf29ec120dfc79a08d79012c5579495f98035b364e756"
+  }
+}

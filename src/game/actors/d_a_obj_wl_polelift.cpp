@@ -7,7 +7,7 @@
  *   changes InitResources. DropShadowScaleXYZ takes three Fix12<int>
  *   by value.
  * - func_ov026_02111234 and func_ov026_021112a4 stay address-named
- *   char* helpers. The fields they walk are still padding.
+ *   C-linkage helpers.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c
  *   the collision offset. data_0209caa0 is the stage-state block.
  *   g_profile_WL_POLELIFT is outside this TU.
@@ -26,6 +26,11 @@
  * Model.h would otherwise pull in first -- scalarizes the last three words,
  * because Vector3 declares a destructor and is therefore not POD. Measured:
  * 0x88 emitted against the cartridge's 0x70. */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_wl_polelift_AssetId {
+    ASSET_WL_POLE_LIFT_BMD = 0x06db
+};
+
 #include "common.h"
 #include "daObjWlPolelift_c.h"
 #include "SharedFilePtr.h"
@@ -157,7 +162,7 @@ s32 daObjWlPolelift_c::Behavior()
 
         path.GetNode(node, current);
         path.GetNode(prevNode, prevNodeIdx);
-        Vec3_Sub(&delta, (Vector3 *)&mPosX, &node);
+        Vec3_Sub(&delta, &mPos, &node);
         length = LenVec3(&delta);
         if (length == 0 || length <= 0xa000) {
             mPosX = node.x;
@@ -167,7 +172,7 @@ s32 daObjWlPolelift_c::Behavior()
         } else {
             scale = cstd::fdiv(0xa000, length);
             Vec3_MulScalar(&step, &delta, scale);
-            SubVec3((Vector3 *)&mPosX, &step, (Vector3 *)&mPosX);
+            SubVec3(&mPos, &step, &mPos);
         }
 
         if (moved) {
@@ -196,7 +201,7 @@ s32 daObjWlPolelift_c::Behavior()
     clsn.Clear();
     skipCollision = (mFlags & 8) != 0;
     if (!skipCollision) {
-        rayPos = *(Vector3 *)&mPosX;
+        rayPos = mPos;
         rayPos.y -= 0x14000;
 
         dBgCh_Gnd ray;
@@ -233,14 +238,13 @@ s32 daObjWlPolelift_c::CleanupResources()
 
 // @symbol func_ov026_021112a4
 /* File-local helper: rebuild the model matrix from the actor's Y rotation and
- * position. The fields it walks are still modelled as padding. */
+ * position. */
 extern "C" void func_ov026_021112a4(daObjWlPolelift_c *actor)
 {
-    char *t = (char *)actor;
-    Matrix4x3_FromRotationY(t + 0xf0, *(short *)(t + 0x8e));
-    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x118) = *(int *)(t + 0x60) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
+    Matrix4x3_FromRotationY(&actor->model.mat4x3, actor->mAngleY);
+    actor->model.mat4x3.m[9] = actor->mPosX >> 3;
+    actor->model.mat4x3.m[10] = actor->mPosY >> 3;
+    actor->model.mat4x3.m[11] = actor->mPosZ >> 3;
 }
 
 // @symbol func_ov026_02111234
@@ -248,11 +252,10 @@ extern "C" void func_ov026_021112a4(daObjWlPolelift_c *actor)
  * hand the owned dExtShadowModel_c to dActor_c::DropShadowScaleXYZ. */
 extern "C" void func_ov026_02111234(daObjWlPolelift_c *actor)
 {
-    char *c = (char *)actor;
-    *(struct Matrix4x3 *)(c + 0x1b0) = *(struct Matrix4x3 *)(c + 0xf0);
-    *(int *)(c + 0x1d8) = *(int *)(c + 0x1e0) >> 3;
+    actor->dropShadowMtx = actor->model.mat4x3;
+    actor->dropShadowMtx.m[10] = actor->groundY >> 3;
     _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-        c, c + 0x188, c + 0x1b0, 0x64000, 0xc8000, 0x64000, 0xf);
+        actor, &actor->shadow, &actor->dropShadowMtx, 0x64000, 0xc8000, 0x64000, 0xf);
 }
 
 /* _ZN17daObjWlPolelift_cD1Ev and _ZN17daObjWlPolelift_cD0Ev are NOT written
@@ -262,4 +265,4 @@ extern "C" void func_ov026_02111234(daObjWlPolelift_c *actor)
 
 /* Static-init global (was the handwritten __sinit_ov026_02112b7c shard):
  * the model handle (file 0x6db). */
-PoleliftModelFile data_ov026_02113ea0(0x6db);
+PoleliftModelFile data_ov026_02113ea0(ASSET_WL_POLE_LIFT_BMD);

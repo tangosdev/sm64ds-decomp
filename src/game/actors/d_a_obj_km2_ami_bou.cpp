@@ -15,8 +15,16 @@
  * up by 7; otherwise it bobs down by 3. classInit is the KM2_AMI_BOU
  * factory. This TU owns g_profile_KM2_AMI_BOU.
  */
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_km2_ami_bou_AssetId {
+    ASSET_KM2_AMI_BOU_BMD = 0x065d,
+    ASSET_KM2_AMI_BOU_KCL = 0x065e
+};
+
 #include "daObjKm2_Ami_Bou_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx.h"
 
 enum {
     kUnsetParam = 0xffff,
@@ -61,23 +69,10 @@ extern "C" daObjKm2_Ami_Bou_c *daObjKm2_Ami_Bou_c_classInit()
     return new daObjKm2_Ami_Bou_c();
 }
 
-struct AmiBouSpawnInfo {
-    daObjKm2_Ami_Bou_c *(*classInit)();
-    s16 executePriority; /* +4: also KM2_AMI_BOU registry id 0x008e = 142 */
-    s16 renderPriority;  /* +6 */
-    u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
-};
-typedef char AmiBouSpawnInfo_size_must_be_0x1c[
-    sizeof(AmiBouSpawnInfo) == 0x1c ? 1 : -1];
-
 // @symbol g_profile_KM2_AMI_BOU
-extern "C" AmiBouSpawnInfo g_profile_KM2_AMI_BOU = {
+extern "C" SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
     daObjKm2_Ami_Bou_c_classInit,
-    0x008e,
+    0x008e, /* KM2_AMI_BOU registry id 142 */
     0x00d5,
     2,
     0x00100000,
@@ -108,10 +103,10 @@ s32 daObjKm2_Ami_Bou_c::Behavior()
     mdCcAc_c.Update();
     if (param1 != kUnsetParam) {
         int s = data_02082214[(mHeightAng >> 4) << 1];
-        mPosY += (int)(((long long)s * kRiseAmp + 0x800) >> 12);
+        mPosY += FX_MUL(s, kRiseAmp);
     } else {
         int s = data_02082214[(mHeightAng >> 4) << 1];
-        mPosY -= (int)(((long long)s * kFallAmp + 0x800) >> 12);
+        mPosY -= FX_MUL(s, kFallAmp);
     }
     *(s16 *)&mHeightAng += kPhaseStep;
     UpdateModelPosAndRotY();
@@ -140,5 +135,5 @@ s32 daObjKm2_Ami_Bou_c::CleanupResources()
 // @symbol _ZN18daObjKm2_Ami_Bou_cD0Ev
 /* The inline destructor in the header emits D1 then D0, and no D2. */
 
-AmiBouModelFilePtr data_ov045_021131b0(1629);
-AmiBouCollisionFilePtr data_ov045_021131a8(1630);
+AmiBouModelFilePtr data_ov045_021131b0(ASSET_KM2_AMI_BOU_BMD);
+AmiBouCollisionFilePtr data_ov045_021131a8(ASSET_KM2_AMI_BOU_KCL);

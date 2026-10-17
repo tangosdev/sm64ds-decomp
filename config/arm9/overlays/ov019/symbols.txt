@@ -108,17 +108,17 @@ _ZTS10daSldMng_c kind:data(any) addr:0x02113398
 g_profile_SLIDER_MANAGER kind:data(any) addr:0x021133a8 ambiguous
 _ZTV10daSldMng_c kind:data(any) addr:0x021133cc
 data_ov019_02113434 kind:data(any) addr:0x02113434 ambiguous
-data_ov019_02113460 kind:bss addr:0x02113460
-data_ov019_02113468 kind:bss addr:0x02113468
-data_ov019_02113470 kind:bss addr:0x02113470
-data_ov019_02113478 kind:bss addr:0x02113478
-data_ov019_02113480 kind:bss addr:0x02113480
-data_ov019_02113488 kind:bss addr:0x02113488
-data_ov019_02113490 kind:bss addr:0x02113490
+gPenguinJumpEdAnimationFile kind:bss addr:0x02113460
+gOV019PenguinWait1TextureSequenceFile kind:bss addr:0x02113468
+gOV019PenguinWait1AnimationFile kind:bss addr:0x02113470
+gPenguinJumpStAnimationFile kind:bss addr:0x02113478
+gPenguinDiveAnimationFile kind:bss addr:0x02113480
+gPenguinSliderAnimationFile kind:bss addr:0x02113488
+gPenguinStandUpAnimationFile kind:bss addr:0x02113490
 data_ov019_02113498 kind:bss addr:0x02113498
-data_ov019_021134a0 kind:bss addr:0x021134a0
-data_ov019_021134a8 kind:bss addr:0x021134a8
-data_ov019_021134b0 kind:bss addr:0x021134b0
+gOV019PenguinWalkAnimationFile kind:bss addr:0x021134a0
+gOV019PenguinAngryTextureSequenceFile kind:bss addr:0x021134a8
+gPenguinSliderTextureSequenceFile kind:bss addr:0x021134b0
 data_ov019_021134b8 kind:bss addr:0x021134b8
 data_ov019_021134c4 kind:bss addr:0x021134c4
 data_ov019_021134d0 kind:bss addr:0x021134d0

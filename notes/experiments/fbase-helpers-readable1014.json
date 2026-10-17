@@ -1,0 +1,185 @@
+{
+  "task": "fbase-helpers-readable1014",
+  "base": "17f7df692cc64be4c74a930b88c3b678947e21f2",
+  "tested_source_checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+  "source_author_session": "codex-root-fbase-helpers-producer1014",
+  "actual_root_thread": "01a12e6f-7ee1-7162-9a64-81145ed6b260",
+  "same_actual_agent_aliases": [
+    "codex-root-fbase-scene-scout1014",
+    "codex-root-fbase-helpers-producer1014"
+  ],
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+  "predecessor_tasks": [
+    "fbase-dispatch-readable1014"
+  ],
+  "scope": [
+    "src/actors/ActorBase.cpp",
+    "notes/experiments/fbase-helpers-readable1014.json"
+  ],
+  "source_completion": "partial",
+  "change": "Use existing fLiNdBa_c next/owner and fBase uniqueID/actorID fields in both actor lookups, replacing their local Node/Inner shadows. Keys use unsigned matching current caller declarations, without a unique original signedness claim. Replace lifecycle helper raw offsets with existing fBase fields while keeping its char* free ABI, original volatile load and operation order. All three entries remain address-named free helpers.",
+  "layout_evidence": {
+    "actor_list_node": "include/dActor_c.h mActorListNode at actor+0x50; existing Next() uses fLiNdBa_c.",
+    "node": "include/fListNode.h: next+4 and fBase owner+8; 0x0c node size.",
+    "lookup_fields": "include/fBase_c.h: u32 uniqueID+4 and u16 actorID+0x0c.",
+    "lifecycle_fields": "u8 aliveState+0x0e, shouldBeKilled+0x0f, unk_010+0x10, unk_011+0x11; behaviorNode+0x28."
+  },
+  "semantics": "Lookup starts at head or immediately after the supplied node and returns the matching node. Lifecycle calls the Init wrapper before checking flags, retains the volatile aliveState read, defers on the existing flag2 mode and appends the existing behavior node. No extra null checks or casts change these flows.",
+  "historical_findings": [
+    {
+      "disposition": "deferred",
+      "id": "FBASE-CALLBACK-CONTRACT-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "include/fBase_c.h:153; src/actors/ActorBase.cpp:165; four unchanged Process ABI wrappers",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "Full source and wrapper/PMF-slot review confirms unchanged call order and machine ABI. Existing wrappers keep raw ABI records; the change neither exposes valid typed calls for the three int-return guard families nor hides them behind adapters. Header and handoff explicitly preserve this boundary.",
+      "summary": "Process now uses genuine fBase_c member-pointer types preserving its configured int/bool/u32 symbol, while cleanup/behavior/render guard families still declare int. This is a partial contract boundary, not recovered proof of an original bool return."
+    },
+    {
+      "disposition": "deferred",
+      "id": "FBASE-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3012",
+      "kind": "reconstruction",
+      "location": "src/actors/ActorBase.cpp; config/tu_manifest.d/arm9/ActorBase.json; notes/agents/handoffs/fbase-process-readable-0923.md",
+      "owner": "codex-root-fbase-readable-0923",
+      "reason": "This bounded follow-up replaces a fake Process receiver and uses existing list/parent fields without changing ownership. Complete ELF includes 27 nonzero function entries across all bindings, including ManagerD1 STB_LOPROC; the licensed set is25. Metadata checker emits zero records for ActorBase, so no new RTTI/vtable ownership is claimed. Manager deadstrip remains issue2025; broader class work remains issue3012.",
+      "summary": "Lifecycle-list facade, heap bridges, explicit destructor variants, key-function/data ownership and the inherited ManagerD1 deadstrip question remain incompletely reconstructed."
+    }
+  ],
+  "historical_qualification": "The exact inherited findings above describe their old epoch, including the old 25-function/zero-metadata receipt. Current scoped evidence is 30 functions and three complete metadata records totaling97 bytes; their historical text is retained rather than presented as current proof.",
+  "historical_failed_composition": {
+    "task": "fbase-process-pr3144-composition-0925",
+    "phase": "cancelled",
+    "input_commit": "c50c07bac79b8b2b5c88604321d6f7cb60ff6f34",
+    "base": "7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f",
+    "reported_finding_id": "FBASE-COMPOSITION-DAONMS-01",
+    "exact_queue_next_action": "Superseded by explicit producer continuation for PR3144. Independent verifier preserved failed c50c07bac79b8b2b5c88604321d6f7cb60ff6f34/base7e7b4c84be0dd8fb9c9c949d40680ae64e46e17f report SHA256 b46f80ec9c93ad85aecdccab387822cfff17d952a54b4db96b36033fe27b22a7 and released own lease. FBASE-COMPOSITION-DAONMS-01 requires exact measured Frame515-to518 manifest identity repair plus fresh independent all12-path/current-consumer/fullROM verification. Preserve original source authors, accepted historical52a proof, prior findings and PR3144; no main merge.",
+    "recorded_reviewer": "codex-fbase-composition-verifier-0925",
+    "artifact_status": "The recorded C:/tmp/sm64ds-fbasev0923/build worktree is absent. Exact finding dictionary is not present in this task outputs (empty); preserve the reported ID and failure facts without inventing a dictionary or acceptance.",
+    "current_scope": "The recorded3144 failure and missing artifact remain historical. Accepted predecessor reports retain their exact proof epochs. This scene continuation changes no header or manifest and claims no new header-fanout or whole-daOnms review; its own current ActorBase/metadata/declaration/ROM proof is recorded separately."
+  },
+  "remaining_reconstruction": "Caller views still use dActor* or int-pointer/integer node interfaces; the declaration scan is not complete type-contract recovery. Process callback member/free ABI views, int/bool guard mismatch, sorting descriptor, heap/allocator bridges and inherited ManagerD1 question remain pending. No header, manifest, symbols, ownership or enrollment change.",
+  "verification": {
+    "source_sha256": "c5b67a9789619f932d06461f00ab280916db09c3b0d467553c879abe2910cba3",
+    "raw_sha256": "9b73570275d39aef46c4b94b4d6c85963e47ba51e55fdf09a4d37d1bd92f88b1",
+    "prepared_sha256": "137165db1189a5fa603d7e179f94eeea5c937828fdd5dc10692b392b2c65c704",
+    "whole_raw_and_prepared_equal": true,
+    "strict_functions": 30,
+    "blind": 0,
+    "raw_relocations": 132,
+    "prepared_relocations": 98,
+    "metadata_records": 3,
+    "complete_metadata_bytes": 97,
+    "metadata_references": 21,
+    "prepared_nontext_storage": [],
+    "complete_ownership_and_graphs_equal": true,
+    "declarations": {
+      "before": 7491,
+      "after": 7489,
+      "new": 0,
+      "removed": 2,
+      "remaining_caller_boundary": "dActor FindWithID still holds the returned list node through its legacy dActor* declaration; FindWithActorID and generated decl_common retain int-pointer/integer after-node views. The unsigned lookup keys agree with existing callers, but no unique original signedness or complete type-contract agreement is claimed. Header/caller changes are separate work."
+    },
+    "terminal_gates": {
+      "rombuild": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/rombuild.py",
+          "-j16",
+          "--no-rom"
+        ],
+        "exit_code": 0,
+        "seconds": 295.28100000001723,
+        "log": "build\\fbase-helpers-readable1014\\rombuild.log",
+        "checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+        "base": "17f7df692cc64be4c74a930b88c3b678947e21f2"
+      },
+      "stock": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/prepush_linkcheck.py",
+          "--range",
+          "17f7df692cc64be4c74a930b88c3b678947e21f2..c38148cad25e9a5418a309f133363d9486713b56",
+          "--json",
+          "build\\fbase-helpers-readable1014\\stock.json"
+        ],
+        "exit_code": 0,
+        "seconds": 28.42200000002049,
+        "log": "build\\fbase-helpers-readable1014\\stock.log",
+        "checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+        "base": "17f7df692cc64be4c74a930b88c3b678947e21f2"
+      },
+      "decl": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--changed",
+          "17f7df692cc64be4c74a930b88c3b678947e21f2"
+        ],
+        "exit_code": 0,
+        "seconds": 13.202999999979511,
+        "log": "build\\fbase-helpers-readable1014\\decl.log",
+        "checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+        "base": "17f7df692cc64be4c74a930b88c3b678947e21f2"
+      },
+      "decl-global": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_decl_agreement.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 12.047000000020489,
+        "log": "build\\fbase-helpers-readable1014\\decl-global.log",
+        "checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+        "base": "17f7df692cc64be4c74a930b88c3b678947e21f2"
+      },
+      "port": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/port_refcheck.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.7810000000172295,
+        "log": "build\\fbase-helpers-readable1014\\port.log",
+        "checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+        "base": "17f7df692cc64be4c74a930b88c3b678947e21f2"
+      },
+      "langmode": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/langmode_audit.py",
+          "--check",
+          "build\\fbase-helpers-readable1014\\langmode-baseline.json"
+        ],
+        "exit_code": 0,
+        "seconds": 14.327999999979511,
+        "log": "build\\fbase-helpers-readable1014\\langmode.log",
+        "checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+        "base": "17f7df692cc64be4c74a930b88c3b678947e21f2"
+      },
+      "conflict": {
+        "command": [
+          "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "tools/check_tubuild_conflicts.py"
+        ],
+        "exit_code": 0,
+        "seconds": 3.875,
+        "log": "build\\fbase-helpers-readable1014\\conflict.log",
+        "checkpoint": "c38148cad25e9a5418a309f133363d9486713b56",
+        "base": "17f7df692cc64be4c74a930b88c3b678947e21f2"
+      }
+    },
+    "full_rom": {
+      "modules_exact": 106,
+      "functions_exact": 11334,
+      "data_claims_exact": 331,
+      "bss_claims": 239,
+      "global_advisory": "970 verified,1519 partial,1 differs,21 unnamed,5285 object records; not global zero-difference proof.",
+      "baseline_dsd_errors": "Existing symbol-check errors remain reported by the unchanged stock control."
+    }
+  },
+  "formal_acceptance": false,
+  "publication": "Independent verification pending; no public PR yet."
+}

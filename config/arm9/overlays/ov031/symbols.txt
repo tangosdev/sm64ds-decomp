@@ -57,10 +57,10 @@ g_profile_HS_Y_STAR kind:data(any) addr:0x02111944 ambiguous
 g_profile_HS_B_STAR kind:data(any) addr:0x02111960 ambiguous
 _ZTV18daObjHsBillboard_c kind:data(any) addr:0x02111984
 data_ov031_02111994 kind:data(any) addr:0x02111994 ambiguous
-data_ov031_02111a00 kind:bss addr:0x02111a00
-data_ov031_02111a08 kind:bss addr:0x02111a08
-data_ov031_02111a10 kind:bss addr:0x02111a10
-data_ov031_02111a18 kind:bss addr:0x02111a18
+gHsStarModelFile kind:bss addr:0x02111a00
+gHsMoonModelFile kind:bss addr:0x02111a08
+gHsYStarModelFile kind:bss addr:0x02111a10
+gHsBStarModelFile kind:bss addr:0x02111a18
 @278 kind:bss addr:0x02111a20
 @277 kind:bss addr:0x02111a2c
 @275 kind:bss addr:0x02111a38

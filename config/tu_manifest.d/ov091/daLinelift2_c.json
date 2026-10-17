@@ -161,28 +161,28 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov091_02135490",
+      "symbol": "gKm2SusumuCollisionFile",
       "address": "0x02135490",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x66a"
     },
     {
-      "symbol": "data_ov091_02135498",
+      "symbol": "gKm3RiftModelFile",
       "address": "0x02135498",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model file handle constructed with file ID 0x683"
     },
     {
-      "symbol": "data_ov091_021354a0",
+      "symbol": "gKm3RiftCollisionFile",
       "address": "0x021354a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x684"
     },
     {
-      "symbol": "data_ov091_021354a8",
+      "symbol": "gKm2SusumuModelFile",
       "address": "0x021354a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -402,7 +402,7 @@
       "source": "0x021346a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135498",
+      "symbol": "gKm3RiftModelFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135498"
@@ -432,7 +432,7 @@
       "source": "0x021346b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_021354a8",
+      "symbol": "gKm2SusumuModelFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x021354a8"
@@ -452,7 +452,7 @@
       "source": "0x021346bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_021354a0",
+      "symbol": "gKm3RiftCollisionFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x021354a0"
@@ -482,7 +482,7 @@
       "source": "0x021346cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov091_02135490",
+      "symbol": "gKm2SusumuCollisionFile",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135490"

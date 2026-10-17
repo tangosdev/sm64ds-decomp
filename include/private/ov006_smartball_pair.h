@@ -1,6 +1,6 @@
 /* The two-word pair every cMgSmartball_object_c constructor takes by pointer.
  *
- * func_ov006_0211474c (that class's C1/C2 in all but name) copies its fourth
+ * cMgSmartball_object_c_Construct (that class's C1/C2 in all but name) copies its fourth
  * argument's two words into BOTH mCurrent0/mCurrent1 and mInitial0/mInitial1 --
  * see include/cMgSmartball_object_c.h, which names those four fields and
  * deliberately claims nothing about what they mean. This type claims no more:

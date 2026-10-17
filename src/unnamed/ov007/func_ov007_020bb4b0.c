@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -142,13 +143,13 @@ void func_ov007_020bb4b0(void)
                 u = u << 4;
                 u = u >> 0x10;
                 tbl = data_02082214[((int)u >> 4) * 2];
-                extra = (int)(((s64)v3sq * (tbl * (s16)0xa) + 0x800) >> 0xc);
+                extra = FX_MUL(v3sq, (tbl * (s16)0xa));
             }
             if (dir > 0) {
                 a -= ease;
-                b += extra + (int)(((s64)ease * fpv + 0x800) >> 0xc);
+                b += extra + FX_MUL(ease, fpv);
             } else {
-                a += extra + (int)(((s64)ease * fpv + 0x800) >> 0xc);
+                a += extra + FX_MUL(ease, fpv);
                 b -= ease;
             }
             func_ov007_020c55bc(s, a, b);
@@ -223,7 +224,7 @@ void func_ov007_020bb4b0(void)
                     if (t2v < 0) {
                         t2v = -t2v;
                     }
-                    amp = (int)(((s64)(t2v / 4 + 0xc00) * amp + 0x800) >> 0xc);
+                    amp = FX_MUL((t2v / 4 + 0xc00), amp);
                 }
             }
             if (md == 0) {

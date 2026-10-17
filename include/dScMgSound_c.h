@@ -15,7 +15,7 @@
 #define DSCMGSOUND_C_H
 #include "dScMgSingle3DBase_c.h"
 
-extern "C" int func_ov006_020c3288(char *t);
+extern "C" int Presenter_Destruct(char *t);
 
 /* One HUD sprite. Two of them, not an array: nothing indexes between them. */
 struct dMgSoundSprite_c {
@@ -57,7 +57,7 @@ struct dMgSoundPop_c {
     u8  active;       /* +0x1c gates the behavior */
     u8  visible;      /* +0x1d gates the draw */
     u8  sprite;       /* +0x1e sprite-table index */
-    u8  unk_1f;       /* +0x1f cleared by func_ov006_0211c478 */
+    u8  unk_1f;       /* +0x1f cleared by ResetRound */
     u8  state;        /* +0x20 behavior index */
     u8  phase;        /* +0x21 step inside that behavior */
     u8  kind;         /* +0x22 motion-table index */
@@ -82,9 +82,9 @@ typedef char dMgSoundComponentStorage_size_must_be_0x1ac[
 #endif
 
 struct dScMgSound_c : dScMgSingle3DBase_c {
-    virtual ~dScMgSound_c() { func_ov006_020c3288((char *)&mTable); }
-    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual void Virtual50();                          /* slot 20 */
+    virtual ~dScMgSound_c() { Presenter_Destruct((char *)&mTable); }
+    virtual void StartRound(int arg);               /* slot 18 */
+    virtual void OnNewRecord();                          /* slot 20 */
 
     dMgSoundComponentStorage mTable; /* 0x4f38; mSuppressSound at 0x50e0 */
     u8  pad_50e4[4];
@@ -116,80 +116,80 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     /* Scene helpers in ROM order: note/pop state handlers, sprite and
        touch helpers, the deal/draw routines, and the phase dispatchers
        that run the PMF state tables. */
-    void func_ov006_021199c0();
-    void func_ov006_02119a18();
-    void func_ov006_02119a88();
-    void func_ov006_02119aa8();
-    void func_ov006_02119b00();
-    void func_ov006_02119ba4();
-    void func_ov006_02119bc4();
-    void func_ov006_02119bdc();
-    void func_ov006_02119c74();
-    void func_ov006_02119d50(int slot);
-    void func_ov006_02119dc4(int slot);
-    void func_ov006_02119e5c(int slot);
-    void func_ov006_02119eec(int slot);
-    void func_ov006_02119f3c(int slot);
-    void func_ov006_02119fb0(int slot);
-    void func_ov006_0211a048(int slot);
-    void func_ov006_0211a0d8(int slot);
-    void func_ov006_0211a128(int slot);
-    void func_ov006_0211a19c(int slot);
-    void func_ov006_0211a234(int slot);
-    void func_ov006_0211a2c4(int slot);
-    void func_ov006_0211a314(int slot);
-    void func_ov006_0211a388(int slot);
-    void func_ov006_0211a420(int slot);
-    void func_ov006_0211a4b0(int slot);
-    void func_ov006_0211a500(int slot);
-    void func_ov006_0211a578(int slot);
-    void func_ov006_0211a5ec(int slot);
-    void func_ov006_0211a648(int slot);
-    void func_ov006_0211a698();
-    void func_ov006_0211a69c(int slot);
-    void func_ov006_0211a714(int slot);
-    void func_ov006_0211a7ac(int slot);
-    void func_ov006_0211a7fc(int slot);
-    void func_ov006_0211a910(int slot);
-    void func_ov006_0211a9fc(int slot);
-    void func_ov006_0211aa44(int slot);
-    void func_ov006_0211aa94(int slot);
-    void func_ov006_0211ab0c(int slot);
-    void func_ov006_0211ab80(int slot);
-    void func_ov006_0211abdc(int slot);
-    void func_ov006_0211ac2c();
-    void func_ov006_0211ac30(int slot);
-    void func_ov006_0211ad00(int slot);
-    void func_ov006_0211ad44(int slot);
-    void func_ov006_0211ad94(int slot);
-    void func_ov006_0211ae40(int slot);
-    void func_ov006_0211aed0(int slot);
-    void func_ov006_0211af60(int slot);
-    void func_ov006_0211afb0(int slot);
-    void func_ov006_0211b05c(int slot);
-    void func_ov006_0211b0ec(int slot);
-    void func_ov006_0211b17c(int slot);
-    void func_ov006_0211b1cc(int slot);
-    void func_ov006_0211b278(int slot);
-    void func_ov006_0211b308(int slot);
-    void func_ov006_0211b398(int slot);
-    void func_ov006_0211b3e8();
-    void func_ov006_0211b3ec(int slot);
-    void func_ov006_0211b4fc(int slot);
-    void func_ov006_0211b590(int slot);
-    void func_ov006_0211b5e0();
-    void func_ov006_0211b654(int n);
-    void func_ov006_0211b790();
-    void func_ov006_0211b80c();
-    void func_ov006_0211b954();
-    void func_ov006_0211b9c8();
-    void func_ov006_0211ba88(int slot);
-    void func_ov006_0211bbe0(int slot);
-    void func_ov006_0211bc68(int slot);
-    void func_ov006_0211bc8c(int idx);
-    void func_ov006_0211bf44(int slot);
-    void func_ov006_0211c080();
-    void func_ov006_0211c478();
+    void DrawWinSpriteB();
+    void UpdateWinSpriteB();
+    void StartWinSpriteB();
+    void DrawWinSpriteA();
+    void UpdateWinSpriteA();
+    void StartWinSpriteA();
+    void DrawTries();
+    void DrawNotes();
+    void DrawPops();
+    void Pop12_Finish(int slot);
+    void Pop12_Fly(int slot);
+    void Pop12_Start(int slot);
+    void Pop12_Update(int slot);
+    void Pop11_Finish(int slot);
+    void Pop11_Fly(int slot);
+    void Pop11_Start(int slot);
+    void Pop11_Update(int slot);
+    void Pop10_Finish(int slot);
+    void Pop10_Fly(int slot);
+    void Pop10_Start(int slot);
+    void Pop10_Update(int slot);
+    void Pop09_Finish(int slot);
+    void Pop09_Fly(int slot);
+    void Pop09_Start(int slot);
+    void Pop09_Update(int slot);
+    void Pop08_Finish(int slot);
+    void Pop08_Fly(int slot);
+    void Pop08_Start(int slot);
+    void Pop08_Update(int slot);
+    void Pop07_Finish();
+    void Pop07_Fly(int slot);
+    void Pop07_Start(int slot);
+    void Pop07_Update(int slot);
+    void Pop06_Finish(int slot);
+    void Pop06_Fly(int slot);
+    void Pop06_Start(int slot);
+    void Pop06_Update(int slot);
+    void Pop05_Finish(int slot);
+    void Pop05_Fly(int slot);
+    void Pop05_Start(int slot);
+    void Pop05_Update(int slot);
+    void Pop04_Finish();
+    void Pop04_Fly(int slot);
+    void Pop04_Start(int slot);
+    void Pop04_Update(int slot);
+    void Pop03_Finish(int slot);
+    void Pop03_Fly(int slot);
+    void Pop03_Start(int slot);
+    void Pop03_Update(int slot);
+    void Pop02_Finish(int slot);
+    void Pop02_Fly(int slot);
+    void Pop02_Start(int slot);
+    void Pop02_Update(int slot);
+    void Pop01_Finish(int slot);
+    void Pop01_Fly(int slot);
+    void Pop01_Start(int slot);
+    void Pop01_Update(int slot);
+    void Pop00_Finish();
+    void Pop00_Fly(int slot);
+    void Pop00_Start(int slot);
+    void Pop00_Update(int slot);
+    void UpdatePops();
+    void SpawnPops(int n);
+    void CheckRoundOver();
+    void CheckPair();
+    void UpdateNotes();
+    void RevealUnmatched();
+    void Note_StateScroll(int slot);
+    void Note_StateClosing(int slot);
+    void Note_StateOpen(int slot);
+    void Note_StateOpening(int idx);
+    void Note_StateWait(int slot);
+    void DealNotes();
+    void ResetRound();
 };
 
 #ifndef SM64DS_PLATFORM_PC

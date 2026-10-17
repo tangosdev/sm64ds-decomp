@@ -14,12 +14,12 @@
  * The destructor is non-trivial: D1 and D0 both call __cxa_vec_cleanup on
  * the 15x0x98 array at 0x4678, as dScMgBase_c's own D1/D0 do. D0's
  * deallocation comes from dScMgBase_c's operator delete. __cxa_vec_cleanup
- * and the array's element destructor func_ov006_020ea324 are declared here,
+ * and the array's element destructor Wiggler_Destroy are declared here,
  * where both the destructor and dScMgHanachan_c_classInit reach them, like
  * func_ov004_020b929c in dScMgBase_c.h.
  */
 extern "C" void __cxa_vec_cleanup(void *arr, int count, int elemSize, void *dtor);
-extern "C" void *func_ov006_020ea324(void *self);
+extern "C" void *Wiggler_Destroy(void *self);
 
 struct dScMgHanachan_c : dScMgBase_c {
     virtual ~dScMgHanachan_c();
@@ -27,7 +27,7 @@ struct dScMgHanachan_c : dScMgBase_c {
     virtual s32 CleanupResources();      /* slot 3 */
     virtual s32 Behavior();              /* slot 6 */
     virtual s32 Render();                /* slot 9 */
-    virtual void OnYoshiTryEat(int arg); /* slot 18 */
+    virtual void StartRound(int arg); /* slot 18 */
 
     /* Scene phase, an Itanium member pointer: Behavior calls it, Render
        compares the pair with the phase tables. */
@@ -45,18 +45,18 @@ struct dScMgHanachan_c : dScMgBase_c {
 
     /* Phase and tap handlers of the scene. The address is the method name; no
        ROM spelling survives. Four are the PMF targets of the phase records
-       (func_ov006_020ed274, func_ov006_020ed34c, func_ov006_020ed494,
-       func_ov006_020ed844); the rest are called on `this` from them and from
-       OnYoshiTryEat. */
-    void func_ov006_020ed274();
-    void func_ov006_020ed300();
-    void func_ov006_020ed32c();
-    void func_ov006_020ed34c();
-    void func_ov006_020ed40c();
-    void func_ov006_020ed494();
-    void func_ov006_020ed81c();
-    void func_ov006_020ed844();
-    void func_ov006_020ed8a4();
+       (Phase_WaitTouch, Phase_Result, Phase_Play,
+       Phase_WaitIntro); the rest are called on `this` from them and from
+       StartRound. */
+    void Phase_WaitTouch();
+    void BeginResultWait();
+    void SetPhaseIdle();
+    void Phase_Result();
+    void BeginResult();
+    void Phase_Play();
+    void BeginPlay();
+    void Phase_WaitIntro();
+    void Phase_SetupRound();
 };
 
 #ifndef SM64DS_PLATFORM_PC

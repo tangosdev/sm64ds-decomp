@@ -4,7 +4,7 @@
     .ctor       start:0x02127f60 end:0x02127f6c kind:rodata align:4
     .data       start:0x02127f80 end:0x021283c0 kind:data align:32
     .bss        start:0x021283c0 end:0x02128860 kind:bss align:32
-src/actors/daChoropu_c.cpp:
+src/game/actors/d_a_choropu.cpp:
     complete
     .text start:0x02123740 end:0x02124a20
     .init start:0x021278c0 end:0x02127a60
@@ -12,7 +12,7 @@ src/actors/daChoropu_c.cpp:
     .data start:0x02127f80 end:0x02127fb0
     .bss start:0x021283c0 end:0x02128468
 
-src/actors/daBttBk_c.cpp:
+src/game/actors/d_a_btt_bk.cpp:
     complete
     .text start:0x02124a20 end:0x02125404
     .init start:0x02127a60 end:0x02127b2c
@@ -22,13 +22,9 @@ src/actors/daBttBk_c.cpp:
 
 src/game/actors/d_a_pic_gate.cpp:
     complete
-    .text start:0x02125404 end:0x021261f4
+    .text start:0x02125404 end:0x021264ec
 
-src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp:
-    complete
-    .text start:0x021261f4 end:0x021264ec
-
-src/actors/daPicGate_c.cpp:
+src/game/actors/d_a_pic_gate_methods.cpp:
     complete
     .text start:0x021264ec end:0x02126fbc
     .init start:0x02127b2c end:0x02127f60

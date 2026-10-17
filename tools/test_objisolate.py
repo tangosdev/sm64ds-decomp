@@ -59,6 +59,63 @@ class Isolate(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
+    def _assert_rename_preserves_object(self, raw, aliases, defined):
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        before = ELFFile(io.BytesIO(raw))
+        original = list(before.get_section_by_name(".symtab").iter_symbols())
+        out, plan = OI.rename_symbols(raw, aliases, defined)
+        self.assertIsNone(plan["error"], plan)
+        self.assertIsNotNone(out)
+        after = ELFFile(io.BytesIO(out))
+        renamed = list(after.get_section_by_name(".symtab").iter_symbols())
+        self.assertEqual([sym.name for sym in renamed],
+                         [aliases.get(sym.name, sym.name) for sym in original])
+        # References use table indices. Names may change; the complete symbol
+        # records, data/code and relocation bytes must retain their identities.
+        self.assertEqual([sym.entry for sym in renamed],
+                         [sym.entry for sym in original])
+        self.assertEqual(after.num_sections(), before.num_sections())
+        for old, new in zip(before.iter_sections(), after.iter_sections()):
+            self.assertEqual(old.header, new.header)
+            if old.name != ".strtab":
+                self.assertEqual(old.data(), new.data(), old.name)
+        return out
+
+    def test_defined_rename_swap_preserves_payloads_and_relocation_indices(self):
+        raw = self.build('extern "C" { int first1 = 7; int first2 = 11; '
+                         'int read_pair() { return first1 - first2; } }').read_bytes()
+        self._assert_rename_preserves_object(
+            raw, {"first1": "first2", "first2": "first1"}, True)
+
+    def test_defined_rename_chain_reuses_a_source_name_as_a_destination(self):
+        raw = self.build('extern "C" { int first1 = 7; int first2 = 11; '
+                         'int keep03 = 13; int read_pair() { '
+                         'return first1 - first2 + keep03; } }').read_bytes()
+        self._assert_rename_preserves_object(
+            raw, {"first1": "first2", "first2": "final2"}, True)
+
+    def test_undefined_alias_swap_preserves_import_relocation_indices(self):
+        raw = self.build('extern "C" { extern int input1, input2; '
+                         'int read_pair() { return input1 - input2; } }').read_bytes()
+        self._assert_rename_preserves_object(
+            raw, {"input1": "input2", "input2": "input1"}, False)
+
+    def test_rename_still_refuses_an_unmoved_destination(self):
+        raw = self.build('extern "C" { int first1 = 7; int first2 = 11; '
+                         'int read_pair() { return first1 - first2; } }').read_bytes()
+        out, plan = OI.rename_defined_symbols(raw, {"first1": "first2"})
+        self.assertIsNone(out)
+        self.assertIn("already exists", plan["error"])
+
+    def test_defined_rename_still_refuses_an_undefined_source(self):
+        raw = self.build('extern "C" { extern int input1; '
+                         'int read_one() { return input1; } }').read_bytes()
+        out, plan = OI.rename_defined_symbols(raw, {"input1": "other1"})
+        self.assertIsNone(out)
+        self.assertIn("is undefined", plan["error"])
+
     def test_plain_destructor_is_isolable(self):
         """The case the whole pass exists for: D0/D1/D2 + vtable reduced to one."""
         obj = self.build("struct P { int p[4]; virtual ~P(); virtual void f(); };\n"

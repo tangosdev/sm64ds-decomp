@@ -1,24 +1,21 @@
 //cpp
-/* arm9/Message3 -- the VS-mode text renderer. 0x02031b84..0x02034a78, 26 functions.
- * Second Message TU; named for the tree class plus the numeric suffix style
- * (d_s_mg_jump2.cpp next to d_s_mg_jump.cpp).
+/* VS-mode text. LoadFont3D brings in the font, LoadTextVS picks the language
+ * table, and the display entry points draw into the main and sub backgrounds.
  *
- * `#pragma defer_codegen off` gives source-order emission, so the file runs
- * ROM-ascending and the emitted .text does too. The optimization pragmas are
- * positional brackets per function -- under deferred codegen they would read
- * last-wins at end of file instead of per-function.
- *
- * The named entry points are real Message members (include/Message.h; all
- * static, no `this`). The address-named helpers and the named C helper
- * LoadFont3D keep their extern "C" spellings and names.
- *
- * All of these functions share one file-scope render state around
- * 0x0209fc50 plus the text blob pointers at 0x0209fd00, so every shard's
- * local externs collapse into the block below. decl_common.h already declares
- * data_0209fc78/9c94/9c9c/9cdc, func_02034504, func_020341a8, func_02054d88,
- * GetOwnerLanguage, IsButtonInputValid, Deallocate, MultiCopy_Int and
- * SetBg3Offset; it spells data_0209f4a4 as s16[], which func_020326ac reads
- * through a byte-stride pun -- the cast stays at the use site. */
+ * leftovers:
+ * - defer_codegen is off so this file emits in source order. The per-function
+ *   optimization pragmas are brackets.
+ * - OAM::Render and G2x::SetBlendBrightness stay local externs. Render's
+ *   scale arguments are Fix12<int> by value, and SetBlendBrightness's u16
+ *   parameters would emit a narrow.
+ * - data_0209fc78 is a volatile macro in func_02033464 only. decl_common.h
+ *   spells that byte plain, and the other functions in this file read it plain.
+ * - data_0209f4a4 is s16[] in decl_common.h. func_020326ac indexes it with a
+ *   byte stride, so the cast stays at that use.
+ * - SetTextGlobalsVS keeps the r2/r3 temps. One expression reorders the load
+ *   of *(r2 + 4) against the store of r3.
+ * - Address-named helpers stay address-named.
+ */
 
 #pragma defer_codegen off
 #include "types.h"

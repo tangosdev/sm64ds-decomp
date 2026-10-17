@@ -1,0 +1,1049 @@
+{
+  "task": "chilly-interfaces1013",
+  "base_commit": "83765ac0639bafd388aaaad4a2515a40bde20add",
+  "checkpoint": "2d20b015404311eed10c1901f7d0e3f0ac793d9a",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+  "coordinator": "codex-chilly-interfaces-coordinator1013",
+  "source_completion": "partial",
+  "source": "src/actors/daKing_Donketu_c.cpp",
+  "manifest": "config/tu_manifest.d/ov073/daKing_Donketu_c.json",
+  "summary": "Use17 existing native movement/collision/animation/resource APIs, remove10 raw imports, and correct all8 local resource handles to measured ID/reference fields and BMD/BCA payload pointers. No shared header, scalar Fix12 ABI, constructor alias or canonical destination changes.",
+  "producer_sessions": [
+    "01a135f6-ffe2-7f12-a948-096399c6745c",
+    "claude-laneA-producer-0928",
+    "claude-prod-Z-0930c",
+    "codex-chiefchilly-producer1013",
+    "codex-native-destructor-producer-0922",
+    "codex-native-destructor-proposal-0921",
+    "codex-receiver-contracts-applied-0923",
+    "codex-receiver-contracts-producer-0923",
+    "codex-receiver-contracts-producer-expanded-0923",
+    "codex-receiver-publication-0925"
+  ],
+  "actual_author_thread": "01a135f6-ffe2-7f12-a948-096399c6745c",
+  "predecessor_tasks": [
+    "chiefchilly-native1013",
+    "native-destructor-repair-0922",
+    "fold-tails-ov065-ov091-0930c",
+    "widen-ov003-ov073-0928"
+  ],
+  "historical_scope": "CHILLY-NATIVE-001 remains the accepted class partial finding on OPEN3775. Thirteen native-destructor-repair findings are retained verbatim as historical broad lifecycle/shared-header/Player/Slot/tooling work; none is asserted as newly repaired Chief code. Actual output diff proves that task wrote this Chief TU. Widen cancelled after main landings; fold task DONE; neither carries Source finding dictionaries.",
+  "inherited_findings": {
+    "CHILLY-NATIVE-001": {
+      "disposition": "deferred",
+      "id": "CHILLY-NATIVE-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "kind": "reconstruction",
+      "location": "src/actors/daKing_Donketu_c.cpp:68",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator",
+      "reason": "This scoped change replaces the registry factory and removes its obsolete ABI declarations; the remaining class source and headers are unchanged. Complete original/candidate object and reference parity is independently proved. Native construction does not claim completion of the entire class.",
+      "summary": "Existing scalar Fix12 ABI externs, PMF state boundary, raw memory views, unnamed fields and linker-style names remain partial reconstruction."
+    },
+    "NDT0922-01": {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    "NDT0922-02": {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    "NDT0922-03": {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    "RCV2908-01": {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    "RCV2908-02": {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    "RCV2908-03": {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    "RCV2908-04": {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    "RCV-PACKET-01": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    "RCV-PACKET-02": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    "RCV-PACKET-03": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    "RCV-PACKET-04": {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    "STALE-ARRAY-RUNTIME-TEST": {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    },
+    "RCV-SHADOW-01": {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    }
+  },
+  "audit_findings_original": [
+    {
+      "id": "CHILLY-AUDIT-TYPE-001",
+      "kind": "correctness",
+      "disposition": "deferred",
+      "location": "src/actors/daKing_Donketu_c.cpp:170-181",
+      "summary": "The eight local resource handles misdescribe file ID/reference bytes and the model payload type.",
+      "reason": "Both synthetic wrappers use s32 fileId, but canonical func_02017e0c writes u16 file ID at0 and u8 numRefs at2 independently; Release consumes those widths. The model handle stores BCA_File* although its loader Model::LoadFile returns BMD_File*. Replace only local wrappers with truthful u16/u8 fields and model BMD_File*/animation BCA_File* at4, retaining8-byte layout/alignment and existing constructor/destructor aliases. Require complete ordinary object/storage/metadata/typed-edge proof; no shared-header layout edit is justified.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator"
+    },
+    {
+      "id": "CHILLY-AUDIT-PROV-001",
+      "kind": "provenance",
+      "disposition": "deferred",
+      "location": "src/actors/daKing_Donketu_c.cpp:1960-1961",
+      "summary": "The local animation loader comment invents an untyped-this restriction for a static method.",
+      "reason": "dExtFrameCtrl_c.h declares static char* LoadFile(SharedFilePtr&); it has no receiver. All seven InitResources calls ignore the returned pointer and already pass actual local resource handles. The existing void* adapter and its explanation do not establish a compiler constraint. Use the native static API if the scoped object proof passes; otherwise record the exact measured mismatch without claiming a nonexistent this argument.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator"
+    },
+    {
+      "id": "CHILLY-AUDIT-PROV-002",
+      "kind": "provenance",
+      "disposition": "deferred",
+      "location": "src/actors/daKing_Donketu_c.cpp:82-83",
+      "summary": "The leftovers block incorrectly says dCamera_c::SetFlag_3 lacks a usable header declaration.",
+      "reason": "include/dCamera_c.h:77 declares void SetFlag_3(), and this exact TU already uses it at lines649,708,754,786,831,1589,1656. Remove SetFlag_3 from the unavailable-interface claim. This is a current factual prose correction, not a new camera-interface implementation claim.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator"
+    }
+  ],
+  "findings": [
+    {
+      "disposition": "deferred",
+      "id": "CHILLY-NATIVE-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "kind": "reconstruction",
+      "location": "src/actors/daKing_Donketu_c.cpp:68",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator",
+      "reason": "This scoped change replaces the registry factory and removes its obsolete ABI declarations; the remaining class source and headers are unchanged. Complete original/candidate object and reference parity is independently proved. Native construction does not claim completion of the entire class.",
+      "summary": "Existing scalar Fix12 ABI externs, PMF state boundary, raw memory views, unnamed fields and linker-style names remain partial reconstruction."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    {
+      "id": "CHILLY-AUDIT-TYPE-001",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/actors/daKing_Donketu_c.cpp:170-181",
+      "summary": "The eight local resource handles misdescribe file ID/reference bytes and the model payload type.",
+      "reason": "At checkpoint 2d20b015404311eed10c1901f7d0e3f0ac793d9a, both local wrappers use u16 fileID at0, u8 numRefs at2, alignment padding at3 and an8-byte total layout. Model payload is BMD_File*; animation payload is BCA_File*. Model::LoadFile actually returns void* in the shared declaration/definition; its body consumes the payload as BMD_File and the caller explicitly casts its return. This corrects the original audit shorthand, not a shared ABI. Construct/Load/Release and destructor chains are recorded below; complete storage, raw normalized graph and ordinary prepared ELF identity prove the change.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator"
+    },
+    {
+      "id": "CHILLY-AUDIT-PROV-001",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/actors/daKing_Donketu_c.cpp:1960-1961",
+      "summary": "The local animation loader comment invents an untyped-this restriction for a static method.",
+      "reason": "All seven animation resource calls now use static dExtFrameCtrl_c::LoadFile with real SharedFilePtr-derived objects. The unused char* result is ignored, and the obsolete void* free declaration and untyped-this explanation are removed. Exact complete ordinary prepared object identity passes.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator"
+    },
+    {
+      "id": "CHILLY-AUDIT-PROV-002",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/actors/daKing_Donketu_c.cpp:82-83",
+      "summary": "The leftovers block incorrectly says dCamera_c::SetFlag_3 lacks a usable header declaration.",
+      "reason": "The unavailable-interface note no longer lists dCamera_c::SetFlag_3. Existing native call sites and the shared declaration are unchanged; this is a factual prose repair.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3775",
+      "owner": "Chief Chilly source producer and enemy reconstruction coordinator"
+    }
+  ],
+  "lineage_events": [
+    {
+      "task": "chiefchilly-native1013",
+      "action": "claim",
+      "at": "2026-10-13T14:24:15.143480+00:00",
+      "input_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+      "role": "producer",
+      "session": "codex-chiefchilly-producer1013"
+    },
+    {
+      "task": "chiefchilly-native1013",
+      "action": "publish",
+      "at": "2026-10-13T14:32:50.627957+00:00",
+      "input_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+      "role": "producer",
+      "session": "codex-chiefchilly-producer1013"
+    },
+    {
+      "task": "chiefchilly-native1013",
+      "action": "claim",
+      "at": "2026-10-13T14:33:36.216953+00:00",
+      "input_commit": "f65589a3bdca50fdbd20869e00f71c1d5029170d",
+      "role": "verifier",
+      "session": "astra-chiefchilly-independent1013"
+    },
+    {
+      "task": "chiefchilly-native1013",
+      "action": "publish",
+      "at": "2026-10-13T14:41:20.406162+00:00",
+      "input_commit": "f65589a3bdca50fdbd20869e00f71c1d5029170d",
+      "role": "verifier",
+      "session": "astra-chiefchilly-independent1013"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "claim",
+      "at": "2026-09-22T04:34:19.567982+00:00",
+      "input_commit": "27ca0e1f322b9cdc538c6954c36ddba44066c683",
+      "role": "producer",
+      "session": "codex-native-destructor-producer-0922"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "publish",
+      "at": "2026-09-22T04:41:18.237683+00:00",
+      "input_commit": "27ca0e1f322b9cdc538c6954c36ddba44066c683",
+      "role": "producer",
+      "session": "codex-native-destructor-producer-0922"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "claim",
+      "at": "2026-09-22T04:46:57.444298+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "verifier",
+      "session": "codex-native-destructor-verifier-0922"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "rework",
+      "at": "2026-09-22T04:49:44.392218+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "verifier",
+      "session": "codex-native-destructor-verifier-0922"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "amend",
+      "at": "2026-09-23T03:56:26.536651+00:00",
+      "session": "codex-integrator-0920"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "claim",
+      "at": "2026-09-23T03:57:47.866930+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-contracts-producer-0923"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "release",
+      "at": "2026-09-23T04:10:58.608935+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-contracts-producer-0923"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "amend",
+      "at": "2026-09-23T04:12:08.158417+00:00",
+      "session": "codex-integrator-0920"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "claim",
+      "at": "2026-09-23T04:12:13.490441+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-contracts-producer-expanded-0923"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "release",
+      "at": "2026-09-24T02:39:12.905295+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-contracts-producer-expanded-0923"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "amend",
+      "at": "2026-09-24T02:39:18.087844+00:00",
+      "session": "codex-integrator-0920"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "claim",
+      "at": "2026-09-24T02:39:23.857725+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-contracts-applied-0923"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "release",
+      "at": "2026-09-25T16:34:36.243484+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-contracts-applied-0923"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "amend",
+      "at": "2026-09-25T16:34:48.700497+00:00",
+      "session": "codex-integrator-0920"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "claim",
+      "at": "2026-09-25T16:34:58.794034+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-publication-0925"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "publish",
+      "at": "2026-09-26T02:54:46.259088+00:00",
+      "input_commit": "07d0a628f96750d851d1729ba4a5c3ec762e38d2",
+      "role": "producer",
+      "session": "codex-receiver-publication-0925"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "claim",
+      "at": "2026-09-26T02:56:13.150761+00:00",
+      "input_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "role": "verifier",
+      "session": "codex-receiver-verifier-0925"
+    },
+    {
+      "task": "native-destructor-repair-0922",
+      "action": "publish",
+      "at": "2026-09-26T02:59:54.720137+00:00",
+      "input_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
+      "role": "verifier",
+      "session": "codex-receiver-verifier-0925"
+    },
+    {
+      "task": "fold-tails-ov065-ov091-0930c",
+      "action": "claim",
+      "at": "2026-10-01T00:50:46.161318+00:00",
+      "input_commit": "b886c013ef933679d0b22ae0644aeeb0b4c2e5a0",
+      "role": "producer",
+      "session": "claude-prod-Z-0930c"
+    },
+    {
+      "task": "fold-tails-ov065-ov091-0930c",
+      "action": "publish",
+      "at": "2026-10-01T01:59:15.996950+00:00",
+      "input_commit": "b886c013ef933679d0b22ae0644aeeb0b4c2e5a0",
+      "role": "producer",
+      "session": "claude-prod-Z-0930c"
+    },
+    {
+      "task": "fold-tails-ov065-ov091-0930c",
+      "action": "claim",
+      "at": "2026-10-01T02:04:17.394718+00:00",
+      "input_commit": "7a36ef5cfe762a5cd163fd725b4523cee9d7af3e",
+      "role": "verifier",
+      "session": "claude-verify-0930c"
+    },
+    {
+      "task": "fold-tails-ov065-ov091-0930c",
+      "action": "publish",
+      "at": "2026-10-01T02:25:26.596405+00:00",
+      "input_commit": "7a36ef5cfe762a5cd163fd725b4523cee9d7af3e",
+      "role": "verifier",
+      "session": "claude-verify-0930c"
+    },
+    {
+      "task": "fold-tails-ov065-ov091-0930c",
+      "action": "claim",
+      "at": "2026-10-01T02:41:32.666578+00:00",
+      "input_commit": "7a36ef5cfe762a5cd163fd725b4523cee9d7af3e",
+      "role": "integrator",
+      "session": "claude-coord-0930c"
+    },
+    {
+      "task": "fold-tails-ov065-ov091-0930c",
+      "action": "publish",
+      "at": "2026-10-01T03:56:34.167419+00:00",
+      "input_commit": "7a36ef5cfe762a5cd163fd725b4523cee9d7af3e",
+      "role": "integrator",
+      "session": "claude-coord-0930c"
+    },
+    {
+      "task": "widen-ov003-ov073-0928",
+      "action": "claim",
+      "at": "2026-09-28T15:54:24.021756+00:00",
+      "input_commit": "83aed8b219dbbe311e6e22133c54a9173eb7544f",
+      "role": "producer",
+      "session": "claude-laneA-producer-0928"
+    },
+    {
+      "task": "widen-ov003-ov073-0928",
+      "action": "publish",
+      "at": "2026-09-28T16:46:50.098197+00:00",
+      "input_commit": "83aed8b219dbbe311e6e22133c54a9173eb7544f",
+      "role": "producer",
+      "session": "claude-laneA-producer-0928"
+    },
+    {
+      "task": "widen-ov003-ov073-0928",
+      "action": "cancel",
+      "at": "2026-09-30T19:33:55.526517+00:00",
+      "session": "claude-coord-0928"
+    }
+  ],
+  "known_prior_native_source_authors": [
+    "/root",
+    "/root/enemy_factories_native_scout"
+  ],
+  "historical_report": {
+    "path": "notes/experiments/chiefchilly-native1013.json",
+    "unchanged": true,
+    "base_blob_sha256": "89050b456c85af8a54e32c9a6a2f9b435ee7f06e41fbe0be0b77687b9bebccb1"
+  },
+  "remaining_work": [
+    "Two synthetic SharedFilePtr subclasses with four local lifecycle aliases plus common registrar alias remain even after truthful field repair;7animation handles+1model handle, not8new real resource classes.",
+    "CompletePMFshadow C and void*mState/free ChiefChilly_ChangeState persist despite16typed State declarations; Render virtualBase shadow and raw matrix/vector/particle/camera views remain.",
+    "Existing scalarFix12 bridges, scheduling/volatile/unsigned load views, unnamed fields/helpers remain; no whole-class reconstruction completion claim."
+  ],
+  "current_followup": "Open issue3775 and codex-chilly-interfaces-coordinator1013 retain the current partial reconstruction follow-up alongside the original CHILLY-NATIVE-001 owner. Thirteen inherited broad-scope findings are historical and are not presented as newly fixed Chief Chilly code.",
+  "native_interfaces": {
+    "calls": 17,
+    "removed_imports": 10,
+    "behavior_calls": [
+      "UpdatePos",
+      "UpdatePosWithOnlySpeed",
+      "UpdateWMClsn",
+      "dCcAcPos_c::SetPosRelativeToActor",
+      "dCc_c::Clear",
+      "dCc_c::Update",
+      "BlendModelAnim::Advance"
+    ],
+    "resource_calls": {
+      "dExtFrameCtrl_c::LoadFile": 7,
+      "Model::LoadFile": 2,
+      "ModelBase::SetFile": 1
+    },
+    "header_edits": 0
+  },
+  "resource_layout_evidence": {
+    "fields": {
+      "0": "u16 fileID",
+      "2": "u8 numRefs",
+      "3": "alignment padding",
+      "4": "BMD_File* model or BCA_File* animation"
+    },
+    "count": 8,
+    "bytes_each": 8,
+    "initializer": "1236B; existing model ctor02017acc and animation SharedFilePtr::Construct0201799c route through02017e48 to02017e0c, which writes u16ID and clears refs/pointer.",
+    "loaders": "Model::LoadFile declares void* and interprets its loaded buffer as BMD_File in UpdateFileOffsets/AddToCommonModelDataArr; dExtFrameCtrl_c::LoadFile declares char* and uses BCA_File::UpdateFileOffsets.",
+    "release": "SharedFilePtr::Release reads u16ID and u8refs; actor CleanupResources releases references.",
+    "destructors": "Model02017ab4 and SharedFilePtr_Destruct_Anim02017984 route to02017e34, which only publishes the u16 fileID. No claim these destructor veneers release resources.",
+    "sources": [
+      "src/func_02017e0c.c",
+      "src/unnamed/arm9/0201/func_02017acc.c",
+      "src/_ZN13SharedFilePtr9ConstructEj.cpp",
+      "src/_ZN5Model8LoadFileER13SharedFilePtr.cpp",
+      "src/_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr.cpp",
+      "src/_ZN13SharedFilePtr7ReleaseEv.cpp",
+      "src/unnamed/arm9/0201/func_02017ab4.c",
+      "src/SharedFilePtr_Destruct_Anim.c",
+      "src/unnamed/arm9/0201/func_02017e34.c"
+    ]
+  },
+  "canary": {
+    "source": "src/actors/dMgTrmpln2Mario_c.cpp",
+    "result": [
+      true,
+      "2004/b56"
+    ]
+  },
+  "whole_proof": {
+    "baseline": {
+      "strict": 81,
+      "bss_records": 32,
+      "bss_bytes": 416,
+      "metadata_records": 11,
+      "metadata_bytes": 250,
+      "raw_refs": 566,
+      "prepared_refs": 510,
+      "raw_sha256": "44cf6f7b241b4bd73355c6216f5c2c38879c4b858e1abd813cff40fb7607607f",
+      "prepared_sha256": "3043a2acf45b5a3f8a7ea1663b6e45f1b14241a36950810462d1376066bd1377"
+    },
+    "candidate": {
+      "strict": 81,
+      "bss_records": 32,
+      "bss_bytes": 416,
+      "metadata_records": 11,
+      "metadata_bytes": 250,
+      "raw_refs": 566,
+      "prepared_refs": 510,
+      "raw_sha256": "0de8470491852a3e0af093137e698ffe2a40d25b503b8242f4ea8524974bb2ce",
+      "prepared_sha256": "3043a2acf45b5a3f8a7ea1663b6e45f1b14241a36950810462d1376066bd1377"
+    },
+    "complete_owned_bodies_edges_equal": true,
+    "complete_metadata_equal": true,
+    "ordinary_preparation": true,
+    "raw_container_equal": false,
+    "prepared_container_equal": true,
+    "base": "83765ac0639bafd388aaaad4a2515a40bde20add",
+    "full_rom_run": false
+  },
+  "component_proof": {
+    "complete_raw_graph_equal_after40measured_names": true,
+    "complete_prepared_graph_equal": true,
+    "complete_bss_storage_equal": true,
+    "manifest_except_existing_input_names_and_evidence_identical": true,
+    "canonical_destinations_identical": true,
+    "shared_headers_unchanged": true,
+    "historical_report_unchanged": true
+  },
+  "measured_input_names": {
+    "names": {
+      "@1883": "@1865",
+      "@1884": "@1866",
+      "@1885": "@1867",
+      "@1886": "@1868",
+      "@1887": "@1869",
+      "@1888": "@1870",
+      "@1889": "@1871",
+      "@1890": "@1872",
+      "@1892": "@1874",
+      "@1894": "@1876",
+      "@1896": "@1878",
+      "@1898": "@1880",
+      "@1900": "@1882",
+      "@1902": "@1884",
+      "@1904": "@1886",
+      "@1906": "@1888",
+      "@1908": "@1890",
+      "@1910": "@1892",
+      "@1912": "@1894",
+      "@1914": "@1896",
+      "@1916": "@1898",
+      "@1918": "@1900",
+      "@1920": "@1902",
+      "@1922": "@1904",
+      "@1924": "@1906",
+      "@1926": "@1908",
+      "@1928": "@1910",
+      "@1930": "@1912",
+      "@1932": "@1914",
+      "@1934": "@1916",
+      "@1936": "@1918",
+      "@1938": "@1920",
+      "@1939": "@1921",
+      "@1941": "@1923",
+      "@1943": "@1925",
+      "@1945": "@1927",
+      "@1947": "@1929",
+      "@1949": "@1931",
+      "@1951": "@1933",
+      "@1953": "@1935"
+    },
+    "symbols_except_string_offsets_identical": true,
+    "all_non_string_and_symbol_table_sections_identical": true
+  },
+  "ordinary_compiler_only": {
+    "requested": [
+      "_ZN16daKing_Donketu_cD2Ev",
+      "_ZN7Vector3D1Ev",
+      "_ZN9RayParamsD1Ev",
+      "_ZN7Vector3C1Ev"
+    ],
+    "deadstripped": [
+      "_ZN16daKing_Donketu_cD2Ev",
+      "_ZN7Vector3C1Ev",
+      "_ZN7Vector3D1Ev",
+      "_ZN9RayParamsD1Ev"
+    ],
+    "droppedSections": [
+      9,
+      10,
+      11,
+      85,
+      91,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204
+    ],
+    "data": [
+      "_ZTI16daKing_Donketu_c",
+      "_ZTS16daKing_Donketu_c",
+      "_ZTI12dEnemyBase_c",
+      "_ZTS12dEnemyBase_c",
+      "_ZTI8dActor_c",
+      "_ZTS8dActor_c",
+      "_ZTI7dBase_c",
+      "_ZTS7dBase_c",
+      "_ZTI7fBase_c",
+      "_ZTS7fBase_c",
+      "_ZTV16daKing_Donketu_c"
+    ],
+    "dataExternalized": [
+      "_ZTI12dEnemyBase_c",
+      "_ZTI16daKing_Donketu_c",
+      "_ZTI7dBase_c",
+      "_ZTI7fBase_c",
+      "_ZTI8dActor_c",
+      "_ZTS12dEnemyBase_c",
+      "_ZTS16daKing_Donketu_c",
+      "_ZTS7dBase_c",
+      "_ZTS7fBase_c",
+      "_ZTS8dActor_c",
+      "_ZTV16daKing_Donketu_c"
+    ],
+    "canonicalDuplicates": [
+      {
+        "symbol": "_ZN7Vector3C1Ev",
+        "canonicalSymbol": "func_0203d384",
+        "module": "arm9",
+        "address": "0x0203d384",
+        "size": 4,
+        "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+        "relocations": 0
+      }
+    ]
+  },
+  "metadata_qualification": "11 complete metadata records250B include full own132B vtable preamble and inherited TI/TS; byte and typed-edge proof is separate from Source ownership. Existing metadata externalization and compiler policies are unchanged.",
+  "storage_qualification": "32BSS416B comprise8handles64B,8registrationnodes96B and16state records256B. All offsets, sizes, alignment and bindings compare equal after normal preparation.32owned data records are PMF constants.",
+  "gates": {
+    "full-rom": {
+      "name": "full-rom",
+      "command": [
+        "python",
+        "tools/rombuild.py",
+        "-j16",
+        "--no-rom"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 314.45885729789734,
+      "log": "build/chilly-interfaces1013/full-rom.log",
+      "log_sha256": "53ada0affb41c549a1799f7853c6b2e15470baedf0f43fd68f10dc89d9f056b3",
+      "tested_commit": "2d20b015404311eed10c1901f7d0e3f0ac793d9a"
+    },
+    "range": {
+      "name": "range",
+      "command": [
+        "python",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "83765ac0639bafd388aaaad4a2515a40bde20add..2d20b015404311eed10c1901f7d0e3f0ac793d9a",
+        "--json",
+        "build/chilly-interfaces1013/range-report.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 46.012413024902344,
+      "log": "build/chilly-interfaces1013/range.log",
+      "log_sha256": "94a265bc28eb691f121c648b723df5853cdd6b602fefef5df6a1f4028d10d3cb",
+      "tested_commit": "2d20b015404311eed10c1901f7d0e3f0ac793d9a"
+    },
+    "decl": {
+      "name": "decl",
+      "command": [
+        "python",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "83765ac0639bafd388aaaad4a2515a40bde20add"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 12.40329122543335,
+      "log": "build/chilly-interfaces1013/decl.log",
+      "log_sha256": "2fcdd8464b64a506edcc89689977d633725ce4f802bc1dd71b6da95e9160ee94",
+      "tested_commit": "2d20b015404311eed10c1901f7d0e3f0ac793d9a"
+    },
+    "port": {
+      "name": "port",
+      "command": [
+        "python",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.7260310649871826,
+      "log": "build/chilly-interfaces1013/port.log",
+      "log_sha256": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+      "tested_commit": "2d20b015404311eed10c1901f7d0e3f0ac793d9a"
+    },
+    "langmode": {
+      "name": "langmode",
+      "command": [
+        "python",
+        "tools/langmode_audit.py",
+        "--check",
+        "langmode-baseline.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 12.603039026260376,
+      "log": "build/chilly-interfaces1013/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "tested_commit": "2d20b015404311eed10c1901f7d0e3f0ac793d9a"
+    },
+    "conflicts": {
+      "name": "conflicts",
+      "command": [
+        "python",
+        "tools/check_tubuild_conflicts.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.31088948249816895,
+      "log": "build/chilly-interfaces1013/conflicts.log",
+      "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521",
+      "tested_commit": "2d20b015404311eed10c1901f7d0e3f0ac793d9a"
+    }
+  },
+  "stock_range_summary": {
+    "checked": 48,
+    "verified": 46,
+    "warnings": 2,
+    "blocking": 0,
+    "warning_controls": {
+      "baseline": [
+        {
+          "name": "daKing_Donketu_c_classInit",
+          "module": "ov073",
+          "addr": "0x02121ec8",
+          "verdict": "BLIND-1",
+          "diffs": [],
+          "blind": 1
+        },
+        {
+          "name": "__sinit_daKing_Donketu_c.cpp",
+          "module": "ov073",
+          "addr": "0x02122874",
+          "verdict": "BLIND-18",
+          "diffs": [],
+          "blind": 18
+        }
+      ],
+      "candidate": [
+        {
+          "name": "daKing_Donketu_c_classInit",
+          "module": "ov073",
+          "addr": "0x02121ec8",
+          "verdict": "BLIND-1",
+          "diffs": [],
+          "blind": 1
+        },
+        {
+          "name": "__sinit_daKing_Donketu_c.cpp",
+          "module": "ov073",
+          "addr": "0x02122874",
+          "verdict": "BLIND-18",
+          "diffs": [],
+          "blind": 18
+        }
+      ],
+      "context": "Actual current headers; each object uses its immutable source revision manifest renames with unchanged stock per-function isolation. Ordinary whole preparation separately verifies every owned row with zero blind."
+    },
+    "qualification": "Inherited factoryBLIND1 and initializerBLIND18 reproduce with zero diffs in baseline/candidate under their own name maps. Complete ordinary81row proof includes both and has zero blind; no stock verdict suppressed."
+  },
+  "final_production_summary": {
+    "modules": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11334,
+      "compiledBytes": 2225480,
+      "sourceFunctions": 11334,
+      "sourceBytes": 2225480,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.43577343005789,
+      "reproducingFunctions": 11334,
+      "reproducingBytes": 2225480,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 331,
+      "sourceBssClaims": 239,
+      "sourceBssBytes": 30164,
+      "reproducingDataClaims": 331,
+      "reproducingDataClaimBytes": 13020,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "intact_link_ok": true,
+    "tested_checkpoint": "2d20b015404311eed10c1901f7d0e3f0ac793d9a",
+    "tested_base": "83765ac0639bafd388aaaad4a2515a40bde20add",
+    "report_sha256": "ba96ecb47303fe0844a951ac911af0a713d058064838d87eb5c5103885787e90",
+    "origin": "Final actual83765ac production analysis, not baseline-control counts. No result on a later main is implied."
+  },
+  "full_rom_qualifications": {
+    "baseline_control": {
+      "symbol_check_passed": false,
+      "errors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "meaning": "Pre-existing baseline DSD symbol lookup failures are retained; baseline modules pass. No baseline symbol-check success claimed."
+    },
+    "advisory_data_coverage": {
+      "verified_symbols": 969,
+      "partial_symbols": 1519,
+      "differing_symbols": 1,
+      "unnamed_by_config": 21,
+      "object_records": 5282
+    },
+    "advisory_meaning": "Global object-data advisory is separate from complete production data ownership and exact-module proof.",
+    "module_composition": {
+      "moduleBytes": 3049600,
+      "codeBytes": 2238108,
+      "dataBytes": 811492,
+      "sourceDataBytes": 13020,
+      "unownedDataBytes": 798472,
+      "retailGapCodeBytes": 12628,
+      "retailGapBytes": 811100,
+      "retailGapBytesOfModulePercent": 26.59693074501574,
+      "sourceBytes": 2225480,
+      "sourceBytesOfModulePercent": 72.97612801678909,
+      "dataBytesVerified": 48968,
+      "sourceDataBytesOfModulePercent": 0.42694123819517316,
+      "dataBytesOfModulePercent": 26.609784889821615
+    }
+  },
+  "report_only_binding": {
+    "checkpoint": "2d20b015404311eed10c1901f7d0e3f0ac793d9a",
+    "production_trees": {
+      "src": "dbb468d941a16c8144321f930b719c42465ca377",
+      "include": "e89a5298373ace30037e9aa52c64b3d01218391b",
+      "config": "72be014fa6eb023f0ef0555e45907f83a8a747c1",
+      "tools": "b77c42f89088e6e8d63449ee846cb3e0a84ee2ec",
+      "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
+    },
+    "rule": "Final report-only descendant preserves five production trees exactly."
+  },
+  "status": "All exact83765ac production gates terminal0. Await independent exact-final Source/byte review and Root serialized publication; no push or main merge by producer.",
+  "artifacts": {
+    "whole.py": "d599b1132d3a532eb404491ce63737f7f9e8b5f9356f0c58567c7d06f39bc4d6",
+    "proof.json": "d0380b22a45f89d45aae53898b481d0bb1e63d40436c1e85d60b09e134797e6d",
+    "name-map.json": "79f1554dc0d1fbcc08630f8c4fb9026ad0f93ac56d8ebd7992165f34aa169812",
+    "storage.json": "7b23ba0e86076391ba071643d1e1618c75661ac21a7f148e9c102829c9903c1a",
+    "component-proof.json": "a3f9684592003864ddcdbf07f629585c93add45805a3fcce4990de86ada87b4b",
+    "warning-controls.py": "01bfa417619022a4cb380c3ae5c51022961776f1faa7cf673eb6dea7a2c18ce2",
+    "stock-warning-controls.json": "0fb22797d5a27de6122a508bbc22e5eb0ee49d2da77ef916552cd214e9ba0e40",
+    "AUDIT-original.json": "a6a22365b2dd1a05b59bc18c1069f578f0c4b051c3f9cf0c2231b4407c7671ed",
+    "predecessor-tasks.json": "6bc61b689a2a6b5d87a1a4d5f926fa603663f8e7f0c5691cb51c61dd289bcdb2",
+    "inherited-findings.json": "d9e37918457a35ccb44731e661f743bc66769822c2147907ef613e917ad4a166",
+    "lineage.json": "efefd72721cd75c0f12d010c81049b5ac2b63964dce1f58699c69d11bea07e35",
+    "baseline/raw.o": "44cf6f7b241b4bd73355c6216f5c2c38879c4b858e1abd813cff40fb7607607f",
+    "baseline/prepared.o": "3043a2acf45b5a3f8a7ea1663b6e45f1b14241a36950810462d1376066bd1377",
+    "baseline/strict.json": "cb01d85e0c20d6d518ff701394be7b0538ff191df877bbd154fa0fa5c6f441e1",
+    "baseline/complete-graphs.json": "5764981412719bbc1e805069905a69ddf0be535e55a2860c34484b44a9360cb0",
+    "baseline/metadata.json": "aa77563de024d2753175a7374aedea9a120fd0b9309b3a1b5c9f20a377ca12f8",
+    "candidate/raw.o": "0de8470491852a3e0af093137e698ffe2a40d25b503b8242f4ea8524974bb2ce",
+    "candidate/prepared.o": "3043a2acf45b5a3f8a7ea1663b6e45f1b14241a36950810462d1376066bd1377",
+    "candidate/strict.json": "cb01d85e0c20d6d518ff701394be7b0538ff191df877bbd154fa0fa5c6f441e1",
+    "candidate/complete-graphs.json": "ab1c6e44b20d34518900846738a8dae8f4da6c372a0c64fae84ad9c6ef0b7420",
+    "candidate/metadata.json": "aa77563de024d2753175a7374aedea9a120fd0b9309b3a1b5c9f20a377ca12f8",
+    "candidate/preparation.json": "18341a7b738a5a74d0c67639b01d6fb97071f017602e7e6ccac949d26e52c6da",
+    "rom-report.json": "ba96ecb47303fe0844a951ac911af0a713d058064838d87eb5c5103885787e90",
+    "baseline-control.json": "5511d8c1920d764de6259b2c33157d7342056271e6ab3b219ba72a3aa17837d3"
+  }
+}

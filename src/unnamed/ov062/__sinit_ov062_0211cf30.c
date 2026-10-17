@@ -1,3 +1,13 @@
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum sinit_ov062_0211cf30_AssetId {
+    ASSET_HORUHEI_BMD = 0x0327,
+    ASSET_HORUHEI_LIFT_BCA = 0x0328,
+    ASSET_HORUHEI_LIFT_LOOP_BCA = 0x0329,
+    ASSET_HORUHEI_STRUGGLE_BCA = 0x032a,
+    ASSET_HORUHEI_THROW_BCA = 0x032b,
+    ASSET_HORUHEI_WALK_BCA = 0x032c
+};
+
 extern int func_02017acc(void*, int);
 extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
@@ -9,13 +19,13 @@ extern void* data_ov062_0211ddf0;
 extern void* data_ov062_0211de10;
 extern void* data_ov062_0211dde8;
 extern void* data_ov062_0211de1c;
-extern void* data_ov062_0211dde0;
+extern void* gHoruheiLiftLoopAnimationFile;
 extern void* data_ov062_0211de28;
 extern void* data_ov062_0211de00;
 extern void* data_ov062_0211de34;
 extern void* data_ov062_0211de08;
 extern void* data_ov062_0211de40;
-extern void* data_ov062_0211ddf8;
+extern void* gHoruheiWalkAnimationFile;
 extern void* data_ov062_0211de4c;
 
 typedef struct { int x, y, z; } V3;
@@ -50,18 +60,18 @@ extern S8 data_ov062_0211d948, data_ov062_0211d970;
 
 void __sinit_ov062_0211cf30(void)
 {
-    func_02017acc(&data_ov062_0211ddf0, 0x327);
+    func_02017acc(&data_ov062_0211ddf0, ASSET_HORUHEI_BMD);
     func_020731dc(&data_ov062_0211ddf0, (void*)&func_02017ab4, (void**)&data_ov062_0211de10);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211dde8, 0x328);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211dde8, ASSET_HORUHEI_LIFT_BCA);
     func_020731dc(&data_ov062_0211dde8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov062_0211de1c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211dde0, 0x329);
-    func_020731dc(&data_ov062_0211dde0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov062_0211de28);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211de00, 0x32a);
+    _ZN13SharedFilePtr9ConstructEj(&gHoruheiLiftLoopAnimationFile, ASSET_HORUHEI_LIFT_LOOP_BCA);
+    func_020731dc(&gHoruheiLiftLoopAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov062_0211de28);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211de00, ASSET_HORUHEI_STRUGGLE_BCA);
     func_020731dc(&data_ov062_0211de00, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov062_0211de34);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211de08, 0x32b);
+    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211de08, ASSET_HORUHEI_THROW_BCA);
     func_020731dc(&data_ov062_0211de08, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov062_0211de40);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov062_0211ddf8, 0x32c);
-    func_020731dc(&data_ov062_0211ddf8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov062_0211de4c);
+    _ZN13SharedFilePtr9ConstructEj(&gHoruheiWalkAnimationFile, ASSET_HORUHEI_WALK_BCA);
+    func_020731dc(&gHoruheiWalkAnimationFile, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov062_0211de4c);
 
     data_ov062_0211df10.x = 0x2c000;
     data_ov062_0211df10.y = -0x14000;

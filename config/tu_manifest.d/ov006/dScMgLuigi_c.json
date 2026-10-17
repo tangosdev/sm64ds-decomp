@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgLuigi_c",
   "module": "ov006",
-  "source": "src/actors/dScMgLuigi_c.cpp",
-  "promoted_source": "src/actors/dScMgLuigi_c.cpp",
+  "source": "src/minigames/d_s_mg_luigi.cpp",
+  "promoted_source": "src/minigames/d_s_mg_luigi.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
@@ -61,14 +61,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020efcf8",
+      "symbol": "Luigi_PrepareScanlines",
       "address": "0x020efcf8",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov006_020efcf8.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020efdac",
+      "symbol": "Luigi_PushScanlineRecord",
       "address": "0x020efdac",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020efdac.c",
@@ -411,7 +411,7 @@
       "ordinal": 52
     },
     {
-      "symbol": "_ZN12dScMgLuigi_c13OnYoshiTryEatEi",
+      "symbol": "_ZN12dScMgLuigi_c10StartRoundEi",
       "address": "0x020f3294",
       "size": "0x0000012c",
       "legacy_source": "src/_ZN12dScMgLuigi_c13OnYoshiTryEatEi.cpp",
@@ -452,87 +452,87 @@
       "address": "0x0213cd8c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c15MovePictureSwayEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c15MovePictureSwayEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@2200",
       "address": "0x0213cd94",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c21MovePictureDriftFixedEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c21MovePictureDriftFixedEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@2206",
       "address": "0x0213cd9c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c21MovePictureDriftByRowEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c21MovePictureDriftByRowEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@2204",
       "address": "0x0213cda4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c24MovePictureDriftByColumnEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c24MovePictureDriftByColumnEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@8807",
       "address": "0x0213cdac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c16CurtainStateFastEi, 0}, copied into data_ov006_0214221c"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c16CurtainStateFastEi, 0}, copied into sLuigiCurtainStateTable"
     },
     {
       "symbol": "@2208",
       "address": "0x0213cdb4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c22MovePictureDriftRandomEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c22MovePictureDriftRandomEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@2218",
       "address": "0x0213cdbc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c13CurtainUpdateEi, 0}, copied into data_ov006_02142204"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c13CurtainUpdateEi, 0}, copied into sLuigiCurtainTable"
     },
     {
       "symbol": "@2214",
       "address": "0x0213cdc4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c16TickPictureFlashEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c16TickPictureFlashEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@8805",
       "address": "0x0213cdcc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c14RestartPictureEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c14RestartPictureEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@8801",
       "address": "0x0213cdd4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c10StateSetupEv, 0}, copied into data_ov006_02142234; mwcc numbers it @2174, which arm9 already defines, so the manifest renames it to @8811"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c10StateSetupEv, 0}, copied into sLuigiStateTable; mwcc numbers it @2174, which arm9 already defines, so the manifest renames it to @8811"
     },
     {
       "symbol": "@2198",
       "address": "0x0213cddc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c11StopPictureEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c11StopPictureEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@2202",
       "address": "0x0213cde4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c23MovePictureDriftByLevelEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c23MovePictureDriftByLevelEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
-      "symbol": "data_ov006_0213cdec",
+      "symbol": "sLuigiWantedPosterTiles",
       "address": "0x0213cdec",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -543,21 +543,21 @@
       "address": "0x0213cdf4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c8IrisStopEi, 0}, copied into data_ov006_021421ec"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c8IrisStopEi, 0}, copied into sLuigiIrisTable"
     },
     {
       "symbol": "@8806",
       "address": "0x0213cdfc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c16CurtainStateHoldEi, 0}, copied into data_ov006_0214221c"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c16CurtainStateHoldEi, 0}, copied into sLuigiCurtainStateTable"
     },
     {
       "symbol": "@2222",
       "address": "0x0213ce04",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c18CurtainStateBounceEi, 0}, copied into data_ov006_0214221c"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c18CurtainStateBounceEi, 0}, copied into sLuigiCurtainStateTable"
     },
     {
       "symbol": "g_profile_MG_LUIGI",
@@ -571,89 +571,89 @@
       "address": "0x0213ce14",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c16CurtainStateSlowEi, 0}, copied into data_ov006_02142204"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c16CurtainStateSlowEi, 0}, copied into sLuigiCurtainTable"
     },
     {
       "symbol": "@2212",
       "address": "0x0213ce1c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c17MovePictureBounceEi, 0}, copied into data_ov006_02142254"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c17MovePictureBounceEi, 0}, copied into sLuigiSlotHandlers"
     },
     {
       "symbol": "@8802",
       "address": "0x0213ce24",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c10StatePlaceEv, 0}, copied into data_ov006_02142234; mwcc numbers it @2176, which arm9 already defines, so the manifest renames it to @8812"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c10StatePlaceEv, 0}, copied into sLuigiStateTable; mwcc numbers it @2176, which arm9 already defines, so the manifest renames it to @8812"
     },
     {
       "symbol": "@8809",
       "address": "0x0213ce2c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c8IrisGrowEi, 0}, copied into data_ov006_021421ec"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c8IrisGrowEi, 0}, copied into sLuigiIrisTable"
     },
     {
       "symbol": "@8808",
       "address": "0x0213ce34",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c8IrisHoldEi, 0}, copied into data_ov006_021421ec"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c8IrisHoldEi, 0}, copied into sLuigiIrisTable"
     },
     {
       "symbol": "@2216",
       "address": "0x0213ce3c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c12CurtainStartEi, 0}, copied into data_ov006_02142204"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c12CurtainStartEi, 0}, copied into sLuigiCurtainTable"
     },
     {
       "symbol": "@8803",
       "address": "0x0213ce44",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c9StatePlayEv, 0}, copied into data_ov006_02142234"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c9StatePlayEv, 0}, copied into sLuigiStateTable"
     },
     {
       "symbol": "@8804",
       "address": "0x0213ce4c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "PMF record {_ZN12dScMgLuigi_c10StateCatchEv, 0}, copied into data_ov006_02142234"
+      "evidence": "PMF record {_ZN12dScMgLuigi_c10StateCatchEv, 0}, copied into sLuigiStateTable"
     }
   ],
   "bss": [
     {
-      "symbol": "data_ov006_021421ec",
+      "symbol": "sLuigiIrisTable",
       "address": "0x021421ec",
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "LuigiSlotHandler iris table [3]; the initializer copies 3 PMF records into it"
     },
     {
-      "symbol": "data_ov006_02142204",
+      "symbol": "sLuigiCurtainTable",
       "address": "0x02142204",
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "LuigiSlotHandler curtain table [3]; the initializer copies 3 PMF records into it"
     },
     {
-      "symbol": "data_ov006_0214221c",
+      "symbol": "sLuigiCurtainStateTable",
       "address": "0x0214221c",
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "LuigiSlotHandler curtain-state table [3]; the initializer copies 3 PMF records into it"
     },
     {
-      "symbol": "data_ov006_02142234",
+      "symbol": "sLuigiStateTable",
       "address": "0x02142234",
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "LuigiStateHandler table [4] that Behavior dispatches through; the initializer copies 4 PMF records into it"
     },
     {
-      "symbol": "data_ov006_02142254",
+      "symbol": "sLuigiSlotHandlers",
       "address": "0x02142254",
       "size": "0x50",
       "binding": "STB_GLOBAL",
@@ -661,33 +661,33 @@
     }
   ],
   "notes": [
-    "SINIT FOLDED (fold/mg-sinits-b-1011): the retail static initializer __sinit_ov006_02130f64 (.init 0x02130f64-0x021311c8, ctor word 0x021335ac) is this TU's own __sinit_dScMgLuigi_c.cpp. In .init link order it is the only record between __sinit_d_s_mg_jump2.cpp and __sinit_d_s_mg_memory.cpp, exactly where this TU's .text sits between d_s_mg_jump2.cpp and d_s_mg_memory.cpp, and the five pointer-to-member state tables it fills (data_ov006_021421ec, 02142204, 0214221c, 02142234, 02142254) are read only by this TU's members (0x020f00a0, 0x020f0bec, 0x020f0dd4, 0x020f1ef4, 0x020f3190, 0x020f345c). The tables are now file-scope arrays of LuigiStateHandler / LuigiSlotHandler, so mwcc emits the initializer with the same 0x264 bytes and 28 relocations, and the 23 PMF records it copies become this TU's .data at 0x0213cd8c-0x0213ce54, together with g_profile_MG_LUIGI and ChooseTarget's tile table data_ov006_0213cdec. The TU takes .bss 0x021421ec-0x021422a4 (Jump2's .bss ends and Memory's begins at those edges). Two compiled @NNN records collide with names other modules define and are renamed to the free @8811 and @8812 through defined_symbol_renames.",
+    "SINIT FOLDED (fold/mg-sinits-b-1011): the retail static initializer __sinit_ov006_02130f64 (.init 0x02130f64-0x021311c8, ctor word 0x021335ac) is this TU's own __sinit_d_s_mg_luigi.cpp. In .init link order it is the only record between __sinit_d_s_mg_jump2.cpp and __sinit_d_s_mg_memory.cpp, exactly where this TU's .text sits between d_s_mg_jump2.cpp and d_s_mg_memory.cpp, and the five pointer-to-member state tables it fills (sLuigiIrisTable, 02142204, 0214221c, 02142234, 02142254) are read only by this TU's members (0x020f00a0, 0x020f0bec, 0x020f0dd4, 0x020f1ef4, 0x020f3190, 0x020f345c). The tables are now file-scope arrays of LuigiStateHandler / LuigiSlotHandler, so mwcc emits the initializer with the same 0x264 bytes and 28 relocations, and the 23 PMF records it copies become this TU's .data at 0x0213cd8c-0x0213ce54, together with g_profile_MG_LUIGI and ChooseTarget's tile table sLuigiWantedPosterTiles. The TU takes .bss 0x021421ec-0x021422a4 (Jump2's .bss ends and Memory's begins at those edges). Two compiled @NNN records collide with names other modules define and are renamed to the free @8811 and @8812 through defined_symbol_renames.",
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "The complete 58-function MG_LUIGI scene run 0x020efc0c..0x020f3834 is reconstructed as one dScMgLuigi_c C++ translation unit: the 57 functions tu_map reports as one contiguous linker run, plus the immediately adjacent unique factory dScMgLuigi_c_classInit that closes the scene object. 55 of the 58 licensed functions are genuine dScMgLuigi_c:: method definitions; remaining record and component views are explicitly partial reconstruction. The promotion landed with 7 (D1, D0, AfterCleanupResources, OnYoshiTryEat, Render, Behavior, InitResources) and a later pass converted 48 more, every one of the free functions that took the object as a leading pointer. Three licensed functions have non-member roles: dScMgLuigi_c_classInit is the C-named registry factory the profile row points at; func_ov006_020efcf8 is IRQ 2's handler and must keep the type void(*)(); and func_ov006_020efdac takes no object at all. See notes/agents/PIPELINE.md, \"A promoted TU is not a reconstructed class\".",
+    "The complete 58-function MG_LUIGI scene run 0x020efc0c..0x020f3834 is reconstructed as one dScMgLuigi_c C++ translation unit: the 57 functions tu_map reports as one contiguous linker run, plus the immediately adjacent unique factory dScMgLuigi_c_classInit that closes the scene object. 55 of the 58 licensed functions are genuine dScMgLuigi_c:: method definitions; remaining record and component views are explicitly partial reconstruction. The promotion landed with 7 (D1, D0, AfterCleanupResources, OnYoshiTryEat, Render, Behavior, InitResources) and a later pass converted 48 more, every one of the free functions that took the object as a leading pointer. Three licensed functions have non-member roles: dScMgLuigi_c_classInit is the C-named registry factory the profile row points at; Luigi_PrepareScanlines is IRQ 2's handler and must keep the type void(*)(); and Luigi_PushScanlineRecord takes no object at all. See notes/agents/PIPELINE.md, \"A promoted TU is not a reconstructed class\".",
     "IDENTITY IS READ, NOT COINED. The cartridge spells the class itself: _ZTS12dScMgLuigi_c at ov006 0x0213ce60 holds '12dScMgLuigi_c\\0', and the __si_class_type_info at 0x0213ce54 is {0x0209a764, 0x0213ce60, 0x020bbf6c} whose base word resolves in ov004 to _ZTI11dScMgBase_c. _ZTV12dScMgLuigi_c (address point 0x0213cf10) is 36 slots, the same length as dScMgBase_c's, so the class adds no new virtual: all 7 entries it owns (slots 0, 5, 6, 9, 16, 17, 18) are overrides. Nothing about the class NAME is invented here. The 48 MEMBER names are the opposite case and are labelled as such: the cartridge carries an address for each and no identifier, so every one of them is a COINED name recorded row by row in symbols/actor_renames.tsv, where each row separates what the ROM proves (member-ness, from a zero-adjustment pointer-to-member record in .data or from the call site that passes this object) from the coined word itself. The two remaining func_ov006_* members keep their address names because neither is a member.",
     "HISTORICAL MERGE STRATEGY: the independently recovered shards originally retained separate local receiver hosts and block declarations. The earlier claim that combining their PMF representations was necessary has been disproved: this repair uses genuine dScMgLuigi_c member-function pointers at all six dispatch sites with identical complete object output at that repair stage. The subsequent native factory changes its vtable relocation from the raw address label to the canonical class symbol; exact function bytes, complete metadata and licensed output are verified separately. Remaining record/curtain/reward storage views and the BEB68_f0274 pointer view are explicit partial reconstruction; no removed host or blanket representation wall is claimed. Original spellings and measured alternatives remain in the durable experiment.",
     "EMISSION ORDER AND FILE-GLOBAL OPTIMISATION PRAGMAS ARE ONE DECISION. The TU is written ROM-ASCENDING and emits ROM-ascending because `#pragma defer_codegen off` (in the preamble, before the includes) makes mwccarm 2004/b56 emit each definition where it is encountered instead of deferring and reversing. The same switch is what makes the opt_* pragmas bind POSITIONALLY instead of file-global last-wins, which this TU cannot do without: SEVEN of the 58 shards carry an optimisation pragma, one more than the queue row's estimate of six (dScMgLuigi_c::PlaceNextPicture arrived after that row was generated). They are ordinal 5 dScMgLuigi_c::BuildIrisTable (opt_strength_reduction off), 27 dScMgLuigi_c::UpdatePenalties (opt_common_subs off), 30 dScMgLuigi_c::TickPictureFlash (opt_common_subs off AND opt_strength_reduction off), 31 dScMgLuigi_c::MovePictureBounce (opt_common_subs off), 45 dScMgLuigi_c::PlaceNextPicture (opt_propagation off), 46 dScMgLuigi_c::ChooseTarget (opt_strength_reduction off) and 49 dScMgLuigi_c::StateCatch (opt_strength_reduction off), each bracketed #pragma push / #pragma pop. MEASURED TRAP: one push per pragma needs one pop per pragma. Emitting a single pop after ordinal 30's two pushes leaked its opt_common_subs off into every later member and cost 9 DIFFs (ordinals 32-37, 43, 44, 45) that reproduced individually and only failed in the merged file; the control run with defer_codegen left on scored 40/58 with 56 ordinal pairs out of ROM order, which is what that failure looks like from the other side.",
     "COMPILER-ONLY ROW COUNT IS 11 DATA + 1 FUNCTION, DERIVED not copied. dScMgLuigi_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c is FIVE levels, so 2 x 5 typeinfo rows + 1 vtable = 11, with no Vector3 term -- measured, not assumed: dScMgBase_c does have Vector3 members, but its constructor and destructor are out of line in ov004 and the emitted object carries no Vector3 symbol of any kind. The 12th row is _ZN12dScMgLuigi_cD2Ev, a genuinely homeless base-object destructor -- all_symbol_homes() returns nothing for it -- so it takes the plain deadstrip. The cartridge orders D1 (0x020efc0c) BELOW D0 (0x020efc30) and has no D2 at all, which is the direction an out-of-line destructor under defer_codegen off reproduces. tools/romdata_check.py check_object over the emitted object independently confirms the whole set: _ZTV12dScMgLuigi_c VERIFIED at 144/144 bytes with 0 blind words, the five _ZTI records VERIFIED, and the five _ZTS records PARTIAL only because a NUL-terminated name is shorter than its padded ROM extent.",
-    "PROMOTED to src/actors/dScMgLuigi_c.cpp. The whole 58-function run moves as one unit -- no subset was taken: delinks.txt carried no coverage hole across 0x020efc0c..0x020f3834 at this base (the 0x020f2790..0x020f2cb8 hole that made this span impossible was closed by 51b339bfc \"Match the ov006 Luigi minigame picture placer (#2358)\", and the run is confirmed gapless at this base), and the destructor direction is the reproducible one, so nothing forces a cut. Placement follows notes/agents/roles/writer.md's fixed convention (src/actors/<Class>.cpp) and the same-overlay precedent src/actors/dScMgMemory2_c.cpp; the thirteen sibling d_s_mg_*.cpp files predate that convention.",
-    "CURRENT NON-TEXT BOUNDARY: this promotion owns the complete contiguous .text run only. The compiler-generated RTTI/vtable at 0x0213ce54..0x0213cfa0, the resource path string data_ov006_0213cfa0 ('/MG/d_2d_mg_bg_luigi1_ncg.bin', 0x0213cfa0..0x0213cfc0 with padding), the PMF and table data at data_ov006_021421ec / 0x0214221c / 0x02142204 / 0x02142234 / 0x02142254, the g_profile_MG_LUIGI registry row at 0x0213ce0c and this class's BSS all remain ROM-gap owned until their exact input-section order and initializers are reconstructed. 0x0213cfc0 -- not 0x0213cfa0 -- is where dScMgMemory_c's data cluster begins; the correction to that neighbour's manifest ships with this change.",
-    "func_ov006_020efcf8 (ordinal 3) remains a free IRQ handler with the void(*)() callback type accepted by IRQ::SetIRQHandler. It uses shared scanline state and no scene receiver; a non-static member function would not have that callback type.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f608' differs between the legacy file that used to hold func_ov006_020efcf8 and the one that held func_ov006_020efdac; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MultiCopy_Int' differs between the legacy file that used to hold func_ov006_020efcf8 and the one that held func_ov006_020efdac; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f60c' differs between the legacy file that used to hold func_ov006_020efdac and the one that held dScMgLuigi_c::BuildIrisTable; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
+    "PROMOTED to src/minigames/d_s_mg_luigi.cpp. The whole 58-function run moves as one unit -- no subset was taken: delinks.txt carried no coverage hole across 0x020efc0c..0x020f3834 at this base (the 0x020f2790..0x020f2cb8 hole that made this span impossible was closed by 51b339bfc \"Match the ov006 Luigi minigame picture placer (#2358)\", and the run is confirmed gapless at this base), and the destructor direction is the reproducible one, so nothing forces a cut. Placement follows notes/agents/roles/writer.md's fixed convention (src/actors/<Class>.cpp) and the same-overlay precedent src/minigames/d_s_mg_memory2.cpp; the thirteen sibling d_s_mg_*.cpp files predate that convention.",
+    "CURRENT NON-TEXT BOUNDARY: this promotion owns the complete contiguous .text run only. The compiler-generated RTTI/vtable at 0x0213ce54..0x0213cfa0, the resource path string sLuigiBg1NcgPath ('/MG/d_2d_mg_bg_luigi1_ncg.bin', 0x0213cfa0..0x0213cfc0 with padding), the PMF and table data at sLuigiIrisTable / 0x0214221c / 0x02142204 / 0x02142234 / 0x02142254, the g_profile_MG_LUIGI registry row at 0x0213ce0c and this class's BSS all remain ROM-gap owned until their exact input-section order and initializers are reconstructed. 0x0213cfc0 -- not 0x0213cfa0 -- is where dScMgMemory_c's data cluster begins; the correction to that neighbour's manifest ships with this change.",
+    "Luigi_PrepareScanlines (ordinal 3) remains a free IRQ handler with the void(*)() callback type accepted by IRQ::SetIRQHandler. It uses shared scanline state and no scene receiver; a non-static member function would not have that callback type.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f608' differs between the legacy file that used to hold Luigi_PrepareScanlines and the one that held Luigi_PushScanlineRecord; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MultiCopy_Int' differs between the legacy file that used to hold Luigi_PrepareScanlines and the one that held Luigi_PushScanlineRecord; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f60c' differs between the legacy file that used to hold Luigi_PushScanlineRecord and the one that held dScMgLuigi_c::BuildIrisTable; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dScMgLuigi_c::BuildIrisTable' differs between the legacy file that used to hold dScMgLuigi_c::IrisGrow and the one that held dScMgLuigi_c::StartIris; kept the first, the other is commented out for review; RESOLVED: this is a genuine method declared in include/dScMgLuigi_c.h and called directly on the scene. No C-linkage free-function declaration or receiver cast remains for this method.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02053c10' differs between the legacy file that used to hold dScMgLuigi_c::IrisStop and the one that held dScMgLuigi_c::StartIris; kept the first, the other is commented out for review; RESOLVED: the two spellings are the same type and differ only in a parameter name or a redundant `extern`, so nothing had to be reconciled -- each member keeps its own declaration at BLOCK scope.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f608' differs between the legacy file that used to hold func_ov006_020efcf8 and the one that held dScMgLuigi_c::StartIris; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f608' differs between the legacy file that used to hold Luigi_PrepareScanlines and the one that held dScMgLuigi_c::StartIris; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold dScMgLuigi_c::UpdateReward and the one that held dScMgLuigi_c::CurtainStateFast; kept the first, the other was commented out for review in the historical assembly; RESOLVED: both callers now use Sound::PlayBank2_2D through Sound.h, with its actual unsigned return and parameter contract. Whole-object identity is recorded in notes/experiments/pr2876-source-repair-0920.json.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d460' differs between the legacy file that used to hold dScMgLuigi_c::StartIris and the one that held dScMgLuigi_c::CurtainStart; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold dScMgLuigi_c::DrawReward and the one that held dScMgLuigi_c::DrawTimer; kept the first, the other is commented out for review; RESOLVED: the two spellings are genuinely different types, so neither was merged -- each member keeps its own declaration at BLOCK scope inside its own body, where the other cannot see it.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold dScMgLuigi_c::UpdateReward and the one that held dScMgLuigi_c::TickTimer; kept the first, the other was commented out for review in the historical assembly; RESOLVED: both callers now use Sound::PlayBank2_2D through Sound.h, with its actual unsigned return and parameter contract. Whole-object identity is recorded in notes/experiments/pr2876-source-repair-0920.json.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020af948' differs between the legacy file that used to hold dScMgLuigi_c::DrawReward and the one that held dScMgLuigi_c::DrawPenalties; kept the first, the other was commented out for review in the historical assembly; RESOLVED: the real pointer-valued matrix parameter is declared void* in both views; callers here pass null. Whole-object identity is preserved.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_RenderSubSpriteMtx' differs between the legacy file that used to hold dScMgLuigi_c::DrawReward and the one that held dScMgLuigi_c::DrawPenalties; kept the first, the other was commented out for review in the historical assembly; RESOLVED: the real pointer-valued matrix parameter is declared void* in both views; callers here pass null. Whole-object identity is preserved.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dScMgLuigi_c::BeginCatch' differs between the legacy file that used to hold dScMgLuigi_c::TickTimer and the one that held dScMgLuigi_c::CheckTouch; kept the first, the other is commented out for review; RESOLVED: this is one of the TU's own members, so it was forward declared once in the file-scope extern \"C\" region and is now a declared member of the class (void dScMgLuigi_c::BeginCatch(int p1)); the caller whose shard recovered a different pointer type casts at the call site, which is free.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold dScMgLuigi_c::TickTimer and the one that held dScMgLuigi_c::CheckTouch; kept the first, the other was commented out for review in the historical assembly; RESOLVED: one file-scope C-linkage unsigned int(unsigned int) declaration agrees with the actual scalar definition; callers discard the result.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold dScMgLuigi_c::MovePictureBounce and the one that held dScMgLuigi_c::PlaceBoardLayout; kept the first, the other is commented out for review; RESOLVED: the two spellings are the same type and differ only in a parameter name or a redundant `extern`, so nothing had to be reconciled -- each member keeps its own declaration at BLOCK scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold dScMgLuigi_c::MovePictureBounce and the one that held dScMgLuigi_c::PlaceNextPicture; kept the first, the other is commented out for review; RESOLVED: the two spellings are the same type and differ only in a parameter name or a redundant `extern`, so nothing had to be reconciled -- each member keeps its own declaration at BLOCK scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dScMgLuigi_c::UpdatePenalties' differs between the legacy file that used to hold dScMgLuigi_c::StateCatch and the one that held dScMgLuigi_c::StatePlay; kept the first, the other is commented out for review; RESOLVED: this is a genuine method declared in include/dScMgLuigi_c.h and called directly on the scene. No C-linkage free-function declaration or receiver cast remains for this method.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dScMgLuigi_c::ResetBoard' differs between the legacy file that used to hold _ZN12dScMgLuigi_c13OnYoshiTryEatEi and the one that held _ZN12dScMgLuigi_c13InitResourcesEv; kept the first, the other is commented out for review; RESOLVED: this is a genuine method declared in include/dScMgLuigi_c.h and called directly on the scene. No C-linkage free-function declaration or receiver cast remains for this method.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dScMgLuigi_c::ResetBoard' differs between the legacy file that used to hold _ZN12dScMgLuigi_c10StartRoundEi and the one that held _ZN12dScMgLuigi_c13InitResourcesEv; kept the first, the other is commented out for review; RESOLVED: this is a genuine method declared in include/dScMgLuigi_c.h and called directly on the scene. No C-linkage free-function declaration or receiver cast remains for this method.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d45c' differs between the legacy file that used to hold dScMgLuigi_c::IrisGrow and the one that held _ZN12dScMgLuigi_c13InitResourcesEv; kept the first, the other is commented out for review; RESOLVED: the two spellings are the same type under a typedef (u8 is unsigned char), so one declaration in the file-scope extern \"C\" region serves both members.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold dScMgLuigi_c::IrisStop and the one that held _ZN12dScMgLuigi_c13InitResourcesEv; kept the first, the other is commented out for review; RESOLVED: the two spellings are the same type under a typedef (u8 is unsigned char), so one declaration in the file-scope extern \"C\" region serves both members.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Entry') differs between the legacy file that used to hold dScMgLuigi_c::UpdateIris and the one that held dScMgLuigi_c::CurtainUpdate; kept the first, the other was commented out for review in the historical assembly; RESOLVED: the invented receiver classes and wrapper entries were removed. All six dispatch sites use actual dScMgLuigi_c member-function pointers; the complete 2004/b56 object remains identical. The former representation-wall claim was disproved by these measured forms.",
@@ -1085,7 +1085,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov006",
       "canonical_address": "0x0213cf10",
-      "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned. Extent corroborated three ways: the cartridge words put mwcc's two-word preamble {0x00000000, 0x0213ce54} at 0x0213cf08 and the last slot at 0x0213cf9c, with data_ov006_0213cfa0 (an ASCII resource path) next, so the OBJECT is 0x0213cf08..0x0213cfa0 = 0x98 bytes; tools/rtti_vtables.py --own dScMgLuigi_c reports 36 slots (0x90) plus the 0x8 preamble = 0x98; the emitted _ZTV12dScMgLuigi_c is 0x98. symbols.txt names the address point, which is the convention romdata_check re-derives the object start from"
+      "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned. Extent corroborated three ways: the cartridge words put mwcc's two-word preamble {0x00000000, 0x0213ce54} at 0x0213cf08 and the last slot at 0x0213cf9c, with sLuigiBg1NcgPath (an ASCII resource path) next, so the OBJECT is 0x0213cf08..0x0213cfa0 = 0x98 bytes; tools/rtti_vtables.py --own dScMgLuigi_c reports 36 slots (0x90) plus the 0x8 preamble = 0x98; the emitted _ZTV12dScMgLuigi_c is 0x98. symbols.txt names the address point, which is the convention romdata_check re-derives the object start from"
     },
     {
       "symbol": "_ZTI12dScMgLuigi_c",
@@ -1160,7 +1160,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_dScMgLuigi_c.cpp",
+      "symbol": "__sinit_d_s_mg_luigi.cpp",
       "address": "0x02130f64",
       "size": "0x264",
       "binding": "STB_GLOBAL",
@@ -1169,7 +1169,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_dScMgLuigi_c.cpp",
+      "symbol": ".p__sinit_d_s_mg_luigi.cpp",
       "address": "0x021335ac",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1225,13 +1225,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_dScMgLuigi_c.cpp",
+      "symbol": "__sinit_d_s_mg_luigi.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_dScMgLuigi_c.cpp",
+      "symbol": ".p__sinit_d_s_mg_luigi.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -1381,7 +1381,7 @@
       "source": "0x021335ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_dScMgLuigi_c.cpp",
+      "symbol": "__sinit_d_s_mg_luigi.cpp",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130f64"
@@ -1411,7 +1411,7 @@
       "source": "0x02131160",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142234",
+      "symbol": "sLuigiStateTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142234"
@@ -1461,7 +1461,7 @@
       "source": "0x02131174",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142254",
+      "symbol": "sLuigiSlotHandlers",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142254"
@@ -1581,7 +1581,7 @@
       "source": "0x021311a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_02142204",
+      "symbol": "sLuigiCurtainTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142204"
@@ -1611,7 +1611,7 @@
       "source": "0x021311b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_0214221c",
+      "symbol": "sLuigiCurtainStateTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0214221c"
@@ -1661,7 +1661,7 @@
       "source": "0x021311c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov006_021421ec",
+      "symbol": "sLuigiIrisTable",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021421ec"

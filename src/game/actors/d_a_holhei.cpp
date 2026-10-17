@@ -98,10 +98,10 @@ extern unsigned int RandomIntInternal(void* s);
 
 extern int data_ov062_0211ddf0[]; /* model, file id 0x327 */
 extern int data_ov062_0211dde8[]; /* animation 0x328 */
-extern void *data_ov062_0211dde0; /* animation 0x329 */
+extern void *gHoruheiLiftLoopAnimationFile; /* animation 0x329 */
 extern void *data_ov062_0211de00[]; /* animation 0x32a, grab */
 extern int *data_ov062_0211de08[]; /* animation 0x32b */
-extern void *data_ov062_0211ddf8; /* animation 0x32c, walk */
+extern void *gHoruheiWalkAnimationFile; /* animation 0x32c, walk */
 
 /* The ten state records (HolheiState, 0x10 apart). See the banner for
    why they keep these element types. */
@@ -128,6 +128,18 @@ void func_ov062_02116dbc(daHolhei_c *self);
 extern void func_ov062_02116edc(daHolhei_c *self);
 }
 
+/* Actor ID 0xbf is PLAYER. The mFlags bits this file tests (0x100, 0x400,
+   0x2000, 0x4000) are undocumented, so they go through IsFlagSet. Both are
+   int-returning: that is what makes the ROM materialize the 0/1 before
+   testing it. */
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 // @symbol daHolhei_c_classInit
 /* The cartridge's body is the one `new`: 0x438 into fBase_c::operator new,
    dEnemyBase_c's C2, this TU's vtable, then the member C1s. */
@@ -149,10 +161,10 @@ int daHolhei_c::InitResources()
     mModel.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov062_0211ddf0), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov062_0211dde8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211dde0);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gHoruheiLiftLoopAnimationFile);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov062_0211de00);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov062_0211de08);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211ddf8);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gHoruheiWalkAnimationFile);
     mVertAccel = -0x3000;
     mTerminalVelocity = -0x1e000;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, (dActor_c*)this, 0xc8000, 0xfa000, 0x200004, 0x3010);
@@ -233,27 +245,17 @@ int daHolhei_c::Behavior()
     mModel.Advance();
     mModel.UpdateVerts();
 
-    {
-        dActor_c *held = mHeld;
-        if (held != 0) {
-            int flag = (mFlags & 0x4000) != 0;
-            if (flag) {
-                if (*(int*)((char*)held + 0xc8) != 0) {
-                    func_ov062_02116d28();
-                    goto ret;
-                }
-            }
-        }
+    dActor_c *held = mHeld;
+    if (held != 0 && IsFlagSet(this, 0x4000) && *(int *)((char *)held + 0xc8) != 0) {
+        func_ov062_02116d28();
+    } else {
+        mdCc_c.Update();
+        mCarryOffsX = 0;
+        mCarryOffsY = 0;
+        mCarryOffsZ = 0;
+        func_ov062_02116e80(this);
+        func_ov062_02116dbc(this);
     }
-
-    mdCc_c.Update();
-    mCarryOffsX = 0;
-    mCarryOffsY = 0;
-    mCarryOffsZ = 0;
-    func_ov062_02116e80(this);
-    func_ov062_02116dbc(this);
-
-ret:
     return 1;
 }
 
@@ -261,15 +263,8 @@ ret:
 int daHolhei_c::Render()
 {
     dActor_c *held = mHeld;
-    if (held != 0) {
-        int flags = mFlags;
-        int flag = (flags & 0x4000) ? 1 : 0;
-        if (flag != 0) {
-            if (*(int*)((char*)held + 0xc8) != 0) {
-                func_ov062_02116edc(this);
-            }
-        }
-    }
+    if (held != 0 && IsFlagSet(this, 0x4000) && *(int *)((char *)held + 0xc8) != 0)
+        func_ov062_02116edc(this);
     /* ModelAnim overrides Render; the ROM calls Model::Render on this member. */
     mModel.Model::Render((const Vector3 *)0);
     return 1;
@@ -285,10 +280,10 @@ int daHolhei_c::CleanupResources()
 {
     ((SharedFilePtr *)data_ov062_0211ddf0)->Release();
     ((SharedFilePtr *)data_ov062_0211dde8)->Release();
-    ((SharedFilePtr *)&data_ov062_0211dde0)->Release();
+    ((SharedFilePtr *)&gHoruheiLiftLoopAnimationFile)->Release();
     ((SharedFilePtr *)data_ov062_0211de00)->Release();
     ((SharedFilePtr *)data_ov062_0211de08)->Release();
-    ((SharedFilePtr *)&data_ov062_0211ddf8)->Release();
+    ((SharedFilePtr *)&gHoruheiWalkAnimationFile)->Release();
     return 1;
 }
 
@@ -370,7 +365,7 @@ int daHolhei_c::func_ov062_02116c78(){
     mTurnWait = 0x3c;
     mChargeStep = 0;
     mModel.speed = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, ((HolheiFile *)&data_ov062_0211ddf8)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, ((HolheiFile *)&gHoruheiWalkAnimationFile)->file, 0, 0x1000, 0);
     mTargetAngY = Vec3_HorzAngle(&mPosX, &mHomePosX);
     return 1;
 }
@@ -393,7 +388,7 @@ extern "C" int func_ov062_02116b80(daHolhei_c *self){
     self->mTargetAngY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
     self->mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x64);
     self->mModel.speed = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&data_ov062_0211ddf8)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&gHoruheiWalkAnimationFile)->file, 0, 0x1000, 0);
     return 1;
 }
 
@@ -426,7 +421,7 @@ extern "C" int func_ov062_02116a08(daHolhei_c *self)
     self->mHorzSpeed = 0xa000;
     pl = self->ClosestPlayer();
 
-    self->mMoveSound = Sound::PlayLong(self->mMoveSound, 3, 0x18a, *(const Vector3 *)&self->mCamSpacePosX, 0);
+    self->mMoveSound = Sound::PlayLong(self->mMoveSound, 3, 0x18a, self->mCamSpacePos, 0);
 
     if (pl != 0 && self->mChaseCooldown == 0) {
         int *pos = &pl->mPosX;
@@ -467,18 +462,17 @@ int daHolhei_c::func_ov062_02116980() {
 int daHolhei_c::func_ov062_02116894(){
     if (*(unsigned short *)&mStateTimer != 0)
         return 1;
-    if (mHorzSpeed == 0)
-        goto angle;
-    if (func_ov062_02115f84(this) != 0 || mEdgeStop == 1) {
-        mTargetAngY = (s16)(mPrevAngleY - 0x2000);
-        goto angle;
+    if (mHorzSpeed != 0) {
+        if (func_ov062_02115f84(this) != 0 || mEdgeStop == 1) {
+            mTargetAngY = (s16)(mPrevAngleY - 0x2000);
+        } else {
+            mPrevAngleY = mTargetAngY;
+            ::daHolhei_c_ChangeState(this, (HolheiState *)data_ov062_0211dee0);
+            mChaseCooldown = 0x1e;
+            mTargetAngY = mPrevAngleY;
+            return 1;
+        }
     }
-    mPrevAngleY = mTargetAngY;
-    ::daHolhei_c_ChangeState(this, (HolheiState *)data_ov062_0211dee0);
-    mChaseCooldown = 0x1e;
-    mTargetAngY = mPrevAngleY;
-    return 1;
-angle:
     if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
         mHorzSpeed = 0xa000;
     ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
@@ -515,7 +509,7 @@ int daHolhei_c::func_ov062_021167c0(){
 // @symbol func_ov062_02116784
 extern "C" int func_ov062_02116784(daHolhei_c *self) {
     self->mChargeStep = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&data_ov062_0211ddf8)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&gHoruheiWalkAnimationFile)->file, 0, 0x1000, 0);
     return 1;
 }
 
@@ -542,7 +536,7 @@ int daHolhei_c::func_ov062_021165e8()
     if (player == 0)
         return 1;
 
-    pp = (struct Vector3*)&player->mPosX;
+    pp = &player->mPos;
     pos.x = pp->x;
     pos.y = pp->y;
     pos.z = pp->z;
@@ -559,7 +553,7 @@ int daHolhei_c::func_ov062_021165e8()
         }
     }
 
-    mMoveSound = Sound::PlayLong(mMoveSound, 3, 0x18a, *(const Vector3 *)&mCamSpacePosX, 0);
+    mMoveSound = Sound::PlayLong(mMoveSound, 3, 0x18a, mCamSpacePos, 0);
 
     {
         int s = mChargeStep;
@@ -587,24 +581,12 @@ extern "C" int func_ov062_021165e0(void)
 // @symbol _ZN10daHolhei_c19func_ov062_021164e8Ev
 int daHolhei_c::func_ov062_021164e8()
 {
-    int flag;
-    int t;
-    if (mGrabAnim == 0) {
-        t = (mFlags & 0x4000) != 0;
-        if (t) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, ((HolheiFile *)data_ov062_0211de00)->file, 0, 0x1000, 0);
-            mGrabAnim = 1;
-        }
+    if (mGrabAnim == 0 && IsFlagSet(this, 0x4000)) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+            &mModel, ((HolheiFile *)data_ov062_0211de00)->file, 0, 0x1000, 0);
+        mGrabAnim = 1;
     }
-    flag = mFlags;
-    t = (flag & 0x400) != 0;
-    if (t) goto do_block;
-    t = (flag & 0x2000) != 0;
-    if (t) goto do_block;
-    t = (flag & 0x100) != 0;
-    if (t) goto done;
-do_block:
-    {
+    if (IsFlagSet(this, 0x400) || IsFlagSet(this, 0x2000) || !IsFlagSet(this, 0x100)) {
         dActor_c *held = mHeld;
         mPrevAngleY = held->mAngleY;
         mdCc_c.flags |= 2;
@@ -615,7 +597,6 @@ do_block:
         }
         mHeld = 0;
     }
-done:
     return 1;
 }
 
@@ -677,7 +658,7 @@ extern "C" int func_ov062_0211632c(daHolhei_c *self){
 /* Start an animation, then wait a random few frames facing a random way. */
 // @symbol func_ov062_021162b8
 extern "C" int func_ov062_021162b8(daHolhei_c *self){
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&data_ov062_0211dde0)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&gHoruheiLiftLoopAnimationFile)->file, 0, 0x1000, 0);
     self->mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x14);
     self->mTargetAngY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
     return 1;
@@ -726,7 +707,6 @@ extern "C" void func_ov062_02116010(daHolhei_c *self)
 {
     u32 id;
     dActor_c *a;
-    int b;
     int angle;
     struct Vector3_16 v;
 
@@ -750,8 +730,7 @@ extern "C" void func_ov062_02116010(daHolhei_c *self)
     a = dActor_c::FindWithID(id);
     if (a == 0)
         return;
-    b = (int)(a->actorID == 0xbf); /* PLAYER */
-    if (b == 0)
+    if (!IsPlayerActor(a))
         return;
     angle = self->HorzAngleToCPlayer();
     angle = AngleDiff(angle, self->mAngleY);

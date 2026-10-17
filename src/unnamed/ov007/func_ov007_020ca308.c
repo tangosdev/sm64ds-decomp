@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern short data_02082214[];
 extern int func_ov007_020c3ba8(int);
 extern int _ZN4cstd3divEii(int, int);
@@ -51,7 +52,7 @@ void func_ov007_020ca308(char *self, char *t, int i)
             ph = j;
             do {
                 s16 s = data_02082214[((u16)(base + ph) >> 4) * 2];
-                int val = (int)(((s64)amp * s + 0x800) >> 12);
+                int val = FX_MUL(amp, s);
                 if (i == 0) {
                     int p = *(int *)(*(int *)(t + 4) + 8);
                     p = ((int *)p)[j];

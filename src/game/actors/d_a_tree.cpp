@@ -17,7 +17,6 @@
  * - dCcPos_c::Init 6az: two by-value Fix12<int> params; the header member
  *   form homes them to the stack and size-DIFFs, so the TU-local wrapper
  *   keeps scalar ints.
- * - dClipper::Func_02015560 6az: the same wall on its Fix12<int> scale.
  * - dCcPos_c::C1 stays a mangled extern: a language limit, not a codegen
  *   one. C++ has no syntax for a qualified constructor call on storage that
  *   already exists, and the alternative -- placement new -- needs a leaf
@@ -25,8 +24,6 @@
  * - _Znwj stays spelled: also a language limit. `::operator new` mangles
  *   _Znwm here (sizeof is unsigned long), which has no ROM home; the
  *   cartridge calls _Znwj.
- * - *(const Vector3 *)&mPosX: dActor_c carries position as three scalars
- *   with no Pos() accessor, so the Init call puns them TU-locally.
  * - data_ov002_02110a48 / data_ov002_0210abb8 / g_profile_TREE: overlay
  *   bss/data owns them (S14); this TU's delinks span is .text-only.
  * - data_0209f43c / data_0209b3ec: arm9 bss, the dClipper singleton and the
@@ -37,6 +34,7 @@
 #include "daTree_c.h"
 #include "dCcPos_c.h"
 #include "dCamera_c.h"
+#include "dClipper.h"
 
 /* One tree instance's list node: the billboard/clip center in
  * matrix-shifted units (>> 3, y lifted by kCanopyLift), its cylinder
@@ -77,12 +75,10 @@ void *_ZN8dCcPos_cC1Ev(void *clsn);
 void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
     dCcPos_c *self, const Vector3 &pos, int radius, int height, u32 flags,
     u32 vuln);
-int _ZN8dClipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
-    void *clipper, void *matrix, void *pos, int scale, void *result);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, short ang);
 /* Spelled Vector3 * for the object actually passed. The definition in
  * src/Vec3_AsrInPlace.c says int *, and the tree also carries s32 * and a
- * file-local `struct Vec3 { int x, y, z; }` in src/actors/daKpa3Bg_c.cpp --
+ * file-local `struct Vec3 { int x, y, z; }` in src/game/actors/d_a_kpa3_bg.cpp --
  * four spellings of the same three-word layout, none of them typedefs of each
  * other. The disagreement is nominal, not a contract difference, and int * is
  * the slop spelling this cleanup exists to retire. */
@@ -98,7 +94,7 @@ void *_Znwj(unsigned int size);
 
 extern TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];
-extern int data_0209f43c[];
+extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern dCamera_c *data_0209f318;
 }
@@ -135,9 +131,8 @@ int daTree_c::InitResources()
     node->pos.z = mPosZ;
     Vec3_AsrInPlace(&node->pos, 3);
     node->pos.y += kCanopyLift;
-    _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
-        &node->clsn, *(const Vector3 *)&mPosX, kClsnRadius, kClsnHeight,
-        kClsnFlags, 0);
+    _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(&node->clsn, mPos, kClsnRadius, kClsnHeight,
+                                               kClsnFlags, 0);
     node->next = *slot;
     *slot = node;
     if (node->next != 0) {
@@ -182,10 +177,7 @@ int daTree_c::Render()
         node = *slot;
         while (node != 0) {
             Vector3 out;
-            int dist =
-                _ZN8dClipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
-                    data_0209f43c, &data_0209b3ec, &node->pos, kCanopyLift,
-                    &out);
+            int dist = data_0209f43c.TransformAndClip(data_0209b3ec, node->pos, kCanopyLift, out);
             if (dist > kClipNear && dist < kClipFar) {
                 int opacity = kOpacityFull;
                 if (dist < kFadeDist)

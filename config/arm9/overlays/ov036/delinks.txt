@@ -24,7 +24,7 @@ src/game/actors/d_a_obj_rc_hane.cpp:
     .ctor start:0x021129e4 end:0x021129e8
     .bss start:0x02114070 end:0x02114084
 
-src/actors/daObjRc_Tikuwa_c.cpp:
+src/game/actors/d_a_obj_rc_tikuwa.cpp:
     complete
     .text start:0x0211193c end:0x02111d14
     .init start:0x021126c8 end:0x02112730

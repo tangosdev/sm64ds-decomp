@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjPowerUpItem_c",
   "module": "ov002",
-  "source": "src/actors/daObjPowerUpItem_c.cpp",
-  "promoted_source": "src/actors/daObjPowerUpItem_c.cpp",
+  "source": "src/game/actors/d_a_obj_power_up_item.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_power_up_item.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
@@ -10,7 +10,7 @@
     "contiguous linker run: 0x20b9148..0x20b9e0c, 18 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjPowerUpItem_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit tail fold (0930c): daObjPowerUpItem_c_classInit (0x020b9e0c..0x020b9e64) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x020b9148..0x020b9e64, bounded above by src/actors/daObjSwitch_c.cpp, which starts exactly at 0x020b9e64."
+    "classInit tail fold (0930c): daObjPowerUpItem_c_classInit (0x020b9e0c..0x020b9e64) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x020b9148..0x020b9e64, bounded above by src/game/actors/d_a_obj_switch.cpp, which starts exactly at 0x020b9e64."
   ],
   "sections": [
     {
@@ -256,7 +256,7 @@
       "address": "0x021097bc",
       "size": "0x3c",
       "binding": "STB_GLOBAL",
-      "evidence": "three-row FlowerEntry state table {PMF enter, PMF update, const char *name}; the name words carry static relocations to @920, @914 and @949 while the six PMF slots are zero in .data and are filled by __sinit_daObjPowerUpItem_c.cpp copying the six descriptor records"
+      "evidence": "three-row FlowerEntry state table {PMF enter, PMF update, const char *name}; the name words carry static relocations to @920, @914 and @949 while the six PMF slots are zero in .data and are filled by __sinit_d_a_obj_power_up_item.cpp copying the six descriptor records"
     },
     {
       "symbol": "_ZTV18daObjPowerUpItem_c",
@@ -344,7 +344,7 @@
       "source": "0x021080f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjPowerUpItem_c.cpp",
+      "symbol": "__sinit_d_a_obj_power_up_item.cpp",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021014e4"
@@ -897,7 +897,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjPowerUpItem_c.cpp",
+      "symbol": "__sinit_d_a_obj_power_up_item.cpp",
       "address": "0x021014e4",
       "size": "0xa4",
       "binding": "STB_GLOBAL",
@@ -906,7 +906,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjPowerUpItem_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_power_up_item.cpp",
       "address": "0x021080f8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -915,13 +915,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjPowerUpItem_c.cpp",
+      "symbol": "__sinit_d_a_obj_power_up_item.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjPowerUpItem_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_power_up_item.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local address"

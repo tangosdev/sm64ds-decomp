@@ -24,7 +24,7 @@
  *   Behavior size-DIFFs without it.
  * Leftover: inline destructor (out-of-line emits D0 before D1).
  * Leftover: data_ov039_021118e0 is this TU's own load-count int, kept as a
- *   plain definition below; data_ov039_021118e4 is the model handle the
+ *   plain definition below; gOV039ObjKumoModelFile is the model handle the
  *   compiler constructs at load (file ID 1141), so it is a
  *   SharedFilePtr-derived object, not an extern array. Its constructor and
  *   destructor are the ROM's SharedFilePtr pair (func_02017acc /
@@ -33,6 +33,11 @@
  *   data_ov039_021118f8 pads the .bss claim to the section end; see the
  *   definition below for the measurement.
  */
+
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_kumo_AssetId {
+    ASSET_OBJ_KUMO_BMD = 0x0475
+};
 
 #include "daObjKumo_c.h"
 #include "SharedFilePtr.h"
@@ -50,7 +55,7 @@ struct KumoModelFilePtr : SharedFilePtr {
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
-extern KumoModelFilePtr data_ov039_021118e4;
+extern KumoModelFilePtr gOV039ObjKumoModelFile;
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 void func_ov039_02111214(daObjKumo_c *t);
 extern int data_ov039_021118e0;
@@ -81,7 +86,7 @@ extern "C" daObjKumo_c *daObjKumo_c_classInit(void)
 // @symbol _ZN11daObjKumo_c13InitResourcesEv
 int daObjKumo_c::InitResources()
 {
-    void *f = Model::LoadFile(data_ov039_021118e4);
+    void *f = Model::LoadFile(gOV039ObjKumoModelFile);
     mModel.SetFile((BMD_File *)f, 1, 2);
     func_ov039_02111214(this);
     data_ov039_021118e0++;
@@ -93,13 +98,13 @@ int daObjKumo_c::InitResources()
 // @symbol _ZN11daObjKumo_c8BehaviorEv
 int daObjKumo_c::Behavior()
 {
-    int d = Vec3_Dist((const Vector3*)&mCamSpacePosX, (const Vector3*)&mPosX);
+    int d = Vec3_Dist(&mCamSpacePos, &mPos);
     int rank = 1;
     int base = 2;
     dActor_c *actor = FindWithActorID(0x13a, 0);
     while (actor) {
         if (actor != this) {
-            int d2 = Vec3_Dist((const Vector3*)&mCamSpacePosX, (const Vector3*)&actor->mPosX);
+            int d2 = Vec3_Dist(&mCamSpacePos, &actor->mPos);
             if (d > d2)
                 rank++;
         }
@@ -123,7 +128,7 @@ int daObjKumo_c::Render()
 // @symbol _ZN11daObjKumo_c16CleanupResourcesEv
 int daObjKumo_c::CleanupResources()
 {
-    data_ov039_021118e4.Release();
+    gOV039ObjKumoModelFile.Release();
     return 1;
 }
 
@@ -161,7 +166,7 @@ void func_ov039_02111214(daObjKumo_c *t)
  * constructs the handle with file ID 1141 and registers its destructor,
  * exactly the two calls the retired handwritten sinit transcribed. */
 int data_ov039_021118e0;
-KumoModelFilePtr data_ov039_021118e4(1141);
+KumoModelFilePtr gOV039ObjKumoModelFile(ASSET_OBJ_KUMO_BMD);
 
 /* Trailing .bss the module reserves but no relocation names. MEASURED: the
  * overlay header keeps 0x20 .bss bytes (0x021118e0..0x02111900) while the

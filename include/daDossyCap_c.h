@@ -53,11 +53,11 @@ struct daDossyCap_c : dActor_c {
     /* The actor this cap is riding, a pointer spelt s32. Behavior bails out
        when it is null, and otherwise copies the cap position out of that actor
        0x0d8 triple and its two angles out of the actor +0xe4 and
-       dActor_c::mAngleY (daDossyCap_c::Behavior, src/actors/daDossy_c.cpp). */
+       dActor_c::mAngleY (daDossyCap_c::Behavior, src/game/actors/d_a_dossy.cpp). */
     s32                mCarrier;                 /* 0x174 */
     u8                 pad_178[0xc];
 
-    /* Inline is load-bearing: src/actors/daDossy_c.cpp defines the key
+    /* Inline is load-bearing: src/game/actors/d_a_dossy.cpp defines the key
        function InitResources, so it emits D1 then D0 with no homeless D2. */
     virtual ~daDossyCap_c() {}
 

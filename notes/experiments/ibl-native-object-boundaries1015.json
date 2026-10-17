@@ -1,0 +1,1254 @@
+{
+  "schema": 1,
+  "task": "ibl-native-object-boundaries1015",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3812",
+  "candidate": "This commit; immutable output is recorded by the coordination queue.",
+  "status": "Current e209 producer composition proved; independent exact review pending. Original native-object changes landed through PR3869; current Source delta repairs factory-member provenance.",
+  "completion": "partial",
+  "source_checkpoint": "40a6bf3cd981e702287be91c0184380979a32c18",
+  "registered_input_commit": "40dfd83ba134be0600730b58f3261f04441632d8",
+  "base_commit": "e209dacfaaa95cb5490637ff053d62182689bebe",
+  "tooling_workflow_commit": "40dfd83ba134be0600730b58f3261f04441632d8",
+  "source_review_policy_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "producer_session": "codex-ibl-e209-coverage-astra-producer1015",
+  "source_author": {
+    "session": "codex-ibl-native-object-boundaries-astra-producer1015",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "label": "codex-enemy-frontier-astra1014"
+  },
+  "read_only_assistance": "Root reviewed source/interface evidence and suggested the enclosing-object byte-view hypothesis; Astra authored and measured the implementation. No independent formal acceptance is claimed.",
+  "changes": [
+    "Native Model::Render receives genuine Vector3 mDrawScale; all scalar component uses are updated.",
+    "Spawner uses an actual automatic Vector3; fabricated Vec3i receiver is removed, with a measured raw-scalar boundary explicitly retained.",
+    "Hurt declaration matches the current reconstructed definition; header/source provenance is qualified."
+  ],
+  "scope": {
+    "source": "src/game/actors/d_a_ibl.cpp",
+    "header": "include/daIbl_c.h",
+    "manifest": "config/tu_manifest.d/ov100/daIbl_c.json",
+    "manifest_changed": false,
+    "koopa_source_and_manifest_literal": true,
+    "header_consumers": [
+      "src/game/actors/d_a_ibl.cpp",
+      "src/game/actors/d_a_r_nk.cpp"
+    ],
+    "original_three_methods": [
+      "_ZN7daIbl_c6RenderEv",
+      "_ZN7daIbl_c19func_ov100_02142b90Ev",
+      "_ZN7daIbl_c19func_ov100_02141fb0Ev"
+    ],
+    "necessary_group_consumers": [
+      "func_ov100_02142264",
+      "InitResources",
+      "D1/D0/D2/factory"
+    ],
+    "source_physical_sha256": "35917fc27fc252ffe58622d3db87c918136457cf62f289834baf60e57a7f3448",
+    "header_physical_sha256": "57aabf414e6e5bb0ee2a45a70aebe629d2fa57b19e48011caa488c30f85df288",
+    "source_git_lf_sha256": "35917fc27fc252ffe58622d3db87c918136457cf62f289834baf60e57a7f3448",
+    "header_git_lf_sha256": "57aabf414e6e5bb0ee2a45a70aebe629d2fa57b19e48011caa488c30f85df288",
+    "actual_source_measurement": {
+      "daIbl_c": {
+        "module": "ov100",
+        "start": "0x2141f04",
+        "end": "0x21431c4",
+        "absorbed": [
+          "daIbl_c_classInit"
+        ],
+        "run_functions": 16,
+        "src_files": 1,
+        "total_lines": 949,
+        "unmatched": 0,
+        "no_legacy_source": 0,
+        "sourceless": [],
+        "not_in_delinks": 0,
+        "orphans": [],
+        "pragma_files": 1,
+        "all_promoted": true
+      },
+      "daRNk_c": {
+        "module": "ov062",
+        "start": "0x211975c",
+        "end": "0x211af38",
+        "absorbed": [
+          "daRNk_c_classInit"
+        ],
+        "run_functions": 18,
+        "src_files": 1,
+        "total_lines": 1051,
+        "unmatched": 0,
+        "no_legacy_source": 0,
+        "sourceless": [],
+        "not_in_delinks": 0,
+        "orphans": [],
+        "pragma_files": 0,
+        "all_promoted": true
+      }
+    },
+    "read_input_count": 66,
+    "changed_read_inputs": [
+      "attribution.json",
+      "config/arm9/symbols.txt",
+      "function-authors.json",
+      "include/Player.h",
+      "include/dActor_c.h",
+      "include/dEnemyBase_c.h",
+      "include/dExtFrameCtrl_c.h",
+      "include/fBase_c.h",
+      "notes/tu-promotion-conventions.md",
+      "tools/tubuild.py"
+    ],
+    "enrollment_canonical_names_ledger_credit_policy_unchanged": "No owned changes; upstream current-main changes retained literally."
+  },
+  "whole_object_proof": {
+    "current_control_candidate": {
+      "ibl": {
+        "control_candidate_literal": {
+          "ordinary.o": true,
+          "prepared.o": true
+        },
+        "raw_sha256": "ad958cf8ec5840823e4699f36c3c9baf42d3b8b624385c03bf188e1ab96c1f71",
+        "prepared_sha256": "f467fabce3b228c154def2dac6c50a8c8bb7df18af632e964b99d5be1f33de1a",
+        "strict_functions": 16,
+        "metadata": 11,
+        "raw_refs": 192,
+        "prepared_refs": 140,
+        "proof_sha256": "c553c029bc5cd5c487bb00178b47a829c38fe0793ef6ee9acbaf4c8028af8260",
+        "coverage": "Complete literal ELF comparison includes section metadata, full symbol multiplicities and all typed relocation edges; current-main control compiled from exact e209 Source with current candidate headers."
+      },
+      "koopa": {
+        "control_candidate_literal": {
+          "ordinary.o": true,
+          "prepared.o": true
+        },
+        "raw_sha256": "ab7dd6e6809d21f2c54cbb11ca5567b1cee33767f117d71a4eef716405f20d36",
+        "prepared_sha256": "6f217de2f49bf9b8431da647a70040492f1ef6215bdef4cbd210447d49394310",
+        "strict_functions": 18,
+        "metadata": 11,
+        "raw_refs": 283,
+        "prepared_refs": 237,
+        "proof_sha256": "658e0fcd3099b13b10c00b8b8f27ee19149d97b0636f700edcc3c9f436e17700",
+        "coverage": "Complete literal ELF comparison includes section metadata, full symbol multiplicities and all typed relocation edges; current-main control compiled from exact e209 Source with current candidate headers."
+      }
+    },
+    "complete_nontext": {
+      "source_checkpoint": "40a6bf3cd981e702287be91c0184380979a32c18",
+      "prepared_sha256": "6f217de2f49bf9b8431da647a70040492f1ef6215bdef4cbd210447d49394310",
+      "rows": [
+        {
+          "section": ".init",
+          "address": "0x211d4a0",
+          "complete_bytes": 496,
+          "typed_edges": [
+            {
+              "off": 140,
+              "type": 1,
+              "sym": "func_02017acc",
+              "addr": 33651404,
+              "add": -8
+            },
+            {
+              "off": 156,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 168,
+              "type": 1,
+              "sym": "_ZN13SharedFilePtr9ConstructEj",
+              "addr": 33651100,
+              "add": -8
+            },
+            {
+              "off": 184,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 196,
+              "type": 1,
+              "sym": "_ZN13SharedFilePtr9ConstructEj",
+              "addr": 33651100,
+              "add": -8
+            },
+            {
+              "off": 212,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 224,
+              "type": 1,
+              "sym": "_ZN13SharedFilePtr9ConstructEj",
+              "addr": 33651100,
+              "add": -8
+            },
+            {
+              "off": 240,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 252,
+              "type": 1,
+              "sym": "_ZN13SharedFilePtr9ConstructEj",
+              "addr": 33651100,
+              "add": -8
+            },
+            {
+              "off": 268,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 280,
+              "type": 1,
+              "sym": "_ZN13SharedFilePtr9ConstructEj",
+              "addr": 33651100,
+              "add": -8
+            },
+            {
+              "off": 296,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 308,
+              "type": 1,
+              "sym": "_ZN13SharedFilePtr9ConstructEj",
+              "addr": 33651100,
+              "add": -8
+            },
+            {
+              "off": 324,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 336,
+              "type": 1,
+              "sym": "_ZN13SharedFilePtr9ConstructEj",
+              "addr": 33651100,
+              "add": -8
+            },
+            {
+              "off": 352,
+              "type": 1,
+              "sym": "func_020731dc",
+              "addr": 34025948,
+              "add": -8
+            },
+            {
+              "off": 368,
+              "type": 2,
+              "sym": "@897",
+              "addr": 34724680,
+              "add": 0
+            },
+            {
+              "off": 372,
+              "type": 2,
+              "sym": "@899",
+              "addr": 34724656,
+              "add": 0
+            },
+            {
+              "off": 376,
+              "type": 2,
+              "sym": "@118",
+              "addr": 34724696,
+              "add": 0
+            },
+            {
+              "off": 380,
+              "type": 2,
+              "sym": "@920",
+              "addr": 34724688,
+              "add": 0
+            },
+            {
+              "off": 384,
+              "type": 2,
+              "sym": "@905",
+              "addr": 34724672,
+              "add": 0
+            },
+            {
+              "off": 388,
+              "type": 2,
+              "sym": "@119",
+              "addr": 34724664,
+              "add": 0
+            },
+            {
+              "off": 392,
+              "type": 2,
+              "sym": "data_ov062_0211e0a4",
+              "addr": 34726052,
+              "add": 0
+            },
+            {
+              "off": 396,
+              "type": 2,
+              "sym": "gdaRNkNokonokoModelFile",
+              "addr": 34725900,
+              "add": 0
+            },
+            {
+              "off": 404,
+              "type": 2,
+              "sym": "func_02017ab4",
+              "addr": 33651380,
+              "add": 0
+            },
+            {
+              "off": 408,
+              "type": 2,
+              "sym": "@120",
+              "addr": 34725968,
+              "add": 0
+            },
+            {
+              "off": 412,
+              "type": 2,
+              "sym": "data_ov062_0211e014",
+              "addr": 34725908,
+              "add": 0
+            },
+            {
+              "off": 420,
+              "type": 2,
+              "sym": "SharedFilePtr_Destruct_Anim",
+              "addr": 33651076,
+              "add": 0
+            },
+            {
+              "off": 424,
+              "type": 2,
+              "sym": "@121",
+              "addr": 34725992,
+              "add": 0
+            },
+            {
+              "off": 428,
+              "type": 2,
+              "sym": "data_ov062_0211e024",
+              "addr": 34725924,
+              "add": 0
+            },
+            {
+              "off": 432,
+              "type": 2,
+              "sym": "@910",
+              "addr": 34726004,
+              "add": 0
+            },
+            {
+              "off": 436,
+              "type": 2,
+              "sym": "gdaRNkNokonokoWalkEdAnimationFile",
+              "addr": 34725916,
+              "add": 0
+            },
+            {
+              "off": 444,
+              "type": 2,
+              "sym": "@122",
+              "addr": 34726016,
+              "add": 0
+            },
+            {
+              "off": 448,
+              "type": 2,
+              "sym": "gdaRNkNokonokoWait1AnimationFile",
+              "addr": 34725940,
+              "add": 0
+            },
+            {
+              "off": 456,
+              "type": 2,
+              "sym": "@912",
+              "addr": 34726028,
+              "add": 0
+            },
+            {
+              "off": 460,
+              "type": 2,
+              "sym": "gdaRNkNokonokoWait2AnimationFile",
+              "addr": 34725948,
+              "add": 0
+            },
+            {
+              "off": 468,
+              "type": 2,
+              "sym": "@123",
+              "addr": 34726040,
+              "add": 0
+            },
+            {
+              "off": 472,
+              "type": 2,
+              "sym": "data_ov062_0211e02c",
+              "addr": 34725932,
+              "add": 0
+            },
+            {
+              "off": 480,
+              "type": 2,
+              "sym": "@914",
+              "addr": 34725956,
+              "add": 0
+            },
+            {
+              "off": 484,
+              "type": 2,
+              "sym": "data_ov062_0211e004",
+              "addr": 34725892,
+              "add": 0
+            },
+            {
+              "off": 492,
+              "type": 2,
+              "sym": "@124",
+              "addr": 34725980,
+              "add": 0
+            }
+          ],
+          "blind": {},
+          "linked_sha256": "41f808b57413012ff5d24a25ea7c2cfd385fa73060257b249a31ad53a32c891d",
+          "literal_retail": true
+        },
+        {
+          "section": ".ctor",
+          "address": "0x211d8d4",
+          "complete_bytes": 4,
+          "typed_edges": [
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "__sinit_d_a_r_nk.cpp",
+              "addr": 34722976,
+              "add": 0
+            }
+          ],
+          "blind": {},
+          "linked_sha256": "d37989a4859d6d3408f2907c2cf830acc4065ec407790fd18f467913006c2f0e",
+          "literal_retail": true
+        },
+        {
+          "section": ".data",
+          "address": "0x211db30",
+          "complete_bytes": 48,
+          "typed_edges": [
+            {
+              "off": 24,
+              "type": 2,
+              "sym": "_ZN7daRNk_c19func_ov062_0211a9c4Ev",
+              "addr": 34712004,
+              "add": 0
+            },
+            {
+              "off": 32,
+              "type": 2,
+              "sym": "_ZN7daRNk_c19func_ov062_0211a168Ev",
+              "addr": 34709864,
+              "add": 0
+            },
+            {
+              "off": 40,
+              "type": 2,
+              "sym": "_ZN7daRNk_c19func_ov062_0211a1f4Ev",
+              "addr": 34710004,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZN7daRNk_c19func_ov062_0211a740Ev",
+              "addr": 34711360,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZN7daRNk_c19func_ov062_02119be0Ev",
+              "addr": 34708448,
+              "add": 0
+            },
+            {
+              "off": 16,
+              "type": 2,
+              "sym": "_ZN7daRNk_c19func_ov062_0211a0f0Ev",
+              "addr": 34709744,
+              "add": 0
+            }
+          ],
+          "blind": {},
+          "linked_sha256": "6b85bfb3b298e7ca08edde506a6d6752a8b82a80e1a7307f02a46013a9c264fd",
+          "literal_retail": true
+        },
+        {
+          "section": ".bss",
+          "size": 208,
+          "symbols": {
+            "@914": {
+              "address": 34725956,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 31
+            },
+            "@120": {
+              "address": 34725968,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 36
+            },
+            "@124": {
+              "address": 34725980,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 37
+            },
+            "@121": {
+              "address": 34725992,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 38
+            },
+            "@910": {
+              "address": 34726004,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 39
+            },
+            "@122": {
+              "address": 34726016,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 42
+            },
+            "@912": {
+              "address": 34726028,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 43
+            },
+            "@123": {
+              "address": 34726040,
+              "size": 12,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 46
+            },
+            "gdaRNkNokonokoWalkEdAnimationFile": {
+              "address": 34725916,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 12
+            },
+            "gdaRNkNokonokoWait1AnimationFile": {
+              "address": 34725940,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 23
+            },
+            "data_ov062_0211e02c": {
+              "address": 34725932,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 22
+            },
+            "data_ov062_0211e024": {
+              "address": 34725924,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 21
+            },
+            "data_ov062_0211e004": {
+              "address": 34725892,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 7
+            },
+            "gdaRNkNokonokoModelFile": {
+              "address": 34725900,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 10
+            },
+            "data_ov062_0211e014": {
+              "address": 34725908,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 11
+            },
+            "gdaRNkNokonokoWait2AnimationFile": {
+              "address": 34725948,
+              "size": 8,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 26
+            },
+            "data_ov062_0211e0a4": {
+              "address": 34726052,
+              "size": 48,
+              "bind": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "sectionIndex": 48
+            }
+          },
+          "limit": "NOBITS: exact owned size/symbol addresses and full normal policy, no ROM payload comparison."
+        }
+      ],
+      "prepush_warning_resolution": "The historical header-fanout generic initializer BLIND18 diagnostic is retained in old epochs. This independent complete owned-section supplement positively verifies all548bytes and48typedreferences plus208B NOBITS. Current generic e209..HEAD checks16 Ibl functions with0warnings and does not include the unchanged r_nk initializer."
+    },
+    "historical_original_full_three_function_proof_commit": "ea5f99972f30eaec5d02b446fc9cddf14305c6cf",
+    "limits": "Complete RAW and ordinary objects are literal to freshly compiled e209 controls, not to old f6 objects. Additional focused proof verifies all34 text functions,22 full metadata records480B,canonical callbacks and helper dispositions. Current generic prepush itself checks16 Ibl functions with0warnings; the additional18 r_nk functions and complete548B/48-reference storage plus208B BSS are separately positive. Historical header-fanout35-check BLIND18 is not current generic coverage."
+  },
+  "gates": {
+    "rom": {
+      "base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+      "source_checkpoint": "40a6bf3cd981e702287be91c0184380979a32c18",
+      "gates": [
+        {
+          "name": "rombuild",
+          "command": [
+            "python",
+            "tools/rombuild.py",
+            "-j16",
+            "--no-rom",
+            "--report-json",
+            "build\\ibl-native-object-boundaries1015\\currente209\\rombuild.json",
+            "--data-json",
+            "build\\ibl-native-object-boundaries1015\\currente209\\romdata-full.json"
+          ],
+          "exit_code": 0,
+          "seconds": 342.87,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\rombuild.log",
+          "log_sha256": "1d6b57365d90d81a26dd6df5cb69e1ae49a190da3478268058fff70f96b67e4f"
+        }
+      ]
+    },
+    "static": {
+      "base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+      "source_checkpoint": "40a6bf3cd981e702287be91c0184380979a32c18",
+      "gates": [
+        {
+          "name": "header-offsets",
+          "command": [
+            "python",
+            "tools/check_header_offsets.py",
+            "include/daIbl_c.h"
+          ],
+          "exit_code": 0,
+          "seconds": 2.61,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\header-offsets.log",
+          "log_sha256": "16ba1e1e9d04eb1dbc6bbe84319a1e4dc6bf1cca27a260ff82edde02b5b09f67"
+        },
+        {
+          "name": "affected-src",
+          "command": [
+            "python",
+            "tools/affected_src.py",
+            "include/daIbl_c.h"
+          ],
+          "exit_code": 0,
+          "seconds": 2.09,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\affected-src.log",
+          "log_sha256": "a1a475881e9337a1893353bca7a2c15e624247b410e08bbe998054bf37085b28"
+        },
+        {
+          "name": "prepush",
+          "command": [
+            "python",
+            "tools/prepush_linkcheck.py",
+            "--range",
+            "e209dacfaaa95cb5490637ff053d62182689bebe..HEAD",
+            "--json",
+            "build\\ibl-native-object-boundaries1015\\currente209\\prepush.json"
+          ],
+          "exit_code": 0,
+          "seconds": 12.55,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\prepush.log",
+          "log_sha256": "cfd5b3afad100680cab8ce6ec171c1475f3ec08a65ce3893fe23255f6475acef"
+        },
+        {
+          "name": "decl-scoped",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--changed",
+            "e209dacfaaa95cb5490637ff053d62182689bebe"
+          ],
+          "exit_code": 0,
+          "seconds": 9.06,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\decl-scoped.log",
+          "log_sha256": "921429644c9ed795d5347a35bd866310551c8f311b7a3775e884643d279840e5"
+        },
+        {
+          "name": "decl-global",
+          "command": [
+            "python",
+            "tools/check_decl_agreement.py",
+            "--check"
+          ],
+          "exit_code": 0,
+          "seconds": 8.39,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\decl-global.log",
+          "log_sha256": "da27b5e78d71ebcc92125bc4abc215edb5a9b945747fe47d98618c958234c01a"
+        },
+        {
+          "name": "port",
+          "command": [
+            "python",
+            "tools/port_refcheck.py"
+          ],
+          "exit_code": 0,
+          "seconds": 1.67,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\port.log",
+          "log_sha256": "552f7df2ae653d9bfd6daa0c514eb313355ac1c3eac23b687b177888ddefcfc9"
+        },
+        {
+          "name": "langmode",
+          "command": [
+            "python",
+            "tools/langmode_audit.py",
+            "--check",
+            "build\\ibl-native-object-boundaries1015\\currente209\\langmode-baseline.json"
+          ],
+          "exit_code": 0,
+          "seconds": 12.26,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\langmode.log",
+          "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765"
+        },
+        {
+          "name": "tu-conflicts",
+          "command": [
+            "python",
+            "tools/check_tubuild_conflicts.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.32,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\tu-conflicts.log",
+          "log_sha256": "50db35b67c8218ccbef6ff33901dea83968467ed21cf7af518414a45000bc521"
+        },
+        {
+          "name": "duplicates",
+          "command": [
+            "python",
+            "tools/check_duplicate_sources.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.36,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\duplicates.log",
+          "log_sha256": "47d18edd39c568729bc51edd15776a6971fec1f32b626e5ce9b63e28b4d25145"
+        },
+        {
+          "name": "drafts",
+          "command": [
+            "python",
+            "tools/check_drafts_compile.py",
+            "--quiet"
+          ],
+          "exit_code": 0,
+          "seconds": 0.97,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\drafts.log",
+          "log_sha256": "4eaa535d055ed5087222e0edd0bd5b993d5867d936e408203180cd0e578d5f99"
+        },
+        {
+          "name": "diff-check",
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "e209dacfaaa95cb5490637ff053d62182689bebe..HEAD"
+          ],
+          "exit_code": 0,
+          "seconds": 0.05,
+          "log": "build\\ibl-native-object-boundaries1015\\currente209\\diff-check.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "source_style": {
+      "command": [
+        "python",
+        "tools/source_style.py",
+        "--base",
+        "e209dacfaaa95cb5490637ff053d62182689bebe"
+      ],
+      "exit_code": 0,
+      "output": "source-style: 1 file(s), 0 finding(s), 0 formatting deferral(s)"
+    },
+    "full_build_summary": [
+      "source-built functions: 5,819  (1,187,876 / 2,238,108 code bytes, 53.08%)",
+      "reproducing: 5,819",
+      "mismatching: 0",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "ROM-build analysis: PASS",
+      "intact TU gates: dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "source-built functions: 11,334  (2,225,480 / 2,238,108 code bytes, 99.44%)",
+      "reproducing: 11,334",
+      "mismatching: 0",
+      "source-owned data claims: 332  (reproducing 332, mismatching 0)",
+      "source-owned BSS claims: 239  (30,164 NOBITS bytes; object/symbol gates)",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "ROM-build analysis: PASS"
+    ],
+    "global_data_advisory": {
+      "verified": 974,
+      "partial": 1521,
+      "differs": 1,
+      "unnamed": 15
+    },
+    "qualifications": [
+      "Actual fresh combined full build at 40a6bf3cd981e702287be91c0184380979a32c18 against e209dacfaaa95cb5490637ff053d62182689bebe; census comes from this invocation, not historical hardcoded totals.",
+      "Current generic prepush checks16 Ibl functions:16 VERIFIED,0warnings,0blocking. Separate fresh r_nk proof covers18 text functions plus complete init496+ctor4+data48=548B/48references0blind and208B/17-record BSS. The historical35-check/header-fanout BLIND18 warning is retained only as a historical epoch; it is not a warning from the current generic run.",
+      "Baseline dsd symbol errors, if present, remain separately recorded in the full build log. --no-rom does not emit a candidate ROM file.",
+      "Declaration ratchet pass is not universal agreement; existing partial reconstruction and all22 findings remain unchanged."
+    ],
+    "actual_generic_prepush": {
+      "checked": 16,
+      "verified": 16,
+      "warnings": 0,
+      "blocking": 0,
+      "scope": "Ibl changed Source only; unchanged shared header does not expand generic coverage to r_nk."
+    }
+  },
+  "historical_provenance": {
+    "accepted_findings_preserved_exact": 16,
+    "prior_source_producers": [
+      {
+        "stage_id": "produce",
+        "session": "codex-ibl-interface-producer1013",
+        "commit": "6821669b3425ce80712dd8610b93758153a17d87",
+        "task": "ibl-interface1013"
+      },
+      {
+        "stage_id": "produce",
+        "session": "astra-ibltyped1013",
+        "commit": "8017f747627b6a9181b9d1231877eb404f534517",
+        "task": "ibl-typed-calls1013"
+      }
+    ],
+    "prior_independent_reviewers": [
+      {
+        "stage_id": "verify",
+        "session": "codex-ibl-interface-independent1013",
+        "commit": "6821669b3425ce80712dd8610b93758153a17d87",
+        "task": "ibl-interface1013"
+      },
+      {
+        "stage_id": "verify",
+        "session": "astra-ibltyped-verifier1013",
+        "commit": "8017f747627b6a9181b9d1231877eb404f534517",
+        "task": "ibl-typed-calls1013"
+      }
+    ],
+    "unchanged_address_credit_rows": 34,
+    "ibl_address_credit_rows": 16,
+    "koopa_address_credit_rows": 18,
+    "credit_policy": "Both complete Git credit blobs unchanged. No new match, function credit, C++ method count or TU promotion is claimed."
+  },
+  "findings": [
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-01",
+      "kind": "correctness",
+      "location": "Original fifteen direct native D1 declaration sites",
+      "original_legacy_kind": "verification_dependency",
+      "reason": "All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The original missing-receiver dependency is corrected in the actual candidate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-02",
+      "kind": "correctness",
+      "location": "tools/check_decl_agreement.py native receiver compatibility",
+      "original_legacy_kind": "prior_proposal_objection",
+      "reason": "The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The rejected concrete receiver-type override remains absent."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NDT0922-03",
+      "kind": "provenance",
+      "location": "Historical native-destructor scratch replay encoding",
+      "original_legacy_kind": "review_harness",
+      "reason": "All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The prior BOM/default-decoding harness failure remains resolved."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-01",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp block-local registrar sites",
+      "reason": "Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Both previously omitted registrar sites are corrected."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-02",
+      "kind": "correctness",
+      "location": "Complete lifecycle-family source census and declaration ledger",
+      "reason": "The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The scoped checker dependencies are repaired in source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-03",
+      "kind": "correctness",
+      "location": "Clipper C1/D1 entry views and static registration boundary",
+      "reason": "Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Clipper signatures and opaque callback transport remain truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-PACKET-04",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp Vector destructor imports",
+      "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The five omitted Player Vector imports are covered."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV-SHADOW-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
+      "reason": "The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-01",
+      "kind": "correctness",
+      "location": "Direct non-deleting destructor declarations in the reviewed source set",
+      "reason": "The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Direct destructor receiver/result contracts are truthful."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-02",
+      "kind": "correctness",
+      "location": "src/actors/player.cpp and static-destructor registration callers",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Registration carries object and callback addresses as pointers."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-03",
+      "kind": "correctness",
+      "location": "Constructor imports and array callback boundaries",
+      "reason": "The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
+    },
+    {
+      "disposition": "fixed",
+      "id": "RCV2908-04",
+      "kind": "provenance",
+      "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
+      "reason": "Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "Source completion and ABI comments are accurate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "STALE-ARRAY-RUNTIME-TEST",
+      "kind": "correctness",
+      "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
+      "reason": "The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
+      "summary": "The stale live-source assertion is replaced by honest isolated controls."
+    },
+    {
+      "disposition": "fixed",
+      "id": "IBL-INTERFACE-1013-NATIVE",
+      "kind": "reconstruction",
+      "location": "src/actors/daIbl_c.cpp:func_ov100_02142b90 and deleted externs",
+      "reason": "ClosestPlayer returns Player*. Spawn is the genuine static dActor_c interface with signed area/death-table parameters. IRONBALL actor 220 maps to daIbl_c, making the child downcast and direct mDispenser store consistent with the existing factory, RTTI and class layout. Both redundant local externs are removed. Complete raw and production objects remain identical, with exact canonical callees independently verified.",
+      "summary": "Nearest-player lookup and spawning use existing class declarations and typed pointers."
+    },
+    {
+      "disposition": "deferred",
+      "id": "IBL-INTERFACE-1013-PARTIAL",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3812",
+      "kind": "reconstruction",
+      "location": "src/actors/daIbl_c.cpp:Vec3i/M48/EmbeddedClass/VtEntry views, Behavior, scalar ABI externs and flat inherited fields",
+      "owner": "root enemy-cleanup coordinator / codex-ibl-interface-producer1013",
+      "reason": "The scoped cleanup preserves the plain stack snapshot and borrowed position/angle spans without adding Vector3 lifecycle. Remaining bridges are not certified as necessary compiler walls by this review; their cleanup is deferred explicitly under the continuing enemy workstream. Text-only production ownership remains unchanged; emitted metadata is checked separately before its externalization.",
+      "summary": "Existing raw views, manual PMF dispatch, scalar Fix12 ABI calls, and unnamed helper boundaries remain partial reconstruction."
+    },
+    {
+      "disposition": "fixed",
+      "id": "IBL-INTERFACE-1013-REPORT",
+      "kind": "provenance",
+      "location": "notes/experiments/ibl-interface1013.json:full_rom_summary.source_functions",
+      "reason": "Rejected head 2d250497365bffae2c0aa9d832847cc9fe2ba47e reported the earlier baseline-control count 5888. Corrected head 6821669b3425ce80712dd8610b93758153a17d87 records 11334 and preserves the correction history. The final production build log independently reports 11334 reproducing functions; all six build-input trees remain identical to the measured checkpoint.",
+      "summary": "The final committed summary now reports the actual 11334 source functions."
+    },
+    {
+      "id": "IBL-NATIVE-RENDER-1015",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_ibl.cpp:Render and include/daIbl_c.h:0x3ac",
+      "summary": "Render uses the actual Model interface and an actual Vector3 draw-scale member.",
+      "reason": "Removed the fake EmbeddedClass/vtable view and replaced only the three scale scalars with Vector3 mDrawScale. The x/y/z uses retain order and values. Group/type/name are inferred from observed scalar stores and the real Render pointer contract, not original spelling proved by RTTI. Header layout24fields/0mismatch/0unparsed and size0x3fc; all lifecycle bodies and both consumers remain byte-identical."
+    },
+    {
+      "id": "IBL-NATIVE-SPAWNER-1015",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_ibl.cpp:func_ov100_02142b90",
+      "summary": "The spawner constructs a real automatic Vector3 and no longer fabricates a Vec3i object over Player fields.",
+      "reason": "The local XYZ components are initialized before use. Actual Player scalar subobjects are read through a character view of the enclosing object at verified offsets0x5c/0x60/0x64; no cross-member scalar array is formed. Native direct named loads and const-reference loads measured392B instead of396B; the preserved whole-object representation bridge gives exact396B and complete raw/prepared identity. This does not reconstruct Player position as a grouped Vector3."
+    },
+    {
+      "id": "IBL-HURT-CONTRACT-1015",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_ibl.cpp:local Hurt declaration",
+      "summary": "The local Hurt bridge agrees with the actual current definition.",
+      "reason": "Declaration is int(Player*,void*,u32,int,u8,u8,u8), replacing void/Vector3*/u32 flag disagreement. ActorID guard precedes the existing Player cast; all seven arguments and discarded result remain. Native by-value Fix12 call reconstruction is still pending; the configured mangled spelling does not prove a unique original scalar type."
+    },
+    {
+      "id": "IBL-LIFECYCLE-PROVENANCE-1015",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "include/daIbl_c.h and src/game/actors/d_a_ibl.cpp:leftovers",
+      "summary": "Header/source prose distinguishes inferred grouping, real new lifetimes and unchanged emitted code.",
+      "reason": "Vector3 default construction does not initialize components; current drawn variants store them before Render. New actual member/local lifetimes exist, while exact D1/D0/D2/factory and complete object identity establishes unchanged emitted lifecycle/cleanup. PathPtr witness wording no longer calls it the fifth member. Earlier universal caller-size assertions are qualified as pending reconstruction."
+    },
+    {
+      "id": "IBL-REMAINING-BOUNDARIES-1015",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_ibl.cpp inherited fields, Spawn, M48 and Behavior",
+      "summary": "Shared flat-field, scalar ABI, aggregate-copy and manual state boundaries remain partial.",
+      "reason": "The new Player byte bridge retains raw offsets. Existing Spawn casts over this actor's flat position/angle fields, other base scalar views, M48 matrix copying, scalar helper bridges and manual PMF dispatch/mixed handler returns are unchanged and not original-type proof. Ibl remains a legacy text-only owner; ROM-supplied State/PMF/resource data and separate startup ownership are not newly claimed. Koopa Source and manifest remain literal; the retained full144 packet must compose its Koopa-manifest work onto this accepted lineage rather than overwrite it.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3812",
+      "owner": "codex-ibl-native-object-boundaries-root-coordinator1015",
+      "next_action": "Continue the separately owned shared field/interface/state reconstruction with complete current consumer and byte proof; retain this documented bridge until then."
+    },
+    {
+      "id": "IBL-FACTORY-MEMBER-COUNT-1015",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/game/actors/d_a_ibl.cpp:945",
+      "summary": "Factory prose now describes construction without an obsolete five-member count.",
+      "reason": "The comment now says return new constructs the ball and its members. The current class has six class-type member subobjects: dBgCh_Actr, Model, dExtShadowModel_c, dCcAc_c, Vector3 mDrawScale and PathPtr. The empty inline Vector3 constructor still begins a real subobject lifetime; five out-of-line constructor calls are not the member count. The sole comment replacement preserves its physical line and all executable Source. Fresh complete RAW and ordinary prepared objects for both consumers remain literal, with all34 strict functions and complete metadata/storage checked. Earlier fixed lifecycle provenance and all21 prior finding dictionaries remain verbatim as historical accepted epochs."
+    },
+    {
+      "id": "IBL-CURRENT-GENERIC-COVERAGE-1015",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "notes/experiments/ibl-native-object-boundaries1015.json:/gates/qualifications/1 and /whole_object_proof/limits; producer currente209/HANDOFF.json:/limits/2",
+      "summary": "The current packet incorrectly carries a generic initializer BLIND18 warning into the current comment-only follow-up.",
+      "reason": "Corrected the rejected report-only epoch: actual current producer and independent e209 ranged prepush checks16 Ibl functions, all16 VERIFIED,0warnings,0blocking. The current unchanged header does not cause generic r_nk coverage. Separate current focused proof positively checks18 r_nk functions,22 full metadata records480B across both units and complete548B/48-reference storage plus208B/17-record BSS. Historical35-check/header-fanout BLIND18 remains explicitly historical. All22 previous finding dictionaries and allfiveproductiontrees remain literal; the actual342.87s combined full build and focused objects are reused with exact positive binding, not described as new invocations.",
+      "next_action": "Independent reviewer verifies this report-only provenance correction and exact23 findings; no further Source or full-build change is claimed."
+    }
+  ],
+  "preserved_failed_probes": [
+    "Native direct named Player loads392B vs396B; exact failure remains in native-group proof accepting=false.",
+    "Actual const scalar references give the same392B.",
+    "No original-layout inference or compiler impossibility follows from these two bounded controls."
+  ],
+  "evidence": {
+    "canary.json": "8edcb72e12c973dcbc304777e21aa971a51d21392a966c9a8a7c27fc8805a536",
+    "input-bindings.json": "b9ef712fd577b2d3a6165720f6935881e573b36306a0f4306dd93804081e7bb1",
+    "complete-comparison.json": "9c89d2e30052a858fd0b3aa24b870332bf8a0fd4c9685e77b6fac7fbd7bcf07e",
+    "helper-inbound-graph.json": "6e2571a08840eb06fd7b713c3a04764acd9bb8e1c0fabdd163260021dac9be8f",
+    "koopa-complete-nontext.json": "22e592e2dd4dc8a25318dfe8c0008f2fa7e4e3dd6ec7b0b31c5262091e5d8b7b",
+    "actual-source-measurement.json": "418640680028bf1a0a3181da01741dbd95d5d3681a3905c0c5f839b6a1c5caf7",
+    "accepted-findings.json": "6c582324cb1a1a74ab8adfaf1847c6773ba5d6b9229c04226038259c3c4c829b",
+    "accepted-lineage.json": "439676e3dd9cbe7b16c0f67748bd10a01ad8b331f3eb739aa79270a42f4a14a8",
+    "address-credits.json": "26471fe964394d0e2b2fc926f4e6d11dfd0c926024f085fec602980a83b59eee",
+    "gate-results-static.json": "372f5c5265960cd0c9970ab2de64bf2ee89b6bb9db13ef87f4059656dd0a6b19",
+    "gate-results-rom.json": "1e7a8e2917740a59d9d98a912a84b1bfa282d2c0bcb0c649fe6a0b84e5c76dd2",
+    "rombuild.json": "db1ae63e029712a7e7f2888cacb87b46dac5637d24397c7c2f0cf1e67d925f26",
+    "romdata-full.json": "74dacf466aec0c52587133962ba009f2dff010969e7d721052a02478eb002515",
+    "prepush.json": "47bb080959902c7eb69ef689afdc40d344b6a98b1d7f2daedd0e9f9dbc6b4dac",
+    "harness-diagnostics.json": "7cb9c971ce07a2971b5084ba7878750dc0472887d55ff4ec6dbf05d9fae4bf61",
+    "native-complete/ibl/proof.json": "e2a0b94b3caf145b4d24448f19fb7742e4cd693640a48e893ff82304543b7e3f",
+    "native-complete/koopa/proof.json": "d3b9af7ef107fbf7bee4be94da7a4cabc67158d44ddc33da70efe0abaf5c53fe",
+    "native-complete/koopa/intact-evidence.json": "176dc07af9febe6ecdbf5590bf06cb85b3f0f156c3b0ce70810536b920cef50d",
+    "native-group/ibl/proof.json": "ac7a82d4b006b0481346ad096cffae2e8893d3da290b0631c987610deb16cdf7",
+    "probes/scalar-references/result.json": "35898bce68e39f8c2c6c62e05eefa99e92073d0f08aa87eda5e0ab38b630a3b0",
+    "probes/object-representation/result.json": "6602e91020444bfd1f349dd2198f8857441c20b559d5291043cb9b94ed33a1dc",
+    "currentbf930/composition-bindings.json": "95b9b2b718d2dca84ed832cff1f9c9fb0f74ef261dd8576f9b78d5b6ddb14f72",
+    "currentbf930/focused-binding.json": "6cb61dcd4621b1fb8c9804f7151fcd3cbbf1ea5278f6ff06982530734f39ac53",
+    "currentbf930/koopa-complete-nontext.json": "1369841b340df0592b7d729e2148b121f10d0ebc51a5ee693169f74a86c40355",
+    "currentbf930/gate-results-rom.json": "205b210303266328e33fe65c1abf719973fe643937925bf8a6250948650a5495",
+    "currentbf930/gate-results-static.json": "1b6541083b28818e65e4d83650874a0ee69a0ffffb8cf280769624a28f766d27",
+    "currentbf930/rombuild.json": "a7a2746aed91b9ab3cb9925d43b1744c0364746adf717b9f2f96ad04c0b5b461",
+    "currentbf930/romdata-full.json": "9994800ba90aa8caddda675dc49d7e0f440ce30220529b0a82d2612b068857c4",
+    "currentbf930/prepush.json": "47bb080959902c7eb69ef689afdc40d344b6a98b1d7f2daedd0e9f9dbc6b4dac",
+    "currentbf930/ibl/proof.json": "84dd9c2c94eb6ae9d0a115693d835bd198bb88dfcb314d5ee6f293f4c09f8dec",
+    "currentbf930/koopa/proof.json": "3ff3feb347b547ef972bc0b17635f46f248143a2f3284c1bf759992826164c9a",
+    "current50bf/composition-bindings.json": "cf29890b4b03d29322ec49c325ac7a49211b1df5dfc5216d3a6800666b7754ba",
+    "current50bf/merge-binding.json": "d8eebf62ed3268c1a327b2edb110bba9263ec9ee4c1cef2517aa510ee11cb2fd",
+    "current50bf/focused-binding.json": "5e696737c29f347bdecf57096596d6d7fbc6182921ff754186ce4fe89d20d036",
+    "current50bf/koopa-complete-nontext.json": "bf1cf3922bc199c8eebc98958eb36d867e8c31f525efb2930d0cc23cac2724d8",
+    "current50bf/gate-results-rom.json": "62363f5f2ac725e3cb6170a88dfddad4270549a0246e1c19aafb36902dc22171",
+    "current50bf/gate-results-static.json": "d746f088cbd63c4225518b7bbee05e65388e73449d6a6e68e9ae211d9a377eab",
+    "current50bf/rombuild.json": "f0437b6dc4992007851180fc707fdf5e0eb6c536c2d6aae7e74e68acc661ae4a",
+    "current50bf/romdata-full.json": "bbfc228109639fb6f0853b8ceb36c70cc5e0bea27ea89577cbbe7bbf252670d9",
+    "current50bf/prepush.json": "47bb080959902c7eb69ef689afdc40d344b6a98b1d7f2daedd0e9f9dbc6b4dac",
+    "current50bf/ibl/proof.json": "2b08de3913b2f501d54cda1093f01bb0618ae55e7148a6d13658b3ba348ff8a6",
+    "current50bf/koopa/proof.json": "7e8efe53e441258c4f4dc0317990fccf9560d3438452ea6be65225ebd8f58123",
+    "factory-prose/source-comment-repair.json": "e226c37f051be22b65eded2d375a6189b42fb036afa93bbe5f7408585bb1847a",
+    "factory-prose/comment-transfer-binding.json": "01113163663096110fc975a8fdcab835325f8d9e721cb22212172c8efd18eac4",
+    "factory-prose/HANDOFF-comment-epoch.json": "0809c3ce5cbe38f9a7fefb87dc94d61dafb9bf9a7409a525a47d93e9c65e875c",
+    "factory-prose/focused-binding.json": "d298ea55daaf02c0f857eadd95a746d943720c7cb2083c50a7c97248da95a53f",
+    "factory-prose/gate-results-static.json": "e33955de965ac51fb05846c54c9bc00b9061a2e920d22dedff92cc6ebe6bc349",
+    "currente209/composition-bindings.json": "732eb138f4b48b3218b8cd98e8961066c04abb2142613ad4aebe0dc02cb78c6e",
+    "currente209/merge-binding.json": "810c4c3b78903977917c987efd0c0ecd9a9107b159c67ed0052f9934939aed5b",
+    "currente209/focused-binding.json": "06d7b2d81cae6f8fc81fbe7be531a547e28f8f98dc661632064548a5013bb5e3",
+    "currente209/koopa-complete-nontext.json": "a52d8cc48d8bb2edc38ddd3435ac9c7c48fc9268e8f31a3c29d54e977453728b",
+    "currente209/gate-results-rom.json": "93132fd59e4f052fe805689633a5a0905337ad493395cca64200d1643348ce18",
+    "currente209/gate-results-static.json": "8267f6afe54c3f4d49a9f32d174bb909967f0eaf551e22dbfceb4e4c73b10442",
+    "currente209/source-style-result.json": "66a11c2215380aa8decda35cd0fd227152fd76ce612d287e0b9b9f24e1bf7504",
+    "currente209/rombuild.json": "9d3ec9b5f0c57e89c8837647a777a9eb13b6cacc5b5b58986994a46f2ff5c72c",
+    "currente209/romdata-full.json": "7da028c304329cf2ccc65053ac251be4f6be7a72ed04d74710ae97a45be97f5c",
+    "currente209/prepush.json": "ad514f5f55361aae29ffe37f24df49f02867c0b832192a76a3fcc8f7d3459ad6",
+    "currente209/ibl/proof.json": "c553c029bc5cd5c487bb00178b47a829c38fe0793ef6ee9acbaf4c8028af8260",
+    "currente209/koopa/proof.json": "658e0fcd3099b13b10c00b8b8f27ee19149d97b0636f700edcc3c9f436e17700",
+    "currente209-coverage/original-verifier-finding.json": "b297be8ea0e56f055f53895904c621f19af8659b311ce42a5f9a814c447911d6"
+  },
+  "current_main_check": {
+    "head": "e209dacfaaa95cb5490637ff053d62182689bebe",
+    "tested_source_base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+    "delta": [],
+    "five_production_trees_literal": {
+      "src": "252d666ec58b81ba918ece300c038dfb3240d663",
+      "include": "1c2768be4f1602d9397aecd3f091a3401b1d83c2",
+      "config": "e01b1c58be821ff871650976ecae4cbc18b9fc6b",
+      "tools": "d0416fda09a9f4c1494d389cb5f78624236544b0",
+      "port": "2d129b0bfa636a2d708375f3452813e8bec39a56"
+    },
+    "checked_at_utc": "2026-10-15T20:49:29.936505+00:00"
+  },
+  "future_composition": "Retained full144 includes Koopa MF; preserve its current literal accepted state and compose future changes, never overwrite with the older snapshot.",
+  "not_claimed": [
+    "Independent Source/byte acceptance",
+    "Complete original class/layout/signature recovery",
+    "Completion of full144/nativeYegg3/shared308/Heap/Chomp20/ARM7 remaining scopes",
+    "Public push/PR/validation/merge"
+  ],
+  "report_author": {
+    "session": "codex-ibl-e209-coverage-astra-producer1015",
+    "agent_uuid": "01a13996-b2f1-7d93-8bdd-510e5c78a79e",
+    "label": "codex-enemy-frontier-astra1014"
+  },
+  "composition": {
+    "rework_input": "ea5f99972f30eaec5d02b446fc9cddf14305c6cf",
+    "current_source_base": "e209dacfaaa95cb5490637ff053d62182689bebe",
+    "parents": [
+      "cd0af588ad9620bd2f6aaf2cf53f23f5e7060fee",
+      "e209dacfaaa95cb5490637ff053d62182689bebe"
+    ],
+    "required_inputs": {
+      "total": 66,
+      "changed_since_f6": [
+        "attribution.json",
+        "config/arm9/symbols.txt",
+        "function-authors.json",
+        "include/Player.h",
+        "include/dActor_c.h",
+        "include/dEnemyBase_c.h",
+        "include/dExtFrameCtrl_c.h",
+        "include/fBase_c.h",
+        "notes/tu-promotion-conventions.md",
+        "tools/tubuild.py"
+      ]
+    },
+    "all22_finding_dictionaries_literal": true,
+    "fresh_current_full_build": true,
+    "fresh_control_candidate_whole_objects_literal": {
+      "ibl": {
+        "control_candidate_literal": {
+          "ordinary.o": true,
+          "prepared.o": true
+        },
+        "raw_sha256": "ad958cf8ec5840823e4699f36c3c9baf42d3b8b624385c03bf188e1ab96c1f71",
+        "prepared_sha256": "f467fabce3b228c154def2dac6c50a8c8bb7df18af632e964b99d5be1f33de1a",
+        "strict_functions": 16,
+        "metadata": 11,
+        "raw_refs": 192,
+        "prepared_refs": 140,
+        "proof_sha256": "c553c029bc5cd5c487bb00178b47a829c38fe0793ef6ee9acbaf4c8028af8260",
+        "coverage": "Complete literal ELF comparison includes section metadata, full symbol multiplicities and all typed relocation edges; current-main control compiled from exact e209 Source with current candidate headers."
+      },
+      "koopa": {
+        "control_candidate_literal": {
+          "ordinary.o": true,
+          "prepared.o": true
+        },
+        "raw_sha256": "ab7dd6e6809d21f2c54cbb11ca5567b1cee33767f117d71a4eef716405f20d36",
+        "prepared_sha256": "6f217de2f49bf9b8431da647a70040492f1ef6215bdef4cbd210447d49394310",
+        "strict_functions": 18,
+        "metadata": 11,
+        "raw_refs": 283,
+        "prepared_refs": 237,
+        "proof_sha256": "658e0fcd3099b13b10c00b8b8f27ee19149d97b0636f700edcc3c9f436e17700",
+        "coverage": "Complete literal ELF comparison includes section metadata, full symbol multiplicities and all typed relocation edges; current-main control compiled from exact e209 Source with current candidate headers."
+      }
+    },
+    "historical_50bf_report_commit": "ea5f99972f30eaec5d02b446fc9cddf14305c6cf",
+    "historical_f6_packet_sha256": "02a76fe20f5b720f662e65a41035a57efb15859c7ae3fa0286aac8bcaefa0eea",
+    "limits": "The former f6 transfer remains historical. Current main changed shared headers, names, credits and tools; this composition preserves those changes and uses a fresh current full build and both freshly compiled current-main controls. The Source-only factory comment does not alter object lifetime or runtime behavior."
+  },
+  "report_provenance_repair": {
+    "rejected_report_commit": "1fbd1ac05e5fc46099806c624cdda3621fb31b9f",
+    "finding_id": "IBL-CURRENT-GENERIC-COVERAGE-1015",
+    "original_verifier_hold_sha256": "0f4462410bfc6d02f931403d3f93f0a577a93b4614e5712fa0155438eee96b86",
+    "all22_previous_dictionaries_literal": true,
+    "code_or_header_change": false,
+    "new_full_build_invocation": false,
+    "new_focused_compile": false,
+    "current_generic_prepush": {
+      "checked": 16,
+      "verified": 16,
+      "warnings": 0,
+      "blocking": 0,
+      "scope": "Ibl changed Source only; unchanged shared header does not expand generic coverage to r_nk."
+    }
+  }
+}

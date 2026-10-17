@@ -1,5 +1,7 @@
 # Handoff: readable-ov071-eykn-0925
 
+Follow-up: the state table and file handles now use native static initialization in the production TU. See [the native-initializer handoff](eykn-sinit1015.md); the checkpoint assessment below records the earlier state.
+
 This document describes this commit. The queue records its immutable output SHA.
 
 ## Identity and resumption
@@ -28,7 +30,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Class, TU, symbol and module-qualified ROM scope: `ov071/daEykn_c`, ov071 `.text`
   `[0x02120668, 0x021219cc)`, 23 functions. That was 22 functions ending at 0x02121734 before this commit.
-- Reserved surfaces actually touched: `src/actors/daEykn_c.cpp`, `include/daEykn_c.h`,
+- Reserved surfaces actually touched: `src/game/actors/d_a_eykn.cpp`, `include/daEykn_c.h`,
   `config/arm9/overlays/ov071/symbols.txt` (16 rows renamed in place),
   `config/arm9/overlays/ov071/delinks.txt` (the TU's one range, end 0x02121734 to 0x021219cc),
   `config/tu_manifest.d/ov071/daEykn_c.json`, the retired stand-alone source of `_ZN8daEykn_c13InitResourcesEv`,
@@ -71,12 +73,12 @@ This document describes this commit. The queue records its immutable output SHA.
 |---|---|---|---|---|
 | R1 | extern "C" helpers or state bodies | 16 `func_ov071_*` helpers and state bodies in extern "C" blocks | fixed | Each one is a member now, with its symbols.txt row, manifest symbol and attribution key renamed in place. 23/23 match, relocation destinations are clean and linkcheck verifies 23/23. |
 | R2 | extern "C" helpers or state bodies | InitResources lived outside the TU, in a 153-line file with 22 extern "C" lines, and was not linked | fixed | It is absorbed as the TU's last function. The delinks range now ends at 0x021219cc, the file is deleted and the credit override is added. rombuild reproduces 11,214 source-built functions with it enrolled. |
-| R3 | mangled bridges | 72 `_ZN` lines in the TU and 27 in the InitResources file | partially fixed | Replaced by real calls: ClosestNonVanishPlayer, DetectRaycastClsn, FindExplosionActor, FindWithID, Spawn, PoofDust, UntrackAndSpawnStar, TrackStar, KillAndTrackInDeathTable, MarkForDestruction, Sound::PlayBank0, Particle::System::FromUniqueID, the Animation and TextureSequence members, the Model, TextureSequence and Animation LoadFile statics, TextureSequence::Prepare, both ApproachLinear overloads, UpdateAngle, the dBgCh_Gnd object, and ModelAnim::Render in place of the `Sub` shadow vtable. Still deferred (owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141): 8 bridges that take a `Fix12<int>` by value (measured for DropShadowRadHeight only, no committed artifact). Also `FindEgg`: as a member call the tree's plurality spelling flips, and `src/actors/Scuttlebug.cpp` then fails the decl gate. That fix needs `src/actors/Scuttlebug.cpp` or `include/decl_Actor.h`, and this task holds neither. |
+| R3 | mangled bridges | 72 `_ZN` lines in the TU and 27 in the InitResources file | partially fixed | Replaced by real calls: ClosestNonVanishPlayer, DetectRaycastClsn, FindExplosionActor, FindWithID, Spawn, PoofDust, UntrackAndSpawnStar, TrackStar, KillAndTrackInDeathTable, MarkForDestruction, Sound::PlayBank0, Particle::System::FromUniqueID, the Animation and TextureSequence members, the Model, TextureSequence and Animation LoadFile statics, TextureSequence::Prepare, both ApproachLinear overloads, UpdateAngle, the dBgCh_Gnd object, and ModelAnim::Render in place of the `Sub` shadow vtable. Still deferred (owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141): 8 bridges that take a `Fix12<int>` by value (measured for DropShadowRadHeight only, no committed artifact). Also `FindEgg`: as a member call the tree's plurality spelling flips, and `src/game/actors/d_a_spd.cpp` then fails the decl gate. That fix needs `src/game/actors/d_a_spd.cpp` or `include/decl_Actor.h`, and this task holds neither. |
 | R4 | `unk_` fields | `unk_1ec`, `unk_217`, and `u8 mShadowMat` followed by a 0x37-byte pad | partially fixed | Named: mShadowMat (flat, see measurements), mState, mStateID, mTarget, mScale (was mShadowRadiusScale), mCircleAngle, mDeathSpinAngle, mWobbleAmp, mParticleID0 and mParticleID1, mDeathSpinSpeed, mWobblePhase, mShotTimer, mSubState, mSubTimer, mCircleTimer (was mTimer) and mStarTrackID. `unk_212` is still deferred (owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141): it is only ever written (0xf0), and nothing reads it to evidence a name. |
 | R5 | raw offsets and casts | Every helper worked through `char *c` and `c + 0x...` | partially fixed | No `this + offset` access remains. Still deferred (owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141): `(Vector3 *)&mPosX`, `&mCamSpacePosX` and `&mScaleX`, because `include/dActor_c.h` has only scalars and is a shared header this task does not hold. The `SharedFilePtr` +4 file reads, because `include/SharedFilePtr.h` has no fields and is shared. The ldrh angle reads, the ldrsh wobble phase and the flat matrix, all three measured. |
 | R6 | goto, temporaries and launders | the `b200` launder, `int *` accumulator temps, the `spin` pointer, the `v` temps, InitResources' `char *c`, the `C` and `PMF` shadow call | partially fixed | All of those are removed. Still deferred (owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141): the CheckAttacks gotos, the int flag temps, the St_Die_Main position load order and the St_Attack_Main target locals. Each was measured to miss. The gotos, the UpdateCircling flag, the load order, the target locals, the ldrh reads and the wobble-phase cast carry a one-line comment. |
 | R7 | dead or local declarations | the shadow types `Vector3_16f`, `AnimData`, `Item16`, `Sub`, `C`, `E` and `M48`, the BMD, BTP and BCA forward declarations, duplicated bridge prototypes, and two prototypes of the same `_ZN` names with different types | partially fixed | All of those are deleted. Still deferred (owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141): the local prototypes of AngleDiff, DecIfAbove0_Byte, the Vec3 helpers, Matrix4x3_FromRotationXYZExt and the BlueCoin loaders, because no shared header except the off-limits `include/decl_common.h` declares them. |
-| R8 | address-named data | `data_ov071_02123088`, `data_ov071_02123038`, `data_ov071_02123040`, `data_ov071_02123048`, `data_ov071_02123050`, `data_ov071_021226a0`, `data_ov071_021226a4`, `data_02082214`, `data_0209f2f8`, `func_0201267c`, `func_0200f760` | deferred | The ov071 rows are defined and filled by `src/unnamed/ov071/__sinit_ov071_021228c8.c`, which this task does not hold. The arm9 rows are not reserved. Owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141. The TU does type them now: `daEykn_c::State[]`, and a `LoadedFile` view for the loaded-file word. |
+| R8 | address-named data | `data_ov071_02123088`, `data_ov071_02123038`, `data_ov071_02123040`, `data_ov071_02123048`, `data_ov071_02123050`, `data_ov071_021226a0`, `data_ov071_021226a4`, `data_02082214`, `data_0209f2f8`, `func_0201267c`, `func_0200f760` | deferred | The ov071 rows are defined and filled by the former handwritten initializer at ov071:0x021228c8, which this task does not hold. The arm9 rows are not reserved. Owner: next ov071 producer, https://github.com/tangosdev/sm64ds-decomp/issues/3141. The TU does type them now: `daEykn_c::State[]`, and a `LoadedFile` view for the loaded-file word. |
 | R9 | unmeasured codegen notes | the St_Attack_Main "previous draft sat at div 7" essay, and InitResources' 30-line history | fixed | Each surviving note is short and was measured in this session (see the list above). The LoadBlueCoinModel note was re-measured. |
 | R10 | stale manifest notes | the boundary evidence and notes said InitResources "stays a shard" | fixed | Both boundary entries and the notes are rewritten for the 23-function span. The state-helper renames are recorded. |
 | R11 | dead or local declarations | `include/decl_common.h` lines 2656-2657 declare `func_ov071_02120c90` and `func_ov071_02121634` | deferred | Those names no longer exist. The file is held by `jump-contract-repair-0918`. The declarations are unused, so nothing is affected. They should be deleted when the file is free. Owner: holder of `include/decl_common.h`, https://github.com/tangosdev/sm64ds-decomp/issues/3141. |
@@ -94,7 +96,7 @@ This document describes this commit. The queue records its immutable output SHA.
 | ID | Finding | Outcome | Change |
 |---|---|---|---|
 | V4 | The St_Die_Main comment said the eye would "swell, then vanish", and the `mScale` comment in `include/daEykn_c.h` said "death swell". The eye shrinks: `mScale` starts at 0x1000 (small) or 0x2000 (big), and `ApproachLinear(mScale, 0xa4, 0xa4)` negates the step when the value is above the target, so it steps down to 0xa4. | fixed | St_Die_Main now reads "spin with a wobble, play the death animation, shrink to scale 0xa4, then despawn". This matches sub-states 0 (wobble), 1 (animation), 2 (shrink) and 3 (spawn, then KillAndTrackInDeathTable or MarkForDestruction). The `mScale` comment now reads "shrinks while dying". No other swell or grow wording remains in the TU, the header or this handoff. |
-| V5 | The residue table gave `src/actors/daEykn_c.cpp` as 753 to 786 lines. It was 788 at `90c5b2ce`. | fixed | Every number in the residue table was recomputed from this commit (see Proof). The file is 789 lines now, because the St_Die_Main comment grew by one line. The other counts did not change. |
+| V5 | The residue table gave `src/game/actors/d_a_eykn.cpp` as 753 to 786 lines. It was 788 at `90c5b2ce`. | fixed | Every number in the residue table was recomputed from this commit (see Proof). The file is 789 lines now, because the St_Die_Main comment grew by one line. The other counts did not change. |
 
 ## Reconstruction dimensions
 
@@ -109,14 +111,14 @@ This document describes this commit. The queue records its immutable output SHA.
   the key function. `_ZTV`, `_ZTI` and `_ZTS` are externalized. D2 and `_ZN7Vector3D1Ev` are
   deadstripped. The state table and file handles stay with `__sinit_ov071_021228c8`.
 - Attribution preserved through each rename: 16 keys re-keyed in place with the same credit.
-  `src/actors/daEykn_c.cpp#_ZN8daEykn_c13InitResourcesEv` was added for andrewboudreau, the file's
+  `src/game/actors/d_a_eykn.cpp#_ZN8daEykn_c13InitResourcesEv` was added for andrewboudreau, the file's
   first matcher. `the old credit check` reports 23 consolidated, 0 changed and 0 lost.
 - Residue. Counting convention: the number of lines containing each token, from
   `MSYS_NO_PATHCONV=1 git show <rev>:<path> | grep -c -F <token>` and `wc -l`:
 
   | Path at base to this commit | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
   |---|---|---|---|---|---|
-  | `src/actors/daEykn_c.cpp` | 753 to 789 | 0 to 3 | 68 to 7 | 21 to 1 | 72 to 50 |
+  | `src/game/actors/d_a_eykn.cpp` | 753 to 789 | 0 to 3 | 68 to 7 | 21 to 1 | 72 to 50 |
   | retired `_ZN8daEykn_c13InitResourcesEv` source | 153 to deleted | 2 to - | 4 to - | 22 to - | 27 to - |
   | `include/daEykn_c.h` | 68 to 105 | 4 to 1 | 0 to 0 | 0 to 0 | 4 to 4 |
 
@@ -131,7 +133,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Proof
 
 Composition fix (this commit against `7b303d2c52`; `git diff 7b303d2c52..HEAD` shows only comment
-lines in `src/actors/daEykn_c.cpp` and `include/daEykn_c.h`, plus this handoff):
+lines in `src/game/actors/d_a_eykn.cpp` and `include/daEykn_c.h`, plus this handoff):
 
 - `python tools/tubuild.py verify ov071/daEykn_c`: exit 0. 23/23 MATCH, objisolate clean,
   reloc-destinations clean, all 23 in ROM order, TEXT-VERIFIED. The manifest was not rewritten.
@@ -145,7 +147,7 @@ lines in `src/actors/daEykn_c.cpp` and `include/daEykn_c.h`, plus this handoff):
   `// @symbol _ZN`, against 6 at base.
 
 Round 2 (this commit against `6a18279e12`; `git diff 6a18279e12..HEAD` shows only comment lines in
-`src/actors/daEykn_c.cpp` and this handoff):
+`src/game/actors/d_a_eykn.cpp` and this handoff):
 
 - `python tools/tubuild.py verify ov071/daEykn_c`: exit 0. 23/23 MATCH, objisolate clean,
   reloc-destinations clean, all 23 in ROM order, TEXT-VERIFIED. The manifest was not rewritten.
@@ -179,7 +181,7 @@ All commands were run in this worktree against this commit's tree. The base is `
 - `python tools/queue_audit.py --check-promoted`: exit 0.
 - `python tools/check_src_tu_compiles.py`: exit 0. 297/297.
 - `python tools/port_refcheck.py`: exit 0. 408 checked.
-- `python tools/affected_src.py include/daEykn_c.h`: the only consumer is `src/actors/daEykn_c.cpp`.
+- `python tools/affected_src.py include/daEykn_c.h`: the only consumer is `src/game/actors/d_a_eykn.cpp`.
 - Undefined symbols (pyelftools):
   - `build/tu/ov071-daEykn_c/daEykn_c.o` has 95 undefined symbols.
   - The base TU object has 82. The base stand-alone `_ZN8daEykn_c13InitResourcesEv` source, compiled with the

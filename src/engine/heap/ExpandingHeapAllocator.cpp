@@ -22,7 +22,12 @@
  * deslop leftovers:
  * - SetNodeID keeps its documented two-step addressing: `Inner* p = this+0x24`
  *   then `p->id` is load-bearing -- flattening to this+0x34 diffs by three
- *   words (the shard's own measurement, #1221).
+ *   words (the shard's own measurement, #1221; re-measured: `mNodeID` read and
+ *   written directly still diffs by three).
+ * - The constructor writes mNodeID/mFlags2/mFirstNode/mLastNode through its
+ *   `nodeList` view of this+0x24: spelling those stores as members re-bases
+ *   them on `this` and diffs (two words for the list pair, five with all
+ *   four).
  * - The AllocateForwards/AllocateBackwards NodeList overlay stays: its `flag`
  *   is mFlags2 and its head/tail are mFirstNode/mLastNode, but both searches
  *   also pass `c` onward to AllocateNode as the list sentinel -- one object
@@ -73,7 +78,9 @@ struct Inner { char pad[0x10]; unsigned short id; };
 /* The free-list head, viewed as a sentinel object at this+0x24. The shard
  * spelled it as an inline accessor, and the spelling is load-bearing for
  * Reallocate's register allocation. */
-static inline MemoryNode **GetList(void *t) { return (MemoryNode **)((char *)t + 0x24); }
+static inline MemoryNode **GetList(void *t) {
+    return &((ExpandingHeapAllocator *)t)->mFirstNode;
+}
 
 // @symbol _ZN10MemoryNode6TargetC1EPS_
 MemoryNode::Target::Target(MemoryNode *node)
@@ -104,20 +111,24 @@ void *ExpandingHeapAllocator::UnlinkNode(MemoryNode *list, MemoryNode *node_)
 /* Insert `node` immediately after `prev`, or at the head when `prev` is null,
  * fixing both neighbours and the list's head/tail. The inverse of UnlinkNode,
  * and the reason UnlinkNode returns the predecessor. */
-void *ExpandingHeapAllocator::LinkNode(MemoryNode *list, MemoryNode *node_, MemoryNode *prev)
-{
-    int *c = (int *)list;
-    int node = (int)node_;
-    int r2 = (int)prev;
-    char *n = (char *)node;
-    *(int *)(n + 8) = r2;
-    int r3;
-    if (r2) { r3 = *(int *)((char *)r2 + 0xc); *(int *)((char *)r2 + 0xc) = node; }
-    else { r3 = c[0]; c[0] = node; }
-    *(int *)(n + 0xc) = r3;
-    if (r3) { *(int *)((char *)r3 + 8) = node; }
-    else { c[1] = node; }
-    return n;
+void *ExpandingHeapAllocator::LinkNode(MemoryNode *list, MemoryNode *node, MemoryNode *prev) {
+    MemoryNode **c = (MemoryNode **)list;
+    MemoryNode *next;
+    node->prev = prev;
+    if (prev) {
+        next = prev->next;
+        prev->next = node;
+    } else {
+        next = c[0];
+        c[0] = node;
+    }
+    node->next = next;
+    if (next) {
+        next->prev = node;
+    } else {
+        c[1] = node;
+    }
+    return node;
 }
 
 // @symbol _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt
@@ -129,19 +140,19 @@ void *ExpandingHeapAllocator::LinkNode(MemoryNode *list, MemoryNode *node_, Memo
 void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
 {
     int *c = (int *)extent;
-    char *n = (char *)c[0];
-    *(unsigned short *)(n + 0) = t;
-    *(unsigned short *)(n + 2) = 0;
-    *(int *)(n + 4) = ((int)c[1]) - (int)(n + 0x10);
-    *(int *)(n + 8) = 0;
-    *(int *)(n + 0xc) = 0;
+    MemoryNode *n = (MemoryNode *)c[0];
+    n->tag = t;
+    n->flags = 0;
+    n->size = ((int)c[1]) - (int)(n + 1);
+    n->prev = 0;
+    n->next = 0;
     return n;
 }
 
 // @symbol _ZN22ExpandingHeapAllocatorC1EPvj
 ExpandingHeapAllocator::ExpandingHeapAllocator(void *heapEnd, u32 flags)
 {
-    char *nodeList = (char *)this + 0x24;
+    char *nodeList = (char *)&mFirstNode;
     MemoryNode::Target extent;
     MemoryNode *node;
 
@@ -213,7 +224,7 @@ void *ExpandingHeapAllocator::AllocateNode(MemoryNode *c, MemoryNode *node,
     t2.end = t1.start;
     void *allocNode = CreateNode(&t2, 0x5544);
 
-    unsigned short *flagsPtr = (unsigned short *)((char *)allocNode + 2);
+    unsigned short *flagsPtr = &((MemoryNode *)allocNode)->flags;
     void *usedList = (char *)c + 8;
     *flagsPtr &= ~0x8000;
     *flagsPtr |= (z & 1) << 15;
@@ -238,7 +249,7 @@ void *ExpandingHeapAllocator::AllocateNode(MemoryNode *c, MemoryNode *node,
  * both. */
 void *ExpandingHeapAllocator::AllocateForwards(u32 size, u32 align)
 {
-    NodeList *c = (NodeList *)((char *)this + 0x24);
+    NodeList *c = (NodeList *)&mFirstNode;
     unsigned short flag = c->flag;
     int firstFit = ((unsigned short)(flag & 1) == 0);
     MemoryNode *best = 0;
@@ -272,7 +283,7 @@ void *ExpandingHeapAllocator::AllocateForwards(u32 size, u32 align)
  * `aligned - data >= 0` -- did it stay inside the node. */
 void *ExpandingHeapAllocator::AllocateBackwards(u32 size, u32 align)
 {
-    NodeList *c = (NodeList *)((char *)this + 0x24);
+    NodeList *c = (NodeList *)&mFirstNode;
     unsigned short flag = c->flag;
     int firstFit = ((unsigned short)(flag & 1) == 0);
     MemoryNode *best = 0;
@@ -344,11 +355,13 @@ int ExpandingHeapAllocator::FreeNode(MemoryNode *list, MemoryNode::Target *exten
     return 1;
 }
 
-// @symbol _ZN4Heap28CreateExpandingHeapAllocatorEPvjj
+// @symbol _ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj
 /* The expanding twin of Heap::CreateSolidHeapAllocator, identical bar the
  * minimum: 0x4c against the solid allocator's 0x30, because an expanding heap
  * keeps a free-node list. */
-ExpandingHeapAllocator *Heap::CreateExpandingHeapAllocator(void *address, u32 size, u32 flags)
+namespace mHeap {
+
+ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 size, u32 flags)
 {
     u32 end   = (size + (u32)address) & ~3u;
     u32 start = ((u32)address + 3u)   & ~3u;
@@ -358,6 +371,8 @@ ExpandingHeapAllocator *Heap::CreateExpandingHeapAllocator(void *address, u32 si
 
     return _ZN22ExpandingHeapAllocatorC1EPvj((ExpandingHeapAllocator *)start, (void *)end, flags);
 }
+
+} /* namespace mHeap */
 
 // @symbol _ZN13HeapAllocator7DestroyEv
 /* Detach this allocator from its containing heap -- a 12-byte tail veneer to
@@ -467,7 +482,7 @@ int ExpandingHeapAllocator::Deallocate(void *ptr)
     MemoryNode *node;
 
     node = (MemoryNode *)((char *)ptr - 0x10);
-    inner = (char *)this + 0x24;
+    inner = (char *)&mFirstNode;
     MemoryNode::Target target(node);
     UnlinkNode((MemoryNode *)(inner + 8), node);
     return FreeNode((MemoryNode *)inner, &target);
@@ -479,11 +494,11 @@ int ExpandingHeapAllocator::Deallocate(void *ptr)
  * differ by fragmentation. */
 u32 ExpandingHeapAllocator::MemoryLeft()
 {
-    void *n = *(void **)((char *)this + 0x24);
+    MemoryNode *n = mFirstNode;
     unsigned int total = 0;
     while (n) {
-        total += *(unsigned int *)((char *)n + 4);
-        n = *(void **)((char *)n + 0xc);
+        total += n->size;
+        n = n->next;
     }
     return total;
 }
@@ -499,11 +514,11 @@ int ExpandingHeapAllocator::MaxAllocatableSize(int arg)
     int align = _ZN4cstd3absEi(arg);
     unsigned int bestSize = 0;
     unsigned int bestOffset = -1;
-    char *n = *(char **)((char *)this + 0x24);
+    MemoryNode *n = mFirstNode;
     while (n) {
-        unsigned int base = (unsigned int)(n + 0x10);
+        unsigned int base = (unsigned int)n + 0x10;
         unsigned int aligned = ((align - 1) + base) & ~(align - 1);
-        unsigned int end = *(int *)(n + 4) + base;
+        unsigned int end = n->size + base;
         if (aligned < end) {
             unsigned int usable = end - aligned;
             unsigned int offset = aligned - base;
@@ -512,7 +527,7 @@ int ExpandingHeapAllocator::MaxAllocatableSize(int arg)
                 bestOffset = offset;
             }
         }
-        n = *(char **)(n + 0xc);
+        n = n->next;
     }
     return bestSize;
 }
@@ -523,7 +538,7 @@ int ExpandingHeapAllocator::MaxAllocatableSize(int arg)
  * on the way in and the u16 widens to int on the way out. */
 int ExpandingHeapAllocator::SetNodeID(u32 id)
 {
-    Inner *p = (Inner *)((char *)this + 0x24);
+    Inner *p = (Inner *)&mFirstNode;
     unsigned short old = p->id;
     p->id = (unsigned short)id;
     return old;
@@ -543,10 +558,10 @@ u32 ExpandingHeapAllocator::GetNodeID()
  * each block back into an allocator->Deallocate(ptr) call. */
 void *ExpandingHeapAllocator::DeallocateAll(DeallocationFunction fn, u32 ctx)
 {
-    void *node = *(void **)((char *)this + 0x2c);
+    MemoryNode *node = mUsedFirstNode;
     if (!node) return node;
     do {
-        void *next = *(void **)((char *)node + 0xc);
+        MemoryNode *next = node->next;
         fn((char *)node + 0x10, this, ctx);
         node = next;
     } while (node);

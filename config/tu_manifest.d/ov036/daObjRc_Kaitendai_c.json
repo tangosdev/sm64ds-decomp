@@ -73,14 +73,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_ov036_02114048",
+      "symbol": "gRcKaitenCollisionFile",
       "address": "0x02114048",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision file handle constructed with file ID 0x6a8"
     },
     {
-      "symbol": "data_ov036_02114050",
+      "symbol": "gRcKaitenModelFile",
       "address": "0x02114050",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -597,7 +597,7 @@
       "source": "0x02112668",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_02114050",
+      "symbol": "gRcKaitenModelFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x02114050"
@@ -627,7 +627,7 @@
       "source": "0x02112678",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov036_02114048",
+      "symbol": "gRcKaitenCollisionFile",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x02114048"

@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/fx/fx.h"
 extern char *data_ov007_0210342c;
 extern int data_ov007_02103428;
 
@@ -12,7 +13,6 @@ extern void func_ov007_020aec94(int a);
 extern void func_ov007_020b6134(int a);
 extern void func_ov007_020b7a44(void);
 
-#define MULFX(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
 void func_ov007_020b50e8(char *arg)
 {
@@ -103,25 +103,25 @@ void func_ov007_020b50e8(char *arg)
                 w = q * 3;
                 w <<= 2;
                 if (w <= 0x1000) {
-                    c = MULFX(w, 0x1000);
+                    c = FX_MUL(w, 0x1000);
                 } else if (w <= 0x3000) {
-                    c = MULFX(w - 0x1000, 0x800) + 0x1000;
+                    c = FX_MUL(w - 0x1000, 0x800) + 0x1000;
                 } else {
-                    c = MULFX(w - 0x3000, -0x2000) + 0x2000;
+                    c = FX_MUL(w - 0x3000, -0x2000) + 0x2000;
                 }
-                result = 0x1000 - MULFX(c, 0x4b0);
+                result = 0x1000 - FX_MUL(c, 0x4b0);
             } else {
                 int c;
                 int w;
                 w = ((q * 3 - 0x1000) / 2) * 4;
                 if (w <= 0x1000) {
-                    c = MULFX(w, 0x800);
+                    c = FX_MUL(w, 0x800);
                 } else if (w <= 0x3000) {
-                    c = MULFX(w - 0x1000, 0x400) + 0x800;
+                    c = FX_MUL(w - 0x1000, 0x400) + 0x800;
                 } else {
-                    c = MULFX(w - 0x3000, -0x1000) + 0x1000;
+                    c = FX_MUL(w - 0x3000, -0x1000) + 0x1000;
                 }
-                result = MULFX(c, 0x640) + 0x1000;
+                result = FX_MUL(c, 0x640) + 0x1000;
             }
         } else {
             u16 s2;
@@ -142,13 +142,13 @@ void func_ov007_020b50e8(char *arg)
                 int w;
                 w = q * 4;
                 if (w <= 0x1000) {
-                    c = MULFX(w, 0x1000);
+                    c = FX_MUL(w, 0x1000);
                 } else if (w <= 0x3000) {
-                    c = MULFX(w - 0x1000, -0x2ec) + 0x1000;
+                    c = FX_MUL(w - 0x1000, -0x2ec) + 0x1000;
                 } else {
-                    c = MULFX(w - 0x3000, -0xa28) + 0xa28;
+                    c = FX_MUL(w - 0x3000, -0xa28) + 0xa28;
                 }
-                result = 0x1000 - MULFX(c, 0x514);
+                result = 0x1000 - FX_MUL(c, 0x514);
             }
         }
     } else {

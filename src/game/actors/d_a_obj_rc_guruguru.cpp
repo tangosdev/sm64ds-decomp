@@ -30,6 +30,12 @@
  * Leftover: g_profile_RC_GURUGURU lives outside this TU (S14).
  */
 
+/* Runtime asset handles resolved through the overlay 0 file table. */
+enum d_a_obj_rc_guruguru_AssetId {
+    ASSET_RC_GURUGURU_BMD = 0x06a4,
+    ASSET_RC_GURUGURU_KCL = 0x06a5
+};
+
 #include "daObjRc_Guruguru_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -44,6 +50,14 @@ void func_020393d4(void *bgw, void *fn);
 bool _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int scale, short angleY, void *clps);
+}
+
+/* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
+ * off screen. This int-returning predicate is what makes the ROM
+ * materialize 0/1 with movne/moveq before testing it; a direct `if` on the
+ * bit folds the two. */
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -106,11 +120,7 @@ s32 daObjRc_Guruguru_c::Behavior()
        is what the ROM does here. */
     mAngleY += mAngVelY;
 
-    /* The temporary is load-bearing: the ROM materialises the predicate with
-       movne/moveq and then tests it, where a direct `if` folds the two.
-       Bit 0x8 is the framework off-screen flag (include/dActor_c.h). */
-    int flagged = (int)((mFlags & 8) != 0);
-    if (flagged != 0) {
+    if (IsOffScreen(this)) {
         if (mMeshCollider.IsEnabled())
             mMeshCollider.Disable();
         return 1;
@@ -173,5 +183,5 @@ struct RcGuruguruCollisionFilePtr : SharedFilePtr {
 // @symbol __sinit_d_a_obj_rc_guruguru.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
-RcGuruguruModelFilePtr data_ov036_021140ac(0x6a4);      /* model */
-RcGuruguruCollisionFilePtr data_ov036_021140b4(0x6a5);  /* collision */
+RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);      /* model */
+RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL);  /* collision */

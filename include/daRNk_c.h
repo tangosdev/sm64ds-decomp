@@ -131,7 +131,7 @@ struct daRNk_c : dEnemyBase_c {
 
     /* mState: which handler Behavior runs this frame. Behavior indexes a table
        of six pointers-to-member at data_ov062_0211e0a4 (filled at start-up by
-       __sinit_daRNk_c.cpp, in this order) and calls the one at mState.
+       __sinit_d_a_r_nk.cpp, in this order) and calls the one at mState.
        Transitions: 0 -> 1; 1 -> 2 when the race is accepted, or back to 0 when
        it is declined (or the player is not Mario); 2 -> 3 -> 4 -> 5; 5 is
        never left. */

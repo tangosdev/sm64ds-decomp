@@ -1,8 +1,8 @@
 {
   "id": "ov065/daObjCtMecha04_c",
   "module": "ov065",
-  "source": "src/actors/daObjCtMecha04_c.cpp",
-  "promoted_source": "src/actors/daObjCtMecha04_c.cpp",
+  "source": "src/game/actors/d_a_obj_ct_mecha04.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ct_mecha04.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -116,28 +116,28 @@
   "production_mode": "intact-object",
   "bss": [
     {
-      "symbol": "data_ov065_0211d8b4",
+      "symbol": "gCtMechaObj04sCollisionFile",
       "address": "0x0211d8b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1473; the variant collision table data_ov065_0211d198 loads it for the large belt"
     },
     {
-      "symbol": "data_ov065_0211d8bc",
+      "symbol": "gCtMechaObj04lModelFile",
       "address": "0x0211d8bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 1470; the variant model table data_ov065_0211d194 loads it for the small belt"
     },
     {
-      "symbol": "data_ov065_0211d8c4",
+      "symbol": "gCtMechaObj04lCollisionFile",
       "address": "0x0211d8c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 1471; the variant collision table loads it for the small belt"
     },
     {
-      "symbol": "data_ov065_0211d8cc",
+      "symbol": "gCtMechaObj04sModelFile",
       "address": "0x0211d8cc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -174,7 +174,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjCtMecha04_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha04.cpp",
       "address": "0x0211c7d8",
       "size": "0xb8",
       "binding": "STB_GLOBAL",
@@ -183,7 +183,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjCtMecha04_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_mecha04.cpp",
       "address": "0x0211caf4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -229,13 +229,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjCtMecha04_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha04.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; the configured initializer is the global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjCtMecha04_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_ct_mecha04.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; the configured ctor entry is exposed globally at the same exact address"
@@ -267,22 +267,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@555",
+      "from": "@562",
       "to": "@50",
       "evidence": "mwcc numbers this model registration node @541 per TU and the in-flight ov060 fring fold already uses @541, so the batch link would multiply-define it"
     },
     {
-      "from": "@556",
+      "from": "@563",
       "to": "@51",
       "evidence": "mwcc numbers this model registration node @542 per TU and ov080 already defines @542, so the link would multiply-define it"
     },
     {
-      "from": "@557",
+      "from": "@564",
       "to": "@52",
       "evidence": "mwcc numbers this collision registration node @543 per TU and the in-flight ov060 fring fold already uses @543, so the batch link would multiply-define it"
     },
     {
-      "from": "@558",
+      "from": "@565",
       "to": "@53",
       "evidence": "mwcc numbers this collision registration node @544 per TU and ov080 already defines @544, so the link would multiply-define it"
     }
@@ -373,7 +373,7 @@
       "source": "0x0211c85c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d8cc",
+      "symbol": "gCtMechaObj04sModelFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d8cc"
@@ -403,7 +403,7 @@
       "source": "0x0211c868",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d8bc",
+      "symbol": "gCtMechaObj04lModelFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d8bc"
@@ -423,7 +423,7 @@
       "source": "0x0211c874",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d8b4",
+      "symbol": "gCtMechaObj04sCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d8b4"
@@ -453,7 +453,7 @@
       "source": "0x0211c884",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov065_0211d8c4",
+      "symbol": "gCtMechaObj04lCollisionFile",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d8c4"
@@ -473,7 +473,7 @@
       "source": "0x0211caf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjCtMecha04_c.cpp",
+      "symbol": "__sinit_d_a_obj_ct_mecha04.cpp",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211c7d8"
@@ -486,7 +486,7 @@
     "The inline destructor in the directly included class header makes mwccarm emit exactly the retail D1 then D0 pair, without a D2. All seven hand-written member definitions carry unique @symbol markers.",
     "UpdateShadow, MoveActorOnBelt, and AfterClsnCallback are descriptive reconstruction labels, not ROM-preserved English names. For MoveActorOnBelt, the member/free form, target type, and dActor_c& spelling encoded in the symbol are inferred. For AfterClsnCallback, static/member/free form and all pointer/type spellings encoded in the symbol are inferred. The ROM proves class ownership or callback role, register-level call shape, bodies, layout, and relocation destinations.",
     "Cleanup folded the adjacent CT_MECHA04L/CT_MECHA04S factories as return new daObjCtMecha04_c(). Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size).",
-    "FOLD 2026-10-10. The handwritten src/unnamed/ov065/__sinit_ov065_0211c7d8.c initializer folded into this TU as the four typed SharedFilePtr wrapper globals at its end (models 1472 then 1470, collisions 1473 then 1471 -- the retail .init order). mwcc emits __sinit_daObjCtMecha04_c.cpp at 0x0211c7d8 and the .ctor word at 0x0211caf4, byte-identical to retail; the compiler temps @541/@542/@543/@544 are renamed @50/@51/@52/@53 because ov080 defines @540-@548 and the in-flight ov060 fring fold claims @541/@543. The TU reaches the handles only through the unowned .data variant tables data_ov065_0211d194/0211d198, so the globals are pure definitions here.",
+    "FOLD 2026-10-10. The handwritten src/unnamed/ov065/__sinit_ov065_0211c7d8.c initializer folded into this TU as the four typed SharedFilePtr wrapper globals at its end (models 1472 then 1470, collisions 1473 then 1471 -- the retail .init order). mwcc emits __sinit_d_a_obj_ct_mecha04.cpp at 0x0211c7d8 and the .ctor word at 0x0211caf4, byte-identical to retail; the compiler temps @541/@542/@543/@544 are renamed @50/@51/@52/@53 because ov080 defines @540-@548 and the in-flight ov060 fring fold claims @541/@543. The TU reaches the handles only through the unowned .data variant tables data_ov065_0211d194/0211d198, so the globals are pure definitions here.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {

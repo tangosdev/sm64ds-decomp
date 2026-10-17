@@ -1,3 +1,4 @@
+#include "nitro/fx/fx.h"
 typedef long long s64;
 
 extern int func_020531a4(int a);
@@ -28,7 +29,7 @@ void func_ov007_020bdbcc(int a0, int a1)
     int t;
 
     data_ov007_02104bb0 = newB;
-    magSq = (int)(((s64)newA * newA + 0x800) >> 12) + (int)(((s64)newB * newB + 0x800) >> 12);
+    magSq = FX_MUL(newA, newA) + FX_MUL(newB, newB);
     data_ov007_02104bb4 = newA;
 
     spd = func_020531a4(magSq);
