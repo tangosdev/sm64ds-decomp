@@ -249,25 +249,31 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
             rl["add"] -= OI.VTABLE_PREAMBLE
     linked, blind = LC.link_function(body, addr - preamble, relocs)
     linked = linked[preamble:]
-    blind = {o - preamble for o in blind if o >= preamble}
+    blind = {o - preamble for o in blind if o + 4 > preamble}
+    # A blind offset masks its entire word, including any bytes in a short tail.
+    # Expand after trimming the vtable preamble so coverage and differences are
+    # measured in bytes, not rounded down (or up) to whole words.
+    blind_bytes = {off for start in blind
+                   for off in range(max(0, start), min(len(linked), start + 4))}
 
     retail = RV.rom_bytes(module, addr, len(linked))
     if retail is None or len(retail) < len(linked):
         return {"symbol": name, "verdict": PARTIAL, "bytes": 0, "module": module,
                 "addr": addr, "note": "module image shorter than the emitted symbol"}
     compared = differing = 0
-    for off in range(0, len(linked) & ~3, 4):
-        if off in blind:
+    for off in range(len(linked)):
+        if off in blind_bytes:
             continue
-        compared += 4
-        if linked[off:off + 4] != retail[off:off + 4]:
-            differing += 4
+        compared += 1
+        if linked[off] != retail[off]:
+            differing += 1
     rec = {"symbol": name, "module": module, "addr": addr, "bytes": compared,
            "emitted": len(linked), "romExtent": extent, "blindWords": len(blind)}
     if differing:
         rec["verdict"] = DIFFERS
         rec["differingBytes"] = differing
-    elif compared and not blind and extent is not None and len(linked) >= extent:
+    elif (compared and compared == len(linked) and not blind
+          and extent is not None and compared >= extent):
         rec["verdict"] = VERIFIED
     else:
         rec["verdict"] = PARTIAL

@@ -211,6 +211,7 @@ jobs:
             tools.test_classqueue \
             tools.test_classqueue_v2 \
             tools.test_cpp_rename_verify \
+            tools.test_data_evidence \
             tools.test_delaunder \
             tools.test_enroll \
             tools.test_layout \
@@ -227,6 +228,7 @@ jobs:
             tools.test_profile_reconstruction \
             tools.test_progress \
             tools.test_reloc_audit_flags \
+            tools.test_romdata_check \
             tools.test_rombuild \
             tools.test_rombuild_cache \
             tools.test_rombuild_check \
