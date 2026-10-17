@@ -352,7 +352,7 @@ def main(argv=None):
     parser.add_argument("--symbol", action="append", required=True, help="configured name; repeat for a batch")
     parser.add_argument("--module", help="module identity, required when a name has several homes")
     parser.add_argument("--size", type=lambda s: int(s, 0), help="explicit observation window, not proof of object size")
-    parser.add_argument("--no-rom", action="store_true", help="collect only config/source evidence")
+    parser.add_argument("--no-rom", action="store_true", help="collect only configuration and source evidence")
     parser.add_argument("--json", type=pathlib.Path, help="write complete evidence (prefer ignored build/)")
     args = parser.parse_args(argv)
     try:
