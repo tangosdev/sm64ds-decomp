@@ -9,7 +9,7 @@ different things and they move independently:
   CONVERTED  a person can read that C without the ROM open next to them.
              Matching does not require readable code, so this tier lags far
              behind MATCHED and does not move on its own.
-  LINKED     the matched translation unit actually reaches the PC port's
+  LINKED     the function's translation unit actually reaches the PC port's
              binary, replacing the host stand-in that was there before.
 
 They are deliberately not a funnel: a function can be MATCHED and LINKED while
@@ -17,12 +17,14 @@ still being unreadable, and CONVERTED work never changes the matched bytes.
 Reporting only MATCHED overstates how finished the project is, which is the
 whole reason this file exists.
 
-Denominators differ and that is not a bug. MATCHED counts functions against the
-dsd config's function universe. CONVERTED counts source-owned FUNCTIONS. Most
-physical files still own one function, but reconstructed translation units own
-several; weighting by their enrolled symbols keeps the metric invariant when the
-same readable behavior is consolidated into its original file. LINKED counts
-matched translation units, not all functions.
+All three bars count FUNCTIONS. MATCHED counts functions against the dsd config's
+function universe. CONVERTED counts source-owned functions: most physical files
+still own one function, but reconstructed translation units own several, and
+weighting by their enrolled symbols keeps the metric invariant when the same
+readable behavior is consolidated into its original file. LINKED counts the
+functions whose translation unit the port build links, read from
+config/port_linked_functions.txt. A stamp with no such list (the older ones)
+still reads, as a count of matched translation units, and says "units".
 
 Usage:
     python tools/tiers.py                 # human-readable table
@@ -52,6 +54,7 @@ README = REPO / "README.md"
 README_START = "<!-- tiers:start -->"
 README_END = "<!-- tiers:end -->"
 LINKED_STAMP = REPO / "config" / "port_linkage.json"
+LINKED_FUNCTIONS = REPO / "config" / "port_linked_functions.txt"
 
 
 # ---------------------------------------------------------------- CONVERTED
@@ -473,7 +476,7 @@ def score_member(path, text, symbol, repo_root=None):
     return score
 
 
-def converted(src_root=None):
+def converted(src_root=None, per_symbol=False):
     """Score every source-owned function. Returns CONVERTED plus its breakdown.
 
     Reads committed source only - no ROM, no build, no local state - so it
@@ -481,6 +484,13 @@ def converted(src_root=None):
     retain file-wide scoring. Members of a promoted production TU are independently
     scored from explicit source markers or evidenced lifecycle definitions, with a
     conservative file-wide fallback when neither boundary is evidenced.
+
+    ``per_symbol=True`` adds ``by_symbol``: ``{repo-relative path: {symbol: bool}}``,
+    the same readings the headline count is made of, one boolean per source-owned
+    function (True = passes all five criteria). chaos_db_ci publishes it as the
+    per-function ``converted`` flag, so the Atlas and this tier can never disagree
+    about which functions were counted. Nothing else in the result changes, and
+    callers that do not ask for it get exactly what they got before.
     """
     root = pathlib.Path(src_root or SRC)
     files = sorted(str(p) for p in root.rglob("*")
@@ -493,6 +503,7 @@ def converted(src_root=None):
 
     source_readable = 0
     total = 0
+    by_symbol = {}
     for p in files:
         with open(p, errors="replace") as f:
             text = f.read()
@@ -514,6 +525,8 @@ def converted(src_root=None):
                 counts[k] += s[k]
             n_pass = sum(s[k] for k in CRITERIA)
             passes_hist[n_pass] = passes_hist.get(n_pass, 0) + 1
+            if per_symbol and rel is not None:
+                by_symbol.setdefault(rel, {})[sym] = n_pass == len(CRITERIA)
             if n_pass == len(CRITERIA):
                 readable += 1
             else:
@@ -525,7 +538,7 @@ def converted(src_root=None):
         if members and all_readable:
             source_readable += 1
 
-    return {
+    out = {
         "functions": total,
         "source_files": len(files),
         "converted_source_files": source_readable,
@@ -537,6 +550,9 @@ def converted(src_root=None):
         "alt_core_two": core,
         "alt_shared_header": counts["shared_header"],
     }
+    if per_symbol:
+        out["by_symbol"] = by_symbol
+    return out
 
 
 # ------------------------------------------------------------------- LINKED
@@ -551,8 +567,41 @@ def converted(src_root=None):
 # branch/commit/date is treated as absent.
 
 
-def linked(stamp_path=None):
-    """The stamped LINKED measurement, or None if there is no usable stamp."""
+def linked_functions(stamp=None, list_path=None):
+    """``(keys, commit)`` from the per-function list, or ``(None, reason)``.
+
+    config/port_linked_functions.txt is written by tools/port_linked_functions.py
+    from a port build. It is believed only while its ``# commit:`` line equals the
+    commit of the usable stamp: two port builds must never be mixed, and a list
+    without the stamp's provenance is a number nobody can trace. ``keys`` is the
+    set of ``module:0xaddr`` strings; ``commit`` is the list's commit on success.
+    """
+    p = pathlib.Path(list_path or LINKED_FUNCTIONS)
+    if not p.is_file():
+        return None, "no per-function list"
+    if stamp is None:
+        stamp = linked_stamp()
+    if not stamp:
+        return None, "no usable stamp"
+    keys, commit, universe = set(), None, None
+    for line in p.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line.startswith("# commit:"):
+            commit = line.split(":", 1)[1].strip()
+        elif line.startswith("# universe:"):
+            try:
+                universe = int(line.split(":", 1)[1])
+            except ValueError:
+                universe = None
+        elif line and not line.startswith("#"):
+            keys.add(line)
+    if not commit or commit != stamp["commit"]:
+        return None, f"list commit {commit!r}, stamp commit {stamp['commit']!r}"
+    return keys, universe
+
+
+def linked_stamp(stamp_path=None):
+    """The stamped LINKED measurement (translation units), or None if unusable."""
     p = pathlib.Path(stamp_path or LINKED_STAMP)
     if not p.is_file():
         return None
@@ -575,6 +624,30 @@ def linked(stamp_path=None):
         "commit": d["commit"],
         "stale": bool(d.get("stale", False)),
     }
+
+
+def linked(stamp_path=None, list_path=None):
+    """LINKED, per function when the stamped build has a per-function list.
+
+    Returns ``linked`` / ``of`` / ``pct`` / ``unit`` (``"functions"`` or, for a
+    stamp with no usable list, ``"units"``) plus the stamp's translation-unit
+    figures as extra detail: ``linkedTus`` and ``matchedTus``. ``of`` for the
+    function count is the list's own ``# universe:`` line, the function universe
+    of the measured tree; chaos_db_ci overrides it with the published record
+    count so the three bars share one denominator. None when there is no usable
+    stamp at all.
+    """
+    stamp = linked_stamp(stamp_path)
+    if not stamp:
+        return None
+    out = dict(stamp, linkedTus=stamp["linked"], unit="units", of=stamp["matchedTus"])
+    keys, universe = linked_functions(
+        stamp, list_path or (pathlib.Path(stamp_path).with_name("port_linked_functions.txt")
+                             if stamp_path else None))
+    if keys is not None and universe:
+        out.update(linked=len(keys), of=universe, unit="functions",
+                   pct=round(100.0 * len(keys) / universe, 2))
+    return out
 
 
 # ------------------------------------------------------------------ MATCHED
@@ -649,6 +722,11 @@ def matched_caption(m):
             f"(hand-written in the original, not C)")
 
 
+def _linked_noun(k):
+    """What LINKED counted: functions, or (an older stamp) matched translation units."""
+    return "functions" if k.get("unit") == "functions" else "matched TUs"
+
+
 def bar_block(t, preserved_matched=None):
     """The fenced block shown under the README "## Progress" heading.
 
@@ -674,8 +752,8 @@ def bar_block(t, preserved_matched=None):
     rows.append(f"CONVERTED  {bar(c['converted'], c['functions'])}  "
                 f"{c['pct']:4.1f}%   {c['converted']:,} / {c['functions']:,} functions")
     if k:
-        rows.append(f"LINKED     {bar(k['linked'], k['matchedTus'])}  "
-                    f"{k['pct']:4.1f}%   {k['linked']:,} / {k['matchedTus']:,} matched TUs")
+        rows.append(f"LINKED     {bar(k['linked'], k['of'])}  "
+                    f"{k['pct']:4.1f}%   {k['linked']:,} / {k['of']:,} {_linked_noun(k)}")
     return "```\n" + "\n".join(rows) + "\n```"
 
 
@@ -719,7 +797,7 @@ def report(t):
                f"{c['pct']:.1f}%   ({c['source_files']:,} physical source files)")
     if k:
         flag = "  STALE" if k["stale"] else ""
-        out.append(f"LINKED     {k['linked']:,} / {k['matchedTus']:,} matched TUs  "
+        out.append(f"LINKED     {k['linked']:,} / {k['of']:,} {_linked_noun(k)}  "
                    f"{k['pct']:.1f}%   (stamped {k['measuredAt']} from {k['branch']}"
                    f" @ {k['commit']}){flag}")
     else:

@@ -109,8 +109,8 @@ Code size  ███████████████████████
 ```
 MATCHED    ██████████████████████████████  100.0%   11,389 / 11,389 functions
            of which 108 are byte-exact assembly (hand-written in the original, not C)
-CONVERTED  ████████████░░░░░░░░░░░░░░░░░░  39.6%   4,509 / 11,386 functions
-LINKED     ████████████████████████████░░  93.5%   10,595 / 11,328 matched TUs
+CONVERTED  ████████████░░░░░░░░░░░░░░░░░░  39.8%   4,531 / 11,385 functions
+LINKED     █████████████████████████████░  96.2%   10,957 / 11,389 functions
 ```
 <!-- tiers:end -->
 
@@ -128,8 +128,8 @@ The three bars measure different things:
 - **CONVERTED** means a person can read that source without the ROM open next to them:
   real C++ classes with their real names, bases and vtables instead of flat C full of
   offsets.
-- **LINKED** means the matched file is compiled straight into the PC port, replacing the
-  stand-in the port used before.
+- **LINKED** means the function's matched file is compiled straight into the PC port,
+  replacing the stand-in the port used before. Like the other two it counts functions.
 
 ## Where things stand
 

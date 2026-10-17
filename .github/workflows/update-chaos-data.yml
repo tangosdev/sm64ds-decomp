@@ -26,6 +26,8 @@ on:
       # percentage and must republish. The LINKED stamp needs no line of its own:
       # config/** already covers config/port_linkage.json.
       - "tools/tiers.py"
+      # demangle.py decides `class` on every record and the real_name criterion of CONVERTED.
+      - "tools/demangle.py"
       - "tools/treemap.py"
       - "tools/tu_treemap.py"
       - "tools/tu_treemap.html"
