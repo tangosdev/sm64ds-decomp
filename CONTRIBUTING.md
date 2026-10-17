@@ -49,6 +49,10 @@ You bring your own copy of the game. Nothing copyrighted lives in this repo.
    drives the analysis config in `config/` and rebuilds the ROM from objects.
    Grab the `0.11.0` binary for your platform and put it at
    `tools/bin/dsd.exe` (`tools/bin/` is git-ignored).
+   `rombuild.py` and `tubuild.py linkcheck` check this version before preparing
+   build inputs and record the executable's SHA-256 in their reports. Newer
+   versions can change delinking and linker scripts; they need a separately
+   validated toolchain migration.
 4. **Python 3** plus a few packages:
    ```sh
    pip install ndspy capstone pyelftools    # core

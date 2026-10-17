@@ -60,6 +60,7 @@ TOOLS = REPO / "tools"
 sys.path.insert(0, str(TOOLS))
 
 import build_pin as BP          # noqa: E402
+import dsd_pin as DSP            # noqa: E402
 import enroll as EN             # noqa: E402
 import lcf_interior as LI       # noqa: E402
 import match as M               # noqa: E402
@@ -3979,7 +3980,7 @@ def content_tree_sha256(root):
 
 BASELINE_CONTROL_TOOLS = tuple(
     REPO / "tools" / name for name in (
-        "objisolate.py", "reloc_audit.py", "rombuild.py", "rombuild_cache.py",
+        "dsd_pin.py", "objisolate.py", "reloc_audit.py", "rombuild.py", "rombuild_cache.py",
         "rombuild_check.py", "rombuild_profile.py", "tu_manifest.py",
         "tu_production.py", "tubuild.py"))
 
@@ -5129,6 +5130,10 @@ def cmd_linkcheck(args):
     print("real config/ and the shared build/ outputs are read-only for this command; "
           "everything written below lives under that scratch tree (build/ is gitignored).\n")
 
+    try:
+        report["dsdTool"] = DSP.check(RB.DSD)
+    except DSP.DsdPinError as exc:
+        raise SystemExit(str(exc)) from exc
     for tool in (RB.DSD, RB.MW / RB.VERSION / "mwccarm.exe",
                  RB.MW / RB.LD_VERSION / "mwldarm.exe"):
         if not tool.is_file():

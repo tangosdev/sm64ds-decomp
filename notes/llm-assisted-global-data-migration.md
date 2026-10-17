@@ -433,6 +433,12 @@ ELF, and module images. Retain the report as evidence for those exact inputs;
 an old receipt is not automatically valid for a new checkout. The static
 collector does not import receipts or turn their claims into a current pass.
 
+Use the documented `dsd` 0.11.0 pin. `rombuild.py` and `tubuild.py linkcheck`
+check it before preparing build inputs and record its path, version, and SHA-256
+under `dsdTool`. A later tool version can change the linker script even when
+the C++ source and compiler are unchanged; such a build is a separate toolchain
+experiment, not evidence for the pinned pipeline.
+
 For initialized data, compare the complete affected linked bytes after relocation:
 values, pointers, ordering, alignment, padding, and section tails. Check the
 module-qualified relocation destination and addend as well as the numeric word;

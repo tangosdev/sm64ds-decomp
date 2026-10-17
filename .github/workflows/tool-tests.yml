@@ -215,6 +215,7 @@ jobs:
             tools.test_data_provenance \
             tools.test_data_provenance_build \
             tools.test_delaunder \
+            tools.test_dsd_pin \
             tools.test_enroll \
             tools.test_layout \
             tools.test_linkcheck \

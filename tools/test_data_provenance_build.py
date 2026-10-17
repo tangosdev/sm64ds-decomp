@@ -196,6 +196,8 @@ src/example.cpp:
             for name, value in {"REPO": self.repo, "BUILD": self.build,
                                 "MW": tool.parents[2], "DSD": dsd}.items():
                 stack.enter_context(mock.patch.object(RB, name, value))
+            stack.enter_context(mock.patch.object(RB.DSP, "check", return_value={
+                "path": str(dsd), "version": "0.11.0", "sha256": "fixture"}))
             for name, value in {"enrolled": [], "versions": {}, "enrolled_symbols": {},
                                 "init_section_sources": set(), "compiler_only_policies": {},
                                 "intact_tu_policies": {}, "audit_version_pins": ([], [])}.items():

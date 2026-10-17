@@ -64,6 +64,7 @@ import rombuild_profile as RP  # noqa: E402
 import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
 import tu_manifest as TUM  # noqa: E402
+import dsd_pin as DSP  # noqa: E402
 
 # Default compiler for the ROM build — same as the matching pin (tools/match.py
 # CANONICAL / notes/rom-build.md). config/rombuild-versions.txt carries per-file
@@ -1203,6 +1204,10 @@ def main():
                                encoding="utf-8", newline="\n")
 
     try:
+        try:
+            report["dsdTool"] = DSP.check(DSD)
+        except DSP.DsdPinError as exc:
+            raise BuildError("preflight", 1, str(exc)) from exc
         for tool in (DSD, MW / VERSION / "mwccarm.exe", MW / LD_VERSION / "mwldarm.exe"):
             if not tool.is_file():
                 raise BuildError("preflight", 1,

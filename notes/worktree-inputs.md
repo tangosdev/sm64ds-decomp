@@ -55,6 +55,17 @@ roots — `src/` holds ~11k files with mangled C++ basenames. It also fails
 
 ## Verify before you trust it
 
+Check the shared `tools/bin/dsd.exe --version` before using it: this repository
+requires `ds-decomp-cli 0.11.0`, as specified in `CONTRIBUTING.md`. Both
+`rombuild.py` and `tubuild.py linkcheck` refuse other versions before preparing
+build inputs. If another worktree needs a different version, give this worktree
+its own `tools/bin/` directory. Unlink its junction first; copying an executable
+through the junction would replace the tool used by every linked worktree.
+An extraction made by a newer `dsd` may also use a different configuration
+schema. Re-extract your own ROM with the pinned tool into a private directory
+and compare the module bytes before replacing this worktree's extraction;
+do not rewrite the shared extraction to accommodate one worktree.
+
 Path existence is not proof the compiler runs. Use a function known to reproduce under
 the pin:
 
