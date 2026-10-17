@@ -39,11 +39,13 @@ import argparse
 import collections
 import concurrent.futures
 import glob
+import functools
 import json
 import pathlib
 import re
 import subprocess
 import sys
+import tempfile
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
@@ -170,6 +172,47 @@ def _resolve(name, idx, ledger):
     return slots
 
 
+@functools.lru_cache(maxsize=1)
+def _production_context():
+    """Snapshot normal-build admission once, before parallel file checks.
+
+    A rejected manifest must not silently select the isolated legacy path. Keep
+    the exception as a file ERROR, including when check_file is called directly.
+    """
+    import rombuild as RB
+    try:
+        intact = RB.intact_tu_policies(enrolled=RB.enrolled())
+        return {"intact": intact, "symbols": RB.enrolled_symbols(),
+                "versions": RB.versions(), "init_sources": RB.init_section_sources()}
+    except Exception as exc:
+        return {"error": f"production TU admission refused: {exc}"}
+
+
+def _production_object(path, context):
+    """Compile the enrolled production source and apply its complete TU policy.
+
+    compile_one uses the production pin/flags, then prepare_intact_object checks
+    owned text/non-text, symbol renames, RTTI, vtables and relocations. Nothing
+    falls back to winning_object if compilation or any policy audit fails.
+    """
+    import rombuild as RB
+    with tempfile.TemporaryDirectory(prefix="pr-linkcheck-") as scratch:
+        _, error, _ = RB.compile_one(
+            path, vers=context["versions"], init_srcs=context["init_sources"],
+            syms=context["symbols"], build_root=scratch,
+            intact_tus=context["intact"])
+        if error:
+            raise RuntimeError(error)
+        return (pathlib.Path(scratch) / pathlib.Path(path).with_suffix(".o")).read_bytes()
+
+
+def _file_error(path, owned, reason):
+    return {"file": path, "symbol": " + ".join(owned), "symbols": owned,
+            "results": [{"sym": " + ".join(owned), "verdict": "ERROR",
+                         "reason": reason, "diffs": [], "blind": 0,
+                         "passenger": False}], "note": ""}
+
+
 def check_file(path, idx, ledger):
     """Link-check every symbol the file compiles to -- the ones it OWNS AND its
     compiler-emitted passengers (this-adjusting thunks, weak dtor/ctor copies, local
@@ -190,7 +233,13 @@ def check_file(path, idx, ledger):
     that nothing had looked at. It could not fall through to the passenger loop either,
     since that loop only runs once the lead symbol has produced an object."""
     owned = SP.symbols_for(path)
+    context = _production_context()
+    if "error" in context:
+        return _file_error(path, owned, context["error"])
+    intact = context["intact"].get(path.replace("\\", "/"))
     named = [(sym, _resolve(sym, idx, ledger)) for sym in owned]
+    if intact is not None and (not owned or any(not slots for _, slots in named)):
+        return _file_error(path, owned, "production TU has unresolved owned functions")
     named = [(sym, slots) for sym, slots in named if slots]
     if not named:
         return {"file": path, "symbol": owned[0], "symbols": owned,
@@ -199,17 +248,26 @@ def check_file(path, idx, ledger):
     import reloc_audit as RA
     import bytegate as BG
     results, checked_passengers = [], set()
+    prepared = None
+    if intact is not None:
+        try:
+            prepared = _production_object(path, context)
+            if not prepared:
+                raise RuntimeError("production compiler returned an empty object")
+        except Exception as exc:
+            return _file_error(path, owned, f"intact TU preparation refused: {exc}")
     for sym, slots in named:
-        # ONE OBJECT PER OWNED SYMBOL, not one per file. `winning_object` runs the
+        # Intact TUs share their production-prepared object across all symbols.
+        # Legacy sources need ONE OBJECT PER OWNED SYMBOL. `winning_object` runs the
         # compiled object through objisolate the way rombuild does, and isolation prunes
         # it to the one function it was asked for -- so a TU's second function is simply
         # not in its sibling's object, and reusing it reports NO-SYM on a file that is
         # perfectly correct. (Measured on ActorBase_SceneNode: shared object ->
         # Reset VERIFIED, SceneNode() NO-SYM; per-symbol -> both VERIFIED.) For the
         # ordinary one-function sources this is exactly one call, as before.
-        obj = wsym = None
+        obj, wsym = prepared, (sym if prepared is not None else None)
         off = 0
-        for addr, size, mod in slots:
+        for addr, size, mod in ([] if prepared is not None else slots):
             # Mirror linkcheck.linkcheck's own resolution order exactly, since this loop
             # pre-supplies obj/sym into LC.linkcheck below instead of letting it call
             # winning_object itself: correct a zero-size EABI alias record to its sized
@@ -249,7 +307,9 @@ def check_file(path, idx, ledger):
         import probe_versions as PV
         try:
             emitted = set(PV.funcs_in(obj).keys())
-        except Exception:
+        except Exception as exc:
+            if intact is not None:
+                return _file_error(path, owned, f"production passenger inventory failed: {exc}")
             emitted = set()
         for psym in sorted(emitted - {s for s, _ in named} - {wsym} - checked_passengers):
             pslots = _resolve(psym, idx, ledger)
@@ -296,6 +356,7 @@ def warm_shared_indexes():
     each doing it and discarding all but one result."""
     import reloc_audit as RA
     import reverify_corpus as RV
+    _production_context()
     RA.warm_gate_index()
     LC._ranges()
     RV.mod_for("arm9")

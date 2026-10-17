@@ -219,6 +219,11 @@ class CheckFileResolvesAndThreadsBeforeCallingLinkcheck(unittest.TestCase):
     ADDR = 0x02000050
     RELOC_TARGET = 0xEE003000
 
+    def setUp(self):
+        patcher = mock.patch.object(PL, "_production_context", return_value={"intact": {}})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_nested_owned_symbol_resolved_via_check_files_own_winning_object_call(self):
         idx = {"nested_child": [(self.ADDR, 4, "itcm")]}
         target = struct.pack("<I", self.RELOC_TARGET)
@@ -292,6 +297,104 @@ class CheckFileResolvesAndThreadsBeforeCallingLinkcheck(unittest.TestCase):
         # that is the len-mismatch dead end the pre-fix caller always hit.
         self.assertEqual(sizes_seen, [4])
         self.assertEqual(rep["results"][0]["verdict"], "VERIFIED")
+
+
+class ProductionObjectChecks(unittest.TestCase):
+    PATH = "src/promoted.cpp"
+    ADDR = 0x02000000
+    TARGET = 0xEE003000
+
+    def _check(self, *, target=None, missing=False, prepare_error=None, owned=None):
+        import probe_versions as PV
+        owned = owned or ["owned"]
+        idx = {name: [(self.ADDR, 4, "arm9")] for name in owned + ["passenger"]}
+        context = {"intact": {self.PATH: {"id": "test"}}}
+        with contextlib.ExitStack() as stack:
+            stack.enter_context(mock.patch.object(PL.SP, "symbols_for", return_value=owned))
+            stack.enter_context(mock.patch.object(PL, "_production_context", return_value=context))
+            prepared = stack.enter_context(mock.patch.object(
+                PL, "_production_object", return_value=b"PREPARED", side_effect=prepare_error))
+            legacy = stack.enter_context(mock.patch.object(RA, "winning_object"))
+            stack.enter_context(mock.patch.object(PV, "funcs_in", return_value={"owned": 4, "passenger": 4}))
+            extract = stack.enter_context(mock.patch.object(
+                LC.M, "extract_func", return_value=(None if missing else bytes(4), set())))
+            stack.enter_context(mock.patch.object(RV, "rom_bytes", return_value=struct.pack("<I", self.TARGET)))
+            stack.enter_context(mock.patch.object(LC, "func_relocs_typed", return_value=[
+                {"off": 0, "type": LC.R_ARM_ABS32, "sym": "callee",
+                 "addr": self.TARGET if target is None else target, "add": 0}]))
+            stack.enter_context(mock.patch.object(LC, "is_benign", return_value=False))
+            stack.enter_context(mock.patch.object(LC, "is_interwork", return_value=False))
+            stack.enter_context(mock.patch.object(LC, "is_thumb_pointer", return_value=False))
+            stack.enter_context(mock.patch.object(RA, "defined_function_size", return_value=None))
+            rep = PL.check_file(self.PATH, idx, {})
+            legacy.assert_not_called()
+            if not prepare_error:
+                prepared.assert_called_once_with(self.PATH, context)
+                for call in extract.call_args_list:
+                    self.assertEqual(call.args[0], b"PREPARED")
+            return rep
+
+    def test_prepared_owned_symbols_and_passengers_are_strictly_checked(self):
+        rep = self._check(owned=["owned", "second"])
+        self.assertEqual([r["verdict"] for r in rep["results"]], ["VERIFIED"] * 3)
+        self.assertEqual(sum(r["passenger"] for r in rep["results"]), 1)
+
+    def test_wrong_destination_in_prepared_object_still_fails(self):
+        rep = self._check(target=self.TARGET + 4)
+        self.assertEqual(PL.worst(rep["results"]), "WRONG")
+        self.assertEqual(rep["results"][0]["diffs"][0]["sym"], "callee")
+
+    def test_missing_owned_symbol_cannot_use_legacy_fallback(self):
+        rep = self._check(missing=True)
+        self.assertEqual(PL.worst(rep["results"]), "NO-SYM")
+
+    def test_preparation_audit_failure_is_error_without_legacy_fallback(self):
+        rep = self._check(prepare_error=RuntimeError("owned non-text relocation differs"))
+        self.assertEqual(PL.worst(rep["results"]), "ERROR")
+        self.assertIn("owned non-text relocation differs", rep["results"][0]["reason"])
+
+    def test_admission_failure_is_error_without_compiling(self):
+        import rombuild as RB
+        PL._production_context.cache_clear()
+        self.addCleanup(PL._production_context.cache_clear)
+        with mock.patch.object(RB, "enrolled", return_value=[self.PATH]) as enrolled, \
+                mock.patch.object(RB, "intact_tu_policies", side_effect=RuntimeError("proof phase rom is not green")) as admit, \
+                mock.patch.object(PL.SP, "symbols_for", return_value=["owned"]), \
+                mock.patch.object(PL, "_production_object") as compile_obj, \
+                mock.patch.object(RA, "winning_object") as legacy:
+            rep = PL.check_file(self.PATH, {"owned": [(self.ADDR, 4, "arm9")]}, {})
+        enrolled.assert_called_once_with()
+        admit.assert_called_once_with(enrolled=[self.PATH])
+        compile_obj.assert_not_called()
+        legacy.assert_not_called()
+        self.assertEqual(PL.worst(rep["results"]), "ERROR")
+        self.assertIn("proof phase rom is not green", rep["results"][0]["reason"])
+
+    def test_uses_production_compile_with_pins_and_admitted_policy(self):
+        import rombuild as RB
+        context = {"intact": {self.PATH: {"id": "test"}},
+                   "versions": {"promoted": "pin"}, "init_sources": set(),
+                   "symbols": {self.PATH: ["owned"]}}
+
+        def compile_one(path, **kwargs):
+            self.assertEqual(path, self.PATH)
+            self.assertIs(kwargs["intact_tus"], context["intact"])
+            self.assertIs(kwargs["vers"], context["versions"])
+            self.assertIs(kwargs["syms"], context["symbols"])
+            output = pathlib.Path(kwargs["build_root"]) / pathlib.Path(path).with_suffix(".o")
+            output.parent.mkdir(parents=True)
+            output.write_bytes(b"PRODUCTION")
+            return path, None, "miss"
+
+        with mock.patch.object(RB, "compile_one", side_effect=compile_one):
+            self.assertEqual(PL._production_object(self.PATH, context), b"PRODUCTION")
+
+    def test_production_compile_error_does_not_read_unprepared_object(self):
+        import rombuild as RB
+        context = {"intact": {}, "versions": {}, "init_sources": set(), "symbols": {}}
+        with mock.patch.object(RB, "compile_one", return_value=(self.PATH, "isolate: nontext mismatch", "error")):
+            with self.assertRaisesRegex(RuntimeError, "nontext mismatch"):
+                PL._production_object(self.PATH, context)
 
 
 if __name__ == "__main__":
