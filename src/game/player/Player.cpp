@@ -374,10 +374,10 @@ void Player::func_ov002_020bd06c(unsigned int state2)
         this->mRootMotionMode = 1;
         break;
     case 2:
-        _ZN5Sound9PlayBank0EjRK7Vector3(0xdc, (struct Vector3 *)(self + 0x74));
+        _ZN5Sound9PlayBank0EjRK7Vector3(0xdc, &mCamSpacePos);
         break;
     case 4:
-        _ZN5Sound9PlayBank0EjRK7Vector3(0xe1, (struct Vector3 *)(self + 0x74));
+        _ZN5Sound9PlayBank0EjRK7Vector3(0xe1, &mCamSpacePos);
         break;
     default:
         break;
@@ -396,9 +396,7 @@ void Player::func_ov002_020bd06c(unsigned int state2)
         var_deathTableID = -1;
 
         *(fBase_c **)(self + 0x72c) = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-            0x10d, flag | (var_self8 << 8),
-            (struct Vector3 *)(self + 0x5c), 0,
-            var_areaID, var_deathTableID);
+            0x10d, flag | (var_self8 << 8), &mPos, 0, var_areaID, var_deathTableID);
     }
 
     {
@@ -1729,6 +1727,7 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(char *self, u32 a, int b, Fix12i c, u16 d)
     extern u8 data_0209f2d8;
     extern void *data_ov002_020ff480[];
     extern void *data_ov002_020ff2f0[];
+    Player *player = (Player *)self;
     u32 charId;
     void *sfp;
     u32 sl;
@@ -1742,34 +1741,36 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(char *self, u32 a, int b, Fix12i c, u16 d)
     flag = (data_0209f2d8 == 1);
     if (flag) {
         if ((int)a < 0x11 || (int)a >= 0x72) {
-            u16 *f = LAUNDER16(self + 0x6ce);
+            u16 *f = LAUNDER16(&player->mStateFlags);
             *f = (u16)(*f | 0x80);
             return;
         }
     }
 
     newVal = a << 2;
-    if (newVal != *(u32 *)(self + 0x63c)) {
-        ((SharedFilePtr *)(data_ov002_020ff480[*(u32 *)(self + 0x63c) + (*(int *)(self + 8) & 3)]))->Release();
+    if (newVal != player->mCharFileBase) {
+        ((SharedFilePtr *)(data_ov002_020ff480[player->mCharFileBase + (*(int *)(self + 8) & 3)]))
+            ->Release();
         _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(data_ov002_020ff480[newVal + (*(int *)(self + 8) & 3)]);
 
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-        modelPtr = ((void **)(self + 0xdc))[id];
+        modelPtr = player->mBodyModels[id];
         ((ModelAnim *)modelPtr)->file = 0;
 
-        if ((*(u16 *)(self + 0x73c) & 7) == 4) {
-            charId = *(u8 *)(self + 0x6dd);
+        if ((player->mCapFlags & 7) == 4) {
+            charId = player->mHatCharacter;
             if (charId == *(u32 *)(self + 8))
-                charId = *(u8 *)(self + 0x6dc);
+                charId = player->mPrevCharacter;
 
-            ((SharedFilePtr *)(data_ov002_020ff480[*(u32 *)(self + 0x63c) + charId]))->Release();
+            ((SharedFilePtr *)(data_ov002_020ff480[player->mCharFileBase + charId]))->Release();
             sfp = data_ov002_020ff480[newVal + charId];
             _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(sfp);
 
             id = _ZNK6Player14GetBodyModelIDEjb(self, charId & 0xff, 0);
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((void **)(self + 0xdc))[id], *(void **)((char *)sfp + 4), b, c, d);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(player->mBodyModels[id],
+                                                        *(void **)((char *)sfp + 4), b, c, d);
             {
-                u16 *g = LAUNDER16(self + 0x73e);
+                u16 *g = LAUNDER16(&player->mCapTimer);
                 *g = (u16)(*g + 1);
             }
         }
@@ -1778,7 +1779,9 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(char *self, u32 a, int b, Fix12i c, u16 d)
     field8 = *(int *)(self + 8);
     sl = a * 4;
     id = _ZNK6Player14GetBodyModelIDEjb(self, (u32)(field8 & 0xff), 0);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj( ((void **)(self + 0xdc))[id], *(void **)((char *)data_ov002_020ff480[(field8 & 3) + (a * 4)] + 4), b, c, d);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        player->mBodyModels[id],
+        *(void **)((char *)data_ov002_020ff480[(field8 & 3) + (a * 4)] + 4), b, c, d);
 
     field8 = *(int *)(self + 8);
     if ((int)sl >= 0x60) sl = 0x60;
@@ -1787,7 +1790,7 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(char *self, u32 a, int b, Fix12i c, u16 d)
     if (((int)sl >> 2) == 1) param2 = 0x40000000;
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj( self + 0x1dc + field8 * 0x14, *(void **)((char *)data_ov002_020ff2f0[sl] + 4), param2, 0x1000, 0);
 
-    *(u32 *)(self + 0x63c) = newVal;
+    player->mCharFileBase = newVal;
 }
 }
 #pragma pop
@@ -2736,7 +2739,7 @@ int Player::func_ov002_020c06fc(int arg)
 
     v = func_ov002_020f02c8(this->func_ov002_020c031c());
     {
-        int j = (*(u16 *)(c + 0x94) >> 4) * 2;
+        int j = ((u16)mPrevAngleY >> 4) * 2;
         spd = this->mHorzSpeed;
         r5v = FX_MUL(spd, (int)data_02082214[j]);
         r4v = FX_MUL(spd, (int)data_02082214[j + 1]);
@@ -2750,24 +2753,24 @@ int Player::func_ov002_020c06fc(int arg)
                 b = 0;
             s2 = *(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18);
             if (s2 < 0x400)
-                *(u16 *)(c + 0x69c) = FX_MUL(b, 0x64);
+                mAngleYSpeed = FX_MUL(b, 0x64);
             else if (s2 < 0x800)
-                *(u16 *)(c + 0x69c) = FX_MUL(b, 0xC8);
+                mAngleYSpeed = FX_MUL(b, 0xC8);
             else if (s2 < 0xC00)
-                *(u16 *)(c + 0x69c) = FX_MUL(b, 0x190);
+                mAngleYSpeed = FX_MUL(b, 0x190);
             else
-                *(u16 *)(c + 0x69c) = FX_MUL(b, 0x300);
+                mAngleYSpeed = FX_MUL(b, 0x300);
         } else {
-            *(u16 *)(c + 0x69c) = FX_MUL(b, 0x220);
+            mAngleYSpeed = FX_MUL(b, 0x220);
         }
     } else {
-        *(u16 *)(c + 0x69c) = (int)((((long long)b << 8) + 0x800) >> 12);
+        mAngleYSpeed = (int)((((long long)b << 8) + 0x800) >> 12);
     }
 
-    f.v0.x = FX_MUL(v, (int)data_02082214[(*(u16 *)(c + 0x69a) >> 4) * 2]);
-    f.v0.z = FX_MUL(v, (int)data_02082214[(*(u16 *)(c + 0x69a) >> 4) * 2 + 1]);
+    f.v0.x = FX_MUL(v, (int)data_02082214[((u16)mFloorAngle >> 4) * 2]);
+    f.v0.z = FX_MUL(v, (int)data_02082214[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
-        int len = Vec3_HorzLen(c + 0x554);
+        int len = Vec3_HorzLen(&mFloorNormalX);
         f.v0.x = FX_MUL(f.v0.x, len);
         f.v0.z = FX_MUL(f.v0.z, len);
     }
@@ -3194,22 +3197,22 @@ void Player::func_ov002_020c14b8()
 
     savedY = 0x80000000;
     if (_ZN6Player12Unk_020c9e5cEh(c, 7) || _ZN6Player12Unk_020c9e5cEh(c, 0xa) || _ZN6Player12Unk_020c9e5cEh(c, 0xb) || _ZN6Player12Unk_020c9e5cEh(c, 0xe))
-        savedY = *(int *)(c + 0x60);
+        savedY = mPosY;
     *(int *)(c + 0x648) = 0x80000000;
-    *(int *)(c + 0x644) = *(int *)(c + 0x648);
+    mGroundY = *(int *)(c + 0x648);
     *(int *)(c + 0x64c) = 0x80000000;
     {
-        int t = *(int *)(c + 0x60) + 0xa0000;
+        int t = mPosY + 0xa0000;
         if (t >= *(int *)(c + 0x650))
             *(int *)(c + 0x650) = 0x80000000;
     }
     *(int *)(c + 0x668) = 0;
-    *(int *)(c + 0x664) = *(int *)(c + 0x668);
-    *(int *)(c + 0x658) = 0;
+    mSurfaceType = *(int *)(c + 0x668);
+    mFloorClass = 0;
     {
-        int z = *(int *)(c + 0x64);
-        int y = *(int *)(c + 0x60) + 0xa0000;
-        int x = *(int *)(c + 0x5c);
+        int z = mPosZ;
+        int y = mPosY + 0xa0000;
+        int x = mPosX;
         pos.x = x;
         pos.y = y;
         pos.z = z;
@@ -3230,11 +3233,11 @@ void Player::func_ov002_020c14b8()
         func_ov002_020c16ec(c, &tmp);
         _ZN5dBgPiD1Ev(&tmp);
         *(int *)(c + 0x648) = *(int *)(rg + 0x44);
-        *(int *)(c + 0x644) = *(int *)(c + 0x648);
-        *(int *)(c + 0x668) = *(int *)(c + 0x664);
+        mGroundY = *(int *)(c + 0x648);
+        *(int *)(c + 0x668) = mSurfaceType;
     }
 
-    pos.y = *(int *)(c + 0x60) + 0x12c000;
+    pos.y = mPosY + 0x12c000;
     _ZN5dBgCh19StartDetectingWaterEv(rg);
     _ZN5dBgCh19StartDetectingToxicEv(rg);
     _ZN5dBgCh21StopDetectingOrdinaryEv(rg);
@@ -3249,12 +3252,12 @@ void Player::func_ov002_020c14b8()
         }
     }
 
-    *(unsigned short *)(c + 0x6ce) &= ~1;
-    *(unsigned short *)(c + 0x6ce) &= ~0x10;
+    mStateFlags &= ~1;
+    mStateFlags &= ~0x10;
     ((Player *)(c))->func_ov002_020c133c();
 
     if (savedY != (int)0x80000000)
-        *(int *)(c + 0x644) = savedY;
+        mGroundY = savedY;
 
     _ZN9dBgCh_GndD1Ev(rg);
 }
@@ -3318,10 +3321,11 @@ extern "C" {
 int func_ov002_020c179c(char* self, int angle) {
     extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
     extern short data_02082214[];
+    Player *p = (Player *)self;
     Vector3 v1;
     Vector3 v2;
-    int idx = (unsigned short)(short)(*(short*)(self + 0x94) + angle);
-    int y1 = *(int*)(self + 0x60);
+    int idx = (unsigned short)(short)(p->mPrevAngleY + angle);
+    int y1 = p->mPosY;
     int y2 = y1;
     idx >>= 4;
     short dx = data_02082214[idx * 2];
@@ -3330,9 +3334,9 @@ int func_ov002_020c179c(char* self, int angle) {
     int oy = dy * 5;
     dBgCh_Gnd rg;
     {
-        int z = *(int*)(self + 0x64) + oy;
-        int y = *(int*)(self + 0x60) + 0x64000;
-        int x = *(int*)(self + 0x5c) + ox;
+        int z = p->mPosZ + oy;
+        int y = p->mPosY + 0x64000;
+        int x = p->mPosX + ox;
         v1.x = x;
         v1.y = y;
         v1.z = z;
@@ -3340,9 +3344,9 @@ int func_ov002_020c179c(char* self, int angle) {
     rg.SetObjAndPos(v1, (dActor_c*)self);
     if (rg.DetectClsn()) y1 = rg.clsnY;
     {
-        int z = *(int*)(self + 0x64) - oy;
-        int x = *(int*)(self + 0x5c) - ox;
-        int y = *(int*)(self + 0x60) + 0x64000;
+        int z = p->mPosZ - oy;
+        int x = p->mPosX - ox;
+        int y = p->mPosY + 0x64000;
         v2.x = x;
         v2.y = y;
         v2.z = z;
@@ -3369,27 +3373,30 @@ void func_ov002_020c18b0(char *self, int p1)
     extern int Player_ScaleByCharFactor(void*, int a);
     extern int __aeabi_idiv(int a, int b);
     extern short data_02082214[];
-    if (*(unsigned char *)(self + 0x6de) != 0) return;
-    if (*(int *)(self + 0x558) == 0) return;
+    Player *p = (Player *)self;
+    if (p->mIsAirborne != 0)
+        return;
+    if (p->mFloorNormalY == 0)
+        return;
     {
         int a = func_ov002_020c179c(self, 0);
         int idx = (unsigned short)a >> 4;
         int sinv = data_02082214[idx * 2 + 1];
-        int f554 = *(int *)(self + 0x554);
-        int f55c = *(int *)(self + 0x55c);
+        int f554 = p->mFloorNormalX;
+        int f55c = p->mFloorNormalZ;
         Vec3i v;
         v.x = f554;
         v.y = sinv;
         v.z = f55c;
-        *(short *)(self + 0x8c) = (short)func_02010844(self, &v, *(short *)(self + 0x8e));
-        *(short *)(self + 0x90) = (short)func_02010844(self, &v, (short)(*(short *)(self + 0x8e) - 0x4000));
+        p->mAngleX = (short)func_02010844(self, &v, p->mAngleY);
+        p->mAngleZ = (short)func_02010844(self, &v, (short)(p->mAngleY - 0x4000));
     }
     if (p1 == 0) return;
     {
         int r0v = Player_ScaleByCharFactor(self, 0x28000);
-        int divr = __aeabi_idiv(*(int *)(self + 0x98) << 12, r0v);
-        *(short *)(self + 0x8c) = (short)FX_MUL(*(short *)(self + 0x8c), divr);
-        *(short *)(self + 0x90) = (short)FX_MUL(*(short *)(self + 0x90), divr);
+        int divr = __aeabi_idiv(p->mHorzSpeed << 12, r0v);
+        p->mAngleX = (short)FX_MUL(p->mAngleX, divr);
+        p->mAngleZ = (short)FX_MUL(p->mAngleZ, divr);
     }
 }
 }
@@ -3846,74 +3853,74 @@ int Player::func_ov002_020c25a8(int arg1)
     char *fr;
     int *dst;
 
-    func_02037318(c + 0x380);
-    _ZN10dBgCh_Actr18StopDetectingWaterEv(c + 0x380);
+    func_02037318(&mMeshClsn);
+    _ZN10dBgCh_Actr18StopDetectingWaterEv(&mMeshClsn);
 
     {
         int b1;
-        b1 = *(int*)(c + 0x354);
+        b1 = mRidingShell;
         b1 = (b1 != 0);
-        if (b1 || *(unsigned char*)(c + 0x6ec) || *(unsigned char*)(c + 0x6fd))
-            _ZN10dBgCh_Actr19StartDetectingWaterEv(c + 0x380);
+        if (b1 || *(unsigned char *)(c + 0x6ec) || mIsBalloon)
+            _ZN10dBgCh_Actr19StartDetectingWaterEv(&mMeshClsn);
     }
 
-    func_020357e0(c + 0x380);
+    func_020357e0(&mMeshClsn);
 
-    if (*(unsigned char*)(c + 0x6fb))
-        func_02035800(c + 0x380);
+    if (mIsVanish)
+        func_02035800(&mMeshClsn);
 
-    func_02035770(c + 0x380);
+    func_02035770(&mMeshClsn);
 
-    if (*(unsigned char*)(c + 0x703))
-        func_02035784(c + 0x380);
+    if (mIsMega)
+        func_02035784(&mMeshClsn);
 
-    func_020357a0(c + 0x380);
+    func_020357a0(&mMeshClsn);
 
     if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110514))
-        func_020357c0(c + 0x380);
+        func_020357c0(&mMeshClsn);
 
-    func_020355e8(c + 0x380);
+    func_020355e8(&mMeshClsn);
 
     {
         int b2;
-        b2 = *(int*)(c + 0x354);
+        b2 = mRidingShell;
         b2 = (b2 != 0);
         if (b2)
-            func_020355fc(c + 0x380);
+            func_020355fc(&mMeshClsn);
     }
 
-    _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x380);
+    _ZN10dBgCh_Actr15ClearLimMovFlagEv(&mMeshClsn);
 
-    if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_021100f4) && *(int*)(c + 0xa8) > 0)
-        _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x380);
+    if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_021100f4) && mVertSpeed > 0)
+        _ZN10dBgCh_Actr13SetLimMovFlagEv(&mMeshClsn);
 
-    func_020355c8(c + 0x380);
+    func_020355c8(&mMeshClsn);
 
     if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_021102ec))
-        func_020355b4(c + 0x380);
+        func_020355b4(&mMeshClsn);
 
-    func_020383e4(c + 0x380);
+    func_020383e4(&mMeshClsn);
 
-    if (*(unsigned char*)(c + 0x703))
-        func_ov002_020eed24(c + 0x380, c);
+    if (mIsMega)
+        func_ov002_020eed24(&mMeshClsn, c);
 
-    if (*(int*)(c + 0xa8) > 0x1e000)
-        _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x380);
+    if (mVertSpeed > 0x1e000)
+        _ZN10dBgCh_Actr15ClearGroundFlagEv(&mMeshClsn);
 
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
-        *(unsigned char*)(c + 0x6e9) |= 1;
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn))
+        mClsnFlags |= 1;
 
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x380))
-        *(unsigned char*)(c + 0x6e9) |= 2;
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(&mMeshClsn))
+        mClsnFlags |= 2;
 
-    if (func_02035638(c + 0x380))
-        *(unsigned char*)(c + 0x6e9) |= 4;
+    if (func_02035638(&mMeshClsn))
+        mClsnFlags |= 4;
 
-    if (*(unsigned char*)(c + 0x706) == 0)
-        func_020371fc(c + 0x380);
+    if (mIsUnderwater == 0)
+        func_020371fc(&mMeshClsn);
 
-    if (*(unsigned char*)(c + 0x6e9) & 1) {
-        fr = (char*)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380);
+    if (mClsnFlags & 1) {
+        fr = (char *)_ZNK10dBgCh_Actr14GetFloorResultEv(&mMeshClsn);
         dst = &tmp.f04;
 
         { struct P2w { int w[2]; }; *(P2w *)dst = *(P2w *)(fr + 0x4); }
@@ -3930,51 +3937,52 @@ int Player::func_ov002_020c25a8(int arg1)
         func_ov002_020c16ec(c, &tmp);
         _ZN5dBgPiD1Ev(&tmp);
 
-        *(int*)(c + 0x644) = *(int*)(c + 0x60);
+        mGroundY = mPosY;
         ret = func_02037e58(fr + 4);
 
-        if (*(unsigned char*)(c + 0x706) == 0 && ret != 1) {
+        if (mIsUnderwater == 0 && ret != 1) {
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, &v);
             if (v.y != 0) {
                 int t = _ZN4cstd4fdivEii(
                     FX_MUL(v.x, *(int *)(c + 0xa4)) + FX_MUL(v.z, *(int *)(c + 0xac)), v.y);
                 t = -(t + 0x8000);
                 if (t < 0)
-                    *(int*)(c + 0xa8) = t;
+                    mVertSpeed = t;
             }
         }
-        *(unsigned char*)(c + 0x6de) = 0;
-        *(unsigned char*)(c + 0x712) = 0;
+        mIsAirborne = 0;
+        mIsInAirState = 0;
     } else {
-        if (func_020356c8(c + 0x380))
-            *(int*)(c + 0x684) = *(int*)(c + 0x60);
-        *(unsigned char*)(c + 0x6de) = 1;
-        *(unsigned char*)(c + 0x6df) = 0;
-        if (func_02035638(c + 0x380) && *(int*)(c + 0xa8) > 0)
-            *(int*)(c + 0xa8) = -0x1000;
+        if (func_020356c8(&mMeshClsn))
+            mPeakY = mPosY;
+        mIsAirborne = 1;
+        mLandSoundPlayed = 0;
+        if (func_02035638(&mMeshClsn) && mVertSpeed > 0)
+            mVertSpeed = -0x1000;
         func_ov002_020cef84(c);
     }
 
     if (arg1 != 0) {
-        *(unsigned char*)(c + 0x6e9) |= 1;
-        *(unsigned char*)(c + 0x6de) = 0;
-        *(unsigned char*)(c + 0x712) = 0;
+        mClsnFlags |= 1;
+        mIsAirborne = 0;
+        mIsInAirState = 0;
     }
 
     {
-        int wallFlag = *(unsigned char*)(c + 0x6e9) & 2;
+        int wallFlag = mClsnFlags & 2;
         if (wallFlag == 0)
             return wallFlag;
     }
 
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(c + 0x380) + 4, &wn);
-    *(int*)(c + 0x560) = wn.x;
-    *(int*)(c + 0x564) = wn.y;
-    *(int*)(c + 0x568) = wn.z;
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(
+        (char *)_ZNK10dBgCh_Actr13GetWallResultEv(&mMeshClsn) + 4, &wn);
+    mWallNormalX = wn.x;
+    mWallNormalY = wn.y;
+    mWallNormalZ = wn.z;
 
-    if (*(unsigned char*)(c + 0x706) == 0) {
-        *(int*)(c + 0x5c) -= *(int*)(c + 0x560) * 2;
-        *(int*)(c + 0x64) -= *(int*)(c + 0x568) * 2;
+    if (mIsUnderwater == 0) {
+        mPosX -= mWallNormalX * 2;
+        mPosZ -= mWallNormalZ * 2;
     }
 
     ret = func_ov002_020d0580(c);
@@ -4006,25 +4014,26 @@ void Player::func_ov002_020c29d4()
     char *base = (char *)this;
     if (*(int *)(base + 8) != 1) return;
     if (this->mIsMega != 0) return;
-    unsigned char flags = *(unsigned char *)(base + 0x6eb);
+    unsigned char flags = mQuicksandRunFlags;
     if ((flags & 1) && !(flags & 0x80)) {
         if (this->mHorzSpeed >= Player_ScaleByCharFactor(this, 0x28000)) {
             if (this->IsState(data_ov002_0211013c)) {
-                *(short *)(base + 0x6bc) = 0x1e;
+                mQuicksandRunTimer = 0x1e;
             } else if (this->IsState(data_ov002_021101b4) && this->mVertSpeed < 0 && (this->mPeakY - this->mPosY) < 0x64000) {
-                *(short *)(base + 0x6bc) = 0x1e;
+                mQuicksandRunTimer = 0x1e;
             }
         }
-        *(unsigned char *)(base + 0x6eb) = 0x80;
+        mQuicksandRunFlags = 0x80;
     } else if (flags & 0x80) {
-        if (((dBgCh_Actr *)(base + 0x380))->IsOnGround()) {
-            int r = func_02037e38((unsigned int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv((dBgCh_Actr *)(base + 0x380)) + 4));
+        if (mMeshClsn.IsOnGround()) {
+            int r = func_02037e38(
+                (unsigned int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(&mMeshClsn) + 4));
             if (r >= 6 && r <= 9) return;
-            *(unsigned char *)(base + 0x6eb) = 0;
-            *(short *)(base + 0x6bc) = 0;
+            mQuicksandRunFlags = 0;
+            mQuicksandRunTimer = 0;
         } else {
-            *(unsigned char *)(base + 0x6eb) = 0;
-            *(short *)(base + 0x6bc) = 0;
+            mQuicksandRunFlags = 0;
+            mQuicksandRunTimer = 0;
         }
     }
 }
@@ -4054,65 +4063,67 @@ void Player::func_ov002_020c2b08()
 
     if (*(int *)(c + 8) != 1)
         return;
-    if (*(u8 *)(c + 0x703) != 0)
+    if (mIsMega != 0)
         return;
 
-    if (*(u8 *)(c + 0x6ea) == 0) {
+    if (mWaterRunLatch == 0) {
         int limit;
 
-        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
+        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn))
             return;
-        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20(
+                (int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(&mMeshClsn) + 4)))
             return;
 
         limit = Player_ScaleByCharFactor(c, 0x20000);
-        if (*(int *)(c + 0x98) >= limit)
-            *(u16 *)(c + 0x6ba) = 0x3c;
+        if (mHorzSpeed >= limit)
+            mWaterRunTimer = 0x3c;
         else
-            *(u16 *)(c + 0x6ba) = 0x1e;
-        *(u8 *)(c + 0x6ea) = 1;
+            mWaterRunTimer = 0x1e;
+        mWaterRunLatch = 1;
         return;
     }
 
-    if (*(u16 *)(c + 0x6ba) != 0) {
-        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
+    if (mWaterRunTimer != 0) {
+        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn))
             goto clear_timer;
-        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20(
+                (int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(&mMeshClsn) + 4)))
             goto clear_timer;
 
-        *(u8 *)(c + 0x707) = 1;
+        mIsInShallowWater = 1;
 
-        if (*(u16 *)(c + 0x6ba) != 0) {
-            if (*(int *)(c + 0x98) >= 0x1000)
+        if (mWaterRunTimer != 0) {
+            if (mHorzSpeed >= 0x1000)
                 goto big_block;
         }
 
-        *(u16 *)(c + 0x6ba) = 0;
-        *(int *)(c + 0x60) += *(int *)(c + 0x690);
-        if (*(int *)(c + 0x60) < *(int *)(c + 0x644))
-            *(int *)(c + 0x60) = *(int *)(c + 0x644);
+        mWaterRunTimer = 0;
+        mPosY += *(int *)(c + 0x690);
+        if (mPosY < mGroundY)
+            mPosY = mGroundY;
         return;
 
     big_block:
         {
             int limit2 = Player_ScaleByCharFactor(c, 0x28000);
 
-            if (*(int *)(c + 0x98) < limit2) {
-                if (*(u16 *)(c + 0x6ba) >= 0x1e)
-                    *(u16 *)(c + 0x6ba) = 0x1e;
+            if (mHorzSpeed < limit2) {
+                if (mWaterRunTimer >= 0x1e)
+                    mWaterRunTimer = 0x1e;
             }
 
-            *(int *)(c + 0x55c) = 0;
+            mFloorNormalZ = 0;
             {
-                int t = *(int *)(c + 0x55c);
-                *(int *)(c + 0x554) = t;
-                *(int *)(c + 0x558) = 0x1000;
+                int t = mFloorNormalZ;
+                mFloorNormalX = t;
+                mFloorNormalY = 0x1000;
             }
 
             {
-                int yy = *(int *)(c + 0x60);
-                int zz = *(int *)(c + 0x64);
-                int xx = *(int *)(c + 0x5c);
+                int yy = mPosY;
+                int zz = mPosZ;
+                int xx = mPosX;
                 int yy2 = yy + 0x64000;
                 v[0] = xx;
                 v[1] = yy2;
@@ -4123,9 +4134,9 @@ void Player::func_ov002_020c2b08()
             _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, v, c);
 
             if (_ZN9dBgCh_Gnd10DetectClsnEv(rg) != 0) {
-                *(int *)(c + 0x644) = *(int *)(rg + 0x44);
-                if (*(int *)(c + 0x60) + *(int *)(c + 0x690) < *(int *)(rg + 0x44))
-                    *(u16 *)(c + 0x6ba) = 0;
+                mGroundY = *(int *)(rg + 0x44);
+                if (mPosY + *(int *)(c + 0x690) < *(int *)(rg + 0x44))
+                    mWaterRunTimer = 0;
             }
 
             _ZN9dBgCh_GndD1Ev(rg);
@@ -4133,20 +4144,21 @@ void Player::func_ov002_020c2b08()
         }
 
     clear_timer:
-        *(u16 *)(c + 0x6ba) = 0;
+        mWaterRunTimer = 0;
         return;
     }
 
     *(u8 *)(c + 0x6ec) = 0;
-    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn))
         return;
-    if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380) + 4)) != 0)
+    if (SurfaceInfo_TestFlag0x20(
+            (int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(&mMeshClsn) + 4)) != 0)
         return;
-    if (*(u8 *)(c + 0x707) != 0)
+    if (mIsInShallowWater != 0)
         return;
 
     if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_0211013c)) {
-        *(u8 *)(c + 0x6ea) = 0;
+        mWaterRunLatch = 0;
         *(u8 *)(c + 0x6ec) = 1;
     }
     return;
@@ -5230,9 +5242,9 @@ int Player::St_Talk_Main()
     }
 
     if (mNoCtrlKind == 0) {
-        char *p = (char *)mTalkActor;
+        dActor_c *p = (dActor_c *)mTalkActor;
         if (p != 0)
-            *(u32*)(((int)p + 0xb0)) |= 0x800000;
+            p->mFlags |= 0x800000;
         mFlags |= 0x800000;
         data_0209b454 |= 0x800000;
         mNoCtrlKind = 1;
@@ -5945,9 +5957,9 @@ int Player::St_DeadPit_Init()
             *(int*)(*(char**)((char*)&mObjInMouth) + 0xd0) = 0;
         }
         mUseAltBodyModel = 0;
-        *(int*)(((int)*(char**)((char*)&mObjInMouth) + 0xb0)) |= 0x80000;
-        *(int*)(((int)*(char**)((char*)&mObjInMouth) + 0xb0)) &= ~0x40000;
-        *(int*)(((int)*(char**)((char*)&mObjInMouth) + 0xb0)) &= ~0x20000;
+        ((dActor_c *)mObjInMouth)->mFlags |= 0x80000;
+        ((dActor_c *)mObjInMouth)->mFlags &= ~0x40000;
+        ((dActor_c *)mObjInMouth)->mFlags &= ~0x20000;
         *(char**)((char*)&mObjInMouth) = 0;
     }
     Player_DisableInteraction(((char*)this));
@@ -7755,7 +7767,7 @@ int Player::func_ov002_020c8540()
             mFlags |= 0x800000;
             o = (char *)mTalkActor;
             if (o != 0) {
-                int* p = (int*)(o + 0xb0);
+                int *p = (int *)&((dActor_c *)o)->mFlags;
                 *p &= ~0x800000;
             }
             data_0209b454 |= 0x800000;
@@ -7770,7 +7782,7 @@ int Player::func_ov002_020c8540()
         mFlags &= ~0x800000;
         o = (char *)mTalkActor;
         if (o != 0) {
-            int* p = (int*)(o + 0xb0);
+            int *p = (int *)&((dActor_c *)o)->mFlags;
             *p |= 0x800000;
             mTalkActor = 0;
         }
@@ -9985,7 +9997,7 @@ int Player::St_Climb_Main()
     mPeakY = mPosY;
 
     {
-        char* gr = *(char**)(c + 0x37c);
+        char *gr = (char *)mClimbClsn;
         s32* p = (*(GroundPosFn*)(*(char**)gr + 8))(gr);
         vbuf[0] = p[0];
         vbuf[1] = p[1];
@@ -9996,7 +10008,7 @@ int Player::St_Climb_Main()
         vbuf[4] = 0;
         vbuf[3] = 0;
         vbuf[5] = -0x10000;
-        gr = *(char**)(c + 0x37c);
+        gr = (char *)mClimbClsn;
         Vec3_RotateYAndTranslate(&vbuf[0], (*(GroundPosFn*)(*(char**)gr + 8))(gr), mAngleY, &vbuf[3]);
     }
     mPosX = vbuf[0];
@@ -10004,10 +10016,10 @@ int Player::St_Climb_Main()
 
     {
         void* cam = data_0209f318;
-        if (*(u32*)(*(char**)(c + 0x37c) + 0x18) & 0x1000000) {
+        if (mClimbClsn->flags & 0x1000000) {
             func_0200d5c0(cam, mPlayerNo);
         } else {
-            s32 v = FX_MUL((*(s32 *)(*(char **)(c + 0x37c) + 8)), 0xb33);
+            s32 v = FX_MUL((*(s32 *)((char *)mClimbClsn + 8)), 0xb33);
             if (v <= mAttachOffsetY) {
                 func_0200d5c0(cam, mPlayerNo);
             } else {
@@ -10048,11 +10060,14 @@ int Player::St_Climb_Main()
                 func_ov002_020cb354(c);
                 mAngleYSpeed = 0;
                 ApproachLinear(this->mAngleY, GetAngleToCamera(mPlayerNo), 0x200);
-                if (*(s32*)(*(char**)(c + 0x37c) + 8) <= mAttachOffsetY) {
-                    if ((*(u32*)(*(char**)(c + 0x37c) + 0x18) & 0x2000000) && mVertSpeed == 0 && (s32)(*(s16*)((char*)data_0209f4a4 + (u32)gActivePlayerSlot * 0x18)) < -0xc00 && mStateWork == 1) {
+                if (*(s32 *)((char *)mClimbClsn + 8) <= mAttachOffsetY) {
+                    if ((mClimbClsn->flags & 0x2000000) && mVertSpeed == 0 &&
+                        (s32)(*(s16 *)((char *)data_0209f4a4 + (u32)gActivePlayerSlot * 0x18)) <
+                            -0xc00 &&
+                        mStateWork == 1) {
                         this->ChangeState(data_ov002_021106f4);
                     }
-                    mAttachOffsetY = *(s32*)(*(char**)(c + 0x37c) + 8);
+                    mAttachOffsetY = *(s32 *)((char *)mClimbClsn + 8);
                     mVertSpeed = 0;
                 } else {
                     u32 idx2 = (u32)gActivePlayerSlot * 0x18;
@@ -10079,7 +10094,7 @@ int Player::St_Climb_Main()
                 goto end;
             } else if (v > 0x200) {
                 func_ov002_020cb400(c);
-                *(s16*)(c + 0x6a4) = 0x1e;
+                mStateTimer = 0x1e;
                 {
                     u32 idx3 = (u32)gActivePlayerSlot * 0x18;
                     s32 mag;
@@ -10109,7 +10124,7 @@ int Player::St_Climb_Main()
                 }
                 goto end;
             } else {
-                *(s16*)(c + 0x6a4) = 0x1e;
+                mStateTimer = 0x1e;
                 mVertSpeed = 0;
                 func_ov002_020cc05c(c, flagsC);
                 if (!IsAnim(0x26)) {
@@ -10135,20 +10150,19 @@ end:
         return 1;
     }
 
-tail:
-    {
-        char* gr = *(char**)(c + 0x37c);
-        s32* p3 = (*(GroundPosFn*)(*(char**)gr + 8))(gr);
-        s32 y = p3[1];
-        if ((mPosY - y) < -0x64000) {
-            mPosY = y - 0x64000;
-        }
+tail: {
+    char *gr = (char *)mClimbClsn;
+    s32 *p3 = (*(GroundPosFn *)(*(char **)gr + 8))(gr);
+    s32 y = p3[1];
+    if ((mPosY - y) < -0x64000) {
+        mPosY = y - 0x64000;
     }
+}
     if (mAttachOffsetY < -0x64000) {
         mAttachOffsetY = -0x64000;
     }
     {
-        s32 t2 = *(s32*)(*(char**)(c + 0x37c) + 8);
+        s32 t2 = *(s32 *)((char *)mClimbClsn + 8);
         if (t2 <= mAttachOffsetY) {
             mAttachOffsetY = t2;
         }
@@ -10168,7 +10182,7 @@ tail:
         return 1;
     }
     {
-        char* gr = *(char**)(c + 0x37c);
+        char *gr = (char *)mClimbClsn;
         s32* p4 = (*(GroundPosFn*)(*(char**)gr + 8))(gr);
         mPosY = mAttachOffsetY + p4[1];
     }
@@ -10565,19 +10579,28 @@ extern "C" {
 void func_ov002_020cc660(char *self, int angle){
     extern s32 ApproachAngle(void*, s16 from, s16 start, s16 speed, s16 max);
     extern void func_ov002_020cc660(void*, int);
- s16 v,w; int delta; int third;
- delta=angle-*(s16*)(self+0x94);
- third=*(int*)(self+0x98)/12;
- v = (s16)FX_MUL(delta, third);
- if(v<-0x1800)v=-0x1800; else if(v>0x1800)v=0x1800;
- ApproachAngle((s16*)(self+0x75e),v,8,0x200,0x20);
- *(s16*)(self+0x762)=-*(s16*)(self+0x75e);
- *(s16*)(self+0x90)=*(s16*)(self+0x75e);
- w = (s16)FX_MUL(*(int *)(self + 0x98), 0xaa);
- if(w<0)w=0; else if(w>0x1000)w=0x1000;
- ApproachAngle((s16*)(self+0x760),w,8,0x200,0x20);
- *(u8*)(self+0x742)=1;
- *(int*)(self+0x690)=0x46000;
+    Player *p = (Player *)self;
+    s16 v, w;
+    int delta;
+    int third;
+    delta = angle - p->mPrevAngleY;
+    third = p->mHorzSpeed / 12;
+    v = (s16)FX_MUL(delta, third);
+    if (v < -0x1800)
+        v = -0x1800;
+    else if (v > 0x1800)
+        v = 0x1800;
+    ApproachAngle(&p->mSpineRot[1], v, 8, 0x200, 0x20);
+    p->mHeadRot[0] = -p->mSpineRot[1];
+    p->mAngleZ = p->mSpineRot[1];
+    w = (s16)FX_MUL(p->mHorzSpeed, 0xaa);
+    if (w < 0)
+        w = 0;
+    else if (w > 0x1000)
+        w = 0x1000;
+    ApproachAngle(&p->mSpineRot[2], w, 8, 0x200, 0x20);
+    p->mHeadRotMode = 1;
+    *(int *)(self + 0x690) = 0x46000;
 }
 }
 
@@ -11453,7 +11476,7 @@ int Player::St_Swim_Main()
             if (has != 0) {
                 mStateStep = 8;
                 mStateTimer = 0xf0;
-                p = (int*)(mHeldObj + 0xb0);
+                p = (int *)&((dActor_c *)mHeldObj)->mFlags;
                 *p |= 0x4000;
                 _ZN6Player7SetAnimEji5Fix12IiEj(this, 0xb0, 0, 0x1000, 0);
             } else {
@@ -11472,7 +11495,7 @@ int Player::St_Swim_Main()
             mStateStep = 8;
             mStateTimer = 0xf0;
             _ZN6Player7SetAnimEji5Fix12IiEj(this, 0xb0, 0, 0x1000, 0);
-            p = (int*)(mHeldObj + 0xb0);
+            p = (int *)&((dActor_c *)mHeldObj)->mFlags;
             *p |= 0x4000;
             func_ov002_020bd928(0x33);
             mSwimMusicPushed = 1;
@@ -11738,32 +11761,33 @@ void func_ov002_020ce798(char* c)
     extern void _ZN9dBgCh_LinD1Ev(void*);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, const Vec3i* a, const Vec3i* b, void*);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);
+    Player *player = (Player *)c;
     char rl[0x78];
     Vec3i v1, v2;
 
     if (!_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_0211067c)) return;
 
-    if (*(int*)(c + 0x60) >= data_0209f32c - 0x50000) {
-        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
-            *(int*)(c + 0x60) = data_0209f32c - 0x50000;
+    if (player->mPosY >= data_0209f32c - 0x50000) {
+        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(&player->mMeshClsn))
+            player->mPosY = data_0209f32c - 0x50000;
     }
 
     _ZN9dBgCh_LinC1Ev(rl);
-    v1.x = *(int*)(c + 0x5c);
-    v1.y = *(int*)(c + 0x60);
-    v1.z = *(int*)(c + 0x64);
-    v2.x = *(int*)(c + 0x5c);
-    v2.y = *(int*)(c + 0x60);
-    v2.z = *(int*)(c + 0x64);
+    v1.x = player->mPosX;
+    v1.y = player->mPosY;
+    v1.z = player->mPosZ;
+    v2.x = player->mPosX;
+    v2.y = player->mPosY;
+    v2.z = player->mPosZ;
     v1.y += 0x50000;
     v2.y += 0x96000;
     _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, (dActor_c*)c);
     if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
         ::Vector3 cp = ((::dBgCh_Lin*)rl)->GetClsnPos();
-        if (*(int*)(c + 0x60) >= cp.y - 0x82000) {
-            LDR_I(c + 0x60) -= 0x4000;
-            if (*(int*)(c + 0x60) < cp.y - 0x82000)
-                *(int*)(c + 0x60) = cp.y - 0x82000;
+        if (player->mPosY >= cp.y - 0x82000) {
+            LDR_I(&player->mPosY) -= 0x4000;
+            if (player->mPosY < cp.y - 0x82000)
+                player->mPosY = cp.y - 0x82000;
         }
     }
     _ZN9dBgCh_LinD1Ev(rl);
@@ -11780,12 +11804,13 @@ void func_ov002_020ce8bc(char* self, int arg1)
 {
     extern u32 func_02022cbc(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* dir);
     extern char* data_0209f32c;
-    int z = *(int*)(self + 0x64);
-    volatile int x = *(int*)(self + 0x5c);
+    Player *p = (Player *)self;
+    int z = p->mPosZ;
+    volatile int x = p->mPosX;
     volatile int y = (int)(data_0209f32c + 0x3000);
     volatile int zshadow = z;
 
-    if (*(unsigned char*)(self + 0x703) != 0) {
+    if (p->mIsMega != 0) {
         if (arg1 != 0) {
             *(int*)(self + 0x634) = func_02022cbc(*(volatile int*)(self + 0x634), 0x65, x, y, z, 0);
         } else {
@@ -11925,10 +11950,12 @@ int func_ov002_020cec2c(char *self)
     extern void func_ov002_020da9d4(void*);
     extern s8 data_0209f2f8;
     extern int func_ov002_020ceb54(void*);
+    Player *player = (Player *)self;
     int flag;
     int thresh;
 
-    if (*(u8 *)(self + 0x709) != 0 || *(u8 *)(self + 0x6f9) != 0 || *(u8 *)(self + 0x703) != 0 || *(u8 *)(self + 0x708) != 0)
+    if (player->mIsNoControl != 0 || player->mIsMetal != 0 || player->mIsMega != 0 ||
+        player->mIsTakingDamage != 0)
         return 0;
 
     flag = 0;
@@ -11937,9 +11964,9 @@ int func_ov002_020cec2c(char *self)
 
     if (func_ov002_020ceb54(self) == 0 && flag == 0) {
         *(u16 *)(self + 0x6ca) = 0;
-        if (*(u16 *)(self + 0x6b8) == 0) {
+        if (player->mWalkTimer == 0) {
             _ZN6Player4HealEi(self, 0x100);
-            *(u16 *)(self + 0x6b8) = 0xf;
+            player->mWalkTimer = 0xf;
         }
         return 0;
     }
@@ -11948,8 +11975,8 @@ int func_ov002_020cec2c(char *self)
     if (flag != 0) thresh = 0x50;
 
     if (_ZN6Player9GetHealthEv(self) <= 2) {
-        *(unsigned int *)(self + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-            *(unsigned int *)(self + 0x624), 2, 0x27, (struct Vector3 *)(self + 0x74), 0);
+        player->mSurfaceSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+            (unsigned int)player->mSurfaceSoundHandle, 2, 0x27, &player->mCamSpacePos, 0);
     }
 
     {
@@ -11992,54 +12019,56 @@ Fix12i func_ov002_020cedb0(void *c, Fix12i a)
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 extern "C" {
-int func_ov002_020cede0(void* thiz_) {
-    extern int SurfaceInfo_TestFlag0x20(void*);
+int func_ov002_020cede0(void *thiz_) {
+    extern int SurfaceInfo_TestFlag0x20(void *);
     extern int data_0209f32c;
     extern signed char data_0209f2f8;
-    extern int func_ov002_020cede0(void*);
+    extern int func_ov002_020cede0(void *);
     extern int data_0209212c;
-    char* thiz = (char*)thiz_;
-  Vector3 v;
-  int y = *(int*)(thiz + 0x60);
-  int g = data_0209f32c;
-  if (g < y - 0x64000)
-    return 0;
-  {
-    int d = g - y;
-    if (d < 0) d = -d;
-    if (d >= 0xc8000)
-      return 1;
-  }
-  dBgCh_Gnd rg;
-  {
-    int z = *(int*)(thiz + 0x64);
-    int yy = data_0209f32c + 0xc8000;
-    int x = *(int*)(thiz + 0x5c);
-    v.x = x;
-    v.y = yy;
-    v.z = z;
-  }
-  rg.StartDetectingWater();
-  rg.StopDetectingOrdinary();
-  rg.SetObjAndPos(v, (dActor_c*)thiz);
-  if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int*)&rg.surface) != 0) {
+    char *thiz = (char *)thiz_;
+    Player *p = (Player *)thiz;
+    Vector3 v;
+    int y = p->mPosY;
+    int g = data_0209f32c;
+    if (g < y - 0x64000)
+        return 0;
+    {
+        int d = g - y;
+        if (d < 0)
+            d = -d;
+        if (d >= 0xc8000)
+            return 1;
+    }
+    dBgCh_Gnd rg;
+    {
+        int z = p->mPosZ;
+        int yy = data_0209f32c + 0xc8000;
+        int x = p->mPosX;
+        v.x = x;
+        v.y = yy;
+        v.z = z;
+    }
+    rg.StartDetectingWater();
+    rg.StopDetectingOrdinary();
+    rg.SetObjAndPos(v, (dActor_c *)thiz);
+    if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
+        return 1;
+    }
+    v.y = data_0209212c;
+    rg.StartDetectingWater();
+    rg.StopDetectingOrdinary();
+    rg.SetObjAndPos(v, (dActor_c *)thiz);
+    if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
+        *(int *)(thiz + 0x64c) = rg.clsnY;
+        data_0209f32c = *(int *)(thiz + 0x64c);
+        return 1;
+    }
+    if (data_0209f2f8 == 0x21) {
+        *(int *)(thiz + 0x64c) = 0x80000000;
+        data_0209f32c = *(int *)(thiz + 0x64c);
+        return 0;
+    }
     return 1;
-  }
-  v.y = data_0209212c;
-  rg.StartDetectingWater();
-  rg.StopDetectingOrdinary();
-  rg.SetObjAndPos(v, (dActor_c*)thiz);
-  if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int*)&rg.surface) != 0) {
-    *(int*)(thiz + 0x64c) = rg.clsnY;
-    data_0209f32c = *(int*)(thiz + 0x64c);
-    return 1;
-  }
-  if (data_0209f2f8 == 0x21) {
-    *(int*)(thiz + 0x64c) = 0x80000000;
-    data_0209f32c = *(int*)(thiz + 0x64c);
-    return 0;
-  }
-  return 1;
 }
 }
 
@@ -12050,6 +12079,7 @@ int func_ov002_020cede0(void* thiz_) {
 extern "C" {
 int func_ov002_020cef84(char *self)
 {
+    Player *p = (Player *)self;
     typedef struct {
         void *tag;
         int f04, f08, f0c, f10, f14;
@@ -12071,23 +12101,25 @@ int func_ov002_020cef84(char *self)
     int lim;
 
     dBgCh_Lin line;
-    if (!_ZN6Player7IsInAirEv(self) || *(unsigned char *)(self + 0x706) != 0 || *(int *)(self + 0xa8) <= 0 || _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211001c) || *(unsigned char *)(self + 0x703) != 0 || *(unsigned char *)(self + 0x708) != 0 || *(unsigned char *)(self + 0x709) != 0) {
+    if (!_ZN6Player7IsInAirEv(self) || p->mIsUnderwater != 0 || p->mVertSpeed <= 0 ||
+        _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211001c) || p->mIsMega != 0 ||
+        p->mIsTakingDamage != 0 || p->mIsNoControl != 0) {
         return 0;
     }
 
-    v1.x = *(int *)(self + 0x5c);
-    int y1 = *(int *)(self + 0x60);
+    v1.x = p->mPosX;
+    int y1 = p->mPosY;
     v1.y = y1;
-    v1.z = *(int *)(self + 0x64);
-    v2.x = *(int *)(self + 0x5c);
-    int y2 = *(int *)(self + 0x60);
+    v1.z = p->mPosZ;
+    v2.x = p->mPosX;
+    int y2 = p->mPosY;
     v2.y = y2;
-    v2.z = *(int *)(self + 0x64);
+    v2.z = p->mPosZ;
     v1.y = y1 + 0x64000;
     v2.y = y2 + 0x96000;
     lim = 0x8c000;
     {
-        int t = *(int *)(self + 0x358) != 0;
+        int t = p->mHeldObj != 0;
         if (t != false) {
             if (*(int *)(self + 8) == 2) {
                 v2.y += 0x32000;
@@ -12096,29 +12128,29 @@ int func_ov002_020cef84(char *self)
         }
     }
     func_02035414(&line);
-    if (*(unsigned char *)(self + 0x6fb) != 0)
+    if (p->mIsVanish != 0)
         func_02035428(&line);
     line.SetObjAndLine(v1, v2, (dActor_c*)self);
     if (line.DetectClsn()) {
         ::Vector3 cp = line.GetClsnPos();
         if (func_02037e38((unsigned int *)&line.surface) == 3) {
-            int t2 = *(int *)(self + 0x358) != 0;
+            int t2 = p->mHeldObj != 0;
             if (t2 == false) {
                 _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211001c);
-                *(int *)(self + 0x60) = cp.y - 0x78000;
+                p->mPosY = cp.y - 0x78000;
                 return 1;
             }
         }
         {
-            int d = cp.y - *(int *)(self + 0x60);
+            int d = cp.y - p->mPosY;
             if (d < 0) d = -d;
             if (d < lim) {
                 void *a;
                 ClsnResultTmp tmp;
                 int *dst = &tmp.f04;
                 int w0, w1;
-                *(int *)(self + 0xa8) = -0x1000;
-                *(unsigned char *)(self + 0x6e9) |= 8;
+                p->mVertSpeed = -0x1000;
+                p->mClsnFlags |= 8;
                 w0 = *(int *)((char *)&line + 0x14);
                 w1 = *(int *)((char *)&line + 0x18);
                 dst[0] = w1 ? w0 : w0;
@@ -12489,23 +12521,24 @@ extern "C" {
 int func_ov002_020cfaf0(char* c) {
     extern short data_02082214[];
     extern int func_ov002_020cfaf0(void*);
+    Player *p = (Player *)c;
     dBgCh_Lin line;
     Vector3 v1;
     Vector3 v2;
     {
-        int ang = *(short*)(c + 0x8e);
+        int ang = p->mAngleY;
         int j = 2 * (((unsigned short)(short)(ang + 0x8000)) >> 4);
         int s = data_02082214[j] * 32;
         int t = data_02082214[j + 1] * 32;
-        int ax = *(int*)(c + 0x5c) + s;
-        int az = *(int*)(c + 0x64) + t;
-        int ay = *(int*)(c + 0x60) - 0x20000;
+        int ax = p->mPosX + s;
+        int az = p->mPosZ + t;
+        int ay = p->mPosY - 0x20000;
         v1.x = ax;
         v1.y = ay;
         v1.z = az;
-        int bx = *(int*)(c + 0x5c) + s;
-        int bz = *(int*)(c + 0x64) + t;
-        int by = *(int*)(c + 0x60) + 0x20000;
+        int bx = p->mPosX + s;
+        int bz = p->mPosZ + t;
+        int by = p->mPosY + 0x20000;
         v2.x = bx;
         v2.y = by;
         v2.z = bz;
@@ -12625,8 +12658,8 @@ int func_ov002_020cfd84(void* actor, void* a, void* b) {
 /* recovered: Player ground/edge probe used while carrying or standing on
  * another actor.
  *
- * With no timer at self+0x6a6 and bit 1 of self+0x6e9 set, the player first
- * asks its dBgCh_Actr (self+0x380) whether it stands on, or presses against, a
+ * With mStateWaitTimer at zero and bit 1 of mClsnFlags set, the player first
+ * asks its dBgCh_Actr (mMeshClsn) whether it stands on, or presses against, a
  * collider that belongs to another actor: standing on one that faces more
  * than 90 degrees away, or touching one as a wall, ends the probe with 1.
  * Otherwise a dBgCh_Gnd is built 32 units ahead of the player along its
@@ -12651,6 +12684,7 @@ int func_ov002_020cfd84(void* actor, void* a, void* b) {
 extern "C" {
 int func_ov002_020cfea4(char *self)
 {
+    Player *p = (Player *)self;
     struct Vector3 { int x, y, z; };
     extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
     extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
@@ -12671,19 +12705,19 @@ int func_ov002_020cfea4(char *self)
     void *fr;
     void *other;
     int idx, dx, dz;
-    if (*(unsigned short *)(self + 0x6a6) == 0 && (*(unsigned char *)(self + 0x6e9) & 2) != 0) {
-        if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x380) != 0) {
-            fr = _ZNK10dBgCh_Actr14GetFloorResultEv(self + 0x380);
+    if (p->mStateWaitTimer == 0 && (p->mClsnFlags & 2) != 0) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(&p->mMeshClsn) != 0) {
+            fr = _ZNK10dBgCh_Actr14GetFloorResultEv(&p->mMeshClsn);
             if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
                 other = _ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK5dBgPi9GetClsnIDEv(fr));
                 if (other != 0) {
-                    if (AngleDiff(*(short *)(self + 0x8e), ((dActor_c *)other)->mAngleY) >= 0x4000)
+                    if (AngleDiff(p->mAngleY, ((dActor_c *)other)->mAngleY) >= 0x4000)
                         return 1;
                 }
             }
         }
-        if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x380) != 0) {
-            fr = _ZNK10dBgCh_Actr13GetWallResultEv(self + 0x380);
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(&p->mMeshClsn) != 0) {
+            fr = _ZNK10dBgCh_Actr13GetWallResultEv(&p->mMeshClsn);
             if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
                 other = _ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK5dBgPi9GetClsnIDEv(fr));
                 if (other != 0)
@@ -12695,15 +12729,15 @@ int func_ov002_020cfea4(char *self)
     {
         int y;
         short *tbl;
-        int ang = *(short *)(self + 0x8e);
+        int ang = p->mAngleY;
         tbl = data_02082214;
-        y = *(int *)(self + 0x60);
+        y = p->mPosY;
         idx = (unsigned short)(short)(ang + 0x8000) >> 4;
         dz = tbl[(idx << 1) + 1];
         dx = tbl[idx << 1];
         {
-            int z = *(int *)(self + 0x64);
-            int x = *(int *)(self + 0x5c);
+            int z = p->mPosZ;
+            int x = p->mPosX;
             int pz = z + (dz << 5);
             int px = x + (dx << 5);
             int py = y + 0x14000;
@@ -12714,13 +12748,13 @@ int func_ov002_020cfea4(char *self)
     }
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pts[1], self);
     if (_ZN9dBgCh_Gnd10DetectClsnEv(rg) != 0) {
-        if (*(int *)(rg + 0x44) >= *(int *)(self + 0x60) - 0x50000) {
+        if (*(int *)(rg + 0x44) >= p->mPosY - 0x50000) {
             _ZN9dBgCh_GndD1Ev(rg);
             return 1;
         }
     }
     {
-        int y = *(int *)(self + 0x60);
+        int y = p->mPosY;
         int yl = y - 0xa000;
         int px = pts[1].x;
         int pz = pts[1].z;
@@ -12730,8 +12764,8 @@ int func_ov002_020cfea4(char *self)
         {
             short *tbl;
             int y2;
-            int ang = *(short *)(self + 0x8e);
-            y2 = *(int *)(self + 0x60);
+            int ang = p->mAngleY;
+            y2 = p->mPosY;
             tbl = data_02082214;
             idx = (unsigned short)(short)(ang + 0x4000) >> 4;
             {
@@ -12786,6 +12820,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     extern int _ZN4cstd5atan2E5Fix12IiES1_(int x, int z);
     extern int AngleDiff(int a, int b);
     extern s16 data_02082214[];
+    Player *p = (Player *)c;
 
     Vec3 normal;
     Vec3 pos1;
@@ -12798,11 +12833,11 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
 
     _ZN9dBgCh_GndC1Ev(rg);
     if (flag != 0)
-        ang = (s16)(*(s16*)(c + 0x8e) + 0x8000);
+        ang = (s16)(p->mAngleY + 0x8000);
     else
-        ang = *(s16*)(c + 0x8e);
+        ang = p->mAngleY;
     {
-        u8 b7 = *(u8*)(c + 0x703);
+        u8 b7 = p->mIsMega;
         int d = 0x40;
         int i;
         int s, csn;
@@ -12820,9 +12855,9 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         if (b7 != 0)
             h = 0x1f4;
         {
-            int tz = *(int*)(c + 0x64) + zoff;
-            int ty = *(int*)(c + 0x60) + (h << 12);
-            int tx = *(int*)(c + 0x5c) + xoff;
+            int tz = p->mPosZ + zoff;
+            int ty = p->mPosY + (h << 12);
+            int tx = p->mPosX + xoff;
             pos1.x = tx;
             pos1.y = ty;
             pos1.z = tz;
@@ -12835,15 +12870,15 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     }
     gy = *(int*)(rg + 0x44);
     if (flag != 0) {
-        if (gy > *(int*)(c + 0x60) + 0x64000 || gy < *(int*)(c + 0x60)) {
+        if (gy > p->mPosY + 0x64000 || gy < p->mPosY) {
             _ZN9dBgCh_GndD1Ev(rg);
             return 0;
         }
     } else {
         int lo = 0x64;
-        if (*(u8*)(c + 0x703) != 0)
+        if (p->mIsMega != 0)
             lo = 0x190;
-        if (gy > *(int*)(c + 0x60) + ((lo + 0x64) << 12) || gy < *(int*)(c + 0x60) + (lo << 12)) {
+        if (gy > p->mPosY + ((lo + 0x64) << 12) || gy < p->mPosY + (lo << 12)) {
             _ZN9dBgCh_GndD1Ev(rg);
             return 0;
         }
@@ -12856,8 +12891,8 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     _ZN9dBgCh_LinC1Ev((dBgCh_Lin*)rl);
     pos1.y = gy;
     {
-        int tz = *(int*)(c + 0x64);
-        int tx = *(int*)(c + 0x5c);
+        int tz = p->mPosZ;
+        int tx = p->mPosX;
         lineStart.x = tx;
         lineStart.y = arg1;
         lineStart.z = tz;
@@ -12876,7 +12911,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     }
     res = _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z);
     {
-        int diff = AngleDiff(res, *(s16*)(c + 0x8e));
+        int diff = AngleDiff(res, p->mAngleY);
         if (flag != 0) {
             if (diff < 0)
                 diff = -diff;
@@ -12904,11 +12939,11 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
-    lineStart.y = *(int*)(c + 0x60);
+    lineStart.y = p->mPosY;
     Vec3 line2;
-    line2.x = *(int*)(c + 0x5c);
-    line2.y = *(int*)(c + 0x60);
-    line2.z = *(int*)(c + 0x64);
+    line2.x = p->mPosX;
+    line2.y = p->mPosY;
+    line2.z = p->mPosZ;
     line2.y = gy + 0xa000;
     _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &line2, c);
     if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
@@ -12916,10 +12951,10 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
-    *(int*)(c + 0x5c) = clsnPos.x - normal.x;
-    *(int*)(c + 0x64) = clsnPos.z - normal.z;
-    *(int*)(c + 0x60) = gy;
-    *(s16*)(c + 0x8e) = (u16)(res + 0x8000);
+    p->mPosX = clsnPos.x - normal.x;
+    p->mPosZ = clsnPos.z - normal.z;
+    p->mPosY = gy;
+    p->mAngleY = (u16)(res + 0x8000);
     _ZN9dBgCh_LinD1Ev(rl);
     _ZN9dBgCh_GndD1Ev(rg);
     return 1;
@@ -13098,6 +13133,7 @@ void func_ov002_020d0948(char* self)
     extern short data_02082214[];
     extern int data_ov002_021101b4[];
     extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
+    Player *p = (Player *)self;
 
     /* The two header reads go through a byte pointer: with the int-typed
        self, mwcc materializes the +0x703 offset from the literal pool
@@ -13106,22 +13142,22 @@ void func_ov002_020d0948(char* self)
     int base = (short)(*(short*)(s + 0x8e) + 0x8000);
     if (*(unsigned char*)(s + 0x703) != 0) {
         int idx = (unsigned short)base >> 4;
-        int* p0 = (int*)(((long long)(int)(self + 0x5c)));
-        int* p1 = (int*)(((long long)(int)(self + 0x60)));
-        int* p2 = (int*)(((long long)(int)(self + 0x64)));
+        int *p0 = (int *)(((long long)(int)(&p->mPosX)));
+        int *p1 = (int *)(((long long)(int)(&p->mPosY)));
+        int *p2 = (int *)(((long long)(int)(&p->mPosZ)));
         *p0 = data_02082214[idx * 2] * 0x110 + *p0;
         *p1 = *p1 - 0x12c000;
         *p2 = data_02082214[idx * 2 + 1] * 0x110 + *p2;
     } else {
         int idx = (unsigned short)base >> 4;
-        int* p0 = (int*)(((long long)(int)(self + 0x5c)));
-        int* p1 = (int*)(((long long)(int)(self + 0x60)));
-        int* p2 = (int*)(((long long)(int)(self + 0x64)));
+        int *p0 = (int *)(((long long)(int)(&p->mPosX)));
+        int *p1 = (int *)(((long long)(int)(&p->mPosY)));
+        int *p2 = (int *)(((long long)(int)(&p->mPosZ)));
         *p0 = *p0 + (data_02082214[idx * 2] << 6);
         *p1 = *p1 - 0x64000;
         *p2 = *p2 + (data_02082214[idx * 2 + 1] << 6);
     }
-    *(int*)(self + 0x98) = -0x8000;
+    p->mHorzSpeed = -0x8000;
     _ZN6Player11ChangeStateERNS_5StateE(self, (int)data_ov002_021101b4);
 }
 }
@@ -13777,7 +13813,7 @@ int Player::St_HoldLight_Cleanup()
 
   char* p = *(char**)((char*)&mHeldObj);
   if (p) {
-    *(unsigned int*)(p + 0xb0) |= 0x4000;
+      ((dActor_c *)p)->mFlags |= 0x4000;
   }
   return 1;
 }
@@ -13950,34 +13986,35 @@ end:
 // @symbol _ZN6Player17St_HoldLight_InitEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
-int Player::St_HoldLight_Init()
-{
-    extern int Player_ScaleByCharFactor(char* c, int a);
-    extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int anim, int a, int fix, unsigned int z);
-    extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
+int Player::St_HoldLight_Init() {
+    extern int Player_ScaleByCharFactor(char *c, int a);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *c, unsigned int anim, int a, int fix,
+                                                unsigned int z);
+    extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void *v);
 
-  if(mHorzSpeed >= Player_ScaleByCharFactor(((char*)this), 0x1c000)){
-    mHorzSpeed = Player_ScaleByCharFactor(((char*)this), 0x1c000);
-  }
-  if(mStateStep == 0){
-    char* o = *(char**)((char*)&mHeldObj);
-    unsigned int anim = 0x2f;
-    if(o != 0){
-      int b = (int)((*(int*)(o+0xb0) & 0x8000) != 0);
-      if(b != 0){
-        anim = 0x86;
-        if(param1 == 2){
-          if((int)(*(unsigned short*)(o+0xc) == 0xce) != 0) anim = 0x2f;
-        }
-      }
+    if (mHorzSpeed >= Player_ScaleByCharFactor(((char *)this), 0x1c000)) {
+        mHorzSpeed = Player_ScaleByCharFactor(((char *)this), 0x1c000);
     }
-    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), anim, 0x40000000, 0x1000, 0);
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x12, &mCamSpacePos);
-  }
-  mStateWork = 0;
-  mAngleYSpeed = 0;
-  mStateArg = 0;
-  return 1;
+    if (mStateStep == 0) {
+        char *o = *(char **)((char *)&mHeldObj);
+        unsigned int anim = 0x2f;
+        if (o != 0) {
+            int b = (int)((((dActor_c *)o)->mFlags & 0x8000) != 0);
+            if (b != 0) {
+                anim = 0x86;
+                if (param1 == 2) {
+                    if ((int)(*(unsigned short *)(o + 0xc) == 0xce) != 0)
+                        anim = 0x2f;
+                }
+            }
+        }
+        _ZN6Player7SetAnimEji5Fix12IiEj(((char *)this), anim, 0x40000000, 0x1000, 0);
+        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x12, &mCamSpacePos);
+    }
+    mStateWork = 0;
+    mAngleYSpeed = 0;
+    mStateArg = 0;
+    return 1;
 }
 }
 
@@ -14001,6 +14038,7 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
     extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
 
     char *self = (char *)selfPtr;
+    Player *p = (Player *)self;
     int idx;
     int flag;
     int id;
@@ -14021,11 +14059,11 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
 
     if (*(int *)(self + 8) == 2 && flag == 0) {
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-        anim = (char *)((long long)(((int *)(self + 0xdc))[id] + 0x50));
+        anim = (char *)((long long)(((int *)p->mBodyModels)[id] + 0x50));
         w = *(u32 *)(anim + 8);
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x3f, 0, 0x2800, (w << 4) >> 16);
     } else {
-        int v = *(int *)(self + 0x98);
+        int v = p->mHorzSpeed;
         int shift = v >> 3;
         if (shift < 0x400)
             shift = 0x400;
@@ -14033,23 +14071,23 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
     }
 
     id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-    anim = (char *)((int *)(self + 0xdc))[id] + 0x50;
+    anim = (char *)p->mBodyModels[id] + 0x50;
     if (!_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 4)) {
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-        anim = (char *)((int *)(self + 0xdc))[id] + 0x50;
+        anim = (char *)p->mBodyModels[id] + 0x50;
         if (!_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 0x13))
             return;
     }
 
-    if (*(u8 *)(self + 0x707) != 0) {
-        u32 newId = func_02022d00(*(u32 *)(self + 0x628), 0xde, *(int *)(self + 0x5c), data_0209f32c, *(int *)(self + 0x64), 0);
-        *(u32 *)(self + 0x628) = newId;
+    if (p->mIsInShallowWater != 0) {
+        u32 newId = func_02022d00((u32)p->mParticle1, 0xde, p->mPosX, data_0209f32c, p->mPosZ, 0);
+        p->mParticle1 = newId;
         return;
     }
 
-    func_0201251c(0, *(int *)(self + 0x66c) + 0x20, (int)(self + 0x74), *(int *)(self + 0x98));
+    func_0201251c(0, p->mGroundSoundType + 0x20, (int)(&p->mCamSpacePosX), p->mHorzSpeed);
 
-    state = *(int *)(self + 0x66c);
+    state = p->mGroundSoundType;
     target = -1;
     if (state == 6)
         goto state_case6;
@@ -14068,7 +14106,7 @@ state_merge:
     if (target == -1)
         return;
 
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(target, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(target, p->mPosX, p->mPosY, p->mPosZ);
 }
 }
 
@@ -14651,46 +14689,47 @@ int func_ov002_020d2fdc(char *self)
     extern int _ZNK6Player14GetBodyModelIDEjb(void *thiz, unsigned int a, int b);
     extern int _ZNK15dExtFrameCtrl_c12WillHitFrameEi(void *thiz, int f);
     extern void func_ov002_020d4c30(void *self);
+    Player *p = (Player *)self;
 
     int r5;
     int id;
     char *anim;
 
     *(u8 *)(self + 0x6ed) = 0;
-    if (*(u8 *)(self + 0x703) != 0) {
+    if (p->mIsMega != 0) {
         return 0;
     }
 
-    if ((unsigned short)((*(u16 *)(self + 0x6ce)) & 0x800)) {
+    if ((unsigned short)(p->mStateFlags & 0x800)) {
         return 1;
     }
 
     if (data_0209f49c[gActivePlayerSlot].flags & 0x800) {
-        if (*(u8 *)(self + 0x6e5) < 0x1e) {
+        if (p->mStateWork < 0x1e) {
             *(u8 *)(((int)self + 0x6e5)) += 1;
-            r5 = *(u8 *)(self + 0x6e5) * 0x111 + 0x1000;
+            r5 = p->mStateWork * 0x111 + 0x1000;
         } else {
             *(u8 *)(self + 0x6ed) = 0x1e;
             r5 = 0x3000;
-            if (*(u8 *)(self + 0x707) == 0) {
-                _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
+            if (p->mIsInShallowWater == 0) {
+                _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(p->mPosX, p->mPosY, p->mPosZ);
             }
         }
 
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x3f, 0, r5, 0);
 
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-        anim = (char *)((int *)(self + 0xdc))[id] + 0x50;
+        anim = (char *)p->mBodyModels[id] + 0x50;
         if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 4) ||
             (id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0),
-             anim = (char *)((int *)(self + 0xdc))[id] + 0x50,
+             anim = (char *)p->mBodyModels[id] + 0x50,
              _ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 0x13))) {
             func_ov002_020d4c30(self);
         }
         return 0;
     }
 
-    *(u8 *)(self + 0x6e5) = 0;
+    p->mStateWork = 0;
     {
         int flag = 0;
         if (data_0209f2d8 == 1) flag = 1;
@@ -14700,22 +14739,22 @@ int func_ov002_020d2fdc(char *self)
         }
     }
 
-    if (*(int *)(self + 0x68c) > 0x32000) {
+    if (p->mSinkDepth > 0x32000) {
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x7d, 0, 0x1000, 0);
         return 0;
     }
 
-    if (*(u8 *)(self + 0x6e3) == 0) {
+    if (p->mStateStep == 0) {
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x47, 0, 0x1000, 0);
-        if (*(u16 *)(self + 0x6a4) == 0) {
+        if (p->mStateTimer == 0) {
             char v = data_0209f2f8;
             if (v == 0x13 || v == 0xa || (unsigned)(v - 0x30) <= 1) {
                 _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x95, 0x40000000, 0x1000, 0);
-                *(u8 *)(self + 0x6e3) = 5;
+                p->mStateStep = 5;
             } else {
-                *(u16 *)(self + 0x6a4) = 0x708;
+                p->mStateTimer = 0x708;
                 _ZN6Player7SetAnimEji5Fix12IiEj(self, 0xd, 0x40000000, 0x1000, 0);
-                *(u8 *)(self + 0x6e3) = 1;
+                p->mStateStep = 1;
             }
             *(int *)(((int)(char *)data_0209f318 + 0x154)) |= 0x2000;
         }
@@ -15104,209 +15143,160 @@ int func_ov002_020d3b9c(char *c)
     extern unsigned char data_0209f4ac[];
     extern unsigned char data_0209f4ae[];
     extern char data_ov002_02110184;
-  int spd;
-  int acc;
-  s16 stick;
-  s16 targ;
-  int diff;
-  spd = 0;
-  stick = *((s16 *) (((char *) data_0209f4a0) + (gActivePlayerSlot * 0x18)));
-  acc = spd;
-  if ((stick != 0) && (((u16) ((*((u16 *) (c + 0x6ce))) & 0xc)) == 0))
-  {
-    *((u16 *) (c + 0x6ac)) = 4;
-    if ((*((u8 *) (data_0209f4ac + (gActivePlayerSlot * 0x18)))) == 0)
-    {
-      spd = Player_ScaleByCharFactor(c, 0x14000);
-      acc = 0x1000;
-      if (((*((u16 *) (data_0209f49c + (gActivePlayerSlot * 0x18)))) & 0x800) == 0)
-      {
-        if ((*((u16 *) (c + 0x6a4))) != 0)
-        {
-          spd = Player_ScaleByCharFactor(c, 0xa000);
-        }
-      }
-      else
-      {
-        spd = Player_ScaleByCharFactor(c, 0x28000);
-      }
-    }
-    else
-    {
-      if (GetStick() <= StickLo())
-      {
-        spd = 0;
-      }
-      else
-        if (GetStick() <= StickHi())
-      {
-        int t = (GetStick() * StickScale()) >> 12;
-        spd = (t - StickLoSpd()) << 15;
-        spd = spd / (StickHiSpd() - StickLoSpd());
-      }
-      else
-      {
-        int a = Player_ScaleByCharFactor(c, 0x28000);
-        int b = Player_ScaleByCharFactor(c, 0xa000);
-        spd = func_ov002_020bf224((int) c, a, b);
-      }
-      acc = 0x1000;
-      if ((*((s16 *) (((char *) data_0209f4a0) + (gActivePlayerSlot * 0x18)))) >= 0xf00)
-      {
-        acc = 0x1000;
-      }
-    }
-    if ((*((u8 *) (c + 0x6ed))) != 0)
-    {
-      if (((*((u16 *) (data_0209f49c + (gActivePlayerSlot * 0x18)))) & 0x800) != 0)
-      {
-        u8 *p = (u8 *) (((char *) c) + 0x6ED);
-        *p = (u8) ((*p) - 1);
-        spd = FX_MUL(spd, 0x1333);
-        acc = 0x1e000;
-        _ZN6Player19func_ov002_020bf88cEv(c);
-      }
-      else
-      {
-        *((u8 *) (c + 0x6ed)) = 0;
-      }
-    }
-    {
-      int v = *((int *) (c + 0x68c));
-      if (v > 0xa000)
-      {
-        int q = 0x6400 / (v >> 12);
-        spd = FX_MUL(spd, q);
-      }
-    }
-    *((int *) (c + 0x690)) = 0;
-    if ((*((int *) (c + 8))) == 1)
-    {
-      u16 h = *((u16 *) (c + 0x6ba));
-      if (((h != 0) && ((*((u8 *) (c + 0x6ea))) != 0)) && (h < 0x1e))
-      {
-        int a = Player_ScaleByCharFactor(c, 0x28000);
-        int prod = h * a;
-        {
-          int cap = prod / 30;
-          if (spd > cap)
-          {
-            spd = cap;
-          }
-        }
-        {
-          int tmp = -((0x1e - ((int) h)) << 12);
-          tmp = tmp * 2;
-          *((int *) (c + 0x690)) = tmp;
-        }
-      }
-    }
-    if (func_ov002_020f035c(_ZN6Player19func_ov002_020c031cEv(c), *((int *) (c + 0x558))) != 0)
-    {
-      acc = 0x1000;
-    }
-    targ = *((s16 *) (c + 0x6d2));
-    diff = AngleDiff(*((s16 *) (c + 0x94)), targ);
-    if (diff < 0)
-    {
-      diff = -diff;
-    }
-    if (diff > 0x6000)
-    {
-      int cur = *((int *) (c + 0x98));
-      if ((cur >= Player_ScaleByCharFactor(c, 0x1c000)) && ((*((u8 *) (c + 0x703))) == 0))
-      {
-        _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110184);
-        Player_AdvanceAnims(c);
-        return 1;
-      }
-      if (cur == 0)
-      {
-        *((s16 *) (c + 0x94)) = targ;
-      }
-      else
-      {
-        ApproachAngle((s16 *) (c + 0x94), targ, 4, 0x2000, 0x800);
-      }
-    }
-    else
-    {
-      int dv;
-      int step;
-      int idx2;
-      step = 0x800;
-      idx2 = gActivePlayerSlot * 0x18;
-      dv = 4;
-      if ((*((u8 *) (data_0209f4ac + idx2))) == 0)
-      {
-        if ((*((s16 *) (((char *) data_0209f4a0) + idx2))) >= 0xa00)
-        {
-          if (AngleDiff(*((s16 *) (c + 0x94)), targ) >= 0x1000)
-          {
-            if ((*((u16 *) (c + 0x6f0))) < 0x18)
-            {
-              u16 *p = (u16 *) (((char *) c) + 0x6F0);
-              *p = (u16) ((*p) + 1);
-              dv = (s16) (0x10 - ((*((u16 *) (c + 0x6f0))) >> 1));
+    Player *player = (Player *)c;
+    int spd;
+    int acc;
+    s16 stick;
+    s16 targ;
+    int diff;
+    spd = 0;
+    stick = *((s16 *)(((char *)data_0209f4a0) + (gActivePlayerSlot * 0x18)));
+    acc = spd;
+    if ((stick != 0) && (((u16)(player->mStateFlags & 0xc)) == 0)) {
+        *((u16 *)(c + 0x6ac)) = 4;
+        if ((*((u8 *)(data_0209f4ac + (gActivePlayerSlot * 0x18)))) == 0) {
+            spd = Player_ScaleByCharFactor(c, 0x14000);
+            acc = 0x1000;
+            if (((*((u16 *)(data_0209f49c + (gActivePlayerSlot * 0x18)))) & 0x800) == 0) {
+                if (player->mStateTimer != 0) {
+                    spd = Player_ScaleByCharFactor(c, 0xa000);
+                }
+            } else {
+                spd = Player_ScaleByCharFactor(c, 0x28000);
             }
-          }
-          else
-          {
-            dv = 0x10;
-            if ((*((u16 *) (c + 0x6f0))) >= 2)
-            {
-              u16 *p = (u16 *) (((char *) c) + 0x6F0);
-              *p = (u16) ((*p) - 2);
+        } else {
+            if (GetStick() <= StickLo()) {
+                spd = 0;
+            } else if (GetStick() <= StickHi()) {
+                int t = (GetStick() * StickScale()) >> 12;
+                spd = (t - StickLoSpd()) << 15;
+                spd = spd / (StickHiSpd() - StickLoSpd());
+            } else {
+                int a = Player_ScaleByCharFactor(c, 0x28000);
+                int b = Player_ScaleByCharFactor(c, 0xa000);
+                spd = func_ov002_020bf224((int)c, a, b);
             }
-          }
-          step = (s16) ((0x10 - (dv - 4)) << 3);
+            acc = 0x1000;
+            if ((*((s16 *)(((char *)data_0209f4a0) + (gActivePlayerSlot * 0x18)))) >= 0xf00) {
+                acc = 0x1000;
+            }
         }
-        else
-          if ((*((u16 *) (c + 0x6f0))) >= 2)
+        if ((*((u8 *)(c + 0x6ed))) != 0) {
+            if (((*((u16 *)(data_0209f49c + (gActivePlayerSlot * 0x18)))) & 0x800) != 0) {
+                u8 *p = (u8 *)(((char *)c) + 0x6ED);
+                *p = (u8)((*p) - 1);
+                spd = FX_MUL(spd, 0x1333);
+                acc = 0x1e000;
+                _ZN6Player19func_ov002_020bf88cEv(c);
+            } else {
+                *((u8 *)(c + 0x6ed)) = 0;
+            }
+        }
         {
-          u16 *p = (u16 *) (((char *) c) + 0x6F0);
-          *p = (u16) ((*p) - 2);
+            int v = player->mSinkDepth;
+            if (v > 0xa000) {
+                int q = 0x6400 / (v >> 12);
+                spd = FX_MUL(spd, q);
+            }
         }
-      }
-      ApproachAngle((s16 *) (c + 0x94), targ, dv, 0x2000, step);
-    }
-    if ((*((u8 *) (c + 0x6e0))) != 0)
-    {
-      func_ov002_020d4540(c);
-    }
-  }
-  else
-  {
-    *((u8 *) (c + 0x6ed)) = 0;
-    if ((*((u8 *) (c + 0x6e0))) != 0)
-    {
-      acc = func_ov002_020bf56c(c, 0x2000);
-      _ZN6Player19func_ov002_020bf88cEv(c);
-    }
-    else
-      if ((*((u16 *) (c + 0x6ac))) == 0)
-    {
-      if ((*((u8 *) (c + 0x703))) == 0) acc = 0x1000; else acc = 0x4000;
-      if ((*((int *) (c + 0x98))) < (-0xa000))
-      {
-        *((int *) (c + 0x98)) = -0xa000;
-      }
-      if ((*((u8 *) (c + 0x703))) == 0)
-      {
-        if ((*((int *) (c + 0x98))) > Player_ScaleByCharFactor(c, 0x10000))
-        {
-          func_ov002_020d454c(c);
+        *((int *)(c + 0x690)) = 0;
+        if ((*((int *)(c + 8))) == 1) {
+            u16 h = player->mWaterRunTimer;
+            if (((h != 0) && (player->mWaterRunLatch != 0)) && (h < 0x1e)) {
+                int a = Player_ScaleByCharFactor(c, 0x28000);
+                int prod = h * a;
+                {
+                    int cap = prod / 30;
+                    if (spd > cap) {
+                        spd = cap;
+                    }
+                }
+                {
+                    int tmp = -((0x1e - ((int)h)) << 12);
+                    tmp = tmp * 2;
+                    *((int *)(c + 0x690)) = tmp;
+                }
+            }
         }
-      }
+        if (func_ov002_020f035c(_ZN6Player19func_ov002_020c031cEv(c), player->mFloorNormalY) != 0) {
+            acc = 0x1000;
+        }
+        targ = player->mDesiredAngleY;
+        diff = AngleDiff(player->mPrevAngleY, targ);
+        if (diff < 0) {
+            diff = -diff;
+        }
+        if (diff > 0x6000) {
+            int cur = player->mHorzSpeed;
+            if ((cur >= Player_ScaleByCharFactor(c, 0x1c000)) && (player->mIsMega == 0)) {
+                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110184);
+                Player_AdvanceAnims(c);
+                return 1;
+            }
+            if (cur == 0) {
+                player->mPrevAngleY = targ;
+            } else {
+                ApproachAngle(&player->mPrevAngleY, targ, 4, 0x2000, 0x800);
+            }
+        } else {
+            int dv;
+            int step;
+            int idx2;
+            step = 0x800;
+            idx2 = gActivePlayerSlot * 0x18;
+            dv = 4;
+            if ((*((u8 *)(data_0209f4ac + idx2))) == 0) {
+                if ((*((s16 *)(((char *)data_0209f4a0) + idx2))) >= 0xa00) {
+                    if (AngleDiff(player->mPrevAngleY, targ) >= 0x1000) {
+                        if ((*((u16 *)(c + 0x6f0))) < 0x18) {
+                            u16 *p = (u16 *)(((char *)c) + 0x6F0);
+                            *p = (u16)((*p) + 1);
+                            dv = (s16)(0x10 - ((*((u16 *)(c + 0x6f0))) >> 1));
+                        }
+                    } else {
+                        dv = 0x10;
+                        if ((*((u16 *)(c + 0x6f0))) >= 2) {
+                            u16 *p = (u16 *)(((char *)c) + 0x6F0);
+                            *p = (u16)((*p) - 2);
+                        }
+                    }
+                    step = (s16)((0x10 - (dv - 4)) << 3);
+                } else if ((*((u16 *)(c + 0x6f0))) >= 2) {
+                    u16 *p = (u16 *)(((char *)c) + 0x6F0);
+                    *p = (u16)((*p) - 2);
+                }
+            }
+            ApproachAngle(&player->mPrevAngleY, targ, dv, 0x2000, step);
+        }
+        if ((*((u8 *)(c + 0x6e0))) != 0) {
+            func_ov002_020d4540(c);
+        }
+    } else {
+        *((u8 *)(c + 0x6ed)) = 0;
+        if ((*((u8 *)(c + 0x6e0))) != 0) {
+            acc = func_ov002_020bf56c(c, 0x2000);
+            _ZN6Player19func_ov002_020bf88cEv(c);
+        } else if ((*((u16 *)(c + 0x6ac))) == 0) {
+            if (player->mIsMega == 0)
+                acc = 0x1000;
+            else
+                acc = 0x4000;
+            if (player->mHorzSpeed < (-0xa000)) {
+                player->mHorzSpeed = -0xa000;
+            }
+            if (player->mIsMega == 0) {
+                if (player->mHorzSpeed > Player_ScaleByCharFactor(c, 0x10000)) {
+                    func_ov002_020d454c(c);
+                }
+            }
+        }
+        if (player->mHorzSpeed < Player_ScaleByCharFactor(c, 0xa000)) {
+            player->mStateTimer = 0x3c;
+        }
     }
-    if ((*((int *) (c + 0x98))) < Player_ScaleByCharFactor(c, 0xa000))
-    {
-      *((u16 *) (c + 0x6a4)) = 0x3c;
-    }
-  }
   func_ov002_020d4d88(c, spd, acc);
   func_ov002_020c18b0(c, 1);
-  *((u16 *) (c + 0x90)) = 0;
+  player->mAngleZ = 0;
   return 0;
 }
 }
@@ -15320,28 +15310,30 @@ void func_ov002_020d413c(char *self, int arg)
 {
     extern int Player_ScaleByCharFactor(void *c, int a);
     extern int ApproachAngle(short *angle, int targetAngle, int invFactor, int maxDelta, int minDelta);
+    Player *p = (Player *)self;
     int v;
     int diff;
     short s;
-    if (*(unsigned char *)(self + 0x703)) return;
+    if (p->mIsMega)
+        return;
     v = Player_ScaleByCharFactor(self, 0x1c000);
-    diff = *(int *)(self + 0x98);
+    diff = p->mHorzSpeed;
     if (diff < v) {
-        *(short *)(self + 0x75e) = 0;
-        *(short *)(self + 0x760) = *(short *)(self + 0x75e);
+        p->mSpineRot[1] = 0;
+        p->mSpineRot[2] = p->mSpineRot[1];
         return;
     }
     s = (short)(FX_MUL(((diff - v) / 12), 0x1c71));
     {
         int t = s;
         if (t >= 0x2000) t = 0x2000;
-        ApproachAngle((short *)(self + 0x760), t, 4, 0x2000, 0x100);
+        ApproachAngle(&p->mSpineRot[2], t, 4, 0x2000, 0x100);
     }
     {
-        int t = (short)((arg - *(short *)(self + 0x94)) * 6);
+        int t = (short)((arg - p->mPrevAngleY) * 6);
         if (t < -0x1555) t = -0x1555;
         else if (t > 0x1555) t = 0x1555;
-        ApproachAngle((short *)(self + 0x75e), t, 8, 0x100, 0x10);
+        ApproachAngle(&p->mSpineRot[1], t, 8, 0x100, 0x10);
     }
 }
 }
@@ -15493,36 +15485,39 @@ void func_ov002_020d45c0(char* self)
     extern s16 data_0209f4a0[];
     extern u8 data_0209f4ac[];
     extern u16 data_0209f49c[];
-    if (*(u8*)(self + 0x707) != 0) return;
+    Player *p = (Player *)self;
+    if (p->mIsInShallowWater != 0)
+        return;
     if (data_0208e430 == 0x2e) return;
 
-    if (*(int*)(self + 0x98) < Player_ScaleByCharFactor(self, 0x24000)) {
+    if (p->mHorzSpeed < Player_ScaleByCharFactor(self, 0x24000)) {
         if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0xe00) {
             if (*(u8*)((char*)data_0209f4ac + gActivePlayerSlot * 0x18) != 0
                 || (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x800)) {
-                if (*(u8*)(self + 0x703) != 0)
-                    func_02022b04(*(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
+                if (p->mIsMega != 0)
+                    func_02022b04(p->mPosX, p->mPosY, p->mPosZ);
                 else
-                    _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
+                    _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(p->mPosX, p->mPosY,
+                                                                       p->mPosZ);
             }
         }
     }
 
     if (*(u8*)((char*)data_0209f4ac + gActivePlayerSlot * 0x18) == 0) return;
 
-    if (*(u8*)(self + 0x70c) != 0) {
-        if (*(u16*)(self + 0x6a6) != 0) {
-            if (*(u8*)(self + 0x703) != 0)
-                func_02022b04(*(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
+    if (p->mStateArg != 0) {
+        if (p->mStateWaitTimer != 0) {
+            if (p->mIsMega != 0)
+                func_02022b04(p->mPosX, p->mPosY, p->mPosZ);
             else
-                _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
+                _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(p->mPosX, p->mPosY, p->mPosZ);
         }
-        if (*(int*)(self + 0x98) < Player_ScaleByCharFactor(self, 0x1c000))
-            *(u8*)(self + 0x70c) = 0;
+        if (p->mHorzSpeed < Player_ScaleByCharFactor(self, 0x1c000))
+            p->mStateArg = 0;
     } else {
-        if (*(int*)(self + 0x98) > Player_ScaleByCharFactor(self, 0x26000)) {
-            *(u16*)(self + 0x6a6) = 0x10;
-            *(u8*)(self + 0x70c) = 1;
+        if (p->mHorzSpeed > Player_ScaleByCharFactor(self, 0x26000)) {
+            p->mStateWaitTimer = 0x10;
+            p->mStateArg = 1;
         }
     }
 }
@@ -16958,6 +16953,7 @@ int func_ov002_020d674c(char* c){
 extern "C" {
 int func_ov002_020d6790(char* self)
 {
+    Player *p = (Player *)self;
     struct Obj {
       virtual int v0(); virtual int v1(); virtual int v2(); virtual int v3();
       virtual int v4(); virtual int v5(); virtual int v6(); virtual int v7();
@@ -16975,15 +16971,18 @@ int func_ov002_020d6790(char* self)
     extern char data_ov002_02110154;
     extern char data_ov002_0211067c;
     extern char data_ov002_0211004c;
-    if (*(u16*)(self + 0x6c6) != 0) return 0;
+    if (p->mMouthHoldTimer != 0)
+        return 0;
 
-    Obj* o = *(Obj**)(self + 0x360);
+    Obj *o = (Obj *)p->mObjInMouth;
     if (o == 0) return 0;
 
     int isbf = (*(u16*)((char*)o + 0xc) == 0xbf);
     if (isbf) {
-        if (*(u8*)(self + 0x709) != 0) goto isbf_ret0;
-        if (*(u8*)(self + 0x708) != 0) goto isbf_ret0;
+        if (p->mIsNoControl != 0)
+            goto isbf_ret0;
+        if (p->mIsTakingDamage != 0)
+            goto isbf_ret0;
         _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_02110034);
         Player_DisableInteraction(self);
         return 1;
@@ -16997,19 +16996,19 @@ isbf_ret0:
         }
     }
 
-    o = *(Obj**)(self + 0x360);
+    o = (Obj *)p->mObjInMouth;
     switch (o->v18()) {
     case 2:
     case 4:
         func_ov002_020d7430(*reinterpret_cast<Player*>(self));
         goto ret0;
     case 5: {
-        int eq132 = (*(u16*)((char*)(*(Obj**)(self + 0x360)) + 0xc) == 0x132);
+        int eq132 = (*(u16 *)((char *)((Obj *)p->mObjInMouth) + 0xc) == 0x132);
         if (eq132) {
             func_ov002_020d8118(self);
         }
-        (*(Obj**)(self + 0x360))->v19(self);
-        *(int*)(self + 0x360) = 0;
+        ((Obj *)p->mObjInMouth)->v19(self);
+        p->mObjInMouth = 0;
         *(u8*)(self + 0x6f4) = 1;
         goto ret0;
     }
@@ -17021,10 +17020,11 @@ isbf_ret0:
         _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211004c);
         return 1;
     case 7:
-        if (*(u8*)(self + 0x714) != 0) goto case7_ret1;
-        *(int*)(*(int*)(self + 0x360) + 0xb0) |= 0x40000;
-        *(int*)(*(int*)(self + 0x360) + 0xb0) &= ~0x20000;
-        *(u8*)(self + 0x714) = 1;
+        if (p->mUseAltBodyModel != 0)
+            goto case7_ret1;
+        ((dActor_c *)p->mObjInMouth)->mFlags |= 0x40000;
+        ((dActor_c *)p->mObjInMouth)->mFlags &= ~0x20000;
+        p->mUseAltBodyModel = 1;
 case7_ret1:
         return 1;
     default:
@@ -17214,7 +17214,7 @@ l48:
 leq:
   if(func_ov002_020d5f34(p1, p0) == 0) goto ret0b;
   *(char**)(p0+0x360) = p1;
-  q = (int*)(((int)p1 + 0xb0) & 0xFFFFFFFFFFFFFFFFull);
+  q = (int *)&((dActor_c *)p1)->mFlags;
   *q = *q | 0x20000;
   func_ov002_020d71ec(p0, 1);
   Player_DisableInteraction(p0);
@@ -17524,13 +17524,13 @@ int Player::St_YoshiPower_Cleanup()
     extern void func_ov002_020d6790(char*);
     char* r2 = *(char**)((char*)&mObjInMouth);
     if (r2 != 0) {
-        int t = (int)((*(int*)(r2+0xb0) & 0x20000) != 0);
+        int t = (int)((((dActor_c *)r2)->mFlags & 0x20000) != 0);
         if (t != 0) {
-            *(int*)(((int)r2 + 0xb0)) &= ~0xe0000;
+            ((dActor_c *)r2)->mFlags &= ~0xe0000;
             func_ov002_020d718c();
             return 1;
         }
-        *(int*)(((int)r2 + 0xb0)) &= ~0x20000;
+        ((dActor_c *)r2)->mFlags &= ~0x20000;
     }
     if (mUseAltBodyModel == 0) {
         char* q = *(char**)((char*)&mObjInMouth);
@@ -17685,7 +17685,8 @@ int Player::St_YoshiPower_Main()
             int b = mUseAltBodyModel;
             char* t4 = (char*)(*(int*)(*(int*)(c + ((b<<2)+3)*4 + 0x154) + 0x14) + 0x90);
             if (*(void**)(&mObjInMouth) != 0) {
-                if (!(*(int*)((char*)*(void**)(&mObjInMouth)+0xb0) & 0x20000)) flag = 0;
+                if (!(((dActor_c *)*(void **)&mObjInMouth)->mFlags & 0x20000))
+                    flag = 0;
                 if (flag != 0) {
                     int id1 = this->GetBodyModelID(this->param1 & 0xff, 0);
                     MulVec3Mat4x3(t4 + 0x24, (char*)*(void**)(c + (id1<<2) + 0xdc) + 0x1c, &tmp);
@@ -17706,13 +17707,13 @@ int Player::St_YoshiPower_Main()
                 Obj* o = *(Obj**)(&mObjInMouth);
                 int cond = (*(unsigned short*)((char*)o+0xc) == 0xbf);
                 if (cond != 0) {
-                    *(int*)((int)o + 0xb0) &= ~0x20000;
+                    ((dActor_c *)o)->mFlags &= ~0x20000;
                     if (((Player*)(*(void**)(&mObjInMouth)))->func_ov002_020d5ed0() == 0) {
                         func_ov002_020d718c();
                     }
                 } else {
-                    *(int*)((int)o + 0xb0) |= 0x40000;
-                    *(int*)((int)*(void**)(&mObjInMouth) + 0xb0) &= ~0x20000;
+                    ((dActor_c *)o)->mFlags |= 0x40000;
+                    ((dActor_c *)mObjInMouth)->mFlags &= ~0x20000;
                     if ((*(Obj**)(&mObjInMouth))->v18() == 4 || (*(Obj**)(&mObjInMouth))->v18() == 2) {
                         mStateStep = 3;
                         int f2 = 1;
@@ -17819,8 +17820,8 @@ int Player::St_YoshiPower_Main()
                     func_ov002_020d5cec(obj0);
                     mStateFlags &= ~2;
                 } else {
-                    *(int*)((int)obj0 + 0xb0) |= 0x80000;
-                    *(int*)((int)*(void**)(&mObjInMouth) + 0xb0) &= ~0x40000;
+                    ((dActor_c *)obj0)->mFlags |= 0x80000;
+                    ((dActor_c *)mObjInMouth)->mFlags &= ~0x40000;
                 }
             }
             *(void**)(&mObjInMouth) = 0;
@@ -17954,7 +17955,7 @@ int Player::St_YoshiPower_Init()
         _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x30, 0x40000000, 0x1000, 0);
         mStateStep = 6;
         *(void**)((char*)&mHeldObj) = **(void***)((char*)&mHeldObjQueue);
-        *(int*)(((int)*(void**)((char*)&mHeldObj) + 0xb0)) |= 0x100;
+        ((dActor_c *)mHeldObj)->mFlags |= 0x100;
         func_ov002_020ed63c(*(void**)((char*)&mHeldObj), 1);
         (*(int**)((char*)&mHeldObjQueue))[0] = 0;
         for (i = 1; i < 5; i++) {
@@ -18654,15 +18655,15 @@ L9c:
         }
         self->mUseAltBodyModel = 0;
         {
-            int* p = (int*)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0);
+            int *p = (int *)&((dActor_c *)self->mObjInMouth)->mFlags;
             *p |= 0x80000;
         }
         {
-            int* p = (int*)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0);
+            int *p = (int *)&((dActor_c *)self->mObjInMouth)->mFlags;
             *p &= ~0x40000;
         }
         {
-            int* p = (int*)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0);
+            int *p = (int *)&((dActor_c *)self->mObjInMouth)->mFlags;
             *p &= ~0x20000;
         }
         *(void**)((char*)&self->mObjInMouth) = 0;
@@ -19121,7 +19122,7 @@ void Player::func_ov002_020d98b4(){
     *(void**)(self+0x628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
       *(unsigned int*)(self+0x628), 0xd6, s.x, s.y, s.z, 0, 0);
   }
-  *(int*)(((int)self + 0xb0)) |= 0x80;
+  mFlags |= 0x80;
 }
 }
 
@@ -19397,7 +19398,7 @@ int Player::St_SwingPlayer_Cleanup()
 {
   char* p = *(char**)((char*)&mHeldObj);
   if (p) {
-    *(unsigned int*)(p + 0xb0) &= ~0x800;
+      ((dActor_c *)p)->mFlags &= ~0x800;
   }
   mPrevAngleY = mAngleY;
   return 1;
@@ -19450,7 +19451,7 @@ int Player::St_SwingPlayer_Main()
         if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 1) != 0) {
             char* p = *(char**)(c + 0x358);
             if (p != 0) {
-                int b = (*(u32*)(p + 0xb0) & 0x200) != 0;
+                int b = (((dActor_c *)p)->mFlags & 0x200) != 0;
                 if (!b) {
                     func_ov002_020d9c70(c);
                     func_ov002_020da95c(c);
@@ -19703,29 +19704,29 @@ int Player::DropActor()
     u32* s = *(u32**)((char*)&mHeldObj);
     int present = (s != 0);
     if (present) {
-        int held = ((s[0x2c] & 0x200) != 0);
+        int held = ((((dActor_c *)s)->mFlags & 0x200) != 0);
         if (!held) {
-            u32* s_ptr1 = (u32*)(((int)s + 0xb0));
+            u32 *s_ptr1 = &((dActor_c *)s)->mFlags;
             *s_ptr1 &= ~0x4000u;
 
             u32* s_ptr2 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr2 = (u32*)(((int)s_ptr2 + 0xb0));
+            u32 *field_ptr2 = &((dActor_c *)s_ptr2)->mFlags;
             *field_ptr2 &= ~0x100u;
 
             u32* s_ptr3 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr3 = (u32*)(((int)s_ptr3 + 0xb0));
+            u32 *field_ptr3 = &((dActor_c *)s_ptr3)->mFlags;
             *field_ptr3 &= ~0x400u;
 
             u32* s_ptr4 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr4 = (u32*)(((int)s_ptr4 + 0xb0));
+            u32 *field_ptr4 = &((dActor_c *)s_ptr4)->mFlags;
             *field_ptr4 &= ~0x2000u;
 
             u32* s_ptr5 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr5 = (u32*)(((int)s_ptr5 + 0xb0));
+            u32 *field_ptr5 = &((dActor_c *)s_ptr5)->mFlags;
             *field_ptr5 &= ~0x800u;
 
             u32* s_ptr6 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr6 = (u32*)(((int)s_ptr6 + 0xb0));
+            u32 *field_ptr6 = &((dActor_c *)s_ptr6)->mFlags;
             *field_ptr6 &= ~0x1000u;
 
             *(u32**)((char*)&mHeldObj) = 0;
@@ -19758,22 +19759,21 @@ int Player::DropActor()
 // @symbol func_ov002_020da95c
 #pragma push
 #pragma opt_propagation off
-#define ADDR(p) ((int *)(p))
 extern "C" {
 int func_ov002_020da95c(char *c)
 {
-    int p = *(int *)(c + 0x358);
+    Player *player = (Player *)c;
+    int p = player->mHeldObj;
     int t = (p != 0);
     if (t == 0) return 0;
-    *ADDR(p + 0xb0) &= ~0x800;
-    *ADDR(*(volatile int *)(c + 0x358) + 0xb0) &= ~0x4000;
-    *ADDR(*(volatile int *)(c + 0x358) + 0xb0) |= 0x1000;
-    *ADDR(*(volatile int *)(c + 0x358) + 0xb0) &= ~0x100;
-    *(int *)(c + 0x358) = 0;
+    ((dActor_c *)p)->mFlags &= ~0x800;
+    ((dActor_c *)*(volatile int *)&player->mHeldObj)->mFlags &= ~0x4000;
+    ((dActor_c *)*(volatile int *)&player->mHeldObj)->mFlags |= 0x1000;
+    ((dActor_c *)*(volatile int *)&player->mHeldObj)->mFlags &= ~0x100;
+    player->mHeldObj = 0;
     return 1;
 }
 }
-#undef ADDR
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
@@ -19783,7 +19783,7 @@ int func_ov002_020da95c(char *c)
 extern "C" {
 extern "C" int func_ov002_020da9d4(char* self){
     extern void func_ov002_020db54c(void* s, int a, int b, int c);
-    char* s = *(char**)(self + 0x358);
+    char *s = (char *)((Player *)self)->mHeldObj;
     int b = (s != 0);
     int* p;
     if (!b)
@@ -19791,15 +19791,15 @@ extern "C" int func_ov002_020da9d4(char* self){
     {
         int e = (*(unsigned short*)(s + 0xc) == 0xbf);
         if (e)
-            func_ov002_020db54c(s, 0x10000, 0x10000, *(short*)(self + 0x8e));
+            func_ov002_020db54c(s, 0x10000, 0x10000, ((Player *)self)->mAngleY);
     }
-    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0));
+    p = (int *)&((dActor_c *)((Player *)self)->mHeldObj)->mFlags;
     *p &= ~0x4000;
-    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0));
+    p = (int *)&((dActor_c *)((Player *)self)->mHeldObj)->mFlags;
     *p |= 0x2000;
-    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0));
+    p = (int *)&((dActor_c *)((Player *)self)->mHeldObj)->mFlags;
     *p &= ~0x100;
-    *(char**)(self + 0x358) = 0;
+    ((Player *)self)->mHeldObj = 0;
     return 1;
 }
 }
@@ -19812,13 +19812,13 @@ extern "C" {
 int Player::func_ov002_020daa74(){
     extern void func_ov002_020db54c(void* s, int a, int b, int c);
     char* self = (char*)this;
-    char* s = *(char**)(self + 0x358);
+    char *s = (char *)mHeldObj;
     int b = (s != 0);
     if (!b)
         return 0;
-    *(int*)(((int)s + 0xb0)) &= ~0x4000;
-    *(int*)(((int)(*(char**)(self + 0x358)) + 0xb0)) |= 0x400;
-    *(int*)(((int)(*(char**)(self + 0x358)) + 0xb0)) &= ~0x100;
+    ((dActor_c *)s)->mFlags &= ~0x4000;
+    ((dActor_c *)mHeldObj)->mFlags |= 0x400;
+    ((dActor_c *)mHeldObj)->mFlags &= ~0x100;
     {
         char* s2 = *(char**)(self + 0x358);
         int e = (*(unsigned short*)(s2 + 0xc) == 0xbf);
@@ -19840,17 +19840,17 @@ extern "C" {
 int Player_ReleaseHeldActor(char* c)
 {
     extern void func_ov002_020db54c(char* p, int a, int b, int d);
-    char* p = *(char**)(c + 0x358);
+    char *p = (char *)((Player *)c)->mHeldObj;
     int ok = (int)(p != 0);
     int is_bf;
     if (ok == 0) return 0;
     is_bf = (int)(*(unsigned short*)(p + 0xc) == 0xbf);
     if (is_bf != 0) {
-        func_ov002_020db54c(p, 0x10000, 0x10000, *(short*)(c + 0x8e));
+        func_ov002_020db54c(p, 0x10000, 0x10000, ((Player *)c)->mAngleY);
     }
-    *(int*)(((int)*(char**)(c + 0x358) + 0xb0)) &= ~0x4000;
-    *(int*)(((int)*(char**)(c + 0x358) + 0xb0)) &= ~0x100;
-    *(char**)(c + 0x358) = 0;
+    ((dActor_c *)((Player *)c)->mHeldObj)->mFlags &= ~0x4000;
+    ((dActor_c *)((Player *)c)->mHeldObj)->mFlags &= ~0x100;
+    ((Player *)c)->mHeldObj = 0;
     return 1;
 }
 }
@@ -19922,10 +19922,10 @@ int func_ov002_020dacb4(char *p, char *actor)
     extern int data_ov002_020ff480[];
     int t;
 
-    *(char **)(p + 0x358) = actor;
-    *(int *)(*(char **)(p + 0x358) + 0xb0) &= ~0x400;
-    *(int *)(*(char **)(p + 0x358) + 0xb0) &= ~0x2000;
-    *(int *)(*(char **)(p + 0x358) + 0xb0) |= 0x100;
+    ((Player *)p)->mHeldObj = (s32)actor;
+    ((dActor_c *)((Player *)p)->mHeldObj)->mFlags &= ~0x400;
+    ((dActor_c *)((Player *)p)->mHeldObj)->mFlags &= ~0x2000;
+    ((dActor_c *)((Player *)p)->mHeldObj)->mFlags |= 0x100;
     *(int *)(p + 0x98) = 0;
 
     if (*(unsigned char *)(p + 0x706) != 0) {
@@ -19959,9 +19959,9 @@ int func_ov002_020dacb4(char *p, char *actor)
     }
 
     {
-        char *a2 = *(char **)(p + 0x358);
+        char *a2 = (char *)((Player *)p)->mHeldObj;
         int offset = 0xc4;
-        int s = *(int *)(a2 + 0xb0);
+        int s = ((dActor_c *)a2)->mFlags;
         s = (s & 0x8000) != false;
         if (s != false) {
             offset = 0x224;
@@ -20019,16 +20019,18 @@ int Player::St_Throw_Main()
     goto Ld0;
   Lb8:
     {
-      int b=(*(int*)(q+0xb0)&0x200)?1:0;
+      int b = (((dActor_c *)q)->mFlags & 0x200) ? 1 : 0;
       if(b) r4=0xd;
     }
   Ld0:
     int id2=this->GetBodyModelID(param1&0xff, 0);
     void *anim2 = mBodyModels[id2];
     if(_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)anim2+0x50,r4)){
-      int b2=(*(int*)(*(char**)((char*)&mHeldObj)+0xb0)&0x200)?1:0;
-      if(b2==0) func_ov002_020daa74();
-      else func_ov002_020da9d4(((char*)this));
+        int b2 = (((dActor_c *)mHeldObj)->mFlags & 0x200) ? 1 : 0;
+        if (b2 == 0)
+            func_ov002_020daa74();
+        else
+            func_ov002_020da9d4(((char *)this));
     }
   }
   if(this->FinishedAnim())
@@ -25043,10 +25045,10 @@ int func_ov002_020e2664(char* self)
 
     if (!(flags & 1)) goto ret0;
 
-    ptr = *(int*)(self + 0x358);
+    ptr = ((Player *)self)->mHeldObj;
     b1 = !!ptr;
     if (b1 != false) {
-        b2 = *(int*)(ptr + 0xb0);
+        b2 = ((dActor_c *)ptr)->mFlags;
         b2 = ((b2 & 0x200) != 0);
         if (b2 == false) {
             _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_021105d4);
