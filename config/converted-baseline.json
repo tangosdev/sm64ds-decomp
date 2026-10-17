@@ -217,7 +217,7 @@
     "src/game/stages/d_s_stage_methods.cpp#_Z17LoadLevelOverlaysi",
     "src/game/stages/d_s_stage_methods.cpp#_Z19UnloadLevelOverlaysi",
     "src/game/stages/d_s_stage_methods.cpp#_Z26LoadOrUnloadObjectOverlaysPFviEi",
-    "src/_ZN10ModelAnim24CopyERKS_Pcj.cpp",
+    "src/engine/model/ModelAnim2.cpp#_ZN10ModelAnim24CopyERKS_Pcj",
     "src/_ZN10ModelAnim2C1Ev.cpp",
     "src/_ZN10ModelAnim2D0Ev.cpp",
     "src/_ZN10ModelAnim2D1Ev.cpp",

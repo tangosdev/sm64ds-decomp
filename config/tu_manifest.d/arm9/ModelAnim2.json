@@ -1,0 +1,154 @@
+{
+  "id": "arm9/ModelAnim2",
+  "module": "arm9",
+  "source": "src/engine/model/ModelAnim2.cpp",
+  "promoted_source": "src/engine/model/ModelAnim2.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "class run 0x02016254..0x020163e0: first to last function named for the class or in its vtable (tu_map unit also carries 79 other class(es), e.g. BlendModelAnim, CLPS_BlockRef, CP15, Event); a TU boundary a reviewer must confirm against the neighbours",
+    "lifecycle excluded (_ZN10ModelAnim2D0Ev, _ZN10ModelAnim2D1Ev, _ZN10ModelAnim2C1Ev): they stay enrolled shards, the split arm9/ModelAnim and arm9/BlendModelAnim recorded",
+    "ROM class identity: _ZTI15dExtAnm2Model_c at 0x0208e788, _ZTS at 0x0208e838, vtable _ZTV10ModelAnim2 at 0x0208e9b4"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02016254",
+      "end": "0x02016320"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10ModelAnim24CopyERKS_Pcj",
+      "address": "0x02016254",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN10ModelAnim24CopyERKS_Pcj.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_0201628c",
+      "address": "0x0201628c",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0201/func_0201628c.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_020162a4",
+      "address": "0x020162a4",
+      "size": "0x00000020",
+      "legacy_source": "src/unnamed/arm9/0201/func_020162a4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt",
+      "address": "0x020162c4",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c",
+      "ordinal": 3
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Scaffolded by tools/class_scaffold.py (RTTI record, ROM vtable, srcpath), then filled by hand. tu_map cannot segment arm9 main, so the boundary is the class run: Copy opens it at 0x02016254 and Func_020162C4 closes the method run at 0x02016320, between dExtCommonModel_c's C1 and the ModelAnim2 lifecycle row.",
+    "ModelAnim2 is the tree's coined name for the cartridge's dExtAnm2Model_c (_ZTI15dExtAnm2Model_c at 0x0208e788, single inheritance from dExtAnmModel_c, the tree's ModelAnim). Its vtable _ZTV10ModelAnim2 at 0x0208e9b4 overrides only D1/D0; renaming the class is separate work, so the file keeps the class name (AGENTS.md file-name rule) beside ModelAnim.cpp.",
+    "The fold takes the method run, lifecycle excluded, the split arm9/ModelAnim and arm9/BlendModelAnim recorded: the destructor is the key function, and defining it here would emit the vtable group of a class whose base is multiply inherited. D0, D1 and C1 at 0x02016320..0x020163e0 and the _ZThn80_ thunks stay enrolled shards. With no key function defined, the object is the four licensed .text sections and nothing else (tubuild verify: no EXTRA, no POLICY).",
+    "func_0201628c and func_020162a4 keep their address names and int parameters: Player calls both through an extern (int, int) declaration on a body model with bone 8, so a typed ModelAnim2* parameter would add a declaration disagreement. func_02045e2c is declared with an int frame, matching the ROM's unextended lsr #16 argument; Model4.cpp defines it with short, the same banked disagreement the absorbed source carried.",
+    "Func_020162C4 keeps the mangled extern \"C\" definition for the Fix12<int> by-value wall (6az), as ModelAnim::SetAnim does; ModelAnim2.h's member declaration is the real one."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-ModelAnim2/ModelAnim2.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/arm9-ModelAnim2/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02016254",
+        "end": "0x02016320",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02016254",
+          "end": "0x02016320",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 4
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}
