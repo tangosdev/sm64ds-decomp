@@ -560,7 +560,7 @@ void daPgBby_c::func_ov072_021210c4()
     int shadowHeight;
     int shadowRadius;
 
-    if (mCarrier && ((mFlags & 0x4000) ? 1 : 0) && *(int *)((char *)mCarrier + 0xc8)) {
+    if (mCarrier && ((mFlags & 0x4000) ? 1 : 0) && mCarrier->mCarryMatrix) {
         idx = 0;
         if (mCarrier->IsFrontSliding() || mCarrier->LostGrabbedObject()) {
             idx = 1;

@@ -16,8 +16,7 @@
  * The held matrix pointer at actor+0xc8 is dActor_c::mCarryMatrix.
  * func_ov078_02125de0 stores the king's own as the member; the stores into
  * the held actor (there and in the throw helper) and the reads in Render and
- * Behavior still use the raw offset on that other actor. Behavior's store
- * at dCamera_c+0x114 is the word after mTargetPlayer, still pad_114.
+ * Behavior still use the raw offset on that other actor.
  * func_02035550 is the call
  * that ORs 0x4000 into dBgCh_Actr::mFlags; inlining the or deletes the call.
  * func_02012694 plays bank 3 at mCamSpacePos. It is not Sound::PlayBank3
@@ -1570,7 +1569,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 int daBombking_c::Behavior()
 {
     if (DistToCPlayer() < 0x1770000) {
-        *(daBombking_c **)((char *)data_0209f318 + 0x114) = this;
+        ((dCamera_c *)data_0209f318)->mFramedActor = this;
     }
 
     if (*(void **)((char *)mState + 8) != 0) {

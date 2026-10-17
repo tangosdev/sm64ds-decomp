@@ -441,7 +441,7 @@ s32 daObjFallBlock_c::Behavior()
         is53 = (int)(actorID == ACTOR_FL_KUZURE);
         if (is53 == 0) {
             pl = ClosestPlayer();
-            dist = Vec3_HorzDist(&mRestPos, (char *)pl + 0x5c);
+            dist = Vec3_HorzDist(&mRestPos, &((dActor_c *)pl)->mPosX);
             thresh = 0x28a000;
             if (data_0209f2f8 == 0x2e)
                 thresh = 0xa000;

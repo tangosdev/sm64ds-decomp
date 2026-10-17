@@ -60,7 +60,7 @@
  *   dActor_c's existing previous-angle and horizontal-speed fields.
  * - mSpawnPos is named in daYegg_c.h but its purpose is not known
  *   (written once, never read here); unk_41e and the 4-byte gap at 0x3f8 are
- *   unnamed. dActor_c::unk_0a4/unk_0ac and Player::unk_37c are read through
+ *   unnamed. dActor_c::unk_0a4/unk_0ac are read through
  *   their unk_ names, and func_ov002_020ed738 reads the floor result +4 raw.
  * - this list is representative, not exhaustive: the flag and mask
  *   literals (mFlags 0x40000/0x10000000/0x8, the hit flags 0x8000/0x26fe0,
@@ -801,9 +801,8 @@ void daYegg_c::func_ov002_020ed0d4()
         Matrix4x3_FromRotationZXYExt(&data_020a0e68, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
         MulVec3Mat4x3(&in, &data_020a0e68, &out);
 
-        if (*(int*)&mPlayer->unk_37c != 0
-            || func_ov002_020cf700(mPlayer) != 0
-            || func_ov002_020d0d2c(mPlayer) != 0) {
+        if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
+            func_ov002_020d0d2c(mPlayer) != 0) {
             if (mWithMeshClsn.IsOnGround() != 0) {
                 mGoalAngleX = mPlayer->mAngleX;
                 mGoalAngleZ = mPlayer->mAngleZ;
@@ -1071,11 +1070,8 @@ void daYegg_c::func_ov002_020ed7f8()
     mShadowMtx[10] = mPosY >> 3;
     mShadowMtx[11] = mPosZ >> 3;
     b = (mFlags & 0x40000) ? 1 : 0;
-    if (b == 0
-        && *(int*)&mPlayer->unk_37c == 0
-        && !func_ov002_020cf700(mPlayer)
-        && !func_ov002_020d0d2c(mPlayer))
-    {
+    if (b == 0 && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
+        !func_ov002_020d0d2c(mPlayer)) {
         if (func_ov002_020ec654() == 0) {
             _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
                 this, &mShadowModel, mShadowMtx, r4, r5 + 0x28000, 0xf);

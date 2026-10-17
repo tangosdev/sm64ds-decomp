@@ -907,19 +907,17 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self)
     camera = (dCamera_c *)data_0209f318;
     angleToPlayer = self->HorzAngleToCPlayer();
     angleToAnchor = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mSpawnPosX);
-    /* camera+0x118 has no name in dCamera_c.h. dCamera_c::Behavior clears
-       it and ORs 4 into mFlags when it was non-zero; steps 0-6 write the
-       chomp there. */
+    /* Steps 0-6 make the chomp the camera's mFocusActor. */
     switch (self->mReleaseStep) {
     case 0:
-        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        camera->mFocusActor = self;
         if (ApproachLinear(self->mAngleY, angleToPlayer, 0x320) != 0
             && DecIfAbove0_Short(&self->mActionTimer) == 0)
             incRelease(self);
         self->mPrevAngleY = self->mAngleY;
         break;
     case 1: case 2: case 3: case 4:
-        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        camera->mFocusActor = self;
         ApproachLinear(self->mHorzSpeed, 0, 0x400);
         if (self->mIsOnGround != 0) {
             self->mPrevAngleY = (s16)(angleToAnchor + 0x2000);
@@ -930,7 +928,7 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self)
         }
         break;
     case 5:
-        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        camera->mFocusActor = self;
         ApproachLinear(self->mHorzSpeed, 0, 0x400);
         if (self->mIsOnGround != 0) {
             self->mPrevAngleY = angleToAnchor;
@@ -943,7 +941,7 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self)
         }
         break;
     case 6: {
-        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        camera->mFocusActor = self;
         ApproachLinear(self->mReleaseSpeed, 0x1000, 0x400);
         if (self->mIsOnGround != 0) {
             SetChompAnim(self, data_ov014_02114970);

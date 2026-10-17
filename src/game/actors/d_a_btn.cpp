@@ -431,12 +431,10 @@ int daBtn_c::Behavior()
 {
     if (mIsKing != 0 && mState != 9) {
         if (DistToCPlayer() < 0x1770000) {
-            /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA). The
-               word at 0x114 is still padding in dCamera_c.h; while the player
-               is within 0x1770000 the king writes itself there each frame, as
-               daBombking_c::Behavior does. What the camera reads it for is
-               not traced here. */
-            *(dActor_c **)((dCamera_c *)data_0209f318)->pad_114 = this;
+            /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA).
+               While the player is within 0x1770000 the king asks the camera
+               to frame him each frame, as daBombking_c::Behavior does. */
+            ((dCamera_c *)data_0209f318)->mFramedActor = this;
         }
     }
 

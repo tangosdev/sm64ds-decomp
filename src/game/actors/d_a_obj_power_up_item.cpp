@@ -499,8 +499,9 @@ int daObjPowerUpItem_c::InitResources()
     mScaleY = 0xfa0;
     mScaleZ = 0xfa0;
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x1cc, ((char *)this), 0x32000, 0x64000, 0x800002, 0x8000);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x200, ((char *)this), 0x3c000, 0x3c000, 0, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x32000, 0x64000, 0x800002, 0x8000);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x3c000,
+                                                                0x3c000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     /* ground probe: a ray starting 0x14000 above the flower */

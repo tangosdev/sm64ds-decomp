@@ -14,7 +14,6 @@
 //   and dBgCh_Actr::Init stay mangled extern "C". SpawnCoins as a member, with
 //   Fix12<int> by value, grew func_ov080_02124acc (0x170 to 0x17c) and
 //   func_ov080_02124edc (0x110 to 0x11c). NewSimple has no header method.
-// - The carrier matrix is read at +0xc8. dActor_c::pad_0c5 covers that word.
 // - mShadowMtx stays u8[0x30] and is cast to Matrix4x3. The header names the
 //   array, not a Matrix4x3.
 // - func_ov080_02124e60 stores 0 through *(int *)pad_0d0, the pad in front of
@@ -148,13 +147,12 @@ void daBttBk_c::func_ov080_02124c3c()
     if (carrier != 0) {
         int hasBit14 = (flags & 0x4000) != 0;
         if (hasBit14 != false) {
-            /* +0xc8 of the carrier is a Matrix4x3 pointer. */
-            if (*(int *)((char *)carrier + 0xc8) != 0) {
+            if (carrier->mCarryMatrix != 0) {
 
                 int tx = 0xc000, ty = 0x2000, tz = 0;
                 t.x = tx; t.y = ty; t.z = tz;
                 carrier = mCarrier;
-                data_020a0e68 = *(Mtx43 *)(*(void **)((char *)carrier + 0xc8));
+                data_020a0e68 = *(Mtx43 *)carrier->mCarryMatrix;
                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, t.x, t.y, t.z);
 
                 mPosX = data_020a0e68.a[9];

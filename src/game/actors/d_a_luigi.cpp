@@ -201,7 +201,7 @@ int daLuigi_c::Behavior()
     func_ov002_020e4374((char *)player, &depth, &radius);
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
         this, &mShadowModel, &mShadowMatrix, radius, depth, kShadowOpacity);
-    /* dCamera_c::pad_114. No named field; the store is the actor pointer. */
+    /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
     *(daLuigi_c **)((char *)data_0209f318 + 0x114) = this;
     return 1;
 }

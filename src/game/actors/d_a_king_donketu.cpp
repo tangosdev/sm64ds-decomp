@@ -95,12 +95,11 @@
  *   const s32* walk of mPosX, unk_4d4[i] in the dust loops, and
  *   *(void**)&mState in func_ov073_0211f2c0 stay. The direct member forms
  *   change addressing. data_020a0e68's translation words stay a char*
- *   walk; .m[9..11] changes bytes. dCamera_c +0x114 is inside pad_114.
+ *   walk; .m[9..11] changes bytes.
  * - unk_4a8..4b0, unk_4c5, unk_4ca, unk_4d0 and unk_4d4 keep offset names.
  *   The hit masks in func_ov073_0211f61c stay literals (0x10000 is not in
  *   dCc_c.h's bit table). Sound ids are named for the site that plays them.
  */
-
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daKing_Donketu_c_AssetId {
@@ -1830,9 +1829,8 @@ int daKing_Donketu_c::Render()
  * boss from walking off in the states that run the ray. Finding ground clears mNoGroundAhead;
  * a miss while moving faster than 0xa000 (10.0) sets it.
  *
- * The first thing it does is store `this` into the camera object at +0x114
- * (dCamera_c.h has that word inside pad_114). What the camera does with it is not
- * recovered here.
+ * The first thing it does is store `this` into the camera's mFramedActor, so
+ * the camera frames the boss with the player.
  *
  * `opt_propagation off` is what stops the many position temporaries being
  * folded. It is bracketed to this one member: under `defer_codegen off` above,
@@ -1860,7 +1858,7 @@ int daKing_Donketu_c::Behavior()
     Vector3 v48;
     Vector3 v54;
 
-    *(C **)((char *)data_0209f318 + 0x114) = c;
+    ((dCamera_c *)data_0209f318)->mFramedActor = this;
     DecIfAbove0_Short(&mStateTimer);
 
     if (*(void **)((char *)c->pp + 8) != 0) {

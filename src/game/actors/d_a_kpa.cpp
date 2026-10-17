@@ -39,8 +39,6 @@
  *    func_ov060_021132a4, func_ov060_02112ee0 and func_ov060_02112bfc; the gotos
  *    in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset reads; and the
  *    opaque Obj view in Bowser_IsAnimAtLastFrame.
- *  - Behavior stores `this` at +0x114 of the object at data_0209f318 (a dCamera_c);
- *    dCamera_c.h has no member there, so it stays a byte offset.
  *  - Callees known only by address, whose purpose this file does not establish:
  *    func_020092c4, func_0200fa04, func_ov002_020c56f0, func_ov060_02117a3c,
  *    func_02038408, func_02011d50, func_02011cfc. Likewise the trailing arguments
@@ -339,8 +337,7 @@ bool ApproachLinear(short &value, short target, short step);
 int ApproachLinear(int &value, int target, int step);
 
 extern "C" {
-/* dCamera_c base pointer; Bowser publishes itself into the target slot at +0x114,
- * so the offset is a byte offset from this base, not a field of a known class. */
+/* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern char *data_0209f318;
 extern short data_02082214[];
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
@@ -800,13 +797,13 @@ find the closest Player and record the angle and the horizontal distance to him
 (condition flags, hold-state handler, opacity fade); func_ov060_02111a28
 (footfall effects); copy mAngleY to mPrevAngleY; advance the model animation at
 mAnimSpeed; func_ov060_0211577c (model matrix, foot points, shadow); store this
-actor at offset 0x114 of the camera object; clear and refresh the body collider,
+actor in the camera's mFramedActor; clear and refresh the body collider,
 offset (0, 0, 0x50000) = 80 units on Z relative to the actor; and drop
 mCapActorAlive once no cap actor exists any more. Always returns 1. */
 /*
  * One frame of the fight: pick the closest player and record the angle and distance
  * to him, run the two state workers, advance the animation, publish `this` into the
- * global at data_0209f318+0x114, then rebuild the body cylinder 0x50000 in front of
+ * camera's mFramedActor, then rebuild the body cylinder 0x50000 in front of
  * the actor. mdCcAcPos_c is a dCc_c by inheritance (dCcAcPos_c -> dCcAc_c ->
  * dCc_c), so Clear() and Update() are its own. The animation speed written here
  * (0x130) is the `speed` of the dExtFrameCtrl_c base inside mModelAnim (+0x50,
@@ -829,7 +826,7 @@ int daKpa_c::Behavior()
     mModelAnim.speed = mAnimSpeed;
     mModelAnim.Advance();
     func_ov060_0211577c();
-    *(char**)(data_0209f318 + 0x114) = (char *)this;
+    ((dCamera_c *)data_0209f318)->mFramedActor = this;
     mdCcAcPos_c.Clear();
     Vector3 v;
     v.z = 0x50000;

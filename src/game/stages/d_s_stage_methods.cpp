@@ -3083,7 +3083,7 @@ void dScStage_c::RenderVsModeCountdown() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209f394[i]) {
-            int t = (((u8 *)data_0209f394[i])[0x711] != 0);
+            int t = (((Player *)data_0209f394[i])->mLevelEntryDone != 0);
             if (t == 1)
                 count++;
         }
@@ -4163,7 +4163,7 @@ int dScStage_c::Behavior() {
                 for (i = 0; i < 4; i++) {
                     char *p = (char *)data_0209f394[i];
                     if (p != 0) {
-                        int t = (*(u8 *)(p + 0x711) != 0) ? 1 : 0;
+                        int t = (((Player *)p)->mLevelEntryDone != 0) ? 1 : 0;
                         if (t == 1)
                             cnt++;
                     }

@@ -77,7 +77,11 @@
  *   dispatch tables over it stay free.
  *   Shadow windows OamEnt, E, C, S and the per-function windows (E5cd0,
  *   Ent5b98, Obj2e30 and the rest) remain where a shared class is not yet
- *   proven; the ones over daDemo_c were moved onto real members.
+ *   proven; the ones over daDemo_c and its model helpers were moved onto
+ *   real members. Inside the block, the four 0x4c-byte entries at +0 and
+ *   the 0x30-byte window entries at +0x130 have roles (see E5cd0 and C37)
+ *   but no class, so indexed accesses that also reach unnamed offsets stay
+ *   raw with a one-line note.
  *   common.h must precede daDemo_c.h: ModelAnim.h's nested Matrix4x3
  *   otherwise wins and scalarizes Behavior's 12-word matrix copy.
  */
@@ -153,11 +157,18 @@ typedef void (C::*PMF0)();
 /* pointer-to-member taking (cmd, a2, a3) — func_ov002_020f7d74's table */
 typedef void (daDemo_c::*PMF3)(unsigned char*, int, int);
 
-/* array-teardown callback used by the anmModel_c destructor */
-typedef void (*VFN)(void *);
-
-/* dispatch receiver of func_ov002_020f37a0 — control bytes at +0x15c/+0x15d */
-struct C37 { unsigned char pad[0x15c]; unsigned char g; unsigned char idx; };
+/* dispatch receiver of func_ov002_020f37a0: the unk_0d8 block seen through
+   the control bytes of its first 0x30-byte sub-screen window entry, which
+   starts at block + 0x130 (sub BG1/BG2 offset, then the window-1
+   rectangle the handlers write to 0x4001042/0x4001046). */
+struct C37 {
+    unsigned char pad[0x15c];
+    unsigned char active; /* 0x15c - func_ov002_020f37a0 does nothing while 0 */
+    unsigned char kind;   /* 0x15d - index into data_ov002_02110e4c */
+    /* 0x15e - step index func_ov002_020f3310 and func_ov002_020f3740
+       dispatch on; the step handlers advance it. */
+    unsigned char step;
+};
 typedef void (C37::*PMF37)(int);
 struct Entry37 { PMF37 pmf; };
 
@@ -169,7 +180,11 @@ struct Entry2dd4 { PMF2dd4 pmf; };
 /* shadow struct 'E' */
 struct E { unsigned char d[0x30]; };
 
-/* shadow struct 'E5cd0' — anim-entry window of func_ov002_020f5cd0 */
+/* shadow struct 'E5cd0' — anim-entry window of func_ov002_020f5cd0 and
+   func_ov002_020f5678: one of the four 0x4c-byte entries at the start of the
+   unk_0d8 block. f28/f2c are the int and s16 func_ov002_020f5990 passes to
+   func_ov002_020f2790, which stores them in the edStarKiraCallback_c at
+   block + 0x200 (its unk308/unk30c) before spawning particle 0x3e. */
 struct E5cd0 {
     s32 f0;              /* 0x00 */
     s32 f4;              /* 0x04 */
@@ -181,7 +196,16 @@ struct E5cd0 {
     u16 f32;             /* 0x32 */
     char p34[0x3a - 0x34];
     u16 f3a;             /* 0x3a */
-    char p3c[0x4c - 0x3c];
+    char p3c[0x44 - 0x3c];
+    /* Set by func_ov002_020f5d34 for each entry it starts, cleared by
+       func_ov002_020f5a6c; func_ov002_020f5990 skips an entry while 0. */
+    u8 active; /* 0x44 */
+    char p45;
+    /* Index into data_ov002_02110e7c, the per-entry handler table
+       func_ov002_020f5990 dispatches through (0 from 5d34, 1 here, 2 from
+       func_ov002_020f5b98). */
+    u8 state; /* 0x46 */
+    char p47[0x4c - 0x47];
 };
 
 /* shadow struct 'E57c0' — anim-entry window of func_ov002_020f57c0 */
@@ -203,15 +227,12 @@ struct E57c0 {
   char p4a[2];
 };
 
-/* shadow struct 'E5678' — 0x4c-stride window of func_ov002_020f5678 */
-struct E5678 { char pad[0x4c]; };
-
 /* shadow struct 'Ent5b98' — anim-entry window of func_ov002_020f5b98 */
 struct Ent5b98 {
     char pad44[0x44];
-    unsigned char f44;
+    unsigned char active; /* 0x44 - see E5cd0 */
     char pad45;
-    unsigned char f46;
+    unsigned char state; /* 0x46 */
     unsigned char f47;
     char pad48[2];
     unsigned char f4a;
@@ -228,9 +249,6 @@ struct Obj2e30 {
     unsigned char f1ca;
     unsigned char f1cb;
 };
-
-/* shadow struct 'ObjSeq' — TextureSequence window of func_ov002_020f65b8 */
-struct ObjSeq { char pad[0x7c]; void *seq; };
 
 /* shadow struct 'Ent' */
 struct Ent
@@ -252,9 +270,9 @@ struct Sub {
     int f28;
     s16 f2c;
     char pad2e[0x44 - 0x2e];
-    u8 f44;
+    u8 active; /* 0x44 - see E5cd0 */
     u8 pad45;
-    u8 f46;
+    u8 state; /* 0x46 */
     char pad47[0x49 - 0x47];
     u8 f49;
 };
@@ -1085,6 +1103,9 @@ void func_ov002_020f26d4(void) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f26e0(void *thiz)
 {
+    /* block + 0x208 is trackingRecords of the edStarKiraCallback_c that
+       func_ov002_020f6448 constructs at block + 0x200; dPa_c.h keeps the
+       records as opaque words, so OamEnt views them and the offset stays raw. */
     struct OamEnt *e = (struct OamEnt *)((char *)thiz + 0x208);
     int i;
     for (i = 0; i < 0x40; i++, e++) {
@@ -1201,6 +1222,8 @@ int func_ov002_020f2990(char* c)
     int x, y;
     int idx;
 
+    /* 0x1cc/0x1d0: sprite position; 0x1d9: draw flag (0x1d8 is written with it
+       by 2a48/2a68 but read nowhere in this TU). Raw: the block has no proven class. */
     if (*(u8*)(c + 0x1d9) == 0) return (int)c;
 
     x = *(int*)(c + 0x1cc) >> 0xc;
@@ -1222,6 +1245,7 @@ int func_ov002_020f2990(char* c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2a48(char *p)
 {
+    /* 0x1d8/0x1d9 and the position: see func_ov002_020f2990. */
     *(char *)(p + 0x1d8) = 1;
     *(char *)(p + 0x1d9) = 1;
     *(int *)(p + 0x1cc) = 524288;
@@ -1236,6 +1260,7 @@ void func_ov002_020f2a48(char *p)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2a68(char *p)
 {
+    /* 0x1d8/0x1d9: see func_ov002_020f2990. */
     *(char *)(p + 0x1d8) = 0;
     *(char *)(p + 0x1d9) = 0;
 }
@@ -1595,6 +1620,7 @@ void func_ov002_020f32e4(struct S *arr, int i)
     *(unsigned short*)(p + 0x158) = 0x10;
     *(int*)(p + 0x150) = 0x1800;
     *(int*)(p + 0x154) = 0x1800;
+    /* +0x15c/+0x15e: control bytes of window entry i (C37 names entry 0's); raw because the block has no proven class. */
     *(unsigned char*)(p + 0x15e) = 1;
 }
 }
@@ -1604,6 +1630,7 @@ void func_ov002_020f32e4(struct S *arr, int i)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f3310
 extern "C" void func_ov002_020f3310(C* self, int idx) {
+    /* +0x15c/+0x15e: control bytes of window entry i (C37 names entry 0's); raw because the block has no proven class. */
     unsigned char sel = *((unsigned char*)((char*)self + idx * 0x30 + 0x15e));
     (self->*data_ov002_02110e24[sel])(idx);
 }
@@ -1618,6 +1645,7 @@ void func_ov002_020f335c(char *o, int i) {
     int idx = i * 0x30;
     int *fld = (int *)(o + 0x144 + idx);
     *fld = *fld + 0x1800;
+    /* +0x15c/+0x15e: control bytes of window entry i (C37 names entry 0's); raw because the block has no proven class. */
     if (*fld >= 0x66000) {
         *fld = 0x66000;
         *(unsigned char *)(o + idx + 0x15c) = 0;
@@ -1644,6 +1672,7 @@ void func_ov002_020f340c(char *o, int i) {
     int idx = i * 0x30;
     int *fld = (int *)(o + 0x144 + idx);
     *fld = *fld + 0x1800;
+    /* +0x15c/+0x15e: control bytes of window entry i (C37 names entry 0's); raw because the block has no proven class. */
     if (*fld >= 0x66000) {
         *fld = 0x66000;
         *(unsigned char *)(o + idx + 0x15c) = 0;
@@ -1680,6 +1709,7 @@ void func_ov002_020f34bc(unsigned char *s, int idx)
     if (*(int *)(s + 0x144 + k) <= 0x56000) *(int *)(s + 0x144 + k) = 0x56000;
     if (*(int *)(s + 0x148 + k) >= 0xfc000) *(int *)(s + 0x148 + k) = 0xfc000;
     if (*(int *)(s + 0x14c + k) >= 0xbc000) { *(int *)(s + 0x14c + k) = 0xbc000; flag++; }
+    /* +0x15c/+0x15e: control bytes of window entry i (C37 names entry 0's); raw because the block has no proven class. */
     if (flag != 0) (*(unsigned char *)(s + 0x15e + k))++;
     a = *(int *)(s + 0x144 + k);
     b = *(int *)(s + 0x140 + k);
@@ -1722,6 +1752,7 @@ void func_ov002_020f35e4(char *c, int i)
     SetSubBg1Offset(*(int *)(c + 0x130 + off) >> 12, *(int *)(c + 0x134 + off) >> 12);
     SetSubBg2Offset(*(int *)(c + 0x130 + off) >> 12, *(int *)(c + 0x134 + off) >> 12);
     data_0209d454 |= 6;
+    /* +0x15c/+0x15e: control bytes of window entry i (C37 names entry 0's); raw because the block has no proven class. */
     *(unsigned char *)(c + 0x15e + off) = *(unsigned char *)(c + 0x15e + off) + 1;
 }
 }
@@ -1731,6 +1762,7 @@ void func_ov002_020f35e4(char *c, int i)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f3740
 extern "C" void func_ov002_020f3740(C* self, int idx) {
+    /* +0x15c/+0x15e: control bytes of window entry i (C37 names entry 0's); raw because the block has no proven class. */
     unsigned char sel = *((unsigned char*)((char*)self + idx * 0x30 + 0x15e));
     (self->*data_ov002_02110e9c[sel])(idx);
 }
@@ -1751,8 +1783,9 @@ void func_ov002_020f378c(struct E *base, int idx){
 // @symbol func_ov002_020f37a0
 extern Entry37 data_ov002_02110e4c[];
 extern "C" void func_ov002_020f37a0(C37* c){
-  if(c->g==0) return;
-  (c->*data_ov002_02110e4c[c->idx].pmf)(0);
+    if (c->active == 0)
+        return;
+    (c->*data_ov002_02110e4c[c->kind].pmf)(0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1763,9 +1796,9 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f37fc(char *c)
 {
     func_ov002_020f3828((int*)c);
-    *(unsigned char*)(c + 0x15c) = 1;
-    *(unsigned char*)(c + 0x15d) = 2;
-    *(unsigned char*)(c + 0x15e) = 0;
+    ((C37 *)c)->active = 1;
+    ((C37 *)c)->kind = 2;
+    ((C37 *)c)->step = 0;
 }
 }
 
@@ -1806,9 +1839,9 @@ void func_ov002_020f3828(int *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f3954(char *p)
 {
-    *(char *)(p + 0x15c) = 1;
-    *(char *)(p + 0x15d) = 1;
-    *(char *)(p + 0x15e) = 0;
+    ((C37 *)p)->active = 1;
+    ((C37 *)p)->kind = 1;
+    ((C37 *)p)->step = 0;
 }
 }
 
@@ -2839,6 +2872,7 @@ void func_ov002_020f55b4(char* c, int i){
   *(unsigned short*)(e+0x3c) = 0;
   *(int*)(e+0x24) = 0;
   *(unsigned short*)(e+0x42) = 0x200;
+  /* Entry fields E5cd0 names (+0x28/+0x2c sparkle parameters, +0x44 active, +0x46 state); raw because the block has no proven class and this body reaches offsets no view names. */
   *(int*)(e+0x28) = 0x1000;
   *(unsigned short*)(e+0x2c) = 0x200;
 }
@@ -2860,9 +2894,9 @@ extern "C" void func_ov002_020f562c(C* self, int idx) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5678(char *base, int i)
 {
-    struct E5678 *e = (struct E5678 *)base + i;
-    *(int *)((char *)e + 0x28) = 0xccc;
-    *(unsigned short *)((char *)e + 0x2c) = 0x155;
+    struct E5cd0 *e = (struct E5cd0 *)base + i;
+    e->f28 = 0xccc;
+    e->f2c = 0x155;
 }
 }
 
@@ -2888,6 +2922,7 @@ void func_ov002_020f569c(void *self, int i)
         return;
     }
 
+    /* Entry fields E5cd0 names (+0x28/+0x2c sparkle parameters, +0x44 active, +0x46 state); raw because the block has no proven class and this body reaches offsets no view names. */
     *(int *)(p + idx + 0x28) = 0x1000;
     *(short *)(p + idx + 0x2c) = 0x200;
 
@@ -2972,6 +3007,7 @@ void func_ov002_020f5894(char *a, int i)
     off = i * 0x4c;
     p34 = (unsigned short*)(a + 0x34 + off);
     *p34 = *p34 + 1;
+    /* Entry fields E5cd0 names (+0x28/+0x2c sparkle parameters, +0x44 active, +0x46 state); raw because the block has no proven class and this body reaches offsets no view names. */
     if (*(int*)(a + 0x28 + off) != 0x1000) {
         unsigned short v = *p34;
         if (v == 0xf || v == 0x1e) {
@@ -3011,8 +3047,9 @@ void func_ov002_020f5990(char* c)
         *cnt = *cnt & 3;
     }
     for (i = 0; i < 4; i++, s = (Sub*)((char*)s + 0x4c)) {
-        if (s->f44 == 0) continue;
-        (((C*)c)->*data_ov002_02110e7c[s->f46])(i);
+        if (s->active == 0)
+            continue;
+        (((C *)c)->*data_ov002_02110e7c[s->state])(i);
         func_ov002_020f39ec(c, i);
         if (s->f49 == 0) continue;
         if (i != *(int*)(c + 0x1f8)) continue;
@@ -3028,10 +3065,11 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5a6c(char *p){
   int i;
   for(i=0;i<4;i++){
-    *(unsigned char*)(p+0x44)=0;
-    *(unsigned char*)(p+0x45)=0;
-    *(unsigned char*)(p+0x4a)=0;
-    p+=0x4c;
+      /* Entry fields E5cd0 names (+0x28/+0x2c sparkle parameters, +0x44 active, +0x46 state); raw because the block has no proven class and this body reaches offsets no view names. */
+      *(unsigned char *)(p + 0x44) = 0;
+      *(unsigned char *)(p + 0x45) = 0;
+      *(unsigned char *)(p + 0x4a) = 0;
+      p += 0x4c;
   }
 }
 }
@@ -3083,7 +3121,7 @@ void func_ov002_020f5b24(char *thiz)
     data_0209d454 |= 8;
     func_ov002_020f2f64(thiz);
     *(volatile unsigned int *)0x4001000 &= ~0xe000;
-    thiz[0x15c] = 0;
+    ((C37 *)thiz)->active = 0;
     func_ov002_020f2a48(thiz);
 }
 }
@@ -3148,8 +3186,8 @@ void func_ov002_020f5b98(struct Ent5b98 *e)
 {
     int i;
     for (i = 0; i < 4; i++) {
-        if (e->f44 != 0) {
-            e->f46 = 2;
+        if (e->active != 0) {
+            e->state = 2;
             e->f47 = 0;
             e->f4a = 0;
         }
@@ -3166,8 +3204,9 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5bcc(char *p){
   int i;
   for(i=0;i<4;i++){
-    if(*(unsigned char*)(p+0x44)) *(unsigned char*)(p+0x4a)=1;
-    p+=0x4c;
+      if (((struct Ent5b98 *)p)->active)
+          ((struct Ent5b98 *)p)->f4a = 1;
+      p += 0x4c;
   }
 }
 }
@@ -3232,12 +3271,12 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5cd0(struct E5cd0 *c)
 {
     int i;
-    if (*(u8*)((char*)c + 0x44) == 0)
+    if (c->active == 0)
         return;
     c->f0 = 0x80000;
     c->f4 = 0x60000;
     c->f30 = 0;
-    *(u8*)((char*)c + 0x46) = 1;
+    c->state = 1;
     c->f28 = 0xccc;
     c->f2c = 0x155;
     for (i = 0; i < 4; i++) {
@@ -3263,6 +3302,7 @@ void func_ov002_020f5d34(u8 *self)
     e = self;
     v = 0;
     do {
+        /* Entry fields E5cd0 names (+0x28/+0x2c sparkle parameters, +0x44 active, +0x46 state); raw because the block has no proven class and this body reaches offsets no view names. */
         *(u8 *)(e + 0x44) = 1;
         *(u8 *)(e + 0x45) = 0;
         *(s16 *)(e + 0x2e) = 0;
@@ -3638,12 +3678,13 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
 
 void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
 {
-    char *c = (char *)this;
-  _ZN15dExtFrameCtrl_c7AdvanceEv(c+0x50);
-  if(!_ZN15dExtFrameCtrl_c8FinishedEv(c+0x50)) return;
-  signed char r2 = *(signed char*)(r4 + (*(unsigned char*)(c+0x82) << 2) + 3);
-  if(r2 < 0) return;
-  func_ov002_020f6514((u8*)r4, (u8)(r2 & 0xff));
+    Advance();
+    if (!Finished())
+        return;
+    signed char r2 = *(signed char *)(r4 + (mAnimEntry << 2) + 3);
+    if (r2 < 0)
+        return;
+    func_ov002_020f6514((u8 *)r4, (u8)(r2 & 0xff));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3653,26 +3694,21 @@ void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
 
 void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
 {
-    unsigned char *self = (unsigned char *)this;
     u8 *e;
     int v;
-    *(u8 *)(self + 0x82) = arg;
-    e = (u8*)tbl + *(u8 *)(self + 0x82) * 4;
-    v = (*(u8 *)(e + 2) == 0) ? 0x40000000 : 0;
+    mAnimEntry = arg;
+    e = (u8 *)tbl + mAnimEntry * 4;
+    v = (e[2] == 0) ? 0x40000000 : 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        self,
-        (void*)((struct Ent **)*(void **)(self + 0x74))[*(u8 *)(e + 0)]->out4,
-        v, 0x1000, 0);
+        this, (void *)((struct Ent **)mAnimFiles)[e[0]]->out4, v, 0x1000, 0);
     {
-        void *ts = *(void **)(self + 0x7c);
+        void *ts = mTexSeq;
         s8 idx;
         if (ts == 0) return;
-        idx = *(s8 *)(e + 1);
+        idx = (s8)e[1];
         if (idx < 0) return;
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-            ts,
-            (void*)((struct Ent **)*(void **)(self + 0x78))[idx]->out4,
-            v, 0x1000, 0);
+            ts, (void *)((struct Ent **)mTexSeqFiles)[idx]->out4, v, 0x1000, 0);
     }
 }
 
@@ -3683,10 +3719,9 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
 
 void daDemo_c::anmModel_c::func_ov002_020f65b8()
 {
-    ObjSeq *o = (ObjSeq *)this;
-    if (o->seq == 0)
+    if (mTexSeq == 0)
         return;
-    ((TextureSequence *)o->seq)->Update(*(ModelComponents *)((char *)o + 8));
+    mTexSeq->Update(data);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3696,8 +3731,7 @@ void daDemo_c::anmModel_c::func_ov002_020f65b8()
 
 int daDemo_c::anmModel_c::func_ov002_020f65ec()
 {
-    char *c = (char *)this;
-    void *p = *(void**)(c + 0x7c);
+    void *p = mTexSeq;
     if (p == 0)
         return (int)p;
     return _ZN15dExtFrameCtrl_c7AdvanceEv((char*)p);
@@ -3722,35 +3756,33 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
     char *self = (char *)this;
     int i;
     void* ts;
-    *(SharedFilePtr**)(self + 0x70) = mdl;
-    if (((ModelBase *)self)
-            ->SetFile((BMD_File *)Model::LoadFile(**(SharedFilePtr **)(self + 0x70)), 1, tsData) ==
-        0)
+    mModelFile = mdl;
+    if (((ModelBase *)self)->SetFile((BMD_File *)Model::LoadFile(*mModelFile), 1, tsData) == 0)
         return 0;
-    self[0x80] = (char)nAnims;
-    *(SharedFilePtr***)(self + 0x74) = anims;
-    for (i = 0; i < *(unsigned char*)(self + 0x80); i++) {
-        _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(*(*(SharedFilePtr***)(self + 0x74))[i]);
+    mNumAnimFiles = (u8)nAnims;
+    mAnimFiles = anims;
+    for (i = 0; i < mNumAnimFiles; i++) {
+        _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(*mAnimFiles[i]);
     }
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self,
-        *(void**)((char*)(*(SharedFilePtr***)(self + 0x74))[0] + 4), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self, *(void **)((char *)mAnimFiles[0] + 4), 0,
+                                                0x1000, 0);
     if (texByte) {
         ts = _Znwj(0x14);
         if (ts) ts = _ZN15TextureSequenceC1Ev(ts);
-        *(void**)(self + 0x7c) = ts;
-        if (*(void**)(self + 0x7c) == 0)
+        mTexSeq = (TextureSequence *)ts;
+        if (mTexSeq == 0)
             return 0;
-        self[0x81] = texByte;
-        *(SharedFilePtr***)(self + 0x78) = texs;
-        for (i = 0; i < *(unsigned char*)(self + 0x81); i++) {
-            void* bmd = *(void**)((char*)(*(SharedFilePtr**)(self + 0x70)) + 4);
-            void *btp = TextureSequence::LoadFile(*(*(SharedFilePtr ***)(self + 0x78))[i]);
+        mNumTexSeqFiles = texByte;
+        mTexSeqFiles = texs;
+        for (i = 0; i < mNumTexSeqFiles; i++) {
+            void *bmd = *(void **)((char *)mModelFile + 4);
+            void *btp = TextureSequence::LoadFile(*mTexSeqFiles[i]);
             TextureSequence::Prepare(*(BMD_File*)bmd, *(BTP_File*)btp);
         }
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(*(void**)(self + 0x7c),
-            *(void**)((char*)(*(SharedFilePtr***)(self + 0x78))[0] + 4), 0, 0x1000, 0);
+        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+            mTexSeq, *(void **)((char *)mTexSeqFiles[0] + 4), 0, 0x1000, 0);
     }
-    self[0x83] = (char)arg5;
+    mSnapToFloor = (u8)arg5;
     return 1;
 }
 
@@ -3779,30 +3811,30 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
  * object tail (0x64/0x50), which is exactly what the vmi typeinfo records
  * encode.
  *
- * The base holds only the array. The remaining fields are read at raw offsets
- * rather than declared, because a declared member would sit BEFORE the tail
- * base in the layout and push the array off 0x50/0x64. */
+ * The base holds only the array. The class's own members come after both
+ * bases (0x70..0x83), so declaring them leaves the array at 0x64; deleting
+ * mTexSeq is the TextureSequence's own virtual D0, which is the slot-1 call
+ * the ROM makes. */
 daDemo_c::anmModel_c::~anmModel_c()
 {
-    char *c = (char *)this;
-    void *p;
+    SharedFilePtr *file;
     int i;
 
-    p = *(void **)(c + 0x70);
-    if (p != 0) ((SharedFilePtr *)(p))->Release();
-    for (i = 0; i < *(unsigned char *)(c + 0x80); i++) {
-        p = (*(void ***)(c + 0x74))[i];
-        if (p != 0) ((SharedFilePtr *)(p))->Release();
+    file = mModelFile;
+    if (file != 0)
+        file->Release();
+    for (i = 0; i < mNumAnimFiles; i++) {
+        file = mAnimFiles[i];
+        if (file != 0)
+            file->Release();
     }
-    if (*(void **)(c + 0x7c) != 0) {
-        for (i = 0; i < *(unsigned char *)(c + 0x81); i++) {
-            p = (*(void ***)(c + 0x78))[i];
-            if (p != 0) ((SharedFilePtr *)(p))->Release();
+    if (mTexSeq != 0) {
+        for (i = 0; i < mNumTexSeqFiles; i++) {
+            file = mTexSeqFiles[i];
+            if (file != 0)
+                file->Release();
         }
-        p = *(void **)(c + 0x7c);
-        if (p != 0) {
-            (*(VFN)((*(int **)p)[1]))(p);
-        }
+        delete mTexSeq;
     }
 }
 
@@ -3843,9 +3875,8 @@ int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
  * object tail (0x64/0x50), which is exactly what the vmi typeinfo records
  * encode.
  *
- * The base holds only the array. The remaining fields are read at raw offsets
- * rather than declared, because a declared member would sit BEFORE the tail
- * base in the layout and push the array off 0x50/0x64. */
+ * The base holds only the array; mFile is the class's own member and lands
+ * after both bases, at 0x5c. */
 /* defer_codegen on for this one definition: it is the second MI destructor
  * defined in the TU, and under defer off the second family emits D1 before
  * D0, which is not the cartridge's order. Deferred, its D2/D0/D1 flush at
@@ -3853,7 +3884,7 @@ int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
 #pragma defer_codegen on
 daDemo_c::simpleModel_c::~simpleModel_c()
 {
-    SharedFilePtr *file = *(SharedFilePtr **)((char *)this + 0x5c);
+    SharedFilePtr *file = mFile;
     if (file != 0) {
         file->Release();
     }
@@ -4154,9 +4185,9 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         }
     }
     {
-        void* obj = ((void*)this->mModelAnim);
-        if (*(unsigned char*)((char*)obj + 0x82) == 0 && (this->unk_103 & 1)) {
-            ((anmModel_c*)obj)->func_ov002_020f6514((u8*)&data_ov002_0210bc88, 1);
+        anmModel_c *obj = (anmModel_c *)this->mModelAnim;
+        if (obj->mAnimEntry == 0 && (this->unk_103 & 1)) {
+            obj->func_ov002_020f6514((u8 *)&data_ov002_0210bc88, 1);
         }
     }
     this->mPosY -= FX_MUL(unk_0f8, 0x199);
@@ -4272,16 +4303,16 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
     int b = in[1] << 8;
     int t;
     if (a != 0 && sel == data_0209b274) {
-        register int *p = (int *)(((int)(((unsigned char *)this->mModel)) + 0x50));
-        p[0] = -0x5d00;
-        p[1] = 0x1800;
-        p[2] = -0x16000;
+        register Vector3 *p = ((param_c &)*(simpleModel_c *)this->mModel).mScale;
+        p->x = -0x5d00;
+        p->y = 0x1800;
+        p->z = -0x16000;
         this->mAngleX = 0;
         this->mAngleY = 0xffffb3c0;
         this->mAngleZ = 0;
         func_0201f138();
     }
-    MulVec3Mat4x3((Vector3 *)(((unsigned char *)this->mModel) + 0x50), (Matrix4x3 *)&data_0209b41c,
+    MulVec3Mat4x3(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
                   (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (_Z14ApproachLinearRiii(&this->unk_0f4, a, b) != 0 && a == 0 && b != 0)
@@ -4366,12 +4397,12 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
   Vec3_Add(&sum, (Vec3*)base, &scaled);
 
   {
-    char* dp = (char*)(((char*)this->mModelAnim) + 0x64);
-    *(int*)(dp) = sum.x;
-    *(int*)(dp + 4) = sum.y;
-    *(int*)(dp + 8) = sum.z;
+      Vector3 *dp = ((param_c &)*(anmModel_c *)this->mModelAnim).mScale;
+      dp->x = sum.x;
+      dp->y = sum.y;
+      dp->z = sum.z;
   }
-  MulVec3Mat4x3((Vector3 *)(*(char **)(&this->mModelAnim) + 0x64), (Matrix4x3 *)&data_0209b41c,
+  MulVec3Mat4x3(((param_c &)*(anmModel_c *)this->mModelAnim).mScale, (Matrix4x3 *)&data_0209b41c,
                 &this->mPos);
   Vec3_LslInPlace((int*)(&this->mPosX), 3);
   _Z14ApproachLinearRiii(&this->unk_0f4, f1, f2);
@@ -4722,30 +4753,27 @@ int daDemo_c::Behavior()
     UpdatePos(0);
   }
   {
-    char *g = (char *)this->mModelAnim;
-    if ((g != 0) && ((*((u8 *) (g + 0x83))) != 0))
-    {
-      {
-        s32 xx = this->mPosX;
-        s32 yy = this->mPosY;
-        s32 zz = this->mPosZ;
-        new_var2 = yy + 0x96000;
-        v.x = xx;
-        v.y = new_var2;
-        v.z = zz;
+      anmModel_c *g = (anmModel_c *)this->mModelAnim;
+      if ((g != 0) && (g->mSnapToFloor != 0)) {
+          {
+              s32 xx = this->mPosX;
+              s32 yy = this->mPosY;
+              s32 zz = this->mPosZ;
+              new_var2 = yy + 0x96000;
+              v.x = xx;
+              v.y = new_var2;
+              v.z = zz;
+          }
+          dBgCh_Gnd ground;
+          ground.SetObjAndPos(v, 0);
+          if (ground.DetectClsn() != 0) {
+              s32 h = ground.clsnY;
+              if ((this->mPosY) < h) {
+                  this->mPosY = h;
+                  this->unk_103 |= 1;
+              }
+          }
       }
-      dBgCh_Gnd ground;
-      ground.SetObjAndPos(v, 0);
-      if (ground.DetectClsn() != 0)
-      {
-        s32 h = ground.clsnY;
-        if ((this->mPosY) < h)
-        {
-          this->mPosY = h;
-          this->unk_103 |= 1;
-        }
-      }
-    }
   }
   Vec3_Asr(&asr, (Vec3 *) (&this->mPosX), 3);
   Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
@@ -4775,6 +4803,11 @@ int daDemo_c::Behavior()
 /* ROM ordinal 144 -- _ZN8daDemo_c13InitResourcesEv, 0x020f83a4, size 0x464 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c13InitResourcesEv
+/* Each model branch spells the nested class's construction out: param_c's
+ * constructor on the tail base, the model base's C2, then the class vptr
+ * and, for anmModel_c, the dExtFrameCtrl_c base's secondary vptr at +0x50.
+ * The base conversions go through references: a pointer conversion adds a
+ * null test the ROM does not have. */
 int daDemo_c::InitResources()
 {
     void *p;
@@ -4783,10 +4816,10 @@ int daDemo_c::InitResources()
     if (param1 == 0x12) {
         p = _Znwj(0x84);
         if (p) {
-            ((param_c*)((char *)p + 0x64))->func_ov002_020f6a50();
+            ((param_c &)*(anmModel_c *)p).func_ov002_020f6a50();
             _ZN9ModelAnimC2Ev(p);
             *(void **)p = &data_ov002_0210bcc4;
-            *(void **)((char *)p + 0x50) = &data_ov002_0210bce8;
+            *(void **)&(dExtFrameCtrl_c &)*(anmModel_c *)p = &data_ov002_0210bce8;
         }
         this->mModelAnim = (ModelAnim *)p;
         if (this->mModelAnim == 0) return 0;
@@ -4794,10 +4827,10 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x13) {
         p = _Znwj(0x84);
         if (p) {
-            ((param_c*)((char *)p + 0x64))->func_ov002_020f6a50();
+            ((param_c &)*(anmModel_c *)p).func_ov002_020f6a50();
             _ZN9ModelAnimC2Ev(p);
             *(void **)p = &data_ov002_0210bcc4;
-            *(void **)((char *)p + 0x50) = &data_ov002_0210bce8;
+            *(void **)&(dExtFrameCtrl_c &)*(anmModel_c *)p = &data_ov002_0210bce8;
         }
         this->mModelAnim = (ModelAnim *)p;
         if (this->mModelAnim == 0) return 0;
@@ -4810,7 +4843,7 @@ int daDemo_c::InitResources()
     } else if (param1 >= 0x14 && param1 <= 0x16) {
         p = _Znwj(0x60);
         if (p) {
-            ((param_c*)((char *)p + 0x50))->func_ov002_020f6a50();
+            ((param_c &)*(simpleModel_c *)p).func_ov002_020f6a50();
             _ZN5ModelC2Ev(p);
             *(void **)p = &data_ov002_0210bae4;
         }
@@ -4820,7 +4853,7 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x17) {
         p = _Znwj(0x60);
         if (p) {
-            ((param_c*)((char *)p + 0x50))->func_ov002_020f6a50();
+            ((param_c &)*(simpleModel_c *)p).func_ov002_020f6a50();
             _ZN5ModelC2Ev(p);
             *(void **)p = &data_ov002_0210bae4;
         }
@@ -4830,7 +4863,7 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x18) {
         p = _Znwj(0x60);
         if (p) {
-            ((param_c*)((char *)p + 0x50))->func_ov002_020f6a50();
+            ((param_c &)*(simpleModel_c *)p).func_ov002_020f6a50();
             _ZN5ModelC2Ev(p);
             *(void **)p = &data_ov002_0210bae4;
         }
@@ -4840,7 +4873,7 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x19) {
         p = _Znwj(0x60);
         if (p) {
-            ((param_c*)((char *)p + 0x50))->func_ov002_020f6a50();
+            ((param_c &)*(simpleModel_c *)p).func_ov002_020f6a50();
             _ZN5ModelC2Ev(p);
             *(void **)p = &data_ov002_0210bae4;
         }
@@ -4850,10 +4883,10 @@ int daDemo_c::InitResources()
     } else if (param1 >= 0x1A && param1 <= 0x2D) {
         p = _Znwj(0x84);
         if (p) {
-            ((param_c*)((char *)p + 0x64))->func_ov002_020f6a50();
+            ((param_c &)*(anmModel_c *)p).func_ov002_020f6a50();
             _ZN9ModelAnimC2Ev(p);
             *(void **)p = &data_ov002_0210bcc4;
-            *(void **)((char *)p + 0x50) = &data_ov002_0210bce8;
+            *(void **)&(dExtFrameCtrl_c &)*(anmModel_c *)p = &data_ov002_0210bce8;
         }
         this->mModelAnim = (ModelAnim *)p;
         if (this->mModelAnim == 0) return 0;

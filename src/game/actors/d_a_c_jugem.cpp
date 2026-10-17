@@ -673,9 +673,9 @@ int daC_Jugem_c::StateFlyToPlayerMain()
         return 1;
     }
 
-    p->unk_744 = mPosX;
-    p->unk_748 = mPosY;
-    p->unk_74c = mPosZ;
+    p->mStateTargetX = mPosX;
+    p->mStateTargetY = mPosY;
+    p->mStateTargetZ = mPosZ;
 
     if (*(unsigned short *)&mStateTimer == 0) {
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4a, 0x14, 0x7f, 0x15666, 0);
@@ -729,9 +729,9 @@ int daC_Jugem_c::StateHiddenMain()
         if ((data_0209caa0[2] & 0x10000) != 0 &&
             v.z > -0x28000 &&
             p->SetNoControlState(0x12, -1, 0) != 0) {
-            p->unk_744 = mPosX;
-            p->unk_748 = mPosY;
-            p->unk_74c = mPosZ;
+            p->mStateTargetX = mPosX;
+            p->mStateTargetY = mPosY;
+            p->mStateTargetZ = mPosZ;
             mPosX = v.x;
             mPosY = v.y;
             mPosZ = v.z;

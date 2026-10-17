@@ -26,8 +26,8 @@
  * - func_ov062_02116d28 reloads mHeld before each pos word.
  *   func_ov062_02116a08 copies the player's position through one int
  *   pointer; three separate pl->mPos loads change the code.
- * - The grabbed actor's +0xc8 and this object's +0xc8 are the unnamed gap
- *   before dActor_c::mAreaId. func_ov062_02116e80 stores &mHoldMtx there.
+ * - func_ov062_02116e80 hands &mHoldMtx out through this object's
+ *   mCarryMatrix; a grabbed actor's mCarryMatrix gates the hold path.
  * - func_ov062_021165e8 keeps a volatile Vector3 so the player's position
  *   occupies that stack slot.
  *
@@ -246,7 +246,7 @@ int daHolhei_c::Behavior()
     mModel.UpdateVerts();
 
     dActor_c *held = mHeld;
-    if (held != 0 && IsFlagSet(this, 0x4000) && *(int *)((char *)held + 0xc8) != 0) {
+    if (held != 0 && IsFlagSet(this, 0x4000) && held->mCarryMatrix != 0) {
         func_ov062_02116d28();
     } else {
         mdCc_c.Update();
@@ -263,7 +263,7 @@ int daHolhei_c::Behavior()
 int daHolhei_c::Render()
 {
     dActor_c *held = mHeld;
-    if (held != 0 && IsFlagSet(this, 0x4000) && *(int *)((char *)held + 0xc8) != 0)
+    if (held != 0 && IsFlagSet(this, 0x4000) && held->mCarryMatrix != 0)
         func_ov062_02116edc(this);
     /* ModelAnim overrides Render; the ROM calls Model::Render on this member. */
     mModel.Model::Render((const Vector3 *)0);
@@ -313,7 +313,7 @@ extern "C" void func_ov062_02116e80(daHolhei_c *self) {
     MulMat4x3Mat4x3(&self->mModel.data.transforms[3],
                     &self->mModel.mat4x3,
                     &self->mHoldMtx);
-    *(int *)((char *)self + 0xc8) = (int)&self->mHoldMtx;
+    self->mCarryMatrix = &self->mHoldMtx;
 }
 
 /* Shadow under this actor. Off the ground the radius grows. */

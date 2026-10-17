@@ -52,7 +52,14 @@ struct dEnemyBase_c : dActor_c {
     s16 mSpinRateX;               /* 0x0ec */
     s16 mSpinRateY;               /* 0x0ee */
     s16 mSpinRateZ;               /* 0x0f0 */
-    u8  pad_0f2[0xe];
+    u8 pad_0f2[0x6];
+    /* Particle-system uniqueIDs for the death state that falls until it lands
+       (EnemyDeathC::func_ov002_020ae4cc): each frame the stored ID is passed
+       back into System::New (effect 0x13a) and System::NewUnkCallback818
+       (effect 0x13b) and the returned ID is stored again. daEykn_c and
+       daPropeller_Heyho_c spawn the same 0x13a/0x13b pair when defeated. */
+    u32 mDeathParticleID0; /* 0x0f8 */
+    u32 mDeathParticleID1; /* 0x0fc */
     /* 0x100 -- 28 subclasses. Frames spent in the current mState: the state
        handlers zero it the instant they change mState, and some count it up
        while others count it down through DecIfAbove0_Short. Derived

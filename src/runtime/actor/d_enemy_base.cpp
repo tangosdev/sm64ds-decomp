@@ -28,25 +28,23 @@
  * __si_class_type_info reaches them through its +8 word.
  *
  * leftovers:
- *   - Aea30C is a file-local shadow receiver for the first state table and
- *     its dispatcher func_ov002_020aea30: the PMF representation was formed
- *     on it, and retyping to the polymorphic dEnemyBase_c changes the
- *     (c->*pmf) call sequence. Its padN/fNN fields are the raw offsets the
- *     dispatcher touches.
- *   - EnemyDeathC is a derived stand-in receiver for the five death-state
- *     handlers in the second table. They belong on dEnemyBase_c, but a
- *     member declaration in dEnemyBase_c.h renumbers the @NNN temporaries
- *     of every promoted TU that includes it, so the move waits for those
- *     TUs to stop recording per-TU numbers.
- *   - The memberized handlers keep `char *c = (char *)this` aliases and
- *     c + 0xNNN puns: the header does not name every field they touch and
- *     member access reschedules the address math.
+ *   - Aea30C and EnemyDeathC are derived stand-in receivers for the two
+ *     state tables (eight start handlers dispatched by func_ov002_020aea30,
+ *     five per-frame handlers dispatched by UpdateDeath). They belong on
+ *     dEnemyBase_c, but a member declaration in dEnemyBase_c.h renumbers the
+ *     @NNN temporaries of every promoted TU that includes it, so the move
+ *     waits for those TUs to stop recording per-TU numbers.
+ *   - The handlers keep their named pointer locals (`Aea30C *self = this`,
+ *     `dEnemyBase_c *c = this`): each named local draws one @NNN number, so
+ *     dropping one renumbers this TU's pointer-to-member records (measured).
+ *   - UpdateYoshiEat keeps a `char *self` for the fields the headers name
+ *     only as unk_ (0x0a4, 0x0ac, 0x104); see the note there.
  *   - func_ov002_020ae5c8 stays a free `extern "C"` callee -- callers pass
  *     its unused second argument; the one-argument form comes out 0x50
  *     against the ROM's 0x5c (measured note in place).
- *   - UpdateKillByInvincibleChar keeps its LAUNDER(&field) lvalue laundries,
- *     the KbicVB vtable-slot-29 stand-in (real slot name unresolved) and the
- *     KbicM48 48-byte matrix copy.
+ *   - UpdateKillByInvincibleChar keeps the KbicVB vtable-slot-29 stand-in
+ *     (real slot name unresolved) and the KbicM48 48-byte matrix copy: a
+ *     plain Matrix4x3 assignment there renumbers one @NNN (measured).
  *   - Computed-spelling externs stay where a member form changes codegen:
  *     _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s (Fix12<int> by value) and the
  *     Particle::System::New wrapper, both noted at their declarations.
@@ -123,8 +121,7 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel)
     }
     if (clsn->IsOnGround()) {
 
-        ((SurfaceInfo *)((char *)clsn->GetFloorResult() + 4))
-            ->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+        ((dBgPi *)clsn->GetFloorResult())->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
         if (clsn->GetLimMovFlag() == 0) {
             int dz = mFloorNormalY;
             if (dz != 0) {
@@ -141,8 +138,7 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel)
         }
     }
     if (clsn->IsOnWall()) {
-        ((SurfaceInfo *)((char *)clsn->GetWallResult() + 4))
-            ->CopyNormalTo(*(Vector3 *)&mWallNormalX);
+        ((dBgPi *)clsn->GetWallResult())->surface.CopyNormalTo(*(Vector3 *)&mWallNormalX);
     }
 
 }
@@ -199,45 +195,39 @@ void dEnemyBase_c::SpawnCoin()
    death-state stores with argument setup; three-argument compiler probes match.
    ov004 has a different function at this address and remains separately named.
 
-   If the state index at +0x10c is set: clears bit 0x10000000 at +0xb0, zeroes
-   the halfword at +0x102, invokes the pointer-to-member-function from
-   data_ov002_0210db80[index-1] (forwarding both pointer args), then writes
-   -0x2000 to +0x9c and clears the +0xb0 bit again.
+   If mDeathState is set: clears mFlags bit 0x10000000, zeroes mDeathTimer,
+   invokes the pointer-to-member-function from data_ov002_0210db80[state-1]
+   (forwarding both pointer args), then sets mVertAccel to -0x2000 and clears
+   the mFlags bit again.
 
-   The receiver stays a file-local shadow (`Aea30C`) rather than dEnemyBase_c: the
-   pointer-to-member type is what selects the call sequence, and dEnemyBase_c has a
-   polymorphic base, so retyping it is a codegen change, not a rename. */
+   The eight targets are declared on `Aea30C`, a derived stand-in receiver like
+   EnemyDeathC below and for the same reason: they are dEnemyBase_c methods, but
+   a member declaration in dEnemyBase_c.h renumbers @NNN in its consumers. It
+   used to be a non-polymorphic shadow struct of padN/fNN fields; deriving it
+   from dEnemyBase_c measured byte-identical, PMF calls included. */
 struct Aea30C;
 typedef void (Aea30C::*Aea30PMF)(dActor_c*, dBgCh_Actr*);
 extern Aea30PMF data_ov002_0210db80[];
-struct Aea30C {
-  char pad0[0x9c];
-  int f9c;
-  char pad1[0x10];
-  int fb0;
-  char pad2[0x4e];
-  short f102;
-  char pad3[8];
-  int f10c;
-
-  /* The eight state-table targets. Member spellings are what let the table
+struct Aea30C : dEnemyBase_c {
+    /* The eight state-table targets. Member spellings are what let the table
      below be written as real pointer-to-member initializers. */
-  void func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*);
-  void func_ov002_020ae954(dActor_c*, dBgCh_Actr*);
-  void func_ov002_020ae890(dActor_c*, dBgCh_Actr*);
-  void func_ov002_020ae87c(dActor_c*, dBgCh_Actr*);
-  void func_ov002_020ae844(dActor_c*, dBgCh_Actr*);
-  void func_ov002_020ae80c(dActor_c*, dBgCh_Actr*);
-  void func_ov002_020ae73c(dActor_c*, dBgCh_Actr*);
-  void func_ov002_020aea2c(dActor_c*, dBgCh_Actr*);
+    void func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae954(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae890(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae87c(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae844(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae80c(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
 };
 extern "C" void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
-  if (c->f10c == 0) return;
-  (*(unsigned int*)((char*)c + 0xb0)) &= ~0x10000000;
-  c->f102 = 0;
-  (c->*data_ov002_0210db80[c->f10c - 1])(a, b);
-  c->f9c = -0x2000;
-  (*(unsigned int*)((char*)c + 0xb0)) &= ~0x10000000;
+    if (c->mDeathState == 0)
+        return;
+    c->mFlags &= ~0x10000000;
+    c->mDeathTimer = 0;
+    (c->*data_ov002_0210db80[c->mDeathState - 1])(a, b);
+    c->mVertAccel = -0x2000;
+    c->mFlags &= ~0x10000000;
 }
 
 /* The five death-state handlers UpdateDeath dispatches through
@@ -267,15 +257,15 @@ int EnemyDeathC::func_ov002_020aea24(dBgCh_Actr&)
 }
 
 // @symbol _ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr
-/* Zero two u32 fields, set a u16 field to 0xf, then clear bit 0x1 in the u32 at
-   self+0xb0. */
+/* Stop the enemy (zero mHorzSpeed and mVertSpeed), start a 0xf-frame
+   mDeathTimer, then clear mFlags bit 0x1. */
 void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
 {
-    char *self = (char *)this;
-    *(unsigned int *)(self + 0x98) = 0;
-    *(unsigned int *)(self + 0xa8) = 0;
-    *(unsigned short *)(self + 0x102) = 0xf;
-    *(unsigned int *)(self + 0xb0) &= ~0x1;
+    Aea30C *self = this;
+    self->mHorzSpeed = 0;
+    self->mVertSpeed = 0;
+    self->mDeathTimer = 0xf;
+    self->mFlags &= ~0x1;
 }
 
 // @symbol func_ov002_020ae968
@@ -284,87 +274,61 @@ extern int _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *v);
 extern u16 data_ov002_020ff01c[];
 }
 
-extern "C" void func_ov002_020ae968(char* c, char* arg)
-{
+extern "C" void func_ov002_020ae968(dEnemyBase_c *c, dActor_c *arg) {
     int b;
-    *(int*)(c + 0xa8) = 0x14000;
-    b = *(u16*)(arg + 0xc);
+    c->mVertSpeed = 0x14000;
+    b = arg->actorID;
     b = b == 0xbf;
     if (b != 0) {
-        u16 t = data_ov002_020ff01c[(u16)*(int*)(arg + 8)];
-        *(int*)(c + 0x98) = ((int)t << 0xf) / 50;
+        u16 t = data_ov002_020ff01c[(u16)arg->param1];
+        c->mHorzSpeed = ((int)t << 0xf) / 50;
     } else {
-        *(int*)(c + 0x98) = 0x14000;
+        c->mHorzSpeed = 0x14000;
     }
-    *(int *)(((int)c + 0xb0)) &= ~1;
-    _ZN5Sound9PlayBank0EjRK7Vector3(9, (void*)(c + 0x74));
+    c->mFlags &= ~1;
+    _ZN5Sound9PlayBank0EjRK7Vector3(9, &c->mCamSpacePosX);
 }
-
-struct Unk954A
-{
-    char pad[0x94];
-    short unk94;
-};
-
-struct Unk954B
-{
-    char pad[0x8e];
-    short unk8e;
-};
 
 // @symbol _ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae954(dActor_c* a, dBgCh_Actr*)
 {
-    ((Unk954A *)this)->unk94 = ((Unk954B *)a)->unk8e;
-    func_ov002_020ae968((char *)this, (char *)a);
+    mPrevAngleY = a->mAngleY;
+    func_ov002_020ae968(this, a);
 }
 
 // @symbol func_ov002_020ae8b8
-extern "C" void func_ov002_020ae8b8(char* c, char* arg)
-{
+extern "C" void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
     int b;
-    b = *(u16*)(arg + 0xc);
+    b = arg->actorID;
     b = b == 0xbf;
     if (b != 0) {
-        u16 t = data_ov002_020ff01c[(u16)*(int*)(arg + 8)];
+        u16 t = data_ov002_020ff01c[(u16)arg->param1];
         int scaled = (int)t << 3;
         int ip = scaled << 12;
         int d1 = ip / 100;
         int d2 = scaled / 100;
-        *(int*)(c + 0x98) = d1;
-        *(int*)(c + 0xa8) = (d2 + 0x20) << 12;
+        c->mHorzSpeed = d1;
+        c->mVertSpeed = (d2 + 0x20) << 12;
     } else {
-        *(int*)(c + 0x98) = 0xa000;
-        *(int*)(c + 0xa8) = 0x28000;
+        c->mHorzSpeed = 0xa000;
+        c->mVertSpeed = 0x28000;
     }
-    *(int *)(((int)c + 0xb0)) &= ~1;
+    c->mFlags &= ~1;
 }
 
 // @symbol _ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae890(dActor_c* a, dBgCh_Actr*)
 {
-    *(short*)((char*)this+0x94) = *(short*)((char*)a+0x8e);
-    func_ov002_020ae8b8((char*)this, (char*)a);
-    _ZN5Sound9PlayBank0EjRK7Vector3(0xa, (char*)this+0x74);
+    mPrevAngleY = a->mAngleY;
+    func_ov002_020ae8b8(this, a);
+    _ZN5Sound9PlayBank0EjRK7Vector3(0xa, &mCamSpacePosX);
 }
-
-struct Unk87cA
-{
-    char pad[0x94];
-    short unk94;
-};
-
-struct Unk87cB
-{
-    char pad[0x8e];
-    short unk8e;
-};
 
 // @symbol _ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
 {
-    ((Unk87cA *)this)->unk94 = ((Unk87cB *)a)->unk8e;
-    func_ov002_020ae8b8((char *)this, (char *)a);
+    mPrevAngleY = a->mAngleY;
+    func_ov002_020ae8b8(this, a);
 }
 
 extern "C" s16 Vec3_HorzAngle(const void *v0, const void *v1);
@@ -372,41 +336,41 @@ extern "C" s16 Vec3_HorzAngle(const void *v0, const void *v1);
 // @symbol _ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)
 {
-    s16 angle = Vec3_HorzAngle((char *)a + 0x5c, (char *)this + 0x5c);
-    *(short *)((char *)this + 0x94) = angle;
-    func_ov002_020ae968((char *)this, (char *)a);
+    s16 angle = Vec3_HorzAngle(&a->mPos, &mPosX);
+    mPrevAngleY = angle;
+    func_ov002_020ae968(this, a);
 }
 
 // @symbol _ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae80c(dActor_c* a, dBgCh_Actr*)
 {
-    *(short*)((char*)this+0x94) = Vec3_HorzAngle((char*)a+0x5c, (char*)this+0x5c);
-    func_ov002_020ae8b8((char*)this, (char*)a);
+    mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPosX);
+    func_ov002_020ae8b8(this, a);
 }
 
 // @symbol _ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae73c(dActor_c* a, dBgCh_Actr*)
 {
-    char* c = (char*)this;
-    char* arg = (char*)a;
-    *(s16*)(c + 0x94) = Vec3_HorzAngle(arg + 0x5c, c + 0x5c);
-    *(int*)(c + 0xa8) = 0xa000;
+    Aea30C *c = this;
+    dActor_c *arg = a;
+    c->mPrevAngleY = Vec3_HorzAngle(&arg->mPos, &c->mPosX);
+    c->mVertSpeed = 0xa000;
 
-    if ((int)(*(unsigned short*)(arg + 0xc) == 0xbf) != 0)
-        *(int*)(c + 0x98) = (data_ov002_020ff01c[(unsigned short)*(u32*)(arg + 8)] << 15) / 50;
+    if ((int)(arg->actorID == 0xbf) != 0)
+        c->mHorzSpeed = (data_ov002_020ff01c[(unsigned short)arg->param1] << 15) / 50;
     else
-        *(int*)(c + 0x98) = 0x14000;
+        c->mHorzSpeed = 0x14000;
 
     {
-        int *p = (int *)(((int)(c) + 0x98));
+        int *p = &c->mHorzSpeed;
         *p = *p / 6;
     }
-    *(s16*)(c + 0x102) = 8;
-    *(int *)(((int)(c) + 0xb0)) &= ~1;
-    _ZN5Sound9PlayBank0EjRK7Vector3(0xa, c + 0x74);
+    c->mDeathTimer = 8;
+    c->mFlags &= ~1;
+    _ZN5Sound9PlayBank0EjRK7Vector3(0xa, &c->mCamSpacePosX);
 }
 
-/* unk_10c selects which death handler from a table of POINTERS TO MEMBER
+/* mDeathState selects which death handler from a table of POINTERS TO MEMBER
    FUNCTION, then the position and mesh collision are updated regardless. */
 typedef int (dEnemyBase_c::*DeathPMF)(dBgCh_Actr &);
 extern DeathPMF data_ov002_0210dbc0[];
@@ -440,42 +404,45 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr & clsn_)
    survive the body in a callee-saved register. So both observations are true at
    once: the caller passes it, the callee ignores it, and the definition below
    carries the parameter unused. */
-extern "C" int func_ov002_020ae5c8(void *c, int x);
+extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x);
 
 // @symbol _ZN11EnemyDeathC19func_ov002_020ae64cER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr& clsn){
-  char* c = (char*)this;
-  int x = (int)&clsn;
-  if(*(unsigned short*)(c+0x102) >= 5){
-    int v=*(int*)(c+0x84) - 0x23d;
-    if(v < 0x4cc) v=0x4cc;
-    *(int*)(c+0x84)=v;
-    *(int*)(c+0x88)=0x2000 - *(int*)(c+0x84);
-    *(int*)(c+0x80)=*(int*)(c+0x88);
-  }
+    dEnemyBase_c *c = this;
+    int x = (int)&clsn;
+    if (c->mDeathTimer >= 5) {
+        int v = c->mScaleY - 0x23d;
+        if (v < 0x4cc)
+            v = 0x4cc;
+        c->mScaleY = v;
+        c->mScaleZ = 0x2000 - c->mScaleY;
+        c->mScaleX = c->mScaleZ;
+    }
   return func_ov002_020ae5c8(c, x);
 }
 
 // @symbol _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020ae608(dBgCh_Actr& clsn){
-  void* c = this;
-  void* a = &clsn;
-  if(((dBgCh_Actr *)a)->IsOnGround()==0) return 0;
-  ((dEnemyBase_c *)c)->SpawnCoin();
-  ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
-  *(int*)((char*)c+0x10c)=0;
-  return 1;
+    dEnemyBase_c *c = this;
+    dBgCh_Actr *a = &clsn;
+    if (a->IsOnGround() == 0)
+        return 0;
+    c->SpawnCoin();
+    c->KillAndTrackInDeathTable();
+    c->mDeathState = 0;
+    return 1;
 }
 
 // @symbol func_ov002_020ae5c8
 /* `x` is unused on purpose -- see the note on func_ov002_020ae64c, which passes it. */
-extern "C" int func_ov002_020ae5c8(void* c, int x){
-  unsigned short* p=(unsigned short*)((char*)c+0x100);
-  if(p[1]!=0) return 0;
-  ((dEnemyBase_c *)c)->SpawnCoin();
-  ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
-  *(int*)((char*)c+0x10c)=0;
-  return 1;
+extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
+    unsigned short *p = &c->mDeathTimer;
+    if (*p != 0)
+        return 0;
+    c->SpawnCoin();
+    c->KillAndTrackInDeathTable();
+    c->mDeathState = 0;
+    return 1;
 }
 
 struct Vector3_16f;
@@ -487,49 +454,53 @@ extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_1
 }
 
 // @symbol _ZN11EnemyDeathC19func_ov002_020ae4ccER10dBgCh_Actr
-int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr& clsn_){
-  char* self = (char*)this;
-  char* clsn = (char*)&clsn_;
-  int v[3];
-  int n = *(int*)(self+0x84);
-  if (n == 0) {
-    int z = *(int*)(self+0x64);
-    int y = *(int*)(self+0x60) + 0x50000;
-    int x = *(int*)(self+0x5c);
-    v[0] = x;
-    v[1] = y;
-    v[2] = z;
-  } else {
-    int z = *(int*)(self+0x64);
-    int y = *(int*)(self+0x60) + n * 0x50;
-    int x = *(int*)(self+0x5c);
-    v[0] = x;
-    v[1] = y;
-    v[2] = z;
-  }
-  if (((dBgCh_Actr *)clsn)->IsOnGround()) {
-    ((dEnemyBase_c *)self)->SpawnCoin();
-    ((dEnemyBase_c *)self)->KillAndTrackInDeathTable();
-    *(int*)(self+0x10c) = 0;
-    return 1;
-  }
-  *(void**)(self+0xf8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    *(unsigned int*)(self+0xf8), 0x13a, *(int*)((char*)v + 0), *(int*)((char*)v + 4), *(int*)((char*)v + 8), 0, 0);
-  *(u32*)(self+0xfc) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    *(unsigned int*)(self+0xfc), 0x13b, *(int*)((char*)v + 0), *(int*)((char*)v + 4), *(int*)((char*)v + 8), 0);
-  return 0;
+int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn_) {
+    dEnemyBase_c *self = this;
+    dBgCh_Actr *clsn = &clsn_;
+    int v[3];
+    int n = self->mScaleY;
+    if (n == 0) {
+        int z = self->mPosZ;
+        int y = self->mPosY + 0x50000;
+        int x = self->mPosX;
+        v[0] = x;
+        v[1] = y;
+        v[2] = z;
+    } else {
+        int z = self->mPosZ;
+        int y = self->mPosY + n * 0x50;
+        int x = self->mPosX;
+        v[0] = x;
+        v[1] = y;
+        v[2] = z;
+    }
+    if (clsn->IsOnGround()) {
+        self->SpawnCoin();
+        self->KillAndTrackInDeathTable();
+        self->mDeathState = 0;
+        return 1;
+    }
+    self->mDeathParticleID0 =
+        (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            self->mDeathParticleID0, 0x13a, *(int *)((char *)v + 0), *(int *)((char *)v + 4),
+            *(int *)((char *)v + 8), 0, 0);
+    self->mDeathParticleID1 =
+        _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+            self->mDeathParticleID1, 0x13b, *(int *)((char *)v + 0), *(int *)((char *)v + 4),
+            *(int *)((char *)v + 8), 0);
+    return 0;
 }
 
 // @symbol _ZN11EnemyDeathC19func_ov002_020ae454ER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020ae454(dBgCh_Actr& clsn){
-  char* c = (char*)this;
-  void* a = &clsn;
-  if(*(unsigned short*)(c+0x102)==0 || ((dBgCh_Actr *)a)->IsOnGround()!=0 || ((dBgCh_Actr *)a)->IsOnWall()!=0){
-    ((dEnemyBase_c *)c)->SpawnCoin();
-    ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
-    *(int*)(c+0x10c)=0;
-    return 1;
-  }
+    dEnemyBase_c *c = this;
+    dBgCh_Actr *a = &clsn;
+    if (c->mDeathTimer == 0 || a->IsOnGround() != 0 || a->IsOnWall() != 0) {
+        c->SpawnCoin();
+        c->KillAndTrackInDeathTable();
+        c->mDeathState = 0;
+        return 1;
+    }
   return 0;
 }
 
@@ -610,7 +581,7 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_
 }
 
 /* One frame of "this enemy is in Yoshi's mouth / has just been spat out". The
-   three flag bits at 0x0b0 pick the phase: 0x40000 = held in the mouth (track the
+   three mFlags bits pick the phase: 0x40000 = held in the mouth (track the
    eater's position and return 2), 0x20000 = swallowed (return 1), 0x80000 = just
    spat out, in which case the launch velocity is built from the eater's facing
    angle and then the body flies under mesh collision until it lands.
@@ -623,17 +594,14 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_
    launch block first in the linearisation and the slot falls the cartridge's way.
    Same branch, same semantics; only the order the two arms are visited in.
 
-   The raw `self + offset` spellings are kept because dEnemyBase_c's header does
-   not name every field this function touches; `this` and the reference argument
-   arrive in r0/r1 exactly as the free-function form did, so the body is unchanged.
-
-   UpdateWMClsn above already declared GetLimMovFlag, UpdateContinuous, IsOnGround,
-   GetFloorResult and CopyNormalTo with typed receivers in a file-scope extern "C"
-   region. A member function cannot sit inside such a region, so those cannot be
-   re-declared here with this member's narrower `char *` view -- extern "C" has no
-   overloading. The typed declarations are reused and the two places the width
-   mattered (GetFloorResult's return feeding `fr + 4`, CopyNormalTo's arguments)
-   carry an explicit cast, which costs nothing. */
+   The eater is mEatingPlayer, read as a dActor_c for its position, facing and
+   speed. Member spellings throughout are byte-identical to the old `self +
+   offset` ones (measured). `self` survives for two fields only, which the
+   headers name only as unk_: dEnemyBase_c's 0x104 (set to 5 when Yoshi spits
+   the enemy out and counted down here; subclasses test it for 5 and 0) and
+   dActor_c's 0x0a4/0x0ac (the X/Z partners of mVertSpeed in a velocity vector:
+   Vec3_HorzLen of the triple at 0x0a4 becomes mHorzSpeed). Naming them is a
+   header rename across their other consumers. */
 extern "C" {
 extern s32 Vec3_HorzLen(const Vector3 *v);
 extern short data_02082214[];
@@ -644,107 +612,106 @@ extern short data_02082214[];
 int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr & clsn_)
 {
     char *self = (char *)this;
-    char *clsn = (char *)&clsn_;
+    dBgCh_Actr *clsn = &clsn_;
     int flags;
     int t;
     int v;
     int lim;
 
-    flags = *(int *)(self + 0xb0);
+    flags = mFlags;
     t = flags & 0x40000;
     t = t != 0;
     if (t != 0) {
-        if (*(char **)(self + 0xd0) == 0) {
-            *(int *)(self + 0xb0) &= ~0x40000;
+        if (mEatingPlayer == 0) {
+            mFlags &= ~0x40000;
         } else {
-            char *o = *(char **)(self + 0xd0) + 0x5c;
-            *(int *)(self + 0x5c) = *(int *)o;
-            *(int *)(self + 0x60) = *(int *)(o + 4);
-            *(int *)(self + 0x64) = *(int *)(o + 8);
-            *(int *)(self + 0x60) += 0x30000;
+            Vector3 *o = &((dActor_c *)mEatingPlayer)->mPos;
+            mPosX = o->x;
+            mPosY = o->y;
+            mPosZ = o->z;
+            mPosY += 0x30000;
         }
-        *(unsigned char *)(self + 0x107) = 0;
+        mEatenByYoshi = 0;
         return 2;
     }
     t = flags & 0x20000;
     t = t != 0;
     if (t != 0) {
-        *(unsigned char *)(self + 0x107) = 0;
+        mEatenByYoshi = 0;
         return 1;
     }
     t = flags & 0x80000;
     t = t != 0;
-    if (t != 0 || *(unsigned char *)(self + 0x107) != 0) {
+    if (t != 0 || mEatenByYoshi != 0) {
         if (*(u16 *)(self + 0x104) != 0)
             *(u16 *)(self + 0x104) -= 1;
-        t = *(int *)(self + 0xb0) & 0x80000;
+        t = mFlags & 0x80000;
         t = t != 0;
         if (t != 0) {
-            *(unsigned char *)(self + 0x107) = 1;
+            mEatenByYoshi = 1;
             *(u16 *)(self + 0x104) = 5;
-            *(int *)(self + 0xb0) &= ~0x80000;
-            if (*(char **)(self + 0xd0) != 0) {
-                char *o2 = *(char **)(self + 0xd0) + 0x5c;
-                *(int *)(self + 0x5c) = *(int *)o2;
-                *(int *)(self + 0x60) = *(int *)(o2 + 4);
-                *(int *)(self + 0x64) = *(int *)(o2 + 8);
-                *(int *)(self + 0x60) += 0x32000;
+            mFlags &= ~0x80000;
+            if (mEatingPlayer != 0) {
+                Vector3 *o2 = &((dActor_c *)mEatingPlayer)->mPos;
+                mPosX = o2->x;
+                mPosY = o2->y;
+                mPosZ = o2->z;
+                mPosY += 0x32000;
                 {
-                    char *o3 = *(char **)(self + 0xd0);
-                    u16 ang = *(u16 *)(o3 + 0x8e);
+                    dActor_c *o3 = (dActor_c *)mEatingPlayer;
+                    u16 ang = o3->mAngleY;
                     int idx = (ang >> 4) << 1;
                     int dist = 0x32000;
-                    *(int *)(self + 0x5c) += FX_MUL(data_02082214[idx], dist);
-                    *(int *)(self + 0x64) += FX_MUL(data_02082214[idx + 1], dist);
+                    mPosX += FX_MUL(data_02082214[idx], dist);
+                    mPosZ += FX_MUL(data_02082214[idx + 1], dist);
                 }
                 {
-                    s16 *p = (s16 *)(*(char **)(self + 0xd0) + 0x8c);
-                    *(s16 *)(self + 0x92) = *p;
-                    *(s16 *)(self + 0x94) = p[1];
-                    *(s16 *)(self + 0x96) = p[2];
+                    Vector3_16 *p = &((dActor_c *)mEatingPlayer)->mAngle;
+                    mPrevAngleX = p->x;
+                    mPrevAngleY = p->y;
+                    mPrevAngleZ = p->z;
                 }
-                v = *(int *)(*(char **)(self + 0xd0) + 0x98);
+                v = ((dActor_c *)mEatingPlayer)->mHorzSpeed;
             } else {
                 v = 0x14000;
             }
             if (v >= 0x14000)
-                *(int *)(self + 0x98) = v + 0xa000;
+                mHorzSpeed = v + 0xa000;
             else
-                *(int *)(self + 0x98) = FX_MUL(v, 0x800) + 0x14000;
-            *(int *)(self + 0x98) = FX_MUL(*(int *)(self + 0x98), 0x14cc);
-            *(int *)(self + 0xa8) = 0xc000;
-            *(int *)(self + 0xd0) = 0;
+                mHorzSpeed = FX_MUL(v, 0x800) + 0x14000;
+            mHorzSpeed = FX_MUL(mHorzSpeed, 0x14cc);
+            mVertSpeed = 0xc000;
+            mEatingPlayer = 0;
         }
-        lim = ((dBgCh_Actr *)clsn)->GetLimMovFlag();
-        ((dBgCh_Actr *)clsn)->SetLimMovFlag();
+        lim = clsn->GetLimMovFlag();
+        clsn->SetLimMovFlag();
         UpdatePos(0);
-        dBgCh_Actr_UpdateContinuous_Veneer((dBgCh_Actr *)clsn);
-        if (((dBgCh_Actr *)clsn)->IsOnGround() != 0) {
-            char *fr = (char *)((dBgCh_Actr *)clsn)->GetFloorResult();
-            ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)(self + 0xd4));
-            if (((dBgCh_Actr *)clsn)->JustHitGround() == 0) {
-                *(int *)(self + 0xa8) = 0;
-                *(unsigned char *)(self + 0x107) = 0;
+        dBgCh_Actr_UpdateContinuous_Veneer(clsn);
+        if (clsn->IsOnGround() != 0) {
+            dBgPi *fr = (dBgPi *)clsn->GetFloorResult();
+            fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+            if (clsn->JustHitGround() == 0) {
+                mVertSpeed = 0;
+                mEatenByYoshi = 0;
             } else {
-                ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)(self + 0xd4));
-                *(int *)(self + 0xa8) =
-                    _ZN4cstd4fdivEii((*(int *)(self + 0xa8) * -50) / 100, *(int *)(self + 0xd8));
+                fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+                mVertSpeed = _ZN4cstd4fdivEii((mVertSpeed * -50) / 100, mFloorNormalY);
             }
             {
                 int *pa = (int *)(self + 0xa4);
-                *pa += *(int *)(self + 0xd4) << 3;
-                *(int *)(self + 0xac) += *(int *)(self + 0xdc) << 3;
-                *(int *)(self + 0x98) = Vec3_HorzLen((const Vector3 *)pa);
+                *pa += mFloorNormalX << 3;
+                *(int *)(self + 0xac) += mFloorNormalZ << 3;
+                mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa);
             }
         }
-        *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
+        mAngleY = mPrevAngleY;
         if (lim == 0)
-            ((dBgCh_Actr *)clsn)->ClearLimMovFlag();
+            clsn->ClearLimMovFlag();
         return 3;
     }
-    *(int *)(self + 0xd0) = 0;
-    *(int *)(self + 0xb0) &= ~0xe0000;
-    *(unsigned char *)(self + 0x107) = 0;
+    mEatingPlayer = 0;
+    mFlags &= ~0xe0000;
+    mEatenByYoshi = 0;
     return 0;
 }
 
@@ -757,29 +724,29 @@ extern "C" {
 // @symbol _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c
 int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c & clsn_)
 {
-    char* clsn = (char*)&clsn_;
-    int* f;
+    dCc_c *clsn = &clsn_;
+    u32 *f;
     if (mEatenByYoshi != 0) {
-        unsigned int id = *(unsigned int*)(clsn+0x24);
+        unsigned int id = clsn->otherOwner;
         if (id != 0) {
             void* a = dActor_c::FindWithID(id);
             if (a != 0) {
-                unsigned short t = *(unsigned short*)((char*)a+0xc);
+                unsigned short t = ((dActor_c *)a)->actorID;
                 int e1 = (t == 0x120);
                 if (e1 == 0) {
                     int e2 = (t == 0x121);
                     if (e2 == 0) {
-                        SpawnMegaCharParticles(*(dActor_c *)a, clsn);
+                        SpawnMegaCharParticles(*(dActor_c *)a, (char *)clsn);
                         return 1;
                     }
                 }
             }
         }
-        f = (int*)(((int)clsn + 0x18));
+        f = &clsn->flags;
         *f = *f | 0x20000;
         goto done;
     }
-    f = (int*)(((int)clsn + 0x18));
+    f = &clsn->flags;
     *f = *f & ~0x20000;
 done:
     return 0;
@@ -795,33 +762,33 @@ extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 
 void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &a, char *p)
 {
-    char *self = (char *)this;
-    char *ap = (char *)&a;
+    dEnemyBase_c *self = this;
+    dActor_c *ap = &a;
     s16 dirvec[3];
     Vector3 v;
     Vector3 dst, src;
 
-    dst.x = *(s32 *)(self + 0x5c);
-    dst.y = *(s32 *)(self + 0x60);
+    dst.x = self->mPosX;
+    dst.y = self->mPosY;
     {
-        Vector3 *pv = (Vector3 *)(((long long)(int)(ap + 0x5c)));
-        dst.z = *(s32 *)(self + 0x64);
+        Vector3 *pv = &ap->mPos;
+        dst.z = self->mPosZ;
         src.x = pv->x;
         src.y = pv->y;
         src.z = pv->z;
     }
 
     {
-        int t = ((int) * (u16 *)(self + 0x8e)) >> 4;
+        int t = ((int)(u16)self->mAngleY) >> 4;
         dirvec[0] = data_02082214[t * 2];
         dirvec[1] = 0;
-        t = ((int) * (u16 *)(self + 0x8e)) >> 4;
+        t = ((int)(u16)self->mAngleY) >> 4;
         dirvec[2] = data_02082214[t * 2 + 1];
     }
 
     if (p != 0) {
         Vector3 delta;
-        s32 w = *(s32 *)(p + 4);
+        s32 w = ((dCc_c *)p)->radius;
         s32 aX, aY;
         s32 iX, iY;
         s32 s;
@@ -843,7 +810,7 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &a, char *p)
         dst.y += FX_MUL(w, data_02082214[iY * 2]);
         dst.z += FX_MUL(s, data_02082214[iX * 2 + 1]);
 
-        dst.y += (*(s32 *)(p + 8)) >> 1;
+        dst.y += ((dCc_c *)p)->height >> 1;
     } else {
         Vector3 delta;
         Vec3_Sub(&delta, &src, &dst);
@@ -882,7 +849,7 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x
 void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 & vel_, Player & player_, Fix12<int>)
 {
     mFlags &= ~0x10000001;
-    mPrevAngleY = Vec3_HorzAngle((const Vector3 *)((char *)&player_ + 0x5c), &mPos);
+    mPrevAngleY = Vec3_HorzAngle(&player_.mPos, &mPos);
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
     mDeathTimer = 0x1e;
@@ -961,8 +928,6 @@ struct KbicVB {
 
 struct KbicM48 { int w[12]; };
 
-#define LAUNDER(p) ((int)(p))
-
 // @symbol _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj
 int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, unsigned int flags)
 {
@@ -974,7 +939,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, 
         return 0;
 
     if (mDeathTimer != 0)
-        *(unsigned short *)LAUNDER(&mDeathTimer) -= 1;
+        mDeathTimer -= 1;
 
     if (mDeathTimer == 0 ||
         (clsn != 0 && clsn->IsOnGround() != 0 && mVertSpeed < 0)) {
@@ -995,9 +960,9 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, 
     }
 
     if (anim != 0) {
-        *(short *)LAUNDER(&mAngleX) += mSpinRateX;
-        *(short *)LAUNDER(&mAngleY) += mSpinRateY;
-        *(short *)LAUNDER(&mAngleZ) += mSpinRateZ;
+        mAngleX += mSpinRateX;
+        mAngleY += mSpinRateY;
+        mAngleZ += mSpinRateZ;
         Vec3_Asr(v, &mPosX, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0,
@@ -1006,7 +971,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, 
             mAngleX, mAngleY, mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0,
             (-((KbicVB *)(void *)this)->m29()) >> 3, 0);
-        *(KbicM48 *)((char *)anim + 0x1c) = *(KbicM48 *)&data_020a0e68;
+        *(KbicM48 *)&anim->mat4x3 = *(KbicM48 *)&data_020a0e68;
     }
     return 1;
 }
@@ -1038,48 +1003,47 @@ extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *o, void *w, uns
 // @symbol func_ov002_020ad660
 extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
 {
-    char *c = (char *)cc;
-    char *p = (char *)pp;
-    char *r5 = (char *)r5p;
+    dEnemyBase_c *c = (dEnemyBase_c *)cc;
+    dBgCh_Actr *p = (dBgCh_Actr *)pp;
+    ModelAnim *r5 = (ModelAnim *)r5p;
     int v[3];
 
-    if (*(int *)(c + 0x10c) != 8)
+    if (c->mDeathState != 8)
         return 0;
 
-    if (*(unsigned short *)(c + 0x102) == 0 ||
+    if (c->mDeathTimer == 0 ||
         (p != 0 && (_ZNK10dBgCh_Actr10IsOnGroundEv(p) || _ZNK10dBgCh_Actr8IsOnWallEv(p)))) {
         if (flags & 1)
             _ZN12dEnemyBase_c9SpawnCoinEv(c);
         if (flags & 2)
             _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
-        *(int *)(c + 0x10c) = 0;
+        c->mDeathState = 0;
         return 2;
     }
 
-    *(unsigned short *)LAUNDER(c + 0x102) -= 1;
+    c->mDeathTimer -= 1;
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
     if (p != 0)
         _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, p, 0);
 
     if (r5 != 0) {
-        *(short *)LAUNDER(c + 0x8c) += *(short *)(c + 0xec);
-        *(short *)LAUNDER(c + 0x8e) += *(short *)(c + 0xee);
-        *(short *)LAUNDER(c + 0x90) += *(short *)(c + 0xf0);
-        Vec3_Asr(v, c + 0x5c, 3);
+        c->mAngleX += c->mSpinRateX;
+        c->mAngleY += c->mSpinRateY;
+        c->mAngleZ += c->mSpinRateZ;
+        Vec3_Asr(v, &c->mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0,
             ((KbicVB *)(void *)c)->m29() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-            *(short *)(c + 0x8c), *(short *)(c + 0x8e), *(short *)(c + 0x90));
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0,
             (-((KbicVB *)(void *)c)->m29()) >> 3, 0);
-        *(Matrix4x3 *)(r5 + 0x1c) = *(Matrix4x3 *)&data_020a0e68;
+        r5->mat4x3 = *(Matrix4x3 *)&data_020a0e68;
     }
     return 1;
 }
 
 /* The two state-handler tables. func_ov002_020aea30 dispatches the first on
-   the f10c index; UpdateDeath dispatches the second on mDeathState. Non-const
+   mDeathState; UpdateDeath dispatches the second on mDeathState. Non-const
    pointer-to-member arrays live in .bss, so mwcc generates this TU's static
    initializer to copy the descriptor records in at overlay load. */
 Aea30PMF data_ov002_0210db80[8] = {

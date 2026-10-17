@@ -395,7 +395,7 @@ extern "C" s16 data_02082214[];
 }
 void dActor_c::UpdatePosWithHorzSpeedAndAng(){
     void *c = this;
-    s32 v98 = *(s32*)((char*)c+0x98);
+    s32 v98 = ((dActor_c *)c)->mHorzSpeed;
     if (v98 == 0) {
         s32 a8 = *(s32*)((char*)c+0xa8);
         s32 v9c = *(s32*)((char*)c+0x9c);
@@ -502,7 +502,7 @@ Player *dActor_c::ClosestPlayer()
         for (i = 0; i < data_0209f21c; i++) {
             void* p = data_0209f394[i];
             if (!p) continue;
-            int d = Vec3_Dist((char*)this + 0x5c, (char*)p + 0x5c);
+            int d = Vec3_Dist(&mPosX, &((dActor_c *)p)->mPosX);
             if (d < data_0208e380) { data_0208e380 = d; data_0209b458 = p; }
             if (d > data_0208e37c) { data_0208e37c = d; data_0209b450 = p; }
         }
@@ -524,7 +524,7 @@ Player *dActor_c::ClosestNonVanishPlayer()
             void* p = data_0209f394[i];
             if (!p) continue;
             if (*(unsigned char*)((char*)p + 0x6fb)) continue;
-            int d = Vec3_Dist((char*)this + 0x5c, (char*)p + 0x5c);
+            int d = Vec3_Dist(&mPosX, &((dActor_c *)p)->mPosX);
             if (d < data_0208e380) { data_0208e380 = d; data_0209b458 = p; }
             if (d > data_0208e37c) { data_0208e37c = d; data_0209b450 = p; }
         }
@@ -676,9 +676,7 @@ extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
     }
 
     for (i = 0; i < count; i++) {
-        actor = dActor_c::Spawn(
-            id, param, *pos, rot,
-            *(signed char *)((char *)self + 0xcc), deathId);
+        actor = dActor_c::Spawn(id, param, *pos, rot, self->mAreaId, deathId);
 
         if (actor != 0) {
             do {
@@ -693,7 +691,7 @@ extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
             prev = ang;
             *(s16 *)((char *)actor + 0x94) = (s16)(ang0 + ang);
             *(s16 *)((char *)actor + 0x96) = 0;
-            *(s32 *)((char *)actor + 0x98) = spread;
+            actor->mHorzSpeed = spread;
         }
     }
 }

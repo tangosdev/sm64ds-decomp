@@ -16,8 +16,7 @@
    vtable. */
 #include "ModelAnim.h"
 #include "SharedFilePtr.h"
-
-typedef void (*VFN)(void *);
+#include "TextureSequence.h"
 
 struct daDemo_c {
     struct param_c {
@@ -25,6 +24,15 @@ struct daDemo_c {
     };
 
     struct anmModel_c : param_c, ModelAnim {
+        SharedFilePtr *mModelFile;    /* 0x70 */
+        SharedFilePtr **mAnimFiles;   /* 0x74 */
+        SharedFilePtr **mTexSeqFiles; /* 0x78 */
+        TextureSequence *mTexSeq;     /* 0x7c */
+        u8 mNumAnimFiles;             /* 0x80 */
+        u8 mNumTexSeqFiles;           /* 0x81 */
+        u8 mAnimEntry;                /* 0x82 */
+        u8 mSnapToFloor;              /* 0x83 */
+
         virtual ~anmModel_c();
         void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
     };
@@ -39,25 +47,24 @@ struct daDemo_c {
 
 daDemo_c::anmModel_c::~anmModel_c()
 {
-    char *c = (char *)this;
-    void *p;
+    SharedFilePtr *file;
     int i;
 
-    p = *(void **)(c + 0x70);
-    if (p != 0) ((SharedFilePtr *)(p))->Release();
-    for (i = 0; i < *(unsigned char *)(c + 0x80); i++) {
-        p = (*(void ***)(c + 0x74))[i];
-        if (p != 0) ((SharedFilePtr *)(p))->Release();
+    file = mModelFile;
+    if (file != 0)
+        file->Release();
+    for (i = 0; i < mNumAnimFiles; i++) {
+        file = mAnimFiles[i];
+        if (file != 0)
+            file->Release();
     }
-    if (*(void **)(c + 0x7c) != 0) {
-        for (i = 0; i < *(unsigned char *)(c + 0x81); i++) {
-            p = (*(void ***)(c + 0x78))[i];
-            if (p != 0) ((SharedFilePtr *)(p))->Release();
+    if (mTexSeq != 0) {
+        for (i = 0; i < mNumTexSeqFiles; i++) {
+            file = mTexSeqFiles[i];
+            if (file != 0)
+                file->Release();
         }
-        p = *(void **)(c + 0x7c);
-        if (p != 0) {
-            (*(VFN)((*(int **)p)[1]))(p);
-        }
+        delete mTexSeq;
     }
 }
 

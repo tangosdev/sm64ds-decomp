@@ -21,7 +21,7 @@ What it emits, for one class:
   * a header: the RTTI base, the destructor pair as the inline one-line
     `virtual ~X() {}` form (notes/cpp-class-form.md), overrides and new virtuals in
     vtable slot order with the slot and ROM address beside each, the size assertion
-    when the factory proves it, and one `unk_` block for the bytes nothing proves,
+    when the factory proves it, and one `pad_` block for the bytes nothing proves,
     marked for a reviewer. Return types come from a base header declaration of the
     same method when one exists; anything else is marked UNPROVEN.
   * a TU skeleton for src_tu/: one `// @symbol` stub per licensed member, written
@@ -538,25 +538,33 @@ def render_header(ev, rec, slots, base_n, size_row, run):
     base_size = header_size(chain[0]) if chain else None
     if size_row and base_size is not None and size_row["size"] > base_size:
         off, n = base_size, size_row["size"] - base_size
-        lines.append(f"    u8 unk_{off:03x}[0x{n:x}];   /* 0x{off:03x}..0x{size_row['size']:03x} "
-                     "UNPROVEN: no field evidence joined yet */")
+        # pad_, not unk_<hex>: tools/source_style.py's unknown-field rule rejects a
+        # new unk_<hex> name, and pad_ is the house form for bytes nothing names yet.
+        lines.append(f"    /* 0x{off:03x}..0x{size_row['size']:03x} UNPROVEN: no field evidence "
+                     "joined yet */")
+        lines.append(f"    u8 pad_{off:03x}[0x{n:x}];")
         lines.append("")
     elif size_row and base_size is None and chain:
-        lines.append(f"    /* fields: {chain[0]} carries no size assertion, so the unk_ span "
+        lines.append(f"    /* fields: {chain[0]} carries no size assertion, so the pad_ span "
                      "cannot be placed */")
         lines.append("")
     dtor = [s for s in slots if s["symbol"] and re.search(r"D[01]Ev$", s["symbol"])
             and s["kind"] != "inherited"]
     if dtor:
         where = ", ".join(f"slot {s['slot']} {s['symbol'][-4:-2]} 0x{s['addr']:08x}" for s in dtor)
-        lines.append(f"    virtual ~{tree}() {{}}   /* {where}; inline + `new {tree}` "
-                     "emits D1 then D0 (notes/cpp-class-form.md) */")
+        # Comments go on their own line above each declaration: a trailing comment
+        # is realigned by the pinned clang-format, and a long one breaks the
+        # one-line `{}` body that check_header_offsets.py needs on the signature.
+        lines.append(f"    /* {where}; inline + `new {tree}` emits D1 then D0 "
+                     "(notes/cpp-class-form.md) */")
+        lines.append(f"    virtual ~{tree}() {{}}")
     for s in slots:
         if s["kind"] == "inherited" or not s["symbol"] or re.search(r"D[012]Ev$", s["symbol"]):
             continue
         decl = member_decl(s["symbol"], tree, chain) if s["symbol"].startswith("_Z") else None
         if decl:
-            lines.append(f"    virtual {decl[0]};   /* slot {s['slot']} {s['kind']} 0x{s['addr']:08x} */")
+            lines.append(f"    /* slot {s['slot']} {s['kind']} 0x{s['addr']:08x} */")
+            lines.append(f"    virtual {decl[0]};")
         else:
             lines.append(f"    /* slot {s['slot']} {s['kind']} 0x{s['addr']:08x} {s['symbol']}: "
                          "UNNAMED virtual, name it before declaring */")
@@ -570,13 +578,56 @@ def render_header(ev, rec, slots, base_n, size_row, run):
     lines.append("};")
     if size_row:
         lines += ["", "#ifndef SM64DS_PLATFORM_PC",
-                  f"typedef char {tree}_size_must_be_{size_row['size_hex']}[",
-                  f"    sizeof({tree}) == {size_row['size_hex']} ? 1 : -1];", "#endif"]
+                  f"typedef char {tree}_size_must_be_{size_row['size_hex']}"
+                  f"[sizeof({tree}) == {size_row['size_hex']} ? 1 : -1];", "#endif"]
     lines += ["", f"#endif /* {guard} */", ""]
     return "\n".join(lines)
 
 
 # ============================================================================ TU
+
+def scalar_fix12_mangling(sym):
+    """``sym`` with each by-value ``5Fix12IiE`` spelled as a plain int, or None.
+
+    Only the simple shape is rewritten: a later ``S<n>_`` substitution can refer
+    to the Fix12<int> type, and renumbering those by hand is exactly the
+    hand-mangling notes/cpp-class-form.md warns against -- ask tools/mangle.py.
+    """
+    if "5Fix12IiE" not in sym or re.search(r"S\d*_", sym.split("5Fix12IiE", 1)[1]):
+        return None
+    original = DM.demangle(sym)
+    if not original or "Fix12<int>" not in original["args"]:
+        return None
+    candidate = sym.replace("5Fix12IiE", "i")
+    parsed = DM.demangle(candidate)
+    expected = ["int" if arg == "Fix12<int>" else arg for arg in original["args"]]
+    if not parsed or parsed["qualified"] != original["qualified"] or parsed["args"] != expected:
+        return None
+    return candidate
+
+
+def fix12_wall_note(sym):
+    """Comment lines for a member whose mangled name passes Fix12<int> by value.
+
+    Measured on arm9/ModelAnim2 (PR #4003): a real member with a by-value
+    Fix12<int> that the body reads costs two words per use (0x6c against 0x5c),
+    and a caller handing one to a class-typed declaration pays as well (0x70);
+    the same member with a scalar parameter matches under the scalar mangling.
+    """
+    parsed = DM.demangle(sym)
+    if not parsed or "Fix12<int>" not in parsed["args"]:
+        return []
+    alt = scalar_fix12_mangling(sym)
+    out = ["/* WALL 6az (notes/mwccarm-codegen.md): Fix12<int> by value. A body that reads it",
+           "   is homed to the stack (+2 words per use) and class-typed callers pay too."]
+    if alt:
+        out.append(f"   A real member with a scalar Fix12i parameter mangles to {alt};")
+        out.append("   renaming the symbol (and its callers) is the repair. Keeping the extern \"C\"")
+    else:
+        out.append("   Ask tools/mangle.py for the scalar spelling before renaming. Keeping the extern \"C\"")
+    out.append("   bridge instead needs a reviewed config/source-style-exceptions.json row. */")
+    return out
+
 
 def render_tu(ev, rec, run, evidence, slots):
     tree = rec["tree"] or rec["name"]
@@ -604,8 +655,7 @@ def render_tu(ev, rec, run, evidence, slots):
         lines.append(f"// @symbol {n}")
         if n.endswith("_classInit"):
             lines.append(f"/* 0x{a:08x} size 0x{s:x}; factory proven by the actor spawn table */")
-            lines.append(f'extern "C" {tree} *{n}()')
-            lines.append("{")
+            lines.append(f'extern "C" {tree} *{n}() {{')
             lines.append(f"    return new {tree}();")
         elif n.startswith("_ZN"):
             decl = member_decl(n, tree, chain)
@@ -613,14 +663,15 @@ def render_tu(ev, rec, run, evidence, slots):
             sig = decl[0] if decl else f"void {d['method']}()"
             ret, rest = sig.split(f" {d['method']}(", 1) if f" {d['method']}(" in sig else ("void", ")")
             lines.append(f"/* 0x{a:08x} size 0x{s:x}{tag}; {cite} */")
-            lines.append(f"{ret} {tree}::{d['method']}({rest}")
-            lines.append("{")
+            wall = fix12_wall_note(n)
+            if wall:
+                lines += wall
+            lines.append(f"{ret} {tree}::{d['method']}({rest} {{")
             lines.append("    /* TODO reconstruct */")
         else:
             lines.append(f"/* 0x{a:08x} size 0x{s:x}{tag}; address-named, linkage and "
                          f"parameters unproven; {cite} */")
-            lines.append(f'extern "C" void {n}(/* TODO */)')
-            lines.append("{")
+            lines.append(f'extern "C" void {n}(/* TODO */) {{')
             lines.append("    /* TODO reconstruct */")
         lines.append("}")
         lines.append("")

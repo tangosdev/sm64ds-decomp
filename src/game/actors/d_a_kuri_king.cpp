@@ -1637,11 +1637,10 @@ int daKuriKing_c::Behavior()
     u = FX_MUL(t, 0x546000);
     mGoombaTargetSpeed = u < 0 ? -u : u;
 
-    /* Camera word +0x114 (still padding in dCamera_c.h) gets the boss every
-       frame for the main boss (not param1 0x1111) except in state 7
-       (defeat). */
+    /* The camera frames the main boss (not param1 0x1111) every frame
+       except in state 7 (defeat). */
     if (mState != 7) {
-        *(void **)(data_0209f318 + 0x114) = this;
+        ((dCamera_c *)data_0209f318)->mFramedActor = this;
     }
 
     func_ov074_0212199c();

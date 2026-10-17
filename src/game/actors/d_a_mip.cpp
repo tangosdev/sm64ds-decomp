@@ -17,14 +17,13 @@
  *   the player position through V3Blk for the same reason.
  *   TestWaterBelow's ground probe stays a stack buffer; clsnY is
  *   detect[12].
- * - UpdateCarriedMatrix reads the carrier at +0xc8, inside
- *   dActor_c::pad_0c5. Render stores the colour at BMD_Material+0x20,
+ * - Render stores the colour at BMD_Material+0x20,
  *   which is pad, and walks materials as an int**. Naming that walk
  *   off modelFile shrinks Render.
  * - UpdateMirrorShadow keeps its Obj overlay. Spelling the position
  *   and a Mtx43* at pad_3e8 moves 34 words.
- * - StateSaveTalkMain and StateCaughtMain write player+0x6ce as an
- *   unsigned short. The mStateFlags member form changes the size.
+ * - StateSaveTalkMain and StateCaughtMain write the player's mStateFlags
+ *   through a u16 pointer. The direct member form changes the size.
  *   StateIdleMain updates mTargetAngY through a pointer, and
  *   Behavior increments mEatenTimer through (long long)(int)&.
  * - unk_426 is the header's name: 2 the frame Yoshi eats the rabbit,
@@ -347,7 +346,7 @@ int daMip_c::StateSaveTalkMain()
             } else if (gb == 2) {
                 func_02012790(0x98);
                 {
-                    unsigned short *hp = (unsigned short *)((char *)player + 0x6ce);
+                    unsigned short *hp = &player->mStateFlags;
                     *hp &= ~0x800;
                 }
                 Message::EndTalk();
@@ -357,7 +356,7 @@ int daMip_c::StateSaveTalkMain()
         break;
     case 2:
         if (data_0209d660 == 0) {
-            unsigned short *hp = (unsigned short *)((char *)player + 0x6ce);
+            unsigned short *hp = &player->mStateFlags;
             *hp &= ~0x800;
             Message::EndTalk();
             SetState(&data_ov085_021306bc);
@@ -709,14 +708,14 @@ int daMip_c::StateCaughtMain()
             func_02012790(0xa);
             mTalkState = 0;
             {
-                u16 *pf = (u16 *)((char *)pl + 0x6ce);
+                u16 *pf = &pl->mStateFlags;
                 *pf = (u16)(*pf | 0x800);
             }
         }
     } else {
         if (mTalkState == 2) {
             {
-                u16 *pf = (u16 *)((char *)pl + 0x6ce);
+                u16 *pf = &pl->mStateFlags;
                 *pf = (u16)(*pf & ~0x800);
             }
             mTalkState = 0;
@@ -733,7 +732,7 @@ int daMip_c::StateCaughtMain()
         SetState(&data_ov085_021306bc);
     } else {
         {
-            u16 *pf = (u16 *)((char *)pl + 0x6ce);
+            u16 *pf = &pl->mStateFlags;
             *pf = (u16)(*pf | 0x800);
         }
         mSaveTalkPlayer = pl;
@@ -1114,8 +1113,7 @@ void daMip_c::UpdateMatrixAndShadow()
 
 // @symbol _ZN7daMip_c19UpdateCarriedMatrixEv
 /* While carried, the matrix comes from UpdateCarry plus one of four hold
-   offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot.
-   The carrier's +0xc8 word is unnamed on Player. */
+   offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot. */
 void daMip_c::UpdateCarriedMatrix()
 {
     struct Mtx43 { s32 m[12]; };
@@ -1125,7 +1123,8 @@ void daMip_c::UpdateCarriedMatrix()
     int idx;
     void* res;
     if (!mTalkingPlayer) return;
-    if (!*(int *)((char *)mTalkingPlayer + 0xc8)) return;
+    if (!mTalkingPlayer->mCarryMatrix)
+        return;
     idx = 0;
     if (mTalkingPlayer->IsFrontSliding() || mTalkingPlayer->LostGrabbedObject()) {
         idx = 1;

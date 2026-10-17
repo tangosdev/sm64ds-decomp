@@ -23,9 +23,8 @@
  * - dActor_c::Earthquake / Particle::System::NewSimple stay TU-local mangled
  *   calls: Fix12<int> by value (6az); typed shared-header decls of them are
  *   overload poison (S13).
- * - Player+0x5c stays an offset: Player is only forward-declared here, and
- *   naming three words is not worth pulling Player.h into a TU that has no
- *   other use for it.
+ * - Player is only forward-declared here, so the closest player's position
+ *   is read through a dActor_c cast rather than pulling in Player.h.
  * - unk_31c/unk_31d stay: the mega-knockback armed flag and its 30-frame fuse
  *   to Kill(), but daObjRotateUpdownLift_c::Kill also writes unk_31c, so
  *   renaming is a shared-header plus leaf change, out of scope for this TU.
@@ -437,7 +436,7 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(dBgActor_c *self, int ra
         else
             center.y += yOffset;
         Player *player = self->ClosestPlayer();
-        int dist = Vec3_Dist(&center, (Vector3 *)((char *)player + 0x5c));
+        int dist = Vec3_Dist(&center, &((dActor_c *)player)->mPos);
         if (dist > radius) {
             if (self->mMeshCollider.IsEnabled())
                 self->mMeshCollider.Disable();
@@ -468,7 +467,7 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, in
     else
         center.y += yOffset;
     Player *player = self->ClosestPlayer();
-    int dist = Vec3_Dist(&center, (Vector3 *)((char *)player + 0x5c));
+    int dist = Vec3_Dist(&center, &((dActor_c *)player)->mPos);
     if (dist > radius) {
         if (self->mMeshCollider.IsEnabled())
             self->mMeshCollider.Disable();

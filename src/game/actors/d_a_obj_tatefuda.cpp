@@ -346,8 +346,8 @@ int daObjTatefuda_c::Behavior()
 
     {
         void *p = mHoldingPlayer;
-        if (p != 0 && (enum Bool)((mFlags & 0x4000) != 0) != FALSE
-            && *(int *)((char *)p + 0xc8) != 0) {
+        if (p != 0 && (enum Bool)((mFlags & 0x4000) != 0) != FALSE &&
+            ((dActor_c *)p)->mCarryMatrix != 0) {
             u32 *fp;
             AttachToHolder(this);
             mClipRadius = 0x20000;
@@ -444,19 +444,19 @@ int daObjTatefuda_c::Behavior()
    Behavior's step 2) the sign is put on the holder first, so the model is drawn
    where the holder has it this frame. The draw itself is a call through slot 5
    of the Model (via the local Sub041 view). */
-int daObjTatefuda_c::Render()
-{
-  if (mHidden != 0) return 1;
-  void* r = mHoldingPlayer;
-  if (r != 0) {
-    int b = (mFlags & 0x4000) != 0;
-    if (b && *(int*)((char*)r+0xc8) != 0) {
-      AttachToHolder(this);
+int daObjTatefuda_c::Render() {
+    if (mHidden != 0)
+        return 1;
+    void *r = mHoldingPlayer;
+    if (r != 0) {
+        int b = (mFlags & 0x4000) != 0;
+        if (b && ((dActor_c *)r)->mCarryMatrix != 0) {
+            AttachToHolder(this);
+        }
     }
-  }
-  Sub041* s = (Sub041*)&mModel;
-  s->v5(0);
-  return 1;
+    Sub041 *s = (Sub041 *)&mModel;
+    s->v5(0);
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
