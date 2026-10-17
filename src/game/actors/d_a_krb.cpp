@@ -282,8 +282,7 @@ inline s32 *chaseRadius(daKrb_c *goomba)
 }
 
 void daKrb_c::func_ov084_021290d4() {
-    char *cc = (char *)this;
-    daKrb_c *c = (daKrb_c *)cc;
+    daKrb_c *c = this;
     int timerOff;
     daKrb_c *self2;
     int state;
@@ -360,8 +359,7 @@ void daKrb_c::func_ov084_02129168(dActor_c *actor) {
  * coin, poofs, is removed (func_ov084_02129498), has its cap released and is
  * put back at mHomePos (RespawnIfHasCap). */
 void daKrb_c::func_ov084_02129238() {
-    char *c = (char *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     if (goomba->mWithMeshClsn.IsOnGround() != 0)
         return;
     {
@@ -413,8 +411,7 @@ void daKrb_c::func_ov084_02129238() {
  * window the sound plays once and MOVE_STEP_SOUND_LATCH is set; the latch is
  * cleared when the frame leaves the window. */
 void daKrb_c::func_ov084_0212934c() {
-    char *c = (char *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     unsigned int kind;
     int frame;
     int type;
@@ -480,8 +477,7 @@ void daKrb_c::func_ov084_02129498() {
  * 6..9 (Player.h calls those the quicksand tiers) while the collision kind
  * (CLPS bits 0..4, func_02037e84) is 8. */
 void daKrb_c::func_ov084_021294d0() {
-    char *c = (char *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     char obj[0x28];
     if (!goomba->mWithMeshClsn.IsOnGround())
         return;
@@ -614,8 +610,7 @@ void daKrb_c::func_ov084_021296cc() {
  * (mStarTracked negative) and mStarID matches data_0209f344[data_0209f208[0]],
  * claim a slot (TrackStar(mStarID, 1)). */
 void daKrb_c::func_ov084_02129864() {
-    char *c = (char *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     if (goomba->mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
         return;
     if (goomba->mStarTracked >= 0)
@@ -642,8 +637,7 @@ void daKrb_c::func_ov084_02129864() {
  * (mCapId < 6) or REWARD_SILVER_STAR_IF_CURRENT send it back to mHomePos and
  * respawn; one with a cap is also dropped from the death table. */
 int daKrb_c::func_ov084_021298d0() {
-    char *c = (char *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     int deathState = goomba->UpdateDeath(goomba->mWithMeshClsn);
     if ((unsigned int)(goomba->mDeathState - 2) > 4) goto L_a4;
     static_cast<dExtFrameCtrl_c &>(goomba->mModelAnim).speed = 0x1000;
@@ -708,8 +702,7 @@ L_end:
  * A king minion with eatState >= 3 that has dropped more than 1000.0 below
  * mHomePos is removed. */
 int daKrb_c::func_ov084_02129a00() {
-    char *c = (char *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     int eatState = goomba->UpdateYoshiEat(goomba->mWithMeshClsn);
     if (eatState == 0)
         goto ret0;
@@ -784,8 +777,7 @@ ret0:
  * the per-type launch speed data_ov084_02130248[type] as vertical speed, and
  * set the 0x4 bit of the dCcAc_c flags (meaning not recovered). */
 void daKrb_c::func_ov084_02129c9c() {
-    char *c = (char *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     func_02012694(SND_HOP, &goomba->mCamSpacePos);
     goomba->mState = daKrb_c::STATE_AIRBORNE;
     goomba->mHorzSpeed = 0;
@@ -906,8 +898,7 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
  * register and then re-tests it, which is the shape the cartridge has. Folding
  * either back into its `if` collapses the pair. See notes/matching-style.md 3. */
 void daKrb_c::func_ov084_02129ed4() {
-    void *c = (void *)this;
-    daKrb_c *goomba = (daKrb_c *)c;
+    daKrb_c *goomba = this;
     s16 killDirNormal[3];
     s16 killDirVariant[3];
     s16 killDirPlayer[3];
