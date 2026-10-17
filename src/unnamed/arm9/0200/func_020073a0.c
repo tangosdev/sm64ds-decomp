@@ -1,7 +1,7 @@
 #include "types.h"
 
 /* A dCamera_c script op, not an actor method: its entry in the camera's
-   member-function table is at 0x02082cb0, between func_020072c4 and
+   member-function table is at 0x02086cb0, between func_020072c4 and
    func_02007d58. The fields used here, named as in include/dCamera_c.h. */
 struct dCamera_c {
     char pad_000[0xb0];
