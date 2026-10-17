@@ -1164,6 +1164,9 @@ def main():
     ap.add_argument("--no-check", action="store_true",
                     help="skip module/source fidelity analysis; report status is unchecked")
     ap.add_argument("--data-json", help="dump every ROM-data verdict record as JSON")
+    ap.add_argument("--data-provenance-requests", metavar="JSON",
+                    help="verify requested source data providers and final bytes/layout; "
+                         "JSON rows contain module, symbol, source, size (stock profile only)")
     ap.add_argument("--no-data-check", action="store_true",
                     help="skip comparing emitted vtable/RTTI data against the ROM "
                          "(see tools/romdata_check.py); never affects the link")
@@ -1183,6 +1186,8 @@ def main():
         ap.error("--partitioned-tu currently supports only the stock profile")
     if args.partitioned_tu and args.no_check:
         ap.error("--partitioned-tu cannot be combined with --no-check")
+    if args.data_provenance_requests and (args.profile != "stock" or args.no_check):
+        ap.error("--data-provenance-requests requires the checked stock profile")
 
     report_path = pathlib.Path(args.report_json or
                                BUILD / ("rombuild-report.json" if args.profile == "stock"
@@ -1205,6 +1210,18 @@ def main():
         if not (REPO / "extracted" / "dsd" / "config.yaml").is_file():
             raise BuildError("preflight", 1,
                              "no extracted ROM - run tools/unpack.py on your own dump first")
+
+        data_provenance_plan = None
+        if args.data_provenance_requests:
+            import data_provenance_build as DPB
+            try:
+                data_provenance_plan = DPB.prepare(
+                    REPO, BUILD, args.data_provenance_requests,
+                    [DSD, MW / LD_VERSION / "mwldarm.exe", *MW.rglob("mwccarm.exe")])
+            except (ValueError, OSError) as exc:
+                raise BuildError("data provenance preparation", 1, str(exc)) from exc
+            report["dataProvenance"] = {
+                "status": "not-run", "requests": data_provenance_plan["requests"]}
 
         # Layout gate, before the compile rather than after: a delinks.txt naming a path
         # with no file there does NOT fail this build. dsd fills that range with retail
@@ -1244,6 +1261,11 @@ def main():
         report["profileConfig"] = str(config_root.relative_to(REPO))
         report["modReplacements"] = profile["modReplacements"]
         report["modGapFallbacks"] = profile["modGapFallbacks"]
+        if data_provenance_plan:
+            try:
+                DPB.bind_generated_config(data_provenance_plan, config_root)
+            except (ValueError, OSError) as exc:
+                raise BuildError("data provenance configuration", 1, str(exc)) from exc
 
         # Gap objects first: delinks.txt drives which ranges dsd carves out for us.
         print(f"profile: {args.profile} ({len(profile['modReplacements'])} mod source replacement(s), "
@@ -1346,11 +1368,28 @@ def main():
         if defined_interior:
             print(f"      lcf: defined {len(defined_interior)} interior row(s) at their ROM "
                   f"address ({', '.join(n for n, _a in defined_interior)})")
+        data_provenance_snapshot = None
+        if data_provenance_plan:
+            try:
+                data_provenance_snapshot = DPB.before_link(data_provenance_plan)
+            except (ValueError, OSError) as exc:
+                raise BuildError("data provenance inputs", 1, str(exc)) from exc
         print("[4/6] mwldarm")
         run([*launcher(), str(MW / LD_VERSION / "mwldarm.exe"), *LDFLAGS.split(),
              f"@{BUILD / 'objects.txt'}", str(BUILD / "arm9.lcf"),
              "-o", str(BUILD / "final_link.o")], "mwldarm")
         report["phases"].append("mwldarm")
+        if data_provenance_plan:
+            try:
+                proof = DPB.after_link(data_provenance_plan, data_provenance_snapshot)
+            except (ValueError, OSError) as exc:
+                raise BuildError("data provenance verification", 1, str(exc)) from exc
+            report["dataProvenance"] = proof
+            if not proof["ok"]:
+                raise BuildError("data provenance verification", 1,
+                                 json.dumps({"errors": proof.get("errors", []),
+                                             "objects": proof["objects"]}, indent=2))
+            print(f"      data provenance: {len(proof['objects'])} requested range(s) verified")
 
         if tu_prepared:
             verification = TP.verify_link(config_yaml, BUILD / "final_link.o", tu_prepared)

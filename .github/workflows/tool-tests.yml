@@ -212,6 +212,8 @@ jobs:
             tools.test_classqueue_v2 \
             tools.test_cpp_rename_verify \
             tools.test_data_evidence \
+            tools.test_data_provenance \
+            tools.test_data_provenance_build \
             tools.test_delaunder \
             tools.test_enroll \
             tools.test_layout \

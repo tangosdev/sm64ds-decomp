@@ -7,8 +7,9 @@ the [2026-08-14 design snapshot](global-data-migration.md), not current migratio
 coverage. Source-built data and promoted TUs have since changed that starting
 point. [The evidence collector](../tools/data_evidence.py) implements the first
 static evidence packet described here. It does not establish semantic identity,
-historical ownership, or a successful compiled-data comparison. Linked-artifact
-provenance checks and runtime tracing remain follow-up work.
+historical ownership, or a successful compiled-data comparison. An opt-in
+`rombuild.py` check now verifies requested linked providers and bytes or BSS
+storage layout. Pointer-target semantics and runtime tracing remain separate work.
 
 It builds on the repository design note:
 
@@ -386,9 +387,51 @@ that the initial collector populates every field.
 
 A matching final image can still contain the original gap bytes. Verification
 must establish that the new source definition actually supplied the linked range.
-The future provenance checker should follow the selected compiled object and
-section through the linker map/selection artifacts, reject a gap-object fallback,
-and retain that evidence beside the comparison result.
+The opt-in provenance checker follows the selected compiled object and section
+through the module-qualified linker map, final ELF symbols, linker selectors,
+and actual object paths. It rejects a gap-object fallback, including a ROM-derived
+object with the same basename as the expected compiler object.
+
+Create an ignored request file, for example `build/data-requests.json`:
+
+```json
+[
+  {"module": "ov047", "symbol": "data_ov047_02112408", "source": "src/game/actors/d_a_obj_km3_kuruma.cpp", "size": 12},
+  {"module": "ov047", "symbol": "data_ov047_02112638", "source": "src/game/actors/d_a_obj_km3_kuruma.cpp", "size": 8}
+]
+```
+
+Then run:
+
+```sh
+python tools/rombuild.py -j16 --no-rom --data-provenance-requests build/data-requests.json --report-json build/data-build-report.json
+```
+
+Each size is an explicit review claim. The tool checks it against configured
+bounds and the exact emitted and linked symbol extent; it does not infer a C++
+type or establish a missing historical size. Requests currently support `.data`,
+`.rodata`, and `.bss` with one complete `src/` owner. A failed requested proof
+fails the build; ordinary builds are unchanged. Existing full-build gates still
+run, and their failure cannot be replaced by a successful per-object check.
+
+The report's `dataProvenance` field contains separate results:
+
+- `source-bytes-verified`: the requested compiler object supplied the exact
+  initialized range and every linked byte equals the retail reference.
+- `source-storage-layout-verified`: the requested compiler object supplied the
+  BSS symbol at the requested address and size, with NOBITS storage, input-section
+  alignment, and configured section bounds checked. Startup clearing and
+  constructor behavior remain `not-run`.
+- `refused`: provider, placement, extent, byte comparison, or freshness evidence
+  failed. Missing outputs and changed inputs cannot produce a pass.
+
+Source, headers, configuration, Python tools, and compiler/linker executables are
+fingerprinted before compilation. The generated build configuration, actual
+post-isolation objects, LCF, and object list are also bound. Expected output files
+are removed immediately before the linker runs; the receipt hashes the new map,
+ELF, and module images. Retain the report as evidence for those exact inputs;
+an old receipt is not automatically valid for a new checkout. The static
+collector does not import receipts or turn their claims into a current pass.
 
 For initialized data, compare the complete affected linked bytes after relocation:
 values, pointers, ordering, alignment, padding, and section tails. Check the
@@ -416,15 +459,18 @@ configured relationships, text references, and ROM ranges. Preserve missing or
 ambiguous evidence explicitly. Current configuration and manifest claims must
 remain distinguishable from independently measured binary facts.
 
-### Phase 2: Establish linked provenance and complete comparisons (remaining)
+### Phase 2: Establish linked provenance and complete comparisons (in progress)
 
-1. Add actual compiled-object/link-map provenance, including rejection of ROM gap
-   fallback for a claimed migrated range.
-2. Integrate symbol-address checks, relocated byte comparisons, pointer-target
-   checks, and the BSS checks above; retain separate results and artifacts.
-3. Add negative controls: wrong pointer destination, changed tail byte,
-   mis-sized BSS, and an unchanged final image supplied by a gap object. Each
-   must fail the relevant check before a migration claim relies on it.
+1. Implemented for explicit requests: actual compiled-object/link-map provenance,
+   exact symbol address/size checks, complete initialized-byte comparisons, and
+   BSS storage layout. ROM gap fallback cannot satisfy a source-provider request.
+2. Still required for broader migration acceptance: module-qualified pointer
+   destination/addend checks and BSS startup/constructor checks. Numeric pointer
+   bytes alone cannot distinguish destinations at the same overlay address.
+3. Regression controls cover changed pointer bytes and tails, mis-sized BSS,
+   wrong overlay/provider, stale inputs, and an unchanged final image supplied by
+   a gap object. A same-address wrong-overlay pointer needs its own semantic
+   relocation check before that stronger claim can be made.
 4. Verify both individual licensed ranges and affected module extents, recording
    any exclusions and the exact tested source/input fingerprints.
 
