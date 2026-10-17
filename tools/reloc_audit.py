@@ -56,15 +56,47 @@ import tu_manifest as TUM  # noqa: E402
 _FUNC_RE = re.compile(r"func_(?:ov(\d+)_)?([0-9a-fA-F]{8})\b")
 
 
-def build_name_index():
-    """name -> (module, addr) from every checked-in symbols.txt.
+def _overlay_id_constants(config):
+    """The absolute OVERLAY_<id>_ID values dsd emits from configured overlays.
 
+    These are linker values, not ROM addresses. Read the configured numeric IDs,
+    never infer an arbitrary constant from an unresolved import's spelling.
+    """
+    import yaml
+    config = pathlib.Path(config)
+    if not config.is_file():
+        return {}
+    data = yaml.safe_load(config.read_text(encoding="utf-8"))
+    overlays = data.get("overlays", [])
+    if not isinstance(overlays, list):
+        raise ValueError("configured overlays must be a list")
+    out = {}
+    for row in overlays:
+        ident = row.get("id") if isinstance(row, dict) else None
+        if type(ident) is not int or not 0 <= ident <= 0xffffffff:
+            raise ValueError(f"invalid configured overlay ID: {ident!r}")
+        name = f"OVERLAY_{ident}_ID"
+        if name in out:
+            raise ValueError(f"duplicate configured overlay ID: {ident}")
+        out[name] = ("arm9", ident)
+    return out
+
+
+def build_name_index():
+    """name -> (module, value), including configured absolute overlay ID constants.
+
+    ROM addresses come from checked-in symbols.txt; overlay IDs come from the
+    same config.yaml inputs dsd uses to generate the linker command file.
     Names are not globally unique (overlays reuse them), so this is a best-effort
     fallback used only for symbols whose address is NOT encoded in the name."""
     idx = {}
     for module, path in R.iter_symbol_files(include_itcm_dtcm=True):
         for name, (mod, addr) in R.iter_syms_pairs(path, module):
             idx.setdefault(name, (mod, addr))
+    for name, value in _overlay_id_constants(REPO / "config/arm9/config.yaml").items():
+        if name in idx and idx[name] != value:
+            raise ValueError(f"configured symbol conflicts with linker constant {name}")
+        idx[name] = value
     return idx
 
 

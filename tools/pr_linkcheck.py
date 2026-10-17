@@ -181,8 +181,11 @@ def _production_context():
     """
     import rombuild as RB
     try:
-        intact = RB.intact_tu_policies(enrolled=RB.enrolled())
-        return {"intact": intact, "symbols": RB.enrolled_symbols(),
+        enrolled = RB.enrolled()
+        intact = RB.intact_tu_policies(enrolled=enrolled)
+        compiler_only = RB.compiler_only_policies(enrolled=enrolled)
+        return {"intact": intact, "compiler_only": compiler_only,
+                "symbols": RB.enrolled_symbols(),
                 "versions": RB.versions(), "init_sources": RB.init_section_sources()}
     except Exception as exc:
         return {"error": f"production TU admission refused: {exc}"}
@@ -191,16 +194,17 @@ def _production_context():
 def _production_object(path, context):
     """Compile the enrolled production source and apply its complete TU policy.
 
-    compile_one uses the production pin/flags, then prepare_intact_object checks
-    owned text/non-text, symbol renames, RTTI, vtables and relocations. Nothing
-    falls back to winning_object if compilation or any policy audit fails.
+    compile_one uses the production pin/flags. Intact objects undergo the complete
+    prepare_intact_object audit; text-only canonical duplicate policies prove the
+    emitted duplicate's bytes and references before renaming its surviving imports.
+    Neither path falls back to winning_object after a failed policy or compile.
     """
     import rombuild as RB
     with tempfile.TemporaryDirectory(prefix="pr-linkcheck-") as scratch:
         _, error, _ = RB.compile_one(
             path, vers=context["versions"], init_srcs=context["init_sources"],
             syms=context["symbols"], build_root=scratch,
-            intact_tus=context["intact"])
+            intact_tus=context["intact"], compiler_only=context.get("compiler_only"))
         if error:
             raise RuntimeError(error)
         return (pathlib.Path(scratch) / pathlib.Path(path).with_suffix(".o")).read_bytes()
@@ -236,9 +240,12 @@ def check_file(path, idx, ledger):
     context = _production_context()
     if "error" in context:
         return _file_error(path, owned, context["error"])
-    intact = context["intact"].get(path.replace("\\", "/"))
+    source = path.replace("\\", "/")
+    intact = context["intact"].get(source)
+    canonical = (context.get("compiler_only", {}).get(source) or {}).get("canonical")
+    production = intact is not None or bool(canonical)
     named = [(sym, _resolve(sym, idx, ledger)) for sym in owned]
-    if intact is not None and (not owned or any(not slots for _, slots in named)):
+    if production and (not owned or any(not slots for _, slots in named)):
         return _file_error(path, owned, "production TU has unresolved owned functions")
     named = [(sym, slots) for sym, slots in named if slots]
     if not named:
@@ -249,15 +256,15 @@ def check_file(path, idx, ledger):
     import bytegate as BG
     results, checked_passengers = [], set()
     prepared = None
-    if intact is not None:
+    if production:
         try:
             prepared = _production_object(path, context)
             if not prepared:
                 raise RuntimeError("production compiler returned an empty object")
         except Exception as exc:
-            return _file_error(path, owned, f"intact TU preparation refused: {exc}")
+            return _file_error(path, owned, f"production TU preparation refused: {exc}")
     for sym, slots in named:
-        # Intact TUs share their production-prepared object across all symbols.
+        # Policy-backed TUs share their production-prepared object across symbols.
         # Legacy sources need ONE OBJECT PER OWNED SYMBOL. `winning_object` runs the
         # compiled object through objisolate the way rombuild does, and isolation prunes
         # it to the one function it was asked for -- so a TU's second function is simply
@@ -308,7 +315,7 @@ def check_file(path, idx, ledger):
         try:
             emitted = set(PV.funcs_in(obj).keys())
         except Exception as exc:
-            if intact is not None:
+            if production:
                 return _file_error(path, owned, f"production passenger inventory failed: {exc}")
             emitted = set()
         for psym in sorted(emitted - {s for s, _ in named} - {wsym} - checked_passengers):

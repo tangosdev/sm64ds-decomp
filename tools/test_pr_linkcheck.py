@@ -304,11 +304,14 @@ class ProductionObjectChecks(unittest.TestCase):
     ADDR = 0x02000000
     TARGET = 0xEE003000
 
-    def _check(self, *, target=None, missing=False, prepare_error=None, owned=None):
+    def _check(self, *, target=None, missing=False, prepare_error=None, owned=None, canonical=False):
         import probe_versions as PV
         owned = owned or ["owned"]
         idx = {name: [(self.ADDR, 4, "arm9")] for name in owned + ["passenger"]}
         context = {"intact": {self.PATH: {"id": "test"}}}
+        if canonical:
+            context = {"intact": {}, "compiler_only": {
+                self.PATH: {"canonical": [{"symbol": "duplicate", "canonical_symbol": "callee"}]}}}
         with contextlib.ExitStack() as stack:
             stack.enter_context(mock.patch.object(PL.SP, "symbols_for", return_value=owned))
             stack.enter_context(mock.patch.object(PL, "_production_context", return_value=context))
@@ -344,6 +347,19 @@ class ProductionObjectChecks(unittest.TestCase):
         self.assertEqual(PL.worst(rep["results"]), "WRONG")
         self.assertEqual(rep["results"][0]["diffs"][0]["sym"], "callee")
 
+    def test_text_only_canonical_policy_uses_prepared_object(self):
+        rep = self._check(canonical=True)
+        self.assertEqual(PL.worst(rep["results"]), "VERIFIED")
+
+    def test_wrong_canonical_destination_still_fails(self):
+        rep = self._check(canonical=True, target=self.TARGET + 4)
+        self.assertEqual(PL.worst(rep["results"]), "WRONG")
+
+    def test_canonical_duplicate_audit_failure_has_no_raw_fallback(self):
+        rep = self._check(canonical=True, prepare_error=RuntimeError("canonical duplicate complete body differs"))
+        self.assertEqual(PL.worst(rep["results"]), "ERROR")
+        self.assertIn("complete body differs", rep["results"][0]["reason"])
+
     def test_missing_owned_symbol_cannot_use_legacy_fallback(self):
         rep = self._check(missing=True)
         self.assertEqual(PL.worst(rep["results"]), "NO-SYM")
@@ -374,13 +390,14 @@ class ProductionObjectChecks(unittest.TestCase):
         import rombuild as RB
         context = {"intact": {self.PATH: {"id": "test"}},
                    "versions": {"promoted": "pin"}, "init_sources": set(),
-                   "symbols": {self.PATH: ["owned"]}}
+                   "symbols": {self.PATH: ["owned"]}, "compiler_only": {"checked": "policy"}}
 
         def compile_one(path, **kwargs):
             self.assertEqual(path, self.PATH)
             self.assertIs(kwargs["intact_tus"], context["intact"])
             self.assertIs(kwargs["vers"], context["versions"])
             self.assertIs(kwargs["syms"], context["symbols"])
+            self.assertIs(kwargs["compiler_only"], context["compiler_only"])
             output = pathlib.Path(kwargs["build_root"]) / pathlib.Path(path).with_suffix(".o")
             output.parent.mkdir(parents=True)
             output.write_bytes(b"PRODUCTION")
