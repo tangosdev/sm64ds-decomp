@@ -40,6 +40,7 @@
 
 #include "daObjCvNewsLift_c.h"
 #include "SharedFilePtr.h"
+#include "SpawnInfo.h"
 #include "dBgW.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
@@ -94,7 +95,8 @@ extern struct Matrix4x3 data_020a0e68;
 extern s32 data_02092768[];
 extern s16 data_02082214[];
 extern const Vector3 data_ov021_02114a20[4];
-extern const u16 data_ov021_02114740[];
+/* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
+extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 }
 
 // @symbol daObjCvNewsLift_c_classInit
@@ -295,14 +297,14 @@ s32 daObjCvNewsLift_c::Behavior()
             else
                 mLoweredPlatform--;
             mBumped = 0;
-            mPrevAngleY = data_ov021_02114740[mLoweredPlatform];
+            mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
             mAngleX = 0;
             mAngleZ = 0;
             mPosY = mHomePos.y;
         }
         if (mPrevLoweredPlatform != mLoweredPlatform) {
             mBumped = 0;
-            mPrevAngleY = data_ov021_02114740[mLoweredPlatform];
+            mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
             mAngleX = 0;
             mAngleZ = 0;
             mPosY = mHomePos.y;
@@ -310,7 +312,7 @@ s32 daObjCvNewsLift_c::Behavior()
     } else {
         if (mLoweredPlatform != -1) {
             mMotorSound = Sound::PlayLong(mMotorSound, 3, 0x88, mCamSpacePos, 0);
-            mPrevAngleY = data_ov021_02114740[mLoweredPlatform];
+            mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
             mHorzSpeed = 0x5000;
             rayStart[0].x = 0; rayStart[0].y = -0xa000; rayStart[0].z = 0x10e000;
             {
@@ -469,7 +471,7 @@ void daObjCvNewsLift_c::UpdateModelTransforms()
         data_020a0e68 = *mainMat;
         Vec3_Asr(&scaled, &hang, 3);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, data_ov021_02114740[i]);
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, sNewsLiftPlatformYaws[i]);
         mPlatformModels[i].mat4x3 = data_020a0e68;
         offset++;
     }
@@ -513,7 +515,7 @@ void daObjCvNewsLift_c::UpdateClsnTransforms()
             hang.y -= 0x1e000;
         data_020a0e68 = mClsnMat;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, hang.x, hang.y, hang.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, data_ov021_02114740[i]);
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, sNewsLiftPlatformYaws[i]);
         /* this stepped one matrix at a time. An index or *platformMat misses. */
         cursor->mPlatformMats[0] = data_020a0e68;
         platformCollider->Transform(*platformMat, mAngleY);
@@ -523,3 +525,7 @@ void daObjCvNewsLift_c::UpdateClsnTransforms()
         platformCollider++;
     }
 }
+
+/* Typed registry descriptor; priorities, flags and clip ranges match retail. */
+extern "C" SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
+    daObjCvNewsLift_c_classInit, 0x44, 0x8b, 6, 0, 0x2a8000, 0x1900000, 0x1900000};

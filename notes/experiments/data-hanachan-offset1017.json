@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "task": "data-hanachan-offset-ci1017",
+  "producer": "codex-hanachan-offset1017",
+  "tested_input": "db0f846cbce64ed992692c31e24fe3b7c103f5e7",
+  "predecessor_task": "data-hanachan-native1017",
+  "scope": "One compiler-enforced Phase size assertion; unchanged field declarations/comments, source files, manifests, delinks and symbol configuration.",
+  "failure_run": "https://github.com/tangosdev/sm64ds-decomp/actions/runs/39084197764",
+  "findings": [
+    {
+      "disposition": "deferred",
+      "id": "ASSET-NAMING-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "Source naming scope and existing actor/interface reconstruction",
+      "owner": "Original asset coordinator and subsequently claimed C++ reconstruction producers",
+      "reason": "Accepted partial readability scope; no class completion, original identifier, full declaration agreement or193warning relocation claim. Exact complete-object and module proofs independently preserve behavior.",
+      "summary": "Remaining reserved/encoded asset candidates and existing class/ABI/raw-field reconstruction debts are outside this evidenced naming slice."
+    },
+    {
+      "disposition": "deferred",
+      "id": "hanachan-raw-layout-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4028",
+      "kind": "reconstruction",
+      "location": "src/minigames/d_s_mg_hanachan_methods.cpp; src/minigames/d_s_mg_hanachan.cpp; include/private/ov006_ec4dc_obj.h",
+      "owner": "codex-hanachan-native1017",
+      "reason": "Native callback fields, methods, comparisons and dispatch are reconstructed and exact; wider layout/lifecycle recovery remains explicitly partial. Inherited matching observations are not presented as new experiments.",
+      "summary": "Existing raw field/loop spellings, popup record views, private StartPathA scalar view and manual factory/lifecycle remain outside this native callback data slice."
+    },
+    {
+      "id": "hanachan-offset-ci-001",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "include/dScMgHanachan_c.h:112",
+      "summary": "Public header-offset checker could not parse the native Phase mPhase field without a qualified size assertion.",
+      "reason": "Add compiler-enforced sizeof(dScMgHanachan_c::Phase)==0x08 assertion. Existing checker now checks all8 outer offsets through data end0x4f65; compiler verifies padded sizeof0x4f68. Entire raw ELF output of both consumers is identical."
+    },
+    {
+      "id": "hanachan-offset-evidence-lf-001",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "notes/experiments/data-hanachan-offset1017.json",
+      "summary": "Committed JSON line endings failed whitespace checks; earlier working-tree diff check did not inspect the untracked added file.",
+      "reason": "Normalize JSON to UTF-8 LF, compare unchanged compiler/config/header blobs against1370 and run committed-range whitespace check before publication."
+    }
+  ],
+  "compiler": "2004/b56",
+  "raw_elf_identity": {
+    "method": "Freshly compile both consumers before and after final formatted header; compare entire ELF byte strings, no masks or excluded regions.",
+    "objects": [
+      {
+        "source": "src\\minigames\\d_s_mg_hanachan.cpp",
+        "bytes": 1272,
+        "sha256": "4109e5e6935a246a178b17c158fdb63eb3dca44b0447dfb8c69b2a899688a945"
+      },
+      {
+        "source": "src\\minigames\\d_s_mg_hanachan_methods.cpp",
+        "bytes": 43600,
+        "sha256": "11a2522fe3067c46200f74a4220d99ea2f300f5355074b3115880ff262958350"
+      }
+    ],
+    "identical": true
+  },
+  "header_offsets": {
+    "command": "python tools/check_header_offsets.py --changed b7acba2fb5aed0e887869ba72ff60f7909afc2f6",
+    "commented_fields": 8,
+    "mismatched": 0,
+    "unparsed": 0,
+    "data_extent": "0x4f65",
+    "padded_class_size": "0x4f68",
+    "fields": [
+      "mPhase",
+      "mDelay",
+      "mPhaseTimer",
+      "mTimeLeft",
+      "mTimeTick",
+      "mWiggler",
+      "mTarget",
+      "mHit"
+    ],
+    "nested_layout_scope": "Existing Wiggler sizeof assertion retained; this header-offset run checks the outer class and does not newly claim every nested field."
+  },
+  "strict_prepush": {
+    "command": "python tools/prepush_linkcheck.py --files src/minigames/d_s_mg_hanachan.cpp src/minigames/d_s_mg_hanachan_methods.cpp --json build/strict.json",
+    "verified": 64,
+    "warnings": 0,
+    "blocking": 0
+  },
+  "production": {
+    "command": "python tools/rombuild.py -j16 --no-rom",
+    "exit_code": 0,
+    "function_count": 11334,
+    "functions_exact": 11334,
+    "complete_initialized_data_claims": 340,
+    "complete_initialized_data_exact": 340,
+    "module_count": 106,
+    "modules_exact": 106,
+    "bss_claims": 245,
+    "bss_nobits_bytes": 31216,
+    "intact_tu_gates": "modules PASS, zero new symbol errors, storage aliases exact",
+    "rom": "Follow-up production ROM generation skipped explicitly by --no-rom. Fresh zero-source baseline control did build ROMd150; this is not presented as a follow-up source ROM build.",
+    "optional_raw_data_diagnostic": "Existing one differing _ZTV10dCcAcPos_c record in its two legacy destructor objects remains outside this follow-up.",
+    "prior_full_rom_provider_proof": "Accepted immutable db0f846cbce64ed992692c31e24fe3b7c103f5e7 carries independently verified fullROMd150 and37Hanachan providers; exact complete ELF identity above connects this assertion to that unchanged output."
+  },
+  "static_checks": {
+    "source_style_findings": 0,
+    "formatting_deferrals": 0,
+    "new_declaration_disagreements": 0,
+    "new_local_header_redeclarations": 0,
+    "port_references": 247,
+    "port_stale": 0,
+    "diff_check": "Committed-range git diff --check b7acba2fb5aed0e887869ba72ff60f7909afc2f6..HEAD must pass after this doc-only commit; final result is recorded in producer queue evidence."
+  },
+  "private_artifact_hashes": {
+    "build/strict.json": "1b1a774a5b5f8ce9cd67f99316da69706461db9de8252437ff8aca60844149ba",
+    "build/rombuild-report.json": "9effdcaef1709c6e9a71f7e87756f51ce42b92b44e2071c2a1bc80b3711adb90",
+    "build/header-offset-after.log": "68909cfd8d4642383eb8f2f13d2caa6f071ff0a39a1cefbd59fee671a9f0563e",
+    "build/style.json": "ff2b6767e0e13011693d70ee52afec87f8fbf80abde08cb83c21d5d7810c1a75",
+    "build/decl-agreement.log": "3e204dfdfa0b624a5f29e206765c5eaeae2d2af1ae2361b627c8aaa85a1686f8"
+  },
+  "final_header_sha256": "9f56d270ec0679e346af944a6ddc4664c466dbf49ac72ef1be54f54df434a97a",
+  "independent_review": "Required against immutable follow-up candidate; producer does not self-accept.",
+  "completion": "CI defect fixed; inherited reconstruction remains partial.",
+  "documentation_followup": {
+    "proof_commit": "1370cdcbfaca19b079a871f969599bd4a8bce2c3",
+    "reason": "The newly added JSON was written with CRLF, which failed committed-diff whitespace checks. Prior working-tree diff check omitted this untracked file, so it was insufficient evidence. Normalize only this documentation to UTF-8 LF and verify the committed diff.",
+    "functional_identity": "Every src/, include/ and config/ Git blob is identical to1370; only this evidence file changes. Root independently verified1370 with64strict entries,8offset fields,106modules,37providers and fullROMd150. No fresh compiler or full-ROM run is claimed for this doc-only follow-up."
+  }
+}

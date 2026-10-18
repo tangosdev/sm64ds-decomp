@@ -11,13 +11,19 @@
     "the former hole is closed: func_ov074_02121380 (0x02121380, size 0x374) was a banked near-miss at 11 divergent words under the free-function spelling; as member-form code walking mCylClsnPos[i] / mdCc_cs[i+1] it is byte-exact, so the contiguous run could be claimed end to end.",
     "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok (module-wide).",
     "static-initializer fold: the compiler-generated __sinit_d_a_kuri_king.cpp is byte-identical to retail __sinit_ov074_02122978 (0x3f8, match.py strict-relocs MATCH). It constructs the fourteen resource handles (model file 917, texture-sequence file 912, twelve animation files) with destructor registrations, then copies the eighteen 8-byte descriptors (fifteen member PMFs the compiler materializes as temporaries, three free-stub unions) into the nine-entry BSS state table at 0x021230f8 in slot order. The ctor word at 0x02122d70 points at that initializer. The handwritten src/unnamed/ov074/__sinit_ov074_02122978.c is retired.",
-    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x02122764..0x0212290c (daKuriKing_c_classInit_KURIKING_VANISH 0xd4, daKuriKing_c_classInit_KURIKING 0xd4) abuts this TU's old .text end (0x02122764) with no gap and is now inside it; it runs to the end of ov074 .text (0x0212290c). Membership: both factories call fBase_c::operator new(0x610) = sizeof(daKuriKing_c), run dEnemyBase_c's base constructor, store the vptr _ZTV12daKuriKing_c (ov074:0x02122eb8, the vtable this TU emits) and construct exactly the members this class declares (dCcAcPos_c[4] @0x110, ModelAnim @0x210, dExtShadowModel_c[3] @0x274, Vector3[3] @0x3ac, MaterialChanger, TextureSequence, TextureTransformer, dBgCh_Actr @0x40c); KURIKING_VANISH and KURIKING are the two registry profiles of the one class. Both factories now use native `return new daKuriKing_c;` construction. The compiler-generated Vector3 array callback is byte-identical to the original arm9:0x0203d384 callback; its dedicated four-byte relocation-free body is externalized under the canonical duplicate policy. All three mCylClsnPos elements retain stride 12 and the Vector3 destructor callback. Appended last in the file, KURIKING_VANISH first (this TU emits .text in source order under #pragma defer_codegen off)."
+    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x02122764..0x0212290c (daKuriKing_c_classInit_KURIKING_VANISH 0xd4, daKuriKing_c_classInit_KURIKING 0xd4) abuts this TU's old .text end (0x02122764) with no gap and is now inside it; it runs to the end of ov074 .text (0x0212290c). Membership: both factories call fBase_c::operator new(0x610) = sizeof(daKuriKing_c), run dEnemyBase_c's base constructor, store the vptr _ZTV12daKuriKing_c (ov074:0x02122eb8, the vtable this TU emits) and construct exactly the members this class declares (dCcAcPos_c[4] @0x110, ModelAnim @0x210, dExtShadowModel_c[3] @0x274, Vector3[3] @0x3ac, MaterialChanger, TextureSequence, TextureTransformer, dBgCh_Actr @0x40c); KURIKING_VANISH and KURIKING are the two registry profiles of the one class. Both factories now use native `return new daKuriKing_c;` construction. The compiler-generated Vector3 array callback is byte-identical to the original arm9:0x0203d384 callback; its dedicated four-byte relocation-free body is externalized under the canonical duplicate policy. All three mCylClsnPos elements retain stride 12 and the Vector3 destructor callback. Appended last in the file, KURIKING_VANISH first (this TU emits .text in source order under #pragma defer_codegen off).",
+    "Animation-handle pointer lists are now compiled from this existing reconstructed TU and enrolled as the complete listed .rodata range. Consumer loops and exact relocated retail bytes establish their roles and full extents; this assignment does not prove the historical source filename or original TU boundary."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0211f000",
       "end": "0x0212290c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212292c",
+      "end": "0x02122978"
     },
     {
       "name": ".init",
@@ -794,149 +800,149 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@677",
-      "to": "@661",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
-    },
-    {
       "from": "@678",
-      "to": "@662",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@661",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@679",
-      "to": "@663",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@662",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@680",
-      "to": "@664",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@663",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@681",
-      "to": "@665",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@664",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@682",
-      "to": "@666",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@665",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@683",
-      "to": "@667",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@666",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@684",
-      "to": "@668",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@667",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@685",
-      "to": "@669",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@668",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@686",
-      "to": "@670",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
-    },
-    {
-      "from": "@689",
-      "to": "@673",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
-    },
-    {
-      "from": "@690",
-      "to": "@674",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
-    },
-    {
-      "from": "@691",
-      "to": "@79",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@669",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@687",
-      "to": "@988",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@670",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+    },
+    {
+      "from": "@690",
+      "to": "@673",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+    },
+    {
+      "from": "@691",
+      "to": "@674",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+    },
+    {
+      "from": "@692",
+      "to": "@79",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@688",
-      "to": "@989",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@988",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
-      "from": "@2115",
-      "to": "@2061",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "from": "@689",
+      "to": "@989",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2116",
-      "to": "@2062",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2061",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2117",
-      "to": "@2063",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2062",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2118",
-      "to": "@2064",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2063",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2119",
-      "to": "@2065",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2064",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2120",
-      "to": "@2066",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2065",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2121",
-      "to": "@2067",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2066",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2122",
-      "to": "@2068",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2067",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2123",
-      "to": "@2069",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2068",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2124",
-      "to": "@2070",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2069",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2125",
-      "to": "@2071",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2070",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2126",
-      "to": "@2072",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2071",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2127",
-      "to": "@2073",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "to": "@2072",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
       "from": "@2128",
+      "to": "@2073",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+    },
+    {
+      "from": "@2129",
       "to": "@2074",
-      "evidence": "Header method declarations renumbered this compiler temporary; preserve the prior raw-object ordering and canonical identity. Production-owned data and initializer relocation targets reverified."
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     }
   ],
   "symbol_binding_rewrites": [
@@ -2097,6 +2103,196 @@
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fb84"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212292c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130ce8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130ce8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122930",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130ce0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130ce0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122934",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cd0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cd0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122938",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cc0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cc0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212293c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKuriboRecoverAnimationFile",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cd8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122940",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cc8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cc8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122944",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cf0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cf0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122948",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingAngerAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123038"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212294c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDamageBAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123008"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122950",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDamageFAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123018"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122954",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDownStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122ff0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122958",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDownAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123048"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212295c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingSerchWaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122ff8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122960",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingTurnAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123028"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122964",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov074_02123030",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123030"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122968",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123020"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212296c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122fe0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122970",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122fe8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122974",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingSpawnAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123010"
     }
   ],
   "undefined_symbol_aliases": [
@@ -2154,7 +2350,7 @@
     "Promoted by hand from the `tools/tubuild.py promote --dry-run` plan (promote is dry-run only). 36 of the class's 55 shards are folded in; the source's own header comment carries the reconciliation notes.",
     "THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED, AND NOT FOR THE USUAL REASON. The cartridge orders them D1 (0x0211f000) then D0 (0x0211f0a0), which is the REPRODUCIBLE direction -- measured here on mwccarm 2004/b56, an inline in-class `virtual ~daKuriKing_c() {}` emits the pair with no D2, while an out-of-line definition emits D2 (0xa0), D0 (0xb4), D1 (0xa0) in that section order. The blocker is the KEY FUNCTION. With the destructor inline the key function becomes the first out-of-line virtual the class declares, Behavior at 0x02121bf0, which is on the far side of the near-miss hole. A TU that does not own the key function emits no vtable, and with no vtable nothing odr-uses the destructor, so neither variant is emitted at all (measured: a probe TU over the inline-destructor header emits zero symbols beyond its own function). A forcing scaffold does emit the pair, and in ROM order when `delete p;` precedes `p->~daKuriKing_c();` -- the variants come out in reverse order of first odr-use, measured here and recorded in no role file -- but mwccarm emits the scaffold itself into .text immediately BELOW D1, and D1 sits at 0x0211f000, the first byte of ov074's .text. There is no address below it. src/_ZN12daKuriKing_cD1Ev.cpp and src/_ZN12daKuriKing_cD0Ev.cpp therefore keep their own delinks entries and this object emits no copy of either.",
     "THE ONE THING BETWEEN 36 AND 55 IS func_ov074_02121380. Match it and the hole closes, a single TU owns Behavior and therefore the key function, the vtable and both destructors come with it, and the whole 0x0211f000..0x0212290c run promotes. notes/mwccarm-codegen.md 6bq records the levers already tried and calls it one lever short.",
-    "The manifest is text-only. _ZTV12daKuriKing_c (ov074:0x02122eb8, 31 slots, 0x7c symbol extent / 0x84 storage) and the whole dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c vague-linkage chain are NOT emitted by this object at all, because the licensed range excludes the key function; there is nothing to deadstrip but Vector3's inline destructor. `externalized_output` is absent -- no symbol needed the canonical-import route.",
+    "HISTORICAL PRE-LIFECYCLE-FOLD NOTE: The manifest is text-only. _ZTV12daKuriKing_c (ov074:0x02122eb8, 31 slots, 0x7c symbol extent / 0x84 storage) and the whole dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c vague-linkage chain are NOT emitted by this object at all, because the licensed range excludes the key function; there is nothing to deadstrip but Vector3's inline destructor. `externalized_output` is absent -- no symbol needed the canonical-import route.",
     "The row count was MEASURED, not inherited: ov074 had no sibling oracle. A probe TU that owns the key function emits exactly 11 data symbols -- _ZTV12daKuriKing_c plus _ZTI/_ZTS for daKuriKing_c, dEnemyBase_c, dActor_c, dBase_c and fBase_c -- which is 2 x 5 levels + 1 vtable, the formula's prediction, exact. This entry needs 1 row rather than 11 only because its licensed range excludes the key function.",
     "NOTE FOR THE NEXT ov074 WRITER, REVISED BY THE RENAME. This entry used to warn that a TU owning the key function would emit _ZTI8Goomboss and _ZTS8Goomboss under the coined name, and that romdata_check.check_object would report both UNNAMED because the cartridge homes those addresses as _ZTI12daKuriKing_c / _ZTS12daKuriKing_c -- which is why those two rows were plain `deadstrip` (homeless) rather than `deadstrip-data`. That trap is GONE. The class now carries its cartridge name, so a key-function TU emits _ZTV12daKuriKing_c, _ZTI12daKuriKing_c and _ZTS12daKuriKing_c, and all three are homed by ov074's symbols.txt. All eleven rows are therefore deadstrip-data with canonical addresses: _ZTV12daKuriKing_c ov074:0x02122eb8, _ZTI12daKuriKing_c ov074:0x02122e30, _ZTS12daKuriKing_c ov074:0x02122e3c, _ZTI12dEnemyBase_c ov002:0x021081c0, _ZTS12dEnemyBase_c ov002:0x021081cc, _ZTI8dActor_c arm9:0x0208e390, _ZTS8dActor_c arm9:0x0208e384, _ZTI7dBase_c arm9:0x02086e78, _ZTS7dBase_c arm9:0x02086e54, _ZTI7fBase_c arm9:0x02086d70, _ZTS7fBase_c arm9:0x02086e60.",
     "src/_ZN12daKuriKing_c13InitResourcesEv.cpp's delinks entry lacks the `complete` marker, which is the draft signal, but build_pin.verify reproduces it byte-for-byte at 2004/b56. The marker looks stale; it is outside this claim either way and was left alone.",
@@ -2227,7 +2423,7 @@
     "Static-initializer fold: src/unnamed/ov074/__sinit_ov074_02122978.c is retired; its fourteen handles, fourteen registration nodes, eighteen descriptors, two parameter arrays and the state table are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. tubuild verify: 53/53 MATCH, objisolate clean, reloc-destinations clean. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_kuri_king.cpp. The TU's own _ZTI/_ZTS/_ZTV stay externalized; this claim stops at 0x02122e24, where _ZTI12daKuriKing_c begins, and the BSS claim stops at the section end 0x021231a0: the table itself ends at 0x02123188 and carries 0x18 of alignment fill because dsd sizes the trailing symbol to the section end and the intact tooling requires the licensed rows to tile the claim."
   ],
   "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "round": "Current standalone text-function audit; native initializer classification refusal is separate from complete six-section scratch proof.",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov074-daKuriKing_c/daKuriKing_c.o (gitignored)",
@@ -2295,7 +2491,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 29 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -2323,6 +2519,13 @@
           "section": ".text",
           "start": "0x0211f000",
           "end": "0x0212290c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0212292c",
+          "end": "0x02122978",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -2356,7 +2559,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 106
+          "LICENSED": 108
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -2365,21 +2568,32 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              199
+              181,
+              183
             ],
             "desired": [
-              199
+              181,
+              183
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              204
+            ],
+            "desired": [
+              204
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              197
+              202
             ],
             "desired": [
-              197
+              202
             ]
           },
           {
@@ -2756,42 +2970,42 @@
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e390",
-      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before text-only isolation discards it."
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before the supported compiler-only isolation policy discards it."
     },
     {
       "symbol": "_ZTS8dActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384",
-      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before the supported compiler-only isolation policy discards it."
     },
     {
       "symbol": "_ZTI7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e78",
-      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before text-only isolation discards it."
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before the supported compiler-only isolation policy discards it."
     },
     {
       "symbol": "_ZTS7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e54",
-      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before the supported compiler-only isolation policy discards it."
     },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086d70",
-      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before text-only isolation discards it."
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before the supported compiler-only isolation policy discards it."
     },
     {
       "symbol": "_ZTS7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
-      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before the supported compiler-only isolation policy discards it."
     },
     {
       "symbol": "_ZN7Vector3C1Ev",
@@ -2802,5 +3016,21 @@
       "reason": "Native Vector3 arrays preserve the retail constructor callback func_0203d384, element size 12 and counts 3; destructor remains _ZN7Vector3D1Ev."
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "rodata": [
+    {
+      "symbol": "sKurikingMinionAnimationFiles",
+      "address": "0x0212292c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native const-pointer list of mutable SharedFilePtr resources. Every entry is a compiler relocation to the actual handle object; all list bytes and destinations match retail. Reconstructed semantic name, not an original-identifier claim."
+    },
+    {
+      "symbol": "sKurikingAnimationFiles",
+      "address": "0x02122948",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native const-pointer list of mutable SharedFilePtr resources. Every entry is a compiler relocation to the actual handle object; all list bytes and destinations match retail. Reconstructed semantic name, not an original-identifier claim."
+    }
+  ]
 }

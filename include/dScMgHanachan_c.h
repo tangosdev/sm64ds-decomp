@@ -29,10 +29,10 @@ struct dScMgHanachan_c : dScMgBase_c {
     virtual s32 Render();             /* slot 9 */
     virtual void StartRound(int arg); /* slot 18 */
 
-    /* Scene phase, an Itanium member pointer: Behavior calls it, Render
-       compares the pair with the phase tables. */
-    u32 mPhaseFn;    /* 0x4660 */
-    u32 mPhaseAdj;   /* 0x4664 */
+    /* Behavior dispatches the scene phase; Render compares it with its
+       phase methods. The target ABI stores this member pointer in 8 bytes. */
+    typedef void (dScMgHanachan_c::*Phase)();
+    Phase mPhase;    /* 0x4660 */
     s32 mDelay;      /* 0x4668 frames before the prompt */
     s32 mPhaseTimer; /* 0x466c per-phase countdown: 0x4b0 at play start
                             (020ed81c), 0xb4 in 020ed300; Render and
@@ -40,18 +40,15 @@ struct dScMgHanachan_c : dScMgBase_c {
     s32 mTimeLeft;   /* 0x4670 seconds left */
     s32 mTimeTick;   /* 0x4674 counts down one second */
     /* Descriptive record names; the ROM supplies the field layout, not names.
-       These are plain storage types: lifecycle calls remain explicit. */
+       Lifecycle calls remain explicit; Wiggler callback methods are native. */
     struct Point {
         s32 x, y;
     };
-    struct CallbackWords {
-        s32 functionOrOffset;
-        s32 adjustmentAndVirtualFlag; /* this adjustment << 1, virtual flag in bit 0 */
-    };
     struct Wiggler {
-        CallbackWords state; /* 0x00 tick callback */
-        CallbackWords saved; /* 0x08 */
-        CallbackWords sub;   /* 0x10 callback the pop states run */
+        typedef void (Wiggler::*State)();
+        State state;         /* 0x00 tick callback */
+        State saved;         /* 0x08 */
+        State sub;           /* 0x10 callback the pop states run */
         Point seg[5];        /* 0x18 segment positions */
         int speed;           /* 0x40 */
         int speedTarget;     /* 0x44 */
@@ -77,16 +74,28 @@ struct dScMgHanachan_c : dScMgBase_c {
         u8 bloom;            /* 0x94 draw the flower */
         u8 face;             /* 0x95 head sprite */
         u8 pad96[2];
+
+        void Update();
+        void StateHold();
+        void StateMoveA();
+        void StateWait();
+        void StateMoveB();
+        void MoveBounce();
+        void CheckOffLeftA();
+        void CheckOffLeftB();
+        void TurnTowardAim();
     };
     Wiggler mWiggler[15]; /* 0x4678, five segment points per wiggler */
     Wiggler *mTarget;     /* 0x4f60 the starred wiggler */
     u8 mHit;              /* 0x4f64 the star was touched */
 
-    /* Phase and tap handlers of the scene. The address is the method name; no
-       ROM spelling survives. Four are the PMF targets of the phase records
+    /* Phase and tap handlers of the scene. These descriptive method names
+       are reconstructions; no ROM spelling survives. Four are the PMF targets of the phase records
        (Phase_WaitTouch, Phase_Result, Phase_Play,
        Phase_WaitIntro); the rest are called on `this` from them and from
        StartRound. */
+    void Phase_NoneA();
+    void Phase_NoneB();
     void Phase_WaitTouch();
     void BeginResultWait();
     void SetPhaseIdle();
@@ -100,6 +109,8 @@ struct dScMgHanachan_c : dScMgBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char
+    dScMgHanachan_c_Phase_size_must_be_0x08[sizeof(dScMgHanachan_c::Phase) == 0x08 ? 1 : -1];
 typedef char dScMgHanachan_c_point_size_must_be_8[sizeof(dScMgHanachan_c::Point) == 8 ? 1 : -1];
 typedef char
     dScMgHanachan_c_wiggler_size_must_be_0x98[sizeof(dScMgHanachan_c::Wiggler) == 0x98 ? 1 : -1];

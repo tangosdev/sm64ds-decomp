@@ -9,7 +9,7 @@ void Sprite_SetAnimation(void *c, int a, int b, int d, int e);
 void func_ov007_020bfd70(void *a0, void *a1, int *o1, int *o2);
 int func_020538b8(int x, int y);
 int _ZN4cstd3divEii(int a, int b);
-int func_ov007_020b7690(int i);
+void *func_ov007_020b7690(int i);
 void func_ov007_020be684(void *a0, void *ctx);
 void func_ov007_020c3fe4(void *p);
 
@@ -20,7 +20,7 @@ int func_ov007_020be0dc(void)
 {
     int endflag = 0;
     char *actor;
-    int r6 = 0;
+    void *system = 0;
     char *ev;
     int val;
     int sp4, sp8;
@@ -100,13 +100,13 @@ int func_ov007_020be0dc(void)
 
     data_ov007_02103230 = val;
     if (val != -1)
-        r6 = func_ov007_020b7690(val);
+        system = func_ov007_020b7690(val);
 
-    if (r6 != 0) {
+    if (system != 0) {
         char *q = *(char **)(G1 + 4);
         if (*(int *)(q + 8) == 0)
             *(int *)(q + 8) = 1;
-        func_ov007_020be684((void *)r6, (void *)G1);
+        func_ov007_020be684(system, (void *)G1);
     } else {
         char *q = *(char **)(G1 + 4);
         if (*(int *)(q + 8) != 0)

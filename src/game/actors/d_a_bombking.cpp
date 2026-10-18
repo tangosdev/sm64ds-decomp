@@ -27,7 +27,7 @@
  * called with no receiver: r0 is whatever the previous call left.
  * func_ov078_021240a0 stays a free function. It is method-shaped, but the
  * member spelling reschedules the clamp under opt_propagation off.
- * Borrowed file views are initialized by the separate __sinit_ov078_02126660.
+ * Resource handles are initialized by the separate __sinit_ov078_02126660.
  * State records stay data_ov078_021270*.
  */
 
@@ -74,11 +74,12 @@ struct BCA_File;
 typedef daBombking_c::StateFunction PMF;
 extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
 
-/* Borrowed views of external shared-file handles, not storage owned by this TU.
+/* Resource handles owned by this TU and initialized by the separate initializer.
  * Construct/Load/Release use a u16 fileID at +0, a u8 reference count at +2,
  * and a loaded pointer at +4. Byte +3 is padding, not a recovered field.
  * __sinit_ov078_02126660 constructs the model (id 0x2c7) and twelve animations
  * (ids 0x2bb..0x2c6), with their respective destructor registrations.
+ * Names follow the runtime asset paths; they are reconstructed identifiers.
  * The shared header intentionally retains an opaque layout. */
 struct BombkingAnimFile {
     u16 fileID;
@@ -93,33 +94,36 @@ struct BombkingModelFile {
     BMD_File *file;
 };
 
+typedef char BombkingAnimFileSize[(sizeof(BombkingAnimFile) == 8) ? 1 : -1];
+typedef char BombkingModelFileSize[(sizeof(BombkingModelFile) == 8) ? 1 : -1];
+
 extern "C" {
-    extern BombkingAnimFile data_ov078_02126ee0;
-    extern BombkingAnimFile data_ov078_02126ee8;
-    extern BombkingAnimFile data_ov078_02126ef0;
-    extern BombkingAnimFile data_ov078_02126ef8;
-    extern BombkingAnimFile data_ov078_02126f00;
-    extern BombkingAnimFile data_ov078_02126f08;
-    extern BombkingAnimFile data_ov078_02126f10;
-    extern BombkingAnimFile data_ov078_02126f18;
-    extern BombkingAnimFile data_ov078_02126f20;
-    extern BombkingAnimFile data_ov078_02126f28;
-    extern BombkingAnimFile data_ov078_02126f30;
-    extern BombkingModelFile data_ov078_02126f38;
-    extern BombkingAnimFile data_ov078_02126f40;
-    /* Canonical single declaration per ROM data symbol -- the generated
+BombkingAnimFile gBombkingStruggleAnimationFile;
+BombkingAnimFile gBombkingWalk1AnimationFile;
+BombkingAnimFile gBombkingThrowAnimationFile;
+BombkingAnimFile gBombkingStartAnimationFile;
+BombkingAnimFile gBombkingGetupAnimationFile;
+BombkingAnimFile gBombkingJumpedAnimationFile;
+BombkingAnimFile gBombkingJumpAnimationFile;
+BombkingAnimFile gBombkingLiftAnimationFile;
+BombkingAnimFile gBombkingDamageAnimationFile;
+BombkingAnimFile gBombkingWalk2AnimationFile;
+BombkingAnimFile gBombkingWait2AnimationFile;
+BombkingModelFile gBombkingModelFile;
+BombkingAnimFile gBombkingWait1AnimationFile;
+/* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
-    extern unsigned char data_0209f220[];
-    extern void *data_0209f318;
-    extern struct M12 data_020a0e68;
-    extern int data_ov078_0212703c[];
-    extern int data_ov078_0212705c[];
-    extern int data_ov078_0212707c[];
-    extern int data_ov078_0212709c[];
-    extern int data_ov078_021270cc[];
-    extern int data_ov078_021270dc[];
-    extern int data_ov078_021270fc[];
-    extern int data_ov078_0212710c[];
+extern unsigned char data_0209f220[];
+extern void *data_0209f318;
+extern struct M12 data_020a0e68;
+extern int data_ov078_0212703c[];
+extern int data_ov078_0212705c[];
+extern int data_ov078_0212707c[];
+extern int data_ov078_0212709c[];
+extern int data_ov078_021270cc[];
+extern int data_ov078_021270dc[];
+extern int data_ov078_021270fc[];
+extern int data_ov078_0212710c[];
 extern int data_ov078_02126ffc[];
 extern int data_02092138;
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
@@ -259,7 +263,8 @@ int daBombking_c::func_ov078_02123a3c()
     this->mHorzSpeed = 0;
     this->mStateTimer = 0x32;
     func_ov078_02123864();
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f20.file, 0, 0, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingDamageAnimationFile.file, 0, 0, 0x1000, 0);
     return 1;
 }
 
@@ -304,7 +309,8 @@ int daBombking_c::func_ov078_02123bc4()
   this->mVertAccel = -0x2000;
   this->mAnimSpeed = 2;
   this->mHorzSpeed = 0xa000;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ee8.file, 4, 0, 0x1000, 0);
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+      &this->mBlendModelAnim, gBombkingWalk1AnimationFile.file, 4, 0, 0x1000, 0);
   return 1;
 }
 
@@ -346,9 +352,10 @@ struct BCA_File;
 
 int daBombking_c::func_ov078_02123cf0()
 {
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ef0.file, 0, 0x40000000, 0x1000, 0);
-  this->mHorzSpeed = 0;
-  return 1;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingThrowAnimationFile.file, 0, 0x40000000, 0x1000, 0);
+    this->mHorzSpeed = 0;
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -407,7 +414,8 @@ int daBombking_c::func_ov078_02123d3c()
 int daBombking_c::func_ov078_02123eb8()
 {
     mVertAccel = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, data_ov078_02126f28.file, 0, 0, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &mBlendModelAnim, gBombkingWalk2AnimationFile.file, 0, 0, 0x1000, 0);
     mStateTimer = 0x32;
     mHorzSpeed = 0xa000;
     return 1;
@@ -442,7 +450,8 @@ L6c:
 int daBombking_c::func_ov078_02123fb4()
 {
   this->mVertAccel = -0x2000;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f18.file, 0, 0x40000000, 0x1000, 0);
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+      &this->mBlendModelAnim, gBombkingLiftAnimationFile.file, 0, 0x40000000, 0x1000, 0);
   return 1;
 }
 
@@ -467,8 +476,9 @@ int daBombking_c::func_ov078_02124000()
 
 int daBombking_c::func_ov078_02124060()
 {
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f00.file, 0, 0x40000000, 0x1000, 0);
-  return 1;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingGetupAnimationFile.file, 0, 0x40000000, 0x1000, 0);
+    return 1;
 }
 
 
@@ -576,16 +586,18 @@ int func_ov078_021240a0(char* c)
 
 int daBombking_c::func_ov078_021243c0()
 {
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f20.file, 0, 0, 0x1000, 0);
-  this->mStateTimer = 0xc8;
-  this->mTargetAngY = Vec3_HorzAngle(&this->mPosX, &this->mArenaPosX);
-  this->mHealth -= 1;
-  this->mActionStep = 0;
-  this->mVertSpeed = 0x28000;
-  this->mHorzSpeed = 0x5000;
-  if (this->mHealth <= 0) this->mFlags = 0x10000000;
-  this->mVertAccel = -0x2000;
-  return 1;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingDamageAnimationFile.file, 0, 0, 0x1000, 0);
+    this->mStateTimer = 0xc8;
+    this->mTargetAngY = Vec3_HorzAngle(&this->mPosX, &this->mArenaPosX);
+    this->mHealth -= 1;
+    this->mActionStep = 0;
+    this->mVertSpeed = 0x28000;
+    this->mHorzSpeed = 0x5000;
+    if (this->mHealth <= 0)
+        this->mFlags = 0x10000000;
+    this->mVertAccel = -0x2000;
+    return 1;
 }
 
 
@@ -608,7 +620,8 @@ int daBombking_c::func_ov078_02124470()
 
 int daBombking_c::func_ov078_021244d0()
 {
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f20.file, 0, 0, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingDamageAnimationFile.file, 0, 0, 0x1000, 0);
     this->mStateTimer = 0x32;
     return 1;
 }
@@ -698,8 +711,9 @@ int daBombking_c::func_ov078_02124520()
 
 int daBombking_c::func_ov078_02124778()
 {
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ef8.file, 8, 0x40000000, 0x1000, 0);
-  return 1;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingStartAnimationFile.file, 8, 0x40000000, 0x1000, 0);
+    return 1;
 }
 
 
@@ -771,7 +785,9 @@ int daBombking_c::func_ov078_021247bc()
         }
 
         if (this->mActionStep == 1) {
-            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f08.file, 0, 0x40000000, 0x1000, 0);
+            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim,
+                                                               gBombkingJumpedAnimationFile.file, 0,
+                                                               0x40000000, 0x1000, 0);
             this->mVertAccel = -0x2000;
             this->mFlags = 0x10000002;
             func_02012694(0x12c, &this->mCamSpacePosX);
@@ -811,7 +827,8 @@ int daBombking_c::func_ov078_021247bc()
 
 int daBombking_c::func_ov078_02124b40()
 {
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f10.file, 0, 0x40000000, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingJumpAnimationFile.file, 0, 0x40000000, 0x1000, 0);
     func_02012694(0x129, &this->mCamSpacePosX);
     this->mWithMeshClsn.ClearGroundFlag();
     this->mPrevAngleX = 0;
@@ -918,7 +935,8 @@ done:
 
 int daBombking_c::func_ov078_02124e9c()
 {
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f20.file, 0, 0, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingDamageAnimationFile.file, 0, 0, 0x1000, 0);
     if (this->mHealth <= 0)
         this->mFlags = 0x10000000;
     this->mWithMeshClsn.ClearGroundFlag();
@@ -941,7 +959,8 @@ int daBombking_c::func_ov078_02124f28()
     if (this->mActionStep == 0) {
         int b = (this->mFlags & 0x4000) != 0;
         if (b != 0) {
-            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ee0.file, 0, 0, 0x1000, 0);
+            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+                &this->mBlendModelAnim, gBombkingStruggleAnimationFile.file, 0, 0, 0x1000, 0);
             this->mActionStep = 1;
         }
     }
@@ -1104,7 +1123,8 @@ int daBombking_c::func_ov078_02125350()
 
     this->mAnimSpeed = 1;
     this->mVertAccel = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ef0.file, 0, 0x40000000, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingThrowAnimationFile.file, 0, 0x40000000, 0x1000, 0);
 
     this->mHorzSpeed = 0;
 
@@ -1239,7 +1259,8 @@ int daBombking_c::func_ov078_02125734()
     this->mAnimSpeed = 1;
     this->mHorzSpeed = 0x5000;
     this->mVertAccel = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ee8.file, 8, 0, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingWalk1AnimationFile.file, 8, 0, 0x1000, 0);
     return 1;
 }
 
@@ -1286,7 +1307,8 @@ int daBombking_c::func_ov078_02125790()
 int daBombking_c::func_ov078_021258e4()
 {
     this->mVertAccel = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ef8.file, 8, 0x40000000, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingStartAnimationFile.file, 8, 0x40000000, 0x1000, 0);
     if (this->mMusicLayer3 == 0) {
         this->mMusicLayer3 = 1;
         this->mFlags = 0x10000002;
@@ -1403,7 +1425,8 @@ int daBombking_c::func_ov078_02125bc8() {
     this->mAnimSpeed = 1;
     this->mVertAccel = -0x2000;
     this->mMusicLayer3Timer = 0;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f30.file, 8, 0, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        &this->mBlendModelAnim, gBombkingWait2AnimationFile.file, 8, 0, 0x1000, 0);
     return 1;
 }
 
@@ -1517,19 +1540,19 @@ void daBombking_c::func_ov078_02125f8c(){
 // @symbol _ZN12daBombking_c16CleanupResourcesEv
 int daBombking_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov078_02126f38)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f00)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f20)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f10)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f08)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f18)->Release();
-    ((SharedFilePtr *)&data_ov078_02126ee0)->Release();
-    ((SharedFilePtr *)&data_ov078_02126ef0)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f40)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f30)->Release();
-    ((SharedFilePtr *)&data_ov078_02126ee8)->Release();
-    ((SharedFilePtr *)&data_ov078_02126f28)->Release();
-    ((SharedFilePtr *)&data_ov078_02126ef8)->Release();
+    ((SharedFilePtr *)&gBombkingModelFile)->Release();
+    ((SharedFilePtr *)&gBombkingGetupAnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingDamageAnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingJumpAnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingJumpedAnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingLiftAnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingStruggleAnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingThrowAnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingWait1AnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingWait2AnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingWalk1AnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingWalk2AnimationFile)->Release();
+    ((SharedFilePtr *)&gBombkingStartAnimationFile)->Release();
     return 1;
 }
 
@@ -1654,21 +1677,21 @@ int daBombking_c::InitResources()
     Vector3 v0;
     Vector3 v1;
     int i;
-    f = (BMD_File *)Model::LoadFile(*(SharedFilePtr *)&data_ov078_02126f38);
+    f = (BMD_File *)Model::LoadFile(*(SharedFilePtr *)&gBombkingModelFile);
     mBlendModelAnim.SetFile(f, 1, 1);
     mShadowModel.InitCylinder();
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f00);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f20);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f10);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f08);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f18);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126ee0);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126ef0);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f40);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f30);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126ee8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126f28);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov078_02126ef8);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingGetupAnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingDamageAnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingJumpAnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingJumpedAnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingLiftAnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingStruggleAnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingThrowAnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingWait1AnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingWait2AnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingWalk1AnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingWalk2AnimationFile);
+    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gBombkingStartAnimationFile);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     v0.x = data_ov078_02126e00.x;

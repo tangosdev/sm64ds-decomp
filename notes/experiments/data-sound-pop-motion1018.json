@@ -1,0 +1,3774 @@
+{
+  "base": "85b3e5c239f435ce63731c85c9c1b6cc7dac88f1",
+  "scope": {
+    "module": "ov006",
+    "section": ".rodata",
+    "start": "0x0212ee40",
+    "end": "0x0212ef3c",
+    "size": 252,
+    "objects": 21,
+    "padding": 0,
+    "relocations": 0
+  },
+  "objects": [
+    {
+      "symbol": "sSoundPop04VX",
+      "address": "0x212ee40",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        3072,
+        -3072
+      ],
+      "consumer_lines": [
+        1202
+      ]
+    },
+    {
+      "symbol": "sSoundPop10VX",
+      "address": "0x212ee4c",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        3584,
+        -3584
+      ],
+      "consumer_lines": [
+        1462
+      ]
+    },
+    {
+      "symbol": "sSoundPop10XOffsets",
+      "address": "0x212ee58",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1460
+      ]
+    },
+    {
+      "symbol": "sSoundPop09XOffsets",
+      "address": "0x212ee64",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1415
+      ]
+    },
+    {
+      "symbol": "sSoundPop06VX",
+      "address": "0x212ee70",
+      "size": 12,
+      "type": "u32",
+      "count": 3,
+      "values": [
+        0,
+        4096,
+        4294963200
+      ],
+      "consumer_lines": [
+        1275
+      ]
+    },
+    {
+      "symbol": "sSoundPop05XOffsets",
+      "address": "0x212ee7c",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        65536,
+        -65536
+      ],
+      "consumer_lines": [
+        1239
+      ]
+    },
+    {
+      "symbol": "sSoundPop11VX",
+      "address": "0x212ee88",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        3072,
+        -3072
+      ],
+      "consumer_lines": [
+        1505
+      ]
+    },
+    {
+      "symbol": "sSoundPop07XOffsets",
+      "address": "0x212ee94",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        65536,
+        -65536
+      ],
+      "consumer_lines": [
+        1343
+      ]
+    },
+    {
+      "symbol": "sSoundPop00VX",
+      "address": "0x212eea0",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        4096,
+        8192,
+        -8192
+      ],
+      "consumer_lines": [
+        1033
+      ]
+    },
+    {
+      "symbol": "sSoundPop11XOffsets",
+      "address": "0x212eeac",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1503
+      ]
+    },
+    {
+      "symbol": "sSoundPop00XOffsets",
+      "address": "0x212eeb8",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1031
+      ]
+    },
+    {
+      "symbol": "sSoundPop01VX",
+      "address": "0x212eec4",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        1536,
+        -1536
+      ],
+      "consumer_lines": [
+        1082
+      ]
+    },
+    {
+      "symbol": "sSoundPop01XOffsets",
+      "address": "0x212eed0",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1080
+      ]
+    },
+    {
+      "symbol": "sSoundPop08XOffsets",
+      "address": "0x212eedc",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        65536,
+        -65536
+      ],
+      "consumer_lines": [
+        1379
+      ]
+    },
+    {
+      "symbol": "sSoundPop02VX",
+      "address": "0x212eee8",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        2560,
+        -2560
+      ],
+      "consumer_lines": [
+        1122
+      ]
+    },
+    {
+      "symbol": "sSoundPop02XOffsets",
+      "address": "0x212eef4",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1120
+      ]
+    },
+    {
+      "symbol": "sSoundPop09VX",
+      "address": "0x212ef00",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        4096,
+        -4096
+      ],
+      "consumer_lines": [
+        1417
+      ]
+    },
+    {
+      "symbol": "sSoundPop12VX",
+      "address": "0x212ef0c",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        2560,
+        -2560
+      ],
+      "consumer_lines": [
+        1550
+      ]
+    },
+    {
+      "symbol": "sSoundPop03XOffsets",
+      "address": "0x212ef18",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1160
+      ]
+    },
+    {
+      "symbol": "sSoundPop03VX",
+      "address": "0x212ef24",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        2048,
+        -2048
+      ],
+      "consumer_lines": [
+        1162
+      ]
+    },
+    {
+      "symbol": "sSoundPop12XOffsets",
+      "address": "0x212ef30",
+      "size": 12,
+      "type": "int",
+      "count": 3,
+      "values": [
+        0,
+        32768,
+        -32768
+      ],
+      "consumer_lines": [
+        1548
+      ]
+    }
+  ],
+  "bound_evidence": {
+    "kind_assignments": [
+      {
+        "function": "ClearPops",
+        "line": 552,
+        "value": 0
+      },
+      {
+        "function": "SpawnPops",
+        "line": 987,
+        "source": "first three bytes of data_ov006_0212ee30",
+        "bytes": [
+          0,
+          1,
+          2
+        ],
+        "loop_bound": 3
+      }
+    ],
+    "consumer_use": "Pop00..Pop12 Start routines use kind as the index into X offsets and horizontal velocities; all local kind assignments examined.",
+    "original_declaration_limits": "Exact historical identifiers/declared array bounds cannot be recovered from binary alone; native three-entry arrays cover all observed kind values and complete12-byte spans.",
+    "selector_bytes_verified_current_base": [
+      0,
+      1,
+      2
+    ]
+  },
+  "raw_proof": {
+    "result": "pass",
+    "base": "85b3e5c239f435ce63731c85c9c1b6cc7dac88f1",
+    "base_sha256": "254ceb397a87f388556ff0925259cbee36d8cc4f87664d537d564509ea2e1016",
+    "candidate_sha256": "3409646f2c4bfe37493d0232922cef1920816599b5ce54f5d3359c88a14a2779",
+    "prior_definitions": 112,
+    "prior_functions": 83,
+    "prior_relocations": 302,
+    "added_objects": 21,
+    "exact_rodata_bytes": 252,
+    "rodata_relocations": 0,
+    "unchanged_existing_definitions": true
+  },
+  "remaining_arrays": [
+    {
+      "range": "0x0212ef5c..0x0212ef9c",
+      "reason": "Four row-length labels only16bytes apart while mPattern can be0..4; cross-boundary reads/grouping need study."
+    },
+    {
+      "range": "0x0212efb0..0x0212efc4",
+      "reason": "Bank table next-boundary span20bytes but current mask establishes onlyfourentries; extra nonzero word not independently owned by consumer evidence."
+    },
+    {
+      "reason": "Timing/spawn-prefix arrays contain unused nonzero suffix values, so adjacent label gaps are not merely alignment/padding."
+    }
+  ],
+  "remaining_pmf": {
+    "native_targets": 57,
+    "void_int_targets": 54,
+    "void_noarg_targets": [
+      "Pop00_Finish",
+      "Pop04_Finish",
+      "Pop07_Finish"
+    ],
+    "reason": "Runtime table uses void(int) member pointers; original parameter contract for three no-argument methods must remain explicit. No native PMF triviality claim."
+  },
+  "findings": [
+    {
+      "disposition": "fixed",
+      "id": "BASE-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgBase_c.h:109",
+      "reason": "Removed obsolete comparison table from current interface; retained historical observations in immutable handoff references. mSceneKind at0x465e is explicitly observed.",
+      "summary": "Minigame/actor distinction, current slot21 description and last observed field are corrected."
+    },
+    {
+      "disposition": "fixed",
+      "id": "BASE-PROV02",
+      "kind": "provenance",
+      "location": "include/dScMgBase_c.h:158",
+      "reason": "Reviewed the exact f7fc175e header/handoff delta across slots22-29, including OnKicked slot24 references. Declarations, layout and all executable tokens are unchanged; all171 complete raw objects freshly equal the prior independently tested objects.",
+      "summary": "Repeated false hierarchy comparisons and dangling removed-table references are corrected."
+    },
+    {
+      "disposition": "fixed",
+      "id": "CUP-01",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:508",
+      "reason": "Inspected both unqualified OnYoshiTryEat calls, removed fake class and strict original-base/final object proof.",
+      "summary": "Both fake Obj self-call views were replaced with real inherited virtual calls."
+    },
+    {
+      "disposition": "fixed",
+      "id": "CUP-02",
+      "kind": "provenance",
+      "location": "include/dScMgCup_c.h:71; src/actors/dScMgCup_c.cpp:1048",
+      "reason": "Current PMF is dScMgCup_c::* and this->* dispatch uses the scene; source identity and inferred English names are distinguished.",
+      "summary": "Actual PMF receiver, seven own slots and inferred names are accurately described."
+    },
+    {
+      "disposition": "deferred",
+      "id": "CUP-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:77; include/dScMgCup_c.h:96",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Tracked under the existing issue; field names can be honestly inferred. No unmeasured compiler barrier excuses the remaining source work.",
+      "summary": "Obj6e, raw own/inherited fields and typed component work remain partial."
+    },
+    {
+      "disposition": "fixed",
+      "id": "CUP-03-P",
+      "kind": "provenance",
+      "location": "include/dScMgCup_c.h:26",
+      "reason": "Raw0x19c is explicitly a declaration boundary; constructor writes+0x50dc/+0x50e0 and live bytes through+0x546d are acknowledged without changing storage.",
+      "summary": "Live component and tail extents are accurately bounded as observations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "CUP-04",
+      "kind": "correctness",
+      "location": "src/actors/dScMgCup_c.cpp:377",
+      "reason": "Inspected both per-arm assignments and preserved final-arm assignment; the164-byte body and typed relocations are independently verified.",
+      "summary": "Every incoming epilogue path initializes cup."
+    },
+    {
+      "disposition": "fixed",
+      "id": "CUP-05",
+      "kind": "correctness",
+      "location": "include/dScMgBase_c.h:132; five minigame Virtual50 definitions",
+      "reason": "Confirmed actual void helpers and minigame caller, unchanged separate actor int control, complete927-function and metadata proof. Reconstructed contract is not claimed as recovered original spelling.",
+      "summary": "Five minigame declarations/definitions coherently return void; two helper views now match their actual void definition."
+    },
+    {
+      "disposition": "deferred",
+      "id": "CUP-06",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgCup_c.cpp:1168",
+      "owner": "issue2492 humanizer/integrator support through andrewboudreau",
+      "reason": "Eight real State methods and the bounded correction do not make the complete class reconstructed; existing issue owns future measured replacement work.",
+      "summary": "Manual factory/lifecycle, raw components/arrays and address-named helpers remain partial."
+    },
+    {
+      "disposition": "fixed",
+      "id": "SOUND-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgSound_c.h:10; src/actors/dScMgSound_c.cpp:145",
+      "reason": "Reviewed whole changed Sound source and header. No full-tail ownership is inferred from one constructor/destructor start. Both method and all82 TU functions remain independently proven.",
+      "summary": "Component extent, live state, call count, PMF entry, source spelling and helper address descriptions are corrected."
+    },
+    {
+      "disposition": "deferred",
+      "id": "SOUND-RECON01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+      "kind": "reconstruction",
+      "location": "include/dScMgSound_c.h:90; src/actors/dScMgSound_c.cpp:186",
+      "owner": "Next owned Sound class producer, coordinated through andrewboudreau under issue #2492",
+      "reason": "Accepted only as partial storage/field readability work. Existing pointer/int address forms and compiler observations do not prove original spellings or blanket compiler barriers. Broader reconstruction remains the issue #2492 continuation; no speculative header/interface changes in this repair.",
+      "summary": "Original component extent and internals, conflicting raw array views, raw scene countdowns, counterfeit PMF/SceneVt receiver views, manual decoders, lifecycle/legacy helper interfaces and empty-condition scaffolding remain incomplete."
+    },
+    {
+      "disposition": "fixed",
+      "id": "SOUND2881-01",
+      "kind": "correctness",
+      "location": "include/dScMgSound_c.h:70; src/actors/dScMgSound_c.cpp:546",
+      "reason": "dMgSoundComponentStorage spans 0x1ac with mSuppressSound at +0x1a8; passed addresses cover that word. Constructor writes and five callback reads independently inspected. Header/TU now distinguish observed minimum extent from original component size; whole-object identity and 82 strict checks pass.",
+      "summary": "The original PR shortened component storage before a live four-byte word and claimed an unsupported component boundary."
+    },
+    {
+      "disposition": "fixed",
+      "id": "SOUND2881-02",
+      "kind": "provenance",
+      "location": "include/dScMgSound_c.h:51",
+      "reason": "Inspected exact final header line 51: references are func_ov006_02119aa8 and func_ov006_021199c0. Their actual TU bodies read the corresponding SpriteA/SpriteB visible flags and x/y coordinates before drawing. The correction is comment-only; fresh final complete object and all strict checks pass.",
+      "severity": "P3",
+      "summary": "Sprite-layout evidence cites nonexistent func_ov006_0211bd18 and func_ov006_0211bdb4 instead of the actual sprite draw helpers."
+    },
+    {
+      "disposition": "fixed",
+      "id": "TERESA-PROV01",
+      "kind": "provenance",
+      "location": "include/dScMgTeresa_c.h:6",
+      "reason": "Both member definitions exist and were covered by complete affected-source proof; no layout change.",
+      "summary": "Own slot18 and current slot34 member status are accurately listed."
+    },
+    {
+      "id": "SOUND-POP-BOUNDS-01",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "src/minigames/d_s_mg_sound.cpp:140",
+      "summary": "Twenty-one complete three-entry offset/velocity arrays cover observed pop kinds 0 through 2.",
+      "reason": "ClearPops initializes kind 0; SpawnPops assigns selector bytes 0, 1 and 2. Names retain existing descriptive reconstructions; original spelling and bounds are not claimed."
+    },
+    {
+      "id": "SOUND-POP-REMAINDER-01",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/minigames/d_s_mg_sound.cpp",
+      "summary": "Remaining Sound arrays and PMF descriptors remain unowned by this slice.",
+      "reason": "Broader arrays have unexplained nonzero suffixes or cross-label indexing; three Finish signatures differ from the runtime PMF contract.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4071",
+      "owner": "Next owned Sound data producer"
+    }
+  ],
+  "predecessor_resolution": "All fourteen inherited IDs retained. BASE-PROV02 and SOUND2881-02 use final accepted predecessor reviews, superseding earlier open snapshots. No new header edits.",
+  "validation_status": "Local raw/strict/scratch/normal-provider/full-ROM gates pass; independent review pending",
+  "strict_proof": {
+    "checked": 83,
+    "verified": 83,
+    "blind": 0,
+    "blocking": 0,
+    "report": "build/sound-strict.json"
+  },
+  "scratch_proof": {
+    "result": "scratch-data-verified",
+    "owned_sections": {
+      "ok": true,
+      "claimed": 4,
+      "rows": [
+        {
+          "section": ".init",
+          "start": "0x02132970",
+          "end": "0x02132f68",
+          "emittedBytes": 1528,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 72
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021335d4",
+          "end": "0x021335d8",
+          "emittedBytes": 4,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 1
+        },
+        {
+          "section": ".bss",
+          "start": "0x02142cc0",
+          "end": "0x02142e88",
+          "emittedBytes": 456,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 0
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0212ee40",
+          "end": "0x0212ef3c",
+          "emittedBytes": 252,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 0
+        }
+      ],
+      "symbolErrors": [],
+      "relocations": [
+        {
+          "section": ".init",
+          "source": "0x02132e48",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Note_StateWait",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Note_StateWait",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f594",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f594",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e4c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Note_StateOpening",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Note_StateOpening",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f694",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f694",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e50",
+          "type": 2,
+          "symbol": "sSoundNoteStateTable",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundNoteStateTable",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142df8",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142df8",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e54",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Note_StateOpen",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Note_StateOpen",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6a4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6a4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e58",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Note_StateClosing",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Note_StateClosing",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f634",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f634",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e5c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Note_StateScroll",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Note_StateScroll",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f64c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f64c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e60",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop00_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop00_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6c4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6c4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e64",
+          "type": 2,
+          "symbol": "sSoundPopUpdateTable",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPopUpdateTable",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142e20",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142e20",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e68",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop01_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop01_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5b4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5b4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e6c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop02_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop02_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f63c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f63c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e70",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop07_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop07_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f554",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f554",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e74",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop03_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop03_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5c4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5c4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e78",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop08_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop08_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5e4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5e4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e7c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop04_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop04_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5a4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5a4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e80",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop05_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop05_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5ac",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5ac",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e84",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop06_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop06_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f62c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f62c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e88",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop09_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop09_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f55c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f55c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e8c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop10_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop10_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f53c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f53c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e90",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop11_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop11_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f564",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f564",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e94",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop12_Update",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop12_Update",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f604",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f604",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e98",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop00_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop00_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f60c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f60c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132e9c",
+          "type": 2,
+          "symbol": "sSoundPop00Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop00Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142d38",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142d38",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ea0",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop02_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop02_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f52c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f52c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ea4",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop00_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop00_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f56c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f56c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ea8",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop00_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop00_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f534",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f534",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132eac",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop01_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop01_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f584",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f584",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132eb0",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop01_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop01_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f51c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f51c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132eb4",
+          "type": 2,
+          "symbol": "sSoundPop01Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop01Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142d50",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142d50",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132eb8",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop01_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop01_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f66c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f66c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ebc",
+          "type": 2,
+          "symbol": "sSoundPop02Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop02Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142d80",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142d80",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ec0",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop02_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop02_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f4fc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f4fc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ec4",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop02_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop02_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f504",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f504",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ec8",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop03_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop03_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6dc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6dc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ecc",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop07_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop07_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f624",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f624",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ed0",
+          "type": 2,
+          "symbol": "sSoundPop03Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop03Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142dc8",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142dc8",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ed4",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop03_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop03_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6d4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6d4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ed8",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop03_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop03_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6cc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6cc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132edc",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop04_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop04_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f524",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f524",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ee0",
+          "type": 2,
+          "symbol": "sSoundPop04Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop04Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142de0",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142de0",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ee4",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop04_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop04_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f67c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f67c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ee8",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop04_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop04_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6ac",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6ac",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132eec",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop05_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop05_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5dc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5dc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ef0",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop05_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop05_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f684",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f684",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ef4",
+          "type": 2,
+          "symbol": "sSoundPop05Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop05Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142cd8",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142cd8",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132ef8",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop05_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop05_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f674",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f674",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132efc",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop06_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop06_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f664",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f664",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f00",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop06_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop06_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f654",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f654",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f04",
+          "type": 2,
+          "symbol": "sSoundPop06Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop06Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142cf0",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142cf0",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f08",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop06_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop06_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6bc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6bc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f0c",
+          "type": 2,
+          "symbol": "sSoundPop07Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop07Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142d20",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142d20",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f10",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop07_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop07_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f61c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f61c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f14",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop07_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop07_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f614",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f614",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f18",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop08_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop08_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5fc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5fc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f1c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop08_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop08_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f57c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f57c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f20",
+          "type": 2,
+          "symbol": "sSoundPop08Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop08Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142d68",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142d68",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f24",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop08_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop08_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5ec",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5ec",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f28",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop09_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop09_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5d4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5d4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f2c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop09_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop09_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f6b4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f6b4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f30",
+          "type": 2,
+          "symbol": "sSoundPop09Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop09Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142d98",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142d98",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f34",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop10_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop10_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5bc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5bc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f38",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop09_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop09_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f50c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f50c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f3c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop10_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop10_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f59c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f59c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f40",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop10_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop10_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f68c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f68c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f44",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop11_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop11_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f514",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f514",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f48",
+          "type": 2,
+          "symbol": "sSoundPop10Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop10Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142cc0",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142cc0",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f4c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop11_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop11_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f644",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f644",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f50",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop11_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop11_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f574",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f574",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f54",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop12_Start",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop12_Start",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5f4",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5f4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f58",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop12_Fly",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop12_Fly",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f58c",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f58c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f5c",
+          "type": 2,
+          "symbol": "pmf_dScMgSound_c_Pop12_Finish",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "pmf_dScMgSound_c_Pop12_Finish",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x0213f5cc",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x0213f5cc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f60",
+          "type": 2,
+          "symbol": "sSoundPop11Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop11Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142d08",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142d08",
+          "verdict": "OK"
+        },
+        {
+          "section": ".init",
+          "source": "0x02132f64",
+          "type": 2,
+          "symbol": "sSoundPop12Table",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "sSoundPop12Table",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02142db0",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02142db0",
+          "verdict": "OK"
+        },
+        {
+          "section": ".ctor",
+          "source": "0x021335d4",
+          "type": 2,
+          "symbol": "__sinit_d_s_mg_sound.cpp",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "__sinit_d_s_mg_sound.cpp",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov006"
+          ],
+          "candidateModule": "ov006",
+          "candidate": "0x02132970",
+          "configuredKind": "load",
+          "configuredModule": "ov006",
+          "configuredModules": [
+            "ov006"
+          ],
+          "configured": "0x02132970",
+          "verdict": "OK"
+        }
+      ],
+      "errors": []
+    },
+    "modules_exact": 106,
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11334,
+      "compiledBytes": 2225480,
+      "sourceFunctions": 11334,
+      "sourceBytes": 2225480,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.43577343005789,
+      "reproducingFunctions": 11334,
+      "reproducingBytes": 2225480,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 349,
+      "sourceBssClaims": 246,
+      "sourceBssBytes": 31320,
+      "reproducingDataClaims": 349,
+      "reproducingDataClaimBytes": 14784,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "new_symbol_errors": [],
+    "baseline_symbol_errors": [
+      "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+      "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+      "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+    ]
+  },
+  "production_proof": {
+    "result": "pass",
+    "providers": [
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop04VX",
+        "address": 34795072,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795072,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop04VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53716
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795072,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "2b446a5c8070592931ffffc10cb8fa0c10d2fe5b423bee295fb25c5049f780f7",
+          "retail_sha256": "2b446a5c8070592931ffffc10cb8fa0c10d2fe5b423bee295fb25c5049f780f7"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop10VX",
+        "address": 34795084,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795084,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop10VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53717
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795084,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "777cad7e5d2d5dfdaa643329f6bcb105e796cbdb2b9941e9cd8f3e5b1e3485a5",
+          "retail_sha256": "777cad7e5d2d5dfdaa643329f6bcb105e796cbdb2b9941e9cd8f3e5b1e3485a5"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop10XOffsets",
+        "address": 34795096,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795096,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop10XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53718
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795096,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop09XOffsets",
+        "address": 34795108,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795108,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop09XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53719
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795108,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop06VX",
+        "address": 34795120,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795120,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop06VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53720
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795120,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "805bdcf9dd637bcd380bc3353b37c3a629a558d24ebfe91a7ed2a55333b9a0c1",
+          "retail_sha256": "805bdcf9dd637bcd380bc3353b37c3a629a558d24ebfe91a7ed2a55333b9a0c1"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop05XOffsets",
+        "address": 34795132,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795132,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop05XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53721
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795132,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "065333ae7a0daabc27b77ed0af6a0ccff56dac23202533f1fc31e46030784ce9",
+          "retail_sha256": "065333ae7a0daabc27b77ed0af6a0ccff56dac23202533f1fc31e46030784ce9"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop11VX",
+        "address": 34795144,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795144,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop11VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53722
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795144,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "2b446a5c8070592931ffffc10cb8fa0c10d2fe5b423bee295fb25c5049f780f7",
+          "retail_sha256": "2b446a5c8070592931ffffc10cb8fa0c10d2fe5b423bee295fb25c5049f780f7"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop07XOffsets",
+        "address": 34795156,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795156,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop07XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53723
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795156,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "065333ae7a0daabc27b77ed0af6a0ccff56dac23202533f1fc31e46030784ce9",
+          "retail_sha256": "065333ae7a0daabc27b77ed0af6a0ccff56dac23202533f1fc31e46030784ce9"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop00VX",
+        "address": 34795168,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795168,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop00VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53724
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795168,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "208c45eb187eb1be9c0cde4c4eec4eb8e1944f81924f3a7833efbe12fd850846",
+          "retail_sha256": "208c45eb187eb1be9c0cde4c4eec4eb8e1944f81924f3a7833efbe12fd850846"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop11XOffsets",
+        "address": 34795180,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795180,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop11XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53725
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795180,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop00XOffsets",
+        "address": 34795192,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795192,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop00XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53726
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795192,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop01VX",
+        "address": 34795204,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795204,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop01VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53727
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795204,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "34919728bc14bdaf463ed657f52265672ea7335506c727b72227fe40053eef6a",
+          "retail_sha256": "34919728bc14bdaf463ed657f52265672ea7335506c727b72227fe40053eef6a"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop01XOffsets",
+        "address": 34795216,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795216,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop01XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53728
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795216,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop08XOffsets",
+        "address": 34795228,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795228,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop08XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53729
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795228,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "065333ae7a0daabc27b77ed0af6a0ccff56dac23202533f1fc31e46030784ce9",
+          "retail_sha256": "065333ae7a0daabc27b77ed0af6a0ccff56dac23202533f1fc31e46030784ce9"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop02VX",
+        "address": 34795240,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795240,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop02VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53730
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795240,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "a50cd8150340342cb19fe8c98a69bb6db1c736f6d96e5b8739ecb5225e747267",
+          "retail_sha256": "a50cd8150340342cb19fe8c98a69bb6db1c736f6d96e5b8739ecb5225e747267"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop02XOffsets",
+        "address": 34795252,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795252,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop02XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53731
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795252,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop09VX",
+        "address": 34795264,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795264,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop09VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53732
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795264,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "805bdcf9dd637bcd380bc3353b37c3a629a558d24ebfe91a7ed2a55333b9a0c1",
+          "retail_sha256": "805bdcf9dd637bcd380bc3353b37c3a629a558d24ebfe91a7ed2a55333b9a0c1"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop12VX",
+        "address": 34795276,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795276,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop12VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53733
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795276,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "a50cd8150340342cb19fe8c98a69bb6db1c736f6d96e5b8739ecb5225e747267",
+          "retail_sha256": "a50cd8150340342cb19fe8c98a69bb6db1c736f6d96e5b8739ecb5225e747267"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop03XOffsets",
+        "address": 34795288,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795288,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop03XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53734
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795288,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop03VX",
+        "address": 34795300,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795300,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop03VX",
+              "object": "d_s_mg_sound.o",
+              "line": 53735
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795300,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "ce71a80c23c6b9879953698a97740545bc0941d54105f4986e78817f9fb3b2b1",
+          "retail_sha256": "ce71a80c23c6b9879953698a97740545bc0941d54105f4986e78817f9fb3b2b1"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      },
+      {
+        "module": "ov006",
+        "symbol": "sSoundPop12XOffsets",
+        "address": 34795312,
+        "size": 12,
+        "size_basis": "caller-requested extent, checked against emitted and linked symbol",
+        "source": "src/minigames/d_s_mg_sound.cpp",
+        "section": ".rodata",
+        "status": "source-bytes-verified",
+        "provider": {
+          "object": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\src\\minigames\\d_s_mg_sound.o",
+          "sha256": "e33f8d838034cf485924d460e30c3dc21b27131abfce73ab2d408a4ff02fccd1",
+          "map_rows": [
+            {
+              "module": "ov006",
+              "address": 34795312,
+              "size": 12,
+              "section": ".rodata",
+              "display_name": "sSoundPop12XOffsets",
+              "object": "d_s_mg_sound.o",
+              "line": 53736
+            }
+          ],
+          "lcf_selector": {
+            "module": "ov006",
+            "object": "d_s_mg_sound.o",
+            "section": ".rodata",
+            "line": 5336
+          },
+          "emitted_symbol": {
+            "address": 0,
+            "size": 12,
+            "section": ".rodata",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "section_type": "SHT_PROGBITS",
+            "section_size": 12,
+            "section_alignment": 4
+          },
+          "linked_symbol": {
+            "address": 34795312,
+            "size": 12,
+            "section": "OV006",
+            "type": "STT_OBJECT",
+            "binding": "STB_GLOBAL",
+            "module_base": 34340544
+          }
+        },
+        "linked_bytes": {
+          "status": "verified",
+          "compared_bytes": 12,
+          "differing_bytes": 0,
+          "linked_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476",
+          "retail_sha256": "e75620b2d08740a08e950ae74e06a02d206b465b3d1e16287e35f64b56422476"
+        },
+        "storage_layout": {
+          "status": "verified",
+          "bytes": 12,
+          "alignment": 4
+        },
+        "pointer_target_semantics": "not-run",
+        "startup_initialization": "not-run",
+        "errors": []
+      }
+    ],
+    "bound_inputs_checked": 7178,
+    "modules_exact": 106,
+    "rom": {
+      "path": "C:\\tmp\\sm64ds-sound-pop-data1018\\build\\sm64ds.nds",
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11334,
+      "compiledBytes": 2225480,
+      "sourceFunctions": 11334,
+      "sourceBytes": 2225480,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.43577343005789,
+      "reproducingFunctions": 11334,
+      "reproducingBytes": 2225480,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 349,
+      "sourceBssClaims": 246,
+      "sourceBssBytes": 31320,
+      "reproducingDataClaims": 349,
+      "reproducingDataClaimBytes": 14784,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    }
+  },
+  "static_checks": [
+    "source_style:0 findings",
+    "declaration agreement:no new disagreements or local header redeclarations",
+    "manifest conflict annotations agree",
+    "port references:247 resolve",
+    "rename ledger:pass",
+    "dead references:no new"
+  ]
+}

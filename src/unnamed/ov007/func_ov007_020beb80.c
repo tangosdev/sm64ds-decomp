@@ -4,7 +4,7 @@ typedef struct { int x, y, z; } Vec3i;
 typedef struct { short x, y, z; } Vec3s;
 
 extern int func_020538b8(int a, int b);
-extern int func_ov007_020b7690(int i);
+extern void *func_ov007_020b7690(int i);
 extern int func_02053644(void *v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_02053380(void *a, void *b);

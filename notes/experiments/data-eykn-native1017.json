@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "task": "data-eykn-native1017",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+  "source_completion": "partial; initialized-data group complete, inherited body/shared-contract debt retained",
+  "tested_base": "2801e012eea47be85d78732b81ff32c3df84e2fb",
+  "tool_dependency": {
+    "pr": 4024,
+    "commit": "2801e012eea47be85d78732b81ff32c3df84e2fb",
+    "branch": "refs/heads/tools/elf-symbol-name-growth"
+  },
+  "preserved_candidate": {
+    "job": "DD243",
+    "batch_commit": "2ba06ba42c42226706fde3c6274ef1f73001d311",
+    "original_candidate_abbreviation": "0813ab172f9b",
+    "author": "lunavyqo",
+    "coauthor": "Cursor",
+    "source_scope": "readonly resource-pointer tables only; current native initializer and modern class retained"
+  },
+  "new_complete_ranges": [
+    {
+      "section": ".rodata",
+      "start": "0x021226a0",
+      "end": "0x021226ac",
+      "bytes": 12
+    },
+    {
+      "section": ".data",
+      "start": "0x02122ca8",
+      "end": "0x02122dac",
+      "bytes": 260
+    }
+  ],
+  "existing_complete_ranges": [
+    {
+      "section": ".text",
+      "start": "0x02120668",
+      "end": "0x02121a6c"
+    },
+    {
+      "section": ".init",
+      "start": "0x021228c8",
+      "end": "0x02122a1c"
+    },
+    {
+      "section": ".ctor",
+      "start": "0x02122b34",
+      "end": "0x02122b38"
+    },
+    {
+      "section": ".bss",
+      "start": "0x02123038",
+      "end": "0x021230b8",
+      "bytes": 128
+    }
+  ],
+  "object_proof": {
+    "emitted_functions": 28,
+    "function_relocations": 188,
+    "all_function_bytes_and_relocations_preserved": true,
+    "licensed_methods": 25,
+    "initializer_bytes": 340,
+    "initializer_relocations": 26,
+    "initialized_objects": 13,
+    "initialized_object_bytes": 270,
+    "initialized_relocations": 46,
+    "bss_objects": 9,
+    "bss_bytes": 128,
+    "candidate_object_sha256": "c19a1204437b9fa4e53daa2a9dd69da8b71bfe6cfaf78ed343e18e6eb3781556",
+    "base_object_sha256": "6c65c45fa2c710ffa0cabaf098b6eff91c5ec943348c966f56c2f69707fe1756",
+    "data_padding_bytes": 2
+  },
+  "provider_proof": {
+    "ok": true,
+    "requested_objects": 21,
+    "initialized_objects": 12,
+    "bss_objects": 9,
+    "prepared_object_sha256": "44068c3ce8a495f85b8a7d333bb4759745c0210641998dcc2016d783c528efb1",
+    "vtable_limit": "Full132bytevtable is covered by explicit raw relocation/ROM proof and complete.data/fullROM. Provider tool requires exactpublicsymbol extent and cannot represent its8bytepreamble; no provider claim for vtable."
+  },
+  "production": {
+    "modules_exact": 106,
+    "functions_reproducing": 11334,
+    "initialized_claims_reproducing": 340,
+    "bss_claims": 245,
+    "bss_bytes": 31216,
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "rom_bytes": 16777216,
+    "all_six_tu_ranges_equal": true,
+    "strict_symbol_errors_preexisting": 9,
+    "strict_symbol_errors_new": 0,
+    "broad_optional_data_differs": [
+      {
+        "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      },
+      {
+        "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      }
+    ]
+  },
+  "comment_only_followup": {
+    "source_before_sha256": "072eb26606d40c1d5a4c798ea77a21478410dffbaa7c0e63c7fb873aed216f7a",
+    "source_after_sha256": "22ffed6375779297a87390dd21f72de2098f79ced573052c2414f6a2fb954a6e",
+    "complete_object_sha256": "c19a1204437b9fa4e53daa2a9dd69da8b71bfe6cfaf78ed343e18e6eb3781556",
+    "complete_object_bytes": 22056,
+    "complete_object_equal": true,
+    "change": "Comment-only coherence fix for asset-backed names and local handle view; all complete compiled object bytes identical.",
+    "prior_production": "build/eykn-production.json",
+    "prior_provider": "build/eykn-data-provenance.json"
+  },
+  "checks": {
+    "prepush": "25verified; initializerBLIND11 warning, covered by exact340byte/26relocation comparison and fullTU/finalROM",
+    "standalone": "25/25MATCH,relocclean; raw standalone classifies native initializer as1unlicensed,0compilerpolicyerrors; normalTU licenses it",
+    "source_style": "0findings,0deferrals,pinnedclang-format19.1.7",
+    "declaration_agreement": "no new disagreements or local header redeclarations",
+    "port_references": "247/247 resolve",
+    "independent_review": "pending exact immutable candidate",
+    "publication": "pending; no merge"
+  },
+  "source_findings": [
+    {
+      "disposition": "fixed",
+      "id": "R1",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp (16 helpers and state bodies)",
+      "reason": "Verified: all 16 are daEykn_c members; ov071 symbols.txt rows renamed in place (same addr and size, 16 rows, line-for-line), manifest symbols and attribution keys re-keyed with the same credit. Object comparison identical after the rename map; tubuild 23/23 MATCH.",
+      "summary": "extern \"C\" func_ov071_* helpers and state bodies"
+    },
+    {
+      "disposition": "fixed",
+      "id": "R10",
+      "kind": "reconstruction",
+      "location": "config/tu_manifest.d/ov071/daEykn_c.json",
+      "reason": "Boundary evidence and section end rewritten for the 23-function span; symbols renamed in place.",
+      "summary": "stale manifest notes"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R11",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "include/decl_common.h:2049",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Current header still declares the two retired analysis labels. It is reserved by jump-contract-repair-0918 and untouched; no active consumer of these declarations was introduced.",
+      "summary": "declarations of func_ov071_02120c90 and func_ov071_02121634, names that no longer exist",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Unused (git grep finds no other consumer); file is off-limits and has an empty diff as ruled."
+    },
+    {
+      "disposition": "fixed",
+      "id": "R12",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "config/decl-agreement-baseline.json",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Already resolved in the pinned input: the current declaration-agreement baseline contains no src/_ZN8daEykn_c13InitResourcesEv.cpp key. This task does not edit the baseline. Historical predecessor text is retained separately.",
+      "summary": "stale keys for the retired InitResources source",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Stale banked entries do not fail the gate (decl check exit 0, 394 banked now gone); file shows empty diff as ruled."
+    },
+    {
+      "disposition": "fixed",
+      "id": "R2",
+      "kind": "reconstruction",
+      "location": "src/_ZN8daEykn_c13InitResourcesEv.cpp -> src/actors/daEykn_c.cpp",
+      "reason": "Verified: file deleted, function is the TU's last, delinks .text end 0x02121734 -> 0x021219cc equals the tu_map cut end 0x21219cc and the symbols.txt row (0x02121734 size 0x298). Its .text section and relocations are identical to the base stand-alone object. prepush_attribution: credit andrewboudreau intact. port_refcheck and dead refs clean; the only remaining path mentions are the manifest legacy_source record and banked decl-baseline keys (R12).",
+      "summary": "InitResources lived outside the TU and was not linked"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R3",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp extern \"C\" block",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Current source retains the scalar Fix12 call bridges and measured method-form differences documented beside this TU. FindEgg is already called as an inherited method; that part of the older wording is historical. This data slice changes none of those caller forms.",
+      "summary": "Fix12-by-value call bridges remain.",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Accepted as partial. Only DropShadowRadHeight was measured and no experiment artifact is committed, so this is deferred, not compiler_constraint. FindEgg reason checked: it needs Scuttlebug.cpp or decl_Actor.h, outside this task's resources.",
+      "historical_predecessor_summary": "8 Fix12-by-value mangled bridges and FindEgg remain"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R4",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "include/daEykn_c.h:0x212",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Inherited partial reconstruction remains outside this data-only slice. Historical evidence: Confirmed only written (three stores of 0xf0), never read in this TU.",
+      "summary": "unk_212 unnamed",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Confirmed only written (three stores of 0xf0), never read in this TU."
+    },
+    {
+      "disposition": "deferred",
+      "id": "R5",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp (Vector3 casts of mPosX, mCamSpacePosX, mScaleX; SharedFilePtr +4 reads in InitResources; ldrh angle reads; flat mShadowMat)",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Inherited partial reconstruction remains outside this data-only slice. Historical evidence: Accepted. Note the SharedFilePtr +4 reads use (char *)x + 4 although the TU already has a local LoadedFile view; the stated reason (shared header has no fields) is true but does not by itself block a local view. Unmeasured, so deferred.",
+      "summary": "remaining casts",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Accepted. Note the SharedFilePtr +4 reads use (char *)x + 4 although the TU already has a local LoadedFile view; the stated reason (shared header has no fields) is true but does not by itself block a local view. Unmeasured, so deferred."
+    },
+    {
+      "disposition": "deferred",
+      "id": "R6",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp CheckAttacks, UpdateCircling, St_Die_Main, St_Attack_Main",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Inherited partial reconstruction remains outside this data-only slice. Historical evidence: Each carries a one-line measured-miss comment; no committed artifact, so deferred rather than compiler_constraint.",
+      "summary": "gotos, int flag temps, load-order locals, target locals",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Each carries a one-line measured-miss comment; no committed artifact, so deferred rather than compiler_constraint."
+    },
+    {
+      "disposition": "deferred",
+      "id": "R7",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp extern \"C\" block",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Inherited partial reconstruction remains outside this data-only slice. Historical evidence: Local copy of a decl_common symbol is the tree convention; decl_common.h is not in resources and shows an empty diff as ruled.",
+      "summary": "local prototypes of AngleDiff, DecIfAbove0_Byte, Vec3 helpers, Matrix4x3_FromRotationXYZExt, BlueCoin loaders",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Local copy of a decl_common symbol is the tree convention; decl_common.h is not in resources and shows an empty diff as ruled."
+    },
+    {
+      "disposition": "deferred",
+      "id": "R8",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_eykn.cpp external/shared globals and helper declarations",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "The bounded ov071 state descriptors, four file handles, two pointer tables and state table are now named and compiler-owned. The earlier separate initializer was already retired before this task. Remaining arm9 helpers and shared ov002 blue-coin storage stay outside the owned ranges; no global naming-completion claim.",
+      "summary": "Class resource/state globals are now named; external arm9 and shared overlay globals/functions retain address-derived names.",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Defined by src/__sinit_ov071_021228c8.c and arm9 rows, outside resources. Confirmed."
+    },
+    {
+      "disposition": "fixed",
+      "id": "R9",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp",
+      "reason": "Old essays gone; remaining notes are one line each.",
+      "summary": "unmeasured codegen essays"
+    },
+    {
+      "disposition": "fixed",
+      "id": "V1",
+      "kind": "correctness",
+      "location": "src/actors/daEykn_c.cpp, comment above daEykn_c::UpdateEyeAnim",
+      "reason": "Re-checked in 7b303d2c: the UpdateEyeAnim comment now says steps 1-3 and 4-6 each play the 0x02123038 sequence and then the 0x02123040 sequence, and step 7 resets to 0 and returns 1. That matches the switch (cases 1/4, 2/5 and 3/6 share bodies). Comment-only; bytes re-proven.",
+      "summary": "False comment: 'Steps the eye's texture animation: close (steps 1-3), open (4-6), done (7).' Contradicting evidence: cases 1 and 4, 2 and 5, 3 and 6 share identical bodies. Each of the ranges 1-3 and 4-6 loads data_ov071_02123038, waits for it, then loads data_ov071_02123040 and waits for that, so both ranges run the same close-then-open cycle. The comment's own next sentence ('the second opening') agrees that there are two openings. The comment is new in this candidate."
+    },
+    {
+      "disposition": "deferred",
+      "id": "V2",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp, comment above the Fix12 bridge prototypes",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Inherited partial reconstruction remains outside this data-only slice. Historical evidence: Comment corrected in round 2 (it now says only DropShadowRadHeight was measured as a member call). Kept deferred with the underlying R3 bridge work, as inherited.",
+      "summary": "The comment gives one measurement (DropShadowRadHeight) as the reason for all eight bridges",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Comment corrected in round 2 (it now says only DropShadowRadHeight was measured as a member call). Kept deferred with the underlying R3 bridge work, as inherited."
+    },
+    {
+      "disposition": "fixed",
+      "id": "V3",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "kind": "reconstruction",
+      "location": "src/actors/daEykn_c.cpp lines 71-92",
+      "owner": "Next independently claimed Eykn reconstruction producer coordinated on issue4033; shared-header edits require their current owner.",
+      "reason": "Already resolved in the pinned input: FindEgg is an inherited method call and no local FindEgg prototype remains interleaved with the Fix12 bridge block. No change to that call in this task.",
+      "summary": "The 'Each of these takes a Fix12<int> by value' block has the FindEgg prototype (no Fix12 parameter) interleaved in it; FindEgg carries its own comment, so nothing is stated falsely, but moving it below the eight bridges would read cleaner",
+      "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
+      "historical_predecessor_reason": "Placement nit, no false statement (materiality rule). Fold into the R3 follow-up."
+    },
+    {
+      "disposition": "fixed",
+      "id": "V4",
+      "kind": "correctness",
+      "location": "src/actors/daEykn_c.cpp comment above daEykn_c::St_Die_Main ('spin with a wobble, swell, then vanish'); include/daEykn_c.h mScale comment ('death swell')",
+      "reason": "Fixed in 19307eb3d0: the St_Die_Main comment reads \"spin with a wobble, play the death animation, shrink to scale 0xa4, then despawn, spawning actor 0x122 (small one) or releasing the star (big one)\" and the mScale comment reads \"shrinks while dying\". Each clause checked against sub-states 0-3, ApproachLinear and InitResources. Comment-only diff.",
+      "summary": "False statement: the dying eye shrinks; it does not swell. Evidence: St_Die_Main case 2 calls ApproachLinear(mScale, 0xa4, 0xa4). InitResources sets mScale to 0x1000 (small) or 0x2000 (big) and nothing else writes it. ApproachLinear (src/_Z14ApproachLinearRiii.cpp) negates the step when ref > target, so mScale, mScaleX/Y/Z and the collision radius (mScale * 0x55) all fall to 0xa4. Neither word is in the base; both are new in this candidate."
+    },
+    {
+      "disposition": "fixed",
+      "id": "V5",
+      "kind": "correctness",
+      "location": "notes/agents/handoffs/readable-ov071-eykn-0925.md, Residue table",
+      "reason": "Fixed in 19307eb3d0: the table now says 753 to 789; recounted mechanically at ace15a6c62 and 19307eb3d0, every line and token count in the residue table matches.",
+      "summary": "False number: the table says src/actors/daEykn_c.cpp goes from 753 to 786 lines. Evidence: git show 90c5b2ce4e:src/actors/daEykn_c.cpp | wc -l gives 788. 786 was round 1's 6a18279e12; round 2 added two comment lines and did not recompute. The token counts (3, 7, 1 and 50) are still right."
+    },
+    {
+      "id": "EYKN-SHARED-HANDLE-CONTRACT-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "Local measured handle view remains separate from the shared SharedFilePtr class contract.",
+      "location": "src/game/actors/d_a_eykn.cpp:LoadedFile",
+      "reason": "Local u16 fileID/u8 numRefs/u8 padding/loaded pointer matches the eight-byte constructor-written runtime layout and preserves all method bytes. SharedFilePtr remains fieldless; local derived resource-family names and exact C1/D1 aliases are reconstructed ABI views, not recovered original class names. Fixing the global shared contract requires separately reserved consumers and proof.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4033",
+      "owner": "Next shared-resource contract producer coordinated with the Eykn continuation owner."
+    }
+  ],
+  "artifact_sha256": {
+    "build\\eykn-object-equivalence.json": "09475728c129252fa4af378e741456802506e6ee8b263d13dfb08257f594c1ba",
+    "build\\eykn-production.json": "453adf4190081371502c68e5122c49501215b10249165b7c8a68ff62410d95fe",
+    "build\\eykn-data-provenance.json": "20a250087c3637e9cdb1b67ba3c2febf2912cfd8e40c85f5a1a4e5ed81718231",
+    "build\\eykn-comment-only-identity.json": "d18f7b9a833a5d0a0e92629e1be079243d0d8675c0b65fa633d3638b44854838",
+    "build\\eykn-prepush.json": "b7908e6fe37ba68090c5d9be20af7440a61a264e7fc87fd13376e76c20a726f2",
+    "build\\run-eykn-provenance.py": "6e56ce4facd54cb6e1272af8aee4f2ada37cf80bd3fd474bffd9bed129340824"
+  },
+  "limits": [
+    "Names are reconstructed from assets and current method semantics, not original identifier recovery.",
+    "Actual compiler-generated data plus complete delinks ownership are established for the stated ranges; original historical TU shape is not proven.",
+    "Production was measured before a final comment-only naming paragraph correction; the final complete rawobject is byte-for-byte identical and sourcehash transition is explicit.",
+    "Inherited partial class/shared-header findings remain; no raw-method matching search was repeated."
+  ]
+}

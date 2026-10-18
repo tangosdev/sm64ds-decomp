@@ -3,7 +3,7 @@
  * The small eye and the big one that holds a star turn in place and shoot
  * EYEKUN_BEAM. Circling one of them until the yaw count passes kDizzyYaw
  * makes it die. Wait, attack, and die are the three rows of
- * data_ov071_02123088.
+ * gEyknStates.
  *
  * deslop leftovers:
  * - TextureSequence::SetFile as a member (Fix12<int> by value):
@@ -38,17 +38,19 @@
  *   27 words off at 0xcc.
  * - The shadow matrix is twelve s32s. Assigning a Matrix4x3 in
  *   InitResources is 0x298->0x2b4.
- * - data_ov071_02123038 / 02123040 are BTP files 0x2f8 / 0x2fb,
- *   02123048 is BCA 0x2f9, 02123050 is BMD 0x2f7. 021226a4 points at
- *   the two BTPs and 021226a0 at the BCA. data_ov002_0210da38 is the
- *   shared blue-coin model. SharedFilePtr has no fields, so the loaded
- *   word is read as LoadedFile.
+ * - gEyknModelFile and gEyknDeathAnimationFile load eyekun.bmd and
+ *   eyekun_dead.bca. gEyknCloseTextureSequenceFile and
+ *   gEyknOpenTextureSequenceFile load the close/open BTP animations.
+ *   gEyknDeathAnimationFilePtr and gEyknTextureSequenceFiles hold the
+ *   readonly resource pointers. LoadedFile supplies the measured local
+ *   file ID, reference count and loaded-pointer layout; SharedFilePtr
+ *   remains fieldless. The shared blue-coin model is data_ov002_0210da38.
  * - data_0209f2f8 is the current sublevel. 0x2e maps through
  *   SUBLEVEL_LEVEL_TABLE to course 19, which is not BBH's entrance
  *   (that is sublevel 0xc). On 0x2e the kill is entered in the death
  *   table; otherwise the eye is only marked for destruction.
- * - g_profile_EYEKUN and g_profile_EYEKUN_BOSS (the registry descriptors
- *   the two classInit factories below back) live outside this TU.
+ * - Both registry profiles, native state descriptors and readonly resource
+ *   pointer tables are compiler-owned alongside the existing initializer.
  *
  * daEykn_c_classInit_EYEKUN_BOSS (0x021219cc) and daEykn_c_classInit_EYEKUN
  * (0x02121a1c) are reconstructed names (RTTI daEykn_c, the two registry
@@ -67,6 +69,7 @@
 #include "daEykn_c.h"
 #include "common.h"
 #include "types.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "Sound.h"
@@ -80,9 +83,13 @@ struct MatrixWords {
     s32 m[12];
 };
 
-/* A loaded SharedFilePtr: the second word is the file it loaded. */
+/* Local eight-byte handle view: the constructor resolves a runtime asset ID
+ * into a u16 NitroFS file ID, clears the reference count and loaded pointer.
+ * The shared header still lacks this measured layout. */
 struct LoadedFile : SharedFilePtr {
-    u32 fileID;
+    u16 fileID;
+    u8 numRefs;
+    u8 padding;
     void *file;
 };
 
@@ -104,24 +111,21 @@ struct EyknAnimationFileHandle : LoadedFile {
     ~EyknAnimationFileHandle();
 };
 
-EyknModelFile data_ov071_02123050(0x02f7);           // EYEKUN_BMD
-EyknTextureSequenceFile data_ov071_02123038(0x02f8); // EYEKUN_CLOSE_BTP
-EyknTextureSequenceFile data_ov071_02123040(0x02fb); // EYEKUN_OPEN_BTP
-EyknAnimationFileHandle data_ov071_02123048(0x02f9); // EYEKUN_DEAD_BCA
+typedef char EyknFileHandle_size_must_be_8[sizeof(LoadedFile) == 8 ? 1 : -1];
 
-/* Existing ROM PMF descriptors remain ROM-owned. Their native copies build
- * the three wait/attack/die rows in BSS, in the original initialization order. */
-extern daEykn_c::StateFunc data_ov071_02122cb8;
-extern daEykn_c::StateFunc data_ov071_02122cc0;
-extern daEykn_c::StateFunc data_ov071_02122ca8;
-extern daEykn_c::StateFunc data_ov071_02122cd0;
-extern daEykn_c::StateFunc data_ov071_02122cb0;
-extern daEykn_c::StateFunc data_ov071_02122cc8;
+EyknModelFile gEyknModelFile(0x02f7);                          // EYEKUN_BMD
+EyknTextureSequenceFile gEyknCloseTextureSequenceFile(0x02f8); // EYEKUN_CLOSE_BTP
+EyknTextureSequenceFile gEyknOpenTextureSequenceFile(0x02fb);  // EYEKUN_OPEN_BTP
+EyknAnimationFileHandle gEyknDeathAnimationFile(0x02f9);       // EYEKUN_DEAD_BCA
 
-daEykn_c::State data_ov071_02123088[3] = {
-    {data_ov071_02122cb8, data_ov071_02122cc0},
-    {data_ov071_02122ca8, data_ov071_02122cd0},
-    {data_ov071_02122cb0, data_ov071_02122cc8},
+/* Native member pointers produce the six constant descriptors and initialize
+ * the wait/attack/die rows in BSS. Names describe their consumers; the ROM
+ * preserves neither these variable names nor the original source spelling. */
+
+daEykn_c::State gEyknStates[3] = {
+    {&daEykn_c::St_Wait_Init, &daEykn_c::St_Wait_Main},
+    {&daEykn_c::St_Attack_Init, &daEykn_c::St_Attack_Main},
+    {&daEykn_c::St_Die_Init, &daEykn_c::St_Die_Main},
 };
 
 int ApproachLinear(int &value, int target, int step);
@@ -163,8 +167,9 @@ extern s16 data_02082214[];
 extern s8 data_0209f2f8; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern SharedFilePtr data_ov002_0210da38; /* blue-coin model */
-extern SharedFilePtr *data_ov071_021226a4[2]; /* the two BTPs */
-extern SharedFilePtr *data_ov071_021226a0; /* the BCA */
+extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSequenceFile,
+                                                            &gEyknOpenTextureSequenceFile};
+extern SharedFilePtr *const gEyknDeathAnimationFilePtr = &gEyknDeathAnimationFile;
 }
 
 /* Debug-table actor ids, and the thresholds this file compares against. */
@@ -245,8 +250,8 @@ int daEykn_c::UpdateCircling()
 
 // @symbol _ZN8daEykn_c13UpdateEyeAnimEv
 /* Steps the eye's texture animation through two identical blinks: steps 1-3
- * and steps 4-6 each play the data_ov071_02123038 sequence, then the
- * data_ov071_02123040 sequence. Step 7 resets to 0 and returns 1, one call
+ * and steps 4-6 each play the gEyknCloseTextureSequenceFile sequence, then the
+ * gEyknOpenTextureSequenceFile sequence. Step 7 resets to 0 and returns 1, one call
  * after the second blink finishes. */
 int daEykn_c::UpdateEyeAnim()
 {
@@ -255,7 +260,8 @@ int daEykn_c::UpdateEyeAnim()
         return 0;
     case 1:
     case 4:
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+            &mTextureSequence, gEyknCloseTextureSequenceFile.file, 0, 0x1000, 0);
         mTextureSequence.SetFlags(0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
@@ -264,7 +270,8 @@ int daEykn_c::UpdateEyeAnim()
     case 2:
     case 5:
         if (mTextureSequence.Finished() != 0) {
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123040.file, 0, 0x1000, 0);
+            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+                &mTextureSequence, gEyknOpenTextureSequenceFile.file, 0, 0x1000, 0);
             mTextureSequence.SetFlags(0x40000000);
             mTextureSequence.speed = 0x1000;
             mTextureSequence.currFrame = 0;
@@ -290,7 +297,8 @@ int daEykn_c::UpdateEyeAnim()
 // @symbol _ZN8daEykn_c12ResetEyeAnimEv
 void daEykn_c::ResetEyeAnim()
 {
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+        &mTextureSequence, gEyknCloseTextureSequenceFile.file, 0, 0x1000, 0);
     mTextureSequence.SetFlags(0x40000000);
     mTextureSequence.speed = 0x1000;
     mTextureSequence.currFrame = 0;
@@ -522,7 +530,8 @@ int daEykn_c::St_Die_Init()
         mDeathSpinSpeed = 0x2500;
     else
         mDeathSpinSpeed = -0x2500;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, gEyknDeathAnimationFile.file, 0,
+                                                0x1000, 0);
     mModelAnim.SetFlags(0x40000000);
     mModelAnim.speed = 0x2800;
     mModelAnim.currFrame = 0;
@@ -733,7 +742,7 @@ void daEykn_c::RunStateInit()
 // @symbol _ZN8daEykn_c8SetStateEi
 void daEykn_c::SetState(int state)
 {
-    mState = &data_ov071_02123088[state];
+    mState = &gEyknStates[state];
     RunStateInit();
 }
 
@@ -743,11 +752,11 @@ s32 daEykn_c::CleanupResources()
 {
     UnloadBlueCoinModel(this);
     data_ov002_0210da38.Release();
-    data_ov071_02123050.Release();
+    gEyknModelFile.Release();
     for (s32 i = 0; i < 2; ++i) {
-        data_ov071_021226a4[i]->Release();
+        gEyknTextureSequenceFiles[i]->Release();
     }
-    data_ov071_021226a0->Release();
+    gEyknDeathAnimationFilePtr->Release();
     return 1;
 }
 
@@ -791,19 +800,19 @@ s32 daEykn_c::InitResources()
     LoadBlueCoinModel(this);
 
     Model::LoadFile(data_ov002_0210da38);
-    bmd = (BMD_File *)Model::LoadFile(data_ov071_02123050);
+    bmd = (BMD_File *)Model::LoadFile(gEyknModelFile);
     ((ModelBase *)&mModelAnim)->SetFile(bmd, 1, 1);
 
     int i;
     for (i = 0; i < 2; i++) {
-        SharedFilePtr *seq = data_ov071_021226a4[i];
+        SharedFilePtr *seq = gEyknTextureSequenceFiles[i];
         TextureSequence::LoadFile(*seq);
-        BMD_File *bmd2 = (BMD_File *)((LoadedFile *)&data_ov071_02123050)->file;
+        BMD_File *bmd2 = (BMD_File *)((LoadedFile *)&gEyknModelFile)->file;
         BTP_File *btp = (BTP_File *)((LoadedFile *)seq)->file;
         TextureSequence::Prepare(*bmd2, *btp);
     }
 
-    dExtFrameCtrl_c::LoadFile(*data_ov071_021226a0);
+    dExtFrameCtrl_c::LoadFile(*gEyknDeathAnimationFilePtr);
 
     if (!mShadowModel.InitCylinder())
         return 0;
@@ -843,10 +852,12 @@ s32 daEykn_c::InitResources()
     mTerminalVelocity = 0;
     SetState(0);
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, gEyknDeathAnimationFile.file, 0,
+                                                0x1000, 0);
 
     mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+        &mTextureSequence, gEyknCloseTextureSequenceFile.file, 0, 0x1000, 0);
 
     mTextureSequence.speed = 0x1000;
     mTarget = 0;
@@ -878,4 +889,11 @@ extern "C" daEykn_c *daEykn_c_classInit_EYEKUN_BOSS()
 extern "C" daEykn_c *daEykn_c_classInit_EYEKUN()
 {
     return new daEykn_c();
+}
+
+extern "C" {
+SpawnInfo<daEykn_c> g_profile_EYEKUN = {
+    daEykn_c_classInit_EYEKUN, 0x106, 0x78, 0x10000003, 0, 0x5f000, 0x1000000, 0xbb8000};
+SpawnInfo<daEykn_c> g_profile_EYEKUN_BOSS = {
+    daEykn_c_classInit_EYEKUN_BOSS, 0x107, 0x79, 0x10000003, 0, 0xbe000, 0x1000000, 0xbb8000};
 }

@@ -1,9 +1,5 @@
-/* DotVec3 at 0x0205380c
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
- */
-typedef int Fix12i;
-typedef struct Vector3 { Fix12i x, y, z; } Vector3;
+/* DotVec3 at 0x0205380c */
+#include "common.h"
 
 Fix12i DotVec3(const Vector3 *a, const Vector3 *b)
 {

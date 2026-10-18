@@ -1,0 +1,666 @@
+{
+  "schema": "native-data-campaign-evidence-v1",
+  "task": "data-gameover-native1017",
+  "base": "e8dc126bcda1865cce7a4a4cb920fb2095deefb9",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4037",
+  "producer": "codex-gameover-native1017",
+  "independent_review": "pending",
+  "source_completion": "partial: complete native initialized-data group; historical declaration extent/naming and existing body-form limitations deferred",
+  "preserved_candidate": {
+    "commit": "5b22a6f79e8b40067fded6eae293dfad1e395b78",
+    "jobs": [
+      "DD082",
+      "DDR009"
+    ],
+    "original_abbreviation": "807a12a9c9ab",
+    "author": "lunavyqo",
+    "coauthor": "Cursor"
+  },
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b0580",
+      "end": "0x020b117c"
+    },
+    {
+      "name": ".data",
+      "start": "0x020b174c",
+      "end": "0x020b1888"
+    }
+  ],
+  "input_files": [
+    {
+      "path": "src/game/stages/d_s_game_over.cpp",
+      "sha256": "2e018ec88d26099d35423f0383f9b1197fbd4c956d660941c98f3131f2d537ef"
+    },
+    {
+      "path": "config/tu_manifest.d/ov003/dScGameOver_c.json",
+      "sha256": "dec6bf44bb832a668b5edb015c9269a8b1c242ee32447456cc6c52f64864b4a0"
+    },
+    {
+      "path": "config/arm9/overlays/ov003/symbols.txt",
+      "sha256": "6dc6a1c09de91e456ce1b091e246b0938e7a4638f046fdd5f23e0c81829d3ba3"
+    },
+    {
+      "path": "config/arm9/overlays/ov003/delinks.txt",
+      "sha256": "888a1de732b6570527511bee632b1876c8e7eabf999e8f20b79882f710a057ae"
+    }
+  ],
+  "raw_object_proof": {
+    "base_commit": "e8dc126bcda1865cce7a4a4cb920fb2095deefb9",
+    "base_object_sha256": "106a4b843a8fa0489399db1ea0bfd98ee643ed008235b92aab2781095de9671b",
+    "candidate_object_sha256": "b7487ea3ec4e5be068f4abd3a249e9dcb4d4d42978b93be52ad5f17f50e5ae17",
+    "source_sha256": "2e018ec88d26099d35423f0383f9b1197fbd4c956d660941c98f3131f2d537ef",
+    "function_checks": [
+      {
+        "symbol": "_ZN13dScGameOver_cD0Ev",
+        "size": 80,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 6
+      },
+      {
+        "symbol": "_ZN13dScGameOver_c16OnPendingDestroyEv",
+        "size": 4,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 0
+      },
+      {
+        "symbol": "_ZN13dScGameOver_c6RenderEv",
+        "size": 128,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 3
+      },
+      {
+        "symbol": "_ZN13dScGameOver_c8BehaviorEv",
+        "size": 672,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 19
+      },
+      {
+        "symbol": "_ZN13dScGameOver_c16CleanupResourcesEv",
+        "size": 8,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 0
+      },
+      {
+        "symbol": "_ZN13dScGameOver_c13InitResourcesEv",
+        "size": 1500,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 78
+      },
+      {
+        "symbol": "_ZN13dScGameOver_cD1Ev",
+        "size": 60,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 4
+      },
+      {
+        "symbol": "_ZN13dScGameOver_c19func_ov003_020b060cEv",
+        "size": 292,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 3
+      },
+      {
+        "symbol": "_ZN13dScGameOver_c19func_ov003_020b0730Ei",
+        "size": 224,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 2
+      },
+      {
+        "symbol": "dScGameOver_c_classInit",
+        "size": 100,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 5
+      },
+      {
+        "symbol": "_ZN8dScene_cD2Ev",
+        "size": 48,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 3
+      },
+      {
+        "symbol": "_ZN7dBase_cD2Ev",
+        "size": 36,
+        "bytes_equal": true,
+        "relocations_equal": true,
+        "relocation_count": 2
+      }
+    ],
+    "data_checks": [
+      {
+        "symbol": "sGameOverPromptTileOffsets",
+        "address": "0x20b174c",
+        "size": 4,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "g_profile_GAME_OVER",
+        "address": "0x20b1750",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": [
+          {
+            "offset": 0,
+            "target": "dScGameOver_c_classInit",
+            "target_module": "ov003",
+            "target_address": "0x020b1118",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          }
+        ]
+      },
+      {
+        "symbol": "_ZTI13dScGameOver_c",
+        "address": "0x20b1758",
+        "size": 12,
+        "rom_bytes_equal": true,
+        "relocations": [
+          {
+            "offset": 4,
+            "target": "_ZTS13dScGameOver_c",
+            "target_module": "ov003",
+            "target_address": "0x020b1784",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 8,
+            "target": "_ZTI8dScene_c",
+            "target_module": "arm9",
+            "target_address": "0x020914d4",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 0,
+            "target": "_ZTVN3abi20__si_class_type_infoE",
+            "target_module": "arm9",
+            "target_address": "0x0209a764",
+            "raw_addend": 8,
+            "canonical_address_point_bias": 8
+          }
+        ]
+      },
+      {
+        "symbol": "data_ov003_020b1764",
+        "address": "0x20b1764",
+        "size": 16,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyphTargetX",
+        "address": "0x20b1774",
+        "size": 16,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "_ZTS13dScGameOver_c",
+        "address": "0x20b1784",
+        "size": 16,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "_ZTV13dScGameOver_c",
+        "address": "0x20b1794",
+        "size": 80,
+        "rom_bytes_equal": true,
+        "relocations": [
+          {
+            "offset": 4,
+            "target": "_ZTI13dScGameOver_c",
+            "target_module": "ov003",
+            "target_address": "0x020b1758",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 68,
+            "target": "_ZN7fBase_c13OnHeapCreatedEv",
+            "target_module": "arm9",
+            "target_address": "0x02043494",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 64,
+            "target": "_ZN7fBase_c9Virtual38Ejj",
+            "target_module": "arm9",
+            "target_address": "0x0204349c",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 60,
+            "target": "_ZN7fBase_c9Virtual34Ejj",
+            "target_module": "arm9",
+            "target_address": "0x0204357c",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 52,
+            "target": "_ZN8dScene_c11AfterRenderEj",
+            "target_module": "arm9",
+            "target_address": "0x0202e398",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 48,
+            "target": "_ZN8dScene_c12BeforeRenderEv",
+            "target_module": "arm9",
+            "target_address": "0x0202e3a4",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 40,
+            "target": "_ZN8dScene_c13AfterBehaviorEj",
+            "target_module": "arm9",
+            "target_address": "0x0202e3c8",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 36,
+            "target": "_ZN8dScene_c14BeforeBehaviorEv",
+            "target_module": "arm9",
+            "target_address": "0x0202e3d4",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 28,
+            "target": "_ZN8dScene_c21AfterCleanupResourcesEj",
+            "target_module": "arm9",
+            "target_address": "0x0202e5d0",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 24,
+            "target": "_ZN8dScene_c22BeforeCleanupResourcesEv",
+            "target_module": "arm9",
+            "target_address": "0x0202e5f0",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 16,
+            "target": "_ZN8dScene_c18AfterInitResourcesEj",
+            "target_module": "arm9",
+            "target_address": "0x0202e62c",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 12,
+            "target": "_ZN8dScene_c19BeforeInitResourcesEv",
+            "target_module": "arm9",
+            "target_address": "0x0202e638",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 76,
+            "target": "_ZN13dScGameOver_cD0Ev",
+            "target_module": "ov003",
+            "target_address": "0x020b05bc",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 56,
+            "target": "_ZN13dScGameOver_c16OnPendingDestroyEv",
+            "target_module": "ov003",
+            "target_address": "0x020b0810",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 44,
+            "target": "_ZN13dScGameOver_c6RenderEv",
+            "target_module": "ov003",
+            "target_address": "0x020b0814",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 32,
+            "target": "_ZN13dScGameOver_c8BehaviorEv",
+            "target_module": "ov003",
+            "target_address": "0x020b0894",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 20,
+            "target": "_ZN13dScGameOver_c16CleanupResourcesEv",
+            "target_module": "ov003",
+            "target_address": "0x020b0b34",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 8,
+            "target": "_ZN13dScGameOver_c13InitResourcesEv",
+            "target_module": "ov003",
+            "target_address": "0x020b0b3c",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 72,
+            "target": "_ZN13dScGameOver_cD1Ev",
+            "target_module": "ov003",
+            "target_address": "0x020b0580",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          }
+        ]
+      },
+      {
+        "symbol": "sGameOverGlyph0",
+        "address": "0x20b17e4",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyph7",
+        "address": "0x20b17ec",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyph6",
+        "address": "0x20b17f4",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyph5",
+        "address": "0x20b17fc",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyph4",
+        "address": "0x20b1804",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyph3",
+        "address": "0x20b180c",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyph2",
+        "address": "0x20b1814",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyph1",
+        "address": "0x20b181c",
+        "size": 8,
+        "rom_bytes_equal": true,
+        "relocations": []
+      },
+      {
+        "symbol": "sGameOverGlyphTemplates",
+        "address": "0x20b1824",
+        "size": 36,
+        "rom_bytes_equal": true,
+        "relocations": [
+          {
+            "offset": 32,
+            "target": "sGameOverCompositeTemplate",
+            "target_module": "ov003",
+            "target_address": "0x020b1848",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 28,
+            "target": "sGameOverGlyph7",
+            "target_module": "ov003",
+            "target_address": "0x020b17ec",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 24,
+            "target": "sGameOverGlyph6",
+            "target_module": "ov003",
+            "target_address": "0x020b17f4",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 20,
+            "target": "sGameOverGlyph5",
+            "target_module": "ov003",
+            "target_address": "0x020b17fc",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 16,
+            "target": "sGameOverGlyph4",
+            "target_module": "ov003",
+            "target_address": "0x020b1804",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 12,
+            "target": "sGameOverGlyph3",
+            "target_module": "ov003",
+            "target_address": "0x020b180c",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 8,
+            "target": "sGameOverGlyph2",
+            "target_module": "ov003",
+            "target_address": "0x020b1814",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 4,
+            "target": "sGameOverGlyph1",
+            "target_module": "ov003",
+            "target_address": "0x020b181c",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          },
+          {
+            "offset": 0,
+            "target": "sGameOverGlyph0",
+            "target_module": "ov003",
+            "target_address": "0x020b17e4",
+            "raw_addend": 0,
+            "canonical_address_point_bias": 0
+          }
+        ]
+      },
+      {
+        "symbol": "sGameOverCompositeTemplate",
+        "address": "0x20b1848",
+        "size": 64,
+        "rom_bytes_equal": true,
+        "relocations": []
+      }
+    ],
+    "production_claim": false,
+    "limitations": [
+      "Raw object proof; final configured routing/provider/full ROM measured separately.",
+      "Following24zero bytes are unclaimed; original composite array extent beyond terminator remains unknown."
+    ]
+  },
+  "retired_alias_evidence": {
+    "retired_alias": "data_ov003_020b179c",
+    "canonical_symbol": "_ZTV13dScGameOver_c",
+    "canonical_address": "0x020b179c",
+    "reason": "Address-derived alias has no source/header/port consumer and no symbol/import/relocation consumer in any object from the completed full-ROM candidate link. Canonical native vtable remains at identical address.",
+    "linked_object_list": "build\\tu\\ov003-dScGameOver_c\\link\\objects.txt",
+    "linked_object_list_sha256": "544dc85363809e65bc333a164a5845601818c69f04ab1d5e7441f386a54e2666",
+    "objects_scanned": 2714,
+    "alias_symbol_or_import_hits": [],
+    "source_ref_search": "rg across src include config port notes/data found only duplicate symbols.txt row and the new strict-failure diagnostic stored in the mutable TU receipt; no live source/header/port consumer.",
+    "scope": "Pre-alias-cleanup candidate linked fullROMd150; scan proves absence from the actual link input list, not every unused file in repository history."
+  },
+  "production": {
+    "status": "passed",
+    "rom": {
+      "status": "passed",
+      "path": "C:\\tmp\\sm64ds-data-gameover1017\\build\\gameover-production.nds",
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "commands": [
+        [
+          "C:\\tmp\\sm64ds-data-gameover1017\\tools\\bin\\dsd.exe",
+          "rom",
+          "config",
+          "--elf",
+          "C:\\tmp\\sm64ds-data-gameover1017\\build\\final_link.o",
+          "--config",
+          "C:\\tmp\\sm64ds-data-gameover1017\\build\\rombuild-config\\stock\\arm9\\config.yaml"
+        ],
+        [
+          "C:\\tmp\\sm64ds-data-gameover1017\\tools\\bin\\dsd.exe",
+          "rom",
+          "build",
+          "--config",
+          "C:\\tmp\\sm64ds-data-gameover1017\\build\\build\\rom_config.yaml",
+          "--rom",
+          "C:\\tmp\\sm64ds-data-gameover1017\\build\\gameover-production.nds"
+        ]
+      ],
+      "fresh_production_artifact_sha256": {
+        "C:\\tmp\\sm64ds-data-gameover1017\\build\\final_link.o": "0ae22adbdd90aec7d5ab289b76178f43181831ab8e6e8cc7282135c5ddb703f6",
+        "C:\\tmp\\sm64ds-data-gameover1017\\build\\final_link.o.xMAP": "fac58a04f1a4d8f3b9c21dd4ac69b534331c8fb6cce71538a7780afbbd1defca",
+        "C:\\tmp\\sm64ds-data-gameover1017\\build\\build\\arm9_ov003.bin": "9d4780b99cdef8a195658b883108082614b5e28383116d62700c0fd80c611f69"
+      },
+      "provider_audited_artifacts_unchanged": true,
+      "scope": "ROM constructed from the exact fresh production ELF/module artifacts audited by the guarded provider run; separate continuation of the --no-rom production invocation."
+    },
+    "complete_link_verification_ok": true,
+    "new_symbol_errors": [],
+    "baseline_symbol_errors": [
+      "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+      "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+      "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+    ],
+    "analysis_passed": true,
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11334,
+      "compiledBytes": 2225480,
+      "sourceFunctions": 11334,
+      "sourceBytes": 2225480,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.43577343005789,
+      "reproducingFunctions": 11334,
+      "reproducingBytes": 2225480,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 339,
+      "sourceBssClaims": 245,
+      "sourceBssBytes": 31216,
+      "reproducingDataClaims": 339,
+      "reproducingDataClaimBytes": 13600,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    }
+  },
+  "provider_proof": {
+    "ok": true,
+    "requests": 16,
+    "excluded_symbol": "_ZTV13dScGameOver_c",
+    "exclusion_reason": "Public vtable address point is storage+8; full 80-byte object and complete owned range proved separately.",
+    "external_tooling_commit": "b045eaba5fdc50e097a78be7f7ac55e0da308816",
+    "tool_paths_bound_by_report": true
+  },
+  "source_findings": [
+    {
+      "id": "GAMEOVER-2711-01",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/game/stages/d_s_game_over.cpp and config/tu_manifest.d/ov003/dScGameOver_c.json",
+      "summary": "Historical free-helper description superseded by existing native methods.",
+      "reason": "Pinned e8dc126 input already implements both address-named helpers as real dScGameOver_c methods. This slice preserves them and labels the old manifest statement historical; it does not claim a new method reconstruction."
+    },
+    {
+      "id": "GAMEOVER-SOURCE-FORM-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/stages/d_s_game_over.cpp:func_ov003_020b060c and OAM Render bridge",
+      "summary": "Known body/addressing, pragma and Fix12 source-form limitations remain.",
+      "reason": "The existing measured codegen floors are retained without reopening search; new data declarations preserve every function and relocation. No claim of complete original source recovery.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4037",
+      "owner": "Next independently claimed Game Over reconstruction producer coordinated on issue4037; shared-header changes require their own reservation."
+    },
+    {
+      "id": "GAMEOVER-INITIAL-X-NAME-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "include/decl_common.h and data_ov003_020b1764",
+      "summary": "Initial glyph-X table retains its address-derived shared declaration.",
+      "reason": "Actual s16[8] type and contents are recovered; the shared header is reserved by another task, so this continuation defines the compatible existing symbol and describes its meaning locally.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4037",
+      "owner": "Next independently claimed Game Over reconstruction producer coordinated on issue4037; shared-header changes require their own reservation."
+    },
+    {
+      "id": "GAMEOVER-TEMPLATE-EXTENT-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "ov003:0x020b1844..0x020b18a0",
+      "summary": "Original grouping of ninth template pointer and storage after composite terminator remains uncertain.",
+      "reason": "The ninth adjacent pointer is preserved in a native nine-entry table, but only entries 0..7 have an observed Render consumer. Eight composite OamAttr records terminate at 0x020b1888; following 24 zero bytes remain ROM-owned under an address-derived boundary label. Neither original array extent nor padding ownership is claimed.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4037",
+      "owner": "Next independently claimed Game Over reconstruction producer coordinated on issue4037; shared-header changes require their own reservation."
+    }
+  ],
+  "limitations": [
+    "No original identifiers or unique historical TU boundary recovered.",
+    "Ninth pointer array membership inferred; only first eight entries have observed Render consumer.",
+    "Following 24 zero bytes at 0x020b1888..0x020b18a0 remain ROM-owned; original extent and padding ownership are unknown.",
+    "Known unrelated optional romdata scanner discrepancy is separate from complete current ownership and full-ROM proof."
+  ]
+}

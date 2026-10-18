@@ -62,6 +62,7 @@ src/minigames/d_s_mg_cup.cpp:
     .init start:0x021303d0 end:0x021304ac
     .ctor start:0x0213358c end:0x02133590
     .bss start:0x02141870 end:0x021418b0
+    .data start:0x0213c094 end:0x0213c0f4
 
 src/minigames/d_s_mg_curling.cpp:
     complete
@@ -93,6 +94,7 @@ src/minigames/d_s_mg_hanachan_methods.cpp:
     .text start:0x020ea280 end:0x020ede18
     .init start:0x02130df8 end:0x02130e9c
     .ctor start:0x021335a0 end:0x021335a4
+    .data start:0x0213c95c end:0x0213ca7c
     .bss start:0x02142018 end:0x02142044
 
 src/minigames/d_s_mg_hanachan.cpp:
@@ -137,6 +139,7 @@ src/minigames/d_s_mg_memory2.cpp:
     .text start:0x020f5564 end:0x020f7634
     .init start:0x021314e4 end:0x021318a0
     .ctor start:0x021335b4 end:0x021335b8
+    .data start:0x0213d248 end:0x0213d338
     .bss start:0x021423a8 end:0x021424ec
 
 src/minigames/d_s_mg_m_carlo.cpp:
@@ -200,6 +203,7 @@ src/minigames/d_s_mg_smartball.cpp:
 
 src/minigames/d_s_mg_sound.cpp:
     complete
+    .rodata start:0x0212ee40 end:0x0212ef3c
     .text start:0x02119904 end:0x0211cbd0
     .init start:0x02132970 end:0x02132f68
     .ctor start:0x021335d4 end:0x021335d8

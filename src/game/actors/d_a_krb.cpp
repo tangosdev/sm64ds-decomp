@@ -94,7 +94,8 @@ typedef struct {
     unsigned char flag : 1;
 } Flags;
 
-/* A resource handle as the ROM lays it out: {id, loaded file}. The files the
+/* Resource handles contain a file ID, reference count, and loaded-file pointer.
+   KrbModelFilePtr retains a packed view of the first word. The files the
    Goombas load are read through .ptr. Model handles construct through
    func_02017acc and destroy through func_02017ab4. Animation handles
    construct through SharedFilePtr::Construct and destroy through
@@ -105,13 +106,6 @@ struct KrbModelFilePtr : SharedFilePtr {
 
     KrbModelFilePtr(u32 fileID);
     ~KrbModelFilePtr();
-};
-
-struct KrbAnimationFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
-
-    KrbAnimationFileHandle(u32 fileID);
-    ~KrbAnimationFileHandle();
 };
 
 /* A state handler: data_ov084_02130d74 holds one pointer-to-member per
@@ -250,7 +244,7 @@ void LoadSilverStarAndNumber(void);
 void LoadBlueCoinModel(void* c);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12i b, Fix12i cc, void* d, Fix12i e);
-extern SharedFilePtr* data_ov084_02130278[7];
+extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];
 extern int data_ov084_02130238[];
@@ -1640,7 +1634,7 @@ int daKrb_c::CleanupResources() {
         UnloadBlueCoinModel(this);
     data_ov084_02130cf8.Release();
     for (i = 0; i < 7; ++i)
-        ((SharedFilePtr *)(data_ov084_02130278[i]))->Release();
+        sKuriboAnimationFiles[i]->Release();
     if ((unsigned char)(mRewardType + 0xff) <= 1)
         UnloadSilverStarAndNumber();
     UnloadCapModel();
@@ -1913,7 +1907,7 @@ int daKrb_c::InitResources()
 
     Model::LoadFile(data_ov084_02130cf8);
     for (i = 0; i < 7; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)(data_ov084_02130278[i]));
+        dExtFrameCtrl_c::LoadFile(*sKuriboAnimationFiles[i]);
 
     AddCap((unsigned char)(*(int *)(c + 8) & 0xf));
 
@@ -2108,3 +2102,10 @@ StateHandler data_ov084_02130d74[5] = {
     krbStateDesc_Tumble.pmf,          /* STATE_TUMBLE */
     krbStateDesc_Pause.pmf,           /* STATE_PAUSE */
 };
+
+extern "C" {
+SharedFilePtr *const sKuriboAnimationFiles[7] = {
+    &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,
+    &gKuriboRecoverAnimationFile, &data_ov084_02130cc8, &data_ov084_02130cf0,
+};
+}

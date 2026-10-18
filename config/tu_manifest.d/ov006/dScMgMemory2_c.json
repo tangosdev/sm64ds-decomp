@@ -28,6 +28,11 @@
       "end": "0x021335b8"
     },
     {
+      "name": ".data",
+      "start": "0x0213d248",
+      "end": "0x0213d338"
+    },
+    {
       "name": ".bss",
       "start": "0x021423a8",
       "end": "0x021424ec"
@@ -399,42 +404,253 @@
       "ordinal": 51
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultWait",
+      "address": "0x0213d248",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StatePlay",
+      "address": "0x0213d250",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerDrop",
+      "address": "0x0213d258",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealHard",
+      "address": "0x0213d260",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateSetup",
+      "address": "0x0213d268",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardIdle",
+      "address": "0x0213d270",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateExit",
+      "address": "0x0213d278",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealFourth",
+      "address": "0x0213d280",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "g_profile_MG_MEMORY_J",
+      "address": "0x0213d288",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte BaseSpawnInfo<void> record: factory pointer and two unsigned 16-bit priorities match retail."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealNormal",
+      "address": "0x0213d290",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundShowCards",
+      "address": "0x0213d298",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReadyCards",
+      "address": "0x0213d2a0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReveal",
+      "address": "0x0213d2a8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardSelect",
+      "address": "0x0213d2b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerWait",
+      "address": "0x0213d2b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateJudge",
+      "address": "0x0213d2c0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundStart",
+      "address": "0x0213d2c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealEasy",
+      "address": "0x0213d2d0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlyAway",
+      "address": "0x0213d2d8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipDown",
+      "address": "0x0213d2e0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardWait",
+      "address": "0x0213d2e8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipUp",
+      "address": "0x0213d2f0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultFinish",
+      "address": "0x0213d2f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateResult",
+      "address": "0x0213d300",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardMove",
+      "address": "0x0213d308",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundHideCards",
+      "address": "0x0213d310",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundWaitDeal",
+      "address": "0x0213d318",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultReward",
+      "address": "0x0213d320",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultTurnCards",
+      "address": "0x0213d328",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerMove",
+      "address": "0x0213d330",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    }
+  ],
   "bss": [
     {
       "symbol": "sMemory2PlayerTable",
       "address": "0x021423a8",
       "size": "0x18",
       "binding": "STB_GLOBAL",
-      "evidence": "three player states, plain-copied from the ROM constants"
+      "evidence": "three player states, initialized from compiler-emitted native member-pointer literals"
     },
     {
       "symbol": "sMemory2ResultTable",
       "address": "0x021423c0",
       "size": "0x20",
       "binding": "STB_GLOBAL",
-      "evidence": "four result states, plain-copied from the ROM constants"
+      "evidence": "four result states, initialized from compiler-emitted native member-pointer literals"
     },
     {
       "symbol": "sMemory2StateTable",
       "address": "0x021423e0",
       "size": "0x28",
       "binding": "STB_GLOBAL",
-      "evidence": "five main states, plain-copied from the ROM constants"
+      "evidence": "five main states, initialized from compiler-emitted native member-pointer literals"
     },
     {
       "symbol": "sMemory2CardTable",
       "address": "0x02142408",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "seven card states, plain-copied from the ROM constants"
+      "evidence": "seven card states, initialized from compiler-emitted native member-pointer literals"
     },
     {
       "symbol": "sMemory2RoundTable",
       "address": "0x02142440",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "ten round states, plain-copied from the ROM constants"
+      "evidence": "ten round states, initialized from compiler-emitted native member-pointer literals"
     },
     {
       "symbol": "sMemory2CardSprites",
@@ -455,13 +671,14 @@
     "COMPILER-ONLY OUTPUT:13 data policies and3 exact-symbol deadstrip function policies,16 rows total. The six-class chain dScMgMemory2_c -> dScMgSingle3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c gives2x6 typeinfo rows plus1 vtable. The function policies cover the existing dScMgMemory2_c D2 and the additional dMgMemory2SharedState_c D1 and dScMgSingle3DBase_c D2 emitted by ordinary construction. Each has no configured ROM home and no retained relocation references it. The queue row records the ancestry-derived minimum of13 compiler-only data records; it is not a total of all function policies.",
     "EMISSION ORDER WITHOUT REVERSING THE SOURCE. This TU is written ROM-ASCENDING and still emits ROM-ascending, because `#pragma defer_codegen off` (after the includes and the extern block) makes mwccarm 2004/b56 emit each definition as it is encountered instead of deferring and reversing. That is what keeps the two file-local optimisation pragmas -- opt_propagation off around DrawCards and opt_loop_invariants off around ResultFinish, each bracketed #pragma push/pop -- attached to the members that measured them, and it is why the out-of-line destructor here yields licensed D1-then-D0 rather than the D2/D0/D1 the deferred path gives.",
     "FOLD 2026-10-10. The handwritten src/unnamed/ov006/__sinit_ov006_021314e4.c initializer folded into this TU as the six retail-ordered table definitions at its end: the 23-entry sprite-pointer permutation and the five PMF state tables (5 main, 10 round, 4 result, 7 card, 3 player) defined through the existing dScMgMemory2_cState/dScMgMemory2_cCardState typedefs and plain-copied from the still-extern .data descriptor records. mwcc emits the same 0x3bc initializer into .init (36 literal-pool reloc sites matching retail), the same .ctor word, and per-table .bss sections covering 0x021423a8..0x021424ec; no @NNN temps are emitted. Same shape as sibling d_s_mg_memory.cpp (READY row 73).",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to its own stock control. The recorded verification.linkcheck.rom.sha256 is the fleet-canonical US-dump hash every intact entry shares, per #3691."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to its own stock control. The recorded verification.linkcheck.rom.sha256 is the fleet-canonical US-dump hash every intact entry shares, per #3691.",
+    "DATA 2026-10-17: the five native member-pointer table initializers emit the 29 .data constants previously declared extern. Preserve header signatures; RoundWaitDeal returns void* and is explicitly converted to the preexisting void-return dispatch type. BaseSpawnInfo<void> supplies the interleaved eight-byte profile. Current ownership adds only .data 0x0213d248..0x0213d338; the shared sprite table and neighboring RTTI remain external. Prior FOLD verification below records the older extern-descriptor version and is historical until fresh production proof is appended."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgMemory2_c/dScMgMemory2_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgMemory2_c/d_s_mg_memory2.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 52,
     "functions_declared": 52,
@@ -483,26 +700,26 @@
         100,
         101,
         102,
-        109,
-        110,
-        111,
-        112,
-        113,
-        114,
-        115,
-        116,
-        117,
-        118,
-        119,
-        120,
-        121,
-        122,
-        123,
-        124,
-        125,
-        126,
-        127,
-        128
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -533,12 +750,13 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV14dScMgMemory2_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 24 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -584,6 +802,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213d248",
+          "end": "0x0213d338",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021423a8",
           "end": "0x021424ec",
@@ -592,7 +817,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 60
+          "LICENSED": 90
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -603,74 +828,240 @@
           {
             "section": ".init",
             "original": [
-              131
+              191
             ],
             "desired": [
-              131
+              191
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              129
+              189
             ],
             "desired": [
-              129
+              189
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              103,
+              106,
+              108,
+              110,
+              112,
+              114,
+              117,
+              119,
+              121,
+              123,
+              125,
+              127,
+              129,
+              131,
+              133,
+              135,
+              138,
+              140,
+              142,
+              144,
+              147,
+              149,
+              151,
+              153,
+              155,
+              157,
+              159,
+              162,
+              164,
+              166
+            ],
+            "desired": [
+              138,
+              108,
+              162,
+              123,
+              106,
+              149,
+              114,
+              125,
+              103,
+              121,
+              127,
+              131,
+              135,
+              151,
+              166,
+              110,
+              117,
+              119,
+              159,
+              157,
+              155,
+              153,
+              144,
+              112,
+              147,
+              129,
+              133,
+              140,
+              142,
+              164
             ]
           },
           {
             "section": ".bss",
             "original": [
-              103,
-              104,
               105,
-              106,
-              107,
-              108
+              116,
+              137,
+              146,
+              161,
+              168
             ],
             "desired": [
-              108,
-              106,
-              104,
-              107,
-              105,
-              103
+              168,
+              146,
+              116,
+              161,
+              137,
+              105
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".data",
               "original": [
                 103,
-                104,
-                105,
                 106,
-                107,
-                108
+                108,
+                110,
+                112,
+                114,
+                117,
+                119,
+                121,
+                123,
+                125,
+                127,
+                129,
+                131,
+                133,
+                135,
+                138,
+                140,
+                142,
+                144,
+                147,
+                149,
+                151,
+                153,
+                155,
+                157,
+                159,
+                162,
+                164,
+                166
               ],
               "desired": [
+                138,
                 108,
+                162,
+                123,
                 106,
-                104,
-                107,
-                105,
-                103
+                149,
+                114,
+                125,
+                103,
+                121,
+                127,
+                131,
+                135,
+                151,
+                166,
+                110,
+                117,
+                119,
+                159,
+                157,
+                155,
+                153,
+                144,
+                112,
+                147,
+                129,
+                133,
+                140,
+                142,
+                164
               ],
               "slots": [
                 103,
-                104,
-                105,
                 106,
-                107,
-                108
+                108,
+                110,
+                112,
+                114,
+                117,
+                119,
+                121,
+                123,
+                125,
+                127,
+                129,
+                131,
+                133,
+                135,
+                138,
+                140,
+                142,
+                144,
+                147,
+                149,
+                151,
+                153,
+                155,
+                157,
+                159,
+                162,
+                164,
+                166
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                105,
+                116,
+                137,
+                146,
+                161,
+                168
+              ],
+              "desired": [
+                168,
+                146,
+                116,
+                161,
+                137,
+                105
+              ],
+              "slots": [
+                105,
+                116,
+                137,
+                146,
+                161,
+                168
               ]
             }
           ],
-          "symbolIndices": 6,
+          "symbolIndices": 36,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 30,
           "error": null
         },
         "errors": null
@@ -846,6 +1237,180 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot emit a reloc to a local"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultWait",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StatePlay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerDrop",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealHard",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateSetup",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateExit",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealFourth",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealNormal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundShowCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReadyCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReveal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardSelect",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerWait",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateJudge",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundStart",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealEasy",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlyAway",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipDown",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardWait",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipUp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultFinish",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateResult",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardMove",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundHideCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundWaitDeal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultReward",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultTurnCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerMove",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local PMF literal is the configured .data symbol referenced by the native table initializer."
     }
   ],
   "relocations": [
@@ -1218,6 +1783,453 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x213d2b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d248",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10ResultWaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6538"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d250",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c9StatePlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7234"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d258",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10PlayerDropEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f58d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d260",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6a78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d268",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10StateSetupEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7280"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d270",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c8CardIdleEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6084"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d278",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c9StateExitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7190"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6a00"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "dScMgMemory2_c_classInit",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f75d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6b00"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6904"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f67a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c11RoundRevealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6678"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10CardSelectEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5f0c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10PlayerWaitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5740"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10StateJudgeEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7210"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10RoundStartEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6bf0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6b78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5cb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5de0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c8CardWaitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5e70"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10CardFlipUpEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5e74"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c12ResultFinishEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6230"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d300",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c11StateResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f71c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c8CardMoveEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6088"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6830"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f670c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d320",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c12ResultRewardEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6488"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f639c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d330",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10PlayerMoveEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5744"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1614",
+      "to": "pmf_dScMgMemory2_c_ResultWait",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1587",
+      "to": "pmf_dScMgMemory2_c_StatePlay",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1636",
+      "to": "pmf_dScMgMemory2_c_PlayerDrop",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1601",
+      "to": "pmf_dScMgMemory2_c_RoundDealHard",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1585",
+      "to": "pmf_dScMgMemory2_c_StateSetup",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1624",
+      "to": "pmf_dScMgMemory2_c_CardIdle",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1593",
+      "to": "pmf_dScMgMemory2_c_StateExit",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1603",
+      "to": "pmf_dScMgMemory2_c_RoundDealFourth",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1599",
+      "to": "pmf_dScMgMemory2_c_RoundDealNormal",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1605",
+      "to": "pmf_dScMgMemory2_c_RoundShowCards",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1609",
+      "to": "pmf_dScMgMemory2_c_RoundReadyCards",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1612",
+      "to": "pmf_dScMgMemory2_c_RoundReveal",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1626",
+      "to": "pmf_dScMgMemory2_c_CardSelect",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1640",
+      "to": "pmf_dScMgMemory2_c_PlayerWait",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1589",
+      "to": "pmf_dScMgMemory2_c_StateJudge",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1595",
+      "to": "pmf_dScMgMemory2_c_RoundStart",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1597",
+      "to": "pmf_dScMgMemory2_c_RoundDealEasy",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1634",
+      "to": "pmf_dScMgMemory2_c_CardFlyAway",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1632",
+      "to": "pmf_dScMgMemory2_c_CardFlipDown",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1630",
+      "to": "pmf_dScMgMemory2_c_CardWait",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1628",
+      "to": "pmf_dScMgMemory2_c_CardFlipUp",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1620",
+      "to": "pmf_dScMgMemory2_c_ResultFinish",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1591",
+      "to": "pmf_dScMgMemory2_c_StateResult",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1622",
+      "to": "pmf_dScMgMemory2_c_CardMove",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1607",
+      "to": "pmf_dScMgMemory2_c_RoundHideCards",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1610",
+      "to": "pmf_dScMgMemory2_c_RoundWaitDeal",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1616",
+      "to": "pmf_dScMgMemory2_c_ResultReward",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1618",
+      "to": "pmf_dScMgMemory2_c_ResultTurnCards",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
+    },
+    {
+      "from": "@1638",
+      "to": "pmf_dScMgMemory2_c_PlayerMove",
+      "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method."
     }
   ]
 }

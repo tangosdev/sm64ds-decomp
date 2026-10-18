@@ -1,0 +1,821 @@
+{
+  "object_sha256": "11a2522fe3067c46200f74a4220d99ea2f300f5355074b3115880ff262958350",
+  "function_bodies_compared": 64,
+  "exact_function_bytes": true,
+  "exact_canonical_relocations": true,
+  "data_records": [
+    {
+      "symbol": "pmf_Wiggler_StateWait",
+      "compiler_symbol": "@1115",
+      "address": "0x213c95c",
+      "target": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "retail_bytes": "1cb30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_Retarget",
+          "native_function": "Wiggler_Retarget",
+          "function_offset": "0x160"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro",
+      "compiler_symbol": "@2148",
+      "address": "0x213c964",
+      "target": "_ZN15dScMgHanachan_c15Phase_WaitIntroEv",
+      "retail_bytes": "44d80e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c16Phase_SetupRoundEv",
+          "native_function": "_ZN15dScMgHanachan_c16Phase_SetupRoundEv",
+          "function_offset": "0x1a0"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim",
+      "compiler_symbol": "@1061",
+      "address": "0x213c96c",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_OnTouched",
+          "native_function": "Wiggler_OnTouched",
+          "function_offset": "0xb0"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveB",
+      "compiler_symbol": "@1112",
+      "address": "0x213c974",
+      "target": "_ZN15dScMgHanachan_c7Wiggler10StateMoveBEv",
+      "retail_bytes": "e4b30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_Retarget",
+          "native_function": "Wiggler_Retarget",
+          "function_offset": "0x15c"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_2",
+      "compiler_symbol": "@652",
+      "address": "0x213c97c",
+      "target": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "retail_bytes": "1cb30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_DrawField",
+          "native_function": "Wiggler_DrawField",
+          "function_offset": "0x3d8"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_2",
+      "compiler_symbol": "@815",
+      "address": "0x213c984",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StateMoveA",
+          "native_function": "_ZN15dScMgHanachan_c7Wiggler10StateMoveAEv",
+          "function_offset": "0x138"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "g_profile_MG_HANACHAN",
+      "compiler_symbol": "g_profile_MG_HANACHAN",
+      "address": "0x213c98c",
+      "target": "dScMgHanachan_c_classInit",
+      "retail_bytes": "18de0e0282018201",
+      "retail_match": true,
+      "size": 8,
+      "format": "BaseSpawnInfo<void>: factory pointer + u16 execution priority + u16 render priority",
+      "consumer_correspondence": [],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Result",
+      "compiler_symbol": "@1778",
+      "address": "0x213c994",
+      "target": "_ZN15dScMgHanachan_c12Phase_ResultEv",
+      "retail_bytes": "4cd30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "native_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "function_offset": "0x294"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA",
+      "compiler_symbol": "@1034",
+      "address": "0x213c99c",
+      "target": "_ZN15dScMgHanachan_c7Wiggler10StateMoveAEv",
+      "retail_bytes": "e0b10e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StopIfIdle",
+          "native_function": "Wiggler_StopIfIdle",
+          "function_offset": "0xe8"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_3",
+      "compiler_symbol": "@1036",
+      "address": "0x213c9a4",
+      "target": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "retail_bytes": "1cb30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StopIfIdle",
+          "native_function": "Wiggler_StopIfIdle",
+          "function_offset": "0xec"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play",
+      "compiler_symbol": "@1764",
+      "address": "0x213c9ac",
+      "target": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+      "retail_bytes": "94d40e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "native_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "function_offset": "0x288"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_3",
+      "compiler_symbol": "@1024",
+      "address": "0x213c9b4",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StopIfIdle",
+          "native_function": "Wiggler_StopIfIdle",
+          "function_offset": "0xe0"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_Update",
+      "compiler_symbol": "@1074",
+      "address": "0x213c9bc",
+      "target": "_ZN15dScMgHanachan_c7Wiggler6UpdateEv",
+      "retail_bytes": "18b00e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_OnTouched",
+          "native_function": "Wiggler_OnTouched",
+          "function_offset": "0xbc"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA_2",
+      "compiler_symbol": "@1071",
+      "address": "0x213c9c4",
+      "target": "_ZN15dScMgHanachan_c7Wiggler10StateMoveAEv",
+      "retail_bytes": "e0b10e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_OnTouched",
+          "native_function": "Wiggler_OnTouched",
+          "function_offset": "0xb8"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play_2",
+      "compiler_symbol": "@2104",
+      "address": "0x213c9cc",
+      "target": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+      "retail_bytes": "94d40e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c9BeginPlayEv",
+          "native_function": "_ZN15dScMgHanachan_c9BeginPlayEv",
+          "function_offset": "0x24"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold",
+      "compiler_symbol": "@1148",
+      "address": "0x213c9d4",
+      "target": "_ZN15dScMgHanachan_c7Wiggler9StateHoldEv",
+      "retail_bytes": "c8b00e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_GetFrame",
+          "native_function": "Wiggler_GetFrame",
+          "function_offset": "0xc4"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_4",
+      "compiler_symbol": "@1714",
+      "address": "0x213c9dc",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StartPathC",
+          "native_function": "Wiggler_StartPathC",
+          "function_offset": "0x210"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce",
+      "compiler_symbol": "@1108",
+      "address": "0x213c9e4",
+      "target": "_ZN15dScMgHanachan_c7Wiggler10MoveBounceEv",
+      "retail_bytes": "e8c60e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_Retarget",
+          "native_function": "Wiggler_Retarget",
+          "function_offset": "0x154"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_5",
+      "compiler_symbol": "@1105",
+      "address": "0x213c9ec",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_Retarget",
+          "native_function": "Wiggler_Retarget",
+          "function_offset": "0x150"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_6",
+      "compiler_symbol": "@1094",
+      "address": "0x213c9f4",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_Retarget",
+          "native_function": "Wiggler_Retarget",
+          "function_offset": "0x148"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold_2",
+      "compiler_symbol": "@1044",
+      "address": "0x213c9fc",
+      "target": "_ZN15dScMgHanachan_c7Wiggler9StateHoldEv",
+      "retail_bytes": "c8b00e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StopIfIdle",
+          "native_function": "Wiggler_StopIfIdle",
+          "function_offset": "0xf4"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_4",
+      "compiler_symbol": "@1140",
+      "address": "0x213ca04",
+      "target": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "retail_bytes": "1cb30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_GetFrame",
+          "native_function": "Wiggler_GetFrame",
+          "function_offset": "0xc0"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftB",
+      "compiler_symbol": "@1664",
+      "address": "0x213ca0c",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftBEv",
+      "retail_bytes": "3cc90e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StartPathB",
+          "native_function": "Wiggler_StartPathB",
+          "function_offset": "0x1bc"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce_2",
+      "compiler_symbol": "@1598",
+      "address": "0x213ca14",
+      "target": "_ZN15dScMgHanachan_c7Wiggler10MoveBounceEv",
+      "retail_bytes": "e8c60e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StartBounce",
+          "native_function": "Wiggler_StartBounce",
+          "function_offset": "0xec"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_7",
+      "compiler_symbol": "@902",
+      "address": "0x213ca1c",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_UpdateSway",
+          "native_function": "Wiggler_UpdateSway",
+          "function_offset": "0xb0"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftA",
+      "compiler_symbol": "@1530",
+      "address": "0x213ca24",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftAEv",
+      "retail_bytes": "58c40e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StartPathA",
+          "native_function": "Wiggler_StartPathA",
+          "function_offset": "0x208"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro_2",
+      "compiler_symbol": "@1815",
+      "address": "0x213ca2c",
+      "target": "_ZN15dScMgHanachan_c15Phase_WaitIntroEv",
+      "retail_bytes": "44d80e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "native_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "function_offset": "0x2a0"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch",
+      "compiler_symbol": "@1805",
+      "address": "0x213ca34",
+      "target": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+      "retail_bytes": "74d20e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "native_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "function_offset": "0x29c"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB",
+      "compiler_symbol": "@1802",
+      "address": "0x213ca3c",
+      "target": "_ZN15dScMgHanachan_c11Phase_NoneBEv",
+      "retail_bytes": "28d30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "native_function": "_ZN15dScMgHanachan_c6RenderEv",
+          "function_offset": "0x298"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_8",
+      "compiler_symbol": "@877",
+      "address": "0x213ca44",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "Wiggler_StateMoveB",
+          "native_function": "_ZN15dScMgHanachan_c7Wiggler10StateMoveBEv",
+          "function_offset": "0x170"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_9",
+      "compiler_symbol": "@2014",
+      "address": "0x213ca4c",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+          "native_function": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+          "function_offset": "0x35c"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneA",
+      "compiler_symbol": "@1924",
+      "address": "0x213ca54",
+      "target": "_ZN15dScMgHanachan_c11Phase_NoneAEv",
+      "retail_bytes": "70d20e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+          "native_function": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+          "function_offset": "0x88"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch_2",
+      "compiler_symbol": "@1938",
+      "address": "0x213ca5c",
+      "target": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+      "retail_bytes": "74d20e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c15BeginResultWaitEv",
+          "native_function": "_ZN15dScMgHanachan_c15BeginResultWaitEv",
+          "function_offset": "0x24"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB_2",
+      "compiler_symbol": "@1950",
+      "address": "0x213ca64",
+      "target": "_ZN15dScMgHanachan_c11Phase_NoneBEv",
+      "retail_bytes": "28d30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c12SetPhaseIdleEv",
+          "native_function": "_ZN15dScMgHanachan_c12SetPhaseIdleEv",
+          "function_offset": "0x1c"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Result_2",
+      "compiler_symbol": "@1991",
+      "address": "0x213ca6c",
+      "target": "_ZN15dScMgHanachan_c12Phase_ResultEv",
+      "retail_bytes": "4cd30e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c11BeginResultEv",
+          "native_function": "_ZN15dScMgHanachan_c11BeginResultEv",
+          "function_offset": "0x84"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_10",
+      "compiler_symbol": "@2041",
+      "address": "0x213ca74",
+      "target": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "retail_bytes": "80cb0e0200000000",
+      "retail_match": true,
+      "size": 8,
+      "format": "native ARM member-function pointer: function address + zero this-adjustment/virtual word",
+      "consumer_correspondence": [
+        {
+          "baseline_function": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+          "native_function": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+          "function_offset": "0x374"
+        }
+      ],
+      "name_status": "Existing descriptive reconstruction, not recovered original spelling"
+    }
+  ],
+  "schema": 1,
+  "task": "data-hanachan-native1017",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4028",
+  "base_commit": "b7acba2fb5aed0e887869ba72ff60f7909afc2f6",
+  "preserved_candidate_commit": "7268d28db7515fd30509c1f261b532407dd297d1",
+  "source": "src/minigames/d_s_mg_hanachan_methods.cpp",
+  "data_range": {
+    "module": "ov006",
+    "start": "0x0213c95c",
+    "end": "0x0213ca7c",
+    "size": 288
+  },
+  "original_tu_ownership": "Unproven; modern production assignment only",
+  "method_renames": [
+    {
+      "old": "Wiggler_Update",
+      "native": "_ZN15dScMgHanachan_c7Wiggler6UpdateEv",
+      "address": "0x020eb018",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_StateHold",
+      "native": "_ZN15dScMgHanachan_c7Wiggler9StateHoldEv",
+      "address": "0x020eb0c8",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_StateMoveA",
+      "native": "_ZN15dScMgHanachan_c7Wiggler10StateMoveAEv",
+      "address": "0x020eb1e0",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_StateWait",
+      "native": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "address": "0x020eb31c",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_StateMoveB",
+      "native": "_ZN15dScMgHanachan_c7Wiggler10StateMoveBEv",
+      "address": "0x020eb3e4",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_MoveBounce",
+      "native": "_ZN15dScMgHanachan_c7Wiggler10MoveBounceEv",
+      "address": "0x020ec6e8",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_CheckOffLeftA",
+      "native": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftAEv",
+      "address": "0x020ec458",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_CheckOffLeftB",
+      "native": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftBEv",
+      "address": "0x020ec93c",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Wiggler_TurnTowardAim",
+      "native": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "address": "0x020ecb80",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Hana_StateNoneA",
+      "native": "_ZN15dScMgHanachan_c11Phase_NoneAEv",
+      "address": "0x020ed270",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    },
+    {
+      "old": "Hana_StateNoneB",
+      "native": "_ZN15dScMgHanachan_c11Phase_NoneBEv",
+      "address": "0x020ed328",
+      "module": "ov006",
+      "name_status": "Descriptive reconstruction; genuine native method ABI"
+    }
+  ],
+  "name_mapping_policy": "No existing callback rows in reserved symbols/actor_renames.tsv. This owned evidence file records exact old/native/address mapping; existing global ledger chains and address-keyed function-authors credits stay unchanged.",
+  "remaining": {
+    "reconstruction": "Codegen-sensitive raw loops and fields, manual factory/lifecycle, popup shadow views remain deferred on issue4028. Native callback fields and Retarget no longer require encoded-word shadows.",
+    "outside_data_scope": "Scalar words at0x0213c954/0x0213c958, RTTI/vtable starting0x0213ca7c, popup BSS ranges. Existing44-byte sprite BSS and164-byte initializer/ctor preserved."
+  },
+  "validation_status": "Producer full scratch and default production/provider gates pass; immutable commit strict check and independent review follow.",
+  "existing_bss": {
+    "symbol": "sWigglerSprites",
+    "size": 44,
+    "raw_offset": 0,
+    "unchanged": true
+  },
+  "baseline_control": {
+    "modules": "all exact",
+    "symbol_errors": 9,
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "log": "build/hanachan-baseline-linkcheck.log"
+  },
+  "scratch_link": {
+    "result": "scratch-data-verified",
+    "owned_sections": 5,
+    "licensed_definitions": 100,
+    "modules_exact": 106,
+    "symbol_errors_baseline": 9,
+    "symbol_errors_new": 0,
+    "rom_size": 16777216,
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "command": "python tools/tubuild.py linkcheck ov006/dScMgHanachan_c -j16",
+    "log": "build/hanachan-full-linkcheck-final.log"
+  },
+  "frozen_source_input_sha256": {
+    "src/minigames/d_s_mg_hanachan_methods.cpp": "903016377d470d77db757208b608b3e9eca2ec3216779c609000993c182ca552",
+    "src/minigames/d_s_mg_hanachan.cpp": "05a5dc89348c30a7f15518fb87ee235dc3102d909f02558fc9f4e63185c39f1f",
+    "include/dScMgHanachan_c.h": "b11cde5bb90977ed4e8b69c67a27f2300cf2864fdbeb2e1e0737261350f1fa7e"
+  },
+  "production": {
+    "command": "python build/run-hanachan-provenance.py -j16 --report-json build/hanachan-production-rombuild.json",
+    "exit_code": 0,
+    "source_functions_reproducing": 11334,
+    "complete_data_claims_reproducing": 340,
+    "modules_exact": 106,
+    "requested_providers_verified": 37,
+    "provider_object": "build/src/minigames/d_s_mg_hanachan_methods.o",
+    "provider_sha256": "744e9b73eff59bb0295b854a09a097fa4caf3c14e825660643541d6057d24dcd",
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "provenance_report": "build/hanachan-data-provenance.json",
+    "provenance_report_sha256": "b01c36528a4f4b27599b5eeaa75f523f0972e5a41afed053bcd8e37831b42ffe",
+    "evidence_tool_commit": "b045eaba5fdc50e097a78be7f7ac55e0da308816",
+    "optional_romdata_existing_difference": [
+      {
+        "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      },
+      {
+        "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      }
+    ],
+    "optional_romdata_difference_unchanged_from_accepted_memory2": true
+  },
+  "final_compiler_and_ownership_input_sha256": {
+    "src/minigames/d_s_mg_hanachan_methods.cpp": "903016377d470d77db757208b608b3e9eca2ec3216779c609000993c182ca552",
+    "src/minigames/d_s_mg_hanachan.cpp": "05a5dc89348c30a7f15518fb87ee235dc3102d909f02558fc9f4e63185c39f1f",
+    "include/dScMgHanachan_c.h": "b11cde5bb90977ed4e8b69c67a27f2300cf2864fdbeb2e1e0737261350f1fa7e",
+    "config/tu_manifest.d/ov006/dScMgHanachan_c.json": "a190f95877495eccbfbce9bae4dfe0f0c91de87c65c628bd26a4a8108b383a28",
+    "config/arm9/overlays/ov006/delinks.txt": "8b73e698efdf8d83ffbeec05c3493245922d3e3d686ce328c24d7b89089d5bd4",
+    "config/arm9/overlays/ov006/symbols.txt": "c6d0b4fbb46203808d1308752813f4bb79bed9f039abb54b971ebdf3bb013796"
+  },
+  "source_style": {
+    "version": "clang-format19.1.7",
+    "findings": 0,
+    "deferrals": 0
+  }
+}

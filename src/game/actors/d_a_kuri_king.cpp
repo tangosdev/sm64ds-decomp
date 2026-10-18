@@ -221,12 +221,12 @@ extern "C" u8 data_ov074_02122d80[];
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
 extern SharedFilePtr data_ov084_0213089c;
-extern SharedFilePtr data_ov084_02130cc8;
+extern KrbAnimationFileHandle data_ov084_02130cc8;
 extern KuriKingModelFilePtr gKurikingModelModelFile;
 extern KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile;
 extern KuriKingAnimationFilePtr data_ov074_02123030;
-extern SharedFilePtr *data_ov074_0212292c[];
-extern SharedFilePtr *data_ov074_02122948[];
+extern SharedFilePtr *const sKurikingMinionAnimationFiles[7];
+extern SharedFilePtr *const sKurikingAnimationFiles[12];
 
 /* Intra-TU forward decls: calls run both ways across the file. */
 extern "C" void func_ov074_02121270(Vector3* out, daKuriKing_c* self, int bone);
@@ -1602,10 +1602,10 @@ int daKuriKing_c::CleanupResources()
     UnloadKeyModels(2);
     data_ov084_02130cf8.Release();
     for (i = 0; i < 7; i++)
-        data_ov074_0212292c[i]->Release();
+        sKurikingMinionAnimationFiles[i]->Release();
     gKurikingModelModelFile.Release();
     for (i = 0; i < 0xc; i++)
-        data_ov074_02122948[i]->Release();
+        sKurikingAnimationFiles[i]->Release();
     gKurikingAngerTextureSequenceFile.Release();
     return 1;
 }
@@ -1737,13 +1737,13 @@ int daKuriKing_c::InitResources()
 
     i = 0;
     do {
-        dExtFrameCtrl_c::LoadFile(*data_ov074_0212292c[i]);
+        dExtFrameCtrl_c::LoadFile(*sKurikingMinionAnimationFiles[i]);
         i++;
     } while (i < 7);
 
     i = 0;
     do {
-        dExtFrameCtrl_c::LoadFile(*data_ov074_02122948[i]);
+        dExtFrameCtrl_c::LoadFile(*sKurikingAnimationFiles[i]);
         i++;
     } while (i < 0xc);
 
@@ -1844,7 +1844,7 @@ int daKuriKing_c::func_ov074_0212229c()
     data_ov084_02130cf8.Release();
     int i = 0;
     do {
-        data_ov074_0212292c[i]->Release();
+        sKurikingMinionAnimationFiles[i]->Release();
         i++;
     } while (i < 7);
     return 1;
@@ -1961,7 +1961,7 @@ int daKuriKing_c::func_ov074_02122634()
 
     Model::LoadFile(data_ov084_02130cf8);
     for (i = 0; i < 7; i++)
-        dExtFrameCtrl_c::LoadFile(*data_ov074_0212292c[i]);
+        dExtFrameCtrl_c::LoadFile(*sKurikingMinionAnimationFiles[i]);
 
     if (this->mModelAnim.SetFile((BMD_File *)FileOf(data_ov084_02130cf8), 1, 1) == 0)
         return 0;
@@ -2054,7 +2054,26 @@ extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void)
  * allocation size, vtable identity, and the KURIKING registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Goomboss_Spawn. */
-extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING(void)
-{
+extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING(void) {
     return new daKuriKing_c;
 }
+extern "C" KrbAnimationFileHandle data_ov084_02130ce8;
+extern "C" KrbAnimationFileHandle data_ov084_02130ce0;
+extern "C" KrbAnimationFileHandle data_ov084_02130cd0;
+extern "C" KrbAnimationFileHandle data_ov084_02130cc0;
+extern "C" KrbAnimationFileHandle gKuriboRecoverAnimationFile;
+extern "C" KrbAnimationFileHandle data_ov084_02130cf0;
+
+SharedFilePtr *const sKurikingMinionAnimationFiles[7] = {
+    &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,
+    &gKuriboRecoverAnimationFile, &data_ov084_02130cc8, &data_ov084_02130cf0,
+};
+
+SharedFilePtr *const sKurikingAnimationFiles[12] = {
+    &gKurikingAngerAnimationFile,     &gKurikingDamageBAnimationFile,
+    &gKurikingDamageFAnimationFile,   &gKurikingDownStartAnimationFile,
+    &gKurikingDownAnimationFile,      &gKurikingSerchWaitAnimationFile,
+    &gKurikingTurnAnimationFile,      &data_ov074_02123030,
+    &gKurikingWalkAnimationFile,      &gKurikingWalkEndAnimationFile,
+    &gKurikingWalkStartAnimationFile, &gKurikingSpawnAnimationFile,
+};

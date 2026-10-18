@@ -14,7 +14,7 @@
     "EDGE 2 addendum -- `defer_codegen off` also flips emission order, and the two effects are one edit. With codegen deferred mwccarm lays .text down in the REVERSE of source order; generating at parse time lays it down in source order. This file is therefore written lowest-ROM-address FIRST, the opposite of the 22-function version. Measured both ways on the identical member set: source ROM-descending + defer_codegen off gives 22/22 MATCH but `21 ordinal pair(s) NOT in ROM order`; source ROM-ascending + defer_codegen off gives 22/22 MATCH and `all 22 in the expected ROM-ascending section order`. Flipping either alone fails the `linkcheck [4b/8]` emission-order refusal. Control on the earlier 49-member file: deleting the `#pragma defer_codegen off` line and changing nothing else costs both properties at once -- 44/49 MATCH (the brackets stop binding and their trailing state goes file-wide, reproducing the earlier pass's 44/49 for strength reduction off) and `48 ordinal pair(s) NOT in ROM order`.",
     "Three byte-diffs that surfaced only in the merge, all fixed at the source and none of them pragma-related. (a) Wiggler_StartPathA, Wiggler_StartPathC and Wiggler_StartPathB each assign a two-int pair whole-struct; the legacy files were C and block-moved it (ldr/ldr/str/str) where C++ scalarizes (ldr/str/ldr/str), so those three copies go through the array-spelled `struct Words2`. (b) _ZN15dScMgHanachan_c10StartRoundEi's read-modify-write of +0xbc let mwcc CSE the field address into its own register (add r2,r4,#0xbc), one word longer than the cartridge's re-issued ldr r1,[r4,#0xbc]; a `const` on the read side defeats the CSE. Seven source forms were tried and six of them match; `x += 1` is the one that does not.",
     "DESTRUCTOR ORDER. The cartridge has D1 at 0x020ea280 below D0 at 0x020ea2c8 and no D2 home. One out-of-line ~dScMgHanachan_c() under #pragma defer_codegen off emits D1 then D0 in that order; the D2 mwccarm also emits is a compiler_only_output deadstrip row.",
-    "KEY FUNCTION. The out-of-line destructor is the class's first declared virtual, so this TU now emits _ZTV/_ZTI/_ZTS15dScMgHanachan_c and the ancestor RTTI chain (fBase_c, dBase_c, dScene_c, dScMgBase_c). Each is a deadstrip-data row with its canonical symbols.txt home; ov006 .data stays ROM-owned, so the TU stays text-only. Wiggler_DrawTarget's point type Vec2_ea914 also emits a 4-byte vague-linkage D1 with no cartridge copy; it is a deadstrip row.",
+    "HISTORICAL KEY-FUNCTION/TEXT-ONLY STAGE: The out-of-line destructor is the class's first declared virtual, so this TU now emits _ZTV/_ZTI/_ZTS15dScMgHanachan_c and the ancestor RTTI chain (fBase_c, dBase_c, dScene_c, dScMgBase_c). Each is a deadstrip-data row with its canonical symbols.txt home; ov006 .data stays ROM-owned, so the TU stays text-only. Wiggler_DrawTarget's point type Vec2_ea914 also emits a 4-byte vague-linkage D1 with no cartridge copy; it is a deadstrip row. Current ownership is superseded for the complete0x0213c95c..0x0213ca7c native callback/profile data group; RTTI/vtable and neighboring data remain ROM-owned.",
     "SOURCE ORDER IS ROM-ASCENDING, lowest address first, under #pragma defer_codegen off; tubuild verify reports all 61 in ROM-ascending emission order.",
     "OUTPUT PATH: src/minigames/d_s_mg_hanachan_methods.cpp, unchanged.",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
@@ -34,6 +34,11 @@
       "name": ".ctor",
       "start": "0x021335a0",
       "end": "0x021335a4"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213c95c",
+      "end": "0x0213ca7c"
     },
     {
       "name": ".bss",
@@ -134,35 +139,35 @@
       "ordinal": 12
     },
     {
-      "symbol": "Wiggler_Update",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler6UpdateEv",
       "address": "0x020eb018",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020eb018.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "Wiggler_StateHold",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateHoldEv",
       "address": "0x020eb0c8",
       "size": "0x00000118",
       "legacy_source": "src/func_ov006_020eb0c8.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "Wiggler_StateMoveA",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10StateMoveAEv",
       "address": "0x020eb1e0",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_020eb1e0.c",
       "ordinal": 15
     },
     {
-      "symbol": "Wiggler_StateWait",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
       "address": "0x020eb31c",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov006_020eb31c.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "Wiggler_StateMoveB",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10StateMoveBEv",
       "address": "0x020eb3e4",
       "size": "0x00000174",
       "legacy_source": "src/func_ov006_020eb3e4.c",
@@ -288,7 +293,7 @@
       "ordinal": 34
     },
     {
-      "symbol": "Wiggler_CheckOffLeftA",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftAEv",
       "address": "0x020ec458",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_020ec458.c",
@@ -302,7 +307,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "Wiggler_MoveBounce",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10MoveBounceEv",
       "address": "0x020ec6e8",
       "size": "0x00000164",
       "legacy_source": "src/func_ov006_020ec6e8.c",
@@ -316,7 +321,7 @@
       "ordinal": 38
     },
     {
-      "symbol": "Wiggler_CheckOffLeftB",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftBEv",
       "address": "0x020ec93c",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_020ec93c.c",
@@ -330,7 +335,7 @@
       "ordinal": 40
     },
     {
-      "symbol": "Wiggler_TurnTowardAim",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
       "address": "0x020ecb80",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020ecb80.c",
@@ -372,7 +377,7 @@
       "ordinal": 46
     },
     {
-      "symbol": "Hana_StateNoneA",
+      "symbol": "_ZN15dScMgHanachan_c11Phase_NoneAEv",
       "address": "0x020ed270",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020ed270.c",
@@ -393,7 +398,7 @@
       "ordinal": 49
     },
     {
-      "symbol": "Hana_StateNoneB",
+      "symbol": "_ZN15dScMgHanachan_c11Phase_NoneBEv",
       "address": "0x020ed328",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020ed328.c",
@@ -488,7 +493,260 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_Wiggler_StateWait",
+      "address": "0x213c95c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro",
+      "address": "0x213c964",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim",
+      "address": "0x213c96c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveB",
+      "address": "0x213c974",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_2",
+      "address": "0x213c97c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_2",
+      "address": "0x213c984",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "g_profile_MG_HANACHAN",
+      "address": "0x213c98c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte BaseSpawnInfo<void>: factory pointer and two unsigned16-bit priorities0x182 verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Result",
+      "address": "0x213c994",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA",
+      "address": "0x213c99c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_3",
+      "address": "0x213c9a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play",
+      "address": "0x213c9ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_3",
+      "address": "0x213c9b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_Update",
+      "address": "0x213c9bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA_2",
+      "address": "0x213c9c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play_2",
+      "address": "0x213c9cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold",
+      "address": "0x213c9d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_4",
+      "address": "0x213c9dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce",
+      "address": "0x213c9e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_5",
+      "address": "0x213c9ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_6",
+      "address": "0x213c9f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold_2",
+      "address": "0x213c9fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_4",
+      "address": "0x213ca04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftB",
+      "address": "0x213ca0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce_2",
+      "address": "0x213ca14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_7",
+      "address": "0x213ca1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftA",
+      "address": "0x213ca24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro_2",
+      "address": "0x213ca2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch",
+      "address": "0x213ca34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB",
+      "address": "0x213ca3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_8",
+      "address": "0x213ca44",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_9",
+      "address": "0x213ca4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneA",
+      "address": "0x213ca54",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch_2",
+      "address": "0x213ca5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB_2",
+      "address": "0x213ca64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Result_2",
+      "address": "0x213ca6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_10",
+      "address": "0x213ca74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    }
+  ],
   "bss": [
     {
       "symbol": "sWigglerSprites",
@@ -510,6 +768,216 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveB",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Result",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_3",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_3",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_5",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_6",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftB",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_7",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftA",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_9",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneA",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Result_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_10",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Compiler-local native PMF is the configured owned data record reached by the same consumer relocation."
     }
   ],
   "relocations": [
@@ -602,6 +1070,366 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130df8"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c95c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c964",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitIntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed844"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c96c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c974",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10StateMoveBEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb3e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c97c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c984",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c98c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "dScMgHanachan_c_classInit",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ede18"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c12Phase_ResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed34c"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c99c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10StateMoveAEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb1e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed494"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler6UpdateEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb018"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10StateMoveAEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb1e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed494"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateHoldEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb0c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10MoveBounceEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ec6e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213c9fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateHoldEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb0c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftBEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ec93c"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler10MoveBounceEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ec6e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13CheckOffLeftAEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ec458"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitIntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed844"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed274"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c11Phase_NoneBEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed328"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c11Phase_NoneAEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed270"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed274"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c11Phase_NoneBEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed328"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c12Phase_ResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ed34c"
+    },
+    {
+      "section": ".data",
+      "source": "0x213ca74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x20ecb80"
     }
   ],
   "notes": [
@@ -626,13 +1454,14 @@
     "Widening: the popup arrays sHanaStarPopup and sHanaPopups were declared several ways across the folded shards (three and four respectively). Each is declared once; sHanaPopups takes HanaPopup_Spawn's record type, because HanaPopup_Spawn DIFFs when it reaches the array through a cast, and the other functions cast to the record type their own shard used. Local tags are renamed per function (Ent_ea670, S_ea81c, E6_ea8e0, Vec2_ea914).",
     "Widening: Wiggler_Destroy is the wiggler array's element destructor and takes the element in r0. include/dScMgHanachan_c.h and include/decl_common.h declared it (void); the header now declares (void *self) and the conflicting decl_common.h line was removed. Its only other use, src/minigames/d_s_mg_hanachan.cpp, takes its address.",
     "The file-scope OamAttr* table sWigglerSprites is defined in this TU, so mwcc emits __sinit_d_s_mg_hanachan_methods.cpp byte-identical to retail __sinit_ov006_02130df8 (0xa4, eight literal-pool relocations: the five scalar globals, sHanaBackgroundPartsB, the vu32* ring sHanaBackgroundParts and the table itself), plus the .ctor word at 0x021335a0. The handwritten src/unnamed/ov006/__sinit_ov006_02130df8.c is retired; its delinks row is absorbed and symbols.txt renames the pair __sinit_d_s_mg_hanachan_methods.cpp / .p__sinit_d_s_mg_hanachan_methods.cpp.",
-    "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share."
+    "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share.",
+    "NATIVE DATA 2026-10-17: supersedes historical ROM-owned .data statement for0x0213c95c..0x0213ca7c only. This complete288-byte run contains35 native PMF literals and BaseSpawnInfo<void>. Nine Wiggler callbacks and two empty scene phases are real methods; typed assignments/comparisons/dispatch emit every literal. Full64 emitted function bodies and canonical relocation destinations were unchanged from accepted base in a fresh raw-object comparison. Exact consumer function/relocation offsets disambiguate repeated method targets. Neighboring scalar words and RTTI/vtable remain outside this claim. Names and production TU placement are reconstructed, not recovered original spellings or boundaries. See notes/agents/handoffs/data-hanachan-native1017.md."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgHanachan_c/dScMgHanachan_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgHanachan_c/d_s_mg_hanachan_methods.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 61,
     "functions_declared": 61,
@@ -646,26 +1475,26 @@
         "_ZN15dScMgHanachan_cD2Ev"
       ],
       "droppedSections": [
-        9,
-        10,
-        31,
-        123,
-        124,
-        125,
-        126,
-        127,
-        128,
-        129,
-        130,
-        131,
-        132,
-        133,
-        134,
-        135,
-        136,
-        137,
-        138,
-        139
+        11,
+        12,
+        33,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -692,7 +1521,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV15dScMgHanachan_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -743,6 +1573,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213c95c",
+          "end": "0x0213ca7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02142018",
           "end": "0x02142044",
@@ -751,7 +1588,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 64
+          "LICENSED": 100
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -762,32 +1599,235 @@
           {
             "section": ".init",
             "original": [
-              142
+              214
             ],
             "desired": [
-              142
+              214
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              140
+              212
             ],
             "desired": [
-              140
+              212
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              34,
+              42,
+              48,
+              52,
+              61,
+              63,
+              65,
+              67,
+              71,
+              73,
+              75,
+              80,
+              82,
+              84,
+              86,
+              88,
+              92,
+              94,
+              113,
+              119,
+              124,
+              130,
+              138,
+              140,
+              142,
+              144,
+              146,
+              153,
+              157,
+              162,
+              168,
+              172,
+              174,
+              178,
+              184
+            ],
+            "desired": [
+              88,
+              184,
+              71,
+              86,
+              34,
+              42,
+              5,
+              140,
+              63,
+              65,
+              138,
+              61,
+              75,
+              73,
+              178,
+              94,
+              130,
+              84,
+              82,
+              80,
+              67,
+              92,
+              124,
+              119,
+              52,
+              113,
+              146,
+              144,
+              142,
+              48,
+              172,
+              153,
+              157,
+              162,
+              168,
+              174
             ]
           },
           {
             "section": ".bss",
             "original": [
-              122
+              194
             ],
             "desired": [
-              122
+              194
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                34,
+                42,
+                48,
+                52,
+                61,
+                63,
+                65,
+                67,
+                71,
+                73,
+                75,
+                80,
+                82,
+                84,
+                86,
+                88,
+                92,
+                94,
+                113,
+                119,
+                124,
+                130,
+                138,
+                140,
+                142,
+                144,
+                146,
+                153,
+                157,
+                162,
+                168,
+                172,
+                174,
+                178,
+                184
+              ],
+              "desired": [
+                88,
+                184,
+                71,
+                86,
+                34,
+                42,
+                5,
+                140,
+                63,
+                65,
+                138,
+                61,
+                75,
+                73,
+                178,
+                94,
+                130,
+                84,
+                82,
+                80,
+                67,
+                92,
+                124,
+                119,
+                52,
+                113,
+                146,
+                144,
+                142,
+                48,
+                172,
+                153,
+                157,
+                162,
+                168,
+                174
+              ],
+              "slots": [
+                5,
+                34,
+                42,
+                48,
+                52,
+                61,
+                63,
+                65,
+                67,
+                71,
+                73,
+                75,
+                80,
+                82,
+                84,
+                86,
+                88,
+                92,
+                94,
+                113,
+                119,
+                124,
+                130,
+                138,
+                140,
+                142,
+                144,
+                146,
+                153,
+                157,
+                162,
+                168,
+                172,
+                174,
+                178,
+                184
+              ]
+            }
+          ],
+          "symbolIndices": 36,
+          "sectionLinks": 0,
+          "sectionInfos": 36,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -910,6 +1950,183 @@
       "canonical_module": "ov006",
       "canonical_address": "0x0213cab8",
       "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1115",
+      "to": "pmf_Wiggler_StateWait",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@2148",
+      "to": "pmf_dScMgHanachan_c_Phase_WaitIntro",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1061",
+      "to": "pmf_Wiggler_TurnTowardAim",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1112",
+      "to": "pmf_Wiggler_StateMoveB",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@652",
+      "to": "pmf_Wiggler_StateWait_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@815",
+      "to": "pmf_Wiggler_TurnTowardAim_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1778",
+      "to": "pmf_dScMgHanachan_c_Phase_Result",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1034",
+      "to": "pmf_Wiggler_StateMoveA",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1036",
+      "to": "pmf_Wiggler_StateWait_3",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1764",
+      "to": "pmf_dScMgHanachan_c_Phase_Play",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1024",
+      "to": "pmf_Wiggler_TurnTowardAim_3",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1074",
+      "to": "pmf_Wiggler_Update",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1071",
+      "to": "pmf_Wiggler_StateMoveA_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@2104",
+      "to": "pmf_dScMgHanachan_c_Phase_Play_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1148",
+      "to": "pmf_Wiggler_StateHold",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1714",
+      "to": "pmf_Wiggler_TurnTowardAim_4",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1108",
+      "to": "pmf_Wiggler_MoveBounce",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1105",
+      "to": "pmf_Wiggler_TurnTowardAim_5",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1094",
+      "to": "pmf_Wiggler_TurnTowardAim_6",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1044",
+      "to": "pmf_Wiggler_StateHold_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1140",
+      "to": "pmf_Wiggler_StateWait_4",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1664",
+      "to": "pmf_Wiggler_CheckOffLeftB",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1598",
+      "to": "pmf_Wiggler_MoveBounce_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@902",
+      "to": "pmf_Wiggler_TurnTowardAim_7",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1530",
+      "to": "pmf_Wiggler_CheckOffLeftA",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1815",
+      "to": "pmf_dScMgHanachan_c_Phase_WaitIntro_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1805",
+      "to": "pmf_dScMgHanachan_c_Phase_WaitTouch",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1802",
+      "to": "pmf_Hana_StateNoneB",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@877",
+      "to": "pmf_Wiggler_TurnTowardAim_8",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@2014",
+      "to": "pmf_Wiggler_TurnTowardAim_9",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1924",
+      "to": "pmf_Hana_StateNoneA",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1938",
+      "to": "pmf_dScMgHanachan_c_Phase_WaitTouch_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1950",
+      "to": "pmf_Hana_StateNoneB_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@1991",
+      "to": "pmf_dScMgHanachan_c_Phase_Result_2",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
+    },
+    {
+      "from": "@2041",
+      "to": "pmf_Wiggler_TurnTowardAim_10",
+      "evidence": "Compiler-local native PMF matched uniquely by consumer function and relocation offset; target and full8-byte record independently verified."
     }
   ]
 }

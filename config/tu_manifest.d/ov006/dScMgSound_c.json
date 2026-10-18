@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x02142cc0",
       "end": "0x02142e88"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212ee40",
+      "end": "0x0212ef3c"
     }
   ],
   "functions": [
@@ -851,11 +856,18 @@
           "start": "0x02142cc0",
           "end": "0x02142e88",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0212ee40",
+          "end": "0x0212ef3c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 99
+          "LICENSED": 120
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -866,56 +878,105 @@
           {
             "section": ".init",
             "original": [
-              176
+              197
             ],
             "desired": [
-              176
+              197
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              174
+              195
             ],
             "desired": [
-              174
+              195
             ]
           },
           {
             "section": ".bss",
             "original": [
-              23,
-              24,
-              25,
-              26,
-              27,
-              28,
-              29,
-              30,
-              31,
-              32,
-              33,
-              34,
-              35,
-              36,
-              37
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58
             ],
             "desired": [
-              35,
-              29,
-              30,
+              56,
+              51,
+              52,
+              44,
+              53,
+              46,
+              47,
+              54,
+              48,
+              55,
+              45,
+              49,
+              50,
+              57,
+              58
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              22,
               23,
-              31,
-              25,
-              26,
-              33,
-              27,
-              34,
               24,
+              25,
+              30,
+              31,
               32,
-              28,
-              36,
-              37
+              35,
+              38,
+              39,
+              40
+            ],
+            "desired": [
+              19,
+              25,
+              35,
+              30,
+              17,
+              10,
+              22,
+              14,
+              38,
+              24,
+              39,
+              40,
+              32,
+              13,
+              31,
+              23,
+              15,
+              16,
+              11,
+              12,
+              18
             ]
           }
         ],
@@ -924,59 +985,131 @@
             {
               "section": ".bss",
               "original": [
-                23,
-                24,
-                25,
-                26,
-                27,
-                28,
-                29,
-                30,
-                31,
-                32,
-                33,
-                34,
-                35,
-                36,
-                37
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58
               ],
               "desired": [
-                35,
-                29,
-                30,
-                23,
-                31,
-                25,
-                26,
-                33,
-                27,
-                34,
-                24,
-                32,
-                28,
-                36,
-                37
+                56,
+                51,
+                52,
+                44,
+                53,
+                46,
+                47,
+                54,
+                48,
+                55,
+                45,
+                49,
+                50,
+                57,
+                58
               ],
               "slots": [
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58
+              ]
+            },
+            {
+              "section": ".rodata",
+              "original": [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                22,
                 23,
                 24,
                 25,
-                26,
-                27,
-                28,
-                29,
                 30,
                 31,
                 32,
-                33,
-                34,
                 35,
-                36,
-                37
+                38,
+                39,
+                40
+              ],
+              "desired": [
+                19,
+                25,
+                35,
+                30,
+                17,
+                10,
+                22,
+                14,
+                38,
+                24,
+                39,
+                40,
+                32,
+                13,
+                31,
+                23,
+                15,
+                16,
+                11,
+                12,
+                18
+              ],
+              "slots": [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                22,
+                23,
+                24,
+                25,
+                30,
+                31,
+                32,
+                35,
+                38,
+                39,
+                40
               ]
             }
           ],
-          "symbolIndices": 15,
+          "symbolIndices": 36,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -1874,5 +2007,112 @@
       "target_address": "0x2142db0"
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "rodata": [
+    {
+      "symbol": "sSoundPop04VX",
+      "address": "0x0212ee40",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop10VX",
+      "address": "0x0212ee4c",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop10XOffsets",
+      "address": "0x0212ee58",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop09XOffsets",
+      "address": "0x0212ee64",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop06VX",
+      "address": "0x0212ee70",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop05XOffsets",
+      "address": "0x0212ee7c",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop11VX",
+      "address": "0x0212ee88",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop07XOffsets",
+      "address": "0x0212ee94",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop00VX",
+      "address": "0x0212eea0",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop11XOffsets",
+      "address": "0x0212eeac",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop00XOffsets",
+      "address": "0x0212eeb8",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop01VX",
+      "address": "0x0212eec4",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop01XOffsets",
+      "address": "0x0212eed0",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop08XOffsets",
+      "address": "0x0212eedc",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop02VX",
+      "address": "0x0212eee8",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop02XOffsets",
+      "address": "0x0212eef4",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop09VX",
+      "address": "0x0212ef00",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop12VX",
+      "address": "0x0212ef0c",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop03XOffsets",
+      "address": "0x0212ef18",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop03VX",
+      "address": "0x0212ef24",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "sSoundPop12XOffsets",
+      "address": "0x0212ef30",
+      "size": "0x0000000c"
+    }
+  ]
 }

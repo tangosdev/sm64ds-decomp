@@ -22,31 +22,35 @@ extern void func_02017ab4(void);
 extern void SharedFilePtr_Destruct_Anim(void);
 extern void *_ZN7Vector3D1Ev(void *object);
 
-extern void* data_ov078_02126f38;
+/* Opaque declarations of the typed storage in d_a_bombking.cpp.
+ * The initializer passes addresses only; it does not access the payload fields. */
+struct BombkingModelFile;
+struct BombkingAnimFile;
+extern struct BombkingModelFile gBombkingModelFile;
 extern void* data_ov078_02126f48;
-extern void* data_ov078_02126f00;
+extern struct BombkingAnimFile gBombkingGetupAnimationFile;
 extern void* data_ov078_02126f54;
-extern void* data_ov078_02126f20;
+extern struct BombkingAnimFile gBombkingDamageAnimationFile;
 extern void* data_ov078_02126f60;
-extern void* data_ov078_02126f10;
+extern struct BombkingAnimFile gBombkingJumpAnimationFile;
 extern void* data_ov078_02126f6c;
-extern void* data_ov078_02126f08;
+extern struct BombkingAnimFile gBombkingJumpedAnimationFile;
 extern void* data_ov078_02126f78;
-extern void* data_ov078_02126f18;
+extern struct BombkingAnimFile gBombkingLiftAnimationFile;
 extern void* data_ov078_02126f84;
-extern void* data_ov078_02126ee0;
+extern struct BombkingAnimFile gBombkingStruggleAnimationFile;
 extern void* data_ov078_02126f90;
-extern void* data_ov078_02126ef0;
+extern struct BombkingAnimFile gBombkingThrowAnimationFile;
 extern void* data_ov078_02126f9c;
-extern void* data_ov078_02126f40;
+extern struct BombkingAnimFile gBombkingWait1AnimationFile;
 extern void* data_ov078_02126fa8;
-extern void* data_ov078_02126f30;
+extern struct BombkingAnimFile gBombkingWait2AnimationFile;
 extern void* data_ov078_02126fb4;
-extern void* data_ov078_02126ee8;
+extern struct BombkingAnimFile gBombkingWalk1AnimationFile;
 extern void* data_ov078_02126fc0;
-extern void* data_ov078_02126f28;
+extern struct BombkingAnimFile gBombkingWalk2AnimationFile;
 extern void* data_ov078_02126fcc;
-extern void* data_ov078_02126ef8;
+extern struct BombkingAnimFile gBombkingStartAnimationFile;
 extern void* data_ov078_02126fd8;
 
 typedef struct { int x, y, z; } V3;
@@ -115,32 +119,44 @@ extern struct P2 data_ov078_02126d58;
 
 void __sinit_ov078_02126660(void)
 {
-    func_02017acc(&data_ov078_02126f38, ASSET_BOMB_KING_BMD);
-    func_020731dc(&data_ov078_02126f38, (void*)&func_02017ab4, (void**)&data_ov078_02126f48);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f00, ASSET_BOMBKING_GETUP_BCA);
-    func_020731dc(&data_ov078_02126f00, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f54);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f20, ASSET_BOMBKING_DAMAGE_BCA);
-    func_020731dc(&data_ov078_02126f20, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f60);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f10, ASSET_BOMBKING_JUMP_BCA);
-    func_020731dc(&data_ov078_02126f10, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f6c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f08, ASSET_BOMBKING_JUMPED_BCA);
-    func_020731dc(&data_ov078_02126f08, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f78);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f18, ASSET_BOMBKING_LIFT_BCA);
-    func_020731dc(&data_ov078_02126f18, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f84);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ee0, ASSET_BOMBKING_STRUGGLE_BCA);
-    func_020731dc(&data_ov078_02126ee0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f90);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ef0, ASSET_BOMBKING_THROW_BCA);
-    func_020731dc(&data_ov078_02126ef0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126f9c);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f40, ASSET_BOMBKING_WAIT1_BCA);
-    func_020731dc(&data_ov078_02126f40, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fa8);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f30, ASSET_BOMBKING_WAIT2_BCA);
-    func_020731dc(&data_ov078_02126f30, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fb4);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ee8, ASSET_BOMBKING_WALK1_BCA);
-    func_020731dc(&data_ov078_02126ee8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fc0);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126f28, ASSET_BOMBKING_WALK2_BCA);
-    func_020731dc(&data_ov078_02126f28, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fcc);
-    _ZN13SharedFilePtr9ConstructEj(&data_ov078_02126ef8, ASSET_BOMBKING_START_BCA);
-    func_020731dc(&data_ov078_02126ef8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov078_02126fd8);
+    func_02017acc(&gBombkingModelFile, ASSET_BOMB_KING_BMD);
+    func_020731dc(&gBombkingModelFile, (void *)&func_02017ab4, (void **)&data_ov078_02126f48);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingGetupAnimationFile, ASSET_BOMBKING_GETUP_BCA);
+    func_020731dc(&gBombkingGetupAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126f54);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingDamageAnimationFile, ASSET_BOMBKING_DAMAGE_BCA);
+    func_020731dc(&gBombkingDamageAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126f60);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingJumpAnimationFile, ASSET_BOMBKING_JUMP_BCA);
+    func_020731dc(&gBombkingJumpAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126f6c);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingJumpedAnimationFile, ASSET_BOMBKING_JUMPED_BCA);
+    func_020731dc(&gBombkingJumpedAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126f78);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingLiftAnimationFile, ASSET_BOMBKING_LIFT_BCA);
+    func_020731dc(&gBombkingLiftAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126f84);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingStruggleAnimationFile, ASSET_BOMBKING_STRUGGLE_BCA);
+    func_020731dc(&gBombkingStruggleAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126f90);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingThrowAnimationFile, ASSET_BOMBKING_THROW_BCA);
+    func_020731dc(&gBombkingThrowAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126f9c);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingWait1AnimationFile, ASSET_BOMBKING_WAIT1_BCA);
+    func_020731dc(&gBombkingWait1AnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126fa8);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingWait2AnimationFile, ASSET_BOMBKING_WAIT2_BCA);
+    func_020731dc(&gBombkingWait2AnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126fb4);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingWalk1AnimationFile, ASSET_BOMBKING_WALK1_BCA);
+    func_020731dc(&gBombkingWalk1AnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126fc0);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingWalk2AnimationFile, ASSET_BOMBKING_WALK2_BCA);
+    func_020731dc(&gBombkingWalk2AnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126fcc);
+    _ZN13SharedFilePtr9ConstructEj(&gBombkingStartAnimationFile, ASSET_BOMBKING_START_BCA);
+    func_020731dc(&gBombkingStartAnimationFile, (void *)&SharedFilePtr_Destruct_Anim,
+                  (void **)&data_ov078_02126fd8);
 
     data_ov078_0212711c.x = 0x2c000;
     data_ov078_0212711c.y = -0x19000;
