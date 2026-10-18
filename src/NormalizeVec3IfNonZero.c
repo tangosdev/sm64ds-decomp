@@ -1,4 +1,4 @@
-typedef struct Vector3 { int x, y, z; } Vector3;
+#include "common.h"
 
 extern void func_0203ce80(Vector3 *dst, Vector3 *src);
 
