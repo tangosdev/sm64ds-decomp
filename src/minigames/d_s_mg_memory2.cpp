@@ -23,6 +23,7 @@
 enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 
 #include "dScMgMemory2_c.h"
+#include "SpawnInfo.h"
 #include "Sound.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
@@ -1270,37 +1271,14 @@ extern "C" void *dScMgMemory2_c_classInit() {
  * The sprite-pointer table plus the five PMF state tables plain-copied
  * from the ROM constants, in retail copy order: the permuted sprite
  * pointers, the five main states, the ten round states, the four result
- * states, the seven card states, then the three player states. */
+ * states, the seven card states, then the three player states. Native member
+ * pointers emit the 29 eight-byte descriptor constants the initializer copies.
+ * The manifest binds those compiler-local constants to the configured pmf_ names.
+ * RoundWaitDeal returns a pointer; this existing dispatch table discards it. */
+/* The non-actor profile is interleaved with the member-pointer constants. */
+extern "C" BaseSpawnInfo<void> g_profile_MG_MEMORY_J = {dScMgMemory2_c_classInit, 0x016b, 0x016b};
+
 extern "C" int sMgCardSprites[];
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateSetup;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StatePlay;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateJudge;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateResult;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateExit;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundStart;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealEasy;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealNormal;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealHard;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealFourth;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundShowCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundHideCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundReadyCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundWaitDeal;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundReveal;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultWait;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultReward;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultTurnCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultFinish;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardMove;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardIdle;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardSelect;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardFlipUp;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardWait;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardFlipDown;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardFlyAway;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_PlayerDrop;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_PlayerMove;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_PlayerWait;
 
 void *sMemory2CardSprites[23] = {
     (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],
@@ -1313,29 +1291,34 @@ void *sMemory2CardSprites[23] = {
     (void *)sMgCardSprites[21], (void *)sMgCardSprites[22],
 };
 dScMgMemory2_cState sMemory2StateTable[5] = {
-    pmf_dScMgMemory2_c_StateSetup,  pmf_dScMgMemory2_c_StatePlay, pmf_dScMgMemory2_c_StateJudge,
-    pmf_dScMgMemory2_c_StateResult, pmf_dScMgMemory2_c_StateExit,
+    &dScMgMemory2_c::StateSetup,  &dScMgMemory2_c::StatePlay, &dScMgMemory2_c::StateJudge,
+    &dScMgMemory2_c::StateResult, &dScMgMemory2_c::StateExit,
 };
 dScMgMemory2_cState sMemory2RoundTable[10] = {
-    pmf_dScMgMemory2_c_RoundStart,      pmf_dScMgMemory2_c_RoundDealEasy,
-    pmf_dScMgMemory2_c_RoundDealNormal, pmf_dScMgMemory2_c_RoundDealHard,
-    pmf_dScMgMemory2_c_RoundDealFourth, pmf_dScMgMemory2_c_RoundShowCards,
-    pmf_dScMgMemory2_c_RoundHideCards,  pmf_dScMgMemory2_c_RoundReadyCards,
-    pmf_dScMgMemory2_c_RoundWaitDeal,   pmf_dScMgMemory2_c_RoundReveal,
+    &dScMgMemory2_c::RoundStart,
+    &dScMgMemory2_c::RoundDealEasy,
+    &dScMgMemory2_c::RoundDealNormal,
+    &dScMgMemory2_c::RoundDealHard,
+    &dScMgMemory2_c::RoundDealFourth,
+    &dScMgMemory2_c::RoundShowCards,
+    &dScMgMemory2_c::RoundHideCards,
+    &dScMgMemory2_c::RoundReadyCards,
+    (dScMgMemory2_cState)&dScMgMemory2_c::RoundWaitDeal,
+    &dScMgMemory2_c::RoundReveal,
 };
 dScMgMemory2_cState sMemory2ResultTable[4] = {
-    pmf_dScMgMemory2_c_ResultWait,
-    pmf_dScMgMemory2_c_ResultReward,
-    pmf_dScMgMemory2_c_ResultTurnCards,
-    pmf_dScMgMemory2_c_ResultFinish,
+    &dScMgMemory2_c::ResultWait,
+    &dScMgMemory2_c::ResultReward,
+    &dScMgMemory2_c::ResultTurnCards,
+    &dScMgMemory2_c::ResultFinish,
 };
 dScMgMemory2_cCardState sMemory2CardTable[7] = {
-    pmf_dScMgMemory2_c_CardMove,    pmf_dScMgMemory2_c_CardIdle, pmf_dScMgMemory2_c_CardSelect,
-    pmf_dScMgMemory2_c_CardFlipUp,  pmf_dScMgMemory2_c_CardWait, pmf_dScMgMemory2_c_CardFlipDown,
-    pmf_dScMgMemory2_c_CardFlyAway,
+    &dScMgMemory2_c::CardMove,    &dScMgMemory2_c::CardIdle, &dScMgMemory2_c::CardSelect,
+    &dScMgMemory2_c::CardFlipUp,  &dScMgMemory2_c::CardWait, &dScMgMemory2_c::CardFlipDown,
+    &dScMgMemory2_c::CardFlyAway,
 };
 dScMgMemory2_cCardState sMemory2PlayerTable[3] = {
-    pmf_dScMgMemory2_c_PlayerDrop,
-    pmf_dScMgMemory2_c_PlayerMove,
-    pmf_dScMgMemory2_c_PlayerWait,
+    &dScMgMemory2_c::PlayerDrop,
+    &dScMgMemory2_c::PlayerMove,
+    &dScMgMemory2_c::PlayerWait,
 };

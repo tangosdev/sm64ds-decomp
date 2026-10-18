@@ -18,8 +18,8 @@
  * Leftover: func_ov002_020b6958 / func_ov002_020b68b0 are still the
  *   linker names of daObjKuruma_c Init/Cleanup (the base leaves
  *   those slots pure virtual). Naming belongs in ov002.
- * Leftover: the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov047_*.
+ * The resource names describe observed uses. The CLPS block is grouped
+ * with its consumer here; its original source-file ownership is unknown.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -29,19 +29,26 @@ enum d_a_obj_km3_kuruma_AssetId {
 };
 
 #include "SharedFilePtr.h"
+#include "CLPS.h"
 
-/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+/* Local layout follows SharedFilePtr.cpp: fileID at +0, numRefs at +2,
+ * implicit padding at +3, filePtr at +4. The shared header is fieldless.
+ * 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Km3KurumaModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
+    unsigned short fileID;
+    unsigned char numRefs;
+    void *filePtr;
 
     Km3KurumaModelFilePtr(unsigned int fileID);
     ~Km3KurumaModelFilePtr();
 };
 
 struct Km3KurumaClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
+    unsigned short fileID;
+    unsigned char numRefs;
+    void *filePtr;
 
     Km3KurumaClsnFilePtr(unsigned int fileID);
     ~Km3KurumaClsnFilePtr();
@@ -52,8 +59,6 @@ typedef char Km3KurumaModelFilePtr_size_must_be_8[
 typedef char Km3KurumaClsnFilePtr_size_must_be_8[
     sizeof(Km3KurumaClsnFilePtr) == 8 ? 1 : -1];
 
-struct CLPS_Block;
-
 struct ResourceDescriptor {
     SharedFilePtr *model;
     SharedFilePtr *kcl;
@@ -63,17 +68,28 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-extern Km3KurumaModelFilePtr data_ov047_02112638;
-extern Km3KurumaClsnFilePtr data_ov047_02112630;
-extern CLPS_Block data_ov047_02111ab4;
+extern Km3KurumaModelFilePtr gKm3KurumaModelFile;
+extern Km3KurumaClsnFilePtr gKm3KurumaCollisionFile;
 }
 
-/* Defined here because this TU owns the descriptor in overlay .data. */
-extern "C" ResourceDescriptor data_ov047_02112408 = {
-    &data_ov047_02112638,
-    &data_ov047_02112630,
-    &data_ov047_02111ab4
+struct Km3KurumaClpsBlock {
+    char magic[4];
+    unsigned short entrySize;
+    unsigned short entryCount;
+    CLPS entries[1];
 };
+typedef char Km3KurumaClpsBlock_size_must_be_16[sizeof(Km3KurumaClpsBlock) == 16 ? 1 : -1];
+
+/* One property entry: all twelve KCL prisms use index zero. The +6
+ * halfword is interpreted as the count; the lookup checks only entrySize. */
+extern "C" const Km3KurumaClpsBlock gKm3KurumaClps = {
+    {'C', 'L', 'P', 'S'}, 8, 1, {{0x00000fc0, 0x000000ff}}};
+
+/* Defined here because this TU owns the descriptor in overlay .data. */
+extern "C" ResourceDescriptor gKm3KurumaResources = {
+    &gKm3KurumaModelFile, &gKm3KurumaCollisionFile,
+    /* SetFile retains this read-only block through its opaque legacy API. */
+    (CLPS_Block *)&gKm3KurumaClps};
 
 #include "daObjKm3_Kuruma_c.h"
 #include "SpawnInfo.h"
@@ -104,16 +120,16 @@ extern "C" SpawnInfo<daObjKm3_Kuruma_c> g_profile_KM3_KURUMA = {
 // @symbol _ZN17daObjKm3_Kuruma_c13InitResourcesEv
 s32 daObjKm3_Kuruma_c::InitResources()
 {
-    return func_ov002_020b6958(this, &data_ov047_02112408);
+    return func_ov002_020b6958(this, &gKm3KurumaResources);
 }
 
 // @symbol _ZN17daObjKm3_Kuruma_c16CleanupResourcesEv
 s32 daObjKm3_Kuruma_c::CleanupResources()
 {
-    return func_ov002_020b68b0(this, &data_ov047_02112408);
+    return func_ov002_020b68b0(this, &gKm3KurumaResources);
 }
 
 /* Source order is construction order: model file 1663, then the collision
  * file 1664. The compiler registers each destructor beside the object. */
-Km3KurumaModelFilePtr data_ov047_02112638(ASSET_KM3_KURUMA_BMD);
-Km3KurumaClsnFilePtr data_ov047_02112630(ASSET_KM3_KURUMA_KCL);
+Km3KurumaModelFilePtr gKm3KurumaModelFile(ASSET_KM3_KURUMA_BMD);
+Km3KurumaClsnFilePtr gKm3KurumaCollisionFile(ASSET_KM3_KURUMA_KCL);

@@ -1,0 +1,884 @@
+{
+  "schema_version": 1,
+  "task": "data-memory2-native1017",
+  "base_commit": "e8dc126bcda1865cce7a4a4cb920fb2095deefb9",
+  "preserved_candidate_commit": "c64fad8cd903f6c806ad5649be258cff707168d1",
+  "compiler": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "source": "src/minigames/d_s_mg_memory2.cpp",
+  "source_sha256": "b5d97fd31625ffb89495afceb39f051cb0c65abcca8423aff7359d227776a5b1",
+  "object_sha256": "320e117a2088d592f0c3b4079ec55328e97a9a26c4fe4ba7feaf700afcb74f17",
+  "data_range": {
+    "module": "ov006",
+    "section": ".data",
+    "start": "0x0213d248",
+    "end_exclusive": "0x0213d338",
+    "size": 240,
+    "objects": 30
+  },
+  "object_comparison": {
+    "baseline_object_sha256": "98eae5b570e77dc97cef864f9221e969e78da38e706d7481a62b7523b67052d2",
+    "compared_functions": 56,
+    "function_or_relocation_differences": [],
+    "compared_bss_symbols": 6,
+    "bss_differences": [],
+    "final_lf_source_recompiled_identically": true,
+    "initializer_size": 956,
+    "initializer_relocations": 36
+  },
+  "native_constants": [
+    {
+      "from": "@1585",
+      "to": "pmf_dScMgMemory2_c_StateSetup",
+      "address": 34853480,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10StateSetupEv",
+          0
+        ]
+      ],
+      "sha256": "cf244aa5cf2558169628c2d669d1fd3a5652cf3fe57dd1498760b0200858cb47"
+    },
+    {
+      "from": "@1587",
+      "to": "pmf_dScMgMemory2_c_StatePlay",
+      "address": 34853456,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c9StatePlayEv",
+          0
+        ]
+      ],
+      "sha256": "95890042f1b3034309a5c8da11c180ed366d76d8bdd46a3c4bbf8c14b9ffae73"
+    },
+    {
+      "from": "@1589",
+      "to": "pmf_dScMgMemory2_c_StateJudge",
+      "address": 34853568,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10StateJudgeEv",
+          0
+        ]
+      ],
+      "sha256": "60d31fd4e159447909346ef27e99f94228e14a81a51d7cbdf1776632352286a8"
+    },
+    {
+      "from": "@1591",
+      "to": "pmf_dScMgMemory2_c_StateResult",
+      "address": 34853632,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c11StateResultEv",
+          0
+        ]
+      ],
+      "sha256": "912511e221558dd6b15bef5c4420a35fba8aa2fa63119ca3ff951c3c19204827"
+    },
+    {
+      "from": "@1593",
+      "to": "pmf_dScMgMemory2_c_StateExit",
+      "address": 34853496,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c9StateExitEv",
+          0
+        ]
+      ],
+      "sha256": "03d97215acd9e24ac31925c4219b0a8f51f0930d290d6c4c1f08aadd72e8befc"
+    },
+    {
+      "from": "@1595",
+      "to": "pmf_dScMgMemory2_c_RoundStart",
+      "address": 34853576,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10RoundStartEv",
+          0
+        ]
+      ],
+      "sha256": "77c7ce47ee7fe3536ddacc8fa985a3c611d39b6e782f41176731e0687a48b291"
+    },
+    {
+      "from": "@1597",
+      "to": "pmf_dScMgMemory2_c_RoundDealEasy",
+      "address": 34853584,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+          0
+        ]
+      ],
+      "sha256": "884820c468025e787126c7c865cb064fe6252041120fcc0915be9d321e1c295c"
+    },
+    {
+      "from": "@1599",
+      "to": "pmf_dScMgMemory2_c_RoundDealNormal",
+      "address": 34853520,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+          0
+        ]
+      ],
+      "sha256": "631916bcb11a7b390df1686e6f296d8ee36fe5521c48ccb27c13c27bd9f98900"
+    },
+    {
+      "from": "@1601",
+      "to": "pmf_dScMgMemory2_c_RoundDealHard",
+      "address": 34853472,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c13RoundDealHardEv",
+          0
+        ]
+      ],
+      "sha256": "4cba60dbd39aef32a24d5e7160cb145b75af13d3f1e1b998a6e5b9dd8ddda872"
+    },
+    {
+      "from": "@1603",
+      "to": "pmf_dScMgMemory2_c_RoundDealFourth",
+      "address": 34853504,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+          0
+        ]
+      ],
+      "sha256": "5496774167bb92f84a91fbcbf78cd5779377475f44b72b9867b7783b15059022"
+    },
+    {
+      "from": "@1605",
+      "to": "pmf_dScMgMemory2_c_RoundShowCards",
+      "address": 34853528,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+          0
+        ]
+      ],
+      "sha256": "0f33d330e1c38144e61b5e22fbcd8e14af6457f0bc3643f3a2141078109f4b6c"
+    },
+    {
+      "from": "@1607",
+      "to": "pmf_dScMgMemory2_c_RoundHideCards",
+      "address": 34853648,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+          0
+        ]
+      ],
+      "sha256": "2efc8f4c541118fe82cdfd24a39d7745c7381327b1eb578e1bcbe15a01901896"
+    },
+    {
+      "from": "@1609",
+      "to": "pmf_dScMgMemory2_c_RoundReadyCards",
+      "address": 34853536,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+          0
+        ]
+      ],
+      "sha256": "7ec4abd40a1aa5f09343f96dbf7a7cdeba789b223b8986e9944822ab86de9465"
+    },
+    {
+      "from": "@1610",
+      "to": "pmf_dScMgMemory2_c_RoundWaitDeal",
+      "address": 34853656,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+          0
+        ]
+      ],
+      "sha256": "c086b75e7c9e31c168cbfe3a219af7fb4185dad3871f065c5857f9594efffe8d"
+    },
+    {
+      "from": "@1612",
+      "to": "pmf_dScMgMemory2_c_RoundReveal",
+      "address": 34853544,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c11RoundRevealEv",
+          0
+        ]
+      ],
+      "sha256": "704b0c67aa810862f741b7c9d6a4a32830df94350037b132fb94b9a670baf297"
+    },
+    {
+      "from": "@1614",
+      "to": "pmf_dScMgMemory2_c_ResultWait",
+      "address": 34853448,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10ResultWaitEv",
+          0
+        ]
+      ],
+      "sha256": "be9b01cc348ca485848d24abb3a71460dd851f0dacaca092e2f92b409de538dd"
+    },
+    {
+      "from": "@1616",
+      "to": "pmf_dScMgMemory2_c_ResultReward",
+      "address": 34853664,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c12ResultRewardEv",
+          0
+        ]
+      ],
+      "sha256": "f3f103130e1e6f864ebd09d8aa5e10cbf57cb334553e84c882e18d11be6a9702"
+    },
+    {
+      "from": "@1618",
+      "to": "pmf_dScMgMemory2_c_ResultTurnCards",
+      "address": 34853672,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+          0
+        ]
+      ],
+      "sha256": "3bcbd37ea0cffd6aac6a33a9be5209e9e66540b6895db565947f1ac143d51caf"
+    },
+    {
+      "from": "@1620",
+      "to": "pmf_dScMgMemory2_c_ResultFinish",
+      "address": 34853624,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c12ResultFinishEv",
+          0
+        ]
+      ],
+      "sha256": "5f4b09d50dea2bedba9d0594a73f8eea5a64146c53895b35c75f3969421d8f8c"
+    },
+    {
+      "from": "@1622",
+      "to": "pmf_dScMgMemory2_c_CardMove",
+      "address": 34853640,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c8CardMoveEi",
+          0
+        ]
+      ],
+      "sha256": "4b807ed64ba63b93833036dfd108dd14f274b1f05bf05538bc43bec84c1de56b"
+    },
+    {
+      "from": "@1624",
+      "to": "pmf_dScMgMemory2_c_CardIdle",
+      "address": 34853488,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c8CardIdleEi",
+          0
+        ]
+      ],
+      "sha256": "c1abfbd512e31dac48be4678d5c669ad69fad7364da3b50c6fef6d2428e3af55"
+    },
+    {
+      "from": "@1626",
+      "to": "pmf_dScMgMemory2_c_CardSelect",
+      "address": 34853552,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10CardSelectEi",
+          0
+        ]
+      ],
+      "sha256": "0c32160c7028cb2409d73f133f10ee7a2568570db99f5b01839ec48eaa40afee"
+    },
+    {
+      "from": "@1628",
+      "to": "pmf_dScMgMemory2_c_CardFlipUp",
+      "address": 34853616,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10CardFlipUpEi",
+          0
+        ]
+      ],
+      "sha256": "b6edb7600d76124ae478f3d8fa1b4e2565303fcb8881d777ae0d5fbf33fad0b4"
+    },
+    {
+      "from": "@1630",
+      "to": "pmf_dScMgMemory2_c_CardWait",
+      "address": 34853608,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c8CardWaitEi",
+          0
+        ]
+      ],
+      "sha256": "65f47a7021e1cab8827ff6f537d92d535c7c64fc0cc023f6b8e762708bea7970"
+    },
+    {
+      "from": "@1632",
+      "to": "pmf_dScMgMemory2_c_CardFlipDown",
+      "address": 34853600,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c12CardFlipDownEi",
+          0
+        ]
+      ],
+      "sha256": "bfa41ee77329f472f96f41fa84b473b72e41f990f82ed75c940db771ba3851d4"
+    },
+    {
+      "from": "@1634",
+      "to": "pmf_dScMgMemory2_c_CardFlyAway",
+      "address": 34853592,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+          0
+        ]
+      ],
+      "sha256": "8fafd7f3d16fd3183effcb24a993366541586b0b8732dedc895402c59d92a185"
+    },
+    {
+      "from": "@1636",
+      "to": "pmf_dScMgMemory2_c_PlayerDrop",
+      "address": 34853464,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10PlayerDropEi",
+          0
+        ]
+      ],
+      "sha256": "f9e0cd77c3b53d2a24b5133ba5937a892a22a4559031f0a830754298c5f2b43e"
+    },
+    {
+      "from": "@1638",
+      "to": "pmf_dScMgMemory2_c_PlayerMove",
+      "address": 34853680,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10PlayerMoveEi",
+          0
+        ]
+      ],
+      "sha256": "a9971c8bc4df7122beb087135466b9ad39ac75789886a74440f5f23c295e88c6"
+    },
+    {
+      "from": "@1640",
+      "to": "pmf_dScMgMemory2_c_PlayerWait",
+      "address": 34853560,
+      "size": 8,
+      "binding": "STB_LOCAL",
+      "relocations": [
+        [
+          0,
+          "_ZN14dScMgMemory2_c10PlayerWaitEi",
+          0
+        ]
+      ],
+      "sha256": "de3d866c1352652428eca443900afc9f0ad8afb1933b4892b03632bf651e3d1a"
+    },
+    {
+      "from": "g_profile_MG_MEMORY_J",
+      "to": "g_profile_MG_MEMORY_J",
+      "address": 34853512,
+      "size": 8,
+      "binding": "STB_GLOBAL",
+      "relocations": [
+        [
+          0,
+          "dScMgMemory2_c_classInit",
+          0
+        ]
+      ],
+      "sha256": "4c8dde5ded788f1e5a3f29a245d9994432fc898441c945fb4cb562cfa260f10a"
+    }
+  ],
+  "type_caveat": "RoundWaitDeal retains its existing void* declaration; the void-return dispatch table uses an explicit member-pointer conversion and discards the result. Original return signature is unproven, deferred on issue #4020 with owner codex-memory2-native1017.",
+  "baseline_control": {
+    "modules_pass": true,
+    "strict_symbols_pass": false,
+    "strict_symbol_errors": [
+      "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+      "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+      "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+    ],
+    "rom_rebuild": "skipped --no-rom",
+    "tested_dependency_base": "9fb6d6a394df537069d62f8a5a394b3c3c7b313f",
+    "control_tools_refreshed": true
+  },
+  "producer_validation": {
+    "status": "private-production-and-provider-checks-passed-independent-verification-pending",
+    "formal_acceptance": false,
+    "standalone_tu_verify": {
+      "matched_functions": 52,
+      "relocation_destinations": "clean",
+      "emission_order": "correct",
+      "unlicensed_symbols": [
+        "raw .text __sinit_d_s_mg_memory2.cpp (existing initializer prepared into .init by production pipeline)"
+      ],
+      "promotion_verdict": "refused-raw-initializer-classification"
+    },
+    "full_scratch_rom": {
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "bytes": 16777216,
+      "identical_to_independently_installed_retail_reference": true,
+      "licensed_sections": 5,
+      "strict_symbol_errors": 9,
+      "new_strict_symbol_errors": 0
+    },
+    "production": {
+      "status": "passed",
+      "rom_generation": "skipped --no-rom",
+      "modules_exact": 106,
+      "modules_total": 106,
+      "source_functions_reproducing": 11334,
+      "complete_data_claims_reproducing": 339,
+      "requested_initialized_records_verified": 30,
+      "requested_bss_layouts_verified": 6,
+      "requested_record_errors": [],
+      "provider_object_sha256": "82df857f1062b76bc3f24ff294b142df474739f8f1bdd3037c5abfe9e7d9bd6e",
+      "new_strict_symbol_errors": [],
+      "broad_optional_romdata_differences": [
+        {
+          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        },
+        {
+          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        }
+      ]
+    }
+  },
+  "evidence_limits": [
+    "Provider audit proves exact requested storage; semantic names, original TU boundaries and startup semantics require separate review.",
+    "All initializer function bytes and canonical relocation sites are preserved in the independent object comparison and complete scratch TU proof.",
+    "Independent verifier approval and CI remain pending.",
+    "RoundWaitDeal original return signature remains deferred on issue #4020.",
+    "No new shared sprite, RTTI, or neighboring data range is claimed."
+  ],
+  "tested_dependency_base": "2801e012eea47be85d78732b81ff32c3df84e2fb",
+  "reviewed_tool_code_commit": "9fb6d6a394df537069d62f8a5a394b3c3c7b313f",
+  "provenance_tooling_commit": "b045eaba5fdc50e097a78be7f7ac55e0da308816",
+  "artifact_sha256": {
+    "build/memory2-data-provenance.json": "560e3177e4ab35acb0fe1fb995a8becdbc3ba8029a82456b4449b00ab56fd926",
+    "build/memory2-rombuild.json": "a605892501bdcf471bae5494c3031f304117fb0f770e70be43704d859d4a03b8",
+    "build/tu/ov006-dScMgMemory2_c/link/linkcheck.json": "895dcfdae5acce6bcc5e58404dfaecb7e27c8f2d0d62b2de354d16e78e36bd3f",
+    "build/run-memory2-provenance.py": "4949b2aa3295d0b09417e7eac91efe0d15715eb9eb4295a6ea154ddf8659937e",
+    "build/memory2-retail-reference-install.json": "46af937c2ab837e4550f704e3954f227e4c13d515a53deb514d8d141350ff3db"
+  },
+  "provider_records": [
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultWait",
+      "address": "0x213d248",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StatePlay",
+      "address": "0x213d250",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerDrop",
+      "address": "0x213d258",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealHard",
+      "address": "0x213d260",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateSetup",
+      "address": "0x213d268",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardIdle",
+      "address": "0x213d270",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateExit",
+      "address": "0x213d278",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealFourth",
+      "address": "0x213d280",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "g_profile_MG_MEMORY_J",
+      "address": "0x213d288",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealNormal",
+      "address": "0x213d290",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundShowCards",
+      "address": "0x213d298",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReadyCards",
+      "address": "0x213d2a0",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReveal",
+      "address": "0x213d2a8",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardSelect",
+      "address": "0x213d2b0",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerWait",
+      "address": "0x213d2b8",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateJudge",
+      "address": "0x213d2c0",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundStart",
+      "address": "0x213d2c8",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealEasy",
+      "address": "0x213d2d0",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlyAway",
+      "address": "0x213d2d8",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipDown",
+      "address": "0x213d2e0",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardWait",
+      "address": "0x213d2e8",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipUp",
+      "address": "0x213d2f0",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultFinish",
+      "address": "0x213d2f8",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateResult",
+      "address": "0x213d300",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardMove",
+      "address": "0x213d308",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundHideCards",
+      "address": "0x213d310",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundWaitDeal",
+      "address": "0x213d318",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultReward",
+      "address": "0x213d320",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultTurnCards",
+      "address": "0x213d328",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerMove",
+      "address": "0x213d330",
+      "size": 8,
+      "section": ".data",
+      "status": "source-bytes-verified",
+      "errors": []
+    },
+    {
+      "symbol": "sMemory2PlayerTable",
+      "address": "0x21423a8",
+      "size": 24,
+      "section": ".bss",
+      "status": "source-storage-layout-verified",
+      "errors": []
+    },
+    {
+      "symbol": "sMemory2ResultTable",
+      "address": "0x21423c0",
+      "size": 32,
+      "section": ".bss",
+      "status": "source-storage-layout-verified",
+      "errors": []
+    },
+    {
+      "symbol": "sMemory2StateTable",
+      "address": "0x21423e0",
+      "size": 40,
+      "section": ".bss",
+      "status": "source-storage-layout-verified",
+      "errors": []
+    },
+    {
+      "symbol": "sMemory2CardTable",
+      "address": "0x2142408",
+      "size": 56,
+      "section": ".bss",
+      "status": "source-storage-layout-verified",
+      "errors": []
+    },
+    {
+      "symbol": "sMemory2RoundTable",
+      "address": "0x2142440",
+      "size": 80,
+      "section": ".bss",
+      "status": "source-storage-layout-verified",
+      "errors": []
+    },
+    {
+      "symbol": "sMemory2CardSprites",
+      "address": "0x2142490",
+      "size": 92,
+      "section": ".bss",
+      "status": "source-storage-layout-verified",
+      "errors": []
+    }
+  ],
+  "proof_commit": "6307fbb9a852e30eb786785adf97f6123c7b7384",
+  "tested_source_input_sha256": {
+    "src/minigames/d_s_mg_memory2.cpp": "b5d97fd31625ffb89495afceb39f051cb0c65abcca8423aff7359d227776a5b1",
+    "config/tu_manifest.d/ov006/dScMgMemory2_c.json": "9df3bae59031a5d8a97844556589afcc3738952dfe786dcb1c0a5570723d27cc",
+    "config/arm9/overlays/ov006/delinks.txt": "b4295edc7e726c1f5433a14a3819916f31a7f432acbf072c053c6b5b710b180b",
+    "config/arm9/overlays/ov006/symbols.txt": "d616f380023f129a22f6af67e71d185da16c40c495df11fe1d06971bb2b55e77"
+  },
+  "metadata_followup": {
+    "predecessor_commit": "6307fbb9a852e30eb786785adf97f6123c7b7384",
+    "finding_fixed": "memory2-verification-summary-001",
+    "manifest_changed_field": "verification.criteria.declared_function_set_equals_defined_function_set",
+    "previous_value": "FAIL-BY-DESIGN -- 30 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+    "regenerated_value": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+    "source_delinks_symbols_byte_identical": true,
+    "all_other_manifest_values_identical": true,
+    "proof_scope": "Prior full-ROM/production/provider proofs remain explicitly bound to predecessor6307f; followup changes only current diagnostic and explanatory evidence. Independent verifier must confirm exact functional input identity.",
+    "current_manifest_sha256": "f6882f19136cd9e2d0b69bdb5317d9993e77648185f2bc44a5cc975158227b4a",
+    "raw_verify_log_sha256": "0ee64b658d3dc4c2e30e0823d828633bef57be004d751f9c7824fb92c96280d3"
+  },
+  "deferred_findings": [
+    {
+      "id": "memory2-return-signature-001",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4020",
+      "owner": "codex-memory2-native1017",
+      "summary": "Original RoundWaitDeal return signature unproven; existing declaration retained."
+    }
+  ]
+}

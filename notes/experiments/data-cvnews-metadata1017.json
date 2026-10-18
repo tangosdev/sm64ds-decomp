@@ -1,0 +1,1735 @@
+{
+  "schema": "cvnews-metadata-native-v1",
+  "base_commit": "121ca67be3ac06751cc6d8106ff6487a76dc52fd",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "task": "data-cvnews-metadata1017",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+  "completion": "partial; independent acceptance pending",
+  "scope": {
+    "module": "ov021",
+    "source": "src/game/actors/d_a_obj_cv_news_lift.cpp",
+    "rodata": [
+      "0x02114740",
+      "0x02114748"
+    ],
+    "data": [
+      "0x02114748",
+      "0x0211480c"
+    ],
+    "new_bytes": 204
+  },
+  "object_proof": {
+    "base_sha256": "eca63c5473251afd1be52d209d3ac67633b91ae291faa53896c4a16aa84e83f7",
+    "candidate_sha256": "76e8d8f75bbdb4aae3562779a97dd59302b2b6fbfa2c0e033fe7223ca2934464",
+    "source_sha256": "5d3e8d8187caa8d652ef599e6374e68d6e68a609deebb8cc974962340dcba390",
+    "existing_definitions_preserved": 32,
+    "functions_preserved": 21,
+    "objects": [
+      {
+        "symbol": "sNewsLiftPlatformYaws",
+        "address": "0x02114740",
+        "size": 8,
+        "binding": "STB_GLOBAL",
+        "relocations": 0,
+        "section": ".rodata"
+      },
+      {
+        "symbol": "_ZTI17daObjCvNewsLift_c",
+        "address": "0x02114748",
+        "size": 12,
+        "binding": "STB_LOPROC",
+        "relocations": 3,
+        "section": ".data"
+      },
+      {
+        "symbol": "_ZTS17daObjCvNewsLift_c",
+        "address": "0x02114754",
+        "size": 20,
+        "binding": "STB_LOPROC",
+        "relocations": 0,
+        "section": ".data"
+      },
+      {
+        "symbol": "g_profile_CV_NEWS_LIFT",
+        "address": "0x02114768",
+        "size": 28,
+        "binding": "STB_GLOBAL",
+        "relocations": 1,
+        "section": ".data"
+      },
+      {
+        "symbol": "_ZTV17daObjCvNewsLift_c",
+        "address": "0x02114784",
+        "size": 136,
+        "binding": "STB_GLOBAL",
+        "relocations": 33,
+        "section": ".data"
+      }
+    ],
+    "relocations": [
+      {
+        "section": ".data",
+        "source": "0x0211474c",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZTS17daObjCvNewsLift_c",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x02114754"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114750",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZTI10dBgActor_c",
+        "addend": 0,
+        "target_module": "overlay(2)",
+        "target_address": "0x021089ec"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114748",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZTVN3abi20__si_class_type_infoE",
+        "addend": 8,
+        "target_module": "main",
+        "target_address": "0x0209a764"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114768",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "daObjCvNewsLift_c_classInit",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x02112168"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114788",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZTI17daObjCvNewsLift_c",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x02114748"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147c8",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02043494"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147c4",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN7fBase_c9Virtual38Ejj",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x0204349c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147c0",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN7fBase_c9Virtual34Ejj",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x0204357c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147bc",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02043ac0"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114804",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x020100dc"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114800",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010124"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147fc",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x0201012c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147f8",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010130"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147f4",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010134"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147f0",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c8OnPushedERS_",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010138"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147ec",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c8OnKickedERS_",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x0201013c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147e8",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010140"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147e4",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010144"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147e0",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010148"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147dc",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c9Virtual50Ev",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x0201014c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147d8",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010154"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147d4",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010160"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147b8",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c11AfterRenderEj",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010f6c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147b4",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c12BeforeRenderEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010f78"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147ac",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010fc8"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147a8",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02010fd4"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147a0",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02011214"
+      },
+      {
+        "section": ".data",
+        "source": "0x0211479c",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02011220"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114794",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02011244"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114790",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+        "addend": 0,
+        "target_module": "main",
+        "target_address": "0x02011268"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114808",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN10dBgActor_c4KillEv",
+        "addend": 0,
+        "target_module": "overlays(2,7)",
+        "target_address": "0x020ee55c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147d0",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN17daObjCvNewsLift_cD0Ev",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x02111214"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147b0",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN17daObjCvNewsLift_c6RenderEv",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x02111650"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147a4",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN17daObjCvNewsLift_c8BehaviorEv",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x021116c8"
+      },
+      {
+        "section": ".data",
+        "source": "0x02114798",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN17daObjCvNewsLift_c16CleanupResourcesEv",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x021115dc"
+      },
+      {
+        "section": ".data",
+        "source": "0x0211478c",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN17daObjCvNewsLift_c13InitResourcesEv",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x02111c6c"
+      },
+      {
+        "section": ".data",
+        "source": "0x021147cc",
+        "type": "R_ARM_ABS32",
+        "kind": "load",
+        "symbol": "_ZN17daObjCvNewsLift_cD1Ev",
+        "addend": 0,
+        "target_module": "overlay(21)",
+        "target_address": "0x021111a0"
+      }
+    ],
+    "bytes": 204,
+    "renames": {
+      "data_ov021_02114740": "sNewsLiftPlatformYaws"
+    },
+    "production_claim": false
+  },
+  "production": {
+    "status": "passed",
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11334,
+      "compiledBytes": 2225480,
+      "sourceFunctions": 11334,
+      "sourceBytes": 2225480,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.43577343005789,
+      "reproducingFunctions": 11334,
+      "reproducingBytes": 2225480,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 340,
+      "sourceBssClaims": 245,
+      "sourceBssBytes": 31216,
+      "reproducingDataClaims": 340,
+      "reproducingDataClaimBytes": 13488,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "module_fidelity": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "providers": 5,
+    "provider_scope": "196 public-address bytes; full204-byte storage including vtable preamble independently covered by whole-section link proof",
+    "optional_rom_data": {
+      "verified": 976,
+      "partial": 1559,
+      "differs": 1,
+      "unnamed": 15,
+      "differingSymbols": [
+        {
+          "module": "arm9",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "addr": 34137860,
+          "bytes": 16
+        }
+      ]
+    }
+  },
+  "scratch": {
+    "result": "scratch-data-verified",
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "symbols_new": [],
+    "owned_sections": {
+      "ok": true,
+      "claimed": 2,
+      "rows": [
+        {
+          "section": ".rodata",
+          "start": "0x02114740",
+          "end": "0x02114748",
+          "emittedBytes": 8,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 0
+        },
+        {
+          "section": ".data",
+          "start": "0x02114748",
+          "end": "0x0211480c",
+          "emittedBytes": 196,
+          "sizeOk": true,
+          "bytesOk": true,
+          "differingWords": 0,
+          "relocCount": 37
+        }
+      ],
+      "symbolErrors": [],
+      "relocations": [
+        {
+          "section": ".data",
+          "source": "0x0211474c",
+          "type": 2,
+          "symbol": "_ZTS17daObjCvNewsLift_c",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZTS17daObjCvNewsLift_c",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x02114754",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x02114754",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114750",
+          "type": 2,
+          "symbol": "_ZTI10dBgActor_c",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZTI10dBgActor_c",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov002"
+          ],
+          "candidateModule": "ov002",
+          "candidate": "0x021089ec",
+          "configuredKind": "load",
+          "configuredModule": "ov002",
+          "configuredModules": [
+            "ov002"
+          ],
+          "configured": "0x021089ec",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114748",
+          "type": 2,
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZTVN3abi20__si_class_type_infoE",
+          "expectedAddend": 8,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x0209a764",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x0209a764",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114768",
+          "type": 2,
+          "symbol": "daObjCvNewsLift_c_classInit",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "daObjCvNewsLift_c_classInit",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x02112168",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x02112168",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114788",
+          "type": 2,
+          "symbol": "_ZTI17daObjCvNewsLift_c",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZTI17daObjCvNewsLift_c",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x02114748",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x02114748",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147c8",
+          "type": 2,
+          "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN7fBase_c13OnHeapCreatedEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02043494",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02043494",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147c4",
+          "type": 2,
+          "symbol": "_ZN7fBase_c9Virtual38Ejj",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN7fBase_c9Virtual38Ejj",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x0204349c",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x0204349c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147c0",
+          "type": 2,
+          "symbol": "_ZN7fBase_c9Virtual34Ejj",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN7fBase_c9Virtual34Ejj",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x0204357c",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x0204357c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147bc",
+          "type": 2,
+          "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN7fBase_c16OnPendingDestroyEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02043ac0",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02043ac0",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114804",
+          "type": 2,
+          "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x020100dc",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x020100dc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114800",
+          "type": 2,
+          "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010124",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010124",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147fc",
+          "type": 2,
+          "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x0201012c",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x0201012c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147f8",
+          "type": 2,
+          "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010130",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010130",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147f4",
+          "type": 2,
+          "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010134",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010134",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147f0",
+          "type": 2,
+          "symbol": "_ZN8dActor_c8OnPushedERS_",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c8OnPushedERS_",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010138",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010138",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147ec",
+          "type": 2,
+          "symbol": "_ZN8dActor_c8OnKickedERS_",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c8OnKickedERS_",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x0201013c",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x0201013c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147e8",
+          "type": 2,
+          "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c11OnAttacked2ERS_",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010140",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010140",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147e4",
+          "type": 2,
+          "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c11OnAttacked1ERS_",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010144",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010144",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147e0",
+          "type": 2,
+          "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010148",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010148",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147dc",
+          "type": 2,
+          "symbol": "_ZN8dActor_c9Virtual50Ev",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c9Virtual50Ev",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x0201014c",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x0201014c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147d8",
+          "type": 2,
+          "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010154",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010154",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147d4",
+          "type": 2,
+          "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010160",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010160",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147b8",
+          "type": 2,
+          "symbol": "_ZN8dActor_c11AfterRenderEj",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c11AfterRenderEj",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010f6c",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010f6c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147b4",
+          "type": 2,
+          "symbol": "_ZN8dActor_c12BeforeRenderEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c12BeforeRenderEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010f78",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010f78",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147ac",
+          "type": 2,
+          "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c13AfterBehaviorEj",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010fc8",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010fc8",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147a8",
+          "type": 2,
+          "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c14BeforeBehaviorEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02010fd4",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02010fd4",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147a0",
+          "type": 2,
+          "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02011214",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02011214",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x0211479c",
+          "type": 2,
+          "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02011220",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02011220",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114794",
+          "type": 2,
+          "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c18AfterInitResourcesEj",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02011244",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02011244",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114790",
+          "type": 2,
+          "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "arm9"
+          ],
+          "candidateModule": "arm9",
+          "candidate": "0x02011268",
+          "configuredKind": "load",
+          "configuredModule": "arm9",
+          "configuredModules": [
+            "arm9"
+          ],
+          "configured": "0x02011268",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114808",
+          "type": 2,
+          "symbol": "_ZN10dBgActor_c4KillEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN10dBgActor_c4KillEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov002",
+            "ov007"
+          ],
+          "candidateModule": "ov002",
+          "candidate": "0x020ee55c",
+          "configuredKind": "load",
+          "configuredModule": "overlays(2,7)",
+          "configuredModules": [
+            "ov002",
+            "ov007"
+          ],
+          "configured": "0x020ee55c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147d0",
+          "type": 2,
+          "symbol": "_ZN17daObjCvNewsLift_cD0Ev",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN17daObjCvNewsLift_cD0Ev",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x02111214",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x02111214",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147b0",
+          "type": 2,
+          "symbol": "_ZN17daObjCvNewsLift_c6RenderEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN17daObjCvNewsLift_c6RenderEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x02111650",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x02111650",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147a4",
+          "type": 2,
+          "symbol": "_ZN17daObjCvNewsLift_c8BehaviorEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN17daObjCvNewsLift_c8BehaviorEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x021116c8",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x021116c8",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x02114798",
+          "type": 2,
+          "symbol": "_ZN17daObjCvNewsLift_c16CleanupResourcesEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN17daObjCvNewsLift_c16CleanupResourcesEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x021115dc",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x021115dc",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x0211478c",
+          "type": 2,
+          "symbol": "_ZN17daObjCvNewsLift_c13InitResourcesEv",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN17daObjCvNewsLift_c13InitResourcesEv",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x02111c6c",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x02111c6c",
+          "verdict": "OK"
+        },
+        {
+          "section": ".data",
+          "source": "0x021147cc",
+          "type": 2,
+          "symbol": "_ZN17daObjCvNewsLift_cD1Ev",
+          "kind": "load",
+          "addend": 0,
+          "expectedType": "R_ARM_ABS32",
+          "expectedSymbol": "_ZN17daObjCvNewsLift_cD1Ev",
+          "expectedAddend": 0,
+          "expectedEmittedAddend": 0,
+          "expectedModules": [
+            "ov021"
+          ],
+          "candidateModule": "ov021",
+          "candidate": "0x021111a0",
+          "configuredKind": "load",
+          "configuredModule": "ov021",
+          "configuredModules": [
+            "ov021"
+          ],
+          "configured": "0x021111a0",
+          "verdict": "OK"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "final_aliases": [
+    {
+      "symbol": "data_ov021_02114750",
+      "address": "0x02114750",
+      "size": 0,
+      "section": "OV021"
+    },
+    {
+      "symbol": "data_ov021_021147c4",
+      "address": "0x021147c4",
+      "size": 0,
+      "section": "OV021"
+    }
+  ],
+  "source_input_sha256": {
+    "src/game/actors/d_a_obj_cv_news_lift.cpp": "5d3e8d8187caa8d652ef599e6374e68d6e68a609deebb8cc974962340dcba390",
+    "include/daObjCvNewsLift_c.h": "c83e98a672f4bb530612094c670eef3622a62aeca4f17c515fbe0dac17213a53",
+    "config/tu_manifest.d/ov021/daObjCvNewsLift_c.json": "420340ca3060e50cf69f1008ccc3969b16c8c145c194c769da9343c0c795987d",
+    "config/arm9/overlays/ov021/symbols.txt": "f038a789c862ec8ed91f70746300bd8abf1bf25546f92c9881214d45546c34f4",
+    "config/arm9/overlays/ov021/delinks.txt": "8c1e65eb17bb5916f39b8103d2954a32731d79bb91b22b39efb727abde12fcbf"
+  },
+  "provider_binding": {
+    "report": "build/cvnews-data-provenance.json",
+    "report_sha256": "8ad86b7ce85f6b5c6326e290376cb554394f7391ae9dbc60519f88119b0781ae",
+    "build_input_count": 4416,
+    "build_input_map_sha256": "fff3259db8e6447c3949ba674929f2371e527a5a1bb8c0c20f13c86763db612b",
+    "link_input_count": 2725,
+    "link_input_map_sha256": "22f15f12099ebfe8a096610c48498c80133cf0033f7cfe9358be09593911e967"
+  },
+  "artifact_sha256": {
+    "final_link.o": "7be59ec40819f5aff2c57f700c80aecec560e7a6056a0e55ca8e4bad89fbf926",
+    "candidate.o": "76e8d8f75bbdb4aae3562779a97dd59302b2b6fbfa2c0e033fe7223ca2934464",
+    "base.o": "eca63c5473251afd1be52d209d3ac67633b91ae291faa53896c4a16aa84e83f7"
+  },
+  "name_provenance": {
+    "sNewsLiftPlatformYaws": "Inferred from Behavior and transform-loop consumers; constu16[4] and exact values evidenced by source/retail. No original identifier claim.",
+    "compiler_ABI": "Existing RTTI/type-name/vtable identities retained;136-byte storage starts02114784,public address point0211478c.",
+    "original_TU": "Modern source ownership assignment; historical filename/boundary not proven."
+  },
+  "predecessor_tasks": [
+    "promote-ov021-newslift-0923",
+    "readable-ov021-newslift-0925",
+    "cvnews-sinit1015"
+  ],
+  "findings": [
+    {
+      "disposition": "deferred",
+      "id": "NEWSLIFT-0923-R1",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp InitResources and its extern C block",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "Byte- and relocation-verified. The same mangled seam appears in 111 other sources, and the handoff names it as remaining scope. There is no committed experiment artifact, so compiler_constraint does not apply. Accepted as partial. Re-checked on the composition ecf3d02685: the TU source is patch-identical to the verified candidate f725153603 (git diff 23537af88f..ecf3d02685 equals eb8f46d46a..f725153603 on every non-ledger path), so the finding stands unchanged and remains deferred. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "InitResources calls dBgW_KcMbg::SetFile through the hand-spelled mangled extern _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block (Fix12 by value), and calls the unnamed func_020393c4 and func_020393d4 with void* callbacks. These are ABI bridges, not header-declared methods.",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "NEWSLIFT-0923-R2",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp func_ov021_0211129c",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "The handoff says mPlatformMats[i] and a second pointer each changed register allocation in measurement, but no committed artifact backs that. Deferred rather than compiler_constraint. Re-checked on the composition ecf3d02685: the TU source is patch-identical to the verified candidate f725153603 (git diff 23537af88f..ecf3d02685 equals eb8f46d46a..f725153603 on every non-ledger path), so the finding stands unchanged and remains deferred. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "The platform-matrix store is a raw offset walk: *(Matrix4x3 *)((char *)platform + 0x460), with platform, a daObjCvNewsLift_c* reinterpretation, stepped by 0x30. It is not written as mPlatformMats[i].",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "NEWSLIFT-0923-R3",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp func_ov021_02111434 tail",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "Byte-exact, and the comment says why. The original shape is not recovered. Reconstruction gap, accepted as partial. Re-checked on the composition ecf3d02685: the TU source is patch-identical to the verified candidate f725153603 (git diff 23537af88f..ecf3d02685 equals eb8f46d46a..f725153603 on every non-ledger path), so the finding stands unchanged and remains deferred. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "This is now plain C++ with no asm: the static asm conv_ov021 helper is gone, and tubuild reloc-destinations and prepush_linkcheck verify its relocation destinations. The function is void and ends in two empty early returns on mResetTimer (>= 0x2d, & 1). They exist only to reproduce the ROM's dead flag-setting test. The original probably returned a value or had compiled-out work there; the test mirrors Render's blink check.",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "fixed",
+      "id": "NEWSLIFT-0923-R4",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp helpers func_ov021_0211129c, func_ov021_02111434 and func_ov021_02111ec4..func_ov021_02112128",
+      "owner": "class owner of daObjCvNewsLift_c on issue #3073 (next producer task scheduled by claude-promo-coord-0923)",
+      "reason": "Historical predecessor finding already resolved before this task; see inherited R4 and the current pinned source/header. This metadata slice preserves all existing emitted definitions.",
+      "summary": "Twelve helpers keep unnamed func_ov021_* extern C names and take the class pointer explicitly: the collision callbacks, the setters and the two matrix rebuilders. None is a member or a static member callback."
+    },
+    {
+      "disposition": "deferred",
+      "id": "NEWSLIFT-0923-R5",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "config/decl-agreement-baseline.json keys (func_ov021_02111434, include/decl_common.h: return:int) and (data_ov021_02114a20, src/actors/daObjCvNewsLift_c.cpp: return:Vector3 [] against the int [] placeholder)",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "decl_common.h is a shared header this task did not reserve. Fixing it needs a reservation and fan-out byte proof. The keys were banked in place, with no re-sort and order preserved. Deferred to a follow-up that reserves include/decl_common.h. Re-checked on the composition ecf3d02685: the TU source is patch-identical to the verified candidate f725153603 (git diff 23537af88f..ecf3d02685 equals eb8f46d46a..f725153603 on every non-ledger path), so the finding stands unchanged and remains deferred. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "include/decl_common.h still declares the ov021 helpers with int placeholders. There func_ov021_02111434 returns int, but the definition is void; data_ov021_02114a20 is int[] there and Vector3[] in the TU. These disagreements are banked in the decl baseline, not fixed.",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "NEWSLIFT-0923-R6",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp NewsLiftFile, InitResources, CleanupResources and Behavior",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "SharedFilePtr.h deliberately declares no fields, so a real accessor needs a shared-header change outside this scope. The lever claims have no committed artifacts. Deferred. Re-checked on the composition ecf3d02685: the TU source is patch-identical to the verified candidate f725153603 (git diff 23537af88f..ecf3d02685 equals eb8f46d46a..f725153603 on every non-ledger path), so the finding stands unchanged and remains deferred. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "A local layout, NewsLiftFile, shadows SharedFilePtr so the code can read the loaded buffer at +4, and every use goes through a *(SharedFilePtr *)& cast. The dActor_c position fields are reached through (Vector3 *)&mPosX casts. The volatile reads of data_02092768 and the per-element pointer writes are kept as measured byte levers.",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "NEWSLIFT-0923-R7",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp file-scope data declarations; src/__sinit_ov021_02113500.c",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "This matches the sibling promoted ov021/daObjCvShutter_c. The module's sinits sit together at the end of ov021 .text, so moving this one needs its own boundary evidence. Deferred. Re-checked on the composition ecf3d02685: the TU source is patch-identical to the verified candidate f725153603 (git diff 23537af88f..ecf3d02685 equals eb8f46d46a..f725153603 on every non-ledger path), so the finding stands unchanged and remains deferred. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "The TU's own static objects are declared extern: the four SharedFilePtr resources at 0x021149a0..0x021149b8 and the platform-offset Vector3 table at 0x02114a20. Their initialisation stays in the separate shard __sinit_ov021_02113500, and the data stays ROM-owned (text-only route).",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "fixed",
+      "id": "NEWSLIFT-0923-R8",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073",
+      "kind": "reconstruction",
+      "location": "include/daObjCvNewsLift_c.h header comment",
+      "owner": "class owner of daObjCvNewsLift_c on issue #3073 (next producer task scheduled by claude-promo-coord-0923)",
+      "reason": "Historical predecessor finding already resolved before this task; see inherited R8 and the current pinned source/header. This metadata slice preserves all existing emitted definitions.",
+      "summary": "Disclosure gap: the comment says names below 0xc40 follow the array types and names from 0xc4c on are inferred. That leaves mHomePos (0xc40) unclassified, although it too is inferred from use. The handoff correctly says 'from 0xc40 on'."
+    },
+    {
+      "disposition": "fixed",
+      "id": "NEWSLIFT-0923-C1",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073",
+      "kind": "reconstruction",
+      "location": "config/decl-agreement-baseline.json (41 rows keyed src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp and src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp, including 4 'return:WorkElevatorFile' reasons); attribution.json plain key src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp",
+      "owner": "class owner of daObjCvNewsLift_c on issue #3073 (next producer task scheduled by claude-promo-coord-0923)",
+      "reason": "Historical predecessor finding already resolved before this task; see inherited C1 and the current pinned source/header. This metadata slice preserves all existing emitted definitions.",
+      "summary": "The branch re-keyed the retired WorkElevator shard rows to the post-rename shard paths instead of dropping or re-pointing them. Those paths existed only between commits 363c8a5097 and bdffad619c, and never on main after the squash. The composition carries the rows faithfully (main plus branch delta, 0 lost, 0 invented). The 41 decl rows are inert: no file exists at those paths, so they cannot suppress any disagreement, and check_decl_agreement lists them among the banked entries that are gone. The attribution plain key duplicates the credit carried by the live override src/actors/daObjCvNewsLift_c.cpp#_ZN17daObjCvNewsLift_c8BehaviorEv, and prepush_attribution reports 0 lost and 0 changed."
+    },
+    {
+      "disposition": "deferred",
+      "id": "R1",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp InitResources",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "The member-call measurement (0x26c against 0x258) exists only as prose, so this is deferred, not a compiler_constraint. func_020393c4 and func_020393d4 are arm9 symbols defined in their own live shards outside this reservation; verified present. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "Mangled dBgW_KcMbg::SetFile bridge; unnamed func_020393c4 and func_020393d4",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R2",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp UpdateClsnTransforms",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "Raw offsets are gone. mPlatformMats is at 0x460 and sizeof(Matrix4x3) is 0x30 per the header (0x460 + 4*0x30 = 0x520 = mPlatformColliders), so the rewrite stores to the same address with the same stride: semantically equal to the base as well as byte-identical. A daObjCvNewsLift_c pointer cursor that points between objects remains; the alternatives were measured only in prose. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "Raw +0x460 and +0x30 walk",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R3",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp UpdateModelTransforms tail",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "Base: an unsigned copy, return if >= 0x2d, return if odd, then fall off the end. Candidate: one if (mResetTimer < 45 && (mResetTimer & 1)) return; at the end of the function. Both are side-effect-free no-ops, so semantically equal; the object tail (ldrh, cmp #0x2d, pophs, ands #1, pop) is identical. The dead test itself remains; alternatives were measured only in prose. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "Dead early returns",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "fixed",
+      "id": "R4",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp, include/daObjCvNewsLift_c.h, config/arm9/overlays/ov021/symbols.txt",
+      "reason": "All 12 are real members (7 non-virtual, 5 static). Names match bodies: UpdateClsnTransforms and UpdateModelTransforms rebuild the collision and model matrices; OnPlatformNRide stores N into mLoweredPlatform and is called from PlatformNCallback, which InitResources registers on mPlatformColliders[N]; OnMainMeshRide and MainMeshCallback belong to mMeshCollider. The header marks the seven non-virtual names coined; the static-callback comment does not (see V3). The 12 symbols.txt rows are renamed in place at the same addresses and sizes; the five literal-pool loads (0x02111ea4 to 0x02111ec0) and the arm_calls are address-keyed in relocs.txt. No src or port consumer of the old names remains (only include/decl_common.h, see R5, and generated docs).",
+      "summary": "Twelve unnamed func_ov021_* helpers"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R5",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "include/decl_common.h lines 1438, 2542, 2543",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "decl_common.h is reserved by the running task jump-contract-repair-0918 (verified in v2 list). Its lines now name no defined symbol and no file uses them. Empty diff in this commit, as ruled. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "int placeholders for the ov021 helpers",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R6",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjCvNewsLift_c.cpp NewsLiftFile",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "Verified: the _ZN13SharedFilePtr4LoadEv definition declares {unsigned short fileID; unsigned char numRefs; void *filePtr;}, reads fileID and writes filePtr at +4. The new fields match (numRefs is evidenced by that declaration only). The shadow remains because include/SharedFilePtr.h is a shared header that declares no fields. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "NewsLiftFile shadow of SharedFilePtr, Vector3 casts, volatile levers",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "deferred",
+      "id": "R7",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "src/__sinit_ov021_02113500.c",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "The shard exists outside this reservation; the reason is true. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "File-scope statics initialised by a separate sinit shard",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "disposition": "fixed",
+      "id": "R8",
+      "kind": "reconstruction",
+      "location": "include/daObjCvNewsLift_c.h header comment",
+      "reason": "The comment now says the names from 0xc40 on are inferred, and mHomePos is at 0xc40.",
+      "summary": "mHomePos (0xc40) was not classified"
+    },
+    {
+      "disposition": "fixed",
+      "id": "C1",
+      "kind": "reconstruction",
+      "location": "config/decl-agreement-baseline.json, attribution.json",
+      "reason": "Already removed on main by #3101 (commit 93ad5a858f, an ancestor of the tested base). No row or key under the retired InitResources and Behavior shard paths, or under any legacy_source path of this manifest, exists at this commit.",
+      "summary": "41 decl-baseline rows and one attribution key under retired shard paths"
+    },
+    {
+      "disposition": "fixed",
+      "id": "V1",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/readable-ov021-newslift-0925.md, Findings table, row C1",
+      "reason": "The C1 row now reads \"fixed upstream by #3101\" and cites 93ad5a858f, which is #3101 and an ancestor of the base. Its detail is true: before #3101 the decl baseline held 41 findings under 26 symbol and path pairs on src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp and src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp; this commit holds none, and #3101 renamed the one attribution key back to its WorkElevator shard name.",
+      "summary": "The handoff says C1 is still deferred and its 41 rows are inert, but those rows and the attribution key do not exist in this commit: #3101 removed them before the base."
+    },
+    {
+      "disposition": "fixed",
+      "id": "V2",
+      "kind": "reconstruction",
+      "location": "config/tu_manifest.d/ov021/daObjCvNewsLift_c.json, FOLD note",
+      "reason": "The FOLD note now adds that OnMainMeshRide writes mTargetRotation at +0xc5c..+0xc68, directly or through Quaternion_FromVector3. Confirmed against the object: four str to #0xc5c..#0xc68 in the bumped branch, and r4+0xc5c passed to Quaternion_FromVector3 and Quaternion_Normalize otherwise.",
+      "summary": "The rewritten note says each setter writes fields at +0xc74..+0xc7e; OnMainMeshRide also writes mTargetRotation (+0xc5c)."
+    },
+    {
+      "disposition": "deferred",
+      "id": "V3",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "kind": "reconstruction",
+      "location": "include/daObjCvNewsLift_c.h, comment above the five static callbacks",
+      "owner": "Next daObjCvNewsLift_c reconstruction producer coordinated on issue4048; reserved shared headers require their owner.",
+      "reason": "A missing optional detail, not a false statement: the handoff says so explicitly, and the ROM has no names for these functions. Header edit for a later readability pass. Historical source locations and measurements retained. This slice leaves that reconstruction scope unchanged; the source is now data-owned only for the204-byte metadata group.",
+      "summary": "The comment on Platform0Callback..Platform3Callback and MainMeshCallback does not say the names are coined, unlike the non-virtual block.",
+      "historical_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3073"
+    },
+    {
+      "id": "cvnews-native-lifecycle-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/unnamed/ov021/__sinit_ov021_02113500.c and four resource/four vector globals",
+      "summary": "Native lifecycle checkpoint has13 scheduling-word mismatches in the last three vector constructions.",
+      "reason": "Preserved immutable e56ffc1953e40dfafc578704400bd7c129f6fc90 and its handoff. Direct, const, volatile, const-volatile and copy forms were already measured; no retry absent a new mechanism. Current C initializer remains source-owned unchanged; its BSS/ctor remain outside this task.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "owner": "Future separately claimed lifecycle producer coordinated by campaign root"
+    },
+    {
+      "id": "cvnews-clps-contract-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "include/decl_common.h:23 and CLPS blocks02113a60/02113a80",
+      "summary": "Existing shared Matrix4x3 declarations disagree with the two16-byte collision-property blocks.",
+      "reason": "Header reserved by jump-contract-repair-0918. Keep both blocks outside this task; a separate owned correction and consumer proof must precede typed source migration. Do not hide the conflicting declaration or turn FF padding into object storage.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4048",
+      "owner": "Reserved header owner and future separately claimed CLPS producer"
+    }
+  ],
+  "known_early_failures": [
+    "Initial enrollment omitted production_mode=intact-object; corrected before valid zero-source control. No source fallback used as acceptance.",
+    "Initial census gave Kill ov002 only; actual configured module set is overlays(2,7). Corrected and control rerun; raw source bytes unchanged."
+  ],
+  "static_checks": {
+    "standalone": "19/19 MATCH; clean isolation and destinations; text verification only",
+    "strict": "19/19 VERIFIED; zero warnings/blocking in focused prepush; final immutable range rerun is separately recorded in queue evidence",
+    "source_style": "0 findings/0 deferrals",
+    "declaration_agreement": "no new disagreements or duplicate header declarations",
+    "header_offsets": "no header edits; gate correctly reports no affected header",
+    "rename_ledger": "existing chains pass; no row for the newly named heading table, exact old/new/address map retained here",
+    "port_refs": "pass",
+    "committed_diff_check": "must be recorded after immutable commit in producer evidence"
+  },
+  "reproducibility": [
+    "build/prove-enroll.py --check-only (preserved fresh baseline object; no tracked mutation)",
+    "python tools/tubuild.py linkcheck --baseline --module ov021 -j16",
+    "python tools/tubuild.py linkcheck ov021/daObjCvNewsLift_c -j16",
+    "python build/run-cvnews-provenance.py -j16 --report-json build/final-production.json"
+  ],
+  "scope_limits": [
+    "Native lifecycle still has 13-word scheduling floor at preserved e56ffc1953e40dfafc578704400bd7c129f6fc90. No retry and no migration in this task.",
+    "Two16-byte CLPS blocks remain outside ownership because reserved decl_common.h declares Matrix4x3; no hidden extern conflict or fake padding objects.",
+    "Existing methods/raw-layout/ABI reconstruction findings retained; address-keyed authorship unchanged.",
+    "Nine baseline strict-symbol errors and optional legacy dCcAcPos vtable diagnostic remain unchanged.",
+    "No merge; independent root review and parent PR publication remain required."
+  ]
+}

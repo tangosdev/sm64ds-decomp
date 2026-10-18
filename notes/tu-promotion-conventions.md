@@ -346,17 +346,18 @@ the entry was keepable and the drop needs a different justification.
 ## 3. Delete your own stale `func_<module>_<addr>` declarations
 
 Promotion renames the absorbed functions in `symbols.txt`, but the old
-`func_<module>_<addr>` names survive elsewhere. `include/decl_common.h` still declares
-three functions that #2055 renamed out of existence:
+`func_<module>_<addr>` names survive elsewhere. `include/decl_common.h` kept declaring
+three functions that #2055 renamed out of existence until the stale-declaration sweep
+removed them (together with 158 others that met the same test):
 ```c
     extern void func_ov071_02121b08(void*);
     extern void func_ov071_02121b50(void*, void*);
     extern void func_ov071_02121ba4(void*);
 ```
-Verified against `origin/main`: a tree-wide search finds **no source reference** to any
-of the three. (Note the count — three, not four. `func_ov071_02121c6c` was renamed by the
-same PR but was never declared in that header, so a promotion must check each absorbed
-symbol individually rather than assume they arrive as a set.)
+A tree-wide search found **no source reference** to any of the three. (Note the count —
+three, not four. `func_ov071_02121c6c` was renamed by the same PR but was never declared
+in that header, so a promotion must check each absorbed symbol individually rather than
+assume they arrive as a set.)
 
 **The rule.** A promotion removes the declarations of the functions it renamed, in the
 same PR. Do it in the promotion PR rather than as a follow-up: the promotion is already
@@ -598,7 +599,8 @@ will be a boundary.
 
 ## Known open items at the time of writing
 
-- The three stale declarations quoted in section 3 are still present. This note does not
-  remove them; it is documentation-only. Removing them belongs in a PR that carries a
-  ROM-link proof.
+- The three stale declarations quoted in section 3 were removed by the stale-declaration
+  sweep of `include/decl_common.h` (161 function rows). Stale *data* and vtable rows in
+  that header (`VT*`, `_ZTV*`, `vtbl_*`, `data_*` names absent from every `symbols.txt`)
+  were out of that sweep's scope and are still present.
 - `include/daEyBm_c.h`'s comment still names the three deleted files quoted in section 4.

@@ -116,7 +116,7 @@ data_ov084_02130238 kind:data(any) addr:0x02130238
 data_ov084_02130248 kind:data(any) addr:0x02130248
 data_ov084_02130258 kind:data(any) addr:0x02130258
 data_ov084_02130268 kind:data(any) addr:0x02130268
-data_ov084_02130278 kind:data(any) addr:0x02130278
+sKuriboAnimationFiles kind:data(any) addr:0x02130278
 data_ov084_02130294 kind:data(any) addr:0x02130294
 data_ov084_0213029c kind:data(any) addr:0x0213029c
 data_ov084_021302c4 kind:data(any) addr:0x021302c4

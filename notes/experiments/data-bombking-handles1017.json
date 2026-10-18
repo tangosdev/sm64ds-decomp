@@ -1,0 +1,338 @@
+{
+  "schema": 1,
+  "task": "data-bombking-handles1017",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4029",
+  "base": "e8dc126bcda1865cce7a4a4cb920fb2095deefb9",
+  "compiler": "2004/b56",
+  "source": "src/game/actors/d_a_bombking.cpp",
+  "initializer": "src/unnamed/ov078/__sinit_ov078_02126660.c",
+  "preserved_candidate": {
+    "job": "DD261",
+    "batch_commit": "2b3f5c857d046f8c7226da451fc59d3dc0af5b80",
+    "recorded_original_candidate": "18a24c13747f",
+    "original_short_sha_unresolved": true,
+    "author": "lunavyqo",
+    "coauthor": "Cursor"
+  },
+  "scope": {
+    "module": "ov078",
+    "bss_start": "0x02126ee0",
+    "bss_end": "0x02126f48",
+    "objects": 13,
+    "bytes": 104
+  },
+  "handles": [
+    {
+      "address": "0x2126ee0",
+      "runtime_asset_id": "0x2c1",
+      "asset_path": "data/enemy/bombking/bombking_struggle.bca",
+      "proposed_name": "gBombkingStruggleAnimationFile",
+      "resolved_fat_file_id": "0x0115"
+    },
+    {
+      "address": "0x2126ee8",
+      "runtime_asset_id": "0x2c5",
+      "asset_path": "data/enemy/bombking/bombking_walk1.bca",
+      "proposed_name": "gBombkingWalk1AnimationFile",
+      "resolved_fat_file_id": "0x0119"
+    },
+    {
+      "address": "0x2126ef0",
+      "runtime_asset_id": "0x2c2",
+      "asset_path": "data/enemy/bombking/bombking_throw.bca",
+      "proposed_name": "gBombkingThrowAnimationFile",
+      "resolved_fat_file_id": "0x0116"
+    },
+    {
+      "address": "0x2126ef8",
+      "runtime_asset_id": "0x2c0",
+      "asset_path": "data/enemy/bombking/bombking_start.bca",
+      "proposed_name": "gBombkingStartAnimationFile",
+      "resolved_fat_file_id": "0x0114"
+    },
+    {
+      "address": "0x2126f00",
+      "runtime_asset_id": "0x2bc",
+      "asset_path": "data/enemy/bombking/bombking_getup.bca",
+      "proposed_name": "gBombkingGetupAnimationFile",
+      "resolved_fat_file_id": "0x0110"
+    },
+    {
+      "address": "0x2126f08",
+      "runtime_asset_id": "0x2be",
+      "asset_path": "data/enemy/bombking/bombking_jumped.bca",
+      "proposed_name": "gBombkingJumpedAnimationFile",
+      "resolved_fat_file_id": "0x0112"
+    },
+    {
+      "address": "0x2126f10",
+      "runtime_asset_id": "0x2bd",
+      "asset_path": "data/enemy/bombking/bombking_jump.bca",
+      "proposed_name": "gBombkingJumpAnimationFile",
+      "resolved_fat_file_id": "0x0111"
+    },
+    {
+      "address": "0x2126f18",
+      "runtime_asset_id": "0x2bf",
+      "asset_path": "data/enemy/bombking/bombking_lift.bca",
+      "proposed_name": "gBombkingLiftAnimationFile",
+      "resolved_fat_file_id": "0x0113"
+    },
+    {
+      "address": "0x2126f20",
+      "runtime_asset_id": "0x2bb",
+      "asset_path": "data/enemy/bombking/bombking_damage.bca",
+      "proposed_name": "gBombkingDamageAnimationFile",
+      "resolved_fat_file_id": "0x010f"
+    },
+    {
+      "address": "0x2126f28",
+      "runtime_asset_id": "0x2c6",
+      "asset_path": "data/enemy/bombking/bombking_walk2.bca",
+      "proposed_name": "gBombkingWalk2AnimationFile",
+      "resolved_fat_file_id": "0x011a"
+    },
+    {
+      "address": "0x2126f30",
+      "runtime_asset_id": "0x2c4",
+      "asset_path": "data/enemy/bombking/bombking_wait2.bca",
+      "proposed_name": "gBombkingWait2AnimationFile",
+      "resolved_fat_file_id": "0x0118"
+    },
+    {
+      "address": "0x2126f38",
+      "runtime_asset_id": "0x2c7",
+      "asset_path": "data/enemy/bombking/bomb_king.bmd",
+      "proposed_name": "gBombkingModelFile",
+      "resolved_fat_file_id": "0x010e"
+    },
+    {
+      "address": "0x2126f40",
+      "runtime_asset_id": "0x2c3",
+      "asset_path": "data/enemy/bombking/bombking_wait1.bca",
+      "proposed_name": "gBombkingWait1AnimationFile",
+      "resolved_fat_file_id": "0x0117"
+    }
+  ],
+  "field_layout": {
+    "0": "u16 resolved file ID returned by func_02018a24(runtime asset ID)",
+    "2": "u8 reference count",
+    "3": "padding",
+    "4": "BCA_File* for animation or BMD_File* for model"
+  },
+  "objects_before_after": [
+    {
+      "base_object": "build\\bombking-base.o",
+      "candidate_object": "build\\tu\\ov078-daBombking_c\\d_a_bombking.o",
+      "base_sha256": "92181d3c505e0a98fb80bed7b9e13df479634c0e7b8deebc72618eab2a437687",
+      "candidate_sha256": "7f2099ce2ce22ff1ff8de5c353c66a9c6ba539729beaf1ab4951740f30a7e0a0",
+      "named_initialized_objects": 66,
+      "functions": 54,
+      "raw_bytes_and_renamed_relocations_equal": true
+    },
+    {
+      "base_object": "build\\bombking-base-init.o",
+      "candidate_object": "build\\bombking-candidate-init.o",
+      "base_sha256": "2edc92beb863bebcf4150e05eb0a7f43211b2040f5850447584ac430599ae818",
+      "candidate_sha256": "b11381af856c588e6229acd9d10a79cee2a895552d6fd501c18ff5cccb03c0ec",
+      "named_initialized_objects": 1,
+      "functions": 1,
+      "raw_bytes_and_renamed_relocations_equal": true
+    }
+  ],
+  "bss_emission": {
+    "candidate_object_sha256": "7f2099ce2ce22ff1ff8de5c353c66a9c6ba539729beaf1ab4951740f30a7e0a0",
+    "handles": [
+      {
+        "symbol": "gBombkingStruggleAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingWalk1AnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingThrowAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingStartAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingGetupAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingJumpedAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingJumpAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingLiftAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingDamageAnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingWalk2AnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingWait2AnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingModelFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "gBombkingWait1AnimationFile",
+        "size": 8,
+        "section": ".bss",
+        "section_type": "SHT_NOBITS",
+        "section_alignment": 4,
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "allocated_bytes": 104,
+    "initializer_sections": [],
+    "evidence_limit": "ELF storage/layout only; final production provider and startup code checks are separate."
+  },
+  "focused_verification": {
+    "checked": 53,
+    "verified": 53,
+    "warnings": 0,
+    "blocking": 0
+  },
+  "source_style": {
+    "files": 2,
+    "findings": 0,
+    "formatting_deferrals": 0
+  },
+  "declarations": "ratchet passes, no new disagreements or local header-declaration copies",
+  "port_references": {
+    "checked": 247,
+    "stale": 0
+  },
+  "production": {
+    "status": "passed",
+    "modules_exact": 106,
+    "modules_checked": 106,
+    "source_functions_reproducing": 11334,
+    "initialized_data_claims_reproducing": 338,
+    "bss_claims": 246,
+    "bss_bytes": 31320,
+    "requested_providers": 13,
+    "provider_object_sha256": "96bc82fd78567dc98c7fa31caef8787f21c0c240c072d899344b77046498c480",
+    "rom_bytes": 16777216,
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "baseline_symbol_errors": 9,
+    "new_symbol_errors": 0,
+    "proof_source_state": "Frozen source/config working-tree blobs subsequently committed; documentation finalization does not alter compiled inputs. Independent verification follows exact immutable queue offer.",
+    "command": "python -u build/run-bombking-provenance.py -j16 --report-json build/bombking-production.json",
+    "external_provenance_tool_commit": "b045eaba5fdc50e097a78be7f7ac55e0da308816",
+    "wrapper_sha256": "855d0d651becaa5cc7e6b13cbc8b04b9923700bcb39d96e0b1d962ae6c994c5c",
+    "private_report_sha256": {
+      "build\\bombking-production.json": "a8fdc3de536703a7cf07c0e6b98715d5826ceac1e091bcd678f863a60c52fd23",
+      "build\\bombking-data-provenance.json": "dd36e2f755121083fce85a5abe77723c18f5987dc7aa249b6dbf3d2f7c8ec095"
+    }
+  },
+  "limits": [
+    "Names are reconstructed from observed asset paths, not original identifiers.",
+    "POD definitions provide storage only; construction and destructor registration stay in separately configured C initializer.",
+    "BSS proof establishes compiler storage, layout and zero fill; runtime values are initialized separately.",
+    "No globally shared SharedFilePtr layout change or entire class/TU reconstruction claim. Existing state data, raw fields and ABI/helper reconstruction remain deferred.",
+    "Inherited predecessor findings are retained in queue handoff, including unrelated Snowman findings with their prior scope and owners."
+  ],
+  "startup": {
+    "symbol": "__sinit_ov078_02126660",
+    "module": "ov078",
+    "address": "0x2126660",
+    "size": 1652,
+    "linked_bytes_equal_retail": true,
+    "linked_bytes_sha256": "172a424dc96af82be152a46324dfbd355bfdc932cf769ca1513d4e25f59210a9",
+    "source": "src/unnamed/ov078/__sinit_ov078_02126660.c",
+    "source_object_sha256": "76a2fd87780980aaff4ff733715e28c64c0019ccecd2fa64724d963bf422d0ff"
+  },
+  "optional_broad_rom_data_scan": {
+    "verified": 974,
+    "partial": 1572,
+    "differs": 1,
+    "unnamed": 15,
+    "differing": [
+      {
+        "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      },
+      {
+        "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      }
+    ],
+    "scope_note": "The differing vtable records belong to unrelated existing destructor objects, not this source. Complete data claims and final modules/ROM pass; the broader object scan is not globally clean."
+  },
+  "discarded_attempts": [
+    "First scratch admission rejected stale trackedConfigArm9 fingerprint after line-ending restoration; refreshed control and final scratch pass are used.",
+    "Initial provider request included existing vtable address point plus full storage size, exceeding its declared range. Prepare rejected before compilation. Final explicit request covers only13newBSS handles; default complete-data gate covers existing metadata."
+  ]
+}

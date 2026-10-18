@@ -189,7 +189,7 @@ data_ov021_02114598 kind:data(any) addr:0x02114598 ambiguous
 data_ov021_021145e4 kind:data(any) addr:0x021145e4 ambiguous
 data_ov021_0211462c kind:data(any) addr:0x0211462c ambiguous
 data_ov021_021146f0 kind:data(any) addr:0x021146f0 ambiguous
-data_ov021_02114740 kind:data(any) addr:0x02114740
+sNewsLiftPlatformYaws kind:data(any) addr:0x02114740
 _ZTI17daObjCvNewsLift_c kind:data(any) addr:0x02114748
 data_ov021_02114750 kind:data(any) addr:0x02114750 ambiguous
 _ZTS17daObjCvNewsLift_c kind:data(any) addr:0x02114754

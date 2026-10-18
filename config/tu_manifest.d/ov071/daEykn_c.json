@@ -32,6 +32,16 @@
       "name": ".bss",
       "start": "0x02123038",
       "end": "0x021230b8"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021226a0",
+      "end": "0x021226ac"
+    },
+    {
+      "name": ".data",
+      "start": "0x02122ca8",
+      "end": "0x02122dac"
     }
   ],
   "functions": [
@@ -211,31 +221,106 @@
       "ordinal": 24
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_daEykn_c_St_Attack_Init",
+      "address": "0x02122ca8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native int (daEykn_c::*)() literal; exact target method and zero adjustment match the retail state descriptor."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Die_Init",
+      "address": "0x02122cb0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native int (daEykn_c::*)() literal; exact target method and zero adjustment match the retail state descriptor."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Wait_Init",
+      "address": "0x02122cb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native int (daEykn_c::*)() literal; exact target method and zero adjustment match the retail state descriptor."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Wait_Main",
+      "address": "0x02122cc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native int (daEykn_c::*)() literal; exact target method and zero adjustment match the retail state descriptor."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Die_Main",
+      "address": "0x02122cc8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native int (daEykn_c::*)() literal; exact target method and zero adjustment match the retail state descriptor."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Attack_Main",
+      "address": "0x02122cd0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native int (daEykn_c::*)() literal; exact target method and zero adjustment match the retail state descriptor."
+    },
+    {
+      "symbol": "_ZTS8daEykn_c",
+      "address": "0x02122cd8",
+      "size": "0xa",
+      "evidence": "Compiler type-name string; following two-byte alignment is padding, not a second object."
+    },
+    {
+      "symbol": "_ZTI8daEykn_c",
+      "address": "0x02122ce4",
+      "size": "0xc",
+      "evidence": "Compiler single-inheritance RTTI; exact type-name, runtime ABI and dActor_c base relocations."
+    },
+    {
+      "symbol": "g_profile_EYEKUN",
+      "address": "0x02122cf0",
+      "size": "0x1c",
+      "evidence": "SpawnInfo<daEykn_c>; typed normal-size factory, priorities, flags and four clip-range fields match retail."
+    },
+    {
+      "symbol": "g_profile_EYEKUN_BOSS",
+      "address": "0x02122d0c",
+      "size": "0x1c",
+      "evidence": "SpawnInfo<daEykn_c>; typed boss factory, priorities, flags and four clip-range fields match retail."
+    },
+    {
+      "symbol": "_ZTV8daEykn_c",
+      "address": "0x02122d30",
+      "emitted_storage_address": "0x02122d28",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "Compiler vtable storage includes its eight-byte preamble; public address point and all31function slots match retail."
+    }
+  ],
   "bss": [
     {
-      "symbol": "data_ov071_02123038",
+      "symbol": "gEyknCloseTextureSequenceFile",
       "address": "0x02123038",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
     },
     {
-      "symbol": "data_ov071_02123040",
+      "symbol": "gEyknOpenTextureSequenceFile",
       "address": "0x02123040",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
     },
     {
-      "symbol": "data_ov071_02123048",
+      "symbol": "gEyknDeathAnimationFile",
       "address": "0x02123048",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "Original initializer destination and exact eight-byte resource or three-row PMF state-table extent."
     },
     {
-      "symbol": "data_ov071_02123050",
+      "symbol": "gEyknModelFile",
       "address": "0x02123050",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -270,7 +355,7 @@
       "evidence": "Native destructor-registration node at the unchanged retail initializer destination."
     },
     {
-      "symbol": "data_ov071_02123088",
+      "symbol": "gEyknStates",
       "address": "0x02123088",
       "size": "0x30",
       "binding": "STB_GLOBAL",
@@ -282,13 +367,14 @@
     "The destructor is defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
     "The state helpers are members with coined names (see include/daEykn_c.h); their symbols.txt rows were renamed in place. Previous tree name MrI was coined. class_rename kept MrI_Spawn / MrI_Projectile rows (no --with-derived). The duplicate _ZTV3MrI alias of _ZTV8daEykn_c was deleted.",
     "fold-lane-D-0929: folded the daEykn_c_classInit_EYEKUN_BOSS and daEykn_c_classInit_EYEKUN registry factories (0x021219cc..0x02121a6c) into this already-promoted TU, widening the complete delinks.txt claim from 0x02120668..0x021219cc to 0x02120668..0x02121a6c. Each loose one-function source hand-called fBase_c::operator new(536) + the inherited dActor_c ctor + this class's vtable store + the four member subobjects in field order (ModelAnim, TextureSequence, dExtShadowModel_c, dCcAcPos_c); daEykn_c has no user-declared constructor, so both are now `new daEykn_c()` -- same bytes, zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the two factories append after InitResources, in ROM order (EYEKUN_BOSS then EYEKUN). `tubuild.py verify` reports 25/25 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (the existing _ZN8daEykn_cD2Ev deadstrip row, from the out-of-line destructor, already covers the homeless base-object-destructor helper `return new` emits here). Retired: src/d_a_eykn_eyekun_boss.c, src/d_a_eykn_eyekun.c (both credited tangosdev, carried into attribution.json as path#symbol overrides).",
-    "Native initializer follow-up: four file handles and three two-PMF state rows replace the handwritten __sinit_ov071_021228c8.c. Local EyknModelFile/EyknTextureSequenceFile/EyknAnimationFileHandle type names are inferred eight-byte resource-family ABI views; the C1/D1 aliases assert their measured exact helper destinations, not recovered original class names. Six copied ROM PMF descriptors remain ROM-owned; their native C++ imports and the BSS state table leave the C-linkage block. All prior Fix12/interface/layout leftovers remain partial reconstruction."
+    "Native initializer follow-up: four file handles and three two-PMF state rows replace the handwritten __sinit_ov071_021228c8.c. Local EyknModelFile/EyknTextureSequenceFile/EyknAnimationFileHandle type names are inferred eight-byte resource-family ABI views; the C1/D1 aliases assert their measured exact helper destinations, not recovered original class names. Six copied ROM PMF descriptors remain ROM-owned; their native C++ imports and the BSS state table leave the C-linkage block. All prior Fix12/interface/layout leftovers remain partial reconstruction.",
+    "data-eykn-native1017: six native member-pointer literals replace ROM imports in the existing State aggregate, preserving all 25 methods and the 340-byte initializer. Two readonly resource-pointer objects, both SpawnInfo profiles and current compiler RTTI/vtable own the complete new 12-byte .rodata and 260-byte .data ranges. Existing 128-byte BSS and constructor entry remain native. Four handle names derive from ROM asset paths; the names are reconstructed. Local handle fields reflect the measured u16 file ID, u8 reference count, u8 padding and loaded-pointer layout. The shared SharedFilePtr contract and prior body/ABI findings remain deferred. DD243 commit 2ba06ba42c42226706fde3c6274ef1f73001d311 preserves pointer-table candidate provenance; the current modern class and header are retained."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov071-daEykn_c/daEykn_c.o (gitignored)",
+    "object": "build/tu/ov071-daEykn_c/d_a_eykn.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 25,
     "functions_declared": 25,
@@ -302,28 +388,20 @@
         "_ZN8daEykn_cD2Ev"
       ],
       "droppedSections": [
-        9,
-        10,
-        20,
-        54,
-        55,
-        56,
-        57,
-        58,
-        59,
-        60,
-        61,
-        62,
-        63,
-        64,
-        65,
-        66,
-        67
+        34,
+        35,
+        45,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96
       ],
       "data": [
-        "_ZTV8daEykn_c",
-        "_ZTI8daEykn_c",
-        "_ZTS8daEykn_c",
         "_ZTI8dActor_c",
         "_ZTS8dActor_c",
         "_ZTI7dBase_c",
@@ -335,20 +413,18 @@
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
-        "_ZTI8daEykn_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTS8daEykn_c",
-        "_ZTV8daEykn_c"
-      ]
+        "_ZTS8dActor_c"
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
+      "relocation_destinations_verified": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
@@ -396,11 +472,25 @@
           "start": "0x02123038",
           "end": "0x021230b8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021226a0",
+          "end": "0x021226ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02122ca8",
+          "end": "0x02122dac",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 36
+          "LICENSED": 49
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -411,44 +501,84 @@
           {
             "section": ".init",
             "original": [
-              79
+              99
             ],
             "desired": [
-              79
+              99
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              77
+              97
             ],
             "desired": [
-              77
+              97
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
               7,
-              8,
-              9,
-              10,
-              11,
               12,
-              13
+              19,
+              22,
+              25,
+              26,
+              27,
+              28,
+              29
             ],
             "desired": [
-              6,
-              8,
               7,
-              5,
               12,
+              19,
+              22,
+              28,
+              25,
+              26,
+              27,
+              29
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              5,
+              15
+            ],
+            "desired": [
+              5,
+              15
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              8,
               10,
-              11,
-              9,
-              13
+              13,
+              17,
+              20,
+              23,
+              79,
+              81,
+              83,
+              85,
+              86
+            ],
+            "desired": [
+              13,
+              20,
+              17,
+              10,
+              8,
+              23,
+              85,
+              86,
+              79,
+              81,
+              83
             ]
           }
         ],
@@ -457,43 +587,85 @@
             {
               "section": ".bss",
               "original": [
-                5,
-                6,
                 7,
-                8,
-                9,
-                10,
-                11,
                 12,
-                13
+                19,
+                22,
+                25,
+                26,
+                27,
+                28,
+                29
               ],
               "desired": [
-                6,
-                8,
                 7,
-                5,
                 12,
-                10,
-                11,
-                9,
-                13
+                19,
+                22,
+                28,
+                25,
+                26,
+                27,
+                29
               ],
               "slots": [
-                5,
-                6,
                 7,
-                8,
-                9,
-                10,
-                11,
                 12,
-                13
+                19,
+                22,
+                25,
+                26,
+                27,
+                28,
+                29
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                8,
+                10,
+                13,
+                17,
+                20,
+                23,
+                79,
+                81,
+                83,
+                85,
+                86
+              ],
+              "desired": [
+                13,
+                20,
+                17,
+                10,
+                8,
+                23,
+                85,
+                86,
+                79,
+                81,
+                83
+              ],
+              "slots": [
+                8,
+                10,
+                13,
+                17,
+                20,
+                23,
+                79,
+                81,
+                83,
+                85,
+                86
               ]
             }
           ],
-          "symbolIndices": 9,
+          "symbolIndices": 20,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 10,
           "error": null
         },
         "errors": null
@@ -543,27 +715,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "Vector3 declares an inline destructor in include/types.h, so this TU's Vector3 locals emit a vague-linkage 4-byte copy. The real home is arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp."
-    },
-    {
-      "symbol": "_ZTV8daEykn_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov071",
-      "canonical_address": "0x02122d30",
-      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02122d30."
-    },
-    {
-      "symbol": "_ZTI8daEykn_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov071",
-      "canonical_address": "0x02122ce4",
-      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02122ce4."
-    },
-    {
-      "symbol": "_ZTS8daEykn_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov071",
-      "canonical_address": "0x02122cd8",
-      "reason": "Metadata remains ROM-owned outside the native-initializer TU claims: externalize to canonical public address 0x02122cd8."
     },
     {
       "symbol": "_ZTI8dActor_c",
@@ -647,6 +798,36 @@
       "from": "@537",
       "to": "@185",
       "evidence": "Compiler-local registration node at ov071:0x0212307c; fleet-unique short label changes no storage or relocation."
+    },
+    {
+      "from": "@549",
+      "to": "pmf_daEykn_c_St_Die_Main",
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment."
+    },
+    {
+      "from": "@541",
+      "to": "pmf_daEykn_c_St_Wait_Main",
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment."
+    },
+    {
+      "from": "@543",
+      "to": "pmf_daEykn_c_St_Attack_Init",
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment."
+    },
+    {
+      "from": "@539",
+      "to": "pmf_daEykn_c_St_Wait_Init",
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment."
+    },
+    {
+      "from": "@547",
+      "to": "pmf_daEykn_c_St_Die_Init",
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment."
+    },
+    {
+      "from": "@545",
+      "to": "pmf_daEykn_c_St_Attack_Main",
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment."
     }
   ],
   "symbol_binding_rewrites": [
@@ -685,6 +866,42 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "Expose the exact owned compiler-local symbol to the DSD global symbol surface without changing storage or relocations."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Die_Main",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose this owned compiler-generated member-pointer constant without changing storage or relocations."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Wait_Main",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose this owned compiler-generated member-pointer constant without changing storage or relocations."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Attack_Init",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose this owned compiler-generated member-pointer constant without changing storage or relocations."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Wait_Init",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose this owned compiler-generated member-pointer constant without changing storage or relocations."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Die_Init",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose this owned compiler-generated member-pointer constant without changing storage or relocations."
+    },
+    {
+      "symbol": "pmf_daEykn_c_St_Attack_Main",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "Expose this owned compiler-generated member-pointer constant without changing storage or relocations."
     }
   ],
   "undefined_symbol_aliases": [
@@ -824,7 +1041,7 @@
       "source": "0x021229c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02123050",
+      "symbol": "gEyknModelFile",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02123050"
@@ -854,7 +1071,7 @@
       "source": "0x021229d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02123038",
+      "symbol": "gEyknCloseTextureSequenceFile",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02123038"
@@ -884,7 +1101,7 @@
       "source": "0x021229e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02123040",
+      "symbol": "gEyknOpenTextureSequenceFile",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02123040"
@@ -904,7 +1121,7 @@
       "source": "0x021229f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02123048",
+      "symbol": "gEyknDeathAnimationFile",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02123048"
@@ -934,7 +1151,7 @@
       "source": "0x02122a00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02123088",
+      "symbol": "gEyknStates",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02123088"
@@ -944,7 +1161,7 @@
       "source": "0x02122a04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02122cb8",
+      "symbol": "pmf_daEykn_c_St_Wait_Init",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02122cb8"
@@ -954,7 +1171,7 @@
       "source": "0x02122a08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02122cc0",
+      "symbol": "pmf_daEykn_c_St_Wait_Main",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02122cc0"
@@ -964,7 +1181,7 @@
       "source": "0x02122a0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02122ca8",
+      "symbol": "pmf_daEykn_c_St_Attack_Init",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02122ca8"
@@ -974,7 +1191,7 @@
       "source": "0x02122a10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02122cd0",
+      "symbol": "pmf_daEykn_c_St_Attack_Main",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02122cd0"
@@ -984,7 +1201,7 @@
       "source": "0x02122a14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02122cb0",
+      "symbol": "pmf_daEykn_c_St_Die_Init",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02122cb0"
@@ -994,7 +1211,7 @@
       "source": "0x02122a18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov071_02122cc8",
+      "symbol": "pmf_daEykn_c_St_Die_Main",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02122cc8"
@@ -1008,6 +1225,480 @@
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x021228c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122ca8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c14St_Attack_InitEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021214f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122cb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c11St_Die_InitEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x0212110c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122cb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c12St_Wait_InitEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02121570"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122cc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c12St_Wait_MainEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x0212152c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122cc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c11St_Die_MainEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02120d30"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122cd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c14St_Attack_MainEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021211e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122ce8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS8daEykn_c",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122cd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122cec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122ce4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122cf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daEykn_c_classInit_EYEKUN",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02121a1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daEykn_c_classInit_EYEKUN_BOSS",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021219cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8daEykn_c",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02122ce4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122da8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122da4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122da0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_cD0Ev",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021206b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021216b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021216b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x021216ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02121650"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02121734"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122d70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daEykn_cD1Ev",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02120668"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021226a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEyknDeathAnimationFile",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123048"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021226a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEyknOpenTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123040"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021226a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEyknCloseTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123038"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "gEyknDeathAnimationFilePtr",
+      "address": "0x021226a0",
+      "size": "0x4",
+      "evidence": "Readonly pointer to the asset-backed death animation handle."
+    },
+    {
+      "symbol": "gEyknTextureSequenceFiles",
+      "address": "0x021226a4",
+      "size": "0x8",
+      "evidence": "Readonly close/open BTP handle pointer array, matching the loading, texture-prepare and cleanup loops."
     }
   ]
 }

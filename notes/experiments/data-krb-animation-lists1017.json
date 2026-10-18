@@ -1,0 +1,1126 @@
+{
+  "schema": 1,
+  "task": "data-krb-animation-lists1017",
+  "base_commit": "121ca67be3ac06751cc6d8106ff6487a76dc52fd",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "completion": "partial",
+  "new_owned_bytes": 104,
+  "new_pointer_relocations": 26,
+  "names_are_reconstructed": true,
+  "name_map": [
+    {
+      "module": "ov084",
+      "address": "0x02130278",
+      "old": "data_ov084_02130278",
+      "new": "sKuriboAnimationFiles",
+      "type": "SharedFilePtr *const [7]"
+    },
+    {
+      "module": "ov074",
+      "address": "0x0212292c",
+      "old": "data_ov074_0212292c",
+      "new": "sKurikingMinionAnimationFiles",
+      "type": "SharedFilePtr *const [7]"
+    },
+    {
+      "module": "ov074",
+      "address": "0x02122948",
+      "old": "data_ov074_02122948",
+      "new": "sKurikingAnimationFiles",
+      "type": "SharedFilePtr *const [12]"
+    }
+  ],
+  "shared_handle": {
+    "fields": [
+      "u16 fileID",
+      "u8 numRefs",
+      "BCA_File *ptr"
+    ],
+    "natural_padding_after_numRefs": 1,
+    "size": 8,
+    "consumers": [
+      "src/game/actors/d_a_krb.cpp",
+      "src/game/actors/d_a_kuri_king.cpp"
+    ],
+    "header_sha256": "9594b2c270f1b56eff7cf79d2f13d6dce8d92bbfa0f3477a0c38eb72c0118c90",
+    "original_member_names_recovered": false
+  },
+  "complete_object_proof": {
+    "status": "PASS",
+    "results": [
+      {
+        "slug": "krb",
+        "source": "src/game/actors/d_a_krb.cpp",
+        "source_sha256": "6c5c5a5f53a6dbac81307b8a7eedff1db9bcce07fa416058d6b3fbfd6fe37b66",
+        "object_sha256": "7789ebc62fe68cbbd7665ef12823a43165bd10d1be893d4a3f87a2442ee9614d",
+        "existing_symbols_preserved": 79,
+        "existing_functions_preserved": 38,
+        "initializer_size": 508,
+        "initializer_relocations": 44,
+        "temporary_map": {},
+        "table_rows": [
+          {
+            "symbol": "sKuriboAnimationFiles",
+            "module": "ov084",
+            "address": "0x2130278",
+            "size": 28,
+            "relocations": [
+              {
+                "section": ".rodata",
+                "source": "0x2130278",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130ce8",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130ce8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x213027c",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130ce0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130ce0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2130280",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cd0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cd0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2130284",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cc0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cc0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2130288",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKuriboRecoverAnimationFile",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cd8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x213028c",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cc8",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cc8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2130290",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cf0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cf0"
+              }
+            ],
+            "relocated_sha256": "35ed2a57255d854bdfe8a3760a567c368aca2e1aa1e9cb1ed51cd7f1e6e26d6b",
+            "rom_exact": true
+          }
+        ]
+      },
+      {
+        "slug": "kuriking",
+        "source": "src/game/actors/d_a_kuri_king.cpp",
+        "source_sha256": "965484034eff5ddde280cd4af59e84130f6420b7b1935dec81eedd76201f071f",
+        "object_sha256": "a68822ecef67faae0cee377e5eeb521abb44aceb9264ebd22e578d69bac70837",
+        "existing_symbols_preserved": 120,
+        "existing_functions_preserved": 59,
+        "initializer_size": 1016,
+        "initializer_relocations": 78,
+        "temporary_map": {
+          "@2115": "@2116",
+          "@2116": "@2117",
+          "@2117": "@2118",
+          "@2118": "@2119",
+          "@2119": "@2120",
+          "@2120": "@2121",
+          "@2121": "@2122",
+          "@2122": "@2123",
+          "@2123": "@2124",
+          "@2124": "@2125",
+          "@2125": "@2126",
+          "@2126": "@2127",
+          "@2127": "@2128",
+          "@2128": "@2129",
+          "@677": "@678",
+          "@678": "@679",
+          "@679": "@680",
+          "@680": "@681",
+          "@681": "@682",
+          "@682": "@683",
+          "@683": "@684",
+          "@684": "@685",
+          "@685": "@686",
+          "@686": "@687",
+          "@687": "@688",
+          "@688": "@689",
+          "@689": "@690",
+          "@690": "@691",
+          "@691": "@692"
+        },
+        "table_rows": [
+          {
+            "symbol": "sKurikingMinionAnimationFiles",
+            "module": "ov074",
+            "address": "0x212292c",
+            "size": 28,
+            "relocations": [
+              {
+                "section": ".rodata",
+                "source": "0x212292c",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130ce8",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130ce8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122930",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130ce0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130ce0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122934",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cd0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cd0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122938",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cc0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cc0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x212293c",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKuriboRecoverAnimationFile",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cd8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122940",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cc8",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cc8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122944",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov084_02130cf0",
+                "addend": 0,
+                "target_module": "ov084",
+                "target_address": "0x2130cf0"
+              }
+            ],
+            "relocated_sha256": "35ed2a57255d854bdfe8a3760a567c368aca2e1aa1e9cb1ed51cd7f1e6e26d6b",
+            "rom_exact": true
+          },
+          {
+            "symbol": "sKurikingAnimationFiles",
+            "module": "ov074",
+            "address": "0x2122948",
+            "size": 48,
+            "relocations": [
+              {
+                "section": ".rodata",
+                "source": "0x2122948",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingAngerAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123038"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x212294c",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingDamageBAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123008"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122950",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingDamageFAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123018"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122954",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingDownStartAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2122ff0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122958",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingDownAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123048"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x212295c",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingSerchWaitAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2122ff8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122960",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingTurnAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123028"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122964",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "data_ov074_02123030",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123030"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122968",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingWalkAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123020"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x212296c",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingWalkEndAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2122fe0"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122970",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingWalkStartAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2122fe8"
+              },
+              {
+                "section": ".rodata",
+                "source": "0x2122974",
+                "type": "R_ARM_ABS32",
+                "kind": "pointer",
+                "symbol": "gKurikingSpawnAnimationFile",
+                "addend": 0,
+                "target_module": "ov074",
+                "target_address": "0x2123010"
+              }
+            ],
+            "relocated_sha256": "5f825ab70fc3ee8bc0e11964f45efb665123844f6642fd7cf502c83b0a18d119",
+            "rom_exact": true
+          }
+        ]
+      }
+    ],
+    "relocations": [
+      {
+        "module": "ov084",
+        "section": ".rodata",
+        "source": "0x2130278",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130ce8",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130ce8"
+      },
+      {
+        "module": "ov084",
+        "section": ".rodata",
+        "source": "0x213027c",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130ce0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130ce0"
+      },
+      {
+        "module": "ov084",
+        "section": ".rodata",
+        "source": "0x2130280",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cd0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cd0"
+      },
+      {
+        "module": "ov084",
+        "section": ".rodata",
+        "source": "0x2130284",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cc0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cc0"
+      },
+      {
+        "module": "ov084",
+        "section": ".rodata",
+        "source": "0x2130288",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKuriboRecoverAnimationFile",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cd8"
+      },
+      {
+        "module": "ov084",
+        "section": ".rodata",
+        "source": "0x213028c",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cc8",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cc8"
+      },
+      {
+        "module": "ov084",
+        "section": ".rodata",
+        "source": "0x2130290",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cf0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cf0"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x212292c",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130ce8",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130ce8"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122930",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130ce0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130ce0"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122934",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cd0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cd0"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122938",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cc0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cc0"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x212293c",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKuriboRecoverAnimationFile",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cd8"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122940",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cc8",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cc8"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122944",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov084_02130cf0",
+        "addend": 0,
+        "target_module": "ov084",
+        "target_address": "0x2130cf0"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122948",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingAngerAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123038"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x212294c",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingDamageBAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123008"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122950",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingDamageFAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123018"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122954",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingDownStartAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2122ff0"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122958",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingDownAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123048"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x212295c",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingSerchWaitAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2122ff8"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122960",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingTurnAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123028"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122964",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "data_ov074_02123030",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123030"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122968",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingWalkAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123020"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x212296c",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingWalkEndAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2122fe0"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122970",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingWalkStartAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2122fe8"
+      },
+      {
+        "module": "ov074",
+        "section": ".rodata",
+        "source": "0x2122974",
+        "type": "R_ARM_ABS32",
+        "kind": "pointer",
+        "symbol": "gKurikingSpawnAnimationFile",
+        "addend": 0,
+        "target_module": "ov074",
+        "target_address": "0x2123010"
+      }
+    ],
+    "normalization": "Only three explicit old/new list names and the independently derived compiler-temporary bijection; unchanged initializer sites/types/addends and complete existing symbol payload/type/binding/size/section/relocations required."
+  },
+  "isolated_candidates": [
+    {
+      "candidate": "ov084/daKrb_c",
+      "result": "scratch-data-verified",
+      "module_count": 106,
+      "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "new_symbol_errors": [],
+      "peer_isolation": {
+        "candidate": "ov084/daKrb_c",
+        "peer": "ov074/daKuriKing_c",
+        "exit_code": 0,
+        "demotions": [
+          {
+            "peer": "ov074/daKuriKing_c",
+            "source": "src/game/actors/d_a_kuri_king.cpp",
+            "config": "C:\\tmp\\sm64ds-data-krb-lists1017\\build\\tu\\ov084-daKrb_c\\link\\config\\arm9",
+            "exact_claims": [
+              {
+                "name": ".text",
+                "module_section": ".text",
+                "start": 34729984,
+                "end": 34744588
+              },
+              {
+                "name": ".rodata",
+                "module_section": ".rodata",
+                "start": 34744620,
+                "end": 34744696
+              },
+              {
+                "name": ".init",
+                "module_section": ".init",
+                "start": 34744696,
+                "end": 34745712
+              },
+              {
+                "name": ".ctor",
+                "module_section": ".ctor",
+                "start": 34745712,
+                "end": 34745716
+              },
+              {
+                "name": ".data",
+                "module_section": ".data",
+                "start": 34745732,
+                "end": 34745892
+              },
+              {
+                "name": ".bss",
+                "module_section": ".bss",
+                "start": 34746336,
+                "end": 34746784
+              }
+            ]
+          }
+        ],
+        "proof_limit": "Isolated candidate admission only. Peer remains retail-owned in this disposable link. Normal final production must prove both source providers and composition."
+      },
+      "report_sha256": "e8d55621ff21df7b17213811466044eea1bc715fc5b0605a57abd8d95e8576da",
+      "configuration_file_count": 320,
+      "configuration_inventory": "build/ov084-daKrb_c-scratch-inputs.json",
+      "configuration_inventory_sha256": "37fdb7653abdb3b03377bcd5a406d4900494defd504cc0277abbf91ae6de6617"
+    },
+    {
+      "candidate": "ov074/daKuriKing_c",
+      "result": "scratch-data-verified",
+      "module_count": 106,
+      "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "new_symbol_errors": [],
+      "peer_isolation": {
+        "candidate": "ov074/daKuriKing_c",
+        "peer": "ov084/daKrb_c",
+        "exit_code": 0,
+        "demotions": [
+          {
+            "peer": "ov084/daKrb_c",
+            "source": "src/game/actors/d_a_krb.cpp",
+            "config": "C:\\tmp\\sm64ds-data-krb-lists1017\\build\\tu\\ov074-daKuriKing_c\\link\\config\\arm9",
+            "exact_claims": [
+              {
+                "name": ".text",
+                "module_section": ".text",
+                "start": 34770976,
+                "end": 34783500
+              },
+              {
+                "name": ".rodata",
+                "module_section": ".rodata",
+                "start": 34800248,
+                "end": 34800276
+              },
+              {
+                "name": ".init",
+                "module_section": ".init",
+                "start": 34800476,
+                "end": 34800984
+              },
+              {
+                "name": ".ctor",
+                "module_section": ".ctor",
+                "start": 34801760,
+                "end": 34801764
+              },
+              {
+                "name": ".data",
+                "module_section": ".data",
+                "start": 34801836,
+                "end": 34802116
+              },
+              {
+                "name": ".bss",
+                "module_section": ".bss",
+                "start": 34802880,
+                "end": 34803100
+              }
+            ]
+          }
+        ],
+        "proof_limit": "Isolated candidate admission only. Peer remains retail-owned in this disposable link. Normal final production must prove both source providers and composition."
+      },
+      "report_sha256": "317ddf2099fc68480b91dd33ce4f4b2e93f10d8800d38872da0dadafe1a3002b",
+      "configuration_file_count": 320,
+      "configuration_inventory": "build/ov074-daKuriKing_c-scratch-inputs.json",
+      "configuration_inventory_sha256": "255f603ae0a7deb2c85c0e36f7feb219fe36f33c279ee594ad2d772fd9a06104"
+    }
+  ],
+  "normal_production": {
+    "result": "passed",
+    "module_count": 106,
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11334,
+      "compiledBytes": 2225480,
+      "sourceFunctions": 11334,
+      "sourceBytes": 2225480,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 99.43577343005789,
+      "reproducingFunctions": 11334,
+      "reproducingBytes": 2225480,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 340,
+      "sourceBssClaims": 245,
+      "sourceBssBytes": 31216,
+      "reproducingDataClaims": 340,
+      "reproducingDataClaimBytes": 13388,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "rom_bytes": 16777216,
+    "new_symbol_errors": [],
+    "provider_count": 82,
+    "providers_all_pass": true,
+    "provider_report_sha256": "acae403c7cd0d1d997bdff069665a24589821fc0f538fc2af41d92478428b2fb",
+    "production_report_sha256": "5a1d3c0b16ba69178e0594ab29053e38982ff63759396298607f55086be4f654",
+    "provider_size_boundary": "Krb vtable request covers124 public bytes. Full132-byte storage including8-byte preamble is independently verified in the complete .data section audit.",
+    "interior_alias": [
+      {
+        "symbol": "data_ov074_02122954",
+        "address": "0x2122954",
+        "size": 0,
+        "section": "OV074",
+        "elf": "build/final_link.o",
+        "elf_sha256": "38a0096b3863c477114397362ba4d36b7766c7a3d517441ff585f348633901cf"
+      }
+    ],
+    "optional_romdata_differing_symbols": [
+      {
+        "module": "arm9",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "addr": 34137860,
+        "bytes": 16
+      }
+    ]
+  },
+  "standalone_audit": {
+    "krb_text_functions": "35/35",
+    "kuriking_text_functions": "55/55",
+    "initializer_classification_refusals_each": 1,
+    "compiler_policy_errors": 0
+  },
+  "raw_prepush": {
+    "checked": 93,
+    "verified": 88,
+    "blocking": 0,
+    "warnings": [
+      "Krb initializer BLIND-20",
+      "KuriKing two factories BLIND-1 each",
+      "KuriKing initializer BLIND-31",
+      "explicit header input NO-SYM"
+    ],
+    "closure": "Whole candidate section bytes and all canonical relocation destinations are separately audited in the two full-ROM scratch proofs and joint normal production; raw blind slots are not reported as strict passes."
+  },
+  "static_checks": {
+    "source_style": "0 findings, 0 deferrals",
+    "declaration_agreement": "no new disagreements or header redeclarations",
+    "header_offsets": "31 fields, zero mismatched/unparsed, extent0x478",
+    "port_references": "247 references resolve",
+    "rename_ledger": "passes existing live-row and chain checks; no old/new rows existed for the three lists"
+  },
+  "tool_sha256": {
+    "tools/tubuild.py": "8db6821f9e5b055dc426c989d17f11c9a329e92e7ddb637a049b2b45d25da025",
+    "tools/rombuild.py": "b4f4d7acfda6c9ad8b7d1d0c553c50afa1db47a460544357124d2c49ab69102f",
+    "tools/lcf_interior.py": "915db6e9c295d2a9cf61a7a65a4a9e0275e37be4e92bf244b10bdd8df9071329",
+    "tools/objisolate.py": "0abf3e0528aa36decec65ca632ca3ac6ed1b229c647be3e0af836556903afbe5",
+    "build/run-isolated-list-proof.py": "77b06ba0e649b083831dd83cebcef147517c7b536dbcf5e85d058a082383bebc",
+    "build/run-list-provenance.py": "162c53c572e3ceb422c930d55215d03c6e52cbc4338873db6ecf16f501d7fb4a",
+    "build/prove-lists.py": "6c908432fb0cc9cfd76c3a1ef1475a9f7f7909bc88f6f05fbb724ee3a43aa697"
+  },
+  "findings": [
+    {
+      "disposition": "deferred",
+      "id": "ASSET-NAMING-RECONSTRUCTION-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750",
+      "kind": "reconstruction",
+      "location": "Source naming scope and existing actor/interface reconstruction",
+      "owner": "Original asset coordinator and subsequently claimed C++ reconstruction producers",
+      "reason": "Accepted partial readability scope; no class completion, original identifier, full declaration agreement or193warning relocation claim. Exact complete-object and module proofs independently preserve behavior.",
+      "summary": "Remaining reserved/encoded asset candidates and existing class/ABI/raw-field reconstruction debts are outside this evidenced naming slice."
+    },
+    {
+      "disposition": "fixed",
+      "id": "onturnintoegg-src-tu-redeclaration",
+      "kind": "correctness",
+      "location": "src_tu/actors/Actor.cpp:1140, src_tu/actors/Koopa+KoopaSmall.cpp:347, src_tu/actors/Lakitu.cpp:88, src_tu/actors/Spiny.cpp:88",
+      "reason": "Re-checked at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried on the verifier's word. All four definitions read void <Class>::OnTurnIntoEgg(Player &player) at exactly the cited lines, and the base declaration in include/dActor_c.h:144 reads virtual void OnTurnIntoEgg(Player &player); slot 19. A tree-wide grep for 'int OnTurnIntoEgg' returns exactly one hit, include/dScMgMemory_c.h:76 virtual int OnTurnIntoEgg(int mode);, which is the separate minigame (int) hierarchy the handoff explicitly keeps as int on the strength of 14 observed ov004 calls that consume the result -- a different overload, not a survivor of this repair. The objective test is compilation, since a redeclaration cannot compile: premerge_check ran the src-tu-refs gate on the merge tree and it passes on both sides, and check_src_tu_compiles is reported by the verifier at 170/170. Disposition unchanged: fixed.",
+      "summary": "Four byte-verified promoted translation units still defined OnTurnIntoEgg(Player&) as int after the header contract moved to void, so the whole-tree compile rejected them as redeclarations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "handoff-matching-headers-claim-false",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md:58-69",
+      "reason": "Re-read the section in the tree at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. The phrase survives only inside an explicit retraction: the text names the earlier claim as wrong, says a whole-tree compile falsified it, and gives the measured readings (exit 1 at 156/160 on candidate 848da2bb8, exit 0 at 159/159 on task base 26f54f8fc), then names the four src_tu definitions that were still int. No unretracted assertion of matching headers exists anywhere in the file. Disposition unchanged: fixed.",
+      "summary": "An earlier revision claimed the overrides returned void with matching headers; a whole-tree compile falsified it."
+    },
+    {
+      "disposition": "deferred",
+      "id": "da1up-reconstruction-debt-disclosed",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2505",
+      "kind": "reconstruction",
+      "location": "src/actors/da1up_c.cpp, include/da1up_c.h",
+      "owner": "fleet-0907-prod-oneup-0908",
+      "reason": "Re-read both files at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c and the disclosure is intact and specific, not a blanket disclaimer. include/da1up_c.h opens by separating what the cartridge proves from what the project invented: the type-name string 7da1up_c at 0x02108370 and _ZTI7da1up_c at 0x0210837c are ROM-attested, ONEUPKINOKO and SCALEUP_KINOKO are ROM ASCII in arm9's actor debug-name table, while the member names and signatures, the classInit and g_profile_ affixes and EVERY field name are marked as reconstructed, with mStateTimer carrying an inline coined-name marker and the tail fields and base extent named as inferences. src/actors/da1up_c.cpp restates the same split, and the handoff's closing paragraph enumerates the remaining debt (eight native definitions emitting nine method symbols, 27 free-function bodies, the opaque PMF holder, the local ModelCache view, raw offsets, destructor/vtable/RTTI and initializer ownership unchanged) and refuses to count the live timer and Model call as method conversions. Deferral is legitimate for kind reconstruction, the review completion is partial as that requires, and the debt has a named owner and its own repository issue. Disposition unchanged: deferred.",
+      "summary": "da1up_c retains substantial unrecovered reconstruction: coined field names, an opaque PMF holder, a local ModelCache view, raw offsets and other ABI parameter views."
+    },
+    {
+      "disposition": "fixed",
+      "id": "dead-references-koopa-plus-truncation",
+      "kind": "correctness",
+      "location": "config/dead-reference-baseline.json, notes/agents/handoffs/issue-2411-humanizer-2.md:68",
+      "reason": "Every element reproduced independently on the MERGE TREE at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0. (1) python tools/check_dead_references.py exits 0 on the merge tree and 0 on the base control, exit codes captured directly to files and never through a pipe. (2) The branch-level diff of config/dead-reference-baseline.json adds exactly ONE entry -- file notes/agents/handoffs/issue-2411-humanizer-2.md, ref src_tu/actors/Koopa -- and removes none. (3) The tool was not weakened: the branch-level git diff over tools/ is entirely EMPTY, so check_dead_references.py is byte-identical to main's. (4) The regex really cannot express the path: PATH_RE's character class is [A-Za-z0-9_.-] with no plus sign, and git ls-files shows exactly 8 tracked files carrying a plus, three of them under src_tu/. (5) The precedent is real: the baseline already carries (notes/actor-leaf-provenance.md, src_tu/actors/EnemySpawner), the identical truncation of src_tu/actors/EnemySpawner+EnemySwitchTag.cpp. RESIDUAL IMPRECISION, disclosed rather than raised as a separate finding: the handoff and the verifier's own reason call that precedent one entry above the new pair; the file sorts by (file, ref) and the precedent is at index 1 while the new entry is at index 12, so it is eleven entries above, not one. The substantive claim (a direct precedent of the identical shape exists in this same file) is true and was verified; only the positional adjective is wrong, it moves no number and changes no verdict, and a provenance finding cannot be deferred under source_review, so raising it would demand a commit this verify-mode stage is forbidden to make. Recorded here so a later writer can correct the word. Disposition unchanged: fixed.",
+      "summary": "check_dead_references PATH_RE cannot express + in a filename, so the handoff's citation of src_tu/actors/Koopa+KoopaSmall.cpp truncated to a path not in the tree and the gate went red."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-rows-stale-from-branch-edits",
+      "kind": "correctness",
+      "location": "notes/data/tu-promotion-queue.tsv, rows Crate / Coin / daGmch_c (plus da1up_c)",
+      "reason": "Measured on both trees rather than inferred. On the merge tree at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0, python tools/queue_audit.py --check exits 0 and prints 'queue agrees with the tree' -- 0 rows disagreeing. On the base control at bdcb1df7d3d071ab46d79e6538fec176efa78780 the same command exits 1 with 'total_lines: 2 row(s) disagree with the tree'. The --check form was used deliberately: the bare invocation exits 0 while printing the same disagreement line, and it was run here on the red base to confirm that trap still bites (bare exit 0 on a red base). The two base rows were named by running --write on the base control and reading the diff: ChiefChilly 1992 to 1993 and Player 26798 to 26799, then restored with git checkout -- and git status --porcelain confirmed empty. So the merge tree is green exactly where main alone is red, which is the fixed outcome, confirmed and not assumed. Disposition unchanged: fixed.",
+      "summary": "The branch's own edits to src/ files left queue total_lines cells stale, and an earlier revision wrote them off as pre-existing on main."
+    },
+    {
+      "disposition": "fixed",
+      "id": "queue-audit-residue-miscited-as-preexisting",
+      "kind": "provenance",
+      "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, the queue-rows bullet",
+      "reason": "Re-read the bullet at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. It now retracts the earlier claim in terms, says plainly that it was wrong for three of the five, gives the per-row table (Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120) with each row delta matched to its source-file line delta, and keeps only ChiefChilly and Player as pre-existing -- which the base control independently confirms are exactly the two rows main is red on. ONE RESIDUAL IMPRECISION, settled here as clearing without a new finding. The bullet attributes the ChiefChilly/Player staleness to main's 9b8cb8add editing include/ChiefChilly.h and include/Player.h. That is the wrong half of the commit: queue_audit derives total_lines by summing lines over the delinks-resolved source paths of the row's range, which are src/ paths only, and no include/ path appears in config/arm9/delinks.txt, so a header edit cannot move the cell. The same commit 9b8cb8add also edited src/_ZN11ChiefChillyD1Ev.cpp and src/_ZN6PlayerD1Ev.cpp, and those are what moved the numbers: measured with git show 9b8cb8add^:<path> piped to wc -l against git show 9b8cb8add:<path>, 22 to 23 and 35 to 36, which are exactly the +1 deltas the two rows need. The commit attribution and the direction of responsibility are therefore both correct and independently verified; 9b8cb8add is an ancestor of both bdcb1df7d and the branch's merge-base c52f63ca5, so it is genuinely main's. Only the named mechanism is wrong. It moves no number, changes no gate verdict and does not affect this branch's attribution, and under source_review a provenance finding may not be deferred, so raising it would require a corrective commit that mode verify forbids -- converting a wrong noun into a hard publish refusal. It clears as-is and is recorded here so the next writer touching this bullet fixes the sentence. Disposition unchanged: fixed.",
+      "summary": "The handoff attributed all five stale queue rows to main; three were the branch's own."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KURI-NATIVE-001",
+      "kind": "provenance",
+      "location": "src/actors/daKuriKing_c.cpp:10",
+      "reason": "Producer corrected the introduction: unused D2 is deadstripped; Vector3 lifecycle callbacks reuse the original ARM9 homes; RTTI/vtable deadstrip-data rebinding remains correctly documented. The final emitted-object comparison proves no executable change from that prose correction.",
+      "summary": "The original introduction incorrectly described Vector3D1 as homeless plain-deadstripped output."
+    },
+    {
+      "disposition": "deferred",
+      "id": "KURI-NATIVE-002",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3769",
+      "kind": "reconstruction",
+      "location": "src/actors/daKuriKing_c.cpp:46",
+      "owner": "codex-kuriking-producer1013 / enemy reconstruction coordinator",
+      "reason": "This authorized slice replaces only the two factory bodies and removes their ABI declaration block. The remaining class source and headers are unchanged; original/candidate whole-object parity is independently proved. Native factories do not imply whole-class reconstruction completion.",
+      "summary": "Existing six free functions/stubs, raw matrix/padding accesses, state PMF stand-in, scalar Fix12 ABI externs and linker-style names remain partial reconstruction."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-01",
+      "kind": "correctness",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:428,433; include/Koopa.h; include/ModelAnim.h",
+      "reason": "Named actor u16 mWalkState and mInvincibleTimer replace out-of-bounds ModelAnim-relative accesses. Header has measured ownership; source byte proof remains exact. Candidate header/handoff accurately describe ModelAnim and actor ownership; integrator must publish the matching revised PR body when updating the branch.",
+      "summary": "The new ModelAnim-relative writes point outside the 0x64-byte member."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-02",
+      "kind": "correctness",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:165-170,1102,1119,1401",
+      "reason": "Truthful helper contracts and void transition result are retained; original redundant/fake declarations disappear with retired shards. External death/unload dependency reconciliation is explicit, with current changed-scope declarations passing.",
+      "summary": "Namespace aliases hide contradictory call contracts for the same C symbol."
+    },
+    {
+      "disposition": "deferred",
+      "id": "KP2864-03",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2871",
+      "kind": "reconstruction",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:120-126,591 and the 27 free helpers",
+      "owner": "codex-integrator-0920",
+      "reason": "Real ModelAnim rendering and ordinary factories/destructor/member Release calls are present.27 free helpers, raw field/PMF/volatile/copy forms and bounded scalar ABI bridges remain partial reconstruction; no general compiler impossibility is asserted.",
+      "summary": "The TU still contains fabricated virtual dispatch and substantial shadow scaffolding."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-04",
+      "kind": "correctness",
+      "location": "config/tu_manifest.d/ov062/Koopa+KoopaSmall.json:verification",
+      "original_kind": "promotion",
+      "reason": "Fresh complete-object policy/order audit has no unlicensed outputs or policy failures, D1 precedes D0, and all39 strict functions/all11 complete metadata bodies verify. Normal text-only production control links the exact compiler-sourced span and whole ROM. The specialized intact-mode refusal is retained honestly, not labeled a pass.",
+      "schema_mapping_reason": "Schema1 has no promotion kind; retain original kind/history and map the fixed hard output/order/link blocker to correctness, never deferred reconstruction.",
+      "summary": "Stored verification is text-only and explicitly not a complete-object promotion pass."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-05",
+      "kind": "provenance",
+      "location": "include/Koopa.h; config/arm9/overlays/ov062/symbols.txt:165-170",
+      "reason": "Real daNknk_c emission now matches all11 complete canonical metadata records including10-byte RTTI name and132-byte vtable with preamble. Community Koopa is only a source typedef; no invented metadata home or altered retail address licenses the class.",
+      "summary": "The coined Koopa class identity does not reproduce the ROM RTTI identity."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-06",
+      "kind": "provenance",
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp and promotion ledgers",
+      "reason": "All39 shards are retired into the one complete production text owner;39 original symbol credits and4 converted identities/positions remain.37 written markers plus actual inline lifecycle definitions cover39 bodies. Seven declaration-fingerprint path migrations are distinct from attribution, and five unchanged-main exceptions remain debt.",
+      "summary": "Accounting and source ownership still describe the unpromoted shadow."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-07",
+      "kind": "correctness",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Existing actual-symbol scalar bridge and real Vector3_16 replace the obsolete import. Independent normal production control resolves the actual ov002 callee at020ada40; whole object is unchanged across the cleanup successor. Canonical C++ signature equivalence is not claimed.",
+      "summary": "Obsolete address-shaped callee import passed local inference but failed the real linker."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-08",
+      "kind": "correctness",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Canonical existing Matrix4x3 is used by the callee and all13 measured affected callers, including omitted daMky locals;57 concrete diagnostics heal. Independent normal ROM covers enrolled output, while the unchanged ov006 draft remains excluded and the ov081 canonical weak body is accounted.",
+      "summary": "Matrix translation helper used incompatible private and shared pointer declarations."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-09",
+      "kind": "reconstruction",
+      "location": "src/game/actors/d_a_nknk.cpp",
+      "reason": "Restored3 native member calls, named fields, ordinary loop and this argument; fresh entire raw object equals the independently linked control. D1/D0 derive from actual inline destructor, and all4 original converted identities still score every criterion true.",
+      "summary": "Consolidated CleanupResources regressed genuine Release calls, and synthetic lifecycle markers obscured the real destructor source."
+    },
+    {
+      "disposition": "fixed",
+      "id": "KP2864-10",
+      "kind": "provenance",
+      "location": "symbols/actor_renames.tsv:1694-1700",
+      "reason": "Independently confirmed exactly seven fourth-column replacements to the actual native names; addresses, original-name columns, reasons, ordering, appended history and all other rows are unchanged. Fresh check_rename_ledger.py passes all2202 checked mangled/vtable rows;1520 coined rows remain explicitly outside that tool scope.",
+      "summary": "Seven active mangled rename targets retained obsolete Koopa names after native daNknk_c symbol promotion."
+    },
+    {
+      "disposition": "fixed",
+      "id": "DA2878-03",
+      "kind": "correctness",
+      "location": "src/actors/daMip_c.cpp:184; src/actors/daMky_c.cpp:1570",
+      "original_local_record": {
+        "disposition": "open",
+        "evidence": "src/func_02012790.c:3 returns the sound handle from Sound::Play2D. Mip has five calls across StateSaveTalkMain/StateCaughtMain; Mky has one call in func_ov030_021136b0. Results are currently discarded, which does not make the contradictory declarations true.",
+        "id": "DA2878-03",
+        "introduced": false,
+        "kind": "correctness",
+        "location": "src/actors/daMip_c.cpp:184; src/actors/daMky_c.cpp:1570",
+        "repair": "Use actual unsigned result/parameter in both owned TU prototypes; preserve C linkage. Proposed exact patch pr2878-proposed-audio-contract.patch requires producer whole-object and strict proof.",
+        "summary": "The two TUs declare func_02012790 as void(int), but its actual definition is unsigned int(unsigned int)."
+      },
+      "reason": "Both owned func_02012790 declarations now agree with the actual unsigned-int result and unsigned-int ID definition. Independent full-object and strict relocated checks preserve every call site.",
+      "summary": "The two TUs declare func_02012790 as void(int), but its actual definition is unsigned int(unsigned int)."
+    },
+    {
+      "disposition": "fixed",
+      "id": "DA2878-04",
+      "kind": "correctness",
+      "location": "src/actors/daMip_c.cpp:138,140,166,182,187; src/actors/daMky_c.cpp:180,182; src/actors/daKrb_c.cpp:119-120,162,167,190,194-195",
+      "original_local_record": {
+        "disposition": "open",
+        "evidence": "Confirmed definitions: Mip ApproachAngle returns int, Animation::LoadFile char*, func02013944 void, func02022a4c u32; Mip declares different results. Mip ApplyOpacity prototype/call includes an extra argument versus the genuine this+u32 method. Mky ClearGroundFlag/Clear are genuine void methods but global declarations return int. Krb ReleaseCap/RespawnIfHasCap return dActor_c*, KillByInvincibleChar is void, Player::Hurt is int; its declarations disagree. DecIfAbove0 byte/short return narrow unsigned values and Math_Function0203b14c returns int. Inventory is saved separately; each repair requires actual caller/ABI proof. Final bounded pass also confirms Player::DropActor actual int (Mip and four Mky locals), Sound::PlaySub actual bool (Mip int/Mky void) and Particle::System::New actual integer handle (Mip void*).",
+        "id": "DA2878-04",
+        "introduced": false,
+        "kind": "correctness",
+        "limits": "Do not equate every one of136 scanner rows with a correctness defect. Plurality-only void* disagreements, destructor parse artifacts, assembly veneers and the measured unsigned RandomInt LSR view need independent classification, not blind canonicalization. No newly measured compiler wall or blanket bank is authorized.",
+        "location": "src/actors/daMip_c.cpp:138,140,166,182,187; src/actors/daMky_c.cpp:180,182; src/actors/daKrb_c.cpp:119-120,162,167,190,194-195",
+        "repair": "Root producer should repair definite families in all3 free Mip/Mky/Krb files under the sealed task; see pr2878-contract-triage.json. No Chair/shared-header/global-ledger edit is needed. Existing raw and typed-interface reconstruction remains explicitly partial.",
+        "summary": "Whole-TU acceptance needs explicit triage of further inherited actual-definition contract contradictions; byte-neutral field edits do not close them."
+      },
+      "reason": "Actual definitions and genuine headers were inspected, not selected by declaration plurality. Fixed the definite return families, integer Particle handle, sound wrappers with unsigned IDs/const Vector3 pointers, Krb Hurt u8 flags, and coherent two-u32 ApplyOpacity definition/callers/forwarder/canonical ARM9 name. Independent25-site retail census (15 zero/10 one), ordinary one-argument negative and unnamed-form complete-object proofs support the final API without claiming unique original source arity. The genuine-header versus legacy-scalar width seam is explicitly retained as uncertainty, not silently declared repaired.",
+      "summary": "Whole-TU acceptance needs explicit triage of further inherited actual-definition contract contradictions; byte-neutral field edits do not close them."
+    },
+    {
+      "id": "krb-animation-layout-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "include/daKrb_c.h:12",
+      "summary": "The shared animation-handle type uses evidenced u16 fileID/u8 numRefs/BCA_File pointer layout instead of presenting a packed u32 as the file ID.",
+      "reason": "SharedFilePtr implementation establishes field offsets and behavior; sizeof8 is compiler-enforced, and complete existing object/initializer preservation and all consumers are proved."
+    },
+    {
+      "id": "krb-lists-residual-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "src/game/actors/d_a_krb.cpp and src/game/actors/d_a_kuri_king.cpp",
+      "summary": "Existing model/other wrapper field views, state union/PMF stand-ins, free stubs, scalar ABI bridges, raw field/matrix accesses and remaining tables remain partial reconstruction.",
+      "reason": "This coherent slice owns three complete animation-handle pointer lists and their shared actual declaration. Native lifecycle and current methods are preserved; no blanket class or original-TU completion claim.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4045",
+      "owner": "codex-krb-lists1017 / enemy reconstruction coordinator"
+    }
+  ],
+  "limits": [
+    "Original historical TU boundaries and identifiers are not recovered by byte equivalence.",
+    "Peer retail fallback is limited to disposable candidate scratch controls. Joint final production verifies both actual source providers.",
+    "Twenty-one inherited findings retain historical scope and accepted dispositions; unrelated classes are not declared reconstructed.",
+    "Independent verifier acceptance and source PR publication remain pending; no merge."
+  ]
+}

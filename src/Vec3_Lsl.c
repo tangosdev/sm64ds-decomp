@@ -1,8 +1,9 @@
-struct Vec3 { int x, y, z; };
-void Vec3_Lsl(struct Vec3* d, struct Vec3* s, int sh){
-    int a = s->x;
-    int b = s->y;
-    int c = s->z;
+#include "common.h"
+
+void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh) {
+    Fix12i a = s->x;
+    Fix12i b = s->y;
+    Fix12i c = s->z;
     d->x = a << sh;
     d->y = b << sh;
     d->z = c << sh;

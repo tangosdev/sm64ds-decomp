@@ -1,12 +1,25 @@
 #ifndef DAKRB_C_H
 #define DAKRB_C_H
 #include "types.h"
+#include "SharedFilePtr.h"
 #include "dCapEnemy_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 #include "ModelAnim.h"
 #include "dExtShadowModel_c.h"
 #include "MaterialChanger.h"
+
+struct KrbAnimationFileHandle : SharedFilePtr {
+    u16 fileID;
+    u8 numRefs;
+    BCA_File *ptr;
+
+    KrbAnimationFileHandle(u32 fileID);
+    ~KrbAnimationFileHandle();
+};
+
+typedef char
+    KrbAnimationFileHandle_size_must_be_0x08[sizeof(KrbAnimationFileHandle) == 0x08 ? 1 : -1];
 
 /* Goomba (KURIBO 200 / KURIBO_S 201 / KURIBO_L 202) -- ov084/daKrb_c.
  *

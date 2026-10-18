@@ -55,6 +55,7 @@ enum dScGameOver_c_AssetId {
 #include "dScGameOver_c.h"
 #include "dScStage_c.h"
 #include "OamAttr.h"
+#include "SpawnInfo.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
@@ -72,14 +73,43 @@ enum dScGameOver_c_AssetId {
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
-/* ROM symbols this TU references that no header in the tree declares yet.
- * Spelt by their exact final names under C linkage, the way decl_common.h
- * spells its own. Everything else these functions call comes from dScStage_c.h,
- * OamAttr.h, or decl_common.h and is deliberately NOT repeated here. */
+/* Native scene data: prompt selection and the animated GAME OVER sprites. */
 extern "C" {
-extern short data_ov003_020b1774[];
-extern unsigned short data_ov003_020b174c[];
-extern OamAttr *data_ov003_020b1824[];
+/* Screen-map offsets for the two prompt rows, and the glyph animation's
+ * off-screen starts and final x positions. The initial-position symbol retains
+ * its existing shared declaration in decl_common.h. */
+u16 sGameOverPromptTileOffsets[2] = {224, 416};
+s16 data_ov003_020b1764[8] = {-96, -69, -42, -16, 274, 297, 325, 352};
+s16 sGameOverGlyphTargetX[8] = {32, 59, 86, 112, 146, 169, 197, 224};
+
+/* Reconstructed names number the eight display slots; the ROM does not preserve
+ * their original identifiers. attr3 terminates each single-sprite template. */
+OamAttr sGameOverGlyph0 = {0x00f0, 0x81f0, 0x0000, 0xffff};
+OamAttr sGameOverGlyph7 = {0x00f0, 0x81f0, 0x0018, 0xffff};
+OamAttr sGameOverGlyph6 = {0x00f0, 0x81f0, 0x000c, 0xffff};
+OamAttr sGameOverGlyph5 = {0x00f0, 0x81f0, 0x0014, 0xffff};
+OamAttr sGameOverGlyph4 = {0x00f0, 0x81f0, 0x0010, 0xffff};
+OamAttr sGameOverGlyph3 = {0x00f0, 0x81f0, 0x000c, 0xffff};
+OamAttr sGameOverGlyph2 = {0x00f0, 0x81f0, 0x0008, 0xffff};
+OamAttr sGameOverGlyph1 = {0x00f0, 0x81f0, 0x0004, 0xffff};
+
+/* The ninth pointer addresses this terminated composite template. Render uses
+ * only the first eight pointers. The historical extent beyond its terminator
+ * is unknown; the following 24 zero bytes remain outside this TU's range. */
+OamAttr sGameOverCompositeTemplate[8] = {
+    {0x00e8, 0x8190, 0x0000, 0}, {0x00e8, 0x81ab, 0x0004, 0},      {0x00e8, 0x81c6, 0x0008, 0},
+    {0x00e8, 0x81e0, 0x000c, 0}, {0x00e8, 0x8002, 0x0010, 0},      {0x00e8, 0x8019, 0x0014, 0},
+    {0x00e8, 0x8035, 0x000c, 0}, {0x00e8, 0x8050, 0x0018, 0xffff},
+};
+OamAttr *sGameOverGlyphTemplates[9] = {
+    &sGameOverGlyph0, &sGameOverGlyph1, &sGameOverGlyph2,
+    &sGameOverGlyph3, &sGameOverGlyph4, &sGameOverGlyph5,
+    &sGameOverGlyph6, &sGameOverGlyph7, sGameOverCompositeTemplate,
+};
+}
+
+/* External scene services not declared by the included headers. */
+extern "C" {
 extern dFdBrightness_c *data_0209f5bc;
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
@@ -371,7 +401,7 @@ s32 dScGameOver_c::Behavior() {
 s32 dScGameOver_c::Render() {
     int i;
     for (i = 0; i < 8; i++) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov003_020b1824[i], mGlyphX[i],
+        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, sGameOverGlyphTemplates[i], mGlyphX[i],
                                                     mGlyphY[i], -1, -1, 0x1000, 0x1000, 0, -1);
     }
     if (mIntroPhase >= 2)
@@ -386,7 +416,7 @@ void dScGameOver_c::OnPendingDestroy() {}
 
 /* [3] 0x020b0730 -- repaints the sub-screen BG1 palette bank over the two
  * yes/no boxes: two 0x20-by-4 rectangles whose screen-map origins come from
- * data_ov003_020b174c. `arg` non-zero forces both back to the unselected
+ * sGameOverPromptTileOffsets. `arg` non-zero forces both back to the unselected
  * bank; zero picks the highlighted bank for whichever box mSelection names,
  * and only while the mFlashTimer has run out. */
 // @symbol _ZN13dScGameOver_c19func_ov003_020b0730Ei
@@ -396,7 +426,7 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
         unsigned int v;
         int j;
         unsigned short *p = _ZN3G2S12GetBG1ScrPtrEv();
-        p += data_ov003_020b174c[i];
+        p += sGameOverPromptTileOffsets[i];
         if (arg) {
             v = 0x1000;
         } else {
@@ -427,7 +457,7 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
 /* The glyph drop-in animation step, one frame per call, driven off
  * mIntroPhase: phase 0 walks the eight glyphs, counting each one's
  * mGlyphDelay down and then sliding its mGlyphX toward the target in
- * data_ov003_020b1774 -- the first four from the left, the last four from
+ * sGameOverGlyphTargetX -- the first four from the left, the last four from
  * the right -- and flips to phase 1 when the last one lands; phase 1 waits
  * out one more mGlyphDelay tick, then reaches phase 2, which is what unblocks
  * Behavior's cursor FSM and Render's bouncing arrows, and enables the two
@@ -467,7 +497,7 @@ void dScGameOver_c::func_ov003_020b060c() {
                                                                           GO_OFF(mGlyphDelay))) -
                                      1);
             } else {
-                short tgt = data_ov003_020b1774[i];
+                short tgt = sGameOverGlyphTargetX[i];
                 if (*(short *)(e + GO_OFF(mGlyphX)) != tgt) {
                     if (i < 4) {
                         short *q = (short *)(e + GO_OFF(mGlyphX));
@@ -513,3 +543,8 @@ void dScGameOver_c::func_ov003_020b060c() {
  * 16/17 odr-use both halves. The empty bodies still reproduce all 0x8c
  * bytes: three inlined vptr stores plus fBase_c::~fBase_c, and D0's
  * inherited operator delete. See include/dScGameOver_c.h. */
+
+/* Scene registry priorities use the base profile, without an actor tail. */
+extern "C" {
+BaseSpawnInfo<dScGameOver_c> g_profile_GAME_OVER = {dScGameOver_c_classInit, 8, 11};
+}
