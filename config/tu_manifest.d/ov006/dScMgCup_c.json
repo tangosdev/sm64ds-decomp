@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x02141870",
       "end": "0x021418b0"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213c094",
+      "end": "0x0213c0f4"
     }
   ],
   "functions": [
@@ -259,7 +264,32 @@
       "ordinal": 31
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sCupRoundTable",
+      "address": "0x0213c094",
+      "size": "0x14",
+      "evidence": "10 two-byte round records: swap count then two 4-bit speed-row indexes; native bitfield layout matches all20retailbytes"
+    },
+    {
+      "symbol": "sCupHomePositions",
+      "address": "0x0213c0a8",
+      "size": "0x18",
+      "evidence": "Three natural8-byte pairs of Q12 screen coordinates; sCupSlots is the retained interior label at+4, not additional storage"
+    },
+    {
+      "symbol": "sCupSwapFirst",
+      "address": "0x0213c0c0",
+      "size": "0x18",
+      "evidence": "Three natural8-byte pairs of cup-slot indices; sCupSwapSecond is the retained interior label at+4, not additional storage"
+    },
+    {
+      "symbol": "sCupAnimTable",
+      "address": "0x0213c0d8",
+      "size": "0x1c",
+      "evidence": "Seven typed pointers to AnimStep sequences, each target exactly matched to ov006 retail relocation"
+    }
+  ],
   "bss": [
     {
       "symbol": "sCupStateTable",
@@ -277,13 +307,14 @@
     "Why every claim in this file is now phrased as a removal measurement: this TU sat shadowed for months partly because the pre-promotion manifest described StateShuffle's residual as 'scratch-register encoding differences' with seven lever families exhausted -- a hypothesis written as a measurement, and wrong. The replacement note then over-claimed one of its own three fixes in the same way, caught by review. Do not add a load-bearing claim here that was not produced by deleting the spelling and re-running the gate.",
     "Issue #2492 continues the promoted TU from PR #2348 and historical scout #2343. CUP-01 replaces the two fake Obj slot-18 self-calls with real virtual OnYoshiTryEat calls. CUP-02 corrects the actual dScMgCup_c PMF receiver and seven own slots (0, 6, 9, 16, 17, 18, 20). CUP-03 corrects the no-inferred-names policy and live-pad prose without changing layout. The scout facts retain their original input/status and measurements; their old field-naming policy does not prohibit honestly inferred or offset-named members with fresh proof. CUP-03 typed fields and CUP-06 lifecycle/components remain reconstruction work; CUP-04 initializes cup on every incoming epilogue path with the measured 0xa4-byte form; hoisting the assignment or using i directly gives 0xa0 bytes. CUP-05 minigame slot-20 int fallthrough remains an unresolved correctness finding. This continuation does not claim whole-source acceptance or new data/BSS ownership. The expanded follow-up after independent rework resolves CUP-05 coherently across the five minigame headers and definitions, preserving the separate actor contract. CUP-03-P corrects the component boundary and live tail-byte claims without layout changes; SOUND-PROV01, TERESA-PROV01 and BASE-PROV01 correct the reviewed dependency prose. Full original-base consumer/TU/metadata and packed-ROM proof is recorded in notes/agents/handoffs/issue-2492-cup-source-review.md. The preceding open-CUP-05 statement describes the preserved first checkpoint.",
     "Static initializer folded: the eight-entry Cup PMF table makes mwcc emit __sinit_d_s_mg_cup.cpp itself (0xdc, raw-byte-identical to retail __sinit_ov006_021303d0 with the same instruction sequence and relocation sites); the handwritten shard is retired. No handles, no compiler temporaries, no renames. This fold does NOT license the .data PMF descriptors or any other .data.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "Data continuation issue4039: the complete96-byte Cup gameplay-table range0x0213c094..0x0213c0f4 is compiled from four native typed objects. The +4 labels sCupSlots and sCupSwapSecond remain identities inside the home-position and swap-pair arrays; consumers now access the corresponding y/b fields. Other PMF descriptors, profile, RTTI, vtable and table targets remain outside this claim. Existing project names describe observed behavior; no original identifier or historical TU filename is asserted."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgCup_c/dScMgCup_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgCup_c/d_s_mg_cup.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 32,
     "functions_declared": 32,
@@ -297,11 +328,6 @@
       "droppedSections": [
         9,
         10,
-        64,
-        65,
-        66,
-        67,
-        68,
         69,
         70,
         71,
@@ -316,7 +342,12 @@
         80,
         81,
         82,
-        83
+        83,
+        84,
+        85,
+        86,
+        87,
+        88
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -347,7 +378,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV10dScMgCup_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -402,11 +434,18 @@
           "start": "0x02141870",
           "end": "0x021418b0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0213c094",
+          "end": "0x0213c0f4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 35
+          "LICENSED": 39
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -417,19 +456,19 @@
           {
             "section": ".init",
             "original": [
-              86
+              91
             ],
             "desired": [
-              86
+              91
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              84
+              89
             ],
             "desired": [
-              84
+              89
             ]
           },
           {
@@ -439,6 +478,21 @@
             ],
             "desired": [
               63
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              64,
+              65,
+              66,
+              67
+            ],
+            "desired": [
+              64,
+              65,
+              66,
+              67
             ]
           }
         ],
@@ -717,6 +771,76 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02141870"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a1ec",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a1ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a274",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a274"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e4c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139db4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139db4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139ec4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139ec4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e9c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dbc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dbc"
     }
   ],
   "production_mode": "intact-object"

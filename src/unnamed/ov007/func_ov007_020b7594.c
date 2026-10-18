@@ -1,14 +1,13 @@
 extern int func_ov007_020c3df4(int a, int b);
-extern void func_ov007_020c0354(int r0, unsigned r1);
+extern void func_ov007_020c0354(int (*words)[2], unsigned count);
 extern int func_ov007_020c1068(void);
 extern int func_ov007_020c0604(int a, int b);
-int func_ov007_020b7594(int r0arg, int r1arg)
-{
-    int* p = (int*)func_ov007_020c3df4(0, 0x48);
+int func_ov007_020b7594(int r0arg, int r1arg) {
+    int *p = (int *)func_ov007_020c3df4(0, 0x48);
     p[4] = func_ov007_020c3df4(0, 0x400);
     p[5] = func_ov007_020c3df4(0, 0x400);
-    func_ov007_020c0354(p[4], 0x80);
-    func_ov007_020c0354(p[5], 0x80);
+    func_ov007_020c0354((int(*)[2])p[4], 0x80);
+    func_ov007_020c0354((int(*)[2])p[5], 0x80);
     p[0] = func_ov007_020c1068();
     p[1] = func_ov007_020c1068();
     p[2] = func_ov007_020c0604(1, r0arg);

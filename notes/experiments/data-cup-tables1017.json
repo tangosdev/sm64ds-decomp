@@ -1,0 +1,290 @@
+{
+  "schema": "cup-data-tables-proof-v1",
+  "task": "data-cup-tables1017",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4039",
+  "candidate": "this commit; immutable SHA in queue",
+  "tested_base": "121ca67be3ac06751cc6d8106ff6487a76dc52fd",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src/minigames/d_s_mg_cup.cpp",
+  "new_range": {
+    "module": "ov006",
+    "section": ".data",
+    "start": "0x0213c094",
+    "end": "0x0213c0f4",
+    "bytes": 96
+  },
+  "source_quality": {
+    "completion": "partial",
+    "genuine_objects": 4,
+    "header_changed": false,
+    "symbol_names_changed": false,
+    "attribution_changed": false,
+    "raw_integer_pointer_payloads": false,
+    "original_names_or_TU_proven": false,
+    "interior_views": "Old fictitious +4 array declarations removed; callers use actual parent .y/.b fields. Both configured identities remain with zero added storage."
+  },
+  "native_object_proof": {
+    "canonical_relocation_aliases": {
+      "sCupSlots": {
+        "parent": "sCupHomePositions",
+        "addend": 4
+      },
+      "sCupSwapSecond": {
+        "parent": "sCupSwapFirst",
+        "addend": 4
+      }
+    },
+    "functions_compared": 34,
+    "function_issues": [],
+    "objects": [
+      {
+        "symbol": "sCupRoundTable",
+        "address": "0x213c094",
+        "section": ".data",
+        "size": 20,
+        "relocations": {},
+        "rom_equal": true,
+        "sha256_relocated": "7c3905fdfacb9e5a64aac0fbeb0a01a748247ec67a2dbd54ffbbe4f3cea0b087"
+      },
+      {
+        "symbol": "sCupHomePositions",
+        "address": "0x213c0a8",
+        "section": ".data",
+        "size": 24,
+        "relocations": {},
+        "rom_equal": true,
+        "sha256_relocated": "e27e39d5381df759442ee49231bfcb36b7328da38dee1edd770f025e2c8b610b"
+      },
+      {
+        "symbol": "sCupSwapFirst",
+        "address": "0x213c0c0",
+        "section": ".data",
+        "size": 24,
+        "relocations": {},
+        "rom_equal": true,
+        "sha256_relocated": "1b81ecbbae8d599298e9d67696c23f9af5373f26668aac1a3b9ad3349346087b"
+      },
+      {
+        "symbol": "sCupAnimTable",
+        "address": "0x213c0d8",
+        "section": ".data",
+        "size": 28,
+        "relocations": {
+          "24": [
+            "data_ov006_0213a1ec",
+            2,
+            0
+          ],
+          "20": [
+            "data_ov006_0213a274",
+            2,
+            0
+          ],
+          "16": [
+            "data_ov006_02139e4c",
+            2,
+            0
+          ],
+          "12": [
+            "data_ov006_02139db4",
+            2,
+            0
+          ],
+          "8": [
+            "data_ov006_02139ec4",
+            2,
+            0
+          ],
+          "4": [
+            "data_ov006_02139e9c",
+            2,
+            0
+          ],
+          "0": [
+            "data_ov006_02139dbc",
+            2,
+            0
+          ]
+        },
+        "rom_equal": true,
+        "sha256_relocated": "0e5f534a2fa72f2b4f2bb64f387c14aa0ce6b2415bda99ade2c94856fd7b1817"
+      }
+    ],
+    "complete_data_bytes": 96,
+    "raw_baseline_object_sha256": "cb34081ecc8b3015a1bff8a082c3bd0c9f5c4feed3e5e413a2f99e5f0368d67e",
+    "raw_candidate_object_sha256": "c69bd5bf04d423f6fee3b4f96af4536b6d5bc2783b7fb67e7c66d6931c578a6f"
+  },
+  "interior_helper": {
+    "rows": [
+      [
+        "sCupSlots",
+        34848940,
+        "sCupHomePositions",
+        4,
+        "overlays/ov006"
+      ],
+      [
+        "sCupSwapSecond",
+        34848964,
+        "sCupSwapFirst",
+        4,
+        "overlays/ov006"
+      ]
+    ],
+    "source_definitions": {
+      "sCupHomePositions": true,
+      "sCupSlots": false,
+      "sCupSwapFirst": true,
+      "sCupSwapSecond": false
+    },
+    "imports": {
+      "sCupSlots": false,
+      "sCupSwapSecond": false
+    }
+  },
+  "final_linked_interiors": {
+    "elf_sha256": "7b225aba12a779d7b4f9f02492a42fe4102df07aa1e9f9bb3c94763ecbdb25cb",
+    "rows": [
+      {
+        "name": "sCupSwapSecond",
+        "address": "0x213c0c4",
+        "size": 0,
+        "section": "OV006"
+      },
+      {
+        "name": "sCupSlots",
+        "address": "0x213c0ac",
+        "size": 0,
+        "section": "OV006"
+      }
+    ]
+  },
+  "standalone_verify": {
+    "exit_code": 1,
+    "methods_matched": 32,
+    "methods_declared": 32,
+    "relocation_errors": 0,
+    "existing_initializer_classification_refusals": 1,
+    "compiler_only_policy_errors": 0,
+    "log": "build/cup-standalone.log"
+  },
+  "focused_strict": {
+    "verified": 33,
+    "warnings": 0,
+    "blocking": 0,
+    "initializer_verified": true,
+    "log": "build/cup-strict.log"
+  },
+  "full_link": {
+    "result": "scratch-data-verified",
+    "ranges": [
+      {
+        "section": ".text",
+        "start": "0x020de988",
+        "end": "0x020e0638",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      {
+        "section": ".init",
+        "start": "0x021303d0",
+        "end": "0x021304ac",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      {
+        "section": ".ctor",
+        "start": "0x0213358c",
+        "end": "0x02133590",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      {
+        "section": ".bss",
+        "start": "0x02141870",
+        "end": "0x021418b0",
+        "comparison": "NOBITS -- symbol/module gates"
+      },
+      {
+        "section": ".data",
+        "start": "0x0213c094",
+        "end": "0x0213c0f4",
+        "differingBytes": 0,
+        "firstDiff": null
+      }
+    ],
+    "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "baseline_symbol_errors": [
+      "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+      "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+      "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+      "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+      "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+    ],
+    "new_symbol_errors": [],
+    "logs": [
+      "build/cup-final-config-baseline.log",
+      "build/cup-final-candidate-link.log"
+    ],
+    "initial_failed_admission": "Pre-edit baseline fingerprint differed after final delinks edit; five existing vtable-policy admission guards refused. Rebuilt zero-source baseline from final configuration before candidate; no weakening."
+  },
+  "production": {
+    "provider_count": 5,
+    "providers_ok": true,
+    "report": "build/cup-data-provenance.json",
+    "report_sha256": "ae02f415d48259bf6e819074fef859cd2a8a49cde59434b9630e2bb357569794",
+    "log": "build/cup-final-production.log",
+    "optional_rom_data_diagnostic": "Existing dCcAcPos vtable difference remains; no blanket all-data success claimed.",
+    "source_built_functions_reproducing": 11334,
+    "complete_data_claims_reproducing": 339,
+    "bss_claims": 245,
+    "modules_exact": 106,
+    "rom_bytes": 16777216,
+    "rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+  },
+  "static_checks": {
+    "style": "pass, zero findings or deferrals",
+    "declarations": "pass, no new disagreements or header redeclarations",
+    "port": "pass",
+    "rename_ledger": "pass",
+    "dead_references": "pass",
+    "diff_check": "pass on complete staged diff including both new LF evidence files"
+  },
+  "final_input_sha256": {
+    "src/minigames/d_s_mg_cup.cpp": "ebbb7b88afc78a67154fbe72d26625c40ea62a3871078ad7de6c086bc90f28db",
+    "include/dScMgCup_c.h": "2b86645456d5be39ff557a70be79cf3cdff9461c1aa137c3956082a82b406070",
+    "config/tu_manifest.d/ov006/dScMgCup_c.json": "cdfb7c229af345ba8eaefddd1edec242e7eef78fd5897da633dad64f1ee7de75",
+    "config/arm9/overlays/ov006/delinks.txt": "8f476b9e80ec62084e14b2ef4df337aadba95ea30c795203f9e65b3c46140ae7",
+    "config/arm9/overlays/ov006/symbols.txt": "d616f380023f129a22f6af67e71d185da16c40c495df11fe1d06971bb2b55e77"
+  },
+  "inherited_findings": "All findings from mg-promotions-finish-0930, mgread-cup-1007 and asset-readability1014 retained through live queue lineage; unrelated historical scopes unchanged.",
+  "findings": [
+    {
+      "id": "cup-table-interiors-001",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/minigames/d_s_mg_cup.cpp: Cup_PickShuffleSpeed and four table definitions",
+      "summary": "Two +4 field identities no longer pretend to be separate arrays or separate storage.",
+      "reason": "Use actual .y/.b members; all raw function bodies and canonical relocation destinations preserved; actual compiled parent extents and final ELF labels proven."
+    },
+    {
+      "id": "cup-data-residual-001",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "Cup data outside ov006 [0x0213c094,0x0213c0f4)",
+      "summary": "Remaining PMF descriptors, profile, RTTI/vtable, animation sequences and other tables remain outside this ownership slice; original names/TU boundary unproven.",
+      "reason": "Preserve coherent96-byte scope and existing manual lifecycle/raw component work without claiming class completion.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4039",
+      "owner": "codex-cup-tables1017"
+    }
+  ]
+}

@@ -62,6 +62,7 @@ src/minigames/d_s_mg_cup.cpp:
     .init start:0x021303d0 end:0x021304ac
     .ctor start:0x0213358c end:0x02133590
     .bss start:0x02141870 end:0x021418b0
+    .data start:0x0213c094 end:0x0213c0f4
 
 src/minigames/d_s_mg_curling.cpp:
     complete

@@ -38,14 +38,12 @@ typedef struct {
     u8 hi : 4;
 } RoundRow;
 
-/* sCupHomePositions is the three rest positions. 0213c0ac is one word
-   later, so [i].x there is cup i's y. */
+/* The three rest positions, in Q12 screen coordinates. */
 struct RestPos {
     s32 x, y;
 };
 
-/* sCupSwapFirst is the three swap pairs. 0213c0c4 is one word later,
-   so [i].a there is the second cup. */
+/* The three possible pairs of slots to swap. */
 struct IdxPair {
     s32 a, b;
 };
@@ -96,9 +94,7 @@ extern int data_0209e650;
 extern RoundRow sCupRoundTable[];
 extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
-extern IdxPair sCupSwapSecond[];
 extern RestPos sCupHomePositions[];
-extern RestPos sCupSlots[];
 extern int RandomIntInternal(int *seed);
 extern void Mg_SetSharedState(int c);
 extern void Cup_UpdateAnim(char *self, int i);
@@ -408,11 +404,12 @@ extern "C" void Cup_PickShuffleSpeed(char *raw) {
 
     swapPair = (rnd >> 0x18) % 3;
     self->mSwapSlotA = sCupSwapFirst[swapPair].a;
-    self->mSwapSlotB = sCupSwapSecond[swapPair].a;
+    self->mSwapSlotB = sCupSwapFirst[swapPair].b;
 
     self->mMidX =
         (sCupHomePositions[self->mSwapSlotB].x + sCupHomePositions[self->mSwapSlotA].x) / 2;
-    self->mMidY = (sCupSlots[self->mSwapSlotB].x + sCupSlots[self->mSwapSlotA].x) / 2;
+    self->mMidY =
+        (sCupHomePositions[self->mSwapSlotB].y + sCupHomePositions[self->mSwapSlotA].y) / 2;
     self->mHalfX = self->mMidX - sCupHomePositions[self->mSwapSlotA].x;
     self->mShuffleAngle = 0;
 
@@ -1036,4 +1033,32 @@ PMF sCupStateTable[8] = {
     pmf_dScMgCup_c_StateShuffle, pmf_dScMgCup_c_StateWaitForInput,
     pmf_dScMgCup_c_StateSelect,  pmf_dScMgCup_c_StateResult,
     pmf_dScMgCup_c_StateFinish,  pmf_dScMgCup_c_StateIdle,
+};
+
+extern "C" {
+extern AnimStep data_ov006_02139dbc[];
+extern AnimStep data_ov006_02139e9c[];
+extern AnimStep data_ov006_02139ec4[];
+extern AnimStep data_ov006_02139db4[];
+extern AnimStep data_ov006_02139e4c[];
+extern AnimStep data_ov006_0213a274[];
+extern AnimStep data_ov006_0213a1ec[];
+}
+
+RoundRow sCupRoundTable[10] = {
+    {8, 1, 0},  {10, 4, 3}, {12, 7, 6}, {8, 1, 0},  {10, 2, 1},
+    {12, 4, 3}, {14, 6, 5}, {10, 2, 1}, {12, 4, 3}, {16, 7, 6},
+};
+
+RestPos sCupHomePositions[3] = {
+    {60 << 12, 112 << 12},
+    {140 << 12, 112 << 12},
+    {220 << 12, 112 << 12},
+};
+
+IdxPair sCupSwapFirst[3] = {{0, 1}, {1, 2}, {0, 2}};
+
+AnimStep *sCupAnimTable[7] = {
+    data_ov006_02139dbc, data_ov006_02139e9c, data_ov006_02139ec4, data_ov006_02139db4,
+    data_ov006_02139e4c, data_ov006_0213a274, data_ov006_0213a1ec,
 };
