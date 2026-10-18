@@ -23,7 +23,7 @@ extern int LenVec3(struct Vec3* v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalar(Vec3_Fix12* out, const Vec3_Fix12* in, int scale);
 extern void SubVec3(struct Vec3* a, struct Vec3* b, struct Vec3* c);
-extern int Vec3_Equal(const struct Vector3* a, const struct Vector3* b);
+extern int Vec3_Equal(const struct Vector3 *a, const struct Vector3 *b);
 
 int _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(struct Vector3& dst, const struct Vector3& target, int step)
 {

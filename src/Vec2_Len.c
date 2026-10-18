@@ -9,8 +9,7 @@ typedef struct {
 
 extern Fix12i _ZN4cstd4sqrtEy(u64 val);
 
-Fix12i Vec2_Len(const Vec2 *v)
-{
+Fix12i Vec2_Len(const Vec2 *v) {
     long long sq = (long long)v->x * v->x;
     sq += (long long)v->y * v->y;
     return _ZN4cstd4sqrtEy((u64)sq);
