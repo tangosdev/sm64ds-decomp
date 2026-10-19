@@ -13,7 +13,11 @@
     .rodata.luigiCounts start:0x020cfb84 end:0x020cfc18 kind:rodata align:4
     .rodata.portraitGapTail start:0x020cfc18 end:0x020d7db8 kind:rodata align:4
     .ctor       start:0x020d7db8 end:0x020d7db8 kind:rodata align:4
-    .data       start:0x020d7dc0 end:0x02103260 kind:data align:32
+    .data start:0x020d7dc0 end:0x020d7e68 kind:data align:32
+    .data.portraitSelectors start:0x020d7e68 end:0x020d7ec8 kind:data align:4
+    .data.portraitGap start:0x020d7ec8 end:0x020d7f0c kind:data align:4
+    .data.portraitPointers start:0x020d7f0c end:0x020d85fc kind:data align:4
+    .data.portraitGapTail start:0x020d85fc end:0x02103260 kind:data align:4
     .data.dsmtMeta0 start:0x02103260 end:0x02103290 kind:data align:4
     .data.dsmtCallbacks start:0x02103290 end:0x021032a8 kind:data align:4
     .data.dsmtMeta1 start:0x021032a8 end:0x02103330 kind:data align:4
@@ -827,7 +831,8 @@ src/unnamed/ov007/func_ov007_020bbe60.c:
     complete
     .text start:0x020bbe60 end:0x020bbf98
     .rodata.portraitSelectors start:0x020cdb34 end:0x020cdb4c
-    .data start:0x020d7e68 end:0x020d7ec8
+    .data.portraitSelectors start:0x020d7e68 end:0x020d7ec8
+    .data.portraitPointers start:0x020d7f0c end:0x020d85fc
     .rodata.yoshiPlainCounts start:0x020cef80 end:0x020cefd0
     .rodata.marioFrontCounts start:0x020cf700 end:0x020cf778
     .rodata.yoshiVariantCounts start:0x020cf8ec end:0x020cf9ec

@@ -1,0 +1,358 @@
+{
+  "task": "data-ov007-portraitptrs1018",
+  "issue": 4112,
+  "tested_base": "a0a42091e573db67d0f3ad1788f067c10ee40cb6",
+  "accepted_predecessor": "data-ov007-pointcounts1018",
+  "predecessor_pr": 4117,
+  "completion": "partial",
+  "scope": {
+    "new_bytes": 1776,
+    "prior_bytes": 860,
+    "total_native_bytes": 2636,
+    "objects": 26,
+    "new_objects": 15,
+    "data_relocations": 468,
+    "new_pointer_relocations": 444,
+    "leaf_imports": 324,
+    "excluded_luigi_pointer_bytes": 444,
+    "excluded_unique_leaves": 435
+  },
+  "inherited_findings": {
+    "LANG-OV007-01": {
+      "disposition": "fixed",
+      "id": "LANG-OV007-01",
+      "kind": "correctness",
+      "location": "src/unnamed/ov007/func_ov007_020bd648.cpp",
+      "reason": "G2x.h included and G2x::SetBlendAlpha call independently inspected and byte verified.",
+      "summary": "Use canonical G2x header and correctly sized final parameter."
+    },
+    "LANG-OV007-02": {
+      "disposition": "fixed",
+      "id": "LANG-OV007-02",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020af260.cpp and four cstd callers",
+      "reason": "div/mod declarations and calls match actual definition and byte checks.",
+      "summary": "Use real cstd namespace spelling."
+    },
+    "LANG-OV007-03": {
+      "disposition": "fixed",
+      "id": "LANG-OV007-03",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bd648.cpp and graphics helper calls",
+      "reason": "Namespace/static calls inspected against definitions and headers; no duplicated canonical declarations.",
+      "summary": "Use established GX/GXS namespaces and G3X header."
+    },
+    "LANG-OV007-04": {
+      "disposition": "fixed",
+      "id": "LANG-OV007-04",
+      "kind": "correctness",
+      "location": "notes/declaration-centralization.md:117; notes/global-data-migration.md:328; notes/mwccarm-codegen.md:6718,7131",
+      "reason": "Historical predecessor failure retained verbatim in inherited_findings. The four cited references now name existing .cpp paths for 020b7948, 020b8548, 020b1f2c and 020ca86c at the tested base; dead-reference checking passes. This task does not rename source paths or claim credit for that external correction.",
+      "summary": "Renamed source files leave four stale .c path references in three documentation files."
+    },
+    "OV007-PORTRAIT-NAMES-01": {
+      "disposition": "deferred",
+      "id": "OV007-PORTRAIT-NAMES-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "Plotting all 184 decoded paths identifies two Mario, one Luigi and three Yoshi drawings. Original identifiers and exact game-screen role remain unproven.",
+      "summary": "Portrait/stroke names are functional reconstructions."
+    },
+    "OV007-PATH-CONTRACTS-01": {
+      "disposition": "fixed",
+      "id": "OV007-PATH-CONTRACTS-01",
+      "kind": "correctness",
+      "location": "src/unnamed/ov007/func_ov007_020c6784.c",
+      "reason": "All five original helper definitions, 812 code bytes and 20 relocations are preserved. The coordinate table object enters as const void* and is interpreted through its actual byte or 32-bit representation inside each mode; no universal nested pointer representation is assumed.",
+      "summary": "Replace integer-erased pointer arguments with sound mode-dependent pointer-table contracts."
+    },
+    "OV007-PATH-RETURN-01": {
+      "disposition": "fixed",
+      "id": "OV007-PATH-RETURN-01",
+      "kind": "correctness",
+      "location": "src/unnamed/ov007/func_ov007_020c2b9c.c",
+      "reason": "Explicit return r and the pointer result type produce identical pinned-compiler function bytes and relocations. The prior void definition did not describe its observed caller contract.",
+      "summary": "Return the allocated path pointer consumed by both callers."
+    },
+    "OV007-PATH-ALLOCATOR-01": {
+      "disposition": "deferred",
+      "id": "OV007-PATH-ALLOCATOR-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020c2c68.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "This unchanged function returns an integer address while the existing declaration in 020c2b9c returns void*. Additional callers 020c2a04 and 020c690c remain outside the five-helper scope; no new disagreement is introduced.",
+      "summary": "Lower allocator integer-address ABI and its other callers remain historical debt."
+    },
+    "OV007-PATH-NESTED-STORAGE-01": {
+      "disposition": "deferred",
+      "id": "OV007-PATH-NESTED-STORAGE-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "config/arm9/overlays/ov007/delinks.txt",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "The original predecessor wording remains verbatim in inherited_findings. This continuation now supplies all six complete point-count arrays740bytes, including Luigi37. All eighteen pointer arrays2220bytes and435 unique leaf symbols remain ROM-owned; their migration, alias preservation and declaration correction are separate work.",
+      "summary": "Nested stroke arrays remain ROM-owned imports."
+    },
+    "OV007-PATH-PROGRESS-01": {
+      "disposition": "deferred",
+      "id": "OV007-PATH-PROGRESS-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "Consumers compare running progress and interpolate between per-point values. The routine scales overall duration separately; frame/tick naming is not established.",
+      "summary": "Progress thresholds are cumulative interpolation values; literal timing units are unknown."
+    },
+    "OV007-PATH-ORIGINAL-TU-01": {
+      "disposition": "deferred",
+      "id": "OV007-PATH-ORIGINAL-TU-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "config/tu_manifest.d/ov007/AnimationPathSets.json",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "The existing one-function production file is admitted intact with its tables. Four helper files remain separately enrolled; raw scene/controller offsets and historical source boundaries are not reconstructed.",
+      "summary": "Intact ownership of a reconstructed carrier is not original-TU recovery."
+    },
+    "OV007-PATH-CONSTNESS-01": {
+      "disposition": "deferred",
+      "id": "OV007-PATH-CONSTNESS-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "The top-level pointers remain mutable initialized .data objects. Both coordinate modes copy source values into newly allocated arrays; no mutation of imported input tables is observed.",
+      "summary": "Const pointees describe observed read-only use; historical qualifier spelling is unknown."
+    },
+    "OV007-PATH-RELOCATION-LICENSE-01": {
+      "disposition": "fixed",
+      "id": "OV007-PATH-RELOCATION-LICENSE-01",
+      "kind": "correctness",
+      "location": "config/tu_manifest.d/ov007/AnimationPathSets.json",
+      "reason": "Initial scratch correctly refused all 24 data relocations because the producer used owned_relocations instead of relocations. The next attempt correctly refused eight text rows in the non-text license field. Both failed manifests/logs are preserved. The final field retains exactly 24 non-text source/target/addend/module records; text uses strict function verification. The actual prepared-object owned-section gate now passes without a waiver.",
+      "summary": "Use the actual per-word non-text relocation license schema."
+    },
+    "OV007-PORTRAIT-AXES-01": {
+      "disposition": "fixed",
+      "id": "OV007-PORTRAIT-AXES-01",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "reason": "Initial research followed inherited px/pz local names in 020c6e68. Independent review traced its actual 020bfe4c call: first input becomes v.x=a-0x80000, second becomes v.y=-(b-0x60000), and separate input c becomes depth v.z. Source now uses YCoords and yCoords; the misleading earlier interpretation and frozen attempt are retained as history. Numeric values and code behavior are unchanged.",
+      "summary": "The second portrait coordinate is screen Y, not depth Z."
+    },
+    "OV007-COUNTS-STORAGE-01": {
+      "id": "OV007-COUNTS-STORAGE-01",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "summary": "Distinguish stored Luigi37 from selected36 and preserve the unused final value.",
+      "reason": "The earlier read-only2944-byte nested probe described accessed extents, not complete storage. All four Luigi arrays have a coherent37th record: count1, X pointer020cccc4, Y pointer020cccb8, threshold pointer020ccd98. The three pointer words are configured relocations, not padding. The complete nested family is2960bytes. This task owns only740 count bytes, with the final Luigi1 included; dispatch remains36. The unused record purpose is unproven and remains covered by the existing reconstruction limits."
+    },
+    "OV007-COUNTS-ROUTING-01": {
+      "id": "OV007-COUNTS-ROUTING-01",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "config/arm9/overlays/ov007/delinks.txt",
+      "summary": "Use complete native rodata sections without absorbing intervening ROM storage.",
+      "reason": "Five new ranges plus the existing24-byte selector range have explicit named sections; ordinary.data remains unchanged. Native objects fill all860 owned initialized bytes without alignment claims. The entire module rodata partition retains seven separate DSD regions. Normal actual-provider proof checks those exclusions, the18 pointer arrays and435 unique leaf ranges."
+    },
+    "OV007-COUNTS-POINTER-CONTRACT-01": {
+      "id": "OV007-COUNTS-POINTER-CONTRACT-01",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "include/decl_common.h:1471",
+      "summary": "The remaining pointer-table family needs a separately owned leaf declaration correction.",
+      "reason": "data_ov007_020cd72c is function-declared as void(void*) in the shared generated header but supplies twenty byte coordinates at LuigiX[9]. Fresh queue audit assigns that header to jump-contract-repair-0918. No shared-header edit, numeric-alias bypass or pointer-family migration occurs here. Follow up with its owner before enrolling the remaining2220 pointer bytes; full2960-byte private proof is retained as research only.",
+      "owner": "codex-ov007-pointcounts1018",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112"
+    },
+    "OV007-COUNTS-PR-COMPOSITION-01": {
+      "id": "OV007-COUNTS-PR-COMPOSITION-01",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/arm9/overlays/ov007/delinks.txt",
+      "summary": "Disclose shared-file composition with the separate open data-batch proposal.",
+      "reason": "The fully paginated audit has no exact carrier/count-range overlap, but PR4106 atf487f61ac9addec52c46d1556c1ceaac640c156e edits the same delinks file and adds unrelated plain.rodata claims inside ranges this candidate names explicitly. No otherPR content is overwritten. Current proof applies only to base8d866; future composition must remap those claims and rerun all relevant byte/provider checks. The initial shorthand no scope overlap is narrowed to exact data/source scope rather than file-level independence."
+    }
+  },
+  "findings": [
+    {
+      "disposition": "fixed",
+      "id": "LANG-OV007-01",
+      "kind": "correctness",
+      "location": "src/unnamed/ov007/func_ov007_020bd648.cpp",
+      "reason": "G2x.h included and G2x::SetBlendAlpha call independently inspected and byte verified.",
+      "summary": "Use canonical G2x header and correctly sized final parameter."
+    },
+    {
+      "disposition": "fixed",
+      "id": "LANG-OV007-02",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020af260.cpp and four cstd callers",
+      "reason": "div/mod declarations and calls match actual definition and byte checks.",
+      "summary": "Use real cstd namespace spelling."
+    },
+    {
+      "disposition": "fixed",
+      "id": "LANG-OV007-03",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bd648.cpp and graphics helper calls",
+      "reason": "Namespace/static calls inspected against definitions and headers; no duplicated canonical declarations.",
+      "summary": "Use established GX/GXS namespaces and G3X header."
+    },
+    {
+      "disposition": "fixed",
+      "id": "LANG-OV007-04",
+      "kind": "correctness",
+      "location": "notes/declaration-centralization.md:117; notes/global-data-migration.md:328; notes/mwccarm-codegen.md:6718,7131",
+      "reason": "Historical predecessor failure retained verbatim in inherited_findings. The four cited references now name existing .cpp paths for 020b7948, 020b8548, 020b1f2c and 020ca86c at the tested base; dead-reference checking passes. This task does not rename source paths or claim credit for that external correction.",
+      "summary": "Renamed source files leave four stale .c path references in three documentation files."
+    },
+    {
+      "disposition": "deferred",
+      "id": "OV007-PORTRAIT-NAMES-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "Plotting all 184 decoded paths identifies two Mario, one Luigi and three Yoshi drawings. Original identifiers and exact game-screen role remain unproven.",
+      "summary": "Portrait/stroke names are functional reconstructions."
+    },
+    {
+      "disposition": "fixed",
+      "id": "OV007-PATH-CONTRACTS-01",
+      "kind": "correctness",
+      "location": "src/unnamed/ov007/func_ov007_020c6784.c",
+      "reason": "All five original helper definitions, 812 code bytes and 20 relocations are preserved. The coordinate table object enters as const void* and is interpreted through its actual byte or 32-bit representation inside each mode; no universal nested pointer representation is assumed.",
+      "summary": "Replace integer-erased pointer arguments with sound mode-dependent pointer-table contracts."
+    },
+    {
+      "disposition": "fixed",
+      "id": "OV007-PATH-RETURN-01",
+      "kind": "correctness",
+      "location": "src/unnamed/ov007/func_ov007_020c2b9c.c",
+      "reason": "Explicit return r and the pointer result type produce identical pinned-compiler function bytes and relocations. The prior void definition did not describe its observed caller contract.",
+      "summary": "Return the allocated path pointer consumed by both callers."
+    },
+    {
+      "disposition": "deferred",
+      "id": "OV007-PATH-ALLOCATOR-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020c2c68.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "This unchanged function returns an integer address while the existing declaration in 020c2b9c returns void*. Additional callers 020c2a04 and 020c690c remain outside the five-helper scope; no new disagreement is introduced.",
+      "summary": "Lower allocator integer-address ABI and its other callers remain historical debt."
+    },
+    {
+      "disposition": "deferred",
+      "id": "OV007-PATH-NESTED-STORAGE-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "config/arm9/overlays/ov007/delinks.txt",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "Predecessor wording remains verbatim in inherited_findings. All six point-count arrays 740 bytes and fifteen non-Luigi pointer arrays 1776 bytes are now native. The three complete Luigi pointer arrays 444 bytes and 435 unique coordinate/progress leaf arrays remain ROM-owned. Their declaration correction and migration remain separate work.",
+      "summary": "Nested stroke arrays remain ROM-owned imports."
+    },
+    {
+      "disposition": "deferred",
+      "id": "OV007-PATH-PROGRESS-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "Consumers compare running progress and interpolate between per-point values. The routine scales overall duration separately; frame/tick naming is not established.",
+      "summary": "Progress thresholds are cumulative interpolation values; literal timing units are unknown."
+    },
+    {
+      "disposition": "deferred",
+      "id": "OV007-PATH-ORIGINAL-TU-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "config/tu_manifest.d/ov007/AnimationPathSets.json",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "The address-named one-function carrier remains provisional. The concrete ownership research scope is the 25-function controller lifecycle at 020b8f50..020bbf98 using globals 02104ba0 and 02104b9c. Generic drawing-engine helpers belong to a separate layer. Both PRs are held as drafts pending this source-layout work.",
+      "summary": "Intact ownership of a reconstructed carrier is not original-TU recovery."
+    },
+    {
+      "disposition": "deferred",
+      "id": "OV007-PATH-CONSTNESS-01",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "owner": "codex-ov007-pathsets-native1018",
+      "reason": "Const pointees match observed read-only access. All 19 pointer arrays are mutable objects in the corrected candidate, consistent with the original configured data interval. Historical qualifier spelling remains unknown; the prior readonly-pointer source and route were rejected.",
+      "summary": "Const pointees describe observed read-only use; historical qualifier spelling is unknown."
+    },
+    {
+      "disposition": "fixed",
+      "id": "OV007-PATH-RELOCATION-LICENSE-01",
+      "kind": "correctness",
+      "location": "config/tu_manifest.d/ov007/AnimationPathSets.json",
+      "reason": "Initial scratch correctly refused all 24 data relocations because the producer used owned_relocations instead of relocations. The next attempt correctly refused eight text rows in the non-text license field. Both failed manifests/logs are preserved. The final field retains exactly 24 non-text source/target/addend/module records; text uses strict function verification. The actual prepared-object owned-section gate now passes without a waiver.",
+      "summary": "Use the actual per-word non-text relocation license schema."
+    },
+    {
+      "disposition": "fixed",
+      "id": "OV007-PORTRAIT-AXES-01",
+      "kind": "reconstruction",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "reason": "Initial research followed inherited px/pz local names in 020c6e68. Independent review traced its actual 020bfe4c call: first input becomes v.x=a-0x80000, second becomes v.y=-(b-0x60000), and separate input c becomes depth v.z. Source now uses YCoords and yCoords; the misleading earlier interpretation and frozen attempt are retained as history. Numeric values and code behavior are unchanged.",
+      "summary": "The second portrait coordinate is screen Y, not depth Z."
+    },
+    {
+      "id": "OV007-COUNTS-STORAGE-01",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "summary": "Distinguish stored Luigi 37 from selected 36 and preserve the unused final value.",
+      "reason": "The earlier read-only 2944-byte nested probe described accessed extents, not complete storage. All four Luigi arrays have a coherent 37th record: count 1, X pointer 020cccc4, Y pointer 020cccb8, threshold pointer 020ccd98. The three pointer words are configured relocations, not padding. The complete nested family is 2960 bytes. This task owns only 740 count bytes, with the final Luigi 1 included; dispatch remains 36. The unused record purpose is unproven and remains covered by the existing reconstruction limits."
+    },
+    {
+      "id": "OV007-COUNTS-ROUTING-01",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "config/arm9/overlays/ov007/delinks.txt",
+      "summary": "Use complete native rodata sections without absorbing intervening ROM storage.",
+      "reason": "The six count arrays occupy five original rodata ranges totaling 740 bytes. The earlier 120 selector bytes remain native. The later pointer-array section correction is recorded separately as OV007-POINTERS-SECTION-01."
+    },
+    {
+      "id": "OV007-COUNTS-POINTER-CONTRACT-01",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "location": "include/decl_common.h:1471",
+      "summary": "The remaining pointer-table family needs a separately owned leaf declaration correction.",
+      "reason": "The shared declaration data_ov007_020cd72c is void(void*) but names twenty byte coordinates at LuigiX[9]. Fresh queue audit still assigns include/decl_common.h to jump-contract-repair-0918. All three Luigi pointer arrays 444 bytes remain imports, including their stored 37th record. The fifteen non-Luigi arrays do not reference that address; their 324 unique leaf declarations have no existing source/include declaration contract. No shared-header edit or alias bypass is used.",
+      "owner": "codex-ov007-pointcounts1018",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/4112"
+    },
+    {
+      "id": "OV007-COUNTS-PR-COMPOSITION-01",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/arm9/overlays/ov007/delinks.txt",
+      "summary": "Disclose shared-file composition with the separate open data-batch proposal.",
+      "reason": "The fully paginated current audit preserves the shared delinks conflict with PR #4106 at f487f61ac9addec52c46d1556c1ceaac640c156e. Its unrelated claims require remapping into named data/rodata partitions before future composition and fresh proof. This candidate is stacked on accepted PR #4117 head a0a42091e573db67d0f3ad1788f067c10ee40cb6; current-main or combined-PR composition is not claimed. Neither external PR is altered."
+    },
+    {
+      "id": "OV007-POINTERS-NATIVE-01",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "location": "src/unnamed/ov007/func_ov007_020bbe60.c",
+      "summary": "Supply fifteen complete non-Luigi portrait pointer arrays using consumer-supported nested types.",
+      "reason": "Mario front 30, Mario side 34, Yoshi plain 20, heart 32 and star 32 each have X-byte, Y-byte and signed 32-progress pointer arrays. All 444 configured destinations and 324 unique imported leaf contracts are checked. All 1776 bytes are native, with no alignment claim; fifteen old selector sites receive same-address names. The function body and all previous definitions remain unchanged after those exact target-name substitutions."
+    },
+    {
+      "id": "OV007-POINTERS-SECTION-01",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/tu_manifest.d/ov007/AnimationPathSets.json",
+      "summary": "Preserve the original configured data section kind for pointer tables.",
+      "reason": "The prior fixed disposition was wrong: invented const pointer elements were accommodated by a readonly route inside the original data region. The correction drops the second const on all 15 arrays and uses .data.portraitPointers with input_section .data. The committed reproduction checks original section boundaries, writable flags, all object bytes and exact relocation destinations. Fresh production validation is required."
+    }
+  ],
+  "historical_status": "Superseded by the source-quality correction; prior byte results did not establish acceptable source ownership or qualifiers. Historical measurements remain in Git history.",
+  "reproduction": "python notes/experiments/ov007-portrait-correction1018.py; see notes/agents/ov007-portrait-correction1018.md for production commands and current limitations."
+}
