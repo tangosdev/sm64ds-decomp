@@ -438,28 +438,28 @@
       "canonical_symbol": "func_02017acc",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the wrapper constructor\u0432\u0402\u2122s exact PC24 relocation"
+      "evidence": "retail initializer call destination and the wrapper constructorвЂ™s exact PC24 relocation"
     },
     {
       "symbol": "_ZN17AgaruModelFilePtrD1Ev",
       "canonical_symbol": "func_02017ab4",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the wrapper destructor\u0432\u0402\u2122s exact ABS32 relocation"
+      "evidence": "retail destructor registration destination and the wrapper destructorвЂ™s exact ABS32 relocation"
     },
     {
       "symbol": "_ZN21AgaruCollisionFilePtrC1Ej",
       "canonical_symbol": "func_02017b4c",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the wrapper constructor\u0432\u0402\u2122s exact PC24 relocation"
+      "evidence": "retail initializer call destination and the wrapper constructorвЂ™s exact PC24 relocation"
     },
     {
       "symbol": "_ZN21AgaruCollisionFilePtrD1Ev",
       "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
-      "evidence": "retail destructor registration destination and the wrapper destructor\u0432\u0402\u2122s exact ABS32 relocation"
+      "evidence": "retail destructor registration destination and the wrapper destructorвЂ™s exact ABS32 relocation"
     },
     {
       "symbol": "__register_global_object",
