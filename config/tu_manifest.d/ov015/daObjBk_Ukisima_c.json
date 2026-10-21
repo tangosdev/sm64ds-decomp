@@ -28,6 +28,11 @@
       "end": "0x02113428"
     },
     {
+      "name": ".data",
+      "start": "0x021147a4",
+      "end": "0x021147b0"
+    },
+    {
       "name": ".bss",
       "start": "0x02114aac",
       "end": "0x02114ad4"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_021147a4",
+      "address": "0x021147a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor {model, collision, clps}: three ABS32 words relocating to gBkUkisimaModelFile (model SharedFilePtr), gBkUkisimaCollisionFile (collision SharedFilePtr) and data_ov015_02113614 (CLPS_Block in the shared .data run owned elsewhere)"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkUkisimaModelFile",
@@ -227,6 +240,13 @@
           "section": ".ctor",
           "start": "0x02113424",
           "end": "0x02113428",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021147a4",
+          "end": "0x021147b0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -623,6 +643,36 @@
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x0211333c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021147a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkUkisimaModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02114aac"
+    },
+    {
+      "section": ".data",
+      "source": "0x021147a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkUkisimaCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02114ab4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021147ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_02113614",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02113614"
     }
   ]
 }

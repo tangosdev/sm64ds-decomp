@@ -1424,8 +1424,8 @@ typedef struct {
 struct Matrix4x3;
 extern "C" extern struct Matrix4x3 data_020a0e68;
 extern "C" extern struct Matrix4x3 data_0209b3ec;
-extern "C" extern unsigned short sTrmpLineDiffuse[];
-extern "C" extern unsigned short sTrmpLineAmbient[];
+extern "C" extern const unsigned short sTrmpLineDiffuse[];
+extern "C" extern const unsigned short sTrmpLineAmbient[];
 extern "C" extern int sTrmpLineTexCoords[];
 extern "C" extern void *sTrmpLineTexAddr;
 extern "C" extern void *sTrmpLinePlttAddr;
@@ -1488,7 +1488,7 @@ extern "C" void TrmpLine_Draw(char *obj) {
     {
         short *slotIndex = &TRMPLINE(obj)->mSlotIndex;
         int sh = *slotIndex;
-        unsigned short *dif = sTrmpLineDiffuse;
+        const unsigned short *dif = sTrmpLineDiffuse;
         volatile unsigned char *alpha = &TRMPLINE(obj)->mAlpha;
         int pl = *alpha;
         REG_POLYGON_ATTR = (((sh + 1) << 24) | 0x82) | (pl << 16);
@@ -2664,3 +2664,17 @@ extern "C" void TrmpLine_Reset(char *p) {
     TRMPLINE(p)->mStatus = 0;
 }
 }
+
+extern "C" const unsigned short sTrmpLineDiffuse[4] = { 0x7fff, 0x13ff, 0x011f, 0x0000 };
+extern "C" const unsigned short sTrmpLineAmbient[4] = { 0x3def, 0x018c, 0x318c, 0x0000 };
+#pragma define_section forcedata ".data" ".data" ".data" data_mode=far_abs
+#pragma section forcedata begin
+extern "C" int sTrmpLinePushWeakPitchMid = 0x00000118;
+extern "C" int sTrmpLinePushStrongPitchEnd = 0xfffffeca;
+extern "C" s32 sTrmpLineStrongPitchMid = 0x00000118;
+extern "C" s32 sTrmpLineWeakPitchMid = 0x00000118;
+extern "C" s32 sTrmpLineWeakPitchEnd = 0xfffffeca;
+extern "C" s32 sTrmpLineStrongPitchEnd = 0xfffffeca;
+extern "C" int sTrmpLinePushStrongPitchMid = 0x00000118;
+extern "C" int sTrmpLinePushWeakPitchEnd = 0xfffffeca;
+#pragma section forcedata end

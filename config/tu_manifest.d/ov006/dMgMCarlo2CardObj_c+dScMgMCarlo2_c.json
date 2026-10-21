@@ -32,7 +32,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x021425a8",
+      "start": "0x02142568",
       "end": "0x02142604"
     }
   ],
@@ -223,6 +223,55 @@
   "data": [],
   "bss": [
     {
+      "symbol": "sMCarlo2CardTail",
+      "address": "0x02142568",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled tail of the live card list"
+    },
+    {
+      "symbol": "sMCarlo2CardHead",
+      "address": "0x0214256c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled head of the cleared-card list"
+    },
+    {
+      "symbol": "sMCarlo2FirstPick",
+      "address": "0x02142570",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled first picked card"
+    },
+    {
+      "symbol": "sMCarlo2SecondPick",
+      "address": "0x02142574",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled second picked card"
+    },
+    {
+      "symbol": "sMCarlo2CardsTail",
+      "address": "0x02142578",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled card in slot 19"
+    },
+    {
+      "symbol": "sMCarlo2Cards",
+      "address": "0x0214257c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled head of the live card list"
+    },
+    {
+      "symbol": "sMCarlo2FaceCounts",
+      "address": "0x02142580",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "ten per-face weights, zero-filled; DrawCardValue writes them"
+    },
+    {
       "symbol": "sMCarlo2CardSprites",
       "address": "0x021425a8",
       "size": "0x5c",
@@ -378,7 +427,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x021425a8",
+          "start": "0x02142568",
           "end": "0x02142604",
           "comparison": "NOBITS -- symbol/module gates"
         }

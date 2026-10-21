@@ -28,6 +28,11 @@
       "end": "0x02112444"
     },
     {
+      "name": ".data",
+      "start": "0x021130ac",
+      "end": "0x021130b8"
+    },
+    {
       "name": ".bss",
       "start": "0x02113248",
       "end": "0x02113270"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov045_021130ac",
+      "address": "0x021130ac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model handle gKm2KuzureModelFile, collision handle gKm2KuzureCollisionFile, CLPS block data_ov045_021125f0"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm2KuzureCollisionFile",
@@ -152,6 +165,13 @@
           "section": ".ctor",
           "start": "0x02112440",
           "end": "0x02112444",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021130ac",
+          "end": "0x021130b8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -680,6 +700,36 @@
       "addend": 0,
       "target_module": "ov045",
       "target_address": "0x021123c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021130ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2KuzureModelFile",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x02113250"
+    },
+    {
+      "section": ".data",
+      "source": "0x021130b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2KuzureCollisionFile",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x02113248"
+    },
+    {
+      "section": ".data",
+      "source": "0x021130b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov045_021125f0",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x021125f0"
     }
   ]
 }

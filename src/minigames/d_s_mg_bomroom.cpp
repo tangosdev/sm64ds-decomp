@@ -44,12 +44,12 @@
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern int sBomroomPenGateSprites[];
-extern int sBomroomPenGateX[];
-extern int sBomroomPenGateY[];
+extern const int sBomroomPenGateX[];
+extern const int sBomroomPenGateY[];
 extern int sBomroomHatchPanelSprites[];
 extern int sBomroomTopDoorSprites[];
-extern int sBomroomHatchPanelX[];
-extern int sBomroomHatchPanelY[];
+extern const int sBomroomHatchPanelX[];
+extern const int sBomroomHatchPanelY[];
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern unsigned char *sBomroomBombFrameTimes[];
@@ -64,7 +64,7 @@ extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern void *sBomroomRoundOverSprites;
 extern void *sBomroomMarkerPlainSprites[];
 extern void *sBomroomMarkerLitSprites[];
-extern int sBomroomMarkerY[];
+extern const int sBomroomMarkerY[];
 extern int Mg_GetSubmittedScore(void);
 extern int RandomIntInternal(int *seed);
 // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
@@ -2268,3 +2268,21 @@ extern "C" void *dScMgBomroom_c_classInit()
 {
     return new dScMgBomroom_c;
 }
+
+/* Pointer-to-member state tables, zeroed here and populated by the
+ * module sinit __sinit_ov006_0212fd48 at load. */
+extern "C" {
+PMFEntry sBomroomTopDoorStateTable[4] = {};
+PMF sBomroomHatchPanelStateTable[4] = {};
+int sBomroomRoundEndTable[8] = {};
+PMF sBomroomPenGateStateTable[4] = {};
+PMFv sBomroomRoundStateTable[5] = {};
+PMFEntry sBomroomBombMarchTable[5] = {};
+}
+PMF sBomroomBombStateTable[7] = {};
+
+extern "C" const int sBomroomMarkerY[2] = {0x00000010, 0x000000b4};
+extern "C" const int sBomroomPenGateX[2] = {0x00000000, 0x00000100};
+extern "C" const int sBomroomHatchPanelY[2] = {0x00000008, 0x000000b8};
+extern "C" const int sBomroomHatchPanelX[2] = {0x00000080, 0x00000080};
+extern "C" const int sBomroomPenGateY[2] = {0x00000050, 0x00000050};

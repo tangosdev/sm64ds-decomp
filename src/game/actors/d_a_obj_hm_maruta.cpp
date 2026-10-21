@@ -86,6 +86,7 @@ int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 #pragma long_calls off
 
 extern ResourceDescriptor data_ov030_02115a04;
+extern CLPS_Block data_ov030_02114f24;
 extern int data_ov030_021159f4;
 }
 
@@ -130,3 +131,11 @@ int daObjHmMaruta_c::CleanupResources()
  * mwcc emits __sinit_d_a_obj_hm_maruta.cpp. */
 MarutaModelFilePtr gHmMarutaModelFile(ASSET_HM_MARUTA_BMD);
 MarutaClsnFileHandle gHmMarutaCollisionFile(ASSET_HM_MARUTA_KCL);
+
+/* The descriptor InitResources and CleanupResources hand to the shared
+ * ov080 helpers. Its CLPS_Block is unclaimed ROM data, not this file's. */
+ResourceDescriptor data_ov030_02115a04 = {
+    &gHmMarutaModelFile,
+    &gHmMarutaCollisionFile,
+    &data_ov030_02114f24,
+};

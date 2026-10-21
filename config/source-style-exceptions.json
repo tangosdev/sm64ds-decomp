@@ -794,6 +794,902 @@
       "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
     },
     {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(self+0x283",
+      "count": 3,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(self+0x284",
+      "count": 2,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(self+0x285",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10CardFlipUpEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10CardSelectEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10PlayerDropEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10PlayerMoveEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10PlayerWaitEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10ResultWaitEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10RoundStartEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10StateJudgeEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c10StateSetupEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c11RoundRevealEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c11StateResultEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c12ResultFinishEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c12ResultRewardEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c8CardIdleEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c8CardMoveEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c8CardWaitEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c9StateExitEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgMemory2_c9StatePlayEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN4cstd5atan2E5Fix12IiES1_",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj",
+      "count": 4,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15TextureSequenceC1Ev",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c7AdvanceEv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c8FinishedEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2GX10LoadBGPlttEPKvjj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2GX11LoadOBJPlttEPKvjj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN2GX22SetBankForSubBGExtPlttEt",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2S13GetBG1CharPtrEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2S13GetBG3CharPtrEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2x13SetBlendAlphaEPVttttj",
+      "count": 6,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS10LoadBGPlttEPKvjj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS11LoadOBJPlttEPKvjj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS13LoadBGExtPlttEPKvjj",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS15SetGraphicsModeEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS16EndLoadBGExtPlttEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS18BeginLoadBGExtPlttEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN4CP1527FlushAndInvalidateDataCacheEjj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN4cstd5atan2E5Fix12IiES1_",
+      "count": 9,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN5ModelC2Ev",
+      "count": 4,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN6Memory13operator_new2Ej",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN6Memory16operator_delete2EPv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7Vector3D1Ev",
+      "count": 6,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE",
+      "count": 11,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f26c4EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f63f8EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6448EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6a9cEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6ab8EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6ae4EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6b4cEPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6bc0EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6c24EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6c34EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6c60EPvii",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f6e48EPh",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f7020Ev",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f7038Eii",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c19func_ov002_020f71c4Eii",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj",
+      "count": 4,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9ModelAnimC2Ev",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgJump_c10State_IdleEv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgJump_c10State_PlayEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgJump_c11State_FinalEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgJump_c11State_IntroEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgJump_c12State_ResultEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgJump_c9State_EndEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_hanachan_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_hanachan_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dScMgHanachan_c12Phase_ResultEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_hanachan_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dScMgHanachan_c15Phase_WaitIntroEv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_hanachan_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_hanachan_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+      "count": 6,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_s_mg_hanachan_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN4cstd5atan2E5Fix12IiES1_",
+      "count": 6,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgBase_cC2Ev",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c7AdvanceEv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c8FinishedEv",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr",
+      "count": 6,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dMg3DEspModel_c4IdleEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dMg3DEspModel_c4WaitEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dMg3DEspModel_c5IntroEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dMg3DEspModel_cC1Ev",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN18TextureTransformerC1Ev",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2S13GetBG2CharPtrEv",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G2x13SetBlendAlphaEPVttttj",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS10LoadBGPlttEPKvjj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3GXS11LoadOBJPlttEPKvjj",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN4cstd5atan2E5Fix12IiES1_",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN5ModelC1Ev",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_cnwEj",
+      "count": 1,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8Particle10SysTrackerC1Ev",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE",
+      "count": 2,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj",
+      "count": 7,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZNK15dExtFrameCtrl_c12WillHitFrameEi",
+      "count": 3,
+      "reason": "The state row is a raw function address plus a zero word. Spelling the method as a pointer-to-member emits a static initializer this record does not have, so the relocation uses the linker name.",
+      "evidence": "The initializer in this file stores that address in the first word of an 8-byte state record and 0 in the second. The class header already declares the method."
+    },
+    {
       "path": "src/runtime/actor/d_actor.cpp",
       "rule": "handspelled-member",
       "match": "_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_",

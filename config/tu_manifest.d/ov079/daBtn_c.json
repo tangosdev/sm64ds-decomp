@@ -28,6 +28,11 @@
       "end": "0x02127b8c"
     },
     {
+      "name": ".data",
+      "start": "0x02127ba0",
+      "end": "0x02127bc0"
+    },
+    {
       "name": ".bss",
       "start": "0x02128140",
       "end": "0x021282e0"
@@ -287,7 +292,15 @@
       "ordinal": 35
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov079_02127ba0",
+      "address": "0x02127ba0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "32 ROM bytes passed to SetFile; tag CLPS, stride 8 at +4, one entry at +8, no relocation"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBattanKingAttack02AnimationFile",
@@ -634,6 +647,13 @@
           "section": ".ctor",
           "start": "0x02127b88",
           "end": "0x02127b8c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02127ba0",
+          "end": "0x02127bc0",
           "differingBytes": 0,
           "firstDiff": null
         },

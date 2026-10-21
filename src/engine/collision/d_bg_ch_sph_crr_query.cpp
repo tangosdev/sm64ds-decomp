@@ -48,7 +48,7 @@ void func_02036acc(void);
 void func_ov002_020fea4c(int *a, int *b);       /* dM3dGLin::GetEnd */
 void func_ov002_020fea68(int *a, int *b);       /* dM3dGLin::GetStart */
 extern dBgW *data_020a0c80[];
-extern char data_020a0c78;
+extern char data_020a0c78[];
 }
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
@@ -524,8 +524,8 @@ void func_020381cc(void *r0, int i, void **out)
 {
     unsigned char *e = *(unsigned char **)r0;
     if (e == 0 || *(unsigned short *)(e + 4) != 8) {
-        func_02037e9c(&data_020a0c78);
-        *out = &data_020a0c78;
+        func_02037e9c(data_020a0c78);
+        *out = data_020a0c78;
         return;
     }
     *out = e + 8 + (i << 3);
@@ -806,4 +806,8 @@ int func_02037dc4(int p)
 {
     return p + 8;
 }
+}
+
+extern "C" {
+char data_020a0c78[8];
 }

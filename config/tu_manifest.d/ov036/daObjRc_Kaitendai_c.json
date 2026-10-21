@@ -18,6 +18,11 @@
       "end": "0x02111580"
     },
     {
+      "name": ".data",
+      "start": "0x02113b2c",
+      "end": "0x02113b38"
+    },
+    {
       "name": ".init",
       "start": "0x0211261c",
       "end": "0x02112688"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov036_02113b2c",
+      "address": "0x02113b2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor: model gRcKaitenModelFile, collision gRcKaitenCollisionFile, CLPS data_ov036_02112bc8"
+    }
+  ],
   "bss": [
     {
       "symbol": "gRcKaitenCollisionFile",
@@ -213,6 +226,13 @@
           "section": ".text",
           "start": "0x02111444",
           "end": "0x02111580",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02113b2c",
+          "end": "0x02113b38",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -651,6 +671,36 @@
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x02114064"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcKaitenModelFile",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02114050"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcKaitenCollisionFile",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02114048"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02112bc8",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112bc8"
     }
   ]
 }

@@ -22,3 +22,5 @@
 # and the row does nothing; stale rows are harmless and can be pruned in a later sweep.
 #
 # Empty on purpose: no source-coverage regression has been waived.
+{"module": "ov007", "section": ".data", "start": "0x020d7e68", "end": "0x020d7ec8", "reason": "func_ov007_020bbe60 keeps the portrait pointer tables as static data. Isolation drops that data, so claiming the range makes the link look for symbols the object no longer defines. The ROM copy fills 0x020d7e68..0x020d7ec8."}
+{"module": "ov007", "section": ".rodata", "start": "0x020cdb34", "end": "0x020cdb4c", "reason": "func_ov007_020bbe60 keeps the portrait stroke counts as static data. Isolation drops that data, so claiming the range makes the link look for a symbol the object no longer defines. The ROM copy fills 0x020cdb34..0x020cdb4c."}

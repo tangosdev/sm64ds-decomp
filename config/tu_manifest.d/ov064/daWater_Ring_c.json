@@ -29,6 +29,11 @@
       "end": "0x0211b750"
     },
     {
+      "name": ".data",
+      "start": "0x0211c3d0",
+      "end": "0x0211c3dc"
+    },
+    {
       "name": ".bss",
       "start": "0x0211c944",
       "end": "0x0211c964"
@@ -141,7 +146,15 @@
       "ordinal": 14
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov064_0211c3d0",
+      "address": "0x0211c3d0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collider offset: three 20.12 words. InitResources copies them into the cylinder; func_ov064_02119afc copies them through a Vector3 cast"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov064_0211c944",
@@ -370,6 +383,13 @@
           "section": ".ctor",
           "start": "0x0211b74c",
           "end": "0x0211b750",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211c3d0",
+          "end": "0x0211c3dc",
           "differingBytes": 0,
           "firstDiff": null
         },

@@ -190,9 +190,6 @@ void UnloadSilverStarAndNumber();
 extern SharedFilePtr data_ov002_0211092c;
 extern s32 data_ov100_02148008[3];
 extern ChompState data_ov100_021486f4;
-/* The ROM PMF constants the state record copies from (unlicensed .data). */
-extern ChompPmf data_ov100_02148000;
-extern ChompPmf data_ov100_02147ff8;
 extern unsigned char data_0209f2d8[];
 extern short data_02082214[];
 extern char data_020a0e68[];
@@ -877,7 +874,18 @@ Wanwan2ModelFilePtr data_ov100_021486bc(0x9c02);
 Wanwan2ModelFilePtr data_ov100_021486a4(0x9c01);
 Wanwan2AnimFileHandle data_ov100_021486ac(0x9c04);
 Wanwan2AnimFileHandle data_ov100_021486b4(0x9c03);
+
+/* Walking-state members, then the chain-contact offset. Each member is
+ * the function and a zero this-adjustment. The offset is 0, -160 units, 0. */
+struct ChompPmfWords {
+    int (*fn)(daWanwan2_c *);
+    int adj;
+};
+extern "C" ChompPmfWords data_ov100_02147ff8 = {func_ov100_02143aa4, 0};
+extern "C" ChompPmfWords data_ov100_02148000 = {func_ov100_02143ae0, 0};
+extern "C" s32 data_ov100_02148008[3] = {0, -0xa0000, 0};
+
 ChompState data_ov100_021486f4 = {
-    data_ov100_02148000,
-    data_ov100_02147ff8,
+    *(ChompPmf *)&data_ov100_02148000,
+    *(ChompPmf *)&data_ov100_02147ff8,
 };

@@ -161,7 +161,7 @@ extern int sTrmpRowMarkerSprite;
 extern int _Z15ApproachLinear2Rsss(s16 *dst, s16 a, s16 b);
 extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);
 extern void TrmpFx_Link(int *self);
-extern struct Node *sTrmpFxList;
+struct Node *sTrmpFxList;
 extern int sTrmpFxCount;
 extern int sTrmpFxPool;
 

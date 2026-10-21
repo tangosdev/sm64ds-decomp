@@ -29,6 +29,11 @@
       "end": "0x021335a0"
     },
     {
+      "name": ".data",
+      "start": "0x0213c764",
+      "end": "0x0213c77c"
+    },
+    {
       "name": ".bss",
       "start": "0x02141e54",
       "end": "0x02141fcc"
@@ -512,7 +517,29 @@
       "ordinal": 67
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dMg3DEspModel_c_Intro",
+      "address": "0x0213c764",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Intro state: function pointer to dMg3DEspModel_c::Intro and a zero this-adjustment"
+    },
+    {
+      "symbol": "pmf_dMg3DEspModel_c_Wait",
+      "address": "0x0213c76c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Wait state: function pointer to dMg3DEspModel_c::Wait and a zero this-adjustment"
+    },
+    {
+      "symbol": "pmf_dMg3DEspModel_c_Idle_3",
+      "address": "0x0213c774",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Idle state: function pointer to dMg3DEspModel_c::Idle and a zero this-adjustment"
+    }
+  ],
   "bss": [
     {
       "symbol": "gEspCardModelFile",
@@ -845,6 +872,13 @@
           "section": ".ctor",
           "start": "0x0213359c",
           "end": "0x021335a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213c764",
+          "end": "0x0213c77c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -2069,6 +2103,36 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130a08"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c764",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dMg3DEspModel_c5IntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e7de8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c76c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dMg3DEspModel_c4WaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e7f04"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c774",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dMg3DEspModel_c4IdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e7fac"
     }
   ],
   "defined_symbol_renames": [

@@ -3,11 +3,11 @@ enum sinit_ov072_02122018_AssetId {
     ASSET_BIG_SNOWMAN_BODY_BMD = 0x02ad
 };
 
-extern int func_02017acc();
+extern void *func_02017acc(void *self, unsigned int fileID);
 extern void func_020731dc();
-extern void func_02017ab4(void);
+extern int func_02017ab4(int self);
 extern void *_ZN7Vector3D1Ev(void *object);
-extern char data_ov072_02122b20[];
+extern struct SharedFilePtr data_ov072_02122b20;
 extern char data_ov072_02122b28[];
 
 struct Pair { int a, b; };
@@ -40,16 +40,21 @@ struct Dst {
 };
 extern struct Dst data_ov072_02122b64;
 
-extern int data_ov072_02122b40[];
-extern int data_ov072_02122b58[];
+typedef struct Vector3 {
+    int x;
+    int y;
+    int z;
+} Vector3;
+extern Vector3 data_ov072_02122b40;
+extern Vector3 data_ov072_02122b58;
 
 extern int data_ov072_02122b34[];
 extern int data_ov072_02122b4c[];
 
 void __sinit_ov072_02122018(void)
 {
-    func_02017acc(data_ov072_02122b20, ASSET_BIG_SNOWMAN_BODY_BMD);
-    func_020731dc(data_ov072_02122b20, &func_02017ab4, data_ov072_02122b28);
+    func_02017acc(&data_ov072_02122b20, ASSET_BIG_SNOWMAN_BODY_BMD);
+    func_020731dc(&data_ov072_02122b20, &func_02017ab4, data_ov072_02122b28);
     data_ov072_02122b64.p0 = data_ov072_02122750;
     data_ov072_02122b64.p1 = data_ov072_02122728;
     data_ov072_02122b64.p2 = data_ov072_02122720;
@@ -62,12 +67,12 @@ void __sinit_ov072_02122018(void)
     data_ov072_02122b64.p9 = data_ov072_02122758;
     data_ov072_02122b64.p10 = data_ov072_02122768;
     data_ov072_02122b64.p11 = data_ov072_02122760;
-    data_ov072_02122b40[0] = -0xad0000;
-    data_ov072_02122b40[1] = 0x290000;
-    data_ov072_02122b40[2] = -0x9d0000;
-    func_020731dc(data_ov072_02122b40, &_ZN7Vector3D1Ev, data_ov072_02122b34);
-    data_ov072_02122b58[0] = 0xfeffc000;
-    data_ov072_02122b58[1] = 0xffa6f000;
-    data_ov072_02122b58[2] = 0x6fe000;
-    func_020731dc(data_ov072_02122b58, &_ZN7Vector3D1Ev, data_ov072_02122b4c);
+    data_ov072_02122b40.x = -0xad0000;
+    data_ov072_02122b40.y = 0x290000;
+    data_ov072_02122b40.z = -0x9d0000;
+    func_020731dc(&data_ov072_02122b40, &_ZN7Vector3D1Ev, data_ov072_02122b34);
+    data_ov072_02122b58.x = 0xfeffc000;
+    data_ov072_02122b58.y = 0xffa6f000;
+    data_ov072_02122b58.z = 0x6fe000;
+    func_020731dc(&data_ov072_02122b58, &_ZN7Vector3D1Ev, data_ov072_02122b4c);
 }

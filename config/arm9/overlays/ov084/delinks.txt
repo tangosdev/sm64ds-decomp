@@ -20,11 +20,15 @@ src/game/actors/d_a_red_bombhei.cpp:
 src/game/actors/d_a_f_pkn.cpp:
     complete
     .text start:0x0212d248 end:0x0212eaf0
+    .bss start:0x02130e04 end:0x02130e0c
 
+    .rodata start:0x02130294 end:0x0213029c
 src/game/actors/d_a_pkn.cpp:
     complete
     .text start:0x0212eaf0 end:0x02130174
+    .bss start:0x02130e80 end:0x02130ee0
 
+    .rodata start:0x021302ec end:0x021302f4
 src/unnamed/ov084/__sinit_ov084_02130558.c:
     complete
     .init start:0x02130558 end:0x02130654

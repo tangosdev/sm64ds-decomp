@@ -16,11 +16,16 @@ src/game/actors/d_a_ibl.cpp:
     complete
     .text start:0x02141f04 end:0x021431c4
 
+src/unnamed/ov100/__sinit_ov100_021474e8.c:
+    complete
+    .init start:0x021474e8 end:0x021475a4
+
 src/game/actors/d_a_wanwan2.cpp:
     complete
     .text start:0x021431c4 end:0x021443f4
     .init start:0x021475a4 end:0x02147698
     .ctor start:0x02147df0 end:0x02147df4
+    .data start:0x02147ff8 end:0x02148014
     .bss start:0x021486a4 end:0x02148704
 
 src/game/actors/d_a_door.cpp:
@@ -28,6 +33,7 @@ src/game/actors/d_a_door.cpp:
     .text start:0x021443f4 end:0x021458d4
     .init start:0x02147698 end:0x02147a70
     .ctor start:0x02147df4 end:0x02147df8
+    .data start:0x02148204 end:0x02148334
     .bss start:0x02148724 end:0x02148934
 
 src/game/actors/d_a_star_gate.cpp:
@@ -51,8 +57,4 @@ src/game/actors/d_a_obj_path_lift.cpp:
     .init start:0x02147d7c end:0x02147de8
     .ctor start:0x02147e00 end:0x02147e04
     .bss start:0x02148a54 end:0x02148a7c
-
-src/unnamed/ov100/__sinit_ov100_021474e8.c:
-    complete
-    .init start:0x021474e8 end:0x021475a4
 

@@ -17,6 +17,17 @@
       "name": ".text",
       "start": "0x020cd744",
       "end": "0x020d1018"
+    },
+    {
+      "name": ".rodata.before_coin_tables",
+      "input_section": ".rodata",
+      "start": "0x0212e060",
+      "end": "0x0212e070"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213b2f4",
+      "end": "0x0213b314"
     }
   ],
   "functions": [
@@ -434,7 +445,70 @@
       "ordinal": 58
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "sTrmpLineDiffuse",
+      "address": "0x0212e060",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLineAmbient",
+      "address": "0x0212e068",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "sTrmpLinePushStrongPitchMid",
+      "address": "0x0213b2f4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLineStrongPitchEnd",
+      "address": "0x0213b2f8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLineWeakPitchEnd",
+      "address": "0x0213b2fc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLineWeakPitchMid",
+      "address": "0x0213b300",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLineStrongPitchMid",
+      "address": "0x0213b304",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLinePushStrongPitchEnd",
+      "address": "0x0213b308",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLinePushWeakPitchMid",
+      "address": "0x0213b30c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "sTrmpLinePushWeakPitchEnd",
+      "address": "0x0213b310",
+      "size": "0x4",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "bss": [],
   "notes": [
     "Text-only fold of the whole 0x020cd744..0x020d1018 linker unit; data and bss stay in the ROM image.",
@@ -470,6 +544,78 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov006-unit020cd744/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020cd744",
+        "end": "0x020d1018",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020cd744",
+          "end": "0x020d1018",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.before_coin_tables",
+          "start": "0x0212e060",
+          "end": "0x0212e070",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213b2f4",
+          "end": "0x0213b314",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      }
     }
   },
   "compiler_only_output": [
@@ -485,5 +631,6 @@
       "disposition": "deadstrip",
       "reason": "TrmpLine_Build reserves one of its two never-written stack slots through a local four-byte type with a declared empty destructor (Spare4 in its namespace block), so mwccarm emits a 4-byte vague-linkage D1 for it beside the licensed text. The cartridge has no copy and no relocation references it."
     }
-  ]
+  ],
+  "production_mode": "intact-object"
 }

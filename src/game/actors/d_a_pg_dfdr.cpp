@@ -155,7 +155,6 @@ struct PatrolStep {
     s16 startHeading;
     s16 endHeading;
 };
-extern PatrolStep data_ov027_02113a1c[];
 }
 
 // @symbol daPgDfdr_c_classInit
@@ -302,6 +301,8 @@ extern "C" int func_ov027_02111ca8(daPgDfdr_c *self)
 /* State 0 tick: after the pause, turn mAngleY toward this step's end heading. */
 extern "C" int func_ov027_02111c48(daPgDfdr_c *self)
 {
+    extern PatrolStep data_ov027_02113a1c[];
+
     if (DecIfAbove0_Byte(&self->mTimer) == 0) {
         unsigned char step = self->mStepIndex;
         short endHeading = data_ov027_02113a1c[step].endHeading;
@@ -317,6 +318,8 @@ extern "C" int func_ov027_02111c48(daPgDfdr_c *self)
    straight-walk clip when the headings match and the turn clip when they do not. */
 extern "C" void func_ov027_02111b2c(daPgDfdr_c *self)
 {
+    extern PatrolStep data_ov027_02113a1c[];
+
     self->mDistanceLeft = data_ov027_02113a1c[self->mStepIndex].distance;
     self->mHorzSpeed = data_ov027_02113a1c[self->mStepIndex].speed;
     self->mPrevAngleY = data_ov027_02113a1c[self->mStepIndex].startHeading;
@@ -423,6 +426,12 @@ PgDfdrAnimationFilePtr data_ov027_02113c74(ASSET_PENGUIN_WALK2_BCA);
 PgDfdrAnimationFilePtr data_ov027_02113c8c(ASSET_PENGUIN_BACK_BCA);
 PgDfdrTexSequenceFilePtr data_ov027_02113c94(ASSET_PENGUIN_WAIT1_BTP);
 PgDfdrCollisionFilePtr data_ov027_02113c6c(ASSET_PENGUIN_KCL);
+/* First word of the stride-0xc patrol table: a 20.12 distance.
+ * symbols.txt puts the next rows at +4, +8 and +0xa, so this object is
+ * that word and those rows stay in the gap. The readers redeclare it
+ * locally as PatrolStep[]: a file-scope redeclaration is rejected, and
+ * that local array is what emits the field addends. */
+extern "C" s32 data_ov027_02113a1c = 0x220000;
 DfdrStateTable data_ov027_02113ce4 = {
     data_ov027_021139d4, data_ov027_021139cc,
     data_ov027_021139dc, data_ov027_021139c4

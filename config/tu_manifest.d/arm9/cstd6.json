@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x02070348",
       "end": "0x020707a4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020aa0ac",
+      "end": "0x020aa0d4"
     }
   ],
   "functions": [
@@ -69,7 +74,14 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_020aa0ac",
+      "address": "0x020aa0ac",
+      "size": "0x28",
+      "evidence": "10-word cstd6 state"
+    }
+  ],
   "compiler_only_output": [],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
@@ -98,9 +110,9 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
-    "linkcheck": {
+        "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/arm9-cstd6/link (gitignored)",
       "phases": {
         "delink": true,
@@ -124,22 +136,14 @@
           "end": "0x020707a4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020aa0ac",
+          "end": "0x020aa0d4",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 7
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
@@ -166,10 +170,10 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
-      },
-      "linkerOutput": null
+      }
     }
-  }
+  },
+  "production_mode": "intact-object"
 }

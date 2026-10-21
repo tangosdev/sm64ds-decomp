@@ -6,6 +6,15 @@
 #define DECL_COMMON_H
 #include "common.h"
 
+/* Forward tags for data symbols whose complete types live in the owning TU:
+ * ResourceDescriptor (per-actor file tables), CLPS_Block (collision blocks),
+ * SharedFilePtr (file handles) and SnmBdyModelFilePtr (snowman body model).
+ * Extern declarations of incomplete struct types are legal C/C++; owners
+ * complete the same tag locally. */
+struct ResourceDescriptor;
+struct CLPS_Block;
+struct SharedFilePtr;
+struct SnmBdyModelFilePtr;
 
 /* C linkage. These declare ROM symbols by their exact final names, so a C++
    translation unit including this header must not mangle them -- a bare
@@ -205,13 +214,13 @@ extern char sRouletteTiles[];
 extern char sRouletteTilePos[];
 extern char data_ov009_02113c20[];
 extern char data_ov009_02113c28[];
-extern char data_ov015_02114538[];
-extern char data_ov015_02114880[];
+extern struct SharedFilePtr *data_ov015_02114538;
+extern struct ResourceDescriptor data_ov015_02114880;
 extern char data_ov016_02113cac[];
 extern struct daObjFloatBoard_c_Resources data_ov016_02114b8c;
 extern char data_ov016_02114e1c[];
 extern char data_ov016_02114e24[];
-extern char data_ov022_021140d4[];
+extern struct ResourceDescriptor data_ov022_021140d4[];
 extern char data_ov022_02114618[];
 extern char data_ov022_02114620[];
 extern char data_ov024_02112d00[];
@@ -221,14 +230,14 @@ extern char data_ov026_02113edc[];
 extern char data_ov026_02113ee4[];
 extern char data_ov027_021130e8;
 extern char data_ov027_02113108[];
-extern char data_ov030_02115d00;
+extern int data_ov030_02115d00[2];
 extern char data_ov030_02115ddc[];
 extern char data_ov045_021125b0[];
 
 extern char data_ov056_02112c68[];
 extern char data_ov062_0211de90[];
 extern char data_ov062_0211dec0[];
-extern char data_ov063_0211eb10[];
+extern struct ResourceDescriptor data_ov063_0211eb10;
 extern char data_ov063_0211ecb8;
 extern char data_ov063_0211ef80;
 extern char data_ov063_0211ef88;
@@ -843,17 +852,17 @@ extern int data_ov012_02111c90[];
 extern int data_ov012_02111cd0[];
 extern int data_ov013_021116b0[];
 extern int data_ov014_02114700[];
-extern int data_ov015_0211453c[];
+extern void *data_ov015_0211453c[4];
 extern int data_ov016_02113bac[];
 extern int data_ov018_02112c0c[];
 extern int data_ov018_02112f48[];
-extern int data_ov021_021148d0[];
+extern struct ResourceDescriptor data_ov021_021148d0;
 extern int data_ov021_021149a0[];
 extern int data_ov021_021149a8[];
 extern int data_ov021_021149b0[];
 extern int data_ov021_021149c0[];
 extern int data_ov022_02112c9c[];
-extern int data_ov022_0211427c[];
+extern struct ResourceDescriptor data_ov022_0211427c;
 extern int data_ov024_021129f0[];
 extern int data_ov025_02112654(void*);
 extern int data_ov025_02113814[];
@@ -869,11 +878,11 @@ extern int data_ov035_02111bfc[];
 extern int data_ov035_021121d8[];
 extern int data_ov036_02112b48[];
 extern int data_ov041_021118e0;
-extern int data_ov043_02111c00[];
+extern struct CLPS_Block data_ov043_02111c00;
 extern int data_ov045_02112510[];
-extern int data_ov045_021125d0[];
-extern int data_ov045_02112f08[];
-extern int data_ov045_021130ac[];
+extern struct CLPS_Block data_ov045_021125d0;
+extern struct ResourceDescriptor data_ov045_02112f08;
+extern struct ResourceDescriptor data_ov045_021130ac;
 extern int data_ov055_02111a90;
 extern int data_ov055_02111b60;
 extern int data_ov055_02111b64;
@@ -929,11 +938,11 @@ extern int data_ov085_02130490[];
 extern int data_ov085_02130830[];
 extern void *data_ov089_02132894[];
 extern int data_ov091_021344e8[];
-extern int data_ov091_02134e5c[];
+extern struct CLPS_Block *data_ov091_02134e5c[2];
 extern int data_ov091_02135138[];
 extern int data_ov094_02136a1c[];
 extern int data_ov095_02136fb0[];
-extern int data_ov095_021375a4[];
+extern struct CLPS_Block *data_ov095_021375a4[3];
 extern int data_ov098_0213bf60[];
 extern int data_ov098_0213bf64[];
 extern int data_ov098_0213bf68[];
@@ -1986,7 +1995,7 @@ extern void*data_0209b2e8;
 extern void*data_0209b450;
 extern void*data_0209b458;
 extern void*data_0209cee8;
-extern void*data_0209cef4[];
+extern struct dExtShadowModel_c *data_0209cef4;
 extern void*data_0209ee78;
 extern void*data_0209ee7c;
 extern void*data_0209ee80;
@@ -2050,7 +2059,7 @@ extern void*data_ov027_02112ca4[3];
 extern void*data_ov029_02112fb8;
 extern void*data_ov029_02112fec;
 extern void*data_ov030_02114824[];
-extern void*data_ov030_02115cf0[];
+extern int data_ov030_02115cf0[2];
 extern void*data_ov034_02113838[];
 extern void*data_ov034_0211384c[];
 extern void*data_ov034_02113860[];
@@ -2066,7 +2075,7 @@ extern void*data_ov065_0211cfd8[];
 extern void*data_ov065_0211d768[];
 extern void*data_ov065_0211d770[];
 extern void*data_ov072_02121ffc;
-extern void*data_ov072_02122b20;
+extern struct SnmBdyModelFilePtr data_ov072_02122b20;
 extern void*data_ov072_02122bc4;
 extern void*data_ov074_02122e4c[];
 extern void*data_ov074_02122e5c[];
@@ -2076,7 +2085,7 @@ extern void*data_ov075_0211d71c;
 extern void*data_ov078_0212700c;
 extern void*data_ov078_0212701c;
 extern void*data_ov079_02127600[];
-extern void*data_ov079_02127ba0;
+extern struct CLPS_Block data_ov079_02127ba0;
 extern void*data_ov079_02127bf0[];
 extern void*data_ov080_02127834;
 extern void*data_ov081_021280d8[4];

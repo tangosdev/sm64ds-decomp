@@ -55,7 +55,8 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
 extern "C" {
 extern SeesawModelFile data_ov022_021145a8;
 extern SeesawCollisionFilePtr data_ov022_021145a0;
-extern char data_ov064_0211bacc[];
+struct CLPS_Block;
+extern CLPS_Block data_ov064_0211bacc;
 
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -139,7 +140,7 @@ s32 daObjFl_Seesaw_c::InitResources()
     UpdateClsnPosAndRot();
     char *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov064_0211bacc);
+        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, (char *)&data_ov064_0211bacc);
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;

@@ -28,6 +28,11 @@
       "end": "0x02114dd4"
     },
     {
+      "name": ".data",
+      "start": "0x02114ee4",
+      "end": "0x02114f04"
+    },
+    {
       "name": ".bss",
       "start": "0x02115c80",
       "end": "0x02115ca8"
@@ -91,7 +96,15 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov030_02114ee4",
+      "address": "0x02114ee4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block SetFile is handed: tag 0x53504c43, header 0x00010008, entry 0x01000fc0 / 0x000000ff, then four 0xffffffff words"
+    }
+  ],
   "production_mode": "intact-object",
   "bss": [
     {
@@ -451,6 +464,13 @@
           "section": ".ctor",
           "start": "0x02114dd0",
           "end": "0x02114dd4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02114ee4",
+          "end": "0x02114f04",
           "differingBytes": 0,
           "firstDiff": null
         },

@@ -1824,3 +1824,14 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
 // @symbol _ZN7daBtn_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
+
+/* CLPS.h leaves CLPS_Block incomplete. These are the 32 ROM bytes at
+   0x02127ba0: the CLPS tag, stride 8 in the halfword at +4, one entry
+   at +8, then four 0xffffffff words. Nothing in the span is a pointer. */
+struct CLPS_Block {
+    u32 w[8];
+};
+
+extern "C" CLPS_Block data_ov079_02127ba0 = {
+    0x53504C43, 0x00010008, 0x01000FC4, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+};

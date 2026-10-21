@@ -52,7 +52,9 @@ typedef char KomaUClsnFileHandle_size_must_be_8[sizeof(KomaUClsnFileHandle) == 8
 
 #pragma defer_codegen off
 
-struct CLPS_Block;
+struct CLPS_Block {
+    u32 w[8];
+};
 
 struct FileTable {
     SharedFilePtr *model;
@@ -61,7 +63,8 @@ struct FileTable {
 };
 
 extern "C" {
-extern FileTable data_ov064_0211adbc;
+extern const FileTable data_ov064_0211adbc;
+extern CLPS_Block data_ov064_0211bdac;
 extern Matrix4x3 data_020a0e68;
 
 void Matrix4x3_FromRotationY(Matrix4x3 *mat, int angle);
@@ -216,3 +219,13 @@ extern "C" daObjFl_KomaU_c *daObjFl_KomaU_c_classInit()
 /* Retail construction order: model 1527, then collision 1528. */
 KomaUModelFilePtr gFlKomaUModelFile(ASSET_FL_KOMA_U_BMD);
 KomaUClsnFileHandle gFlKomaUCollisionFile(ASSET_FL_KOMA_U_KCL);
+
+extern "C" CLPS_Block data_ov064_0211bdac = {
+    0x53504C43, 0x00010008, 0x00000FC0, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+};
+
+extern "C" const FileTable data_ov064_0211adbc = {
+    &gFlKomaUModelFile,
+    &gFlKomaUCollisionFile,
+    &data_ov064_0211bdac,
+};

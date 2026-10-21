@@ -1616,36 +1616,36 @@
         },
         {
           "section": ".data.clps0",
-          "start": "0x02111b60",
-          "end": "0x02111b78",
+          "start": "0x2111b60",
+          "end": "0x2111b78",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.clps1",
-          "start": "0x02111ba0",
-          "end": "0x02111bb8",
+          "start": "0x2111ba0",
+          "end": "0x2111bb8",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.clps2",
-          "start": "0x02111c40",
-          "end": "0x02111c58",
+          "start": "0x2111c40",
+          "end": "0x2111c58",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.clps3",
-          "start": "0x02111c60",
-          "end": "0x02111c78",
+          "start": "0x2111c60",
+          "end": "0x2111c78",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.clps4",
-          "start": "0x02111c80",
-          "end": "0x02111c98",
+          "start": "0x2111c80",
+          "end": "0x2111c98",
           "differingBytes": 0,
           "firstDiff": null
         }

@@ -619,3 +619,7 @@ extern "C" daKinopio_c *daKinopio_c_classInit(void)
 {
     return new daKinopio_c();
 }
+
+/* State names. Eight bytes each, the word after the text is zero. */
+extern "C" char data_ov085_0212fe20[8] = "TALK";
+extern "C" char data_ov085_0212fe28[8] = "WAIT";

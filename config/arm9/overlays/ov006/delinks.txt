@@ -32,6 +32,7 @@ src/minigames/unit020c8a30.cpp:
     complete
     .text start:0x020c8a30 end:0x020c8dd4
 
+
 src/minigames/d_mg_trmpln2_mario.cpp:
     complete
     .text start:0x020c8dd4 end:0x020cd744
@@ -39,6 +40,9 @@ src/minigames/d_mg_trmpln2_mario.cpp:
 src/minigames/unit020cd744.cpp:
     complete
     .text start:0x020cd744 end:0x020d1018
+
+    .rodata.before_coin_tables start:0x0212e060 end:0x0212e070
+    .data start:0x0213b2f4 end:0x0213b314
 
 src/minigames/d_s_mg_amida.cpp:
     complete
@@ -48,6 +52,25 @@ src/minigames/d_s_mg_amida.cpp:
 src/minigames/d_s_mg_bomroom.cpp:
     complete
     .text start:0x020d5a54 end:0x020d95a4
+    .bss start:0x02141660 end:0x02141768
+
+    .rodata.before_coin_tables start:0x0212e2c0 end:0x0212e2e8
+
+src/unnamed/ov006/__sinit_ov006_0212f660.c:
+    complete
+    .init start:0x0212f660 end:0x0212f6b4
+
+src/unnamed/ov006/__sinit_ov006_0212f6b4.c:
+    complete
+    .init start:0x0212f6b4 end:0x0212fc7c
+
+src/unnamed/ov006/__sinit_ov006_0212fc7c.c:
+    complete
+    .init start:0x0212fc7c end:0x0212fd48
+
+src/unnamed/ov006/__sinit_ov006_0212fd48.c:
+    complete
+    .init start:0x0212fd48 end:0x021300b0
 
 src/minigames/d_s_mg_card.cpp:
     complete
@@ -89,12 +112,20 @@ src/minigames/d_s_mg_curling2.cpp:
 src/minigames/d_s_mg_d3d_base.cpp:
     complete
     .text start:0x020e6c28 end:0x020e7660
+    .bss start:0x02141a54 end:0x02141e54
+
+    .rodata start:0x0212e574 end:0x0212e57c
+
+src/unnamed/ov006/__sinit_ov006_02130a04.c:
+    complete
+    .init start:0x02130a04 end:0x02130a08
 
 src/minigames/d_mg3d_esp_anim_set.cpp:
     complete
     .text start:0x020e7660 end:0x020ea280
     .init start:0x02130a08 end:0x02130df8
     .ctor start:0x0213359c end:0x021335a0
+    .data start:0x0213c764 end:0x0213c77c
     .bss start:0x02141e54 end:0x02141fcc
 
 src/minigames/d_s_mg_hanachan_methods.cpp:
@@ -114,6 +145,7 @@ src/minigames/d_s_mg_jump_methods.cpp:
     .text start:0x020edec0 end:0x020eeafc
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
+    .data start:0x0213cb4c end:0x0213cb8c
     .bss start:0x02142188 end:0x021421b0
 
 src/minigames/d_s_mg_jump.cpp:
@@ -156,14 +188,14 @@ src/minigames/d_s_mg_m_carlo.cpp:
     .text start:0x020f7634 end:0x020f8ef4
     .init start:0x021318a0 end:0x0213195c
     .ctor start:0x021335b8 end:0x021335bc
-    .bss start:0x0214250c end:0x02142558
+    .bss start:0x021424fc end:0x02142558
 
 src/minigames/d_s_mg_m_carlo2.cpp:
     complete
     .text start:0x020f8ef4 end:0x020fa75c
     .init start:0x0213195c end:0x02131a38
     .ctor start:0x021335bc end:0x021335c0
-    .bss start:0x021425a8 end:0x02142604
+    .bss start:0x02142568 end:0x02142604
 
 src/minigames/d_s_mg_pachinko.cpp:
     complete
@@ -190,6 +222,9 @@ src/minigames/d_s_mg_panel.cpp:
 src/minigames/d_s_mg_roulette_methods.cpp:
     complete
     .text start:0x0210788c end:0x0210a400
+    .data start:0x0213e2e8 end:0x0213e2f0
+
+    .rodata start:0x0212ed14 end:0x0212ed34
 
 src/minigames/d_s_mg_roulette.cpp:
     complete
@@ -199,6 +234,9 @@ src/minigames/d_s_mg_single3d_base.cpp:
     complete
     .text start:0x0210a4b0 end:0x0210a8c0
 
+src/unnamed/ov006/__sinit_ov006_021322bc.c:
+    complete
+    .init start:0x021322bc end:0x02132894
 src/minigames/d_s_mg_slots.cpp:
     complete
     .text start:0x0210a8c0 end:0x0210d740
@@ -209,6 +247,8 @@ src/minigames/d_s_mg_slots.cpp:
 src/minigames/d_s_mg_smartball.cpp:
     complete
     .text start:0x0210d740 end:0x02119904
+
+    .rodata start:0x0212edfc end:0x0212ee0c
 
 src/minigames/d_s_mg_sound.cpp:
     complete
@@ -231,6 +271,7 @@ src/minigames/d_s_mg_trampoline.cpp:
     complete
     .text start:0x021207dc end:0x021225ac
     .data start:0x0213faa0 end:0x0213fbc4
+    .bss start:0x02142f64 end:0x02142f68
 
 src/minigames/d_s_mg_trampoline2.cpp:
     complete
@@ -260,26 +301,3 @@ src/minigames/d_s_mg_flower.cpp:
     complete
     .text start:0x0212a554 end:0x0212b890
 
-src/unnamed/ov006/__sinit_ov006_0212f660.c:
-    complete
-    .init start:0x0212f660 end:0x0212f6b4
-
-src/unnamed/ov006/__sinit_ov006_0212f6b4.c:
-    complete
-    .init start:0x0212f6b4 end:0x0212fc7c
-
-src/unnamed/ov006/__sinit_ov006_0212fc7c.c:
-    complete
-    .init start:0x0212fc7c end:0x0212fd48
-
-src/unnamed/ov006/__sinit_ov006_0212fd48.c:
-    complete
-    .init start:0x0212fd48 end:0x021300b0
-
-src/unnamed/ov006/__sinit_ov006_02130a04.c:
-    complete
-    .init start:0x02130a04 end:0x02130a08
-
-src/unnamed/ov006/__sinit_ov006_021322bc.c:
-    complete
-    .init start:0x021322bc end:0x02132894

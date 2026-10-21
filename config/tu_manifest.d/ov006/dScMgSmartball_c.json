@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x0210d740",
       "end": "0x02119904"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212edfc",
+      "end": "0x0212ee0c"
     }
   ],
   "functions": [
@@ -943,6 +948,14 @@
       "ordinal": 131
     }
   ],
+  "rodata": [
+    {
+      "symbol": "sSmartballCellScores",
+      "address": "0x0212edfc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "data": [],
   "bss": [],
   "notes": [
@@ -1172,7 +1185,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov006-dScMgSmartball_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -1196,22 +1209,15 @@
           "end": "0x02119904",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0212edfc",
+          "end": "0x0212ee0c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 132
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
@@ -1238,10 +1244,9 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
-      },
-      "linkerOutput": null
+      }
     }
   },
   "compiler_only_output": [
@@ -1584,5 +1589,6 @@
       "canonical_module": "ov006",
       "canonical_address": "0x0213eefc"
     }
-  ]
+  ],
+  "production_mode": "intact-object"
 }

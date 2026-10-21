@@ -28,6 +28,11 @@
       "end": "0x02147df8"
     },
     {
+      "name": ".data",
+      "start": "0x02148204",
+      "end": "0x02148334"
+    },
+    {
       "name": ".bss",
       "start": "0x02148724",
       "end": "0x02148934"
@@ -259,7 +264,15 @@
       "ordinal": 31
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov100_02148204",
+      "address": "0x02148204",
+      "size": "0x130",
+      "binding": "STB_GLOBAL",
+      "evidence": "nineteen DoorEntry records, one per param1 variant; each word that is a file handle relocates to that handle"
+    }
+  ],
   "bss": [
     {
       "symbol": "gObjDoor0Star1ModelFile",
@@ -758,6 +771,13 @@
           "section": ".ctor",
           "start": "0x02147df4",
           "end": "0x02147df8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02148204",
+          "end": "0x02148334",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1982,6 +2002,326 @@
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02147698"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148204",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148214",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148218",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0StarModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214873c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148224",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148228",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star1ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148724"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148234",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148238",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star1ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148724"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148244",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148248",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star3ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214872c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148254",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148258",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star3ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214872c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148264",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148268",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star10ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148274",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148278",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor1ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148774"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor2BoroModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214876c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214874c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214874c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148314",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor4YamiModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148754"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148324",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor5HorrorModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148734"
     }
   ],
   "defined_symbol_renames": [

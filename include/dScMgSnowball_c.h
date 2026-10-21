@@ -291,7 +291,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mCrashTimer;      /* 0xba0c -- counts up through states 2 and 4 */
     s32   mEndDelayTimer;   /* 0xba10 -- 0xb4 frames of state 3 */
     dScMgSnowball_spray mSprays[0x20]; /* 0xba14 -- elem dtor SnowSpray_ElemDtor */
-    dScMgSnowball_bit mBits[50]; /* 0xbe94 -- 50 * 0x24, see file banner */
+    dScMgSnowball_bit mBits[50];       /* 0xbe94 -- 50 * 0x24, see file banner */
 };
 
 #ifndef SM64DS_PLATFORM_PC

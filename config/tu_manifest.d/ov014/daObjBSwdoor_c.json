@@ -28,6 +28,11 @@
       "end": "0x0211336c"
     },
     {
+      "name": ".data",
+      "start": "0x021145c4",
+      "end": "0x021145d0"
+    },
+    {
       "name": ".bss",
       "start": "0x02114940",
       "end": "0x02114968"
@@ -84,7 +89,15 @@
       "legacy_source": "src/game/actors/d_a_obj_b_swdoor.cpp"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov014_021145c4",
+      "address": "0x021145c4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor: model handle, collision handle, CLPS block"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBAnaShutterCollisionFile",
@@ -170,6 +183,13 @@
           "section": ".ctor",
           "start": "0x02113368",
           "end": "0x0211336c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021145c4",
+          "end": "0x021145d0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -532,6 +552,36 @@
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x021130ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x021145c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBAnaShutterModelFile",
+      "addend": 0,
+      "target_module": "ov014",
+      "target_address": "0x02114948"
+    },
+    {
+      "section": ".data",
+      "source": "0x021145c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBAnaShutterCollisionFile",
+      "addend": 0,
+      "target_module": "ov014",
+      "target_address": "0x02114940"
+    },
+    {
+      "section": ".data",
+      "source": "0x021145cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov014_02114578",
+      "addend": 0,
+      "target_module": "ov014",
+      "target_address": "0x02114578"
     }
   ],
   "production_mode": "intact-object"

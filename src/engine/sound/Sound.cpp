@@ -1259,3 +1259,25 @@ extern "C" void func_020134c8(void)
     /* arity split (banked): caller passes 0, def is (void) */
     ((void (*)(int))func_020133bc)(0);
 }
+
+#pragma define_section forcerodata ".rodata" ".rodata" ".rodata" data_mode=far_abs
+#pragma section forcerodata begin
+extern "C" unsigned char data_02075250[8] = { 0x00, 0x40, 0x80, 0xc0, 0xc0, 0x00, 0x00, 0x00 };
+#pragma section forcerodata end
+extern "C" int data_0209b4ac;
+extern "C" int data_0209b4a8;
+extern "C" int data_0209b4a4[1];
+extern "C" int data_0209b4a0[1];
+extern "C" int data_0209b49c;
+extern "C" int data_0209b498;
+extern "C" int data_0209b494;
+extern "C" int data_0209b490;
+extern "C" int data_0209b48c;
+extern "C" int data_0209b488;
+extern "C" int data_0209b484;
+extern "C" unsigned char data_0209b480;
+extern "C" unsigned char data_0209b47c;
+extern "C" unsigned char data_0209b478;
+extern "C" unsigned char data_0209b474;
+extern "C" signed char data_0209b470;
+extern "C" int data_0209b4b0[1];

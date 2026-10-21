@@ -16,6 +16,7 @@ src/game/actors/d_a_obj_bk_botaosi.cpp:
     .text start:0x02111314 end:0x02111ba0
     .init start:0x02112fdc end:0x02113048
     .ctor start:0x02113414 end:0x02113418
+    .data start:0x02113574 end:0x02113594
     .bss start:0x02114974 end:0x0211499c
 
 src/game/actors/d_a_obj_bk_dossunbar.cpp:
@@ -23,6 +24,7 @@ src/game/actors/d_a_obj_bk_dossunbar.cpp:
     .text start:0x02111ba0 end:0x02112290
     .init start:0x02113048 end:0x02113264
     .ctor start:0x02113418 end:0x0211341c
+    .data start:0x02114534 end:0x0211454c
     .bss start:0x0211499c end:0x02114a5c
 
 src/game/actors/d_a_obj_bk_lift.cpp:
@@ -44,6 +46,7 @@ src/game/actors/d_a_obj_bk_ukisima.cpp:
     .text start:0x02112bd0 end:0x02112cf4
     .init start:0x0211333c end:0x021133a8
     .ctor start:0x02113424 end:0x02113428
+    .data start:0x021147a4 end:0x021147b0
     .bss start:0x02114aac end:0x02114ad4
 
 src/game/actors/d_a_obj_bk_fall_block.cpp:
@@ -51,4 +54,5 @@ src/game/actors/d_a_obj_bk_fall_block.cpp:
     .text start:0x02112cf4 end:0x02112e0c
     .init start:0x021133a8 end:0x02113410
     .ctor start:0x02113428 end:0x0211342c
+    .data start:0x02114880 end:0x0211488c
     .bss start:0x02114ad4 end:0x02114afc

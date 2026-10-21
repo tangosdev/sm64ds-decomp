@@ -182,3 +182,18 @@ extern "C" void func_02044334(Obj *self) {
         self->idx--;
     } while (self->idx >= 0);
 }
+
+extern int data_02099f28;
+extern int data_02099f30;
+extern int data_02099f38;
+extern int data_02099f40;
+extern int data_02099f58;
+extern int data_02099f78;
+
+#pragma define_section forcerodata ".rodata" ".rodata" ".rodata" data_mode=far_abs
+#pragma section forcerodata begin
+extern "C" int data_02082178[6] = {
+    (int)&data_02099f30, (int)&data_02099f78, (int)&data_02099f40,
+    (int)&data_02099f58, (int)&data_02099f38, (int)&data_02099f28,
+};
+#pragma section forcerodata end

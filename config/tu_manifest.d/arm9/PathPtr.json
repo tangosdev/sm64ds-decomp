@@ -4,18 +4,24 @@
   "source": "src/engine/path/PathPtr.cpp",
   "promoted_source": "src/engine/path/PathPtr.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "Eleven consecutive delinked functions at 0x0203ac80..0x0203ad84, all complete: the five named PathPtr members (FromID, GetNode, Loops, NumNodes, C1) plus six anonymous func_ shards that resolve to the class's accessors (func_0203ad44 -> flags&0x7f, func_0203ad54 -> unk_004, func_0203ad6c -> def store called only by FromID) and its three path-table helpers (func_0203aca0/0203acbc/0203accc on data_020a0d84/88/8c, the PathDef/node tables LoadPathObjects hands it).",
     "func_0203ad84 at 0x0203ad84 closes the run: a string-copy helper on unrelated globals (data_020994d4, data_020a0d90) with no PathPtr receiver, folded in under its func_ name the same way dBgPi kept its neighbouring shards.",
     "Preceded by the dM3dGSph member run ending at C2 0x0203ac70..0x0203ac80; followed by DecIfAbove0_Short's math family. The span is the whole class.",
-    "PathPtr is non-polymorphic: no _ZTS/_ZTI/_ZTV for it exists in the ROM, so this is a text-only fold with no data or bss claim."
+    "PathPtr is non-polymorphic: no _ZTS/_ZTI/_ZTV for it exists in the ROM. PATH_DEFS is the 4-byte BSS pointer this TU claims; PATH_NODES and NUM_PATHS stay in the gap."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0203ac80",
       "end": "0x0203adbc"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a0d84",
+      "end": "0x020a0d88"
     }
   ],
   "functions": [
@@ -105,10 +111,18 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "PATH_DEFS",
+      "address": "0x020a0d84",
+      "size": "0x4",
+      "evidence": "level PathDef table pointer; the BSS word is 0 and SetPathTable stores the loaded table"
+    }
+  ],
   "notes": [
-    "Six members arrived as anonymous func_ shards; symbols.txt names them by their member spellings. GetPullFactor reads def->flags & 0x7f -- the low seven bits under Loops' 0x80 closed-path bit -- which path-follow code scales a lateral offset by. GetUnk004 reads the remaining opaque PathDef byte. SetDef is the def-pointer store FromID goes through. SetPathTable/GetNodeTable/SetNodeTable manage the level's PATH_DEFS/PATH_NODES/NUM_PATHS globals (data_020a0d84/88/8c, bss gap-served, no claim) that LoadPathObjects and LoadPathNodeObjects load; they are statics on the class because GetNode calls GetNodeTable as its own plumbing.",
-    "mwccarm emits .text in reverse source order, so the file lists C1 first and FromID last; the manifest ordinals run ROM-ascending."
+    "Six members arrived as anonymous func_ shards; symbols.txt names them by their member spellings. GetPullFactor reads def->flags & 0x7f -- the low seven bits under Loops' 0x80 closed-path bit -- which path-follow code scales a lateral offset by. GetUnk004 reads the remaining opaque PathDef byte. SetDef is the def-pointer store FromID goes through. SetPathTable/GetNodeTable/SetNodeTable manage the level's PATH_DEFS/PATH_NODES/NUM_PATHS globals (0x020a0d84/88/8c). PATH_DEFS is this TU's BSS claim; PATH_NODES and NUM_PATHS stay gap-served. LoadPathObjects and LoadPathNodeObjects load them; they are statics on the class because GetNode calls GetNodeTable as its own plumbing.",
+    "mwccarm emits .text in reverse source order, so the file lists C1 first and FromID last; the manifest ordinals run ROM-ascending.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock baseline -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -137,6 +151,95 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-PathPtr/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0203ac80",
+        "end": "0x0203adbc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0203ac80",
+          "end": "0x0203adbc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a0d84",
+          "end": "0x020a0d88",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 13
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [

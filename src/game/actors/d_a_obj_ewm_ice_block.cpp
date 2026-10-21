@@ -190,3 +190,11 @@ struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
 // @symbol __sinit_d_a_obj_ewm_ice_block.cpp
 EwmIceBlockModelFilePtr gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);      /* model */
 EwmIceBlockCollisionFilePtr gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL);  /* collision */
+
+/* Model handle, collision handle, then the ov064 CLPS words. */
+extern "C" char data_ov064_0211bbec[];
+extern "C" SharedFilePtr *data_ov056_02113314[3] = {
+    &gEwmIceBrockModelFile,
+    &gEwmIceBrockCollisionFile,
+    (SharedFilePtr *)data_ov064_0211bbec,
+};

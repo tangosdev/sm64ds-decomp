@@ -125,7 +125,7 @@ struct dScMgPanel_c : dScMgBase_c {
                              0x50 once out of credits, 0x10 to rewind;
                              Scene_StateResult/_StateGameOver count it down */
     u8 pad_4ec2[0x2];
-    s16 mDelay; /* 0x4ec4 countdown; helpers also read it as u16 */
+    s16 mDelay;            /* 0x4ec4 countdown; helpers also read it as u16 */
     u16 mScrollFrames;     /* 0x4ec6 Scene_StateResult counts the frames it runs
                               Scroll_Update; ResetRound clears it; nothing
                               reads it */

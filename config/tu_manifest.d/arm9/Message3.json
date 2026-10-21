@@ -15,9 +15,21 @@
       "name": ".text",
       "start": "0x02031b84",
       "end": "0x02034a78"
+    },
+    {
+      "name": ".data",
+      "start": "0x0209289c",
+      "end": "0x02092d3c"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_0209289c",
+      "address": "0x0209289c",
+      "size": "0x4a0",
+      "evidence": "296-word Message3 digit/face parameter table"
+    }
+  ],
   "bss": [],
   "compiler_only_output": [],
   "notes": [
@@ -51,9 +63,9 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
-    "linkcheck": {
+        "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/arm9-Message3/link (gitignored)",
       "phases": {
         "delink": true,
@@ -77,22 +89,15 @@
           "end": "0x02034a78",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0209289c",
+          "end": "0x02092d3c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 26
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
@@ -121,8 +126,7 @@
         "bytes": 16777216,
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
-      },
-      "linkerOutput": null
+      }
     }
   },
   "functions": [
@@ -308,5 +312,6 @@
       "legacy_source": "src/_ZN7Message10LoadTextVSEv.cpp",
       "ordinal": 25
     }
-  ]
+  ],
+  "production_mode": "intact-object"
 }

@@ -77,10 +77,10 @@ extern int data_ov060_02119564[];
 extern int data_ov060_02119568[];
 extern int data_0209b3ec;
 
-extern SharedFilePtr *data_ov060_02119514[];
-extern SharedFilePtr *data_ov060_0211953c[];
+extern SharedFilePtr *const data_ov060_02119514[10];
+extern SharedFilePtr *const data_ov060_0211953c[10];
 extern CLPS_Block *data_ov060_0211a980[];
-extern int data_0208e738;
+extern int data_0208e738[];
 
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
@@ -149,12 +149,12 @@ extern "C" void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other)
 s32 daKpa3Bg_c::InitResources()
 {
     mVariant = (u8)(param1 & 0xf);
-    data_0208e738 = 0;
+    data_0208e738[0] = 0;
     /* bmd is named for the @NNN count (see the banner). */
     BMD_File *bmd = (BMD_File *)Model::LoadFile(*data_ov060_02119514[mVariant]);
     mModel.SetFile(bmd, 1, -1);
     CopyTexPalFromLevelModel(&mModel.data);
-    data_0208e738 = 1;
+    data_0208e738[0] = 1;
     UpdateClsnPosAndRot();
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider,
@@ -402,3 +402,31 @@ HandlerEntry data_ov060_0211b1ac[3] = {
     { &daKpa3Bg_c::func_ov060_021180e0 },
     { &daKpa3Bg_c::func_ov060_02117db8 },
 };
+
+/* After the statics, so the @NNN count above does not move.
+   Retail words are the handles constructed just above, in that order. */
+extern "C" SharedFilePtr *const data_ov060_02119514[10] = {
+    &data_ov060_0211b06c, &data_ov060_0211b034, &data_ov060_0211b0a4, &data_ov060_0211b03c,
+    &data_ov060_0211b0b4, &data_ov060_0211b044, &data_ov060_0211b094, &data_ov060_0211b09c,
+    &data_ov060_0211b054, &data_ov060_0211b024,
+};
+extern "C" SharedFilePtr *const data_ov060_0211953c[10] = {
+    &data_ov060_0211b0ac, &data_ov060_0211b02c, &data_ov060_0211b05c, &data_ov060_0211b064,
+    &data_ov060_0211b07c, &data_ov060_0211b01c, &data_ov060_0211b074, &data_ov060_0211b084,
+    &data_ov060_0211b08c, &data_ov060_0211b04c,
+};
+
+/* Ten course CLPS blocks. Each address is the symbols.txt row in every
+   overlay the retail reloc names; ov008 is in each of those sets.
+   The next symbol is the vtable address point, so this .data run
+   continues through _ZTV10daKpa3Bg_c, which the class emits. */
+extern "C" CLPS_Block data_ov008_021116c0;
+extern "C" CLPS_Block data_ov008_02111700;
+extern "C" CLPS_Block data_ov008_02111740;
+extern "C" CLPS_Block data_ov008_02111640;
+extern "C" CLPS_Block data_ov008_02111680;
+extern "C" CLPS_Block data_ov008_021116e0;
+extern "C" CLPS_Block data_ov008_02111720;
+extern "C" CLPS_Block data_ov008_021116a0;
+extern "C" CLPS_Block data_ov008_02111760;
+extern "C" CLPS_Block data_ov008_02111660;

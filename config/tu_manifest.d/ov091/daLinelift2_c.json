@@ -18,6 +18,11 @@
       "end": "0x02132404"
     },
     {
+      "name": ".rodata",
+      "start": "0x021344f4",
+      "end": "0x02134504"
+    },
+    {
       "name": ".init",
       "start": "0x021345dc",
       "end": "0x021346e8"
@@ -26,6 +31,11 @@
       "name": ".ctor",
       "start": "0x02134b6c",
       "end": "0x02134b70"
+    },
+    {
+      "name": ".data",
+      "start": "0x02134e5c",
+      "end": "0x02134e64"
     },
     {
       "name": ".bss",
@@ -158,7 +168,31 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov091_021344f4",
+      "address": "0x021344f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two collision-file pointers, one per mVariant, aimed at the handles at 0x021354a0 and 0x02135490"
+    },
+    {
+      "symbol": "data_ov091_021344fc",
+      "address": "0x021344fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two model-file pointers, one per mVariant, aimed at the handles at 0x02135498 and 0x021354a8"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_ov091_02134e5c",
+      "address": "0x02134e5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two CLPS_Block pointers, one per mVariant"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm2SusumuCollisionFile",
@@ -546,6 +580,66 @@
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x021345dc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021344f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3RiftCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x021354a0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021344f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2SusumuCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135490"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021344fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3RiftModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135498"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02134500",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2SusumuModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x021354a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134e5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov008_02111af4",
+      "addend": 0,
+      "target_module": "overlays(8,12,13,17,24,33,41,43,47,52,53,54,55,56,58)",
+      "target_address": "0x02111af4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134e60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_02112610",
+      "addend": 0,
+      "target_module": "overlays(10,22,24,26,35,43,45,47,52,56)",
+      "target_address": "0x02112610"
     }
   ],
   "notes": [
@@ -653,6 +747,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x021344f4",
+          "end": "0x02134504",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x021345dc",
           "end": "0x021346e8",
@@ -663,6 +764,13 @@
           "section": ".ctor",
           "start": "0x02134b6c",
           "end": "0x02134b70",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02134e5c",
+          "end": "0x02134e64",
           "differingBytes": 0,
           "firstDiff": null
         },

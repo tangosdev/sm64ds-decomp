@@ -5,9 +5,9 @@ typedef struct { int a, b; } Elem;
 
 extern int *data_020a4bec;
 extern Elem data_020a4c18[];
-extern Elem data_020a4c08[];
-extern Elem data_020a4bf8[];
-extern Elem data_020a4bf0;
+static Elem data_020a4bf0;
+static Elem data_020a4bf8[2];
+static Elem data_020a4c08[2];
 
 void func_02048f34(int *owner)
 {

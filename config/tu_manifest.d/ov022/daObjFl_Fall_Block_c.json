@@ -28,6 +28,11 @@
       "end": "0x02113118"
     },
     {
+      "name": ".data",
+      "start": "0x0211427c",
+      "end": "0x02114288"
+    },
+    {
       "name": ".bss",
       "start": "0x02114640",
       "end": "0x02114668"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov022_0211427c",
+      "address": "0x0211427c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "resource descriptor: model data_ov022_02114648, collision data_ov022_02114640, CLPS data_ov064_0211ba8c"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov022_02114640",
@@ -230,6 +243,13 @@
           "section": ".ctor",
           "start": "0x02113114",
           "end": "0x02113118",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211427c",
+          "end": "0x02114288",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -701,6 +721,36 @@
       "addend": 0,
       "target_module": "ov022",
       "target_address": "0x0211465c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211427c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02114648",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114648"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02114640",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114640"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211ba8c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211ba8c"
     }
   ],
   "defined_symbol_renames": [

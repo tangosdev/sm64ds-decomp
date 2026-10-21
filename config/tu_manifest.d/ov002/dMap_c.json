@@ -16,6 +16,11 @@
       "name": ".text",
       "start": "0x020f975c",
       "end": "0x020fb8f8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0211116c",
+      "end": "0x02111178"
     }
   ],
   "functions": [
@@ -105,7 +110,15 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov002_0211116c",
+      "address": "0x0211116c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "minimap follow point: Vec3_Sub/Vec3_RotateYAndTranslate read it as the reference vector; __sinit_ov002_0210804c writes {0x80000, 0, 0x60000} and registers _ZN7Vector3D1Ev via func_020731dc"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN6dMap_cD2Ev",
@@ -267,7 +280,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov002-dMap_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -280,7 +293,7 @@
       },
       "tuRange": {
         "start": "0x020f975c",
-        "end": "0x020fb8bc",
+        "end": "0x020fb8f8",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -288,21 +301,37 @@
         {
           "section": ".text",
           "start": "0x020f975c",
-          "end": "0x020fb8bc",
+          "end": "0x020fb8f8",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0211116c",
+          "end": "0x02111178",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 13
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },

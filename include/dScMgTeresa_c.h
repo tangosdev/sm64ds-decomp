@@ -270,7 +270,7 @@ struct dScMgTeresa_c : dScMgBase_c {
     u8 mCountdownShown;  /* 0x4c1b -- DrawCountdown draws only while set; StartCountdown sets it,
                             BigBoo_ShowResult clears it, as does Scene_StateResult on a new record */
     u8 mCountdownRunning; /* 0x4c1c -- set once by StartCountdown; UpdateCountdown runs only while set */
-    u8 mRubTouching; /* 0x4c1d -- set on the stylus press, cleared on release */
+    u8 mRubTouching;      /* 0x4c1d -- set on the stylus press, cleared on release */
     u8 pad_4c1e[0x1];
     /* 1 when CheckRoundEnd finds every Boo, 0 when time runs out: picks the
        round-clear or game-over result and the big Boo's result frames. */

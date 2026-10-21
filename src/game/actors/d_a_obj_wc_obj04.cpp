@@ -21,8 +21,8 @@
  * - func_020393a4: Behavior pokes mMeshCollider with 0x100000 (no setter).
  * - func_ov029_021126dc / 02112710 stay placeholder labels (Y-rot + pos
  *   into mClsnMat2 / mModel2.mat4x3). Not coined.
- * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles;
- *   data_ov029_0211304c the CLPS block stays unowned overlay data.
+ * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles.
+ *   data_ov029_0211304c is the CLPS block, defined in this file.
  * - Behavior case 1 keeps the unsigned short* increment pointer
  *   (`*p > 0x168` CSEs and size-DIFFs).
  * - S14: g_profile_WC_OBJ04 stays outside the licensed .text.
@@ -55,6 +55,11 @@ struct WcObj04CollisionFilePtr : SharedFilePtr {
 
     WcObj04CollisionFilePtr(u32 fileID);
     ~WcObj04CollisionFilePtr();
+};
+
+/* CLPS.h leaves this incomplete. Eight ROM words, no relocation. */
+struct CLPS_Block {
+    u32 w[8];
 };
 
 extern "C" {
@@ -234,3 +239,7 @@ extern "C" void func_ov029_021126dc(daObjWc_Obj04_c *c)
    from these: one ctor veneer plus destructor registration per handle. */
 WcObj04ModelFilePtr data_ov029_0211432c(ASSET_WC_OBJ04_BMD);
 WcObj04CollisionFilePtr data_ov029_02114324(ASSET_WC_OBJ04_KCL);
+
+extern "C" CLPS_Block data_ov029_0211304c = {
+    0x53504C43, 0x00020008, 0x01000FC0, 0x000000FF, 0x01000FC5, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF,
+};

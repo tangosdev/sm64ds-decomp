@@ -148,7 +148,7 @@ extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */
 extern SharedFilePtr data_ov002_0210da38;   /* the blue-coin model, out of ov002 */
 extern PknSharedFile data_ov084_02130df4;   /* idle animation */
-extern PknSharedFile data_ov084_02130e04;   /* spit animation */
+PknSharedFile data_ov084_02130e04;          /* spit animation; sinit writes file 0x3d1 */
 extern PknSharedFile data_ov084_02130e14;   /* grow-in lunge animation */
 extern void *data_ov084_02130e1c[];         /* post-spit animation, a PknSharedFile pair */
 extern PknSharedFile data_ov084_02130e24;   /* death animation */
@@ -893,3 +893,8 @@ extern "C" daFPkn_c *daFPkn_c_classInit_FIREPAKUN()
 {
     return new daFPkn_c();
 }
+
+#pragma define_section forcerodata ".rodata" ".rodata" ".rodata" data_mode=far_abs
+#pragma section forcerodata begin
+extern "C" u8 data_ov084_02130294[8] = { 0x00, 0x03, 0x04, 0x05, 0x06, 0x00, 0x00, 0x00 };
+#pragma section forcerodata end

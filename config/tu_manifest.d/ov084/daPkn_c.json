@@ -17,6 +17,16 @@
       "name": ".text",
       "start": "0x0212eaf0",
       "end": "0x02130174"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02130e80",
+      "end": "0x02130ee0"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021302ec",
+      "end": "0x021302f4"
     }
   ],
   "functions": [
@@ -189,8 +199,24 @@
       "ordinal": 23
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov084_021302ec",
+      "address": "0x021302ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov084_02130e80",
+      "address": "0x02130e80",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "twelve PknStatePMF slots; __sinit_ov084_02130654 copies nine descriptors, the rest stays zero"
+    }
+  ],
   "notes": [
     "Hand-written, not the generator's output. tools/tubuild.py create produced a starting point with 25 declaration CONFLICTs and one truncated declaration; the preamble was replaced wholesale and every conflict resolved (see the notes below and the file's own header comment). Function bodies were carried from the legacy one-function sources. See notes/tu-promotion-conventions.md for the declaration policy and notes/translation-unit-reconstruction-plan.md section 7.3 for what the generator does and does not attempt.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212ec04; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
@@ -221,7 +247,7 @@
     "2026-09-08 source-review continuation, input abe07e30645e08fd6f0faf4f49007ba957eb7e3a: state 8 now has a void contract; Behavior uses daPkn_c member pointers and existing real method declarations; state 7/8 access named actor fields. No external function identities, ranges, PMF records or production data ownership changed. The earlier generator-conflict notes describe the original fold. Current compiler probes and finding dispositions are recorded in notes/agents/handoffs/pr-2450-source-review-fixes.md. Remaining scalar call seams are measured candidate constraints, not evidence of original Fix12 signatures or caller ABI differences.",
     "2026-09-25 readability pass: the nine state bodies are members under coined names (state 0 func_ov084_0212fc10 is _ZN7daPkn_c9StateWaitEv, 1 func_ov084_0212fa7c is _ZN7daPkn_c10StateSleepEv, 2 func_ov084_0212f6d8 is _ZN7daPkn_c9StateBiteEv, 3 func_ov084_0212f630 is _ZN7daPkn_c9StateWakeEv, 4 func_ov084_0212f588 is _ZN7daPkn_c9StateDozeEv, 5 func_ov084_0212f460 is _ZN7daPkn_c8StateDieEv, 6 func_ov084_0212f33c is _ZN7daPkn_c11StateShrinkEv, 7 func_ov084_0212f2dc is _ZN7daPkn_c9StateGoneEv, 8 func_ov084_0212f298 is _ZN7daPkn_c11StateRegrowEv); the older notes above use the address names. The .data PMF records at 0x02130ba4 reach them by address, so only the ov084 symbols.txt rows, these symbol fields and the attribution keys were renamed. The six helpers include/decl_common.h declares keep C linkage. The C-linkage bridges for dActor_c::FindWithID, ClosestPlayer, JumpedOnByPlayer and Spawn, Player::IncMegaKillCount, dExtFrameCtrl_c::Finished, WillHitFrame and SetFlags, Sound::PlayLong and ApproachLinear are real calls now, the class's operator new forwarder is gone, and the collision check has no goto. The remaining mangled calls each carry a Fix12<int> by value."
   ],
-  "production_mode": "text-only",
+  "production_mode": "intact-object",
   "externalized_output": [],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -291,6 +317,77 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov084-daPkn_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0212eaf0",
+        "end": "0x02130174",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0212eaf0",
+          "end": "0x02130174",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02130e80",
+          "end": "0x02130ee0",
+          "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021302ec",
+          "end": "0x021302f4",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      }
     }
   },
   "compiler_only_output": [

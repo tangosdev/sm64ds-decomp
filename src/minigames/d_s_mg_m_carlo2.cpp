@@ -30,16 +30,16 @@
 
 /* Globals that decl_common.h does not already declare with these types. */
 extern "C" {
-extern dMgMCarlo2CardObj_c *sMCarlo2CardTail;
-extern dMgMCarlo2CardObj_c *sMCarlo2CardHead;
-extern dMgMCarlo2CardObj_c *sMCarlo2FirstPick;
-extern dMgMCarlo2CardObj_c *sMCarlo2SecondPick;
-extern dMgMCarlo2CardObj_c *sMCarlo2CardsTail;
-extern dMgMCarlo2CardObj_c *sMCarlo2Cards;
+dMgMCarlo2CardObj_c *sMCarlo2CardTail;
+dMgMCarlo2CardObj_c *sMCarlo2CardHead;
+dMgMCarlo2CardObj_c *sMCarlo2FirstPick;
+dMgMCarlo2CardObj_c *sMCarlo2SecondPick;
+dMgMCarlo2CardObj_c *sMCarlo2CardsTail;
+dMgMCarlo2CardObj_c *sMCarlo2Cards;
 extern s16 sMCarlo2BoardDelay;   /* frames left before the pair resolves  */
 extern s16 sMCarlo2CardsMoving;  /* pieces still animating                */
 extern s16 sMCarlo2BoardStep;    /* difficulty row into sMCarlo2BoardRows */
-extern int sMCarlo2FaceCounts[]; /* per-face weights the picker draws from  */
+int sMCarlo2FaceCounts[10];      /* per-face weights the picker draws from  */
 /* Twenty-three sprite words. The static initializer copies them out of
  * sMgCardSprites in this order; an in-order copy does not. */
 struct Carlo2SpriteWords {

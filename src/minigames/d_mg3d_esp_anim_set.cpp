@@ -146,9 +146,23 @@ extern int sEsp3DMaterialAnim;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Hit;
-extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Intro;
-extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Wait;
-extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle_3;
+/* A State initializer is copied from __sinit and grows .init. Retail stores
+   the function and a zero adjustment, contiguous from 0x0213c764. */
+struct dMg3DEspModelStateWords {
+    void (*function)(dMg3DEspModel_c *);
+    int adjustment;
+};
+
+/* local extern: {fn,0} address */
+extern "C" void _ZN15dMg3DEspModel_c5IntroEv(dMg3DEspModel_c *);
+/* local extern: {fn,0} address */
+extern "C" void _ZN15dMg3DEspModel_c4WaitEv(dMg3DEspModel_c *);
+/* local extern: {fn,0} address */
+extern "C" void _ZN15dMg3DEspModel_c4IdleEv(dMg3DEspModel_c *);
+
+dMg3DEspModelStateWords pmf_dMg3DEspModel_c_Intro = {_ZN15dMg3DEspModel_c5IntroEv, 0};
+dMg3DEspModelStateWords pmf_dMg3DEspModel_c_Wait = {_ZN15dMg3DEspModel_c4WaitEv, 0};
+dMg3DEspModelStateWords pmf_dMg3DEspModel_c_Idle_3 = {_ZN15dMg3DEspModel_c4IdleEv, 0};
 extern void *sEsp3DTextureAnim;
 extern s16 data_02082214[];
 extern unsigned char data_0209d45c;
@@ -441,7 +455,7 @@ void dMg3DEspModel_c::StartIntro()
     mAnimSet.SetRepeats(3);
     if (mMuted == 0)
         Sound::PlayBank2_2D(0x18e);
-    mState = pmf_dMg3DEspModel_c_Intro;
+    mState = *(dMg3DEspModel_c::State *)&pmf_dMg3DEspModel_c_Intro;
 }
 
 // @symbol _ZN15dMg3DEspModel_c4WaitEv
@@ -464,7 +478,7 @@ void dMg3DEspModel_c::StartWait()
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         &mModelAnim, ((BCA_File **)&gEspCardWaitAnimFile)[1], 0, 0x800, 0);
-    mState = pmf_dMg3DEspModel_c_Wait;
+    mState = *(dMg3DEspModel_c::State *)&pmf_dMg3DEspModel_c_Wait;
 }
 
 // @symbol _ZN15dMg3DEspModel_c4IdleEv
@@ -477,7 +491,7 @@ void dMg3DEspModel_c::Reset()
 {
     mAnimSet.Reset();
     mShowSparks = 0;
-    mState = pmf_dMg3DEspModel_c_Idle_3;
+    mState = *(dMg3DEspModel_c::State *)&pmf_dMg3DEspModel_c_Idle_3;
 }
 
 // @symbol _ZN15dMg3DEspModel_c13InitResourcesEv

@@ -1001,3 +1001,12 @@ void Message::Update() {
     }
     }
 }
+
+#pragma define_section forcedata ".data" ".data" ".data" data_mode=far_abs
+#pragma section forcedata begin
+extern "C" u16 data_0208ee64[4] = { 0x0064, 0x000a, 0x0001, 0x0000 };
+extern "C" u8 data_0208ee6c[8] = { 0xf2, 0xf4, 0xf6, 0xf8, 0xfa, 0xfc, 0xfe, 0x00 };
+#pragma section forcedata end
+extern "C" {
+u8 data_0209d710[60];
+}

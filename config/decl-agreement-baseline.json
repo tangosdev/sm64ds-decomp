@@ -11630,7 +11630,10 @@
       ]
     },
     "data_0208e738": {
-      "src/_ZN5Model23AddToCommonModelDataArrER8BMD_File.cpp": [
+      "src/engine/model/Model.cpp": [
+        "return:int"
+      ],
+      "src/named/arm9/data_0208e738.c": [
         "return:int []"
       ]
     },
@@ -18204,19 +18207,6 @@
     "data_ov072_02122b20": {
       "src/game/actors/d_a_bg_snm_bdy.cpp": [
         "return:SharedFilePtr"
-      ],
-      "src/unnamed/ov072/__sinit_ov072_02122018.c": [
-        "return:char []"
-      ]
-    },
-    "data_ov072_02122b40": {
-      "src/unnamed/ov072/__sinit_ov072_02122018.c": [
-        "return:int []"
-      ]
-    },
-    "data_ov072_02122b58": {
-      "src/unnamed/ov072/__sinit_ov072_02122018.c": [
-        "return:int []"
       ]
     },
     "data_ov072_02122bc4": {
@@ -21033,10 +21023,6 @@
         "arity:0",
         "return:void"
       ],
-      "src/unnamed/ov072/__sinit_ov072_02122018.c": [
-        "arity:0",
-        "return:void"
-      ],
       "src/unnamed/ov072/__sinit_ov072_021221f8.c": [
         "kind:data"
       ],
@@ -21660,9 +21646,6 @@
       ],
       "src/unnamed/ov071/__sinit_ov071_02122a64.c": [
         "return:void"
-      ],
-      "src/unnamed/ov072/__sinit_ov072_02122018.c": [
-        "return:int"
       ],
       "src/unnamed/ov072/__sinit_ov072_021221f8.c": [
         "return:void"

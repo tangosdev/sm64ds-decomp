@@ -23,6 +23,7 @@ src/game/actors/d_a_pg_dfdr.cpp:
     .text start:0x021118c8 end:0x021120c4
     .init start:0x02112df8 end:0x02112f70
     .ctor start:0x02112fcc end:0x02112fd0
+    .data start:0x02113a1c end:0x02113a20
     .bss start:0x02113c6c end:0x02113d04
 
 src/game/actors/d_a_snm_bth.cpp:

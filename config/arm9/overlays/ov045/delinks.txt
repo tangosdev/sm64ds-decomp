@@ -9,6 +9,7 @@ src/game/actors/d_a_obj_km2_agaru.cpp:
     .text start:0x021111a0 end:0x0211150c
     .init start:0x021121a8 end:0x02112214
     .ctor start:0x0211242c end:0x02112430
+    .data start:0x021125d0 end:0x021125f0
     .bss start:0x02113180 end:0x021131a8
 
 src/game/actors/d_a_obj_km2_ami_bou.cpp:
@@ -31,6 +32,7 @@ src/game/actors/d_a_obj_km2_ukishima.cpp:
     .text start:0x02111b14 end:0x02111c30
     .init start:0x021122ec end:0x02112358
     .ctor start:0x02112438 end:0x0211243c
+    .data start:0x02112f08 end:0x02112f14
     .bss start:0x021131f8 end:0x02113220
 
 src/game/actors/d_a_obj_km2_gura.cpp:
@@ -46,4 +48,5 @@ src/game/actors/d_a_obj_km2_fall_block.cpp:
     .text start:0x02111d48 end:0x02111e60
     .init start:0x021123c0 end:0x0211242c
     .ctor start:0x02112440 end:0x02112444
+    .data start:0x021130ac end:0x021130b8
     .bss start:0x02113248 end:0x02113270

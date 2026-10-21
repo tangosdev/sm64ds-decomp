@@ -311,7 +311,7 @@ s32 dScMgJump2_c::InitResources() {
         return 0;
 
     sJump2BackFile = &sJump2Back02ModelFile;
-    bmdFile = Model::LoadFile(*(SharedFilePtr *)&sJump2Back02ModelFile);
+    bmdFile = Model::LoadFile(sJump2Back02ModelFile);
 
     if (((Model *)mModel)->SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);

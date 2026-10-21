@@ -66,6 +66,7 @@ extern "C" {
 int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020bac18(daObjSwdoor_c *self);
+extern CLPS_Block data_ov014_02114578;
 extern ResourceDescriptor data_ov014_021145c4;
 }
 
@@ -127,3 +128,9 @@ s32 daObjBSwdoor_c::CleanupResources()
  * file 1444. The compiler registers each destructor beside the object. */
 BSwdoorModelFilePtr gBAnaShutterModelFile(ASSET_B_ANA_SHUTTER_BMD);
 BSwdoorClsnFilePtr gBAnaShutterCollisionFile(ASSET_B_ANA_SHUTTER_KCL);
+
+extern "C" ResourceDescriptor data_ov014_021145c4 = {
+    &gBAnaShutterModelFile,
+    &gBAnaShutterCollisionFile,
+    &data_ov014_02114578,
+};

@@ -1161,99 +1161,99 @@
         },
         {
           "section": ".data.entry_sprites0",
-          "start": "0x0211c6f0",
-          "end": "0x0211c6f8",
+          "start": "0x211c6f0",
+          "end": "0x211c6f8",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites1",
-          "start": "0x0211c708",
-          "end": "0x0211c710",
+          "start": "0x211c708",
+          "end": "0x211c710",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites2",
-          "start": "0x0211c720",
-          "end": "0x0211c728",
+          "start": "0x211c720",
+          "end": "0x211c728",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites3",
-          "start": "0x0211c730",
-          "end": "0x0211c738",
+          "start": "0x211c730",
+          "end": "0x211c738",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites4",
-          "start": "0x0211c778",
-          "end": "0x0211c780",
+          "start": "0x211c778",
+          "end": "0x211c780",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites5",
-          "start": "0x0211c7c0",
-          "end": "0x0211c7c8",
+          "start": "0x211c7c0",
+          "end": "0x211c7c8",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites6",
-          "start": "0x0211c870",
-          "end": "0x0211c878",
+          "start": "0x211c870",
+          "end": "0x211c878",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites7",
-          "start": "0x0211c890",
-          "end": "0x0211c898",
+          "start": "0x211c890",
+          "end": "0x211c898",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_meta0",
-          "start": "0x0211c8e0",
-          "end": "0x0211c968",
+          "start": "0x211c8e0",
+          "end": "0x211c968",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_meta2",
-          "start": "0x0211ca1c",
-          "end": "0x0211ca4c",
+          "start": "0x211ca1c",
+          "end": "0x211ca4c",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_meta3",
-          "start": "0x0211cac4",
-          "end": "0x0211cb84",
+          "start": "0x211cac4",
+          "end": "0x211cb84",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites11",
-          "start": "0x0211d084",
-          "end": "0x0211d0c4",
+          "start": "0x211d084",
+          "end": "0x211d0c4",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_sprites12",
-          "start": "0x0211d144",
-          "end": "0x0211d264",
+          "start": "0x211d144",
+          "end": "0x211d264",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".data.entry_meta4",
-          "start": "0x0211d2fc",
-          "end": "0x0211d34c",
+          "start": "0x211d2fc",
+          "end": "0x211d34c",
           "differingBytes": 0,
           "firstDiff": null
         }

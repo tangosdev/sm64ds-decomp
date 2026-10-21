@@ -67,8 +67,11 @@ bool ApproachLinear(short &value, short target, short step);
 /* C-linkage declarations for the remaining raw entry points and shared data. */
 extern "C" {
 
-/* -- the state table __sinit_ov084_02130654 fills in -- */
-extern PknStatePMF data_ov084_02130e80[];
+/* State table. BSS image is zero. __sinit_ov084_02130654 copies nine
+ * pointer-to-member descriptors in; the other three slots stay zero.
+ * The recoil handle at 0x02130e0c stays the ROM copy: it is not adjacent,
+ * and one .bss section cannot cover both. */
+PknStatePMF data_ov084_02130e80[12];
 
 /* -- other modules -- */
 void  LoadBlueCoinModel(void *c);
@@ -812,3 +815,8 @@ void daPkn_c::Die()
     mState = 5;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e24.file, 0x40000000, 0x1000, 0);
 }
+
+#pragma define_section forcerodata ".rodata" ".rodata" ".rodata" data_mode=far_abs
+#pragma section forcerodata begin
+extern "C" u8 data_ov084_021302ec[8] = { 0x00, 0x03, 0x04, 0x05, 0x06, 0x00, 0x00, 0x00 };
+#pragma section forcerodata end

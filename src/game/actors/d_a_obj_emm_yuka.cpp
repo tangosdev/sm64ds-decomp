@@ -185,3 +185,11 @@ extern "C" daObjEmmYuka_c *daObjEmmYuka_c_classInit()
  * and .collision point at them. */
 EmmYukaModelFilePtr gEmmYukaModelFile(ASSET_EMM_YUKA_BMD);
 EmmYukaCollisionFilePtr gEmmYukaCollisionFile(ASSET_EMM_YUKA_KCL);
+
+/* Twelve bytes. The third word is ov064's CLPS block. */
+extern "C" CLPS_Block data_ov064_0211ba0c;
+extern "C" EmmYukaFiles data_ov052_021125a0 = {
+    &gEmmYukaModelFile,
+    &gEmmYukaCollisionFile,
+    &data_ov064_0211ba0c,
+};

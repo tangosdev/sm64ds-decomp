@@ -1592,3 +1592,11 @@ void Message::ResetAllGlobals()
     func_0201eaac();
     data_0209d660 = 0;
 }
+
+#pragma define_section forcedata ".data" ".data" ".data" data_mode=far_abs
+#pragma section forcedata begin
+extern "C" u8 data_0208ee74[12] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x00, 0x00 };
+#pragma section forcedata end
+extern "C" {
+s32 data_0209d74c[960];
+}

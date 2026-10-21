@@ -151,7 +151,7 @@ void func_0205a358(int a0, int a1, int a2, int a3, int a4);
 void func_02059fa8(int ch);
 extern Vec3 data_02099f88;
 extern u32 data_020a4bd4;
-extern int data_02082190;
+extern int data_02082190[];
 extern void *data_020a4bd0;
 extern u8 data_020a4bbc;
 extern u16 data_02099f94[8];
@@ -748,3 +748,8 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
         } while (i < ((RenderInfo *)modelFile)->count);
     }
 }
+
+#pragma define_section forcerodata ".rodata" ".rodata" ".rodata" data_mode=far_abs
+#pragma section forcerodata begin
+extern "C" int data_02082190[12] = { 0x00001000, 0x00000000, 0x00000000, 0x00000000, 0x00001000, 0x00000000, 0x00000000, 0x00000000, 0x00001000, 0x00000000, 0x00000000, 0x00000000 };
+#pragma section forcerodata end

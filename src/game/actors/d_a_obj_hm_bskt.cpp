@@ -43,7 +43,15 @@ enum d_a_obj_hm_bskt_AssetId {
 #include "SharedFilePtr.h"
 
 struct KCL_File;
-struct CLPS_Block;
+
+/* Headers only forward-declare CLPS_Block. */
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 rest[4];
+};
 
 /* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
  * cartridge's ctor/dtor imports are the functions the wrappers' aliases name. */
@@ -64,7 +72,13 @@ struct HmBsktCollisionFilePtr : SharedFilePtr {
 extern "C" {
 extern HmBsktCollisionFilePtr data_ov030_02115c80; /* the KCL */
 extern HmBsktModelFilePtr data_ov030_02115c88;     /* the BMD */
-extern CLPS_Block data_ov030_02114ee4;
+CLPS_Block data_ov030_02114ee4 = {
+    0x53504c43,
+    0x00010008,
+    0x01000fc0,
+    0x000000ff,
+    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 
 int func_ov030_0211124c(char *c, char *mc);
 

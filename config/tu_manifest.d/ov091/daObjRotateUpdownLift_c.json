@@ -29,6 +29,11 @@
       "end": "0x02134b6c"
     },
     {
+      "name": ".data",
+      "start": "0x02134ba0",
+      "end": "0x02134bc4"
+    },
+    {
       "name": ".bss",
       "start": "0x02135440",
       "end": "0x02135490"
@@ -127,7 +132,29 @@
       "ordinal": 12
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov091_02134ba0",
+      "address": "0x02134ba0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "VariantWords clip-cap triple {0x200000,0x200000,0x500000}; InitResources copies it by variant"
+    },
+    {
+      "symbol": "data_ov091_02134bac",
+      "address": "0x02134bac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "VariantWords shadow-base-Y triple {0x3c000,0x3c000,0x78000}"
+    },
+    {
+      "symbol": "data_ov091_02134bb8",
+      "address": "0x02134bb8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "VariantWords shadow-size-Z triple {0x32000,0x32000,0x78000}"
+    }
+  ],
   "bss": [
     {
       "symbol": "gHsUpdownLiftModelFile",
@@ -410,6 +437,13 @@
           "section": ".ctor",
           "start": "0x02134b68",
           "end": "0x02134b6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02134ba0",
+          "end": "0x02134bc4",
           "differingBytes": 0,
           "firstDiff": null
         },

@@ -28,6 +28,11 @@
       "end": "0x02108110"
     },
     {
+      "name": ".data",
+      "start": "0x02109cf0",
+      "end": "0x02109db8"
+    },
+    {
       "name": ".bss",
       "start": "0x0210e124",
       "end": "0x0210e14c"
@@ -91,7 +96,34 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI20daObjCannonShutter_c",
+      "address": "0x02109cf0",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI. The base word is _ZTI10dBgActor_c"
+    },
+    {
+      "symbol": "_ZTS20daObjCannonShutter_c",
+      "address": "0x02109cfc",
+      "size": "0x17",
+      "evidence": "compiler-emitted type-name string 20daObjCannonShutter_c"
+    },
+    {
+      "symbol": "g_profile_CANNON_SHUTTER",
+      "address": "0x02109d14",
+      "size": "0x1c",
+      "evidence": "actor profile. classInit relocates to daObjCannonShutter_c_classInit; the id, draw order, flags, and culling words match retail"
+    },
+    {
+      "symbol": "_ZTV20daObjCannonShutter_c",
+      "address": "0x02109d38",
+      "emitted_storage_address": "0x02109d30",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "compiler storage includes the two-word ABI preamble at 0x02109d30; the public address point is eight bytes later"
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_cannon_shutter.cpp",
@@ -167,6 +199,376 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02109cf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 8,
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109cf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZTS20daObjCannonShutter_c",
+      "target_module": "ov002",
+      "target_address": "0x02109cfc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109cf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZTI10dBgActor_c",
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "daObjCannonShutter_c_classInit",
+      "target_module": "ov002",
+      "target_address": "0x020bcccc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZTI20daObjCannonShutter_c",
+      "target_module": "ov002",
+      "target_address": "0x02109cf0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN20daObjCannonShutter_c13InitResourcesEv",
+      "target_module": "ov002",
+      "target_address": "0x020bcc20"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN20daObjCannonShutter_c16CleanupResourcesEv",
+      "target_module": "ov002",
+      "target_address": "0x020bc9b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN20daObjCannonShutter_c8BehaviorEv",
+      "target_module": "ov002",
+      "target_address": "0x020bca78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN20daObjCannonShutter_c6RenderEv",
+      "target_module": "ov002",
+      "target_address": "0x020bc9f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN20daObjCannonShutter_cD1Ev",
+      "target_module": "ov002",
+      "target_address": "0x020bc8f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN20daObjCannonShutter_cD0Ev",
+      "target_module": "ov002",
+      "target_address": "0x020bc938"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109d9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109da0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109da4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109da8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109dac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109db0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109db4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "target_module": "ov002",
+      "target_address": "0x020ee55c"
+    },
     {
       "section": ".init",
       "source": "0x02101978",
@@ -324,7 +726,8 @@
     "PROMOTED AND ENROLLED 2026-08-30. config/arm9/overlays/ov002/delinks.txt now licenses the whole 0x020bc8f4..0x020bccfc run to src/game/actors/d_a_obj_cannon_shutter.cpp; the eight legacy per-function sources are deleted. MEASURED: python tools/rombuild.py -j 16 reports 106/106 exact, 0 mismatching of 11,088 reproducing functions, with the same invocation on origin/main @ ec8fe22d6 also 106/106. python tools/romdata_check.py over this TU and daObjFl_Fall_Block_c reports 9 VERIFIED / 7 PARTIAL / 0 DIFFERS.",
     "ONE ABI SEAM CANNOT BE WRITTEN AS A MEMBER CALL, and it is measured, not assumed. InitResources reaches dBgW_KcMbg::SetFile, whose third parameter is a by-value Fix12<int> -- a bare aggregate with no constructor (include/math/Fix12.h), so materialising one costs stack traffic the ROM does not spend. Written as mMeshCollider.SetFile(...), build/final_link.o.xMAP showed '020BCC20 000000B8 .text daObjCannonShutter_c::InitResources()' against the cartridge's 0xAC. Those 12 bytes pushed daObjCannonShutter_c_classInit to 0x020BCCD8 (ROM 0x020BCCCC) and overflowed this entry's own range end 0x020BCCFC; because ov002 is the overlay every later overlay loads behind, ov002 growing shifted 69 modules and module fidelity fell to 20/106. The call keeps the mangled spelling for that reason and that reason only. Same wall for dBgActor_c::IsClsnInRangeOnScreen(Fix12<int>, Fix12<int>), which src/game/actors/d_a_obj_pushblock.cpp already spells mangled for the identical cause.",
     "Leftover cleanup folded daObjCannonShutter_c_classInit as return new daObjCannonShutter_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. The factory instantiates the class and mwcc re-emits _ZN10dBgActor_cD2Ev as a compiler-only helper; licensed as deadstrip.",
-    "The TU owns its two resource handles outright: CannonShutterModelFilePtr data_ov002_0210e12c(0x45f) and CannonShutterClsnFilePtr data_ov002_0210e124(0x460) are defined at file end in retail initializer order, so mwcc emits __sinit_d_a_obj_cannon_shutter.cpp itself; the handwritten src/unnamed/ov002/__sinit_ov002_02101968.c is retired."
+    "The TU owns its two resource handles outright: CannonShutterModelFilePtr data_ov002_0210e12c(0x45f) and CannonShutterClsnFilePtr data_ov002_0210e124(0x460) are defined at file end in retail initializer order, so mwcc emits __sinit_d_a_obj_cannon_shutter.cpp itself; the handwritten src/unnamed/ov002/__sinit_ov002_02101968.c is retired.",
+    "_ZTI20daObjCannonShutter_c, _ZTS20daObjCannonShutter_c, _ZTI20daObjCannonShutter_c, _ZTS20daObjCannonShutter_c, g_profile_CANNON_SHUTTER and _ZTV20daObjCannonShutter_c are this entry's .data (0x02109cf0..0x02109db8). The vtable's public address is the address point; its two-word preamble is the compiler storage at 0x02109d30. The base typeinfo _ZTI10dBgActor_c stays deadstrip-data. data_ov002_0210d7f4 stays the ROM copy."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -445,6 +848,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02109cf0",
+          "end": "0x02109db8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0210e124",
           "end": "0x0210e14c",
@@ -453,7 +863,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 18
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -477,6 +887,21 @@
             ],
             "desired": [
               47
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              19,
+              23,
+              24,
+              26
+            ],
+            "desired": [
+              19,
+              23,
+              24,
+              26
             ]
           },
           {
@@ -645,34 +1070,6 @@
       "canonical_module": "ov002",
       "canonical_address": "0x02108a04",
       "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
-    },
-    {
-      "symbol": "_ZTI20daObjCannonShutter_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02109cf0",
-      "reason": "the class's own __si_class_type_info record -- ABI kind word, name relocation and single-base relocation, all three read out of the cartridge and reproduced here. MEASURED: the cartridge carries this record under this exact name at ov002:0x02109cf0 -- daObjCannonShutter_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
-    },
-    {
-      "symbol": "_ZTS20daObjCannonShutter_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02109cfc",
-      "reason": "the class's own length-prefixed type-name string. MEASURED: the cartridge carries this record under this exact name at ov002:0x02109cfc -- daObjCannonShutter_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
-    },
-    {
-      "symbol": "g_profile_CANNON_SHUTTER",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02109d14",
-      "reason": "typed 0x1c actor/process profile descriptor; its classInit relocation and every profile/order/flag/culling word reproduce the retail object before text-only isolation discards it"
-    },
-    {
-      "symbol": "_ZTV20daObjCannonShutter_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02109d38",
-      "reason": "the class's own vtable storage. This TU declares the class, so mwcc emits the table as vague linkage. MEASURED: the cartridge carries this record under this exact name at ov002:0x02109d38 -- daObjCannonShutter_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",

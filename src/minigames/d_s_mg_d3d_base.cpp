@@ -30,7 +30,11 @@ extern "C" {
 /* ov006's own data. */
 extern void *sD3DSubObjPalette;
 extern void *sMgSubCamera;
-extern Oam sD3DOamShadow[];
+/* C, not C++: a C++ definition of this array emits an empty __sinit, and
+   0x02130a04 is already __sinit_ov006_02130a04. 128 entries, 8 bytes each. */
+#pragma cplusplus off
+Oam sD3DOamShadow[128];
+#pragma cplusplus on
 extern unsigned char sD3DSoundPanOffsets[];
 
 /* arm9 / ov004 globals with no project header. */
@@ -461,3 +465,8 @@ void dScMgD3DBase_c::RestoreScreenFromMenu()
 }
 
 /* The destructor is inline in the header (see the banner). */
+
+#pragma define_section forcerodata ".rodata" ".rodata" ".rodata" data_mode=far_abs
+#pragma section forcerodata begin
+extern "C" unsigned char sD3DSoundPanOffsets[8] = { 0x00, 0x40, 0x80, 0xc0, 0xc0, 0x00, 0x00, 0x00 };
+#pragma section forcerodata end

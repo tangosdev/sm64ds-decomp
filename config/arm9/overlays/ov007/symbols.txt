@@ -882,7 +882,7 @@ data_ov007_020cdad4 kind:data(any) addr:0x020cdad4
 data_ov007_020cdaec kind:data(any) addr:0x020cdaec
 data_ov007_020cdb04 kind:data(any) addr:0x020cdb04
 data_ov007_020cdb1c kind:data(any) addr:0x020cdb1c
-sPortraitStrokeCounts kind:data(any) addr:0x020cdb34 local
+sPortraitStrokeCounts kind:data(any) addr:0x020cdb34
 data_ov007_020cdb4c kind:data(any) addr:0x020cdb4c
 data_ov007_020cdb64 kind:data(any) addr:0x020cdb64
 data_ov007_020cdb7c kind:data(any) addr:0x020cdb7c
@@ -1117,10 +1117,10 @@ data_ov007_020d7e20 kind:data(any) addr:0x020d7e20
 data_ov007_020d7e28 kind:data(any) addr:0x020d7e28
 data_ov007_020d7e38 kind:data(any) addr:0x020d7e38
 data_ov007_020d7e50 kind:data(any) addr:0x020d7e50
-sPortraitStrokePointCounts kind:data(any) addr:0x020d7e68 local
-sPortraitStrokeXCoords kind:data(any) addr:0x020d7e80 local
-sPortraitStrokeYCoords kind:data(any) addr:0x020d7e98 local
-sPortraitStrokeProgressThresholds kind:data(any) addr:0x020d7eb0 local
+sPortraitStrokePointCounts kind:data(any) addr:0x020d7e68
+sPortraitStrokeXCoords kind:data(any) addr:0x020d7e80
+sPortraitStrokeYCoords kind:data(any) addr:0x020d7e98
+sPortraitStrokeProgressThresholds kind:data(any) addr:0x020d7eb0
 data_ov007_020d7ec8 kind:data(any) addr:0x020d7ec8
 data_ov007_020d7ee8 kind:data(any) addr:0x020d7ee8
 data_ov007_020d7f0c kind:data(any) addr:0x020d7f0c

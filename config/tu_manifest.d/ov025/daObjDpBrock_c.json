@@ -29,6 +29,11 @@
       "end": "0x02112b24"
     },
     {
+      "name": ".data",
+      "start": "0x02112ce8",
+      "end": "0x02112d08"
+    },
+    {
       "name": ".bss",
       "start": "0x02113ab0",
       "end": "0x02113ad8"
@@ -99,7 +104,15 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov025_02112ce8",
+      "address": "0x02112ce8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block SetFile takes; magic, stride 8, count 1, one entry"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov025_02113ab0",
@@ -249,6 +262,13 @@
           "section": ".ctor",
           "start": "0x02112b20",
           "end": "0x02112b24",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02112ce8",
+          "end": "0x02112d08",
           "differingBytes": 0,
           "firstDiff": null
         },

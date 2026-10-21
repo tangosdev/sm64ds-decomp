@@ -6546,3 +6546,9 @@ extern "C" void *dScMgSmartball_c_classInit(void) {
 
 // @symbol SmartballObj_ElemCtor
 extern "C" void SmartballObj_ElemCtor(void) {}
+
+#pragma define_section forcerodata ".rodata" ".rodata" ".rodata" data_mode=far_abs
+#pragma section forcerodata begin
+extern "C" int sSmartballCellScores[4] = { 0x000001f4, 0x000007d0, 0x00000fa0, 0x00001f40 };
+#pragma section forcerodata end
+extern "C" int data_ov006_02142c40[32];

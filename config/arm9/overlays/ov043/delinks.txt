@@ -18,6 +18,7 @@ src/game/actors/d_a_obj_km1_ukishima.cpp:
     .text start:0x021111a0 end:0x021113fc
     .init start:0x021117fc end:0x02111868
     .ctor start:0x02111ae8 end:0x02111aec
+    .data.gap2 start:0x02111c00 end:0x02111c40
     .bss start:0x021125e0 end:0x02112608
 
 src/game/actors/d_a_obj_km1_kurumajiku.cpp:
@@ -25,6 +26,7 @@ src/game/actors/d_a_obj_km1_kurumajiku.cpp:
     .text start:0x021113fc end:0x02111518
     .init start:0x02111868 end:0x021118d4
     .ctor start:0x02111aec end:0x02111af0
+    .data start:0x02112344 end:0x02112350
     .bss start:0x02112608 end:0x02112630
 
 src/game/actors/d_a_obj_km1_kuruma.cpp:

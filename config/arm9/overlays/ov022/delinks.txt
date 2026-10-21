@@ -16,6 +16,7 @@ src/game/actors/d_a_obj_fl_koma_d.cpp:
     .text start:0x021115a8 end:0x021116c4
     .init start:0x02112d14 end:0x02112d80
     .ctor start:0x021130fc end:0x02113100
+    .data start:0x02113da8 end:0x02113db0
     .bss start:0x02114528 end:0x02114550
 
 src/game/actors/d_a_obj_fl_block.cpp:
@@ -45,19 +46,28 @@ src/game/actors/d_a_obj_fl_ukiyuka.cpp:
     .text start:0x02111f6c end:0x02112130
     .init start:0x02112ec0 end:0x02112f78
     .ctor start:0x0211310c end:0x02113110
+    .data start:0x021140d4 end:0x021140ec
     .bss start:0x021145c8 end:0x02114618
 
 src/game/actors/d_a_obj_fl_uki_ki.cpp:
     complete
     .text start:0x02112130 end:0x02112380
 
+src/unnamed/ov022/__sinit_ov022_02112f78.c:
+    complete
+    .init start:0x02112f78 end:0x02112fe4
+
 src/game/actors/d_a_obj_fl_fall_block.cpp:
     complete
     .text start:0x02112380 end:0x02112498
     .init start:0x02112fe4 end:0x02113050
     .ctor start:0x02113114 end:0x02113118
+    .data start:0x0211427c end:0x02114288
     .bss start:0x02114640 end:0x02114668
 
+src/unnamed/ov022/__sinit_ov022_02113050.c:
+    complete
+    .init start:0x02113050 end:0x021130bc
 src/game/actors/d_a_obj_fl_maruta.cpp:
     complete
     .text start:0x02112498 end:0x02112950
@@ -65,10 +75,3 @@ src/game/actors/d_a_obj_fl_maruta.cpp:
     .ctor start:0x0211311c end:0x02113120
     .bss start:0x02114690 end:0x021146a0
 
-src/unnamed/ov022/__sinit_ov022_02112f78.c:
-    complete
-    .init start:0x02112f78 end:0x02112fe4
-
-src/unnamed/ov022/__sinit_ov022_02113050.c:
-    complete
-    .init start:0x02113050 end:0x021130bc

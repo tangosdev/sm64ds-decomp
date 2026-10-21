@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x0206dab4",
       "end": "0x0206ece0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a9ecc",
+      "end": "0x020a9ed0"
     }
   ],
   "functions": [
@@ -223,7 +228,14 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_020a9ecc",
+      "address": "0x020a9ecc",
+      "size": "0x4",
+      "kind": "FP0206dbf8 (function pointer: void (*)(void))"
+    }
+  ],
   "compiler_only_output": [],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
@@ -259,7 +271,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/arm9-cstd4/link (gitignored)",
       "phases": {
         "delink": true,
@@ -283,22 +295,14 @@
           "end": "0x0206ece0",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a9ecc",
+          "end": "0x020a9ed0",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 29
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
@@ -327,8 +331,8 @@
         "bytes": 16777216,
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
-      },
-      "linkerOutput": null
+      }
     }
-  }
+  },
+  "production_mode": "intact-object"
 }

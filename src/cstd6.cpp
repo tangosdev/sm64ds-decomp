@@ -19,7 +19,7 @@ extern int func_020589d4(void *p);
 extern void func_02058b08(void *p);
 extern void func_02058a94(void *p);
 extern int func_0206dbf8(int a);
-extern int data_020aa0ac;
+extern int data_020aa0ac[];
 extern char *data_020a6134[];
 extern struct G { char p[0x1c]; int v; } data_020a9fd8;
 extern struct G data_020a9ffc;
@@ -242,4 +242,8 @@ unsigned int func_02070348(void)
     data_0209a624 = s;
     return (s >> 16) & 0x7fff;
 }
+}
+
+extern "C" {
+int data_020aa0ac[10];
 }

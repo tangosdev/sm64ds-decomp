@@ -28,6 +28,11 @@
       "end": "0x0211e708"
     },
     {
+      "name": ".data",
+      "start": "0x0211eb10",
+      "end": "0x0211eb1c"
+    },
+    {
       "name": ".bss",
       "start": "0x0211ef58",
       "end": "0x0211ef80"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov063_0211eb10",
+      "address": "0x0211eb10",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor: model gThDownBModelFile, collision gThDownBCollisionFile, CLPS data_ov063_0211ec98"
+    }
+  ],
   "bss": [
     {
       "symbol": "gThDownBCollisionFile",
@@ -230,6 +243,13 @@
           "section": ".ctor",
           "start": "0x0211e704",
           "end": "0x0211e708",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211eb10",
+          "end": "0x0211eb1c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -661,6 +681,36 @@
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211e590"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211eb10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThDownBModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef60"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211eb14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThDownBCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef58"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211eb18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ec98",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ec98"
     }
   ]
 }

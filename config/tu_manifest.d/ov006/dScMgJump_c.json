@@ -33,6 +33,11 @@
       "end": "0x021335a8"
     },
     {
+      "name": ".data",
+      "start": "0x0213cb4c",
+      "end": "0x0213cb8c"
+    },
+    {
       "name": ".bss",
       "start": "0x02142188",
       "end": "0x021421b0"
@@ -166,7 +171,64 @@
       "ordinal": 17
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dScMgJump_c_State_Result",
+      "address": "0x0213cb4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee3ec, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Intro",
+      "address": "0x0213cb54",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee5b8, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_End",
+      "address": "0x0213cb5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee44c, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "g_profile_MG_JUMP",
+      "address": "0x0213cb64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "MG_JUMP registry profile; the first word relocates to dScMgJump_c_classInit (0x020eeafc) and the halfword pair 0x0174, 0x0174 matches retail"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Final",
+      "address": "0x0213cb6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee2c4, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Idle",
+      "address": "0x0213cb74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee2c0, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Idle_2",
+      "address": "0x0213cb7c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee2c0, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Play",
+      "address": "0x0213cb84",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee508, 0}; Behavior copies it into mState"
+    }
+  ],
   "bss": [
     {
       "symbol": "gJumpBack02ModelFile",
@@ -317,6 +379,13 @@
           "section": ".ctor",
           "start": "0x021335a4",
           "end": "0x021335a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213cb4c",
+          "end": "0x0213cb8c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -707,6 +776,86 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130e9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c12State_ResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee3ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c11State_IntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee5b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c9State_EndEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee44c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "dScMgJump_c_classInit",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eeafc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c11State_FinalEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee2c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c10State_IdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee2c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c10State_IdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee2c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c10State_PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee508"
     }
   ]
 }

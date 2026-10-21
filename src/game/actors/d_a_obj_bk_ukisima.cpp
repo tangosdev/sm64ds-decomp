@@ -62,6 +62,7 @@ int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
 int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov015_021147a4;
 extern s16 data_ov015_02114794;
+extern CLPS_Block data_ov015_02113614;
 }
 
 // @symbol daObjBk_Ukisima_c_classInit
@@ -85,3 +86,12 @@ s32 daObjBk_Ukisima_c::CleanupResources()
 /* Retail construction order. mwcc emits __sinit_d_a_obj_bk_ukisima.cpp. */
 UkisimaModelFilePtr gBkUkisimaModelFile(ASSET_BK_UKISIMA_BMD);
 UkisimaClsnFileHandle gBkUkisimaCollisionFile(ASSET_BK_UKISIMA_KCL);
+
+/* The descriptor InitResources and CleanupResources hand to the shared
+ * ov002 helpers. Its CLPS_Block is the shared .data run's record, not
+ * this file's. */
+ResourceDescriptor data_ov015_021147a4 = {
+    &gBkUkisimaModelFile,
+    &gBkUkisimaCollisionFile,
+    &data_ov015_02113614,
+};

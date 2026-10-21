@@ -69,3 +69,11 @@ int daObjKi_Ita_c::InitResources()
  * handle, then the collision handle. */
 KiItaModelFilePtr data_ov016_02114e44(1601);
 KiItaCollisionFilePtr data_ov016_02114e4c(1602);
+
+/* Model, collision, CLPS. The CLPS block at 0x02113bec belongs to another run. */
+extern "C" CLPS_Block data_ov016_02113bec;
+extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c = {
+    &data_ov016_02114e44,
+    &data_ov016_02114e4c,
+    &data_ov016_02113bec,
+};

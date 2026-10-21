@@ -9,6 +9,7 @@ src/game/actors/d_a_obj_sm_lift.cpp:
     .text start:0x021111a0 end:0x02111848
     .init start:0x02112c14 end:0x02112c80
     .ctor start:0x02112e6c end:0x02112e70
+    .data start:0x02112f48 end:0x02112f68
     .bss start:0x02113bc0 end:0x02113be8
 
 src/game/actors/d_a_pg_mthr.cpp:

@@ -29,6 +29,11 @@
       "end": "0x02113acc"
     },
     {
+      "name": ".data",
+      "start": "0x02114b8c",
+      "end": "0x02114b98"
+    },
+    {
       "name": ".bss",
       "start": "0x02114e44",
       "end": "0x02114e6c"
@@ -64,7 +69,15 @@
       "ordinal": 3
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov016_02114b8c",
+      "address": "0x02114b8c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model pointer data_ov016_02114e44, collision pointer data_ov016_02114e4c, CLPS pointer data_ov016_02113bec. The CLPS block stays in another run."
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov016_02114e44",
@@ -234,6 +247,13 @@
           "section": ".ctor",
           "start": "0x02113ac8",
           "end": "0x02113acc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02114b8c",
+          "end": "0x02114b98",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -626,6 +646,36 @@
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x021139e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114b8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov016_02114e44",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e44"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114b90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov016_02114e4c",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114b94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov016_02113bec",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02113bec"
     }
   ]
 }

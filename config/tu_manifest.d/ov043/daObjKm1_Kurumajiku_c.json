@@ -20,6 +20,11 @@
       "end": "0x02111518"
     },
     {
+      "name": ".data",
+      "start": "0x02112344",
+      "end": "0x02112350"
+    },
+    {
       "name": ".init",
       "start": "0x02111868",
       "end": "0x021118d4"
@@ -72,7 +77,14 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov043_02112344",
+      "address": "0x02112344",
+      "size": "0xc",
+      "evidence": "ResourceDescriptor {model, kcl, clps}: model and kcl relocate to this TU's own bss file handles gKm1KurumajikuModelFile (file ID 1621) and gKm1KurumajikuCollisionFile (1622); clps relocates to the module-shared data_ov043_02111bc0, which remains ROM-owned"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm1KurumajikuModelFile",
@@ -332,6 +344,13 @@
           "section": ".text",
           "start": "0x021113fc",
           "end": "0x02111518",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02112344",
+          "end": "0x02112350",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -667,6 +686,36 @@
       "addend": 0,
       "target_module": "ov043",
       "target_address": "0x02111868"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumajikuModelFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112610"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112348",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumajikuCollisionFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112608"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211234c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111bc0",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111bc0"
     }
   ]
 }

@@ -66,8 +66,14 @@ int func_ov002_020b6c54(daObjKm1_Kurumajiku_c *self,
                         ResourceDescriptor *descriptor, unsigned actorID);
 int func_ov002_020b6ac8(daObjKm1_Kurumajiku_c *self,
                         ResourceDescriptor *descriptor);
+extern CLPS_Block data_ov043_02111bc0;
+extern Km1KurumajikuModelFilePtr gKm1KurumajikuModelFile;
+extern Km1KurumajikuCollisionFilePtr gKm1KurumajikuCollisionFile;
 extern ResourceDescriptor data_ov043_02112344;
 }
+
+ResourceDescriptor data_ov043_02112344 = {&gKm1KurumajikuModelFile, &gKm1KurumajikuCollisionFile,
+                                          &data_ov043_02111bc0};
 
 /* KM1_KURUMA: the cart this axle drives. The helper Spawns four of them. */
 enum { kCartActorId = 0x88 };

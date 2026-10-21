@@ -28,6 +28,11 @@
       "end": "0x02112e88"
     },
     {
+      "name": ".data",
+      "start": "0x0211304c",
+      "end": "0x0211306c"
+    },
+    {
       "name": ".bss",
       "start": "0x02114324",
       "end": "0x0211434c"
@@ -116,7 +121,15 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov029_0211304c",
+      "address": "0x0211304c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "32 ROM bytes passed to SetFile; tag CLPS, stride 8 at +4, two entries, no relocation"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov029_02114324",
@@ -448,6 +461,13 @@
           "section": ".ctor",
           "start": "0x02112e84",
           "end": "0x02112e88",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211304c",
+          "end": "0x0211306c",
           "differingBytes": 0,
           "firstDiff": null
         },

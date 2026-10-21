@@ -178,6 +178,10 @@ FRingModelFilePtr data_ov060_0211b208(ASSET_KPA_SHWAVE_BMD);
 FRingAnimationFileHandle data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
 FRingTexSequenceFilePtr data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
 
+/* 20.12 band scales. Behavior multiplies the frame reach by these four
+ * words. symbols.txt names only the first. */
+extern "C" int data_ov060_0211ab20[4] = {0x787, 0x800, 0xf0f, 0x1000};
+
 /* return new builds the ring and its eight animators. */
 // @symbol daFRing_c_classInit
 extern "C" daFRing_c *daFRing_c_classInit(void)

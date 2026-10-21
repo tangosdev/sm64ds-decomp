@@ -432,6 +432,17 @@ extern "C" daObjBk_Botaosi_c *daObjBk_Botaosi_c_classInit()
 
 /* The ROM's initializer constructs the model handle with file ID 1417 and
  * the collision handle with file ID 1418, registering a destructor node for
- * each. mwcc emits __sinit_d_a_obj_bk_botaosi.cpp from these definitions. */
+ * each. mwcc emits __sinit_d_a_obj_bk_botaosi.cpp from these definitions.
+ * data_ov015_02113574 is the CLPS block SetFile takes: 'CLPS', stride 8,
+ * one entry, then the bytes through the next symbol. */
 BkBotaosiModelFilePtr data_ov015_0211497c(ASSET_BK_BOTAOSI_BMD);
 BkBotaosiCollisionFilePtr data_ov015_02114974(ASSET_BK_BOTAOSI_KCL);
+
+struct CLPS_Block {
+    u32 w[8];
+};
+typedef char CLPS_Block_size_must_be_0x20[sizeof(CLPS_Block) == 0x20 ? 1 : -1];
+
+extern "C" CLPS_Block data_ov015_02113574 = {
+    0x53504c43, 0x00010008, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};

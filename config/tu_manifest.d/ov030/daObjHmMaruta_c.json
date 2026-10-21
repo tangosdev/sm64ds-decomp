@@ -29,6 +29,11 @@
       "end": "0x02114dd8"
     },
     {
+      "name": ".data",
+      "start": "0x02115a04",
+      "end": "0x02115a10"
+    },
+    {
       "name": ".bss",
       "start": "0x02115ca8",
       "end": "0x02115cd0"
@@ -78,7 +83,15 @@
       "ordinal": 5
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov030_02115a04",
+      "address": "0x02115a04",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor {model, collision, clps}: three ABS32 words relocating to gHmMarutaModelFile (model SharedFilePtr), gHmMarutaCollisionFile (collision SharedFilePtr) and data_ov030_02114f24 (CLPS_Block in unclaimed ROM data)"
+    }
+  ],
   "bss": [
     {
       "symbol": "gHmMarutaModelFile",
@@ -237,6 +250,13 @@
           "section": ".ctor",
           "start": "0x02114dd4",
           "end": "0x02114dd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02115a04",
+          "end": "0x02115a10",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -633,6 +653,36 @@
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x021148b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02115a04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHmMarutaModelFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115ca8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02115a08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHmMarutaCollisionFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115cb0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02115a0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov030_02114f24",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02114f24"
     }
   ]
 }

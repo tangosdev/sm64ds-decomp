@@ -9,6 +9,7 @@ src/game/actors/d_a_btn.cpp:
     .text start:0x02123740 end:0x02126648
     .init start:0x02127618 end:0x021279d4
     .ctor start:0x02127b88 end:0x02127b8c
+    .data start:0x02127ba0 end:0x02127bc0
     .bss start:0x02128140 end:0x021282e0
 
 src/game/actors/d_a_klr.cpp:
@@ -23,6 +24,9 @@ src/game/actors/d_a_obj_bk_killerdai.cpp:
     complete
     .text start:0x02126dbc end:0x021271e4
 
+src/unnamed/ov079/__sinit_ov079_02127a10.c:
+    complete
+    .init start:0x02127a10 end:0x02127acc
 src/game/actors/d_a_obj_bk_kabe.cpp:
     complete
     .text start:0x021271e4 end:0x021275dc
@@ -30,6 +34,3 @@ src/game/actors/d_a_obj_bk_kabe.cpp:
     .ctor start:0x02127b94 end:0x02127b98
     .bss start:0x02128340 end:0x02128390
 
-src/unnamed/ov079/__sinit_ov079_02127a10.c:
-    complete
-    .init start:0x02127a10 end:0x02127acc

@@ -37,7 +37,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x0214250c",
+      "start": "0x021424fc",
       "end": "0x02142558"
     }
   ],
@@ -221,6 +221,34 @@
   "data": [],
   "bss": [
     {
+      "symbol": "sMCarloFirstPick",
+      "address": "0x021424fc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first pick; written at runtime, BSS image is zero"
+    },
+    {
+      "symbol": "sMCarloCards",
+      "address": "0x02142500",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "board list head; written at runtime, BSS image is zero"
+    },
+    {
+      "symbol": "sMCarloCardsTail",
+      "address": "0x02142504",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "board list tail; written at runtime, BSS image is zero"
+    },
+    {
+      "symbol": "sMCarloSecondPick",
+      "address": "0x02142508",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "second pick; written at runtime, BSS image is zero"
+    },
+    {
       "symbol": "sMCarloCardSprites",
       "address": "0x0214250c",
       "size": "0x4c",
@@ -399,7 +427,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x0214250c",
+          "start": "0x021424fc",
           "end": "0x02142558",
           "comparison": "NOBITS -- symbol/module gates"
         }

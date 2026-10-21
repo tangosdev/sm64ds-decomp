@@ -28,6 +28,11 @@
       "end": "0x0211341c"
     },
     {
+      "name": ".data",
+      "start": "0x02114534",
+      "end": "0x0211454c"
+    },
+    {
       "name": ".bss",
       "start": "0x0211499c",
       "end": "0x02114a5c"
@@ -210,7 +215,29 @@
       "ordinal": 24
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_02114534",
+      "address": "0x02114534",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "model-column base; word is the file handle at 0x021149a4"
+    },
+    {
+      "symbol": "data_ov015_02114538",
+      "address": "0x02114538",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision-column base; word is the file handle at 0x021149ac"
+    },
+    {
+      "symbol": "data_ov015_0211453c",
+      "address": "0x0211453c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "first-row clps pointer plus the second resource row; ends before g_profile_BK_DOSSUNBAR_S"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkDossunbarLCollisionFile",
@@ -399,6 +426,13 @@
           "section": ".ctor",
           "start": "0x02113418",
           "end": "0x0211341c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02114534",
+          "end": "0x0211454c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1104,6 +1138,66 @@
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x021144e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114534",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarSModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149a4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarSCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211453c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_021135b4",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021135b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114540",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarLModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114544",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarLCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x0211499c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_02113634",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02113634"
     }
   ]
 }

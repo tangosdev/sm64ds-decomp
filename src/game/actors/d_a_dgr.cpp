@@ -62,6 +62,15 @@ struct DgrCollisionFilePtr : SharedFilePtr {
     ~DgrCollisionFilePtr();
 };
 
+/* Headers only forward-declare CLPS_Block. The last word is its own symbol. */
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 rest[3];
+};
+
 enum {
     kYoshiEggActorID = 9,
     kHoldFrames = 0x20,
@@ -83,7 +92,10 @@ extern void Matrix4x3_FromRotationX(void *mat, int angleX);
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
 extern s16 data_02082214[];
-extern CLPS_Block data_ov025_02112c28;
+CLPS_Block data_ov025_02112c28 = {
+    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, {0xffffffff, 0xffffffff, 0xffffffff},
+};
+u32 data_ov025_02112c44 = 0xffffffff;
 
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(daDgr_c *self, s32 a, s32 b);
 void func_02012694(s32 soundId, void *pos);

@@ -64,7 +64,7 @@ extern "C" {
 
 extern u16 data_02099fcc; // display on (TRUE until GX_DispOff)
 extern int data_02099fd0; // GX DMA channel, -1 if none
-extern u16 data_020a6084; // display mode parked by GX_DispOff
+extern u16 data_020a6084[2]; // parked display mode, padded out to the next symbol
 
 void func_02053d9c(void);
 void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size);
@@ -134,7 +134,7 @@ int func_02053be0(int enable) {
 void func_02053b98(void) {
     u32 cnt = REG_DISPCNT;
     data_02099fcc = 0;
-    data_020a6084 = (u16)((cnt & DISPCNT_MODE_MASK) >> DISPCNT_MODE_SHIFT);
+    data_020a6084[0] = (u16)((cnt & DISPCNT_MODE_MASK) >> DISPCNT_MODE_SHIFT);
     REG_DISPCNT = cnt & ~DISPCNT_MODE_MASK;
 }
 
@@ -145,9 +145,9 @@ namespace GX {
 // @symbol _ZN2GX6DispOnEv
 void DispOn() {
     data_02099fcc = 1;
-    if (data_020a6084 != 0)
+    if (data_020a6084[0] != 0)
         REG_DISPCNT =
-            (REG_DISPCNT & ~DISPCNT_MODE_MASK) | ((u32)data_020a6084 << DISPCNT_MODE_SHIFT);
+            (REG_DISPCNT & ~DISPCNT_MODE_MASK) | ((u32)data_020a6084[0] << DISPCNT_MODE_SHIFT);
     else
         REG_DISPCNT |= DISPMODE_GRAPHICS << DISPCNT_MODE_SHIFT;
 }
@@ -155,13 +155,13 @@ void DispOn() {
 // @symbol _ZN2GX15SetGraphicsModeEiii
 void SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
     u32 cnt = REG_DISPCNT;
-    data_020a6084 = (u16)dispMode;
+    data_020a6084[0] = (u16)dispMode;
     if (data_02099fcc == 0)
         dispMode = 0;
     cnt &= ~(DISPCNT_BGMODE_MASK | DISPCNT_BG0_3D | DISPCNT_MODE_MASK | DISPCNT_VRAM_MASK);
     REG_DISPCNT =
         cnt | (dispMode << DISPCNT_MODE_SHIFT) | bgMode | (bg0As3d << DISPCNT_BG0_3D_SHIFT);
-    if (data_020a6084 == 0)
+    if (data_020a6084[0] == 0)
         data_02099fcc = 0;
 }
 
@@ -191,3 +191,7 @@ void func_02053a90(u16 *reg, int brightness) {
 }
 
 } // extern "C"
+
+extern "C" {
+u16 data_020a6084[2];
+}

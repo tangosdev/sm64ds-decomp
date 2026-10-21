@@ -8,6 +8,7 @@ src/game/actors/d_a_obj_b_swdoor.cpp:
     .text start:0x021111a0 end:0x02111308
     .init start:0x021130ac end:0x02113118
     .ctor start:0x02113368 end:0x0211336c
+    .data start:0x021145c4 end:0x021145d0
     .bss start:0x02114940 end:0x02114968
 
 src/game/actors/d_a_wanwan.cpp:

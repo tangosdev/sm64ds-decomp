@@ -45,6 +45,7 @@ int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020bac18(daObjSwdoor_c *self);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern CLPS_Block data_ov021_02113a00;
 extern ResourceDescriptor data_ov021_021148d0;
 }
 
@@ -113,3 +114,9 @@ s32 daObjCvShutter_c::CleanupResources()
  * handle, then the collision handle. */
 CvShutterModelFilePtr gCvShutterModelFile(ASSET_CV_SHUTTER_BMD);
 CvShutterCollisionFilePtr gCvShutterCollisionFile(ASSET_CV_SHUTTER_KCL);
+
+extern "C" ResourceDescriptor data_ov021_021148d0 = {
+    &gCvShutterModelFile,
+    &gCvShutterCollisionFile,
+    &data_ov021_02113a00,
+};

@@ -90,7 +90,7 @@ int func_0206dac4(int a)
 typedef void (*FP0206dbf8)(void);
 
 extern int data_020a9ed4;
-extern FP0206dbf8 data_020a9ecc;
+FP0206dbf8 data_020a9ecc;
 void func_02072f3c(void);
 
 // @symbol func_0206dbf8

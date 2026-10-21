@@ -28,6 +28,12 @@
       "end": "0x02111aec"
     },
     {
+      "name": ".data.gap2",
+      "input_section": ".data",
+      "start": "0x02111c00",
+      "end": "0x02111c40"
+    },
+    {
       "name": ".bss",
       "start": "0x021125e0",
       "end": "0x02112608"
@@ -84,7 +90,22 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov043_02111c00",
+      "address": "0x02111c00",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block SetFile already takes; two entries, stride 8"
+    },
+    {
+      "symbol": "data_ov043_02111c20",
+      "address": "0x02111c20",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "next CLPS block, one entry, stride 8; symbols.txt marks it ambiguous"
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_km1_ukishima.cpp",
@@ -437,6 +458,13 @@
           "section": ".ctor",
           "start": "0x02111ae8",
           "end": "0x02111aec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.gap2",
+          "start": "0x02111c00",
+          "end": "0x02111c40",
           "differingBytes": 0,
           "firstDiff": null
         },
