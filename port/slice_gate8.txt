@@ -22,9 +22,8 @@ src/engine/collision/d_bg_ch_lin.cpp
 # to name separately all live in it.
 src/engine/collision/d_bg_w.cpp
 src/Vec3_Dist.c
-src/func_020353d4.c
-src/func_02035408.c
-src/func_0203543c.c
+# func_020353d4, func_02035408 and func_0203543c live in this file now.
+src/unnamed/arm9/0203/func_02035354.c
 # func_0203545c, func_0203547c and func_020354b0 live in d_bg_ch.cpp now.
 src/engine/collision/d_bg_ch.cpp
 

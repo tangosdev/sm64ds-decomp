@@ -75,7 +75,7 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 - `src/func_02049018.c:17` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000);`
 - `src/func_02049018.c:18` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000);`
 - `src/cstd.cpp:2` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
-- `src/func_02053380.c:31` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {}`
+- `src/unnamed/arm9/0205/func_02053320.c:30` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {}`
 
 ## Address-passed sites (not lvalue-redirectable)
 

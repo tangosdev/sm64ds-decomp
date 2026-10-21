@@ -1,3 +1,5 @@
+void func_02053a8c(void) {}
+
 #include "types.h"
 /* func_020538b8 at 0x020538b8
  *

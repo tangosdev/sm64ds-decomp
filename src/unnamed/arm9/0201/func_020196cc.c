@@ -1,3 +1,5 @@
+void func_0201973c(void) {}
+
 extern int func_0205f8e0(int *a, int *b);
 extern void func_0203b9b4(int *p, int v);
 extern void SetSoundMode(int mode);

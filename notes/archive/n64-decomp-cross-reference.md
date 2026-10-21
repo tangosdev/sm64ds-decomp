@@ -490,9 +490,9 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 |---------|-------------|
 | [`0x02037e58`](../../src/unnamed/arm9/0203/func_02037e58.c) | `CLPS::GetSlipperiness` |
 | [`0x02037e38`](../../src/func_02037e38.c) | `CLPS::GetSurfaceType` |
-| [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/unnamed/ov002/func_ov002_020f02c8.c) | `GetSlideAccelForClass` |
-| [`0x020f030c`](../../src/unnamed/ov002/func_ov002_020f030c.c) | `GetSlideLossFactorForClass` |
-| [`0x020f035c`](../../src/unnamed/ov002/func_ov002_020f035c.c) | `FloorIsSlope` |
+| [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/unnamed/ov002/func_ov002_020effb8.c) | `GetSlideAccelForClass` |
+| [`0x020f030c`](../../src/unnamed/ov002/func_ov002_020effb8.c) | `GetSlideLossFactorForClass` |
+| [`0x020f035c`](../../src/unnamed/ov002/func_ov002_020effb8.c) | `FloorIsSlope` |
 | [`0x020c031c`](../../src/game/player/Player.cpp) (ROM ordinal 55) | `Player::GetFloorClass` |
 | [`0x020c04e0`](../../src/game/player/Player.cpp) (ROM ordinal 59; currently [`_ZN6Player19func_ov002_020c04e0Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ApplySlopeAccel` |
 | [`0x020c06fc`](../../src/game/player/Player.cpp) (ROM ordinal 61) | `Player::UpdateSliding` |

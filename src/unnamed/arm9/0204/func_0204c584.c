@@ -1,6 +1,74 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 
+/* File-local view of Particle::System (include/Particle__System.h is C++):
+   the direction and the two axes perpendicular to it. */
+typedef struct {
+    u8 pad_000[0x3c];
+    Vector3s direction; /* 0x3c */
+    u8 pad_042[0x1a];
+    Vector3s basisU; /* 0x5c */
+    Vector3s basisV; /* 0x62 */
+} ParticleSystemView;
+
+extern Vector3s data_02099fc4;
+extern void func_02053380(void *a, Vector3s *b);
+
+void func_0204cebc(void *c) {
+    ParticleSystemView *sys = (ParticleSystemView *)c;
+    Vector3s vecA;
+    Vector3s vecB;
+
+    vecA = data_02099fc4;
+    func_02053380(&sys->direction, &vecB);
+
+    if (vecA.x == vecB.x && vecA.y == vecB.y && vecA.z == vecB.z) {
+        vecA.x = 0x1000;
+        vecA.y = 0;
+        vecA.z = 0;
+    }
+
+    sys->basisU.x = (s16)(FX_MUL(vecB.y, vecA.z) - FX_MUL(vecB.z, vecA.y));
+    sys->basisU.y = (s16)(FX_MUL(vecB.z, vecA.x) - FX_MUL(vecB.x, vecA.z));
+    sys->basisU.z = (s16)(FX_MUL(vecB.x, vecA.y) - FX_MUL(vecB.y, vecA.x));
+
+    sys->basisV.x = (s16)(FX_MUL(vecB.y, sys->basisU.z) - FX_MUL(vecB.z, sys->basisU.y));
+    sys->basisV.y = (s16)(FX_MUL(vecB.z, sys->basisU.x) - FX_MUL(vecB.x, sys->basisU.z));
+    sys->basisV.z = (s16)(FX_MUL(vecB.x, sys->basisU.y) - FX_MUL(vecB.y, sys->basisU.x));
+}
+
+#include "nitro/fx/fx.h"
+typedef short s16;
+typedef long long s64;
+
+void func_0204cd5c(int *out, int *in, int sel, s16 *m) {
+    switch (sel) {
+    case 2:
+        out[0] = 0;
+        out[1] = in[0];
+        out[2] = in[1];
+        break;
+    case 1:
+        out[0] = in[1];
+        out[1] = 0;
+        out[2] = in[0];
+        break;
+    case 0:
+        out[0] = in[0];
+        out[1] = in[1];
+        out[2] = 0;
+        break;
+    case 3:
+        out[0] = FX_MUL(in[0], m[0x2e]) + FX_MUL(in[1], m[0x31]);
+        out[1] = FX_MUL(in[0], m[0x2f]) + FX_MUL(in[1], m[0x32]);
+        out[2] = FX_MUL(in[0], m[0x30]) + FX_MUL(in[1], m[0x33]);
+        break;
+    }
+}
+
+#include "types.h"
+#include "nitro/fx/fx.h"
+
 typedef struct Node { struct Node *next; struct Node *prev; } Node;
 typedef struct List { Node *head; int count; } List;
 

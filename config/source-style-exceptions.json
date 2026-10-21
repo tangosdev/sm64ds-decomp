@@ -808,6 +808,206 @@
       "count": 2,
       "reason": "Retained scalar ABI bridge from the former course-title renderer. OAM.h deliberately excludes this Fix12-by-value overload, and its enrolled definition still uses the scalar extern C interface. Follow-up: replace the bridge when the Fix12 interface is reconstructed with matching caller and callee ABI.",
       "evidence": "include/OAM.h; src/engine/oam/OAM.cpp; notes/mwccarm-codegen.md section 6az; former func_ov075_02118cd0.c at ov075 0x02118cd0 size 0x4c. The declaration and single call are inherited, not newly introduced interfaces."
+    },
+    {
+      "path": "src/unnamed/arm9/0201/func_02018c00.c",
+      "rule": "raw-offset",
+      "match": "(int*)(self+0x20",
+      "count": 1,
+      "reason": "Offset cast carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0201/func_02018cbc.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0201/func_02019f10.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3IRQ7DisableEv",
+      "count": 2,
+      "reason": "Mangled name carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0201/func_0201a028.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0201/func_02019f10.c",
+      "rule": "handspelled-member",
+      "match": "_ZN4CP1516WaitForInterruptEv",
+      "count": 2,
+      "reason": "Mangled name carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0201/func_0201a028.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0204/func_02041a94.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3IRQ7DisableEv",
+      "count": 2,
+      "reason": "Mangled name carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0204/func_02041bbc.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0204/func_02041a94.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3IRQ7RestoreEj",
+      "count": 2,
+      "reason": "Mangled name carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0204/func_02041bbc.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0204/func_02041a94.c",
+      "rule": "raw-offset",
+      "match": "(char*)node+0x7c",
+      "count": 1,
+      "reason": "Offset cast carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0204/func_02041b60.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0204/func_02041a94.c",
+      "rule": "raw-offset",
+      "match": "(int*)(base+0x2724",
+      "count": 2,
+      "reason": "Offset cast carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0204/func_02041b60.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0204/func_02041a94.c",
+      "rule": "raw-offset",
+      "match": "(int*)(node+0x7c",
+      "count": 3,
+      "reason": "Offset cast carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0204/func_02041ae8.c, src/unnamed/arm9/0204/func_02041b24.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0205/func_0205865c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3IRQ7DisableEv",
+      "count": 2,
+      "reason": "Mangled name carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0205/func_02058690.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0205/func_0205865c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3IRQ7RestoreEj",
+      "count": 2,
+      "reason": "Mangled name carried verbatim from the folded neighbor on main. This change only moves that function into the file it belongs with.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0205/func_02058690.c; concatenated into this file unchanged"
+    },
+    {
+      "path": "src/unnamed/arm9/0203/func_02035354.c",
+      "rule": "raw-offset",
+      "match": "(int*)(c+0xc",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0203/func_020353b0.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0203/func_02035354.c",
+      "rule": "raw-offset",
+      "match": "(int*)(dst+0xc",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0203/func_02035394.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0203/func_02035354.c",
+      "rule": "raw-offset",
+      "match": "(int*)(src+0xc",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0203/func_02035394.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0205/func_0205d3e4.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3IRQ7DisableEv",
+      "count": 2,
+      "reason": "Mangled name carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0205/func_0205d3f4.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0205/func_0205d3e4.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3IRQ7RestoreEj",
+      "count": 2,
+      "reason": "Mangled name carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0205/func_0205d3f4.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0206/func_0206116c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN4CP1519InvalidateDataCacheEjj",
+      "count": 6,
+      "reason": "Mangled name carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0206/func_02061188.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0206/func_0206116c.c",
+      "rule": "raw-offset",
+      "match": "(char*)msg+0x14",
+      "count": 2,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0206/func_02061188.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0206/func_0206116c.c",
+      "rule": "raw-offset",
+      "match": "(char*)msg+0x1c",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/arm9/0206/func_02061188.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.c",
+      "rule": "handspelled-member",
+      "match": "_ZN6Memory13operator_new2Ej",
+      "count": 2,
+      "reason": "Mangled name carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/ov002/func_ov002_020e6bb0.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.c",
+      "rule": "raw-offset",
+      "match": "(char*)obj+0x24",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/ov002/func_ov002_020e6b74.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.c",
+      "rule": "raw-offset",
+      "match": "(char*)p+0x40",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/ov002/func_ov002_020e6ad4.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.c",
+      "rule": "raw-offset",
+      "match": "(int*)(dst+0x1c",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/ov002/func_ov002_020e6b74.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.c",
+      "rule": "raw-offset",
+      "match": "(int*)(src+0x1c",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/ov002/func_ov002_020e6bb0.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.c",
+      "rule": "raw-offset",
+      "match": "(unsignedint*)(base+0x24",
+      "count": 1,
+      "reason": "Offset cast carried from the neighboring function on this branch. The functions were already one stretch between two named files.",
+      "evidence": "present in src/unnamed/ov002/func_ov002_020e6bb0.c before this fold; the bytes of each function still match"
+    },
+    {
+      "path": "src/unnamed/arm9/0201/func_0201a428.c",
+      "rule": "handspelled-member",
+      "match": "_ZN5mHeap6Heap_t14CreateRootHeapEPvj",
+      "count": 2,
+      "reason": "Mangled name carried from the neighboring function. Both load the same private table.",
+      "evidence": "present in src/unnamed/arm9/0201/func_0201a458.c before this fold; each function's bytes still match"
     }
   ]
 }

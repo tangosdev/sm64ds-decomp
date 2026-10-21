@@ -1,3 +1,9 @@
+extern unsigned short data_020a89a8;
+
+int func_0206152c(void) {
+    return data_020a89a8 ? 0 : 3;
+}
+
 extern int func_0206152c(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int n);
 extern unsigned int *data_020a89ac;

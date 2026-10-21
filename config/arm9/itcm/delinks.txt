@@ -46,11 +46,7 @@ src/OSReadROMArea.c:
 
 src/unnamed/arm9/01ff/func_01ffdd08.c:
     complete
-    .text start:0x01ffdd08 end:0x01ffdd98
-
-src/unnamed/arm9/01ff/func_01ffdd98.c:
-    complete
-    .text start:0x01ffdd98 end:0x01ffde00
+    .text start:0x01ffdd08 end:0x01ffde00
 
 src/DMAStartTransferFB.c:
     complete

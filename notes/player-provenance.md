@@ -114,7 +114,7 @@ the deleting destructor -- on each element.
 The two `s32` runs are parallel to the model runs, one word per model, and that
 pairing is witnessed rather than inferred: `TurnOffToonShading` passes
 `unk_27c[j]` with `mBodyModels[...]`, `unk_28c[j]` with `unk_154[j]` and
-`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to [func_ov002_020e6b74](../src/unnamed/ov002/func_ov002_020e6b74.c), which
+`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to [func_ov002_020e6b74](../src/unnamed/ov002/func_ov002_020e6a78.c), which
 walks the model's material records writing one word of the array into each
 record's `+0x1c`. So each element is an allocated per-material word buffer owned
 by the model at the same index -- `CleanupResources` frees them with

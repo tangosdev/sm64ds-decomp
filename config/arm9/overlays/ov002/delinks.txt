@@ -199,23 +199,7 @@ src/Color_Interp.c:
 
 src/unnamed/ov002/func_ov002_020e6a78.c:
     complete
-    .text start:0x020e6a78 end:0x020e6ad4
-
-src/unnamed/ov002/func_ov002_020e6ad4.c:
-    complete
-    .text start:0x020e6ad4 end:0x020e6b3c
-
-src/unnamed/ov002/func_ov002_020e6b3c.c:
-    complete
-    .text start:0x020e6b3c end:0x020e6b74
-
-src/unnamed/ov002/func_ov002_020e6b74.c:
-    complete
-    .text start:0x020e6b74 end:0x020e6bb0
-
-src/unnamed/ov002/func_ov002_020e6bb0.c:
-    complete
-    .text start:0x020e6bb0 end:0x020e6c0c
+    .text start:0x020e6a78 end:0x020e6c0c
 
 src/game/player/d_a_ply.cpp:
     complete
@@ -274,19 +258,7 @@ src/runtime/actor/d_path_lift_actor.cpp:
 
 src/unnamed/ov002/func_ov002_020effb8.c:
     complete
-    .text start:0x020effb8 end:0x020f02c8
-
-src/unnamed/ov002/func_ov002_020f02c8.c:
-    complete
-    .text start:0x020f02c8 end:0x020f030c
-
-src/unnamed/ov002/func_ov002_020f030c.c:
-    complete
-    .text start:0x020f030c end:0x020f035c
-
-src/unnamed/ov002/func_ov002_020f035c.c:
-    complete
-    .text start:0x020f035c end:0x020f03c4
+    .text start:0x020effb8 end:0x020f03c4
 
 src/game/actors/d_a_s_coin.cpp:
     complete

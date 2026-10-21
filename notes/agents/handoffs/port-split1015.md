@@ -18,9 +18,9 @@ Extract the ordinary C helper from IRQ3 and the entire ordinary C tail from CP15
 | Symbol | ARM9 range | Production source |
 | --- | --- | --- |
 | `func_02058c84` | `0x02058c84..0x02058cd0` | `src/unnamed/arm9/0205/func_02058c84.cpp` |
-| `func_02058cd0` | `0x02058cd0..0x02058d58` | `src/unnamed/arm9/0205/func_02058cd0.cpp` |
-| `func_02058d58` | `0x02058d58..0x02058d6c` | `src/unnamed/arm9/0205/func_02058d58.cpp` |
-| `func_02058d6c` | `0x02058d6c..0x02058d80` | `src/unnamed/arm9/0205/func_02058d6c.cpp` |
+| `func_02058cd0` | `0x02058cd0..0x02058d58` | `src/unnamed/arm9/0205/func_02058c84.cpp` |
+| `func_02058d58` | `0x02058d58..0x02058d6c` | `src/unnamed/arm9/0205/func_02058c84.cpp` |
+| `func_02058d6c` | `0x02058d6c..0x02058d80` | `src/unnamed/arm9/0205/func_02058c84.cpp` |
 | `OS_GetInitArenaLo` | `0x02058d80..0x02058df4` | `src/OS_GetInitArenaLo.cpp` |
 | `func_02059cb4` | `0x02059cb4..0x02059d08` | `src/unnamed/arm9/0205/func_02059cb4.cpp` |
 

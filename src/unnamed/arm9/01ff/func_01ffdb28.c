@@ -1,7 +1,7 @@
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 //
 // func_01ffdb28 at 0x01ffdb28 (ITCM) -- the last step of the soft reset described in
-// src/unnamed/arm9/01ff/func_01ffdd98.c: after func_01ffdd08 has reloaded both binaries off the card,
+// src/unnamed/arm9/01ff/func_01ffdd08.c: after func_01ffdd08 has reloaded both binaries off the card,
 // this hands off to the freshly loaded ARM9 image and never returns.
 //
 // Why this is assembly and not C, independent of the instruction list:
