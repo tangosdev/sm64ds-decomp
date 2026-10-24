@@ -550,5 +550,94 @@ class SourceBssInteriorTests(unittest.TestCase):
             self.assertEqual(self.rows(), [])
 
 
+def _asm_elf(text, defined):
+    """ELF32 object: symbol table, string table, .text, then the section headers.
+
+    `defined` is [(name, value, size)]. Names are global STT_FUNC in .text.
+    """
+    strings = b"\0"
+    offsets = {}
+    for name, _value, _size in defined:
+        offsets[name] = len(strings)
+        strings += name.encode() + b"\0"
+    symbols = b"\0" * 16
+    for name, value, size in defined:
+        symbols += struct.pack("<IIIBBH", offsets[name], value, size, (1 << 4) | 2, 0, 4)
+    shstr = b"\0.symtab\0.strtab\0.shstrtab\0.text\0"
+    sym_off = 52
+    str_off = sym_off + len(symbols)
+    shstr_off = str_off + len(strings)
+    text_off = (shstr_off + len(shstr) + 15) & ~15
+    shoff = text_off + len(text)
+    shdrs = b"\0" * 40
+    shdrs += struct.pack("<IIIIIIIIII", 1, 2, 0, 0, sym_off, len(symbols), 2, 1, 4, 16)
+    shdrs += struct.pack("<IIIIIIIIII", 9, 3, 0, 0, str_off, len(strings), 0, 0, 1, 0)
+    shdrs += struct.pack("<IIIIIIIIII", 17, 3, 0, 0, shstr_off, len(shstr), 0, 0, 1, 0)
+    shdrs += struct.pack("<IIIIIIIIII", 27, 1, 0, 0, text_off, len(text), 0, 0, 4, 0)
+    hdr = b"\x7fELF\x01\x01\x01" + b"\0" * 9
+    hdr += struct.pack("<HHIIIIIHHHHHH", 1, 40, 1, 0, 0, shoff, 0, 52, 0, 0, 40, 5, 3)
+    pad = b"\0" * (text_off - shstr_off - len(shstr))
+    return hdr + symbols + strings + shstr + pad + text + shdrs
+
+
+class ItcmAliasStampTests(unittest.TestCase):
+    def test_stamp_writes_the_other_spelling_into_the_object(self):
+        root = pathlib.Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: __import__("shutil").rmtree(root, ignore_errors=True))
+        itcm = root / "config" / "itcm"
+        itcm.mkdir(parents=True)
+        (itcm / "symbols.txt").write_text(
+            "func_01ff8000 kind:function(arm,size=0x20) addr:0x01ff8000\n"
+            "_dadd kind:function(arm,size=0x0) addr:0x01ff8000\n"
+            "_dadd_core kind:label(arm) addr:0x01ff8010\n"
+            "func_01ff97d8 kind:function(arm,size=0x11c) addr:0x01ff97d8\n"
+            "_deq kind:function(arm,size=0x0) addr:0x01ff9d40\n")
+        (itcm / "delinks.txt").write_text(
+            "src/_dadd.c:\n"
+            "    complete\n"
+            "    .text start:0x01ff8000 end:0x01ff8020\n"
+            "\n"
+            "src/unnamed/arm9/01ff/func_01ff97d8.c:\n"
+            "    complete\n"
+            "    .text start:0x01ff97d8 end:0x01ffa344\n")
+        text = bytes(range(0x20))
+        obj = root / "_dadd.o"
+        obj.write_bytes(_asm_elf(text, [("_dadd", 0, 0x20)]))
+        untouched = root / "func_01ff97d8.o"
+        untouched.write_bytes(_asm_elf(b"\x11" * 4, [("func_01ff97d8", 0, 4)]))
+        before = untouched.read_bytes()
+        listing = root / "objects.txt"
+        listing.write_text(f"{obj}\n{untouched}\n")
+        LI.stamp_linked_aliases(listing, root / "config")
+        self.assertEqual(untouched.read_bytes(), before)
+        stamped = obj.read_bytes()
+        defined, imported = LI._elf_names(stamped)
+        self.assertEqual(imported, set())
+        self.assertEqual(defined, {"_dadd", "func_01ff8000", "_dadd_core"})
+        _shoff, _entsize, shstrndx, sections = LI._elf_sections(stamped)
+        text_index = next(i for i, sec in enumerate(sections)
+                          if LI._section_name(stamped, sections, shstrndx, i) == ".text")
+        self.assertEqual(stamped[sections[text_index][4]:][:0x20], text)
+        names = LI._symbol_names(stamped, sections[1][4], sections[1][5], sections[2][4])
+        by_name = {name: (value, size, info) for name, value, size, info, _shndx in names}
+        self.assertEqual(by_name["_dadd"][:2], (0, 0))
+        self.assertEqual(by_name["func_01ff8000"][:2], (0, 0x20))
+        self.assertEqual(by_name["_dadd_core"][:2], (0x10, 0))
+        self.assertEqual(by_name["_dadd_core"][2] & 0xF, 0)
+        again = stamped
+        obj.write_bytes(stamped)
+        LI.stamp_linked_aliases(listing, root / "config")
+        self.assertEqual(obj.read_bytes(), again)
+
+        caller = root / "caller.o"
+        caller.write_bytes(_elf(defined=["func_02060b64"], imported=["func_01ff8000"]))
+        listing.write_text(f"{obj}\n{caller}\n")
+        lcf = root / "arm9.lcf"
+        lcf.write_text("SECTIONS {\n    .itcm : {}\n}\n")
+        added = LI.patch(lcf, listing, root / "config")
+        self.assertNotIn("func_01ff8000", {name for name, _addr in added})
+        self.assertNotIn("func_01ff8000 =", lcf.read_text())
+
+
 if __name__ == "__main__":
     unittest.main()
