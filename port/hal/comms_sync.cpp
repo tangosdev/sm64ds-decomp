@@ -1523,12 +1523,9 @@ int gw_here(GwSeat &z) {
     }
     const HubGhostFrame &nw = z.ring[z.n - 1].f;
     if (nw.y < kDeathPlaneY) return 0;                      // fell out
-    /* a friend who has been in the pause menu / star select for 2 s fades
-       out and is gone, he does not stand frozen for as long as it lasts */
-    if (z.paused_now &&
-        (unsigned)(now - z.paused_ms) >=
-            (unsigned)(kGwPauseFadeMs + kGwPauseFadeLen))
-        return 0;
+    /* A PAUSED FRIEND STAYS (Tango 10-28): he stands where he paused and his
+       tag carries the pause mark (tests/nametag.h), instead of fading out
+       after kGwPauseFadeMs as he used to. */
     if ((int)nw.level_id != (int)data_0209f2f8) return 2;
     if (nw.flags & kGwFrameClock) {
         /* his area is not mine: HideArea hid that room's world for me, and a
@@ -3190,6 +3187,12 @@ extern "C" int port_adventure_ghost_seat(int slot) {
     if (!g_hub) return -1;
     return gw_seat_for_body(slot);
 }
+/* the seat's newest ghost frames say his game is paused (the pause menu, a star
+   select, a loading hold): his tag shows the pause mark */
+extern "C" int port_adventure_ghost_paused(int slot) {
+    const int s = port_adventure_ghost_seat(slot);
+    return s >= 0 && g_gw[s].paused_now ? 1 : 0;
+}
 extern "C" const char *port_adventure_ghost_name(int slot) {
     const int s = port_adventure_ghost_seat(slot);
     if (s < 0 || !g_gw[s].have_ident || !g_gw[s].name[0]) return 0;
@@ -3241,15 +3244,6 @@ int gw_fade_out(int s) {
             const int d = ls.door_frame >= kGwDoorGoneTo ? 0 :
                 (int)(kGwDoorGoneTo - ls.door_frame);
             f = f * d / (int)(kGwDoorGoneTo - kGwDoorGoneFrom);
-        }
-    }
-    if (z.paused_now) {
-        const unsigned pe = now - z.paused_ms;
-        if (pe >= (unsigned)kGwPauseFadeMs) {
-            const unsigned into = pe - (unsigned)kGwPauseFadeMs;
-            if (into >= (unsigned)kGwPauseFadeLen) return 0;
-            f = (int)((unsigned)f * ((unsigned)kGwPauseFadeLen - into) /
-                      (unsigned)kGwPauseFadeLen);
         }
     }
     return f;
@@ -3509,7 +3503,7 @@ void gw_follow() {
            in another level or area is drawn the way a ghost is (it fades out
            as it leaves) but is never solid (party::follow below) */
         const bool pseat = got && party::seat_is_party(s);
-        if (pseat && (party::gate(s) == party::kGateHide || g_gw[s].paused_now)) got = false;
+        if (pseat && party::gate(s) == party::kGateHide) got = false;   /* paused: stays, with the pause mark (Tango 10-28) */
         if (got) {
             if (g_gw[s].leaving) {         // GHOSTDOOR1: fading out in place
                 sm = g_gw_last[s];
