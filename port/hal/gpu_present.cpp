@@ -961,6 +961,18 @@ LRESULT CALLBACK surface_proc(HWND h, UINT m, WPARAM w, LPARAM l)
    window's). user32 hand-loaded, the rule this file keeps. */
 HWND make_child(HWND parent, int w, int h)
 {
+    /* SM64DS_PRESENT_CHILD=0 (lane DECK1): no child, the swap chain goes on the
+       game window itself, the way it did before MGFREEZE2. A diagnostic for the
+       Steam Deck's blank screen (Wine draws a child window's Vulkan picture by
+       a different path than a top-level one's); a lost card then cannot be
+       rebuilt on a fresh window and ends on the ordinary Windows path. */
+    static int no_child = -1;
+    if (no_child < 0) {
+        const char *e = getenv("SM64DS_PRESENT_CHILD");
+        no_child = e && e[0] == '0' && !e[1];
+        if (no_child) fputs("[present] SM64DS_PRESENT_CHILD=0: the swap chain goes on the game window itself\n", stderr);
+    }
+    if (no_child) return 0;
     if (g_child_class < 0 || !g_user32) return 0;
     if (!g_child_class) {
         RegisterClassA_t reg = (RegisterClassA_t)GetProcAddress(g_user32, "RegisterClassA");

@@ -3034,12 +3034,110 @@ extern "C" {
    Two deliberate fail-open cases, so this can never be what silently locks a
    run out of its own input: no window yet (g_hwnd unset, which is every
    binary that does not open one) and no GetForegroundWindow (never on
-   Windows, but the whole user32 surface here is loaded by name). */
+   Windows, but the whole user32 surface here is loaded by name).
+
+   UNDER GAMESCOPE THE FOREGROUND IS THE WRONG QUESTION (lane DECK1, Steam Deck
+   Gaming Mode). Gamescope shows one window at a time, full screen, and Steam
+   Input takes the controller away from the game by itself while the Steam
+   menu is up. Under Wine there the foreground Wine reports is often the
+   launcher's window even while the game is the picture on the screen, so the
+   pad, the keys and the touch screen all read released: the game sat on
+   "touch to start" ignoring everything until the player switched to the
+   launcher and back. So there, and only there, the window being up (visible,
+   not minimised) is the whole answer. Plain Wine on a desktop keeps the
+   Windows rule, and Windows itself never reaches the new line: it has no
+   wine_get_version, so g_focus_gamescope stays 0. */
+static int g_focus_gamescope;
+static BOOL(WINAPI *IsWindowVisible_)(HWND);
+static BOOL(WINAPI *IsIconic_)(HWND);
+
+static int env_is(const char *name, const char *want)
+{
+    const char *v = std::getenv(name);
+    return v && _stricmp(v, want) == 0;
+}
+
+/* Once per process, from hal_sub_screen_init_hw. SM64DS_GAMESCOPE=1 forces
+   the arm (the Windows proof row, which has neither Wine nor Gamescope), =0
+   turns it off (a player's way back to the foreground rule). */
+static void focus_gamescope_detect(void)
+{
+    static int done;
+    if (done) return;
+    done = 1;
+    if (HMODULE u = GetModuleHandleA("user32.dll")) {
+        IsWindowVisible_ = (decltype(IsWindowVisible_))GetProcAddress(u, "IsWindowVisible");
+        IsIconic_ = (decltype(IsIconic_))GetProcAddress(u, "IsIconic");
+    }
+    char ver[48] = "";
+    if (HMODULE nt = GetModuleHandleA("ntdll.dll")) {
+        typedef const char *(__cdecl *WineVer)(void);
+        if (WineVer f = (WineVer)GetProcAddress(nt, "wine_get_version")) {
+            const char *s = f();
+            _snprintf(ver, sizeof ver, "%s", s && s[0] ? s : "?");
+            ver[sizeof ver - 1] = 0;
+        }
+    }
+    const char *why = 0;
+    const char *gw = std::getenv("GAMESCOPE_WAYLAND_DISPLAY");
+    if (gw && gw[0]) why = "GAMESCOPE_WAYLAND_DISPLAY";
+    else if (env_is("XDG_CURRENT_DESKTOP", "gamescope")) why = "XDG_CURRENT_DESKTOP=gamescope";
+    else if (env_is("SteamDeck", "1") && env_is("SteamGamepadUI", "1")) why = "SteamDeck=1 SteamGamepadUI=1";
+    const char *force = std::getenv("SM64DS_GAMESCOPE");
+    if (force && force[0] == '0') {
+        if (ver[0] && why)
+            fprintf(stderr, "[focus] Wine %s under Gamescope (%s), but SM64DS_GAMESCOPE=0: the controller "
+                    "follows the foreground window\n", ver, why);
+        return;
+    }
+    const int forced = force && force[0] == '1';
+    if (!forced && !(ver[0] && why)) {
+        if (ver[0])
+            fprintf(stderr, "[focus] Wine %s, no Gamescope: the controller follows the foreground "
+                    "window, as on Windows\n", ver);
+        return;
+    }
+    if (!IsWindowVisible_ || !IsIconic_) return;
+    g_focus_gamescope = 1;
+    fprintf(stderr, "[focus] %s%s%s (%s): the controller, the keys and the touch screen follow this "
+            "window while it is up, whatever Wine calls the foreground\n",
+            ver[0] ? "Wine " : "", ver[0] ? ver : "", ver[0] ? " under Gamescope" : "Gamescope",
+            forced ? "SM64DS_GAMESCOPE=1" : why);
+}
+
+/* One line per change of the answer, under Wine (a Deck report then says when
+   and why the pad was shut) or with SM64DS_FOCUS_TRACE=1 (the Windows proof).
+   Silent on Windows otherwise, so a desktop log is the log it was. */
+static int g_focus_trace = -1;
+static int g_focus_last = -1;
+
+static void focus_trace(int ans, int fg_ours)
+{
+    if (g_focus_trace < 0) {
+        const char *e = std::getenv("SM64DS_FOCUS_TRACE");
+        int wine = 0;
+        if (HMODULE nt = GetModuleHandleA("ntdll.dll")) wine = GetProcAddress(nt, "wine_get_version") != 0;
+        g_focus_trace = (e && e[0] == '1') || wine || g_focus_gamescope;
+    }
+    if (!g_focus_trace || ans == g_focus_last) return;
+    g_focus_last = ans;
+    const int vis = IsWindowVisible_ ? (IsWindowVisible_(g_hwnd) ? 1 : 0) : -1;
+    const int ico = IsIconic_ ? (IsIconic_(g_hwnd) ? 1 : 0) : -1;
+    fprintf(stderr, "[focus] input %s: foreground is %s, gamescope rule %s, window visible %d minimised %d\n",
+            ans ? "OPEN" : "SHUT", fg_ours ? "this window" : "another window",
+            g_focus_gamescope ? "on" : "off", vis, ico);
+}
+
 int hal_window_focused(void)
 {
     if (g_nofocusgate) return 1;
     if (!g_hwnd || !GetForegroundWindow_) return 1;
-    return GetForegroundWindow_() == g_hwnd ? 1 : 0;
+    const int fg_ours = GetForegroundWindow_() == g_hwnd;
+    int ans = fg_ours;
+    if (!ans && g_focus_gamescope)
+        ans = IsWindowVisible_(g_hwnd) && !IsIconic_(g_hwnd) ? 1 : 0;
+    focus_trace(ans, fg_ours);
+    return ans;
 }
 
 /* THE HALF EVERY MODE NEEDS, split out of hal_sub_screen_init so the scene
@@ -3115,6 +3213,7 @@ void hal_sub_screen_init_hw(void *hwnd, int zoom)
         GetForegroundWindow_ =
             (decltype(GetForegroundWindow_))GetProcAddress(u, "GetForegroundWindow");
     }
+    if (hwnd) focus_gamescope_detect();     /* DECK1: Steam Deck Gaming Mode */
 
     /* POWCNT1 bit 15: main engine drives the top screen. OAM::Load reads this
        bit to pick which shadow goes to which engine's OAM, and Scene::Reset-
