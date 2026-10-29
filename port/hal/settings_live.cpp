@@ -57,6 +57,10 @@ static const SlInfo INFO[] = {
     { "PadCamDown",  SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0, 0, 1 },
     { "PadCamZoomIn",  SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0, 0, 1 },
     { "PadCamZoomOut", SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0, 0, 1 },
+    /* CHEATS1: the party pads in their HOST_PAD_ place (they sat after the mouse rows, so INFO[id] of both and of every mouse id named the
+       row two places off, and Reset wrote those rows' wrong defaults) */
+    { "PadPartyInvite", SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0001, 0, 1 },
+    { "PadPartyLeave",  SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0002, 0, 1 },
     /* mouse buttons, in HOST_MOUSE_ order (CAMPACK1): VK 0 none, 2 right, 4 middle, 5 X1, 6 X2 */
     { "MouseCamHold",    SL_KIND_MOUSE, 0, 6, 2, 0, 1 },
     { "MouseCamCenter",  SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
@@ -68,8 +72,6 @@ static const SlInfo INFO[] = {
     { "MouseCamZoomOut", SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseCamMode",    SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseLook",       SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
-    { "PadPartyInvite", SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0001, 0, 1 },
-    { "PadPartyLeave",  SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0002, 0, 1 },
     /* the rest */
     { "RunMode",                SL_KIND_ENUM,    0, 2, 1, RUN_NAMES, 1 },
     { "StickDeadzone",          SL_KIND_PERCENT, 0, 50, 24, 0, 1 },

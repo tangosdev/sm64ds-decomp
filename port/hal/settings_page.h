@@ -59,6 +59,10 @@ void settings_page_close(void);                      /* flushes the settings fil
 int  settings_page_frame(const SpInput *in);
 /* draw onto an opaque 32 bit picture (0x00RRGGBB or 0xFFRRGGBB pixels) of w x h with `stride` pixels per row */
 void settings_page_draw(uint32_t *px, int stride, int w, int h);
+/* CHEATS1: the place between two page frames of the next picture drawn (1 = a tick's own picture; the draw puts it back to 1), and 1 while
+   the tab strip slides. No caller makes pictures between ticks while the page is open today. */
+void settings_page_set_picture_alpha(double a);
+int  settings_page_strip_moving(void);
 void settings_page_idle_tick(int idle_frames, int w, int h);   /* hooks.cpp: warms the caches once, when OneScreenMenus is on */
 int settings_page_warm_waiting(void);               /* PAUSEFIX1: 1 while the worker decodes the picture the warm-up waits for */
 int settings_page_warm_step(int w, int h);          /* PAUSEFIX1: one small slice of the cache build (about 2 ms at most); 1 when all of it is cached for this size */
