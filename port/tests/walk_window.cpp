@@ -9893,6 +9893,8 @@ static int ip_overlap_on(void)
 }
 static int ip_build_b(IpPend *P);
 static int ip_build_a(double alpha, IpPend *P, int pipe);
+static int g_mgi_tick;
+static int mgi_build(double alpha, ntr::Framebuffer &o);
 static int ip_build(double alpha)
 {
     IpPend P;
@@ -9997,6 +9999,9 @@ static int ip_build_a(double alpha, IpPend *P, int pipe)
 
 static int ip_build_b(IpPend *P)
 {
+    /* MGINTERP1: a minigame tick's picture between ticks is its 2D drawn again from the blended state (the stacked compose that
+       follows puts both screens together and mgi_after_compose puts the live state back) */
+    if (g_mgi_tick && !P->card && g_ip_stack_on) return mgi_build(P->alpha, *g_ip_fb);
     const double alpha = P->alpha;
     const int ip_evy_t = P->ip_evy_t;
     int tw = P->tw, twc = P->twc;
@@ -10448,6 +10453,7 @@ static void si_pic(char kind, double alpha, const ntr::Framebuffer *fb, const ui
    put back over it wherever the tick's final image differs from the image
    before the UI went on, and the present is pointed at it. The caller puts
    g_present_stack back to the tick's kept image afterwards. */
+static void mgi_after_compose(void);
 static void ip_stack_for_blend(void)
 {
     const long long t0 = ip_qpc();
@@ -10495,9 +10501,11 @@ static void ip_stack_for_blend(void)
         ++g_si_blend_n;
         g_si_ms[3] += ip_ms_since(t0);
         g_present_stack = W;
+        mgi_after_compose();
         return;
     }
     uint32_t *img = hal_sub_screen_stacked_image(&g_ip_fb->px[0][0]);
+    mgi_after_compose();   /* MGINTERP1: the live OAM, registers and bottom screen back to the tick's */
     if (!img) return;
     ++g_si_blend_n;
     g_si_ms[3] += ip_ms_since(t0);
@@ -11166,10 +11174,332 @@ static void scene_ip_note(int why)
     if (why >= 0 && why < SI_N) ++g_si_count[why];
 }
 
+/* ---- MINIGAME 2D BETWEEN TICKS (run after093, lane MGINTERP1) ----------------
+ *
+ * The Rec Room minigames are 2D: both screens are BG layers and sprites, and the
+ * scene path's pictures between two ticks put the TICK'S 2D back over the
+ * replayed 3D (see the SCENEINTERP1 banner below), so in a minigame every one of
+ * them was a copy of the tick's own picture and the motion stepped 60 times a
+ * second on a 144 Hz display (2-3-2-3 copies: judder).
+ *
+ * Here a picture between ticks N-1 and N draws both engines' 2D again from a
+ * BLENDED state: each sprite's position, each text BG's scroll, the affine BGs'
+ * reference points and matrices and the affine sprites' matrices, at the
+ * picture's alpha. Tiles, palettes, maps and everything else are tick N's. The
+ * state is written into the live OAM and BG registers for the raster and put
+ * back right after the picture is composed; the scene loop is one thread, so no
+ * game code runs in between. The game never reads it.
+ *
+ * MATCH RULES (an entry that fails any of them draws exactly as in tick N):
+ *   - both ticks show the entry (not the disabled encoding, attr0 bits 8-9 = 10);
+ *   - the same sprite: attr0 without its y, attr1 without its x and attr2 (tile,
+ *     palette, priority) all equal; failing that by slot, the one entry of tick
+ *     N-1 with the same identity within reach (two candidates = no blend);
+ *   - it moved at most kMgiReach DS pixels on each axis (x wraps at 512, y at 256);
+ *   - an affine sprite's matrix (and an affine BG's) blends only as a pure turn
+ *     and scale: the turn's shortest way, at most kMgiTurnDeg a tick; otherwise
+ *     tick N's matrix with the blended place;
+ *   - a BG blends only when its control word, the display mode and its enable are
+ *     the same on both ticks, and its scroll moved at most kMgiBgReach.
+ * Positions are whole DS pixels (both engines rasterise at 256x192 and are scaled
+ * after), so at render scale 1 nothing is softened.
+ *
+ * A tick is drawn this way only on the stacked layout of a minigame scene with no
+ * fade (the existing rules snap a moving one; a still one keeps the old path),
+ * no menu and no 2D on the card. SM64DS_MG_INTERP=0 is the old path. */
+extern "C" int port_scene_live_id(void);
+extern "C" int port_message_engine_a_replay(void *fbp);
+extern "C" void hal_sub_screen_blend_rescan(void);
+extern "C" void hal_sub_screen_blend_restore(void);
+extern "C" long hal_sub_screen_blend_check(void);
+enum { kMgiReach = 48, kMgiBgReach = 64 };
+static const double kMgiTurnDeg = 60.0;
+static const double kMgiPi = 3.14159265358979323846;
+struct MgiState {
+    unsigned char oam[0x800];          /* engine A 0x07000000, engine B 0x07000400 */
+    unsigned char reg[2][0x40];        /* 0x04000000 / 0x04001000, words 0..0x3f (DISPCNT, BGxCNT, scroll, affine) */
+    unsigned serial;
+    int valid;
+};
+static MgiState g_mgi_prev, g_mgi_cur, g_mgi_live;
+/* g_mgi_tick is declared above ip_build */                 /* this tick's pictures between ticks are drawn by mgi_build */
+static int g_mgi_swapped;              /* the blended state is in the live OAM / registers now */
+static unsigned g_mgi_n[8];            /* ticks drawn this way, pictures, sprites blended / kept, BG layers blended / kept, refused ticks, check bad */
+static int mgi_enabled(void)
+{
+    static int on = -1;
+    if (on < 0) { const char *e = getenv("SM64DS_MG_INTERP"); on = (e && e[0] == '0') ? 0 : 1; }
+    return on;
+}
+static int mgi_scene_is_mg(void)
+{
+    int sc = port_scene_live_id();
+    if (sc < 0) sc = port_scene_env_want();
+    return sc >= 0 && IsMinigameActorID((unsigned)sc);
+}
+static void mgi_read(MgiState &s)
+{
+    memcpy(s.oam, (const void *)0x07000000, sizeof s.oam);
+    memcpy(s.reg[0], (const void *)0x04000000, sizeof s.reg[0]);
+    memcpy(s.reg[1], (const void *)0x04001000, sizeof s.reg[1]);
+}
+/* every tick, stage 2 (both screens rasterised): the state the tick drew becomes the current one */
+extern "C" const unsigned char *port_message_engine_a_regs_drawn(void);
+extern "C" const unsigned char *port_message_engine_a_oam_drawn(void);
+static inline int mgi_rd16(const unsigned char *p);
+static const unsigned char *g_mgi_live_probe_regs(void) { return (const unsigned char *)0x04000000; }
+static void mgi_capture(void)
+{
+    g_mgi_prev = g_mgi_cur;
+    mgi_read(g_mgi_cur);
+    /* engine A's raster ran before the frame's BG sync (hal/sub_screen.cpp) moved its offsets: start from what it read */
+    memcpy(g_mgi_cur.reg[0], port_message_engine_a_regs_drawn(), sizeof g_mgi_cur.reg[0]);
+    {   /* SM64DS_MG_INTERP_DIFF=<n> (proof instrument): the engine A bytes that changed between its raster and stage 2, first n ticks */
+        static int dn = -1;
+        if (dn < 0) { const char *e = getenv("SM64DS_MG_INTERP_DIFF"); dn = e ? atoi(e) : 0; }
+        if (dn > 0) {
+            --dn;
+            const unsigned char *ro = port_message_engine_a_oam_drawn();
+            for (int i = 0; i < 0x400; i += 2)
+                if (mgi_rd16(ro + i) != mgi_rd16(g_mgi_cur.oam + i))
+                    fprintf(stderr, "[mg-diff] t%u oam+%03x drawn %04x stage2 %04x\n", g_si_ticks, i, mgi_rd16(ro + i), mgi_rd16(g_mgi_cur.oam + i));
+            for (int i = 0; i < 0x40; i += 2)
+                if (mgi_rd16(g_mgi_cur.reg[0] + i) != mgi_rd16(g_mgi_live_probe_regs() + i))
+                    fprintf(stderr, "[mg-diff] t%u reg+%02x drawn %04x stage2 %04x\n", g_si_ticks, i, mgi_rd16(g_mgi_cur.reg[0] + i), mgi_rd16(g_mgi_live_probe_regs() + i));
+        }
+    }
+    memcpy(g_mgi_cur.oam, port_message_engine_a_oam_drawn(), 0x400);
+    g_mgi_cur.serial = g_si_ticks;
+    g_mgi_cur.valid = 1;
+}
+static inline int mgi_rd16(const unsigned char *p) { return p[0] | (p[1] << 8); }
+static inline void mgi_wr16(unsigned char *p, int v) { p[0] = (unsigned char)v; p[1] = (unsigned char)(v >> 8); }
+static inline int mgi_round(double v) { return (int)floor(v + 0.5); }
+/* a 2x2 8.8 matrix as a turn and two scales; 0 when it is not one (a shear or a mirror) */
+static int mgi_polar(const int m[4], double &ang, double &s0, double &s1)
+{
+    const double a = m[0], b = m[1], c = m[2], d = m[3];
+    s0 = sqrt(a * a + b * b);
+    s1 = sqrt(c * c + d * d);
+    if (s0 < 1.0 || s1 < 1.0) return 0;
+    ang = atan2(b, a);
+    const double ang2 = atan2(-c, d);
+    double dd = ang2 - ang;
+    while (dd > kMgiPi) dd -= 2 * kMgiPi;
+    while (dd < -kMgiPi) dd += 2 * kMgiPi;
+    return fabs(dd) < 0.05 ? 1 : 0;
+}
+/* blend matrix p -> c at alpha into out; 0 = keep c (not a pure turn and scale, or too big a turn) */
+static int mgi_mtx(const int p[4], const int c[4], double alpha, int out[4])
+{
+    if (alpha >= 1.0 || !memcmp(p, c, 4 * sizeof(int))) { memcpy(out, c, 4 * sizeof(int)); return 1; }   /* alpha 1 is tick N exactly */
+    double ap, sp0, sp1, ac, sc0, sc1;
+    if (!mgi_polar(p, ap, sp0, sp1) || !mgi_polar(c, ac, sc0, sc1)) return 0;
+    double dt = ac - ap;
+    while (dt > kMgiPi) dt -= 2 * kMgiPi;
+    while (dt < -kMgiPi) dt += 2 * kMgiPi;
+    if (fabs(dt) * 180.0 / kMgiPi > kMgiTurnDeg) return 0;
+    const double a = ap + dt * alpha, s0 = sp0 + (sc0 - sp0) * alpha, s1 = sp1 + (sc1 - sp1) * alpha;
+    out[0] = mgi_round(cos(a) * s0);
+    out[1] = mgi_round(sin(a) * s0);
+    out[2] = mgi_round(-sin(a) * s1);
+    out[3] = mgi_round(cos(a) * s1);
+    return 1;
+}
+static inline int mgi_shown(const unsigned char *e) { return (mgi_rd16(e) & 0x300) != 0x200; }
+static inline int mgi_same(const unsigned char *a, const unsigned char *b)
+{
+    return (mgi_rd16(a) & 0xFF00) == (mgi_rd16(b) & 0xFF00) &&
+           (mgi_rd16(a + 2) & 0xFE00) == (mgi_rd16(b + 2) & 0xFE00) &&
+           mgi_rd16(a + 4) == mgi_rd16(b + 4);
+}
+static inline int mgi_dx(int c, int p) { return ((c - p + 256) & 511) - 256; }
+static inline int mgi_dy(int c, int p) { return ((c - p + 128) & 255) - 128; }
+/* one engine's 128 sprites: positions and the matrices of the groups only blended sprites use */
+static void mgi_blend_oam(const unsigned char *P, const unsigned char *C, unsigned char *O, double alpha)
+{
+    signed char grp_ok[32];            /* 1 = every shown sprite of tick N using the group was blended, -1 = one was not */
+    memset(grp_ok, 0, sizeof grp_ok);
+    for (int i = 0; i < 128; ++i) {
+        const unsigned char *c = C + i * 8;
+        unsigned char *o = O + i * 8;
+        if (!mgi_shown(c)) continue;
+        const int c0 = mgi_rd16(c), c1 = mgi_rd16(c + 2);
+        const int aff = (c0 >> 8) & 1;
+        const int grp = (c1 >> 9) & 31;
+        const unsigned char *p = 0;
+        if (mgi_shown(P + i * 8) && mgi_same(P + i * 8, c)) {
+            p = P + i * 8;
+        } else {
+            int hits = 0;
+            for (int j = 0; j < 128 && hits < 2; ++j) {
+                const unsigned char *q = P + j * 8;
+                if (!mgi_shown(q) || !mgi_same(q, c)) continue;
+                if (abs(mgi_dx(c1 & 511, mgi_rd16(q + 2) & 511)) > kMgiReach || abs(mgi_dy(c0 & 255, mgi_rd16(q) & 255)) > kMgiReach) continue;
+                p = q;
+                ++hits;
+            }
+            if (hits != 1) p = 0;
+        }
+        int ok = 0, moved = 0;
+        if (p) {
+            const int p0 = mgi_rd16(p), p1 = mgi_rd16(p + 2);
+            const int dx = mgi_dx(c1 & 511, p1 & 511), dy = mgi_dy(c0 & 255, p0 & 255);
+            if (abs(dx) <= kMgiReach && abs(dy) <= kMgiReach) {
+                ok = 1;
+                if (dx || dy) {
+                    moved = 1;
+                    const int x = ((p1 & 511) + mgi_round(dx * alpha)) & 511;
+                    const int y = ((p0 & 255) + mgi_round(dy * alpha)) & 255;
+                    mgi_wr16(o, (c0 & 0xFF00) | y);
+                    mgi_wr16(o + 2, (c1 & 0xFE00) | x);
+                }
+            }
+        }
+        if (moved) ++g_mgi_n[2];
+        else if (!ok) ++g_mgi_n[3];
+        if (aff) grp_ok[grp] = (grp_ok[grp] < 0 || !ok) ? -1 : 1;
+    }
+    for (int g = 0; g < 32; ++g) {
+        if (grp_ok[g] != 1) continue;
+        int pm[4], cm[4], om[4];
+        for (int k = 0; k < 4; ++k) {
+            pm[k] = (short)mgi_rd16(P + (g * 4 + k) * 8 + 6);
+            cm[k] = (short)mgi_rd16(C + (g * 4 + k) * 8 + 6);
+        }
+        if (!mgi_mtx(pm, cm, alpha, om)) continue;
+        for (int k = 0; k < 4; ++k) mgi_wr16(O + (g * 4 + k) * 8 + 6, om[k]);
+    }
+}
+/* one engine's four BGs: text scroll, affine reference point and matrix */
+static void mgi_blend_bg(const unsigned char *P, const unsigned char *C, unsigned char *O, double alpha, int eng)
+{
+    const unsigned pd = (unsigned)(mgi_rd16(P) | (mgi_rd16(P + 2) << 16)), cd = (unsigned)(mgi_rd16(C) | (mgi_rd16(C + 2) << 16));
+    if ((pd & 0xF) != (cd & 0xF)) return;            /* mode and BG0-3D */
+    const int mode = cd & 7;
+    for (int bg = 0; bg < 4; ++bg) {
+        if (!((cd >> (8 + bg)) & 1) || !((pd >> (8 + bg)) & 1)) continue;
+        if (mgi_rd16(P + 8 + bg * 2) != mgi_rd16(C + 8 + bg * 2)) { ++g_mgi_n[5]; continue; }
+        if (eng == 0 && bg == 0 && (cd & 8)) continue;  /* the 3D layer */
+        const int affine = (bg == 3 && mode >= 1 && mode <= 5) || (bg == 2 && (mode == 2 || mode == 4 || mode == 5));
+        if (!affine) {
+            const int ph = mgi_rd16(P + 0x10 + bg * 4) & 511, pv = mgi_rd16(P + 0x12 + bg * 4) & 511;
+            const int ch = mgi_rd16(C + 0x10 + bg * 4) & 511, cv = mgi_rd16(C + 0x12 + bg * 4) & 511;
+            const int dh = mgi_dx(ch, ph), dv = mgi_dx(cv, pv);
+            if (!dh && !dv) continue;
+            if (abs(dh) > kMgiBgReach || abs(dv) > kMgiBgReach) { ++g_mgi_n[5]; continue; }
+            mgi_wr16(O + 0x10 + bg * 4, (ph + mgi_round(dh * alpha)) & 511);
+            mgi_wr16(O + 0x12 + bg * 4, (pv + mgi_round(dv * alpha)) & 511);
+            ++g_mgi_n[4];
+            continue;
+        }
+        const int base = 0x20 + (bg - 2) * 0x10;
+        int pm[4], cm[4], om[4];
+        for (int k = 0; k < 4; ++k) { pm[k] = (short)mgi_rd16(P + base + k * 2); cm[k] = (short)mgi_rd16(C + base + k * 2); }
+        const int prx = (int)((unsigned)(mgi_rd16(P + base + 8) | (mgi_rd16(P + base + 10) << 16)) << 4) >> 4;
+        const int pry = (int)((unsigned)(mgi_rd16(P + base + 12) | (mgi_rd16(P + base + 14) << 16)) << 4) >> 4;
+        const int crx = (int)((unsigned)(mgi_rd16(C + base + 8) | (mgi_rd16(C + base + 10) << 16)) << 4) >> 4;
+        const int cry = (int)((unsigned)(mgi_rd16(C + base + 12) | (mgi_rd16(C + base + 14) << 16)) << 4) >> 4;
+        if (!memcmp(pm, cm, sizeof pm) && prx == crx && pry == cry) continue;
+        if (abs(crx - prx) > kMgiBgReach * 256 || abs(cry - pry) > kMgiBgReach * 256 || !mgi_mtx(pm, cm, alpha, om)) { ++g_mgi_n[5]; continue; }
+        for (int k = 0; k < 4; ++k) mgi_wr16(O + base + k * 2, om[k]);
+        /* the reference point at whole 1/256 pixels: this is the BG's own precision, so a blended scroll is a real sub-pixel one */
+        const unsigned rx = (unsigned)(prx + mgi_round((crx - prx) * alpha)) & 0x0FFFFFFFu;
+        const unsigned ry = (unsigned)(pry + mgi_round((cry - pry) * alpha)) & 0x0FFFFFFFu;
+        mgi_wr16(O + base + 8, (int)(rx & 0xFFFF)); mgi_wr16(O + base + 10, (int)(rx >> 16));
+        mgi_wr16(O + base + 12, (int)(ry & 0xFFFF)); mgi_wr16(O + base + 14, (int)(ry >> 16));
+        ++g_mgi_n[4];
+    }
+}
+/* put the blended state for alpha into the live OAM and registers (the live bytes kept) */
+static void mgi_swap_in(double alpha)
+{
+    mgi_read(g_mgi_live);
+    MgiState o = g_mgi_cur;
+    for (int e = 0; e < 2; ++e) {
+        mgi_blend_oam(g_mgi_prev.oam + e * 0x400, g_mgi_cur.oam + e * 0x400, o.oam + e * 0x400, alpha);
+        mgi_blend_bg(g_mgi_prev.reg[e], g_mgi_cur.reg[e], o.reg[e], alpha, e);
+    }
+    memcpy((void *)0x07000000, o.oam, sizeof o.oam);
+    /* engine A: DISPCNT and the BG words as its raster read them (blended); engine B: the scroll and affine words */
+    memcpy((void *)0x04000000, o.reg[0], 4);
+    memcpy((void *)0x04000008, o.reg[0] + 8, 0x38);
+    memcpy((void *)0x04001010, o.reg[1] + 0x10, 0x30);
+    g_mgi_swapped = 1;
+}
+static void mgi_swap_out(void)
+{
+    if (!g_mgi_swapped) return;
+    memcpy((void *)0x07000000, g_mgi_live.oam, sizeof g_mgi_live.oam);
+    memcpy((void *)0x04000000, g_mgi_live.reg[0], 4);
+    memcpy((void *)0x04000008, g_mgi_live.reg[0] + 8, 0x38);
+    memcpy((void *)0x04001010, g_mgi_live.reg[1] + 0x10, 0x30);
+    g_mgi_swapped = 0;
+}
+/* the picture between ticks: o holds the replayed 3D (the clear colour in a 2D minigame) */
+static int mgi_build(double alpha, ntr::Framebuffer &o)
+{
+    mgi_swap_in(alpha);
+    port_message_engine_a_replay(&o);
+    hal_sub_screen_blend_rescan();
+    ++g_mgi_n[1];
+    return 1;
+}
+/* after the stacked compose of that picture */
+static void mgi_after_compose(void)
+{
+    if (!g_mgi_swapped) return;
+    hal_sub_screen_blend_restore();
+    mgi_swap_out();
+}
+static void mgi_report(void)
+{
+    if (!g_mgi_n[0] && !g_mgi_n[6]) return;
+    fprintf(stderr, "[mg-interp] %u minigame ticks drawn between, %u refused; %u pictures; sprites moved and blended %u, unmatched (drawn at the tick) %u; BG layers blended %u kept %u; alpha-1 check bad %u\n",
+            g_mgi_n[0], g_mgi_n[6], g_mgi_n[1], g_mgi_n[2], g_mgi_n[3], g_mgi_n[4], g_mgi_n[5], g_mgi_n[7]);
+    fflush(stderr);
+}
+/* SM64DS_MG_INTERP_CHECK=1 (proof instrument): at every minigame tick, draw the tick again through the same replay with the
+   tick's own state (what a picture at alpha 1 is) and count the pixels that differ from the tick's own 2D (p2 over p3, and
+   engine B's scan-out). Any difference is a replay that does not reproduce the tick. */
+static void mgi_check(void)
+{
+    static int on = -1;
+    if (on < 0) on = getenv("SM64DS_MG_INTERP_CHECK") ? 1 : 0;
+    if (!on) return;
+    static ntr::Framebuffer *scratch;
+    if (!scratch) scratch = new ntr::Framebuffer;
+    for (int y = 0; y < ntr::active_h; ++y)
+        memcpy(scratch->px[y], g_ip_p3->px[y], ntr::active_w * sizeof(uint32_t));
+    mgi_swap_in(1.0);                  /* the state a picture at alpha 1 draws from */
+    port_message_engine_a_replay(scratch);
+    long bad = 0;
+    for (int y = 0; y < ntr::active_h; ++y)
+        for (int x = 0; x < ntr::active_w; ++x)
+            if (scratch->px[y][x] != g_ip_p2->px[y][x]) ++bad;
+    const long badb = hal_sub_screen_blend_check();
+    mgi_swap_out();
+    if (bad || badb) {
+        ++g_mgi_n[7];
+        if (g_mgi_n[7] <= 20) fprintf(stderr, "[mg-interp] check t%u: engine A %ld px, engine B %ld px differ\n", g_si_ticks, bad, badb);
+        static const char *dump = getenv("SM64DS_MG_INTERP_CHECK_DUMP");
+        if (dump && g_mgi_n[7] <= 3) {
+            char pth[400];
+            _snprintf(pth, sizeof pth, "%s_t%u_replay.bmp", dump, g_si_ticks);
+            ntr::ppu_write_bmp(pth, *scratch);
+            _snprintf(pth, sizeof pth, "%s_t%u_tick.bmp", dump, g_si_ticks);
+            ntr::ppu_write_bmp(pth, *g_ip_p2);
+        }
+    }
+}
+
+
 static double g_force_ms[5];   /* MENUINTERP2 cost rows: forced builds, total / replay / raster / 2D (incl. menu) / menu re-draw, ms summed */
 static unsigned g_force_n;
+static void mgi_report(void);
 static void scene_ip_report(void)
 {
+    mgi_report();
     if (!g_si_ticks) return;
     fprintf(stderr, "[scene-interp] %u scene ticks, %u blendable; snaps:", g_si_ticks,
             g_si_ok);
@@ -11246,7 +11576,7 @@ static void scene_ip_hook_body(int stage, void *fbp, int frame, int tick_game)
                     mg_ok = (e && e[0] == '1') ? 1 : 0;
                 }
                 const int sc = port_scene_env_want();
-                if (!mg_ok && sc >= 0 && IsMinigameActorID((unsigned)sc))
+                if (!mg_ok && !mgi_enabled() && sc >= 0 && IsMinigameActorID((unsigned)sc))
                     why = SI_MG;
             }
         }
@@ -11286,6 +11616,8 @@ static void scene_ip_hook_body(int stage, void *fbp, int frame, int tick_game)
         return;
     }
     /* stage 2: the 2D, the bottom screen and engine A's fade are in fb */
+    g_mgi_tick = 0;
+    if (mgi_enabled()) mgi_capture();   /* MGINTERP1: the state this tick drew, every tick */
     if (!g_ip_tick_ok) return;
     /* MENUFOLD1: a one-screen menu that takes no 3D pixels as a source lets the pictures between ticks run (the tick's composed
        picture goes back over the replayed 3D); one that moves 3D pixels keeps the snap. Asked here, after the composite, so it is
@@ -11366,6 +11698,18 @@ static void scene_ip_hook_body(int stage, void *fbp, int frame, int tick_game)
         }
     }
     g_ip_snapstage = 2;
+    /* MGINTERP1: a minigame tick on the stacked layout with no fade, no menu and the tick before it captured draws its pictures
+       between ticks from the blended 2D state (mgi_build) */
+    if (mgi_enabled() && mgi_scene_is_mg()) {
+        if (hal_sub_screen_stacked() && g_mgi_prev.valid && g_mgi_prev.serial + 1 == g_mgi_cur.serial &&
+            !g_ip_fade_on && !g_ip_menu_relift && !hal_menu_live()) {
+            g_mgi_tick = 1;
+            ++g_mgi_n[0];
+            mgi_check();
+        } else {
+            ++g_mgi_n[6];
+        }
+    }
     if ((g_si_ticks % 240) == 0 && (ip_trace() || getenv("SM64DS_SCENE_INTERP_TRACE")))
         scene_ip_report();
 }
@@ -11620,7 +11964,8 @@ static void ip_scene_present(int stacked, uint32_t *stack_img,
                 g_ip_skip_p5 = 1;
                 const ntr::StackLayout &lay = *hal_screen_layout();
                 g_ip_stack_fast = (lay.band_h == 0 && lay.head_h == 0 &&
-                                   lay.w == w && lay.h == h && !getenv("SM64DS_SCENE_INTERP_FULLCOMPOSE"));
+                                   lay.w == w && lay.h == h && !getenv("SM64DS_SCENE_INTERP_FULLCOMPOSE") &&
+                                   !g_mgi_tick);   /* MGINTERP1: the bottom screen moves too */
                 g_ip_stack_final = stack_img;
                 /* fast: hal's buffer stays the tick's picture and the blends
                    work in the kept copy; otherwise the kept copy is the tick's

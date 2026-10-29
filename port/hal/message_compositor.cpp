@@ -3450,10 +3450,18 @@ static void rabbit_rank_refresh(void)
     s_cur = want;
 }
 
+/* run after093, lane MGINTERP1: 1 while port_message_engine_a_replay draws a picture between two minigame ticks. The frame's
+   own work at the head of the compositor (the graph block's beat, the VRAM publish, the OAM upload, the layer-mask publish, the
+   text-scroll take, the tween window record, the level-clear question) is the TICK's and is not run again; only the raster. */
+static int g_mc_replay;
+static unsigned char g_mc_regs_drawn[0x40], g_mc_oam_drawn[0x400];
+extern "C" const unsigned char *port_message_engine_a_regs_drawn(void) { return g_mc_regs_drawn; }
+extern "C" const unsigned char *port_message_engine_a_oam_drawn(void) { return g_mc_oam_drawn; }
 extern "C" void port_message_composite_engine_a(void *fbp)
 {
-    rabbit_rank_refresh();   /* RABBIT1 */
     ntr::Framebuffer &fb = *reinterpret_cast<ntr::Framebuffer *>(fbp);
+    if (!g_mc_replay) {
+    rabbit_rank_refresh();   /* RABBIT1 */
     /* POLISH093 P3 (the text box opening between two ticks, see port_tween_win below): this tick's window record starts empty and the
        last tick's becomes the previous one. Set where the box's window is read, further down. */
     g_tw_prev = g_tw_cur;
@@ -3470,6 +3478,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     g_cz.live = (lc_ov.live || lc_ov.top_live) ? 1 : 0;
     g_cz.mark(0);
     ++g_cz.n[g_cz.live];
+    }   /* !g_mc_replay */
     /* and the brightness mask's: off until this frame builds one */
     g_bm_live = false;
     g_inset_fade_set = false;
@@ -3488,8 +3497,8 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     if ((lc_ov.live || lc_ov.top_live) && !g_lift_card) ntr::gx_card_settle_because("the level-clear compose");
     g_cz.mark(1);
     /* TWODGPU1: may this tick's host-resolution half go to the card? (after
-       menu1's decision, which lc_overlay_begin above asks for) */
-    const bool tw_try = twod_wanted();
+       menu1's decision, which lc_overlay_begin above asks for). MGINTERP1: a replay draws on the processor. */
+    const bool tw_try = g_mc_replay ? false : twod_wanted();
 
     /* ---- func_02019144 LINE 46, THE ENGINE-A LAYER-MASK PUBLISH -----------
      *
@@ -3570,14 +3579,14 @@ extern "C" void port_message_composite_engine_a(void *fbp)
        publish below is here: the rasteriser must read what the beat just
        wrote, and the beat writes DISPCNT, BGxCNT and OAM. The engine B half
        of the tail reads the same verdict inside hal_sub_screen_present. */
-    const bool run_tail = port_graph_block_beat() != 0;
+    const bool run_tail = g_mc_replay ? false : port_graph_block_beat() != 0;   /* MGINTERP1: the tick's beat already ran */
     /* DRAWFLASH1: A VRAM BANK'S NEW MAPPING IS THIS FRAME'S, so the captured block is in its window before anything below reads it.
        The beat above is the ROM's VBlank work: it programs VRAMCNT together with DISPCNT / BGxCNT, and on the DS the bank shows through its
        new mapping from the frame's first scanline, as BG3's direct-colour bitmap does. The move of the captured block into that window
        lived only in hal_sub_screen_present, after this compose, so for one picture BG3's held-face bitmap was read out of a window still
        holding the previous capture (the title's drawing page entered a second time: the earlier face, half overwritten, over the page).
        The same publish, now in the DS's order; the later call finds nothing left to do. */
-    ntr::ppu_vram_publish();
+    if (!g_mc_replay) ntr::ppu_vram_publish();
     /* func_02019144 LINES 44-45, THE OAM UPLOAD, and it belongs HERE.
        The ROM's order is slot-2 beat, OAM::Flush, OAM::Load, and only then the
        two layer publishes -- all of it in VBlank, so the frame it configures is
@@ -3598,13 +3607,19 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             *reinterpret_cast<volatile uint32_t *>(kRegBase) =
                 (rd32(kRegBase) & ~0x1F00u) | ((uint32_t)data_0209d45c << 8);
     }
+    /* MGINTERP1: the register file this raster reads, kept for the pictures between ticks. The BG offsets the frame's sync
+       copies in later (hal/sub_screen.cpp) reach this raster one frame after engine B's, so a replay must start from these. */
+    if (!g_mc_replay) {
+        std::memcpy(g_mc_regs_drawn, reinterpret_cast<const void *>(kRegBase), sizeof g_mc_regs_drawn);
+        std::memcpy(g_mc_oam_drawn, reinterpret_cast<const void *>(kOamBase), sizeof g_mc_oam_drawn);
+    }
 
     const uint32_t dispcnt = rd32(kRegBase);
     const unsigned disp_mode = (dispcnt >> 16) & 3;
     /* the per-frame layer census, BEFORE the forced-blank exit below, because
        a frame the compositor declines is still a frame whose registers are the
        game's own statement about its layers. */
-    {
+    if (!g_mc_replay) {
         extern unsigned char data_0209d45c;
         enga_layer_regs(dispcnt, (unsigned)data_0209d45c);
     }
@@ -4798,4 +4813,28 @@ extern "C" unsigned int port_engine_a_fade_px(unsigned int p, unsigned char bm)
         b -= (b * g_fpx_evy) >> 4;
     }
     return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+}
+
+/* run after093, lane MGINTERP1: engine A's 2D drawn again into fbp (a picture between two minigame ticks, whose 3D is already
+   in it) from the registers and the OAM as they stand now, which the caller has set to the blended state. Only the raster runs:
+   see g_mc_replay. The records the raster leaves for the pictures between ticks of a TEXT box (the tween window, the text
+   scroll, the HUD slide note) are the tick's and are put back afterwards. Returns 1. */
+extern "C" int port_message_engine_a_replay(void *fbp)
+{
+    const TwWin tw_cur = g_tw_cur, tw_prev = g_tw_prev;
+    const int tw_closing = g_tw_closing, ts_live = g_ts_live, ts_pend = g_ts_pend;
+    const HudSlideNote note = g_note;
+    int slide_n = g_slide_n, slide_ds[2][4], slide_d[2];
+    std::memcpy(slide_ds, g_slide_ds, sizeof slide_ds);
+    std::memcpy(slide_d, g_slide_d, sizeof slide_d);
+    g_mc_replay = 1;
+    port_message_composite_engine_a(fbp);
+    g_mc_replay = 0;
+    g_tw_cur = tw_cur; g_tw_prev = tw_prev; g_tw_closing = tw_closing;
+    g_ts_live = ts_live; g_ts_pend = ts_pend;
+    g_note = note;
+    g_slide_n = slide_n;
+    std::memcpy(g_slide_ds, slide_ds, sizeof slide_ds);
+    std::memcpy(g_slide_d, slide_d, sizeof slide_d);
+    return 1;
 }

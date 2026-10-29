@@ -6009,3 +6009,32 @@ extern "C" int port_sub_screen_hd_ui_reset(void)
     g_art_state = 0;
     return was;
 }
+
+/* run after093, lane MGINTERP1: a picture between two minigame ticks scans engine B out again into g_sub from the registers and
+   the OAM as the caller has set them (the blended state), so the stacked compose that follows draws the blended bottom screen.
+   The tick's own scan-out is kept and put back afterwards (restore), so nothing after the picture sees the blended one. */
+static ntr::SubFramebuffer g_sub_keep;
+extern "C" void hal_sub_screen_blend_rescan(void)
+{
+    g_sub_keep = g_sub;
+    ntr::ppu_scanout_sub(g_sub);
+}
+extern "C" void hal_sub_screen_blend_restore(void)
+{
+    g_sub = g_sub_keep;
+}
+
+/* MGINTERP1 proof instrument (SM64DS_MG_INTERP_CHECK): engine B scanned out again from the state as it stands, against the
+   tick's own scan-out; the number of pixels that differ (0 = the rescan reproduces the tick). g_sub is left as it was. */
+extern "C" long hal_sub_screen_blend_check(void)
+{
+    static ntr::SubFramebuffer t;
+    t = g_sub;
+    ntr::ppu_scanout_sub(g_sub);
+    long n = 0;
+    for (int y = 0; y < 192; ++y)
+        for (int x = 0; x < 256; ++x)
+            if (g_sub.px[y][x] != t.px[y][x]) ++n;
+    g_sub = t;
+    return n;
+}
