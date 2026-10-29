@@ -589,7 +589,7 @@ const Piece *arrow_right_piece(int w, int h)
 
 /* =========================================================== state and rows ============================================ */
 
-enum Tab { T_GENERAL = 0, T_DISPLAY, T_CONTROLS, T_SOUND, T_PATCHES, T_COUNT };
+enum Tab { T_GENERAL = 0, T_DISPLAY, T_CONTROLS, T_SOUND, T_PATCHES, T_ONLINE, T_COUNT };
 enum RType { R_CHOICE, R_SLIDER, R_CHECK, R_BIND, R_HEAD, R_NOTE };
 struct Row { RType t; const char *label; int id, id2, step; const char *const *names; int nn; const int *vals; int id3p1 = 0; };   /* vals: the value of each choice when it is not min + index (the frame rate stops) */
 
@@ -622,9 +622,7 @@ const Row ROWS_GENERAL[] = {
     { R_SLIDER, "Minimap size", SL_MINIMAP_SCALE, -1, 5, 0, 0 },
     { R_NOTE, "The minimap is the small map in the corner.", -1, -1, 0, 0, 0 },
     { R_CHECK, "Debug menu", SL_DEBUG_MENU, -1, 0, 0, 0 },
-    { R_CHOICE, "Chat size", SL_CHAT_SCALE, -1, 0, CHAT_LABELS, 5, CHAT_VALS },
     { R_CHECK, "Custom characters from the start", SL_CHARS_FROM_START, -1, 0, 0, 0 },
-    { R_CHECK, "Online events", SL_ONLINE_EVENTS, -1, 0, 0, 0 },
     { R_CHECK, "Character select on star select", SL_CHARACTER_STRIP, -1, 0, 0, 0 },
     { R_CHECK, "Coins in the middle", SL_COINS_MIDDLE, -1, 0, 0, 0 },
     { R_NOTE, "Puts the coin counter at the top middle, like SM64.", -1, -1, 0, 0, 0 },
@@ -679,11 +677,21 @@ const Row ROWS_CONTROLS[] = {
     { R_BIND, "Mouse look button", SL_MOUSE_BASE + HOST_MOUSE_CAM_HOLD, -1, 0, 0, 0 },
     { R_NOTE, "Two actions can share a button.", -1, -1, 0, 0, 0 },
 };
+/* CHEATS1: ONLINE holds the online rows that were in GENERAL (same keys, OnlineEvents and ChatScale) and the world party bindings (KeyPartyInvite /
+   PadPartyInvite, KeyPartyLeave / PadPartyLeave), which had no row on the page. Name, colours and voice are launcher settings, not live keys. */
+const Row ROWS_ONLINE[] = {
+    { R_CHECK, "Online events", SL_ONLINE_EVENTS, -1, 0, 0, 0 },
+    { R_CHOICE, "Chat size", SL_CHAT_SCALE, -1, 0, CHAT_LABELS, 5, CHAT_VALS },
+    { R_HEAD, "World party", -1, -1, 0, 0, 0 },
+    { R_BIND, "Party invite", SL_KEY_BASE + HOST_KEY_PARTY_INVITE, SL_PAD_BASE + HOST_PAD_PARTY_INVITE, 0, 0, 0 },
+    { R_BIND, "Leave party", SL_KEY_BASE + HOST_KEY_PARTY_LEAVE, SL_PAD_BASE + HOST_PAD_PARTY_LEAVE, 0, 0, 0 },
+    { R_NOTE, "Name, colours and voice are set in the launcher.", -1, -1, 0, 0, 0 },
+};
 const Row ROWS_SOUND[] = {
     { R_SLIDER, "Volume", SL_VOLUME, -1, 5, 0, 0 },
     { R_NOTE, "Music and effects share one volume.", -1, -1, 0, 0, 0 },
 };
-const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "DISPLAY", "CONTROLS", "SOUND", "PATCHES" };
+const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "DISPLAY", "CONTROLS", "SOUND", "PATCHES", "ONLINE" };
 
 /* DISPLAY is built per call: the Frame rate row is there only when this build's settings_live has a FrameRate row (another lane makes it
    live; until then it stays a launcher setting and the note says so) */
@@ -726,6 +734,7 @@ const Row *rows_of(int tab, int *n)
     case T_SOUND: *n = (int)(sizeof ROWS_SOUND / sizeof ROWS_SOUND[0]); return ROWS_SOUND;
     case T_PATCHES: return patches_rows(n);
     case T_CONTROLS: *n = (int)(sizeof ROWS_CONTROLS / sizeof ROWS_CONTROLS[0]); return ROWS_CONTROLS;
+    case T_ONLINE: *n = (int)(sizeof ROWS_ONLINE / sizeof ROWS_ONLINE[0]); return ROWS_ONLINE;
     default: *n = (int)(sizeof ROWS_GENERAL / sizeof ROWS_GENERAL[0]); return ROWS_GENERAL;
     }
 }
