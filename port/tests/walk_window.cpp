@@ -9264,8 +9264,10 @@ static void port_handoff_signal(void);
 static void port_handoff_show(void);    /* JOINWIN1 */
 static void join_settings_dump_once(void);   /* JOINFLOW1 */
 
+static void win_rect_log_tick(HWND hwnd);
 static void present(void)
 {
+    win_rect_log_tick(g_present_hwnd);   /* MGINTERP1 proof instrument, inert unless SM64DS_WINRECT_LOG is set */
     port_gpu_present_set_repeat(g_present_repeat);
     /* run perf2: charge the blit to present, or to present_x when the
        pacer is the caller (FrameRate's repeated pictures) */
@@ -14051,6 +14053,54 @@ static void stack_capture(const uint32_t *img)
     fflush(stderr);
 }
 
+/* run after093, lane MGINTERP1 (Tango 10-29, "can we not resize the window when it goes to minigame in windowed mode"): a
+   windowed game keeps its size and place when a minigame starts or ends; the picture is fitted into the window as it is
+   (letterboxed, with the side fill) the way a window the player sized already is. SM64DS_WINDOW_FOLLOW_LAYOUT=1 puts the
+   old behaviour back (the window grows or shrinks to the new layout's shape). Fullscreen and maximised are not touched. */
+static int win_follow_layout(void)
+{
+    static int v = -1;
+    if (v < 0) { const char *e = getenv("SM64DS_WINDOW_FOLLOW_LAYOUT"); v = (e && e[0] == '1') ? 1 : 0; }
+    return v;
+}
+/* SM64DS_WINRECT_LOG=<n> (proof instrument): the window and client rectangles at every layout change and every n scene frames */
+static void win_rect_log(HWND hwnd, const char *why)
+{
+    static int n = -2;
+    if (n == -2) { const char *e = getenv("SM64DS_WINRECT_LOG"); n = e ? atoi(e) : -1; }
+    if (n < 0 || !hwnd || !W.GetClientRect_) return;
+    HMODULE u = GetModuleHandleA("user32.dll");
+    BOOL(WINAPI *grect)(HWND, RECT *) = u ? (BOOL(WINAPI *)(HWND, RECT *))GetProcAddress(u, "GetWindowRect") : 0;
+    RECT r = {0, 0, 0, 0}, c = {0, 0, 0, 0};
+    if (grect) grect(hwnd, &r);
+    W.GetClientRect_(hwnd, &c);
+    fprintf(stderr, "[winrect] %s: window %ld,%ld %ldx%ld client %ldx%ld user_sized %d fullscreen %d\n", why, (long)r.left, (long)r.top,
+            (long)(r.right - r.left), (long)(r.bottom - r.top), (long)(c.right - c.left), (long)(c.bottom - c.top), g_user_sized, g_fullscreen);
+}
+static void win_rect_log_tick(HWND hwnd)
+{
+    static int n = -2;
+    static unsigned f;
+    if (n == -2) { const char *e = getenv("SM64DS_WINRECT_LOG"); n = e ? atoi(e) : 0; }
+    if (n > 0 && (f++ % (unsigned)n) == 0) win_rect_log(hwnd, "frame");
+    /* SM64DS_PROOF_USER_RESIZE=<picture>:<w>x<h> (proof instrument, inert unset): at that picture the window gets what a
+       drag on its sizing border gives it (WM_SIZING, then the new outer size), so a row can show a player's own size is
+       kept through a minigame's start and end */
+    static int at = -2, rw, rh;
+    static unsigned pics;
+    if (at == -2) {
+        const char *e = getenv("SM64DS_PROOF_USER_RESIZE");
+        at = (e && sscanf(e, "%d:%dx%d", &at, &rw, &rh) == 3) ? at : -1;
+    }
+    if (at >= 0 && hwnd && (int)pics++ == at && W.SetWindowPos_) {
+        HMODULE u = GetModuleHandleA("user32.dll");
+        LRESULT(WINAPI *send)(HWND, UINT, WPARAM, LPARAM) = u ? (LRESULT(WINAPI *)(HWND, UINT, WPARAM, LPARAM))GetProcAddress(u, "SendMessageA") : 0;
+        RECT nr = {0, 0, rw, rh};
+        if (send) send(hwnd, 0x0214 /* WM_SIZING */, 8 /* WMSZ_BOTTOMRIGHT */, (LPARAM)&nr);
+        W.SetWindowPos_(hwnd, 0, 0, 0, rw, rh, 0x0002u | 0x0004u | 0x0010u);
+        win_rect_log(hwnd, "after the proof's border drag");
+    }
+}
 static void stack_present_arm(const uint32_t *img, HWND hwnd)
 {
     stack_capture(img);
@@ -14078,7 +14128,7 @@ static void stack_present_arm(const uint32_t *img, HWND hwnd)
            correctly onto a window nobody wanted. was_h is the header's, the
            header is the window's, and a difference is a grow whenever it
            appears. */
-        if (h != was_h && hwnd && !g_user_sized &&
+        if (h != was_h && hwnd && !g_user_sized && win_follow_layout() &&
             !g_fullscreen && W.GetClientRect_ && W.AdjustWindowRect_ &&
             W.SetWindowPos_ && W.GetWindowLongA_) {
             RECT cr;
@@ -14119,7 +14169,8 @@ static void stack_present_arm(const uint32_t *img, HWND hwnd)
             fprintf(stderr, "[gap] the stacked image grew %d -> %d rows; the "
                     "window keeps the size it has (%s)\n", was_h, h,
                     g_user_sized ? "the player chose it"
-                                 : g_fullscreen ? "fullscreen" : "no window");
+                                 : g_fullscreen ? "fullscreen" : !hwnd ? "no window" : "a windowed game keeps its size");
+            win_rect_log(hwnd, "stacked image grew");
         }
         g_stack_gen = gen;
     }
@@ -14227,7 +14278,7 @@ static void host_layout_follow_scene(HWND hwnd, int two_screen, const char *what
         cw = win_px_1(cw);
         ch = win_px_1(ch);
     }
-    if (hwnd && !g_user_sized && !g_fullscreen && W.AdjustWindowRect_ &&
+    if (hwnd && !g_user_sized && !g_fullscreen && win_follow_layout() && W.AdjustWindowRect_ &&
         W.SetWindowPos_ && W.GetWindowLongA_) {
         RECT want = {0, 0, cw, ch};
         const LONG style = W.GetWindowLongA_(hwnd, GWL_STYLE);
@@ -14245,7 +14296,8 @@ static void host_layout_follow_scene(HWND hwnd, int two_screen, const char *what
                 stacked ? "STACKED, both DS screens full size"
                         : "the corner inset panel",
                 !hwnd ? "no window" : g_user_sized ? "the player chose it"
-                                                   : "fullscreen");
+                                                   : g_fullscreen ? "fullscreen" : "a windowed game keeps its size");
+        win_rect_log(hwnd, what);
     }
     fflush(stderr);
 }
