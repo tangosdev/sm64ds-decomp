@@ -6039,14 +6039,17 @@ extern "C" int port_sub_screen_hd_ui_reset(void)
    the OAM as the caller has set them (the blended state), so the stacked compose that follows draws the blended bottom screen.
    The tick's own scan-out is kept and put back afterwards (restore), so nothing after the picture sees the blended one. */
 static ntr::SubFramebuffer g_sub_keep;
+extern "C" void port_mghr_slot(int slot);   /* MGHIRES1 (ntr/ppu_sub.cpp): the picture's render-scale panel goes in its own buffer */
 extern "C" void hal_sub_screen_blend_rescan(void)
 {
     g_sub_keep = g_sub;
+    port_mghr_slot(1);
     ntr::ppu_scanout_sub(g_sub);
 }
 extern "C" void hal_sub_screen_blend_restore(void)
 {
     g_sub = g_sub_keep;
+    port_mghr_slot(0);
 }
 namespace ntr { void ppu_compose_sub_panel(const SubFramebuffer &sub, uint32_t *dst, const StackLayout &lay); bool ppu_compose_wipe_live(void); }
 /* the bottom screen's panel of the stacked image `img` from g_sub (the rescan above), the rest of the image untouched */
@@ -6070,3 +6073,34 @@ extern "C" long hal_sub_screen_blend_check(void)
     g_sub = t;
     return n;
 }
+
+/* ---- MGHIRES1: WHEN ENGINE B IS DRAWN AT RENDER SCALE (run after093) ---------
+ *
+ * ntr/ppu_sub.cpp's hr_build draws the bottom screen at the picture's own scale
+ * (affine sprites and BGs evaluated per host pixel, sub-pixel places between two
+ * ticks) and, with the MinigameUpscale setting, runs the pixel-art upscaler on
+ * it. This is the host's say over when: the stacked layout of a minigame (or the
+ * Rec Room), at a render scale of 2 or more (below that there is no finer pixel
+ * to draw). SM64DS_MG_HIRES=0 turns the render-scale half off for an A/B on one
+ * binary; SM64DS_MG_UPSCALE overrides the setting. */
+extern "C" void port_mghr_policy_install(int (*fn)(void));
+extern "C" int IsMinigameActorID(unsigned int id);
+extern "C" int port_scene_env_want(void);
+static int mghr_env(const char *name)
+{
+    const char *e = std::getenv(name);
+    return (e && *e) ? (*e != '0' ? 1 : 0) : -1;
+}
+static int mghr_policy(void)
+{
+    static int hi = -2, up = -2;
+    if (hi == -2) { hi = mghr_env("SM64DS_MG_HIRES"); up = mghr_env("SM64DS_MG_UPSCALE"); }
+    if (!hal_sub_screen_stacked() || ntr::active_h / ntr::SUB_H < 2) return 0;
+    int sc = port_scene_live_id();
+    if (sc < 0) sc = port_scene_env_want();
+    if (sc < 0 || !(IsMinigameActorID((unsigned)sc) || sc == 5)) return 0;
+    const int a = hi != 0 ? 1 : 0;
+    const int b = up >= 0 ? up : host_setting_minigame_upscale();
+    return a | (b ? 2 : 0);
+}
+static const int g_mghr_installed = (port_mghr_policy_install(mghr_policy), 1);

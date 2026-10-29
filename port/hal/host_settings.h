@@ -848,6 +848,13 @@ int host_setting_save_frame_rate(int rate);
    SM64DS_SMOOTH_MOTION overrides. */
 int host_setting_smooth_motion(void);
 
+/* ---- MinigameUpscale: THE PIXEL-ART UPSCALER ON THE MINIGAMES' 2D (run after093, lane MGHIRES1) --
+   Default 0, the DS pixels sharp as they are. 1 runs the EPX / Scale2x-Scale3x rules on each minigame screen's finished
+   2D before the two screens are stacked, at a render scale of 2 or more (ntr/ppu_sub.cpp hr_build, engine B). It only
+   moves a neighbour's colour into a pixel's corner: no new colours, gameplay untouched. Accepted: 1 / true on, anything
+   else off. SM64DS_MG_UPSCALE overrides. */
+int host_setting_minigame_upscale(void);
+
 /* ---- THE THREE PICTURE-QUALITY KEYS (run hd1) ---------------------------
    One block, because they are one promise: with every one of them absent the
    game's picture, timing and behaviour are what the build without them
