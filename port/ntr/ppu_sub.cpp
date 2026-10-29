@@ -2652,6 +2652,8 @@ void band_edge_update(const uint32_t *dst, int dst_w, const StackLayout &lay)
     }
 }
 
+enum { kAmbW = 8192 };
+RGB g_amb_t[kAmbW], g_amb_b[kAmbW];
 void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
@@ -2728,15 +2730,21 @@ void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
             b.g = (bots[c].g * v + bots[c + 1].g * u) / span;
             b.b = (bots[c].b * v + bots[c + 1].b * u) / span;
         }
-        const int den = 2 * lay.band_h;
-        for (int k = 0; k < lay.band_h; ++k) {
-            const int num = 2 * k + 1;
+        /* MGINTERP1: the column's two ends kept, the rows written below row by row (the same values; a column at a time
+           walked the band with a stride of a whole image row per pixel) */
+        if (x < kAmbW) { g_amb_t[x] = t; g_amb_b[x] = b; }
+    }
+    const int den = 2 * lay.band_h;
+    const int wn = lay.w < kAmbW ? lay.w : kAmbW;
+    for (int k = 0; k < lay.band_h; ++k) {
+        const int num = 2 * k + 1;
+        uint32_t *row = dst + (size_t)(lay.band_y + k) * dst_w;
+        for (int x = 0; x < wn; ++x) {
+            const RGB &t = g_amb_t[x], &b = g_amb_b[x];
             const int r = (t.r * (den - num) + b.r * num) / den;
             const int g = (t.g * (den - num) + b.g * num) / den;
             const int bl = (t.b * (den - num) + b.b * num) / den;
-            dst[(size_t)(lay.band_y + k) * dst_w + x] =
-                0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) |
-                (uint32_t)bl;
+            row[x] = 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)bl;
         }
     }
 }
@@ -5330,11 +5338,21 @@ static void wipe_circle_cut(uint32_t *dst, int dst_w, int x0, int y0, float s, f
     const uint32_t bd = dst[(size_t)y0 * dst_w + x0];
     const float cx = (float)x0 + 128.f * s, cy = (float)y0 + 96.f * s;
     const float rh = (R - 0.75f) * s;
+    const uint32_t bd_full = 0xFF000000u | (bd & 0x00FFFFFFu);   /* what the blend below gives at a = 0 */
     for (int y = 0; y < ch; ++y) {
         const float dy = (float)(y0 + y) + 0.5f - cy;
         uint32_t *row = dst + (size_t)(y0 + y) * dst_w + x0;
+        /* MGINTERP1: the pixels well inside the circle (a >= 1, left alone) and well outside it (a = 0, the backdrop) are known from
+           the row's chord without a square root each; only a band of a few pixels about the edge is worked out as before. The
+           margins (2 host pixels and 1.5 in the radius) keep the shortcut away from any pixel the exact test could answer otherwise. */
+        const double ri = (double)rh - 2.0, ro = (double)rh + 2.0, dd = (double)dy * dy;
+        const double wi = ri > 0.0 && ri * ri > dd ? std::sqrt(ri * ri - dd) - 2.0 : -1.0;
+        const double wo = std::sqrt(ro * ro > dd ? ro * ro - dd : 0.0) + 2.0;
         for (int x = 0; x < cw; ++x) {
             const float dx = (float)(x0 + x) + 0.5f - cx;
+            const double adx = dx < 0.f ? -(double)dx : (double)dx;
+            if (adx < wi) continue;
+            if (adx > wo) { row[x] = bd_full; continue; }
             const float d = std::sqrt(dx * dx + dy * dy);
             float a = rh - d + 0.5f;
             if (a >= 1.f) continue;
@@ -5449,7 +5467,27 @@ static void wipe_rows_cut(uint32_t *dst, int dst_w, int dst_h, int stride, int x
             else { iv_s[nm] = iv_s[a1]; iv_e[nm] = iv_e[a1]; ++nm; }
         }
         uint32_t *row = dst + (size_t)py * stride;
+        /* MGINTERP1: each merged interval in host columns: [ilo, ihi] surely inside (a >= 1, the pixel is left alone), outside
+           every [olo, ohi] surely outside (a = 0, the backdrop), the rest worked out exactly as before. Only where the column's DS
+           x is not clamped (2 host pixels in from the rectangle's sides), and with 2 host pixels of margin on every bound. */
+        double ilo[4], ihi[4], olo[4], ohi[4];
+        for (int i = 0; i < nm; ++i) {
+            const double L = ((double)iv_s[i] + inset) * s + x0, H = ((double)iv_e[i] - inset) * s + x0;
+            ilo[i] = L + 2.0; ihi[i] = H - 3.0;
+            olo[i] = L - 3.0; ohi[i] = H + 2.0;
+        }
+        const int safe0 = x0 + 2, safe1 = x0 + cw - 3;
+        const uint32_t bd_full = 0xFF000000u | (backdrop & 0x00FFFFFFu);
         for (int px = xa; px < xb; ++px) {
+            if (px >= safe0 && px <= safe1) {
+                bool in = false, near = false;
+                for (int i = 0; i < nm; ++i) {
+                    if (px >= ilo[i] && px <= ihi[i]) { in = true; break; }
+                    if (px >= olo[i] && px <= ohi[i]) near = true;
+                }
+                if (in) continue;
+                if (!near) { row[px] = bd_full; continue; }
+            }
             float xd = ((float)px + 0.5f - (float)x0) / s;
             if (xd < 0.f) xd = 0.f;
             if (xd > 255.99f) xd = 255.99f;
@@ -5600,15 +5638,30 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
            identity left to mask against. evy/to_white stay live below for the
            gap band's own seam/straddle fade, a host UI element and not part
            of the DS raster. */
+        /* MGINTERP1: the same nearest scale-up, a DS pixel repeated ry times along the row and a row equal to the one above it
+           (the same DS row) copied whole, instead of a divide per host pixel. Same pixels. */
         for (int y = 0; y < lay.pan_h; ++y) {
             const int sy = y / ry;
             const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
             uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
             for (int x = 0; x < px0; ++x) out[x] = 0xFF000000u;
             for (int x = px0 + pw; x < active_w; ++x) out[x] = 0xFF000000u;
-            for (int x = 0; x < pw; ++x) {
-                const int sx = x / ry;
-                out[px0 + x] = src[sx < SUB_W ? sx : SUB_W - 1];
+            if (y > 0 && (y - 1) / ry == sy && ry > 0) {
+                std::memcpy(out + px0, out - dst_w + px0, (size_t)pw * 4);
+                continue;
+            }
+            if (ry <= 0) {
+                for (int x = 0; x < pw; ++x) {
+                    const int sx = x / ry;
+                    out[px0 + x] = src[sx < SUB_W ? sx : SUB_W - 1];
+                }
+                continue;
+            }
+            uint32_t *o = out + px0;
+            for (int x = 0, sx = 0; x < pw; ++sx) {
+                const uint32_t c = src[sx < SUB_W ? sx : SUB_W - 1];
+                const int e = x + ry < pw ? x + ry : pw;
+                for (; x < e; ++x) o[x] = c;
             }
         }
 
@@ -5752,7 +5805,97 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     wipe_circle_stacked(dst, dst_w, a_y, active_h, b_y, -1, active_h);
 }
 
+/* MGINTERP1: engine B's panel of the stacked image only, the same nearest scale-up ppu_compose_stacked makes into the same
+   rows and columns (the panel's own; the margins, the band and the side bars are left as they are). For a picture between two
+   minigame ticks that starts from the tick's finished image. */
+void ppu_compose_sub_panel(const SubFramebuffer &sub, uint32_t *dst, const StackLayout &lay)
+{
+    if (!dst) return;
+    const int b_y = lay.main_lower ? lay.top_y : lay.bottom_y;
+    if (lay.pan_x0 > 0) {
+        const int px0 = lay.pan_x0, pw = lay.pan_w, ry = active_h / SUB_H, dst_w = lay.w;
+        if (ry <= 0) return;
+        for (int y = 0; y < lay.pan_h; ++y) {
+            const int sy = y / ry;
+            const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
+            uint32_t *o = dst + (size_t)(b_y + y) * dst_w + px0;
+            if (y > 0 && (y - 1) / ry == sy) { std::memcpy(o, o - dst_w, (size_t)pw * 4); continue; }
+            for (int x = 0, sx = 0; x < pw; ++sx) {
+                const uint32_t c = src[sx < SUB_W ? sx : SUB_W - 1];
+                const int e = x + ry < pw ? x + ry : pw;
+                for (; x < e; ++x) o[x] = c;
+            }
+        }
+        return;
+    }
+    const int rx = active_w / SUB_W, ry = active_h / SUB_H, dst_w = lay.w;
+    for (int y = 0; y < active_h; ++y) {
+        const int sy = ry > 0 ? y / ry : (y * SUB_H) / active_h;
+        const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
+        uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
+        for (int x = 0; x < active_w; ++x) {
+            const int sx = rx > 0 ? x / rx : (x * SUB_W) / active_w;
+            out[x] = src[sx < SUB_W ? sx : SUB_W - 1];
+        }
+    }
+}
+bool ppu_compose_wipe_live(void)
+{
+    const uint32_t *rows = nullptr;
+    return rt_window_rows(0, &rows) || rt_window_rows(1, &rows);
+}
+
+/* MGINTERP1: the gap band's and the seam's memory (the ambient follow, the edge rows, the ghost tracks, the snow), kept
+   across a compose of a picture BETWEEN two ticks. Those filters step once per compose, so every extra picture used to move
+   them on and the next tick's own picture came out different (its band) depending on how many pictures the machine had time
+   for. A picture between ticks now composes from the tick's memory and leaves it as it found it. */
+namespace {
+struct ComposeKeep {
+    AmbMemory amb; unsigned amb_frame;
+    EdgeMem edge; uint8_t ew[2][256], eo[2][256], er[2]; uint32_t el[2][256], eb[2][256];
+    unsigned band_frame, band_carried;
+    BandCache track[BAND_TRACK_MAX];
+    unsigned peek_frame, hinge_frame, head_frame, seam_frame;
+    SnowFlake snow[SNOW_MAX]; unsigned snow_last; int snow_warm; unsigned snow_lcg;
+};
+ComposeKeep *g_keep_slot[2];
+}
+void ppu_compose_state_save(int slot)
+{
+    ComposeKeep *&g_keep = g_keep_slot[slot & 1];
+    if (!g_keep) g_keep = new ComposeKeep;
+    ComposeKeep &k = *g_keep;
+    k.amb = g_amb; k.amb_frame = g_amb_frame;
+    k.edge = g_edge;
+    std::memcpy(k.ew, g_edge_w, sizeof k.ew); std::memcpy(k.eo, g_edge_obj, sizeof k.eo); std::memcpy(k.er, g_edge_refused, sizeof k.er);
+    std::memcpy(k.el, g_edge_live, sizeof k.el); std::memcpy(k.eb, g_edge_bg_px, sizeof k.eb);
+    k.band_frame = g_band_frame; k.band_carried = g_band_carried;
+    for (int i = 0; i < BAND_TRACK_MAX; ++i) k.track[i] = g_track[i];
+    k.peek_frame = g_peek_frame; k.hinge_frame = g_hinge_frame; k.head_frame = g_head_frame; k.seam_frame = g_seam_frame;
+    for (int i = 0; i < SNOW_MAX; ++i) k.snow[i] = g_snow[i];
+    k.snow_last = g_snow_last_ticks; k.snow_warm = g_snow_warm; k.snow_lcg = g_snow_lcg;
+}
+void ppu_compose_state_restore(int slot)
+{
+    ComposeKeep *g_keep = g_keep_slot[slot & 1];
+    if (!g_keep) return;
+    const ComposeKeep &k = *g_keep;
+    g_amb = k.amb; g_amb_frame = k.amb_frame;
+    g_edge = k.edge;
+    std::memcpy(g_edge_w, k.ew, sizeof k.ew); std::memcpy(g_edge_obj, k.eo, sizeof k.eo); std::memcpy(g_edge_refused, k.er, sizeof k.er);
+    std::memcpy(g_edge_live, k.el, sizeof k.el); std::memcpy(g_edge_bg_px, k.eb, sizeof k.eb);
+    g_band_frame = k.band_frame; g_band_carried = k.band_carried;
+    for (int i = 0; i < BAND_TRACK_MAX; ++i) g_track[i] = k.track[i];
+    g_peek_frame = k.peek_frame; g_hinge_frame = k.hinge_frame; g_head_frame = k.head_frame; g_seam_frame = k.seam_frame;
+    for (int i = 0; i < SNOW_MAX; ++i) g_snow[i] = k.snow[i];
+    g_snow_last_ticks = k.snow_last; g_snow_warm = k.snow_warm; g_snow_lcg = k.snow_lcg;
+}
+
 }  // namespace ntr
 
+/* slot 0: the memory as it was before the tick's own compose (taken by the scene present); slot 1: scratch */
+extern "C" void port_compose_state_save(int slot) { ntr::ppu_compose_state_save(slot); }
+extern "C" void port_compose_state_restore(int slot) { ntr::ppu_compose_state_restore(slot); }
+extern "C" int port_compose_state_have(int slot) { return ntr::g_keep_slot[slot & 1] ? 1 : 0; }
 extern "C" void port_wipe_suppress_set(int on) { ntr::set_wipe_suppress(on != 0); }
 extern "C" int port_wipe_cut_picture(uint32_t *dst, int w, int h, int stride) { return ntr::wipe_cut_picture(dst, w, h, stride) ? 1 : 0; }

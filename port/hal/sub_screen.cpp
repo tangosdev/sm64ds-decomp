@@ -4880,14 +4880,23 @@ void wide_fill_screen(unsigned *img, int iw, int y0, int rows, int cx0, int cx1,
         const int R = rows / 20 > 1 ? rows / 20 : 1;
         for (int pass = 0; pass < 2; ++pass) {
             unsigned *src = pass == 0 ? e : tmp, *dst = pass == 0 ? tmp : e;
+            /* MGINTERP1: the same clamped box sum, kept running (one row in, one out) instead of summed afresh per row */
+            const unsigned n = (unsigned)(2 * R + 1);
+            unsigned sr = 0, sg = 0, sb = 0;
+            for (int k = -R; k <= R; ++k) {
+                const int q = k < 0 ? 0 : k >= rows ? rows - 1 : k;
+                const unsigned c = src[q];
+                sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255;
+            }
             for (int r = 0; r < rows; ++r) {
-                unsigned sr = 0, sg = 0, sb = 0, n = 0;
-                for (int k = -R; k <= R; ++k) {
-                    int q = r + k; q = q < 0 ? 0 : q >= rows ? rows - 1 : q;
-                    const unsigned c = src[q];
-                    sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; ++n;
-                }
                 dst[r] = 0xFF000000u | ((sr / n) << 16) | ((sg / n) << 8) | (sb / n);
+                int qo = r - R, qi = r + R + 1;
+                qo = qo < 0 ? 0 : qo >= rows ? rows - 1 : qo;
+                qi = qi < 0 ? 0 : qi >= rows ? rows - 1 : qi;
+                const unsigned co = src[qo], ci = src[qi];
+                sr += ((ci >> 16) & 255) - ((co >> 16) & 255);
+                sg += ((ci >> 8) & 255) - ((co >> 8) & 255);
+                sb += (ci & 255) - (co & 255);
             }
         }
     }
@@ -4958,6 +4967,24 @@ void wide_fill_screen(unsigned *img, int iw, int y0, int rows, int cx0, int cx1,
     }
     WideArt *art = wide_art_for(key);
     const int mL = cx0 > 0 ? cx0 : 0, mR = iw - cx1 > 0 ? iw - cx1 : 0;
+    static int darken = -1;
+    if (darken < 0) { const char *e = std::getenv("SM64DS_WIDE_DARKEN"); darken = (e && *e == '1') ? 1 : 0; }
+    /* MGINTERP1: with no art and no darkening a bar's colour is one value per row and side, so only the margin pixels are
+       visited (the loop below walks every pixel of every row, the picture's own included, and was a third of a minigame's
+       frame at RenderScale 4 in the stacked 16:9 layout). Same pixels, same values. */
+    if (!art && !darken && cx0 <= cx1) {
+        const int l1 = cx0 < iw ? cx0 : iw, r0 = cx1 > 0 ? cx1 : 0;
+        for (int r = 0; r < rows; ++r) {
+            unsigned *row = img + (size_t)(y0 + r) * iw;
+            const unsigned kl = (cx0 >= 3 ? row[cx0 - 3] : row[0]) & 0xFFFFFFu, kr = (cx1 + 3 <= iw ? row[cx1 + 2] : row[iw - 1]) & 0xFFFFFFu;
+            const unsigned cl = flat[0] ? E[0][r] : wide_mix(E[0][r], 256), cr = flat[1] ? E[1][r] : wide_mix(E[1][r], 256);
+            for (int x = 0; x < l1; ++x)
+                if ((row[x] & 0xFFFFFFu) == kl) row[x] = cl;
+            for (int x = r0; x < iw; ++x)
+                if ((row[x] & 0xFFFFFFu) == kr) row[x] = cr;
+        }
+        return;
+    }
     for (int r = 0; r < rows; ++r) {
         unsigned *row = img + (size_t)(y0 + r) * iw;
         const unsigned kl = (cx0 >= 3 ? row[cx0 - 3] : row[0]) & 0xFFFFFFu, kr = (cx1 + 3 <= iw ? row[cx1 + 2] : row[iw - 1]) & 0xFFFFFFu;
@@ -4980,8 +5007,6 @@ void wide_fill_screen(unsigned *img, int iw, int y0, int rows, int cx0, int cx1,
             }
             if (!have && flat[left ? 0 : 1]) { c = E[left ? 0 : 1][r]; have = 1; }   /* REGRESS093: eased above (the flat colour was written into E first) */
             if (!have) {
-                static int darken = -1;
-                if (darken < 0) { const char *e = std::getenv("SM64DS_WIDE_DARKEN"); darken = (e && *e == '1') ? 1 : 0; }
                 const int f = darken ? 224 - (m > 0 ? 72 * d / m : 0) : 256;   /* WIDEBG2: no darkening (=1 brings WIDEBG1's back) */
                 c = wide_mix(E[left ? 0 : 1][r], f);
             }
@@ -6008,4 +6033,40 @@ extern "C" int port_sub_screen_hd_ui_reset(void)
     g_art_base.w = g_art_base.h = g_art_tab.w = g_art_tab.h = 0;
     g_art_state = 0;
     return was;
+}
+
+/* run after093, lane MGINTERP1: a picture between two minigame ticks scans engine B out again into g_sub from the registers and
+   the OAM as the caller has set them (the blended state), so the stacked compose that follows draws the blended bottom screen.
+   The tick's own scan-out is kept and put back afterwards (restore), so nothing after the picture sees the blended one. */
+static ntr::SubFramebuffer g_sub_keep;
+extern "C" void hal_sub_screen_blend_rescan(void)
+{
+    g_sub_keep = g_sub;
+    ntr::ppu_scanout_sub(g_sub);
+}
+extern "C" void hal_sub_screen_blend_restore(void)
+{
+    g_sub = g_sub_keep;
+}
+namespace ntr { void ppu_compose_sub_panel(const SubFramebuffer &sub, uint32_t *dst, const StackLayout &lay); bool ppu_compose_wipe_live(void); }
+/* the bottom screen's panel of the stacked image `img` from g_sub (the rescan above), the rest of the image untouched */
+extern "C" void hal_sub_screen_blend_panel(unsigned int *img)
+{
+    ntr::ppu_compose_sub_panel(g_sub, reinterpret_cast<uint32_t *>(img), *hal_screen_layout());
+}
+extern "C" int hal_sub_screen_wipe_live(void) { return ntr::ppu_compose_wipe_live() ? 1 : 0; }
+
+/* MGINTERP1 proof instrument (SM64DS_MG_INTERP_CHECK): engine B scanned out again from the state as it stands, against the
+   tick's own scan-out; the number of pixels that differ (0 = the rescan reproduces the tick). g_sub is left as it was. */
+extern "C" long hal_sub_screen_blend_check(void)
+{
+    static ntr::SubFramebuffer t;
+    t = g_sub;
+    ntr::ppu_scanout_sub(g_sub);
+    long n = 0;
+    for (int y = 0; y < 192; ++y)
+        for (int x = 0; x < 256; ++x)
+            if (g_sub.px[y][x] != t.px[y][x]) ++n;
+    g_sub = t;
+    return n;
 }
