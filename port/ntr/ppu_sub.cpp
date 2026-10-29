@@ -1736,7 +1736,7 @@ int (*g_hr_policy)(void);      /* hal: bit 0 render scale, bit 1 the upscaler; S
 short g_hr_ofr[128][2];        /* engine B OAM entry: x, y remainder in 1/256 DS px (true place - drawn place) */
 short g_hr_bfr[4][2];          /* engine B text BG: scroll remainder */
 int g_hr_frac_on;
-long g_hr_n[6];                /* scan-outs built, sensitive rows, phases run, upscaled, check scans, check bad px */
+long g_hr_n[7];                /* scan-outs built, sensitive rows, phases run, upscaled, check px, check bad px, capped */
 double g_hr_ms;
 
 int hr_check_on()
@@ -2148,8 +2148,18 @@ void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
         static uint32_t lcol[4][256];
         static uint8_t lok[4][256];
         uint8_t needrow[192];
-        for (int j = 0; j < S; ++j)
-            for (int i = 0; i < S; ++i) {
+        /* THE COST CAP. A whole screen turning at S 4 is 15 extra resolves per DS pixel; past the budget (resolves per
+           scan-out, SM64DS_MG_HIRES_BUDGET, default 160000, about 2-3 ms here) the phases go every second host pixel and
+           each fills a 2x2 block: half-DS-pixel edges instead of quarter ones, a quarter of the work. */
+        static long budget = -1;
+        if (budget < 0) { const char *e = std::getenv("SM64DS_MG_HIRES_BUDGET"); budget = e ? std::atol(e) : 160000; }
+        long est = 0;
+        for (int y = 0; y < 192; ++y)
+            if (rx1[y] > rx0[y]) est += (long)(rx1[y] - rx0[y]) * (rax[y] == 3 ? S * S - 1 : S - 1);
+        const int st = (est > budget && S % 2 == 0) ? 2 : 1;
+        if (st > 1) ++g_hr_n[6];
+        for (int j = 0; j < S; j += st)
+            for (int i = 0; i < S; i += st) {
                 const int u = i * 256 / S, v = j * 256 / S;
                 /* phase (0,0) with no remainder is the DS pixel: drawn only for the check */
                 const bool zero_check = chk && i == 0 && j == 0 && !g_hr_frac_on;
@@ -2208,12 +2218,14 @@ void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
                             continue;
                         }
                         if (c == fb.px[y][x]) continue;
-                        if (m == 1 && !(i == 0 && j == 0 && g_hr_frac_on && (m & 2)))
-                            for (int jj = 0; jj < S; ++jj) orow[(size_t)(jj - j) * W + x * S + i] = c;   /* x only: the whole column of the cell */
-                        else if (m == 2)
-                            for (int ii = 0; ii < S; ++ii) orow[x * S + ii] = c;                      /* y only: the whole row of the cell */
-                        else
-                            orow[x * S + i] = c;
+                        /* x only: the cell's column(s) of this phase, all S rows; y only: its row(s), all S columns;
+                           both: the st x st block of this phase */
+                        const int j0 = m == 1 ? 0 : j, j1 = m == 1 ? S : j + st;
+                        const int i0 = m == 2 ? 0 : i, i1 = m == 2 ? S : i + st;
+                        for (int jj = j0; jj < j1; ++jj) {
+                            uint32_t *q = orow + (ptrdiff_t)(jj - j) * W + x * S;
+                            for (int ii = i0; ii < i1; ++ii) q[ii] = c;
+                        }
                     }
                 }
             }
@@ -2238,8 +2250,8 @@ const uint32_t *hr_for(const SubFramebuffer &sub, int S)
 void hr_report()
 {
     if (!g_hr_n[0]) return;
-    std::fprintf(stderr, "[mg-hires] %ld render-scale scan-outs (%ld upscaled), %ld sensitive rows, %ld phase passes, %.3f ms per scan-out; check %ld px compared, %ld differ\n",
-                 g_hr_n[0], g_hr_n[3], g_hr_n[1], g_hr_n[2], g_hr_ms / g_hr_n[0], g_hr_n[4], g_hr_n[5]);
+    std::fprintf(stderr, "[mg-hires] %ld render-scale scan-outs (%ld upscaled, %ld at half phases), %ld sensitive rows, %ld phase passes, %.3f ms per scan-out; check %ld px compared, %ld differ\n",
+                 g_hr_n[0], g_hr_n[3], g_hr_n[6], g_hr_n[1], g_hr_n[2], g_hr_ms / g_hr_n[0], g_hr_n[4], g_hr_n[5]);
 }
 
 }  // namespace

@@ -6104,3 +6104,5 @@ static int mghr_policy(void)
     return a | (b ? 2 : 0);
 }
 static const int g_mghr_installed = (port_mghr_policy_install(mghr_policy), 1);
+/* engine A's half (hal/message_compositor.cpp mghr_a_*) asks the same question */
+extern "C" int port_mghr_policy(void) { return mghr_policy(); }
