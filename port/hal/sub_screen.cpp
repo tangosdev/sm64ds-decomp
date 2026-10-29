@@ -4880,14 +4880,23 @@ void wide_fill_screen(unsigned *img, int iw, int y0, int rows, int cx0, int cx1,
         const int R = rows / 20 > 1 ? rows / 20 : 1;
         for (int pass = 0; pass < 2; ++pass) {
             unsigned *src = pass == 0 ? e : tmp, *dst = pass == 0 ? tmp : e;
+            /* MGINTERP1: the same clamped box sum, kept running (one row in, one out) instead of summed afresh per row */
+            const unsigned n = (unsigned)(2 * R + 1);
+            unsigned sr = 0, sg = 0, sb = 0;
+            for (int k = -R; k <= R; ++k) {
+                const int q = k < 0 ? 0 : k >= rows ? rows - 1 : k;
+                const unsigned c = src[q];
+                sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255;
+            }
             for (int r = 0; r < rows; ++r) {
-                unsigned sr = 0, sg = 0, sb = 0, n = 0;
-                for (int k = -R; k <= R; ++k) {
-                    int q = r + k; q = q < 0 ? 0 : q >= rows ? rows - 1 : q;
-                    const unsigned c = src[q];
-                    sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; ++n;
-                }
                 dst[r] = 0xFF000000u | ((sr / n) << 16) | ((sg / n) << 8) | (sb / n);
+                int qo = r - R, qi = r + R + 1;
+                qo = qo < 0 ? 0 : qo >= rows ? rows - 1 : qo;
+                qi = qi < 0 ? 0 : qi >= rows ? rows - 1 : qi;
+                const unsigned co = src[qo], ci = src[qi];
+                sr += ((ci >> 16) & 255) - ((co >> 16) & 255);
+                sg += ((ci >> 8) & 255) - ((co >> 8) & 255);
+                sb += (ci & 255) - (co & 255);
             }
         }
     }
@@ -4958,6 +4967,24 @@ void wide_fill_screen(unsigned *img, int iw, int y0, int rows, int cx0, int cx1,
     }
     WideArt *art = wide_art_for(key);
     const int mL = cx0 > 0 ? cx0 : 0, mR = iw - cx1 > 0 ? iw - cx1 : 0;
+    static int darken = -1;
+    if (darken < 0) { const char *e = std::getenv("SM64DS_WIDE_DARKEN"); darken = (e && *e == '1') ? 1 : 0; }
+    /* MGINTERP1: with no art and no darkening a bar's colour is one value per row and side, so only the margin pixels are
+       visited (the loop below walks every pixel of every row, the picture's own included, and was a third of a minigame's
+       frame at RenderScale 4 in the stacked 16:9 layout). Same pixels, same values. */
+    if (!art && !darken && cx0 <= cx1) {
+        const int l1 = cx0 < iw ? cx0 : iw, r0 = cx1 > 0 ? cx1 : 0;
+        for (int r = 0; r < rows; ++r) {
+            unsigned *row = img + (size_t)(y0 + r) * iw;
+            const unsigned kl = (cx0 >= 3 ? row[cx0 - 3] : row[0]) & 0xFFFFFFu, kr = (cx1 + 3 <= iw ? row[cx1 + 2] : row[iw - 1]) & 0xFFFFFFu;
+            const unsigned cl = flat[0] ? E[0][r] : wide_mix(E[0][r], 256), cr = flat[1] ? E[1][r] : wide_mix(E[1][r], 256);
+            for (int x = 0; x < l1; ++x)
+                if ((row[x] & 0xFFFFFFu) == kl) row[x] = cl;
+            for (int x = r0; x < iw; ++x)
+                if ((row[x] & 0xFFFFFFu) == kr) row[x] = cr;
+        }
+        return;
+    }
     for (int r = 0; r < rows; ++r) {
         unsigned *row = img + (size_t)(y0 + r) * iw;
         const unsigned kl = (cx0 >= 3 ? row[cx0 - 3] : row[0]) & 0xFFFFFFu, kr = (cx1 + 3 <= iw ? row[cx1 + 2] : row[iw - 1]) & 0xFFFFFFu;
@@ -4980,8 +5007,6 @@ void wide_fill_screen(unsigned *img, int iw, int y0, int rows, int cx0, int cx1,
             }
             if (!have && flat[left ? 0 : 1]) { c = E[left ? 0 : 1][r]; have = 1; }   /* REGRESS093: eased above (the flat colour was written into E first) */
             if (!have) {
-                static int darken = -1;
-                if (darken < 0) { const char *e = std::getenv("SM64DS_WIDE_DARKEN"); darken = (e && *e == '1') ? 1 : 0; }
                 const int f = darken ? 224 - (m > 0 ? 72 * d / m : 0) : 256;   /* WIDEBG2: no darkening (=1 brings WIDEBG1's back) */
                 c = wide_mix(E[left ? 0 : 1][r], f);
             }

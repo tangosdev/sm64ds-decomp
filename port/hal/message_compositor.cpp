@@ -3454,6 +3454,9 @@ static void rabbit_rank_refresh(void)
    own work at the head of the compositor (the graph block's beat, the VRAM publish, the OAM upload, the layer-mask publish, the
    text-scroll take, the tween window record, the level-clear question) is the TICK's and is not run again; only the raster. */
 static int g_mc_replay;
+static const uint32_t *g_mc_dirty_final;   /* MGINTERP1: the tick's finished picture, for a replay that redraws only what moved */
+static uint32_t *g_mc_pre_blit;
+static Cell g_a_tick[192][256];
 static unsigned char g_mc_regs_drawn[0x40], g_mc_oam_drawn[0x400];
 extern "C" const unsigned char *port_message_engine_a_regs_drawn(void) { return g_mc_regs_drawn; }
 extern "C" const unsigned char *port_message_engine_a_oam_drawn(void) { return g_mc_oam_drawn; }
@@ -4418,12 +4421,44 @@ extern "C" void port_message_composite_engine_a(void *fbp)
         }
     }
     g_cz.mark(4);
+    /* MGINTERP1: a replay with the tick's finished picture to start from (port_message_engine_a_replay_dirty) redraws only the
+       DS cells whose resolved pixel differs from the tick's: the picture as it stands before this blit is kept aside (a cell
+       that is no longer drawn takes it back), the tick's finished picture is put in, and the cells the tick drew identically
+       are left as they are. Native presentation only, where a cell's place does not depend on what is in it. */
+    const bool mc_dirty = g_mc_replay && g_mc_dirty_final && ntr::present_native();
+    if (!g_mc_replay) std::memcpy(g_a_tick, g_a, sizeof g_a_tick);
+    if (mc_dirty) {
+        if (!g_mc_pre_blit) g_mc_pre_blit = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * (size_t)ntr::SCREEN_W * ntr::SCREEN_H));
+        for (int y = 0; g_mc_pre_blit && y < ntr::active_h; ++y) {
+            std::memcpy(g_mc_pre_blit + (size_t)y * ntr::SCREEN_W, fb.px[y], (size_t)ntr::active_w * 4);
+            std::memcpy(fb.px[y], g_mc_dirty_final + (size_t)y * ntr::SCREEN_W, (size_t)ntr::active_w * 4);
+        }
+    }
+    /* MGINTERP1: the host column and row of every DS column and row, once a frame, instead of two cross-file calls and a
+       divide for each of them per cell (the same numbers: ds_col_x0 / ds_row_y0) */
+    int mc_col_x0[257], mc_row_y0[193];
+    const bool mc_native = ntr::present_native();
+    for (int i = 0; i <= 256; ++i) mc_col_x0[i] = ds_col_x0(i);
+    for (int i = 0; i <= 192; ++i) mc_row_y0[i] = ds_row_y0(i);
     for (int pass = 0; pass < 2; ++pass) {
     if (pass && !g_hud_row_live) break;
     /* pass 0 = the DS plane, pass 1 = the moved coin block's own plane (drawn after, so it covers what is under it) */
     for (int y = 0; y < 192; ++y) {
         for (int x = 0; x < 256; ++x) {
             const Cell &gc = pass ? g_hud_cells[y][x] : g_a[y][x];
+            if (mc_dirty && !pass) {
+                const Cell &tc = g_a_tick[y][x];
+                if (!gc.hit && !tc.hit) continue;
+                if (gc.hit && tc.hit && std::memcmp(&gc, &tc, sizeof gc) == 0) continue;
+                if (!gc.hit) {
+                    /* drawn by the tick, not now: the picture as it was before this blit */
+                    const int hx0 = ntr::widescreen ? mc_col_x0[x] + margin / 2 : x * sx;
+                    const int bw = ntr::widescreen ? mc_col_x0[x + 1] - mc_col_x0[x] : sx;
+                    for (int hy = mc_row_y0[y]; g_mc_pre_blit && hy < mc_row_y0[y + 1]; ++hy)
+                        std::memcpy(&fb.px[hy][hx0], g_mc_pre_blit + (size_t)hy * ntr::SCREEN_W + hx0, (size_t)bw * 4);
+                    continue;
+                }
+            }
             if (!gc.hit) continue;
             if (pass && !g_hud_row[y][x]) continue;   /* g_hud_cells is not cleared per frame: only this frame's moved cells */
             if (!pass && g_hud_erase && g_hud_row_live && g_hud_row[y][x]) continue;
@@ -4435,8 +4470,8 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                byte-for-byte the old code. */
             int bw, hx0;
             if (ntr::widescreen) {
-            const int ux0 = ds_col_x0(x);
-            bw = ds_col_x0(x + 1) - ux0;
+            const int ux0 = mc_col_x0[x];
+            bw = mc_col_x0[x + 1] - ux0;
             /* THE REANCHOR IS FOR A SPARSE HUD OVER A WIDE 3D VIEW, and only
                there. With a 3D layer in the picture (shown3d) the bands it opens
                between the HUD clusters are filled by the 3D field, so pushing the
@@ -4484,7 +4519,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                              way of !shown3d. margin / 2 is ntr::present_x(),
                              and it is the bottom panel's pan_x0 too, so all
                              three layers line up. */
-                          : (ntr::present_native() || !shown3d)
+                          : (mc_native || !shown3d)
                           ? ux0 + margin / 2
                           : pass
                           ? (g_hud_mid ? ux0 + margin / 2 : ux0 + margin)   /* the moved coin block rides the right edge with the star counter; HUDMENU2: in a wide picture the centre anchor, beside the meter */
@@ -4513,7 +4548,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                viewport and the window test use (ds_row_y0), so a DS row is
                one screen row in every layer whether or not active_h is a
                whole multiple of 192. */
-            const int hy0 = ds_row_y0(y), hy1 = ds_row_y0(y + 1);
+            const int hy0 = mc_row_y0[y], hy1 = mc_row_y0[y + 1];
             const unsigned lcow = gc.owner;
             const int lcv = lc_overlay_verdict(lcow);
             if (lcv == 2) continue;
@@ -4601,6 +4636,23 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                 || !layer_behind_3d(gc.owner, gc.prio, p3d)) {
                 /* the owning 2D layer is in FRONT of the 3D layer (or there is
                    no 3D layer in the picture): the old unconditional write */
+                if (!ovl3d && !lcv && !bm_on) {
+                    /* MGINTERP1: the plain case (no card overlay, no level-clear lift, no brightness mask) as row fills; the
+                       same writes and the same count as the loop below, without its per-pixel tests */
+                    for (int hy = hy0; hy < hy1; ++hy) {
+                        uint32_t *row = &fb.px[hy][hx0];
+                        for (int dx = 0; dx < bw; ++dx) row[dx] = c;
+                        if (cover) {
+                            const uint8_t *cv = cover + (size_t)hy * ntr::SCREEN_W + hx0;
+                            for (int dx = 0; dx < bw; ++dx) buried += cv[dx] ? 1 : 0;
+                        }
+                        if (pre) {
+                            uint32_t *pr = pre + (size_t)hy * ntr::SCREEN_W + hx0;
+                            for (int dx = 0; dx < bw; ++dx) pr[dx] = c;
+                        }
+                    }
+                    continue;
+                }
                 for (int hy = hy0; hy < hy1; ++hy)
                     for (int dx = 0; dx < bw; ++dx) {
                         const int hx = hx0 + dx;
@@ -4819,6 +4871,15 @@ extern "C" unsigned int port_engine_a_fade_px(unsigned int p, unsigned char bm)
    in it) from the registers and the OAM as they stand now, which the caller has set to the blended state. Only the raster runs:
    see g_mc_replay. The records the raster leaves for the pictures between ticks of a TEXT box (the tween window, the text
    scroll, the HUD slide note) are the tick's and are put back afterwards. Returns 1. */
+extern "C" int port_message_engine_a_replay(void *fbp);
+/* the same, starting from the tick's finished picture (SCREEN_W stride): only the cells that differ from the tick's are drawn */
+extern "C" int port_message_engine_a_replay_dirty(void *fbp, const unsigned int *tick_final)
+{
+    g_mc_dirty_final = reinterpret_cast<const uint32_t *>(tick_final);
+    const int r = port_message_engine_a_replay(fbp);
+    g_mc_dirty_final = nullptr;
+    return r;
+}
 extern "C" int port_message_engine_a_replay(void *fbp)
 {
     const TwWin tw_cur = g_tw_cur, tw_prev = g_tw_prev;

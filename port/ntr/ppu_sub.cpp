@@ -2652,6 +2652,8 @@ void band_edge_update(const uint32_t *dst, int dst_w, const StackLayout &lay)
     }
 }
 
+enum { kAmbW = 8192 };
+RGB g_amb_t[kAmbW], g_amb_b[kAmbW];
 void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
@@ -2728,15 +2730,21 @@ void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
             b.g = (bots[c].g * v + bots[c + 1].g * u) / span;
             b.b = (bots[c].b * v + bots[c + 1].b * u) / span;
         }
-        const int den = 2 * lay.band_h;
-        for (int k = 0; k < lay.band_h; ++k) {
-            const int num = 2 * k + 1;
+        /* MGINTERP1: the column's two ends kept, the rows written below row by row (the same values; a column at a time
+           walked the band with a stride of a whole image row per pixel) */
+        if (x < kAmbW) { g_amb_t[x] = t; g_amb_b[x] = b; }
+    }
+    const int den = 2 * lay.band_h;
+    const int wn = lay.w < kAmbW ? lay.w : kAmbW;
+    for (int k = 0; k < lay.band_h; ++k) {
+        const int num = 2 * k + 1;
+        uint32_t *row = dst + (size_t)(lay.band_y + k) * dst_w;
+        for (int x = 0; x < wn; ++x) {
+            const RGB &t = g_amb_t[x], &b = g_amb_b[x];
             const int r = (t.r * (den - num) + b.r * num) / den;
             const int g = (t.g * (den - num) + b.g * num) / den;
             const int bl = (t.b * (den - num) + b.b * num) / den;
-            dst[(size_t)(lay.band_y + k) * dst_w + x] =
-                0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) |
-                (uint32_t)bl;
+            row[x] = 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)bl;
         }
     }
 }
@@ -5600,15 +5608,30 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
            identity left to mask against. evy/to_white stay live below for the
            gap band's own seam/straddle fade, a host UI element and not part
            of the DS raster. */
+        /* MGINTERP1: the same nearest scale-up, a DS pixel repeated ry times along the row and a row equal to the one above it
+           (the same DS row) copied whole, instead of a divide per host pixel. Same pixels. */
         for (int y = 0; y < lay.pan_h; ++y) {
             const int sy = y / ry;
             const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
             uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
             for (int x = 0; x < px0; ++x) out[x] = 0xFF000000u;
             for (int x = px0 + pw; x < active_w; ++x) out[x] = 0xFF000000u;
-            for (int x = 0; x < pw; ++x) {
-                const int sx = x / ry;
-                out[px0 + x] = src[sx < SUB_W ? sx : SUB_W - 1];
+            if (y > 0 && (y - 1) / ry == sy && ry > 0) {
+                std::memcpy(out + px0, out - dst_w + px0, (size_t)pw * 4);
+                continue;
+            }
+            if (ry <= 0) {
+                for (int x = 0; x < pw; ++x) {
+                    const int sx = x / ry;
+                    out[px0 + x] = src[sx < SUB_W ? sx : SUB_W - 1];
+                }
+                continue;
+            }
+            uint32_t *o = out + px0;
+            for (int x = 0, sx = 0; x < pw; ++sx) {
+                const uint32_t c = src[sx < SUB_W ? sx : SUB_W - 1];
+                const int e = x + ry < pw ? x + ry : pw;
+                for (; x < e; ++x) o[x] = c;
             }
         }
 

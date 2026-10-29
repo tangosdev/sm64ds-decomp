@@ -11224,7 +11224,16 @@ struct MgiState {
 static MgiState g_mgi_prev, g_mgi_cur, g_mgi_live;
 /* g_mgi_tick is declared above ip_build */                 /* this tick's pictures between ticks are drawn by mgi_build */
 static int g_mgi_swapped;              /* the blended state is in the live OAM / registers now */
-static unsigned g_mgi_n[8];            /* ticks drawn this way, pictures, sprites blended / kept, BG layers blended / kept, refused ticks, check bad */
+static unsigned g_mgi_n[8];
+static int g_mgi_g3d[2] = { -1, -1 };   /* 3D draw groups of tick N-1 and tick N (0 and 0: the picture under the 2D is the tick's) */
+extern "C" int port_message_engine_a_replay_dirty(void *fbp, const unsigned int *tick_final);
+static int mgi_dirty_ok(void)
+{
+    static int on = -1;
+    if (on < 0) { const char *e = getenv("SM64DS_MG_INTERP_DIRTY"); on = (e && e[0] == '0') ? 0 : 1; }
+    return on && g_mgi_g3d[0] == 0 && g_mgi_g3d[1] == 0;
+}
+static double g_mgi_ms[3];             /* summed ms: blend + swap in, engine A replay, engine B scan-out */            /* ticks drawn this way, pictures, sprites blended / kept, BG layers blended / kept, refused ticks, check bad */
 static int mgi_enabled(void)
 {
     static int on = -1;
@@ -11439,9 +11448,16 @@ static void mgi_swap_out(void)
 /* the picture between ticks: o holds the replayed 3D (the clear colour in a 2D minigame) */
 static int mgi_build(double alpha, ntr::Framebuffer &o)
 {
+    const long long t0 = ip_qpc();
     mgi_swap_in(alpha);
-    port_message_engine_a_replay(&o);
+    const long long t1 = ip_qpc();
+    if (mgi_dirty_ok()) port_message_engine_a_replay_dirty(&o, &g_ip_p2->px[0][0]);
+    else port_message_engine_a_replay(&o);
+    const long long t2 = ip_qpc();
     hal_sub_screen_blend_rescan();
+    g_mgi_ms[0] += ip_ms_since(t0) - ip_ms_since(t1);
+    g_mgi_ms[1] += ip_ms_since(t1) - ip_ms_since(t2);
+    g_mgi_ms[2] += ip_ms_since(t2);
     ++g_mgi_n[1];
     return 1;
 }
@@ -11457,6 +11473,9 @@ static void mgi_report(void)
     if (!g_mgi_n[0] && !g_mgi_n[6]) return;
     fprintf(stderr, "[mg-interp] %u minigame ticks drawn between, %u refused; %u pictures; sprites moved and blended %u, unmatched (drawn at the tick) %u; BG layers blended %u kept %u; alpha-1 check bad %u\n",
             g_mgi_n[0], g_mgi_n[6], g_mgi_n[1], g_mgi_n[2], g_mgi_n[3], g_mgi_n[4], g_mgi_n[5], g_mgi_n[7]);
+    if (g_mgi_n[1])
+        fprintf(stderr, "[mg-interp] per picture ms: blend %.3f, engine A replay %.3f, engine B scan-out %.3f (the stacked compose is the scene-interp line's)\n",
+                g_mgi_ms[0] / g_mgi_n[1], g_mgi_ms[1] / g_mgi_n[1], g_mgi_ms[2] / g_mgi_n[1]);
     fflush(stderr);
 }
 /* SM64DS_MG_INTERP_CHECK=1 (proof instrument): at every minigame tick, draw the tick again through the same replay with the
@@ -11479,6 +11498,24 @@ static void mgi_check(void)
             if (scratch->px[y][x] != g_ip_p2->px[y][x]) ++bad;
     const long badb = hal_sub_screen_blend_check();
     mgi_swap_out();
+    /* and halfway between the ticks, the redraw of what moved against the whole redraw (both over the tick's 3D) */
+    long badd = 0;
+    if (mgi_dirty_ok()) {
+        static ntr::Framebuffer *scratch2;
+        if (!scratch2) scratch2 = new ntr::Framebuffer;
+        for (int y = 0; y < ntr::active_h; ++y) {
+            memcpy(scratch->px[y], g_ip_p3->px[y], ntr::active_w * sizeof(uint32_t));
+            memcpy(scratch2->px[y], g_ip_p3->px[y], ntr::active_w * sizeof(uint32_t));
+        }
+        mgi_swap_in(0.5);
+        port_message_engine_a_replay(scratch);
+        port_message_engine_a_replay_dirty(scratch2, &g_ip_p2->px[0][0]);
+        mgi_swap_out();
+        for (int y = 0; y < ntr::active_h; ++y)
+            for (int x = 0; x < ntr::active_w; ++x)
+                if (scratch->px[y][x] != scratch2->px[y][x]) ++badd;
+        if (badd) { ++g_mgi_n[7]; if (g_mgi_n[7] <= 20) fprintf(stderr, "[mg-interp] check t%u: dirty redraw differs from the whole one in %ld px\n", g_si_ticks, badd); }
+    }
     if (bad || badb) {
         ++g_mgi_n[7];
         if (g_mgi_n[7] <= 20) fprintf(stderr, "[mg-interp] check t%u: engine A %ld px, engine B %ld px differ\n", g_si_ticks, bad, badb);
@@ -11584,6 +11621,8 @@ static void scene_ip_hook_body(int stage, void *fbp, int frame, int tick_game)
         ntr::GxInterpStats ist;
         const long long tcm = ip_qpc();
         g_ip_tick_ok = ntr::gx_interp_commit(data_0209b3ec, why >= 0 ? 1 : 0, &ist);
+        g_mgi_g3d[0] = g_mgi_g3d[1];   /* MGINTERP1: 3D draw groups of the last two ticks */
+        g_mgi_g3d[1] = ist.groups;
         g_si_ms[5] += ip_ms_since(tcm);
         if (why < 0 && !g_ip_tick_ok) scene_ip_note(SI_COMMIT);
         ++g_ip_serial;
