@@ -4679,18 +4679,26 @@ inline int toon_index(float vr)
    only the steps between them go soft.
 
    g_toon_blend[k] (k 0..30) is 1 where entries k and k + 1 blend and 0 where
-   they keep their hard edge; a gap keeps its edge when the two colours differ
-   by more than kToonBlendStep on any channel, so a table drawn as a few flat
-   cel steps stays a cel picture and only a ramp is smoothed. g_toon_blend[31]
+   they keep their hard edge. THE RULE, from the tables the ROM was seen to
+   load (out/SMOOTHTOON1 tables.tsv: the title head's grey ramp, the
+   Luigi / Wario / Yoshi ramp, the cap-change rainbow and shimmer, the title's
+   highlight fade): the step is the largest change on any channel in 5-bit
+   levels; a step of up to 3 levels always blends (every ramp seen steps by 1
+   to 3), a step of more than 8 never does (a deliberate colour change, like
+   the Luigi ramp's red going 22 -> 31), and a step in between blends unless
+   the entries on one side of it are a run of 3 or more equal colours (a cel
+   table's flat bands, like the rainbow's runs of 4; the highlight fade's 5 to
+   7 level steps sit inside a smooth curve and blend). g_toon_blend[31]
    is the switch itself (1 smooth, 0 the DS's nearest entry, every blend flag
    then 0 too). The card path reads the same 32 floats (GxGpuFrame toon_blend).
    An unblended gap picks exactly the entry toon_index picks, and with the
    switch off nothing here runs. */
 float g_toon_blend[32];
 int g_toon_smooth = 0;
-/* the widest step a ramp takes: three 5-bit levels (one level is 255/31 =
-   8.2 in these units); measured over the ROM's tables in out/SMOOTHTOON1 */
-constexpr float kToonBlendStep = 3.0f * 255.0f / 31.0f + 0.5f;
+/* the two step limits above, in the 0..255 units of g_toon8 (one 5-bit level
+   is 255 / 31 = 8.2 of them), with half a level of slack */
+constexpr float kToonRampStep = 3.5f * 255.0f / 31.0f;
+constexpr float kToonEdgeStep = 8.5f * 255.0f / 31.0f;
 
 /* the blended entry for an interpolated red, into out[3] */
 inline void toon_smooth_entry(float vr, float out[3])
@@ -4725,18 +4733,34 @@ int toon_smooth_wanted()
 }
 
 /* this frame's blend flags from this frame's table (g_toon8, g_toon_shade) */
+inline bool toon_same(int a, int b)
+{
+    return g_toon8[a * 3] == g_toon8[b * 3] && g_toon8[a * 3 + 1] == g_toon8[b * 3 + 1] &&
+           g_toon8[a * 3 + 2] == g_toon8[b * 3 + 2];
+}
+
 void toon_blend_setup()
 {
     g_toon_smooth = (g_toon_shade && toon_smooth_wanted()) ? 1 : 0;
     for (int k = 0; k < 31; ++k) {
-        float d = 0.0f;
-        if (g_toon_smooth)
+        bool blend = false;
+        if (g_toon_smooth) {
+            float d = 0.0f;
             for (int c = 0; c < 3; ++c) {
                 const float x = g_toon8[(k + 1) * 3 + c] - g_toon8[k * 3 + c];
                 const float ax = x < 0.0f ? -x : x;
                 if (ax > d) d = ax;
             }
-        g_toon_blend[k] = (g_toon_smooth && d <= kToonBlendStep) ? 1.0f : 0.0f;
+            if (d <= kToonRampStep) {
+                blend = true;
+            } else if (d <= kToonEdgeStep) {
+                /* a flat band of 3 or more on either side = a cel edge */
+                const bool flat_lo = k >= 2 && toon_same(k, k - 1) && toon_same(k, k - 2);
+                const bool flat_hi = k <= 28 && toon_same(k + 1, k + 2) && toon_same(k + 1, k + 3);
+                blend = !flat_lo && !flat_hi;
+            }
+        }
+        g_toon_blend[k] = blend ? 1.0f : 0.0f;
     }
     g_toon_blend[31] = g_toon_smooth ? 1.0f : 0.0f;
 }
