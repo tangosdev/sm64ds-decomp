@@ -5775,7 +5775,53 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     wipe_circle_stacked(dst, dst_w, a_y, active_h, b_y, -1, active_h);
 }
 
+/* MGINTERP1: the gap band's and the seam's memory (the ambient follow, the edge rows, the ghost tracks, the snow), kept
+   across a compose of a picture BETWEEN two ticks. Those filters step once per compose, so every extra picture used to move
+   them on and the next tick's own picture came out different (its band) depending on how many pictures the machine had time
+   for. A picture between ticks now composes from the tick's memory and leaves it as it found it. */
+namespace {
+struct ComposeKeep {
+    AmbMemory amb; unsigned amb_frame;
+    EdgeMem edge; uint8_t ew[2][256], eo[2][256], er[2]; uint32_t el[2][256], eb[2][256];
+    unsigned band_frame, band_carried;
+    BandCache track[BAND_TRACK_MAX];
+    unsigned peek_frame, hinge_frame, head_frame, seam_frame;
+    SnowFlake snow[SNOW_MAX]; unsigned snow_last; int snow_warm; unsigned snow_lcg;
+};
+ComposeKeep *g_keep;
+}
+void ppu_compose_state_save(void)
+{
+    if (!g_keep) g_keep = new ComposeKeep;
+    ComposeKeep &k = *g_keep;
+    k.amb = g_amb; k.amb_frame = g_amb_frame;
+    k.edge = g_edge;
+    std::memcpy(k.ew, g_edge_w, sizeof k.ew); std::memcpy(k.eo, g_edge_obj, sizeof k.eo); std::memcpy(k.er, g_edge_refused, sizeof k.er);
+    std::memcpy(k.el, g_edge_live, sizeof k.el); std::memcpy(k.eb, g_edge_bg_px, sizeof k.eb);
+    k.band_frame = g_band_frame; k.band_carried = g_band_carried;
+    for (int i = 0; i < BAND_TRACK_MAX; ++i) k.track[i] = g_track[i];
+    k.peek_frame = g_peek_frame; k.hinge_frame = g_hinge_frame; k.head_frame = g_head_frame; k.seam_frame = g_seam_frame;
+    for (int i = 0; i < SNOW_MAX; ++i) k.snow[i] = g_snow[i];
+    k.snow_last = g_snow_last_ticks; k.snow_warm = g_snow_warm; k.snow_lcg = g_snow_lcg;
+}
+void ppu_compose_state_restore(void)
+{
+    if (!g_keep) return;
+    const ComposeKeep &k = *g_keep;
+    g_amb = k.amb; g_amb_frame = k.amb_frame;
+    g_edge = k.edge;
+    std::memcpy(g_edge_w, k.ew, sizeof k.ew); std::memcpy(g_edge_obj, k.eo, sizeof k.eo); std::memcpy(g_edge_refused, k.er, sizeof k.er);
+    std::memcpy(g_edge_live, k.el, sizeof k.el); std::memcpy(g_edge_bg_px, k.eb, sizeof k.eb);
+    g_band_frame = k.band_frame; g_band_carried = k.band_carried;
+    for (int i = 0; i < BAND_TRACK_MAX; ++i) g_track[i] = k.track[i];
+    g_peek_frame = k.peek_frame; g_hinge_frame = k.hinge_frame; g_head_frame = k.head_frame; g_seam_frame = k.seam_frame;
+    for (int i = 0; i < SNOW_MAX; ++i) g_snow[i] = k.snow[i];
+    g_snow_last_ticks = k.snow_last; g_snow_warm = k.snow_warm; g_snow_lcg = k.snow_lcg;
+}
+
 }  // namespace ntr
 
+extern "C" void port_compose_state_save(void) { ntr::ppu_compose_state_save(); }
+extern "C" void port_compose_state_restore(void) { ntr::ppu_compose_state_restore(); }
 extern "C" void port_wipe_suppress_set(int on) { ntr::set_wipe_suppress(on != 0); }
 extern "C" int port_wipe_cut_picture(uint32_t *dst, int w, int h, int stride) { return ntr::wipe_cut_picture(dst, w, h, stride) ? 1 : 0; }

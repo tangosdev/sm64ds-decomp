@@ -10454,6 +10454,8 @@ static void si_pic(char kind, double alpha, const ntr::Framebuffer *fb, const ui
    before the UI went on, and the present is pointed at it. The caller puts
    g_present_stack back to the tick's kept image afterwards. */
 static void mgi_after_compose(void);
+extern "C" void port_compose_state_save(void);
+extern "C" void port_compose_state_restore(void);
 static void ip_stack_for_blend(void)
 {
     const long long t0 = ip_qpc();
@@ -10504,7 +10506,12 @@ static void ip_stack_for_blend(void)
         mgi_after_compose();
         return;
     }
+    /* MGINTERP1: the band's per-compose memory is the tick's before and after this picture (SM64DS_BLEND_KEEPSTATE=0: as before) */
+    static int keep = -1;
+    if (keep < 0) { const char *e = getenv("SM64DS_BLEND_KEEPSTATE"); keep = (e && e[0] == '0') ? 0 : 1; }
+    if (keep) port_compose_state_save();
     uint32_t *img = hal_sub_screen_stacked_image(&g_ip_fb->px[0][0]);
+    if (keep) port_compose_state_restore();
     mgi_after_compose();   /* MGINTERP1: the live OAM, registers and bottom screen back to the tick's */
     if (!img) return;
     ++g_si_blend_n;
