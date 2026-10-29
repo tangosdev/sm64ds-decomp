@@ -332,6 +332,9 @@ struct GxGpuFrame {
     // per entry, in the units the vertex colour travels in.
     int toon_shade;
     const float *toon_rgb;
+    // the Smooth Models toon blend (gx.cpp's g_toon_blend): [k] 1 where entries
+    // k and k + 1 blend, [31] 1 when the blend is on at all (lane SMOOTHTOON1)
+    const float *toon_blend;
     // THE FRAME'S FOG (run hunt8, RENDER093): fog_on 0 = none; fog_shift and
     // fog_offset are DISP3DCNT bits 8-11 and FOG_OFFSET << 8; fog_rgb the
     // colour as 0..255; fog_tab the 34 density entries of the melonDS table
