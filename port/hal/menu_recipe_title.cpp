@@ -147,7 +147,7 @@ struct TitleFacts {
     int toy_v;                /* FACE1: the face press page's own frame counter (the page object's +0xc) PLUS ONE while top 4 / elem 0 is up, 0 = not the press page (a zeroed blob is not the press page) */
     int dd_live;              /* TITLE092 (3b): ticks since the drawing page's own picture became the page (1 on the first live tick), 0 = still the ROM's black hand-over frames */
     int sc_on;                /* TITLE092: this frame's 3D was drawn as the full-canvas scene (g_sc), and sc_T is its transform */
-    float sc_K, sc_Tx, sc_Ty;
+    float sc_K, sc_Tx, sc_Ty, sc_S;
     int pg_top, pg_elem;      /* NAME1: the ROM's top-state and element machine of this tick (-1 = not built) */
 };
 static_assert(sizeof(TitleFacts) <= ONL_FACTS_OFF, "TitleFacts must leave the tail of MenuFacts.blob to the online facts");
@@ -1393,8 +1393,9 @@ void toy_dest(const MenuLayout *L, float growth_t, int *ox, int *oy, int *ow, in
    whole 3D layer as a unit, keyed by coverage) and keeps only click-mapping twins for the touch areas.
    T = {K, Tx, Ty}: the DS box centre (128, 96) lands at the canvas centre + (Tx, Ty) canvas units, scaled K about it
    (canvas unit = window height / 192; Ty down). {1, 0, 0} is the DS layout. SM64DS_TITLE_WIDE=0 turns the whole thing off (the old cut
-   pieces draw); SM64DS_TITLE_SCENE=Kpermille,Tx,Ty tunes the main menu's. */
-struct SceneT { float K, Tx, Ty; };
+   pieces draw); SM64DS_TITLE_SCENE=Kpermille,Tx,Ty tunes the main menu's.
+   S: the x scale over the y scale (1 everywhere but the drawing page, whose DS canvas is the paper's whole rect, see scene_doodle). */
+struct SceneT { float K, Tx, Ty, S = 1.f; };
 struct SceneNow {              /* what this frame's callback answered; build reads it through TitleFacts */
     int on, variant, frame;
     SceneT T;
@@ -1446,17 +1447,6 @@ SceneT scene_toy(float growth_t)
     t.Ty = m.Ty + (27.8f - 96.f) * m.K - (ay - 96.f) * k;
     return t;
 }
-/* the drawing page: the strokes were traced at the toy's rest pose; the free-draw state grows the canvas to the DS canvas's own size,
-   centred (e3 ticks since it began) */
-SceneT scene_doodle(int e3)
-{
-    SceneT t = scene_toy(1.f);
-    if (e3 > 0) {
-        const float u = (float)(e3 - 8) / 26.f, g = u <= 0.f ? 0.f : u >= 1.f ? 1.f : u * u * (3.f - 2.f * u);
-        t.K = t.K + (1.f - t.K) * g; t.Tx *= (1.f - g); t.Ty *= (1.f - g);
-    }
-    return t;
-}
 /* the canvas in units: width, height (window / unit) */
 void scene_canvas_units(float *cw, float *ch)
 {
@@ -1464,16 +1454,34 @@ void scene_canvas_units(float *cw, float *ch)
     *cw = (float)ntr::active_w * 192.f / ph;
     *ch = (float)ntr::active_h * 192.f / ph;
 }
+/* DOODLEBOUNDS1: the drawing page's DS canvas is the rect the paper is drawn in, the whole canvas (DS x 0..255 across its width, y 0..191
+   down its height, centred), in the face tracing and the free-draw state alike, HD UI on or off. The ROM's touch range is the DS screen
+   and the paper fills the window, so this is the one place every pixel of the paper is a stroke the ROM can take: the touch twin reads
+   the same transform, so a stroke still lands under the pointer. Before, the canvas was the press page's head place (HD UI: a box about
+   0.78 of the window's height at its top) or the DS 4:3 box, and a drag stopped at its edge with paper still beyond it (Tango, round 22).
+   On a window wider than 4:3 the line art is wider than the DS's by the same ratio. (e3 is kept for the callers; the canvas no longer
+   grows in the free-draw state, it is already the paper.) */
+SceneT scene_doodle(int e3)
+{
+    (void)e3;
+    float cw, ch;
+    scene_canvas_units(&cw, &ch);
+    SceneT t;
+    t.K = ch / 192.f; t.Tx = 0.f; t.Ty = 0.f;
+    t.S = (cw / 256.f) / (t.K > 0.f ? t.K : 1.f);
+    return t;
+}
 void scene_xf(const SceneT &t, float cw, float ch, float xf[4])
 {
-    xf[0] = t.K; xf[1] = 2.f * t.Tx / cw; xf[2] = t.K; xf[3] = -2.f * t.Ty / ch;
+    xf[0] = t.K * t.S; xf[1] = 2.f * t.Tx / cw; xf[2] = t.K; xf[3] = -2.f * t.Ty / ch;
 }
 /* DS box rect -> host pixels under T for a layout (the touch twins of the scene's parts) */
 void scene_rect_host(const MenuLayout *L, const SceneT &t, int sx, int sy, int sw, int sh, short *ox, short *oy, short *ow, short *oh)
 {
     const float u = (float)L->unum / (float)L->uden;
-    const float x0 = (float)L->w * 0.5f + (t.Tx + ((float)sx - 128.f) * t.K) * u, y0 = (float)L->h * 0.5f + (t.Ty + ((float)sy - 96.f) * t.K) * u;
-    const float x1 = x0 + (float)sw * t.K * u, y1 = y0 + (float)sh * t.K * u;
+    const float kx = t.K * t.S;
+    const float x0 = (float)L->w * 0.5f + (t.Tx + ((float)sx - 128.f) * kx) * u, y0 = (float)L->h * 0.5f + (t.Ty + ((float)sy - 96.f) * t.K) * u;
+    const float x1 = x0 + (float)sw * kx * u, y1 = y0 + (float)sh * t.K * u;
     *ox = (short)(x0 + 0.5f); *oy = (short)(y0 + 0.5f);
     *ow = (short)((int)(x1 + 0.5f) - (int)(x0 + 0.5f)); *oh = (short)((int)(y1 + 0.5f) - (int)(y0 + 0.5f));
 }
@@ -1488,7 +1496,7 @@ void scene_e3_step(int top, int elem, int frame)
 
 /* TITLE092: this tick's 3D is the full-canvas scene (facts), and its transform */
 bool scene_now() { return t_f && t_f->wide3d && t_f->sc_on; }
-SceneT scene_of_facts() { SceneT t; t.K = t_f->sc_K; t.Tx = t_f->sc_Tx; t.Ty = t_f->sc_Ty; return t; }
+SceneT scene_of_facts() { SceneT t; t.K = t_f->sc_K; t.Tx = t_f->sc_Tx; t.Ty = t_f->sc_Ty; t.S = t_f->sc_S; return t; }
 /* the whole 3D layer as ONE element (the layer is a unit, the scene the ROM drew, not a rect of a finished screen): the window-sized
    copy of the frame's 3D picture keyed by what the 3D engine wrote */
 MenuPiece scene_layer(const MenuLayout *L)
@@ -2128,7 +2136,7 @@ void menu_title_facts(MenuFacts *f)
     tf.wz = tf.wide3d ? g_file_wz : 0;
     if (hal_menu_trace_on()) { static int lw = -1; if (tf.wz != lw) { lw = tf.wz; fprintf(stderr, "[filewide] zoom permille %d (active %dx%d present %dx%d)\n", tf.wz, ntr::active_w, ntr::active_h, ntr::present_w(), ntr::present_h()); } }
     tf.sc_on = (tf.wide3d && g_sc.on && data_ov007_0210342c && g_sc.frame + 1 >= data_ov007_0210342c[0]) ? 1 : 0;   /* the callback ran in this tick's Render (the counter moved on once since) */
-    tf.sc_K = g_sc.T.K; tf.sc_Tx = g_sc.T.Tx; tf.sc_Ty = g_sc.T.Ty;
+    tf.sc_K = g_sc.T.K; tf.sc_Tx = g_sc.T.Tx; tf.sc_Ty = g_sc.T.Ty; tf.sc_S = g_sc.T.S;
     tf.toy_v = 0;
     {
         static int last_v = -1, last_e = 0, dd_chain = 0, dd_e = 0, was_dd = 0, out_e = 0, dd_live_c = 0;
@@ -2413,7 +2421,7 @@ bool title_scene_cb(float xf[4])
            same layout {1, 0, 0}: the ROM's line art then lies on the head it replaces, as on the DS (FACE1 measured the strokes over the press page's
            rest pose), and the crossfade from the press page's held frame no longer jumps from a big head to a small outline. The touch twins and the
            sprite placement read this same transform, so a stroke lands under the pointer. The HD page keeps its own (the head the main menu drew). */
-        T = pc ? scene_doodle(g_sc.e3) : T;
+        T = scene_doodle(g_sc.e3);      /* DOODLEBOUNDS1: HD UI on or off, the DS canvas is the paper's rect (see scene_doodle) */
         break;
     default:
         return false;
