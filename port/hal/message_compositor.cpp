@@ -1983,6 +1983,8 @@ void arrow_capture(int px, int py, uint32_t color)
     if (py > g_arrow_y1) g_arrow_y1 = py;
 }
 
+/* MGHIRES1: which OAM entry's texel each OBJ cell of g_a holds (hal mghr_a_end reads it) */
+uint8_t g_mghr_idx[192][256];
 void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 ntr::Framebuffer &fb) {
     static const int kSizes[3][4][2] = {
@@ -2391,6 +2393,7 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 g_a[py][px].color = color;
                 g_a[py][px].hit = true;
                 g_a[py][px].owner = kOwnerObj;
+                g_mghr_idx[py][px] = (uint8_t)i;
                 /* whose texel this is, for the widescreen placement */
                 g_a[py][px].msgcur = msgcur ? 1 : 0;
                 /* The priority the OBJ-vs-OBJ test above, the OBJ-vs-BG test
@@ -3495,57 +3498,242 @@ extern "C" void port_mghr_a_frac_set(const short *obj)
 }
 static int g_mghr_inner;
 static bool g_mghr_took;
-static uint32_t *g_mghr_scr;               /* the picture under the 2D, then the picture without the sensitive sprites */
+static int g_mghr_replay_mode = -1;        /* SM64DS_MG_HIRES_REPLAY=1: the cells without the sprites from a whole replay (A/B) */
+static uint32_t *g_mghr_scr;               /* the picture under the 2D (replay mode: then the picture without the sprites) */
+static uint32_t *g_mghr_pre_under;         /* the pre-smoothing copy under the 2D, same rows */
 static uint8_t g_mghr_sens[128];
-static long g_mghr_n[4];                   /* composites refined, sprites, host px changed, skipped by a gate */
-static double g_mghr_ms;
+static int g_mghr_bb[4];                   /* DS box of the sensitive entries, one pixel of margin: x0 y0 x1 y1 */
+static Cell g_mghr_bg[192][256];           /* g_a after the BG loop, before the sprites */
+static long g_mghr_n[5];                   /* composites refined, sprites, host px changed, refused by a gate, cells resolved again */
+static double g_mghr_ms, g_mghr_seg[4];    /* under copy, the cells without, sample, decide */
+static inline double mghr_since(std::chrono::steady_clock::time_point t) { return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t).count(); }
 static void mghr_a_report(void)
 {
     if (g_mghr_n[0] || g_mghr_n[3])
-        std::fprintf(stderr, "[mg-hires] engine A: %ld composites refined (%ld sprites, %ld host px), %ld refused by a gate, %.3f ms each\n",
-                     g_mghr_n[0], g_mghr_n[1], g_mghr_n[2], g_mghr_n[3], g_mghr_n[0] ? g_mghr_ms / g_mghr_n[0] : 0.0);
+        std::fprintf(stderr, "[mg-hires] engine A: %ld composites refined (%ld sprites, %ld host px, %ld cells resolved without them), %ld refused by a gate, %.3f ms each (under copy %.3f, without %.3f, sample %.3f, decide %.3f)%s\n",
+                     g_mghr_n[0], g_mghr_n[1], g_mghr_n[2], g_mghr_n[4], g_mghr_n[3], g_mghr_n[0] ? g_mghr_ms / g_mghr_n[0] : 0.0,
+                     g_mghr_n[0] ? g_mghr_seg[0] / g_mghr_n[0] : 0.0, g_mghr_n[0] ? g_mghr_seg[1] / g_mghr_n[0] : 0.0,
+                     g_mghr_n[0] ? g_mghr_seg[2] / g_mghr_n[0] : 0.0, g_mghr_n[0] ? g_mghr_seg[3] / g_mghr_n[0] : 0.0,
+                     g_mghr_replay_mode > 0 ? " [replay mode]" : "");
+}
+/* one OAM entry, parsed the way raster_obj reads it */
+struct MghrEnt { int i, x, y, w, h, bw, bh, pa, pb, pc, pd, fx, fy, mode; bool ok, affine, hflip, vflip, c256; uint32_t tile, pal; uint8_t prio; };
+static MghrEnt g_mghr_ent[128];
+static void mghr_parse(int i, MghrEnt &e)
+{
+    static const int kSizes[3][4][2] = {
+        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
+        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
+        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
+    };
+    const uint16_t a0 = rd16(oam_a() + i * 8u), a1 = rd16(oam_a() + i * 8u + 2), a2 = rd16(oam_a() + i * 8u + 4);
+    e.i = i;
+    e.ok = false;
+    e.affine = a0 & 0x100;
+    if (!e.affine && (a0 & 0x200)) return;
+    e.mode = (a0 >> 10) & 3;
+    const int shape = (a0 >> 14) & 3, size = (a1 >> 14) & 3;
+    if (shape == 3 || e.mode == 2 || e.mode == 3) return;
+    if (ntr::ppu_seam_snow_owns(a2)) return;
+    e.w = kSizes[shape][size][0]; e.h = kSizes[shape][size][1];
+    const bool dbl = e.affine && (a0 & 0x200);
+    e.bw = dbl ? e.w * 2 : e.w; e.bh = dbl ? e.h * 2 : e.h;
+    e.x = a1 & 0x1FF; e.y = a0 & 0xFF;
+    if (e.x >= 256) e.x -= 512;
+    if (e.y >= 192 && e.y >= 256 - e.bh) e.y -= 256;
+    e.y += hal_gapless_obj_raster_shift_ds() + ntr::ppu_obj_routed_live_resid(i);
+    e.c256 = a0 & 0x2000;
+    e.hflip = !e.affine && (a1 & 0x1000);
+    e.vflip = !e.affine && (a1 & 0x2000);
+    e.tile = a2 & 0x3FF; e.pal = (a2 >> 12) & 0xF; e.prio = (uint8_t)((a2 >> 10) & 3);
+    e.pa = 256; e.pb = 0; e.pc = 0; e.pd = 256;
+    if (e.affine) {
+        const int g = (a1 >> 9) & 0x1F;
+        e.pa = (int16_t)rd16(oam_a() + (g * 4 + 0) * 8u + 6); e.pb = (int16_t)rd16(oam_a() + (g * 4 + 1) * 8u + 6);
+        e.pc = (int16_t)rd16(oam_a() + (g * 4 + 2) * 8u + 6); e.pd = (int16_t)rd16(oam_a() + (g * 4 + 3) * 8u + 6);
+    }
+    e.fx = g_mghr_afr_on ? g_mghr_afr[i][0] : 0; e.fy = g_mghr_afr_on ? g_mghr_afr[i][1] : 0;
+    e.ok = true;
+}
+/* the sprite's texel at (qx, qy), 1/256 px from its box's top-left: true and the colour when opaque (raster_obj's fetch) */
+static inline bool mghr_texel(const MghrEnt &e, int qx, int qy, uint32_t boundary, bool map1d, uint32_t &color)
+{
+    if (qx < 0 || qx >= e.bw * 256 || qy < 0 || qy >= e.bh * 256) return false;
+    int tx, ty;
+    if (e.affine) {
+        const int cx = qx - (e.bw / 2) * 256, cy = qy - (e.bh / 2) * 256;
+        tx = (int)(((long long)e.pa * cx + (long long)e.pb * cy) >> 16) + e.w / 2;
+        ty = (int)(((long long)e.pc * cx + (long long)e.pd * cy) >> 16) + e.h / 2;
+        if (tx < 0 || tx >= e.w || ty < 0 || ty >= e.h) return false;
+    } else {
+        tx = qx >> 8; ty = qy >> 8;
+        if (e.hflip) tx = e.w - 1 - tx;
+        if (e.vflip) ty = e.h - 1 - ty;
+    }
+    const int tcol = tx >> 3, trow = ty >> 3, fx = tx & 7, fy = ty & 7;
+    const uint32_t slot = map1d ? (uint32_t)(trow * (e.w / 8) + tcol) * (e.c256 ? 2u : 1u)
+                                : (uint32_t)(trow * 32 + (e.c256 ? tcol * 2 : tcol));
+    const uint32_t cell = kObjVram + e.tile * boundary + slot * 32u;
+    const uint32_t obj_pltt = kPlttBase + 0x200u;
+    uint32_t index;
+    if (e.c256) {
+        index = *reinterpret_cast<volatile uint8_t *>(cell + fy * 8u + fx);
+        if (!index) return false;
+        color = bgr555(rd16(obj_pltt + index * 2u));
+    } else {
+        const uint8_t b = *reinterpret_cast<volatile uint8_t *>(cell + fy * 4u + fx / 2);
+        index = (fx & 1) ? (b >> 4) : (b & 0xF);
+        if (!index) return false;
+        color = bgr555(rd16(obj_pltt + (e.pal * 16u + index) * 2u));
+    }
+    return true;
 }
 static int mghr_a_sensitive(void)
 {
     int n = 0;
+    g_mghr_bb[0] = 256; g_mghr_bb[1] = 192; g_mghr_bb[2] = 0; g_mghr_bb[3] = 0;
     for (int i = 0; i < 128; ++i) {
         g_mghr_sens[i] = 0;
-        const uint16_t a0 = rd16(oam_a() + i * 8u), a1 = rd16(oam_a() + i * 8u + 2);
-        const bool affine = a0 & 0x100;
-        if (!affine && (a0 & 0x200)) continue;
-        if (((a0 >> 10) & 3) != 0 || ((a0 >> 14) & 3) == 3) continue;     /* normal sprites only */
-        bool s = g_mghr_afr_on && (g_mghr_afr[i][0] || g_mghr_afr[i][1]);
-        if (affine && !s) {
-            const int g = (a1 >> 9) & 0x1F;
-            s = (int16_t)rd16(oam_a() + (g * 4) * 8u + 6) != 256 || rd16(oam_a() + (g * 4 + 1) * 8u + 6) ||
-                rd16(oam_a() + (g * 4 + 2) * 8u + 6) || (int16_t)rd16(oam_a() + (g * 4 + 3) * 8u + 6) != 256;
-        }
-        if (s) { g_mghr_sens[i] = 1; ++n; }
+        MghrEnt &e = g_mghr_ent[i];
+        mghr_parse(i, e);
+        if (!e.ok || e.mode != 0) continue;                         /* normal sprites only */
+        bool s = e.fx || e.fy;
+        if (e.affine) s = s || e.pa != 256 || e.pb || e.pc || e.pd != 256;
+        if (!s) continue;
+        const int x0 = mghr_mx(0, e.x - 1), x1 = mghr_mn(256, e.x + e.bw + 1);
+        const int y0 = mghr_mx(0, e.y - 1), y1 = mghr_mn(192, e.y + e.bh + 1);
+        if (x0 >= x1 || y0 >= y1) continue;
+        g_mghr_sens[i] = 1; ++n;
+        g_mghr_bb[0] = mghr_mn(g_mghr_bb[0], x0); g_mghr_bb[1] = mghr_mn(g_mghr_bb[1], y0);
+        g_mghr_bb[2] = mghr_mx(g_mghr_bb[2], x1); g_mghr_bb[3] = mghr_mx(g_mghr_bb[3], y1);
     }
     return n;
 }
-/* entry: keep the picture under the 2D when this composite will be refined */
+/* entry: does this composite get refined (a sensitive entry is up)? Replay mode keeps the whole picture here too. */
 static bool mghr_a_begin(ntr::Framebuffer &fb)
 {
     g_mghr_took = false;
     if (g_mghr_inner) return false;
     static bool rep;
-    if (!rep) { rep = true; std::atexit(mghr_a_report); }
+    if (!rep) {
+        rep = true; std::atexit(mghr_a_report);
+        const char *e = std::getenv("SM64DS_MG_HIRES_REPLAY");
+        g_mghr_replay_mode = (e && *e == '1') ? 1 : 0;
+    }
     const int S = ntr::present_h() / 192;
     if (!(port_mghr_policy() & 1) || S < 2 || !ntr::present_native()) return false;
     if (!mghr_a_sensitive()) return false;
     if (!g_mghr_scr) g_mghr_scr = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * (size_t)ntr::SCREEN_W * ntr::SCREEN_H));
     if (!g_mghr_scr) return false;
-    for (int y = 0; y < ntr::active_h; ++y)
-        std::memcpy(g_mghr_scr + (size_t)y * ntr::SCREEN_W, fb.px[y], (size_t)ntr::active_w * 4);
+    if (g_mghr_replay_mode > 0) {
+        const auto tc = std::chrono::steady_clock::now();
+        for (int y = 0; y < ntr::active_h; ++y)
+            std::memcpy(g_mghr_scr + (size_t)y * ntr::SCREEN_W, fb.px[y], (size_t)ntr::active_w * 4);
+        g_mghr_seg[0] += mghr_since(tc);
+    }
     g_mghr_took = true;
     return true;
 }
+/* after the BG loop, before the sprites: the cells the sprites are drawn over */
+static inline void mghr_a_bg_snapshot(void)
+{
+    if (g_mghr_took && g_mghr_replay_mode <= 0) std::memcpy(g_mghr_bg, g_a, sizeof g_a);
+}
+/* just before the blit: the picture (and its pre-smoothing copy) under the 2D, over the sensitive box */
+static void mghr_a_under(ntr::Framebuffer &fb, const uint32_t *pre, int margin)
+{
+    if (!g_mghr_took || g_mghr_replay_mode > 0) return;
+    const auto tc = std::chrono::steady_clock::now();
+    const int S = ntr::present_h() / 192, xoff = margin / 2;
+    const int hx0 = mghr_mx(0, xoff + g_mghr_bb[0] * S), hx1 = mghr_mn(ntr::active_w, xoff + g_mghr_bb[2] * S);
+    const int hy0 = mghr_mx(0, g_mghr_bb[1] * S), hy1 = mghr_mn(ntr::active_h, g_mghr_bb[3] * S);
+    if (hx1 <= hx0) return;
+    if (pre && !g_mghr_pre_under) g_mghr_pre_under = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * (size_t)ntr::SCREEN_W * ntr::SCREEN_H));
+    for (int y = hy0; y < hy1; ++y) {
+        std::memcpy(g_mghr_scr + (size_t)y * ntr::SCREEN_W + hx0, &fb.px[y][hx0], (size_t)(hx1 - hx0) * 4);
+        if (pre && g_mghr_pre_under)
+            std::memcpy(g_mghr_pre_under + (size_t)y * ntr::SCREEN_W + hx0, pre + (size_t)y * ntr::SCREEN_W + hx0, (size_t)(hx1 - hx0) * 4);
+    }
+    g_mghr_seg[0] += mghr_since(tc);
+}
 struct MghrPx { uint32_t color; uint8_t hit, prio; };
+/* MGHIRES1: the columns qx (1/256 px from the box's left edge) of one sample row qy at which an affine sprite's texture
+   coordinate (the DS's sum, 16.16) can fall inside the sprite, one texel of margin: [lo, hi]; false when none */
+static inline bool mghr_aff_span(int pa, int pb, int pc, int pd, int w, int h, int bw, int bh, int qy, int &lo, int &hi)
+{
+    const double cy = (double)qy - (bh / 2) * 256.0;
+    double a = -1e18, b = 1e18;
+    const double lims[2][2] = {{(-1.0 - w / 2) * 65536.0, (w + 1.0 - w / 2) * 65536.0}, {(-1.0 - h / 2) * 65536.0, (h + 1.0 - h / 2) * 65536.0}};
+    const int k[2] = {pa, pc}, m[2] = {pb, pd};
+    for (int t = 0; t < 2; ++t) {
+        const double r0 = lims[t][0] - m[t] * cy, r1 = lims[t][1] - m[t] * cy;
+        if (k[t] == 0) { if (r0 > 0 || r1 < 0) return false; continue; }
+        double c0 = r0 / k[t], c1 = r1 / k[t];
+        if (c0 > c1) { const double z = c0; c0 = c1; c1 = z; }
+        if (c0 > a) a = c0;
+        if (c1 < b) b = c1;
+    }
+    a += (bw / 2) * 256.0 - 256.0; b += (bw / 2) * 256.0 + 256.0;
+    if (a < 0) a = 0;
+    if (b > bw * 256.0 - 1) b = bw * 256.0 - 1;
+    if (a > b) return false;
+    lo = (int)a; hi = (int)b;
+    return true;
+}
+/* THE PIXEL-ART UPSCALER ON ENGINE A (the MinigameUpscale setting): a top screen with no 3D in it is a whole 256x192 2D
+   picture, read back here at phase (0, 0) of every cell, upscaled (ntr/ppu_sub.cpp's Scale2x / Scale3x rules) and written
+   over every host pixel that still holds its cell's DS colour; a pixel the render-scale pass above changed keeps its own.
+   A top screen with 3D in it is left alone: the 3D is already at render scale and the 2D over it stays the DS's pixels. */
+extern "C" void port_mghr_upscale(const unsigned int *ds, int S, unsigned int *out);
+static long g_mghr_up_n;
+static double g_mghr_up_ms;
+static void mghr_a_upscale_report(void)
+{
+    if (g_mghr_up_n) std::fprintf(stderr, "[mg-hires] engine A upscaled %ld pictures, %.3f ms each\n", g_mghr_up_n, g_mghr_up_ms / g_mghr_up_n);
+}
+static void mghr_a_upscale(ntr::Framebuffer &fb, uint32_t *pre, int margin)
+{
+    const int S = ntr::present_h() / 192, xoff = margin / 2;
+    if (S < 2 || S > 8 || ds_row_y0(1) - ds_row_y0(0) != S || ds_col_x0(1) - ds_col_x0(0) != S || ds_row_y0(0) != 0 ||
+        xoff + 256 * S > ntr::active_w || 192 * S > ntr::active_h) return;
+    static bool rep;
+    if (!rep) { rep = true; std::atexit(mghr_a_upscale_report); }
+    const auto t0 = std::chrono::steady_clock::now();
+    static uint32_t ds[192][256], last[192][256];
+    static int last_S;
+    static std::vector<uint32_t> up;
+    up.resize((size_t)256 * S * 192 * S);
+    for (int Y = 0; Y < 192; ++Y)
+        for (int X = 0; X < 256; ++X) ds[Y][X] = fb.px[Y * S][xoff + X * S];
+    /* the same DS picture as the last one scaled (a still screen, a picture between ticks where nothing moved): the same scale */
+    if (last_S != S || std::memcmp(ds, last, sizeof ds) != 0) {
+        port_mghr_upscale(&ds[0][0], S, up.data());
+        std::memcpy(last, ds, sizeof ds);
+        last_S = S;
+    }
+    const int W = 256 * S;
+    for (int Y = 0; Y < 192; ++Y)
+        for (int X = 0; X < 256; ++X) {
+            const uint32_t c = ds[Y][X];
+            for (int j = 0; j < S; ++j) {
+                const int hy = Y * S + j;
+                const uint32_t *urow = &up[(size_t)hy * W + X * S];
+                uint32_t *frow = &fb.px[hy][xoff + X * S];
+                uint32_t *prow = pre ? pre + (size_t)hy * ntr::SCREEN_W + xoff + X * S : nullptr;
+                for (int i = 0; i < S; ++i) {
+                    if (frow[i] != c || urow[i] == c) continue;   /* a render-scale pixel keeps its own; an unchanged one needs no write */
+                    frow[i] = urow[i];
+                    if (prow) prow[i] = urow[i];
+                }
+            }
+        }
+    ++g_mghr_up_n;
+    g_mghr_up_ms += std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+}
 static Cell g_mghr_wo[192][256], g_mghr_keep[192][256];
 /* after the blit (the plain path only, see the banner) */
-static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &win, bool shown3d, bool honour3d, int p3d,
-                       uint32_t *pre, int margin)
+static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &win, const Blend &bl, bool shown3d, bool honour3d,
+                       int p3d, const uint8_t *cover, uint32_t *pre, int margin)
 {
     if (!g_mghr_took) return;
     g_mghr_took = false;
@@ -3554,139 +3742,146 @@ static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &wi
     const int xoff = margin / 2;
     if (ds_row_y0(1) - ds_row_y0(0) != S || ds_col_x0(1) - ds_col_x0(0) != S || ds_row_y0(0) != 0 ||
         xoff + 256 * S > ntr::active_w || 192 * S > ntr::active_h) { ++g_mghr_n[3]; return; }
-    static const int kSizes[3][4][2] = {
-        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
-        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
-        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
-    };
-    /* the sensitive entries, their boxes (DS, one pixel of margin) and the union of them */
-    struct Ent { int i, x, y, w, h, bw, bh, pa, pb, pc, pd, fx, fy; bool affine, hflip, vflip, c256; uint32_t tile, pal; uint8_t prio; };
-    static Ent ent[128];
+    const bool replay = g_mghr_replay_mode > 0;
+    /* the sensitive entries this composite refines (127 -> 0, raster_obj's walk) and the union of their boxes */
+    static int sel[128];
     int ne = 0, ux0 = 256, uy0 = 192, ux1 = 0, uy1 = 0;
-    const int layer = hal_gapless_obj_raster_shift_ds();
     for (int i = 127; i >= 0; --i) {
         if (!g_mghr_sens[i]) continue;
-        const uint16_t a0 = rd16(oam_a() + i * 8u), a1 = rd16(oam_a() + i * 8u + 2), a2 = rd16(oam_a() + i * 8u + 4);
-        Ent &e = ent[ne];
-        e.i = i;
-        e.affine = a0 & 0x100;
-        const int shape = (a0 >> 14) & 3, size = (a1 >> 14) & 3;
-        e.w = kSizes[shape][size][0]; e.h = kSizes[shape][size][1];
-        const bool dbl = e.affine && (a0 & 0x200);
-        e.bw = dbl ? e.w * 2 : e.w; e.bh = dbl ? e.h * 2 : e.h;
-        e.x = a1 & 0x1FF; e.y = a0 & 0xFF;
-        if (e.x >= 256) e.x -= 512;
-        if (e.y >= 192 && e.y >= 256 - e.bh) e.y -= 256;
-        e.y += layer + ntr::ppu_obj_routed_live_resid(i);
-        e.c256 = a0 & 0x2000;
-        e.hflip = !e.affine && (a1 & 0x1000);
-        e.vflip = !e.affine && (a1 & 0x2000);
-        e.tile = a2 & 0x3FF; e.pal = (a2 >> 12) & 0xF; e.prio = (uint8_t)((a2 >> 10) & 3);
-        e.pa = 256; e.pb = 0; e.pc = 0; e.pd = 256;
-        if (e.affine) {
-            const int g = (a1 >> 9) & 0x1F;
-            e.pa = (int16_t)rd16(oam_a() + (g * 4 + 0) * 8u + 6); e.pb = (int16_t)rd16(oam_a() + (g * 4 + 1) * 8u + 6);
-            e.pc = (int16_t)rd16(oam_a() + (g * 4 + 2) * 8u + 6); e.pd = (int16_t)rd16(oam_a() + (g * 4 + 3) * 8u + 6);
-        }
-        e.fx = g_mghr_afr_on ? g_mghr_afr[i][0] : 0; e.fy = g_mghr_afr_on ? g_mghr_afr[i][1] : 0;
-        if (shown3d && honour3d && layer_behind_3d(kOwnerObj, e.prio, p3d)) continue;   /* behind the 3D: left at the DS's */
-        const int x0 = mghr_mx(0, e.x - 1), x1 = mghr_mn(256, e.x + e.bw + 1);
-        const int y0 = mghr_mx(0, e.y - 1), y1 = mghr_mn(192, e.y + e.bh + 1);
-        if (x0 >= x1 || y0 >= y1) continue;
-        ux0 = mghr_mn(ux0, x0); ux1 = mghr_mx(ux1, x1); uy0 = mghr_mn(uy0, y0); uy1 = mghr_mx(uy1, y1);
-        ++ne;
+        const MghrEnt &e = g_mghr_ent[i];
+        if (shown3d && honour3d && layer_behind_3d(kOwnerObj, e.prio, p3d)) { g_mghr_sens[i] = 0; continue; }   /* behind the 3D: the DS's */
+        ux0 = mghr_mn(ux0, mghr_mx(0, e.x - 1)); ux1 = mghr_mx(ux1, mghr_mn(256, e.x + e.bw + 1));
+        uy0 = mghr_mn(uy0, mghr_mx(0, e.y - 1)); uy1 = mghr_mx(uy1, mghr_mn(192, e.y + e.bh + 1));
+        sel[ne++] = i;
     }
-    if (!ne) return;
-    /* 2: the composite again into the kept picture, the sensitive entries hidden; its cells are the cells without them */
-    uint16_t oam_keep[128];
-    std::memcpy(g_mghr_keep, g_a, sizeof g_a);
-    for (int k = 0; k < ne; ++k) {
-        volatile uint16_t *p = reinterpret_cast<volatile uint16_t *>(oam_a() + ent[k].i * 8u);
-        oam_keep[k] = *p;
-        *p = (uint16_t)((*p & ~0x0300u) | 0x0200u);
-    }
-    static std::vector<uint32_t> pre_keep, pre_wo;
+    if (!ne || ux0 >= ux1 || uy0 >= uy1) return;
     const int hx0 = xoff + ux0 * S, hx1 = xoff + ux1 * S, hy0 = uy0 * S, hy1 = uy1 * S, BW = hx1 - hx0;
-    if (pre) {
-        pre_keep.resize((size_t)BW * (hy1 - hy0));
-        for (int hy = hy0; hy < hy1; ++hy)
-            std::memcpy(&pre_keep[(size_t)(hy - hy0) * BW], pre + (size_t)hy * ntr::SCREEN_W + hx0, (size_t)BW * 4);
-    }
-    const uint32_t *dirty_keep = g_mc_dirty_final;
-    const int replay_keep = g_mc_replay;
-    g_mc_dirty_final = nullptr;
-    g_mghr_inner = 1;
-    port_message_engine_a_replay(g_mghr_scr);
-    g_mghr_inner = 0;
-    g_mc_replay = replay_keep;           /* the replay's wrapper cleared it; this composite is still the outer one */
-    g_mc_dirty_final = dirty_keep;
-    for (int k = 0; k < ne; ++k)
-        *reinterpret_cast<volatile uint16_t *>(oam_a() + ent[k].i * 8u) = oam_keep[k];
-    std::memcpy(g_mghr_wo, g_a, sizeof g_a);
-    std::memcpy(g_a, g_mghr_keep, sizeof g_a);
-    if (pre) {
-        pre_wo.resize((size_t)BW * (hy1 - hy0));
-        for (int hy = hy0; hy < hy1; ++hy) {
-            std::memcpy(&pre_wo[(size_t)(hy - hy0) * BW], pre + (size_t)hy * ntr::SCREEN_W + hx0, (size_t)BW * 4);
-            std::memcpy(pre + (size_t)hy * ntr::SCREEN_W + hx0, &pre_keep[(size_t)(hy - hy0) * BW], (size_t)BW * 4);
-        }
-    }
-    /* 3: the sensitive sprites at every host pixel of the union, 127 -> 0 with raster_obj's OBJ-vs-OBJ rule */
-    static std::vector<MghrPx> plane;
-    plane.assign((size_t)BW * (hy1 - hy0), MghrPx{0, 0, 0});
-    const uint32_t obj_pltt = kPlttBase + 0x200u;
     const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
     const bool map1d = (dispcnt >> 4) & 1;
+    static std::vector<uint32_t> pre_wo;
+    const auto tw = std::chrono::steady_clock::now();
+    if (replay) {
+        /* 2 (A/B): the composite again into the kept picture with the sensitive entries hidden */
+        uint16_t oam_keep[128];
+        std::memcpy(g_mghr_keep, g_a, sizeof g_a);
+        for (int k = 0; k < ne; ++k) {
+            volatile uint16_t *p = reinterpret_cast<volatile uint16_t *>(oam_a() + sel[k] * 8u);
+            oam_keep[k] = *p;
+            *p = (uint16_t)((*p & ~0x0300u) | 0x0200u);
+        }
+        static std::vector<uint32_t> pre_keep;
+        if (pre) {
+            pre_keep.resize((size_t)BW * (hy1 - hy0));
+            for (int hy = hy0; hy < hy1; ++hy)
+                std::memcpy(&pre_keep[(size_t)(hy - hy0) * BW], pre + (size_t)hy * ntr::SCREEN_W + hx0, (size_t)BW * 4);
+        }
+        const uint32_t *dirty_keep = g_mc_dirty_final;
+        const int replay_keep = g_mc_replay;
+        g_mc_dirty_final = nullptr;
+        g_mghr_inner = 1;
+        port_message_engine_a_replay(g_mghr_scr);
+        g_mghr_inner = 0;
+        g_mc_replay = replay_keep;           /* the replay's wrapper cleared it; this composite is still the outer one */
+        g_mc_dirty_final = dirty_keep;
+        for (int k = 0; k < ne; ++k)
+            *reinterpret_cast<volatile uint16_t *>(oam_a() + sel[k] * 8u) = oam_keep[k];
+        std::memcpy(g_mghr_wo, g_a, sizeof g_a);
+        std::memcpy(g_a, g_mghr_keep, sizeof g_a);
+        if (pre) {
+            pre_wo.resize((size_t)BW * (hy1 - hy0));
+            for (int hy = hy0; hy < hy1; ++hy) {
+                std::memcpy(&pre_wo[(size_t)(hy - hy0) * BW], pre + (size_t)hy * ntr::SCREEN_W + hx0, (size_t)BW * 4);
+                std::memcpy(pre + (size_t)hy * ntr::SCREEN_W + hx0, &pre_keep[(size_t)(hy - hy0) * BW], (size_t)BW * 4);
+            }
+        }
+    } else {
+        /* 2: the cells WITHOUT the sensitive entries. A cell whose sprite texel is not a sensitive entry's is the same
+           cell; one that is takes the BG loop's cell and the other sprites again, raster_obj's own rules (window OBJ bit,
+           OBJ-vs-OBJ by priority, OBJ-vs-BG with the tie to the sprite, the semi-transparent blend against what is
+           under it). A semi-transparent sprite over the 3D there would read the 3D: replay mode is the honest answer
+           for that and the cell keeps the DS's picture instead (counted). */
+        for (int Y = uy0; Y < uy1; ++Y)
+            for (int X = ux0; X < ux1; ++X) {
+                const Cell &cw = g_a[Y][X];
+                Cell &wo = g_mghr_wo[Y][X];
+                if (!(cw.hit && cw.owner == kOwnerObj && g_mghr_sens[g_mghr_idx[Y][X]])) { wo = cw; continue; }
+                ++g_mghr_n[4];
+                wo = g_mghr_bg[Y][X];
+                const unsigned wm = window_mask(win, X, Y);
+                if (!winobj_off_env() && !(wm & 0x10)) continue;
+                for (int i = 127; i >= 0; --i) {
+                    if (g_mghr_sens[i]) continue;
+                    const MghrEnt &e = g_mghr_ent[i];
+                    if (!e.ok || X < e.x || X >= e.x + e.bw || Y < e.y || Y >= e.y + e.bh) continue;
+                    uint32_t color;
+                    if (!mghr_texel(e, (X - e.x) * 256, (Y - e.y) * 256, boundary, map1d, color)) continue;
+                    if (wo.hit && wo.owner == kOwnerObj && e.prio > wo.prio) continue;
+                    if (wo.hit && wo.owner != kOwnerObj && wo.prio < e.prio) continue;
+                    if (!bl.off && e.mode == 1 && (wm & 0x20)) {
+                        if (wo.hit) { if (bl.second & (1u << wo.owner)) color = blend_alpha(color, wo.color, bl.eva, bl.evb); }
+                        else if (bl.second & 1u) { wo = cw; break; }   /* over the 3D: keep the DS's cell */
+                    }
+                    wo.color = color; wo.hit = true; wo.owner = kOwnerObj; wo.msgcur = 0; wo.prio = e.prio;
+                }
+            }
+    }
+    g_mghr_seg[1] += mghr_since(tw);
+    /* the picture without them at host pixel (hx, hy) of cell (X, Y) */
+    auto under = [&](int X, int Y, int hx, int hy, uint32_t &v, uint32_t &pv) {
+        if (replay) {
+            v = g_mghr_scr[(size_t)hy * ntr::SCREEN_W + hx];
+            pv = pre ? pre_wo[(size_t)(hy - hy0) * BW + hx - hx0] : v;
+            return;
+        }
+        const Cell &wo = g_mghr_wo[Y][X];
+        const size_t at = (size_t)hy * ntr::SCREEN_W + hx;
+        const bool behind = wo.hit && honour3d && layer_behind_3d(wo.owner, wo.prio, p3d) && cover && cover[at];
+        if (wo.hit && !behind) { v = pv = wo.color; return; }
+        v = g_mghr_scr[at];
+        pv = (pre && g_mghr_pre_under) ? g_mghr_pre_under[at] : v;
+    };
+    /* 3: the sensitive sprites at every host pixel of the union, 127 -> 0 with raster_obj's OBJ-vs-OBJ rule */
+    const auto ts = std::chrono::steady_clock::now();
+    static std::vector<MghrPx> plane;
+    plane.assign((size_t)BW * (hy1 - hy0), MghrPx{0, 0, 0});
+    static uint8_t cellhit[192][256];   /* a sensitive texel landed in this cell at some phase */
+    for (int Y = uy0; Y < uy1; ++Y) std::memset(&cellhit[Y][ux0], 0, (size_t)(ux1 - ux0));
     for (int k = 0; k < ne; ++k) {
-        const Ent &e = ent[k];
+        const MghrEnt &e = g_mghr_ent[sel[k]];
         const int x0 = mghr_mx(0, e.x - 1), x1 = mghr_mn(256, e.x + e.bw + 1);
         const int y0 = mghr_mx(0, e.y - 1), y1 = mghr_mn(192, e.y + e.bh + 1);
         for (int Y = y0; Y < y1; ++Y)
             for (int j = 0; j < S; ++j) {
                 const int qy = (Y - e.y) * 256 + j * 256 / S - e.fy;
+                if (qy < 0 || qy >= e.bh * 256) continue;
                 MghrPx *prow = &plane[(size_t)(Y * S + j - hy0) * BW];
-                for (int X = x0; X < x1; ++X)
+                int xa = x0, xb = x1;
+                if (e.affine) {
+                    int lo, hi;
+                    if (!mghr_aff_span(e.pa, e.pb, e.pc, e.pd, e.w, e.h, e.bw, e.bh, qy, lo, hi)) continue;
+                    xa = mghr_mx(x0, e.x + ((lo + e.fx) >> 8) - 1);
+                    xb = mghr_mn(x1, e.x + ((hi + e.fx) >> 8) + 2);
+                }
+                for (int X = xa; X < xb; ++X)
                     for (int i = 0; i < S; ++i) {
-                        const int qx = (X - e.x) * 256 + i * 256 / S - e.fx;
-                        if (qx < 0 || qx >= e.bw * 256 || qy < 0 || qy >= e.bh * 256) continue;
-                        int tx, ty;
-                        if (e.affine) {
-                            const int cx = qx - (e.bw / 2) * 256, cy = qy - (e.bh / 2) * 256;
-                            tx = (int)(((long long)e.pa * cx + (long long)e.pb * cy) >> 16) + e.w / 2;
-                            ty = (int)(((long long)e.pc * cx + (long long)e.pd * cy) >> 16) + e.h / 2;
-                            if (tx < 0 || tx >= e.w || ty < 0 || ty >= e.h) continue;
-                        } else {
-                            tx = qx >> 8; ty = qy >> 8;
-                            if (e.hflip) tx = e.w - 1 - tx;
-                            if (e.vflip) ty = e.h - 1 - ty;
-                        }
-                        const int tcol = tx >> 3, trow = ty >> 3, fx = tx & 7, fy = ty & 7;
-                        const uint32_t slot = map1d ? (uint32_t)(trow * (e.w / 8) + tcol) * (e.c256 ? 2u : 1u)
-                                                    : (uint32_t)(trow * 32 + (e.c256 ? tcol * 2 : tcol));
-                        const uint32_t cell = kObjVram + e.tile * boundary + slot * 32u;
-                        uint32_t index, color;
-                        if (e.c256) {
-                            index = *reinterpret_cast<volatile uint8_t *>(cell + fy * 8u + fx);
-                            if (!index) continue;
-                            color = bgr555(rd16(obj_pltt + index * 2u));
-                        } else {
-                            const uint8_t b = *reinterpret_cast<volatile uint8_t *>(cell + fy * 4u + fx / 2);
-                            index = (fx & 1) ? (b >> 4) : (b & 0xF);
-                            if (!index) continue;
-                            color = bgr555(rd16(obj_pltt + (e.pal * 16u + index) * 2u));
-                        }
+                        uint32_t color;
+                        if (!mghr_texel(e, (X - e.x) * 256 + i * 256 / S - e.fx, qy, boundary, map1d, color)) continue;
                         MghrPx &q = prow[X * S + i + xoff - hx0];
                         if (q.hit && e.prio > q.prio) continue;
                         q.color = color; q.hit = 1; q.prio = e.prio;
+                        cellhit[Y][X] = 1;
                     }
             }
     }
+    g_mghr_seg[2] += mghr_since(ts);
+    const auto td = std::chrono::steady_clock::now();
     /* 4: each host pixel of the union */
     long changed = 0;
     for (int Y = uy0; Y < uy1; ++Y)
         for (int X = ux0; X < ux1; ++X) {
             const Cell &cw = g_a[Y][X], &co = g_mghr_wo[Y][X];
             const bool drew = std::memcmp(&cw, &co, sizeof cw) != 0;   /* the DS put a sensitive sprite in this cell */
+            if (!drew && !cellhit[Y][X]) continue;                     /* nothing sensitive here at any phase */
             const bool objok = winobj_off_env() || (window_mask(win, X, Y) & 0x10);
             for (int j = 0; j < S; ++j) {
                 const int hy = Y * S + j;
@@ -3702,13 +3897,14 @@ static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &wi
                     }
                     uint32_t v, pv;
                     if (takes) { v = pv = q.color; }
-                    else if (drew) { v = g_mghr_scr[(size_t)hy * ntr::SCREEN_W + hx]; pv = pre ? pre_wo[(size_t)(hy - hy0) * BW + hx - hx0] : v; }
+                    else if (drew) under(X, Y, hx, hy, v, pv);
                     else continue;
                     if (fb.px[hy][hx] != v) { fb.px[hy][hx] = v; ++changed; }
                     if (pre) pre[(size_t)hy * ntr::SCREEN_W + hx] = pv;
                 }
             }
         }
+    g_mghr_seg[3] += mghr_since(td);
     ++g_mghr_n[0];
     g_mghr_n[1] += ne;
     g_mghr_n[2] += changed;
@@ -4117,6 +4313,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     }
     if (verify_a) twod_verify_a_end(bgs, win, lmask, bl, dispcnt);
 
+    mghr_a_bg_snapshot();   /* MGHIRES1: the cells before the sprites */
     if (obj_on && (lmask & (1u << kOwnerObj)))
         raster_obj(dispcnt, bl, win, fb);
 
@@ -4677,6 +4874,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             }
         }
     }
+    mghr_a_under(fb, pre, margin);   /* MGHIRES1: the picture under the 2D, over the sensitive box */
     g_cz.mark(4);
     /* MGINTERP1: a replay with the tick's finished picture to start from (port_message_engine_a_replay_dirty) redraws only the
        DS cells whose resolved pixel differs from the tick's: the picture as it stands before this blit is kept aside (a cell
@@ -5058,9 +5256,12 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     /* MGHIRES1: engine A's turned and sub-pixel sprites at render scale, on the plain path only (see mghr_a_end) */
     if (g_mghr_took) {
         if (mc_native && !gpu_blit && !ovl3d && !bm_on && !lc_ov.live && !lc_ov.top_live && !g_hud_row_live && !g_hdm.on)
-            mghr_a_end(fb, dispcnt, win, shown3d, honour3d, p3d, pre, margin);
+            mghr_a_end(fb, dispcnt, win, bl, shown3d, honour3d, p3d, cover, pre, margin);
         else { g_mghr_took = false; ++g_mghr_n[3]; }
     }
+    if (!g_mghr_inner && mc_native && !shown3d && !gpu_blit && !ovl3d && !bm_on && !lc_ov.live && !lc_ov.top_live && !g_hud_row_live &&
+        (port_mghr_policy() & 2))
+        mghr_a_upscale(fb, pre, margin);
     g_cz.mark(5);
     if (gpu_blit) {
         port_gpu_twod_rects(g_tw_inst, g_tw_n);

@@ -11525,8 +11525,10 @@ static void mgi_after_compose(void)
     mgi_swap_out();
 }
 unsigned g_mghr_survey[2][3];
+unsigned g_mghr_g3d[2];
 static void mgi_report(void)
 {
+    if (g_mghr_g3d[0]) fprintf(stderr, "[mg-hires] survey 3D: %u ticks drew 3D groups (at most %u in one tick)\n", g_mghr_g3d[0], g_mghr_g3d[1]);
     if (g_mghr_survey[0][0] | g_mghr_survey[0][1] | g_mghr_survey[0][2] | g_mghr_survey[1][0] | g_mghr_survey[1][1] | g_mghr_survey[1][2])
         fprintf(stderr, "[mg-hires] survey (sprite-ticks turned / scaled, affine BG ticks): engine A %u / %u, %u; engine B %u / %u, %u\n",
                 g_mghr_survey[0][0], g_mghr_survey[0][1], g_mghr_survey[0][2], g_mghr_survey[1][0], g_mghr_survey[1][1], g_mghr_survey[1][2]);
@@ -11685,6 +11687,10 @@ static void scene_ip_hook_body(int stage, void *fbp, int frame, int tick_game)
         g_ip_tick_ok = ntr::gx_interp_commit(data_0209b3ec, why >= 0 ? 1 : 0, &ist);
         g_mgi_g3d[0] = g_mgi_g3d[1];   /* MGINTERP1: 3D draw groups of the last two ticks */
         g_mgi_g3d[1] = ist.groups;
+        {   /* MGHIRES1 survey: ticks whose picture has 3D draw groups, and the most groups in one tick */
+            extern unsigned g_mghr_g3d[2];
+            if (ist.groups > 0) { ++g_mghr_g3d[0]; if ((unsigned)ist.groups > g_mghr_g3d[1]) g_mghr_g3d[1] = (unsigned)ist.groups; }
+        }
         g_si_ms[5] += ip_ms_since(tcm);
         if (why < 0 && !g_ip_tick_ok) scene_ip_note(SI_COMMIT);
         ++g_ip_serial;

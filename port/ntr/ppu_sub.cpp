@@ -1729,6 +1729,7 @@ struct HrSlot {
     SubFramebuffer *of = nullptr;
     int S = 0, cap = 0;
     bool valid = false;
+    bool ups_only = false;   /* built by the upscaler alone (no render-scale rows) */
 };
 HrSlot g_hr[2];
 int g_hr_slot;
@@ -1844,6 +1845,29 @@ void hr_base(const SubFramebuffer &fb, int S, bool ups, uint32_t *out)
     }
 }
 
+/* MGHIRES1: the columns qx (1/256 px from the box's left edge) of one sample row qy at which an affine sprite's texture
+   coordinate (the DS's sum, 16.16) can fall inside the sprite, one texel of margin: [lo, hi]; false when none */
+static inline bool mghr_aff_span(int pa, int pb, int pc, int pd, int w, int h, int bw, int bh, int qy, int &lo, int &hi)
+{
+    const double cy = (double)qy - (bh / 2) * 256.0;
+    double a = -1e18, b = 1e18;
+    const double lims[2][2] = {{(-1.0 - w / 2) * 65536.0, (w + 1.0 - w / 2) * 65536.0}, {(-1.0 - h / 2) * 65536.0, (h + 1.0 - h / 2) * 65536.0}};
+    const int k[2] = {pa, pc}, m[2] = {pb, pd};
+    for (int t = 0; t < 2; ++t) {
+        const double r0 = lims[t][0] - m[t] * cy, r1 = lims[t][1] - m[t] * cy;
+        if (k[t] == 0) { if (r0 > 0 || r1 < 0) return false; continue; }
+        double c0 = r0 / k[t], c1 = r1 / k[t];
+        if (c0 > c1) { const double z = c0; c0 = c1; c1 = z; }
+        if (c0 > a) a = c0;
+        if (c1 < b) b = c1;
+    }
+    a += (bw / 2) * 256.0 - 256.0; b += (bw / 2) * 256.0 + 256.0;
+    if (a < 0) a = 0;
+    if (b > bw * 256.0 - 1) b = bw * 256.0 - 1;
+    if (a > b) return false;
+    lo = (int)a; hi = (int)b;
+    return true;
+}
 ObjPixel g_hr_obj[192][256];
 uint8_t g_hr_objwin[192][256];
 
@@ -1902,7 +1926,15 @@ void hr_raster_obj(uint32_t dispcnt, const uint8_t *skip, int u, int v, const ui
             const int py = y + sy;
             if (py < 0 || py >= 192 || !need[py]) continue;
             const int qy = sy * 256 + dv;            /* sample row inside the box, 1/256 px */
-            for (int sx = -1; sx <= bw; ++sx) {
+            int sxa = -1, sxb = bw;
+            if (affine) {
+                int lo, hi;
+                if (qy < 0 || qy >= bh * 256 || !mghr_aff_span(pa, pb, pc, pd, w, h, bw, bh, qy, lo, hi)) continue;
+                sxa = ((lo - du) >> 8) - 1; sxb = ((hi - du) >> 8) + 1;
+                if (sxa < -1) sxa = -1;
+                if (sxb > bw) sxb = bw;
+            }
+            for (int sx = sxa; sx <= sxb; ++sx) {
                 const int px = x + sx;
                 if (px < 0 || px >= 256) continue;
                 const int qx = sx * 256 + du;
@@ -2120,7 +2152,14 @@ void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
         hs.cap = hs.px ? need : 0;
         if (!hs.px) return;
     }
-    if (!hs.of) { hs.of = static_cast<SubFramebuffer *>(std::malloc(sizeof(SubFramebuffer))); if (!hs.of) return; }
+    if (!hs.of) { hs.of = static_cast<SubFramebuffer *>(std::malloc(sizeof(SubFramebuffer))); hs.ups_only = false; if (!hs.of) return; }
+    /* the upscaler alone, and this slot already holds it for this very picture: nothing to redo */
+    if (!sens && hs.ups_only && hs.S == S && std::memcmp(hs.of->px, fb.px, sizeof fb.px) == 0) {
+        hs.valid = true;
+        ++g_hr_n[0];
+        return;
+    }
+    hs.ups_only = false;
     hr_base(fb, S, ups, hs.px);
     if (ups) ++g_hr_n[3];
     if (sens) {
@@ -2233,6 +2272,7 @@ void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
     std::memcpy(hs.of->px, fb.px, sizeof fb.px);
     hs.S = S;
     hs.valid = true;
+    hs.ups_only = !sens;
     ++g_hr_n[0];
     g_hr_ms += std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
 }
@@ -6511,6 +6551,11 @@ extern "C" int port_wipe_cut_picture(uint32_t *dst, int w, int h, int stride) { 
    fills (0 the tick, 1 a picture between ticks), and engine B's sub-pixel remainders for that picture (null clears them) */
 extern "C" void port_mghr_policy_install(int (*fn)(void)) { ntr::g_hr_policy = fn; }
 extern "C" void port_mghr_slot(int slot) { ntr::g_hr_slot = slot & 1; }
+/* the upscaler alone, for engine A (hal/message_compositor.cpp): a 256x192 picture to (256*S) x (192*S) */
+extern "C" void port_mghr_upscale(const unsigned int *ds, int S, unsigned int *out)
+{
+    ntr::hr_base(*reinterpret_cast<const ntr::SubFramebuffer *>(ds), S, true, reinterpret_cast<uint32_t *>(out));
+}
 extern "C" void port_mghr_frac_set(const short *obj, const short *bg)
 {
     if (!obj || !bg) { ntr::g_hr_frac_on = 0; return; }
