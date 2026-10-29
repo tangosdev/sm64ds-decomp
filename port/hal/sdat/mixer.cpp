@@ -148,6 +148,19 @@ struct Channel {
 };
 
 Channel g_ch[SD_CHANNELS];
+#ifndef PORT_ROM_CLEAN
+/* LOGOSPEED1 proof instrument (dev builds only): SM64DS_MIX_VOICE_TRACE=<path>. One line per voice event with the mixer's output frame:
+   start (wave, length, loop start, rate, first sample), cut (an audible voice replaced by a start), wrap (a loop seam: the last sample
+   before it, the loop start sample and the one before it, the gain), end (a one-shot ran out: its last sample). A step in the output can
+   then be put on the voice and the wave that made it. */
+FILE *g_vtF;
+int g_vtOn = -1;
+unsigned long long g_vtNow;      /* output frame of the chunk being rendered */
+static inline bool vt_on() {
+    if (g_vtOn < 0) { const char *e = getenv("SM64DS_MIX_VOICE_TRACE"); g_vtF = (e && *e) ? fopen(e, "w") : 0; if (g_vtF) setvbuf(g_vtF, 0, _IONBF, 0); g_vtOn = g_vtF ? 1 : 0; }
+    return g_vtOn > 0;
+}
+#endif
 
 // Output frames per 192 Hz sequencer tick, as a fraction: g_tickAcc counts
 // output frames * 192 and a tick is due each time it reaches g_mixRate.
@@ -382,6 +395,28 @@ void sd_mix_start(int ch, const SdatWave *w, const SdatNote *n,
           rate > 0.0 ? (double)w->totalSamples * 1000.0 / (rate * g_mixRate)
                      : 0.0);
     Channel &c = g_ch[ch];
+#ifndef PORT_ROM_CLEAN
+    if (vt_on()) {
+        if (c.active && !c.ended && c.pcm) {
+            const sd_u32 i = (sd_u32)c.pos < c.total ? (sd_u32)c.pos : c.total - 1;
+            fprintf(g_vtF, "cut f=%llu ch=%d wave=%p v=%d atten=%d\n", g_vtNow, ch, (const void *)c.pcm, (int)c.pcm[i], (c.ampl >> 7) + c.volDb10);
+        }
+        {   /* SM64DS_MIX_VOICE_WAVES=<dir>: each wave's decoded samples once, as <dir>/w_<address>.raw (s16 mono), for an offline compare */
+            static const char *wd = getenv("SM64DS_MIX_VOICE_WAVES");
+            static std::vector<const void *> seen;
+            bool got = false;
+            for (const void *q : seen) if (q == (const void *)w->pcm) { got = true; break; }
+            if (wd && *wd && !got) {
+                seen.push_back((const void *)w->pcm);
+                char path[512];
+                snprintf(path, sizeof path, "%s/w_%p.raw", wd, (const void *)w->pcm);
+                if (FILE *wf = fopen(path, "wb")) { fwrite(w->pcm, sizeof(sd_s16), w->totalSamples, wf); fclose(wf); }
+            }
+        }
+        fprintf(g_vtF, "start f=%llu ch=%d wave=%p total=%u loop=%d ls=%u rate=%.4f hz=%u v0=%d db=%d\n", g_vtNow, ch, (const void *)w->pcm,
+                (unsigned)w->totalSamples, w->loop, (unsigned)w->loopStart, rate, (unsigned)w->sampleRate, (int)w->pcm[0], volume_db10);
+    }
+#endif
     unsigned s = c.seq + 1;
     memset(&c, 0, sizeof c);
     c.seq = s;
@@ -1148,6 +1183,8 @@ static void sd_mix_render_body(sd_s16 *dst, int frames)
         g_cwOn = g_cwF ? 1 : 0;
     }
     const int cw = g_cwOn > 0 && frames <= 2048;
+    (void)vt_on();
+    const unsigned long long vtBase = g_vtNow;
     if (cw) memset(g_cw, 0, (size_t)frames * 2 * sizeof(double));
 #endif
     int done = 0;
@@ -1205,7 +1242,16 @@ static void sd_mix_render_body(sd_s16 *dst, int frames)
                             double span = (double)(c.total - c.loopStart);
                             c.pos = c.loopStart + fmod(c.pos - c.loopStart, span);
                             idx = (sd_u32)c.pos;
+#ifndef PORT_ROM_CLEAN
+                            if (g_vtOn > 0)
+                                fprintf(g_vtF, "wrap f=%llu ch=%d wave=%p last=%d ls=%d pre=%d g=%.4f\n", g_vtNow + k, i, (const void *)c.pcm,
+                                        (int)c.pcm[c.total - 1], (int)c.pcm[c.loopStart], c.loopStart ? (int)c.pcm[c.loopStart - 1] : 0, g);
+#endif
                         } else {
+#ifndef PORT_ROM_CLEAN
+                            if (g_vtOn > 0)
+                                fprintf(g_vtF, "end f=%llu ch=%d wave=%p last=%d g=%.4f\n", g_vtNow + k, i, (const void *)c.pcm, (int)c.pcm[c.total - 1], g);
+#endif
                             c.ended = 1;      // quiet from here; the shadow clock frees it
                             break;
                         }
@@ -1271,6 +1317,9 @@ static void sd_mix_render_body(sd_s16 *dst, int frames)
         streams_render(dst + done * 2, n);
 
         done += n;
+#ifndef PORT_ROM_CLEAN
+        g_vtNow = vtBase + (unsigned long long)done;
+#endif
         g_tickAcc += n * 192;
         while (g_tickAcc >= g_mixRate) {
             g_tickAcc -= g_mixRate;
