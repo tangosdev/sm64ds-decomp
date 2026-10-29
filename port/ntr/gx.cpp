@@ -4670,6 +4670,77 @@ inline int toon_index(float vr)
     return i < 0 ? 0 : (i > 31 ? 31 : i);
 }
 
+/* SMOOTH TOON SHADING (run after093, lane SMOOTHTOON1; the Smooth Models
+   setting). The nearest entry above is exact at the DS's 256x192, where one
+   entry spans a pixel or two of a head; at a high render scale the same entry
+   is a wide flat band and the bands read as contour lines (the title's big
+   Mario head). With Smooth Models on, a pixel instead blends the two entries
+   on either side of its fractional index, so the table's own colours stay and
+   only the steps between them go soft.
+
+   g_toon_blend[k] (k 0..30) is 1 where entries k and k + 1 blend and 0 where
+   they keep their hard edge; a gap keeps its edge when the two colours differ
+   by more than kToonBlendStep on any channel, so a table drawn as a few flat
+   cel steps stays a cel picture and only a ramp is smoothed. g_toon_blend[31]
+   is the switch itself (1 smooth, 0 the DS's nearest entry, every blend flag
+   then 0 too). The card path reads the same 32 floats (GxGpuFrame toon_blend).
+   An unblended gap picks exactly the entry toon_index picks, and with the
+   switch off nothing here runs. */
+float g_toon_blend[32];
+int g_toon_smooth = 0;
+/* the widest step a ramp takes: three 5-bit levels (one level is 255/31 =
+   8.2 in these units); measured over the ROM's tables in out/SMOOTHTOON1 */
+constexpr float kToonBlendStep = 3.0f * 255.0f / 31.0f + 0.5f;
+
+/* the blended entry for an interpolated red, into out[3] */
+inline void toon_smooth_entry(float vr, float out[3])
+{
+    float f = vr * (31.0f / 255.0f);
+    f = f < 0.0f ? 0.0f : (f > 31.0f ? 31.0f : f);
+    int i0 = static_cast<int>(f);
+    if (i0 > 30) i0 = 30;
+    const float t = f - static_cast<float>(i0);
+    const float *a = &g_toon8[i0 * 3];
+    const float *b = a + 3;
+    if (g_toon_blend[i0] != 0.0f) {
+        out[0] = a[0] + (b[0] - a[0]) * t;
+        out[1] = a[1] + (b[1] - a[1]) * t;
+        out[2] = a[2] + (b[2] - a[2]) * t;
+    } else {
+        const float *e = t < 0.5f ? a : b;
+        out[0] = e[0]; out[1] = e[1]; out[2] = e[2];
+    }
+}
+
+/* Smooth Models on (any level), or SM64DS_TOON_SMOOTH=0 / 1 to force it */
+int toon_smooth_wanted()
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = std::getenv("SM64DS_TOON_SMOOTH");
+        env = (e && e[0]) ? (e[0] == '0' ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    return smooth_level() > 0 ? 1 : 0;
+}
+
+/* this frame's blend flags from this frame's table (g_toon8, g_toon_shade) */
+void toon_blend_setup()
+{
+    g_toon_smooth = (g_toon_shade && toon_smooth_wanted()) ? 1 : 0;
+    for (int k = 0; k < 31; ++k) {
+        float d = 0.0f;
+        if (g_toon_smooth)
+            for (int c = 0; c < 3; ++c) {
+                const float x = g_toon8[(k + 1) * 3 + c] - g_toon8[k * 3 + c];
+                const float ax = x < 0.0f ? -x : x;
+                if (ax > d) d = ax;
+            }
+        g_toon_blend[k] = (g_toon_smooth && d <= kToonBlendStep) ? 1.0f : 0.0f;
+    }
+    g_toon_blend[31] = g_toon_smooth ? 1.0f : 0.0f;
+}
+
 int toon_off_env()
 {
     static const int v = std::getenv("SM64DS_TOON_OFF") ? 1 : 0;
@@ -6423,9 +6494,12 @@ void raster_ref(const RefArgs &ra, int tid, int nt) {
                 const uint32_t fd = (g_fog.on && t.fog)
                     ? fog_density(wdepth ? -g_fog.wscale / z : z * 16777215.0f) : 0u;
                 const float *te = nullptr;
-                if (toon)
-                    te = &g_toon8[toon_index(l0 * acol[0] + l1 * bcol[0] +
-                                             l2 * ccol[0]) * 3];
+                float tsm[3];
+                if (toon) {
+                    const float vr = l0 * acol[0] + l1 * bcol[0] + l2 * ccol[0];
+                    if (g_toon_smooth) { toon_smooth_entry(vr, tsm); te = tsm; }
+                    else te = &g_toon8[toon_index(vr) * 3];
+                }
                 auto ch = [&](int k, int sh) {
                     const int kv = toon == 2 ? 0 : k;
                     const float v = toon == 1
@@ -6433,7 +6507,7 @@ void raster_ref(const RefArgs &ra, int tid, int nt) {
                         : l0 * acol[kv] + l1 * bcol[kv] + l2 * ccol[kv];
                     const float m = inv255.v[(texel >> sh) & 0xFF];
                     int i = static_cast<int>(v * m + 0.5f);
-                    if (toon == 2) i += static_cast<int>(te[k]);
+                    if (toon == 2) i += static_cast<int>(te[k] + 0.5f);
                     i = i < 0 ? 0 : (i > 255 ? 255 : i);
                     if (fd) i = (int)(((uint32_t)i * (128u - fd) + (uint32_t)g_fog.rgb[k] * fd) >> 7);
                     return static_cast<uint32_t>(i);
@@ -6977,9 +7051,12 @@ void ghost_group_cpu(Framebuffer &fb, const std::vector<GxTriangle> &gt,
                     if ((texel >> 24) == 0) continue;
                 }
                 const float *te = nullptr;
-                if (toon)
-                    te = &g_toon8[toon_index(l0 * acol[0] + l1 * bcol[0] +
-                                             l2 * ccol[0]) * 3];
+                float tsm[3];
+                if (toon) {
+                    const float vr = l0 * acol[0] + l1 * bcol[0] + l2 * ccol[0];
+                    if (g_toon_smooth) { toon_smooth_entry(vr, tsm); te = tsm; }
+                    else te = &g_toon8[toon_index(vr) * 3];
+                }
                 auto ch = [&](int k, int sh) {
                     const int kv = toon == 2 ? 0 : k;
                     const float v = toon == 1
@@ -6987,7 +7064,7 @@ void ghost_group_cpu(Framebuffer &fb, const std::vector<GxTriangle> &gt,
                         : l0 * acol[kv] + l1 * bcol[kv] + l2 * ccol[kv];
                     const float m = inv255.v[(texel >> sh) & 0xFF];
                     int i = static_cast<int>(v * m + 0.5f);
-                    if (toon == 2) i += static_cast<int>(te[k]);
+                    if (toon == 2) i += static_cast<int>(te[k] + 0.5f);
                     return static_cast<uint32_t>(i < 0 ? 0 : (i > 255 ? 255 : i));
                 };
                 const uint32_t tex_a = texel >> 24;
@@ -7355,6 +7432,42 @@ void gx_render(Framebuffer &fb) {
         for (size_t gi_ = 0; gi_ < gl_n; ++gi_)
             if (gl_p[gi_].mode == 2) ++n2;
         if (n2) g_toon_shade = gx_toon_table(g_toon8);
+        toon_blend_setup();
+        /* SM64DS_TOON_DUMP=<file>: every distinct table a frame draws with,
+           once, as its 32 BGR555 entries and the blend flags (lane
+           SMOOTHTOON1's table survey) */
+        static const char *tdump = std::getenv("SM64DS_TOON_DUMP");
+        if (tdump && n2 && io_ready()) {
+            static uint32_t seen[64];
+            static int nseen = 0;
+            static unsigned long dframes = 0;
+            ++dframes;
+            const volatile uint16_t *tt =
+                reinterpret_cast<const volatile uint16_t *>(0x04000380u);
+            uint32_t hsh = 2166136261u ^ (uint32_t)g_toon_shade;
+            for (int i = 0; i < 32; ++i) hsh = (hsh ^ (uint32_t)(tt[i] & 0x7FFF)) * 16777619u;
+            bool known = false;
+            for (int i = 0; i < nseen; ++i) if (seen[i] == hsh) known = true;
+            if (!known && nseen < 64) {
+                seen[nseen++] = hsh;
+                if (FILE *fp = std::fopen(tdump, "a")) {
+                    std::fprintf(fp, "%08x\t%lu\t%s\t%u\t", (unsigned)hsh, dframes,
+                                 g_toon_shade == 2 ? "highlight" : "toon", (unsigned)n2);
+                    for (int i = 0; i < 32; ++i)
+                        std::fprintf(fp, "%04x%s", (unsigned)(tt[i] & 0x7FFF), i < 31 ? " " : "\t");
+                    /* per gap: 0 the two entries are equal, 1 a step that
+                       blends, 2 a step that keeps its hard edge (or the
+                       switch is off) */
+                    for (int i = 0; i < 31; ++i) {
+                        const float *a = &g_toon8[i * 3];
+                        const bool same = a[0] == a[3] && a[1] == a[4] && a[2] == a[5];
+                        std::fprintf(fp, "%d", same ? 0 : (g_toon_blend[i] != 0.0f ? 1 : 2));
+                    }
+                    std::fprintf(fp, "\t%d\n", g_toon_smooth);
+                    std::fclose(fp);
+                }
+            }
+        }
         static const int tprobe = std::getenv("SM64DS_TOON_PROBE") ? 1 : 0;
         if (tprobe && n2) {
             static unsigned long frames = 0, lines = 0;
@@ -7460,6 +7573,7 @@ void gx_render(Framebuffer &fb) {
         }
         f.toon_shade = g_toon_shade;
         f.toon_rgb = g_toon8;
+        f.toon_blend = g_toon_blend;
         f.fog_on = g_fog.on;
         f.fog_wscale = frame_wdepth() ? g_fog.wscale : 0.0f;
         f.fog_shift = g_fog.shift;
@@ -7931,9 +8045,12 @@ void gx_render(Framebuffer &fb) {
                 const uint32_t fd = (g_fog.on && t.fog)
                     ? fog_density(wdepth ? -g_fog.wscale / z : z * 16777215.0f) : 0u;
                 const float *te = nullptr;
-                if (toon)
-                    te = &g_toon8[toon_index(l0 * acol[0] + l1 * bcol[0] +
-                                             l2 * ccol[0]) * 3];
+                float tsm[3];
+                if (toon) {
+                    const float vr = l0 * acol[0] + l1 * bcol[0] + l2 * ccol[0];
+                    if (g_toon_smooth) { toon_smooth_entry(vr, tsm); te = tsm; }
+                    else te = &g_toon8[toon_index(vr) * 3];
+                }
                 auto ch = [&](int k, int sh) {
                     const int kv = toon == 2 ? 0 : k;
                     const float v = toon == 1
@@ -7941,7 +8058,7 @@ void gx_render(Framebuffer &fb) {
                         : l0 * acol[kv] + l1 * bcol[kv] + l2 * ccol[kv];
                     const float m = inv255.v[(texel >> sh) & 0xFF];
                     int i = static_cast<int>(v * m + 0.5f);
-                    if (toon == 2) i += static_cast<int>(te[k]);
+                    if (toon == 2) i += static_cast<int>(te[k] + 0.5f);
                     i = i < 0 ? 0 : (i > 255 ? 255 : i);
                     if (fd) i = (int)(((uint32_t)i * (128u - fd) + (uint32_t)g_fog.rgb[k] * fd) >> 7);
                     return static_cast<uint32_t>(i);
@@ -8203,6 +8320,7 @@ void gx_render(Framebuffer &fb) {
         /* the frame's toon table, for its mode-2 polygons (0 = none) */
         f.toon_shade = g_toon_shade;
         f.toon_rgb = g_toon8;
+        f.toon_blend = g_toon_blend;
         f.fog_on = g_fog.on;
         f.fog_wscale = frame_wdepth() ? g_fog.wscale : 0.0f;
         f.fog_shift = g_fog.shift;

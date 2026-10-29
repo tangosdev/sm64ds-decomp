@@ -81,6 +81,25 @@ cbuffer ToonTable : register(b0)
     float4 fogt[9];
 };
 
+// THE ENTRY A MODE-2 PIXEL TAKES (gx.cpp's toon_index, and with Smooth Models
+// on its toon_smooth_entry; lane SMOOTHTOON1). toon[31].w is the smooth switch
+// and toon[k].w says entries k and k + 1 blend; with the switch off this is
+// the DS's nearest entry, round(red * 31 / 255), 0..31.
+float3 toon_entry(float r)
+{
+    int k = clamp((int)(r * (31.0f / 255.0f) + 0.5f), 0, 31);
+    float3 e = toon[k].rgb;
+    if (toon[31].w > 0.5) {
+        float fk = clamp(r * (31.0f / 255.0f), 0.0, 31.0);
+        int i0 = min((int)fk, 30);
+        float t = fk - (float)i0;
+        float3 a = toon[i0].rgb;
+        float3 b = toon[i0 + 1].rgb;
+        e = (toon[i0].w > 0.5) ? (a + (b - a) * t) : ((t < 0.5) ? a : b);
+    }
+    return e;
+}
+
 // SV_Position.w arrives as the clip w itself here (115 for Mario at the default
 // camera), not its reciprocal: measured with a colour readout of the shader.
 // the polygon's fog bit rides in attr.y as 256 (bit 15 of POLYGON_ATTR); the
@@ -123,13 +142,11 @@ PSOut shade(VSOut i, float4 t, float ta)
     float3 v = i.col;
     float3 e = float3(0.0, 0.0, 0.0);
     if (m != 0u) {
-        // gx.cpp's toon_index: round(red * 31 / 255), 0..31
-        int k = clamp((int)(i.col.r * (31.0f / 255.0f) + 0.5f), 0, 31);
-        e = toon[k].rgb;
+        e = toon_entry(i.col.r);
         v = (m == 1u) ? e : i.col.rrr;
     }
     float3 f = floor(v * t.rgb + 0.5);
-    if (m == 2u) f += e;
+    if (m == 2u) f += floor(e + 0.5);
     float3 c = fog_apply(clamp(f, 0.0, 255.0) * (1.0 / 255.0), i);
     o.col = float4(c, min(sa, 31.0) * (1.0 / 31.0));
     o.id = 0x80u | (a & 63u);
@@ -352,12 +369,11 @@ void shade_full(VSOut i, bool filtered, out float3 c, out float sa, out float ta
     float3 v = i.col;
     float3 e = float3(0.0, 0.0, 0.0);
     if (m != 0u) {
-        int k = clamp((int)(i.col.r * (31.0f / 255.0f) + 0.5f), 0, 31);
-        e = toon[k].rgb;
+        e = toon_entry(i.col.r);
         v = (m == 1u) ? e : i.col.rrr;
     }
     float3 f = floor(v * t.rgb + 0.5);
-    if (m == 2u) f += e;
+    if (m == 2u) f += floor(e + 0.5);
     c = clamp(f, 0.0, 255.0) * (1.0 / 255.0);
 }
 

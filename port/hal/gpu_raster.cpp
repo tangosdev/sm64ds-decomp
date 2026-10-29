@@ -2078,7 +2078,10 @@ bool upload_frame_consts(const ntr::GxGpuFrame *f)
             shadow[i * 4 + 0] = f->toon_rgb[i * 3 + 0];
             shadow[i * 4 + 1] = f->toon_rgb[i * 3 + 1];
             shadow[i * 4 + 2] = f->toon_rgb[i * 3 + 2];
-            shadow[i * 4 + 3] = 0.0f;
+            /* w: the Smooth Models toon blend (gx.cpp's g_toon_blend; lane
+               SMOOTHTOON1): entry k's w is 1 when k and k + 1 blend, entry
+               31's w is the switch. 0 everywhere = the DS's nearest entry. */
+            shadow[i * 4 + 3] = f->toon_blend ? f->toon_blend[i] : 0.0f;
         }
     }
     float *p = shadow + 32 * 4;
