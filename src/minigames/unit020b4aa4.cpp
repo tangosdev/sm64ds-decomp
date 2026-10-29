@@ -92,6 +92,13 @@ struct Vec2i { int x, y; };
    screen pixels (Coin_Draw draws at mPos >> 12). */
 struct Sprite;
 typedef void (Sprite::*SpriteFn)();
+#ifdef _MSC_VER
+/* MSVC aligns the two-word member pointer to 8, which pads the record to
+   0x28. The array is the ROM's twenty 0x24-byte records and four readers
+   below index its visible bytes as sMgCoinsVisible[i * 0x24], so the host
+   record has to be the ROM's width. */
+#pragma pack(push, 4)
+#endif
 struct Sprite {
     SpriteFn mState;   /* 0x00 run every frame by Coin_Update */
     Vec2i mPos;        /* 0x08 */
@@ -100,6 +107,10 @@ struct Sprite {
     s16 mDelay;        /* 0x20 frames to wait; also the rise counter */
     u8 mVisible;       /* 0x22 drawn while nonzero */
 };
+#ifdef _MSC_VER
+#pragma pack(pop)
+typedef char Sprite_host_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
+#endif
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];

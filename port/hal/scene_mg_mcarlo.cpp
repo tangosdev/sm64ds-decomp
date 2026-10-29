@@ -298,6 +298,15 @@ extern int           data_020a0e40[];
    Printed here because a frozen clock makes the selection invisible while every
    other number in this trace stays correct. */
 extern int           data_020a0db0;
+/* THE COIN TALLY, MCARLOFREEZE1. CanEndState's case 6 waits for gMgCoinsStatus
+   to come back to 1, which only MgCoins_StepSpend's own end can do. */
+extern short         gMgCoinsStatus;
+extern void        (*sMgCoinsStep)();
+extern int           sMgCoinsToStep;
+extern int           sMgCoinsIndex;
+extern int           sMgCoinsLastSpent;
+extern int           sMgCoinsWait;
+extern unsigned char sMgCoinsVisible[];
 int  _ZN13dScMgMCarlo_c10BoardReadyEv(void);               /* "the board has settled"     */
 int  _ZN13dScMgMCarlo_c16HasRemovablePairEv(void);               /* "a matching pair exists"    */
 
@@ -400,6 +409,25 @@ static void mca_trace(const char *when, const char *self)
                         *(const int *)(r + 0x10) >> 12,
                         (unsigned)(unsigned char)r[0x2e]);
         }
+    }
+    if (self) {
+        const char *head = (const char *)data_ov006_02142500;
+        unsigned vis = 0;
+        for (int i = 0; i < 0x14; ++i)
+            if (sMgCoinsVisible[i * 0x24]) vis |= 1u << i;
+        std::printf("[mc1c] %-3s tick %u state %d sub %d step %d headvis %d "
+                    "coins status %d step %p tostep %d idx %d last %d "
+                    "lastvis %u wait %d credits %d vismask %05x\n",
+                    when, g_mca_hits[6], *(const short *)(self + 0x60a8),
+                    *(const short *)(self + 0x60aa),
+                    *(const short *)(self + 0x60ae),
+                    head ? (int)(unsigned char)head[0x2e] : -1,
+                    (int)gMgCoinsStatus, (void *)sMgCoinsStep, sMgCoinsToStep,
+                    sMgCoinsIndex, sMgCoinsLastSpent,
+                    (unsigned)sMgCoinsVisible[sMgCoinsLastSpent * 0x24],
+                    sMgCoinsWait,
+                    gMgScene ? *(const int *)((const char *)gMgScene + 0xa8) : -1,
+                    vis);
     }
     std::fflush(stdout);
 }
