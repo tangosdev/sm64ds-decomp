@@ -3644,6 +3644,9 @@ static inline void mghr_a_bg_snapshot(void)
 static void mghr_a_under(ntr::Framebuffer &fb, const uint32_t *pre, int margin)
 {
     if (!g_mghr_took || g_mghr_replay_mode > 0) return;
+    /* parsed again now that the sprites are drawn: an entry's routed row (ppu_obj_routed_live_resid) is the raster's by now,
+       and the one read at entry can be the previous frame's (scene 368 drew its wings one place off from it) */
+    if (!mghr_a_sensitive()) { g_mghr_took = false; return; }
     const auto tc = std::chrono::steady_clock::now();
     const int S = ntr::present_h() / 192, xoff = margin / 2;
     const int hx0 = mghr_mx(0, xoff + g_mghr_bb[0] * S), hx1 = mghr_mn(ntr::active_w, xoff + g_mghr_bb[2] * S);
@@ -3738,6 +3741,7 @@ static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &wi
 {
     if (!g_mghr_took) return;
     g_mghr_took = false;
+    if (g_mghr_replay_mode > 0 && !mghr_a_sensitive()) return;   /* replay mode: parsed again after the raster too */
     const auto t0 = std::chrono::steady_clock::now();
     const int S = ntr::present_h() / 192;
     const int xoff = margin / 2;

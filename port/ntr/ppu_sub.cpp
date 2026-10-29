@@ -1870,17 +1870,24 @@ static inline bool mghr_aff_span(int pa, int pb, int pc, int pd, int w, int h, i
 }
 ObjPixel g_hr_obj[192][256];
 uint8_t g_hr_objwin[192][256];
+uint8_t g_hr_oidx[192][256];        /* the OAM entry that holds each g_hr_obj pixel (the tie rule across the two passes) */
+ObjPixel g_hr_obj0[192][256];       /* the entries with nothing finer to show, drawn once a scan-out */
+uint8_t g_hr_objwin0[192][256], g_hr_oidx0[192][256];
+uint8_t g_hr_sens[128];             /* entry i has something finer to show (hr_rows) */
 
 /* raster_obj at phase (u, v) (1/256 DS px), only rows with need[y]: the same sprites, the same rules, sampled at
    (X + u/256, Y + v/256) with each entry's remainder taken off its place. u = v = 0 and no remainders is raster_obj. */
-void hr_raster_obj(uint32_t dispcnt, const uint8_t *skip, int u, int v, const uint8_t *need)
+/* pass 0: the entries with nothing finer to show, at phase 0, into a cleared buffer; pass 1: the others at (u, v) over what
+   the caller put in the buffer (pass 0's). The overwrite rule is raster_obj's 127 -> 0 walk, spelled as "the lower
+   priority number wins, then the lower index", so drawing in two passes picks the same winner. */
+void hr_raster_obj(uint32_t dispcnt, const uint8_t *skip, int u, int v, const uint8_t *need, int pass)
 {
     static const int kSizes[3][4][2] = {
         {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
         {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
         {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
     };
-    for (int y = 0; y < 192; ++y)
+    for (int y = 0; pass == 0 && y < 192; ++y)
         if (need[y]) { std::memset(g_hr_obj[y], 0, sizeof g_hr_obj[y]); std::memset(g_hr_objwin[y], 0, 256); }
     if (!((dispcnt >> 12) & 1)) return;
     const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
@@ -1889,6 +1896,7 @@ void hr_raster_obj(uint32_t dispcnt, const uint8_t *skip, int u, int v, const ui
     const uint32_t oam_b = g_oam_src_b ? g_oam_src_b : kOamBase;
     for (int i = 127; i >= 0; --i) {
         if (skip[i]) continue;
+        if ((pass == 0) == (g_hr_sens[i] != 0)) continue;
         const uint16_t a0 = rd16(oam_b + i * 8u);
         const uint16_t a1 = rd16(oam_b + i * 8u + 2);
         const uint16_t a2 = rd16(oam_b + i * 8u + 4);
@@ -1968,8 +1976,9 @@ void hr_raster_obj(uint32_t dispcnt, const uint8_t *skip, int u, int v, const ui
                     }
                     const uint16_t vv = rd16(kObjVram + at);
                     if (!(vv & 0x8000)) continue;
-                    if (op.hit && prio > op.prio) continue;
+                    if (op.hit && (prio > op.prio || (prio == op.prio && i > g_hr_oidx[py][px]))) continue;
                     op.color = bgr555(vv); op.prio = prio; op.hit = 1; op.semi = 0;
+                    g_hr_oidx[py][px] = (uint8_t)i;
                     continue;
                 }
                 const uint32_t slot =
@@ -1988,8 +1997,9 @@ void hr_raster_obj(uint32_t dispcnt, const uint8_t *skip, int u, int v, const ui
                     color = bgr555(rd16(kObjPltt + (pal * 16u + idx) * 2u));
                 }
                 if (is_win) { g_hr_objwin[py][px] = 1; continue; }
-                if (op.hit && prio > op.prio) continue;
+                if (op.hit && (prio > op.prio || (prio == op.prio && i > g_hr_oidx[py][px]))) continue;
                 op.color = color; op.prio = prio; op.hit = 1; op.semi = (objmode == 1);
+                g_hr_oidx[py][px] = (uint8_t)i;
             }
         }
     }
@@ -2087,6 +2097,7 @@ bool hr_rows(uint32_t dispcnt, const uint8_t *skip, const BgLayer *bgs, int16_t 
         x0[y] = bgax ? 0 : 256; x1[y] = bgax ? 256 : 0; ax[y] = (uint8_t)bgax;
     }
     bool any = bgax != 0;
+    std::memset(g_hr_sens, 0, sizeof g_hr_sens);
     if (!((dispcnt >> 12) & 1)) return any;
     const uint32_t oam_b = g_oam_src_b ? g_oam_src_b : kOamBase;
     for (int i = 0; i < 128; ++i) {
@@ -2097,13 +2108,15 @@ bool hr_rows(uint32_t dispcnt, const uint8_t *skip, const BgLayer *bgs, int16_t 
         const int shape = (a0 >> 14) & 3;
         if (shape == 3) continue;
         int sax = g_hr_frac_on ? ((g_hr_ofr[i][0] ? 1 : 0) | (g_hr_ofr[i][1] ? 2 : 0)) : 0;
+        int pa = 256, pb = 0, pc = 0, pd = 256;
         if (affine) {
             const int grp = (a1 >> 9) & 0x1F;
-            const int pa = (int16_t)rd16(oam_b + (grp * 4 + 0) * 8u + 6), pb = (int16_t)rd16(oam_b + (grp * 4 + 1) * 8u + 6);
-            const int pc = (int16_t)rd16(oam_b + (grp * 4 + 2) * 8u + 6), pd = (int16_t)rd16(oam_b + (grp * 4 + 3) * 8u + 6);
+            pa = (int16_t)rd16(oam_b + (grp * 4 + 0) * 8u + 6); pb = (int16_t)rd16(oam_b + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_b + (grp * 4 + 2) * 8u + 6); pd = (int16_t)rd16(oam_b + (grp * 4 + 3) * 8u + 6);
             if (pb || pc) sax = 3;
             else sax |= (pa != 256 ? 1 : 0) | (pd != 256 ? 2 : 0);
         }
+        g_hr_sens[i] = sax ? 1 : 0;
         if (!sax) continue;
         const int size = (a1 >> 14) & 3;
         const int w = kSizes[shape][size][0], h = kSizes[shape][size][1];
@@ -2112,10 +2125,28 @@ bool hr_rows(uint32_t dispcnt, const uint8_t *skip, const BgLayer *bgs, int16_t 
         int x = a1 & 0x1FF, y = a0 & 0xFF;
         if (x >= 256) x -= 512;
         if (y >= 192 && y >= 256 - bh) y -= 256;
-        const int xa = x - 1 < 0 ? 0 : x - 1, xb = x + bw + 1 > 256 ? 256 : x + bw + 1;
-        if (xa >= xb) continue;
+        const int xa0 = x - 1 < 0 ? 0 : x - 1, xb0 = x + bw + 1 > 256 ? 256 : x + bw + 1;
+        if (xa0 >= xb0) continue;
+        const int fxr = g_hr_frac_on ? g_hr_ofr[i][0] : 0, fyr = g_hr_frac_on ? g_hr_ofr[i][1] : 0;
         for (int yy = y - 1; yy <= y + bh; ++yy) {
             if (yy < 0 || yy >= 192) continue;
+            int xa = xa0, xb = xb0;
+            if (affine) {
+                /* the columns this row's samples can find the sprite in: the footprint at the row's top, middle and
+                   bottom sample rows (one texel of margin in the span, one pixel here) */
+                int lo = 1 << 30, hi = -1;
+                for (int k = 0; k < 3; ++k) {
+                    int qy = (yy - y) * 256 + k * 127 - fyr, l, h2;
+                    if (qy < 0) qy = 0;
+                    if (qy >= bh * 256) qy = bh * 256 - 1;
+                    if (mghr_aff_span(pa, pb, pc, pd, w, h, bw, bh, qy, l, h2)) { if (l < lo) lo = l; if (h2 > hi) hi = h2; }
+                }
+                if (hi < 0) continue;
+                xa = x + ((lo - 255 + fxr) >> 8) - 1; xb = x + ((hi + fxr) >> 8) + 2;
+                if (xa < xa0) xa = xa0;
+                if (xb > xb0) xb = xb0;
+                if (xa >= xb) continue;
+            }
             if (xa < x0[yy]) x0[yy] = (int16_t)xa;
             if (xb > x1[yy]) x1[yy] = (int16_t)xb;
             ax[yy] |= (uint8_t)sax;
@@ -2187,6 +2218,22 @@ void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
         static uint32_t lcol[4][256];
         static uint8_t lok[4][256];
         uint8_t needrow[192];
+        /* ONCE A SCAN-OUT: the entries with nothing finer to show at phase 0 over every row a phase may draw, and every BG
+           with nothing finer to show sampled once per such row (hr_bg_axes 0: every phase reads the same texel) */
+        static uint32_t bcol[4][192][256];
+        static uint8_t bok[4][192][256];
+        int bgfix[4];
+        for (int bg = 0; bg < 4; ++bg) bgfix[bg] = bgs[bg].kind != BG_OFF && !hr_bg_axes(bgs[bg], bg);
+        for (int y = 0; y < 192; ++y) needrow[y] = rx1[y] > rx0[y] ? 1 : 0;
+        hr_raster_obj(dispcnt, skip, 0, 0, needrow, 0);
+        for (int y = 0; y < 192; ++y) {
+            if (!needrow[y]) continue;
+            std::memcpy(g_hr_obj0[y], g_hr_obj[y], sizeof g_hr_obj[y]);
+            std::memcpy(g_hr_objwin0[y], g_hr_objwin[y], 256);
+            std::memcpy(g_hr_oidx0[y], g_hr_oidx[y], 256);
+            for (int bg = 0; bg < 4; ++bg)
+                if (bgfix[bg]) hr_sample_line(bgs[bg], bg, y, 0, 0, pal32, bcol[bg][y], bok[bg][y], rx0[y], rx1[y]);
+        }
         /* THE COST CAP. A whole screen turning at S 4 is 15 extra resolves per DS pixel; past the budget (resolves per
            scan-out, SM64DS_MG_HIRES_BUDGET, default 160000, about 2-3 ms here) the phases go every second host pixel and
            each fills a 2x2 block: half-DS-pixel edges instead of quarter ones, a quarter of the work. */
@@ -2212,14 +2259,27 @@ void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
                     nr += want ? 1 : 0;
                 }
                 if (!nr) continue;
-                hr_raster_obj(dispcnt, skip, u, v, needrow);
+                for (int y = 0; y < 192; ++y) {
+                    if (!needrow[y]) continue;
+                    std::memcpy(g_hr_obj[y], g_hr_obj0[y], sizeof g_hr_obj[y]);
+                    std::memcpy(g_hr_objwin[y], g_hr_objwin0[y], 256);
+                    std::memcpy(g_hr_oidx[y], g_hr_oidx0[y], 256);
+                }
+                hr_raster_obj(dispcnt, skip, u, v, needrow, 1);
                 ++g_hr_n[2];
                 for (int y = 0; y < SUB_H; ++y) {
                     if (!needrow[y]) continue;
                     const int xa = rx0[y], xb = rx1[y];
                     const int m = rax[y];
-                    for (int bg = 0; bg < 4; ++bg)
-                        if (bgs[bg].kind != BG_OFF) hr_sample_line(bgs[bg], bg, y, u, v, pal32, lcol[bg], lok[bg], xa, xb);
+                    for (int bg = 0; bg < 4; ++bg) {
+                        if (bgs[bg].kind == BG_OFF) continue;
+                        if (bgfix[bg]) {
+                            std::memcpy(lcol[bg] + xa, bcol[bg][y] + xa, (size_t)(xb - xa) * 4);
+                            std::memcpy(lok[bg] + xa, bok[bg][y] + xa, (size_t)(xb - xa));
+                        } else {
+                            hr_sample_line(bgs[bg], bg, y, u, v, pal32, lcol[bg], lok[bg], xa, xb);
+                        }
+                    }
                     uint32_t *orow = hs.px + (size_t)(y * S + j) * W;
                     for (int x = xa; x < xb; ++x) {
                         const unsigned mask = win.any ? window_mask(win, x, y, g_hr_objwin) : 0x3Fu;
