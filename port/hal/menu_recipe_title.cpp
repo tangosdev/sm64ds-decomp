@@ -1946,6 +1946,28 @@ int paper3_mode()
     return m;
 }
 
+/* DOODLEWIDE1: with the wide drawing page off, the window outside the DS 4:3 box is the port's own gap colour (Display tab, the colour the
+   port puts beside the DS picture everywhere else), plain, at the paper's own fade */
+void dd_margin_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int stride)
+{
+    const MenuPiece &P = L->p[piece];
+    const unsigned c = host_setting_gap_color() & 0xffffffu;
+    const int a = P.alpha == 0 ? 256 : P.alpha;
+    const int x0 = P.fx, x1 = P.fx + P.fw;
+    for (int y = 0; y < h; ++y) {
+        uint32_t *row = dst + (size_t)y * stride;
+        for (int x = 0; x < w; ++x) {
+            if (x >= x0 && x < x1) { x = x1 - 1; continue; }
+            if (a >= 256) { row[x] = 0xFF000000u | c; continue; }
+            const uint32_t o = row[x];
+            const unsigned r = (((o >> 16) & 255) * (256 - a) + ((c >> 16) & 255) * a) >> 8;
+            const unsigned g = (((o >> 8) & 255) * (256 - a) + ((c >> 8) & 255) * a) >> 8;
+            const unsigned b = ((o & 255) * (256 - a) + (c & 255) * a) >> 8;
+            row[x] = 0xFF000000u | (r << 16) | (g << 8) | b;
+        }
+    }
+}
+
 void build_doodle(MenuLayout *L)
 {
     const int w = L->w, h = L->h;
@@ -1975,6 +1997,12 @@ void build_doodle(MenuLayout *L)
         const int a = e >= DD_HF ? 255 : 255 * e / DD_HF;
         pp.alpha = (uint8_t)(a >= 255 ? 0 : (a < 1 ? 1 : a));
         menu_add_piece(L, pp);
+        if (pw < w) {      /* DOODLEWIDE1: the margins beside the DS box (fx / fw = the box, the callback fills the rest) */
+            MenuPiece mg = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+            mg.bg = 1; mg.fixdest = 1; mg.fx = (short)px0; mg.fy = 0; mg.fw = (short)pw; mg.fh = (short)h;
+            mg.alpha = pp.alpha; mg.custom = dd_margin_draw;
+            menu_add_piece(L, mg);
+        }
     }
     const int e3 = t_f ? t_f->e3 : 0;      /* FACE3: the free-draw state (the ROM's element machine 3, after the pencil) */
     if (e3 > 0 && paper3_mode() == 1) {    /* the page's own green paper fades in over the cream one (0.3 s) */

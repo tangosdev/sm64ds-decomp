@@ -2714,6 +2714,8 @@ extern "C" int port_menu_touch_wide_x(int cx, int y)
         const WideRec &r = g_wide_ring[(g_wide_i - k) & 7];
         if (r.cx != cx || r.y != y) continue;
         if (now - r.t > std::chrono::milliseconds(1000)) break;
+        static const int tr = getenv("SM64DS_WIDE_TRACE") ? 1 : 0;      /* proof rows: one line per sample the title's stylus reader took */
+        if (tr) fprintf(stderr, "[widetouch] ds (%d,%d) -> x %d\n", cx, y, r.wx);
         return r.wx;
     }
     return cx;
