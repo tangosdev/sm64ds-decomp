@@ -32,7 +32,12 @@ void func_ov007_020b9ca8(void)
         char *x;
         *(int *)(data_ov007_02104ba0 + 0x1c) = 0;
         x = *(char **)(data_ov007_0210342c + 0x30);
+#ifdef _MSC_VER
+        /* host arm only: the wide drawing page's x runs past 0..255 (func_ov007_020c1db0 host arm) */
+        func_ov007_020bfe4c(x, *(s16 *)(r4 + 8) << 12, *(u16 *)(r4 + 0xa) << 12,
+#else
         func_ov007_020bfe4c(x, *(u16 *)(r4 + 8) << 12, *(u16 *)(r4 + 0xa) << 12,
+#endif
                             -*(int *)(x + 0x2c), v);
         if (*(u32 *)(r4 + 0x20) == 1) {
             int s;

@@ -2683,6 +2683,9 @@ void hal_menu_present_relift(uint32_t *dst, int w, int h, int stage)
     g_in_relift = 0;
 }
 
+struct WideRec { int cx, y, wx; std::chrono::steady_clock::time_point t; };    /* DOODLEWIDE1: see hal_menu_touch_inverse */
+static WideRec g_wide_ring[8];
+static unsigned g_wide_i;
 void hal_menu_touch_inverse(int bx, int by, int *dsx, int *dsy, int *in)
 {
     std::lock_guard<std::mutex> lk(g_mu);
@@ -2690,6 +2693,30 @@ void hal_menu_touch_inverse(int bx, int by, int *dsx, int *dsy, int *in)
     menu_inverse(&g_seen, bx, by, &g_drag_piece, dsx, dsy, in);
     /* menu_inverse sets the drag piece only on a hit; MenuInverse is also what
        a held stylus clamps to, so a miss keeps whatever piece it started on */
+    /* DOODLEWIDE1: a touch piece whose source rect runs past the DS screen (the title's wide drawing page: DS x -42..298 at 16:9) answers a
+       DS x outside 0..255. The stylus record is a byte, so the caller gets the clamped x and the wide one is kept, keyed by the clamped point,
+       for the title's own stylus reader (port_menu_touch_wide_x, src/unnamed/ov007/func_ov007_020c1db0.c host arm). Every answer is kept
+       (an in-range one maps to itself), so only the last eight answers can widen a sample. */
+    const int wx = *dsx;
+    if (*dsy >= 0 && *dsx > 255) *dsx = 255;
+    else if (*dsy >= 0 && *dsx < 0) *dsx = 0;
+    g_wide_ring[g_wide_i & 7] = WideRec{ *dsx, *dsy, wx, std::chrono::steady_clock::now() };
+    ++g_wide_i;
+}
+
+/* DOODLEWIDE1: the wide DS x of the latest touch answer that published (cx, y), or cx when none of the last eight answers (within a second) did, or while no menu recipe is live */
+extern "C" int port_menu_touch_wide_x(int cx, int y)
+{
+    std::lock_guard<std::mutex> lk(g_mu);
+    if (!g_live) return cx;
+    const auto now = std::chrono::steady_clock::now();
+    for (unsigned k = 1; k <= 8 && k <= g_wide_i; ++k) {
+        const WideRec &r = g_wide_ring[(g_wide_i - k) & 7];
+        if (r.cx != cx || r.y != y) continue;
+        if (now - r.t > std::chrono::milliseconds(1000)) break;
+        return r.wx;
+    }
+    return cx;
 }
 
 void hal_menu_touch_end(void) { g_drag_piece = -1; }
