@@ -1993,7 +1993,11 @@ void build_doodle(MenuLayout *L)
         if (e < DD_XF) { const int a = 255 * e / DD_XF; sc.alpha = (uint8_t)(a < 1 ? 1 : a); }      /* 3b: the page's own parts fade in with the paper, they do not pop */
         menu_add_piece(L, sc);
         const int th = 192;           /* INTROCARD092: the whole DS stylus surface (the buttons are added after it and win the hit); it ended at row 130 / 146, so a drag stopped at about half the window */
-        menu_add_piece(L, scene_twin(L, T, 0, 0, 256, th));
+        MenuPiece tw = scene_twin(L, T, 0, 0, 256, th);
+        tw.fx = 0; tw.fy = 0; tw.fw = (short)w; tw.fh = (short)h;     /* DOODLEBOUNDS1: the paper's own rect, the whole picture (the 3D canvas covers the whole
+                                                                       frame, scene_doodle); scene_rect_host's layout unit is not the scene's where the 4:3 box
+                                                                       is not the picture's full height (21:9: 2.29 vs 2.0 px), so the rect is set, not solved */
+        menu_add_piece(L, tw);
         MenuPiece yo = menu_piece_make(SRC_TOP_PIC, kYo.x, kYo.y, kYo.w, kYo.h, MENU_AX_L, MENU_AY_B, 0, 0, 1, 1);
         yo.touch = 1; yo.nodraw = 1;
         menu_add_piece(L, yo);
