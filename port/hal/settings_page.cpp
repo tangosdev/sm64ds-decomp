@@ -1094,7 +1094,8 @@ void switch_tab(int t)
     host_menu_cursor_sound();
     /* CHEATS1: the strip slides from where it stands now to the new tab's window; a wrap from one end to the other snaps */
     const double from = strip_win_now();
-    if (!wrap && from != (double)tab_win_of(t)) { S.slide_from = from; S.slide_t = 1; }
+    if (!wrap && S.slide_t > 0 && tab_win_of(t) == tab_win_of(S.tab)) {}       /* the same window: the slide under way goes on */
+    else if (!wrap && from != (double)tab_win_of(t)) { S.slide_from = from; S.slide_t = 1; }
     else S.slide_t = 0;
     S.tab = t; S.sel = 0; S.col = 0; S.scroll = 0; S.dd_open = 0; S.drag = -1;
     int n = 0;
