@@ -751,6 +751,7 @@ static float g_bob_frac[MENU_MAX_PIECES]; /* ARROWSLOW1: this picture's sub-pixe
    old face to nothing and the swap lands on the tick picture, edge-on, where the tick swaps it. a = 1 (the tick's own picture, Smooth Motion
    off) changes nothing but hiding that old face. A host picture plank drawn narrower between ticks is squeezed from one copy of its full-width
    scale (turn_squeezed) instead of being scaled again every picture. */
+extern "C" int port_menu_hostimg_hd_ui_reset(void);       /* hal/menu_hostimg.cpp (FLIPSMOOTH1's proof instrument calls it) */
 static uint8_t g_turn_hide[MENU_MAX_PIECES];      /* this picture does not draw the piece */
 static uint8_t g_turn_sq[MENU_MAX_PIECES];        /* this picture moved the piece's rect (1), and draws its host picture squeezed (2) */
 static int g_turn_keep[MENU_MAX_PIECES][2];       /* the tick rect's x and width, put back after the draw */
@@ -778,6 +779,15 @@ static void turn_place(MenuLayout &L, double a)
         g_turn_sq[i] = P.src == SRC_HOSTIMG && !P.custom ? 2 : 1;
     }
 #ifndef PORT_ROM_CLEAN
+    { static int reset_at = -2, turn_pics;                          /* FLIPSMOOTH1 proof instrument: SM64DS_FS1_RESET_AT=<n> runs the art reset (as a mod relatch
+                                                                       does) on the n-th picture that draws a turning plank between ticks */
+      if (reset_at == -2) { const char *e = getenv("SM64DS_FS1_RESET_AT"); reset_at = e ? atoi(e) : -1; }
+      bool any = false;
+      for (int i = 0; i < L.np && i < MENU_MAX_PIECES; ++i) any = any || g_turn_sq[i] == 2;
+      if (any && reset_at >= 0 && ++turn_pics == reset_at) {
+          const int dropped = port_menu_hostimg_hd_ui_reset();
+          fprintf(stderr, "[fs1-sq] art reset on turn picture %d: %d pictures dropped, art generation now %u\n", turn_pics, dropped, menu_hostimg_generation());
+      } }
     { static const int tr = getenv("SM64DS_FS1_TRACE") ? 1 : 0;     /* FLIPSMOOTH1 proof instrument: every turning piece on every picture */
       if (tr) for (int i = 0; i < L.np && i < MENU_MAX_PIECES; ++i) if (L.p[i].turn)
           fprintf(stderr, "[fs1-turn] a=%.4f piece %d face %d phase %.3f hide %d rect %d %d\n", a, i, (int)L.p[i].turn,
@@ -798,9 +808,16 @@ static const uint32_t *turn_squeezed(const MenuPiece &P, int dw, int dh)
     struct Full { int id, w, h; std::vector<uint32_t> px; };
     static Full full[8];
     static int next;
+    static unsigned gen;
     static std::vector<uint32_t> out;
     const int fw = P.turn_fw;
     if (fw < 1 || dw < 1 || dh < 1 || dw > fw) return menu_hostimg_scaled(P.hostimg, dw, dh);
+    /* an art reset (a mod relatch, an HD UI version switch) re-decodes every menu picture: the copies kept here are the old art, drop them */
+    const unsigned g = menu_hostimg_generation();
+    if (g != gen) {
+        for (int k = 0; k < 8; ++k) { full[k].id = -1; full[k].px.clear(); }
+        gen = g;
+    }
     Full *F = 0;
     for (int k = 0; k < 8; ++k)
         if (full[k].id == P.hostimg && full[k].w == fw && full[k].h == dh && !full[k].px.empty()) { F = &full[k]; break; }
@@ -810,6 +827,10 @@ static const uint32_t *turn_squeezed(const MenuPiece &P, int dw, int dh)
         F = &full[next]; next = (next + 1) & 7;
         F->id = P.hostimg; F->w = fw; F->h = dh;
         F->px.assign(s, s + (size_t)fw * dh);
+#ifndef PORT_ROM_CLEAN
+        { static const int tr = getenv("SM64DS_FS1_TRACE") ? 1 : 0;     /* FLIPSMOOTH1 proof instrument: a full-width copy built */
+          if (tr) fprintf(stderr, "[fs1-sq] full-width copy built: picture %d %dx%d, art generation %u\n", P.hostimg, fw, dh, g); }
+#endif
     }
     out.resize((size_t)dw * dh);
     /* output column x covers source [x * fw / dw, (x + 1) * fw / dw): an area average of the premultiplied channels */

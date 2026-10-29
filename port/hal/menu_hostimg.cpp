@@ -17,6 +17,7 @@
 #include <deque>
 #include <map>
 #include <mutex>
+#include <atomic>
 #include <thread>
 #include <string>
 
@@ -526,8 +527,13 @@ extern "C" int port_menu_hostimg_hd_ui_quiesce(void)
     return 0;
 }
 
+/* FLIPSMOOTH1: the art generation. Every reset below bumps it, so a copy of a scaled picture kept outside this file (the plank turn's
+   full-width copies in menu_compose.cpp) is known to be the old art and is built again from the new pictures. */
+static std::atomic<unsigned> g_art_gen{ 0 };
+extern "C" unsigned menu_hostimg_generation(void) { return g_art_gen.load(); }
 extern "C" int port_menu_hostimg_hd_ui_reset(void)
 {
+    ++g_art_gen;
     if (g_wk) {
         std::lock_guard<std::mutex> lk(g_wk->m);
         g_wk->out.clear();
