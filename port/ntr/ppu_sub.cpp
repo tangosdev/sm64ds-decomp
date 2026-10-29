@@ -5338,11 +5338,21 @@ static void wipe_circle_cut(uint32_t *dst, int dst_w, int x0, int y0, float s, f
     const uint32_t bd = dst[(size_t)y0 * dst_w + x0];
     const float cx = (float)x0 + 128.f * s, cy = (float)y0 + 96.f * s;
     const float rh = (R - 0.75f) * s;
+    const uint32_t bd_full = 0xFF000000u | (bd & 0x00FFFFFFu);   /* what the blend below gives at a = 0 */
     for (int y = 0; y < ch; ++y) {
         const float dy = (float)(y0 + y) + 0.5f - cy;
         uint32_t *row = dst + (size_t)(y0 + y) * dst_w + x0;
+        /* MGINTERP1: the pixels well inside the circle (a >= 1, left alone) and well outside it (a = 0, the backdrop) are known from
+           the row's chord without a square root each; only a band of a few pixels about the edge is worked out as before. The
+           margins (2 host pixels and 1.5 in the radius) keep the shortcut away from any pixel the exact test could answer otherwise. */
+        const double ri = (double)rh - 2.0, ro = (double)rh + 2.0, dd = (double)dy * dy;
+        const double wi = ri > 0.0 && ri * ri > dd ? std::sqrt(ri * ri - dd) - 2.0 : -1.0;
+        const double wo = std::sqrt(ro * ro > dd ? ro * ro - dd : 0.0) + 2.0;
         for (int x = 0; x < cw; ++x) {
             const float dx = (float)(x0 + x) + 0.5f - cx;
+            const double adx = dx < 0.f ? -(double)dx : (double)dx;
+            if (adx < wi) continue;
+            if (adx > wo) { row[x] = bd_full; continue; }
             const float d = std::sqrt(dx * dx + dy * dy);
             float a = rh - d + 0.5f;
             if (a >= 1.f) continue;
@@ -5457,7 +5467,27 @@ static void wipe_rows_cut(uint32_t *dst, int dst_w, int dst_h, int stride, int x
             else { iv_s[nm] = iv_s[a1]; iv_e[nm] = iv_e[a1]; ++nm; }
         }
         uint32_t *row = dst + (size_t)py * stride;
+        /* MGINTERP1: each merged interval in host columns: [ilo, ihi] surely inside (a >= 1, the pixel is left alone), outside
+           every [olo, ohi] surely outside (a = 0, the backdrop), the rest worked out exactly as before. Only where the column's DS
+           x is not clamped (2 host pixels in from the rectangle's sides), and with 2 host pixels of margin on every bound. */
+        double ilo[4], ihi[4], olo[4], ohi[4];
+        for (int i = 0; i < nm; ++i) {
+            const double L = ((double)iv_s[i] + inset) * s + x0, H = ((double)iv_e[i] - inset) * s + x0;
+            ilo[i] = L + 2.0; ihi[i] = H - 3.0;
+            olo[i] = L - 3.0; ohi[i] = H + 2.0;
+        }
+        const int safe0 = x0 + 2, safe1 = x0 + cw - 3;
+        const uint32_t bd_full = 0xFF000000u | (backdrop & 0x00FFFFFFu);
         for (int px = xa; px < xb; ++px) {
+            if (px >= safe0 && px <= safe1) {
+                bool in = false, near = false;
+                for (int i = 0; i < nm; ++i) {
+                    if (px >= ilo[i] && px <= ihi[i]) { in = true; break; }
+                    if (px >= olo[i] && px <= ohi[i]) near = true;
+                }
+                if (in) continue;
+                if (!near) { row[px] = bd_full; continue; }
+            }
             float xd = ((float)px + 0.5f - (float)x0) / s;
             if (xd < 0.f) xd = 0.f;
             if (xd > 255.99f) xd = 255.99f;
