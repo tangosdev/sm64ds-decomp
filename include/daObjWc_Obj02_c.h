@@ -3,7 +3,6 @@
 #include "types.h"
 
 #ifdef __cplusplus
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 #include "dBgActor_c.h"
 
@@ -17,7 +16,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * not a compatibility alias.
  *
  * SIZE 0x328, the factory's own literal. dBgActor_c fills 0x000..0x31f
- * (D1 restores _ZTV10dBgActor_c, destroys dBgW_KcMbg at 0x124 and Model
+ * (D1 restores _ZTV10dBgActor_c, destroys dBgW_KcMbg at 0x124 and dExtSimpleModel_c
  * at 0x0d4, then chains to dActor_c). This class owns the eight-byte
  * state tail:
  *
@@ -28,10 +27,10 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  */
 
 struct daObjWc_Obj02_c : dBgActor_c {
-    s32 mTravelDist;          /* 0x320 */
-    u16 mStateTimer;          /* 0x324 */
-    u8  mTriggered;           /* 0x326 */
-    u8  mState;               /* 0x327 */
+    s32 mTravelDist; /* 0x320 */
+    u16 mStateTimer; /* 0x324 */
+    u8 mTriggered;   /* 0x326 */
+    u8 mState;       /* 0x327 */
 
     /* Inline is load-bearing: out of line mwccarm emits D2, D0, D1, while
      * the ROM has D1 then D0 and no D2. */
@@ -43,10 +42,8 @@ struct daObjWc_Obj02_c : dBgActor_c {
     int Behavior();
     int Render();
 
-    static void *operator new(size_t size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void OnStoodOn(dActor_c *);                                         /* ov029 0x021116c4 */
+    static void StoodOnCallback(void *, daObjWc_Obj02_c *, dActor_c *); /* ov029 0x021116e4 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

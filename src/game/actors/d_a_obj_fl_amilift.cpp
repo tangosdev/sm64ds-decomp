@@ -4,8 +4,8 @@
  * the player stands on it and bobs on a sine table.
  *
  * ROM name from _ZTS17daObjFl_Amilift_c. Vtable _ZTV17daObjFl_Amilift_c
- * at 0x0211bc68. The run ends with the touch helper func_ov064_02117fb4, the
- * collision callback func_ov064_02117fd4 and the registry factory
+ * at 0x0211bc68. The run ends with the touch helper OnStoodOn, the
+ * collision callback StoodOnCallback and the registry factory
  * daObjFl_Amilift_c_classInit.
  *
  * STATES: mState indexes a three-entry table of pointers-to-member at
@@ -13,37 +13,32 @@
  * 0x0211bc0c, 0x0211bc14 and 0x0211bc1c (the ROM words are, in order,
  * 0x02117c24, 0x02117bdc, 0x02117b8c):
  *
- *     0  func_ov064_02117c24  wait for the player, 20 frames, then walk forward
- *     1  func_ov064_02117bdc  walk forward; at the last node switch to 2
- *     2  func_ov064_02117b8c  walk back after a 20-frame pause; at node 0 go
- *                             to 1 if auto-run, else back to 0
+ *     0  StateWait      wait for the player, 20 frames, then walk forward
+ *     1  StateForward   walk forward; at the last node switch to 2
+ *     2  StateBackward  walk back after a 20-frame pause; at node 0 go
+ *                       to 1 if auto-run, else back to 0
  *
  * #pragma defer_codegen off lays .text down in source order. One out-of-line
  * destructor emits D1 then D0.
  */
 
-// leftovers:
-// - The three state handlers and their helpers are daObjFl_Amilift_c members
-//   that keep their ROM addresses as names. Renaming is a reviewer call;
-//   the bodies already read as methods.
-// - dBgW_KcMbg::SetFile, dBgActor_c::IsClsnInRange and cstd::atan2 take
-//   Fix12<int> by value, so they stay mangled calls.
+// Notes (each measured with mwccarm 2004/b56):
 // - The collider callbacks registered in InitResources
-//   (dBgW::UpdatePosWithTransform and func_ov064_02117fd4) are passed as raw
-//   addresses to func_020393d4 / func_020393c4, which have no header.
+//   (dBgW::UpdatePosWithTransform and StoodOnCallback) are passed as raw
+//   addresses to func_020393d4 / func_020393c4. d_bg_w.cpp defines them
+//   and no header declares them.
 // - Behavior updates mStateFrames and mBobPhase through pointer locals and
 //   re-reads mBobPhase as unsigned; plain member updates came out 8 bytes
 //   short.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjFl_Amilift_c_AssetId {
-    ASSET_FL_AMILIFT_BMD = 0x05ef,
-    ASSET_FL_AMILIFT_KCL = 0x05f0
-};
+enum daObjFl_Amilift_c_AssetId { ASSET_FL_AMILIFT_BMD = 0x05ef, ASSET_FL_AMILIFT_KCL = 0x05f0 };
 
 #include "daObjFl_Amilift_c.h"
 #include "common.h"
 #include "SharedFilePtr.h"
+#include "math/Approach.h"
+#include "cstd.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
  * model handle constructs through func_02017acc and destroys through
@@ -51,15 +46,11 @@ enum daObjFl_Amilift_c_AssetId {
  * destroys through SharedFilePtr_Destruct_Clsn. The manifest aliases each
  * undefined member onto its ROM symbol. */
 struct AmiliftModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
-
     AmiliftModelFilePtr(u32 fileID);
     ~AmiliftModelFilePtr();
 };
 
 struct AmiliftClsnFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
-
     AmiliftClsnFilePtr(u32 fileID);
     ~AmiliftClsnFilePtr();
 };
@@ -75,94 +66,90 @@ struct KCL_File;
 struct CLPS_Block;
 
 extern "C" {
-int Vec3_HorzDist(const void* a, const void* b);
-int _Z14ApproachLinearRiii(int* v, int target, int step);
-extern LiftState data_ov064_0211c750[];
-extern short data_02082214[];
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( void *self, KCL_File *k, Matrix4x3 *m, int fix, short s, CLPS_Block *clps);
+int Vec3_HorzDist(const void *a, const void *b);
+extern void Vec3_Sub(Vector3 *dst, Vector3 *a, Vector3 *b);
+/* local extern: d_bg_w.cpp defines these and no header declares them. */
 void func_020393d4(void *p, void *v);
 void func_020393c4(void *p, void *v);
+}
+
+extern LiftState data_ov064_0211c750[];
+extern short data_02082214[];
 extern AmiliftModelFilePtr data_ov064_0211c730;
 extern AmiliftClsnFilePtr data_ov064_0211c728;
 extern CLPS_Block data_ov064_0211bb6c;
-extern void Vec3_Sub(Vector3* dst, Vector3* a, Vector3* b);
-extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-/* The collision callback this TU installs; defined at the end of the file. */
-void func_ov064_02117fd4(void *collider, daObjFl_Amilift_c *self, dActor_c *other);
-}
 
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
 
 // @symbol _ZN17daObjFl_Amilift_cD1Ev
 // @symbol _ZN17daObjFl_Amilift_cD0Ev
-daObjFl_Amilift_c::~daObjFl_Amilift_c()
-{
-}
+daObjFl_Amilift_c::~daObjFl_Amilift_c() {}
 
-// @symbol func_ov064_02117a14
+// @symbol _ZN17daObjFl_Amilift_c10FaceTowardEP7Vector3S1_
 /* Turn the lift to face from node b toward node a. */
-void daObjFl_Amilift_c::func_ov064_02117a14(Vector3* a, Vector3* b){
-  Vector3 v;
-  Vec3_Sub(&v, a, b);
-  mPrevAngleY = (short)_ZN4cstd5atan2E5Fix12IiES1_(v.x, v.z);
+void daObjFl_Amilift_c::FaceToward(Vector3 *a, Vector3 *b) {
+    Vector3 v;
+    Vec3_Sub(&v, a, b);
+    mPrevAngleY = (short)cstd::atan2(v.x, v.z);
 }
 
-// @symbol func_ov064_02117a44
+// @symbol _ZN17daObjFl_Amilift_c13MoveAlongPathEv
 /* Advance along the path by one frame. Speeds up toward 0xa000 and slows to a
  * stop within 0x69000 of the next node; once stopped there it snaps onto the
  * node, steps mNodeIndex one way or the other (per mState) and turns toward
  * the following node. Returns -1 when it has just reached either end of the
  * path (the index is then pulled back inside the path), else 0 or 1. */
-int daObjFl_Amilift_c::func_ov064_02117a44() {
-  Vector3 a;
-  Vector3 b;
-  int r;
-  UpdatePos(0);
-  r = (Vec3_HorzDist(&mPosX, &mToX) < 0x69000) ? 0 : 0xa000;
-  if (_Z14ApproachLinearRiii(&mHorzSpeed, r, 0x800) != 0 && r == 0) {
-    mFromX = mToX;
-    mFromY = mToY;
-    mFromZ = mToZ;
-    mPosX = mFromX;
-    mPosY = mFromY;
-    mPosZ = mFromZ;
-    r = 1;
-    if (mState == daObjFl_Amilift_c::STATE_FORWARD) {
-      ++mNodeIndex;
-      if (mNodeIndex >= mNodeCount) {
-        mNodeIndex = mNodeCount - 2;
-        r = -1;
-      }
-    } else {
-      --mNodeIndex;
-      if (mNodeIndex < 0) {
-        mNodeIndex = r;
-        r = -1;
-      }
+int daObjFl_Amilift_c::MoveAlongPath() {
+    Vector3 a;
+    Vector3 b;
+    int r;
+    UpdatePos(0);
+    r = (Vec3_HorzDist(&mPosX, &mToX) < 0x69000) ? 0 : 0xa000;
+    if (ApproachLinear(mHorzSpeed, r, 0x800) != 0 && r == 0) {
+        mFromX = mToX;
+        mFromY = mToY;
+        mFromZ = mToZ;
+        mPosX = mFromX;
+        mPosY = mFromY;
+        mPosZ = mFromZ;
+        r = 1;
+        if (mState == daObjFl_Amilift_c::STATE_FORWARD) {
+            ++mNodeIndex;
+            if (mNodeIndex >= mNodeCount) {
+                mNodeIndex = mNodeCount - 2;
+                r = -1;
+            }
+        } else {
+            --mNodeIndex;
+            if (mNodeIndex < 0) {
+                mNodeIndex = r;
+                r = -1;
+            }
+        }
+        mPathPtr.GetNode(*(Vector3 *)&mToX, mNodeIndex);
+        a.x = mToX;
+        a.y = mToY;
+        a.z = mToZ;
+        b.x = mFromX;
+        b.y = mFromY;
+        b.z = mFromZ;
+        FaceToward(&a, &b);
+        return r;
     }
-    mPathPtr.GetNode(*(Vector3 *)&mToX, mNodeIndex);
-    a.x = mToX;
-    a.y = mToY;
-    a.z = mToZ;
-    b.x = mFromX;
-    b.y = mFromY;
-    b.z = mFromZ;
-    func_ov064_02117a14(&a, &b);
-    return r;
-  }
-  return 0;
+    return 0;
 }
 
-// @symbol func_ov064_02117b8c
+// @symbol _ZN17daObjFl_Amilift_c13StateBackwardEv
 /* State 2, walking back: pause 20 frames, then walk. On reaching node 0 go to
  * the forward state if auto-run, else wait for the player. */
-void daObjFl_Amilift_c::func_ov064_02117b8c() {
+void daObjFl_Amilift_c::StateBackward() {
     unsigned short v = mStateFrames;
-    if (v < 0x14) return;
-    int r = func_ov064_02117a44();
-    if (r != -1) return;
+    if (v < 0x14)
+        return;
+    int r = MoveAlongPath();
+    if (r != -1)
+        return;
     unsigned char b = mAutoRun;
     if (b == 0) {
         mState = daObjFl_Amilift_c::STATE_WAIT;
@@ -171,17 +158,17 @@ void daObjFl_Amilift_c::func_ov064_02117b8c() {
     }
 }
 
-// @symbol func_ov064_02117bdc
+// @symbol _ZN17daObjFl_Amilift_c12StateForwardEv
 /* State 1, walking forward: an auto-run lift pauses 20 frames first. On
  * reaching the last node go to the backward state. */
-int daObjFl_Amilift_c::func_ov064_02117bdc()
-{
+int daObjFl_Amilift_c::StateForward() {
     unsigned char b = mAutoRun;
     if (b == 1) {
         unsigned short v = mStateFrames;
-        if (v < 0x14) return v;
+        if (v < 0x14)
+            return v;
     }
-    int r = func_ov064_02117a44();
+    int r = MoveAlongPath();
     if (r == -1) {
         r = 2;
         mState = r;
@@ -189,13 +176,12 @@ int daObjFl_Amilift_c::func_ov064_02117bdc()
     return r;
 }
 
-// @symbol func_ov064_02117c24
+// @symbol _ZN17daObjFl_Amilift_c9StateWaitEv
 /* State 0, waiting: while the player is on the lift, count frames (Behavior
  * does the counting); once more than 20 have counted, or at once if auto-run, turn toward
  * the next node and start walking forward. With nobody on it the counter
  * is held at 0. */
-void daObjFl_Amilift_c::func_ov064_02117c24()
-{
+void daObjFl_Amilift_c::StateWait() {
     if (mRiderOn != 0) {
         if (mAutoRun != 1) {
             if (mStateFrames <= 0x14)
@@ -209,7 +195,7 @@ void daObjFl_Amilift_c::func_ov064_02117c24()
         v1.x = mFromX;
         v1.y = mFromY;
         v1.z = mFromZ;
-        func_ov064_02117a14(&v0, &v1);
+        FaceToward(&v0, &v1);
         return;
     }
     mStateFrames = 0;
@@ -237,14 +223,14 @@ s32 daObjFl_Amilift_c::Render() {
 s32 daObjFl_Amilift_c::Behavior() {
     int idx = mState;
     (this->*data_ov064_0211c750[idx].pmf)();
-    unsigned short* p338 = &mStateFrames;
+    unsigned short *p338 = &mStateFrames;
     *p338 = (unsigned short)(*p338 + 1);
     if (idx != mState) {
         mStateFrames = 0;
     }
     int target = mRiderOn ? -0x28000 : 0;
-    if (_Z14ApproachLinearRiii(&mSinkOffset, target, 0x5000)) {
-        short* pAng = &mBobPhase;
+    if (ApproachLinear(mSinkOffset, target, 0x5000)) {
+        short *pAng = &mBobPhase;
         *pAng = (short)(*pAng + 0xa00);
         unsigned short h = *(unsigned short *)&mBobPhase;
         short s = data_02082214[(h >> 4) * 2];
@@ -257,7 +243,7 @@ s32 daObjFl_Amilift_c::Behavior() {
     int saved = mPosY;
     mPosY = t324 + (t330 + t320);
     UpdateModelPosAndRotY();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
     mPosY = saved;
     mRiderOn = 0;
@@ -272,7 +258,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     Vector3 nodeB;
     unsigned char b;
 
-    bmd = (BMD_File *)Model::LoadFile(data_ov064_0211c730);
+    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov064_0211c730);
     mModel.SetFile(bmd, 1, -1);
 
     b = (param1 >> 8) & 1;
@@ -287,11 +273,11 @@ s32 daObjFl_Amilift_c::InitResources() {
     UpdateClsnPosAndRot();
 
     kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov064_0211c728);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, &data_ov064_0211bb6c);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
 
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&func_ov064_02117fd4);
+    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
 
     mPathPtr.FromID(param1 & 0xf);
     mNodeCount = mPathPtr.NumNodes();
@@ -310,7 +296,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     nodeB.y = mFromY;
     nodeB.z = mFromZ;
 
-    func_ov064_02117a14(&nodeA, &nodeB);
+    FaceToward(&nodeA, &nodeB);
 
     mHomeX = mPosX;
     mHomeY = mPosY;
@@ -327,20 +313,19 @@ AmiliftClsnFilePtr data_ov064_0211c728(ASSET_FL_AMILIFT_KCL);
 /* The three-entry state dispatch table: wait, forward, backward. mwcc cannot
  * link-time-initialize pointer-to-member records, so the initializer copies
  * the descriptor records in. */
-extern "C" LiftState data_ov064_0211c750[3] = {
-    {&daObjFl_Amilift_c::func_ov064_02117c24},
-    {(LiftStateFn)&daObjFl_Amilift_c::func_ov064_02117bdc},
-    {&daObjFl_Amilift_c::func_ov064_02117b8c},
+LiftState data_ov064_0211c750[3] = {
+    {&daObjFl_Amilift_c::StateWait},
+    {(LiftStateFn)&daObjFl_Amilift_c::StateForward},
+    {&daObjFl_Amilift_c::StateBackward},
 };
 
-// @symbol func_ov064_02117fb4
+// @symbol _ZN17daObjFl_Amilift_c9OnStoodOnEP8dActor_c
 /* The player (actor 0xbf) touched the lift: raise mRiderOn, which Behavior
  * reads to sink the lift and clears every frame. */
-extern "C" void func_ov064_02117fb4(daObjFl_Amilift_c *self, dActor_c *other)
-{
+void daObjFl_Amilift_c::OnStoodOn(dActor_c *other) {
     u8 isPlayer = other->actorID == 0xbf;
     if (isPlayer)
-        self->mRiderOn = 1;
+        mRiderOn = 1;
 }
 
 /* The collision callback InitResources installs in mMeshCollider's slot. The
@@ -348,10 +333,9 @@ extern "C" void func_ov064_02117fb4(daObjFl_Amilift_c *self, dActor_c *other)
  * long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol func_ov064_02117fd4
-extern "C" void func_ov064_02117fd4(void *collider, daObjFl_Amilift_c *self, dActor_c *other)
-{
-    func_ov064_02117fb4(self, other);
+// @symbol _ZN17daObjFl_Amilift_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
+void daObjFl_Amilift_c::StoodOnCallback(dBgW *collider, daObjFl_Amilift_c *self, dActor_c *other) {
+    self->OnStoodOn(other);
 }
 #pragma pop
 
@@ -364,7 +348,6 @@ extern "C" void func_ov064_02117fd4(void *collider, daObjFl_Amilift_c *self, dAc
  * `new daObjFl_Amilift_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x368), dBgActor_c's base constructor, the vptr
  * store, then mPathPtr's constructor. */
-extern "C" daObjFl_Amilift_c *daObjFl_Amilift_c_classInit(void)
-{
+extern "C" daObjFl_Amilift_c *daObjFl_Amilift_c_classInit(void) {
     return new daObjFl_Amilift_c;
 }

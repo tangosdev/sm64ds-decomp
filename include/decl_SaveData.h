@@ -20,12 +20,6 @@
 extern "C" {
 #endif
 
-extern int _ZN8SaveData16HasPlayerLostCapEv(void);
-extern int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
-extern s32 _ZN8SaveData16ReadDataFromCartEPcjj(char*, u32, u32);
-extern unsigned int _ZN8SaveData26CountStarsCollectedInLevelEj(unsigned int);
-extern void _ZN8SaveData13PlayerLoseCapEv(void);
-extern void _ZN8SaveData16EraseAllSaveDataEv(void);
 
 
 #ifdef __cplusplus

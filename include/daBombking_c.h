@@ -20,15 +20,13 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "BlendModelAnim.h"
+#include "dExtBlendAnmModel_c.h"
 #include "dExtCommonModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 
 struct Player;
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daBombking_c : dEnemyBase_c {
     /* Declared first, DEFINED OUT OF LINE at the top of src/game/actors/d_a_bombking.cpp.
@@ -41,7 +39,7 @@ struct daBombking_c : dEnemyBase_c {
     virtual ~daBombking_c();
 
     dBgCh_Actr mWithMeshClsn;       /* 0x110 */
-    BlendModelAnim mBlendModelAnim;   /* 0x2cc */
+    dExtBlendAnmModel_c mBlendAnmModel; /* 0x2cc */
     dCcAcPos_c mdCcAcPos_c;/* 0x33c */
     dCcAcPos_c mdCcAcPos_c2;/* 0x37c */
     dExtCommonModel_c mCommonModel;         /* 0x3bc */
@@ -90,8 +88,15 @@ struct daBombking_c : dEnemyBase_c {
     s16 mTargetAngY;                  /* 0x4fa */
     s32 mAnimSpeed;                   /* 0x4fc */
     s32 mHealth;                      /* 0x500 */
-    u8  unk_504;                      /* 0x504 -- DecIfAbove0_Byte; armed to 0x64 */
-    u8  unk_505;                      /* 0x505 -- DecIfAbove0_Byte; armed to 5 / 0xf / 0x14 */
+    /* Frames before the next bob-omb throw. Behavior counts it down with
+       DecIfAbove0_Byte; the throw update (func_ov078_021250f8) arms it to
+       0x64 when its animation ends, and func_ov078_02125448 only goes to
+       the throw state while it is 0. */
+    u8 mThrowCooldown; /* 0x504 */
+    /* Repeat gap for the walking sounds: Behavior counts it down with
+       DecIfAbove0_Byte, and each site plays 0x12d or 0x12f only at 0 and
+       then re-arms it (5 / 0xf / 0x14). */
+    u8 mSoundCooldown; /* 0x505 */
     /* 1 while fight BGM layer 3 is up. */
     u8  mMusicLayer3;                 /* 0x506 */
     u8  mStarTracked;                 /* 0x507 */
@@ -111,7 +116,7 @@ struct daBombking_c : dEnemyBase_c {
     int Render();
 
     /* State-record {enter, tick} handlers and their helpers, in ROM order. The
-       ov078 sinit copies PMF pairs into data_ov078_021270* records. */
+       static initializer copies PMF pairs into the data_ov078_* records. */
     int func_ov078_02123804();
     void func_ov078_02123864();
     int func_ov078_021238ac();
@@ -126,6 +131,7 @@ struct daBombking_c : dEnemyBase_c {
     int func_ov078_02123fb4();
     int func_ov078_02124000();
     int func_ov078_02124060();
+    int func_ov078_021240a0();
     int func_ov078_021243c0();
     int func_ov078_02124470();
     int func_ov078_021244d0();
@@ -154,15 +160,11 @@ struct daBombking_c : dEnemyBase_c {
     int KingBobOmb_SetState(void *rec);
     void func_ov078_02125de0();
     void func_ov078_02125f8c();
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 /* ~daBombking_c, the key function, owns the compiler-emitted definition of this
- * vtable. The factory is `return new daBombking_c()`; the leaf size_t operator
- * new forwards to `_ZN7fBase_cnwEj` until #2570's fBase overload lands. */
+ * vtable. The factory is `return new daBombking_c()`, which calls the
+ * inherited fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 extern int _ZTV12daBombking_c[];
 
 #ifndef SM64DS_PLATFORM_PC

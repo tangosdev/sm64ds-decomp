@@ -6,8 +6,10 @@
  * RTTI: dScMgTrampoline_c : dScMgD3DBase_c (tools/rtti_extract.py); vtable
  * ov006:0x0213fb34. Factory dScMgTrampoline_c_classInit (historical alias
  * MgTrampolineTime_Spawn) installs it for the MG_TRAMPOLINE profile. The
- * factory builds 0x500c, 0x534c and 0x5cd0; the destructor tears them down
- * in exact reverse.
+ * factory is `new dScMgTrampoline_c`: the constructor builds mMarios, mLines
+ * and mScorePopups through __cxa_vec_ctor in member order and then clears the
+ * door mark; the empty destructor's member teardown runs them through
+ * __cxa_vec_cleanup in exact reverse.
  *
  * The destructor is defined in the class body: D1 0x021207dc sits below D0
  * 0x02120880. An out-of-line definition emits D0 before D1, plus a D2 this
@@ -15,18 +17,15 @@
  * linked in address order. InitResources is the first virtual not defined
  * here and stays the key function. dScMgD3DBase_c supplies operator delete.
  *
- * The three element arrays stay raw: their private types are not recovered.
  * From 0x5d84 the tail is the flashing door mark, the scroll, the stylus
  * sample, and the timer that moves the lit door.
  */
 #ifndef DSCMGTRAMPOLINE_C_H
 #define DSCMGTRAMPOLINE_C_H
 #include "dScMgD3DBase_c.h"
-
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void *Trmp3DMario_Destruct(void);
-extern "C" void TrmpLine_Destroy(void);
-extern "C" void Trmp_Nothing(void);
+#include "dMgTrmpln3DMario_c.h"
+#include "TrmpLine.h"
+#include "TrmpScorePopup.h"
 
 /* The flashing mark on the lit door, 0xc bytes at 0x5d84. */
 struct dScMgTrampoline_DoorMark {
@@ -35,7 +34,7 @@ struct dScMgTrampoline_DoorMark {
     s32 active;         /* 0x04 -- nonzero while that blink is running */
     s32 shown;          /* 0x08 -- toggles with timer / 10 */
 
-    void Init();               /* ov006 0x02120a54 -- the factory's clear */
+    void Init();               /* ov006 0x02120a54 -- the constructor's clear */
     void Hide();               /* ov006 0x02120a44 -- StartRound's reset */
     void Show(int side);       /* ov006 0x02120a18 -- starts the blink */
     void Update();             /* ov006 0x021209ac -- ticks it */
@@ -46,14 +45,14 @@ typedef char dScMgTrampoline_DoorMark_size_must_be_0xc[sizeof(dScMgTrampoline_Do
 struct dScMgTrampoline_c : dScMgD3DBase_c {
     typedef void (dScMgTrampoline_c::*State)();
 
+    dScMgTrampoline_c() {
+        mDoorMark.Init();
+    }
+
     /* In the class body so D1 is emitted before D0 and no D2 is emitted.
        A virtual destructor is still reached through the vtable, not inlined
        into callers. */
-    virtual ~dScMgTrampoline_c() {
-        __cxa_vec_cleanup(mArray3, 5, 0x24, (void *)Trmp_Nothing);
-        __cxa_vec_cleanup(mArray2, 3, 0x32c, (void *)TrmpLine_Destroy);
-        __cxa_vec_cleanup(mArray1, 4, 0xd0, (void *)Trmp3DMario_Destruct);
-    }
+    virtual ~dScMgTrampoline_c() {}
 
     virtual s32 InitResources();     /* slot 0 */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021212e0 */
@@ -71,7 +70,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        this class; Behavior dispatches the same eight-byte pointer-to-member
        every frame. The State/Begin/Update names are coined from the
        matched bodies; the ROM symbols were address-only. */
-    void StateDone();      /* ov006 0x02121774 */
+    static void StateDone(); /* ov006 0x02121774 */
     void StateWaitExit();  /* ov006 0x02121778 */
     void StateResults();   /* ov006 0x02121848 */
     void StatePlay();      /* ov006 0x021218fc */
@@ -90,9 +89,9 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
 
     u32 mState[2];          /* 0x5004 -- raw eight-byte State encoding; a
                                typed global PMF emits a non-ROM __sinit */
-    u8  mArray1[0x340];     /* 0x500c -- 4 * 0xd0; StatePlay launches one */
-    u8  mArray2[0x984];     /* 0x534c -- 3 * 0x32c, elem dtor TrmpLine_Destroy */
-    u8 mArray3[0xb4];       /* 0x5cd0 -- 5 * 0x24 floating scores (TrmpScorePopup) */
+    dMgTrmpln3DMario_c mMarios[4];      /* 0x500c -- StatePlay launches one */
+    TrmpLine mLines[3];                 /* 0x534c */
+    TrmpScorePopup mScorePopups[5];     /* 0x5cd0 -- floating scores */
     dScMgTrampoline_DoorMark mDoorMark; /* 0x5d84 */
     int mTimer;             /* 0x5d90 -- countdown gating state transitions */
     s32 mScrollY;           /* 0x5d94 -- approached toward mScrollTargetY by 2 a

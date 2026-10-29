@@ -23,6 +23,15 @@
 #include "dScStage_c.h"
 #include "dFdColor_c.h"
 #include "G2x.h"
+#include "GX.h"
+
+namespace GX {
+void SetGraphicsMode(int a, int b, int c);
+}
+
+namespace GXS {
+void SetGraphicsMode(int a);
+}
 
 struct Matrix2x2 { int m[4]; };
 
@@ -47,9 +56,9 @@ namespace GX { void DisableAllBanks(); }
 extern "C" {
 extern int  func_02053c10(int enable);
 extern int  func_02053be0(int enable);
-extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
+
 extern void func_02053a90(u16* out, int v);
-extern void _ZN3GXS15SetGraphicsModeEi(int a);
+
 extern Matrix2x2 data_02092668;
 
 extern u16 func_02053f58(void);
@@ -66,13 +75,6 @@ extern u16 func_02053f30(void);
 extern u16 func_02053f08(void);
 extern u16 func_02053ee0(void);
 
-extern void _ZN2GX13SetBankForTexEt(u16);
-extern void _ZN2GX17SetBankForTexPlttEt(u16);
-extern void _ZN2GX12SetBankForBGEt(u16);
-extern void _ZN2GX13SetBankForOBJEt(u16);
-extern void _ZN2GX15SetBankForSubBGEt(u16);
-extern void _ZN2GX22SetBankForSubBGExtPlttEt(u16);
-extern void _ZN2GX16SetBankForSubOBJEt(u16);
 
 extern void func_0205583c(void);
 
@@ -80,12 +82,13 @@ extern void Initialise3dGraphics(int arg);
 
 extern fBase_c *data_0209f5c0;
 
-extern dFdColor_c data_0209f5e8;
-
 extern void *data_0209f1e4;
 extern void func_02011b7c(void);
 
-extern char data_0209b53c[];
+/* Sound.cpp's sound-object registry; only its address is needed here.
+   local extern: SndRegTable is Sound.cpp's own type, no header declares it. */
+struct SndRegTable;
+extern SndRegTable data_0209b53c;
 extern void func_02011974(void *object);
 
 extern u8 data_02092660;
@@ -93,7 +96,6 @@ extern u8 data_02092660;
 extern u8   data_0209f1e0;
 
 extern dFdBrightness_c *data_0209f5bc;
-extern dFdBrightness_c data_0209f5d0;
 extern u16  data_02092664;
 
 extern void func_02023544(void);
@@ -107,6 +109,16 @@ extern int func_02013edc(u32 sceneID, u32 param, int a);
 
 extern dFdBrightness_c *data_0209d4ac;
 }
+
+/* The scene's two global faders: the colour fade every scene change runs
+   (SetAndStopColorFader, StartSceneFade) and the plain brightness fade
+   BeforeBehavior falls back to. Namespace-scope objects with inline
+   constructors and real destructors, so mwcc emits __sinit_d_scene.cpp to
+   build them in this order and register their destructors (was the
+   handwritten __sinit_02074edc). Other TUs reach them by these address
+   names. */
+dFdColor_c data_0209f5e8;
+dFdBrightness_c data_0209f5d0;
 
 // @symbol _ZN8dScene_c22ResetHardwareRegistersEv
 void dScene_c::ResetHardwareRegisters()
@@ -122,7 +134,7 @@ void dScene_c::ResetHardwareRegisters()
     GX::DisableAllBanks();
     func_02053c10(0);
     func_02053be0(1);
-    _ZN2GX15SetGraphicsModeEiii(1, 0, 0);
+    GX::SetGraphicsMode(1, 0, 0);
 
     *(volatile u32*)0x4000000 &= ~0x1f00;
     *(volatile u32*)0x4000000 &= ~0xe000;
@@ -167,7 +179,7 @@ void dScene_c::ResetHardwareRegisters()
     *(volatile u8*)0x400004d = 0;
 
     func_02053a90((u16*)0x400006c, 0);
-    _ZN3GXS15SetGraphicsModeEi(0);
+    GXS::SetGraphicsMode(0);
 
     *(volatile u32*)0x4001000 &= ~0x1f00;
     *(volatile u32*)0x4001000 &= ~0xe000;
@@ -224,13 +236,13 @@ void DisableAllBanks(){
 // @symbol _ZN10dScStage_c12SetVramBanksEv
 void dScStage_c::SetVramBanks() {
     GX::DisableAllBanks();
-    _ZN2GX13SetBankForTexEt(3);
-    _ZN2GX17SetBankForTexPlttEt(0x30);
-    _ZN2GX12SetBankForBGEt(8);
-    _ZN2GX13SetBankForOBJEt(0x40);
-    _ZN2GX15SetBankForSubBGEt(4);
-    _ZN2GX22SetBankForSubBGExtPlttEt(0x80);
-    _ZN2GX16SetBankForSubOBJEt(0x100);
+    GX::SetBankForTex(3);
+    GX::SetBankForTexPltt(0x30);
+    GX::SetBankForBG(8);
+    GX::SetBankForOBJ(0x40);
+    GX::SetBankForSubBG(4);
+    GX::SetBankForSubBGExtPltt(0x80);
+    GX::SetBankForSubOBJ(0x100);
 }
 
 // @symbol _ZN8dScene_c20Initialise3dGraphicsEv
@@ -238,7 +250,7 @@ void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
     func_0205583c();
-    _ZN2GX15SetGraphicsModeEiii(1, 0, 1);
+    GX::SetGraphicsMode(1, 0, 1);
     *(volatile u32 *)0x40004c8 = 0x296a5800;
     *(volatile u32 *)0x40004cc = 0x7fff;
     *(volatile u32 *)0x40004c0 = 0x7fff;
@@ -278,7 +290,7 @@ int dScene_c::BeforeCleanupResources()
 {
     if (!fBase_c::BeforeCleanupResources())
         return 0;
-    func_02011974(data_0209b53c);
+    func_02011974(&data_0209b53c);
     return 1;
 }
 

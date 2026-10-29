@@ -184,6 +184,12 @@ def _production_context():
         enrolled = RB.enrolled()
         intact = RB.intact_tu_policies(enrolled=enrolled)
         compiler_only = RB.compiler_only_policies(enrolled=enrolled)
+        if intact:
+            # The private worker checks relocations before building the head ROM.
+            # Vtable split preparation needs the same current stock control as
+            # rombuild; a previous job's baseline is not evidence for this tree.
+            import tu_production as TP
+            TP.prepare_intact_link_verification(intact)
         return {"intact": intact, "compiler_only": compiler_only,
                 "symbols": RB.enrolled_symbols(),
                 "versions": RB.versions(), "init_sources": RB.init_section_sources()}

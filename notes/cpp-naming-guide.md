@@ -70,7 +70,7 @@ Thunks are small compiler-generated functions that adjust the `this` pointer bef
 *   `_ZTv<voff>_n<off>_` - Virtual `this`-adjustment thunk.
 
 ### Real Game Example
-*   `_ZThn80_N9ModelAnimD0Ev` &rarr; Non-virtual thunk adjusting `this` by `-80` for `ModelAnim::~ModelAnim()`.
+*   `_ZThn80_N14dExtAnmModel_cD0Ev` &rarr; Non-virtual thunk adjusting `this` by `-80` for `dExtAnmModel_c::~dExtAnmModel_c()`.
     *   If you call a virtual destructor through a base class pointer, and that base class is located at offset 80 within the derived class, the thunk subtracts 80 from the `this` pointer before invoking the derived destructor.
 
 ## 4. Vtable Layout
@@ -182,7 +182,7 @@ When decompiling, you will frequently encounter these top classes. The number of
 *   **GX** (22 methods)
 *   **Message** (22 methods)
 *   **ActorBase** (22 methods)
-*   **Model** (21 methods)
+*   **dExtSimpleModel_c** (21 methods)
 
 **Actor Spawn Patterns:** Spawn functions typically allocate the instance (`mov r0, #size` before the first `bl`) and store the class vtable (the last pool literal stored).
 **Destructor Chains:** `func_ovNN_...` functions returning `this` often consist of a vtable install, several `SubObjectD1(this+off)` calls in reverse construction order, and a final `Deallocate` call.

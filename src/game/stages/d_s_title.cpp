@@ -31,12 +31,6 @@
  *   spelled `void *` -- the one spelling neither call site has to cast away
  *   from. Until the ownership is narrowed, the original form stays
  *   uncertain, and the free form is only what this TU reproduces.
- * - OAM::EnableSubOAM keeps its legacy call-site declaration: Render
- *   passes the address of a stack slot in r0 even though the canonical
- *   static function takes no arguments. This is a call-site ABI leftover.
- * - The GX/G2 shadow namespaces have no header in the tree yet; they are
- *   carried from the legacy InitResources source unchanged.
- * - unk_050: the one own field, a repeat-delay counter. See dScTitle_c.h.
  */
 
 #include "dScTitle_c.h"
@@ -45,38 +39,17 @@
 #include "Sound.h"
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
+#include "G2.h"
+#include "GX.h"
+#include "OAM.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
-/* Stack slot whose address is retained by the matched Render call. */
+/* Stack slot whose address Render passes to OAM::EnableSubOAM. The callee
+ * does not read it; the call still has to materialize the pointer in r0. */
 struct OamTmp {
     int x;
 };
-
-namespace OAM {
-void EnableSubOAM(OamTmp *);
-/* local extern: the matched Render passes &tmp in r0; the header's
-   static EnableSubOAM() takes no argument */
-extern "C" void _ZN3OAM12EnableSubOAMEv(OamTmp *);
-}
-
-/* No header in the tree declares this namespace yet. Carried from the
- * legacy InitResources source unchanged. Its sibling `namespace G2` could
- * NOT be carried: decl_common.h:395 declares a real ROM symbol
- * `extern int G2[];`, and a variable-hides-a-tag lookup turns the namespace
- * into `illegal namespace` / `undefined identifier 'G2'` the moment this TU
- * includes that header. G2::GetBG0ScrPtr is therefore spelt by its final
- * mangled name in the block below, the way the rest of the tree spells it. */
-namespace GX {
-void DisableAllBanks();
-void SetBankForBG(unsigned short);
-void SetBankForOBJ(unsigned short);
-void SetGraphicsMode(int, int, int);
-void LoadBG0Char(void const *, unsigned int, unsigned int);
-void LoadBGPltt(void const *, unsigned int, unsigned int);
-void LoadOBJ(void const *, unsigned int, unsigned int);
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
 
 /* ROM symbols this TU references that no header in the tree declares yet,
  * spelt by their exact final names under C linkage the way decl_common.h
@@ -100,8 +73,6 @@ extern int data_020a0d90[];
 extern u8 data_0209d45c[];
 extern u8 data_0208ee44[];
 extern u8 data_0209ee90[];
-extern void func_02012790(int idx);
-extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
@@ -143,7 +114,6 @@ extern const TitleLevelEntry sTitleLevelEntries[] = {
 /* `void *` is the tree's plurality spelling for this one (it is declared
  * five different ways across five files); the cast at the one call site is
  * free. */
-void *_ZN2G212GetBG0ScrPtrEv(void);
 /* RECONCILED: the two legacy call sites spelt the parameter `int` and
  * `char *`; the body ignores it. `void *` is the spelling neither call site
  * has to cast away from. */
@@ -172,7 +142,7 @@ extern "C" void func_ov003_020adcbc(int level, int row, int col) {
     volatile u16 t0, t1, t2, t3, t4;
     int tens = level / 10;
     int ones = level % 10;
-    short *scr = (short *)_ZN2G212GetBG0ScrPtrEv();
+    short *scr = (short *)G2::GetBG0ScrPtr();
     short *d = scr + (col + (row << 5));
     t0 = tens == 0 ? 0xff : tens + 0x30;
     MultiStore16(t0, (char *)d, 2);
@@ -204,7 +174,7 @@ extern "C" void func_ov003_020adcbc(int level, int row, int col) {
  * func_ov003_020ad6ec, for the caption. */
 // @symbol func_ov003_020adc74
 extern "C" void func_ov003_020adc74(signed char *s, int row, int col) {
-    short *p = (short *)_ZN2G212GetBG0ScrPtrEv() + (col + (row << 5));
+    short *p = (short *)G2::GetBG0ScrPtr() + (col + (row << 5));
     if (*s == 0)
         return;
     do {
@@ -248,7 +218,7 @@ s32 dScTitle_c::InitResources() {
     GX::LoadBG0Char(data_0208a178, 0, 0x2000);
     GX::LoadBGPltt(data_0208c178, 0, 0x200);
     {
-        u16 *scr = (u16 *)_ZN2G212GetBG0ScrPtrEv();
+        u16 *scr = (u16 *)G2::GetBG0ScrPtr();
         int i = 0;
         do {
             *scr++ = 0xff;
@@ -280,7 +250,7 @@ s32 dScTitle_c::CleanupResources() {
 /* [5] 0x020ad814 -- vtable slot 6. Level-select cursor update: on confirm
  * (or minigame-active flag) starts the scene fade / loads the picked level
  * from sTitleLevelEntries; otherwise moves the
- * cursor by row (+0x35) or column (+1) with repeat delay at unk_050,
+ * cursor by row (+0x35) or column (+1) with repeat delay at mRepeatDelay,
  * wrapping the index modulo 0x36. */
 // @symbol _ZN10dScTitle_c8BehaviorEv
 s32 dScTitle_c::Behavior() {
@@ -292,10 +262,10 @@ s32 dScTitle_c::Behavior() {
         t = sTitleLevelEntries[i].levelID;
         if (t == -1 || IsTouchStarted()) {
             dScene_c::StartSceneFade(5, 0, 0);
-            _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
+            Sound::StopLoadedMusic_Layer1(0x3c);
         } else if (t == -2) {
             dScene_c::StartSceneFade(6, 0, 0);
-            _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
+            Sound::StopLoadedMusic_Layer1(0x3c);
         } else {
             data_0209f2d8 = 0;
             LoadLevelNoReturn(t, sTitleLevelEntries[i].entranceID, 1, 0);
@@ -308,15 +278,15 @@ s32 dScTitle_c::Behavior() {
         u16 v = data_020a0e58[0];
         if (v & 0x40) {
             int h = data_020a0e58[1] & 0x40;
-            if (h != 0 || unk_050 == 0) {
-                unk_050 = h ? 8 : 2;
+            if (h != 0 || mRepeatDelay == 0) {
+                mRepeatDelay = h ? 8 : 2;
                 data_0209b2f4 += 0x35;
                 func_02012790(0);
             }
         } else if (v & 0x80) {
             int h = data_020a0e58[1] & 0x80;
-            if (h != 0 || unk_050 == 0) {
-                unk_050 = h ? 8 : 2;
+            if (h != 0 || mRepeatDelay == 0) {
+                mRepeatDelay = h ? 8 : 2;
                 data_0209b2f4 += 1;
                 func_02012790(0);
             }
@@ -324,7 +294,7 @@ s32 dScTitle_c::Behavior() {
     }
 
     data_0209b2f4 = data_0209b2f4 % 0x36;
-    DecIfAbove0_Short(&unk_050);
+    DecIfAbove0_Short(&mRepeatDelay);
     func_ov003_020ad6ec(this);
     return 1;
 }
@@ -334,7 +304,7 @@ s32 dScTitle_c::Behavior() {
 // @symbol _ZN10dScTitle_c6RenderEv
 s32 dScTitle_c::Render() {
     OamTmp tmp;
-    OAM::_ZN3OAM12EnableSubOAMEv(&tmp);
+    OAM::EnableSubOAM(&tmp);
     {
         int idx = data_0209e664;
         unsigned int v = ((data_0209b2f4 - data_0209b2f8 + 2) << 3) & 0xff;

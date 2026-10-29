@@ -9,7 +9,7 @@
     "HISTORY: contiguous linker run: 0x2111900..0x21163f0, 79 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daKpaTail_c, daKpa_c",
     "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-09): the run 0x021163f0..0x02116484 abuts this TU's .text end with no gap and is now inside it, written first among the deferred functions (codegen is deferred, so source order is reversed). daKpaTail_c_classInit is `return new daKpaTail_c;` (operator new 0x118, dActor_c base ctor, _ZTV11daKpaTail_c vptr store, dCcAc_c member ctor) and daKpa_c_classInit is `return new daKpa_c;` (operator new 0x454, dActor_c base ctor, _ZTV7daKpa_c vptr store, ModelAnim/TextureSequence/dBgCh_Actr/dExtShadowModel_c/dCcAcPos_c member ctors) -- each the retired shard's hand-spelled sequence, for the KOOPATAIL and KOOPA profiles. Both classes are this unit's; it is now 0x02111900..0x02116484, bounded above by src/game/actors/d_a_kpa_fire.cpp, which starts exactly at 0x02116484. The two new-expressions advance mwcc's compiler-label counter by 12, so every @label this unit owns was renumbered (+12: .bss @2250..@2283 -> @2262..@2295, .data @2285..@2337 -> @2297..@2349) in this manifest and ov060 symbols.txt; the six .bss registration nodes that used to be renamed @2249..@2259 -> @2710..@2715 to dodge ov002 daStarBase_c+daStar_c's global @2249..@2259 now compile as @2261..@2271, clear of that range, so defined_symbol_renames was dropped and they carry their compiler names."
+    "CLASSINIT TAIL FOLD (2026-10-09): the run 0x021163f0..0x02116484 abuts this TU's .text end with no gap and is now inside it, written first among the deferred functions (codegen is deferred, so source order is reversed). daKpaTail_c_classInit is `return new daKpaTail_c;` (operator new 0x118, dActor_c base ctor, _ZTV11daKpaTail_c vptr store, dCcAc_c member ctor) and daKpa_c_classInit is `return new daKpa_c;` (operator new 0x454, dActor_c base ctor, _ZTV7daKpa_c vptr store, dExtAnmModel_c/dExtAnmTexPat_c/dBgCh_Actr/dExtShadowModel_c/dCcAcPos_c member ctors) -- each the retired shard's hand-spelled sequence, for the KOOPATAIL and KOOPA profiles. Both classes are this unit's; it is now 0x02111900..0x02116484, bounded above by src/game/actors/d_a_kpa_fire.cpp, which starts exactly at 0x02116484. The two new-expressions advance mwcc's compiler-label counter by 12, so every @label this unit owns was renumbered (+12: .bss @2250..@2283 -> @2262..@2295, .data @2285..@2337 -> @2297..@2349) in this manifest and ov060 symbols.txt; the six .bss registration nodes that used to be renamed @2249..@2259 -> @2710..@2715 to dodge ov002 daStarBase_c+daStar_c's global @2249..@2259 now compile as @2261..@2271, clear of that range, so defined_symbol_renames was dropped and they carry their compiler names."
   ],
   "sections": [
     {
@@ -1391,7 +1391,7 @@
     "tubuild create warning: CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov060_02112724 and the one that held func_ov060_02114e9c; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Bowser_IsAnimAtLastFrame' differs between the legacy file that used to hold func_ov060_021125f0 and the one that held func_ov060_02114e9c; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_ov060_02111cc0' differs between the legacy file that used to hold func_ov060_02112350 and the one that held func_ov060_02114e9c; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration '_ZNK15dExtFrameCtrl_c12WillHitFrameEi' differs between the legacy file that used to hold func_ov060_021140c0 and the one that held func_ov060_02114e9c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK15dExtFrameCtrl_c12WillHitFrameEi' differs between the legacy file that used to hold func_ov060_021140c0 and the one that held func_ov060_02114e9c; kept the first, the other is commented out for review -- RESOLVED: no declaration of this symbol survives in the promoted TU; every use is now a real member call through the class header.",
     "tubuild create warning: CONFLICT: extern declaration 'Bowser_IsAnimAtLastFrame' differs between the legacy file that used to hold func_ov060_021125f0 and the one that held func_ov060_02114ff8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov060_021140c0 and the one that held func_ov060_021151d4; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_ov060_02115744' differs between the legacy file that used to hold func_ov060_02114d08 and the one that held func_ov060_021153f8; kept the first, the other is commented out for review",
@@ -2248,28 +2248,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -4749,314 +4729,314 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2143",
+      "from": "@2090",
       "to": "@3094",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2289 -> @2247; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3094 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2247 -> @2139; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3094 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2289 -> @2247; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3094 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2247 -> @2139; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3094 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2144",
+      "from": "@2091",
       "to": "@3095",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2290 -> @2248; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3095 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2248 -> @2140; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3095 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2290 -> @2248; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3095 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2248 -> @2140; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3095 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2145",
+      "from": "@2092",
       "to": "@3096",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2291 -> @2249; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3096 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2249 -> @2141; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3096 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2291 -> @2249; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3096 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2249 -> @2141; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3096 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2146",
+      "from": "@2093",
       "to": "@3097",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2292 -> @2250; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3097 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2250 -> @2142; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3097 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2292 -> @2250; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3097 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2250 -> @2142; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3097 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2147",
+      "from": "@2094",
       "to": "@3098",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2293 -> @2251; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3098 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2251 -> @2143; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3098 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2293 -> @2251; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3098 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2251 -> @2143; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3098 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2148",
+      "from": "@2095",
       "to": "@3099",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2294 -> @2252; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3099 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2252 -> @2144; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3099 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2294 -> @2252; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3099 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2252 -> @2144; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3099 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2149",
+      "from": "@2096",
       "to": "@3100",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2295 -> @2253; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3100 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2253 -> @2145; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3100 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2295 -> @2253; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3100 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2253 -> @2145; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3100 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2150",
+      "from": "@2097",
       "to": "@3101",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2296 -> @2254; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3101 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2254 -> @2146; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3101 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2296 -> @2254; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3101 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2254 -> @2146; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3101 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2151",
+      "from": "@2098",
       "to": "@3102",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2297 -> @2255; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3102 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2255 -> @2147; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3102 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2297 -> @2255; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3102 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2255 -> @2147; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3102 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2152",
+      "from": "@2099",
       "to": "@3103",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2298 -> @2256; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3103 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2256 -> @2148; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3103 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2298 -> @2256; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3103 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2256 -> @2148; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3103 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2153",
+      "from": "@2100",
       "to": "@3104",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2299 -> @2257; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3104 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2257 -> @2149; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3104 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2299 -> @2257; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3104 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2257 -> @2149; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3104 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2154",
+      "from": "@2101",
       "to": "@3105",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2300 -> @2258; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3105 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2258 -> @2150; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3105 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2300 -> @2258; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3105 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2258 -> @2150; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3105 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2155",
+      "from": "@2102",
       "to": "@3106",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2301 -> @2259; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3106 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2259 -> @2151; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3106 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2301 -> @2259; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3106 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2259 -> @2151; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3106 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2156",
+      "from": "@2103",
       "to": "@3107",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2302 -> @2260; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3107 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2260 -> @2152; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3107 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2302 -> @2260; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3107 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2260 -> @2152; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3107 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2157",
+      "from": "@2104",
       "to": "@3108",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2303 -> @2261; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3108 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2261 -> @2153; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3108 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2303 -> @2261; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3108 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2261 -> @2153; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3108 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2158",
+      "from": "@2105",
       "to": "@3109",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2304 -> @2262; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3109 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2262 -> @2154; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3109 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2304 -> @2262; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3109 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2262 -> @2154; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3109 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2159",
+      "from": "@2106",
       "to": "@3110",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2305 -> @2263; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3110 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2263 -> @2155; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3110 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2305 -> @2263; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3110 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2263 -> @2155; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3110 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2160",
+      "from": "@2107",
       "to": "@3111",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2306 -> @2264; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3111 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2264 -> @2156; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3111 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2306 -> @2264; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3111 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2264 -> @2156; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3111 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2161",
+      "from": "@2108",
       "to": "@3112",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2307 -> @2265; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3112 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2265 -> @2157; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3112 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2307 -> @2265; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3112 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2265 -> @2157; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3112 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2162",
+      "from": "@2109",
       "to": "@3113",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2308 -> @2266; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3113 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2266 -> @2158; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3113 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2308 -> @2266; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3113 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2266 -> @2158; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3113 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2163",
+      "from": "@2110",
       "to": "@3114",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2309 -> @2267; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3114 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2267 -> @2159; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3114 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2309 -> @2267; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3114 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2267 -> @2159; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3114 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2165",
+      "from": "@2112",
       "to": "@3115",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2311 -> @2269; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3115 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2269 -> @2161; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3115 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2311 -> @2269; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3115 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2269 -> @2161; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3115 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2167",
+      "from": "@2114",
       "to": "@3116",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2313 -> @2271; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3116 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2271 -> @2163; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3116 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2313 -> @2271; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3116 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2271 -> @2163; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3116 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2169",
+      "from": "@2116",
       "to": "@3117",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2315 -> @2273; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3117 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2273 -> @2165; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3117 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2315 -> @2273; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3117 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2273 -> @2165; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3117 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2171",
+      "from": "@2118",
       "to": "@3118",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2317 -> @2275; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3118 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2275 -> @2167; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3118 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2317 -> @2275; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3118 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2275 -> @2167; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3118 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2173",
+      "from": "@2120",
       "to": "@3119",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2319 -> @2277; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3119 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2277 -> @2169; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3119 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2319 -> @2277; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3119 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2277 -> @2169; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3119 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2175",
+      "from": "@2122",
       "to": "@3120",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2321 -> @2279; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3120 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2279 -> @2171; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3120 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2321 -> @2279; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3120 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2279 -> @2171; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3120 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2177",
+      "from": "@2124",
       "to": "@3121",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2323 -> @2281; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3121 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2281 -> @2173; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3121 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2323 -> @2281; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3121 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2281 -> @2173; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3121 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2179",
+      "from": "@2126",
       "to": "@3122",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2325 -> @2283; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3122 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2283 -> @2175; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3122 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2325 -> @2283; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3122 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2283 -> @2175; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3122 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2181",
+      "from": "@2128",
       "to": "@3123",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2327 -> @2285; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3123 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2285 -> @2177; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3123 is retained."
-    },
-    {
-      "from": "@2183",
-      "to": "@3124",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2329 -> @2287; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3124 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2287 -> @2179; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3124 is retained."
-    },
-    {
-      "from": "@2185",
-      "to": "@3125",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2331 -> @2289; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3125 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2289 -> @2181; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3125 is retained."
-    },
-    {
-      "from": "@2187",
-      "to": "@3126",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2333 -> @2291; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3126 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2291 -> @2183; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3126 is retained."
-    },
-    {
-      "from": "@2189",
-      "to": "@3127",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2335 -> @2293; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3127 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2293 -> @2185; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3127 is retained."
-    },
-    {
-      "from": "@2191",
-      "to": "@3128",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2337 -> @2295; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3128 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2295 -> @2187; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3128 is retained."
-    },
-    {
-      "from": "@2193",
-      "to": "@3129",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2339 -> @2297; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3129 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2297 -> @2189; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3129 is retained."
-    },
-    {
-      "from": "@2195",
-      "to": "@3130",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2341 -> @2299; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3130 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2299 -> @2191; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3130 is retained."
-    },
-    {
-      "from": "@2197",
-      "to": "@3131",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2343 -> @2301; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3131 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2301 -> @2193; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3131 is retained."
-    },
-    {
-      "from": "@2199",
-      "to": "@3132",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2345 -> @2303; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3132 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2303 -> @2195; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3132 is retained."
-    },
-    {
-      "from": "@2201",
-      "to": "@3133",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2347 -> @2305; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3133 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2305 -> @2197; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3133 is retained."
-    },
-    {
-      "from": "@2203",
-      "to": "@3134",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2349 -> @2307; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3134 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2307 -> @2199; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3134 is retained."
-    },
-    {
-      "from": "@2205",
-      "to": "@3135",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2351 -> @2309; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3135 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2309 -> @2201; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3135 is retained."
-    },
-    {
-      "from": "@2207",
-      "to": "@3136",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2353 -> @2311; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3136 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2311 -> @2203; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3136 is retained."
-    },
-    {
-      "from": "@2209",
-      "to": "@3137",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2355 -> @2313; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3137 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2313 -> @2205; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3137 is retained."
-    },
-    {
-      "from": "@2211",
-      "to": "@3138",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2357 -> @2315; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3138 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2315 -> @2207; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3138 is retained."
-    },
-    {
-      "from": "@2213",
-      "to": "@3139",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2359 -> @2317; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3139 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2317 -> @2209; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3139 is retained."
-    },
-    {
-      "from": "@2215",
-      "to": "@3140",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2361 -> @2319; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3140 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2319 -> @2211; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3140 is retained."
-    },
-    {
-      "from": "@2217",
-      "to": "@3141",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2363 -> @2321; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3141 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2321 -> @2213; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3141 is retained."
-    },
-    {
-      "from": "@2129",
-      "to": "@2261",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2275 -> @2233; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2261 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2233 -> @2125; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2261 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2327 -> @2285; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3123 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2285 -> @2177; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3123 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "from": "@2130",
-      "to": "@2262",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2276 -> @2234; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2262 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2234 -> @2126; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2262 is retained."
-    },
-    {
-      "from": "@2131",
-      "to": "@2263",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2277 -> @2235; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2263 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2235 -> @2127; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2263 is retained."
+      "to": "@3124",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2329 -> @2287; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3124 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2287 -> @2179; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3124 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "from": "@2132",
-      "to": "@2264",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2278 -> @2236; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2264 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2236 -> @2128; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2264 is retained."
+      "to": "@3125",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2331 -> @2289; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3125 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2289 -> @2181; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3125 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "from": "@2134",
-      "to": "@2266",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2280 -> @2238; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2266 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2238 -> @2130; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2266 is retained."
+      "to": "@3126",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2333 -> @2291; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3126 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2291 -> @2183; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3126 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "from": "@2136",
-      "to": "@2268",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2282 -> @2240; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2268 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2240 -> @2132; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2268 is retained."
+      "to": "@3127",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2335 -> @2293; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3127 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2293 -> @2185; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3127 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "from": "@2138",
-      "to": "@2270",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2284 -> @2242; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2270 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2242 -> @2134; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2270 is retained."
-    },
-    {
-      "from": "@2139",
-      "to": "@2271",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2285 -> @2243; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2271 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2243 -> @2135; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2271 is retained."
+      "to": "@3128",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2337 -> @2295; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3128 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2295 -> @2187; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3128 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "from": "@2140",
-      "to": "@2272",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2286 -> @2244; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2272 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2244 -> @2136; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2272 is retained."
-    },
-    {
-      "from": "@2141",
-      "to": "@2273",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2287 -> @2245; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2273 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2245 -> @2137; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2273 is retained."
+      "to": "@3129",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2339 -> @2297; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3129 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2297 -> @2189; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3129 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "from": "@2142",
+      "to": "@3130",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2341 -> @2299; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3130 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2299 -> @2191; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3130 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2144",
+      "to": "@3131",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2343 -> @2301; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3131 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2301 -> @2193; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3131 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2146",
+      "to": "@3132",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2345 -> @2303; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3132 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2303 -> @2195; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3132 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2148",
+      "to": "@3133",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2347 -> @2305; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3133 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2305 -> @2197; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3133 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2150",
+      "to": "@3134",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2349 -> @2307; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3134 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2307 -> @2199; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3134 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2152",
+      "to": "@3135",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2351 -> @2309; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3135 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2309 -> @2201; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3135 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2154",
+      "to": "@3136",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2353 -> @2311; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3136 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2311 -> @2203; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3136 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2156",
+      "to": "@3137",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2355 -> @2313; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3137 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2313 -> @2205; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3137 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2158",
+      "to": "@3138",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2357 -> @2315; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3138 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2315 -> @2207; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3138 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2160",
+      "to": "@3139",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2359 -> @2317; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3139 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2317 -> @2209; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3139 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2162",
+      "to": "@3140",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2361 -> @2319; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3140 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2319 -> @2211; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3140 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2164",
+      "to": "@3141",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2363 -> @2321; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @3141 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2321 -> @2213; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @3141 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2076",
+      "to": "@2261",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2275 -> @2233; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2261 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2233 -> @2125; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2261 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2077",
+      "to": "@2262",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2276 -> @2234; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2262 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2234 -> @2126; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2262 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2078",
+      "to": "@2263",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2277 -> @2235; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2263 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2235 -> @2127; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2263 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2079",
+      "to": "@2264",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2278 -> @2236; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2264 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2236 -> @2128; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2264 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2081",
+      "to": "@2266",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2280 -> @2238; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2266 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2238 -> @2130; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2266 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2083",
+      "to": "@2268",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2282 -> @2240; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2268 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2240 -> @2132; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2268 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2085",
+      "to": "@2270",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2284 -> @2242; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2270 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2242 -> @2134; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2270 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2086",
+      "to": "@2271",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2285 -> @2243; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2271 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2243 -> @2135; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2271 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2087",
+      "to": "@2272",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2286 -> @2244; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2272 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2244 -> @2136; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2272 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2088",
+      "to": "@2273",
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2287 -> @2245; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2273 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2245 -> @2137; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2273 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@2089",
       "to": "@2274",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2288 -> @2246; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2274 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2246 -> @2138; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2274 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2288 -> @2246; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2274 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2246 -> @2138; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2274 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2137",
+      "from": "@2084",
       "to": "@2269",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2283 -> @2241; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2269 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2241 -> @2133; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2269 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2283 -> @2241; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2269 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2241 -> @2133; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2269 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2135",
+      "from": "@2082",
       "to": "@2267",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2281 -> @2239; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2267 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2239 -> @2131; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2267 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2281 -> @2239; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2267 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2239 -> @2131; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2267 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@2133",
+      "from": "@2080",
       "to": "@2265",
-      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2279 -> @2237; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2265 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2237 -> @2129; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2265 is retained."
+      "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2279 -> @2237; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2265 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2237 -> @2129; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2265 is retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }
   ]
 }

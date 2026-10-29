@@ -1,0 +1,211 @@
+{
+  "id": "arm9/dCamera_c_dtor",
+  "module": "arm9",
+  "source": "src/engine/view/d_camera_dtor.cpp",
+  "promoted_source": "src/engine/view/d_camera_dtor.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "NOT FROM tu_map. tools/tu_map.py reports arm9 main as under-segmented, so this boundary is hand-derived.",
+    "Contiguous run 0x0200705c..0x020072c4, six functions, gapless in config/arm9/delinks.txt: _ZN9dCamera_cD1Ev, _ZN9dCamera_cD0Ev, func_020070e8, func_020071a8, func_020071e0, _ZN7Vector3D1Ev. Neighbour below is main (src/main.c, 0x02007000..0x0200705c).",
+    "TOP EDGE: _ZN7Vector3D1Ev at 0x020072c0 is the inline Vector3 destructor that func_020071e0's Vector3 locals make the compiler emit at the end of its object. An emitted inline body sits after the last function of the TU that emits it, so the object ends at 0x020072c4 and func_020072c4 starts the next one.",
+    "The three helpers are dCamera_c code: each takes the camera and touches only dCamera_c fields (pos, lookAt, mTargetPos, savedLookAt, savedPos, mTargetPlayer, mScriptParam, mOrbitTargetYaw). The other camera states (func_020075b4, func_02007758, ...) call them.",
+    "The run is not src/engine/view/d_camera.cpp. That TU is 0x0200bec4..0x0200e494, and the functions 0x020072c4..0x0200bec4 lie between. func_0200bb28 needs opt_common_subs off while dCamera_c::Behavior needs it on; under deferred codegen that pragma is TU-global.",
+    "ROM RTTI is this class: _ZTS9dCamera_c at 0x02086e6c, _ZTI9dCamera_c at 0x02086ee4, _ZTV9dCamera_c at 0x02086f84. Vtable slots 16 and 17 are D1 0x0200705c and D0 0x02007098. The retail table stays the linked copy."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0200705c",
+      "end": "0x020072c4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9dCamera_cD1Ev",
+      "address": "0x0200705c",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN9dCamera_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9dCamera_cD0Ev",
+      "address": "0x02007098",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN9dCamera_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_020070e8",
+      "address": "0x020070e8",
+      "size": "0x000000c0",
+      "legacy_source": "src/unnamed/arm9/0200/func_020070e8.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_020071a8",
+      "address": "0x020071a8",
+      "size": "0x00000038",
+      "legacy_source": "src/unnamed/arm9/0200/func_020071a8.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_020071e0",
+      "address": "0x020071e0",
+      "size": "0x000000e0",
+      "legacy_source": "src/unnamed/arm9/0200/func_020071e0.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "address": "0x020072c0",
+      "size": "0x00000004",
+      "legacy_source": "src/unnamed/arm9/0200/func_020071e0.cpp",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN9dCamera_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line ~dCamera_c under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at 0x0200705c and D0 at 0x02007098 and no dCamera_c D2. D2 is homeless and is deadstripped."
+    },
+    {
+      "symbol": "_ZTV9dCamera_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086f84",
+      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable (two-word preamble plus 18 slots). Slot 16 is D1 0x0200705c and slot 17 is D0 0x02007098; the other slots are the retail dCamera_c overrides and inherited fBase_c entries. deadstrip-data keeps the retail table at 0x02086f84 as the linked copy. Licensed span is .text only."
+    },
+    {
+      "symbol": "_ZTS9dCamera_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e6c",
+      "reason": "compiler-emitted type-name string '9dCamera_c'; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI9dCamera_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086ee4",
+      "reason": "compiler-emitted __si_class_type_info on dView_c; the vtable preamble relocates here. Canonical bytes verified, contribution is gap data."
+    },
+    {
+      "symbol": "_ZTS7dView_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e48",
+      "reason": "compiler-emitted type-name string '7dView_c' (base of dCamera_c); canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI7dView_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086ecc",
+      "reason": "compiler-emitted __si_class_type_info on dBase_c, the base record _ZTI9dCamera_c names; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "compiler-emitted type-name string '7dBase_c'; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "compiler-emitted __si_class_type_info on fBase_c; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "compiler-emitted type-name string '7fBase_c'; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "compiler-emitted root __class_type_info for fBase_c; canonical bytes verified, contribution is gap data"
+    }
+  ],
+  "notes": [
+    "Two destructor shards first, then (2026-10-28) the three camera helpers func_020070e8, func_020071a8 and func_020071e0 and the Vector3 destructor func_020071e0 emits. #pragma defer_codegen off puts the functions in source order: D1, D0, D2, then the helpers. D2 is deadstripped. RTTI stays on because the cartridge spells this class dCamera_c, so the emitted _ZTV/_ZTI/_ZTS records have retail homes and are deadstrip-data rather than homeless. The retail vtable at 0x02086f84 remains the linked copy.",
+    "The helpers keep their ROM names under C linkage because the other camera shards call them by those names. They read the real dCamera_c fields; mTargetPlayer is an s32 in the header and is cast to dActor_c * for the player's position and facing.",
+    "AngleDiff is declared short locally: func_020071a8 compares its result without sign-extending it, and the definition returns int. Banked in config/decl-agreement-baseline.json.",
+    "Not folded into d_camera.cpp: the runs are not adjacent. The opt_common_subs split that keeps 0x0200af0c..0x0200bec4 out of d_camera.cpp is unchanged."
+  ],
+  "relocations": [],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-dCamera_c_dtor/d_camera_dtor.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN9dCamera_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN9dCamera_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "data": [
+        "_ZTV9dCamera_c",
+        "_ZTS9dCamera_c",
+        "_ZTI9dCamera_c",
+        "_ZTS7dView_c",
+        "_ZTI7dView_c",
+        "_ZTS7dBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7dView_c",
+        "_ZTI7fBase_c",
+        "_ZTI9dCamera_c",
+        "_ZTS7dBase_c",
+        "_ZTS7dView_c",
+        "_ZTS7fBase_c",
+        "_ZTS9dCamera_c",
+        "_ZTV9dCamera_c"
+      ],
+      "canonicalDuplicates": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

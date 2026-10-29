@@ -160,7 +160,6 @@ short data_0208e378;
 short *data_0209b45c;      /* spawn default rotation ptr (null = none) */
 short *data_0209b460;      /* spawn default position ptr */
 signed char data_0209b44c_c;
-int data_0209b468[4];      /* actor list head the ctor links into */
 }
 #pragma comment(linker, "/alternatename:?data_0209b44c@@3CA=_data_0209b44c_c")
 #pragma comment(linker, "/alternatename:_data_0209b44c=_data_0209b44c_c")

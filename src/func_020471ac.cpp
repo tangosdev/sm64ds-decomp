@@ -1,0 +1,35 @@
+//cpp
+#include "types.h"
+#include "cstd.h"
+
+extern "C" {
+
+extern void Crash(void);
+typedef struct {
+    const char* name;
+    char pad[0x2c];
+} Entry;
+
+typedef struct {
+    char pad[0x14];
+    u32 count;
+    Entry* entries;
+} Table;
+
+int func_020471ac(const Table* tbl, const char* name)
+{
+    u32 count = tbl->count;
+    u32 i = 0;
+    if (i < count) {
+        Entry* entry = tbl->entries;
+        do {
+            if (cstd::strcmp(entry->name, name) == 0)
+                return (int)i;
+            i++;
+            entry = (Entry*)((char*)entry + 0x14);
+        } while (i < tbl->count);
+    }
+    Crash();
+    return -1;
+}
+}

@@ -1,16 +1,16 @@
 #ifndef DSCMGAMIDA_C_H
 #define DSCMGAMIDA_C_H
 #include "dScMgBase_c.h"
-
-/* The destructor tears down four arrays with __cxa_vec_cleanup; both
-   per-element destructors are no-ops. */
-extern "C" void __cxa_vec_cleanup(void *arr, int count, int elemSize, void *dtor);
-extern "C" void AmidaPiece_ElemDtor(void);
-extern "C" void NullDestructor_0203d47c(void);
+#include "Vector2.h"
 
 /* One of the 0x80 falling pieces. Behavior adds vel into pos once a tick
-   and counts timer up until active clears; Render draws pos >> 12. */
+   and counts timer up until active clears; Render draws pos >> 12.
+   Both structors are empty and inline; this TU emits them, the destructor
+   right after ~dScMgAmida_c and the constructor after the factory. */
 struct dScMgAmida_c_Piece {
+    dScMgAmida_c_Piece() {}
+    ~dScMgAmida_c_Piece() {}
+
     s32 posX;    /* +0x00 */
     s32 posY;    /* +0x04 */
     s32 velX;    /* +0x08 */
@@ -103,7 +103,7 @@ struct dScMgAmida_c : dScMgBase_c {
        occupancy mark it sits on, mWalkerDir its last step direction (-1
        unset), mWalkerDelay its staggered spawn countdown, and mWalkerDone
        latches when it settles. */
-    s32 mWalkerCell[4][2];    /* 0x4660 */
+    Vector2 mWalkerCell[4];   /* 0x4660 */
     s8  mWalkerMark[4];       /* 0x4680 */
     s32 mWalkerDir[4];        /* 0x4684 */
     s32 mLanePerm[4];         /* 0x4694 -- the dealt lane permutation */
@@ -147,9 +147,9 @@ struct dScMgAmida_c : dScMgBase_c {
                                  PaintSquare probes it for collisions */
     s32 mLaneResult[4];       /* 0x4714 -- ShuffleGoals' result table: which
                                  lanes win (mode 1) or each lane's goal */
-    s32 mLanePos[4][2];       /* 0x4724 -- Fix12 {x,y} of the four lane
+    Vector2 mLanePos[4];      /* 0x4724 -- Fix12 {x,y} of the four lane
                                  markers; seeded to x=0x20+0x40*i, y=0xb0 */
-    s32 mLaneVel[4][2];       /* 0x4744 -- Fix12 {dx,dy} added into mLanePos
+    Vector2 mLaneVel[4];      /* 0x4744 -- Fix12 {dx,dy} added into mLanePos
                                  each tick; dy loses 0x100 per tick (gravity) */
     s32 mFinaleTimer;         /* 0x4764 -- ticks in the state-3 finale */
     dScMgAmida_c_Piece mPieces[0x80]; /* 0x4768 */

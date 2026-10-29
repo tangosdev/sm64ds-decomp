@@ -70,6 +70,7 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import build_pin as BP     # noqa: E402
 import demangle as DM      # noqa: E402
+import rom_fingerprint as RF  # noqa: E402
 import srcpath as SP       # noqa: E402
 import tu_manifest as TUM  # noqa: E402
 import tu_names as TN      # noqa: E402
@@ -360,6 +361,13 @@ def tu_unit(module, addrs):
     if not TU_MAP.is_file():
         return None, None
     data = json.loads(TU_MAP.read_text(encoding="utf-8"))
+    # build/tu_map.json is labelled from build/rtti_vtables.json, so it carries that
+    # file's ROM fingerprint. A map made from other ROM images than this tree's is
+    # refused: its boundaries are the ones a stale extraction gave. The vtable and
+    # size evidence above is read from the ROM itself and does not depend on it.
+    RF.guard(data.get("meta", {}).get("rtti_vtables_fingerprint"), "build/tu_map.json",
+             "python tools/rtti_vtables.py --out build/rtti_vtables.json; "
+             "python tools/tu_map.py")
     label = "main" if module == "arm9" else module
     rec = data.get("modules", {}).get(label)
     if not rec:
@@ -431,7 +439,7 @@ def member_run(ev, rec, slots, exclude_lifecycle):
             raise SystemExit(f"{rec['name']}: lifecycle members sit inside the method run, so "
                              "excluding them leaves two .text spans; tu_promote needs one")
         evidence.append(f"lifecycle excluded ({', '.join(structors)}): they stay enrolled "
-                        "shards, the split arm9/ModelAnim and arm9/BlendModelAnim recorded")
+                        "shards, the split arm9/ModelAnim recorded")
         run = kept
     return run, evidence, warnings, structors
 
@@ -639,7 +647,8 @@ def render_tu(ev, rec, run, evidence, slots):
     lines += ["   Written ROM-descending: mwccarm emits .text in reverse source order under the",
               "   default deferred codegen, so this file's LAST member is the TU's first function.",
               "   Every hand-written member keeps its unique `// @symbol` line",
-              "   (notes/tu-promotion-conventions.md section 6). */",
+              "   (notes/tu-promotion-conventions.md section 6).",
+              "   Fill the bodies using the measured source forms in notes/cpp-class-form.md. */",
               f'#include "{tree}.h"', ""]
     slot_of = {s["symbol"]: s for s in slots if s["symbol"]}
     for a, n, s in reversed(run):
@@ -814,9 +823,10 @@ def lifecycle_note(rec, slots, run, structors, base_mi=False):
         text = "the class overrides nothing: no vtable is emitted by this TU"
     if mi:
         text += ("; the class is multiply inherited (itself or a base), so its destructors carry "
-                 "_ZThn thunks; the promoted MI precedent "
-                 "(arm9/ModelAnim) keeps the lifecycle row as shards because the secondary table's "
-                 "preamble cannot be licensed")
+                 "_ZThn thunks and the key function emits a vtable group. The secondary preamble "
+                 "lands inside the primary _ZTV; RTTI off zeroes it, and romdata_check masks those "
+                 "zeros only when the cartridge words are a negative offset-to-top plus a _ZTI "
+                 "pointer (arm9/BlendModelAnim). arm9/ModelAnim still keeps its lifecycle as shards")
     return text
 
 
@@ -876,6 +886,8 @@ def print_plan(plan):
         for f in p["files"]))
     if p.get("manifest_path"):
         print(f"manifest   {pathlib.Path(p['manifest_path']).relative_to(REPO).as_posix()}")
+    print("class form read notes/cpp-class-form.md before filling these in (destructor order, "
+          "vtable ownership, struct copies, bool widening)")
 
 
 def main(argv=None):

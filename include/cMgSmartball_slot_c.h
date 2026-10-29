@@ -4,7 +4,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x88, from _Znwj(0x88) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
+ * SIZE 0x88, from operator new(0x88) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
  * this class adds 0x54 bytes. This class's own four functions never touch
  * the base's 0x31-0x33 region, so no raw cast is needed anywhere here
  * (unlike wing_c/ana_c/board_c).

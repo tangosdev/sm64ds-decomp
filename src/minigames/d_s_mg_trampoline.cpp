@@ -1,5 +1,6 @@
 //cpp
 #include "dFdBrightness_c.h"
+#include "math/Approach.h"
 /* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
  * (up to three at once) and bounce Mario to the lit door. Three misses
  * end the round.
@@ -17,8 +18,6 @@
  * - The score pool (TrmpFx_Unlink..TrmpFx_InitPool) stays free:
  *   it works on the file-scope live-list globals, not one object, and
  *   TrmpFx_Spawn is the entry dMgTrmpln2Mario_c calls.
- * - Trmp_Nothing2 / Trmp_Nothing stay free: the shared empty
- *   ctor/dtor pair for the TrmpScorePopup pool, used by d_s_mg_trampoline2.cpp too.
  * - ov004 helpers and most data symbols are unnamed.
  */
 
@@ -31,6 +30,7 @@ enum d_s_mg_trampoline_AssetId {
 };
 
 #include "dScMgTrampoline_c.h"
+#include "TrmpScorePopup.h"
 #include "SpawnInfo.h"
 #include "types.h"
 #include "G2x.h"
@@ -57,7 +57,7 @@ void LoadBGPltt(const void *src, u32 offset, u32 size);
 void LoadOBJPltt(const void *src, u32 offset, u32 size);
 }
 namespace G3X {
-void SetFog(bool enable, int blend, int slope, int offset);
+void SetFog(int enable, int blend, int slope, int offset);
 }
 
 /* Local stand-ins for types no header declares yet. */
@@ -65,29 +65,6 @@ typedef short s16;
 
 struct Node {
     struct Node *next;
-};
-
-/* One floating score. Five of these are mArray3. Spawned when a Mario
-   lands: x starts at the right edge and drifts left, y eases toward
-   targetY, and number is the score drawn by Mg_DrawBigNumber.
-   Same 0x24 shape as dScMgJump2_c's Elem. targetX is written and not
-   read by this TU's step. */
-struct TrmpScorePopup {
-    Node *next;  /* +0x00 -- the live list */
-    int x;       /* +0x04 -- 20.12 */
-    int y;       /* +0x08 */
-    int targetX; /* +0x0c */
-    int targetY; /* +0x10 */
-    int speedX;  /* +0x14 */
-    int speedY;  /* +0x18 -- func_0203d630 damps it with speedX (it
-                       scales both words); not applied here */
-    u16 life;    /* +0x1c */
-    u16 number;  /* +0x1e */
-    u16 active;  /* +0x20 */
-
-    void Spawn(int y, int number); /* fills a slot and links it live */
-    void Update();                 /* ticks life, eases toward targetY */
-    void Render();                 /* draws the number when active */
 };
 
 /* Shadow of the scene's +0x68/+0x6c, which sit in dScMgBase_c padding.
@@ -103,12 +80,12 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-/* Raw storage form of mwccarm's eight-byte single-inheritance PMF. Behavior
-   gives the live scene storage its dScMgTrampoline_c::State meaning at the
-   dispatch site; these descriptors retain the raw form because direct
-   namespace-scope PMF initialization makes
-   mwccarm 2004/b56 emit a __sinit, .ctor entry, and five anonymous data
-   temporaries that the cartridge does not contain. */
+/* Eight-byte state descriptors. A namespace-scope pointer-to-member is not
+   static data on this class: the named object moves to .bss, __sinit grows
+   by 0xb4, a .ctor word appears, and the RELA lands on an anonymous temp.
+   StateDone is empty, so it is static and its address is an ordinary
+   function pointer (same mangling). The other four read members and stay
+   a raw (code, 0) pair. */
 struct P2 {
     int a, b;
 };
@@ -158,7 +135,6 @@ extern "C" {
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern int sTrmpRowScreenY[];
 extern int sTrmpRowMarkerSprite;
-extern int _Z15ApproachLinear2Rsss(s16 *dst, s16 a, s16 b);
 extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);
 extern void TrmpFx_Link(int *self);
 extern struct Node *sTrmpFxList;
@@ -174,7 +150,6 @@ extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern const unsigned char sTrmpBrushPltt[];
 extern dFdBrightness_c *data_0209f5bc;
 extern int sTrmpTouchBlocked;
-unsigned int func_02012790(unsigned int a);
 int TrmpLine_Create(Vec2s *a, Vec2s *b);
 
 void SetBg2Offset(int a, int b);
@@ -184,13 +159,11 @@ extern "C" void Mg_CommitRecords(void *scene);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 int RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawLine(void *a, int b, int c, int d, int e, int f, int g);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern short sTrmpGoalRow;
 
 extern void Trmp3DMario_UpdateAll(...);
-extern int _Z14ApproachLinearRiii(int *, int, int);
 extern int Trmp3DMario_CountFinished(void);
 extern void Mg_SetSharedState(int);
 extern void Trmp3DMario_StartAll(void *c);
@@ -235,21 +208,11 @@ extern void *sTrmpDoorSignSprites[];
 extern void *sTrmpArrowSprite;
 extern void Trmp3DMario_DrawAll(void);
 extern void TrmpLine_DrawAll(void);
-extern void *_ZN11dScMgBase_cC2Ev(void *self);
-extern void _ZN8Particle10SysTrackerC1Ev(void *self);
-extern void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
-extern int _ZTV14dScMgD3DBase_c[];
-extern int _ZTV17dScMgTrampoline_c[];
-extern void Trmp3DMario_Construct(void);
-extern void TrmpLine_Reset(void);
-extern void Trmp_Nothing2(void);
 
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
-/* Literal aliases used only to make the five ROM PMF relocations static data.
-   Their definitions below are real compiler-spelled C++ members. Each is a
-   local extern: a pointer to member cannot convert to the int word a P2
-   entry holds, so dScMgTrampoline_c.h's declarations cannot fill the table. */
-extern "C" void _ZN17dScMgTrampoline_c9StateDoneEv(void);      /* local extern: PMF -> int */
+/* The four non-static state methods. A pointer to member does not convert
+   to the int word a descriptor holds. StateDone is static, so the
+   descriptor below names it directly. */
 extern "C" void _ZN17dScMgTrampoline_c13StateWaitExitEv(void); /* local extern: PMF -> int */
 extern "C" void _ZN17dScMgTrampoline_c12StateResultsEv(void);  /* local extern: PMF -> int */
 extern "C" void _ZN17dScMgTrampoline_c9StatePlayEv(void);      /* local extern: PMF -> int */
@@ -267,7 +230,7 @@ extern int sMgTextSpritesItalian[];
 
 /* Data owned by the same original TU. */
 P2 pmf_dScMgTrampoline_c_StateWaitExit = {(int)_ZN17dScMgTrampoline_c13StateWaitExitEv, 0};
-P2 pmf_dScMgTrampoline_c_StateDone = {(int)_ZN17dScMgTrampoline_c9StateDoneEv, 0};
+P2 pmf_dScMgTrampoline_c_StateDone = {(int)&dScMgTrampoline_c::StateDone, 0};
 P2 pmf_dScMgTrampoline_c_StateIntro = {(int)_ZN17dScMgTrampoline_c10StateIntroEv, 0};
 BaseSpawnInfo<dScMgTrampoline_c> g_profile_MG_TRAMPOLINE = {
     dScMgTrampoline_c_classInit,
@@ -306,7 +269,6 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_02121d64, NOT applied: void MultiStore16(u16 val, char *dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012718, from the legacy file for func_ov006_02121d64, NOT applied: void func_02012718(void *a, int b); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov006_02121d64, NOT applied: int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of Mg_DrawLine, from the legacy file for func_ov006_02121d64, NOT applied: void Mg_DrawLine(void *a, int b, int c, int d, int e, int f, int g); */
 /* TUBUILD CONFLICT -- alternate declaration of func_020126e8, from the legacy file for func_ov006_02121d64, NOT applied: int func_020126e8(int a); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012468, from the legacy file for func_ov006_02121d64, NOT applied: int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h); */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchX, from the legacy file for func_ov006_02121f04, NOT applied: extern short sTrmpStartTouchX; */
@@ -320,35 +282,15 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_0212231c, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 }
 
-// @symbol Trmp_Nothing2
-extern "C" void Trmp_Nothing2(void) {}
+// @symbol _ZN14TrmpScorePopupC1Ev
+TrmpScorePopup::TrmpScorePopup() {}
 
 // @symbol dScMgTrampoline_c_classInit
+/* `new dScMgTrampoline_c` reproduces it: the inline dScMgD3DBase_c
+   constructor, then this class's vtable, the three element arrays and the
+   door mark's clear. */
 extern "C" dScMgTrampoline_c *dScMgTrampoline_c_classInit(void) {
-    char *scene = (char *)_ZN7fBase_cnwEj(0x5dc8);
-    if (scene) {
-        char *it;
-        _ZN11dScMgBase_cC2Ev(scene);
-        *(int *)scene = (int)_ZTV14dScMgD3DBase_c;
-        *(short *)(scene + 0x4664) = 0;
-        it = scene + 0x466c;
-        {
-            char *end = scene;
-            end += 0x47e4;
-            do {
-                it += 0xbc;
-            } while (it != end);
-        }
-        _ZN8Particle10SysTrackerC1Ev(scene + 0x47e4);
-        // This TU owns the vtable object; +2 selects its ABI address point.
-        *(int *)scene = (int)(_ZTV17dScMgTrampoline_c + 2);
-        __cxa_vec_ctor(scene + 0x500c, 4, 0xd0, (void *)Trmp3DMario_Construct,
-                       (void *)Trmp3DMario_Destruct);
-        __cxa_vec_ctor(scene + 0x534c, 3, 0x32c, (void *)TrmpLine_Reset, (void *)TrmpLine_Destroy);
-        __cxa_vec_ctor(scene + 0x5cd0, 5, 0x24, (void *)Trmp_Nothing2, (void *)Trmp_Nothing);
-        ((dScMgTrampoline_DoorMark *)(scene + 0x5d84))->Init();
-    }
-    return (dScMgTrampoline_c *)scene;
+    return new dScMgTrampoline_c;
 }
 
 // @symbol _ZN17dScMgTrampoline_c11InitDisplayEv
@@ -407,22 +349,22 @@ s32 dScMgTrampoline_c::InitResources() {
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082414);
-    this->mCamera0EyeX = 0;
-    this->mCamera0EyeY = -0x64000;
-    this->mCamera0EyeZ = 0;
-    this->mCamera0TargetX = 0;
-    this->mCamera0TargetY = 0;
-    this->mCamera0TargetZ = fov;
-    this->mCamera0Angle = 0x400;
-    Camera_UpdateMatrices(base + 0x466c);
-    this->mCamera1EyeX = 0;
-    this->mCamera1EyeY = 0x82000;
-    this->mCamera1EyeZ = 0;
-    this->mCamera1TargetX = 0;
-    this->mCamera1TargetY = 0;
-    this->mCamera1TargetZ = fov;
-    this->mCamera1Angle = 0x400;
-    Camera_UpdateMatrices(base + 0x4728);
+    this->mCameras[0].mEyeX = 0;
+    this->mCameras[0].mEyeY = -0x64000;
+    this->mCameras[0].mEyeZ = 0;
+    this->mCameras[0].mTargetX = 0;
+    this->mCameras[0].mTargetY = 0;
+    this->mCameras[0].mTargetZ = fov;
+    this->mCameras[0].mAngle = 0x400;
+    Camera_UpdateMatrices(&mCameras[0]);
+    this->mCameras[1].mEyeX = 0;
+    this->mCameras[1].mEyeY = 0x82000;
+    this->mCameras[1].mEyeZ = 0;
+    this->mCameras[1].mTargetX = 0;
+    this->mCameras[1].mTargetY = 0;
+    this->mCameras[1].mTargetZ = fov;
+    this->mCameras[1].mAngle = 0x400;
+    Camera_UpdateMatrices(&mCameras[1]);
     if (Trmp3DMario_InitPool((unsigned char *)(base + 0x500c), 4) == 0)
         return 0;
     TrmpFx_InitPool(base + 0x5cd0, 5);
@@ -517,7 +459,6 @@ void dScMgTrampoline_c::BeginIntro() {
 
 // @symbol _ZN17dScMgTrampoline_c10StateIntroEv
 void dScMgTrampoline_c::StateIntro() {
-    char *c = (char *)this;
     int counter;
 
     TrmpLine_UpdateAll();
@@ -557,7 +498,7 @@ void dScMgTrampoline_c::StateIntro() {
               << 2) >>
              12);
 
-        Mg_DrawLine(c, oldY, oldZ, mTouchX, mTouchY, 2, 0xc);
+        Mg_DrawLine(oldY, oldZ, mTouchX, mTouchY, 2, 0xc);
 
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mixRaw), 0, 0);
@@ -575,8 +516,6 @@ void dScMgTrampoline_c::BeginPlay() {
 }
 
 // @symbol _ZN17dScMgTrampoline_c12UpdateScrollEv
-int ApproachLinear(int &, int, int);
-
 void dScMgTrampoline_c::UpdateScroll() {
     int q = sTrmpComboCount / 10;
     int old = mLevel;
@@ -622,13 +561,13 @@ void dScMgTrampoline_c::StatePlay() {
         mInputEnabled = 0;
         BeginResults();
     } else {
-        if (_Z14ApproachLinearRiii(&mTimer, 0, 1)) {
+        if (ApproachLinear(mTimer, 0, 1)) {
             if (sTrmpComboCount >= 5 || sTrmpMariosInPlay < 3) {
                 int i;
-                char *p = (char *)mArray1;
+                char *p = (char *)mMarios;
                 for (i = 0; i < 4; i++) {
                     if (Trmp3DMario_IsOffstage((int *)p)) {
-                        Trmp3DMario_EnterWalkIn((char *)mArray1 + i * 0xd0);
+                        Trmp3DMario_EnterWalkIn((char *)mMarios + i * 0xd0);
                         break;
                     }
                     p += 0xd0;
@@ -645,7 +584,7 @@ void dScMgTrampoline_c::StatePlay() {
     }
 
     if (sTrmpAnyOnLedge == 0) {
-        if (_Z15ApproachLinear2Rsss((short *)&mDoorSwitchTimer, 0, 1)) {
+        if (ApproachLinear2(*(short *)&mDoorSwitchTimer, 0, 1)) {
             if (GetDoorSide()) {
                 SetDoorSide(0);
                 mDoorMark.Show(mDoorSide);
@@ -665,7 +604,7 @@ void dScMgTrampoline_c::StatePlay() {
     }
 
     if (mDoorSwitchTimer <= 0x3c) {
-        if (_Z15ApproachLinear2Rsss((short *)&mDoorBlinkTimer, 0, 1)) {
+        if (ApproachLinear2(*(short *)&mDoorBlinkTimer, 0, 1)) {
             mDoorBlinkTimer = 0xa;
             if (mDoorBlinkPhase != 0)
                 mDoorBlinkPhase = 0;
@@ -675,11 +614,11 @@ void dScMgTrampoline_c::StatePlay() {
     }
 
     if (mDoorSide != 0) {
-        _Z14ApproachLinearRiii(&mArrow1X, 0, 1);
-        _Z14ApproachLinearRiii(&mArrow2X, 0x20, 1);
+        ApproachLinear(mArrow1X, 0, 1);
+        ApproachLinear(mArrow2X, 0x20, 1);
     } else {
-        _Z14ApproachLinearRiii(&mArrow1X, 0x20, 1);
-        _Z14ApproachLinearRiii(&mArrow2X, 0, 1);
+        ApproachLinear(mArrow1X, 0x20, 1);
+        ApproachLinear(mArrow2X, 0, 1);
     }
 }
 
@@ -695,7 +634,7 @@ void dScMgTrampoline_c::BeginResults() {
 void dScMgTrampoline_c::StateResults() {
     unsigned char *c = (unsigned char *)this;
     Trmp3DMario_UpdateAll(c);
-    if (_Z14ApproachLinearRiii(&mTimer, 0, 1) == 0)
+    if (ApproachLinear(mTimer, 0, 1) == 0)
         return;
     if (Trmp3DMario_CountFinished() == 0)
         return;
@@ -774,8 +713,7 @@ void dScMgTrampoline_c::UpdateTouchInput() {
 
     i = ACTIVE_SLOT;
     if (TOUCH_REC(gTouchHeld)[i][0] != 0) {
-        Mg_DrawLine(this, mTouchX, mTouchY, TOUCH_REC(gTouchX)[i][0], TOUCH_REC(gTouchY)[i][0], 2,
-                    4);
+        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[i][0], TOUCH_REC(gTouchY)[i][0], 2, 4);
         i = ACTIVE_SLOT;
         mTouchX = TOUCH_REC(gTouchX)[i][0];
         mTouchY = TOUCH_REC(gTouchY)[i][0];
@@ -1176,7 +1114,7 @@ void TrmpScorePopup::Update() {
     if ((*((short *)(self + 0x20))) == 0) {
         return;
     }
-    if (_Z15ApproachLinear2Rsss((short *)(self + 0x1c), 0, 1)) {
+    if (ApproachLinear2(*((short *)(self + 0x1c)), 0, 1)) {
         TrmpFx_Unlink((Node *)self);
         *((short *)(self + 0x20)) = 0;
     }
@@ -1184,7 +1122,7 @@ void TrmpScorePopup::Update() {
         int *p = (int *)(((int)self + 4));
         *p = *p + (*((int *)(self + 0x14)));
     }
-    _Z14ApproachLinearRiii((int *)(self + 8), *((int *)(self + 0x10)), 0x1800);
+    ApproachLinear(*((int *)(self + 8)), *((int *)(self + 0x10)), 0x1800);
     func_0203d630((int *)(self + 0x14), 0xf00);
 }
 
@@ -1223,7 +1161,7 @@ void dScMgTrampoline_DoorMark::Show(int side) {
 void dScMgTrampoline_DoorMark::Update() {
     if (active == 0)
         return;
-    if (_Z15ApproachLinear2Rsss(&timer, 0, 1) != 0) {
+    if (ApproachLinear2(timer, 0, 1) != 0) {
         active = 0;
     }
     if (((timer / 10) & 1) != 0) {
@@ -1243,7 +1181,5 @@ void dScMgTrampoline_DoorMark::Render(int scrollY) {
                         -1);
 }
 
-// @symbol Trmp_Nothing
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Trmp_Nothing(void) {}
-}
+// @symbol _ZN14TrmpScorePopupD1Ev
+TrmpScorePopup::~TrmpScorePopup() {}

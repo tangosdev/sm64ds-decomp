@@ -6,20 +6,12 @@
  * length. DetectClsn (0x02038f44) and DetectClsnSlot0 live in
  * d_bg_ch_sph_crr_query.cpp with the other registry scans. */
 /* leftovers:
- * func_020353b0 stays a free extern: the shared dBgCh-side bind helper is
- * owned by its own shard and called by the Lin/SphCrr query code as well
- * (d_bg_ch_lin.cpp, d_bg_ch_sph_crr.cpp, d_bg_ch_sph_crr_query.cpp).
  * func_02037464 stays a free extern "C" function taking the query: its two
  * d_bg_ch_sph_crr_query.cpp call sites (dBgCh_Gnd::DetectClsn and
  * DetectClsnSlot0) call it as a free symbol, so a member spelling would
  * rename linkage out from under that TU.
  */
 #include "dBgCh_Gnd.h"
-
-extern "C" {
-void func_020353b0(char *c, int *p);    /* local extern: shared bind helper,
-   writes the bound actor + its uniqueID into the query's dBgCh tail */
-}
 
 // @symbol _ZN9dBgCh_GndC1Ev
 dBgCh_Gnd::dBgCh_Gnd() : mProbeHeight(0x1f4000) {}
@@ -49,7 +41,7 @@ void dBgCh_Gnd::GetClsnPos(Vector3 &res)
 void dBgCh_Gnd::SetObjAndPos(const Vector3 &pos, dActor_c *actor)
 {
     SetClsnPos(pos);
-    func_020353b0((char *)this, (int *)actor);
+    SetActor(actor);
 }
 
 // @symbol func_02037464

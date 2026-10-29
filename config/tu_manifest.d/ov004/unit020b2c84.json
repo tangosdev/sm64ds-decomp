@@ -36,7 +36,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x020bf41c",
+      "start": "0x020bf3ec",
       "end": "0x020bf9e4"
     }
   ],
@@ -361,6 +361,48 @@
   ],
   "bss": [
     {
+      "symbol": "sBannerWaveFxPosGuard",
+      "address": "0x020bf3ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of Banner_StartWaveBurst's function-local `static Vector2 sBannerWaveFxPos(0, 0xc0)` (emitted _ZGVsBannerWaveFxPos$520); the burst tests bit 0 and sets it after the first initialisation"
+    },
+    {
+      "symbol": "sBannerZoomFxPosGuard",
+      "address": "0x020bf3f0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of Banner_SetupZoomBurst's function-local `static Vector2 sBannerZoomFxPos(0, 0xc0)` (emitted _ZGVsBannerZoomFxPos$908)"
+    },
+    {
+      "symbol": "sBannerWaveFxPos",
+      "address": "0x020bf3f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Banner_StartWaveBurst's function-local static Vector2, the effect origin it passes to Mg_SpawnFx (emitted sBannerWaveFxPos$520); 8 bytes, {0, 0xc0}"
+    },
+    {
+      "symbol": "sBannerZoomFxPos",
+      "address": "0x020bf3fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Banner_SetupZoomBurst's function-local static Vector2, the effect origin it passes to Mg_SpawnFx (emitted sBannerZoomFxPos$908); 8 bytes, {0, 0xc0}"
+    },
+    {
+      "symbol": "sBannerZoomFxPosDtorRec",
+      "address": "0x020bf404",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node __register_global_object links sBannerZoomFxPos into (emitted @911)"
+    },
+    {
+      "symbol": "sBannerWaveFxPosDtorRec",
+      "address": "0x020bf410",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node __register_global_object links sBannerWaveFxPos into (emitted @523)"
+    },
+    {
       "symbol": "@938",
       "address": "0x020bf41c",
       "size": "0xc",
@@ -416,7 +458,8 @@
     "The per-source extern declarations disagreed on type for several symbols (sMgBannerFiles and data_ov006_021346bc as int vs pointer, Mg_RenderSpriteOn's argument widths, Banner_StartWaveBurst's return type); the single declaration set in the unit source picks one spelling each and the bodies cast to match. Banner_UpdateFall became void: no caller uses a result, and the void body compiles to the same bytes.",
     "Two-word struct copies (Banner_StartSpin, Banner_StartWaveBurst, Banner_Press) go through W2, a struct whose only member is an int[2]; plain {int a, b} structs scalarize under C++ and miss the ROM's block move.",
     "Text and the one template only: this unit's bss (0x020bf3e8..0x020bf9e4, including the static array at gMgBanners) stays ROM-owned and is reached by extern, as the one-function sources did; __sinit_ov004_020b955c stays its own enrolled source.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "2026-10-25 Vector2 adoption: Banner_StartWaveBurst and Banner_SetupZoomBurst each hand-built a function-local static (guard test, two stores, __register_global_object with NullDestructor_0203d47c, guard set). They are now `static Vector2 sBannerWaveFxPos(0, 0xc0)` / `sBannerZoomFxPos`, byte-identical once posA is computed y-first as before. The compiler owns the object, its guard and its registration node, so this unit's .bss claim now starts at 0x020bf3ec (was 0x020bf41c) and covers the six ov004 names there: each emitted name$N / _ZGVname$N / @N is renamed onto its configured name and made global, exactly as dMgState_c does for sEnterTable. The ROM's layout (both guards, both objects, then the Zoom node before the Wave node) is placed by address, not by object order. The statics and the new Vector2(x, y) constructor advance the counter by twenty ahead of gMgBanners, so the emitted __arraydtor$974 / @975 are renamed onto __arraydtor$954 (an owned_function row: the configured symbols.txt name stays) and @938. This TU's copy of ~Vector2 is a deadstrip-duplicate of NullDestructor_0203d47c. tubuild verify: 44/44 MATCH, objisolate clean, ROM-ascending -> TEXT-VERIFIED."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -456,7 +499,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -496,14 +539,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x020bf41c",
+          "start": "0x020bf3ec",
           "end": "0x020bf9e4",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 54
+          "LICENSED": 60
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -514,19 +557,19 @@
           {
             "section": ".init",
             "original": [
-              91
+              98
             ],
             "desired": [
-              91
+              98
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              89
+              96
             ],
             "desired": [
-              89
+              96
             ]
           },
           {
@@ -541,22 +584,34 @@
           {
             "section": ".bss",
             "original": [
-              82,
-              83,
-              84,
-              85,
-              86,
-              87,
-              88
+              35,
+              36,
+              37,
+              70,
+              71,
+              72,
+              89,
+              90,
+              91,
+              92,
+              93,
+              94,
+              95
             ],
             "desired": [
-              82,
-              86,
-              85,
-              87,
-              88,
-              84,
-              83
+              35,
+              70,
+              37,
+              72,
+              71,
+              36,
+              89,
+              93,
+              92,
+              94,
+              95,
+              91,
+              90
             ]
           }
         ],
@@ -565,35 +620,53 @@
             {
               "section": ".bss",
               "original": [
-                82,
-                83,
-                84,
-                85,
-                86,
-                87,
-                88
+                35,
+                36,
+                37,
+                70,
+                71,
+                72,
+                89,
+                90,
+                91,
+                92,
+                93,
+                94,
+                95
               ],
               "desired": [
-                82,
-                86,
-                85,
-                87,
-                88,
-                84,
-                83
+                35,
+                70,
+                37,
+                72,
+                71,
+                36,
+                89,
+                93,
+                92,
+                94,
+                95,
+                91,
+                90
               ],
               "slots": [
-                82,
-                83,
-                84,
-                85,
-                86,
-                87,
-                88
+                35,
+                36,
+                37,
+                70,
+                71,
+                72,
+                89,
+                90,
+                91,
+                92,
+                93,
+                94,
+                95
               ]
             }
           ],
-          "symbolIndices": 7,
+          "symbolIndices": 13,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -602,28 +675,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -639,6 +692,14 @@
       "symbol": "_ZN8MgBannerC2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-object constructor beside the licensed complete-object C1; the ROM has no configured C2 home"
+    },
+    {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "The two function-local static Vector2s register ~Vector2() with __register_global_object, as retail registers NullDestructor_0203d47c. include/Vector2.h defines the empty ~Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 element destructor at 0x0203d47c, so this copy is discarded."
     }
   ],
   "init": [
@@ -670,9 +731,52 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@955",
+      "from": "@986",
       "to": "@938",
       "evidence": "mwcc emits the destructor-registration node as @941, already promoted by other modules; @938 is unused fleet-wide and the same length"
+    },
+    {
+      "from": "sBannerWaveFxPos$531",
+      "to": "sBannerWaveFxPos",
+      "evidence": "mwccarm names a function-local static name$N, its guard _ZGVname$N and its registration node @N from the per-TU counter; renamed onto the configured ov004 name at the same address"
+    },
+    {
+      "from": "_ZGVsBannerWaveFxPos$531",
+      "to": "sBannerWaveFxPosGuard",
+      "evidence": "mwccarm names a function-local static name$N, its guard _ZGVname$N and its registration node @N from the per-TU counter; renamed onto the configured ov004 name at the same address"
+    },
+    {
+      "from": "@534",
+      "to": "sBannerWaveFxPosDtorRec",
+      "evidence": "mwccarm names a function-local static name$N, its guard _ZGVname$N and its registration node @N from the per-TU counter; renamed onto the configured ov004 name at the same address"
+    },
+    {
+      "from": "sBannerZoomFxPos$919",
+      "to": "sBannerZoomFxPos",
+      "evidence": "mwccarm names a function-local static name$N, its guard _ZGVname$N and its registration node @N from the per-TU counter; renamed onto the configured ov004 name at the same address"
+    },
+    {
+      "from": "_ZGVsBannerZoomFxPos$919",
+      "to": "sBannerZoomFxPosGuard",
+      "evidence": "mwccarm names a function-local static name$N, its guard _ZGVname$N and its registration node @N from the per-TU counter; renamed onto the configured ov004 name at the same address"
+    },
+    {
+      "from": "@922",
+      "to": "sBannerZoomFxPosDtorRec",
+      "evidence": "mwccarm names a function-local static name$N, its guard _ZGVname$N and its registration node @N from the per-TU counter; renamed onto the configured ov004 name at the same address"
+    },
+    {
+      "from": "__arraydtor$985",
+      "to": "__arraydtor$954",
+      "owned_function": {
+        "module": "ov004",
+        "address": "0x020b4a7c",
+        "size": "0x00000024",
+        "function_ordinal": 42,
+        "raw_type": "STT_FUNC",
+        "raw_binding": "STB_LOCAL"
+      },
+      "evidence": "the gMgBanners array destructor thunk; the two Vector2 statics and include/Vector2.h advance the per-TU counter ahead of it, so mwccarm emits __arraydtor$974; renamed onto the configured __arraydtor$954 at 0x020b4a7c"
     }
   ],
   "symbol_binding_rewrites": [
@@ -705,6 +809,42 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x020bf41c"
+    },
+    {
+      "symbol": "sBannerWaveFxPosGuard",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "The compiler owns this function-local static (or its guard/registration node). DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    },
+    {
+      "symbol": "sBannerZoomFxPosGuard",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "The compiler owns this function-local static (or its guard/registration node). DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    },
+    {
+      "symbol": "sBannerWaveFxPos",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "The compiler owns this function-local static (or its guard/registration node). DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    },
+    {
+      "symbol": "sBannerZoomFxPos",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "The compiler owns this function-local static (or its guard/registration node). DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    },
+    {
+      "symbol": "sBannerZoomFxPosDtorRec",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "The compiler owns this function-local static (or its guard/registration node). DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    },
+    {
+      "symbol": "sBannerWaveFxPosDtorRec",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "The compiler owns this function-local static (or its guard/registration node). DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
     }
   ],
   "relocations": [

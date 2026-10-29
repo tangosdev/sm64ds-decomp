@@ -37,6 +37,10 @@
 #include "dM3dGLin.h"
 #include "dM3dGSph.h"
 
+namespace Memory {
+void operator_delete2(void *);
+}
+
 struct dActor_c;
 
 struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
@@ -112,7 +116,9 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
        class or its immediate base. This is load-bearing for the D0 at
        0x02037710, which ends at Memory::operator_delete2; a non-virtual inline
        member adds no field and no vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 
     /* methods */
     Vector3 GetClsnPos();

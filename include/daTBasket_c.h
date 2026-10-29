@@ -15,7 +15,7 @@
  *
  * LAYOUT IS READ TWICE, not once. daTBasket_c_classInit (0x0211c4d0) allocates
  * 0x380, chains dEnemyBase_c's constructor, stores this vtable, and constructs
- * dCcAc_c at +0x110, dBgCh_Actr at +0x144, Model at +0x300 and dExtShadowModel_c at
+ * dCcAc_c at +0x110, dBgCh_Actr at +0x144, dExtSimpleModel_c at +0x300 and dExtShadowModel_c at
  * +0x350; _ZN11daTBasket_cD1Ev (0x02115fc4) destroys the same four at the same
  * offsets in exactly the reverse order. It closes: 0x350 + sizeof(dExtShadowModel_c)
  * 0x28 = 0x378, and the tail fields reach the 0x380 the ROM allocates.
@@ -28,12 +28,6 @@
  * there once, out of line: D1 0x02115fc4, D0 0x0211600c, homeless D2 licensed.
  *
  * deslop leftovers:
- * - dCcAc_c::Init / dBgCh_Actr::Init stay TU-local mangled scalars: the
- *   header member forms take Fix12<int> BY VALUE but the tree's Fix12 has no
- *   int constructor (measured: neither a bare 0x64000 nor Fix12<int>(0x64000)
- *   converts), so only the scalar spelling reproduces the ROM's raw-word
- *   passing; dBgCh_Actr::Init's header additionally takes Fix12i, which
- *   mangles as i while the ROM is Fix12<int>.
  * - Sound::PlaySecretSound uses the shared declaration in Sound.h.
  *   Particle::System::New retains its TU-local scalar ABI declaration.
  * - func_ov063_021169c4 is this class's own shadow helper (writes
@@ -47,17 +41,15 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daTBasket_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
-    Model                        mModel;                /* 0x300 */
+    dExtSimpleModel_c mModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x350 */
     s32                          mParticleID;               /* 0x378 */
     s16                          mSoundTimer;               /* 0x37c */
@@ -75,12 +67,6 @@ struct daTBasket_c : dEnemyBase_c {
     virtual s32 CleanupResources();  /* slot  3 -- ov063:0x0211ae1c */
     virtual s32 Behavior();          /* slot  6 -- ov063:0x0211b888 */
     virtual s32 Render();            /* slot  9 -- ov063:0x0211b078 */
-
-    /* Existing leaf forwarding adapter: `return new daTBasket_c()` routes
-       through the retail allocator. fBase_c also declares an adapter. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
     /* The shadow-drop helper: rebuilds mModel.mat4x3 from the position and
        calls DropShadowRadHeight on mShadowModel. r0 is this basket. */

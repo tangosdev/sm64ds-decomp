@@ -131,9 +131,10 @@ extern "C" int func_02044284(Obj *self, int flag);
 /* Step a pending sequence once. Returns 0 while it is still pending. */
 // @symbol func_0204424c
 extern "C" int func_0204424c(char *c) {
-    if (*(short *)(c + 4) == 1)
-        *(short *)(c + 4) = func_02044284((Obj *)c, 0);
-    if (*(short *)(c + 4) == 1)
+    Obj *self = (Obj *)c;
+    if (self->state == 1)
+        self->state = func_02044284(self, 0);
+    if (self->state == 1)
         return 0;
     return 1;
 }

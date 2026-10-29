@@ -12,16 +12,11 @@
  *   Render by 0x18 bytes.
  * - opt_loop_invariants off binds InitResources alone, between a
  *   push and a pop. Without it the star-row loop hoists its +0x23 step.
- * - The factory keeps its hand-built construction: `new dScStarSel_c'
- *   would store the vtable at _ZTV12dScStarSel_c+8, and the cartridge
- *   label is already the address point.
  * - The seven helpers stay func_ov003_*. Every caller is in this
  *   class, and the bodies only touch this object's fields.
  * - data_020a0e5a stays u16[][2]. The flat u16[i*2] form costs
  *   func_ov003_020ae358 seventeen words.
- * - OAM::Render and the G3i/G2/GX calls stay mangled. They take
- *   class arguments by value.
- * - The bytes after the Model pair stay offset macros. The header
+ * - The bytes after the dExtSimpleModel_c pair stay offset macros. The header
  *   still holds that tail as opaque storage.
  *
  * dScStarSel_c, the star-select screen. ov003 .text
@@ -40,37 +35,8 @@
 #include "Sound.h"
 #include "G3X.h"
 #include "G3i.h"
-
-/* The Nitro SDK's GX (main engine) and GXS (sub engine) VRAM helpers that
- * InitResources calls. No header in the tree declares either namespace
- * yet, so the declarations live here, spelt as src/engine/gx/ and the
- * per-function GX shards define them. G2 cannot be declared the same way:
- * decl_common.h declares the ROM data symbol `extern int G2[];`, which
- * hides a `namespace G2` (see d_s_title.cpp), so G2's two calls keep their
- * final mangled names. */
-namespace GX {
-void DisableAllBanks();
-void SetBankForTex(u16);
-void SetBankForTexPltt(u16);
-void SetBankForBG(u16);
-void SetBankForOBJ(u16);
-void SetBankForSubBG(u16);
-void SetBankForSubOBJ(u16);
-void SetBankForSubOBJExtPltt(u16);
-void SetGraphicsMode(int, int, int);
-void DispOn();
-void LoadBGPltt(const void *, unsigned int, unsigned int);
-void LoadOBJPltt(const void *, unsigned int, unsigned int);
-}
-
-namespace GXS {
-void SetGraphicsMode(int);
-void LoadBGPltt(const void *, unsigned int, unsigned int);
-void LoadOBJPltt(const void *, unsigned int, unsigned int);
-void BeginLoadOBJExtPltt();
-void LoadOBJExtPltt(const void *, u32, u32);
-void EndLoadOBJExtPltt();
-}
+#include "G2.h"
+#include "GX.h"
 
 /* Raw this-relative accessors, and the cosine table lookup used by Render. */
 #define FB(p, o) (*(u8 *)((u8 *)(p) + (o)))
@@ -79,7 +45,7 @@ void EndLoadOBJExtPltt();
 #define FU(p, o) (*(u16 *)((u8 *)(p) + (o)))
 #define COS(a) data_02082214[((u16)(a) >> 4) * 2 + 1]
 
-/* Named views onto the storage between the Model pair and the end of the
+/* Named views onto the storage between the dExtSimpleModel_c pair and the end of the
  * object. Fixed-point values are 20.12 (0x1000 = 1.0), as the OAM::Render
  * scale arguments and the 0x1000 steps below show. */
 #define SCALE_X(p)        FW(p, 0x50)   /* scale of the panel sprite at (0x80, PANEL_Y) */
@@ -87,13 +53,30 @@ void EndLoadOBJExtPltt();
 #define ICON_SCALE_X(p)   FW(p, 0x58)   /* scale of the icon under CHAR_CURSOR */
 #define ICON_SCALE_Y(p)   FW(p, 0x5c)
 #define IDLE_ICON_SCALE(p) FW(p, 0x60)  /* scale of the other character icons */
+/* D-pad auto-repeat on the star plates: Behavior reloads it with 0x10 on a
+   press and 8 while held, and counts it down every frame. */
+#define PLATE_REPEAT_TIMER(p) FU(p, 0x104)
 #define REPEAT_TIMER(p)   (*(u16 *)((u8 *)(p) + 0x106))   /* D-pad auto-repeat */
+/* The bottom sprite's bounce in Behavior: BOUNCE_DELAY frames (0x78) pass,
+   then BOUNCE_VELOCITY is launched at BOUNCE_LAUNCH (first -0x400) and
+   steps BOTTOM_Y_OFFSET until it lands; each phase-3 landing raises BOUNCE_LAUNCH
+   by 0x80 until it reaches -0x180 and the delay restarts. BOUNCE_PHASE is
+   1 for the arc above the rest line, 2 or 3 for the rebound below it. */
+#define BOUNCE_DELAY(p)    FU(p, 0x108)
+#define BOUNCE_VELOCITY(p) FH(p, 0x10c)
+#define BOUNCE_LAUNCH(p)   FH(p, 0x10e)
+#define BOUNCE_PHASE(p)    FB(p, 0x136)
 #define BOTTOM_Y_OFFSET(p) FH(p, 0x10a) /* 8.8 offset of the bottom sprite's y */
 #define SPIN_ANGLE(p)     FH(p, 0x110)
 #define PULSE_ANGLE(p)    FH(p, 0x112)
 #define PLATE_COUNT(p)    FB(p, 0x114)  /* star plates drawn by Render */
 #define SELECTED_PLATE(p) FB(p, 0x115)
 #define LIFE_ICON(p)      FB(p, 0x116)  /* index into OAM::LIFE_ICONS */
+/* Frames the picked character's icon is drawn pressed (Render's pressY). */
+#define PICK_PRESS_TIMER(p) FB(p, 0x118)
+/* Set to 0x10 when a choice is made; Behavior counts it down and fades the
+   scene out at zero. */
+#define EXIT_DELAY(p)     FB(p, 0x119)
 #define PLATE_X(p, i)     FB((u8 *)(p) + (i), 0x11a)
 #define DIGIT(p, i)       (*(s8 *)((u8 *)(p) + (i) + 0x121))  /* 3 digits, -1 = blank */
 #define CHAR_X(p, i)      FB((u8 *)(p) + (i), 0x124)          /* per character */
@@ -108,11 +91,12 @@ void EndLoadOBJExtPltt();
 #define CURSOR_ON(p)      FB(p, 0x135)
 #define ANIM_MODE(p)      FB(p, 0x139)  /* 1 or 2 selects the animation below */
 #define ANIM_FLIP(p)      FB(p, 0x13a)
+/* Step of the panel's ANIM_MODE 1 grow, shrink, wait and spin sequence. */
+#define PANEL_ANIM_STEP(p) FB(p, 0x137)
 
 extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
 extern unsigned short sStarSelectDecimalDivisors[];
-extern void func_02012790(int a);
 extern unsigned char NumStars(void);
 // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern unsigned char gActivePlayerSlot;
@@ -128,10 +112,7 @@ extern int data_0208ee44;
 extern unsigned short data_020a0e5a[][2];
 extern u16 data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void *, int, int, int, int, int, int, int,
-                                                 int);
-void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(int, int, int, int, int, int, int,
-                                                                 void *);
+void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
 void _Z13CopyToViewMatPK9Matrix4x3(const Matrix4x3 *);
 void Matrix4x3_FromTranslation(Matrix4x3 *, s32, s32, s32);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, s16);
@@ -143,11 +124,6 @@ extern u8 data_0209caa0[0x50];
 extern Matrix4x3 data_020a0e68;
 extern u8 data_02092128;
 extern signed char data_0209f2f4[];
-extern void *_ZN3OAM7NUMBERSE[];
-extern void *_ZN3OAM10LIFE_ICONSE[];
-extern void *_ZN3OAM4COINE[];
-extern void *_ZN3OAM5TIMESE;
-extern void *_ZN3OAM10POWER_STARE;
 extern u8 data_ov001_020ab938;
 extern u8 data_ov001_020ab940;
 extern void *data_ov001_020abb18[];
@@ -171,7 +147,7 @@ extern u8 data_ov001_020abbf4;
 // @symbol _ZN12dScStarSel_cD1Ev
 // ROM 0x020addfc, size 0x58; vtable slot 16. Written first so D1 and D0 are
 // emitted first, as in the cartridge. The body is empty: tearing down the
-// Model pair (__cxa_vec_cleanup) and the base destructors is all
+// dExtSimpleModel_c pair (__cxa_vec_cleanup) and the base destructors is all
 // compiler-generated.
 dScStarSel_c::~dScStarSel_c() {}
 
@@ -246,12 +222,12 @@ void dScStarSel_c::func_ov003_020adfc8() {
     for (i = 2; i >= 0; i--) {
         signed char d = DIGIT(this, i);
         if (d >= 0) {
-            OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[d], x, 0x4c, 8, -1, 0);
+            OAM::Render(0, OAM::NUMBERS[d], x, 0x4c, 8, -1, 0);
             x -= 9;
         }
     }
-    OAM::Render(0, (OamAttr *)&_ZN3OAM5TIMESE, x, 0x54, -1, -1, 0);
-    OAM::Render(0, (OamAttr *)_ZN3OAM4COINE, x - 0x10, 0x4c, -1, -1, 0);
+    OAM::Render(0, &OAM::TIMES, x, 0x54, -1, -1, 0);
+    OAM::Render(0, &OAM::COIN, x - 0x10, 0x4c, -1, -1, 0);
 }
 
 // @symbol _ZN12dScStarSel_c19func_ov003_020ae0b0Ev
@@ -273,14 +249,14 @@ void dScStarSel_c::func_ov003_020ae0b0() {
         do {
             signed char d = DIGIT(this, i);
             if (d >= 0) {
-                OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[d], x, y, 8, -1, 0);
+                OAM::Render(0, OAM::NUMBERS[d], x, y, 8, -1, 0);
                 x -= 9;
             }
             i--;
         } while (i >= 0);
     }
-    OAM::Render(0, (OamAttr *)&_ZN3OAM5TIMESE, x, y + 8, -1, -1, 0);
-    OAM::Render(0, (OamAttr *)&_ZN3OAM10POWER_STARE, x - 0x10, y + 8, -1, -1, 0);
+    OAM::Render(0, &OAM::TIMES, x, y + 8, -1, -1, 0);
+    OAM::Render(0, &OAM::POWER_STAR, x - 0x10, y + 8, -1, -1, 0);
 }
 
 // @symbol _ZN12dScStarSel_c19func_ov003_020ae1a4Ei
@@ -318,9 +294,8 @@ void dScStarSel_c::func_ov003_020ae238() {
         x = 0x10;
         y = 0xac;
     }
-    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, _ZN3OAM10LIFE_ICONSE[LIFE_ICON(this)], x, y + 8,
-                                                -1, -1, 0x1000, 0x1000, 0, -1);
-    OAM::Render(0, (OamAttr *)&_ZN3OAM5TIMESE, x + 0x10, y + 8, -1, -1, 0);
+    OAM::Render(0, OAM::LIFE_ICONS[LIFE_ICON(this)], x, y + 8, -1, -1, 0x1000, 0x1000, 0, -1);
+    OAM::Render(0, &OAM::TIMES, x + 0x10, y + 8, -1, -1, 0);
     func_ov003_020ae1a4((unsigned short)data_0209f2f4[0]);
     {
         int i = 0;
@@ -328,7 +303,7 @@ void dScStarSel_c::func_ov003_020ae238() {
         do {
             signed char d = DIGIT(this, i);
             if (d >= 0) {
-                OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[d], x, y, 8, -1, 0);
+                OAM::Render(0, OAM::NUMBERS[d], x, y, 8, -1, 0);
                 x += 9;
             }
             i++;
@@ -378,9 +353,9 @@ void dScStarSel_c::func_ov003_020ae358() {
             (((unsigned char)((gTouchY[idx][0] - PANEL_Y(this)) + 0x28)) < 0x50)) {
             CURSOR_MODE(this) = 2;
             PICKED_CHAR(this) = 3;
-            FB(this, 0x118) = (unsigned char)(data_0208ee44 * 6);
+            PICK_PRESS_TIMER(this) = (unsigned char)(data_0208ee44 * 6);
             ANIM_MODE(this) = 1;
-            FB(this, 0x119) = 0x10;
+            EXIT_DELAY(this) = 0x10;
             func_02012790(data_0209caa0[0x41] + 0x3c);
             return;
         }
@@ -401,9 +376,9 @@ void dScStarSel_c::func_ov003_020ae358() {
                         data_02092128 = (unsigned char)i;
                         data_02092114 = (unsigned char)i;
                         PICKED_CHAR(this) = (unsigned char)i;
-                        FB(this, 0x118) = (unsigned char)(data_0208ee44 * 3);
+                        PICK_PRESS_TIMER(this) = (unsigned char)(data_0208ee44 * 3);
                         ANIM_MODE(this) = 2;
-                        FB(this, 0x119) = 0x10;
+                        EXIT_DELAY(this) = 0x10;
                         func_02012790(data_0209caa0[0x41] + 0x3c);
                         return;
                     }
@@ -479,7 +454,7 @@ s32 dScStarSel_c::Render() {
     s32 x;
     s32 i;
     s32 idx;
-    Model *plate;
+    dExtSimpleModel_c *plate;
     s32 pressY;
     Matrix4x3 mtx;
 
@@ -493,19 +468,18 @@ s32 dScStarSel_c::Render() {
         levelNum = SublevelToLevel(data_02092110) + 1;
         if (levelNum <= 0xf) {
             if (levelNum >= 10) {
-                OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[levelNum / 10], numX = 0x77, 0x7a, 8, -1,
-                            0);
+                OAM::Render(0, OAM::NUMBERS[levelNum / 10], numX = 0x77, 0x7a, 8, -1, 0);
                 numX += 9;
             } else {
                 numX = 0x7c;
             }
-            OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[levelNum % 10], numX, 0x7a, 8, -1, 0);
+            OAM::Render(0, OAM::NUMBERS[levelNum % 10], numX, 0x7a, 8, -1, 0);
         }
     }
 
     if (SublevelToLevel(data_02092110) <= 0xe) {
-        _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
-            data_02082214[0x16], data_02082214[0x17], 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
+        G3i::PerspectiveW_(data_02082214[0x16], data_02082214[0x17], 0x1555, 0x1000, 0x1388000,
+                           0x1000, 1, 0);
         G3i::LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
                      (const Vector3 *)&data_ov003_020b1344, true, &mtx);
         _Z13CopyToViewMatPK9Matrix4x3(&mtx);
@@ -541,9 +515,9 @@ s32 dScStarSel_c::Render() {
                 OAM::RenderSub((OamAttr *)&data_ov001_020abd78, PLATE_X(this, SELECTED_PLATE(this)),
                                6);
             } else if (CURSOR_MODE(this) == 1) {
-                u8 *sel = (u8 *)this + func_ov003_020adf50();
-                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, FB(sel, 0x124) - 0x24,
-                               FB(sel, 0x128) - 8);
+                int slot = func_ov003_020adf50();
+                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, CHAR_X(this, slot) - 0x24,
+                               CHAR_Y(this, slot) - 8);
             } else {
                 OAM::RenderSub((OamAttr *)&data_ov001_020abd80, 0x50, PANEL_Y(this) + 8);
             }
@@ -551,25 +525,25 @@ s32 dScStarSel_c::Render() {
 
         if (ANIM_MODE(this) != 0) {
             if (ANIM_MODE(this) == 1) {
-                switch (FB(this, 0x137)) {
+                switch (PANEL_ANIM_STEP(this)) {
                 case 0:
                     SCALE_X(this) += 0x400;
                     if (SCALE_X(this) >= 0x1800) {
                         SCALE_X(this) = 0x1800;
-                        FB(this, 0x137) = 1;
+                        PANEL_ANIM_STEP(this) = 1;
                     }
                     break;
                 case 1:
                     SCALE_X(this) -= 0x400;
                     if (SCALE_X(this) <= 0x1000) {
                         SCALE_X(this) = 0x1000;
-                        FB(this, 0x137) = 2;
+                        PANEL_ANIM_STEP(this) = 2;
                     }
                     break;
                 case 2:
                     SCALE_X(this) -= 0x80;
-                    if (FB(this, 0x119) == 0) {
-                        FB(this, 0x137) = 3;
+                    if (EXIT_DELAY(this) == 0) {
+                        PANEL_ANIM_STEP(this) = 3;
                     }
                     break;
                 case 3:
@@ -597,55 +571,49 @@ s32 dScStarSel_c::Render() {
 
         switch (data_0209caa0[0x41]) {
         case 0:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb34, 0x80,
-                                                        PANEL_Y(this), -1, -1, SCALE_X(this),
-                                                        SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb34, 0x80, PANEL_Y(this), -1, -1,
+                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
             break;
         case 1:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb54, 0x80,
-                                                        PANEL_Y(this), -1, -1, SCALE_X(this),
-                                                        SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb54, 0x80, PANEL_Y(this), -1, -1,
+                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
             break;
         case 2:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb74, 0x80,
-                                                        PANEL_Y(this), -1, -1, SCALE_X(this),
-                                                        SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb74, 0x80, PANEL_Y(this), -1, -1,
+                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
             break;
         case 3:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb94, 0x80,
-                                                        PANEL_Y(this), -1, -1, SCALE_X(this),
-                                                        SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb94, 0x80, PANEL_Y(this), -1, -1,
+                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
             for (i = 0; i < 3; i++) {
                 pressY = 0;
-                if (PICKED_CHAR(this) == i && FB(this, 0x118) != 0) {
+                if (PICKED_CHAR(this) == i && PICK_PRESS_TIMER(this) != 0) {
                     pressY = 3;
                 }
                 if (SaveData::IsCharacterUnlocked(i) != 0) {
                     if (ANIM_MODE(this) == 2) {
                         if (i == func_ov003_020adf50()) {
                             if (ANIM_FLIP(this) == 0) {
-                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                                    1, data_ov001_020abcb4[i + 3], CHAR_X(this, i), CHAR_Y(this, i),
-                                    -1, -1, ICON_SCALE_X(this), ICON_SCALE_Y(this), 0, -1);
-                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                                    1, data_ov001_020abcb4[CHAR_SPRITE(this, i)], CHAR_X(this, i),
-                                    CHAR_Y(this, i), -1, -1, ICON_SCALE_X(this), ICON_SCALE_Y(this),
-                                    0, -1);
+                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3],
+                                            CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
+                                            ICON_SCALE_X(this), ICON_SCALE_Y(this), 0, -1);
+                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[CHAR_SPRITE(this, i)],
+                                            CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
+                                            ICON_SCALE_X(this), ICON_SCALE_Y(this), 0, -1);
                             } else {
-                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                                    1,
-                                    data_ov001_020abcb4[CHAR_SPRITE(this, i ^ ((i != 0) ? 3 : 0))],
-                                    CHAR_X(this, i), CHAR_Y(this, i), -1, -1, ICON_SCALE_X(this),
-                                    ICON_SCALE_Y(this), 0, -1);
+                                OAM::Render(1,
+                                            (OamAttr *)data_ov001_020abcb4[CHAR_SPRITE(
+                                                this, i ^ ((i != 0) ? 3 : 0))],
+                                            CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
+                                            ICON_SCALE_X(this), ICON_SCALE_Y(this), 0, -1);
                             }
                         } else if (IDLE_ICON_SCALE(this) != 0) {
-                            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                                1, data_ov001_020abcb4[i + 3], CHAR_X(this, i), CHAR_Y(this, i), -1,
-                                -1, IDLE_ICON_SCALE(this), IDLE_ICON_SCALE(this), 0, -1);
-                            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                                1, data_ov001_020abcb4[CHAR_SPRITE(this, i)], CHAR_X(this, i),
-                                CHAR_Y(this, i), -1, -1, IDLE_ICON_SCALE(this),
-                                IDLE_ICON_SCALE(this), 0, -1);
+                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3], CHAR_X(this, i),
+                                        CHAR_Y(this, i), -1, -1, IDLE_ICON_SCALE(this),
+                                        IDLE_ICON_SCALE(this), 0, -1);
+                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[CHAR_SPRITE(this, i)],
+                                        CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
+                                        IDLE_ICON_SCALE(this), IDLE_ICON_SCALE(this), 0, -1);
                         }
                     } else {
                         OAM::RenderSub((OamAttr *)data_ov001_020abcb4[i + 3], CHAR_X(this, i),
@@ -711,58 +679,58 @@ s32 dScStarSel_c::Behavior() {
 
     if (data_0209f5bc->IsAtStart() != 0) {
         DecIfAbove0_Byte(&FB(this, 0x117));
-        DecIfAbove0_Byte(&FB(this, 0x118));
-        if (FB(this, 0x119) != 0 ||
+        DecIfAbove0_Byte(&PICK_PRESS_TIMER(this));
+        if (EXIT_DELAY(this) != 0 ||
             (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
-            if (FB(this, 0x119) != 0) {
-                FB(this, 0x119) -= data_0208ee44;
+            if (EXIT_DELAY(this) != 0) {
+                EXIT_DELAY(this) -= data_0208ee44;
             }
-            if (FB(this, 0x119) == 0 ||
+            if (EXIT_DELAY(this) == 0 ||
                 (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
                 StartSceneFade(3, 0, 0);
                 data_0209f5e8[6] = 0x7fff;
                 if (SublevelToLevel(data_02092110) <= 0xe) {
-                    data_0209f1f0 = FB(this, 0x115) + 1;
+                    data_0209f1f0 = SELECTED_PLATE(this) + 1;
                 } else {
                     data_0209f1f0 = 1;
                 }
             }
-        } else if (FB(this, 0x135) != 0 && IsButtonInputValid() != 0) {
-            val = FB(this, 0x133);
-            if (val == 0 && FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
-                FB(this, 0x133) = 2;
+        } else if (CURSOR_ON(this) != 0 && IsButtonInputValid() != 0) {
+            val = CURSOR_MODE(this);
+            if (val == 0 && STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
+                CURSOR_MODE(this) = 2;
                 func_02012790(0x12e);
-            } else if (FB(this, 0x139) == 0) {
+            } else if (ANIM_MODE(this) == 0) {
                 if (val == 1) {
                     num = func_ov003_020adf50();
                     data_02092128 = num;
                     data_02092114 = num;
-                    FB(this, 0x132) = num;
-                    FB(this, 0x118) = data_0208ee44 * 3;
-                    FB(this, 0x139) = 2;
+                    PICKED_CHAR(this) = num;
+                    PICK_PRESS_TIMER(this) = data_0208ee44 * 3;
+                    ANIM_MODE(this) = 2;
                 } else {
-                    FB(this, 0x133) = 2;
-                    FB(this, 0x132) = 3;
-                    FB(this, 0x118) = data_0208ee44 * 6;
-                    FB(this, 0x139) = 1;
+                    CURSOR_MODE(this) = 2;
+                    PICKED_CHAR(this) = 3;
+                    PICK_PRESS_TIMER(this) = data_0208ee44 * 6;
+                    ANIM_MODE(this) = 1;
                 }
-                FB(this, 0x119) = 0x10;
+                EXIT_DELAY(this) = 0x10;
                 func_02012790(data_0209caa0[0x41] + 0x3c);
             }
         } else if (SublevelToLevel(data_02092110) <= 0xe) {
             idx = gActivePlayerSlot;
-            cur = FB(this, 0x115);
+            cur = SELECTED_PLATE(this);
             found = 0;
             val = gTouchHeld[idx][0];
             if (val != 0) {
-                num = FB(this, 0x114);
+                num = PLATE_COUNT(this);
                 i = 0;
                 if (num > 0) {
                     rec = gTouchHeld[idx];
                     tx = rec[2];
                     do {
-                        if ((u8)(tx - FB((u8 *)this + i, 0x11a) + 8) < 0x10 &&
-                            gTouchHeld[idx][3] < 0x28 && ((FB(this, 0x131) >> i) & 1)) {
+                        if ((u8)(tx - PLATE_X(this, i) + 8) < 0x10 && gTouchHeld[idx][3] < 0x28 &&
+                            ((PLATE_MASK(this) >> i) & 1)) {
                             hit = (val != 0 && gTouchEdge[idx][0] != 0);
                             if (hit != 0 || cur != i) {
                                 FB(this, 0x117) = data_0208ee44 * 3;
@@ -771,7 +739,7 @@ s32 dScStarSel_c::Behavior() {
                                 cur = i;
                                 func_02012790(0x12e);
                             }
-                            FB(this, 0x133) = 0;
+                            CURSOR_MODE(this) = 0;
                             found = 1;
                             break;
                         }
@@ -779,14 +747,14 @@ s32 dScStarSel_c::Behavior() {
                     } while (i < num);
                 }
             }
-            if (found == 0 && FB(this, 0x135) == 2 && FB(this, 0x133) == 0 &&
+            if (found == 0 && CURSOR_ON(this) == 2 && CURSOR_MODE(this) == 0 &&
                 data_0209caa0[0x42] == 0) {
                 if (data_020a0e58[0] & 0x20) {
                     pressed = data_020a0e58[1] & 0x20;
-                    if (pressed != 0 || FU(this, 0x104) == 0) {
-                        FU(this, 0x104) = pressed ? 0x10 : 8;
+                    if (pressed != 0 || PLATE_REPEAT_TIMER(this) == 0) {
+                        PLATE_REPEAT_TIMER(this) = pressed ? 0x10 : 8;
                         if (cur != 0) {
-                            u8 mask = FB(this, 0x131);
+                            u8 mask = PLATE_MASK(this);
                             cur--;
                             while (!((mask >> cur) & 1)) {
                                 cur--;
@@ -796,10 +764,10 @@ s32 dScStarSel_c::Behavior() {
                     }
                 } else if (data_020a0e58[0] & 0x10) {
                     pressed = data_020a0e58[1] & 0x10;
-                    if (pressed != 0 || FU(this, 0x104) == 0) {
-                        FU(this, 0x104) = pressed ? 0x10 : 8;
-                        if (cur < FB(this, 0x114) - 1) {
-                            u8 mask = FB(this, 0x131);
+                    if (pressed != 0 || PLATE_REPEAT_TIMER(this) == 0) {
+                        PLATE_REPEAT_TIMER(this) = pressed ? 0x10 : 8;
+                        if (cur < PLATE_COUNT(this) - 1) {
+                            u8 mask = PLATE_MASK(this);
                             cur++;
                             while (!((mask >> cur) & 1)) {
                                 cur++;
@@ -809,73 +777,73 @@ s32 dScStarSel_c::Behavior() {
                     }
                 }
             }
-            if (FB(this, 0x115) != cur) {
-                FB(this, 0x115) = cur;
+            if (SELECTED_PLATE(this) != cur) {
+                SELECTED_PLATE(this) = cur;
                 Message::DisplayStarNameForStarSelect((s16)cur);
                 FB(this, 0x117) = data_0208ee44 * 3;
             }
-            if (FB(this, 0x139) == 0) {
+            if (ANIM_MODE(this) == 0) {
                 func_ov003_020ae358();
             }
         }
 
         if (SublevelToLevel(data_02092110) <= 0xe) {
-            if (FB(this, 0x135) == 0) {
+            if (CURSOR_ON(this) == 0) {
                 if (IsButtonInputValid() != 0 ||
                     (data_0209caa0[0x42] == 0 && (data_020a0e5a[gActivePlayerSlot][0] & 0xf0))) {
                     func_02012790(0x12e);
                     if (data_0209caa0[0x42] == 0 && (data_020a0e58[1] & 0x30)) {
-                        FB(this, 0x135) = 1;
+                        CURSOR_ON(this) = 1;
                     } else {
-                        FB(this, 0x135) = 2;
+                        CURSOR_ON(this) = 2;
                     }
                     if (SublevelToLevel(data_02092110) <= 0xe) {
-                        FB(this, 0x133) = 0;
-                    } else if (FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
-                        FB(this, 0x133) = 1;
-                        if (FB(this, 0x130) != 4) {
-                            FB(this, 0x134) = 0;
+                        CURSOR_MODE(this) = 0;
+                    } else if (STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
+                        CURSOR_MODE(this) = 1;
+                        if (STRIP_MODE(this) != 4) {
+                            CHAR_CURSOR(this) = 0;
                         } else {
-                            FB(this, 0x134) = 1;
+                            CHAR_CURSOR(this) = 1;
                         }
                     } else {
-                        FB(this, 0x133) = 2;
+                        CURSOR_MODE(this) = 2;
                     }
                 }
-            } else if (FB(this, 0x135) == 1) {
+            } else if (CURSOR_ON(this) == 1) {
                 if (data_020a0e58[1] != 0) {
-                    FB(this, 0x135) = 2;
+                    CURSOR_ON(this) = 2;
                 }
             } else if (data_0209caa0[0x42] == 0 && (data_020a0e58[0] & 0xc0)) {
                 u16 keys = data_020a0e58[1];
                 if (keys & 0x40) {
-                    if (FB(this, 0x133) != 0) {
-                        FB(this, 0x133) -= 1;
-                        if (FB(this, 0x133) == 1) {
-                            if (FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
-                                if (FB(this, 0x130) != 4) {
-                                    FB(this, 0x134) = 0;
+                    if (CURSOR_MODE(this) != 0) {
+                        CURSOR_MODE(this) -= 1;
+                        if (CURSOR_MODE(this) == 1) {
+                            if (STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
+                                if (STRIP_MODE(this) != 4) {
+                                    CHAR_CURSOR(this) = 0;
                                 } else {
-                                    FB(this, 0x134) = 1;
+                                    CHAR_CURSOR(this) = 1;
                                 }
                             } else {
-                                FB(this, 0x133) = 0;
+                                CURSOR_MODE(this) = 0;
                             }
                         }
                         func_02012790(0x12e);
                     }
                 } else if (keys & 0x80) {
-                    if (FB(this, 0x133) != 2) {
-                        FB(this, 0x133) += 1;
-                        if (FB(this, 0x133) == 1) {
-                            if (FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
-                                if (FB(this, 0x130) != 4) {
-                                    FB(this, 0x134) = 0;
+                    if (CURSOR_MODE(this) != 2) {
+                        CURSOR_MODE(this) += 1;
+                        if (CURSOR_MODE(this) == 1) {
+                            if (STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
+                                if (STRIP_MODE(this) != 4) {
+                                    CHAR_CURSOR(this) = 0;
                                 } else {
-                                    FB(this, 0x134) = 1;
+                                    CHAR_CURSOR(this) = 1;
                                 }
                             } else {
-                                FB(this, 0x133) = 2;
+                                CURSOR_MODE(this) = 2;
                             }
                         }
                         func_02012790(0x12e);
@@ -883,45 +851,45 @@ s32 dScStarSel_c::Behavior() {
                 }
             }
 
-            if (FB(this, 0x130) <= 1 || data_0209caa0[0x41] != 3) {
-                if (FU(this, 0x108) != 0) {
-                    FU(this, 0x108) -= 1;
-                    if (FU(this, 0x108) == 0) {
-                        FH(this, 0x10a) = 0;
-                        FH(this, 0x10e) = -0x400;
-                        FH(this, 0x10c) = FH(this, 0x10e);
-                        FB(this, 0x136) = 1;
+            if (STRIP_MODE(this) <= 1 || data_0209caa0[0x41] != 3) {
+                if (BOUNCE_DELAY(this) != 0) {
+                    BOUNCE_DELAY(this) -= 1;
+                    if (BOUNCE_DELAY(this) == 0) {
+                        BOTTOM_Y_OFFSET(this) = 0;
+                        BOUNCE_LAUNCH(this) = -0x400;
+                        BOUNCE_VELOCITY(this) = BOUNCE_LAUNCH(this);
+                        BOUNCE_PHASE(this) = 1;
                     }
                 } else {
-                    if (!(FB(this, 0x136) & 2)) {
-                        FH(this, 0x10c) += 0x100;
-                        if (FH(this, 0x10c) >= 0) {
-                            FB(this, 0x136) = 1;
+                    if (!(BOUNCE_PHASE(this) & 2)) {
+                        BOUNCE_VELOCITY(this) += 0x100;
+                        if (BOUNCE_VELOCITY(this) >= 0) {
+                            BOUNCE_PHASE(this) = 1;
                         }
                     } else {
-                        FH(this, 0x10c) -= 0x100;
-                        if (FH(this, 0x10c) >= 0) {
-                            FB(this, 0x136) = 3;
+                        BOUNCE_VELOCITY(this) -= 0x100;
+                        if (BOUNCE_VELOCITY(this) >= 0) {
+                            BOUNCE_PHASE(this) = 3;
                         }
                     }
-                    FH(this, 0x10a) += FH(this, 0x10c);
-                    if (FB(this, 0x136) == 1 && FH(this, 0x10a) >= 0) {
-                        FB(this, 0x136) = 2;
-                    } else if (FB(this, 0x136) == 3 && FH(this, 0x10a) <= 0) {
-                        FH(this, 0x10e) += 0x80;
-                        if (FH(this, 0x10e) >= -0x180) {
-                            FU(this, 0x108) = 0x78;
-                            FH(this, 0x10a) = 0;
+                    BOTTOM_Y_OFFSET(this) += BOUNCE_VELOCITY(this);
+                    if (BOUNCE_PHASE(this) == 1 && BOTTOM_Y_OFFSET(this) >= 0) {
+                        BOUNCE_PHASE(this) = 2;
+                    } else if (BOUNCE_PHASE(this) == 3 && BOTTOM_Y_OFFSET(this) <= 0) {
+                        BOUNCE_LAUNCH(this) += 0x80;
+                        if (BOUNCE_LAUNCH(this) >= -0x180) {
+                            BOUNCE_DELAY(this) = 0x78;
+                            BOTTOM_Y_OFFSET(this) = 0;
                         } else {
-                            FH(this, 0x10c) = FH(this, 0x10e);
-                            FB(this, 0x136) = 1;
+                            BOUNCE_VELOCITY(this) = BOUNCE_LAUNCH(this);
+                            BOUNCE_PHASE(this) = 1;
                         }
                     }
                 }
             }
         }
     }
-    DecIfAbove0_Short(&FU(this, 0x104));
+    DecIfAbove0_Short(&PLATE_REPEAT_TIMER(this));
     return 1;
 }
 
@@ -973,13 +941,12 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
 // @symbol _ZN12dScStarSel_c13InitResourcesEv
 /* recovered: real C++ method over include/dScStarSel_c.h -- vtable slot 0.
  *
- * Loads the star-select screen: sound group, VRAM banks, the two Model members
+ * Loads the star-select screen: sound group, VRAM banks, the two dExtSimpleModel_c members
  * (models[0]/models[1]), the per-language BG/OBJ graphics, the per-character
- * palette set, then derives the star row (collected bitmask at +0x131, first
- * uncollected slot at +0x115, count at +0x114, per-star x positions at +0x11A)
- * and the character row (+0x124/+0x128/+0x12C, count at +0x130). Those offsets
- * fall inside dScStarSel_c::unk_104, which the header still holds as opaque
- * storage, so they stay raw; the Model pair is named.
+ * palette set, then derives the star row (PLATE_MASK, SELECTED_PLATE,
+ * PLATE_COUNT, PLATE_X) and the character row (CHAR_X/CHAR_Y/CHAR_SPRITE,
+ * STRIP_MODE). Those fields fall inside dScStarSel_c::unk_104, which the header
+ * still holds as opaque storage, so they are reached through the views above.
  *
  * The star x positions are a u8 running value: the row is centred, so it starts
  * at 0x80 (odd count) or 0x92 (even count) minus half the count times the 0x23
@@ -992,8 +959,6 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
 extern "C" {
 void Enable3dEngines(void);
 void *LoadFile(int);
-void *_ZN2G213GetBG2CharPtrEv(void);
-void *_ZN2G212GetBG2ScrPtrEv(void);
 void DecompressLZ16(void *, u32);
 int IsStarCollected(int, int);
 
@@ -1074,14 +1039,14 @@ s32 dScStarSel_c::InitResources() {
         REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
         REG16(0x400000C) &= ~0x40;
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
-        DecompressLZ16(file, (u32)_ZN2G213GetBG2CharPtrEv());
+        DecompressLZ16(file, (u32)G2::GetBG2CharPtr());
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCL_BIN);
         GX::LoadBGPltt(file, 0, 0x1A0);
         GXS::LoadBGPltt(file, 0, 2);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NSC_BIN);
-        DecompressLZ16(file, (u32)_ZN2G212GetBG2ScrPtrEv());
+        DecompressLZ16(file, (u32)G2::GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, 0);
         data_0209d45c |= 4;
@@ -1101,13 +1066,13 @@ s32 dScStarSel_c::InitResources() {
         } else {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NCG_BIN);
         }
-        DecompressLZ16(file, (u32)_ZN2G213GetBG2CharPtrEv());
+        DecompressLZ16(file, (u32)G2::GetBG2CharPtr());
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NCL_BIN);
         GX::LoadBGPltt(file, 0, 0x1A0);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NSC_BIN);
-        DecompressLZ16(file, (u32)_ZN2G212GetBG2ScrPtrEv());
+        DecompressLZ16(file, (u32)G2::GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, -4);
         data_0209d45c |= 4;
@@ -1234,8 +1199,8 @@ s32 dScStarSel_c::InitResources() {
         if (IsStarCollected(level, 0) != 0) {
             totalStars = (u32)(u8)(totalStars - 1);
         }
-        FB(this, 0x115) = 0xFF;
-        FB(this, 0x131) = 0;
+        SELECTED_PLATE(this) = 0xFF;
+        PLATE_MASK(this) = 0;
         loopI = 1;
         if ((u32)accB < totalStars) {
             sp8 = 1;
@@ -1245,11 +1210,11 @@ s32 dScStarSel_c::InitResources() {
             bitsPtr += 0x131;
             do {
                 if (IsStarCollected(level, loopI) != 0) {
-                    FB(this, 0x131) |= (u8)(varOne << bitPos);
+                    PLATE_MASK(this) |= (u8)(varOne << bitPos);
                     accB += 1;
                 } else {
-                    if (FB(this, 0x115) == 0xFF) {
-                        FB(this, 0x115) = bitPos;
+                    if (SELECTED_PLATE(this) == 0xFF) {
+                        SELECTED_PLATE(this) = bitPos;
                         *bitsPtr |= (u8)(sp8 << bitPos);
                     }
                     anyUnfilled = spC;
@@ -1258,25 +1223,25 @@ s32 dScStarSel_c::InitResources() {
                 loopI += 1;
             } while ((u32)accB < totalStars);
         }
-        FB(this, 0x114) = bitPos;
+        PLATE_COUNT(this) = bitPos;
         if ((anyUnfilled == 0) && (totalStars != 7)) {
-            FB(this, 0x114) += 1;
-            if (FB(this, 0x115) == 0xFF) {
-                FB(this, 0x115) = bitPos;
-                FB(this, 0x131) |= (u8)(1 << bitPos);
+            PLATE_COUNT(this) += 1;
+            if (SELECTED_PLATE(this) == 0xFF) {
+                SELECTED_PLATE(this) = bitPos;
+                PLATE_MASK(this) |= (u8)(1 << bitPos);
             }
         }
-        if (FB(this, 0x115) == 0xFF) {
-            FB(this, 0x115) = 0;
+        if (SELECTED_PLATE(this) == 0xFF) {
+            SELECTED_PLATE(this) = 0;
         }
-        tmpU8 = FB(this, 0x114);
+        tmpU8 = PLATE_COUNT(this);
         if (tmpU8 & 1)
             colorVal = 0x80;
         else
             colorVal = 0x92;
         colorVal -= ((s32)tmpU8 >> 1) * 0x23;
-        for (idx2 = 0; idx2 < (s32)FB(this, 0x114); idx2++) {
-            FB((u8 *)this + idx2, 0x11A) = colorVal;
+        for (idx2 = 0; idx2 < (s32)PLATE_COUNT(this); idx2++) {
+            PLATE_X(this, idx2) = colorVal;
             colorVal += 0x23;
         }
     }
@@ -1284,7 +1249,7 @@ s32 dScStarSel_c::InitResources() {
     if (SublevelToLevel(data_02092110) <= 0x14) {
         Message::DisplayCourseNameForStarSelect((u32)(s16)SublevelToLevel(data_02092110));
         if (SublevelToLevel(data_02092110) <= 0xE) {
-            Message::DisplayStarNameForStarSelect(FB(this, 0x115));
+            Message::DisplayStarNameForStarSelect(SELECTED_PLATE(this));
         }
         SetBg3Offset(0, -4);
     } else {
@@ -1292,23 +1257,23 @@ s32 dScStarSel_c::InitResources() {
     }
 
     charIdx = 0;
-    FB(this, 0x130) = 0;
+    STRIP_MODE(this) = 0;
     do {
         if (SaveData::IsCharacterUnlocked(charIdx) != 0) {
-            FB(this, 0x130)++;
+            STRIP_MODE(this)++;
         }
         charIdx += 1;
     } while (charIdx < 4);
 
     if (SublevelToLevel(data_02092110) <= 0xE) {
-        if ((FB(this, 0x130) != 1) && (data_0209caa0[0x41] == 3)) {
-            FB(this, 0x12B) = 0x88;
-            FU(this, 0x108) = 0;
+        if ((STRIP_MODE(this) != 1) && (data_0209caa0[0x41] == 3)) {
+            PANEL_Y(this) = 0x88;
+            BOUNCE_DELAY(this) = 0;
         } else {
-            FB(this, 0x12B) = 0x60;
-            FU(this, 0x108) = 0;
+            PANEL_Y(this) = 0x60;
+            BOUNCE_DELAY(this) = 0;
         }
-        charCount = FB(this, 0x130);
+        charCount = STRIP_MODE(this);
         charCountM1 = charCount - 1;
         tabR5 = data_ov003_020b16a8[charCountM1];
         tabSL = data_ov003_020b16a0[charCountM1];
@@ -1321,9 +1286,9 @@ s32 dScStarSel_c::InitResources() {
                 tablePtr = &data_ov003_020b16c8[idx8];
                 do {
                     if (SaveData::IsCharacterUnlocked(varR6) != 0) {
-                        FB((u8 *)this + varR6, 0x124) = tabR5;
-                        FB((u8 *)this + varR6, 0x128) = tabSL;
-                        FB((u8 *)this + varR6, 0x12C) = tabSB;
+                        CHAR_X(this, varR6) = tabR5;
+                        CHAR_Y(this, varR6) = tabSL;
+                        CHAR_SPRITE(this, varR6) = tabSB;
                         varFp += 1;
                         tabR5 = (u8)(tabR5 + data_ov003_020b16e4[idx8]);
                         tabSL = (u8)(tabSL + *tablePtr);
@@ -1332,60 +1297,39 @@ s32 dScStarSel_c::InitResources() {
                         idx8 += 1;
                     }
                     varR6 += 1;
-                } while (varFp < (s32)(FB(this, 0x130) - 1));
+                } while (varFp < (s32)(STRIP_MODE(this) - 1));
             }
         }
     }
 
-    FB(this, 0x132) = 0xFF;
-    FB(this, 0x135) = 0;
-    FB(this, 0x133) = 0;
-    FW(this, 0x50) = 0x1000;
-    FW(this, 0x54) = 0x1000;
-    FW(this, 0x60) = 0x1000;
-    FU(this, 0x110) = 0;
-    FB(this, 0x139) = 0;
-    FB(this, 0x137) = 0;
-    FU(this, 0x110) = 0;
-    FU(this, 0x108) = 0x78;
-    FB(this, 0x13A) = 0;
+    PICKED_CHAR(this) = 0xFF;
+    CURSOR_ON(this) = 0;
+    CURSOR_MODE(this) = 0;
+    SCALE_X(this) = 0x1000;
+    SCALE_Y(this) = 0x1000;
+    IDLE_ICON_SCALE(this) = 0x1000;
+    SPIN_ANGLE(this) = 0;
+    ANIM_MODE(this) = 0;
+    PANEL_ANIM_STEP(this) = 0;
+    SPIN_ANGLE(this) = 0;
+    BOUNCE_DELAY(this) = 0x78;
+    ANIM_FLIP(this) = 0;
     data_0209d454 = 0x10;
     REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (data_0209d45c << 8);
     REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
-    FB(this, 0x116) = data_0209caa0[0x41];
+    LIFE_ICON(this) = data_0209caa0[0x41];
     data_0208ee44 = 1;
     return 1;
 }
 #pragma pop
 
 // @symbol dScStarSel_c_classInit
-extern "C" {
-extern void *_ZN7fBase_cC2Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void *_ZN5ModelC1Ev(void *);
-/* The array runtime discards the constructor's receiver result. */
-extern void __cxa_vec_ctor(void *arr, int count, int size, void (*ctor)(void *),
-                           void (*dtor)(void *));
-extern void *data_0208e4b8[];
-
 /* Reconstructed source-style name: SM64DS proves dScStarSel_c through RTTI,
  * allocation size, vtable identity, and the STAR_SELECT registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: StarSelect_Spawn. */
-dScStarSel_c *dScStarSel_c_classInit(void) {
-    char *p = (char *)_ZN7fBase_cnwEj(0x13c);
-    if (p) {
-        _ZN7fBase_cC2Ev(p);
-        *(void ***)p = (void **)data_0208e4b8;
-        *(void ***)p = (void **)_ZTV8dScene_c;
-        unsigned char *fl = (unsigned char *)(((int)p + 0x13));
-        *fl |= 1;
-        *fl |= 4;
-        *(void ***)p = (void **)data_ov003_020b1704;
-        __cxa_vec_ctor(p + 0x64, 2, 0x50, (void (*)(void *))_ZN5ModelC1Ev, _ZN5ModelD1Ev);
-    }
-    return (dScStarSel_c *)p;
-}
+extern "C" dScStarSel_c *dScStarSel_c_classInit(void) {
+    return new dScStarSel_c;
 }
 
 extern "C" {

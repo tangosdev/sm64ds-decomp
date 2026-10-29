@@ -12,8 +12,8 @@
  * The members close on each other, which is what makes the layout a reading
  * rather than a guess:
  *
- *     0x110 ModelAnim                  0x64    -> 0x174
- *     0x174 Model                      0x50    -> 0x1c4
+ *     0x110 dExtAnmModel_c                  0x64    -> 0x174
+ *     0x174 dExtSimpleModel_c                      0x50    -> 0x1c4
  *     0x1c4 dExtShadowModel_c                0x28    -> 0x1ec
  *     0x1ec Matrix4x3                  0x30    -> 0x21c
  *     0x21c dCcAcPos_c  0x40    -> 0x25c
@@ -32,15 +32,15 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 
 struct daBook_c : dEnemyBase_c {
-    ModelAnim                    mModelAnim;            /* 0x110 */
-    Model                        mModel;                /* 0x174 */
+    dExtAnmModel_c mAnmModel;                                 /* 0x110 */
+    dExtSimpleModel_c mModel;                                 /* 0x174 */
     dExtShadowModel_c                  mShadowModel;          /* 0x1c4 */
     /* Drop-shadow matrix: InitResources copies IDENTITY_MATRIX4X3 here and
        func_ov020_0211216c writes the position, divided by 8, into its
@@ -76,9 +76,9 @@ struct daBook_c : dEnemyBase_c {
     /* Uniform scale in fix12 (0x1000 is 1.0): 0.5 at spawn, then grows to 1.5
        through the wind-up. It is copied into mScaleX/Y/Z and sizes the collider. */
     s32                          mUniformScale;         /* 0x44c */
-    /* Nonzero once the animated model is in use: Render draws mModelAnim
+    /* Nonzero once the animated model is in use: Render draws mAnmModel
        instead of mModel, and func_ov020_0211216c builds the matrix in it. */
-    u8                           mUsesModelAnim;        /* 0x450 */
+    u8 mUsesAnmModel; /* 0x450 */
     u8  pad_451[0x3];
 
     /* --- vtable --- */

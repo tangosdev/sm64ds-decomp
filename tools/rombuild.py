@@ -393,6 +393,10 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None
                 differ = _data_body_reasons(obj, rel, pol.get("data") or [])
                 if differ:
                     return "compiler-only data policy: " + "; ".join(differ)
+                differ = retargeted_data_reasons(
+                    obj.read_bytes(), pol.get("retarget") or [], pol.get("data") or [])
+                if differ:
+                    return "compiler-only data policy: " + "; ".join(differ)
                 differ = _duplicate_body_reasons(
                     obj, rel, pol.get("expect") or {}, pol.get("homes") or {})
                 if differ:
@@ -407,9 +411,27 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None
                         reduced, {r["symbol"]: r["canonical_symbol"] for r in canonical})
                     if reduced is None:
                         return "canonical duplicate rename refused: " + rename_plan["error"]
+                # The coined records are imports now. Name them as the cartridge
+                # symbols the proof just compared, so a homeless spelling is not
+                # what the link looks up.
+                retarget = pol.get("retarget") or []
+                if retarget:
+                    reduced, rename_plan = OI.rename_undefined_symbols(
+                        reduced, {r["symbol"]: r["canonical_symbol"] for r in retarget})
+                    if reduced is None:
+                        return "RTTI retarget rename refused: " + rename_plan["error"]
                 obj.write_bytes(reduced)
+            # deadstrip has already turned mwcc's vtable-object addends into the
+            # ROM slot-array convention. isolate_many does not rewrite them.
+            # rtti_rebased and public_vtables both keep a secondary _ZTV
+            # remainder of at least 16 that is 4-aligned (a thunk-table offset).
+            # They share that floor, so passing both after a deadstrip still
+            # refuses an unrebased +8 primary. Both stay false when this object
+            # was not deadstripped.
             plan = (OI.isolate(obj, selected[0]) if len(selected) == 1
-                    else OI.isolate_many(obj, selected))
+                    else OI.isolate_many(
+                        obj, selected, rtti_rebased=bool(dead),
+                        public_vtables=bool(dead)))
     else:
         plan = OI.isolate(obj, selected)
     if plan.get("kind") == OI.NOT_A_FUNCTION:
@@ -633,6 +655,105 @@ def _data_body_reasons(obj, rel, symbols):
     return sorted(out)
 
 
+def _reloc_target_names(raw, name):
+    """Defined-symbol names one data object's relocations point at, or None."""
+    from elftools.elf.elffile import ELFFile  # noqa: PLC0415
+    from elftools.elf.relocation import RelocationSection  # noqa: PLC0415
+    elf = ELFFile(io.BytesIO(raw))
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None
+    syms = list(symtab.iter_symbols())
+    owners = [s for s in syms if s.name == name
+              and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")]
+    if len(owners) != 1 or not isinstance(owners[0]["st_shndx"], int):
+        return None
+    shndx = owners[0]["st_shndx"]
+    found = set()
+    for rel in elf.iter_sections():
+        if isinstance(rel, RelocationSection) and rel["sh_info"] == shndx:
+            for reloc in rel.iter_relocations():
+                target = syms[reloc["r_info_sym"]]
+                if target.name:
+                    found.add(target.name)
+    return found
+
+
+def retargeted_data_reasons(raw, retarget, data_symbols):
+    """Reasons a coined RTTI retarget is not the cartridge record it names.
+
+    ``deadstrip-data`` compares an emitted symbol under its own spelling. A class
+    the project spells differently from the cartridge's RTTI name emits ``_ZTI``
+    and ``_ZTS`` records that spelling does not home, and the plain ``deadstrip``
+    guard refuses to drop those unverified. Renaming the class is the ordinary
+    fix. Where other enrolled translation units still define the destructor under
+    the project spelling, the manifest instead names the cartridge symbol. This
+    renames a proof copy, resolves every relocation, and refuses a blind or
+    differing word. A coined ``_ZTS`` string is not the cartridge's text, so an
+    ``import`` row is not byte-compared: some compared record must relocate to
+    the cartridge string, and the coined section is discarded rather than linked.
+    """
+    rows = list(retarget or [])
+    if not rows:
+        return []
+    mapping, imports = {}, set()
+    for row in rows:
+        old, new = row["symbol"], row["canonical_symbol"]
+        mapping[old] = new
+        if row.get("proof", "compare") == "import":
+            imports.add(old)
+    renamed, plan = OI.rename_defined_symbols(bytes(raw), mapping)
+    if renamed is None:
+        return [f"RTTI retarget refused: {plan.get('error')}"]
+    emitted = {name: (shndx, value, size)
+               for name, shndx, value, size in RDC.emitted_data_symbols(renamed)}
+    names = RDC.name_index()
+    reasons, proved, seen = [], [], set()
+
+    def consider(name):
+        if name in seen:
+            return
+        seen.add(name)
+        if name not in emitted:
+            reasons.append(f"{name} is not defined after the RTTI retarget")
+            return
+        shndx, value, size = emitted[name]
+        rec = RDC.verify_data_symbol(renamed, name, shndx, value, size, names)
+        blind = rec.get("blindWords") or 0
+        ok = (rec.get("verdict") == RDC.VERIFIED or (
+            rec.get("verdict") == RDC.PARTIAL and not blind and rec.get("bytes")))
+        if not ok:
+            reasons.append(
+                f"{name} retargeted against {rec.get('module')}:"
+                f"0x{rec.get('addr', 0):08x} is {rec.get('verdict')} "
+                f"({rec.get('differingBytes', 0)} differing, {blind} blind, "
+                f"{rec.get('bytes', 0)} compared)")
+        else:
+            proved.append(name)
+
+    for sym in data_symbols or []:
+        if sym in imports:
+            continue
+        consider(mapping.get(sym, sym))
+    for old, new in mapping.items():
+        if old not in imports:
+            consider(new)
+    if reasons:
+        return reasons
+    referenced = set()
+    for name in proved:
+        targets = _reloc_target_names(renamed, name)
+        if targets is None:
+            return [f"{name}: could not read relocations after the RTTI retarget"]
+        referenced.update(targets)
+    for old in sorted(imports):
+        new = mapping[old]
+        if new not in referenced:
+            reasons.append(f"{old} is discarded as an import of {new}, but no "
+                           f"compared record relocates to it")
+    return reasons
+
+
 def compiler_only_policies(enrolled=None, manifest=None, homes=None):
     """Exact dead-strip allow-lists for promoted multi-function sources.
 
@@ -674,6 +795,13 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
         home *inside* a claimed range is refused because that is a range the source
         undertook to build.  The bodies are then proved word-by-word at isolation time,
         with the relocations applied -- see :func:`_data_body_reasons`.
+
+        A coined ``_ZTI``/``_ZTS`` has no home under the spelling mwcc emits. The
+        plain ``deadstrip`` guard still refuses that row. Naming ``canonical_symbol``
+        on the ``deadstrip-data`` row retargets a proof copy onto the cartridge
+        record first; ``proof: import`` is the type-name string, which is discarded
+        rather than compared because its bytes are the project spelling. See
+        :func:`retargeted_data_reasons`.
     """
     data = TUM.load() if manifest is None else manifest
     active = None if enrolled is None else {
@@ -705,7 +833,7 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
             continue
         canonical_by_name = {row["symbol"]: row for row in canonical}
         licensed = {row.get("symbol") for row in entry.get("functions", [])}
-        wanted, expect, data, dup_homes = [], {}, [], {}
+        wanted, expect, data, dup_homes, retarget = [], {}, [], {}, []
         for i, row in enumerate(rows):
             if not isinstance(row, dict):
                 errors.append(f"{source}: compiler_only_output[{i}] is not an object")
@@ -753,6 +881,60 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
                         # has already refused anything but a single unambiguous home.
                         dup_homes[symbol] = (RL.normalize_module(homes[symbol][0][0]),
                                              homes[symbol][0][1])
+            elif disposition == "deadstrip-data" and row.get("canonical_symbol") \
+                    and row.get("canonical_symbol") != symbol:
+                # Coined spelling, cartridge home. The emitted name has no
+                # symbols.txt row; ``retargeted_data_reasons`` renames a proof
+                # copy onto ``canonical_symbol`` and refuses a blind or differing
+                # word before the section is discarded. An ``import`` proof is
+                # only a type-name string, whose bytes are the project spelling
+                # and therefore cannot be the cartridge's text.
+                coined = row.get("canonical_symbol")
+                proof = row.get("proof", "compare")
+                homes_for = homes.get(coined) or []
+                ok = True
+                if proof not in ("compare", "import"):
+                    errors.append(f"{source}: {symbol} proof must be compare or import")
+                    ok = False
+                elif proof == "import" and not (symbol.startswith("_ZTS")
+                                                and str(coined).startswith("_ZTS")):
+                    errors.append(f"{source}: {symbol} proof \"import\" is only valid "
+                                  f"for a coined _ZTS record retargeted onto a "
+                                  f"cartridge _ZTS; a _ZTI/_ZTV record has to be compared")
+                    ok = False
+                elif homes.get(symbol):
+                    errors.append(f"{source}: {symbol} already has a configured ROM "
+                                  f"home; retarget a coined name, or declare "
+                                  f"deadstrip-data on the homed spelling")
+                    ok = False
+                elif len(homes_for) != 1:
+                    errors.append(f"{source}: {symbol} retargets to {coined}, which "
+                                  f"needs exactly one configured ROM home")
+                    ok = False
+                elif not str(entry.get("module") or ""):
+                    errors.append(f"{source}: {symbol} is declared compiler-only data "
+                                  f"but this entry declares no module, so its claimed "
+                                  f"ranges cannot be compared against a ROM home")
+                    ok = False
+                elif declared is None:
+                    errors.append(f"{source}: {symbol} retarget must name "
+                                  f"canonical_module and canonical_address")
+                    ok = False
+                elif declared == "bad":
+                    ok = False
+                else:
+                    module, addr = homes_for[0]
+                    module = RL.normalize_module(module)
+                    claimed = _claimed_range(entry, module, addr)
+                    if claimed:
+                        errors.append(f"{source}: {coined}'s ROM home {module}:0x{addr:08x} "
+                                      f"falls inside this entry's own {claimed}; a range the "
+                                      f"source claims must be built, not discarded")
+                        ok = False
+                if ok:
+                    data.append(symbol)
+                    retarget.append({"symbol": symbol, "canonical_symbol": coined,
+                                     "proof": proof})
             elif disposition == "deadstrip-data":
                 if not str(entry.get("module") or ""):
                     # Fail closed. The licence is that the home lies outside every
@@ -810,6 +992,8 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
                        "homes": dup_homes}
         if canonical:
             out[source]["canonical"] = canonical
+        if retarget:
+            out[source]["retarget"] = retarget
     if errors:
         raise BuildError("compiler-only policy", 1, "\n".join(errors))
     return out

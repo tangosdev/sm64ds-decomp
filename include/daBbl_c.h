@@ -17,13 +17,6 @@
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
-/* The actor heap's own allocator. daBbl_c_classInit's first call is
- * fBase_c::operator new with the literal 0x31c, not the global operator new;
- * declaring it here, and the leaf `operator new` below, is what lets the
- * factory be written as a plain `new daBbl_c()` and still emit that call.
- * Spelt exactly as include/decl_common.h spells it. */
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daBbl_c : dEnemyBase_c {
     /* The bubble runs a two-entry state table. Each entry is an enter hook
      * the transition calls once and an execute hook Behavior calls every
@@ -38,19 +31,19 @@ struct daBbl_c : dEnemyBase_c {
         StateFn mExecute;
     };
 
-    dCcAc_c    mdCcAc_c;       /* 0x110 */
-    dBgCh_Actr mWithMeshClsn;  /* 0x144 */
-    State     *mState;         /* 0x300 -- the table this bubble is running */
-    s32        mSpawnPosX;     /* 0x304 -- where InitResources found the actor */
-    s32        mSpawnPosY;     /* 0x308 */
-    s32        mSpawnPosZ;     /* 0x30c */
-    u8         mJumps;         /* 0x310 -- clear: the fixed flame, which only
+    dCcAc_c mdCcAc_c;         /* 0x110 */
+    dBgCh_Actr mWithMeshClsn; /* 0x144 */
+    State *mState;            /* 0x300 -- the table this bubble is running */
+    s32 mSpawnPosX;           /* 0x304 -- where InitResources found the actor */
+    s32 mSpawnPosY;           /* 0x308 */
+    s32 mSpawnPosZ;           /* 0x30c */
+    u8 mJumps;                /* 0x310 -- clear: the fixed flame, which only
                                 *          hurts; set: the jumping bubble, which
                                 *          falls under gravity and is hittable */
-    u8         pad_311[0x3];
-    s32        mFireParticle;  /* 0x314 -- both handles are rolled forward every
+    u8 pad_311[0x3];
+    s32 mFireParticle;  /* 0x314 -- both handles are rolled forward every
                                 *          frame the bubble is airborne */
-    s32        mSmokeParticle; /* 0x318 */
+    s32 mSmokeParticle; /* 0x318 */
 
     /* Inline empty body on purpose. From an inline destructor mwccarm emits D1
      * and then D0 -- the cartridge's own order at 0x021185c0 and 0x021185f8 --
@@ -61,27 +54,25 @@ struct daBbl_c : dEnemyBase_c {
      * construction order, then the dEnemyBase_c base; D0 additionally returns
      * the object to the actor heap through dEnemyBase_c's inline
      * operator delete. */
-    virtual ~daBbl_c() {}            /* slots 16, 17 */
+    virtual ~daBbl_c() {} /* slots 16, 17 */
 
-    virtual int  InitResources();    /* slot  0 */
-    virtual int  CleanupResources(); /* slot  3 */
-    virtual int  Behavior();         /* slot  6 */
-    virtual int  Render();           /* slot  9 */
+    virtual int InitResources();     /* slot  0 */
+    virtual int CleanupResources();  /* slot  3 */
+    virtual int Behavior();          /* slot  6 */
+    virtual int Render();            /* slot  9 */
     virtual void OnPendingDestroy(); /* slot 12 */
-    virtual s32  OnYoshiTryEat();    /* slot 18 */
+    virtual s32 OnYoshiTryEat();     /* slot 18 */
 
-    /* The five state hooks. The ROM records no English names; the
-     * pointer-to-member records at 0x0211be90..0x0211beb0 prove they are
-     * members, so they keep their address labels as method names. */
-    int func_ov064_02118644();
-    int func_ov064_0211873c();
-    int func_ov064_02118760();
-    int func_ov064_021187d0();
-    int func_ov064_021187ec(State *state);
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* SetState adopts a table and runs its enter hook; the two tables pair
+     * EnterFountain/ExecuteFountain (the fixed flame, which spawns a jumping
+     * bubble every 180 frames) and EnterJump/ExecuteJump. The ROM records no
+     * names; the pointer-to-member records at 0x0211be90..0x0211beb0 prove
+     * the hooks are members. */
+    int ExecuteJump();
+    int EnterJump();
+    int ExecuteFountain();
+    int EnterFountain();
+    int SetState(State *state);
 };
 
 #ifndef SM64DS_PLATFORM_PC

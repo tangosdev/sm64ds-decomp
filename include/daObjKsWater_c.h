@@ -2,9 +2,7 @@
 #define DAOBJKSWATER_C_H
 
 #include "dBgActor_c.h"
-#include "TextureTransformer.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "dExtAnmTexSRT_c.h"
 
 /* daObjKsWater_c -- the draining water inside the sunken ship (profile KS_MIZU,
  * actor 62, ov017). It sits still until every treasure chest in the room has
@@ -46,7 +44,7 @@ struct daObjKsWater_c : dBgActor_c {
     virtual int Render();                         /* slot 9 */
 
     u8  pad_31e[0x2];
-    TextureTransformer mTextureTransformer;       /* 0x320 -- scrolls the water's
+    dExtAnmTexSRT_c mTextureTransformer;          /* 0x320 -- scrolls the water's
                                                      surface texture every frame */
     s32 mOriginalPosY;                            /* 0x334 -- the height it starts
                                                      at, and the one the drain is
@@ -56,10 +54,6 @@ struct daObjKsWater_c : dBgActor_c {
     u8  pad_339[0x3];
     s32 mSoundID;                                 /* 0x33c -- the looping draining-
                                                      water sound's handle */
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

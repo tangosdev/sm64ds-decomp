@@ -29,31 +29,23 @@
  */
 #include "dM3dGSph.h"
 
-dM3dGSph::dM3dGSph()
-{
+dM3dGSph::dM3dGSph() {}
+
+dM3dGSph::~dM3dGSph() {}
+
+void dM3dGSph::SetCentre(const Vector3 &centre_) {
+    centre = centre_;
 }
 
-dM3dGSph::~dM3dGSph()
-{
+void dM3dGSph::Set(const Vector3 &centre_, Fix12i radius_) {
+    SetCentre(centre_);
+    SetRadius(radius_);
 }
 
-void dM3dGSph::SetCentre(const Vector3 &c)
-{
-    centre = c;
+void dM3dGSph::SetRadius(Fix12i radius_) {
+    radius = radius_;
 }
 
-void dM3dGSph::Set(const Vector3 &c, Fix12i r)
-{
-    SetCentre(c);
-    SetRadius(r);
-}
-
-void dM3dGSph::SetRadius(Fix12i r)
-{
-    radius = r;
-}
-
-void dM3dGSph::GetCentre(Vector3 &out) const
-{
+void dM3dGSph::GetCentre(Vector3 &out) const {
     out = centre;
 }

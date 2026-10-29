@@ -15,48 +15,24 @@
  * with the inline destructor in the real header, the compiler naturally owns
  * retail D1/D0 plus the class RTTI, type name, and vtable.
  *
- * deslop leftovers:
- * - dCcAc_c::Init 6az: InitResources passes Fix12<int> by value; the header
- *   method form size-DIFFs (notes/mwccarm-codegen.md 6az).
- * - KinokoPositionWords: a local Vector3 would emit vague-linkage ~Vector3.
+ * Notes:
  * - data_ov002_0210da30 is the ov002 SharedFilePtr handle; symbols.txt has
- *   no recovered name, so it is not coined. SharedFilePtr.h has no fields.
- * - PILE / daObjPile_c.h +0x32c backlink (actor ID 0x1b).
- * - Vec3_Dist: no shared header this TU can take without a campaign.
- * - no Player.h / dCamera_c.h.
- * - leaf operator new until #2570.
+ *   no recovered name, so it is not coined.
+ * - Behavior links the nearest PILE (actor ID 0x1b) back to this tag through
+ *   daObjPile_c::mLinkedTag.
  */
 
 #include "daObjKinokoTag_c.h"
 #include "SpawnInfo.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
+#include "daObjPile_c.h"
+#include "math/CalcLib.h"
 
-/* POD view used only to preserve the three-word Vector3 call ABI without
- * emitting Vector3's vague-linkage destructor. */
-struct KinokoPositionWords {
-    Fix12i x;
-    Fix12i y;
-    Fix12i z;
-};
-
-typedef char KinokoPositionWords_size_must_be_0xc[
-    sizeof(KinokoPositionWords) == 0xc ? 1 : -1];
-
-extern "C" {
 extern SharedFilePtr data_ov002_0210da30;
-extern Fix12i Vec3_Dist(const Vector3 *, const Vector3 *);
-
-/* dCcAc_c::Init takes Fix12<int> values by value. Spelling those parameters
- * naturally makes mwccarm home the register arguments and grows this caller,
- * so this one measured scalar declaration remains a narrow ABI seam. */
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    dCcAc_c *, dActor_c *, Fix12i, Fix12i, u32, u32);
-}
 
 // @symbol daObjKinokoTag_c_classInit_KINOKO_TAG
-extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG()
-{
+extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG() {
     return new daObjKinokoTag_c();
 }
 
@@ -69,41 +45,27 @@ extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_TAG = {
     0x00060000,
     0x00200000,
     0x01000000,
-    0
-};
+    0};
 
 // @symbol daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG
-extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG()
-{
+extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG() {
     return new daObjKinokoTag_c();
 }
 
 /* The actor profile at ov002:0x02108cd0. */
 extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_CREATE_TAG = {
-    daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG,
-    0x013f,
-    0x013d,
-    0,
-    0,
-    0,
-    0,
-    0
-};
+    daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG, 0x013f, 0x013d, 0, 0, 0, 0, 0};
 
 // @symbol _ZN16daObjKinokoTag_c13InitResourcesEv
-s32 daObjKinokoTag_c::InitResources()
-{
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mMovingCylinderClsn, this,
-        0x12c000, 0x32000, 0x800002, 0x20);
+s32 daObjKinokoTag_c::InitResources() {
+    mMovingCylinderClsn.Init(this, 0x12c000, 0x32000, 0x800002, 0x20);
     mGroupId = param1;
-    Model::LoadFile(data_ov002_0210da30);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
     return 1;
 }
 
 // @symbol _ZN16daObjKinokoTag_c8BehaviorEv
-s32 daObjKinokoTag_c::Behavior()
-{
+s32 daObjKinokoTag_c::Behavior() {
     dActor_c *other;
     s32 isKinokoTag = (s32)(actorID == 0x140);
     if (isKinokoTag) {
@@ -112,8 +74,7 @@ s32 daObjKinokoTag_c::Behavior()
             while (other != 0) {
                 if (Vec3_Dist(&mPos, &other->mPos) < 0x96000) {
                     mHasLinkedPile = 1;
-                    /* PILE / daObjPile_c.h +0x32c */
-                    *(dActor_c **)((u8 *)other + 0x32c) = this;
+                    ((daObjPile_c *)other)->mLinkedTag = this;
                     mSearchedForPile = 1;
                     return 1;
                 }
@@ -124,8 +85,7 @@ s32 daObjKinokoTag_c::Behavior()
     }
 
     if (!mHasMatchingTag) {
-        daObjKinokoTag_c *tag =
-            (daObjKinokoTag_c *)FindWithActorID(0x13f, 0);
+        daObjKinokoTag_c *tag = (daObjKinokoTag_c *)FindWithActorID(0x13f, 0);
         while (tag != 0) {
             if (mGroupId == tag->mGroupId)
                 mHasMatchingTag = 1;
@@ -151,15 +111,13 @@ s32 daObjKinokoTag_c::Behavior()
 }
 
 // @symbol _ZN16daObjKinokoTag_c16CleanupResourcesEv
-s32 daObjKinokoTag_c::CleanupResources()
-{
+s32 daObjKinokoTag_c::CleanupResources() {
     data_ov002_0210da30.Release();
     return 1;
 }
 
 // @symbol _ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv
-void daObjKinokoTag_c::TrySpawnMegaMushroom()
-{
+void daObjKinokoTag_c::TrySpawnMegaMushroom() {
     if (mMovingCylinderClsn.otherOwner == 0)
         return;
     if ((mMovingCylinderClsn.hitFlags & 0x20) == 0)
@@ -168,20 +126,17 @@ void daObjKinokoTag_c::TrySpawnMegaMushroom()
 }
 
 // @symbol _ZN16daObjKinokoTag_c17SpawnMegaMushroomEv
-void daObjKinokoTag_c::SpawnMegaMushroom()
-{
-    daObjKinokoTag_c *tag =
-        (daObjKinokoTag_c *)FindWithActorID(0x13f, 0);
+void daObjKinokoTag_c::SpawnMegaMushroom() {
+    daObjKinokoTag_c *tag = (daObjKinokoTag_c *)FindWithActorID(0x13f, 0);
     while (tag != 0) {
         if (mGroupId == tag->mGroupId) {
-            KinokoPositionWords *tagPos =
-                (KinokoPositionWords *)&tag->mPosX;
-            KinokoPositionWords spawnPos;
+            Vector3 *tagPos = &tag->mPos;
+            Vector3 spawnPos;
             spawnPos.x = tagPos->x;
             spawnPos.y = tagPos->y;
             spawnPos.z = tagPos->z;
 
-            LandingDustAt(*(Vector3 *)&spawnPos, true);
+            LandingDustAt(spawnPos, true);
             dActor_c *mushroom = Spawn(0x115, 0xd, tag->mPos, 0, mAreaId, -1);
             mushroom->mVertSpeed = 0x28000;
 

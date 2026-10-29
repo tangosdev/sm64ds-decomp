@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -25,8 +25,6 @@
  * Pokey_Spawn) constructs it for the SANBO
  * registry profile.
  */
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daSanbo_c : dActor_c {
     /* The twelve state handlers leave 1 in the return register. Dispatch
        ignores the result; int is a consistent reconstructed interface,
@@ -34,7 +32,7 @@ struct daSanbo_c : dActor_c {
     typedef int (daSanbo_c::*StateFunc)();
 
     u8  pad_0d0[0x4];
-    Model mModel;                            /* 0x0d4 */
+    dExtSimpleModel_c mModel;                      /* 0x0d4 */
     dExtShadowModel_c mShadowModel;                /* 0x124 */
     dCcAc_c mdCcAc_c;  /* 0x14c */
     dBgCh_Actr mWithMeshClsn;              /* 0x180 */
@@ -69,10 +67,12 @@ struct daSanbo_c : dActor_c {
        func_ov096_02136434 / func_ov096_02135948. */
     s32 mParticle0;             /* 0x3a0 */
     s32 mParticle1;             /* 0x3a4 */
-    /* Set by the head after loading the blue-coin model. func_ov096_0213670c
-       reads it through the head to choose a zero or 90-frame regrowth delay;
-       func_ov096_021365d4 clears it after the segment count reaches three. */
-    u8  unk_3a8;            /* 0x3a8 */
+    /* Head only. InitResources sets it; while it is set,
+       func_ov096_0213670c gives a new segment no delay and full scale
+       instead of a 90-frame wait, so the initial stack sprouts at once.
+       func_ov096_021365d4 clears it once three segments exist, so later
+       regrowth waits. */
+    u8 mInstantSprout; /* 0x3a8 */
     u8  pad_3a9[0x1];
     /* Heading copied from the previous segment + 0x13000; feeds the sin table
        that fills mOffset*. */
@@ -122,15 +122,11 @@ struct daSanbo_c : dActor_c {
     void func_ov096_021368b4();
     void func_ov096_021368f0();
     void func_ov096_02136928(int a);
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 /* Inline destructor is the key function, so this TU emits the vtable. Both
- * factories are `return new daSanbo_c()`; the leaf size_t operator new
- * forwards to `_ZN7fBase_cnwEj` until #2570's fBase overload lands. */
+ * factories are `return new daSanbo_c()`, which calls the inherited
+ * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 extern int _ZTV9daSanbo_c[];
 
 #ifndef SM64DS_PLATFORM_PC

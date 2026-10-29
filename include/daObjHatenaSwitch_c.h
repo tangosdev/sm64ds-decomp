@@ -1,13 +1,11 @@
 #ifndef DAOBJHATENASWITCH_C_H
 #define DAOBJHATENASWITCH_C_H
 
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dBgActor_c.h"
 #include "dBgW_KcMbg.h"
 
 struct Player;
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /* daObjHatenaSwitch_c is the ROM-proven class identity: the ov002 RTTI at
  * 0x02108e14 names this type and dBgActor_c as its sole base. The factory
@@ -18,7 +16,7 @@ struct daObjHatenaSwitch_c : dBgActor_c {
     dBgW_KcMbg *mActiveMeshCollider;    /* 0x320 */
     dBgW_KcMbg mStaticMeshCollider;     /* 0x324 */
     dBgW_KcMbg mMovingMeshCollider;     /* 0x4ec */
-    ModelAnim mModelAnim;               /* 0x6b4 */
+    dExtAnmModel_c mAnmModel;           /* 0x6b4 */
     u8 mPressTimer;                     /* 0x718 */
     u8 pad_719[0x1];
     u8 mPressedThisFrame;               /* 0x71a */
@@ -35,11 +33,6 @@ struct daObjHatenaSwitch_c : dBgActor_c {
     virtual s32 Behavior();
     virtual s32 Render();
     virtual void OnGroundPounded(dActor_c &other);
-
-    /* size_t == unsigned long here; unsigned int is illegal. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
 private:
     /* Class ownership and bodies are proven. These readable private spellings

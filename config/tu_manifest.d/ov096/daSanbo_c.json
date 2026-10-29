@@ -466,7 +466,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02135800' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_02136534; kept the first, same single file-scope declaration as the record above. This loser was `extern \"C\" void func_ov096_02135800(char *c)`, which differed only in linkage; the whole TU is compiled with the definition under extern \"C\", so nothing was lost.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_02136534; kept the first, widened to `extern short Vec3_HorzAngle(const void *a, const void *b)`. The kept declaration was `short (void *, void *)` and the loser was `extern \"C\" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1)`; the live spelling takes const from the loser and keeps void * as the retained legacy bridge spelling; Vector3 is available and narrowing that bridge remains reconstruction work. One declaration survives.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02136928' differs between the legacy file that used to hold func_ov096_02136264 and the one that held _ZN9daSanbo_c13InitResourcesEv; kept the first, then dropped entirely. func_ov096_02136928 is a MEMBER of this fold, defined at ROM ordinal 27 (0x02136928), so the TU needs no declaration of it at all and the disagreement between the two legacy externs is moot. Its one live signature is the definition, `void func_ov096_02136928(void *cc, int a)`, which conforms to the void * receiver include/decl_common.h already declares.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov096_02136134 and the one that held _ZN9daSanbo_c6RenderEv; kept the first during the initial import, which separated the two observations as Obj and RenderView/RenderModel. The later source repair removed all of these shadows: the helper uses daSanbo_c::OnAimedAtWithEgg, and Render uses mFlags, mModel and the existing virtual Model::Render interface. This record preserves the historical conflict; none of those local shadow types remains.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov096_02136134 and the one that held _ZN9daSanbo_c6RenderEv; kept the first during the initial import, which separated the two observations as Obj and RenderView/RenderModel. The later source repair removed all of these shadows: the helper uses daSanbo_c::OnAimedAtWithEgg, and Render uses mFlags, mModel and the existing virtual dExtSimpleModel_c::Render interface. This record preserves the historical conflict; none of those local shadow types remains.",
     "Historical earlier worker packaging observation (not the current run): LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "source_review_checkpoint": {
@@ -474,12 +474,12 @@
     "task": "sanbo-ov096-0908-fakeiface",
     "accepted_input": "fb42193acb6ab53cec0b72cadb1d054987d416d5",
     "corrected": [
-      "Render now uses mFlags and virtual Model::Render through a Model pointer; RenderView, RenderModel and RenderArg are removed.",
+      "Render now uses mFlags and virtual dExtSimpleModel_c::Render through a dExtSimpleModel_c pointer; RenderView, RenderModel and RenderArg are removed.",
       "mMatrix is a real Matrix4x3; previous/next segment links and state dispatch use the real daSanbo_c type. N and C shadow layouts are removed.",
       "Previous-link and unk_3a8 reader descriptions now agree with the helpers. Existing dExtShadowModel_c and actor methods replace four mangled-call declarations.",
       "func_ov096_02135e2c and its local declaration return void; the sole source call discards the result and all 36 TU functions remain exact.",
       "OnTurnIntoEgg follows the composed main void contract; the retired Pokey shard remains removed.",
-      "Three Model::LoadFile calls and two mModel.SetFile calls replace the corresponding raw ABI spellings; complete TU proof remains required.",
+      "Three dExtSimpleModel_c::LoadFile calls and two mModel.SetFile calls replace the corresponding raw ABI spellings; complete TU proof remains required.",
       "The current provenance note, dated scout correction and handoffs identify previous-segment links, live flag reads, existing matrix/model interfaces, exact RTTI string length and partial reconstruction."
     ],
     "remaining": [
@@ -782,28 +782,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1656,74 +1636,74 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@1057",
+      "from": "@1022",
       "to": "@1043",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1058",
+      "from": "@1023",
       "to": "@1044",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "to": "data_ov096_02137970",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1074"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1039"
     },
     {
       "to": "data_ov096_02137920",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1070"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1035"
     },
     {
       "to": "data_ov096_02137978",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1072"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1037"
     },
     {
       "to": "data_ov096_02137958",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1082"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1047"
     },
     {
       "to": "data_ov096_02137928",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1066"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1031"
     },
     {
       "to": "data_ov096_02137950",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1064"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1029"
     },
     {
       "to": "data_ov096_02137930",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1068"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1033"
     },
     {
       "to": "data_ov096_02137948",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1060"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1025"
     },
     {
       "to": "data_ov096_02137960",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1080"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1045"
     },
     {
       "to": "data_ov096_02137940",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1062"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1027"
     },
     {
       "to": "data_ov096_02137968",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1078"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1043"
     },
     {
       "to": "data_ov096_02137938",
-      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence.",
-      "from": "@1076"
+      "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
+      "from": "@1041"
     }
   ]
 }

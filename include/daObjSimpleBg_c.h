@@ -18,7 +18,7 @@
  * BASE: dBgActor_c, direct -- _ZTI15daObjSimpleBg_c at ov102 0x0214e0c0 names
  * _ZTI10dBgActor_c. The destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and the
- * Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c;
+ * dExtSimpleModel_c at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c;
  * this class adds no member with a destructor of its own.
  */
 

@@ -19,17 +19,16 @@
  * zeroes mStateTimer to move on.
  *
  * 0x080..0x0a8 IS dActor_c's OWN LAYOUT, not this class's; real inheritance
- * now supplies those fields directly. 0x0a4 and 0x0ac stay unk_ because
- * dActor_c leaves them unnamed too; this class writes the three of them as an (x,
- * vert, z) velocity triple, which is a lead for a later pass on the base, not
- * a licence to name a shadow field something its own base contradicts.
+ * now supplies those fields directly. This class writes 0x0a4/0x0a8/0x0ac as
+ * an (x, vert, z) velocity triple, through dActor_c's mSpeedX, mVertSpeed and
+ * mSpeedZ.
  *
  * Provenance table: notes/butterfly-tornado-provenance.md. */
 #ifndef DABTFLY_C_H
 #define DABTFLY_C_H
 #include "types.h"
-#include "ModelAnim.h"
-#include "Model.h"
+#include "dExtAnmModel_c.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
@@ -39,17 +38,17 @@ struct daBtfly_c : dActor_c {
     /* The ROM leaves the usual derived-actor word between dActor_c and the
        first owned subobject. */
     u8  pad_0d0[0x4];
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+    /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
        stopped short of the object, so the member also takes over unk_0f0 (+0x1c = mat4x3),
        mAnimation (+0x50 = the dExtFrameCtrl_c base), which the header declared separately inside
        it. */
-    ModelAnim mModelAnim;            /* 0x0d4 */
-    /* Model member, named by _ZN5ModelD1Ev at +0x138 -- a relocation the ROM build checks.
+    dExtAnmModel_c mAnmModel; /* 0x0d4 */
+    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0x138 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
        short of the object, so the member also takes over unk_154 (+0x1c = mat4x3), which
        the header declared separately inside it. */
-    Model mModel;            /* 0x138 */
+    dExtSimpleModel_c mModel; /* 0x138 */
     /* dExtShadowModel_c member, named by the class's own destructor calling
        dExtShadowModel_c's D1 at +0x188 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev, now in src/game/actors/d_a_btfly.cpp] */
@@ -101,7 +100,7 @@ struct daBtfly_c : dActor_c {
                                  param1 bits 0xc0. Only kind 1 becomes actor
                                  0x114 in State6; Behavior skips
                                  all movement while this is 0. */
-    u8  mUseAnimModel;      /* 0x3f1 -- 1: draw mModelAnim with mShadowModel1
+    u8 mUseAnimModel;       /* 0x3f1 -- 1: draw mAnmModel with mShadowModel1
                                  and advance the animation. 0: draw mModel with
                                  mShadowModel2 and do not. Set by
                                  InitResources, cleared by

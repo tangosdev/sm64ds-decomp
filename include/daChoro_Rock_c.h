@@ -18,7 +18,7 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
@@ -28,7 +28,7 @@ enum {
 };
 
 struct daChoro_Rock_c : dEnemyBase_c {
-    Model mModel;                     /* 0x110 */
+    dExtSimpleModel_c mModel; /* 0x110 */
     dCcAc_c mdCcAc_c;/* 0x160 */
     dBgCh_Actr mWithMeshClsn;       /* 0x194 */
     u8 mIsSmall;                       /* 0x350 -- param1 & 1; a big rock (0) breaks into two small ones (1) on landing */

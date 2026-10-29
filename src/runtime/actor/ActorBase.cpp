@@ -7,19 +7,27 @@
  *   and externalizes it to the existing canonical ROM storage.
  * - decl_common.h stays out. Its spellings of these list heads
  *   disagree with the calls in this file.
- * - Heap locals stay void*. Virtual34 and Virtual38 still read
- *   the flags word at +4 and the heap top at +8.
+ * - Heap locals stay void*, cast to Heap at each use. Virtual34 and
+ *   Virtual38 test bit 4 of heapStart (+4: an arena that does not start
+ *   on a 0x20 boundary gets a 0x10-byte pad allocation) and read
+ *   heapSize (+8) less MaxAllocationUnitSize as the bytes in use. Older
+ *   notes called these the flags word and the heap top; Heap.h's
+ *   constructor evidence names them.
  * - func_0203* and data_020a4b* keep their linker names. They are
  *   the list operations and the four global list heads.
  *
  * fBase_c, the root of the actor hierarchy. arm9 .text
- * 0x020433b8..0x020440e8.
+ * 0x02042fe4..0x020440e8. Below func_020433b8 sit the four Process
+ * wrappers, the child-creation check d_scene.cpp polls, and the create
+ * entry func_02043098 with its hooks and the two creation calls
+ * ActorDerived.cpp makes.
  */
 #include "fBase_c.h"
 #include "Heap.h"
+#include "Memory.h"
 
 struct fBaseActorInfo {
-    u32 unk_000;
+    fBase_c *(*classInit)();
     u16 behaviorPriority;
     u16 renderPriority;
 };
@@ -64,16 +72,13 @@ extern void *func_0206e2f8(void *p, int fill, unsigned int size);
  * caller is emitted above the definition. */
 extern void *func_02043810(void *p);
 
-/* Heap's methods come from include/Heap.h. The heap locals stay `void *`
-   (and are cast at each call), deliberately: Virtual34 and Virtual38 both
-   reach two of its fields by raw offset (`+4` flags word, `+8` top-of-heap)
-   rather than by member, and reconciling those onto named members is a
-   per-function codegen change this round has no reason to risk.
-   include/Heap.h itself declares InitializeSolidHeapAsDefault as returning
-   `void *`. Memory::Deallocate and data_020a0eac come from include/fBase_c.h,
-   which needs them for its inline operator delete. */
-extern void *_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(unsigned int size, int align, void *heap);
-
+/* Heap's methods and fields come from include/Heap.h. The heap locals stay
+   `void *` (and are cast at each use): Virtual34 and Virtual38 read its
+   heapStart and heapSize through those casts. include/Heap.h itself
+   declares InitializeSolidHeapAsDefault as returning `void *`.
+   Memory::Allocate and Memory::Deallocate come from include/Memory.h;
+   data_020a0eac, the actor heap they are handed, comes from
+   include/fBase_c.h, which needs it for its inline operator delete. */
 }
 
 /* aliveState is 0 before the actor joins the lists, 1 while it is alive
@@ -316,7 +321,7 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
     if (lifecycleState)
         func_02044334(lifecycleState);
     this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
-    _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(this, data_020a0eac);
+    Memory::Deallocate(this, (Heap *)data_020a0eac);
 }
 
 /* vtable slot 6. The default update succeeds without doing any work. */
@@ -476,9 +481,8 @@ extern "C" void *func_02043810(void *base)
  * actor for destruction if none of them works.
  *
  * `this->v15()` in the legacy shadow is slot 15, which the real class names
- * OnHeapCreated -- so this now reads as the virtual it is. The heap's flags
- * word (+4) and top (+8) are still reached by raw offset: see the note on the
- * Heap note above. */
+ * OnHeapCreated -- so this now reads as the virtual it is. The heap's
+ * heapStart and heapSize are read as in the Heap note above. */
 // @symbol _ZN7fBase_c9Virtual34Ejj
 int fBase_c::Virtual34(u32 a, u32 b)
 {
@@ -491,15 +495,15 @@ int fBase_c::Virtual34(u32 a, u32 b)
     if (a != 0) {
         h = Heap::InitializeSolidHeapAsDefault(a, (Heap *)b, 0x20);
         if (h != 0) {
-            u32 flagA = (*(u32 *)((char *)h + 4)) & 0x10;
+            u32 flagA = (u32)((Heap *)h)->heapStart & 0x10;
             if (flagA != 0)
-                _ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(0x10, 4, 0);
+                Memory::Allocate(0x10, 4, 0);
             int res = OnHeapCreated();
             u32 okA;
             if (flagA != 0) {
                 okA = (u32)res;
             } else {
-                void *allocRes = _ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(0x10, 4, 0);
+                void *allocRes = Memory::Allocate(0x10, 4, 0);
                 okA = (allocRes != 0) ? (u32)res : 0;
             }
             Heap::RestoreFromTemporary();
@@ -507,7 +511,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
                 ((Heap *)h)->_Destroy();
                 h = 0;
             } else {
-                u32 topA = *(u32 *)((char *)h + 8);
+                u32 topA = ((Heap *)h)->heapSize;
                 avail = topA - ((Heap *)h)->MaxAllocationUnitSize();
                 avail = (avail + 0x1f) & ~0x1f;
                 if (a == avail) {
@@ -521,12 +525,12 @@ int fBase_c::Virtual34(u32 a, u32 b)
 
     if (h == 0) {
         h = Heap::InitializeSolidHeapAsDefault((u32)-1, (Heap *)b, 0x20);
-        u32 flagB = (*(u32 *)((char *)h + 4)) & 0x10;
+        u32 flagB = (u32)((Heap *)h)->heapStart & 0x10;
         if (flagB != 0)
-            _ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(0x10, 4, 0);
+            Memory::Allocate(0x10, 4, 0);
         a = (u32)OnHeapCreated();
         if (flagB == 0) {
-            void *allocRes2 = _ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(0x10, 4, 0);
+            void *allocRes2 = Memory::Allocate(0x10, 4, 0);
             if (allocRes2 == 0)
                 a = 0;
         }
@@ -536,13 +540,13 @@ int fBase_c::Virtual34(u32 a, u32 b)
             MarkForDestruction();
             return 0;
         }
-        u32 topB = *(u32 *)((char *)h + 8);
+        u32 topB = ((Heap *)h)->heapSize;
         avail = topB - ((Heap *)h)->MaxAllocationUnitSize();
         avail = (avail + 0x1f) & ~0x1f;
     }
 
     if (h != 0) {
-        u32 topH = *(u32 *)((char *)h + 8);
+        u32 topH = ((Heap *)h)->heapSize;
         void *h2 = 0;
         u32 availInH = topH - ((Heap *)h)->MaxAllocationUnitSize();
         u32 needed = ((availInH + 0xf) & ~0xf) + 0x30;
@@ -596,12 +600,12 @@ int fBase_c::Virtual38(u32 a, u32 b)
         void *h = Heap::InitializeSolidHeapAsDefault(a, (Heap *)b, 0x20);
         if (h != 0) {
             int ok;
-            int flag = (*(int *)((char *)h + 4)) & 0x10;
+            int flag = (int)((Heap *)h)->heapStart & 0x10;
             if (flag != 0)
-                _ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(0x10, 4, 0);
+                Memory::Allocate(0x10, 4, 0);
             ok = OnHeapCreated();
             if (flag == 0) {
-                if (_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(0x10, 4, 0) == 0)
+                if (Memory::Allocate(0x10, 4, 0) == 0)
                     ok = 0;
             }
             ((Heap *)h)->MaxAllocationUnitSize();
@@ -626,13 +630,11 @@ bool fBase_c::OnHeapCreated()
     return 1;
 }
 
-/* Actor-heap allocation, cleared before construction. The configured ABI takes
- * unsigned; the class's size_t operator-new overload forwards here because
- * the compiler requires size_t for an in-class operator new. */
-// @symbol _ZN7fBase_cnwEj
-extern "C" void *_ZN7fBase_cnwEj(unsigned int size)
-{
-    void *p = _ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(size, -4, data_020a0eac);
+/* Actor-heap allocation, cleared before construction. Every `new` of a
+ * process class lands here. */
+// @symbol _ZN7fBase_cnwEm
+void *fBase_c::operator new(size_t size) {
+    void *p = Memory::Allocate(size, -4, (Heap *)data_020a0eac);
     if (!p)
         return 0;
     func_0206e2f8(p, 0, size);
@@ -657,5 +659,146 @@ void func_020433b8(char* self)
         return;
     }
     func_0203b244(data_020a4b88, &actor->manager.behaviorNode);
+}
+}
+
+/* The four Process wrappers below 0x020433b8. Each runs Process with one
+ * triple of fBase_c member-function pointers from .data; the triples are
+ * ROM-owned constants and stay extern. They keep their linker names. */
+extern "C" {
+extern fBase_c::ProcessFunction data_02099ebc;
+extern fBase_c::BeforeProcessFunction data_02099ec4;
+extern fBase_c::AfterProcessFunction data_02099e94;
+extern fBase_c::ProcessFunction data_02099e8c;
+extern fBase_c::BeforeProcessFunction data_02099e7c;
+extern fBase_c::AfterProcessFunction data_02099e84;
+extern fBase_c::ProcessFunction data_02099ea4;
+extern fBase_c::BeforeProcessFunction data_02099eac;
+extern fBase_c::AfterProcessFunction data_02099eb4;
+extern fBase_c::ProcessFunction data_02099ecc;
+extern fBase_c::BeforeProcessFunction data_02099e74;
+extern fBase_c::AfterProcessFunction data_02099e9c;
+/* Defined below; the calls are emitted first. */
+extern void func_0204302c(int actorID);
+extern int func_02043060(int actorID);
+extern void func_02043180(int actorID, void *parentNode, u32 param1, int unk012);
+
+/* The create hooks a scene installs, and the create entry's progress:
+   data_020a4b4c steps 2..5 through func_02043098 and data_020a4b50 holds
+   the profile being created (0xffff when idle). */
+extern void (*data_020a4b5c)(int actorID);
+extern int (*data_020a4b58)(int actorID);
+extern u16 data_020a4b50;
+extern u8 data_020a4b4c;
+
+// @symbol func_0204335c
+int func_0204335c(void *self) {
+    return ((fBase_c *)self)->Process(data_02099ebc, data_02099ec4, data_02099e94);
+}
+
+// @symbol func_020432e4
+int func_020432e4(fBase_c *self) {
+    /* The actor ID is read before Process runs and handed to the
+     * func_0204302c hook on a result of 1. */
+    unsigned short id = self->actorID;
+    int r = self->Process(data_02099e8c, data_02099e7c, data_02099e84);
+    if (r == 1)
+        func_0204302c(id);
+    return r;
+}
+
+// @symbol func_02043288
+int func_02043288(fBase_c *self) {
+    return self->Process(data_02099ea4, data_02099eac, data_02099eb4);
+}
+
+// @symbol func_0204322c
+int func_0204322c(fBase_c *self) {
+    return self->Process(data_02099ecc, data_02099e74, data_02099e9c);
+}
+
+/* Scene-tree walk: func_0203b394 steps to the first child or, failing
+   that, to func_0203b358's next node outside the subtree, which is also
+   where the walk ends. */
+extern fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node);
+extern fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
+
+/* Is any descendant still uncreated (aliveState 0)? d_scene.cpp waits on
+   this before it moves on. */
+// @symbol func_020431c4
+int func_020431c4(fBase_c *self) {
+    fBase_c::SceneNode *base = &self->manager.sceneNode;
+    fBase_c::SceneNode *end = func_0203b358(base);
+    fBase_c::SceneNode *node = base->child;
+    int uncreated;
+    while (node != 0 && node != end) {
+        /* Materialized as 0/1 before the test, as the ROM does. */
+        uncreated = !node->owner->aliveState;
+        if (uncreated != 0)
+            return 1;
+        node = func_0203b394(node);
+    }
+    return 0;
+}
+
+/* Stage the arguments fBase_c::fBase_c reads while the factory runs. */
+// @symbol func_02043180
+void func_02043180(int actorID, void *parentNode, u32 param1, int unk012) {
+    data_020a4b60 = param1;
+    data_020a4b54 = actorID;
+    data_020a4b48 = unk012;
+    data_020a4b64 = parentNode;
+}
+
+/* The create entry: ask the scene's hook, stage the constructor's
+   arguments, run the profile's factory, then link the new process. */
+// @symbol func_02043098
+fBase_c *func_02043098(int actorID, void *parentNode, u32 param1, int unk012) {
+    fBase_c *actor;
+    data_020a4b50 = (u16)actorID;
+    data_020a4b4c = 2;
+    if (func_02043060(actorID) == 3)
+        return 0;
+    data_020a4b4c = 3;
+    func_02043180(actorID, parentNode, param1, unk012);
+    data_020a4b4c = 4;
+    actor = data_020a4bb8[actorID]->classInit();
+    if (actor == 0) {
+        data_020a4b4c = 0;
+        data_020a4b50 = 0xffff;
+        return 0;
+    }
+    data_020a4b4c = 5;
+    func_020433b8((char *)actor);
+    data_020a4b4c = 0;
+    data_020a4b50 = 0xffff;
+    return actor;
+}
+
+// @symbol func_02043060
+int func_02043060(int actorID) {
+    if (data_020a4b58 == 0)
+        return 2;
+    return data_020a4b58(actorID);
+}
+
+// @symbol func_0204302c
+void func_0204302c(int actorID) {
+    if (data_020a4b5c)
+        data_020a4b5c(actorID);
+}
+
+/* Create a child of parent; none without a parent. */
+// @symbol func_02042ffc
+fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 param1, int unk012) {
+    if (parent == 0)
+        return 0;
+    return func_02043098(actorID, &parent->manager.sceneNode, param1, unk012);
+}
+
+/* Create a process at the root of the scene tree. */
+// @symbol func_02042fe4
+void func_02042fe4(int actorID, u32 param1, int unk012) {
+    func_02043098(actorID, 0, param1, unk012);
 }
 }

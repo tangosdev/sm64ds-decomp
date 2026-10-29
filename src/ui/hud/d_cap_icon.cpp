@@ -23,9 +23,6 @@
  * Leftover: func_ov001_020aa6b0 / func_ov001_020aa6cc are other TUs.
  * Leftover: owner uniqueID is fBase_c::uniqueID at +4; this TU keeps
  *   the +4 load.
- * Leftover: unk_19 / unk_1a. The link helper stores its 4th argument
- *   into unk_19 and special-cases it against 3; Unlink zeros unk_19.
- *   Original names are not in the cartridge.
  * Shared list state is declared in CapIconMgr.h and defined by the manager.
  * Leftover: data_0209f3e8 remains an external slot-table linker name.
  */
@@ -33,6 +30,7 @@
 
 #include "CapIconMgr.h"
 #include "SaveData.h"
+#include "dThIcon_c.h"
 
 extern "C" {
 
@@ -76,7 +74,7 @@ void dCapIcon_c::Unlink()
     mFlags = 0;
     mFlags |= 4;
     mCharacter = 3;
-    unk_19 = 0;
+    mIconKind = 0;
 
     if (gCapIconCounts[mCharacter])
         --gCapIconCounts[mCharacter];
@@ -93,7 +91,7 @@ void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
     mCharacter = (unsigned char)idx;
     mOwner = (dActor_c *)a1;
     mOwnerUniqueID = *(u32 *)(a1 + 4);
-    unk_19 = (unsigned char)a3;
+    mIconKind = (unsigned char)a3;
     mNext = gCapIconListHeads[idx];
     if (gCapIconListHeads[idx])
         gCapIconListHeads[idx]->mPrev = this;
@@ -101,7 +99,7 @@ void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
     gCapIconCounts[idx]++;
     if (a3 == 3)
         gCapIconRequestFlags[idx] |= 8;
-    unk_1a = 0;
+    mFlashFrames = 0;
     mFlags = 0;
     {
         unsigned char *p1b = (unsigned char *)(int)&mFlags;
@@ -120,14 +118,15 @@ void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
 
 // @symbol func_ov001_020ab3f0
 extern "C" void func_ov001_020ab3f0(void *r0) {
-    unsigned char *ptr = (unsigned char *)r0;
-    if (ptr[0x10] != 0) {
-        ptr[0x10] = 0;
+    /* The dThIcon_c press pulse (callers pass &mIcons[i]). */
+    dThIcon_c *icon = (dThIcon_c *)r0;
+    if (icon->mOn != 0) {
+        icon->mOn = 0;
     } else {
-        ptr[0x10] = 1;
+        icon->mOn = 1;
     }
-    ptr[0x11] = 0;
-    *(int *)(ptr + 0xc) = *(int *)(ptr + 0x18);
+    icon->mReady = 0;
+    icon->mPressTimer = icon->mPressTime;
 }
 
 // @symbol _ZN10dCapIcon_cC1Ev

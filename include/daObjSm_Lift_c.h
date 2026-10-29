@@ -20,7 +20,7 @@
  *   daObjSm_Lift_c_classInit (historically SkiLift_Spawn): fBase_c::operator
  *     new(852 = 0x354), dBgActor_c::dBgActor_c(), stores _ZTV14daObjSm_Lift_c;
  *   ~daObjSm_Lift_c: stores its own vptr, then dBgActor_c's (inlined), destroys
- *     dBgActor_c's dBgW_KcMbg at 0x124 and Model at 0xd4, then ~dActor_c. This
+ *     dBgActor_c's dBgW_KcMbg at 0x124 and dExtSimpleModel_c at 0xd4, then ~dActor_c. This
  *     class adds no member with a destructor of its own.
  *
  * SIZE 0x354 is the factory's own literal, and the last field closes on it.
@@ -30,32 +30,42 @@
  */
 
 struct daObjSm_Lift_c : dBgActor_c {
-    dActor_c *unk_320;          /* 0x320 */
-    s32 mBasePosX;              /* 0x324 */
-    s32 mBasePosY;              /* 0x328 */
-    s32 mBasePosZ;              /* 0x32c */
-    u8 unk_330;                 /* 0x330 */
-    u8 unk_331;                 /* 0x331 */
-    u8 pad_332[2];              /* 0x332 */
-    s32 mPathId;                /* 0x334 */
-    s32 mNodeCount;             /* 0x338 */
-    s32 mNodeIndex;             /* 0x33c */
-    u8 pad_340[0xc];            /* 0x340 */
-    s32 mNodeStep;              /* 0x34c */
-    u32 unk_350;                /* 0x350 */
+    /* The player touching the lift this frame (HandlePlayerContact sets it,
+       Behavior clears it at the end of every frame). */
+    dActor_c *mTouchingPlayer; /* 0x320 */
+    s32 mBasePosX;             /* 0x324 */
+    s32 mBasePosY;             /* 0x328 */
+    s32 mBasePosZ;             /* 0x32c */
+    /* Nonzero while the lift runs along its path. */
+    u8 mMoving; /* 0x330 */
+    /* Frames left before a stopped lift starts again. */
+    u8 mPauseTimer;  /* 0x331 */
+    u8 pad_332[2];   /* 0x332 */
+    s32 mPathId;     /* 0x334 */
+    s32 mNodeCount;  /* 0x338 */
+    s32 mNodeIndex;  /* 0x33c */
+    u8 pad_340[0xc]; /* 0x340 */
+    s32 mNodeStep;   /* 0x34c */
+    u32 mSoundID;    /* 0x350 */
 
     /* OUT OF LINE, DECLARED FIRST: the key function. The TU defines it first
        under `#pragma defer_codegen off`, which emits D1 then D0 -- the
        cartridge's order -- then a D2 the cartridge has no home for. */
-    virtual ~daObjSm_Lift_c();            /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjSm_Lift_c(); /* slots 16 (D1), 17 (D0) */
 
-    virtual s32   InitResources();         /* slot  0 */
-    virtual s32   CleanupResources();      /* slot  3 */
-    virtual s32   Behavior();              /* slot  6 */
-    virtual s32   Render();                /* slot  9 */
-    virtual void  OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual s32 InitResources();                  /* slot  0 */
+    virtual s32 CleanupResources();               /* slot  3 */
+    virtual s32 Behavior();                       /* slot  6 */
+    virtual s32 Render();                         /* slot  9 */
+    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
 
-    void func_ov018_02111278();
+    /* Place the model at mPos, turned by mAngleY and mAngleX plus a quarter
+       turn of yaw. */
+    void UpdateModelTransform();
+    /* The collider's before-collision hook: remember a touching player.
+       BeforeClsnCallback is the address the dBgW stores. */
+    void HandlePlayerContact(dActor_c *);
+    static void BeforeClsnCallback(void *, daObjSm_Lift_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

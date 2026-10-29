@@ -104,8 +104,8 @@ only if each label occupies exactly one object. Two kinds of label break that, a
   **71** other labels. Same shape: `IRQ`, `cstd`, `GX`, `Sound`, `SaveData`,
   `Message`, `Particle`.
 - **genuinely multi-TU classes** — the case the plan predicts in section 2 ("A large
-  class can have methods defined across several TUs"). `Model`, `Scene`, `dScStage_c`,
-  `Animation`, `MeshCollider`, `TextureSequence` all *do* have `type_info` records
+  class can have methods defined across several TUs"). `dExtSimpleModel_c`, `Scene`, `dScStage_c`,
+  `Animation`, `MeshCollider`, `dExtAnmTexPat_c` all *do* have `type_info` records
   and still swallow.
 
 Because that second group exists, **"has RTTI" does not separate the two kinds** —

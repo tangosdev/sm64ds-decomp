@@ -116,6 +116,9 @@ src/game/actors/d_a_obj_kuruma.cpp:
 src/game/actors/d_a_obj_kurumajiku.cpp:
     complete
     .text start:0x020b69e4 end:0x020b6d28
+    .init start:0x02100f84 end:0x02101064
+    .ctor start:0x021080ec end:0x021080f0
+    .bss start:0x0210dda0 end:0x0210de00
 
 src/game/actors/d_a_obj_lava.cpp:
     complete
@@ -190,51 +193,8 @@ src/game/actors/d_a_obj_cannon_shutter.cpp:
 
 src/game/player/Player.cpp:
     complete
-    .text start:0x020bccfc end:0x020e67a8
-
-src/_ZN6PlayerD0Ev.cpp:
-    complete
-    .text start:0x020e67a8 end:0x020e6858
-
-src/_ZN6PlayerD1Ev.cpp:
-    complete
-    .text start:0x020e6858 end:0x020e68f4
-
-src/_ZN6PlayerC1Ev.cpp:
-    complete
-    .text start:0x020e68f4 end:0x020e69b8
-
-src/_ZN6Player13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x020e69b8 end:0x020e69c0
-
-src/unnamed/ov002/func_ov002_020e69c0.c:
-    complete
-    .text start:0x020e69c0 end:0x020e6a08
-
-src/Color_Interp.c:
-    complete
-    .text start:0x020e6a08 end:0x020e6a78
-
-src/unnamed/ov002/func_ov002_020e6a78.c:
-    complete
-    .text start:0x020e6a78 end:0x020e6ad4
-
-src/unnamed/ov002/func_ov002_020e6ad4.c:
-    complete
-    .text start:0x020e6ad4 end:0x020e6b3c
-
-src/unnamed/ov002/func_ov002_020e6b3c.c:
-    complete
-    .text start:0x020e6b3c end:0x020e6b74
-
-src/unnamed/ov002/func_ov002_020e6b74.c:
-    complete
-    .text start:0x020e6b74 end:0x020e6bb0
-
-src/unnamed/ov002/func_ov002_020e6bb0.c:
-    complete
-    .text start:0x020e6bb0 end:0x020e6c0c
+    .text start:0x020bccfc end:0x020e6c0c
+    .init start:0x021019d0 end:0x02106e40
 
 src/game/player/d_a_ply.cpp:
     complete
@@ -252,15 +212,15 @@ src/game/actors/StarCamera_Spawn.cpp:
     complete
     .text start:0x020ebe5c end:0x020ebe8c
 
-src/game/actors/d_a_star_base.c:
+src/game/actors/d_a_star_base.cpp:
     complete
     .text start:0x020ebe8c end:0x020ebed4
 
-src/game/actors/d_a_star_silver_star.c:
+src/game/actors/d_a_star_silver_star.cpp:
     complete
     .text start:0x020ebed4 end:0x020ebf30
 
-src/game/actors/d_a_star_star.c:
+src/game/actors/d_a_star_star.cpp:
     complete
     .text start:0x020ebf30 end:0x020ebf8c
 
@@ -291,22 +251,9 @@ src/runtime/actor/d_path_lift_actor.cpp:
     .ctor start:0x0210811c end:0x02108120
     .data start:0x0210aeb8 end:0x0210af68
 
-src/unnamed/ov002/func_ov002_020effb8.c:
+src/unnamed/ov002/func_ov002_020effb8.cpp:
     complete
-    .text start:0x020effb8 end:0x020f02c8
-
-src/unnamed/ov002/func_ov002_020f02c8.c:
-    complete
-    .text start:0x020f02c8 end:0x020f030c
-
-src/unnamed/ov002/func_ov002_020f030c.c:
-    complete
-    .text start:0x020f030c end:0x020f035c
-
-src/unnamed/ov002/func_ov002_020f035c.c:
-    complete
-    .text start:0x020f035c end:0x020f03c4
-
+    .text start:0x020effb8 end:0x020f03c4
 src/game/actors/d_a_s_coin.cpp:
     complete
     .text start:0x020f03c4 end:0x020f0894
@@ -344,16 +291,9 @@ src/game/actors/d_a_mugen_bgm.cpp:
 
 src/game/actors/d_a_demo.cpp:
     complete
-    .text start:0x020f1f70 end:0x020f8838
+    .text start:0x020f1f70 end:0x020f8858
     .data start:0x0210b940 end:0x0210b958
-
-src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp:
-    complete
-    .text start:0x020f8838 end:0x020f8848
-
-src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp:
-    complete
-    .text start:0x020f8848 end:0x020f8858
+    .bss start:0x02110afc end:0x02110e24
 
 src/game/actors/d_a_f_pkn_ball.cpp:
     complete
@@ -366,6 +306,9 @@ src/game/actors/d_a_sound_obj.cpp:
 src/ui/hud/d_map.cpp:
     complete
     .text start:0x020f975c end:0x020fb8f8
+    .init start:0x0210804c end:0x02108094
+    .ctor start:0x02108130 end:0x02108134
+    .bss start:0x02111160 end:0x02111178
 
 src/ui/hud/d_meter.cpp:
     complete
@@ -386,27 +329,15 @@ src/game/actors/d_a_propeller_heyho_fire.cpp:
     .ctor start:0x02108134 end:0x02108138
     .bss start:0x02111190 end:0x021111a0
 
-src/unnamed/ov002/__sinit_ov002_02100560.c:
+src/unnamed/ov002/__sinit_ov002_02100560.cpp:
     complete
     .init start:0x02100560 end:0x02100938
 
 
-src/unnamed/ov002/__sinit_ov002_02100f84.c:
-    complete
-    .init start:0x02100f84 end:0x02101064
-
-src/unnamed/ov002/__sinit_ov002_021019d0.c:
-    complete
-    .init start:0x021019d0 end:0x02106e40
-
-src/unnamed/ov002/__sinit_ov002_02107370.c:
+src/unnamed/ov002/__sinit_ov002_02107370.cpp:
     complete
     .init start:0x02107370 end:0x02107f88
 
 src/unnamed/ov002/__sinit_ov002_02107f88.c:
     complete
     .init start:0x02107f88 end:0x0210804c
-
-src/unnamed/ov002/__sinit_ov002_0210804c.c:
-    complete
-    .init start:0x0210804c end:0x02108094

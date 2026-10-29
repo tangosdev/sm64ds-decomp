@@ -54,35 +54,35 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN14daObjC1_Trap_c6State4Ev",
+      "symbol": "_ZN14daObjC1_Trap_c13StateHeldOpenEv",
       "address": "0x0211124c",
       "size": "0x00000010",
       "legacy_source": "src/func_ov010_0211124c.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN14daObjC1_Trap_c6State3Ev",
+      "symbol": "_ZN14daObjC1_Trap_c12StateClosingEv",
       "address": "0x0211125c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov010_0211125c.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN14daObjC1_Trap_c6State2Ev",
+      "symbol": "_ZN14daObjC1_Trap_c9StateOpenEv",
       "address": "0x02111284",
       "size": "0x00000030",
       "legacy_source": "src/func_ov010_02111284.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN14daObjC1_Trap_c6State1Ev",
+      "symbol": "_ZN14daObjC1_Trap_c12StateOpeningEv",
       "address": "0x021112b4",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov010_021112b4.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN14daObjC1_Trap_c6State0Ev",
+      "symbol": "_ZN14daObjC1_Trap_c11StateClosedEv",
       "address": "0x02111320",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov010_02111320.c",
@@ -290,37 +290,37 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@758",
+      "from": "@808",
       "to": "@744",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@767",
+      "from": "@817",
       "to": "@753",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@769",
+      "from": "@819",
       "to": "@755",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@759",
+      "from": "@809",
       "to": "@993",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@763",
+      "from": "@813",
       "to": "@994",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@765",
+      "from": "@815",
       "to": "@995",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@761",
+      "from": "@811",
       "to": "@996",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
@@ -557,7 +557,7 @@
       "source": "0x02112a78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN14daObjC1_Trap_c6State0Ev",
+      "symbol": "_ZN14daObjC1_Trap_c11StateClosedEv",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x02111320"
@@ -567,7 +567,7 @@
       "source": "0x02112a80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN14daObjC1_Trap_c6State2Ev",
+      "symbol": "_ZN14daObjC1_Trap_c9StateOpenEv",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x02111284"
@@ -577,7 +577,7 @@
       "source": "0x02112a88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN14daObjC1_Trap_c6State1Ev",
+      "symbol": "_ZN14daObjC1_Trap_c12StateOpeningEv",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x021112b4"
@@ -587,7 +587,7 @@
       "source": "0x02112a90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN14daObjC1_Trap_c6State4Ev",
+      "symbol": "_ZN14daObjC1_Trap_c13StateHeldOpenEv",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x0211124c"
@@ -597,7 +597,7 @@
       "source": "0x02112a98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN14daObjC1_Trap_c6State3Ev",
+      "symbol": "_ZN14daObjC1_Trap_c12StateClosingEv",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x0211125c"
@@ -897,28 +897,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,

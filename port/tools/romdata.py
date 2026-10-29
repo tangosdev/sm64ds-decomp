@@ -23,12 +23,12 @@ BSS_START = 0x02094640
 # here -- they are runtime-initialized and live in the HAL as storage.
 TABLES = [
     # A fourth column names ROM symbols the decomp spells by NAME rather than
-    # by address. Model's migrated constructor assigns IDENTITY_MATRIX4X3, not
-    # data_02082128, so the alias is emitted here beside the definition rather
-    # than in a HAL file: a HAL alias would point at a symbol port_refcheck
-    # cannot find in src/ or include/, because this datum is generated and
-    # deliberately kept out of git.
-    (0x02082128, 48, "int", ["IDENTITY_MATRIX4X3"]),  # Model ctor default Matrix4x3
+    # by address. dExtSimpleModel_c's migrated constructor assigns
+    # IDENTITY_MATRIX4X3, not data_02082128, so the alias is emitted here
+    # beside the definition rather than in a HAL file: a HAL alias would point
+    # at a symbol port_refcheck cannot find in src/ or include/, because this
+    # datum is generated and deliberately kept out of git.
+    (0x02082128, 48, "int", ["IDENTITY_MATRIX4X3"]),  # dExtSimpleModel_c ctor default Matrix4x3
     (0x02082190, 48, "int"),        # matrix Render uses for a NULL argument
     (0x02082214, 0x4000, "short"),  # s16 trig table the material bind indexes
     (0x020755A0, 12, "char"),       # OBJ width table (shape x size)

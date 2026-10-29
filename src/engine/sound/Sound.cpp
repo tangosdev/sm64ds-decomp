@@ -8,10 +8,12 @@
  * include/Sound.h models the namespace.
  *
  * leftovers:
- * - Sound::Play and Sound::Play2D are defined void; callers that harvest r0
- *   keep the mangled spelling (the same return-split the shards carried).
- * - PlaySub and ChangeMusicVolume keep their literal mangled names:
- *   `5Fix12IiE' is unproducible (the Fix12 wall, see include/Sound.h).
+ * - Sound::Play is defined void; PlayBank0's caller harvests r0 through a
+ *   cast of its address (the same return-split the shards carried).
+ *   Play2D returns Player_PlaySoundEffect's result, which its tail call
+ *   leaves in r0.
+ * - ChangeMusicVolume is Sound::ChangeMusicVolume(unsigned int, int). The
+ *   second value is a 0x1000-scaled volume, spelled Fix12i in the header.
  * - Sound_PlayIfNotActive calls func_0201186c through an int-arity pointer:
  *   the def takes short #4 and the site passes d untruncated.
  * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
@@ -25,6 +27,8 @@
  */
 #include "types.h"
 #include "Sound.h"
+#include "Memory.h"
+#include "math/Approach.h"
 
 extern "C" {
 
@@ -83,14 +87,6 @@ extern void func_02048f14(void);
 extern void func_02048f24(void);
 extern void func_0204efe0(void);
 extern void func_0204effc(void);
-extern void *_ZN6Memory8AllocateEj(u32 size);
-extern void _ZN5Sound13Func_02048eb4Ev(void);
-extern void _ZN5Sound13Func_02048ec4Ev(void);
-extern void _ZN5Sound13Func_02048ee4Ev(void);
-/* Callers that consume r0 from the void-declared Sound::Play2D keep the
- * mangled spelling; the extern "C" name is not type-checked across the seam.
- * Members reach the same symbol by casting Play2D/Play's address instead. */
-extern unsigned int _ZN5Sound6Play2DEjj(unsigned int a, unsigned int b);
 
 /* In-TU functions, declared once so callers ahead of their definitions link. */
 extern void func_02013524(int fileRef, int vol, int mode);
@@ -149,7 +145,6 @@ extern int data_0209b4a8;
 extern int data_0209b4ac;
 extern int data_0209b4b0[];
 extern char data_0209b4b4[];
-extern char data_0209b53c[];
 extern int data_0209baa0;
 extern char data_0209d574[];
 extern unsigned char data_0209f250;
@@ -161,10 +156,6 @@ extern unsigned char data_02075258[];
 extern char data_0208e498[];
 
 }
-
-/* ApproachLinear(int&, int, int) is _Z14ApproachLinearRiii -- a C++ symbol,
- * so it is declared as one rather than by its mangled name. */
-void ApproachLinear(int &val, int target, int step);
 
 typedef struct {
     int playerID;
@@ -185,13 +176,21 @@ typedef struct SndRegEntry {
     struct SndRegEntry *next; /* 0x10 - bucket chain, away from the head */
 } SndRegEntry;
 
+extern "C" void func_02011a5c(void *vc);
+
 typedef struct SndRegTable {
     int counter;                 /* 0x00 - handed out as the unique id */
     unsigned char cursor;        /* 0x04 - round-robin cursor into entries */
     unsigned char pad5[3];
     SndRegEntry entries[0x40];   /* 0x08 */
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
+
+    SndRegTable() {
+        func_02011a5c(this);
+    }
 } SndRegTable;
+
+SndRegTable data_0209b53c;
 
 namespace Sound {
 
@@ -356,20 +355,22 @@ extern "C" void func_02012d64(void)
                   0);
 }
 
-// @symbol _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE
-extern "C" int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b)
-{
+// @symbol _ZN5Sound17ChangeMusicVolumeEji
+namespace Sound {
+int ChangeMusicVolume(unsigned int a, int b) {
     data_0208e42c = a;
     data_0209b494 = b;
     return data_0209b490 == (data_0208e42c << 12);
 }
+}
 
-// @symbol _ZN5Sound7PlaySubEjjj5Fix12IiEb
-extern "C" bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e)
-{
+// @symbol _ZN5Sound7PlaySubEjjjib
+namespace Sound {
+bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
     int x;
     if (c == 0) {
-        if (!e) {
+        /* e is bool. A plain test compiles to ldrb; retail loads the whole word. */
+        if (!*(int *)&e) {
             x = data_0208e430;
             if ((x >= 0 && x != (int)a) ||
                 (data_0209b49c == 0 && data_0208e42c == (int)b && data_0209b490 == (int)(b << 12)))
@@ -377,7 +378,7 @@ extern "C" bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, 
         }
     } else {
         x = data_0208e430;
-        if (x < 0 || e) {
+        if (x < 0 || *(int *)&e) { /* same full-word load as above */
             if (x != (int)a) {
                 data_0208e430 = a;
                 if (a != 0x35 && a != 0x36) {
@@ -394,6 +395,7 @@ extern "C" bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, 
     data_0209b470 = (signed char)c;
     data_0209b494 = d;
     return data_0209b490 == (int)(b << 12) && data_0209b49c == (int)(c << 12);
+}
 }
 
 namespace Sound {
@@ -437,11 +439,17 @@ void SetMusic(unsigned int j1, unsigned int j2)
     func_02011dcc(data_0209b4a0, j2);
 }
 
-// @symbol _ZN5Sound8EndMusicEjj
-void EndMusic(unsigned int j1, unsigned int j2)
-{
+/* ONE parameter, although this symbol used to be spelled with two (`...Ejj`).
+   The second was never read here, and every ROM call site passes a single
+   argument -- `LDRB r0, [...]; BL`, r1 untouched. The extra `j` kept the symbol
+   unspellable from C++: a truthful declaration mangled to ...Ej and matched
+   nothing, so callers had to hand-spell the two-parameter name and pass one
+   argument. The symbol is now ...Ej and include/Sound.h declares it. */
+// @symbol _ZN5Sound8EndMusicEj
+void EndMusic(unsigned int playerNo) {
     if (data_0209b4ac < 0) return;
-    if (j1 != data_0209f250) return;
+    if (playerNo != data_0209f250)
+        return;
     int e43c = data_0208e43c;
     int e444 = data_0208e444;
     data_0209b4ac = e43c;
@@ -487,11 +495,9 @@ extern "C" void func_02012860(void *a, int flags, int c, int d, int e)
 namespace Sound {
 
 // @symbol _ZN5Sound6Play2DEjj
-void Play2D(unsigned int j1, unsigned int j2)
-{
-    Player_PlaySoundEffect((int)data_0209b4a4, j1, j2);
+unsigned int Play2D(unsigned int j1, unsigned int j2) {
+    return Player_PlaySoundEffect((int)data_0209b4a4, j1, j2);
 }
-
 }
 
 // @symbol func_020127ec
@@ -511,13 +517,13 @@ extern "C" void func_020127a4(int r0, int r1, int r2, int r3)
 // @symbol func_02012790
 extern "C" unsigned int func_02012790(unsigned int a)
 {
-    return _ZN5Sound6Play2DEjj(2, a);
+    return Sound::Play2D(2, a);
 }
 
 // @symbol func_0201277c
 extern "C" unsigned int func_0201277c(unsigned int a)
 {
-    return _ZN5Sound6Play2DEjj(3, a);
+    return Sound::Play2D(3, a);
 }
 
 namespace Sound {
@@ -525,13 +531,13 @@ namespace Sound {
 // @symbol _ZN5Sound12PlayBank3_2DEj
 unsigned int PlayBank3_2D(unsigned int a)
 {
-    return ((unsigned int (*)(unsigned int, unsigned int))Play2D)(3, a);
+    return Play2D(3, a);
 }
 
 // @symbol _ZN5Sound12PlayBank2_2DEj
 unsigned int PlayBank2_2D(unsigned int a)
 {
-    return ((unsigned int (*)(unsigned int, unsigned int))Play2D)(2, a);
+    return Play2D(2, a);
 }
 
 }
@@ -616,7 +622,7 @@ extern "C" void func_0201251c(int a, int b, int c, int d)
 // @symbol Sound_PlayIfNotActive
 extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
 {
-    char *o = (char *)func_02011934(data_0209b53c, a);
+    char *o = (char *)func_02011934((char *)&data_0209b53c, a);
     if (o) {
         *(unsigned char *)(o + 6) = 1;
         return *(int *)o;
@@ -624,7 +630,7 @@ extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
     /* original TU declared func_0201186c's #4 as int (def is short):
        the call site passes d untruncated -- cast through an int-arity
        pointer to reproduce it without the narrowing sequence */
-    return ((int (*)(char *, int, int, int))func_0201186c)(data_0209b53c, b, c, d);
+    return ((int (*)(char *, int, int, int))func_0201186c)((char *)&data_0209b53c, b, c, d);
 }
 
 // @symbol func_02012468
@@ -635,7 +641,7 @@ extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, sh
     char *p;
 
     x = Sound_PlayIfNotActive(a, b, c, h);
-    p = (char *)func_02011934(data_0209b53c, x);
+    p = (char *)func_02011934((char *)&data_0209b53c, x);
     if (p != 0)
         func_02012860(p + 8, dd, e, f, g);
     return x;
@@ -667,14 +673,14 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
     if (func_02048a1c((int *)&pos, a, b) == 0)
         return 0;
 
-    char *slot = (char *)func_02011934(data_0209b53c, handle);
+    char *slot = (char *)func_02011934((char *)&data_0209b53c, handle);
     if (slot) {
         *(char *)(slot + 6) = 1;
         func_020123c8((int)(slot + 8), a, b, (int)&pos);
         return *(int *)slot;
     }
 
-    return func_0201179c(data_0209b53c, a, b, (int)&pos, e);
+    return func_0201179c((char *)&data_0209b53c, a, b, (int)&pos, e);
 }
 
 }
@@ -690,13 +696,13 @@ extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
 {
     void *p;
     if (func_02048a1c((int *)a3, a1, a2) == 0) return 0;
-    p = func_02011934(data_0209b53c, a0);
+    p = func_02011934((char *)&data_0209b53c, a0);
     if (p != 0) {
         *(unsigned char *)((char *)p + 6) = 1;
         func_02048c30((char *)p + 8, a3, a4);
         return *(int *)p;
     }
-    return func_020116c4(data_0209b53c, a1, a2, a3, a4, a5);
+    return func_020116c4((char *)&data_0209b53c, a1, a2, a3, a4, a5);
 }
 
 // @symbol func_02012194
@@ -704,7 +710,7 @@ extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, sh
 {
     char *e;
     if (func_02048a1c((int *)s1, a1, a2) == 0) return 0;
-    e = (char *)func_02011934(data_0209b53c, (int)c);
+    e = (char *)func_02011934((char *)&data_0209b53c, (int)c);
     if (e != 0) {
         char *slot = e + 8;
         e[6] = 1;
@@ -712,8 +718,8 @@ extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, sh
         func_0204f7fc(slot, a3, s0);
         return *(int *)e;
     } else {
-        char *n = (char *)func_0201179c(data_0209b53c, a1, a2, s1, s2);
-        char *e2 = (char *)func_02011934(data_0209b53c, (int)n);
+        char *n = (char *)func_0201179c((char *)&data_0209b53c, a1, a2, s1, s2);
+        char *e2 = (char *)func_02011934((char *)&data_0209b53c, (int)n);
         if (e2 != 0)
             func_0204f7fc(e2 + 8, a3, s0);
         return (int)n;
@@ -723,7 +729,7 @@ extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, sh
 // @symbol func_02012174
 extern "C" unsigned int func_02012174(unsigned int a, unsigned int b)
 {
-    return _ZN5Sound6Play2DEjj(1, b + data_02075250[a]);
+    return Sound::Play2D(1, b + data_02075250[a]);
 }
 
 namespace Sound {
@@ -738,11 +744,10 @@ unsigned int PlayCharVoice(unsigned int a, unsigned int b, const Vector3 &v)
 }
 
 // @symbol func_02012120
-extern "C" void func_02012120(unsigned int p0, unsigned int p1, unsigned int p2,
-                              const Vector3 *p3, short p4)
-{
+extern "C" int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
+                             short p4) {
     p2 += data_02075250[p1];
-    Sound::PlayLong(p0, 1, p2, *p3, p4);
+    return Sound::PlayLong(p0, 1, p2, *p3, p4);
 }
 
 namespace Sound {
@@ -899,7 +904,7 @@ extern "C" void func_02011d2c(void)
 // @symbol func_02011d20
 extern "C" void func_02011d20(void)
 {
-    _ZN5Sound13Func_02048ee4Ev();
+    Sound::Func_02048ee4();
 }
 
 // @symbol func_02011d14
@@ -911,13 +916,13 @@ extern "C" void func_02011d14(void)
 // @symbol func_02011d08
 extern "C" void func_02011d08(void)
 {
-    _ZN5Sound13Func_02048ec4Ev();
+    Sound::Func_02048ec4();
 }
 
 // @symbol func_02011cfc
 extern "C" void func_02011cfc(void)
 {
-    _ZN5Sound13Func_02048eb4Ev();
+    Sound::Func_02048eb4();
 }
 
 // @symbol DisableSoundPlayersForCredits
@@ -1207,7 +1212,7 @@ extern "C" void func_020133bc(void)
 {
     char *anim;
     func_0204f070();
-    data_0209b498 = (int)func_0205130c((u32)_ZN6Memory8AllocateEj(0x100000), 0x100000);
+    data_0209b498 = (int)func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
     func_0201a9fc(data_0209d574);
     func_02050f34(&data_0209b4b4, (int)anim, data_0209b498, 0);
@@ -1221,7 +1226,7 @@ extern "C" void func_020133bc(void)
     func_0204f94c(&data_0209b4a0);
     func_0204f94c(&data_0209b4b0);
     func_0204f94c(&data_0209b4a4);
-    func_02011a28(data_0209b53c);
+    func_02011a28((char *)&data_0209b53c);
     func_02048f34(&data_0209b4b4);
     func_020506fc(2);
     func_02049cd8(&data_0209baa0, 0x1000, 0);

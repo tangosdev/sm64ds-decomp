@@ -9,7 +9,9 @@
 #ifdef __cplusplus
 struct Matrix4x3;
 #include "math/Fix12.h"
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *);
+}
 #endif
 
 /* Same 0xc coordinate layout as Vector3, but deliberately POD. A Vector3[4]
@@ -60,8 +62,7 @@ struct dClipper {
        them from r1/r2/r3/[sp]. The old address-derived `...Ev` symbol was
        therefore impossible; this declaration lets CodeWarrior generate the
        truthful signature and the exact ROM body. */
-    void Func_020156DC(Fix12i aspectRatio, u16 fovAngle,
-                       Fix12i nearZ, Fix12i farZ);
+    void Func_020156DC(Fix12i aspectRatio, s16 fovAngle, Fix12i nearZ, Fix12i farZ);
 
     /* Name inferred from the frustum-plane tests; no original name is known.
        hint optionally caches the rejecting side plane. */
@@ -72,7 +73,9 @@ struct dClipper {
 
     /* D0 calls 0x0203cbcc, Memory::operator_delete2, rather than the global
        delete at 0x0203cbf0. Inline class lookup makes that choice exactly. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 #endif
 };
 

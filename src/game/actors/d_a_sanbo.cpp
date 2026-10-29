@@ -37,12 +37,6 @@
  *   - gSanboHeadModelFile and gSanboBodyModelFile are the head
  *   and segment file handles (InitResources LoadFile, CleanupResources
  *   Release). Both actor profiles are defined with their factories below.
- *   - unk_3a8 is the head byte func_ov096_0213670c reads to
- *   choose a 0 or 0x5a regrowth delay. func_ov096_021365d4 clears it
- *   once three segments exist. It stays unk_ until that role is
- *   measured past those two stores.
- *   - unk_0a4 and unk_0ac keep dActor_c's names.
- *   func_ov096_02135e2c multiplies them by the floor normal.
  *   - func_ov096_02135948 keeps five int[3] positions. One
  *   Vector3 in their place changes that function.
  *   - data_02082214 is arm9's sine table. data_020a0e68 is the
@@ -67,11 +61,13 @@ enum daSanbo_c_AssetId {
 #include "Player.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
+#include "math/Approach.h"
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
-namespace cstd { int fdiv(int, int); }
-
+namespace cstd {
+int fdiv(int, int);
+}
 
 extern "C" {
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
@@ -79,21 +75,19 @@ extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, F
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);
 extern struct Matrix4x3 data_020a0e68;
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern int RandomIntInternal(void*);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
+extern void d_a_sanboNewSimpleHold(unsigned int, int, int, int);
 extern int data_0209e650[];
 extern s16 data_02082214[];
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
 void UnloadBlueCoinModel(void *);
-extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *c, int d);
 void LoadBlueCoinModel(void* actor);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int r, int h, unsigned int d, unsigned int e);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int b, int c, void* v, int e);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v, int e);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
@@ -101,7 +95,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
  * pair (func_02017acc / func_02017ab4), spelled through a declared-only
  * subclass so the static initializer names the real entry points. */
 struct SanboModelFilePtr : SharedFilePtr {
-    u32 words[2];
     SanboModelFilePtr(u32 fileID);
     ~SanboModelFilePtr();
 };
@@ -142,15 +135,15 @@ int daSanbo_c::InitResources()
 
     t = (actorID == SANBO_HEAD);
     if (t != false) {
-        void* m = Model::LoadFile(gSanboHeadModelFile);
+        void *m = dExtSimpleModel_c::LoadFile(gSanboHeadModelFile);
         mModel.SetFile((BMD_File *)m, 1, 1);
-        Model::LoadFile(gSanboBodyModelFile);
+        dExtSimpleModel_c::LoadFile(gSanboBodyModelFile);
         LoadBlueCoinModel(this);
-        unk_3a8 = 1;
+        mInstantSprout = 1;
     } else {
         t = (actorID == SANBO_BODY);
         if (t != false) {
-            void* m = Model::LoadFile(gSanboBodyModelFile);
+            void *m = dExtSimpleModel_c::LoadFile(gSanboBodyModelFile);
             if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
                 return 0;
         }
@@ -159,8 +152,8 @@ int daSanbo_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x3c000, 0x78000, 0x200004, 0x6eff0);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x3c000, 0x3c000, 0, 0);
+    mdCcAc_c.Init(this, 0x3c000, 0x78000, 0x200004, 0x6eff0);
+    mWithMeshClsn.Init(this, 0x3c000, 0x3c000, 0, 0);
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -204,7 +197,8 @@ int daSanbo_c::Behavior()
 {
     int s = mState;
     if (s != 2 && s != 5) {
-        if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000)) return 1;
+        if (IsTooFarAwayFromPlayer(0x5dc000))
+            return 1;
     }
     func_ov096_021368b4();
     MakeVanishLuigiWork(mdCcAc_c);
@@ -218,7 +212,7 @@ int daSanbo_c::Render()
     unsigned int f = mFlags;
     int b = ((f & 0x40000) != 0);
     if(b) return 1;
-    Model *model = &mModel;
+    dExtSimpleModel_c *model = &mModel;
     model->Render(&mScale);
     return 1;
 }
@@ -285,17 +279,12 @@ int daSanbo_c::func_ov096_021368a4()
 
 namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
 
-void ApproachLinear(int &dst, int target, int step);
-bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
-void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int x, int y, int z);
-unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
-unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    unsigned a, unsigned b, int x, int y, int z, const Vector3_16f *dir);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-    void *player, void *at, unsigned a, int fix, unsigned b, unsigned d, unsigned e);
+void d_a_sanboRunningSlidingDustAtHold(int x, int y, int z);
+unsigned d_a_sanboNewHold(unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
+unsigned d_a_sanboNewUnkCallback818Hold(unsigned a, unsigned b, int x, int y, int z,
+                                        const Vector3_16f *dir);
 }
 
 // @symbol _ZN9daSanbo_c19func_ov096_02136754Ev
@@ -353,10 +342,10 @@ int daSanbo_c::func_ov096_02136754()
 }
 
 // @symbol _ZN9daSanbo_c19func_ov096_0213670cEv
-/* unk_3a8 on the head picks a zero delay or a 90-frame one. */
+/* mInstantSprout on the head picks a zero delay or a 90-frame one. */
 int daSanbo_c::func_ov096_0213670c() {
     daSanbo_c *head = func_ov096_021357b4();
-    u8 timer = head->unk_3a8;
+    u8 timer = head->mInstantSprout;
 
     if (timer != 0)
         timer = 0;
@@ -397,7 +386,7 @@ int daSanbo_c::func_ov096_021365d4()
                 mNextSegment = (daSanbo_c *)spawned;
                 func_ov096_02136928(4);
                 if (func_ov096_02135838() >= 3)
-                    func_ov096_021357b4()->unk_3a8 = 0;
+                    func_ov096_021357b4()->mInstantSprout = 0;
             }
         }
     }
@@ -407,8 +396,7 @@ int daSanbo_c::func_ov096_021365d4()
     mdCcAc_c.Clear();
     mdCcAc_c.dCc_c::Update();
     if (mWithMeshClsn.IsOnGround() != 0) {
-        _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(
-            mPosX, mPosY, mPosZ);
+        Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
     }
     return 1;
 }
@@ -450,10 +438,8 @@ int daSanbo_c::func_ov096_02136434()
         ((int *)&pos)[0] = x;
         ((int *)&pos)[1] = y;
         ((int *)&pos)[2] = z;
-        mParticle0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
-        mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
+        mParticle0 = Particle::System::New(mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
+        mParticle1 = Particle::System::NewUnkCallback818(mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
         p0 = Particle::System::FromUniqueID(mParticle0);
         p1 = Particle::System::FromUniqueID(mParticle1);
         if (p0)
@@ -561,10 +547,8 @@ int daSanbo_c::func_ov096_02136134()
     mVertSpeed = 0x28000;
     mHorzSpeed = 0xa000;
     mTimer = 0x2d;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, mPosX,
-        mPosY + OnAimedAtWithEgg(), mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, mPosX,
-        mPosY + OnAimedAtWithEgg(), mPosZ);
+    Particle::System::NewSimple(0x43, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
+    Particle::System::NewSimple(0x44, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     mState = 5;
     return 1;
 }
@@ -610,8 +594,7 @@ void daSanbo_c::func_ov096_02135efc()
             mMatrix.m[10] = mPosY >> 3;
             mMatrix.m[11] = mPosZ >> 3;
 
-            _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-                this, &mShadowModel, &mMatrix, 0xa0000, 0x2bc000, 0xf);
+            DropShadowRadHeight(mShadowModel, mMatrix, 0xa0000, 0x2bc000, 0xf);
             return;
         }
     }
@@ -622,8 +605,7 @@ void daSanbo_c::func_ov096_02135efc()
     mModel.mat4x3.m[11] = (mPosZ + mOffsetZ) >> 3;
 
     if (mNextSegment == 0 || mState == 2 || mState == 5) {
-        _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-            this, &mShadowModel, &mModel.mat4x3, 0x82000, 0x2bc000, 0xf);
+        DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x82000, 0x2bc000, 0xf);
     }
 }
 
@@ -637,8 +619,8 @@ void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
     if (clsn->IsOnGround()) {
         static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(*(Vector3 *)n0);
         if (n0[1] != 0) {
-            int x = FX_MUL(n0[0], unk_0a4);
-            int z = FX_MUL(n0[2], unk_0ac);
+            int x = FX_MUL(n0[0], mSpeedX);
+            int z = FX_MUL(n0[2], mSpeedZ);
             int dot = x + z;
             int slope = cstd::fdiv(dot, n0[1]);
             mVertSpeed = -(slope + 0x8000);
@@ -733,10 +715,9 @@ void daSanbo_c::func_ov096_02135948()
             ((int *)&pos)[0] = x;
             ((int *)&pos)[1] = y;
             ((int *)&pos)[2] = z;
-            mParticle0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
-            mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
+            mParticle0 = Particle::System::New(mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
+            mParticle1 =
+                Particle::System::NewUnkCallback818(mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
             Sound::PlayBank0(9, mCamSpacePos);
             mHitActor = player;
             func_ov096_02136928(2);
@@ -758,15 +739,13 @@ void daSanbo_c::func_ov096_02135948()
                         vv1[0] = mPosX;
                         vv1[1] = mPosY;
                         vv1[2] = mPosZ;
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                            player, vv1, 2, 0xc000, 1, 0, 1);
+                        player->Hurt(*(Vector3 *)vv1, 2, 0xc000, 1, 0, 1);
                     }
                 } else if (mVertSpeed == 0 && prev->mVertSpeed == 0) {
                     vv2[0] = mPosX;
                     vv2[1] = mPosY;
                     vv2[2] = mPosZ;
-                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                        player, vv2, 2, 0xc000, 1, 0, 1);
+                    player->Hurt(*(Vector3 *)vv2, 2, 0xc000, 1, 0, 1);
                 }
             } else if (state == 1) {
                 if (mPrevSegment == 0) {
@@ -774,23 +753,20 @@ void daSanbo_c::func_ov096_02135948()
                         vv3[0] = mPosX;
                         vv3[1] = mPosY;
                         vv3[2] = mPosZ;
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                            player, vv3, 2, 0xc000, 1, 0, 1);
+                        player->Hurt(*(Vector3 *)vv3, 2, 0xc000, 1, 0, 1);
                     }
                 } else if (mWithMeshClsn.IsOnGround() != 0 &&
                            mPrevSegment->mVertSpeed == 0) {
                     vv4[0] = mPosX;
                     vv4[1] = mPosY;
                     vv4[2] = mPosZ;
-                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                        player, vv4, 2, 0xc000, 1, 0, 1);
+                    player->Hurt(*(Vector3 *)vv4, 2, 0xc000, 1, 0, 1);
                 }
             } else {
                 vv5[0] = mPosX;
                 vv5[1] = mPosY;
                 vv5[2] = mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                    player, vv5, 2, 0xc000, 1, 0, 1);
+                player->Hurt(*(Vector3 *)vv5, 2, 0xc000, 1, 0, 1);
             }
         }
     }

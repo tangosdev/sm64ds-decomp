@@ -1,27 +1,27 @@
 //cpp
 /* ov006 sprite pool, 0x020c8a30..0x020c8dd4.
  *
- * Three 0x20-byte records at sPuffs. Jump, Jump2,
- * Trampoline and Trampoline2 reset the pool through 0x020c8a9c.
- * No RTTI or vtable, so the functions keep their address names.
- * The empty constructor and destructor are what the sinit at
- * 0x0212f660 passes to __cxa_vec_ctor.
+ * Three 0x20-byte Puff records at sPuffs. Jump, Jump2, Trampoline and
+ * Trampoline2 reset the pool through Puff_ClearAll; dMgJump3DMario_c and
+ * the Trampoline Mario unit claim records through Puff_Spawn.
+ * No RTTI or vtable, so the record name is coined and the C entries keep
+ * the names their callers use.
  *
- * leftovers:
- * - Draw, update and clear use the existing record fields. Their public
- *   pointer signatures stay unchanged for the pool callers.
- * - ApproachLinear and ApproachLinear2 stay local externs. They
- *   take the value by reference.
- * - The pool, the counter and the sprite table are overlay data,
- *   not this TU's.
+ * The file defines the pool. mwcc builds sPuffs in this file's static
+ * initializer (retail 0x0212f660) with __cxa_vec_ctor and registers the
+ * array destructor __arraydtor, which it emits after the initializer.
+ * The record's constructor and destructor are inline, so their used bodies
+ * come after __arraydtor as on the cartridge (D1 0x020c8dcc, C1 0x020c8dd0).
  */
 #include "nitro/fx/fx.h"
+#include "math/Approach.h"
 
-#include "nitro/fx/fx.h"
+/* One puff sprite: position, velocity, a swaying spread that shrinks by
+   mScale each frame, and a lifetime. */
+struct Puff {
+    Puff();
+    ~Puff();
 
-typedef long long s64;
-
-struct Ent_ov006 {
     int x;
     int y;
     int mVelX;
@@ -34,36 +34,20 @@ struct Ent_ov006 {
     short mTimer;
 };
 
-extern int ApproachLinear(int &, int, int);
-extern int ApproachLinear2(short &, short, short);
-
 extern "C" {
+/* local extern: arm9 C helpers with no shared header. */
 int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-typedef void (*dtor_t)(void *);
-void __cxa_vec_cleanup(void *block, unsigned int n, unsigned int size, dtor_t dtor);
+}
+
 extern short data_02082214[];
 extern void **sPuffSprites[];
-extern int sPuffNextIndex;
-extern void **sPuffXTable;
-extern struct Ent_ov006 sPuffs[3];
-extern int sPuffPoolLast[];
 
-void Puff_Draw(char *c);
-void Puff_Update(char *c);
-void Puff_Clear(short *p);
-void Puff_ElemDtor(void);
+int sPuffNextIndex;
+void **sPuffXTable;
+Puff sPuffs[3];
 
-// @symbol Puff_Nothing
-void Puff_Nothing(void) {}
-
-// @symbol Puff_ElemDtor
-void Puff_ElemDtor(void) {}
-
-// @symbol Puff_CleanupAll
-void Puff_CleanupAll(void) {
-    __cxa_vec_cleanup(sPuffs, 3, 0x20, (dtor_t)Puff_ElemDtor);
-}
+extern "C" {
 
 // @symbol Puff_Spawn
 void Puff_Spawn(int x, int y) {
@@ -101,12 +85,12 @@ void Puff_Spawn(int x, int y) {
 
 // @symbol Puff_Clear
 void Puff_Clear(short *p) {
-    ((Ent_ov006 *)p)->mActive = 0;
+    ((Puff *)p)->mActive = 0;
 }
 
 // @symbol Puff_Update
 void Puff_Update(char *c) {
-    Ent_ov006 *entry = (Ent_ov006 *)c;
+    Puff *entry = (Puff *)c;
     if (entry->mActive == 0)
         return;
     entry->mAngle += 0x200;
@@ -124,7 +108,7 @@ void Puff_Update(char *c) {
 
 // @symbol Puff_Draw
 void Puff_Draw(char *c) {
-    Ent_ov006 *entry = (Ent_ov006 *)c;
+    Puff *entry = (Puff *)c;
     void *sprite;
     int sine;
     int offsetX;
@@ -171,10 +155,16 @@ void Puff_UpdateAll(void) {
 // @symbol Puff_DrawAll
 void Puff_DrawAll(void) {
     int i;
-    char *p = (char *)sPuffPoolLast;
+    char *p = (char *)&sPuffs[2];
     for (i = 2; i >= 0; i--) {
         Puff_Draw(p);
         p -= 0x20;
     }
 }
 }
+
+// @symbol _ZN4PuffD1Ev
+inline Puff::~Puff() {}
+
+// @symbol _ZN4PuffC1Ev
+inline Puff::Puff() {}

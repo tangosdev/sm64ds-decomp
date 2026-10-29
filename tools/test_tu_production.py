@@ -515,6 +515,41 @@ class ProductionTuObjects(unittest.TestCase):
                                          "pre-promotion inventory"):
                 TP.prepare_intact_link_verification(entries)
 
+    def test_automatic_intact_link_plan_rejects_a_control_that_lost_errors(self):
+        # The admitted inventory must be the control's own, not a superset: a
+        # stale proof that still admits a resolved row is re-recorded, not kept.
+        baseline = {"symbolErrors": ["[ERROR] kept"],
+                    "romSha256": "ab" * 32, "matchesStockRom": True,
+                    "moduleSetSha256": "ef" * 32}
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing",
+            "verification": {"linkcheck": {
+                "symbolCheckErrors": ["[ERROR] kept", "[ERROR] resolved"],
+                "moduleSetSha256": "ef" * 32,
+                "rom": {"sha256": "ab" * 32}}},
+        }}
+        with mock.patch.object(TP, "_strict_baseline", return_value=baseline):
+            with self.assertRaisesRegex(TP.ProductionTuError,
+                                         "pre-promotion inventory"):
+                TP.prepare_intact_link_verification(entries)
+
+    def test_automatic_intact_link_plan_rejects_disagreeing_admitted_inventories(self):
+        baseline = {"symbolErrors": [],
+                    "romSha256": "ab" * 32, "matchesStockRom": True,
+                    "moduleSetSha256": "ef" * 32}
+
+        def entry(tu_id, errors):
+            return {"id": tu_id, "verification": {"linkcheck": {
+                "symbolCheckErrors": errors, "moduleSetSha256": "ef" * 32,
+                "rom": {"sha256": "ab" * 32}}}}
+
+        entries = {"src/actors/Thing.cpp": entry("ov047/Thing", []),
+                   "src/actors/Other.cpp": entry("ov047/Other", ["[ERROR] old"])}
+        with mock.patch.object(TP, "_strict_baseline", return_value=baseline):
+            with self.assertRaisesRegex(TP.ProductionTuError,
+                                         "pre-promotion inventory"):
+                TP.prepare_intact_link_verification(entries)
+
     def test_same_worker_stock_control_allows_environment_specific_outer_rom(self):
         baseline = {
             "symbolErrors": [], "romSha256": "cd" * 32,

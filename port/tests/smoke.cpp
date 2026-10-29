@@ -97,7 +97,7 @@ static void test_fader(void)
     f.AdvanceInterp();                        /* 16th step lands exactly */
     CHECK(f.IsAtEnd() == 1 && f.currInterp == ONE);
 
-    f.SetBackwardTime(8);                     /* and back down */
+    f.SetBackwardTime(8, 0);                  /* and back down */
     for (int i = 0; i < 8; ++i)
         f.AdvanceInterp();
     CHECK(f.IsAtStart() == 1 && f.currInterp == 0);

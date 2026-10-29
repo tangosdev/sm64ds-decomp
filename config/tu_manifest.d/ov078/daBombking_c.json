@@ -18,14 +18,24 @@
       "end": "0x02126660"
     },
     {
+      "name": ".init",
+      "start": "0x02126660",
+      "end": "0x02126cd4"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02126cd4",
+      "end": "0x02126cd8"
+    },
+    {
       "name": ".data",
-      "start": "0x02126e0c",
+      "start": "0x02126ce0",
       "end": "0x02126ec8"
     },
     {
       "name": ".bss",
       "start": "0x02126ee0",
-      "end": "0x02126f48"
+      "end": "0x02127134"
     }
   ],
   "functions": [
@@ -142,7 +152,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov078_021240a0",
+      "symbol": "_ZN12daBombking_c19func_ov078_021240a0Ev",
       "address": "0x021240a0",
       "size": "0x00000320",
       "legacy_source": "src/func_ov078_021240a0.c",
@@ -396,6 +406,265 @@
   ],
   "data": [
     {
+      "symbol": "data_ov078_02126ce0",
+      "address": "0x02126ce0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126ce8",
+      "address": "0x02126ce8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126cf0",
+      "address": "0x02126cf0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126cf8",
+      "address": "0x02126cf8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d00",
+      "address": "0x02126d00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d08",
+      "address": "0x02126d08",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d10",
+      "address": "0x02126d10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d18",
+      "address": "0x02126d18",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d20",
+      "address": "0x02126d20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d28",
+      "address": "0x02126d28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d30",
+      "address": "0x02126d30",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d38",
+      "address": "0x02126d38",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d40",
+      "address": "0x02126d40",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d48",
+      "address": "0x02126d48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d50",
+      "address": "0x02126d50",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d58",
+      "address": "0x02126d58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d60",
+      "address": "0x02126d60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d68",
+      "address": "0x02126d68",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d70",
+      "address": "0x02126d70",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d78",
+      "address": "0x02126d78",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d80",
+      "address": "0x02126d80",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d88",
+      "address": "0x02126d88",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d90",
+      "address": "0x02126d90",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126d98",
+      "address": "0x02126d98",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126da0",
+      "address": "0x02126da0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126da8",
+      "address": "0x02126da8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126db0",
+      "address": "0x02126db0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126db8",
+      "address": "0x02126db8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126dc0",
+      "address": "0x02126dc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126dc8",
+      "address": "0x02126dc8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126dd0",
+      "address": "0x02126dd0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126dd8",
+      "address": "0x02126dd8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126de0",
+      "address": "0x02126de0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126de8",
+      "address": "0x02126de8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126df0",
+      "address": "0x02126df0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126df8",
+      "address": "0x02126df8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into a state record; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov078_02126e00",
+      "address": "0x02126e00",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized Vec3 {0, 0x3c000, 0}; InitResources and Behavior read it field by field as the collision-sphere offset; bytes compared to retail"
+    },
+    {
       "symbol": "_ZTI12daBombking_c",
       "address": "0x02126e0c",
       "size": "0xc",
@@ -428,91 +697,329 @@
       "address": "0x02126ee0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c1 (data/enemy/bombking/bombking_struggle.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c1 (data/enemy/bombking/bombking_struggle.bca)."
     },
     {
       "symbol": "gBombkingWalk1AnimationFile",
       "address": "0x02126ee8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c5 (data/enemy/bombking/bombking_walk1.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c5 (data/enemy/bombking/bombking_walk1.bca)."
     },
     {
       "symbol": "gBombkingThrowAnimationFile",
       "address": "0x02126ef0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c2 (data/enemy/bombking/bombking_throw.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c2 (data/enemy/bombking/bombking_throw.bca)."
     },
     {
       "symbol": "gBombkingStartAnimationFile",
       "address": "0x02126ef8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c0 (data/enemy/bombking/bombking_start.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c0 (data/enemy/bombking/bombking_start.bca)."
     },
     {
       "symbol": "gBombkingGetupAnimationFile",
       "address": "0x02126f00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2bc (data/enemy/bombking/bombking_getup.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bc (data/enemy/bombking/bombking_getup.bca)."
     },
     {
       "symbol": "gBombkingJumpedAnimationFile",
       "address": "0x02126f08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2be (data/enemy/bombking/bombking_jumped.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2be (data/enemy/bombking/bombking_jumped.bca)."
     },
     {
       "symbol": "gBombkingJumpAnimationFile",
       "address": "0x02126f10",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2bd (data/enemy/bombking/bombking_jump.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bd (data/enemy/bombking/bombking_jump.bca)."
     },
     {
       "symbol": "gBombkingLiftAnimationFile",
       "address": "0x02126f18",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2bf (data/enemy/bombking/bombking_lift.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bf (data/enemy/bombking/bombking_lift.bca)."
     },
     {
       "symbol": "gBombkingDamageAnimationFile",
       "address": "0x02126f20",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2bb (data/enemy/bombking/bombking_damage.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bb (data/enemy/bombking/bombking_damage.bca)."
     },
     {
       "symbol": "gBombkingWalk2AnimationFile",
       "address": "0x02126f28",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c6 (data/enemy/bombking/bombking_walk2.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c6 (data/enemy/bombking/bombking_walk2.bca)."
     },
     {
       "symbol": "gBombkingWait2AnimationFile",
       "address": "0x02126f30",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c4 (data/enemy/bombking/bombking_wait2.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c4 (data/enemy/bombking/bombking_wait2.bca)."
     },
     {
       "symbol": "gBombkingModelFile",
       "address": "0x02126f38",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingModelFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c7 (data/enemy/bombking/bomb_king.bmd)."
+      "evidence": "BombkingModelFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c7 (data/enemy/bombking/bomb_king.bmd)."
     },
     {
       "symbol": "gBombkingWait1AnimationFile",
       "address": "0x02126f40",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; separate __sinit_ov078_02126660 constructs runtime handle 0x2c3 (data/enemy/bombking/bombking_wait1.bca)."
+      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c3 (data/enemy/bombking/bombking_wait1.bca)."
+    },
+    {
+      "symbol": "data_ov078_02126f48",
+      "address": "0x02126f48",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126f54",
+      "address": "0x02126f54",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126f60",
+      "address": "0x02126f60",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126f6c",
+      "address": "0x02126f6c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126f78",
+      "address": "0x02126f78",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126f84",
+      "address": "0x02126f84",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126f90",
+      "address": "0x02126f90",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126f9c",
+      "address": "0x02126f9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126fa8",
+      "address": "0x02126fa8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126fb4",
+      "address": "0x02126fb4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126fc0",
+      "address": "0x02126fc0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126fcc",
+      "address": "0x02126fcc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126fd8",
+      "address": "0x02126fd8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126fe4",
+      "address": "0x02126fe4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126ff0",
+      "address": "0x02126ff0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov078_02126ffc",
+      "address": "0x02126ffc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212700c",
+      "address": "0x0212700c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212701c",
+      "address": "0x0212701c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212702c",
+      "address": "0x0212702c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212703c",
+      "address": "0x0212703c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212704c",
+      "address": "0x0212704c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212705c",
+      "address": "0x0212705c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212706c",
+      "address": "0x0212706c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212707c",
+      "address": "0x0212707c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212708c",
+      "address": "0x0212708c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212709c",
+      "address": "0x0212709c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_021270ac",
+      "address": "0x021270ac",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_021270bc",
+      "address": "0x021270bc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_021270cc",
+      "address": "0x021270cc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_021270dc",
+      "address": "0x021270dc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_021270ec",
+      "address": "0x021270ec",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_021270fc",
+      "address": "0x021270fc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212710c",
+      "address": "0x0212710c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-PMF state record {enter, tick} that the initializer fills from two literals; KingBobOmb_SetState stores its address in mState"
+    },
+    {
+      "symbol": "data_ov078_0212711c",
+      "address": "0x0212711c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "two file-scope Vector3 carry offsets, (0x2c000, -0x19000, 0x34000) and (0x44000, -0x19000, 0x34000); retail stores both and registers ~Vector3() for each element"
     }
   ],
   "notes": [
@@ -530,7 +1037,7 @@
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02123864; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02123aa0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02123aa0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02123bc4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02123bc4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov078_02123864' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
@@ -554,7 +1061,7 @@
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov078_02124000 and the one that held func_ov078_02124470; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02124470; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02124470; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_021244d0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_021244d0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulMat4x3Mat4x3' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
@@ -571,12 +1078,12 @@
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN9dCamera_c9SetFlag_3Ev' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02124b40; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02124b40; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124b40; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov078_02125c24' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_02124c94; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_0200fa8c' differs between the legacy file that used to hold func_ov078_021247bc and the one that held func_ov078_02124c94; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
@@ -590,7 +1097,7 @@
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212705c' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02124e9c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02124e9c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
@@ -599,12 +1106,12 @@
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov078_02123f1c and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212703c' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125350; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125350; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov078_02124000 and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125734; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125734; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov078_02124000 and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
@@ -624,7 +1131,7 @@
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125bc8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125bc8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125c24; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02125c98; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125de0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
@@ -641,7 +1148,8 @@
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f28' differs between the legacy file that used to hold func_ov078_02123eb8 and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126ef8' differs between the legacy file that used to hold func_ov078_021258e4 and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
     "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out."
+    "tubuild create warning: CONFLICT (RESOLVED): local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "Static initializer folded: the model and twelve animation handles gain declared constructors and destructors, and the two Vector3 carry offsets and the eighteen two-PMF state records are real definitions in d_a_bombking.cpp, replacing the handwritten src/unnamed/ov078/__sinit_ov078_02126660.cpp. mwcc emits __sinit_d_a_bombking.cpp (0x674), its .ctor word, the thirty-six PMF literals and the fifteen registration nodes itself; all are byte- and relocation-identical to retail. Ownership: ov078 holds one TU; its only .ctor word is 0x02126cd4. The 0x02126ffc record's tick handler, func_ov078_021240a0, was a free function; naming it in the record needs a member, and the member spelling now reproduces it byte for byte (match.py, ov078 0x021240a0 size 0x320), so it becomes daBombking_c::func_ov078_021240a0 and its symbols.txt row and attribution override take the mangled name. The same change claims data_ov078_02126e00 (the collision-sphere offset {0, 0x3c000, 0}), so .data is one run 0x02126ce0..0x02126ec8. The carry-offset array data_ov078_0212711c is the terminal .bss object, so symbols.txt gives it an explicit size (0x18) and sizes the two interior labels it covers to zero: data_ov078_02127124 stays for the ambiguous ov022/ov030 references, and data_ov078_02127128 stays because dsd resolves the initializer's element-1 pool word (0x02126bf4) to the nearest preceding label; the manifest records that word as data_ov078_0212711c + 0xc, as mwcc emits it."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -717,7 +1225,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -735,8 +1243,22 @@
           "firstDiff": null
         },
         {
+          "section": ".init",
+          "start": "0x02126660",
+          "end": "0x02126cd4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02126cd4",
+          "end": "0x02126cd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
-          "start": "0x02126e0c",
+          "start": "0x02126ce0",
           "end": "0x02126ec8",
           "differingBytes": 0,
           "firstDiff": null
@@ -744,13 +1266,13 @@
         {
           "section": ".bss",
           "start": "0x02126ee0",
-          "end": "0x02126f48",
+          "end": "0x02127134",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 69
+          "LICENSED": 142
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -759,51 +1281,211 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".data",
+            "section": ".init",
             "original": [
-              120,
-              122,
-              124,
-              125
+              248
             ],
             "desired": [
-              125,
-              124,
-              120,
-              122
+              248
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              246
+            ],
+            "desired": [
+              246
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              14,
+              18,
+              21,
+              24,
+              26,
+              29,
+              31,
+              33,
+              35,
+              38,
+              40,
+              42,
+              44,
+              47,
+              49,
+              51,
+              54,
+              56,
+              58,
+              60,
+              63,
+              65,
+              69,
+              72,
+              74,
+              76,
+              78,
+              80,
+              82,
+              84,
+              86,
+              88,
+              94,
+              227,
+              229,
+              231,
+              232
+            ],
+            "desired": [
+              82,
+              84,
+              51,
+              7,
+              78,
+              74,
+              21,
+              63,
+              18,
+              47,
+              86,
+              49,
+              26,
+              56,
+              31,
+              60,
+              9,
+              11,
+              24,
+              54,
+              72,
+              14,
+              44,
+              29,
+              80,
+              69,
+              38,
+              88,
+              42,
+              76,
+              35,
+              40,
+              5,
+              65,
+              58,
+              33,
+              94,
+              232,
+              231,
+              227,
+              229
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              7,
-              8,
-              9,
-              10,
-              11,
-              12,
               13,
-              14,
-              15,
               16,
-              17
+              17,
+              20,
+              23,
+              28,
+              37,
+              46,
+              53,
+              62,
+              67,
+              68,
+              71,
+              90,
+              91,
+              92,
+              93,
+              95,
+              96,
+              97,
+              98,
+              99,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105,
+              106,
+              107,
+              108,
+              109,
+              110,
+              111,
+              112,
+              113,
+              114,
+              115,
+              116,
+              117,
+              118,
+              119,
+              120,
+              121,
+              122,
+              123,
+              124
             ],
             "desired": [
+              23,
+              68,
+              53,
+              37,
+              28,
+              62,
+              20,
+              46,
+              71,
+              17,
               16,
-              15,
-              14,
+              67,
               13,
-              12,
-              11,
-              10,
-              9,
-              8,
-              7,
-              6,
-              5,
-              17
+              95,
+              96,
+              97,
+              98,
+              99,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105,
+              90,
+              91,
+              92,
+              93,
+              119,
+              112,
+              114,
+              122,
+              116,
+              117,
+              113,
+              110,
+              120,
+              121,
+              118,
+              106,
+              107,
+              108,
+              111,
+              115,
+              123,
+              109,
+              124
             ]
           }
         ],
@@ -812,104 +1494,297 @@
             {
               "section": ".data",
               "original": [
-                120,
-                122,
-                124,
-                125
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                21,
+                24,
+                26,
+                29,
+                31,
+                33,
+                35,
+                38,
+                40,
+                42,
+                44,
+                47,
+                49,
+                51,
+                54,
+                56,
+                58,
+                60,
+                63,
+                65,
+                69,
+                72,
+                74,
+                76,
+                78,
+                80,
+                82,
+                84,
+                86,
+                88,
+                94,
+                227,
+                229,
+                231,
+                232
               ],
               "desired": [
-                125,
-                124,
-                120,
-                122
+                82,
+                84,
+                51,
+                7,
+                78,
+                74,
+                21,
+                63,
+                18,
+                47,
+                86,
+                49,
+                26,
+                56,
+                31,
+                60,
+                9,
+                11,
+                24,
+                54,
+                72,
+                14,
+                44,
+                29,
+                80,
+                69,
+                38,
+                88,
+                42,
+                76,
+                35,
+                40,
+                5,
+                65,
+                58,
+                33,
+                94,
+                232,
+                231,
+                227,
+                229
               ],
               "slots": [
-                120,
-                122,
-                124,
-                125
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                21,
+                24,
+                26,
+                29,
+                31,
+                33,
+                35,
+                38,
+                40,
+                42,
+                44,
+                47,
+                49,
+                51,
+                54,
+                56,
+                58,
+                60,
+                63,
+                65,
+                69,
+                72,
+                74,
+                76,
+                78,
+                80,
+                82,
+                84,
+                86,
+                88,
+                94,
+                227,
+                229,
+                231,
+                232
               ]
             },
             {
               "section": ".bss",
               "original": [
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
                 13,
-                14,
-                15,
                 16,
-                17
+                17,
+                20,
+                23,
+                28,
+                37,
+                46,
+                53,
+                62,
+                67,
+                68,
+                71,
+                90,
+                91,
+                92,
+                93,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124
               ],
               "desired": [
+                23,
+                68,
+                53,
+                37,
+                28,
+                62,
+                20,
+                46,
+                71,
+                17,
                 16,
-                15,
-                14,
+                67,
                 13,
-                12,
-                11,
-                10,
-                9,
-                8,
-                7,
-                6,
-                5,
-                17
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                90,
+                91,
+                92,
+                93,
+                119,
+                112,
+                114,
+                122,
+                116,
+                117,
+                113,
+                110,
+                120,
+                121,
+                118,
+                106,
+                107,
+                108,
+                111,
+                115,
+                123,
+                109,
+                124
               ],
               "slots": [
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
                 13,
-                14,
-                15,
                 16,
-                17
+                17,
+                20,
+                23,
+                28,
+                37,
+                46,
+                53,
+                62,
+                67,
+                68,
+                71,
+                90,
+                91,
+                92,
+                93,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124
               ]
             }
           ],
-          "symbolIndices": 17,
+          "symbolIndices": 88,
           "sectionLinks": 0,
-          "sectionInfos": 3,
+          "sectionInfos": 39,
           "error": null
         },
         "errors": null
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1350,6 +2225,1526 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020100dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126670",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126680",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212668c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212669c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021266a8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021266b8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021266c4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021266d4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021266e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021266f0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021266fc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212670c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126718",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126728",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126734",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126744",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126750",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126760",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212676c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212677c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126788",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126798",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021267a4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021267b4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021267c0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021267d0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021267fc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126828",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingModelFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f38"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f48",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f48"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingGetupAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f00"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f54",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f54"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingDamageAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f20"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f60",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f60"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingJumpAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f10"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f6c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f6c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingJumpedAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f08"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f78",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f78"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingLiftAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f18"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f84",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f84"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126b9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingStruggleAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ee0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126ba4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f90",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f90"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126ba8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingThrowAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ef0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126f9c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f9c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingWait1AnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f40"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126fa8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126fa8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingWait2AnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f30"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126fb4",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126fb4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingWalk1AnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ee8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126fc0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126fc0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingWalk2AnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126f28"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126fcc",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126fcc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126be0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBombkingStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ef8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126be4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126fd8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126fd8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126be8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212711c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212711c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7Vector3D1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020072c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126fe4",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126fe4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212711c",
+      "addend": 12,
+      "target_module": "ov078",
+      "target_address": "0x02127128"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126ff0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ff0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126bfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212710c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212710c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d78",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d78"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d40",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d40"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212700c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212700c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126cf8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126cf8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126db8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126db8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212701c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212701c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126ce8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ce8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126ce0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ce0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212703c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212703c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d00",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d00"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126dc8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126dc8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212704c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212704c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126df0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126df0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126de8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126de8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212707c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212707c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126dd8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126dd8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126dd0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126dd0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212708c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212708c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d28",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d28"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d38",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d38"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_021270ac",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021270ac"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d98",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d98"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d50",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d50"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_021270bc",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021270bc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d60",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d60"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d20",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d20"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_021270dc",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021270dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d70",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d70"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d88",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d88"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_021270ec",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021270ec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d30",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d30"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126da0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126da0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126ffc",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126ffc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d08",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d08"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d80",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d80"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212702c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212702c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d10",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d10"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126cf0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126cf0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212706c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212706c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126c9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126df8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126df8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126ca0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126de0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126de0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126ca4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212709c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212709c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126ca8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126dc0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126dc0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126db0",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126db0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_021270cc",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021270cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d18",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d18"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d48",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d48"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_021270fc",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021270fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d90",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d90"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126da8",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126da8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_0212705c",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x0212705c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126ccc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d68",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d68"
+    },
+    {
+      "section": ".init",
+      "source": "0x02126cd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov078_02126d58",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126d58"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02126cd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_bombking.cpp",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02126660"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126ce0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02125790Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02125790"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126ce8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021258e4Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021258e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126cf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124000Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124000"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126cf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021259e4Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021259e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02125734Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02125734"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021243c0Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021243c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124060Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124060"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123cf0Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123cf0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021247bcEv",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021247bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124e9cEv",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124e9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021244d0Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021244d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124cf4Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124cf4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021259ecEv",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021259ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123c20Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123c20"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124bc4Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124bc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021238acEv",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021238ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124b40Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124b40"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123a3cEv",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123a3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124778Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124778"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02125bc8Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02125bc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021240a0Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021240a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124520Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124520"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123bc4Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123bc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126d98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124c94Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124c94"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126da0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124470Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124470"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126da8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123aa0Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123aa0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126db0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123d3cEv",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123d3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126db8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02125950Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02125950"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126dc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123eb8Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123eb8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126dc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02125448Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02125448"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126dd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02124f28Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02124f28"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126dd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021250d0Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021250d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126de0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123f1cEv",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123f1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126de8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_021250f8Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x021250f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126df0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02125350Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02125350"
+    },
+    {
+      "section": ".data",
+      "source": "0x02126df8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123fb4Ev",
+      "addend": 0,
+      "target_module": "ov078",
+      "target_address": "0x02123fb4"
     }
   ],
   "production_mode": "intact-object",
@@ -1360,5 +3755,637 @@
     "status": "partial-awaiting-independent-review",
     "scope": "Coherent void shadow helper, real model calls and class PMF receiver, and current source/provenance corrections. Remaining raw fields, helper contracts and manual factory are tracked separately from text-only promotion.",
     "historical_evidence": "Existing verification/linkcheck and promotion-note records predate this correction. Fresh proof and its exact candidate identity are recorded in the continuation handoff and queue evidence."
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_d_a_bombking.cpp",
+      "address": "0x02126660",
+      "size": "0x674",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov078_02126660 (0x674) and carries the same relocation sites in the same order"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_bombking.cpp",
+      "address": "0x02126cd4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@572",
+      "to": "data_ov078_02126f48",
+      "evidence": "compiler temp mapped to 0x02126f48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@573",
+      "to": "data_ov078_02126f54",
+      "evidence": "compiler temp mapped to 0x02126f54 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@574",
+      "to": "data_ov078_02126f60",
+      "evidence": "compiler temp mapped to 0x02126f60 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@575",
+      "to": "data_ov078_02126f6c",
+      "evidence": "compiler temp mapped to 0x02126f6c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@576",
+      "to": "data_ov078_02126f78",
+      "evidence": "compiler temp mapped to 0x02126f78 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@577",
+      "to": "data_ov078_02126f84",
+      "evidence": "compiler temp mapped to 0x02126f84 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@578",
+      "to": "data_ov078_02126f90",
+      "evidence": "compiler temp mapped to 0x02126f90 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@579",
+      "to": "data_ov078_02126f9c",
+      "evidence": "compiler temp mapped to 0x02126f9c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@580",
+      "to": "data_ov078_02126fa8",
+      "evidence": "compiler temp mapped to 0x02126fa8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@581",
+      "to": "data_ov078_02126fb4",
+      "evidence": "compiler temp mapped to 0x02126fb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@582",
+      "to": "data_ov078_02126fc0",
+      "evidence": "compiler temp mapped to 0x02126fc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@583",
+      "to": "data_ov078_02126fcc",
+      "evidence": "compiler temp mapped to 0x02126fcc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@584",
+      "to": "data_ov078_02126fd8",
+      "evidence": "compiler temp mapped to 0x02126fd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@586",
+      "to": "data_ov078_02126fe4",
+      "evidence": "compiler temp mapped to 0x02126fe4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@589",
+      "to": "data_ov078_02126ff0",
+      "evidence": "compiler temp mapped to 0x02126ff0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@591",
+      "to": "data_ov078_02126d78",
+      "evidence": "compiler temp mapped to 0x02126d78 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@593",
+      "to": "data_ov078_02126d40",
+      "evidence": "compiler temp mapped to 0x02126d40 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@595",
+      "to": "data_ov078_02126cf8",
+      "evidence": "compiler temp mapped to 0x02126cf8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@597",
+      "to": "data_ov078_02126db8",
+      "evidence": "compiler temp mapped to 0x02126db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@599",
+      "to": "data_ov078_02126ce8",
+      "evidence": "compiler temp mapped to 0x02126ce8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@601",
+      "to": "data_ov078_02126ce0",
+      "evidence": "compiler temp mapped to 0x02126ce0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@603",
+      "to": "data_ov078_02126d00",
+      "evidence": "compiler temp mapped to 0x02126d00 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@605",
+      "to": "data_ov078_02126dc8",
+      "evidence": "compiler temp mapped to 0x02126dc8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@607",
+      "to": "data_ov078_02126df0",
+      "evidence": "compiler temp mapped to 0x02126df0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@609",
+      "to": "data_ov078_02126de8",
+      "evidence": "compiler temp mapped to 0x02126de8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@611",
+      "to": "data_ov078_02126dd8",
+      "evidence": "compiler temp mapped to 0x02126dd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@613",
+      "to": "data_ov078_02126dd0",
+      "evidence": "compiler temp mapped to 0x02126dd0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@615",
+      "to": "data_ov078_02126d28",
+      "evidence": "compiler temp mapped to 0x02126d28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@617",
+      "to": "data_ov078_02126d38",
+      "evidence": "compiler temp mapped to 0x02126d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@619",
+      "to": "data_ov078_02126d98",
+      "evidence": "compiler temp mapped to 0x02126d98 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@621",
+      "to": "data_ov078_02126d50",
+      "evidence": "compiler temp mapped to 0x02126d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@623",
+      "to": "data_ov078_02126d60",
+      "evidence": "compiler temp mapped to 0x02126d60 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@625",
+      "to": "data_ov078_02126d20",
+      "evidence": "compiler temp mapped to 0x02126d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@627",
+      "to": "data_ov078_02126d70",
+      "evidence": "compiler temp mapped to 0x02126d70 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@629",
+      "to": "data_ov078_02126d88",
+      "evidence": "compiler temp mapped to 0x02126d88 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@631",
+      "to": "data_ov078_02126d30",
+      "evidence": "compiler temp mapped to 0x02126d30 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@633",
+      "to": "data_ov078_02126da0",
+      "evidence": "compiler temp mapped to 0x02126da0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@635",
+      "to": "data_ov078_02126d08",
+      "evidence": "compiler temp mapped to 0x02126d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@637",
+      "to": "data_ov078_02126d80",
+      "evidence": "compiler temp mapped to 0x02126d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@639",
+      "to": "data_ov078_02126d10",
+      "evidence": "compiler temp mapped to 0x02126d10 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@641",
+      "to": "data_ov078_02126cf0",
+      "evidence": "compiler temp mapped to 0x02126cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@643",
+      "to": "data_ov078_02126df8",
+      "evidence": "compiler temp mapped to 0x02126df8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@645",
+      "to": "data_ov078_02126de0",
+      "evidence": "compiler temp mapped to 0x02126de0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@647",
+      "to": "data_ov078_02126dc0",
+      "evidence": "compiler temp mapped to 0x02126dc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@649",
+      "to": "data_ov078_02126db0",
+      "evidence": "compiler temp mapped to 0x02126db0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@651",
+      "to": "data_ov078_02126d18",
+      "evidence": "compiler temp mapped to 0x02126d18 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@653",
+      "to": "data_ov078_02126d48",
+      "evidence": "compiler temp mapped to 0x02126d48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@655",
+      "to": "data_ov078_02126d90",
+      "evidence": "compiler temp mapped to 0x02126d90 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@657",
+      "to": "data_ov078_02126da8",
+      "evidence": "compiler temp mapped to 0x02126da8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@659",
+      "to": "data_ov078_02126d68",
+      "evidence": "compiler temp mapped to 0x02126d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@661",
+      "to": "data_ov078_02126d58",
+      "evidence": "compiler temp mapped to 0x02126d58 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_bombking.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_bombking.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_ov078_02126ce0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126ce8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126cf0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126cf8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d00",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d08",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d10",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d18",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d20",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d28",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d30",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d38",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d40",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d48",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d50",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d58",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d60",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d68",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d70",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d78",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d80",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d88",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d90",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126d98",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126da0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126da8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126db0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126db8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126dc0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126dc8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126dd0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126dd8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126de0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126de8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126df0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126df8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f48",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f54",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f60",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f6c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f78",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f84",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f90",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126f9c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126fa8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126fb4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126fc0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126fcc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126fd8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126fe4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov078_02126ff0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN17BombkingModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN16BombkingAnimFileC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN17BombkingModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN16BombkingAnimFileD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    }
+  ]
 }

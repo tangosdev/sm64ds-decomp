@@ -1,41 +1,62 @@
-struct Pair { int a, b; };
-struct Dst4 { struct Pair p0, p1, p2, p3; };
-struct Dst5 { struct Pair p0, p1, p2, p3, p4; };
-struct Dst7 { struct Pair p0, p1, p2, p3, p4, p5, p6; };
+/* ov006 static initializer at 0x0212fd48 (0x368): fills dScMgBomroom_c's
+ * seven pointer-to-member state tables (round, round end, bomb, bomb march,
+ * hatch panel, pen gate, top door) from the pointer-to-member constants
+ * the compiler laid down in .data (pmf_dScMgBomroom_c_*).
+ *
+ * Not folded: its owner is d_s_mg_bomroom.cpp, but that TU claims neither
+ * the constants' .data run (0x0213b9xx) nor the tables' .bss (from
+ * 0x021416e0), and emitting this from real pointer-to-member table
+ * definitions needs both claimed first.
+ */
 
-extern struct Pair pmf_dScMgBomroom_c_Round_StateSetup;
-extern struct Pair pmf_dScMgBomroom_c_Round_StateStart;
-extern struct Pair pmf_dScMgBomroom_c_Round_StatePlay;
-extern struct Pair pmf_dScMgBomroom_c_Round_StateEnd;
-extern struct Pair pmf_dScMgBomroom_c_Round_StateGameOver;
-extern struct Pair pmf_dScMgBomroom_c_RoundEnd_StartMarch;
-extern struct Pair pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp;
-extern struct Pair pmf_dScMgBomroom_c_RoundEnd_Tally;
-extern struct Pair pmf_dScMgBomroom_c_RoundEnd_Finish;
-extern struct Pair pmf_dScMgBomroom_c_Bomb_StateWaiting;
-extern struct Pair pmf_dScMgBomroom_c_Bomb_StateWalk;
-extern struct Pair pmf_dScMgBomroom_c_Bomb_StateHeld;
-extern struct Pair pmf_dScMgBomroom_c_Bomb_StateChainDelay;
-extern struct Pair pmf_dScMgBomroom_c_Bomb_StateExploding;
-extern struct Pair pmf_dScMgBomroom_c_Bomb_StateInPen;
-extern struct Pair pmf_dScMgBomroom_c_Bomb_StateMarch;
-extern struct Pair pmf_dScMgBomroom_c_BombMarch_ToGate;
-extern struct Pair pmf_dScMgBomroom_c_BombMarch_Exit;
-extern struct Pair pmf_dScMgBomroom_c_BombMarch_Offscreen;
-extern struct Pair pmf_dScMgBomroom_c_BombMarch_ToLine;
-extern struct Pair pmf_dScMgBomroom_c_BombMarch_LinedUp;
-extern struct Pair pmf_dScMgBomroom_c_HatchPanel_StateIdle;
-extern struct Pair pmf_dScMgBomroom_c_HatchPanel_StateAnimate;
-extern struct Pair pmf_dScMgBomroom_c_HatchPanel_StateHeld;
-extern struct Pair pmf_dScMgBomroom_c_HatchPanel_StateRevert;
-extern struct Pair pmf_dScMgBomroom_c_PenGate_StateShut;
-extern struct Pair pmf_dScMgBomroom_c_PenGate_StateOpening;
-extern struct Pair pmf_dScMgBomroom_c_PenGate_StateHold;
-extern struct Pair pmf_dScMgBomroom_c_PenGate_StateClosing;
-extern struct Pair pmf_dScMgBomroom_c_TopDoor_StateShut;
-extern struct Pair pmf_dScMgBomroom_c_TopDoor_StateOpening;
-extern struct Pair pmf_dScMgBomroom_c_TopDoor_StateOpen;
-extern struct Pair pmf_dScMgBomroom_c_TopDoor_StateClosing;
+/* A pointer to member function as the ABI stores it: function and this
+   adjustment. */
+struct Pmf {
+    int fn, adj;
+};
+struct Dst4 {
+    struct Pmf p0, p1, p2, p3;
+};
+struct Dst5 {
+    struct Pmf p0, p1, p2, p3, p4;
+};
+struct Dst7 {
+    struct Pmf p0, p1, p2, p3, p4, p5, p6;
+};
+
+extern struct Pmf pmf_dScMgBomroom_c_Round_StateSetup;
+extern struct Pmf pmf_dScMgBomroom_c_Round_StateStart;
+extern struct Pmf pmf_dScMgBomroom_c_Round_StatePlay;
+extern struct Pmf pmf_dScMgBomroom_c_Round_StateEnd;
+extern struct Pmf pmf_dScMgBomroom_c_Round_StateGameOver;
+extern struct Pmf pmf_dScMgBomroom_c_RoundEnd_StartMarch;
+extern struct Pmf pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp;
+extern struct Pmf pmf_dScMgBomroom_c_RoundEnd_Tally;
+extern struct Pmf pmf_dScMgBomroom_c_RoundEnd_Finish;
+extern struct Pmf pmf_dScMgBomroom_c_Bomb_StateWaiting;
+extern struct Pmf pmf_dScMgBomroom_c_Bomb_StateWalk;
+extern struct Pmf pmf_dScMgBomroom_c_Bomb_StateHeld;
+extern struct Pmf pmf_dScMgBomroom_c_Bomb_StateChainDelay;
+extern struct Pmf pmf_dScMgBomroom_c_Bomb_StateExploding;
+extern struct Pmf pmf_dScMgBomroom_c_Bomb_StateInPen;
+extern struct Pmf pmf_dScMgBomroom_c_Bomb_StateMarch;
+extern struct Pmf pmf_dScMgBomroom_c_BombMarch_ToGate;
+extern struct Pmf pmf_dScMgBomroom_c_BombMarch_Exit;
+extern struct Pmf pmf_dScMgBomroom_c_BombMarch_Offscreen;
+extern struct Pmf pmf_dScMgBomroom_c_BombMarch_ToLine;
+extern struct Pmf pmf_dScMgBomroom_c_BombMarch_LinedUp;
+extern struct Pmf pmf_dScMgBomroom_c_HatchPanel_StateIdle;
+extern struct Pmf pmf_dScMgBomroom_c_HatchPanel_StateAnimate;
+extern struct Pmf pmf_dScMgBomroom_c_HatchPanel_StateHeld;
+extern struct Pmf pmf_dScMgBomroom_c_HatchPanel_StateRevert;
+extern struct Pmf pmf_dScMgBomroom_c_PenGate_StateShut;
+extern struct Pmf pmf_dScMgBomroom_c_PenGate_StateOpening;
+extern struct Pmf pmf_dScMgBomroom_c_PenGate_StateHold;
+extern struct Pmf pmf_dScMgBomroom_c_PenGate_StateClosing;
+extern struct Pmf pmf_dScMgBomroom_c_TopDoor_StateShut;
+extern struct Pmf pmf_dScMgBomroom_c_TopDoor_StateOpening;
+extern struct Pmf pmf_dScMgBomroom_c_TopDoor_StateOpen;
+extern struct Pmf pmf_dScMgBomroom_c_TopDoor_StateClosing;
 
 extern struct Dst5 sBomroomRoundStateTable;
 extern struct Dst4 sBomroomRoundEndTable;
@@ -45,8 +66,7 @@ extern struct Dst4 sBomroomHatchPanelStateTable;
 extern struct Dst4 sBomroomPenGateStateTable;
 extern struct Dst4 sBomroomTopDoorStateTable;
 
-void __sinit_ov006_0212fd48(void)
-{
+void __sinit_ov006_0212fd48(void) {
     sBomroomRoundStateTable.p0 = pmf_dScMgBomroom_c_Round_StateSetup;
     sBomroomRoundStateTable.p1 = pmf_dScMgBomroom_c_Round_StateStart;
     sBomroomRoundStateTable.p2 = pmf_dScMgBomroom_c_Round_StatePlay;

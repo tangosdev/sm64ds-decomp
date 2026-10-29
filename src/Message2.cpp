@@ -11,9 +11,6 @@
  * - Sound::ChangeMusicVolume and OAM::Render stay extern "C" free functions.
  *   Each takes a Fix12<int> by value; a method with that parameter homes
  *   r0-r3 to the stack.
- * - Callers reach Message::AddChar through its mangled name taking an int.
- *   Through the char signature every caller narrows the byte first, and
- *   the ROM callers pass it untruncated.
  * - The G2/G2S getters are declared locally in their namespaces. No
  *   header declares them yet.
  * - data_0209d6f4 is u8 * here. Message.cpp spells the same word volatile int
@@ -29,6 +26,7 @@
 #include "Message.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
+#include "Sound.h"
 
 extern "C" {
 extern u8 data_0209d454;
@@ -103,20 +101,19 @@ extern void *func_02054ea8(void);
 extern void MultiCopy_Int(int *dst, int *src, int len);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern int IsButtonInputValid(void);
-extern u32 func_02012790(u32 a);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
 extern int __aeabi_idiv(int, int);
-/* local extern: byte-forced spelling -- the definition below is
-   Message::AddChar(char); a char parameter makes every caller narrow the
-   byte it passes, and the ROM callers pass it untruncated. Message.cpp
-   spells it the same way. */
-extern void _ZN7Message7AddCharEc(int c);
-void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 vol, Fix12i speed);
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int a, void *b, int c, int d, int e, int f, int g,
-                                                 int h, int i, int j);
 }
+extern "C" {
+void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int h, int i, int j);
+}
+
+struct OamAttr;
+struct OAM {
+    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
+};
 
 namespace G2 {
 void *GetBG2CharPtr();
@@ -140,14 +137,14 @@ static inline int IsCastleFallCutsceneRunning(void) {
 // @symbol _ZN7Message7EndTalkEv
 void Message::EndTalk() {
     /* Restore music to 0x7f. Slower ramp than PrepareTalk. */
-    _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x000064cc);
+    Sound::ChangeMusicVolume(0x7f, 0x000064cc);
     data_0209d664 = 0;
 }
 
 // @symbol _ZN7Message11PrepareTalkEv
 void Message::PrepareTalk() {
     /* Duck the music to 0x40 before dialogue. EndTalk is the inverse. */
-    _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0x0000c999);
+    Sound::ChangeMusicVolume(0x40, 0x0000c999);
     data_0209d664 = 1;
 }
 
@@ -170,21 +167,21 @@ void func_0201ab6c(void) {
         idx = data_0209d68c;
         data_0209d68c = idx + 1;
         data_0209d6e4[idx] = data_0209d6b0;
-        _ZN7Message7AddCharEc(0x4d);
+        Message::AddChar(0x4d);
         data_0209d694 = 1;
         break;
     case 2:
         idx = data_0209d68c;
         data_0209d68c = idx + 1;
         data_0209d6e4[idx] = data_0209d6b4;
-        _ZN7Message7AddCharEc(0x4d);
+        Message::AddChar(0x4d);
         data_0209d694 = 2;
         break;
     case 3:
         idx = data_0209d68c;
         data_0209d68c = idx + 1;
         data_0209d6e4[idx] = data_0209d6b4;
-        _ZN7Message7AddCharEc(0x4d);
+        Message::AddChar(0x4d);
         data_0209d694 = 3;
         break;
     }
@@ -226,7 +223,7 @@ void func_0201aca4(void) {
         for (i = 0; i < 3; i++) {
             int q = __aeabi_idiv(num, data_0208ee64[i]);
             if (q != 0 || leading != 0 || i == 2) {
-                _ZN7Message7AddCharEc(data_0208ee74[q]);
+                Message::AddChar(data_0208ee74[q]);
                 leading = 1;
             }
             num = num % data_0208ee64[i];
@@ -252,8 +249,8 @@ void func_0201adac(void) {
     };
     struct MsgTextChar *state = (struct MsgTextChar *)data_0209d6f4;
     u16 idx = state->indexLo | (state->indexHi << 8);
-    _ZN7Message7AddCharEc(data_0208ee6c[idx]);
-    _ZN7Message7AddCharEc((data_0208ee6c[idx] + 1) & 0xff);
+    Message::AddChar(data_0208ee6c[idx]);
+    Message::AddChar((data_0208ee6c[idx] + 1) & 0xff);
 }
 
 // @symbol func_0201adfc
@@ -476,8 +473,8 @@ void func_0201b388(int a0) {
 #pragma pop
 }
 
-// @symbol _ZN7Message7AddCharEc
-void Message::AddChar(char c) {
+// @symbol _ZN7Message7AddCharEh
+void Message::AddChar(u8 c) {
     int i;
     int *ip;
     unsigned int word;
@@ -659,7 +656,7 @@ void func_0201b7cc(void) {
             }
 
         default:
-            _ZN7Message7AddCharEc(c);
+            Message::AddChar(c);
             added = 1;
             data_0209d6f4 = data_0209d6f4 + 1;
         }
@@ -745,7 +742,7 @@ int Message::UpdateWindow() {
 
     data_0209b454 &= ~0x80000000;
     if (func_0201fb4c() != 0) {
-        _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x000064cc);
+        Sound::ChangeMusicVolume(0x7f, 0x000064cc);
     }
     data_0209d660 = 0;
     data_0209d670 = 0;
@@ -824,11 +821,11 @@ void Message::Update() {
             int r5 = data_0209d6e4[data_0209d68c] + data_0209d650 + 0xC;
             int r4 = data_0209d6cc + (data_0209d688 * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c3a8, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             } else {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c3a0, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             }
             return;
         }
@@ -860,11 +857,11 @@ void Message::Update() {
             int r5 = data_0209d650 + 0xC;
             int r4 = data_0209d6cc + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c3a8, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             } else {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c3a0, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             }
             return;
         }
@@ -942,11 +939,11 @@ void Message::Update() {
             int r5 = data_0209d650 + 0xC;
             int r4 = data_0209d6cc + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c3a8, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             } else {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c3a0, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             }
             return;
         }
@@ -972,11 +969,11 @@ void Message::Update() {
                 return;
             }
             if (data_0209d6c4 != 0) {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c390, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             } else {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c398, r5, r4, -1, -1,
-                                                            0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210c398, r5, r4, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
             }
             return;
         }

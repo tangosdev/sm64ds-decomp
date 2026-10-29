@@ -20,7 +20,14 @@ In tools/hooks/pre-push: it
 needs mwccarm and config/rombuild-versions.txt, not the ROM. It compiles and never
 compares bytes, about 0.1s per draft.
 
-A MISSING COMPILER IS A FAILURE, NOT A SKIP. An empty work list is a failure too.
+A MISSING COMPILER IS A FAILURE, NOT A SKIP.
+
+AN EMPTY src/ IS A PASS ONLY IF THE SCANNER CAN SEE A BANNER. Zero drafts used to be
+a failure outright, so that a scanner that went blind (asm_policy's banner rule
+changing under it) could not report green on nothing. Once the last draft in src/ was
+matched, that rule refused every push. So an empty default scan first runs a positive
+control, has_draft_banner on a probe banner. If that's True, zero is the real count
+and the check passes. If it's False, the scanner is blind and the check fails.
 
 Usage:
   python tools/check_drafts_compile.py            # compile every bannered draft
@@ -44,6 +51,12 @@ import build_pin as BP          # noqa: E402
 import match as M               # noqa: E402
 
 SOURCE_SUFFIXES = (".c", ".cpp")
+
+# The banner shape tools/nonmatching.py parks a function with. The positive control
+# for an empty scan: if the scanner can't see this, it can't see a real one either.
+PROBE_BANNER = ("// NONMATCHING: probe draft (div=1). Logic verified correct vs ROM; not\n"
+                "// byte-matchable from C at mwccarm 2004/b56.\n"
+                "int probe_draft(int a) { return a + 1; }\n")
 
 
 def drafts(root=None):
@@ -85,9 +98,10 @@ def check(paths=None, on_result=None):
                          "mwccarm licence file is missing -- every compile below will "
                          "fail for that reason and not for a source defect"))
     work = list(paths) if paths else drafts()
-    if not work:
-        failures.append(("src", "no NONMATCHING drafts found -- an empty check is not "
-                                "a pass"))
+    if not work and not AP.has_draft_banner(PROBE_BANNER):
+        failures.append(("src", "no NONMATCHING drafts found, and the scanner does not "
+                                "recognise a probe banner either -- it is blind, not "
+                                "empty"))
     for rel in work:
         ok, info = compile_one(rel)
         if ok:
@@ -119,6 +133,10 @@ def main(argv=None):
     report = check(paths, narrate)
     print(f"check_drafts_compile: {report['compiled']}/{report['drafts']} draft(s) "
           f"compiled in {time.time() - started:.1f}s")
+    if report["ok"] and not report["drafts"]:
+        print("check_drafts_compile: no NONMATCHING drafts in src/ (the scanner "
+              "recognises a probe banner, so zero is the real count).")
+        return 0
     if report["ok"]:
         print("check_drafts_compile: every NONMATCHING draft compiles.")
         return 0

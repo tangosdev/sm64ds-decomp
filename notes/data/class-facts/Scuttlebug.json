@@ -98,13 +98,13 @@
       "movs r4,r0 ; beq               (null check; returns null without constructing)",
       "bl 0x0201150c                  -> _ZN8dActor_cC2Ev  (BASE ctor, C2 variant)",
       "ldr r1,[pc,#0x2c] ; str r1,[r4] -> literal at 0x02120664 = 0x02122c2c, the vtable address point",
-      "add r0,r4,#0xd4  ; bl 0x02016958 -> _ZN9ModelAnimC1Ev",
+      "add r0,r4,#0xd4  ; bl 0x02016958 -> _ZN14dExtAnmModel_cC1Ev",
       "add r0,r4,#0x138 ; bl 0x02016068 -> _ZN11ShadowModelC1Ev",
       "add r0,r4,#0x160 ; bl 0x020149c8 -> _ZN7dCcAc_cC1Ev",
       "add r0,r4,#0x194 ; bl 0x02037430 -> _ZN10dBgCh_ActrC1Ev",
       "mov r0,r4 ; pop {r4,lr} ; bx lr"
     ],
-    "destructor_mirror": "_ZN10ScuttlebugD1Ev at 0x0211f000 stores the same literal 0x02122c2c (pool at 0x0211f044) and then destroys 0x194 -> _ZN10dBgCh_ActrD1Ev, 0x160 -> _ZN7dCcAc_cD1Ev, 0x138 -> _ZN11ShadowModelD1Ev, 0xd4 -> _ZN9ModelAnimD1Ev, then 0x020112c8 = _ZN8dActor_cD2Ev. Exactly reverse order, so all four member offsets and types are proven twice, from opposite ends.",
+    "destructor_mirror": "_ZN10ScuttlebugD1Ev at 0x0211f000 stores the same literal 0x02122c2c (pool at 0x0211f044) and then destroys 0x194 -> _ZN10dBgCh_ActrD1Ev, 0x160 -> _ZN7dCcAc_cD1Ev, 0x138 -> _ZN11ShadowModelD1Ev, 0xd4 -> _ZN14dExtAnmModel_cD1Ev, then 0x020112c8 = _ZN8dActor_cD2Ev. Exactly reverse order, so all four member offsets and types are proven twice, from opposite ends.",
     "D0_tail": "_ZN10ScuttlebugD0Ev at 0x0211f048 repeats the D1 body inline, then loads the heap pointer from the literal at 0x0211f0a0 = 0x020a0eac and calls 0x0203c1e8 = _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE. There is no D2 for this class anywhere in ov071 -- a D1,D0 pair with no D2 is what mwccarm 2004/b56 emits for an INLINE destructor.",
     "vtable_emission_note": "With the destructor inline, the first non-inline virtual this class declares is OnYoshiTryEat at 0x0211f0a4, which lies inside the licensed run. That is the key function, and the TU defining it emits _ZTV/_ZTI/_ZTS."
   },
@@ -112,7 +112,7 @@
   "fields": [
     {"offset": "0x000", "extent": "0x000..0x0d0", "type": "dActor_c", "name": "(base subobject)", "proof": "include/dActor_c.h asserts sizeof(dActor_c) == 0xd0; the first own member sits at 0x0d4 and the ROM writes 0x0d0 itself, so the base cannot extend past 0x0d0."},
     {"offset": "0x0d0", "size": 4, "type": "u32 / pointer", "name": null, "name_status": "unproven", "proof": "PROVEN LIVE, not padding. Word ldr/str off the this-pointer in four functions: _ZN10Scuttlebug13InitResourcesEv writes it (`str r0,[r4,#0xd0]` @0x02120528), func_ov071_0211f8d0 reads it four times and writes it once, func_ov071_0211fa54 reads and writes it. include/Scuttlebug.h on this base declares `u8 pad_0d0[0x4]` -- that is wrong."},
-    {"offset": "0x0d4", "size": "0x64", "type": "ModelAnim", "name": "mModelAnim", "proof": "ctor _ZN9ModelAnimC1Ev and dtor _ZN9ModelAnimD1Ev on this+0xd4. 0xd4 + 0x64 = 0x138, exactly the next constructed member offset."},
+    {"offset": "0x0d4", "size": "0x64", "type": "dExtAnmModel_c", "name": "mModelAnim", "proof": "ctor _ZN14dExtAnmModel_cC1Ev and dtor _ZN14dExtAnmModel_cD1Ev on this+0xd4. 0xd4 + 0x64 = 0x138, exactly the next constructed member offset."},
     {"offset": "0x138", "size": "0x28", "type": "ShadowModel", "name": "mShadowModel", "proof": "ctor _ZN11ShadowModelC1Ev / dtor _ZN11ShadowModelD1Ev on this+0x138. 0x138 + 0x28 = 0x160, the next constructed member offset."},
     {"offset": "0x160", "size": "0x34", "type": "dCcAc_c", "name": "mdCcAc_c", "proof": "ctor _ZN7dCcAc_cC1Ev / dtor _ZN7dCcAc_cD1Ev on this+0x160. 0x160 + 0x34 = 0x194, the next constructed member offset. Also passed to _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c from Behavior."},
     {"offset": "0x194", "size": "0x1bc", "type": "dBgCh_Actr", "name": "mWithMeshClsn", "proof": "ctor _ZN10dBgCh_ActrC1Ev / dtor _ZN10dBgCh_ActrD1Ev on this+0x194. 0x194 + 0x1bc = 0x350, the next this-relative address whose address is taken. Behavior calls _ZNK10dBgCh_Actr14GetResultFlag1Ev and _ZNK10dBgCh_Actr12TouchesWaterEv on it. An `add rD,this,#0x300` in nine functions is 0x16c INTO this member, not a separate field."},
@@ -243,7 +243,7 @@
       "config/arm9/{symbols,relocs}.txt",
       "config/tu_manifest.d/ov071/daEyBm_c.json",
       "notes/data/tu-promotion-queue.tsv",
-      "include/Scuttlebug.h, include/dActor_c.h, include/dBgCh_Actr.h, include/ModelAnim.h, include/ShadowModel.h, include/dCcAc_c.h"
+      "include/Scuttlebug.h, include/dActor_c.h, include/dBgCh_Actr.h, include/dExtAnmModel_c.h, include/ShadowModel.h, include/dCcAc_c.h"
     ],
     "tools_run": "python tools/rtti_extract.py (429 records, 0 unresolved) then python tools/rtti_vtables.py --own daSpd_c and --own daEyBm_c; capstone decode of ov071 .text for the BL call graph and the this-relative field scan.",
     "tree_derived_fields": "shard_count_correction.queue_says, sibling_oracle_daEyBm_c.promotion_state, header_divergences_to_fix and data_and_bss_band's delinks boundaries are TREE-derived and rot on every promotion. Everything under identity_evidence, vtable, base_evidence, overrides, construction, fields, state_machine and callers is ROM-derived and cannot.",

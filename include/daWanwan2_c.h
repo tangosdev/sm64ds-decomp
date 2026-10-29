@@ -3,8 +3,8 @@
 
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -19,7 +19,7 @@ enum { daWanwan2_NUM_LINKS = 6 };
  * (the plain fields at 0x668..0x6d8 lie between the single dExtShadowModel_c and the link
  * arrays):
  *
- *     0x370  Model       x6   stride 0x50
+ *     0x370  dExtSimpleModel_c       x6   stride 0x50
  *     0x550  dExtShadowModel_c x6   stride 0x28
  *     0x640  dExtShadowModel_c  1
  *     0x6d8  Vector3     x6   stride 0x0c
@@ -41,8 +41,8 @@ enum { daWanwan2_NUM_LINKS = 6 };
 struct daWanwan2_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
     dBgCh_Actr        mWithMeshClsn;      /* 0x150 */
-    ModelAnim           mModelAnim;         /* 0x30c -- the chomp's body; its mat4x3 is the body matrix */
-    Model               mModels[6];                           /* 0x370 -- one per chain link; mat4x3 is that link's matrix */
+    dExtAnmModel_c mAnmModel;     /* 0x30c -- the chomp's body; its mat4x3 is the body matrix */
+    dExtSimpleModel_c mModels[6]; /* 0x370 -- one per chain link; mat4x3 is that link's matrix */
     dExtShadowModel_c         mShadowModels[6];                     /* 0x550 -- the links' drop shadows */
     dExtShadowModel_c         mShadowModel;       /* 0x640 -- the body's drop shadow */
     /* The current state: a pair of pointers-to-member (enter, execute) that

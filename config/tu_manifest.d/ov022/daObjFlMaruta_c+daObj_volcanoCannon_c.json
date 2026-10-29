@@ -172,6 +172,16 @@
       "reason": "mwccarm emits the base-object destructor variant beside the licensed D1/D0 pair whenever it lowers an out-of-line destructor definition. daObj_volcanoCannon_c's D2 has no entry in config/arm9/overlays/ov022/symbols.txt, so the ROM gives it no home, and no function surviving in this TU references it."
     },
     {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. return new daObjFlMaruta_c inlines the base constructor and mwccarm 2004/b56 also materialises the base-object destructor as an unreferenced STB_LOPROC D2 of 0x38 bytes. config symbols name dBgActor_c D1 and D0 only, in ov002. Home count 0, so plain deadstrip rather than deadstrip-duplicate."
+    },
+    {
+      "symbol": "_ZN13daObjMaruta_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The same new-expression materialises daObjMaruta_c's base-object destructor as an unreferenced STB_LOPROC D2 of 0x44 bytes. ov080 names D1 and D0 only. Home count 0, so plain deadstrip rather than deadstrip-duplicate."
+    },
+    {
       "symbol": "_ZTI15daObjFlMaruta_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov022",
@@ -472,28 +482,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,

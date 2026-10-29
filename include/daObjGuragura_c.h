@@ -56,13 +56,15 @@
 
 #include "dBgActor_c.h"
 
+struct ResourceDescriptor;
+
 struct daObjGuragura_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    s32 mTilt[4];           /* 0x320 - quaternion, the live orientation */
-    s32 mTiltTarget[4];     /* 0x330 - quaternion, what it lerps toward */
-    u8  pad_340[0xc];
-    u8  mBumped;            /* 0x34c - cleared every frame by Behavior */
-    u8  mSettleDelay;       /* 0x34d - frames before the target is reloaded */
+    s32 mTilt[4];       /* 0x320 - quaternion, the live orientation */
+    s32 mTiltTarget[4]; /* 0x330 - quaternion, what it lerps toward */
+    u8 pad_340[0xc];
+    u8 mBumped;      /* 0x34c - cleared every frame by Behavior */
+    u8 mSettleDelay; /* 0x34d - frames before the target is reloaded */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
@@ -100,8 +102,8 @@ struct daObjGuragura_c : dBgActor_c {
        cartridge byte for byte with it enrolled. Measured on the sibling
        daObjKuruma_c: with Behavior declared first the object came out with eleven
        .data sections; with Render first, one .text. */
-    s32 Render();                      /* slot  9 -- see above */
-    s32 Behavior();                    /* slot  6 */
+    s32 Render();   /* slot  9 -- see above */
+    s32 Behavior(); /* slot  6 */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero
@@ -115,8 +117,18 @@ struct daObjGuragura_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual s32 InitResources() = 0;        /* slot  0 */
-    virtual s32 CleanupResources() = 0;     /* slot  3 */
+    virtual s32 InitResources() = 0;    /* slot  0 */
+    virtual s32 CleanupResources() = 0; /* slot  3 */
+
+    /* The shared halves of the descendants' slot-0 and slot-3 overrides. */
+    s32 InitResourcesFrom(ResourceDescriptor *descriptor);
+    s32 CleanupResourcesFrom(ResourceDescriptor *descriptor);
+    /* Live quaternion, position >> 3 and mAngleY into the model matrix. */
+    void UpdateModelMatrix();
+    /* A rider landed: aim mTiltTarget under it and arm mSettleDelay. */
+    void TiltToward(unsigned char *rider);
+    /* The dBgW+0x1c stood-on callback InitResourcesFrom installs. */
+    static void StoodOnCallback(void *collider, daObjGuragura_c *self, unsigned char *rider);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -130,12 +142,12 @@ typedef char daObjGuragura_c_size_must_be_0x350[sizeof(daObjGuragura_c) == 0x350
    inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
    as include/dBgActor_c.h. */
 struct daObjGuragura_c {
-    u8  pad_000[0x320];
-    s32 mTilt[4];           /* 0x320 */
-    s32 mTiltTarget[4];     /* 0x330 */
-    u8  pad_340[0xc];
-    u8  mBumped;            /* 0x34c */
-    u8  mSettleDelay;       /* 0x34d */
+    u8 pad_000[0x320];
+    s32 mTilt[4];       /* 0x320 */
+    s32 mTiltTarget[4]; /* 0x330 */
+    u8 pad_340[0xc];
+    u8 mBumped;      /* 0x34c */
+    u8 mSettleDelay; /* 0x34d */
 };
 
 #endif /* __cplusplus */

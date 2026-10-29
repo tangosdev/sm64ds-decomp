@@ -1,8 +1,8 @@
 _ZN7daDgr_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN7daDgr_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN7daDgr_c19func_ov025_0211123cEv kind:function(arm,size=0xa4) addr:0x0211123c
-_ZN7daDgr_c19func_ov025_021112e0Ev kind:function(arm,size=0x64) addr:0x021112e0
-_ZN7daDgr_c19func_ov025_02111344Ev kind:function(arm,size=0x40) addr:0x02111344
+_ZN7daDgr_c17EnableClsnNearEggEv kind:function(arm,size=0xa4) addr:0x0211123c
+_ZN7daDgr_c16UpdateClsnMatrixEv kind:function(arm,size=0x64) addr:0x021112e0
+_ZN7daDgr_c17UpdateModelMatrixEv kind:function(arm,size=0x40) addr:0x02111344
 _ZN7daDgr_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111384
 _ZN7daDgr_c6RenderEv kind:function(arm,size=0x28) addr:0x021113c8
 _ZN7daDgr_c8BehaviorEv kind:function(arm,size=0x3ec) addr:0x021113f0
@@ -11,9 +11,9 @@ daDgr_c_classInit kind:function(arm,size=0x30) addr:0x02111898
 _ZN7daDkk_cD1Ev kind:function(arm,size=0x60) addr:0x021118c8
 _ZN7daDkk_cD0Ev kind:function(arm,size=0x74) addr:0x02111928
 _ZN7daDkk_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211199c
-_ZN7daDkk_c19func_ov025_021119a4Ev kind:function(arm,size=0x50) addr:0x021119a4
-_ZN7daDkk_c19func_ov025_021119f4Ev kind:function(arm,size=0x90) addr:0x021119f4
-_ZN7daDkk_c19func_ov025_02111a84Ev kind:function(arm,size=0xe0) addr:0x02111a84
+_ZN7daDkk_c9StateTurnEv kind:function(arm,size=0x50) addr:0x021119a4
+_ZN7daDkk_c14StateLandPauseEv kind:function(arm,size=0x90) addr:0x021119f4
+_ZN7daDkk_c9StateFallEv kind:function(arm,size=0xe0) addr:0x02111a84
 _ZN7daDkk_c8BehaviorEv kind:function(arm,size=0xc0) addr:0x02111b64
 _ZN7daDkk_c13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111c24
 daDkk_c_classInit kind:function(arm,size=0x4c) addr:0x02111cf4
@@ -32,8 +32,8 @@ _ZN10daDpLift_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x021121c0
 _ZN10daDpLift_c6RenderEv kind:function(arm,size=0x8c) addr:0x021121fc
 _ZN10daDpLift_c8BehaviorEv kind:function(arm,size=0x210) addr:0x02112288
 _ZN10daDpLift_c13InitResourcesEv kind:function(arm,size=0x124) addr:0x02112498
-func_ov025_021125bc kind:function(arm,size=0x20) addr:0x021125bc
-func_ov025_021125dc kind:function(arm,size=0x14) addr:0x021125dc
+_ZN10daDpLift_c9OnStoodOnEP8dActor_c kind:function(arm,size=0x20) addr:0x021125bc
+_ZN10daDpLift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_ kind:function(arm,size=0x14) addr:0x021125dc
 daDpLift_c_classInit kind:function(arm,size=0x64) addr:0x021125f0
 data_ov025_02112654 kind:data(any) addr:0x02112654
 data_ov025_02112658 kind:data(any) addr:0x02112658

@@ -6,6 +6,30 @@
     .ctor       start:0x02086b60 end:0x02086bbc kind:rodata align:4
     .data       start:0x02086bc0 end:0x0209b000 kind:data align:32
     .bss        start:0x0209b000 end:0x020aa420 kind:bss align:32
+src/IntrWait.c:
+    complete
+    .text start:0x020040f4 end:0x020040f8
+
+src/SoftReset.c:
+    complete
+    .text start:0x0200414c end:0x02004150
+
+src/RLUnCompReadByCallbackWrite16bit.c:
+    complete
+    .text start:0x02004244 end:0x02004248
+
+src/BitUnPack.c:
+    complete
+    .text start:0x0200432c end:0x02004330
+
+src/Sqrt.c:
+    complete
+    .text start:0x020043d0 end:0x020043d4
+
+src/LZ77UnCompReadNormalWrite8bit.c:
+    complete
+    .text start:0x02004438 end:0x0200443c
+
 src/Entry.c:
     complete
     .text start:0x02004800 end:0x020048d8
@@ -14,11 +38,15 @@ src/unnamed/arm9/0200/func_020048d8.c:
     complete
     .text start:0x020048d8 end:0x0200497c
 
+src/unnamed/arm9/0200/func_0200497c.c:
+    complete
+    .text start:0x0200497c end:0x020049ec
+
 src/AutoloadCallback.c:
     complete
     .text start:0x020049ec end:0x020049f0
 
-src/_ZN4CP1511SystemSetupEv.cpp:
+src/engine/cp15/CP15_SystemSetup.cpp:
     complete
     .text start:0x020049f0 end:0x02004ad8
 
@@ -38,7 +66,7 @@ src/unnamed/arm9/0200/func_020050dc.c:
     complete
     .text start:0x020050dc end:0x02005110
 
-src/unnamed/arm9/0200/func_02005110.c:
+src/unnamed/arm9/0200/func_02005110.cpp:
     complete
     .text start:0x02005110 end:0x02005324
 
@@ -49,479 +77,31 @@ src/game/stages/d_s_boot_methods.cpp:
 
 src/runtime/actor/d_cap_enemy_arm9.cpp:
     complete
-    .text start:0x02005d94 end:0x0200651c
+    .text start:0x02005d94 end:0x02006588
 
-src/_ZN11dCapEnemy_cD1Ev.cpp:
-    complete
-    .text start:0x0200651c end:0x02006554
-
-src/_ZN11dCapEnemy_cC2Ev.cpp:
-    complete
-    .text start:0x02006554 end:0x02006588
-
-src/main.c:
+src/main.cpp:
     complete
     .text start:0x02007000 end:0x0200705c
 
-src/_ZN9dCamera_cD1Ev.cpp:
+src/engine/view/d_camera_dtor.cpp:
     complete
-    .text start:0x0200705c end:0x02007098
+    .text start:0x0200705c end:0x020072c4
 
-src/_ZN9dCamera_cD0Ev.cpp:
-    complete
-    .text start:0x02007098 end:0x020070e8
-
-src/unnamed/arm9/0200/func_020070e8.c:
-    complete
-    .text start:0x020070e8 end:0x020071a8
-
-src/unnamed/arm9/0200/func_020071a8.c:
-    complete
-    .text start:0x020071a8 end:0x020071e0
-
-src/unnamed/arm9/0200/func_020071e0.c:
-    complete
-    .text start:0x020071e0 end:0x020072c0
-
-src/_ZN7Vector3D1Ev.cpp:
-    complete
-    .text start:0x020072c0 end:0x020072c4
-
-src/unnamed/arm9/0200/func_020072c4.c:
+src/unnamed/arm9/0200/func_020072c4.cpp:
     complete
     .text start:0x020072c4 end:0x020073a0
 
-src/unnamed/arm9/0200/func_020073a0.c:
-    complete
-    .text start:0x020073a0 end:0x02007414
-
-src/unnamed/arm9/0200/func_02007414.c:
-    complete
-    .text start:0x02007414 end:0x02007450
-
-src/unnamed/arm9/0200/func_02007450.c:
-    complete
-    .text start:0x02007450 end:0x02007484
-
-src/unnamed/arm9/0200/func_02007484.c:
-    complete
-    .text start:0x02007484 end:0x020074e8
-
-src/unnamed/arm9/0200/func_020074e8.c:
-    complete
-    .text start:0x020074e8 end:0x0200751c
-
-src/unnamed/arm9/0200/func_0200751c.c:
-    complete
-    .text start:0x0200751c end:0x02007548
-
-src/unnamed/arm9/0200/func_02007548.c:
-    complete
-    .text start:0x02007548 end:0x020075b4
-
-src/unnamed/arm9/0200/func_020075b4.c:
-    complete
-    .text start:0x020075b4 end:0x0200762c
-
-src/unnamed/arm9/0200/func_0200762c.c:
-    complete
-    .text start:0x0200762c end:0x02007698
-
-src/unnamed/arm9/0200/func_02007698.c:
-    complete
-    .text start:0x02007698 end:0x02007758
-
-src/unnamed/arm9/0200/func_02007758.c:
-    complete
-    .text start:0x02007758 end:0x020077f0
-
-src/unnamed/arm9/0200/func_020077f0.c:
-    complete
-    .text start:0x020077f0 end:0x02007870
-
-src/unnamed/arm9/0200/func_02007870.c:
-    complete
-    .text start:0x02007870 end:0x020078c4
-
-src/unnamed/arm9/0200/func_020078c4.c:
-    complete
-    .text start:0x020078c4 end:0x02007910
-
-src/unnamed/arm9/0200/func_02007910.c:
-    complete
-    .text start:0x02007910 end:0x020079ac
-
-src/unnamed/arm9/0200/func_020079ac.c:
-    complete
-    .text start:0x020079ac end:0x02007a8c
-
-src/unnamed/arm9/0200/func_02007a8c.c:
-    complete
-    .text start:0x02007a8c end:0x02007b0c
-
-src/unnamed/arm9/0200/func_02007b0c.c:
-    complete
-    .text start:0x02007b0c end:0x02007b98
-
-src/unnamed/arm9/0200/func_02007b98.c:
-    complete
-    .text start:0x02007b98 end:0x02007c14
-
-src/unnamed/arm9/0200/func_02007c14.c:
-    complete
-    .text start:0x02007c14 end:0x02007c9c
-
-src/unnamed/arm9/0200/func_02007c9c.c:
-    complete
-    .text start:0x02007c9c end:0x02007cec
-
-src/unnamed/arm9/0200/func_02007cec.c:
-    complete
-    .text start:0x02007cec end:0x02007d0c
-
-src/unnamed/arm9/0200/func_02007d0c.c:
-    complete
-    .text start:0x02007d0c end:0x02007d58
-
-src/unnamed/arm9/0200/func_02007d58.c:
-    complete
-    .text start:0x02007d58 end:0x02007e5c
-
-src/unnamed/arm9/0200/func_02007e5c.c:
-    complete
-    .text start:0x02007e5c end:0x02007f14
-
-src/unnamed/arm9/0200/func_02007f14.c:
-    complete
-    .text start:0x02007f14 end:0x02007fcc
-
-src/unnamed/arm9/0200/func_02007fcc.c:
-    complete
-    .text start:0x02007fcc end:0x02008008
-
-src/unnamed/arm9/0200/func_02008008.c:
-    complete
-    .text start:0x02008008 end:0x02008028
-
-src/unnamed/arm9/0200/func_02008028.c:
-    complete
-    .text start:0x02008028 end:0x02008080
-
-src/unnamed/arm9/0200/func_02008080.c:
-    complete
-    .text start:0x02008080 end:0x020080b0
-
-src/unnamed/arm9/0200/func_020080b0.c:
-    complete
-    .text start:0x020080b0 end:0x020080f0
-
-src/unnamed/arm9/0200/func_020080f0.c:
-    complete
-    .text start:0x020080f0 end:0x0200814c
-
-src/unnamed/arm9/0200/func_0200814c.c:
-    complete
-    .text start:0x0200814c end:0x02008200
-
-src/unnamed/arm9/0200/func_02008200.c:
-    complete
-    .text start:0x02008200 end:0x020082a0
-
-src/unnamed/arm9/0200/func_020082a0.c:
-    complete
-    .text start:0x020082a0 end:0x020082f8
-
-src/unnamed/arm9/0200/func_020082f8.c:
-    complete
-    .text start:0x020082f8 end:0x0200840c
-
-src/unnamed/arm9/0200/func_0200840c.c:
-    complete
-    .text start:0x0200840c end:0x02008450
-
-src/unnamed/arm9/0200/func_02008450.c:
-    complete
-    .text start:0x02008450 end:0x02008474
-
-src/unnamed/arm9/0200/func_02008474.c:
-    complete
-    .text start:0x02008474 end:0x020084b0
-
-src/unnamed/arm9/0200/func_020084b0.c:
-    complete
-    .text start:0x020084b0 end:0x02008500
-
-src/unnamed/arm9/0200/func_02008500.c:
-    complete
-    .text start:0x02008500 end:0x02008550
-
-src/unnamed/arm9/0200/func_02008550.cpp:
-    complete
-    .text start:0x02008550 end:0x0200897c
-
-src/unnamed/arm9/0200/func_0200897c.c:
-    complete
-    .text start:0x0200897c end:0x020089d8
-
-src/unnamed/arm9/0200/func_020089d8.c:
-    complete
-    .text start:0x020089d8 end:0x020089f8
-
-src/unnamed/arm9/0200/func_020089f8.c:
-    complete
-    .text start:0x020089f8 end:0x02008a70
-
-src/unnamed/arm9/0200/func_02008a70.c:
-    complete
-    .text start:0x02008a70 end:0x02008abc
-
-src/unnamed/arm9/0200/func_02008abc.c:
-    complete
-    .text start:0x02008abc end:0x02008b08
-
-src/unnamed/arm9/0200/func_02008b08.c:
-    complete
-    .text start:0x02008b08 end:0x02008b4c
-
-src/unnamed/arm9/0200/func_02008b4c.c:
-    complete
-    .text start:0x02008b4c end:0x02008cb4
-
-src/unnamed/arm9/0200/func_02008cb4.c:
-    complete
-    .text start:0x02008cb4 end:0x02009138
-
-src/unnamed/arm9/0200/func_02009138.c:
-    complete
-    .text start:0x02009138 end:0x020091f8
-
-src/unnamed/arm9/0200/func_020091f8.c:
-    complete
-    .text start:0x020091f8 end:0x0200928c
-
-src/unnamed/arm9/0200/func_0200928c.c:
-    complete
-    .text start:0x0200928c end:0x020092c4
-
-src/unnamed/arm9/0200/func_020092c4.c:
-    complete
-    .text start:0x020092c4 end:0x02009374
-
-src/unnamed/arm9/0200/func_02009374.c:
-    complete
-    .text start:0x02009374 end:0x020093d4
-
-src/unnamed/arm9/0200/func_020093d4.c:
-    complete
-    .text start:0x020093d4 end:0x020093f4
-
-src/unnamed/arm9/0200/func_020093f4.c:
-    complete
-    .text start:0x020093f4 end:0x02009414
-
-src/unnamed/arm9/0200/func_02009414.c:
-    complete
-    .text start:0x02009414 end:0x020094a8
-
-src/unnamed/arm9/0200/func_020094a8.c:
-    complete
-    .text start:0x020094a8 end:0x020094c0
-
-src/unnamed/arm9/0200/func_020094c0.c:
-    complete
-    .text start:0x020094c0 end:0x020094e4
-
-src/unnamed/arm9/0200/func_020094e4.c:
-    complete
-    .text start:0x020094e4 end:0x02009540
-
-src/unnamed/arm9/0200/func_02009540.c:
-    complete
-    .text start:0x02009540 end:0x020095c4
-
-src/unnamed/arm9/0200/func_020095c4.c:
-    complete
-    .text start:0x020095c4 end:0x020095e4
-
-src/unnamed/arm9/0200/func_020095e4.c:
-    complete
-    .text start:0x020095e4 end:0x020097ec
-
-src/unnamed/arm9/0200/func_020097ec.c:
-    complete
-    .text start:0x020097ec end:0x0200985c
-
-src/unnamed/arm9/0200/func_0200985c.c:
-    complete
-    .text start:0x0200985c end:0x0200987c
-
-src/unnamed/arm9/0200/func_0200987c.c:
-    complete
-    .text start:0x0200987c end:0x020098b8
-
-src/unnamed/arm9/0200/func_020098b8.c:
-    complete
-    .text start:0x020098b8 end:0x020098e0
-
-src/unnamed/arm9/0200/func_020098e0.c:
-    complete
-    .text start:0x020098e0 end:0x02009a8c
-
-src/unnamed/arm9/0200/func_02009a8c.c:
-    complete
-    .text start:0x02009a8c end:0x02009aa8
-
-src/unnamed/arm9/0200/func_02009aa8.c:
-    complete
-    .text start:0x02009aa8 end:0x02009d30
-
-src/unnamed/arm9/0200/func_02009d30.c:
-    complete
-    .text start:0x02009d30 end:0x02009d70
-
-src/unnamed/arm9/0200/func_02009d70.c:
-    complete
-    .text start:0x02009d70 end:0x02009d90
-
-src/unnamed/arm9/0200/func_02009d90.c:
-    complete
-    .text start:0x02009d90 end:0x02009db0
-
-src/unnamed/arm9/0200/func_02009db0.c:
-    complete
-    .text start:0x02009db0 end:0x02009dd0
-
-src/unnamed/arm9/0200/func_02009dd0.c:
-    complete
-    .text start:0x02009dd0 end:0x02009df0
-
-src/unnamed/arm9/0200/func_02009df0.c:
-    complete
-    .text start:0x02009df0 end:0x02009e10
-
-src/unnamed/arm9/0200/func_02009e10.c:
-    complete
-    .text start:0x02009e10 end:0x02009e30
-
-src/unnamed/arm9/0200/func_02009e30.c:
-    complete
-    .text start:0x02009e30 end:0x02009e50
-
-src/unnamed/arm9/0200/func_02009e50.c:
-    complete
-    .text start:0x02009e50 end:0x02009e70
-
-src/unnamed/arm9/0200/func_02009e70.cpp:
-    complete
-    .text start:0x02009e70 end:0x0200af0c
-
-src/unnamed/arm9/0200/func_0200af0c.c:
-    complete
-    .text start:0x0200af0c end:0x0200af20
-
-src/unnamed/arm9/0200/func_0200af20.c:
-    complete
-    .text start:0x0200af20 end:0x0200b0fc
-
-src/unnamed/arm9/0200/func_0200b0fc.c:
-    complete
-    .text start:0x0200b0fc end:0x0200b590
-
-src/unnamed/arm9/0200/func_0200b590.c:
-    complete
-    .text start:0x0200b590 end:0x0200b798
-
-src/unnamed/arm9/0200/func_0200b798.c:
-    complete
-    .text start:0x0200b798 end:0x0200b990
-
-src/unnamed/arm9/0200/func_0200b990.c:
-    complete
-    .text start:0x0200b990 end:0x0200bb28
-
-src/unnamed/arm9/0200/func_0200bb28.c:
-    complete
-    .text start:0x0200bb28 end:0x0200bec4
-
 src/engine/view/d_camera.cpp:
     complete
-    .text start:0x0200bec4 end:0x0200e494
+    .text start:0x020073a0 end:0x0200e494
 
-src/unnamed/arm9/0200/func_0200e494.c:
+src/KuppaScript.cpp:
     complete
-    .text start:0x0200e494 end:0x0200e4e4
-
-src/unnamed/arm9/0200/func_0200e4e4.c:
-    complete
-    .text start:0x0200e4e4 end:0x0200e55c
-
-src/unnamed/arm9/0200/func_0200e55c.c:
-    complete
-    .text start:0x0200e55c end:0x0200e5ac
-
-src/unnamed/arm9/0200/func_0200e5ac.c:
-    complete
-    .text start:0x0200e5ac end:0x0200e5fc
-
-src/unnamed/arm9/0200/func_0200e5fc.c:
-    complete
-    .text start:0x0200e5fc end:0x0200e6d8
-
-src/unnamed/arm9/0200/func_0200e6d8.c:
-    complete
-    .text start:0x0200e6d8 end:0x0200e728
-
-src/unnamed/arm9/0200/func_0200e728.c:
-    complete
-    .text start:0x0200e728 end:0x0200e748
-
-src/ReadUnalignedInt.c:
-    complete
-    .text start:0x0200e748 end:0x0200e768
-
-src/ReadUnalignedShort.c:
-    complete
-    .text start:0x0200e768 end:0x0200e780
-
-src/ReadUnalignedUshort.c:
-    complete
-    .text start:0x0200e780 end:0x0200e798
-
-src/EndKuppaScript.cpp:
-    complete
-    .text start:0x0200e798 end:0x0200e8d4
-
-src/ProcessKuppaScript.cpp:
-    complete
-    .text start:0x0200e8d4 end:0x0200ee68
-
-src/unnamed/arm9/0200/func_0200ee68.c:
-    complete
-    .text start:0x0200ee68 end:0x0200ee8c
-
-src/unnamed/arm9/0200/func_0200ee8c.c:
-    complete
-    .text start:0x0200ee8c end:0x0200eec8
-
-src/unnamed/arm9/0200/func_0200eec8.c:
-    complete
-    .text start:0x0200eec8 end:0x0200eedc
-
-src/StartIntroCutscene.c:
-    complete
-    .text start:0x0200eedc end:0x0200ef04
-
-src/RunKuppaScript.c:
-    complete
-    .text start:0x0200ef04 end:0x0200ef80
-
-src/ContinueKuppaScriptIfNecessary.c:
-    complete
-    .text start:0x0200ef80 end:0x0200f04c
-
-src/ResetKuppaScript.c:
-    complete
-    .text start:0x0200f04c end:0x0200f0bc
+    .text start:0x0200e494 end:0x0200f0bc
+    .init start:0x02073e6c end:0x02074d90
+    .ctor start:0x02086b64 end:0x02086b68
+    .data start:0x0208751c end:0x0208a0e0
+    .bss start:0x0209b270 end:0x0209b2e4
 
 src/unnamed/arm9/0200/func_0200f0bc.c:
     complete
@@ -531,11 +111,11 @@ src/unnamed/arm9/0200/func_0200f13c.cpp:
     complete
     .text start:0x0200f13c end:0x0200f220
 
-src/unnamed/arm9/0200/func_0200f220.c:
+src/unnamed/arm9/0200/func_0200f220.cpp:
     complete
     .text start:0x0200f220 end:0x0200f2cc
 
-src/unnamed/arm9/0200/func_0200f2cc.c:
+src/unnamed/arm9/0200/func_0200f2cc.cpp:
     complete
     .text start:0x0200f2cc end:0x0200f450
 
@@ -545,47 +125,24 @@ src/SetNumPlayers.c:
 
 src/unnamed/arm9/0200/func_0200f468.c:
     complete
-    .text start:0x0200f468 end:0x0200f46c
-
-src/unnamed/arm9/0200/func_0200f46c.c:
-    complete
-    .text start:0x0200f46c end:0x0200f470
-
+    .text start:0x0200f468 end:0x0200f470
 src/engine/view/Graphics3D.cpp:
     complete
     .text start:0x0200f470 end:0x0200f658
 
 src/runtime/actor/d_actor.cpp:
     complete
-    .text start:0x0200f658 end:0x020112c8
-
-src/_ZN8dActor_cD2Ev.cpp:
-    complete
-    .text start:0x020112c8 end:0x02011314
-
-src/_ZN8dActor_cD0Ev.cpp:
-    complete
-    .text start:0x02011314 end:0x02011374
-
-src/_ZN8dActor_cD1Ev.cpp:
-    complete
-    .text start:0x02011374 end:0x020113c0
-
-src/_ZN8dActor_cC1Ev.cpp:
-    complete
-    .text start:0x020113c0 end:0x02011508
-
-src/_ZN8Vector3sD1Ev.cpp:
-    complete
-    .text start:0x02011508 end:0x0201150c
-
-src/_ZN8dActor_cC2Ev.cpp:
-    complete
-    .text start:0x0201150c end:0x02011654
+    .text start:0x0200f658 end:0x02011654
+    .init start:0x02074d90 end:0x02074da8
+    .ctor start:0x02086b68 end:0x02086b6c
+    .bss start:0x0209b468 end:0x0209b470
 
 src/engine/sound/Sound.cpp:
     complete
     .text start:0x02011654 end:0x02013548
+    .init start:0x02074da8 end:0x02074dbc
+    .ctor start:0x02086b6c end:0x02086b70
+    .bss start:0x0209b53c end:0x0209ba84
 
 src/GetLevelPart.c:
     complete
@@ -597,12 +154,7 @@ src/SublevelToLevel.c:
 
 src/unnamed/arm9/0201/func_02013568.c:
     complete
-    .text start:0x02013568 end:0x02013580
-
-src/unnamed/arm9/0201/func_02013580.c:
-    complete
-    .text start:0x02013580 end:0x02013598
-
+    .text start:0x02013568 end:0x02013598
 src/unnamed/arm9/0201/func_02013598.c:
     complete
     .text start:0x02013598 end:0x020135d0
@@ -628,23 +180,23 @@ src/runtime/actor/ActorDerived.cpp:
     .text start:0x02013e80 end:0x02013f4c
 
 
-src/func_02013f4c.c:
+src/func_02013f4c.cpp:
     complete
     .text start:0x02013f4c end:0x02014150
 
-src/InitCrashScreen.c:
+src/InitCrashScreen.cpp:
     complete
     .text start:0x02014150 end:0x02014214
 
-src/ResetCrashScreen.c:
+src/ResetCrashScreen.cpp:
     complete
     .text start:0x02014214 end:0x02014244
 
-src/ShowCrashScreen.c:
+src/ShowCrashScreen.cpp:
     complete
     .text start:0x02014244 end:0x02014620
 
-src/nds_printt.c:
+src/nds_printt.cpp:
     complete
     .text start:0x02014620 end:0x0201470c
 
@@ -666,19 +218,7 @@ src/engine/collision/d_cc_pos.cpp:
 
 src/engine/collision/d_cc_ac.cpp:
     complete
-    .text start:0x0201489c end:0x02014a34
-
-src/_ZN10dCcAcPos_cD0Ev.cpp:
-    complete
-    .text start:0x02014a34 end:0x02014a60
-
-src/_ZN10dCcAcPos_cD1Ev.cpp:
-    complete
-    .text start:0x02014a60 end:0x02014a84
-
-src/_ZN10dCcAcPos_cC1Ev.cpp:
-    complete
-    .text start:0x02014a84 end:0x02014aa8
+    .text start:0x0201489c end:0x02014aa8
 
 src/engine/collision/d_cc.cpp:
     complete
@@ -688,205 +228,9 @@ src/engine/collision/d_clipper.cpp:
     complete
     .text start:0x020150e8 end:0x0201577c
 
-src/engine/model/MaterialChanger.cpp:
+src/engine/model/d_ext_model.cpp:
     complete
-    .text start:0x0201577c end:0x0201587c
-
-src/engine/model/TextureTransformer.cpp:
-    complete
-    .text start:0x0201587c end:0x0201597c
-
-src/engine/model/TextureSequence.cpp:
-    complete
-    .text start:0x0201597c end:0x02015a7c
-
-src/engine/animation/d_ext_frame_ctrl.cpp:
-    complete
-    .text start:0x02015a7c end:0x02015d38
-
-src/engine/model/d_ext_shadow_model.cpp:
-    complete
-    .text start:0x02015d38 end:0x0201609c
-
-src/engine/model/d_ext_common_model.cpp:
-    complete
-    .text start:0x0201609c end:0x02016254
-
-src/engine/model/ModelAnim2.cpp:
-    complete
-    .text start:0x02016254 end:0x02016320
-
-src/_ZN10ModelAnim2D0Ev.cpp:
-    complete
-    .text start:0x02016320 end:0x02016364
-
-src/_ZN10ModelAnim2D1Ev.cpp:
-    complete
-    .text start:0x02016364 end:0x020163a0
-
-src/_ZN10ModelAnim2C1Ev.cpp:
-    complete
-    .text start:0x020163a0 end:0x020163e0
-
-src/engine/model/BlendModelAnim.cpp:
-    complete
-    .text start:0x020163e0 end:0x02016644
-
-src/_ZN14BlendModelAnimD0Ev.cpp:
-    complete
-    .text start:0x02016644 end:0x02016690
-
-src/_ZN14BlendModelAnimD1Ev.cpp:
-    complete
-    .text start:0x02016690 end:0x020166d4
-
-src/_ZN14BlendModelAnimC1Ev.cpp:
-    complete
-    .text start:0x020166d4 end:0x02016714
-
-src/engine/model/ModelAnim.cpp:
-    complete
-    .text start:0x02016714 end:0x0201689c
-
-src/_ZN9ModelAnimD2Ev.cpp:
-    complete
-    .text start:0x0201689c end:0x020168d8
-
-src/_ZN9ModelAnimD0Ev.cpp:
-    complete
-    .text start:0x020168d8 end:0x0201691c
-
-src/_ZN9ModelAnimD1Ev.cpp:
-    complete
-    .text start:0x0201691c end:0x02016958
-
-src/_ZN9ModelAnimC1Ev.cpp:
-    complete
-    .text start:0x02016958 end:0x02016998
-
-src/_ZN9ModelAnimC2Ev.cpp:
-    complete
-    .text start:0x02016998 end:0x020169d8
-
-src/unnamed/arm9/0201/func_020169d8.c:
-    complete
-    .text start:0x020169d8 end:0x020169f4
-
-src/unnamed/arm9/0201/func_020169f4.c:
-    complete
-    .text start:0x020169f4 end:0x02016a04
-
-src/unnamed/arm9/0201/func_02016a04.c:
-    complete
-    .text start:0x02016a04 end:0x02016a14
-
-src/unnamed/arm9/0201/func_02016a14.c:
-    complete
-    .text start:0x02016a14 end:0x02016a24
-
-src/_ZN5Model12ShowMaterialEii.cpp:
-    complete
-    .text start:0x02016a24 end:0x02016a58
-
-src/_ZN5Model12HideMaterialEii.cpp:
-    complete
-    .text start:0x02016a58 end:0x02016a8c
-
-src/_ZN5Model14SetPolygonModeEi.cpp:
-    complete
-    .text start:0x02016a8c end:0x02016a9c
-
-src/_ZN9ModelBase12ApplyOpacityEjj.cpp:
-    complete
-    .text start:0x02016a9c end:0x02016aac
-
-src/unnamed/arm9/0201/func_02016aac.c:
-    complete
-    .text start:0x02016aac end:0x02016abc
-
-src/_ZN5Model12SetPolygonIDEi.cpp:
-    complete
-    .text start:0x02016abc end:0x02016acc
-
-src/unnamed/arm9/0201/func_02016acc.c:
-    complete
-    .text start:0x02016acc end:0x02016b24
-
-src/func_02016b24.c:
-    complete
-    .text start:0x02016b24 end:0x02016b78
-
-src/engine/model/Model.cpp:
-    complete
-    .text start:0x02016b78 end:0x02016df8
-
-src/CleanCommonModelDataArr.c:
-    complete
-    .text start:0x02016df8 end:0x02016e70
-
-src/unnamed/arm9/0201/func_02016e70.c:
-    complete
-    .text start:0x02016e70 end:0x02016f08
-
-src/_ZN5Model23AddToCommonModelDataArrER8BMD_File.cpp:
-    complete
-    .text start:0x02016f08 end:0x02016f9c
-
-src/_ZN5Model14LoadAndSetFileEtii.cpp:
-    complete
-    .text start:0x02016f9c end:0x02016fd4
-
-src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp:
-    complete
-    .text start:0x02016fd4 end:0x02016ff4
-
-src/unnamed/arm9/0201/func_02016ff4.cpp:
-    complete
-    .text start:0x02016ff4 end:0x02017060
-
-src/unnamed/arm9/0201/func_02017060.c:
-    complete
-    .text start:0x02017060 end:0x020170b8
-
-src/_ZN9ModelBaseD2Ev.cpp:
-    complete
-    .text start:0x020170b8 end:0x020170e8
-
-src/_ZN9ModelBaseD0Ev.cpp:
-    complete
-    .text start:0x020170e8 end:0x02017120
-
-src/_ZN9ModelBaseD1Ev.cpp:
-    complete
-    .text start:0x02017120 end:0x02017150
-
-src/_ZN9ModelBaseC2Ev.cpp:
-    complete
-    .text start:0x02017150 end:0x02017168
-
-src/_ZThn80_N9ModelAnimD0Ev.cpp:
-    complete
-    .text start:0x02017168 end:0x02017178
-
-src/_ZThn80_N9ModelAnimD1Ev.cpp:
-    complete
-    .text start:0x02017178 end:0x02017188
-
-src/_ZThn80_N14BlendModelAnimD0Ev.cpp:
-    complete
-    .text start:0x02017188 end:0x02017198
-
-src/_ZThn80_N14BlendModelAnimD1Ev.cpp:
-    complete
-    .text start:0x02017198 end:0x020171a8
-
-src/_ZThn80_N10ModelAnim2D0Ev.cpp:
-    complete
-    .text start:0x020171a8 end:0x020171b8
-
-src/_ZThn80_N10ModelAnim2D1Ev.cpp:
-    complete
-    .text start:0x020171b8 end:0x020171c8
+    .text start:0x0201577c end:0x020171c8
 
 src/runtime/graphics/fader/d_fader.cpp:
     complete
@@ -909,7 +253,7 @@ src/UnloadOverlay.c:
     complete
     .text start:0x02017f34 end:0x02017fd0
 
-src/unnamed/arm9/0201/func_02017fd0.c:
+src/unnamed/arm9/0201/func_02017fd0.cpp:
     complete
     .text start:0x02017fd0 end:0x02018028
 
@@ -921,7 +265,7 @@ src/LoadCompressedFileAt.c:
     complete
     .text start:0x02018100 end:0x02018144
 
-src/Deallocate.c:
+src/Deallocate.cpp:
     complete
     .text start:0x02018144 end:0x0201816c
 
@@ -933,7 +277,7 @@ src/unnamed/arm9/0201/func_0201817c.c:
     complete
     .text start:0x0201817c end:0x0201818c
 
-src/unnamed/arm9/0201/func_0201818c.c:
+src/unnamed/arm9/0201/func_0201818c.cpp:
     complete
     .text start:0x0201818c end:0x02018270
 
@@ -947,13 +291,8 @@ src/LoadFileAt.c:
 
 src/unnamed/arm9/0201/func_020182bc.c:
     complete
-    .text start:0x020182bc end:0x020182ec
-
-src/unnamed/arm9/0201/func_020182ec.c:
-    complete
-    .text start:0x020182ec end:0x0201834c
-
-src/unnamed/arm9/0201/func_0201834c.c:
+    .text start:0x020182bc end:0x0201834c
+src/unnamed/arm9/0201/func_0201834c.cpp:
     complete
     .text start:0x0201834c end:0x02018434
 
@@ -965,7 +304,7 @@ src/unnamed/arm9/0201/func_02018474.c:
     complete
     .text start:0x02018474 end:0x020184e0
 
-src/unnamed/arm9/0201/func_020184e0.c:
+src/unnamed/arm9/0201/func_020184e0.cpp:
     complete
     .text start:0x020184e0 end:0x02018568
 
@@ -1005,11 +344,11 @@ src/LoadArchive.c:
     complete
     .text start:0x020188a8 end:0x02018908
 
-src/unnamed/arm9/0201/func_02018908.c:
+src/unnamed/arm9/0201/func_02018908.cpp:
     complete
     .text start:0x02018908 end:0x02018934
 
-src/unnamed/arm9/0201/func_02018934.c:
+src/unnamed/arm9/0201/func_02018934.cpp:
     complete
     .text start:0x02018934 end:0x020189f0
 
@@ -1047,48 +386,17 @@ src/unnamed/arm9/0201/func_02018b64.c:
 
 src/unnamed/arm9/0201/func_02018c00.c:
     complete
-    .text start:0x02018c00 end:0x02018cbc
-
-src/unnamed/arm9/0201/func_02018cbc.c:
-    complete
-    .text start:0x02018cbc end:0x02018d48
-
+    .text start:0x02018c00 end:0x02018d48
 src/unnamed/arm9/0201/func_02018d48.c:
     complete
-    .text start:0x02018d48 end:0x02018d98
-
-src/unnamed/arm9/0201/func_02018d98.c:
-    complete
-    .text start:0x02018d98 end:0x02018dc4
-
-src/unnamed/arm9/0201/func_02018dc4.c:
-    complete
-    .text start:0x02018dc4 end:0x02018e00
-
-src/unnamed/arm9/0201/func_02018e00.c:
-    complete
-    .text start:0x02018e00 end:0x02018e3c
-
-src/unnamed/arm9/0201/func_02018e3c.c:
-    complete
-    .text start:0x02018e3c end:0x02018e68
-
-src/unnamed/arm9/0201/func_02018e68.c:
-    complete
-    .text start:0x02018e68 end:0x02018ea0
-
+    .text start:0x02018d48 end:0x02018ea0
 src/engine/graph/d_graph_c_callback.cpp:
     complete
     .text start:0x02018ea0 end:0x02018ec0
 
 src/unnamed/arm9/0201/func_02018ec0.c:
     complete
-    .text start:0x02018ec0 end:0x02018efc
-
-src/unnamed/arm9/0201/func_02018efc.c:
-    complete
-    .text start:0x02018efc end:0x02018f38
-
+    .text start:0x02018ec0 end:0x02018f38
 src/SetSubBg3Offset.c:
     complete
     .text start:0x02018f38 end:0x02018f54
@@ -1123,12 +431,7 @@ src/SetBg0Offset.c:
 
 src/unnamed/arm9/0201/func_02019018.c:
     complete
-    .text start:0x02019018 end:0x02019028
-
-src/unnamed/arm9/0201/func_02019028.c:
-    complete
-    .text start:0x02019028 end:0x02019070
-
+    .text start:0x02019018 end:0x02019070
 src/Enable3dEngines.c:
     complete
     .text start:0x02019070 end:0x020190b8
@@ -1141,11 +444,11 @@ src/unnamed/arm9/0201/func_02019100.c:
     complete
     .text start:0x02019100 end:0x02019144
 
-src/unnamed/arm9/0201/func_02019144.c:
+src/unnamed/arm9/0201/func_02019144.cpp:
     complete
     .text start:0x02019144 end:0x02019390
 
-src/unnamed/arm9/0201/func_02019390.c:
+src/unnamed/arm9/0201/func_02019390.cpp:
     complete
     .text start:0x02019390 end:0x02019404
 
@@ -1179,44 +482,25 @@ src/TurnBacklightOn.c:
 
 src/unnamed/arm9/0201/func_020196cc.c:
     complete
-    .text start:0x020196cc end:0x0201973c
-
-src/unnamed/arm9/0201/func_0201973c.c:
-    complete
-    .text start:0x0201973c end:0x02019740
-
-src/Crash.c:
+    .text start:0x020196cc end:0x02019740
+src/Crash.cpp:
     complete
     .text start:0x02019740 end:0x02019780
 
-src/unnamed/arm9/0201/func_02019780.c:
+src/unnamed/arm9/0201/func_02019780.cpp:
     complete
     .text start:0x02019780 end:0x020197b8
 
-src/unnamed/arm9/0201/func_020197b8.c:
+src/unnamed/arm9/0201/func_020197b8.cpp:
     complete
     .text start:0x020197b8 end:0x020199a4
 
 src/unnamed/arm9/0201/func_020199a4.c:
     complete
-    .text start:0x020199a4 end:0x02019a58
-
-src/unnamed/arm9/0201/func_02019a58.c:
-    complete
-    .text start:0x02019a58 end:0x02019ac4
-
-src/unnamed/arm9/0201/func_02019ac4.c:
-    complete
-    .text start:0x02019ac4 end:0x02019dfc
-
+    .text start:0x020199a4 end:0x02019dfc
 src/unnamed/arm9/0201/func_02019dfc.c:
     complete
-    .text start:0x02019dfc end:0x02019e60
-
-src/unnamed/arm9/0201/func_02019e60.c:
-    complete
-    .text start:0x02019e60 end:0x02019ebc
-
+    .text start:0x02019dfc end:0x02019ebc
 src/unnamed/arm9/0201/func_02019ebc.c:
     complete
     .text start:0x02019ebc end:0x02019ed0
@@ -1225,66 +509,43 @@ src/unnamed/arm9/0201/func_02019ed0.c:
     complete
     .text start:0x02019ed0 end:0x02019f10
 
-src/unnamed/arm9/0201/func_02019f10.c:
+src/unnamed/arm9/0201/func_02019f10.cpp:
     complete
-    .text start:0x02019f10 end:0x02019f64
-
-src/unnamed/arm9/0201/func_02019f64.c:
-    complete
-    .text start:0x02019f64 end:0x02019ff4
-
-src/unnamed/arm9/0201/func_02019ff4.c:
-    complete
-    .text start:0x02019ff4 end:0x0201a028
-
-src/unnamed/arm9/0201/func_0201a028.c:
-    complete
-    .text start:0x0201a028 end:0x0201a03c
-
+    .text start:0x02019f10 end:0x0201a03c
 src/unnamed/arm9/0201/func_0201a03c.c:
     complete
     .text start:0x0201a03c end:0x0201a054
 
-src/unnamed/arm9/0201/func_0201a054.c:
+src/unnamed/arm9/0201/func_0201a054.cpp:
     complete
     .text start:0x0201a054 end:0x0201a1bc
 
-src/unnamed/arm9/0201/func_0201a1bc.c:
+src/unnamed/arm9/0201/func_0201a1bc.cpp:
     complete
     .text start:0x0201a1bc end:0x0201a244
 
-src/unnamed/arm9/0201/func_0201a244.c:
+src/unnamed/arm9/0201/func_0201a244.cpp:
     complete
     .text start:0x0201a244 end:0x0201a2f8
 
-src/func_0201a2f8.c:
+src/func_0201a2f8.cpp:
     complete
     .text start:0x0201a2f8 end:0x0201a3e4
 
-src/unnamed/arm9/0201/func_0201a3e4.c:
+src/unnamed/arm9/0201/func_0201a3e4.cpp:
     complete
     .text start:0x0201a3e4 end:0x0201a428
 
-src/unnamed/arm9/0201/func_0201a428.c:
+src/unnamed/arm9/0201/func_0201a428.cpp:
     complete
-    .text start:0x0201a428 end:0x0201a458
-
-src/unnamed/arm9/0201/func_0201a458.c:
-    complete
-    .text start:0x0201a458 end:0x0201a490
-
+    .text start:0x0201a428 end:0x0201a490
 src/unnamed/arm9/0201/func_0201a490.c:
     complete
     .text start:0x0201a490 end:0x0201a4bc
 
 src/unnamed/arm9/0201/func_0201a4bc.c:
     complete
-    .text start:0x0201a4bc end:0x0201a4d0
-
-src/unnamed/arm9/0201/func_0201a4d0.c:
-    complete
-    .text start:0x0201a4d0 end:0x0201a4e4
-
+    .text start:0x0201a4bc end:0x0201a4e4
 src/IRQ2.cpp:
     complete
     .text start:0x0201a4e4 end:0x0201a5cc
@@ -1299,12 +560,7 @@ src/unnamed/arm9/0201/func_0201a5f8.c:
 
 src/unnamed/arm9/0201/func_0201a614.c:
     complete
-    .text start:0x0201a614 end:0x0201a694
-
-src/unnamed/arm9/0201/func_0201a694.c:
-    complete
-    .text start:0x0201a694 end:0x0201a754
-
+    .text start:0x0201a614 end:0x0201a754
 src/unnamed/arm9/0201/func_0201a754.c:
     complete
     .text start:0x0201a754 end:0x0201a798
@@ -1325,7 +581,7 @@ src/unnamed/arm9/0201/func_0201a8b4.c:
     complete
     .text start:0x0201a8b4 end:0x0201a96c
 
-src/unnamed/arm9/0201/func_0201a96c.c:
+src/unnamed/arm9/0201/func_0201a96c.cpp:
     complete
     .text start:0x0201a96c end:0x0201a9ec
 
@@ -1369,7 +625,7 @@ src/Message2.cpp:
     complete
     .text start:0x0201ab04 end:0x0201cb2c
 
-src/ui/messages/func_0201cb2c.c:
+src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp:
     complete
     .text start:0x0201cb2c end:0x0201cb7c
 
@@ -1381,7 +637,7 @@ src/LoadFont.cpp:
     complete
     .text start:0x0201fcd4 end:0x0201fe08
 
-src/ui/messages/func_0201fe08.c:
+src/ui/messages/_ZN7Message8LoadTextEv.cpp:
     complete
     .text start:0x0201fe08 end:0x0201fec8
 
@@ -1515,32 +771,14 @@ src/GetActorDebugName.c:
 
 src/unnamed/arm9/0202/func_020233f0.c:
     complete
-    .text start:0x020233f0 end:0x020233f4
-
-src/unnamed/arm9/0202/func_020233f4.c:
-    complete
-    .text start:0x020233f4 end:0x02023408
-
-src/unnamed/arm9/0202/func_02023408.c:
-    complete
-    .text start:0x02023408 end:0x0202341c
-
-src/LoadDebugFont.c:
+    .text start:0x020233f0 end:0x0202341c
+src/LoadDebugFont.cpp:
     complete
     .text start:0x0202341c end:0x0202345c
 
 src/unnamed/arm9/0202/func_0202345c.c:
     complete
-    .text start:0x0202345c end:0x02023498
-
-src/unnamed/arm9/0202/func_02023498.c:
-    complete
-    .text start:0x02023498 end:0x02023544
-
-src/unnamed/arm9/0202/func_02023544.c:
-    complete
-    .text start:0x02023544 end:0x02023598
-
+    .text start:0x0202345c end:0x02023598
 src/game/stages/d_s_boot.cpp:
     complete
     .text start:0x02023598 end:0x02023688
@@ -1556,18 +794,24 @@ src/unnamed/arm9/0202/func_0202e118.c:
 src/game/stages/d_scene.cpp:
     complete
     .text start:0x0202e140 end:0x0202ec9c
+    .init start:0x02074edc end:0x02074f80
+    .ctor start:0x02086b8c end:0x02086b90
+    .bss start:0x0209f5c4 end:0x0209f5f8
 
 src/runtime/graphics/fader/d_wipe.cpp:
     complete
     .text start:0x0202ec9c end:0x0202fc98
+    .init start:0x02074f80 end:0x02074fb8
+    .ctor start:0x02086b90 end:0x02086b94
     .data start:0x020926d0 end:0x02092718
+    .bss start:0x0209f610 end:0x0209f648
 
 src/engine/view/d_view.cpp:
     complete
     .text start:0x0202fc98 end:0x0202fd4c
 
 
-src/Quaternion_FromVector3.c:
+src/Quaternion_FromVector3.cpp:
     complete
     .text start:0x0202fd4c end:0x0202fef8
 
@@ -1591,11 +835,11 @@ src/Quaternion_Normalize.c:
     complete
     .text start:0x02030450 end:0x02030500
 
-src/unnamed/arm9/0203/func_02030500.c:
+src/unnamed/arm9/0203/func_02030500.cpp:
     complete
     .text start:0x02030500 end:0x02030790
 
-src/unnamed/arm9/0203/func_02030790.c:
+src/unnamed/arm9/0203/func_02030790.cpp:
     complete
     .text start:0x02030790 end:0x02030838
 
@@ -1603,7 +847,7 @@ src/unnamed/arm9/0203/func_02030838.c:
     complete
     .text start:0x02030838 end:0x0203083c
 
-src/unnamed/arm9/0203/func_0203083c.c:
+src/unnamed/arm9/0203/func_0203083c.cpp:
     complete
     .text start:0x0203083c end:0x020308a8
 
@@ -1663,93 +907,21 @@ src/unnamed/arm9/0203/func_02030e4c.c:
     complete
     .text start:0x02030e4c end:0x02030fa8
 
-src/unnamed/arm9/0203/func_02030fa8.c:
-    complete
-    .text start:0x02030fa8 end:0x02031028
-
-src/unnamed/arm9/0203/func_02031028.c:
-    complete
-    .text start:0x02031028 end:0x02031154
-
-src/unnamed/arm9/0203/func_02031154.c:
-    complete
-    .text start:0x02031154 end:0x0203128c
-
-src/unnamed/arm9/0203/func_0203128c.c:
-    complete
-    .text start:0x0203128c end:0x020313d8
-
-src/unnamed/arm9/0203/func_020313d8.c:
-    complete
-    .text start:0x020313d8 end:0x02031428
-
-src/unnamed/arm9/0203/func_02031428.c:
-    complete
-    .text start:0x02031428 end:0x020316d8
-
-src/unnamed/arm9/0203/func_020316d8.c:
-    complete
-    .text start:0x020316d8 end:0x020318a4
-
-src/unnamed/arm9/0203/func_020318a4.c:
-    complete
-    .text start:0x020318a4 end:0x020319fc
-
-src/unnamed/arm9/0203/func_020319fc.c:
-    complete
-    .text start:0x020319fc end:0x02031b84
-
 src/Message3.cpp:
     complete
-    .text start:0x02031b84 end:0x02034a78
+    .text start:0x02030fa8 end:0x02034a78
 
 src/game/stages/d_s_mb.cpp:
     complete
     .text start:0x02034a78 end:0x02035354
-
-src/unnamed/arm9/0203/func_02035354.c:
-    complete
-    .text start:0x02035354 end:0x02035394
-
-src/unnamed/arm9/0203/func_02035394.c:
-    complete
-    .text start:0x02035394 end:0x020353b0
-
-src/unnamed/arm9/0203/func_020353b0.c:
-    complete
-    .text start:0x020353b0 end:0x020353d4
-
-src/func_020353d4.c:
-    complete
-    .text start:0x020353d4 end:0x020353e0
-
-src/unnamed/arm9/0203/func_020353e0.c:
-    complete
-    .text start:0x020353e0 end:0x020353f4
-
-src/unnamed/arm9/0203/func_020353f4.c:
-    complete
-    .text start:0x020353f4 end:0x02035408
-
-src/func_02035408.c:
-    complete
-    .text start:0x02035408 end:0x02035414
-
-src/unnamed/arm9/0203/func_02035414.c:
-    complete
-    .text start:0x02035414 end:0x02035428
-
-src/unnamed/arm9/0203/func_02035428.c:
-    complete
-    .text start:0x02035428 end:0x0203543c
-
-src/func_0203543c.c:
-    complete
-    .text start:0x0203543c end:0x02035448
+    .init start:0x02074fb8 end:0x02074fe4
+    .ctor start:0x02086b94 end:0x02086b98
+    .bss start:0x020a0c68 end:0x020a0c78
 
 src/engine/collision/d_bg_ch.cpp:
     complete
-    .text start:0x02035448 end:0x0203553c
+    .text start:0x02035354 end:0x0203553c
+    .data start:0x020991c0 end:0x020991e0
 
 src/engine/collision/d_bg_ch_actr.cpp:
     complete
@@ -1783,10 +955,16 @@ src/engine/collision/d_bg_w.cpp:
 src/engine/collision/d_bg_w_kc.cpp:
     complete
     .text start:0x020396d8 end:0x020398fc
+    .init start:0x02074fe4 end:0x0207501c
+    .ctor start:0x02086b98 end:0x02086b9c
+    .bss start:0x020a0ce0 end:0x020a0d00
 
 src/engine/collision/d_bg_w_kc_mbg.cpp:
     complete
     .text start:0x020398fc end:0x0203a4dc
+    .init start:0x0207501c end:0x02075054
+    .ctor start:0x02086b9c end:0x02086ba0
+    .bss start:0x020a0d00 end:0x020a0d84
 
 src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp:
     complete
@@ -1852,7 +1030,7 @@ src/runtime/actor/ActorBase_SceneNode.cpp:
     complete
     .text start:0x0203b3c0 end:0x0203b4dc
 
-src/_ZN4cstd5atan2E5Fix12IiES1_.c:
+src/cstd_atan2.cpp:
     complete
     .text start:0x0203b4dc end:0x0203b684
 
@@ -1864,11 +1042,11 @@ src/Vec3_RotateYAndTranslate.c:
     complete
     .text start:0x0203b6a4 end:0x0203b770
 
-src/Vec3_VertAngle.c:
+src/Vec3_VertAngle.cpp:
     complete
     .text start:0x0203b770 end:0x0203b7ac
 
-src/Vec3_HorzAngle.c:
+src/Vec3_HorzAngle.cpp:
     complete
     .text start:0x0203b7ac end:0x0203b7dc
 
@@ -1987,37 +1165,19 @@ src/engine/heap/Heap.cpp:
 
 src/unnamed/arm9/0203/func_0203cc28.c:
     complete
-    .text start:0x0203cc28 end:0x0203ccd4
-
-src/unnamed/arm9/0203/func_0203ccd4.c:
-    complete
-    .text start:0x0203ccd4 end:0x0203cd80
-
-src/unnamed/arm9/0203/func_0203cd80.c:
-    complete
-    .text start:0x0203cd80 end:0x0203ce2c
-
+    .text start:0x0203cc28 end:0x0203ce2c
 src/NormalizeVec3IfNonZero.c:
     complete
     .text start:0x0203ce2c end:0x0203ce80
 
 src/unnamed/arm9/0203/func_0203ce80.c:
     complete
-    .text start:0x0203ce80 end:0x0203cebc
-
-src/unnamed/arm9/0203/func_0203cebc.c:
-    complete
-    .text start:0x0203cebc end:0x0203cf00
-
-src/unnamed/arm9/0203/func_0203cf00.c:
-    complete
-    .text start:0x0203cf00 end:0x0203cf40
-
-src/Vec3_HorzDist.c:
+    .text start:0x0203ce80 end:0x0203cf40
+src/Vec3_HorzDist.cpp:
     complete
     .text start:0x0203cf40 end:0x0203cf78
 
-src/Vec3_HorzLen.c:
+src/Vec3_HorzLen.cpp:
     complete
     .text start:0x0203cf78 end:0x0203cf94
 
@@ -2025,7 +1185,7 @@ src/unnamed/arm9/0203/func_0203cf94.c:
     complete
     .text start:0x0203cf94 end:0x0203cfdc
 
-src/Vec3_Dist.c:
+src/Vec3_Dist.cpp:
     complete
     .text start:0x0203cfdc end:0x0203d024
 
@@ -2053,7 +1213,7 @@ src/Vec3_Asr.c:
     complete
     .text start:0x0203d138 end:0x0203d170
 
-src/Vec3_DivScalarInPlace.c:
+src/Vec3_DivScalarInPlace.cpp:
     complete
     .text start:0x0203d170 end:0x0203d224
 
@@ -2075,21 +1235,12 @@ src/Vec3_Add.c:
 
 src/unnamed/arm9/0203/func_0203d384.c:
     complete
-    .text start:0x0203d384 end:0x0203d388
-
-src/unnamed/arm9/0203/func_0203d388.c:
-    complete
-    .text start:0x0203d388 end:0x0203d434
-
-src/unnamed/arm9/0203/func_0203d434.c:
-    complete
-    .text start:0x0203d434 end:0x0203d47c
-
+    .text start:0x0203d384 end:0x0203d47c
 src/NullDestructor_0203d47c.c:
     complete
     .text start:0x0203d47c end:0x0203d480
 
-src/unnamed/arm9/0203/func_0203d480.c:
+src/unnamed/arm9/0203/func_0203d480.cpp:
     complete
     .text start:0x0203d480 end:0x0203d4d0
 
@@ -2109,43 +1260,25 @@ src/unnamed/arm9/0203/func_0203d5bc.c:
     complete
     .text start:0x0203d5bc end:0x0203d5dc
 
-src/unnamed/arm9/0203/func_0203d5dc.c:
+src/unnamed/arm9/0203/func_0203d5dc.cpp:
     complete
     .text start:0x0203d5dc end:0x0203d614
 
-src/Vec2_Len.c:
+src/Vec2_Len.cpp:
     complete
     .text start:0x0203d614 end:0x0203d630
 
 src/unnamed/arm9/0203/func_0203d630.c:
     complete
-    .text start:0x0203d630 end:0x0203d680
-
-src/unnamed/arm9/0203/func_0203d680.c:
-    complete
-    .text start:0x0203d680 end:0x0203d6d0
-
+    .text start:0x0203d630 end:0x0203d6d0
 src/Vec2_Sub.c:
     complete
     .text start:0x0203d6d0 end:0x0203d704
 
 src/unnamed/arm9/0203/func_0203d704.c:
     complete
-    .text start:0x0203d704 end:0x0203d738
-
-src/unnamed/arm9/0203/func_0203d738.c:
-    complete
-    .text start:0x0203d738 end:0x0203d73c
-
-src/unnamed/arm9/0203/func_0203d73c.c:
-    complete
-    .text start:0x0203d73c end:0x0203d740
-
-src/unnamed/arm9/0203/func_0203d740.c:
-    complete
-    .text start:0x0203d740 end:0x0203d744
-
-src/_ZN4cstd4sqrtEy.cpp:
+    .text start:0x0203d704 end:0x0203d744
+src/cstd_sqrt.cpp:
     complete
     .text start:0x0203d744 end:0x0203d7b8
 
@@ -2285,7 +1418,7 @@ src/unnamed/arm9/0203/func_0203e0ac.c:
     complete
     .text start:0x0203e0ac end:0x0203e20c
 
-src/unnamed/arm9/0203/func_0203e20c.c:
+src/unnamed/arm9/0203/func_0203e20c.cpp:
     complete
     .text start:0x0203e20c end:0x0203e978
 
@@ -2301,7 +1434,7 @@ src/unnamed/arm9/0203/func_0203ea5c.c:
     complete
     .text start:0x0203ea5c end:0x0203f604
 
-src/unnamed/arm9/0203/func_0203f604.c:
+src/unnamed/arm9/0203/func_0203f604.cpp:
     complete
     .text start:0x0203f604 end:0x0203f644
 
@@ -2469,11 +1602,11 @@ src/unnamed/arm9/0204/func_02040820.c:
     complete
     .text start:0x02040820 end:0x020408b0
 
-src/unnamed/arm9/0204/func_020408b0.c:
+src/unnamed/arm9/0204/func_020408b0.cpp:
     complete
     .text start:0x020408b0 end:0x02040a5c
 
-src/unnamed/arm9/0204/func_02040a5c.c:
+src/unnamed/arm9/0204/func_02040a5c.cpp:
     complete
     .text start:0x02040a5c end:0x02040a84
 
@@ -2485,7 +1618,7 @@ src/unnamed/arm9/0204/func_02040a94.c:
     complete
     .text start:0x02040a94 end:0x02040aa4
 
-src/unnamed/arm9/0204/func_02040aa4.c:
+src/unnamed/arm9/0204/func_02040aa4.cpp:
     complete
     .text start:0x02040aa4 end:0x02040bb0
 
@@ -2497,19 +1630,19 @@ src/unnamed/arm9/0204/func_02040c34.c:
     complete
     .text start:0x02040c34 end:0x02040f30
 
-src/unnamed/arm9/0204/func_02040f30.c:
+src/unnamed/arm9/0204/func_02040f30.cpp:
     complete
     .text start:0x02040f30 end:0x02041224
 
-src/unnamed/arm9/0204/func_02041224.c:
+src/unnamed/arm9/0204/func_02041224.cpp:
     complete
     .text start:0x02041224 end:0x020412f0
 
-src/unnamed/arm9/0204/func_020412f0.c:
+src/unnamed/arm9/0204/func_020412f0.cpp:
     complete
     .text start:0x020412f0 end:0x0204175c
 
-src/unnamed/arm9/0204/func_0204175c.c:
+src/unnamed/arm9/0204/func_0204175c.cpp:
     complete
     .text start:0x0204175c end:0x020417d0
 
@@ -2529,26 +1662,9 @@ src/unnamed/arm9/0204/func_02041a00.c:
     complete
     .text start:0x02041a00 end:0x02041a94
 
-src/unnamed/arm9/0204/func_02041a94.c:
+src/unnamed/arm9/0204/func_02041a94.cpp:
     complete
-    .text start:0x02041a94 end:0x02041ae8
-
-src/unnamed/arm9/0204/func_02041ae8.c:
-    complete
-    .text start:0x02041ae8 end:0x02041b24
-
-src/unnamed/arm9/0204/func_02041b24.c:
-    complete
-    .text start:0x02041b24 end:0x02041b60
-
-src/unnamed/arm9/0204/func_02041b60.c:
-    complete
-    .text start:0x02041b60 end:0x02041bbc
-
-src/unnamed/arm9/0204/func_02041bbc.c:
-    complete
-    .text start:0x02041bbc end:0x02041c2c
-
+    .text start:0x02041a94 end:0x02041c2c
 src/unnamed/arm9/0204/func_02041c2c.c:
     complete
     .text start:0x02041c2c end:0x02041c64
@@ -2561,7 +1677,7 @@ src/unnamed/arm9/0204/func_02041ce0.c:
     complete
     .text start:0x02041ce0 end:0x02041d28
 
-src/unnamed/arm9/0204/func_02041d28.c:
+src/unnamed/arm9/0204/func_02041d28.cpp:
     complete
     .text start:0x02041d28 end:0x02041e14
 
@@ -2581,7 +1697,7 @@ src/unnamed/arm9/0204/func_02042200.c:
     complete
     .text start:0x02042200 end:0x02042254
 
-src/unnamed/arm9/0204/func_02042254.c:
+src/unnamed/arm9/0204/func_02042254.cpp:
     complete
     .text start:0x02042254 end:0x020423c8
 
@@ -2593,7 +1709,7 @@ src/unnamed/arm9/0204/func_020423dc.c:
     complete
     .text start:0x020423dc end:0x020424c0
 
-src/unnamed/arm9/0204/func_020424c0.c:
+src/unnamed/arm9/0204/func_020424c0.cpp:
     complete
     .text start:0x020424c0 end:0x02042668
 
@@ -2641,53 +1757,9 @@ src/unnamed/arm9/0204/func_02042f68.c:
     complete
     .text start:0x02042f68 end:0x02042fe4
 
-src/unnamed/arm9/0204/func_02042fe4.c:
-    complete
-    .text start:0x02042fe4 end:0x02042ffc
-
-src/unnamed/arm9/0204/func_02042ffc.c:
-    complete
-    .text start:0x02042ffc end:0x0204302c
-
-src/unnamed/arm9/0204/func_0204302c.c:
-    complete
-    .text start:0x0204302c end:0x02043060
-
-src/unnamed/arm9/0204/func_02043060.c:
-    complete
-    .text start:0x02043060 end:0x02043098
-
-src/unnamed/arm9/0204/func_02043098.c:
-    complete
-    .text start:0x02043098 end:0x02043180
-
-src/unnamed/arm9/0204/func_02043180.c:
-    complete
-    .text start:0x02043180 end:0x020431c4
-
-src/unnamed/arm9/0204/func_020431c4.c:
-    complete
-    .text start:0x020431c4 end:0x0204322c
-
-src/unnamed/arm9/0204/func_0204322c.c:
-    complete
-    .text start:0x0204322c end:0x02043288
-
-src/unnamed/arm9/0204/func_02043288.c:
-    complete
-    .text start:0x02043288 end:0x020432e4
-
-src/unnamed/arm9/0204/func_020432e4.c:
-    complete
-    .text start:0x020432e4 end:0x0204335c
-
-src/unnamed/arm9/0204/func_0204335c.c:
-    complete
-    .text start:0x0204335c end:0x020433b8
-
 src/runtime/actor/ActorBase.cpp:
     complete
-    .text start:0x020433b8 end:0x020440e8
+    .text start:0x02042fe4 end:0x020440e8
 
 src/fListNode.cpp:
     complete
@@ -2697,18 +1769,9 @@ src/engine/model/ModelComponents.cpp:
     complete
     .text start:0x020443c8 end:0x0204547c
 
-src/func_0204547c.c:
+src/func_0204547c.cpp:
     complete
-    .text start:0x0204547c end:0x020456a0
-
-src/func_020456a0.c:
-    complete
-    .text start:0x020456a0 end:0x020457f0
-
-src/func_020457f0.c:
-    complete
-    .text start:0x020457f0 end:0x020458a8
-
+    .text start:0x0204547c end:0x020458a8
 src/func_020458a8.c:
     complete
     .text start:0x020458a8 end:0x020458e0
@@ -2717,11 +1780,11 @@ src/engine/model/Model4.cpp:
     complete
     .text start:0x020458e0 end:0x020468a0
 
-src/_ZN15TextureSequence17UpdateFileOffsetsER8BTP_File.cpp:
+src/engine/model/dExtAnmTexPat_c_UpdateFileOffsets.cpp:
     complete
     .text start:0x020468a0 end:0x020469ac
 
-src/_ZN15dExtFrameCtrl_c17UpdateFileOffsetsER8BCA_File.cpp:
+src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp:
     complete
     .text start:0x020469ac end:0x020469e0
 
@@ -2753,11 +1816,11 @@ src/unnamed/arm9/0204/func_020470e8.c:
     complete
     .text start:0x020470e8 end:0x02047144
 
-src/unnamed/arm9/0204/func_02047144.c:
+src/unnamed/arm9/0204/func_02047144.cpp:
     complete
     .text start:0x02047144 end:0x020471ac
 
-src/func_020471ac.c:
+src/func_020471ac.cpp:
     complete
     .text start:0x020471ac end:0x02047218
 
@@ -2773,69 +1836,9 @@ src/func_02048234.c:
     complete
     .text start:0x02048234 end:0x02048528
 
-src/unnamed/arm9/0204/func_02048528.c:
-    complete
-    .text start:0x02048528 end:0x020485f0
-
-src/unnamed/arm9/0204/func_020485f0.c:
-    complete
-    .text start:0x020485f0 end:0x02048720
-
-src/unnamed/arm9/0204/func_02048720.c:
-    complete
-    .text start:0x02048720 end:0x02048908
-
-src/unnamed/arm9/0204/func_02048908.c:
-    complete
-    .text start:0x02048908 end:0x02048a18
-
-src/unnamed/arm9/0204/func_02048a18.c:
-    complete
-    .text start:0x02048a18 end:0x02048a1c
-
-src/unnamed/arm9/0204/func_02048a1c.c:
-    complete
-    .text start:0x02048a1c end:0x02048af4
-
-src/unnamed/arm9/0204/func_02048af4.c:
-    complete
-    .text start:0x02048af4 end:0x02048c30
-
-src/unnamed/arm9/0204/func_02048c30.c:
-    complete
-    .text start:0x02048c30 end:0x02048d80
-
-src/unnamed/arm9/0204/func_02048d80.c:
-    complete
-    .text start:0x02048d80 end:0x02048e54
-
-src/unnamed/arm9/0204/func_02048e54.c:
-    complete
-    .text start:0x02048e54 end:0x02048e74
-
-src/unnamed/arm9/0204/func_02048e74.c:
-    complete
-    .text start:0x02048e74 end:0x02048e94
-
-src/unnamed/arm9/0204/func_02048e94.c:
-    complete
-    .text start:0x02048e94 end:0x02048eb4
-
 src/engine/sound/Sound2.cpp:
     complete
-    .text start:0x02048eb4 end:0x02048f34
-
-src/unnamed/arm9/0204/func_02048f34.c:
-    complete
-    .text start:0x02048f34 end:0x02048fd4
-
-src/unnamed/arm9/0204/func_02048fd4.c:
-    complete
-    .text start:0x02048fd4 end:0x02049018
-
-src/func_02049018.c:
-    complete
-    .text start:0x02049018 end:0x020490b0
+    .text start:0x02048528 end:0x020490b0
 
 src/unnamed/arm9/0204/func_020490b0.cpp:
     complete
@@ -2853,11 +1856,11 @@ src/unnamed/arm9/0204/func_02049764.c:
     complete
     .text start:0x02049764 end:0x020497a0
 
-src/unnamed/arm9/0204/func_020497a0.c:
+src/unnamed/arm9/0204/func_020497a0.cpp:
     complete
     .text start:0x020497a0 end:0x020499bc
 
-src/unnamed/arm9/0204/func_020499bc.c:
+src/unnamed/arm9/0204/func_020499bc.cpp:
     complete
     .text start:0x020499bc end:0x02049ba8
 
@@ -2865,7 +1868,7 @@ src/unnamed/arm9/0204/func_02049ba8.c:
     complete
     .text start:0x02049ba8 end:0x02049c48
 
-src/unnamed/arm9/0204/func_02049c48.c:
+src/unnamed/arm9/0204/func_02049c48.cpp:
     complete
     .text start:0x02049c48 end:0x02049cd8
 
@@ -2873,41 +1876,9 @@ src/unnamed/arm9/0204/func_02049cd8.c:
     complete
     .text start:0x02049cd8 end:0x02049d60
 
-src/unnamed/arm9/0204/func_02049d60.c:
+src/engine/particle/Particle_Manager.cpp:
     complete
-    .text start:0x02049d60 end:0x02049d78
-
-src/unnamed/arm9/0204/func_02049d78.c:
-    complete
-    .text start:0x02049d78 end:0x02049e0c
-
-src/_ZN8Particle7Manager9AddSystemEiR7Vector3.cpp:
-    complete
-    .text start:0x02049e0c end:0x02049ee8
-
-src/unnamed/arm9/0204/func_02049ee8.c:
-    complete
-    .text start:0x02049ee8 end:0x02049f58
-
-src/unnamed/arm9/0204/func_02049f58.c:
-    complete
-    .text start:0x02049f58 end:0x0204a028
-
-src/unnamed/arm9/0204/func_0204a028.c:
-    complete
-    .text start:0x0204a028 end:0x0204a0dc
-
-src/unnamed/arm9/0204/func_0204a0dc.c:
-    complete
-    .text start:0x0204a0dc end:0x0204a17c
-
-src/unnamed/arm9/0204/func_0204a17c.cpp:
-    complete
-    .text start:0x0204a17c end:0x0204a4c8
-
-src/unnamed/arm9/0204/func_0204a4c8.c:
-    complete
-    .text start:0x0204a4c8 end:0x0204a5bc
+    .text start:0x02049d60 end:0x0204a5bc
 
 src/unnamed/arm9/0204/func_0204a5bc.c:
     complete
@@ -2979,16 +1950,7 @@ src/unnamed/arm9/0204/func_0204c304.c:
 
 src/unnamed/arm9/0204/func_0204c584.c:
     complete
-    .text start:0x0204c584 end:0x0204cd5c
-
-src/unnamed/arm9/0204/func_0204cd5c.c:
-    complete
-    .text start:0x0204cd5c end:0x0204cebc
-
-src/unnamed/arm9/0204/func_0204cebc.c:
-    complete
-    .text start:0x0204cebc end:0x0204d0b8
-
+    .text start:0x0204c584 end:0x0204d0b8
 src/unnamed/arm9/0204/func_0204d0b8.c:
     complete
     .text start:0x0204d0b8 end:0x0204d104
@@ -3037,7 +1999,7 @@ src/unnamed/arm9/0204/func_0204da4c.c:
     complete
     .text start:0x0204da4c end:0x0204dab4
 
-src/unnamed/arm9/0204/func_0204dab4.c:
+src/unnamed/arm9/0204/func_0204dab4.cpp:
     complete
     .text start:0x0204dab4 end:0x0204dc84
 
@@ -3073,9 +2035,21 @@ src/Matrix3x3_LoadIdentity.c:
     complete
     .text start:0x020524f0 end:0x02052514
 
+src/unnamed/arm9/0205/func_02052514.c:
+    complete
+    .text start:0x02052514 end:0x02052550
+
 src/unnamed/arm9/0205/func_02052550.c:
     complete
     .text start:0x02052550 end:0x0205256c
+
+src/unnamed/arm9/0205/func_0205256c.c:
+    complete
+    .text start:0x0205256c end:0x02052588
+
+src/Matrix3x3_SetRotationZ.c:
+    complete
+    .text start:0x02052588 end:0x020525a0
 
 src/MulVec3Mat3x3.c:
     complete
@@ -3097,9 +2071,13 @@ src/MulMat4x3Mat4x3.c:
     complete
     .text start:0x02052914 end:0x02052b34
 
-src/InvMat4x3.c:
+src/InvMat4x3.cpp:
     complete
     .text start:0x02052b34 end:0x02052ec8
+
+src/unnamed/arm9/0205/func_02052ec8.c:
+    complete
+    .text start:0x02052ec8 end:0x02052ef4
 
 src/cstd.cpp:
     complete
@@ -3108,12 +2086,7 @@ src/cstd.cpp:
 
 src/unnamed/arm9/0205/func_02053320.c:
     complete
-    .text start:0x02053320 end:0x02053380
-
-src/func_02053380.c:
-    complete
-    .text start:0x02053380 end:0x020534ec
-
+    .text start:0x02053320 end:0x020534ec
 src/NormalizeVec3.c:
     complete
     .text start:0x020534ec end:0x02053644
@@ -3142,14 +2115,9 @@ src/AddVec3.c:
     complete
     .text start:0x02053884 end:0x020538b8
 
-src/unnamed/arm9/0205/func_020538b8.c:
+src/unnamed/arm9/0205/func_020538b8.cpp:
     complete
-    .text start:0x020538b8 end:0x02053a8c
-
-src/unnamed/arm9/0205/func_02053a8c.c:
-    complete
-    .text start:0x02053a8c end:0x02053a90
-
+    .text start:0x020538b8 end:0x02053a90
 src/engine/gx/GX_Init.cpp:
     complete
     .text start:0x02053a90 end:0x02053d9c
@@ -3189,6 +2157,10 @@ src/unnamed/arm9/0205/func_02055388.c:
 src/unnamed/arm9/0205/func_020553a4.c:
     complete
     .text start:0x020553a4 end:0x020553c0
+
+src/unnamed/arm9/0205/func_020553c0.c:
+    complete
+    .text start:0x020553c0 end:0x02055454
 
 src/unnamed/arm9/0205/func_02055454.c:
     complete
@@ -3242,6 +2214,18 @@ src/IRQ.cpp:
     complete
     .text start:0x02056c40 end:0x02057014
 
+src/unnamed/arm9/0205/func_02057014.c:
+    complete
+    .text start:0x02057014 end:0x02057020
+
+src/unnamed/arm9/0205/func_02057020.c:
+    complete
+    .text start:0x02057020 end:0x02057078
+
+src/unnamed/arm9/0205/func_02057078.c:
+    complete
+    .text start:0x02057078 end:0x020570a8
+
 src/unnamed/arm9/0205/func_020570a8.c:
     complete
     .text start:0x020570a8 end:0x020570b8
@@ -3282,7 +2266,7 @@ src/unnamed/arm9/0205/func_02057178.c:
     complete
     .text start:0x02057178 end:0x02057198
 
-src/unnamed/arm9/0205/func_02057198.c:
+src/unnamed/arm9/0205/func_02057198.cpp:
     complete
     .text start:0x02057198 end:0x02057218
 
@@ -3290,7 +2274,7 @@ src/unnamed/arm9/0205/func_02057218.c:
     complete
     .text start:0x02057218 end:0x02057228
 
-src/unnamed/arm9/0205/func_02057228.c:
+src/unnamed/arm9/0205/func_02057228.cpp:
     complete
     .text start:0x02057228 end:0x020572b8
 
@@ -3334,11 +2318,11 @@ src/unnamed/arm9/0205/func_02057e30.c:
     complete
     .text start:0x02057e30 end:0x02057e34
 
-src/unnamed/arm9/0205/func_02057e34.c:
+src/unnamed/arm9/0205/func_02057e34.cpp:
     complete
     .text start:0x02057e34 end:0x02057e48
 
-src/unnamed/arm9/0205/func_02057e48.c:
+src/unnamed/arm9/0205/func_02057e48.cpp:
     complete
     .text start:0x02057e48 end:0x02057e7c
 
@@ -3346,7 +2330,7 @@ src/unnamed/arm9/0205/func_02057e7c.c:
     complete
     .text start:0x02057e7c end:0x02057e84
 
-src/unnamed/arm9/0205/func_02057e84.c:
+src/unnamed/arm9/0205/func_02057e84.cpp:
     complete
     .text start:0x02057e84 end:0x02057f38
 
@@ -3362,15 +2346,15 @@ src/unnamed/arm9/0205/func_0205801c.c:
     complete
     .text start:0x0205801c end:0x02058048
 
-src/unnamed/arm9/0205/func_02058048.c:
+src/unnamed/arm9/0205/func_02058048.cpp:
     complete
     .text start:0x02058048 end:0x0205807c
 
-src/OS_WakeupThread.c:
+src/OS_WakeupThread.cpp:
     complete
     .text start:0x0205807c end:0x020580f0
 
-src/OS_SleepThread.c:
+src/OS_SleepThread.cpp:
     complete
     .text start:0x020580f0 end:0x02058158
 
@@ -3378,7 +2362,7 @@ src/unnamed/arm9/0205/func_02058158.c:
     complete
     .text start:0x02058158 end:0x0205816c
 
-src/unnamed/arm9/0205/func_0205816c.c:
+src/unnamed/arm9/0205/func_0205816c.cpp:
     complete
     .text start:0x0205816c end:0x020581a8
 
@@ -3386,7 +2370,7 @@ src/unnamed/arm9/0205/func_020581a8.cpp:
     complete
     .text start:0x020581a8 end:0x02058200
 
-src/unnamed/arm9/0205/func_02058200.c:
+src/unnamed/arm9/0205/func_02058200.cpp:
     complete
     .text start:0x02058200 end:0x02058308
 
@@ -3406,6 +2390,10 @@ src/unnamed/arm9/0205/func_02058538.c:
     complete
     .text start:0x02058538 end:0x02058568
 
+src/unnamed/arm9/0205/func_02058568.c:
+    complete
+    .text start:0x02058568 end:0x020585cc
+
 src/ARMSaveContext.c:
     complete
     .text start:0x020585cc end:0x02058618
@@ -3414,27 +2402,18 @@ src/ARMRestoreContext.c:
     complete
     .text start:0x02058618 end:0x0205865c
 
-src/unnamed/arm9/0205/func_0205865c.c:
+src/unnamed/arm9/0205/func_0205865c.cpp:
     complete
-    .text start:0x0205865c end:0x02058690
-
-src/unnamed/arm9/0205/func_02058690.c:
-    complete
-    .text start:0x02058690 end:0x02058764
-
-src/unnamed/arm9/0205/func_02058764.c:
-    complete
-    .text start:0x02058764 end:0x020587dc
-
+    .text start:0x0205865c end:0x020587dc
 src/unnamed/arm9/0205/func_020587dc.c:
     complete
     .text start:0x020587dc end:0x020587e4
 
-src/unnamed/arm9/0205/func_020587e4.c:
+src/unnamed/arm9/0205/func_020587e4.cpp:
     complete
     .text start:0x020587e4 end:0x02058894
 
-src/unnamed/arm9/0205/func_02058894.c:
+src/unnamed/arm9/0205/func_02058894.cpp:
     complete
     .text start:0x02058894 end:0x02058940
 
@@ -3454,7 +2433,7 @@ src/unnamed/arm9/0205/func_020589ac.c:
     complete
     .text start:0x020589ac end:0x020589d4
 
-src/unnamed/arm9/0205/func_020589d4.c:
+src/unnamed/arm9/0205/func_020589d4.cpp:
     complete
     .text start:0x020589d4 end:0x02058a44
 
@@ -3462,11 +2441,11 @@ src/unnamed/arm9/0205/func_02058a44.c:
     complete
     .text start:0x02058a44 end:0x02058a94
 
-src/unnamed/arm9/0205/func_02058a94.c:
+src/unnamed/arm9/0205/func_02058a94.cpp:
     complete
     .text start:0x02058a94 end:0x02058b08
 
-src/unnamed/arm9/0205/func_02058b08.c:
+src/unnamed/arm9/0205/func_02058b08.cpp:
     complete
     .text start:0x02058b08 end:0x02058b9c
 
@@ -3483,17 +2462,8 @@ src/unnamed/arm9/0205/func_02058c84.cpp:
     complete
 
 src/unnamed/arm9/0205/func_02058cd0.cpp:
-    .text start:0x02058cd0 end:0x02058d58
+    .text start:0x02058cd0 end:0x02058d80
     complete
-
-src/unnamed/arm9/0205/func_02058d58.cpp:
-    .text start:0x02058d58 end:0x02058d6c
-    complete
-
-src/unnamed/arm9/0205/func_02058d6c.cpp:
-    .text start:0x02058d6c end:0x02058d80
-    complete
-
 src/OS_GetInitArenaLo.cpp:
     .text start:0x02058d80 end:0x02058df4
     complete
@@ -3510,7 +2480,7 @@ src/unnamed/arm9/0205/func_02058eb4.c:
     complete
     .text start:0x02058eb4 end:0x02058ec8
 
-src/unnamed/arm9/0205/func_02058ec8.c:
+src/unnamed/arm9/0205/func_02058ec8.cpp:
     complete
     .text start:0x02058ec8 end:0x02058f28
 
@@ -3518,15 +2488,15 @@ src/unnamed/arm9/0205/func_02058f28.c:
     complete
     .text start:0x02058f28 end:0x02059040
 
-src/unnamed/arm9/0205/func_02059040.c:
+src/unnamed/arm9/0205/func_02059040.cpp:
     complete
     .text start:0x02059040 end:0x020590fc
 
-src/unnamed/arm9/0205/func_020590fc.c:
+src/unnamed/arm9/0205/func_020590fc.cpp:
     complete
     .text start:0x020590fc end:0x02059170
 
-src/unnamed/arm9/0205/func_02059170.c:
+src/unnamed/arm9/0205/func_02059170.cpp:
     complete
     .text start:0x02059170 end:0x0205929c
 
@@ -3550,7 +2520,7 @@ src/engine/cp15/CP15_ProtectionUnit.cpp:
     complete
     .text start:0x020593cc end:0x020593ec
 
-src/_ZN4CP1514MPUDataRegion1Ej.cpp:
+src/engine/cp15/CP15_MPUDataRegion1.cpp:
     complete
     .text start:0x020593ec end:0x020593f4
 
@@ -3558,11 +2528,15 @@ src/unnamed/arm9/0205/func_020593f4.c:
     complete
     .text start:0x020593f4 end:0x02059468
 
+src/unnamed/arm9/0205/func_02059468.c:
+    complete
+    .text start:0x02059468 end:0x0205947c
+
 src/unnamed/arm9/0205/func_0205947c.c:
     complete
     .text start:0x0205947c end:0x0205950c
 
-src/unnamed/arm9/0205/func_0205950c.c:
+src/unnamed/arm9/0205/func_0205950c.cpp:
     complete
     .text start:0x0205950c end:0x02059578
 
@@ -3582,7 +2556,7 @@ src/unnamed/arm9/0205/func_02059640.c:
     complete
     .text start:0x02059640 end:0x02059650
 
-src/unnamed/arm9/0205/func_02059650.c:
+src/unnamed/arm9/0205/func_02059650.cpp:
     complete
     .text start:0x02059650 end:0x02059700
 
@@ -3590,15 +2564,19 @@ src/unnamed/arm9/0205/func_02059700.c:
     complete
     .text start:0x02059700 end:0x02059788
 
-src/unnamed/arm9/0205/func_02059788.c:
+src/unnamed/arm9/0205/func_02059788.cpp:
     complete
     .text start:0x02059788 end:0x02059824
 
-src/unnamed/arm9/0205/func_02059834.c:
+src/unnamed/arm9/0205/func_02059824.c:
+    complete
+    .text start:0x02059824 end:0x02059834
+
+src/unnamed/arm9/0205/func_02059834.cpp:
     complete
     .text start:0x02059834 end:0x02059950
 
-src/unnamed/arm9/0205/func_02059950.c:
+src/unnamed/arm9/0205/func_02059950.cpp:
     complete
     .text start:0x02059950 end:0x020599e8
 
@@ -3618,11 +2596,11 @@ src/unnamed/arm9/0205/func_02059bb0.c:
     complete
     .text start:0x02059bb0 end:0x02059bc0
 
-src/unnamed/arm9/0205/func_02059bc0.c:
+src/unnamed/arm9/0205/func_02059bc0.cpp:
     complete
     .text start:0x02059bc0 end:0x02059c18
 
-src/unnamed/arm9/0205/func_02059c18.c:
+src/unnamed/arm9/0205/func_02059c18.cpp:
     complete
     .text start:0x02059c18 end:0x02059cb4
 
@@ -3633,6 +2611,14 @@ src/unnamed/arm9/0205/func_02059cb4.cpp:
 src/IRQ3.cpp:
     .text start:0x02059d08 end:0x02059d8c
     complete
+
+src/unnamed/arm9/0205/func_02059d8c.c:
+    complete
+    .text start:0x02059d8c end:0x02059d98
+
+src/unnamed/arm9/0205/func_02059d98.c:
+    complete
+    .text start:0x02059d98 end:0x02059dd4
 
 src/unnamed/arm9/0205/func_02059dd4.c:
     complete
@@ -3658,7 +2644,7 @@ src/unnamed/arm9/0205/func_02059f48.c:
     complete
     .text start:0x02059f48 end:0x02059f58
 
-src/unnamed/arm9/0205/func_02059f58.c:
+src/unnamed/arm9/0205/func_02059f58.cpp:
     complete
     .text start:0x02059f58 end:0x02059fa8
 
@@ -3686,11 +2672,11 @@ src/DMASyncFillTransfer.c:
     complete
     .text start:0x0205a1b4 end:0x0205a21c
 
-src/unnamed/arm9/0205/func_0205a21c.c:
+src/unnamed/arm9/0205/func_0205a21c.cpp:
     complete
     .text start:0x0205a21c end:0x0205a290
 
-src/func_0205a290.c:
+src/func_0205a290.cpp:
     complete
     .text start:0x0205a290 end:0x0205a358
 
@@ -3733,6 +2719,14 @@ src/Copy36Bytes.c:
 src/Copy48Bytes.c:
     complete
     .text start:0x0205a564 end:0x0205a588
+
+src/unnamed/arm9/0205/func_0205a588.c:
+    complete
+    .text start:0x0205a588 end:0x0205a61c
+
+src/CpuCopy8.c:
+    complete
+    .text start:0x0205a61c end:0x0205a74c
 
 src/unnamed/arm9/0205/func_0205a74c.c:
     complete
@@ -3870,22 +2864,13 @@ src/unnamed/arm9/0205/func_0205ae64.c:
     complete
     .text start:0x0205ae64 end:0x0205aed0
 
-src/unnamed/arm9/0205/func_0205aed0.c:
+src/unnamed/arm9/0205/func_0205aed0.cpp:
     complete
     .text start:0x0205aed0 end:0x0205af00
 
 src/unnamed/arm9/0205/func_0205af00.c:
     complete
-    .text start:0x0205af00 end:0x0205af20
-
-src/unnamed/arm9/0205/func_0205af20.c:
-    complete
-    .text start:0x0205af20 end:0x0205af4c
-
-src/unnamed/arm9/0205/func_0205af4c.c:
-    complete
-    .text start:0x0205af4c end:0x0205af78
-
+    .text start:0x0205af00 end:0x0205af78
 src/unnamed/arm9/0205/func_0205af78.c:
     complete
     .text start:0x0205af78 end:0x0205afb4
@@ -3898,7 +2883,7 @@ src/unnamed/arm9/0205/func_0205afe0.c:
     complete
     .text start:0x0205afe0 end:0x0205b070
 
-src/func_0205b070.c:
+src/func_0205b070.cpp:
     complete
     .text start:0x0205b070 end:0x0205b1a4
 
@@ -3934,15 +2919,15 @@ src/unnamed/arm9/0205/func_0205b524.c:
     complete
     .text start:0x0205b524 end:0x0205b554
 
-src/unnamed/arm9/0205/func_0205b554.c:
+src/unnamed/arm9/0205/func_0205b554.cpp:
     complete
     .text start:0x0205b554 end:0x0205b5d4
 
-src/unnamed/arm9/0205/func_0205b5d4.c:
+src/unnamed/arm9/0205/func_0205b5d4.cpp:
     complete
     .text start:0x0205b5d4 end:0x0205b608
 
-src/unnamed/arm9/0205/func_0205b608.c:
+src/unnamed/arm9/0205/func_0205b608.cpp:
     complete
     .text start:0x0205b608 end:0x0205b63c
 
@@ -3950,15 +2935,15 @@ src/unnamed/arm9/0205/func_0205b63c.c:
     complete
     .text start:0x0205b63c end:0x0205b6b0
 
-src/unnamed/arm9/0205/func_0205b6b0.c:
+src/unnamed/arm9/0205/func_0205b6b0.cpp:
     complete
     .text start:0x0205b6b0 end:0x0205b6f4
 
-src/unnamed/arm9/0205/func_0205b6f4.c:
+src/unnamed/arm9/0205/func_0205b6f4.cpp:
     complete
     .text start:0x0205b6f4 end:0x0205b78c
 
-src/unnamed/arm9/0205/func_0205b78c.c:
+src/unnamed/arm9/0205/func_0205b78c.cpp:
     complete
     .text start:0x0205b78c end:0x0205b858
 
@@ -4018,7 +3003,7 @@ src/unnamed/arm9/0205/func_0205c528.cpp:
     complete
     .text start:0x0205c528 end:0x0205c5e4
 
-src/unnamed/arm9/0205/func_0205c5e4.c:
+src/unnamed/arm9/0205/func_0205c5e4.cpp:
     complete
     .text start:0x0205c5e4 end:0x0205c788
 
@@ -4030,11 +3015,11 @@ src/unnamed/arm9/0205/func_0205c7c4.c:
     complete
     .text start:0x0205c7c4 end:0x0205c7e4
 
-src/unnamed/arm9/0205/func_0205c7e4.c:
+src/unnamed/arm9/0205/func_0205c7e4.cpp:
     complete
     .text start:0x0205c7e4 end:0x0205c864
 
-src/unnamed/arm9/0205/func_0205c864.c:
+src/unnamed/arm9/0205/func_0205c864.cpp:
     complete
     .text start:0x0205c864 end:0x0205c91c
 
@@ -4046,7 +3031,7 @@ src/unnamed/arm9/0205/func_0205c9b8.c:
     complete
     .text start:0x0205c9b8 end:0x0205caa8
 
-src/unnamed/arm9/0205/func_0205caa8.c:
+src/unnamed/arm9/0205/func_0205caa8.cpp:
     complete
     .text start:0x0205caa8 end:0x0205cb68
 
@@ -4054,11 +3039,11 @@ src/unnamed/arm9/0205/func_0205cb68.c:
     complete
     .text start:0x0205cb68 end:0x0205cbe4
 
-src/unnamed/arm9/0205/func_0205cbe4.c:
+src/unnamed/arm9/0205/func_0205cbe4.cpp:
     complete
     .text start:0x0205cbe4 end:0x0205cc80
 
-src/unnamed/arm9/0205/func_0205cc80.c:
+src/unnamed/arm9/0205/func_0205cc80.cpp:
     complete
     .text start:0x0205cc80 end:0x0205cd34
 
@@ -4066,7 +3051,7 @@ src/unnamed/arm9/0205/func_0205cd34.c:
     complete
     .text start:0x0205cd34 end:0x0205cd5c
 
-src/unnamed/arm9/0205/func_0205cd5c.c:
+src/unnamed/arm9/0205/func_0205cd5c.cpp:
     complete
     .text start:0x0205cd5c end:0x0205cdf4
 
@@ -4078,15 +3063,15 @@ src/unnamed/arm9/0205/func_0205cf5c.c:
     complete
     .text start:0x0205cf5c end:0x0205cfa4
 
-src/unnamed/arm9/0205/func_0205cfa4.c:
+src/unnamed/arm9/0205/func_0205cfa4.cpp:
     complete
     .text start:0x0205cfa4 end:0x0205d044
 
-src/unnamed/arm9/0205/func_0205d044.c:
+src/unnamed/arm9/0205/func_0205d044.cpp:
     complete
     .text start:0x0205d044 end:0x0205d23c
 
-src/unnamed/arm9/0205/func_0205d23c.c:
+src/unnamed/arm9/0205/func_0205d23c.cpp:
     complete
     .text start:0x0205d23c end:0x0205d28c
 
@@ -4114,18 +3099,9 @@ src/FS_ReadFile.c:
     complete
     .text start:0x0205d3d4 end:0x0205d3e4
 
-src/unnamed/arm9/0205/func_0205d3e4.c:
+src/unnamed/arm9/0205/func_0205d3e4.cpp:
     complete
-    .text start:0x0205d3e4 end:0x0205d3f4
-
-src/unnamed/arm9/0205/func_0205d3f4.c:
-    complete
-    .text start:0x0205d3f4 end:0x0205d4a0
-
-src/unnamed/arm9/0205/func_0205d4a0.c:
-    complete
-    .text start:0x0205d4a0 end:0x0205d4cc
-
+    .text start:0x0205d3e4 end:0x0205d4cc
 src/FS_CloseFile.c:
     complete
     .text start:0x0205d4cc end:0x0205d518
@@ -4194,7 +3170,7 @@ src/unnamed/arm9/0205/func_0205db78.c:
     complete
     .text start:0x0205db78 end:0x0205db88
 
-src/unnamed/arm9/0205/func_0205db88.c:
+src/unnamed/arm9/0205/func_0205db88.cpp:
     complete
     .text start:0x0205db88 end:0x0205dc0c
 
@@ -4206,7 +3182,7 @@ src/unnamed/arm9/0205/func_0205dc60.c:
     complete
     .text start:0x0205dc60 end:0x0205dc7c
 
-src/unnamed/arm9/0205/func_0205dc7c.c:
+src/unnamed/arm9/0205/func_0205dc7c.cpp:
     complete
     .text start:0x0205dc7c end:0x0205dd9c
 
@@ -4230,7 +3206,7 @@ src/unnamed/arm9/0205/func_0205e088.c:
     complete
     .text start:0x0205e088 end:0x0205e0b0
 
-src/unnamed/arm9/0205/func_0205e0b0.c:
+src/unnamed/arm9/0205/func_0205e0b0.cpp:
     complete
     .text start:0x0205e0b0 end:0x0205e0f4
 
@@ -4282,7 +3258,7 @@ src/unnamed/arm9/0205/func_0205ea28.c:
     complete
     .text start:0x0205ea28 end:0x0205eb58
 
-src/unnamed/arm9/0205/func_0205eb58.c:
+src/unnamed/arm9/0205/func_0205eb58.cpp:
     complete
     .text start:0x0205eb58 end:0x0205edc8
 
@@ -4306,11 +3282,11 @@ src/unnamed/arm9/0205/func_0205efe0.c:
     complete
     .text start:0x0205efe0 end:0x0205f040
 
-src/unnamed/arm9/0205/func_0205f040.c:
+src/unnamed/arm9/0205/func_0205f040.cpp:
     complete
     .text start:0x0205f040 end:0x0205f0e0
 
-src/unnamed/arm9/0205/func_0205f0e0.c:
+src/unnamed/arm9/0205/func_0205f0e0.cpp:
     complete
     .text start:0x0205f0e0 end:0x0205f1e4
 
@@ -4418,7 +3394,7 @@ src/unnamed/arm9/0205/func_0205ff08.c:
     complete
     .text start:0x0205ff08 end:0x0205ff20
 
-src/unnamed/arm9/0205/func_0205ff20.c:
+src/unnamed/arm9/0205/func_0205ff20.cpp:
     complete
     .text start:0x0205ff20 end:0x0205ff70
 
@@ -4438,19 +3414,19 @@ src/unnamed/arm9/0205/func_0205ffb0.c:
     complete
     .text start:0x0205ffb0 end:0x0205ffd0
 
-src/unnamed/arm9/0205/func_0205ffd0.c:
+src/unnamed/arm9/0205/func_0205ffd0.cpp:
     complete
     .text start:0x0205ffd0 end:0x0206002c
 
-src/unnamed/arm9/0206/func_0206002c.c:
+src/unnamed/arm9/0206/func_0206002c.cpp:
     complete
     .text start:0x0206002c end:0x020600e0
 
-src/unnamed/arm9/0206/func_020600e0.c:
+src/unnamed/arm9/0206/func_020600e0.cpp:
     complete
     .text start:0x020600e0 end:0x02060188
 
-src/unnamed/arm9/0206/func_02060188.c:
+src/unnamed/arm9/0206/func_02060188.cpp:
     complete
     .text start:0x02060188 end:0x02060228
 
@@ -4486,7 +3462,7 @@ src/unnamed/arm9/0206/func_02060470.c:
     complete
     .text start:0x02060470 end:0x02060484
 
-src/unnamed/arm9/0206/func_02060484.c:
+src/unnamed/arm9/0206/func_02060484.cpp:
     complete
     .text start:0x02060484 end:0x02060558
 
@@ -4498,7 +3474,7 @@ src/unnamed/arm9/0206/func_0206062c.cpp:
     complete
     .text start:0x0206062c end:0x0206071c
 
-src/unnamed/arm9/0206/func_0206071c.c:
+src/unnamed/arm9/0206/func_0206071c.cpp:
     complete
     .text start:0x0206071c end:0x020607e8
 
@@ -4506,7 +3482,7 @@ src/unnamed/arm9/0206/func_020607e8.c:
     complete
     .text start:0x020607e8 end:0x0206081c
 
-src/unnamed/arm9/0206/func_0206081c.c:
+src/unnamed/arm9/0206/func_0206081c.cpp:
     complete
     .text start:0x0206081c end:0x02060890
 
@@ -4518,7 +3494,7 @@ src/unnamed/arm9/0206/func_0206090c.c:
     complete
     .text start:0x0206090c end:0x02060918
 
-src/unnamed/arm9/0206/func_02060918.c:
+src/unnamed/arm9/0206/func_02060918.cpp:
     complete
     .text start:0x02060918 end:0x02060a30
 
@@ -4530,11 +3506,11 @@ src/unnamed/arm9/0206/func_02060a64.c:
     complete
     .text start:0x02060a64 end:0x02060b64
 
-src/unnamed/arm9/0206/func_02060b64.c:
+src/unnamed/arm9/0206/func_02060b64.cpp:
     complete
     .text start:0x02060b64 end:0x02060cac
 
-src/unnamed/arm9/0206/func_02060cac.c:
+src/unnamed/arm9/0206/func_02060cac.cpp:
     complete
     .text start:0x02060cac end:0x02060d1c
 
@@ -4546,7 +3522,7 @@ src/unnamed/arm9/0206/func_02060d98.c:
     complete
     .text start:0x02060d98 end:0x02060e38
 
-src/unnamed/arm9/0206/func_02060e38.c:
+src/unnamed/arm9/0206/func_02060e38.cpp:
     complete
     .text start:0x02060e38 end:0x02060ebc
 
@@ -4562,31 +3538,21 @@ src/engine/card/CARD_PullOut.cpp:
     complete
     .text start:0x020610ac end:0x0206116c
 
-src/unnamed/arm9/0206/func_0206116c.c:
+src/unnamed/arm9/0206/func_0206116c.cpp:
     complete
-    .text start:0x0206116c end:0x02061188
-
-src/unnamed/arm9/0206/func_02061188.c:
-    complete
-    .text start:0x02061188 end:0x02061428
-
-src/WM_CheckStateEx.c:
+    .text start:0x0206116c end:0x02061428
+src/WM_CheckStateEx.cpp:
     complete
     .text start:0x02061428 end:0x020614d0
 
-src/unnamed/arm9/0206/func_020614d0.c:
+src/unnamed/arm9/0206/func_020614d0.cpp:
     complete
-    .text start:0x020614d0 end:0x0206152c
-
-src/unnamed/arm9/0206/func_0206152c.c:
-    complete
-    .text start:0x0206152c end:0x02061548
-
+    .text start:0x020614d0 end:0x02061548
 src/WM_GetSystemWork.c:
     complete
     .text start:0x02061548 end:0x02061558
 
-src/WM_SendCommand.c:
+src/WM_SendCommand.cpp:
     complete
     .text start:0x02061558 end:0x0206165c
 
@@ -4598,47 +3564,47 @@ src/unnamed/arm9/0206/func_02061674.c:
     complete
     .text start:0x02061674 end:0x020616e8
 
-src/unnamed/arm9/0206/func_020616e8.c:
+src/unnamed/arm9/0206/func_020616e8.cpp:
     complete
     .text start:0x020616e8 end:0x020618b8
 
-src/unnamed/arm9/0206/func_020618b8.c:
+src/unnamed/arm9/0206/func_020618b8.cpp:
     complete
     .text start:0x020618b8 end:0x02061960
 
-src/unnamed/arm9/0206/func_02061960.c:
+src/unnamed/arm9/0206/func_02061960.cpp:
     complete
     .text start:0x02061960 end:0x020619ac
 
-src/unnamed/arm9/0206/func_020619ac.c:
+src/unnamed/arm9/0206/func_020619ac.cpp:
     complete
     .text start:0x020619ac end:0x02061ab0
 
-src/unnamed/arm9/0206/func_02061ab0.c:
+src/unnamed/arm9/0206/func_02061ab0.cpp:
     complete
     .text start:0x02061ab0 end:0x02061b9c
 
-src/unnamed/arm9/0206/func_02061b9c.c:
+src/unnamed/arm9/0206/func_02061b9c.cpp:
     complete
     .text start:0x02061b9c end:0x02061c20
 
-src/unnamed/arm9/0206/func_02061c20.c:
+src/unnamed/arm9/0206/func_02061c20.cpp:
     complete
     .text start:0x02061c20 end:0x02061c88
 
-src/unnamed/arm9/0206/func_02061c88.c:
+src/unnamed/arm9/0206/func_02061c88.cpp:
     complete
     .text start:0x02061c88 end:0x02061ce4
 
-src/unnamed/arm9/0206/func_02061ce4.c:
+src/unnamed/arm9/0206/func_02061ce4.cpp:
     complete
     .text start:0x02061ce4 end:0x02061d30
 
-src/unnamed/arm9/0206/func_02061d30.c:
+src/unnamed/arm9/0206/func_02061d30.cpp:
     complete
     .text start:0x02061d30 end:0x02061e38
 
-src/unnamed/arm9/0206/func_02061e38.c:
+src/unnamed/arm9/0206/func_02061e38.cpp:
     complete
     .text start:0x02061e38 end:0x02061ee4
 
@@ -4654,7 +3620,7 @@ src/unnamed/arm9/0206/func_02062024.c:
     complete
     .text start:0x02062024 end:0x020620b0
 
-src/unnamed/arm9/0206/func_020620b0.c:
+src/unnamed/arm9/0206/func_020620b0.cpp:
     complete
     .text start:0x020620b0 end:0x020621b8
 
@@ -4690,7 +3656,7 @@ src/unnamed/arm9/0206/func_020623ec.c:
     complete
     .text start:0x020623ec end:0x02062428
 
-src/unnamed/arm9/0206/func_02062428.c:
+src/unnamed/arm9/0206/func_02062428.cpp:
     complete
     .text start:0x02062428 end:0x0206259c
 
@@ -4698,7 +3664,7 @@ src/unnamed/arm9/0206/func_0206259c.c:
     complete
     .text start:0x0206259c end:0x020625fc
 
-src/unnamed/arm9/0206/func_020625fc.c:
+src/unnamed/arm9/0206/func_020625fc.cpp:
     complete
     .text start:0x020625fc end:0x02062734
 
@@ -4710,11 +3676,11 @@ src/unnamed/arm9/0206/func_02062778.c:
     complete
     .text start:0x02062778 end:0x020627e8
 
-src/unnamed/arm9/0206/func_020627e8.c:
+src/unnamed/arm9/0206/func_020627e8.cpp:
     complete
     .text start:0x020627e8 end:0x02062990
 
-src/unnamed/arm9/0206/func_02062990.c:
+src/unnamed/arm9/0206/func_02062990.cpp:
     complete
     .text start:0x02062990 end:0x02062aa4
 
@@ -4730,11 +3696,11 @@ src/unnamed/arm9/0206/func_02062d10.cpp:
     complete
     .text start:0x02062d10 end:0x02062df0
 
-src/unnamed/arm9/0206/func_02062df0.c:
+src/unnamed/arm9/0206/func_02062df0.cpp:
     complete
     .text start:0x02062df0 end:0x020631dc
 
-src/unnamed/arm9/0206/func_020631dc.c:
+src/unnamed/arm9/0206/func_020631dc.cpp:
     complete
     .text start:0x020631dc end:0x020634fc
 
@@ -4750,7 +3716,7 @@ src/unnamed/arm9/0206/func_020635d8.c:
     complete
     .text start:0x020635d8 end:0x02063648
 
-src/unnamed/arm9/0206/func_02063648.c:
+src/unnamed/arm9/0206/func_02063648.cpp:
     complete
     .text start:0x02063648 end:0x02063718
 
@@ -4882,15 +3848,15 @@ src/unnamed/arm9/0206/func_02065138.c:
     complete
     .text start:0x02065138 end:0x02065170
 
-src/unnamed/arm9/0206/func_02065170.c:
+src/unnamed/arm9/0206/func_02065170.cpp:
     complete
     .text start:0x02065170 end:0x02065234
 
-src/unnamed/arm9/0206/func_02065234.c:
+src/unnamed/arm9/0206/func_02065234.cpp:
     complete
     .text start:0x02065234 end:0x020652fc
 
-src/unnamed/arm9/0206/func_020652fc.c:
+src/unnamed/arm9/0206/func_020652fc.cpp:
     complete
     .text start:0x020652fc end:0x020653cc
 
@@ -4926,11 +3892,11 @@ src/unnamed/arm9/0206/func_020657d0.c:
     complete
     .text start:0x020657d0 end:0x020657fc
 
-src/unnamed/arm9/0206/func_020657fc.c:
+src/unnamed/arm9/0206/func_020657fc.cpp:
     complete
     .text start:0x020657fc end:0x020658c0
 
-src/unnamed/arm9/0206/func_020658c0.c:
+src/unnamed/arm9/0206/func_020658c0.cpp:
     complete
     .text start:0x020658c0 end:0x02065970
 
@@ -4952,12 +3918,7 @@ src/unnamed/arm9/0206/func_02065a4c.c:
 
 src/unnamed/arm9/0206/func_02065a74.c:
     complete
-    .text start:0x02065a74 end:0x02065a84
-
-src/unnamed/arm9/0206/func_02065a84.c:
-    complete
-    .text start:0x02065a84 end:0x02065a94
-
+    .text start:0x02065a74 end:0x02065a94
 src/unnamed/arm9/0206/func_02065a94.c:
     complete
     .text start:0x02065a94 end:0x02065ad0
@@ -4970,7 +3931,7 @@ src/unnamed/arm9/0206/func_02065ae0.c:
     complete
     .text start:0x02065ae0 end:0x02065af0
 
-src/unnamed/arm9/0206/func_02065af0.c:
+src/unnamed/arm9/0206/func_02065af0.cpp:
     complete
     .text start:0x02065af0 end:0x02065b88
 
@@ -5086,7 +4047,7 @@ src/unnamed/arm9/0206/func_02067194.c:
     complete
     .text start:0x02067194 end:0x020671b4
 
-src/unnamed/arm9/0206/func_020671b4.c:
+src/unnamed/arm9/0206/func_020671b4.cpp:
     complete
     .text start:0x020671b4 end:0x02067250
 
@@ -5094,7 +4055,7 @@ src/unnamed/arm9/0206/func_02067250.c:
     complete
     .text start:0x02067250 end:0x020672a4
 
-src/unnamed/arm9/0206/func_020672a4.c:
+src/unnamed/arm9/0206/func_020672a4.cpp:
     complete
     .text start:0x020672a4 end:0x020672d0
 
@@ -5104,12 +4065,7 @@ src/unnamed/arm9/0206/func_020672d0.c:
 
 src/unnamed/arm9/0206/func_0206736c.c:
     complete
-    .text start:0x0206736c end:0x02067480
-
-src/unnamed/arm9/0206/func_02067480.c:
-    complete
-    .text start:0x02067480 end:0x02067530
-
+    .text start:0x0206736c end:0x02067530
 src/unnamed/arm9/0206/func_02067530.c:
     complete
     .text start:0x02067530 end:0x02067604
@@ -5126,7 +4082,7 @@ src/unnamed/arm9/0206/func_020678a4.c:
     complete
     .text start:0x020678a4 end:0x02067928
 
-src/unnamed/arm9/0206/func_02067928.c:
+src/unnamed/arm9/0206/func_02067928.cpp:
     complete
     .text start:0x02067928 end:0x02067b68
 
@@ -5134,7 +4090,7 @@ src/unnamed/arm9/0206/func_02067b68.c:
     complete
     .text start:0x02067b68 end:0x02067bfc
 
-src/unnamed/arm9/0206/func_02067bfc.c:
+src/unnamed/arm9/0206/func_02067bfc.cpp:
     complete
     .text start:0x02067bfc end:0x02067e70
 
@@ -5146,7 +4102,7 @@ src/unnamed/arm9/0206/func_02067ee4.c:
     complete
     .text start:0x02067ee4 end:0x02067f2c
 
-src/unnamed/arm9/0206/func_02067f2c.c:
+src/unnamed/arm9/0206/func_02067f2c.cpp:
     complete
     .text start:0x02067f2c end:0x02067f68
 
@@ -5242,7 +4198,7 @@ src/unnamed/arm9/0206/func_02068a28.c:
     complete
     .text start:0x02068a28 end:0x02068a54
 
-src/unnamed/arm9/0206/func_02068a54.c:
+src/unnamed/arm9/0206/func_02068a54.cpp:
     complete
     .text start:0x02068a54 end:0x02068a74
 
@@ -5250,7 +4206,7 @@ src/unnamed/arm9/0206/func_02068a74.c:
     complete
     .text start:0x02068a74 end:0x02068ae8
 
-src/unnamed/arm9/0206/func_02068ae8.c:
+src/unnamed/arm9/0206/func_02068ae8.cpp:
     complete
     .text start:0x02068ae8 end:0x02068d08
 
@@ -5266,14 +4222,9 @@ src/unnamed/arm9/0206/func_02068e44.c:
     complete
     .text start:0x02068e44 end:0x02068e4c
 
-src/unnamed/arm9/0206/func_02068e4c.c:
+src/unnamed/arm9/0206/func_02068e4c.cpp:
     complete
-    .text start:0x02068e4c end:0x02069038
-
-src/unnamed/arm9/0206/func_02069038.c:
-    complete
-    .text start:0x02069038 end:0x020690b0
-
+    .text start:0x02068e4c end:0x020690b0
 src/unnamed/arm9/0206/func_020690b0.c:
     complete
     .text start:0x020690b0 end:0x02069918
@@ -5298,11 +4249,11 @@ src/unnamed/arm9/0206/func_0206a318.c:
     complete
     .text start:0x0206a318 end:0x0206a37c
 
-src/unnamed/arm9/0206/func_0206a37c.c:
+src/unnamed/arm9/0206/func_0206a37c.cpp:
     complete
     .text start:0x0206a37c end:0x0206a3a4
 
-src/unnamed/arm9/0206/func_0206a3a4.c:
+src/unnamed/arm9/0206/func_0206a3a4.cpp:
     complete
     .text start:0x0206a3a4 end:0x0206a424
 
@@ -5324,17 +4275,12 @@ src/unnamed/arm9/0206/func_0206a5c0.c:
 
 src/unnamed/arm9/0206/func_0206a600.c:
     complete
-    .text start:0x0206a600 end:0x0206a634
-
-src/unnamed/arm9/0206/func_0206a634.c:
-    complete
-    .text start:0x0206a634 end:0x0206a694
-
+    .text start:0x0206a600 end:0x0206a694
 src/unnamed/arm9/0206/func_0206a694.c:
     complete
     .text start:0x0206a694 end:0x0206a6d0
 
-src/unnamed/arm9/0206/func_0206a6d0.c:
+src/unnamed/arm9/0206/func_0206a6d0.cpp:
     complete
     .text start:0x0206a6d0 end:0x0206a88c
 
@@ -5422,19 +4368,19 @@ src/unnamed/arm9/0206/func_0206d32c.c:
     complete
     .text start:0x0206d32c end:0x0206d868
 
-src/unnamed/arm9/0206/func_0206d868.c:
+src/unnamed/arm9/0206/func_0206d868.cpp:
     complete
     .text start:0x0206d868 end:0x0206d890
 
-src/unnamed/arm9/0206/func_0206d890.c:
+src/unnamed/arm9/0206/func_0206d890.cpp:
     complete
     .text start:0x0206d890 end:0x0206d8c4
 
-src/unnamed/arm9/0206/func_0206d8c4.c:
+src/unnamed/arm9/0206/func_0206d8c4.cpp:
     complete
     .text start:0x0206d8c4 end:0x0206d940
 
-src/unnamed/arm9/0206/func_0206d940.c:
+src/unnamed/arm9/0206/func_0206d940.cpp:
     complete
     .text start:0x0206d940 end:0x0206d9cc
 
@@ -5541,6 +4487,14 @@ src/unnamed/arm9/0207/func_02071708.c:
 src/unnamed/arm9/0207/func_02071784.c:
     complete
     .text start:0x02071784 end:0x02071790
+
+src/unnamed/arm9/0207/func_02071790.c:
+    complete
+    .text start:0x02071790 end:0x020717c0
+
+src/__rethrow.c:
+    complete
+    .text start:0x020717c0 end:0x0207180c
 
 src/unnamed/arm9/0207/func_0207180c.c:
     complete
@@ -5702,18 +4656,6 @@ src/unnamed/arm9/0207/__sinit_02073a24.c:
     complete
     .init start:0x02073a24 end:0x02073e6c
 
-src/unnamed/arm9/0207/__sinit_02073e6c.c:
-    complete
-    .init start:0x02073e6c end:0x02074d90
-
-src/unnamed/arm9/0207/__sinit_02074d90.c:
-    complete
-    .init start:0x02074d90 end:0x02074da8
-
-src/unnamed/arm9/0207/__sinit_02074da8.c:
-    complete
-    .init start:0x02074da8 end:0x02074dbc
-
 src/unnamed/arm9/0207/__sinit_02074dbc.c:
     complete
     .init start:0x02074dbc end:0x02074dc0
@@ -5741,26 +4683,6 @@ src/unnamed/arm9/0207/__sinit_02074e80.c:
 src/unnamed/arm9/0207/__sinit_02074e84.cpp:
     complete
     .init start:0x02074e84 end:0x02074edc
-
-src/unnamed/arm9/0207/__sinit_02074edc.c:
-    complete
-    .init start:0x02074edc end:0x02074f80
-
-src/unnamed/arm9/0207/__sinit_02074f80.c:
-    complete
-    .init start:0x02074f80 end:0x02074fb8
-
-src/unnamed/arm9/0207/__sinit_02074fb8.c:
-    complete
-    .init start:0x02074fb8 end:0x02074fe4
-
-src/unnamed/arm9/0207/__sinit_02074fe4.c:
-    complete
-    .init start:0x02074fe4 end:0x0207501c
-
-src/unnamed/arm9/0207/__sinit_0207501c.c:
-    complete
-    .init start:0x0207501c end:0x02075054
 
 src/unnamed/arm9/0207/__sinit_02075054.c:
     complete

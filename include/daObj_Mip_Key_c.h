@@ -4,11 +4,11 @@
 #include "types.h"
 
 /* ROM RTTI at ov085:0x02130194 identifies dEnemyBase_c as the base.
- * Constructor/destructor calls place Model at 0x110 and dExtShadowModel_c at 0x160;
+ * Constructor/destructor calls place dExtSimpleModel_c at 0x110 and dExtShadowModel_c at 0x160;
  * the factory allocates 0x1a0 bytes. */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 
 struct daObj_Mip_Key_c;
@@ -21,14 +21,14 @@ struct MipKeyState {
 };
 
 struct daObj_Mip_Key_c : dEnemyBase_c {
-    Model mModel;                         /* 0x110 */
-    dExtShadowModel_c mShadowModel;             /* 0x160 */
-    MipKeyState * mState;                 /* 0x188 */
-    Player * mPlayer;                     /* 0x18c */
-    s32 unk_190;                          /* 0x190 */
-    s32 mTalkState;                       /* 0x194 */
-    s32 mWaitForTalk;                     /* 0x198 */
-    s32 unk_19c;                          /* 0x19c */
+    dExtSimpleModel_c mModel;       /* 0x110 */
+    dExtShadowModel_c mShadowModel; /* 0x160 */
+    MipKeyState *mState;            /* 0x188 */
+    Player *mPlayer;                /* 0x18c */
+    s32 unk_190;                    /* 0x190 */
+    s32 mTalkState;                 /* 0x194 */
+    s32 mWaitForTalk;               /* 0x198 */
+    s32 unk_19c;                    /* 0x19c */
 
     /* --- vtable --- */
     virtual ~daObj_Mip_Key_c();
@@ -38,6 +38,16 @@ struct daObj_Mip_Key_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+
+    /* State bodies: the loose key waits, then chases the player; once caught
+       it is carried and runs the save conversation. */
+    void FinishConversation();
+    int StateCarried();
+    int StateCarriedEnter();
+    int StateLoose();
+    int StateLooseEnter();
+    int ChangeState(MipKeyState *);
+    void UpdateModelAndShadow();
 };
 
 #ifndef SM64DS_PLATFORM_PC

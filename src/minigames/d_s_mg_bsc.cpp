@@ -8,8 +8,6 @@
  *
  * leftovers:
  *   - most data_ globals still have address-based names.
- *   - the factory builds the object by hand because the class has no
- *     constructor declared yet.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
@@ -21,6 +19,7 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "types.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
+#include "math/Approach.h"
 
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
@@ -79,12 +78,6 @@ extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern int LoadFile(int handle);
 extern int Dealer_Load(char *c);
-void *_ZN11dScMgBase_cC2Ev(void *);
-void _ZN8Particle10SysTrackerC1Ev(void *);
-void __cxa_vec_ctor(void *, int, int, void *, void *);
-void func_0203d738(void);
-extern int _ZTV19dScMgSingle3DBase_c;
-extern int _ZTV10dScMgBSC_c[];
 }
 
 /* Real C++ declarations for the engine calls below; the namespaces and the
@@ -98,21 +91,12 @@ void LoadOBJPltt(const void *plt, u32 base, u32 size);
 }
 
 /* Moves value toward target by step; nonzero once it gets there. */
-int ApproachLinear(int &value, int target, int step);
 
 // @symbol dScMgBSC_c_classInit
+/* `new` inlines the implicit constructor: the base chain, this class's
+   vptr, then mDealer and mCardPos in declaration order. */
 extern "C" void *dScMgBSC_c_classInit() {
-    char *scene = (char *)_ZN7fBase_cnwEj(sizeof(dScMgBSC_c));
-    if (scene) {
-        _ZN11dScMgBase_cC2Ev(scene);
-        *(int *)scene = (int)&_ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(scene + 0x471c);
-        *(int *)scene = (int)&_ZTV10dScMgBSC_c[2];
-        Dealer_Construct(scene + 0x4f38);
-        __cxa_vec_ctor(scene + 0x51a8, 2, 8, (void *)func_0203d738,
-                       (void *)NullDestructor_0203d47c);
-    }
-    return scene;
+    return new dScMgBSC_c;
 }
 
 // @symbol _ZN10dScMgBSC_c13InitResourcesEv
@@ -130,7 +114,7 @@ s32 dScMgBSC_c::InitResources() {
     GXS::LoadOBJPltt((void *)paletteData, 0, 0x100);
     Deallocate((void *)paletteData);
     Camera_InitDealerView(pad_4660);
-    if (Dealer_Load((char *)&mShared) == 0)
+    if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
     Mg_SetTopScreenYOffset(0x20);
     Mg_PlaceBannersOnTopScreen();
@@ -146,7 +130,7 @@ s32 dScMgBSC_c::InitResources() {
 s32 dScMgBSC_c::Behavior() {
     (this->*sBSCStateTable[mState])();
     MgCoins_Update();
-    Dealer_Update((char *)&mShared);
+    Dealer_Update((char *)&mDealer);
     return 1;
 }
 
@@ -171,7 +155,7 @@ s32 dScMgBSC_c::Render() {
     MgCoins_Draw();
     Mg_DrawCredits(this, 0xc, 0xc, 0);
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
-    Dealer_Draw(&mShared);
+    Dealer_Draw(&mDealer);
     return 1;
 }
 
@@ -198,7 +182,7 @@ s32 dScMgBSC_c::CanEndState(int mode) {
     int state;
     short coinStatus;
     if (mState == STATE_WAIT_RESULT) {
-        if (Dealer_IsIdle((int *)&mShared) != 0) {
+        if (Dealer_IsIdle((int *)&mDealer) != 0) {
             if (mode == 4) {
                 FreeGfxSlotsById(0x1d);
                 mState = STATE_WAIT_WIN;
@@ -270,7 +254,7 @@ void dScMgBSC_c::StateDealCards() {
     mOtherCard = 0;
     mChosenCard = 1;
     mCardsDealt = 0;
-    Dealer_StartShuffle((char *)&mShared, 3, 2, (int)&mCardsDealt);
+    Dealer_StartShuffle((char *)&mDealer, 3, 2, (int)&mCardsDealt);
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -439,7 +423,7 @@ void dScMgBSC_c::StateJudgeCards() {
             mBestHudScore = mHudScore;
         Mg_SubmitScore(mHudScore);
         Mg_SetSharedState(MG_STATE_WIN);
-        Dealer_PlayWin(&mShared);
+        Dealer_PlayWin(&mDealer);
         mState = STATE_WAIT_RESULT;
     } else {
         if (mHudScore > 0) {
@@ -447,7 +431,7 @@ void dScMgBSC_c::StateJudgeCards() {
             *score = *score - 1;
         }
         Mg_SetSharedState(MG_STATE_LOSE);
-        Dealer_PlayLose(&mShared);
+        Dealer_PlayLose(&mDealer);
         mState = STATE_WAIT_RESULT;
     }
 }
@@ -457,10 +441,10 @@ void dScMgBSC_c::StateJudgeCards() {
  * file sets state 7 or 8; StateJudgeCards does the same work inline. */
 void dScMgBSC_c::StateTableReaction() {
     if (mState == STATE_WIN_REACTION) {
-        Dealer_PlayWin(&mShared);
+        Dealer_PlayWin(&mDealer);
         mState = STATE_WAIT_WIN;
     } else {
-        Dealer_PlayLose(&mShared);
+        Dealer_PlayLose(&mDealer);
         mState = STATE_WAIT_LOSE;
     }
 }
@@ -469,7 +453,7 @@ void dScMgBSC_c::StateTableReaction() {
 /* States 9 and 10: wait for the table's reaction to finish, then pay out
  * a win (state 12) or play the loss sting and gather the cards (state 11). */
 void dScMgBSC_c::StateWaitTable() {
-    if (Dealer_IsIdle((int *)&mShared) == 0)
+    if (Dealer_IsIdle((int *)&mDealer) == 0)
         return;
     if (mState == STATE_WAIT_WIN) {
         MgCoins_StartPayout(gMgCoinsInPlay << 1);
@@ -487,7 +471,7 @@ void dScMgBSC_c::StateWaitTable() {
 void dScMgBSC_c::StateReturnCards() {
     int cardsReturned;
     int cardIndex;
-    CardPos *cardPos;
+    Vector2 *cardPos;
 
     if (gMgCoinsStatus != 1) {
         return;

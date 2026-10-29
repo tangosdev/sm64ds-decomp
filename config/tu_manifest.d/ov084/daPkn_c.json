@@ -17,6 +17,26 @@
       "name": ".text",
       "start": "0x0212eaf0",
       "end": "0x02130174"
+    },
+    {
+      "name": ".init",
+      "start": "0x02130654",
+      "end": "0x02130860"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02130868",
+      "end": "0x0213086c"
+    },
+    {
+      "name": ".data",
+      "start": "0x02130ba4",
+      "end": "0x02130ca4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02130df4",
+      "end": "0x02130ec8"
     }
   ],
   "functions": [
@@ -189,18 +209,214 @@
       "ordinal": 23
     }
   ],
-  "data": [],
-  "bss": [],
+  "data": [
+    {
+      "symbol": "data_ov084_02130ba4",
+      "address": "0x02130ba4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130bac",
+      "address": "0x02130bac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130bb4",
+      "address": "0x02130bb4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130bbc",
+      "address": "0x02130bbc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130bc4",
+      "address": "0x02130bc4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130bcc",
+      "address": "0x02130bcc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130bd4",
+      "address": "0x02130bd4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130bdc",
+      "address": "0x02130bdc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_02130be4",
+      "address": "0x02130be4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130e80; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "_ZTS7daPkn_c",
+      "address": "0x02130bec",
+      "size": "0x9",
+      "evidence": "literal ROM RTTI type-name string \"7daPkn_c\" and exact compiler emission"
+    },
+    {
+      "symbol": "_ZTI7daPkn_c",
+      "address": "0x02130bf8",
+      "size": "0xc",
+      "evidence": "ROM single-inheritance RTTI record naming dEnemyBase_c as the direct base; exact compiler emission"
+    },
+    {
+      "symbol": "g_profile_PAKUN",
+      "address": "0x02130c04",
+      "size": "0x1c",
+      "evidence": "typed actor profile; factory relocation to daPkn_c_classInit, behavior priority 0xfa and all fields compared to retail"
+    },
+    {
+      "symbol": "_ZTV7daPkn_c",
+      "address": "0x02130c28",
+      "emitted_storage_address": "0x02130c20",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x02130c28, and the storage ends at 0x02130ca4, the end of the module's .data"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov084_02130df4",
+      "address": "0x02130df4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x3d5 through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail"
+    },
+    {
+      "symbol": "data_ov084_02130dfc",
+      "address": "0x02130dfc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with id 0x3d3 and registered with func_02017ab4, as in retail; d_a_f_pkn.cpp reads it by this name"
+    },
+    {
+      "symbol": "data_ov084_02130e04",
+      "address": "0x02130e04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x3d1 through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail"
+    },
+    {
+      "symbol": "data_ov084_02130e0c",
+      "address": "0x02130e0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x3d4 through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail"
+    },
+    {
+      "symbol": "data_ov084_02130e14",
+      "address": "0x02130e14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x3cf through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail"
+    },
+    {
+      "symbol": "data_ov084_02130e1c",
+      "address": "0x02130e1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x3d2 through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail"
+    },
+    {
+      "symbol": "data_ov084_02130e24",
+      "address": "0x02130e24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x3d0 through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail"
+    },
+    {
+      "symbol": "data_ov084_02130e2c",
+      "address": "0x02130e2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130e38",
+      "address": "0x02130e38",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130e44",
+      "address": "0x02130e44",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130e50",
+      "address": "0x02130e50",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130e5c",
+      "address": "0x02130e5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130e68",
+      "address": "0x02130e68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130e74",
+      "address": "0x02130e74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130e80",
+      "address": "0x02130e80",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "nine state member pointers that the initializer fills from the nine literals; Behavior indexes it"
+    }
+  ],
   "notes": [
     "Hand-written, not the generator's output. tools/tubuild.py create produced a starting point with 25 declaration CONFLICTs and one truncated declaration; the preamble was replaced wholesale and every conflict resolved (see the notes below and the file's own header comment). Function bodies were carried from the legacy one-function sources. See notes/tu-promotion-conventions.md for the declaration policy and notes/translation-unit-reconstruction-plan.md section 7.3 for what the generator does and does not attempt.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212ec04; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212ef00; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212ec04; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212ef00; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212ef00 and the one that held func_ov084_0212f33c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov084_0212f460 and the one that held func_ov084_0212f588; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212f588; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212f588; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound7PlaySubEjjj5Fix12IiEb' differs between the legacy file that used to hold func_ov084_0212f460 and the one that held func_ov084_0212f630; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov084_0212f460 and the one that held func_ov084_0212f630; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212f630; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212f630; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212f6d8; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov084_0212f460 and the one that held func_ov084_0212f6d8; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_0212ef00 and the one that held func_ov084_0212f6d8; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
@@ -208,21 +424,214 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212ef00 and the one that held func_ov084_0212f6d8; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj' differs between the legacy file that used to hold func_ov084_0212ef00 and the one that held func_ov084_0212f6d8; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov084_0212f460 and the one that held func_ov084_0212fa7c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212fa7c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212fa7c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212ef00 and the one that held func_ov084_0212fa7c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound7PlaySubEjjj5Fix12IiEb' differs between the legacy file that used to hold func_ov084_0212f460 and the one that held func_ov084_0212fa7c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212fc10; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212fc10; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov084_0212ef00' differs between the legacy file that used to hold func_ov084_0212f630 and the one that held func_ov084_0212fc10; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130df4' differs between the legacy file that used to hold func_ov084_0212fa7c and the one that held _ZN7daPkn_c6RenderEv; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held _ZN7daPkn_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held _ZN7daPkn_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130dfc' differs between the legacy file that used to hold _ZN7daPkn_c16CleanupResourcesEv and the one that held _ZN7daPkn_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210da38' differs between the legacy file that used to hold _ZN7daPkn_c16CleanupResourcesEv and the one that held _ZN7daPkn_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130df4' differs between the legacy file that used to hold func_ov084_0212fa7c and the one that held _ZN7daPkn_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
     "2026-09-08 source-review continuation, input abe07e30645e08fd6f0faf4f49007ba957eb7e3a: state 8 now has a void contract; Behavior uses daPkn_c member pointers and existing real method declarations; state 7/8 access named actor fields. No external function identities, ranges, PMF records or production data ownership changed. The earlier generator-conflict notes describe the original fold. Current compiler probes and finding dispositions are recorded in notes/agents/handoffs/pr-2450-source-review-fixes.md. Remaining scalar call seams are measured candidate constraints, not evidence of original Fix12 signatures or caller ABI differences.",
-    "2026-09-25 readability pass: the nine state bodies are members under coined names (state 0 func_ov084_0212fc10 is _ZN7daPkn_c9StateWaitEv, 1 func_ov084_0212fa7c is _ZN7daPkn_c10StateSleepEv, 2 func_ov084_0212f6d8 is _ZN7daPkn_c9StateBiteEv, 3 func_ov084_0212f630 is _ZN7daPkn_c9StateWakeEv, 4 func_ov084_0212f588 is _ZN7daPkn_c9StateDozeEv, 5 func_ov084_0212f460 is _ZN7daPkn_c8StateDieEv, 6 func_ov084_0212f33c is _ZN7daPkn_c11StateShrinkEv, 7 func_ov084_0212f2dc is _ZN7daPkn_c9StateGoneEv, 8 func_ov084_0212f298 is _ZN7daPkn_c11StateRegrowEv); the older notes above use the address names. The .data PMF records at 0x02130ba4 reach them by address, so only the ov084 symbols.txt rows, these symbol fields and the attribution keys were renamed. The six helpers include/decl_common.h declares keep C linkage. The C-linkage bridges for dActor_c::FindWithID, ClosestPlayer, JumpedOnByPlayer and Spawn, Player::IncMegaKillCount, dExtFrameCtrl_c::Finished, WillHitFrame and SetFlags, Sound::PlayLong and ApproachLinear are real calls now, the class's operator new forwarder is gone, and the collision check has no goto. The remaining mangled calls each carry a Fix12<int> by value."
+    "2026-09-25 readability pass: the nine state bodies are members under coined names (state 0 func_ov084_0212fc10 is _ZN7daPkn_c9StateWaitEv, 1 func_ov084_0212fa7c is _ZN7daPkn_c10StateSleepEv, 2 func_ov084_0212f6d8 is _ZN7daPkn_c9StateBiteEv, 3 func_ov084_0212f630 is _ZN7daPkn_c9StateWakeEv, 4 func_ov084_0212f588 is _ZN7daPkn_c9StateDozeEv, 5 func_ov084_0212f460 is _ZN7daPkn_c8StateDieEv, 6 func_ov084_0212f33c is _ZN7daPkn_c11StateShrinkEv, 7 func_ov084_0212f2dc is _ZN7daPkn_c9StateGoneEv, 8 func_ov084_0212f298 is _ZN7daPkn_c11StateRegrowEv); the older notes above use the address names. The .data PMF records at 0x02130ba4 reach them by address, so only the ov084 symbols.txt rows, these symbol fields and the attribution keys were renamed. The six helpers include/decl_common.h declares keep C linkage. The C-linkage bridges for dActor_c::FindWithID, ClosestPlayer, JumpedOnByPlayer and Spawn, Player::IncMegaKillCount, dExtFrameCtrl_c::Finished, WillHitFrame and SetFlags, Sound::PlayLong and ApproachLinear are real calls now, the class's operator new forwarder is gone, and the collision check has no goto. The remaining mangled calls each carry a Fix12<int> by value.",
+    "Static initializer folded: the model and six animation handles (ids 0x3cf..0x3d5) and the nine-entry state member-pointer table are real definitions in d_a_pkn.cpp, replacing the handwritten src/unnamed/ov084/__sinit_ov084_02130654.cpp. mwcc emits __sinit_d_a_pkn.cpp (0x20c), its .ctor word, the nine PMF literals and the registration nodes itself; all are byte- and relocation-identical to retail. The handles keep their address names because d_a_f_pkn.cpp reads them. Ownership: ov084 .init, .ctor and .bss run in .text TU order; d_a_pkn is the module's last .text TU, this initializer and its .ctor word 0x02130868 are the module's last, its .bss 0x02130df4..0x02130ec8 starts where d_a_red_bombhei's ends and ends the module, and the literals name only this TU's state handlers. The same change licenses the TU's whole .data run 0x02130ba4..0x02130ca4 (PMF literals, _ZTS/_ZTI, the new typed g_profile_PAKUN and the vtable, whose 0x84-byte storage starts at 0x02130c20, two words ahead of the configured address point) and makes the TU intact-object."
   ],
-  "production_mode": "text-only",
-  "externalized_output": [],
+  "production_mode": "intact-object",
+  "externalized_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e60"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e54"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086d70"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS12dEnemyBase_c",
+          "addend": 0,
+          "target_module": "ov002",
+          "target_address": "0x021081cc"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e390"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xf",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e384"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e78"
+        }
+      ]
+    }
+  ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -291,6 +700,284 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov084-daPkn_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0212eaf0",
+        "end": "0x02130174",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0212eaf0",
+          "end": "0x02130174",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02130654",
+          "end": "0x02130860",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02130868",
+          "end": "0x0213086c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02130ba4",
+          "end": "0x02130ca4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02130df4",
+          "end": "0x02130ec8",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 54
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              104
+            ],
+            "desired": [
+              104
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              102
+            ],
+            "desired": [
+              102
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              10,
+              13,
+              16,
+              18,
+              20,
+              24,
+              27,
+              33,
+              47,
+              52,
+              55
+            ],
+            "desired": [
+              20,
+              5,
+              7,
+              10,
+              13,
+              27,
+              18,
+              16,
+              24,
+              33,
+              47,
+              52,
+              55
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              9,
+              12,
+              15,
+              22,
+              23,
+              26,
+              31,
+              36,
+              37,
+              40,
+              41,
+              46,
+              49,
+              50,
+              54
+            ],
+            "desired": [
+              23,
+              22,
+              26,
+              9,
+              31,
+              12,
+              15,
+              40,
+              41,
+              46,
+              49,
+              37,
+              50,
+              36,
+              54
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                10,
+                13,
+                16,
+                18,
+                20,
+                24,
+                27,
+                33,
+                47,
+                52,
+                55
+              ],
+              "desired": [
+                20,
+                5,
+                7,
+                10,
+                13,
+                27,
+                18,
+                16,
+                24,
+                33,
+                47,
+                52,
+                55
+              ],
+              "slots": [
+                5,
+                7,
+                10,
+                13,
+                16,
+                18,
+                20,
+                24,
+                27,
+                33,
+                47,
+                52,
+                55
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                9,
+                12,
+                15,
+                22,
+                23,
+                26,
+                31,
+                36,
+                37,
+                40,
+                41,
+                46,
+                49,
+                50,
+                54
+              ],
+              "desired": [
+                23,
+                22,
+                26,
+                9,
+                31,
+                12,
+                15,
+                40,
+                41,
+                46,
+                49,
+                37,
+                50,
+                36,
+                54
+              ],
+              "slots": [
+                9,
+                12,
+                15,
+                22,
+                23,
+                26,
+                31,
+                36,
+                37,
+                40,
+                41,
+                46,
+                49,
+                50,
+                54
+              ]
+            }
+          ],
+          "symbolIndices": 28,
+          "sectionLinks": 0,
+          "sectionInfos": 12,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -300,83 +987,1115 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "daPkn_c::InitResources, StateBite, StateDie and StateShrink, func_ov084_0212ef00 and func_ov084_0212f204 hold Vector3 locals, and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_pkn.cpp",
+      "address": "0x02130654",
+      "size": "0x20c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov084_02130654 (0x20c) and carries the same relocation sites in the same order"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_pkn.cpp",
+      "address": "0x02130868",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@492",
+      "to": "data_ov084_02130e44",
+      "evidence": "compiler temp mapped to 0x02130e44 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
     },
     {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
+      "from": "@493",
+      "to": "data_ov084_02130e50",
+      "evidence": "compiler temp mapped to 0x02130e50 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@494",
+      "to": "data_ov084_02130e68",
+      "evidence": "compiler temp mapped to 0x02130e68 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@495",
+      "to": "data_ov084_02130e74",
+      "evidence": "compiler temp mapped to 0x02130e74 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@496",
+      "to": "data_ov084_02130e5c",
+      "evidence": "compiler temp mapped to 0x02130e5c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@497",
+      "to": "data_ov084_02130e2c",
+      "evidence": "compiler temp mapped to 0x02130e2c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@498",
+      "to": "data_ov084_02130e38",
+      "evidence": "compiler temp mapped to 0x02130e38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@500",
+      "to": "data_ov084_02130bb4",
+      "evidence": "compiler temp mapped to 0x02130bb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@502",
+      "to": "data_ov084_02130ba4",
+      "evidence": "compiler temp mapped to 0x02130ba4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@504",
+      "to": "data_ov084_02130bbc",
+      "evidence": "compiler temp mapped to 0x02130bbc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@506",
+      "to": "data_ov084_02130bac",
+      "evidence": "compiler temp mapped to 0x02130bac by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@508",
+      "to": "data_ov084_02130bc4",
+      "evidence": "compiler temp mapped to 0x02130bc4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@510",
+      "to": "data_ov084_02130bcc",
+      "evidence": "compiler temp mapped to 0x02130bcc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@512",
+      "to": "data_ov084_02130bdc",
+      "evidence": "compiler temp mapped to 0x02130bdc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@514",
+      "to": "data_ov084_02130bd4",
+      "evidence": "compiler temp mapped to 0x02130bd4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@516",
+      "to": "data_ov084_02130be4",
+      "evidence": "compiler temp mapped to 0x02130be4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_pkn.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_pkn.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_ov084_02130ba4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130bac",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130bb4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130bbc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130bc4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130bcc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130bd4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130bdc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130be4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130e2c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130e38",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130e44",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130e50",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130e5c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130e68",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130e74",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN12PknModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
       "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
     },
     {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
       "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+      "canonical_address": "0x020731dc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
     },
     {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
+      "symbol": "_ZN11PknAnimFileC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
       "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
     },
     {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
+      "symbol": "_ZN12PknModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
       "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
     },
     {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "deadstrip-data",
+      "symbol": "_ZN11PknAnimFileD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
       "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+      "canonical_address": "0x02017984",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02130664",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
     },
     {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+      "section": ".init",
+      "source": "0x02130674",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
     },
     {
-      "symbol": "_ZTI12dEnemyBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021081c0",
-      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical ov002 home before text-only isolation discards it."
+      "section": ".init",
+      "source": "0x02130680",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
     },
     {
-      "symbol": "_ZTS12dEnemyBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021081cc",
-      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical ov002 home before text-only isolation discards it."
+      "section": ".init",
+      "source": "0x02130690",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
     },
     {
-      "symbol": "_ZTI7daPkn_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov084",
-      "canonical_address": "0x02130bf8",
-      "reason": "This class's OWN RTTI, emitted here because the inline destructor makes daPkn_c::OnAimedAtWithEgg the key function. ov084 delinks no .data, so the ROM copy at 0x02130bf8 stays ROM-supplied and this one is discarded by text-only isolation."
+      "section": ".init",
+      "source": "0x0213069c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
     },
     {
+      "section": ".init",
+      "source": "0x021306ac",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021306b8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021306c8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021306d4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021306e4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021306f0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130700",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213070c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213071c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021307e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130dfc",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130dfc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021307ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021307f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e44",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e44"
+    },
+    {
+      "section": ".init",
+      "source": "0x021307f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e14",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e14"
+    },
+    {
+      "section": ".init",
+      "source": "0x021307fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130800",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e50",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e50"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130804",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e24",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e24"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130808",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e68",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e68"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213080c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e0c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e0c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130810",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e74",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e74"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130814",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130df4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130df4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213081c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e5c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e5c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130820",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e04",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e04"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e2c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e2c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213082c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e1c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e1c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130834",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e38",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e38"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e80",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e80"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213083c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130bb4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bb4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130ba4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130ba4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130bbc",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bbc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130bac",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bac"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213084c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130bc4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bc4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130850",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130bcc",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bcc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130bdc",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bdc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130858",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130bd4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bd4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213085c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130be4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130be4"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02130868",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_pkn.cpp",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130654"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130ba4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c10StateSleepEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212fa7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c9StateWakeEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212f630"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212fc10"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c9StateBiteEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212f6d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c9StateDozeEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212f588"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c8StateDieEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212f460"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c9StateGoneEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212f2dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c11StateShrinkEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212f33c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130be4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c11StateRegrowEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212f298"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130bfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
       "symbol": "_ZTS7daPkn_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov084",
-      "canonical_address": "0x02130bec",
-      "reason": "This class's OWN type-name string -- the nine bytes \"7daPkn_c\\0\" that prove the cartridge's name for it. Emitted with the key function; the ROM copy at 0x02130bec stays ROM-supplied and this one is discarded by text-only isolation."
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bec"
     },
     {
-      "symbol": "_ZTV7daPkn_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov084",
-      "canonical_address": "0x02130c28",
-      "reason": "This class's OWN vtable, emitted here because the key function is defined here. The compiler's symbol addresses the vtable OBJECT and so spans 0x84; config/arm9/overlays/ov084/symbols.txt binds the name to the public ADDRESS POINT two words higher, where the ROM's 31 slots span 0x7c and end at 0x02130ca4. Seven zero words follow before ov084 .data ends at 0x02130cc0; the section boundary does not establish the vtable's slot count. ov084 delinks no .data, so the ROM copy stays ROM-supplied and this one is discarded by text-only isolation."
+      "section": ".data",
+      "source": "0x02130c00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dEnemyBase_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021081c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daPkn_c_classInit",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130110"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI7daPkn_c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130bf8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212feb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212fc84"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212fd4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212fcdc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212fcd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_cD1Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212eaf0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_cD0Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212eb48"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130c9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPkn_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212ec58"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130ca0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
     }
   ]
 }

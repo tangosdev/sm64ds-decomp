@@ -1,4 +1,8 @@
 //cpp
+namespace Particle {
+struct Callback;
+}
+struct Vector3_16f;
 /* Monty Mole (daChoropu_c) and the rock it throws (daChoro_Rock_c), ov080.
  * The mole stays underground until the nearest Player is 250..1500 units
  * away and it holds the turn, then emerges, throws, leaps, and dives,
@@ -16,16 +20,15 @@
 // leftovers:
 // - func_ov080_02124418 stays free. Its first argument is a daChoro_Rock_c,
 //   so it is not a daChoropu_c method.
-// - ModelAnim::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init, Player::Hurt,
-//   Particle::System::New/NewSimple retain scalar mangled declarations for
+// - Player::Hurt and Player::Bounce retain scalar mangled declarations for
 //   their by-value Fix12 parameters. Throw's spawn id stays
 //   `py ? 0x137 : 0x137`.
 // - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
 //   mTimesHit addresses opaque.
 // - Throw reads mAngleX/Y/Z as unsigned short. Hidden reads mHasTurn as
 //   signed char.
-// - Model handle layout remains words[2]. The local animation handles use
-//   the measured fileID, numRefs and filePtr fields. File ids: mole model
+// - The model and animation handles take SharedFilePtr's fileID, numRefs
+//   and filePtr. File ids: mole model
 //   0x2d1, rock model 0x2d6, animations 0x2d2..0x2d5.
 // - SetAnim's flag word is 0 in InitResources and 0x40000000 in the state
 //   handlers. Collision words 0x200000 (mole) and 0x200004 (rock), and
@@ -35,7 +38,6 @@
 // - pad_0d0 is untouched. data_ov080_0212767c and data_ov080_021276c4
 //   (leap and emerge cylinder heights) are read as int arrays. The
 //   hit-flag mask 0x66fe0 stays a literal.
-
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daChoropu_c_AssetId {
@@ -50,11 +52,11 @@ enum daChoropu_c_AssetId {
 #include "decl_common.h"
 #include "daChoropu_c.h"
 #include "daChoro_Rock_c.h"
-#include "decl_Animation.h"
 #include "decl_Player.h"
 #include "SharedFilePtr.h"
 #include "dCc_c.h"
 #include "Player.h"
+#include "Sound.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -67,18 +69,11 @@ struct ChoropuStateRow { ChoropuStateFn fn[1]; };
  * 0x2d4, 0x2d5) and fill the six one-entry state rows. mwcc emits
  * __sinit_d_a_choropu.cpp from those definitions. */
 struct ChoropuModelFile : SharedFilePtr {
-    u32 words[2];
-
     ChoropuModelFile(u32 fileID);
     ~ChoropuModelFile();
 };
 
 struct ChoropuAnimationFilePtr : SharedFilePtr {
-    /* SharedFilePtr::Load and func_02017e0c use this local eight-byte layout. */
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
-
     ChoropuAnimationFilePtr(u32 fileID);
     ~ChoropuAnimationFilePtr();
 };
@@ -94,21 +89,22 @@ extern ChoropuStateRow data_ov080_02128438[6];
 #define LAUND(p) ((void*)((((long long)(int)(p)))))
 
 extern "C" {
-void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int b, unsigned int c);
-void  _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    unsigned int a, unsigned int b, int x, int y, int z, void *vel, void *cb);
-void  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, void *pos, unsigned int a, int b,
-    unsigned int d, unsigned int e, unsigned int f);
-void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int r, int h,
-    unsigned int e, unsigned int g);
-int   _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor,
-    int radius, int height, Vector3_16 *a, Vector3_16 *b);
+namespace Particle {
+struct System {
+    static void NewSimple(unsigned int id, int x, int y, int z);
+
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
+unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x, int y, int z, void *vel,
+                                void *cb);
+/* Parameter names keep this TU's @NNN. */
+typedef int BgchInitAt_(void *self, void *actor, int radius, int height, Vector3_16 *a,
+                        Vector3_16 *b);
 int   RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void  Matrix4x3_FromRotationY(void *m, int ang);
-void  func_0201267c(unsigned int id, const void *pos);
 void  func_02012694(int a, void *p);
 
 void  func_ov080_02124418(daChoro_Rock_c *t);
@@ -157,23 +153,23 @@ void daChoropu_c::func_ov080_02123860()
 {
     unsigned int idx;
 
-    mModelAnim.Advance();
-    idx = (unsigned int)(mModelAnim.currFrame << 4) >> 0x10;   /* whole frame number */
+    mAnmModel.Advance();
+    idx = (unsigned int)(mAnmModel.currFrame << 4) >> 0x10; /* whole frame number */
     if (idx >= 0xf) {
         mdCcAc_c.flags |= daChoropu_CC_DISABLED;
         mFlags &= ~daChoropu_FLAG_EMERGED;
         if (idx == 0xf) {
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x2a, mPosX, mPosY, mPosZ);
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x2b, mPosX, mPosY + 0x1e000, mPosZ);
+            Particle::System::NewSimple(0x2a, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(0x2b, mPosX, mPosY + 0x1e000, mPosZ);
         }
     }
     {
-        int raw = mModelAnim.currFrame;
+        int raw = mAnmModel.currFrame;
         int *tbl = (int *)(int)(data_ov080_0212767c);
         idx = (unsigned int)(raw << 4) >> 0x10;
         mdCcAc_c.height = tbl[idx] << 0xc;
     }
-    if (mModelAnim.Finished() == 0)
+    if (mAnmModel.Finished() == 0)
         return;
     mState = daChoropu_ST_HIDDEN;
     func_ov080_02124360();
@@ -189,10 +185,10 @@ void daChoropu_c::func_ov080_02123860()
  * animation to end. */
 void daChoropu_c::func_ov080_02123924()
 {
-    mModelAnim.Advance();
-    if (mModelAnim.Finished()) {
+    mAnmModel.Advance();
+    if (mAnmModel.Finished()) {
         mState = daChoropu_ST_LEAP;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
         return;
     }
     {
@@ -209,7 +205,7 @@ void daChoropu_c::func_ov080_02123924()
         if (Vec3_HorzDist(&mPos, &v) >= 0x1f4000)
             return;
         mState = daChoropu_ST_LEAP;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
     }
 }
 
@@ -230,8 +226,8 @@ void daChoropu_c::func_ov080_02123924()
  * (Leap), otherwise state 4 (Wait). */
 void daChoropu_c::func_ov080_02123a34()
 {
-    mModelAnim.Advance();
-    if (mModelAnim.WillHitFrame(10)) {
+    mAnmModel.Advance();
+    if (mAnmModel.WillHitFrame(10)) {
         Vector3_16 v16;
         Vector3 pos;
         unsigned short ax, ay;
@@ -275,21 +271,21 @@ void daChoropu_c::func_ov080_02123a34()
         if (d >= 0x258000)
             d = 0x258000;
         a->mHorzSpeed = 0x1e000;
-        a->unk_0a4 = 0;
+        a->mSpeedX = 0;
         a->mVertSpeed = (d << 2) / 100 + 0x4000;
-        a->unk_0ac = 0;
-        func_0201267c(0xd2, &mCamSpacePosX);
+        a->mSpeedZ = 0;
+        func_0201267c(0xd2, &mCamSpacePos);
     }
 
-    if (mModelAnim.Finished() == 0)
+    if (mAnmModel.Finished() == 0)
         return;
 
     if (DistToCPlayer() < 0x3e8000) {
         mState = daChoropu_ST_LEAP;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
     } else {
         mState = daChoropu_ST_WAIT;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283d0.filePtr, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov080_021283d0.filePtr, 0x40000000, 0x1000, 0);
     }
 }
 
@@ -314,8 +310,8 @@ void daChoropu_c::func_ov080_02123c24()
     unsigned int state;
     int raw;
 
-    mModelAnim.Advance();
-    raw = mModelAnim.currFrame;
+    mAnmModel.Advance();
+    raw = mAnmModel.currFrame;
     amt = 0;
     state = ((unsigned int)raw << 4) >> 16;   /* whole frame number */
 
@@ -331,16 +327,14 @@ void daChoropu_c::func_ov080_02123c24()
             amt = 0x50000;
         } else {
             amt = data_ov080_021276c4[state - 6] << 12;
-            mEmergeSystemID = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mEmergeSystemID, 0x29,
-                mPosX, mPosY, mPosZ,
-                0, 0);
+            mEmergeSystemID =
+                Particle::System::New(mEmergeSystemID, 0x29, mPosX, mPosY, mPosZ, 0, 0);
         }
     }
 
     mdCcAc_c.height = amt;
 
-    if (mModelAnim.Finished() == 0)
+    if (mAnmModel.Finished() == 0)
         return;
 
     mEmergeSystemID = 0;
@@ -350,16 +344,16 @@ void daChoropu_c::func_ov080_02123c24()
         unsigned int rem = (rv % 3) & 0xff;
         if (rem == 0) {
             mState = daChoropu_ST_THROW_ROCK;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
             return;
         }
         if (rem == 1) {
             mState = daChoropu_ST_WAIT;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283d0.filePtr, 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov080_021283d0.filePtr, 0x40000000, 0x1000, 0);
             return;
         }
         mState = daChoropu_ST_LEAP;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov080_021283e8.filePtr, 0x40000000, 0x1000, 0);
         return;
     }
 
@@ -367,7 +361,7 @@ void daChoropu_c::func_ov080_02123c24()
         Player *player = ClosestPlayer();
         if (player == 0) {
             mState = daChoropu_ST_THROW_ROCK;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
             return;
         }
         {
@@ -382,10 +376,10 @@ void daChoropu_c::func_ov080_02123c24()
             diff = (short)AngleDiff(mAngleY, horz);
             if (diff < 0x4000) {
                 mState = daChoropu_ST_THROW_ROCK;
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
+                mAnmModel.SetAnim((BCA_File *)data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
             } else {
                 mState = daChoropu_ST_WAIT;
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283d0.filePtr, 0x40000000, 0x1000, 0);
+                mAnmModel.SetAnim((BCA_File *)data_ov080_021283d0.filePtr, 0x40000000, 0x1000, 0);
             }
         }
     }
@@ -412,7 +406,7 @@ void daChoropu_c::func_ov080_02123ecc()
     if (*(signed char *)&mHasTurn != 1) return;   /* read signed, as the ROM does (ldrsb) */
     if (dist >= 0xfa000) {
         mState = daChoropu_ST_EMERGE;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283d8.filePtr, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0x40000000, 0x1000, 0);
         Player *p2 = ClosestPlayer();
         mAngleY = Vec3_HorzAngle(&mPos, &p2->mPos);
         {
@@ -421,7 +415,7 @@ void daChoropu_c::func_ov080_02123ecc()
             mPrevAngleY = mAngleY;
             *a = *a & ~daChoropu_CC_DISABLED;
             *b = *b | daChoropu_FLAG_EMERGED;
-            func_0201267c(0x116, &mCamSpacePosX);
+            func_0201267c(0x116, &mCamSpacePos);
         }
         return;
     }
@@ -487,9 +481,9 @@ void daChoropu_c::func_ov080_02124088()
     daChoropu_c *a;
 
     mState = daChoropu_ST_HIDDEN;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283d8.filePtr, 0x40000000, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0x40000000, 0x1000, 0);
 
-    mModelAnim.currFrame = 0;
+    mAnmModel.currFrame = 0;
     {
         u32 *p150 = (u32 *)LAUND(&mdCcAc_c.flags);
         *p150 |= daChoropu_CC_DISABLED;
@@ -499,7 +493,7 @@ void daChoropu_c::func_ov080_02124088()
         *pb0 &= ~daChoropu_FLAG_EMERGED;
     }
 
-    func_0201267c(0xd5, &mCamSpacePosX);
+    func_0201267c(0xd5, &mCamSpacePos);
 
     v1.x = mPosX;
     {
@@ -586,7 +580,7 @@ void daChoropu_c::func_ov080_02124208()
 
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
         func_ov080_02124088();
-        _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
+        p->Bounce(0x28000);
         return;
     }
 
@@ -610,7 +604,7 @@ void daChoropu_c::func_ov080_02124208()
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, &pos, 2, 0xc000, 1, 0, 1);
+        p->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
 }
 
@@ -642,15 +636,15 @@ void *daChoropu_c::func_ov080_02124360()
 }
 
 // @symbol _ZN11daChoropu_c19func_ov080_021243d8Ev
-/* Rebuilds the model's matrix (mModelAnim.mat4x3): a rotation about Y by mAngleY,
+/* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngleY,
  * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set to
  * the actor's position >> 3. */
 void daChoropu_c::func_ov080_021243d8()
 {
-    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
-    mModelAnim.mat4x3.m[9] = mPosX >> 3;
-    mModelAnim.mat4x3.m[10] = mPosY >> 3;
-    mModelAnim.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    mAnmModel.mat4x3.m[9] = mPosX >> 3;
+    mAnmModel.mat4x3.m[10] = mPosY >> 3;
+    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 // @symbol func_ov080_02124418
@@ -690,10 +684,10 @@ s32 daChoro_Rock_c::CleanupResources()
 }
 
 // @symbol _ZN11daChoropu_c6RenderEv
-/* Draws the mole's model (mModelAnim) with no scale argument. */
+/* Draws the mole's model (mAnmModel) with no scale argument. */
 s32 daChoropu_c::Render()
 {
-    Model *m = &mModelAnim;
+    dExtSimpleModel_c *m = &mAnmModel;
     m->Render(0);
     return 1;
 }
@@ -702,7 +696,7 @@ s32 daChoropu_c::Render()
 /* Draws the rock's model, scaled by (mScaleX, mScaleY, mScaleZ). */
 s32 daChoro_Rock_c::Render()
 {
-    Model *m = &mModel;
+    dExtSimpleModel_c *m = &mModel;
     m->Render(&mScale);
     return 1;
 }
@@ -748,13 +742,13 @@ s32 daChoro_Rock_c::Behavior()
                 pos.x = mPosX;
                 pos.y = mPosY;
                 pos.z = mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &pos, 1, 0xc000, 1, 0, 1);
+                player->Hurt(pos, 1, 0xc000, 1, 0, 1);
             } else if (!player->mIsVanish) {
                 Vector3 pos;
                 pos.x = mPosX;
                 pos.y = mPosY;
                 pos.z = mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &pos, 1, 0xc000, 1, 0, 1);
+                player->Hurt(pos, 1, 0xc000, 1, 0, 1);
             }
         }
     }
@@ -771,9 +765,9 @@ s32 daChoro_Rock_c::Behavior()
             s->mPrevAngleY = (short)((unsigned int)r >> 8);
             s->mPrevAngleZ = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
-            s->unk_0a4 = 0;
+            s->mSpeedX = 0;
             s->mVertSpeed = 0x5000;
-            s->unk_0ac = 0;
+            s->mSpeedZ = 0;
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650);
@@ -781,9 +775,9 @@ s32 daChoro_Rock_c::Behavior()
             s->mPrevAngleY = (short)((unsigned int)r >> 8);
             s->mPrevAngleZ = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
-            s->unk_0a4 = 0;
+            s->mSpeedX = 0;
             s->mVertSpeed = 0x5000;
-            s->unk_0ac = 0;
+            s->mSpeedZ = 0;
         }
         MarkForDestruction();
     }
@@ -798,7 +792,7 @@ s32 daChoro_Rock_c::Behavior()
 
 // @symbol _ZN11daChoropu_c13InitResourcesEv
 /* Loads the four animation files through data_ov080_0212766c, the ov002 shared model
- * file, the rock model and the mole model (data_ov080_021283c0, set on mModelAnim with
+ * file, the rock model and the mole model (data_ov080_021283c0, set on mAnmModel with
  * flags 1 and -1). Starts animation file 0x2d4 (data_ov080_021283d8) with flags 0, speed
  * 1.0 (0x1000) from frame 0, and initialises the collision cylinder: radius 80 units
  * (0x50000), height 100 units (0x64000), flags 0x200000 (not decoded here), vulnerability
@@ -811,11 +805,11 @@ s32 daChoropu_c::InitResources()
 {
     int i;
     for (i = 0; i < 4; i++) dExtFrameCtrl_c::LoadFile(*data_ov080_0212766c[i]);
-    Model::LoadFile(data_ov002_0210d9d8);
-    Model::LoadFile(data_ov080_021283c8);
-    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov080_021283c0), 1, -1);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov080_021283d8.filePtr, 0, 0x1000, 0);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x50000, 0x64000, 0x200000, 0x66fe0);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+    dExtSimpleModel_c::LoadFile(data_ov080_021283c8);
+    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov080_021283c0), 1, -1);
+    mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0, 0x1000, 0);
+    mdCcAc_c.Init(this, 0x50000, 0x64000, 0x200000, 0x66fe0);
     mGroupMode = param1 & 0xf;
     mState = daChoropu_ST_SETUP;
     if (mGroupMode == daChoropu_GROUP_SOLO) mHasTurn = 1;
@@ -837,10 +831,11 @@ s32 daChoropu_c::InitResources()
  * 0.5 (0x800) for a small one. */
 s32 daChoro_Rock_c::InitResources()
 {
-    if (!mModel.SetFile((BMD_File *)Model::LoadFile(data_ov080_021283c8), 1, -1)) return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x1e000, 0x1e000, 0x200004, 0);
+    if (!mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov080_021283c8), 1, -1))
+        return 0;
+    mdCcAc_c.Init(this, 0x1e000, 0x1e000, 0x200004, 0);
     mIsSmall = param1 & 1;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x1e000, 0x1e000, 0, 0);
+    mWithMeshClsn.Init(this, 0x1e000, 0x1e000, 0, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     if (mIsSmall == 0) {

@@ -38,13 +38,13 @@ enum daObjC1Peach_c_AssetId {
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
 
-namespace cstd { int fdiv(int a, int b); }
+namespace cstd {
+int fdiv(int a, int b);
+}
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
- * cartridge's ctor/dtor imports are the functions the wrapper's aliases name. */
+/* The cartridge's ctor/dtor imports are the functions the wrapper's aliases
+ * name. */
 struct C1PeachModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     C1PeachModelFilePtr(u32 fileID);
     ~C1PeachModelFilePtr();
 };
@@ -60,7 +60,7 @@ extern C1PeachModelFilePtr gC1PeachModelFile;
  * lineage supplies classInit. Historical alias: PeachPainting_Spawn.
  *
  * fBase_c::operator new(unsigned long) keeps the allocation on
- * _ZN7fBase_cnwEj. The emitted constructor stores the vtable address point. */
+ * _ZN7fBase_cnwEm. The emitted constructor stores the vtable address point. */
 // @symbol daObjC1Peach_c_classInit
 extern "C" daObjC1Peach_c *daObjC1Peach_c_classInit()
 {
@@ -70,7 +70,7 @@ extern "C" daObjC1Peach_c *daObjC1Peach_c_classInit()
 // @symbol _ZN14daObjC1Peach_c13InitResourcesEv
 int daObjC1Peach_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)Model::LoadFile(gC1PeachModelFile), 1, -1);
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gC1PeachModelFile), 1, -1);
     mOpacity = 0xff;
     UpdateModelTransform();
     return 1;

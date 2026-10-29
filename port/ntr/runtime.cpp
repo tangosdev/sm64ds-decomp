@@ -172,6 +172,14 @@ Handler GetIRQHandler(unsigned mask) {
 void SetIRQHandler(unsigned mask, Handler h) { _ZN3IRQ13SetIRQHandlerEjPFvvE(mask, h); }
 unsigned EnableIRQs(unsigned mask) { return _ZN3IRQ10EnableIRQsEj(mask); }
 unsigned DisableIRQs(unsigned mask) { return _ZN3IRQ11DisableIRQsEj(mask); }
+// The host has no IF register to acknowledge; func_0205a290 calls this after
+// every chunk it starts and ignores the result.
+unsigned ClearInterrupts(unsigned mask) {
+    _ZN3IRQ15ClearInterruptsEj(mask);
+    return 0;
+}
+unsigned Disable() { return _ZN3IRQ7DisableEv(); }
+unsigned Restore(unsigned prev) { return _ZN3IRQ7RestoreEj(prev); }
 }  // namespace IRQ
 
 // DMA to the FIFO is the display-list path (func_0205a290). ctrl bit 30 is

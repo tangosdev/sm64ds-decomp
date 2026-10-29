@@ -6,21 +6,17 @@
  * not daObjWc_Obj02_c (ARROW_LIFT), not daObjWc_Obj03_c (WATER_DIAMOND), not
  * daObjWc_Obj05_c (CAGE_LIFT).
  *
- * common.h FIRST (via dBgActor_c.h): Model.h would otherwise win with
+ * common.h FIRST (via dBgActor_c.h): dExtSimpleModel_c.h would otherwise win with
  * math/Matrix.h's nested Matrix4x3, and InitResources' SetFile matrix
  * argument scalarizes. The two helpers write translation as m[9..11].
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. Highest-address first.
  * The destructor is inline in include/daObjWc_Obj04_c.h (D1 then D0, no D2).
  *
- * deslop leftovers:
- * - dBgW_KcMbg::SetFile 6az: InitResources passes Fix12<int> by value; the
- *   header method form size-DIFFs.
+ * What stays:
  * - func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
  *   mMeshCollider; dBgW.h has no setter.
  * - func_020393a4: Behavior pokes mMeshCollider with 0x100000 (no setter).
- * - func_ov029_021126dc / 02112710 stay placeholder labels (Y-rot + pos
- *   into mClsnMat2 / mModel2.mat4x3). Not coined.
  * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles;
  *   data_ov029_0211304c the CLPS block stays unowned overlay data.
  * - Behavior case 1 keeps the unsigned short* increment pointer
@@ -30,46 +26,36 @@
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_wc_obj04_AssetId {
-    ASSET_WC_OBJ04_BMD = 0x06d1,
-    ASSET_WC_OBJ04_KCL = 0x06d2
-};
+enum d_a_obj_wc_obj04_AssetId { ASSET_WC_OBJ04_BMD = 0x06d1, ASSET_WC_OBJ04_KCL = 0x06d2 };
 
 #include "common.h"
 #include "daObjWc_Obj04_c.h"
 #include "SharedFilePtr.h"
 #include "Event.h"
+#include "math/MtxStack.h"
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct WcObj04ModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     WcObj04ModelFilePtr(u32 fileID);
     ~WcObj04ModelFilePtr();
 };
 
 struct WcObj04CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     WcObj04CollisionFilePtr(u32 fileID);
     ~WcObj04CollisionFilePtr();
 };
 
+/* local extern: no shared header declares these. */
 extern "C" {
 void func_020393a4(void *p, int v);
-void func_020393d4(int *p, int v);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, Matrix4x3 *mat, int scale,
-    short angY, CLPS_Block &clps);
-void Matrix4x3_FromRotationY(Matrix4x3 *m, int angY);
-void func_ov029_021126dc(daObjWc_Obj04_c *c);
-void func_ov029_02112710(daObjWc_Obj04_c *t);
+void func_020393d4(dBgW *bgw, void *fn);
+}
+
 extern WcObj04ModelFilePtr data_ov029_0211432c;
 extern WcObj04CollisionFilePtr data_ov029_02114324;
 extern CLPS_Block data_ov029_0211304c;
-}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -83,31 +69,26 @@ extern CLPS_Block data_ov029_0211304c;
  * Every instruction the cartridge has here falls out of the one `new`.
  * 0x02112968 loads 0x3a8 -- the class's own size -- into the header's leaf
  * operator new; 0x02112978 calls dBgActor_c's C2, the store at 0x02112984
- * lays down this class's vptr, and Model's C1 at 0x320 follows. The null
+ * lays down this class's vptr, and dExtSimpleModel_c's C1 at 0x320 follows. The null
  * check is the one `new` itself emits. The implicit constructor is what
  * keeps the intervening construction inlined; declaring a constructor of
  * our own would emit a `bl` the factory does not have. */
-extern "C" daObjWc_Obj04_c *daObjWc_Obj04_c_classInit()
-{
+extern "C" daObjWc_Obj04_c *daObjWc_Obj04_c_classInit() {
     return new daObjWc_Obj04_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjWc_Obj04_c13InitResourcesEv
-int daObjWc_Obj04_c::InitResources()
-{
-    mModel2.SetFile((BMD_File *)Model::LoadFile(data_ov029_0211432c), 1, -1);
-    func_ov029_02112710(this);
-    func_ov029_021126dc(this);
+int daObjWc_Obj04_c::InitResources() {
+    mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_0211432c), 1, -1);
+    UpdateModelMatrix();
+    UpdateClsnMatrix();
     {
         KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov029_02114324);
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, &mClsnMat2, 0x199, mAngleY, data_ov029_0211304c);
+        mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, data_ov029_0211304c);
     }
-    func_020393d4(
-        (int *)&mMeshCollider,
-        (int)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
     mState = 0;
     mStateTimer = 0;
     mVisible = 0;
@@ -119,8 +100,7 @@ int daObjWc_Obj04_c::InitResources()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjWc_Obj04_c8BehaviorEv
 #pragma optimize_for_size on
-int daObjWc_Obj04_c::Behavior()
-{
+int daObjWc_Obj04_c::Behavior() {
     func_020393a4(&mMeshCollider, 0x100000);
 
     switch (mState) {
@@ -137,7 +117,7 @@ int daObjWc_Obj04_c::Behavior()
         mVisible = 1;
 
         mMeshCollider.Enable(this);
-        func_ov029_021126dc(this);
+        UpdateClsnMatrix();
         mMeshCollider.Transform(mClsnMat2, mAngleY);
         break;
 
@@ -164,8 +144,7 @@ int daObjWc_Obj04_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjWc_Obj04_c6RenderEv
-int daObjWc_Obj04_c::Render()
-{
+int daObjWc_Obj04_c::Render() {
     if (mVisible != 0) {
         mModel2.Render(0);
     }
@@ -175,8 +154,7 @@ int daObjWc_Obj04_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjWc_Obj04_c16CleanupResourcesEv
-int daObjWc_Obj04_c::CleanupResources()
-{
+int daObjWc_Obj04_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
@@ -187,24 +165,24 @@ int daObjWc_Obj04_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov029_02112710
-extern "C" void func_ov029_02112710(daObjWc_Obj04_c *t)
-{
-    Matrix4x3_FromRotationY(&t->mModel2.mat4x3, t->mAngleY);
-    t->mModel2.mat4x3.m[9] = t->mPosX >> 3;
-    t->mModel2.mat4x3.m[10] = t->mPosY >> 3;
-    t->mModel2.mat4x3.m[11] = t->mPosZ >> 3;
+/* The plank model's matrix: yaw plus position >> 3 (world fix12 to model units). */
+// @symbol _ZN15daObjWc_Obj04_c17UpdateModelMatrixEv
+void daObjWc_Obj04_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngleY);
+    mModel2.mat4x3.m[9] = mPosX >> 3;
+    mModel2.mat4x3.m[10] = mPosY >> 3;
+    mModel2.mat4x3.m[11] = mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov029_021126dc
-extern "C" void func_ov029_021126dc(daObjWc_Obj04_c *c)
-{
-    Matrix4x3_FromRotationY(&c->mClsnMat2, c->mAngleY);
-    c->mClsnMat2.m[9] = c->mPosX;
-    c->mClsnMat2.m[10] = c->mPosY;
-    c->mClsnMat2.m[11] = c->mPosZ;
+/* The plank collision matrix: yaw plus the world position. */
+// @symbol _ZN15daObjWc_Obj04_c16UpdateClsnMatrixEv
+void daObjWc_Obj04_c::UpdateClsnMatrix() {
+    Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
+    mClsnMat2.m[9] = mPosX;
+    mClsnMat2.m[10] = mPosY;
+    mClsnMat2.m[11] = mPosZ;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -221,8 +199,8 @@ extern "C" void func_ov029_021126dc(daObjWc_Obj04_c *c)
  * what emits the used D1/D0 pair in cartridge order and keeps this TU the
  * vtable's home.
  *
- * Both bodies destroy Model at +0x320 first, then the inlined dBgActor_c
- * step stores _ZTV10dBgActor_c, destroys dBgW_KcMbg at +0x124 and Model at
+ * Both bodies destroy dExtSimpleModel_c at +0x320 first, then the inlined dBgActor_c
+ * step stores _ZTV10dBgActor_c, destroys dBgW_KcMbg at +0x124 and dExtSimpleModel_c at
  * +0xd4, and chains to dActor_c. D0 then returns the object to the actor
  * heap through dActor_c's inline operator delete.
  */

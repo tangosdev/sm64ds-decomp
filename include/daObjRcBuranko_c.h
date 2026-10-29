@@ -29,10 +29,8 @@
 
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daObjRcBuranko_c : dBgActor_c {
-    s16 mSwingVelZ;   /* 0x31e -- signed angular velocity added to mAngleZ each
+    s16 mSwingVelZ; /* 0x31e -- signed angular velocity added to mAngleZ each
                          frame; Behavior nudges it by +/-4 against the sign of
                          mAngleZ, which is what makes the platform a pendulum
                          rather than a turntable. It occupies the two bytes
@@ -42,18 +40,15 @@ struct daObjRcBuranko_c : dBgActor_c {
     /* MEASURED -- INLINE ON PURPOSE, and declared first, so this TU is the
        vtable's home. Both ROM bodies are empty; an inline body also drops the
        D2 variant the cartridge never carried. */
-    virtual ~daObjRcBuranko_c() {}  /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjRcBuranko_c() {} /* slots 16 (D1), 17 (D0) */
 
     /* declared in reverse of ROM address order, as the TU emits them */
-    int InitResources();      /* slot  0 -- 0x0211137c */
-    int Behavior();           /* slot  6 -- 0x021112f0 */
-    int Render();             /* slot  9 -- 0x021112c8 */
-    int CleanupResources();   /* slot  3 -- 0x02111284 */
+    int InitResources();    /* slot  0 -- 0x0211137c */
+    int Behavior();         /* slot  6 -- 0x021112f0 */
+    int Render();           /* slot  9 -- 0x021112c8 */
+    int CleanupResources(); /* slot  3 -- 0x02111284 */
 
-    /* size_t == unsigned long here; unsigned int is illegal. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void UpdateModelMatrix(); /* ov036 0x0211123c */
 };
 
 #ifndef SM64DS_PLATFORM_PC

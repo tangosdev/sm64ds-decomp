@@ -18,7 +18,6 @@
  *
 comment leftovers:
  *   - Calls whose real signatures take Fix12<int> BY VALUE stay mangled:
- *     Sound::PlaySub, ModelAnim::SetAnim, TextureSequence::SetFile and
  *     dActor_c::DropShadowRadHeight. mwccarm passes those differently at
  *     the call site than the loose scalar spelling; this file's externs
  *     are the spelling that matches.
@@ -52,8 +51,7 @@ enum daC_Jugem_c_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
 
 /* File-scope objects at the end of this file construct the three resource
  * handles (model file 0x2d7, animation file 0x2d8, texture-sequence file
@@ -68,22 +66,16 @@ bool ApproachLinear(short &value, short target, short step);
  * TU, which deliberately avoids it); the destructor alias points at the
  * ROM's canonical copy. */
 struct JugemModelFile : SharedFilePtr {
-    u32 words[2];
-
     JugemModelFile(u32 fileID);
     ~JugemModelFile();
 };
 
 struct JugemAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
-
     JugemAnimationFilePtr(u32 fileID);
     ~JugemAnimationFilePtr();
 };
 
 struct JugemTexSequenceFilePtr : SharedFilePtr {
-    u32 words[2];
-
     JugemTexSequenceFilePtr(u32 fileID);
     ~JugemTexSequenceFilePtr();
 };
@@ -109,8 +101,6 @@ struct JugemVec3 {
 extern "C" {
 
 /* math / vector helpers -- no shared header declares these */
-void  _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *cur, const void *tgt, int step);
-void  _Z14ApproachLinearRiii(int *cur, int tgt, int step);
 int   Vec3_Dist(const void *a, const void *b);
 int   Vec3_HorzDist(const void *a, const void *b);
 s16   Vec3_HorzAngle(const void *a, const void *b);
@@ -131,11 +121,7 @@ void  MulVec3Mat4x3(const void *v, const void *m, void *out);
    which mwccarm passes differently at the call site than the loose scalar
    spelling -- the mangled spelling is the one that matches. Sound.h covers
    PlayLong, so only PlaySub stays. */
-int   _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12i d, bool loop);
-void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *f, int a, Fix12i b, u32 c);
-void  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *thiz, BTP_File &f, int a, Fix12i b, u32 c);
-void  _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-         void *thiz, void *sm, void *mtx, int rad, int height, u32 flags);
+int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, Fix12i d, bool loop);
 
 /* other overlays / arm9 */
 void  func_ov002_020c3e8c(void *player);
@@ -144,7 +130,6 @@ void  func_ov002_020c3f2c(void *p);
 void  func_ov002_020d228c(void *p);
 void  func_ov002_020e4374(void *p, int *a, int *b);
 void  func_0201f32c(int a);
-void  func_02012790(int a);
 
 /* globals */
 extern void          *data_0209f318;        /* the camera object */
@@ -224,41 +209,40 @@ daC_Jugem_c::~daC_Jugem_c()
 /* The intro camera sweep: pull the look-at and eye down toward the player
    while the fanfare plays; on the last frame hand the camera back and go
    wait in StateHidden. */
-int daC_Jugem_c::StateIntroMain()
-{
-  dCamera_c *cam = (dCamera_c *)data_0209f318;
-  CamPose r;
-  cam->SetFlag_3();
-  r.lx = -0x4b0000;
-  r.ly = 0x19f000;
-  r.lz = 0x1a90000;
-  r.px = -0x4b0000;
-  r.py = 0x250000;
-  r.pz = 0x1d4c000;
-  _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mCamLookX, &r, 0x70000);
-  cam->SetLookAt(*(Vector3 *)&mCamLookX);
-  cam->SetPos(*(Vector3 *)&mCamPosX);
-  Vec3_Dist(&mCamLookX, &r);
-  mTimer++;
-  if (mTimer > 0x64) {
-    if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x7f, 0, 0x7222, false) != 0) {
-      *(int *)&cam->mFlags &= ~8;
-      mHorzSpeed = 0;
-      mTimer = 0;
-      mAuxCounter = 0;
-      unk_0a4 = 0;
-      mVertSpeed = 0;
-      unk_0ac = 0;
-      mAngleX = 0;
-      Player *player = ClosestPlayer();
-      if (player != 0) {
-        func_ov002_020c3e8c(player);
-        data_0209caa0[2] |= 0x80;
-      }
-      SetState(data_ov085_021307e0);
+int daC_Jugem_c::StateIntroMain() {
+    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    CamPose r;
+    cam->SetFlag_3();
+    r.lx = -0x4b0000;
+    r.ly = 0x19f000;
+    r.lz = 0x1a90000;
+    r.px = -0x4b0000;
+    r.py = 0x250000;
+    r.pz = 0x1d4c000;
+    ApproachLinear(*(Vector3 *)&mCamLookX, *(Vector3 *)&r, 0x70000);
+    cam->SetLookAt(*(Vector3 *)&mCamLookX);
+    cam->SetPos(*(Vector3 *)&mCamPosX);
+    Vec3_Dist(&mCamLookX, &r);
+    mTimer++;
+    if (mTimer > 0x64) {
+        if (Sound::PlaySub(0x4b, 0x7f, 0, 0x7222, false) != 0) {
+            *(int *)&cam->mFlags &= ~8;
+            mHorzSpeed = 0;
+            mTimer = 0;
+            mAuxCounter = 0;
+            mSpeedX = 0;
+            mVertSpeed = 0;
+            mSpeedZ = 0;
+            mAngleX = 0;
+            Player *player = ClosestPlayer();
+            if (player != 0) {
+                func_ov002_020c3e8c(player);
+                data_0209caa0[2] |= 0x80;
+            }
+            SetState(data_ov085_021307e0);
+        }
     }
-  }
-  return 1;
+    return 1;
 }
 
 // @symbol _ZN11daC_Jugem_c14StateIntroInitEv
@@ -287,7 +271,7 @@ int daC_Jugem_c::StateApproachMain()
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
     ApproachLinear(mAngleY, Vec3_HorzAngle(&mPosX, &data_ov085_0213084c), 0x200);
     ApproachLinear(mAngleX, Vec3_VertAngle(&mPosX, &data_ov085_0213084c), 0x200);
-    _Z14ApproachLinearRiii(&mHorzSpeed, 0x28000, 0x2000);
+    ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
     ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &data_ov085_0213084c), (s16)mAuxCounter);
     mAngleY = mPrevAngleY;
     mAuxCounter += 5;
@@ -300,8 +284,8 @@ int daC_Jugem_c::StateApproachMain()
     v[1].y = 0x115000;
     v[1].z = 0x1d15000;
     spd = mHorzSpeed >> 1;
-    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mCamLookX, &mPosX, spd);
-    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mCamPosX, &v[1], spd);
+    ApproachLinear(*(::Vector3 *)&mCamLookX, mPos, spd);
+    ApproachLinear(*(::Vector3 *)&mCamPosX, *(::Vector3 *)&v[1], spd);
     cam->SetLookAt(*(::Vector3 *)&mCamLookX);
     cam->SetPos(*(::Vector3 *)&mCamPosX);
     Vec3_Sub(&v[2], &mPosX, &data_ov085_0213084c);
@@ -353,7 +337,7 @@ int daC_Jugem_c::StateBobMain()
         int v = (short)mAuxCounter;
         int idx = (int)((unsigned int)(v << 16) >> 16) >> 4;
         short e = data_02082214[idx * 2];
-        _Z14ApproachLinearRiii(&mPosY, FX_MUL(e, 0x1a000) + mTargetY, 0x10000000);
+        ApproachLinear(mPosY, FX_MUL(e, 0x1a000) + mTargetY, 0x10000000);
     }
 
     if (mTimer == 0x32) {
@@ -364,7 +348,7 @@ int daC_Jugem_c::StateBobMain()
     {
         int a1 = 0x4000;
         if (mTimer >= 0x4b) a1 = 0x8000;
-        _Z14ApproachLinearRiii(&mHorzSpeed, a1, 0x1000);
+        ApproachLinear(mHorzSpeed, a1, 0x1000);
     }
 
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
@@ -525,16 +509,16 @@ int daC_Jugem_c::StateArriveMain()
     mAngleX = 0x1000;
     mAngleZ = 0x800;
     mTimer += 1;
-    _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x14, 0x7f, 0x15666, false);
+    Sound::PlaySub(0x4b, 0x14, 0x7f, 0x15666, false);
     switch (mTimer) {
     case 1:
-        p->unk_723 = 1;
+        p->mMuteSleepVoice = 1;
         break;
     case 0x78:
         func_0201f32c(1);
         break;
     case 0x82:
-        p->unk_723 = 0;
+        p->mMuteSleepVoice = 0;
         break;
     case 0xb4:
         data_0209d66c = 1;
@@ -591,10 +575,10 @@ int daC_Jugem_c::StateLeaveMain()
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
     if (AngleDiff(mPrevAngleY, Vec3_HorzAngle(&mPosX, &mTargetX)) < 0x2000) {
         Vec3_ApproachHorz(&mPosX, &mTargetX, 0x1e000);
-        _Z14ApproachLinearRiii(&mPosY, mTargetY, 0x1e000);
+        ApproachLinear(mPosY, mTargetY, 0x1e000);
     }
     if (*(unsigned short *)&mStateTimer == 0) {
-        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
+        if (Sound::PlaySub(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
             if (mTalkPlayer->HasFinishedTalking() == 1) {
                 MarkForDestruction();
                 data_0209f284 = 0;
@@ -678,7 +662,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     p->mStateTargetZ = mPosZ;
 
     if (*(unsigned short *)&mStateTimer == 0) {
-        _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4a, 0x14, 0x7f, 0x15666, 0);
+        Sound::PlaySub(0x4a, 0x14, 0x7f, 0x15666, 0);
     }
 
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
@@ -696,7 +680,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     out.y += p->mPosY + 0x70000;
     out.z += p->mPosZ;
 
-    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mPosX, &out, 0x14000);
+    ApproachLinear(mPos, *(::Vector3 *)&out, 0x14000);
     ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &out), 0x800);
     mAngleY = mPrevAngleY;
 
@@ -829,11 +813,10 @@ void daC_Jugem_c::UpdateShadow()
     Vec3_Asr(&v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mModelAnim1.mat4x3 = *(M48 *)&data_020a0e68;
+    *(M48 *)&mAnmModel1.mat4x3 = *(M48 *)&data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x38000) >> 3, mPosZ >> 3);
     *(M48 *)&mShadowMat1 = *(M48 *)&data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel1, &mShadowMat1, 0x46000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
 }
 
 // @symbol _ZN11daC_Jugem_c18UpdateShadowPlayerEv
@@ -856,7 +839,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
     Vec3_Asr(&t, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mModelAnim1.mat4x3 = *(M48 *)&data_020a0e68;
+    *(M48 *)&mAnmModel1.mat4x3 = *(M48 *)&data_020a0e68;
 
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
@@ -864,8 +847,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
         mPosZ >> 3);
     *(M48 *)&mShadowMat1 = *(M48 *)&data_020a0e68;
 
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel1, &mShadowMat1, 0x46000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
 
     pl = ClosestPlayer();
     if (pl == 0) return;
@@ -908,8 +890,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
     func_ov002_020e4374(pl, &p1, &p2);
 
     *(M48 *)&mShadowMat2 = *(M48 *)&data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel2, &mShadowMat2, p2, p1, 0xf);
+    DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mShadowMat2, p2, p1, 0xf);
 }
 
 // @symbol _ZN11daC_Jugem_c16CleanupResourcesEv
@@ -931,70 +912,71 @@ void daC_Jugem_c::OnPendingDestroy()
 // @symbol _ZN11daC_Jugem_c6RenderEv
 int daC_Jugem_c::Render()
 {
-  if (mHidden == 1) return 1;
-  mTextureSequence.Update(mModelAnim1.data);
-  mModelAnim1.Render(0);
-  return 1;
+    if (mHidden == 1)
+        return 1;
+    mTextureSequence.Update(mAnmModel1.data);
+    mAnmModel1.Render(0);
+    return 1;
 }
 
 // @symbol _ZN11daC_Jugem_c8BehaviorEv
 int daC_Jugem_c::Behavior()
 {
-  DecIfAbove0_Short((unsigned short *)&mStateTimer);
-  if (mState[1]) (this->*mState[1])();
-  UpdatePos(0);
-  mModelAnim1.Advance();
-  mTextureSequence.Advance();
-  if (mState == data_ov085_021307d0) {
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
-  }
-  if (mState == data_ov085_021307e0) return 1;
-  if (mVariant == 0) UpdateShadowPlayer();
-  else UpdateShadow();
-  return 1;
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    if (mState[1])
+        (this->*mState[1])();
+    UpdatePos(0);
+    mAnmModel1.Advance();
+    mTextureSequence.Advance();
+    if (mState == data_ov085_021307d0) {
+        mAngleX = mPrevAngleX;
+        mAngleY = mPrevAngleY;
+        mAngleZ = mPrevAngleZ;
+    }
+    if (mState == data_ov085_021307e0)
+        return 1;
+    if (mVariant == 0)
+        UpdateShadowPlayer();
+    else
+        UpdateShadow();
+    return 1;
 }
 
 // @symbol _ZN11daC_Jugem_c13InitResourcesEv
 int daC_Jugem_c::InitResources()
 {
-  BMD_File* bmd = (BMD_File*)Model::LoadFile(data_ov085_0213074c);
-  mModelAnim1.SetFile(bmd, 1, -1);
-  dExtFrameCtrl_c::LoadFile(data_ov085_02130744);
-  TextureSequence::LoadFile(data_ov085_0213073c);
-  mShadowModel1.InitCylinder();
-  mShadowModel2.InitCylinder();
-  TextureSequence::Prepare(
-      **(BMD_File**)((char*)&data_ov085_0213074c + 4), **(BTP_File**)((char*)&data_ov085_0213073c + 4));
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-      &mModelAnim1, *(BCA_File**)((char*)&data_ov085_02130744 + 4), 0, 0x1000, 0);
-  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-      &mTextureSequence, **(BTP_File**)((char*)&data_ov085_0213073c + 4), 0, 0x1000, 0);
-  mModelAnim1.speed = 0x1000;
-  mVariant = param1 & 0xff;
-  if (mVariant == 0xff)
-    mVariant = 0;
-  switch (mVariant) {
-  case 0:
-    SetState(data_ov085_021307d0);
-    break;
-  case 1:
-    {
-      int v = data_0209caa0[2];
-      if (v & 0x20000)
-        return 0;
-      if (v & 0x10000)
-        data_0209caa0[2] = v & ~0x10000;
-      mHidden = 1;
-      if (!(data_0209caa0[2] & 0x80))
-        SetState(data_ov085_02130790);
-      else
-        SetState(data_ov085_021307e0);
+    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov085_0213074c);
+    mAnmModel1.SetFile(bmd, 1, -1);
+    dExtFrameCtrl_c::LoadFile(data_ov085_02130744);
+    dExtAnmTexPat_c::LoadFile(data_ov085_0213073c);
+    mShadowModel1.InitCylinder();
+    mShadowModel2.InitCylinder();
+    dExtAnmTexPat_c::Prepare(**(BMD_File **)((char *)&data_ov085_0213074c + 4),
+                             **(BTP_File **)((char *)&data_ov085_0213073c + 4));
+    mAnmModel1.SetAnim(*(BCA_File **)((char *)&data_ov085_02130744 + 4), 0, 0x1000, 0);
+    mTextureSequence.SetFile(**(BTP_File **)((char *)&data_ov085_0213073c + 4), 0, 0x1000, 0);
+    mAnmModel1.speed = 0x1000;
+    mVariant = param1 & 0xff;
+    if (mVariant == 0xff)
+        mVariant = 0;
+    switch (mVariant) {
+    case 0:
+        SetState(data_ov085_021307d0);
+        break;
+    case 1: {
+        int v = data_0209caa0[2];
+        if (v & 0x20000)
+            return 0;
+        if (v & 0x10000)
+            data_0209caa0[2] = v & ~0x10000;
+        mHidden = 1;
+        if (!(data_0209caa0[2] & 0x80))
+            SetState(data_ov085_02130790);
+        else
+            SetState(data_ov085_021307e0);
+    } break;
     }
-    break;
-  }
-  return 1;
+    return 1;
 }
 
 // @symbol daC_Jugem_c_classInit

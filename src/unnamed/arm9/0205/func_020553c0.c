@@ -1,6 +1,3 @@
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
-// assembly primitive, so there is no original C to recover and no match to chase. Counts as
-// done under the asm-primitive policy - see notes/arm9-endgame.md.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only runtime primitive).
 // Bulk hardware-FIFO/command-port write: pushes 4 zeroed registers via 32 identical
 // no-writeback stmia to the fixed address in r0 (a FIFO port, not memory). No C compiler

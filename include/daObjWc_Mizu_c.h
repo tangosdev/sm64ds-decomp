@@ -6,7 +6,7 @@
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
- * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * the dExtSimpleModel_c at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
@@ -17,9 +17,7 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "TextureTransformer.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "dExtAnmTexSRT_c.h"
 
 /* WDW water (profile WDW_WATER 101). ov029 RTTI:
  *   _ZTI  0x02114098  __si_class_type_info; base dBgActor_c
@@ -30,19 +28,19 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  */
 
 struct daObjWc_Mizu_c : dBgActor_c {
-    u8  pad_31e[0x2];
-    TextureTransformer mTextureTransformer; /* 0x320 */
-    s32 mTargetPosY;                  /* 0x334 */
-    u8 mUseSpawnPosY;                 /* 0x338 -- param1 & 1; when clear InitResources overrides mPosY from the WDW water-level table data_ov029_02112b2c[setting] */
-    u8  pad_339[0x3];
-    s32 mSoundID;                      /* 0x33c */
-    s8 mTrueAreaID;                    /* 0x340 -- mAreaId as spawned; s8 like it */
-    u8  pad_341;
+    u8 pad_31e[0x2];
+    dExtAnmTexSRT_c mTextureTransformer; /* 0x320 */
+    s32 mTargetPosY;                     /* 0x334 */
+    u8 mUseSpawnPosY; /* 0x338 -- param1 & 1; when clear InitResources overrides mPosY from the WDW water-level table data_ov029_02112b2c[setting] */
+    u8 pad_339[0x3];
+    s32 mSoundID;   /* 0x33c */
+    s8 mTrueAreaID; /* 0x340 -- mAreaId as spawned; s8 like it */
+    u8 pad_341;
     /* Behavior adds 0x200 per frame; (u16)>>4 indexes data_02082214.
        Same sine-table shape as daObjFl_UkiKi_c::mPhaseAngle. Was pad_341[3]
        covering this live halfword. */
-    s16 mPhaseAngle;                   /* 0x342 */
-    s32 mWaterHeight;                  /* 0x344 */
+    s16 mPhaseAngle;  /* 0x342 */
+    s32 mWaterHeight; /* 0x344 */
 
     /* INLINE ON PURPOSE. Out of line, mwccarm emits D0 ahead of D1 plus an
        unhomed D2; the cartridge keeps D1 at 0x021121a4 below D0 at 0x021121f0.
@@ -51,14 +49,13 @@ struct daObjWc_Mizu_c : dBgActor_c {
        so this class's TU still homes _ZTV/_ZTI/_ZTS. */
     virtual ~daObjWc_Mizu_c() {}
 
-    virtual int InitResources();       /* slot  0 */
-    virtual int CleanupResources();    /* slot  3 */
-    virtual int Behavior();            /* slot  6 */
-    virtual int Render();              /* slot  9 */
+    virtual int InitResources();    /* slot  0 */
+    virtual int CleanupResources(); /* slot  3 */
+    virtual int Behavior();         /* slot  6 */
+    virtual int Render();           /* slot  9 */
 
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void UpdateClsnTransform();  /* 0x02112250 */
+    void UpdateModelTransform(); /* 0x021122b4 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

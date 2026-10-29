@@ -6,18 +6,7 @@
  * gEyknStates.
  *
  * deslop leftovers:
- * - TextureSequence::SetFile as a member (Fix12<int> by value):
- *   ResetEyeAnim 0x58->0x64, UpdateEyeAnim 0x168->0x178.
- *   ModelAnim::SetAnim as a member: St_Die_Init 0xd4->0xe0.
- *   InitResources' SetAnim and SetFile together 0x298->0x2ac.
- * - DropShadowRadHeight as a member: UpdateModelTransform 0xa0->0xb0.
- * - dCcAcPos_c::Init as a member, both call sites: InitResources
- *   0x298->0x2b8.
- * - Particle::System::New, NewUnkCallback818, and NewSimple, and
- *   Player::Hurt, stay scalar externs. System does not declare the
- *   three New* calls, and Player.h does not declare Hurt. A Fix12<int>
- *   parameter is the caller cost measured on SetFile, SetAnim,
- *   DropShadow, and Init above.
+ * - Player::Hurt stays a scalar extern; Player.h does not declare it.
  * - func_0201267c is the bank-3 veneer around Sound::Play. Sound::Play(3,
  *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
  *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
@@ -42,9 +31,8 @@
  *   eyekun_dead.bca. gEyknCloseTextureSequenceFile and
  *   gEyknOpenTextureSequenceFile load the close/open BTP animations.
  *   gEyknDeathAnimationFilePtr and gEyknTextureSequenceFiles hold the
- *   readonly resource pointers. LoadedFile supplies the measured local
- *   file ID, reference count and loaded-pointer layout; SharedFilePtr
- *   remains fieldless. The shared blue-coin model is data_ov002_0210da38.
+ *   readonly resource pointers. data_ov002_0210da38 is ov002's shared
+ *   sleep-bubble model.
  * - data_0209f2f8 is the current sublevel. 0x2e maps through
  *   SUBLEVEL_LEVEL_TABLE to course 19, which is not BBH's entrance
  *   (that is sublevel 0xc). On 0x2e the kill is entered in the death
@@ -57,7 +45,7 @@
  * profiles); retail does not store them. Historical aliases: BigMrI_Spawn
  * and MrI_Spawn. Each hand-called fBase_c::operator new(536) + the inherited
  * dActor_c ctor + this class's vtable store + the four member subobjects in
- * field order (ModelAnim, TextureSequence, dExtShadowModel_c, dCcAcPos_c).
+ * field order (dExtAnmModel_c, dExtAnmTexPat_c, dExtShadowModel_c, dCcAcPos_c).
  * daEykn_c has no user-declared constructor, so both factories are now
  * `new daEykn_c()`. This TU keeps `#pragma defer_codegen off`, so emission
  * follows source order (ROM-ascending); the two factories append after
@@ -76,6 +64,7 @@
 #include "Particle__System.h"
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
+#include "math/Approach.h"
 
 /* Twelve plain words: assigning a Matrix4x3 copies it member by member,
    0x1c bytes longer than the cartridge's block copy. */
@@ -83,35 +72,23 @@ struct MatrixWords {
     s32 m[12];
 };
 
-/* Local eight-byte handle view: the constructor resolves a runtime asset ID
- * into a u16 NitroFS file ID, clears the reference count and loaded pointer.
- * The shared header still lacks this measured layout. */
-struct LoadedFile : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    u8 padding;
-    void *file;
-};
-
 /* Inferred local resource-family ABI views; these type names are not ROM
  * names. The manifest binds each constructor/destructor to its existing
  * model, texture-sequence or animation helper at the original address. */
-struct EyknModelFile : LoadedFile {
+struct EyknModelFile : SharedFilePtr {
     EyknModelFile(u32 fileID);
     ~EyknModelFile();
 };
 
-struct EyknTextureSequenceFile : LoadedFile {
+struct EyknTextureSequenceFile : SharedFilePtr {
     EyknTextureSequenceFile(u32 fileID);
     ~EyknTextureSequenceFile();
 };
 
-struct EyknAnimationFileHandle : LoadedFile {
+struct EyknAnimationFileHandle : SharedFilePtr {
     EyknAnimationFileHandle(u32 fileID);
     ~EyknAnimationFileHandle();
 };
-
-typedef char EyknFileHandle_size_must_be_8[sizeof(LoadedFile) == 8 ? 1 : -1];
 
 EyknModelFile gEyknModelFile(0x02f7);                          // EYEKUN_BMD
 EyknTextureSequenceFile gEyknCloseTextureSequenceFile(0x02f8); // EYEKUN_CLOSE_BTP
@@ -128,9 +105,6 @@ daEykn_c::State gEyknStates[3] = {
     {&daEykn_c::St_Die_Init, &daEykn_c::St_Die_Main},
 };
 
-int ApproachLinear(int &value, int target, int step);
-bool ApproachLinear(short &value, short target, short step);
-void UpdateAngle(s16 &angle, s16 target, int div, s16 maxStep);
 
 extern "C" {
 int AngleDiff(int a, int b);
@@ -141,32 +115,21 @@ s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void LoadBlueCoinModel(void *actor);
 void UnloadBlueCoinModel(void *actor);
-void func_0201267c(u32 id, void *pos); /* Sound::Play(3, id, pos) */
 void func_0200f760(void *actor, void *clsn);
 
 /* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
    See the leftover list. */
-int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir, void *callback);
-u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    u32 uniqueID, u32 effectID, int x, int y, int z, const Vector3_16f *dir);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 effectID, int x, int y, int z);
-int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-    Player *player, void *source, u32 damage, int speed, u8 a, u8 b, u8 c);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-    ModelAnim *anim, void *file, int flags, int speed, u32 startFrame);
-void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-    TextureSequence *seq, void *file, int flags, int speed, u32 startFrame);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    dCcAcPos_c *clsn, dActor_c *actor, const Vector3 *offset, int radius, int height, u32 flags, u32 vulnFlags);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    dActor_c *actor, dExtShadowModel_c *shadow, Matrix4x3 *matrix, int radius, int depth, u32 opacity);
+int d_a_eyknNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
+                    void *callback);
+u32 d_a_eyknNewUnkCallback818Hold(u32 uniqueID, u32 effectID, int x, int y, int z,
+                                  const Vector3_16f *dir);
+void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s16 data_02082214[];
 extern s8 data_0209f2f8; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern SharedFilePtr data_ov002_0210da38; /* blue-coin model */
+extern SharedFilePtr data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
 extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSequenceFile,
                                                             &gEyknOpenTextureSequenceFile};
 extern SharedFilePtr *const gEyknDeathAnimationFilePtr = &gEyknDeathAnimationFile;
@@ -260,8 +223,7 @@ int daEykn_c::UpdateEyeAnim()
         return 0;
     case 1:
     case 4:
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-            &mTextureSequence, gEyknCloseTextureSequenceFile.file, 0, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)gEyknCloseTextureSequenceFile.filePtr, 0, 0x1000, 0);
         mTextureSequence.SetFlags(0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
@@ -270,8 +232,8 @@ int daEykn_c::UpdateEyeAnim()
     case 2:
     case 5:
         if (mTextureSequence.Finished() != 0) {
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-                &mTextureSequence, gEyknOpenTextureSequenceFile.file, 0, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)gEyknOpenTextureSequenceFile.filePtr, 0, 0x1000,
+                                     0);
             mTextureSequence.SetFlags(0x40000000);
             mTextureSequence.speed = 0x1000;
             mTextureSequence.currFrame = 0;
@@ -297,8 +259,7 @@ int daEykn_c::UpdateEyeAnim()
 // @symbol _ZN8daEykn_c12ResetEyeAnimEv
 void daEykn_c::ResetEyeAnim()
 {
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-        &mTextureSequence, gEyknCloseTextureSequenceFile.file, 0, 0x1000, 0);
+    mTextureSequence.SetFile(*(BTP_File *)gEyknCloseTextureSequenceFile.filePtr, 0, 0x1000, 0);
     mTextureSequence.SetFlags(0x40000000);
     mTextureSequence.speed = 0x1000;
     mTextureSequence.currFrame = 0;
@@ -370,15 +331,17 @@ idCheck:
 
     if (mdCcAcPos_c.otherOwner == 0) return;
 
-    dActor_c *f = FindWithID(mdCcAcPos_c.otherOwner);
+    Player *f = static_cast<Player *>(FindWithID(mdCcAcPos_c.otherOwner));
     if (f == 0) return;
 
     int isPlayer = (int)(f->actorID == kPlayer);
     if (!isPlayer) return;
 
     if (mdCcAcPos_c.hitFlags & kKillHit) {
-        mParticleID0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
-        mParticleID1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+        mParticleID0 =
+            (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID1 =
+            Particle::System::NewUnkCallback818(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         SetState(2);
         return;
     }
@@ -387,21 +350,21 @@ idCheck:
     hv.x = mPosX;
     hv.y = mPosY;
     hv.z = mPosZ;
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((Player *)f, &hv, 2, 0xc000, 1, 0, 1);
+    f->Hurt(hv, 2, 0xc000, 1, 0, 1);
 }
 
 
 // @symbol _ZN8daEykn_c20UpdateModelTransformEv
 void daEykn_c::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationXYZExt(&mModelAnim.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModelAnim.mat4x3.t.x = mPosX >> 3;
-    mModelAnim.mat4x3.t.y = mPosY >> 3;
-    mModelAnim.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mAnmModel.mat4x3.t.x = mPosX >> 3;
+    mAnmModel.mat4x3.t.y = mPosY >> 3;
+    mAnmModel.mat4x3.t.z = mPosZ >> 3;
     mShadowMat[9] = mPosX >> 3;
     mShadowMat[10] = mPosY >> 3;
     mShadowMat[11] = mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &mShadowModel, (Matrix4x3 *)mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
 }
 
 
@@ -417,7 +380,7 @@ int daEykn_c::St_Die_Main()
     mAngleY = (s16)(mAngleY + mHorzSpeed);
     mDeathSpinAngle += mHorzSpeed;
     if (mDeathSpinAngle / 131070 != 0) {
-        func_0201267c(0x119, &mCamSpacePosX);
+        func_0201267c(0x119, &mCamSpacePos);
     }
     mDeathSpinAngle %= 131070;
 
@@ -425,10 +388,9 @@ int daEykn_c::St_Die_Main()
     if (id0 != 0 && mParticleID1 != 0) {
         Particle::System *p0;
         Particle::System *p1;
-        mParticleID0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
-        mParticleID1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+        mParticleID0 = (u32)Particle::System::New(id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID1 =
+            Particle::System::NewUnkCallback818(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         p0 = Particle::System::FromUniqueID(mParticleID0);
         p1 = Particle::System::FromUniqueID(mParticleID1);
         if (p0 != 0) {
@@ -451,8 +413,8 @@ int daEykn_c::St_Die_Main()
         break;
     }
     case 1:
-        mModelAnim.Advance();
-        if (mModelAnim.Finished() != 0) {
+        mAnmModel.Advance();
+        if (mAnmModel.Finished() != 0) {
             mSubState++;
         }
         break;
@@ -502,12 +464,12 @@ int daEykn_c::St_Die_Main()
             if (isBig != 0) {
                 unsigned char star = (unsigned char)(param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x124, mPosX, mPosY, mPosZ);
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x125, mPosX, mPosY, mPosZ);
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x126, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(0x124, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(0x125, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(0x126, mPosX, mPosY, mPosZ);
             }
         }
-        func_0201267c(0xc4, &mCamSpacePosX);
+        func_0201267c(0xc4, &mCamSpacePos);
         if (data_0209f2f8 == 0x2e) {
             KillAndTrackInDeathTable();
         } else {
@@ -530,15 +492,14 @@ int daEykn_c::St_Die_Init()
         mDeathSpinSpeed = 0x2500;
     else
         mDeathSpinSpeed = -0x2500;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, gEyknDeathAnimationFile.file, 0,
-                                                0x1000, 0);
-    mModelAnim.SetFlags(0x40000000);
-    mModelAnim.speed = 0x2800;
-    mModelAnim.currFrame = 0;
+    mAnmModel.SetAnim((BCA_File *)gEyknDeathAnimationFile.filePtr, 0, 0x1000, 0);
+    mAnmModel.SetFlags(0x40000000);
+    mAnmModel.speed = 0x2800;
+    mAnmModel.currFrame = 0;
     mSubState = 0;
     mSubTimer = kCircleFrames;
     mWobblePhase = 0;
-    func_0201267c(0x119, &mCamSpacePosX);
+    func_0201267c(0x119, &mCamSpacePos);
     mFlags &= ~1;
     mStateID = 2;
     mWobbleAmp = 0x500;
@@ -646,7 +607,7 @@ int daEykn_c::St_Attack_Main()
             else
                 param = 0;
             Spawn(kMrIBeam, param, pos, &rot, mAreaId, -1);
-            func_0201267c(0x165, &mCamSpacePosX);
+            func_0201267c(0x165, &mCamSpacePos);
             mCircleTimer = kCircleFrames;
             unk_212 = 0xf0;
             mShotTimer = 0x53;
@@ -772,9 +733,9 @@ void daEykn_c::OnPendingDestroy()
 // @symbol _ZN8daEykn_c6RenderEv
 int daEykn_c::Render()
 {
-    mTextureSequence.Update(mModelAnim.data);
+    mTextureSequence.Update(mAnmModel.data);
     /* Not &mScale: daEykn_c's own s32 mScale hides dActor_c's vector. */
-    mModelAnim.Render((Vector3 *)&mScaleX);
+    mAnmModel.Render((Vector3 *)&mScaleX);
     return 1;
 }
 
@@ -799,17 +760,17 @@ s32 daEykn_c::InitResources()
     BMD_File *bmd;
     LoadBlueCoinModel(this);
 
-    Model::LoadFile(data_ov002_0210da38);
-    bmd = (BMD_File *)Model::LoadFile(gEyknModelFile);
-    ((ModelBase *)&mModelAnim)->SetFile(bmd, 1, 1);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
+    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gEyknModelFile);
+    ((dExtModel_c *)&mAnmModel)->SetFile(bmd, 1, 1);
 
     int i;
     for (i = 0; i < 2; i++) {
         SharedFilePtr *seq = gEyknTextureSequenceFiles[i];
-        TextureSequence::LoadFile(*seq);
-        BMD_File *bmd2 = (BMD_File *)((LoadedFile *)&gEyknModelFile)->file;
-        BTP_File *btp = (BTP_File *)((LoadedFile *)seq)->file;
-        TextureSequence::Prepare(*bmd2, *btp);
+        dExtAnmTexPat_c::LoadFile(*seq);
+        BMD_File *bmd2 = (BMD_File *)gEyknModelFile.filePtr;
+        BTP_File *btp = (BTP_File *)seq->filePtr;
+        dExtAnmTexPat_c::Prepare(*bmd2, *btp);
     }
 
     dExtFrameCtrl_c::LoadFile(*gEyknDeathAnimationFilePtr);
@@ -824,7 +785,7 @@ s32 daEykn_c::InitResources()
         v.x = 0;
         v.y = -0x4b000;
         v.z = 0;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0x55000, 0x96000, 0x200004, 0x42000);
+        mdCcAcPos_c.Init(this, v, 0x55000, 0x96000, 0x200004, 0x42000);
         mScaleX = 0x1000;
         mScaleY = 0x1000;
         mScaleZ = 0x1000;
@@ -836,7 +797,7 @@ s32 daEykn_c::InitResources()
             v.x = 0;
             v.y = -0x96000;
             v.z = 0;
-            _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0xaa000, 0x12c000, 0x200004, 0);
+            mdCcAcPos_c.Init(this, v, 0xaa000, 0x12c000, 0x200004, 0);
             mScaleX = 0x2000;
             mScaleY = 0x2000;
             mScaleZ = 0x2000;
@@ -852,12 +813,10 @@ s32 daEykn_c::InitResources()
     mTerminalVelocity = 0;
     SetState(0);
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, gEyknDeathAnimationFile.file, 0,
-                                                0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gEyknDeathAnimationFile.filePtr, 0, 0x1000, 0);
 
-    mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-        &mTextureSequence, gEyknCloseTextureSequenceFile.file, 0, 0x1000, 0);
+    mAnmModel.speed = 0x1000;
+    mTextureSequence.SetFile(*(BTP_File *)gEyknCloseTextureSequenceFile.filePtr, 0, 0x1000, 0);
 
     mTextureSequence.speed = 0x1000;
     mTarget = 0;

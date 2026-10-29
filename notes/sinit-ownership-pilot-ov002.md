@@ -65,7 +65,7 @@ The destination [data_ov002_0210dbc0](../config/arm9/overlays/ov002/symbols.txt)
 Overlay 2 has 26 `__sinit` functions and exactly 26 `.ctor` entries. This
 initializer is ordinal 1; [.p__sinit_ov002_02100938](../config/arm9/overlays/ov002/symbols.txt) - (recreated in `Enemy.cpp` as ownership pilot.) at `0x021080d4` relocates to
 it. The immediately preceding initializer is the ambiguous shared-resource
-initializer [__sinit_ov002_02100560](../src/unnamed/ov002/__sinit_ov002_02100560.c). The immediately following initializer,
+initializer [__sinit_ov002_02100560](../src/unnamed/ov002/__sinit_ov002_02100560.cpp). The immediately following initializer,
 [__sinit_ov002_02100adc](../src/game/actors/d_a_1up.cpp) - (used as part of `da1up_c`), independently resolves high-confidence to
 [ov002](../config/arm9/overlays/ov002/symbols.txt)/[da1up_c](../src/game/actors/d_a_1up.cpp) (the manifest id this note called `ov002/OneUpMushroom` before
 the class moved to its cartridge RTTI name), the next substantial class TU after the small

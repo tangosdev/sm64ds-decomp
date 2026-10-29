@@ -7,47 +7,51 @@
 struct Vec3;
 extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
 
-/* Only the fields this function touches are named. */
-typedef struct {
+/* The 0xd0-byte touch picker func_ov007_020c690c builds; names as in
+ * func_ov007_020c5a6c and func_ov007_020c684c, only the slots this function
+ * touches. */
+typedef struct Ov007Picker {
     int pad_00;
-    int mode; /* 0x04 */
+    int mode; /* 0x04: 0 move, 1 drag, 2 link (func_ov007_020c5a6c) */
     u8 pad_08[0x34];
-    int **tab; /* 0x3c */
+    int **pointLists; /* 0x3c: per group (func_ov007_020c798c) */
     u8 pad_40[0x18];
-    int i;          /* 0x58 */
-    int j;          /* 0x5c */
-    Vector3 offset; /* 0x60 */
+    int hitGroup;      /* 0x58: picked group, -1 = none */
+    int hitIndex;      /* 0x5c: picked point in that group, -1 = none */
+    Vector3 hitOffset; /* 0x60 */
     int pad_6c;
     Vector3 pos; /* 0x70 */
     u8 pad_7c[0x1c];
-    Vector3 pos2; /* 0x98 */
+    Vector3 anchorPos; /* 0x98 */
     u8 pad_a4[0x14];
-    int hi[2]; /* 0xb8 */
+    /* 0xb8/0xc4: the clamp rectangle (func_ov007_020c510c); mode 1 keeps
+     * pos inside it on x and y */
+    int boundsMin[2];
     int pad_c0;
-    int lo[2]; /* 0xc4 */
-} Self;
+    int boundsMax[2];
+} Ov007Picker;
 
 void func_ov007_020c5948(char *self, Vector3 *src) {
-    Self *s = (Self *)self;
+    Ov007Picker *s = (Ov007Picker *)self;
     int i;
     int j;
-    int **tab;
+    int **pointLists;
     int *obj;
     int *vec;
     int mode;
     int *dst;
-    int *hi;
-    int *lo;
+    int *min;
+    int *max;
 
-    i = s->i;
+    i = s->hitGroup;
     if (i == -1)
         return;
-    j = s->j;
+    j = s->hitIndex;
     if (j == -1)
         return;
 
-    tab = s->tab;
-    obj = (*(int ***)tab[i])[j];
+    pointLists = s->pointLists;
+    obj = (*(int ***)pointLists[i])[j];
     vec = (int *)obj[0];
 
     obj[6] = 0;
@@ -67,20 +71,20 @@ void func_ov007_020c5948(char *self, Vector3 *src) {
         break;
     case 1:
         dst = (int *)(int)LAUNDER(&s->pos);
-        hi = (int *)(int)LAUNDER(s->hi);
-        lo = (int *)(int)LAUNDER(s->lo);
-        AddVec3((struct Vec3 *)src, (struct Vec3 *)&s->offset, (struct Vec3 *)dst);
-        if (hi[0] > dst[0])
-            dst[0] = hi[0];
-        if (lo[0] < dst[0])
-            dst[0] = lo[0];
-        if (hi[1] > dst[1])
-            dst[1] = hi[1];
-        if (lo[1] < dst[1])
-            dst[1] = lo[1];
+        min = (int *)(int)LAUNDER(s->boundsMin);
+        max = (int *)(int)LAUNDER(s->boundsMax);
+        AddVec3((struct Vec3 *)src, (struct Vec3 *)&s->hitOffset, (struct Vec3 *)dst);
+        if (min[0] > dst[0])
+            dst[0] = min[0];
+        if (max[0] < dst[0])
+            dst[0] = max[0];
+        if (min[1] > dst[1])
+            dst[1] = min[1];
+        if (max[1] < dst[1])
+            dst[1] = max[1];
         break;
     case 2:
-        s->pos2 = *src;
+        s->anchorPos = *src;
         break;
     }
 }

@@ -2,13 +2,11 @@
 #define DABGSNMBDY_C_H
 
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 #include "PathPtr.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /* The big rolling snowman's BODY actor.
  *
@@ -27,13 +25,13 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *
  * SIZE. 0x3a8. daBgSnmBdy_c_classInit at 0x0211fedc opens with
  * fBase_c::operator new(936), and the five subobjects it constructs after the
- * dActor_c base -- Model at 0xd4, dExtShadowModel_c at 0x124, dCcAc_c at 0x14c,
+ * dActor_c base -- dExtSimpleModel_c at 0xd4, dExtShadowModel_c at 0x124, dCcAc_c at 0x14c,
  * dBgCh_Actr at 0x180 and PathPtr at 0x380 -- are declared typed below in that
  * same order, which is what makes the compiler emit that exact call sequence.
  *
  * THE SIX STATE PAIRS are not guesses from code adjacency. The static
  * initializer at 0x02122018 copies twelve ROM pointer-to-member constants into
- * data_ov072_02122b64 in the exact pairs documented below. SetState indexes
+ * gBgSnmBdyStates in the exact pairs documented below. SetState indexes
  * that table at state * 0x10 and CallStateInit invokes the first PMF of the
  * pair; CallStateBehavior invokes the second. Descriptive original names are
  * absent, so the ROM-evidenced indices are retained: State<N>/InitState<N>
@@ -47,7 +45,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  */
 struct daBgSnmBdy_c : dActor_c {
     u8 mPad0d0[0x4];                    /* 0x0d0 */
-    Model mModel;                       /* 0x0d4 */
+    dExtSimpleModel_c mModel;           /* 0x0d4 */
     dExtShadowModel_c mShadowModel;           /* 0x124 */
     dCcAc_c mCylinder;                  /* 0x14c */
     dBgCh_Actr mWithMeshClsn;           /* 0x180 */
@@ -117,10 +115,6 @@ struct daBgSnmBdy_c : dActor_c {
        call sites do not establish the original parameter type; an enum
        spelling is not ruled out. This is an inferred declaration. */
     void SetState(int state);
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
     /* Declared last and inline so class instantiation emits the retail D1/D0
        pair in that order, at the bottom of the run, with no separate D2 body.

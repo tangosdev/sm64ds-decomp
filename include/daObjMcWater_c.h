@@ -2,9 +2,7 @@
 #define DAOBJMCWATER_C_H
 
 #include "dBgActor_c.h"
-#include "TextureTransformer.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "dExtAnmTexSRT_c.h"
 
 /* CASTLE_WATER (338) -- ov009/daObjMcWater_c, the castle water plane.
  * The moat outside and the flooded basement inside are the same actor.
@@ -23,15 +21,15 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * every other slot still holds dBgActor_c's arm9 word, including slot 31
  * (Kill, 0x020ee55c). No OnPendingDestroy override.
  *
- * dBgActor_c ends at 0x31e (sizeof 0x320). TextureTransformer at 0x320
+ * dBgActor_c ends at 0x31e (sizeof 0x320). dExtAnmTexSRT_c at 0x320
  * (0x14 bytes) plus four trailing bytes make 0x338.
  */
 
 struct daObjMcWater_c : dBgActor_c {
     u8 unk_31e[0x2];
-    TextureTransformer mTexTransformer; /* 0x320 -- Behavior re-forces
+    dExtAnmTexSRT_c mTexTransformer; /* 0x320 -- Behavior re-forces
                                            speed to 0x1000 every frame */
-    u8 unk_334[0x4];                    /* 0x334 -- allocation tail; nothing
+    u8 unk_334[0x4];                 /* 0x334 -- allocation tail; nothing
                                            in the eight matched bodies reads
                                            or writes it */
 
@@ -42,14 +40,14 @@ struct daObjMcWater_c : dBgActor_c {
        so this class's TU still homes _ZTV/_ZTI/_ZTS. */
     virtual ~daObjMcWater_c() {}
 
-    virtual int InitResources();       /* slot  0 */
-    virtual int CleanupResources();    /* slot  3 */
-    virtual int Behavior();            /* slot  6 */
-    virtual int Render();              /* slot  9 */
+    virtual int InitResources();    /* slot  0 */
+    virtual int CleanupResources(); /* slot  3 */
+    virtual int Behavior();         /* slot  6 */
+    virtual int Render();           /* slot  9 */
 
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* Spawn the seven WATERFALL actors (0xc5) at the positions the save
+       state and game mode select. */
+    void SpawnWaterfalls();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -524,15 +524,15 @@ def plan(raw, keep_symbol):
             if sym.name in ext:
                 # MULTIPLE INHERITANCE puts a SECOND vptr store in the object,
                 # pointing past the primary slots into the secondary sub-table --
-                # addend 44 for ModelAnim, where the primary's is 8. The
+                # addend 44 for dExtAnmModel_c, where the primary's is 8. The
                 # correction is the same subtraction either way, because mwcc's
                 # _ZTV addresses the vtable object's start while the ROM's IS the
                 # slot array. The ROM names the destination independently and the
                 # arithmetic lands on it exactly:
                 #
-                #   _ZTV9ModelAnim                   0x0208e980
-                #   VTable_Animation_ModelAnimThunk  0x0208e9a4   = +0x24
-                #   44 - VTABLE_PREAMBLE                          =  0x24
+                #   _ZTV14dExtAnmModel_c                        0x0208e980
+                #   VTable_dExtFrameCtrl_c_dExtAnmModel_cThunk  0x0208e9a4  = +0x24
+                #   44 - VTABLE_PREAMBLE                                    =  0x24
                 #
                 # Two symbols this tree recorded separately agreeing with the
                 # subtraction is the enrolled instance the refusal wanted.
@@ -552,7 +552,8 @@ def plan(raw, keep_symbol):
                 # into the secondary block, which must land on the ROM's
                 # separately named thunk table. That is exactly the
                 # externalise case's arithmetic, whose enrolled instance
-                # (ModelAnim: 44 - 8 = +0x24 = VTable_Animation_ModelAnimThunk)
+                # (dExtAnmModel_c: 44 - 8 = +0x24 =
+                # VTable_dExtFrameCtrl_c_dExtAnmModel_cThunk)
                 # is the verification the original refusal asked for, and
                 # rombuild's module byte-compare still checks every landing.
                 # Non-_ZTV RTTI addends stay refused, and so does any _ZTV
@@ -575,7 +576,7 @@ def plan(raw, keep_symbol):
             "ztvRebase": ztv_rebase, "error": None}
 
 
-def plan_many(raw, keep_symbols):
+def plan_many(raw, keep_symbols, rtti_rebased=False, public_vtables=False):
     """Validate an exact text-only multi-function object for production linking.
 
     This is deliberately not ``plan`` with a wider argument.  The one-function
@@ -591,7 +592,19 @@ def plan_many(raw, keep_symbols):
     * one dedicated, non-empty ``.text`` section per requested symbol;
     * those sections occur in the caller's ROM order;
     * no other non-debug content and no unlicensed symbol in a kept section; and
-    * no undefined RTTI relocation that still needs the single-function ``-8`` rewrite.
+    * no undefined RTTI relocation that still needs the single-function ``-8``
+      rewrite.  Two licences name a rewrite that already happened, and either
+      one is enough to keep the addend.  ``rtti_rebased=True`` keeps a ``_ZTV``
+      addend of 16 or more that is a multiple of 4: after the preamble was
+      subtracted, that is a secondary slot-array offset, not a pending rewrite.
+      A primary ``+8`` and any shorter or unaligned remainder are still refused.
+      ``public_vtables=True`` keeps an ``R_ARM_ABS32`` ``_ZTV`` addend of 16
+      or more that is a multiple of 4, the same floor as ``rtti_rebased``.
+      ModelAnim's thunk-table offset is 44 - 8 = 36.  A primary ``+8`` is
+      refused even when both flags are set, which is how rombuild calls this
+      after a deadstrip.  ``_ZTI`` / ``_ZTS`` addends stay 0, and a non-ABS32
+      reloc is refused.
+      Callers that have not rebased leave both flags false.
 
     Success therefore needs no ELF surgery: the exact input object is preserved.  The
     returned plan uses the familiar shape so callers can report one isolation verdict
@@ -685,20 +698,44 @@ def plan_many(raw, keep_symbols):
                 continue
             if not relsec.is_RELA():
                 return {"error": f"{target.name}: RTTI reloc is REL, not RELA"}
-            if target["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF) \
-                    and reloc["r_addend"] != 0:
-                return {"error": f"{target.name}: intact multi-symbol object has "
-                                 f"undefined RTTI addend {reloc['r_addend']}; text-only "
-                                 "production isolation cannot rewrite it"}
+            addend = reloc["r_addend"]
+            if target["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF) and addend != 0:
+                # This function does not rewrite addends. An unrebased primary
+                # store is still +8. After deadstrip has subtracted the preamble,
+                # a primary store is 0 and a secondary store keeps a positive
+                # remainder. Either licence below keeps that remainder; callers
+                # that have not rebased leave both flags false.
+                #
+                # rtti_rebased: the remainder is the ROM symbol's real offset
+                # from the primary slot array (at least two destructor slots plus
+                # the secondary preamble, 16) and is 4-aligned. Anything shorter
+                # is still a pending rewrite.
+                #
+                # public_vtables: the definition is an import and the remainder
+                # is a thunk-table offset (ModelAnim: 44 - 8 = 36). The floor
+                # matches rtti_rebased. A primary +8 is the unrebased store,
+                # and passing both flags must not accept it. _ZTI/_ZTS stay 0.
+                rebased_secondary = (
+                    rtti_rebased and target.name.startswith("_ZTV")
+                    and addend >= 16 and addend % 4 == 0)
+                public_secondary = (
+                    public_vtables and target.name.startswith("_ZTV")
+                    and reloc["r_info_type"] == R_ARM_ABS32
+                    and addend >= 16 and addend % 4 == 0)
+                if not (rebased_secondary or public_secondary):
+                    return {"error": f"{target.name}: intact multi-symbol object has "
+                                     f"undefined RTTI addend {addend}; text-only "
+                                     "production isolation cannot rewrite it"}
 
     return {"keep": keep, "keepSymbols": requested, "drop": [],
             "externalise": [], "dead": [], "referenced": sorted(referenced),
             "error": None}
 
 
-def derive_many(raw, keep_symbols):
+def derive_many(raw, keep_symbols, rtti_rebased=False, public_vtables=False):
     """Pure, fail-closed validation of one exact text-only multi-function object."""
-    p = plan_many(bytes(raw), keep_symbols)
+    p = plan_many(bytes(raw), keep_symbols, rtti_rebased=rtti_rebased,
+                  public_vtables=public_vtables)
     return (None, p) if p.get("error") else (bytes(raw), p)
 
 
@@ -792,15 +829,15 @@ def deadstrip_plan(raw, symbol_names, expect=None, duplicates=None):
       An unnamed section symbol stays refused either way, because an anonymous
       reference cannot be redirected to a home by name.
 
-    ``expect`` extends this to the *duplicate* case: a vague-linkage body the compiler
-    re-emits in every TU that needs it, while the retail image keeps exactly one copy
+    ``expect`` extends this to the *duplicate* case: a body the compiler re-emits in
+    a TU that is not its enrolled home, while the retail image keeps exactly one copy
     at a configured address.  Such a symbol is NOT compiler-only -- it has a ROM home --
     so discarding it is only sound when this object's copy is provably the same body.
-    ``{symbol: bytes}`` demands exactly that: ``STB_LOPROC`` binding and a section whose
-    content equals the cartridge's own bytes at the home address.  A caller that cannot
-    produce those bytes must not use this path.  If nothing else defines the symbol the
-    link fails loudly on an undefined reference, so this cannot silently drop a function
-    that has a retail address.
+    ``{symbol: bytes}`` demands exactly that: vague or strong linkage and a section
+    whose content equals the cartridge's own bytes at the home address.  A caller that
+    cannot produce those bytes must not use this path.  If nothing else defines the
+    symbol the link fails loudly on an undefined reference, so this cannot silently
+    drop a function that has a retail address.
 
     ``STT_OBJECT`` is accepted alongside ``STT_FUNC`` because a reconstructed TU that
     names its key function emits the class's ``_ZTV``/``_ZTI``/``_ZTS`` as well as its
@@ -957,9 +994,15 @@ def deadstrip_plan(raw, symbol_names, expect=None, duplicates=None):
                              f"data object's words are relocation addends here and "
                              f"linked addresses in the cartridge, so the two are not "
                              f"comparable before the link"}
-        if sym["st_info"]["bind"] != "STB_LOPROC":
-            return {"error": f"{name}: duplicate deadstrip needs vague linkage, got "
-                             f"{sym['st_info']['bind']}"}
+        # Vague linkage is the usual case. A strong duplicate is the same
+        # discard when this body is the cartridge's and another enrolled source
+        # owns that home: externalising it leaves one definition, and if that
+        # owner is absent the link fails on an undefined symbol instead of
+        # silently dropping the only copy. The byte checks below are what
+        # make the strong case safe.
+        if sym["st_info"]["bind"] not in ("STB_LOPROC", "STB_GLOBAL", "STB_WEAK"):
+            return {"error": f"{name}: duplicate deadstrip needs vague or strong "
+                             f"linkage, got {sym['st_info']['bind']}"}
         got, want = bytes(secs[sym["st_shndx"]].data()), bytes(want)
         if len(got) != len(want):
             return {"error": f"{name}: this object's body ({len(got)} bytes) is not the "
@@ -1904,10 +1947,11 @@ def isolate(obj, keep_symbol):
     return p
 
 
-def isolate_many(obj, keep_symbols):
+def isolate_many(obj, keep_symbols, rtti_rebased=False, public_vtables=False):
     """Validate and preserve an exact text-only multi-function object in place."""
     raw = obj.read_bytes()
-    out, p = derive_many(raw, keep_symbols)
+    out, p = derive_many(raw, keep_symbols, rtti_rebased=rtti_rebased,
+                         public_vtables=public_vtables)
     if out is not None and out != raw:
         obj.write_bytes(out)
     return p

@@ -10,11 +10,11 @@
 #include "dCcAc_c.h"
 
 struct daESwitch_c : dActor_c {
-    u8  pad_0d0[0x4];
+    u8 pad_0d0[0x4];
     /* dCcAc_c member. The cartridge's own ~daESwitch_c calls _ZN7dCcAc_cD1Ev at
        +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dCcAc_c mdCcAc_c;            /* 0x0d4 */
+    dCcAc_c mdCcAc_c; /* 0x0d4 */
     /* The tag sets an Event bit while something stands in its collider.
        mHoldDuration comes from the spawn rotation Z word (mAngleZ slot), or
        0x96 (150 frames) when that is not positive; mHoldTimer counts it down
@@ -22,10 +22,10 @@ struct daESwitch_c : dActor_c {
        mIsReusable is bit 5 of param1: set, the tag re-arms by reloading
        mHoldTimer from mHoldDuration; clear, it destroys itself after firing
        once. See daESwitch_c::InitResources and ::Behavior. */
-    u16 mHoldDuration;            /* 0x108 */
-    u16 mHoldTimer;            /* 0x10a */
-    u8  mIsReusable;            /* 0x10c */
-    u8  mEventID;            /* 0x10d */
+    u16 mHoldDuration; /* 0x108 */
+    u16 mHoldTimer;    /* 0x10a */
+    u8 mIsReusable;    /* 0x10c */
+    u8 mEventID;       /* 0x10d */
 
     virtual ~daESwitch_c() {}
 

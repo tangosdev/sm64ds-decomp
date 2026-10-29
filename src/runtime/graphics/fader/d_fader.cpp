@@ -10,13 +10,11 @@
  * 0x02017838..0x0201787c in cartridge order.
  *
  * For the host port only the non-hardware members compile; the structors, the
- * GX/CP15/MMIO writers and the Model-/filesystem-touching dFdWipe_c members
+ * GX/CP15/MMIO writers and the dExtSimpleModel_c-/filesystem-touching dFdWipe_c members
  * stay NDS-only behind _MSC_VER, exactly the subset port/slice_gate1.txt and
  * port/hal/shims.cpp already arrange.
  *
  * leftovers:
- * - G2x::SetBlendBrightness keeps its measured wide-argument bridge; see
- *   the declaration below. The original parameter width remains unresolved.
  * - The 0x400xxxx MMIO addresses stay literal; no shared register-name
  *   header owns them.
  */
@@ -25,7 +23,8 @@
 #include "dFdWipe_c.h"
 #include "dFdDummy_c.h"
 #include "decl_common.h"
-#include "ModelBase.h"
+#include "G2x.h"
+#include "dExtModel_c.h"
 
 // These helpers have native definitions but no shared declaration yet.
 namespace cstd {
@@ -44,10 +43,6 @@ int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
 extern "C" {
 void func_02053a90(u16 *reg, int value);
-// local extern: G2x.h's short parameter adds sign-extension before these calls
-// under 2004/b56 (+8 bytes in each AdvanceFade). The reconstructed signature
-// still needs a callee/caller audit; keep this boundary explicit meanwhile.
-void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, u16 a, int b);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short ang);
@@ -96,10 +91,10 @@ void dFdBrightness_c::AdvanceFade()
 }
 #endif
 
-/* Fade out over `frames` frames: the same rate with the sign flipped. */
-// @symbol _ZN15dFdBrightness_c15SetBackwardTimeEj
-int dFdBrightness_c::SetBackwardTime(u32 frames)
-{
+/* Fade out over `frames` frames: the same rate with the sign flipped.
+   `extra` is not read. Callers still pass it (always 0). */
+// @symbol _ZN15dFdBrightness_c15SetBackwardTimeEjj
+int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
         speed = -(Fix12i)0x1000;
     } else {
@@ -188,8 +183,8 @@ void dFdColor_c::AdvanceFade()
         int m = color ? 0x10 : -0x10;
         int r = (currInterp * m) >> 12;
         if (r != 0) {
-            _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short*)0x4000050, 0x3f, r);
-            _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short*)0x4001050, 0x3f, r);
+            G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, r);
+            G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x3f, r);
         } else {
             *(unsigned short*)0x4000050 = 0;
             *(unsigned short*)0x4001050 = 0;
@@ -200,14 +195,14 @@ void dFdColor_c::AdvanceFade()
 /* The empty C1 is the clearest single statement of the chain's shape:
    dFader_c's vptr, then dFdBrightness_c's plus its two field stores, then
    dFdColor_c's plus its field store, then this class's own, then
-   Model::Model() at +0x10 -- all base ctors inline in their headers, which
+   dExtSimpleModel_c::dExtSimpleModel_c() at +0x10 -- all base ctors inline in their headers, which
    is why the whole chain flattens into this one body. */
 // @symbol _ZN9dFdWipe_cC1Ev
 dFdWipe_c::dFdWipe_c()
 {
 }
 
-/* ~dFdWipe_c: store this class's vptr, destroy the Model member (out of
+/* ~dFdWipe_c: store this class's vptr, destroy the dExtSimpleModel_c member (out of
    line), run the dFdColor_c sub-object destructor, and -- for D0 -- dFader_c's
    class operator delete inlined to Memory::operator_delete2. */
 // @symbol _ZN9dFdWipe_cD0Ev
@@ -225,7 +220,7 @@ void dFdWipe_c::AdvanceFade()
     cur = currInterp;
     if (cur == 0 && cur == old) return;
     if (cur == 0x1000) {
-        _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16*)0x4000050, 0x3f, -0x10);
+        G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x3f, -0x10);
     } else {
         if (speed != 0) {
             if (old != 0x1000) *(u16*)0x4000050 = 0;
@@ -246,7 +241,7 @@ void dFdWipe_c::AdvanceFade()
         int prod = currInterp * m;
         int r = prod >> 12;
         if (r != 0) {
-            _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16*)0x4001050, 0x3f, r);
+            G2x::SetBlendBrightness((volatile u16 *)0x4001050, 0x3f, r);
         } else {
             *(u16*)0x4000050 = 0;
             *(u16*)0x4001050 = 0;
@@ -254,7 +249,7 @@ void dFdWipe_c::AdvanceFade()
     }
 }
 
-/* This used to reach the model as `(char*)this + 0x10` with Model declared
+/* This used to reach the model as `(char*)this + 0x10` with dExtSimpleModel_c declared
    nowhere. Going through the member instead is the same bytes and turns the
    offset into a checkable claim. */
 // @symbol _ZN9dFdWipe_c14LoadAndSetFileEt
@@ -288,9 +283,8 @@ void dFdDummy_c::AdvanceFade()
 
 /* dFdDummy_c::SetBackwardTime -- writes speed = -0x1000, then a genuine
    virtual call through slot 5 (same inherited bodies as below). */
-// @symbol _ZN10dFdDummy_c15SetBackwardTimeEj
-int dFdDummy_c::SetBackwardTime(u32)
-{
+// @symbol _ZN10dFdDummy_c15SetBackwardTimeEjj
+int dFdDummy_c::SetBackwardTime(u32, u32) {
     speed = -0x1000;
     return IsAtStart();
 }

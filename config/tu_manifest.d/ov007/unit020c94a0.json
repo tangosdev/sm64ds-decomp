@@ -1,0 +1,62 @@
+{
+  "id": "ov007/unit020c94a0",
+  "module": "ov007",
+  "source": "src/ui/menus/unit020c94a0.cpp",
+  "promoted_source": "src/ui/menus/unit020c94a0.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous run 0x020c94a0..0x020c95fc, 3 functions, all byte-matched from the one unit source. A sub-range of build/tu_map.json's unattributed ov007 unit 0x020b72a0..0x020cc028, which the map cannot cut: no ROM RTTI, vtable or static initializer falls in it.",
+    "data window: the bss block 0x02104c18..0x02104c28 (the bound message bank and its INF1 / DAT1 section pointers) is referenced by these three functions and nothing else in the overlay.",
+    "module shape: one message bank: bind (func_ov007_020c951c), lookup (020c94a0), reset (020c94e4).",
+    "start edge (high): func_ov007_020c946c references none of this data. End edge (high): func_ov007_020c95fc references none of it either."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020c94a0",
+      "end": "0x020c95fc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov007_020c94a0",
+      "address": "0x020c94a0",
+      "size": "0x00000044",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c94a0.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov007_020c94e4",
+      "address": "0x020c94e4",
+      "size": "0x00000038",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c94e4.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov007_020c951c",
+      "address": "0x020c951c",
+      "size": "0x000000e0",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c951c.c",
+      "ordinal": 2
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text only: the bss block stays ROM-owned and is reached by extern, as the one-function sources did.",
+    "Folded from 3 sources that declared the four section words as int, void * and unsigned short * between them; the unit types them as the bank (MessageBank *), the INF1 header (MessageInfo *) and char * entry and payload pointers. func_ov007_020c94a0 keeps its int return for its callers."
+  ],
+  "verification": {
+    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_matched": 3,
+    "functions_declared": 3,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS"
+    }
+  }
+}

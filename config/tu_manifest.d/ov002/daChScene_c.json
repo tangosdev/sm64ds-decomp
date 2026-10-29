@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020b0a0c",
+      "symbol": "_ZN11daChScene_c20LoadDestinationLevelEv",
       "address": "0x020b0a0c",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020b0a0c.c",
@@ -150,6 +150,13 @@
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "This TU odr-uses Vector3 (Behavior keeps two Vector3 locals), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",

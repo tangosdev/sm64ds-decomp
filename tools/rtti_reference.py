@@ -48,6 +48,10 @@ import re
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "tools"))
+
+import rom_fingerprint as RF  # noqa: E402
+
 RTTI = REPO / "build" / "rtti.json"
 VTABLES = REPO / "build" / "rtti_vtables.json"
 RECONCILE = REPO / "build" / "rtti_reconcile.json"
@@ -408,7 +412,7 @@ def load_all():
         raise SystemExit("missing input(s): %s -- run tools/rtti_extract.py and "
                          "tools/rtti_vtables.py first" % ", ".join(missing))
     rtti = json.loads(RTTI.read_text(encoding="utf-8"))
-    vt = json.loads(VTABLES.read_text(encoding="utf-8"))
+    vt, _fingerprint = RF.split(json.loads(VTABLES.read_text(encoding="utf-8")))
     gl = json.loads(GLOSSARY.read_text(encoding="utf-8"))
     rec = {}
     if RECONCILE.is_file():

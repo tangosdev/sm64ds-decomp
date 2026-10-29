@@ -1,4 +1,8 @@
 //cpp
+namespace Particle {
+struct Callback;
+}
+struct Vector3_16f;
 /* Eyerok, the two-handed pyramid boss (.text 0x02115ee0..0x0211a418,
  * 64 functions). ROM RTTI daIwante_c (_ZTS10daIwante_c ov066:0x0211ad30);
  * this tree keeps the coined name.
@@ -52,6 +56,7 @@
  *  - EVec3 and M48 are plain word structs standing in for Vector3 and
  *    Matrix4x3. Vec4 is an unused stack object with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
+ *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */
 
 /* Turns off deferred codegen, which does two things at once here: it makes
@@ -95,10 +100,12 @@ enum Eyerok_AssetId {
 #include "common.h"
 #include "decl_Message.h"
 #include "SharedFilePtr.h"
-#include "TextureSequence.h"
+#include "dExtAnmTexPat_c.h"
 #include "Player.h"
 #include "Message.h"
 #include "dCamera_c.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -183,44 +190,38 @@ struct CLPS_Block;
 
 /* The static initializer's own types. __sinit_ov066_0211a418 constructs 22
  * resource handles with per-kind constructors and destructors, and copies
- * 38 pointer-to-member pairs into 19 state descriptors. The constructors the
- * ROM runs for each handle kind are not classes the compiler could have
- * recovered fields for (SharedFilePtr's layout is not recovered), so each
- * kind is a subclass of SharedFilePtr that adds two words and defines its
- * constructor/destructor out of line; the manifest aliases those symbols onto
- * the ROM's per-kind constructor/destructor entry points.
+ * 38 pointer-to-member pairs into 19 state descriptors. Each handle kind is a
+ * subclass of SharedFilePtr that declares its own constructor/destructor; the
+ * manifest aliases those symbols onto the ROM's per-kind constructor/destructor
+ * entry points.
  *
  * A state descriptor is an EyerokState: two of the 8-byte pointer-to-member
  * records the ROM keeps in .data, the enter handler at +0 and the run handler
  * at +8, laid out the way func_ov066_02119454 reads them (see EyerokState
  * above). */
 struct EyerokModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     EyerokModelFilePtr(unsigned int fileID);
     ~EyerokModelFilePtr();
 };
 
 struct EyerokAnimationFilePtr : SharedFilePtr {
-    unsigned int words[2];
     EyerokAnimationFilePtr(unsigned int fileID);
     ~EyerokAnimationFilePtr();
 };
 
 struct EyerokTextureSequencePtr : SharedFilePtr {
-    unsigned int words[2];
     EyerokTextureSequencePtr(unsigned int fileID);
     ~EyerokTextureSequencePtr();
 };
 
 struct EyerokCollisionFilePtr : SharedFilePtr {
-    unsigned int words[2];
     EyerokCollisionFilePtr(unsigned int fileID);
     ~EyerokCollisionFilePtr();
 };
 
 extern "C" {
 /* ---- ov066 .bss: 8-byte SharedFilePtr slots (0x0211ae14..0x0211aebc) ----
- * Word [1] of each is the loaded file, which the states pass to SetAnim /
+ * Each one's filePtr is the loaded file, which the states pass to SetAnim /
  * SetFile. Roles, from InitResources and the order __sinit_d_a_iwante.cpp
  * constructs them (the number in brackets is the id each is built with):
  *   models:           ae6c [0x339] body, ae4c [0x33f] hand 1, aeb4 [0x33a] hand 2
@@ -371,25 +372,24 @@ extern void func_020393c4(void *p, void *v);
 extern void func_020393d4(void *p, void *v);
 extern void func_020398fc(void *p);
 
-/* ---- arm9 / ov002 methods, mangled ROM spelling ---- */
-extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *out, void *tgt, int step);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, Vector3 *v, s32 f1, s32 f2, u32 a, u32 b);
-extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
-extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
-extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
-extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
-extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *m, int rad, int h, unsigned int u);
+/* Unreferenced. */
+extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
+}
+extern "C" {
+namespace Particle {
+struct System {
+    static void NewSimple(unsigned int a, int x, int y, int z);
+
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
+extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 
 /* ---- the dBgW callback veneer (0x0211a35c), defined at the bottom of this
  *      file; seven call sites pass its address to func_020393c4 ---- */
 extern void func_ov066_0211a35c(void *a, void *b, void *c);
 }
 
-int ApproachLinear(int &value, int target, int step);
 
 typedef struct { int w[12]; } M48;
 
@@ -420,10 +420,10 @@ static inline int IsOffScreen(dActor_c *actor) {
  *
  * Own vptr, then the members in reverse declaration order (the class-owned
  * dBgW_KcMbg at 0x674, the Vector3 span at 0x4dc via __cxa_vec_cleanup,
- * TextureSequence, dExtShadowModel_c, Model, BlendModelAnim,
+ * dExtAnmTexPat_c, dExtShadowModel_c, dExtSimpleModel_c, dExtBlendAnmModel_c,
  * dCcAcPos_c), then dBgActor_c's vptr -- inlined, because
  * dBgActor_c's destructor is defined in its class body -- then dBgActor_c's
- * own dBgW_Kc and Model, then dActor_c. See include/Eyerok.h for why
+ * own dBgW_Kc and dExtSimpleModel_c, then dActor_c. See include/Eyerok.h for why
  * this is a direct dBgActor_c child, not three levels deep.
  *
  * Out-of-line ~Eyerok is the key function, so this TU also emits the vtable
@@ -462,14 +462,14 @@ Eyerok::~Eyerok()
  * these apart. */
 int Eyerok::func_ov066_0211603c()
 {
-    dActor_c *actor;
+    Player *actor;
     int flags;
     int hit;
     unsigned int id;
 
     id = mdCcAcPos_c.otherOwner;
     if (id != 0) {
-        actor = dActor_c::FindWithID(id);
+        actor = static_cast<Player *>(dActor_c::FindWithID(id));
         if (actor == 0)
             return 0;
 
@@ -479,14 +479,14 @@ int Eyerok::func_ov066_0211603c()
         hit = 0;
         flags = mdCcAcPos_c.hitFlags;
         if (IsPlayerActor(actor)) {
-            if (((Player *)actor)->mIsMetal == 1) {
+            if (actor->mIsMetal == 1) {
                 (mHitPoints)--;
                 hit = 1;
             }
             if (flags & HIT_MEGA) {
                 (mHitPoints)--;
                 if (mHitPoints <= 0)
-                    ((Player *)actor)->IncMegaKillCount();
+                    actor->IncMegaKillCount();
                 hit = 1;
             }
         }
@@ -507,19 +507,15 @@ int Eyerok::func_ov066_0211603c()
         if (hit != 0) {
             if (mHitPoints > 0) {
                 if (mPartIdx == PART_HAND_2) {
-                    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
-                        &mBlendModelAnim, (void *)data_ov066_0211ae5c.words[1], 4, 0x40000000,
-                        0x1000, 0);
-                    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-                        &mTextureSequence, (void *)data_ov066_0211ae3c.words[1], 0x40000000, 0x1000,
-                        0);
+                    mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae5c.filePtr, 4, 0x40000000,
+                                           0x1000, 0);
+                    mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000,
+                                             0x1000, 0);
                 } else {
-                    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
-                        &mBlendModelAnim, (void *)data_ov066_0211ae84.words[1], 4, 0x40000000,
-                        0x1000, 0);
-                    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-                        &mTextureSequence, (void *)data_ov066_0211aebc.words[1], 0x40000000, 0x1000,
-                        0);
+                    mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae84.filePtr, 4, 0x40000000,
+                                           0x1000, 0);
+                    mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000,
+                                             0x1000, 0);
                 }
                 func_02012694(SE_HAND_HIT, &mCamSpacePosX);
                 return 1;
@@ -587,15 +583,19 @@ void Eyerok::func_ov066_02116390()
         return;
     if (mTexPhase == 0) {
         if (mPartIdx == PART_HAND_2)
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211ae2c.words[1], 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae2c.filePtr, 0x40000000, 0x1000,
+                                     0);
         else
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211ae9c.words[1], 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000,
+                                     0);
         mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf) * 2 + 0x32;
     } else {
         if (mPartIdx == PART_HAND_2)
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211ae3c.words[1], 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000,
+                                     0);
         else
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211aebc.words[1], 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000, 0x1000,
+                                     0);
         mTexTimer = 8;
     }
     mTexPhase ^= 1;
@@ -612,14 +612,15 @@ void Eyerok::func_ov066_02116390()
 void Eyerok::func_ov066_021164ec()
 {
     if (mStateWork1 != 0) return;
-    if ((unsigned short)(mBlendModelAnim.currFrame >> 0xc) != 0) return;
+    if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) != 0)
+        return;
     mdCcAcPos_c.vulnFlags |= HIT_HAND_VULNERABLE | HIT_MEGA;
     mFlags = 0x10000000;
     mdCcAcPos_c.flags |= 2;
     if (mPartIdx == PART_HAND_2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211ae64.words[1], 4, 0, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae64.filePtr, 4, 0, 0x1000, 0);
     } else {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211ae44.words[1], 4, 0, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae44.filePtr, 4, 0, 0x1000, 0);
     }
     mStateWork1 = 1;
 }
@@ -634,17 +635,13 @@ void Eyerok::func_ov066_021164ec()
 void Eyerok::func_ov066_021165cc()
 {
     if (mPartIdx == PART_HAND_2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
-            &mBlendModelAnim, (void *)data_ov066_0211ae54.words[1], 4, 0x40000000, 0x1000, 0);
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-            &mTextureSequence, (void *)data_ov066_0211ae3c.words[1], 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
     } else {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
-            &mBlendModelAnim, (void *)data_ov066_0211ae94.words[1], 4, 0x40000000, 0x1000, 0);
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-            &mTextureSequence, (void *)data_ov066_0211aebc.words[1], 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae94.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
     }
-    mBlendModelAnim.speed = 0x1000;
+    mBlendAnmModel.speed = 0x1000;
     {
         u32 *p = &mdCcAcPos_c.vulnFlags;
         *p = *p & (~(HIT_HAND_VULNERABLE | HIT_MEGA) | HIT_SPIN_OR_GROUND_POUND);
@@ -664,22 +661,26 @@ void Eyerok::func_ov066_021166c8()
 {
 
     if (mPartIdx == PART_HAND_2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211ae54.words[1], 4, 0x40000000, 0x1000, 0);
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211ae2c.words[1], 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae2c.filePtr, 0x40000000, 0x1000, 0);
     } else {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211ae94.words[1], 4, 0x40000000, 0x1000, 0);
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211ae9c.words[1], 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae94.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000, 0);
     }
 
     if (mMeshCollider2.IsEnabled() != 0)
         mMeshCollider2.Disable();
 
     if (mPartIdx == PART_HAND_1) {
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, (void *)data_ov066_0211ae34.words[1], &mClsnMat2, 0x199,
-                                   mAngleY, &data_ov025_02112cc8);
+        ((dBgW_KcMbg *)(&mMeshCollider2))
+            ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae34.filePtr),
+                                  *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                  *(CLPS_Block *)(&data_ov025_02112cc8));
     } else {
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, (void *)data_ov066_0211ae1c.words[1], &mClsnMat2, 0x199,
-                                   mAngleY, &data_ov025_02112c88);
+        ((dBgW_KcMbg *)(&mMeshCollider2))
+            ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr),
+                                  *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                  *(CLPS_Block *)(&data_ov025_02112c88));
     }
 
     func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
@@ -688,9 +689,9 @@ void Eyerok::func_ov066_021166c8()
     mMeshCollider2.Enable(this);
 
     {
-        int n = mBlendModelAnim.GetFrameCount();
-        mBlendModelAnim.currFrame = (int)(((unsigned int)((n - 1) << 0x10)) >> 4);
-        mBlendModelAnim.speed = -0x1000;
+        int n = mBlendAnmModel.GetFrameCount();
+        mBlendAnmModel.currFrame = (int)(((unsigned int)((n - 1) << 0x10)) >> 4);
+        mBlendAnmModel.speed = -0x1000;
     }
 }
 
@@ -842,12 +843,12 @@ int Eyerok::func_ov066_02116b78()
  * marks the actor for destruction. */
 int Eyerok::func_ov066_02116c6c()
 {
-    if ((unsigned int)((unsigned int)(mBlendModelAnim.currFrame << 4) >> 0x10) > 0xc) {
+    if ((unsigned int)((unsigned int)(mBlendAnmModel.currFrame << 4) >> 0x10) > 0xc) {
         mHorzSpeed = 0;
     }
-    if (mBlendModelAnim.Finished() != 0) {
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x7c, mPosX, mPosY, mPosZ);
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x7d, mPosX, mPosY, mPosZ);
+    if (mBlendAnmModel.Finished() != 0) {
+        Particle::System::NewSimple(0x7c, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(0x7d, mPosX, mPosY, mPosZ);
         {
             EVec3 v;
             v.x = mPosX;
@@ -873,9 +874,9 @@ int Eyerok::func_ov066_02116d14()
     mSubState = 0;
     mHorzSpeed = -0xa000;
     if (mPartIdx == PART_HAND_2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211aea4.words[1], 4, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211aea4.filePtr, 4, 0x40000000, 0x1000, 0);
     } else {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211ae8c.words[1], 4, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae8c.filePtr, 4, 0x40000000, 0x1000, 0);
     }
     return 1;
 }
@@ -935,10 +936,10 @@ int Eyerok::func_ov066_02116db0()
                 mTargetPosZ += out.z;
             }
 
-            if ((unsigned short)(mBlendModelAnim.currFrame >> 0xc) == 0)
+            if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
                 func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
 
-            if ((unsigned short)(mBlendModelAnim.currFrame >> 0xc) == 0) {
+            if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
                 func_ov066_021164ec();
                 func_02012694(SE_START_MOVING, &mCamSpacePosX);
             }
@@ -964,17 +965,19 @@ int Eyerok::func_ov066_02116db0()
 
     /* case 3 body before case 2 to match ROM placement */
     case 3:
-        if (mBlendModelAnim.Finished() != 0) {
+        if (mBlendAnmModel.Finished() != 0) {
             if (mMeshCollider2.IsEnabled() != 0)
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
-                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                    &mMeshCollider2, (void *)data_ov066_0211ae14.words[1], &mClsnMat2, 0x199,
-                    mAngleY, &data_ov025_02112c08);
+                ((dBgW_KcMbg *)(&mMeshCollider2))
+                    ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae14.filePtr),
+                                          *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                          *(CLPS_Block *)(&data_ov025_02112c08));
             else
-                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                    &mMeshCollider2, (void *)data_ov066_0211aeac.words[1], &mClsnMat2, 0x199,
-                    mAngleY, &data_ov025_02112d48);
+                ((dBgW_KcMbg *)(&mMeshCollider2))
+                    ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
+                                          *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                          *(CLPS_Block *)(&data_ov025_02112d48));
             func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
             func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
             func_020398fc(&mMeshCollider2);
@@ -984,7 +987,7 @@ int Eyerok::func_ov066_02116db0()
         break;
 
     case 2:
-        if (mBlendModelAnim.Finished() != 0) {
+        if (mBlendAnmModel.Finished() != 0) {
             func_ov066_021165cc();
             mSubState = 3;
         }
@@ -1086,7 +1089,7 @@ int Eyerok::func_ov066_021171b0()
         break;
     }
     case 1:
-        _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mPosX, &mTargetPosX, 0x28000);
+        ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
         if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x28000)
             break;
         mPosX = mTargetPosX;
@@ -1109,7 +1112,7 @@ int Eyerok::func_ov066_021171b0()
     case 2:
         if (mTimer1 != 0)
             break;
-        _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mPosX, &mTargetPosX, 0x32000);
+        ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
         if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x32000)
             break;
         mPosX = mTargetPosX;
@@ -1249,7 +1252,7 @@ int Eyerok::func_ov066_021175e8()
         }
         break;
     case 1:
-        _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mPosX, &mTargetPosX, 0x28000);
+        ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
         if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x28000) {
             mTimer1 = 0xa;
             mFlags = 0x2000000;
@@ -1262,7 +1265,7 @@ int Eyerok::func_ov066_021175e8()
         break;
     case 2:
         if (mTimer1 == 0)
-            _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&mPosX, &mTargetPosX, 0x32000);
+            ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
         if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x32000) {
             func_ov066_02116ac4(0x7d0000);
             mPosX = mTargetPosX;
@@ -1307,7 +1310,7 @@ int Eyerok::func_ov066_021175e8()
         break;
     case 4:
         func_ov066_021164ec();
-        if ((unsigned short)(mBlendModelAnim.currFrame >> 0xc) == 0)
+        if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
             func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
         if (mStateWork1 == 1) {
             int r = func_ov066_0211603c();
@@ -1324,24 +1327,26 @@ int Eyerok::func_ov066_021175e8()
         }
         break;
     case 5:
-        if (mBlendModelAnim.Finished() != 0) {
+        if (mBlendAnmModel.Finished() != 0) {
             func_ov066_021165cc();
             mSubState = 6;
         }
         break;
     case 6:
-        if (mBlendModelAnim.Finished() != 0) {
+        if (mBlendAnmModel.Finished() != 0) {
             func_ov066_021162e8();
             if (mMeshCollider2.IsEnabled() != 0)
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
-                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                    &mMeshCollider2, (void *)data_ov066_0211ae14.words[1], &mClsnMat2, 0x199,
-                    mAngleY, &data_ov025_02112c08);
+                ((dBgW_KcMbg *)(&mMeshCollider2))
+                    ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae14.filePtr),
+                                          *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                          *(CLPS_Block *)(&data_ov025_02112c08));
             else
-                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                    &mMeshCollider2, (void *)data_ov066_0211aeac.words[1], &mClsnMat2, 0x199,
-                    mAngleY, &data_ov025_02112d48);
+                ((dBgW_KcMbg *)(&mMeshCollider2))
+                    ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
+                                          *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                          *(CLPS_Block *)(&data_ov025_02112d48));
             func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
             func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
             func_020398fc(&mMeshCollider2);
@@ -1489,7 +1494,7 @@ int Eyerok::func_ov066_02117bf0()
         break;
     case 3:
         func_ov066_021164ec();
-        if ((unsigned short)(mBlendModelAnim.currFrame >> 0xc) == 0)
+        if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
             func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
         if (mStateWork1 == 1) {
             int r = func_ov066_0211603c();
@@ -1506,24 +1511,26 @@ int Eyerok::func_ov066_02117bf0()
         }
         break;
     case 4:
-        if (mBlendModelAnim.Finished() != 0) {
+        if (mBlendAnmModel.Finished() != 0) {
             func_ov066_021165cc();
             mSubState = 5;
         }
         break;
     case 5:
-        if (mBlendModelAnim.Finished() != 0) {
+        if (mBlendAnmModel.Finished() != 0) {
             func_ov066_021162e8();
             if (mMeshCollider2.IsEnabled() != 0)
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
-                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                    &mMeshCollider2, (void *)data_ov066_0211ae14.words[1], &mClsnMat2, 0x199,
-                    mAngleY, &data_ov025_02112c08);
+                ((dBgW_KcMbg *)(&mMeshCollider2))
+                    ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae14.filePtr),
+                                          *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                          *(CLPS_Block *)(&data_ov025_02112c08));
             else
-                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                    &mMeshCollider2, (void *)data_ov066_0211aeac.words[1], &mClsnMat2, 0x199,
-                    mAngleY, &data_ov025_02112d48);
+                ((dBgW_KcMbg *)(&mMeshCollider2))
+                    ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
+                                          *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                          *(CLPS_Block *)(&data_ov025_02112d48));
             func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
             func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
             func_020398fc(&mMeshCollider2);
@@ -1626,7 +1633,7 @@ int Eyerok::func_ov066_02118188()
             }
         }
 
-        if ((unsigned short)(mBlendModelAnim.currFrame >> 0xc) == 0) {
+        if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
             func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
         }
 
@@ -1647,27 +1654,29 @@ int Eyerok::func_ov066_02118188()
         break;
 
     case 3:
-        if (mBlendModelAnim.Finished() == 0)
+        if (mBlendAnmModel.Finished() == 0)
             break;
         func_ov066_021165cc();
         mSubState = 4;
         break;
 
     case 4:
-        if (mBlendModelAnim.Finished() == 0)
+        if (mBlendAnmModel.Finished() == 0)
             break;
         func_ov066_021162e8();
         if (mMeshCollider2.IsEnabled() != 0)
             mMeshCollider2.Disable();
 
         if (mPartIdx == PART_HAND_1) {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                &mMeshCollider2, (void *)data_ov066_0211ae14.words[1], &mClsnMat2, 0x199,
-                mAngleY, &data_ov025_02112c08);
+            ((dBgW_KcMbg *)(&mMeshCollider2))
+                ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae14.filePtr),
+                                      *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                      *(CLPS_Block *)(&data_ov025_02112c08));
         } else {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                &mMeshCollider2, (void *)data_ov066_0211aeac.words[1], &mClsnMat2, 0x199,
-                mAngleY, &data_ov025_02112d48);
+            ((dBgW_KcMbg *)(&mMeshCollider2))
+                ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
+                                      *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                      *(CLPS_Block *)(&data_ov025_02112d48));
         }
 
         func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
@@ -1802,7 +1811,7 @@ int Eyerok::func_ov066_02118678()
 {
     if (mStateWork0 == 0) {
         if (data_ov066_0211ae04 == PHASE_RISE) {
-            mBlendModelAnim.speed = 0x1000;
+            mBlendAnmModel.speed = 0x1000;
             if (mPartIdx == PART_HAND_1) {
                 mVertSpeed = 0x2d000;
                 mVertAccel = -0x2000;
@@ -1827,9 +1836,8 @@ int Eyerok::func_ov066_02118678()
         }
     }
 
-    if (mVertAccel == 0
-        && Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x14000
-        && mBlendModelAnim.Finished()) {
+    if (mVertAccel == 0 && Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x14000 &&
+        mBlendAnmModel.Finished()) {
         mMeshCollider2.Enable(this);
         data_ov066_0211ae0c |= mPartIdx;
         func_ov066_02119454(&data_ov066_0211b06c);
@@ -1844,13 +1852,13 @@ int Eyerok::func_ov066_02118678()
 int Eyerok::func_ov066_021187c8()
 {
     if (mPartIdx == PART_HAND_2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211ae74.words[1], 4, 0x40000000, 0x1000, 0);
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211ae3c.words[1], 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae74.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
     } else {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mBlendModelAnim, (void *)data_ov066_0211ae7c.words[1], 4, 0x40000000, 0x1000, 0);
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void *)data_ov066_0211aebc.words[1], 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae7c.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
     }
-    mBlendModelAnim.speed = 0;
+    mBlendAnmModel.speed = 0;
     mStateWork0 = 0;
     mStateWork1 = 0;
     return 1;
@@ -2234,7 +2242,7 @@ int Eyerok::func_ov066_0211903c() {
             msgid = MSG_BEFORE_FIGHT;
             if (data_ov066_0211abe0 == 0) {
                 msgid = MSG_AFTER_FIGHT;
-                _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
+                Sound::ChangeMusicVolume(0x14, 0x15666);
             }
 
             mTalkPlayer->mStateFlags |= 0x400;
@@ -2250,12 +2258,12 @@ int Eyerok::func_ov066_0211903c() {
                 cam->mFlags &= ~8;
                 Message::EndTalk();
                 if (data_ov066_0211abe0 == HANDS_BOTH) {
-                    _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
+                    Sound::LoadAndSetMusic_Layer3(0x2d);
                     func_02011d2c();
                     func_ov066_02119454(&data_ov066_0211b0cc);
                 } else {
-                    _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x15666);
-                    _ZN5Sound22StopLoadedMusic_Layer3Ev();
+                    Sound::ChangeMusicVolume(0x7f, 0x15666);
+                    Sound::StopLoadedMusic_Layer3();
                     func_02011cfc();
                     star.x = 0;
                     star.y = (int)0xffa24000;
@@ -2350,7 +2358,7 @@ void Eyerok::func_ov066_021194a4()
 
 // @symbol _ZN6Eyerok19func_ov066_021194fcEv
 /* Refresh the model matrices. The matrix is a translation of mPos >> 3 rotated
- * by mAngleX/Y/Z and is stored in mModel2 (the body) or mBlendModelAnim (a hand).
+ * by mAngleX/Y/Z and is stored in mModel2 (the body) or mBlendAnmModel (a hand).
  * A hand above its rest height also gets a drop shadow: a matrix at mPosX
  * +0x64000 (+100.0; -100.0 for hand 1), mPosY - 0x8000 (8.0 lower), mPosZ +
  * 0xa0000 (160.0), each >> 3, passed to dActor_c::DropShadowRadHeight with
@@ -2364,7 +2372,7 @@ void Eyerok::func_ov066_021194fc()
     if (mPartIdx == PART_MAIN)
         *(M48 *)&mModel2.mat4x3 = *(M48*)data_020a0e68;
     else
-        *(M48 *)&mBlendModelAnim.mat4x3 = *(M48*)data_020a0e68;
+        *(M48 *)&mBlendAnmModel.mat4x3 = *(M48 *)data_020a0e68;
     if (mPartIdx == PART_MAIN)
         return;
     if (mRestPosY >= mPosY)
@@ -2381,8 +2389,7 @@ void Eyerok::func_ov066_021194fc()
             (mPosZ + 0xa0000) >> 3);
     }
     *(M48 *)mShadowMtx = *(M48*)data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel, mShadowMtx, 0x140000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 
 // @symbol _ZN6Eyerok16CleanupResourcesEv
@@ -2430,7 +2437,7 @@ void Eyerok::OnPendingDestroy()
 // @symbol _ZN6Eyerok6RenderEv
 /* Body: draws mModel2, only during PHASE_DORMANT. Hands: not drawn during
  * PHASE_DORMANT; afterwards the texture pattern is updated from the model data
- * and mBlendModelAnim is drawn. */
+ * and mBlendAnmModel is drawn. */
 int Eyerok::Render()
 {
     if (mPartIdx == PART_MAIN) {
@@ -2440,8 +2447,8 @@ int Eyerok::Render()
         return 1;
     }
     if (data_ov066_0211ae04 == PHASE_DORMANT) return 1;
-    mTextureSequence.TextureSequence::Update(mBlendModelAnim.data);
-    mBlendModelAnim.Render(0);
+    mTextureSequence.dExtAnmTexPat_c::Update(mBlendAnmModel.data);
+    mBlendAnmModel.Render(0);
     return 1;
 }
 
@@ -2557,17 +2564,16 @@ int Eyerok::Behavior()
             u32 id1 = 0x13b;
             int z0 = 0;
             for (; i < 0x14; i++) {
-                if (*(int *)(cur + 0x4dc) != 0 || *(int *)(cur + 0x4e0) != 0 || *(int *)(cur + 0x4e4) != 0) {
-                    mDustParticle1[i] =
-                        _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                            mDustParticle1[i], id0,
-                            *(int *)(cur + 0x4dc), *(int *)(cur + 0x4e0), *(int *)(cur + 0x4e4),
-                            (void *)z0, (void *)z0);
-                    mDustParticle2[i] =
-                        _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                            mDustParticle2[i], id1,
-                            *(int *)(cur + 0x4dc), *(int *)(cur + 0x4e0), *(int *)(cur + 0x4e4),
-                            (void *)z0, (void *)z0);
+                if (((Eyerok *)cur)->mDustPos[0].x != 0 || ((Eyerok *)cur)->mDustPos[0].y != 0 ||
+                    ((Eyerok *)cur)->mDustPos[0].z != 0) {
+                    mDustParticle1[i] = Particle::System::New(
+                        mDustParticle1[i], id0, ((Eyerok *)cur)->mDustPos[0].x,
+                        ((Eyerok *)cur)->mDustPos[0].y, ((Eyerok *)cur)->mDustPos[0].z,
+                        (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
+                    mDustParticle2[i] = Particle::System::New(
+                        mDustParticle2[i], id1, ((Eyerok *)cur)->mDustPos[0].x,
+                        ((Eyerok *)cur)->mDustPos[0].y, ((Eyerok *)cur)->mDustPos[0].z,
+                        (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
                 }
                 cur += 0xc;
             }
@@ -2581,9 +2587,9 @@ int Eyerok::Behavior()
                 char *q = c;
                 mDustCounter = (u16)j;
                 for (; j < 0x14; j++) {
-                    *(int *)(q + 0x4dc) = 0;
-                    *(int *)(q + 0x4e0) = 0;
-                    *(int *)(q + 0x4e4) = 0;
+                    ((Eyerok *)q)->mDustPos[0].x = 0;
+                    ((Eyerok *)q)->mDustPos[0].y = 0;
+                    ((Eyerok *)q)->mDustPos[0].z = 0;
                     q += 0xc;
                 }
             }
@@ -2613,7 +2619,7 @@ int Eyerok::Behavior()
             func_ov066_021194a4();
         mdCcAcPos_c.Clear();
         mdCcAcPos_c.dCc_c::Update();
-        mBlendModelAnim.Advance();
+        mBlendAnmModel.Advance();
         mTextureSequence.Advance();
     }
     return 1;
@@ -2658,13 +2664,13 @@ int Eyerok::InitResources()
 
     switch (mPartIdx) {
     case 0:
-        mModel2.SetFile((BMD_File *)Model::LoadFile(data_ov066_0211ae6c), 1, -1);
-        Model::LoadFile(data_ov066_0211ae4c);
-        Model::LoadFile(data_ov066_0211aeb4);
-        TextureSequence::LoadFile(data_ov066_0211aebc);
-        TextureSequence::LoadFile(data_ov066_0211ae9c);
-        TextureSequence::LoadFile(data_ov066_0211ae3c);
-        TextureSequence::LoadFile(data_ov066_0211ae2c);
+        mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov066_0211ae6c), 1, -1);
+        dExtSimpleModel_c::LoadFile(data_ov066_0211ae4c);
+        dExtSimpleModel_c::LoadFile(data_ov066_0211aeb4);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211aebc);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae9c);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae3c);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae2c);
         dExtFrameCtrl_c::LoadFile(data_ov066_0211ae5c);
         dExtFrameCtrl_c::LoadFile(data_ov066_0211ae84);
         dExtFrameCtrl_c::LoadFile(data_ov066_0211aea4);
@@ -2682,16 +2688,20 @@ int Eyerok::InitResources()
         dBgW_Kc::LoadFile(data_ov066_0211ae34);
         break;
     case 1:
-        if (mBlendModelAnim.SetFile((BMD_File *)data_ov066_0211ae4c.words[1], 1, -1) == 0)
+        if (mBlendAnmModel.SetFile((BMD_File *)data_ov066_0211ae4c.filePtr, 1, -1) == 0)
             return 0;
-        TextureSequence::Prepare(*(BMD_File *)data_ov066_0211ae4c.words[1], *(BTP_File *)data_ov066_0211aebc.words[1]);
-        TextureSequence::Prepare(*(BMD_File *)data_ov066_0211ae4c.words[1], *(BTP_File *)data_ov066_0211ae9c.words[1]);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211ae4c.filePtr,
+                                 *(BTP_File *)data_ov066_0211aebc.filePtr);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211ae4c.filePtr,
+                                 *(BTP_File *)data_ov066_0211ae9c.filePtr);
         break;
     case 2:
-        if (mBlendModelAnim.SetFile((BMD_File *)data_ov066_0211aeb4.words[1], 1, -1) == 0)
+        if (mBlendAnmModel.SetFile((BMD_File *)data_ov066_0211aeb4.filePtr, 1, -1) == 0)
             return 0;
-        TextureSequence::Prepare(*(BMD_File *)data_ov066_0211aeb4.words[1], *(BTP_File *)data_ov066_0211ae3c.words[1]);
-        TextureSequence::Prepare(*(BMD_File *)data_ov066_0211aeb4.words[1], *(BTP_File *)data_ov066_0211ae2c.words[1]);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211aeb4.filePtr,
+                                 *(BTP_File *)data_ov066_0211ae3c.filePtr);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211aeb4.filePtr,
+                                 *(BTP_File *)data_ov066_0211ae2c.filePtr);
         break;
     }
 
@@ -2700,7 +2710,7 @@ int Eyerok::InitResources()
         w.x = data_ov066_0211ad18[0];
         w.y = data_ov066_0211ad18[1];
         w.z = data_ov066_0211ad18[2];
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, c, &w, 0x64000, 0x64000, 0x200002, 0);
+        mdCcAcPos_c.Init((dActor_c *)c, w, 0x64000, 0x64000, 0x200002, 0);
     }
 
     {
@@ -2710,10 +2720,10 @@ int Eyerok::InitResources()
         int i = 0;
         char *p = c;
         do {
-            *(s32 *)(p + 0x4DC) = 0;
-            *(s32 *)(p + 0x4E0) = 0;
+            ((Eyerok *)p)->mDustPos[0].x = 0;
+            ((Eyerok *)p)->mDustPos[0].y = 0;
             i += 1;
-            *(s32 *)(p + 0x4E4) = 0;
+            ((Eyerok *)p)->mDustPos[0].z = 0;
             p += 0xC;
         } while (i < 0x14);
     }
@@ -2746,7 +2756,10 @@ int Eyerok::InitResources()
         data_ov066_0211abe4 = 1;
         data_ov066_0211ae04 = PHASE_DORMANT;
         data_ov066_0211abe0 = HANDS_BOTH;
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, (void *)data_ov066_0211ae24.words[1], &mClsnMat2, 0x199, mAngleY, &data_ov025_02112ca8);
+        ((dBgW_KcMbg *)(&mMeshCollider2))
+            ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae24.filePtr),
+                                  *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                  *(CLPS_Block *)(&data_ov025_02112ca8));
         func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
         func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
         mMeshCollider2.Enable(this);
@@ -2760,10 +2773,16 @@ int Eyerok::InitResources()
         mSpawnPosY = mPosY;
         mSpawnPosZ = mPosZ;
         if (mPartIdx == PART_HAND_1) {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, (void *)data_ov066_0211ae14.words[1], &mClsnMat2, 0x199, mAngleY, &data_ov025_02112c08);
+            ((dBgW_KcMbg *)(&mMeshCollider2))
+                ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae14.filePtr),
+                                      *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                      *(CLPS_Block *)(&data_ov025_02112c08));
             mRestPosX -= 0x31F000;
         } else {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, (void *)data_ov066_0211aeac.words[1], &mClsnMat2, 0x199, mAngleY, &data_ov025_02112d48);
+            ((dBgW_KcMbg *)(&mMeshCollider2))
+                ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
+                                      *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
+                                      *(CLPS_Block *)(&data_ov025_02112d48));
             mRestPosX += 0x31F000;
         }
         func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);

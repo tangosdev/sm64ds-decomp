@@ -10,7 +10,7 @@
     "contiguous linker run: 0x21196d8..0x2119ebc, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjCtRotateBlock_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold (0930c): the two registry factories daObjCtRotateBlock_c_classInit_CT_MECHA02 (0x02119ebc, 0x40) and daObjCtRotateBlock_c_classInit_CT_MECHA01 (0x02119efc, 0x40) abut this TU's former end 0x02119ebc with no gap and nothing between them; tu_map left them in their own unlabelled unit because it cuts on symbol name. Both construct this class (operator new(0x3d8), dBgActor_c C2, _ZTV20daObjCtRotateBlock_c store, Model and dExtShadowModel_c C1). The widened range 0x021196d8..0x02119f3c ends where the daObjCtMecha03_c TU (src/game/actors/d_a_obj_ct_mecha03.cpp) begins."
+    "classInit fold (0930c): the two registry factories daObjCtRotateBlock_c_classInit_CT_MECHA02 (0x02119ebc, 0x40) and daObjCtRotateBlock_c_classInit_CT_MECHA01 (0x02119efc, 0x40) abut this TU's former end 0x02119ebc with no gap and nothing between them; tu_map left them in their own unlabelled unit because it cuts on symbol name. Both construct this class (operator new(0x3d8), dBgActor_c C2, _ZTV20daObjCtRotateBlock_c store, dExtSimpleModel_c and dExtShadowModel_c C1). The widened range 0x021196d8..0x02119f3c ends where the daObjCtMecha03_c TU (src/game/actors/d_a_obj_ct_mecha03.cpp) begins."
   ],
   "sections": [
     {
@@ -547,28 +547,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -635,34 +615,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@643",
+      "from": "@691",
       "to": "@951",
-      "evidence": "mwcc numbers this registration node @627 per TU and the fleet already defines a global @627, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @627 per TU and the fleet already defines a global @627, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@645",
+      "from": "@693",
       "to": "@895",
-      "evidence": "mwcc numbers this registration node @629 per TU and the fleet already defines a global @629, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @629 per TU and the fleet already defines a global @629, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@647",
+      "from": "@695",
       "to": "@891",
-      "evidence": "mwcc numbers this registration node @631 per TU and the fleet already defines a global @631, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @631 per TU and the fleet already defines a global @631, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@644",
+      "from": "@692",
       "to": "@628",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @644 now; licensed under the existing pin @628"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @644 now; licensed under the existing pin @628 | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@646",
+      "from": "@694",
       "to": "@630",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @646 now; licensed under the existing pin @630"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @646 now; licensed under the existing pin @630 | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@648",
+      "from": "@696",
       "to": "@632",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @648 now; licensed under the existing pin @632"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @648 now; licensed under the existing pin @632 | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     }
   ],
   "symbol_binding_rewrites": [

@@ -2,8 +2,7 @@
  * the things a level is built out of. A model, a moving mesh collider, and the
  * matrix that keeps the collider where the model is.
  *
- * Layout evidence and the sizeof-0x320 argument: notes/platform-provenance.md.
- * Field names still spelled unk_ are placeholders. */
+ * Layout evidence and the sizeof-0x320 argument: notes/platform-provenance.md. */
 #ifndef DBGACTOR_C_H
 #define DBGACTOR_C_H
 #include "types.h"
@@ -13,25 +12,28 @@ struct Player;
 struct player_;
 #ifdef __cplusplus
 
-/* MEASURED -- MUST STAY FIRST, ahead of Model.h. Matrix4x3 has two guarded
+/* MEASURED -- MUST STAY FIRST, ahead of dExtSimpleModel_c.h. Matrix4x3 has two guarded
    spellings sharing the same 0x30 bytes; whichever a TU sees first stands, and
-   Model.h pulls in the wrong one. UpdateClsnPosAndRot then compiles to 0x74
+   dExtSimpleModel_c.h pulls in the wrong one. UpdateClsnPosAndRot then compiles to 0x74
    against the ROM's 0x64. notes/platform-provenance.md. */
 #include "common.h"
 
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 
 struct dBgActor_c : dActor_c {
     u8  pad_0d0[0x4];
-    Model mModel;                           /* 0x0d4 */
+    dExtSimpleModel_c mModel;       /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;       /* 0x124 */
     /* Where the collider sits: mModel's matrix with the actor's position
        written over the translation row. See UpdateClsnPosAndRot. */
     Matrix4x3 mClsnMat;     /* 0x2ec */
-    u8  unk_31c;            /* 0x31c */
-    u8  unk_31d;            /* 0x31d */
+    /* Mega Mario's knockback: KillByMegaChar arms the flag and loads the
+       30-frame timer; UpdateKillByMegaChar flies the actor while the flag is
+       set and calls Kill() when the timer runs out. */
+    u8 mMegaKnockback;      /* 0x31c */
+    u8 mMegaKnockbackTimer; /* 0x31d */
     /* The class ends at 0x31e; sizeof rounds to 0x320, and derived classes do
        use that tail padding (daObjRc_Guruguru_c::mAngVelY). */
 
@@ -58,11 +60,22 @@ struct dBgActor_c : dActor_c {
     void UpdateClsnPosAndRot();
     void UpdateModelPosAndRotY();
 
-    /* MEASURED: the by-value Fix12<int> is confirmed by the body at ov002
-       0x020ee674, not inferred from the mangled name. The two IsClsnInRange*
-       symbols make the same claim and their bytes refuse it -- see
-       include/dActor_c.h and notes/platform-provenance.md. */
-    int UpdateKillByMegaChar(s16 a, s16 b, s16 c, Fix12<int> d);
+    /* The two IsClsnInRange* symbols used to spell a by-value Fix12<int>, and
+       this header already recorded that "their bytes refuse it". Acted on
+       2026-10-23: both are real methods taking the scalar Fix12i, under
+       _ZN10dBgActor_c13IsClsnInRangeEii and
+       _ZN10dBgActor_c21IsClsnInRangeOnScreenEii, reproducing ov002
+       0x020ee870/0xc4 and 0x020ee934/0x11c. notes/mwccarm-codegen.md 6az.
+       Parameters (radius, yOffset) are unnamed on purpose: a named
+       class-scope parameter consumes an @NNN number in every consumer. */
+    int IsClsnInRange(Fix12i, Fix12i);
+    int IsClsnInRangeOnScreen(Fix12i, Fix12i);
+
+    /* Takes the scalar Fix12i, under _ZN10dBgActor_c20UpdateKillByMegaCharEsssi.
+       The body at ov002 0x020ee674 only forwards the pivot height in a
+       register, so the scalar reproduces it (2026-10-26), and callers can
+       call it as a method. notes/mwccarm-codegen.md 6az. */
+    int UpdateKillByMegaChar(s16 a, s16 b, s16 c, Fix12i d);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -112,8 +125,8 @@ struct dBgActor_c {
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1c7];
     struct Matrix4x3 mClsnMat;    /* 0x2ec */
-    u8  unk_31c;            /* 0x31c */
-    u8  unk_31d;            /* 0x31d */
+    u8 mMegaKnockback;            /* 0x31c */
+    u8 mMegaKnockbackTimer;       /* 0x31d */
     /* Ends at 0x31e; sizeof rounds to 0x320. See the C++ half. */
 };
 

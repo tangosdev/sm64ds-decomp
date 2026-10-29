@@ -1,6 +1,6 @@
 /* SHA-1 block transform (RFC 3174 SHA1ProcessMessageBlock), plus a
    game-specific patch that temporarily zeroes two words of the message
-   block while data_020a80c4 is set.
+   block (words 6 and 14, bytes 0x18 and 0x38) while data_020a80c4 is set.
 
    Matching notes:
    - RFC 3174 declaration order is load-bearing: K, t, temp, W, A..E.
@@ -49,10 +49,10 @@ void func_0205e3d4(void *ctx)
     blk = context->Message_Block;
     if (data_020a80c4 != 0)
     {
-        save[0] = *(unsigned int *)(blk + 0x18);
-        save[1] = *(unsigned int *)(blk + 0x38);
-        *(unsigned int *)(blk + 0x18) = 0;
-        *(unsigned int *)(blk + 0x38) = 0;
+        save[0] = ((unsigned int *)blk)[6];
+        save[1] = ((unsigned int *)blk)[14];
+        ((unsigned int *)blk)[6] = 0;
+        ((unsigned int *)blk)[14] = 0;
     }
 
     for (t = 0; t < 16; t++)
@@ -124,7 +124,7 @@ void func_0205e3d4(void *ctx)
 
     if (data_020a80c4 != 0)
     {
-        *(unsigned int *)(blk + 0x18) = save[0];
-        *(unsigned int *)(blk + 0x38) = save[1];
+        ((unsigned int *)blk)[6] = save[0];
+        ((unsigned int *)blk)[14] = save[1];
     }
 }

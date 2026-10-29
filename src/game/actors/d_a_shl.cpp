@@ -1,8 +1,15 @@
 //cpp
+struct Vector3_16f;
+namespace Particle {
+struct Callback;
+struct System {
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 /**
  * Koopa shell (profile SHELL) -- ov102/daShl_c.
  *
- * Idle until the player touches it. Model 0 can be jumped on and ridden
+ * Idle until the player touches it. dExtSimpleModel_c 0 can be jumped on and ridden
  * (it follows the rider and gets a per-frame surface splash/trail pass and
  * a looping surface sound); model 1 is kicked away by an attack. The
  * variant (param1 bit 4) is picked up and held instead. Yoshi can eat any
@@ -28,9 +35,7 @@
  * section per function in the reverse of source order.
  *
  * Known limits:
- * - dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight,
- *   dEnemyBase_c::KillByInvincibleChar, Player::Hurt and
- *   Particle::System::New stay mangled: each takes Fix12<int> by value
+ * - Player::Hurt and Particle::System::New stay mangled: each takes Fix12<int> by value
  *   (notes/mwccarm-codegen.md 6az). Particle::System::New is declared
  *   with the seven arguments its call sites pass.
  * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
@@ -61,6 +66,7 @@
 
 #include "common.h"
 #include "daShl_c.h"
+#include "Player.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
@@ -77,6 +83,11 @@ struct ShlStateEnd {
     ShlState rec;
     ShlStateFn tail[3];
 };
+
+namespace Sound {
+/* local extern: including Sound.h renumbers @NNN. */
+int PlayLong(u32, u32, u32, const Vector3 &, s16);
+}
 
 extern "C" {
 
@@ -96,36 +107,16 @@ u8   DecIfAbove0_Byte(u8 *counter);
 u16  DecIfAbove0_Short(u16 *counter);
 void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
-int  func_02037e84(int *si);
-int  func_02037e38(unsigned int *si);
 u32  func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                    void *dir);
 
-/* Including Player.h renumbers the pinned @NNN statics by 94. */
-int  _ZN6Player9IsOnShellEv(void *player);  /* local extern: Player.h is +94 */
-int  _ZN6Player7TryGrabER8dActor_c(void *player, dActor_c &actor);  /* local extern: Player.h is +94 */
-int  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, const Vector3 *v,
-                                            u32 a, Fix12i f, u8 b, u8 c,
-                                            u8 d);
-int  _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-         u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir,
-         void *cb);
-/* local extern: including Sound.h renumbers the pinned @NNN statics by 15. */
-int  _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 a, u32 soundID,
-                                       const Vector3 &pos, s16 e);
+int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir, void *cb);
+/* local extern: these five names hold the @NNN count. Sound::PlayLong is the call. */
+void d_a_shlPlayLongHold(u32 handle, u32 a, u32 soundID, const Vector3 &pos, s16 e);
 
-void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(
-         void *self, const Vector3_16 &dir, Player &player, s32 speed);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *owner,
-                                              Fix12i radius, Fix12i height,
-                                              unsigned int d, unsigned int e);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-         void *self, dActor_c *owner, Fix12i radius, Fix12i height,
-         Vector3_16 *d, int e);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-         void *self, dExtShadowModel_c *sm, Matrix4x3 *m, Fix12i radius,
-         int height, u8 flags);
-
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, dActor_c *owner, Fix12i radius, Fix12i height, Vector3_16 *d,
+                         int e);
 }
 
 /* Plain three-word position: Vector3 members here emit an extra
@@ -158,12 +149,12 @@ s32 daShl_c::InitResources()
 {
     mModelIndex = param1 & 1;
     mVariant = (param1 >> 4) & 1;
-    BMD_File *bmd = (BMD_File *)Model::LoadFile(*data_ov102_0214d70c[mModelIndex]);
+    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov102_0214d70c[mModelIndex]);
     if (mModel.SetFile(bmd, 1, 1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, this, 0x3c000, 0x46000, 0x100004, 0xa083c0);
+    mdCc_c.Init(this, 0x3c000, 0x46000, 0x100004, 0xa083c0);
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;
@@ -171,7 +162,7 @@ s32 daShl_c::InitResources()
     mTerminalVelocity = -0x32000;  /* -50.0 */
     mStateTimer = 20;
     mCarrier = 0;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mMeshClsn, this, 0x28000, 0x28000, 0, 0);
+    mMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mMeshClsn.StartDetectingWater();
     func_ov102_0214d1f8(&data_ov102_0214ea68);
     mParticleHandle_3d4 = 0;
@@ -339,7 +330,7 @@ int daShl_c::func_ov102_0214d148()
     mAngleY = mPrevAngleY;
     mHorzSpeed = 0x1e000;
     mVertAccel = -0x2000;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c2, this, 0x28000, 0x3c000, 0x102002, 0);
+    mdCc_c2.Init(this, 0x28000, 0x3c000, 0x102002, 0);
     return 1;
 }
 
@@ -357,7 +348,7 @@ int daShl_c::func_ov102_0214d114()
 /* Ridden: enter. The body cylinder is re-initialised with no extent. */
 int daShl_c::func_ov102_0214d0bc()
 {
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, this, 0, 0, 0x100002, 0);
+    mdCc_c.Init(this, 0, 0, 0x100002, 0);
     mFlags &= ~3;
     mDespawnTimer = 100;
     return 1;
@@ -370,7 +361,7 @@ int daShl_c::func_ov102_0214d044()
 {
     /* The riderPos/angle/x/ret locals below are needed: without them the
        function is 4 bytes shorter. */
-    if (mCarrier == 0 || _ZN6Player9IsOnShellEv(mCarrier) == 0) {
+    if (mCarrier == 0 || mCarrier->IsOnShell() == 0) {
         PoofDust();
         MarkForDestruction();
         return 0;
@@ -416,7 +407,7 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
 {
     if (mCarrier != 0)
         return 0;
-    mCarrier = player;
+    mCarrier = static_cast<Player *>(player);
     if (mState != &data_ov102_0214ea48)
         func_ov102_0214d1f8(&data_ov102_0214ea48);
     return 1;
@@ -434,7 +425,7 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214ce60Ev
-/* Model matrix and drop shadow. While carried (flag 0x4000) the model
+/* dExtSimpleModel_c matrix and drop shadow. While carried (flag 0x4000) the model
    follows the carrier's hands; otherwise it sits at mPos turned by
    mAngleY. Flag 0x40000 (hidden) skips the shadow. */
 void daShl_c::func_ov102_0214ce60()
@@ -445,7 +436,7 @@ void daShl_c::func_ov102_0214ce60()
         offset.x = 0x1e000;
         offset.y = -0x1e000;
         offset.z = 0x32000;
-        mModel.mat4x3 = *UpdateCarry(*(Player *)mCarrier, offset);
+        mModel.mat4x3 = *UpdateCarry(*mCarrier, offset);
     } else {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
         mModel.mat4x3.m[9] = mPosX >> 3;
@@ -455,7 +446,7 @@ void daShl_c::func_ov102_0214ce60()
     int hidden = (mFlags & 0x40000) != 0;
     if (hidden)
         return;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &mShadowModel, &mModel.mat4x3, 0x50000, 0x50000, 0xf);
+    DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214cbecEv
@@ -467,7 +458,7 @@ void daShl_c::func_ov102_0214ce60()
    ridden. */
 void daShl_c::func_ov102_0214cbec()
 {
-    dActor_c *player;
+    Player *player;
     s32 hit;
     u32 id;
     Vector3 v1, v2;
@@ -475,7 +466,7 @@ void daShl_c::func_ov102_0214cbec()
     id = mdCc_c.otherOwner;
     if (id == 0)
         return;
-    player = dActor_c::FindWithID(id);
+    player = static_cast<Player *>(dActor_c::FindWithID(id));
     if (!player)
         return;
 
@@ -494,7 +485,7 @@ void daShl_c::func_ov102_0214cbec()
         dir.x = 0x2000;
         dir.y = 0;
         dir.z = 0;
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, dir, *(Player *)player, mdCc_c.height >> 1);
+        KillByInvincibleChar(dir, *player, mdCc_c.height >> 1);
         return;
     }
 
@@ -503,7 +494,7 @@ void daShl_c::func_ov102_0214cbec()
             return;
         if (!(hit & 0x1000))
             return;
-        if (_ZN6Player7TryGrabER8dActor_c(player, *this) == 0)
+        if (player->TryGrab(*this) == 0)
             return;
         mCarrier = player;
         func_ov102_0214d1f8(&data_ov102_0214ea58);
@@ -522,7 +513,7 @@ void daShl_c::func_ov102_0214cbec()
         v1.x = mPosX;
         v1.y = mPosY;
         v1.z = mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v1, 1, 0xc000, 1, 0, 1);
+        player->Hurt(v1, 1, 0xc000, 1, 0, 1);
         return;
     }
 
@@ -530,7 +521,7 @@ void daShl_c::func_ov102_0214cbec()
         v2.x = mPosX;
         v2.y = mPosY;
         v2.z = mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v2, 1, 0xc000, 1, 0, 1);
+        player->Hurt(v2, 1, 0xc000, 1, 0, 1);
         return;
     }
 
@@ -544,7 +535,7 @@ void daShl_c::func_ov102_0214cbec()
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214c84cEv
-/* Model 0 only (Behavior gates it). While ridden, probe the ground from
+/* dExtSimpleModel_c 0 only (Behavior gates it). While ridden, probe the ground from
    50.0 above the shell and pick the trail particles and the looping
    surface sound from what it finds; otherwise just the idle trail. Water
    detection is on, so ground.clsnY is the hit height of a water surface
@@ -559,10 +550,7 @@ void daShl_c::func_ov102_0214c84c()
     pos.trail.y = mPosY;
     pos.trail.z = mPosZ;
 
-    if (mState == &data_ov102_0214ea48
-        && mCarrier != 0
-        && *((u8 *)mCarrier + 0x6de) == 0)  /* Player::mIsAirborne */
-    {
+    if (mState == &data_ov102_0214ea48 && mCarrier != 0 && mCarrier->mIsAirborne == 0) {
         dBgCh_Gnd ground;
         ground.StartDetectingWater();
         {
@@ -582,52 +570,44 @@ void daShl_c::func_ov102_0214c84c()
                 mParticleHandle_3d4 = 0;
                 mParticleHandle_3c8 = mParticleHandle_3d4;
                 mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
-                mParticleHandle_3d0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                    mParticleHandle_3d0, 0xe3, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
-                if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
+                mParticleHandle_3d0 = Particle::System::New(mParticleHandle_3d0, 0xe3, pos.trail.x,
+                                                            pos.trail.y, pos.trail.z, 0, 0);
+                if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
                     mSoundHandle = 0;
-                mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
-                mSoundHandle =
-                    _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
+                mSoundID = ground.surface.clps.func_02037e84() + 0xf2;
+                mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
                 return;
             }
-            if (func_02037e38((unsigned int *)&ground.surface) == 1)
-            {
-                if (func_02037e84((int *)&ground.surface) == 7)
-                {
+            if (ground.surface.clps.GetSurfaceType() == 1) {
+                if (ground.surface.clps.func_02037e84() == 7) {
                     pos.trail.y = ground.clsnY + 0x3c000;
                     mParticleHandle_3d4 = 0;
                     mParticleHandle_3c8 = mParticleHandle_3d4;
                     mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
-                    mParticleHandle_3d0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                    mParticleHandle_3d0 = Particle::System::New(
                         mParticleHandle_3d0, 0xe3, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
-                    if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
+                    if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
                         mSoundHandle = 0;
-                    mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
-                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID,
-                                                                     mCamSpacePos, 0);
-                }
-                else
-                {
+                    mSoundID = ground.surface.clps.func_02037e84() + 0xf2;
+                    mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
+                } else {
                     pos.trail.y = ground.clsnY + 0xa000;
                     mParticleHandle_3d0 = 0;
                     mParticleHandle_3cc = mParticleHandle_3d0;
                     mParticleHandle_3d4 = mParticleHandle_3cc;
-                    mParticleHandle_3c8 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                    mParticleHandle_3c8 = Particle::System::New(
                         mParticleHandle_3c8, 0xe1, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
                     if (mSoundID != 0x102)
                         mSoundHandle = 0;
                     mSoundID = 0x102;
-                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID,
-                                                                     mCamSpacePos, 0);
+                    mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
                 }
                 return;
             }
-            if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
+            if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
                 mSoundHandle = 0;
-            mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
-            mSoundHandle =
-                _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
+            mSoundID = ground.surface.clps.func_02037e84() + 0xf2;
+            mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
         }
         else
         {
@@ -640,8 +620,8 @@ void daShl_c::func_ov102_0214c84c()
     mParticleHandle_3cc = mParticleHandle_3d0;
     mParticleHandle_3c8 = mParticleHandle_3cc;
     pos.trail.y = pos.trail.y + 0x1e000;
-    mParticleHandle_3d4 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticleHandle_3d4, 0xe0, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+    mParticleHandle_3d4 = Particle::System::New(mParticleHandle_3d4, 0xe0, pos.trail.x, pos.trail.y,
+                                                pos.trail.z, 0, 0);
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214c7fcEv
@@ -654,7 +634,7 @@ void daShl_c::func_ov102_0214c7fc()
 {
     if (!mMeshClsn.IsOnGround())
         return;
-    dBgPi *floor = (dBgPi *)mMeshClsn.GetFloorResult();
+    dBgPi *floor = mMeshClsn.GetFloorResult();
     if (!SurfaceInfo_TestFlag0x20((int *)&floor->surface))
         return;
     PoofDust();

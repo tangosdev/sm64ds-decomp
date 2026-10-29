@@ -26,7 +26,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "Wiggler_Construct",
+      "symbol": "_ZN15dScMgHanachan_c7WigglerC1Ev",
       "address": "0x020ede80",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020ede80.c",
@@ -35,10 +35,34 @@
   ],
   "data": [],
   "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN15dScMgHanachan_c7WigglerD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "reason": "return new dScMgHanachan_c builds mWiggler[15] through __cxa_vec_ctor with Wiggler's destructor as the element destructor, so this TU emits its own vague-linkage copy of the empty inline ~Wiggler() (dScMgHanachan_c.h). The cartridge's copy is the one ov006/dScMgHanachan_c emits at 0x020ea324, right after ~dScMgHanachan_c; this one is discarded."
+    },
+    {
+      "symbol": "_ZN7Vector2C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d738",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d738",
+      "reason": "Wiggler's inline constructor (emitted here at 0x020ede80) builds Vector2 seg[5] at +0x18 (stride 8) through __cxa_vec_ctor with func_0203d738 as the element constructor, as retail does. include/Vector2.h defines the empty Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 callback at 0x0203d738, so this copy is discarded (the Vector3 constructor's policy, ov025/daDpLift_c; ov006/dScMgBSC_c does the same for Vector2)."
+    },
+    {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "The same seg[5] array's element destructor in that __cxa_vec_ctor call (and in this TU's copy of ~Wiggler) is NullDestructor_0203d47c, as retail does. include/Vector2.h defines the empty ~Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 element destructor at 0x0203d47c, so this copy is discarded."
+    }
+  ],
   "notes": [
     "Hand-built manifest entry (tools.build_manifest_entry's schema, not its code path): tools/tubuild.py create ov006/MgWhichWiggler now fails with 'no candidate TU in build/tu_map.json' because the freshly regenerated map no longer isolates this range -- see boundary_evidence above.",
     "The src_tu/actors/MgWhichWiggler.cpp shadow file already existed (generated in an earlier session against the older, finer-cut map) and was reconciled/verified in place against this hand-written entry.",
-    "tubuild reconcile note: this entry was hand-built, so build_manifest_entry never ran and no generated warning list was ever recorded, while the shadow source carried a conflict marker that promotion copied into src/minigames/d_s_mg_hanachan.cpp. The marker recorded a deferred decision nothing in the manifest knew about. It is resolved: the two declarations of func_020733a8 are the same declaration, differing only in asterisk placement. The dropped alternate, verbatim, was `extern void func_020733a8(void* obj, int a, int b, void* cb1, void* cb2);` against the kept `extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);`. Replaced in the source by a TUBUILD RECONCILE comment. Checked by tools/check_tubuild_conflicts.py."
+    "tubuild reconcile note: this entry was hand-built, so build_manifest_entry never ran and no generated warning list was ever recorded, while the shadow source carried a conflict marker that promotion copied into src/minigames/d_s_mg_hanachan.cpp. The marker recorded a deferred decision nothing in the manifest knew about. It is resolved: the two declarations of func_020733a8 are the same declaration, differing only in asterisk placement. The dropped alternate, verbatim, was `extern void func_020733a8(void* obj, int a, int b, void* cb1, void* cb2);` against the kept `extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);`. Replaced in the source by a TUBUILD RECONCILE comment. Checked by tools/check_tubuild_conflicts.py.",
+    "2026-10-25 Vector2 adoption: the factory is `return new dScMgHanachan_c`. The inlined implicit constructor emits dScMgBase_c's C2, the vptr (the cartridge's _ZTV15dScMgHanachan_c) and the mWiggler __cxa_vec_ctor with Wiggler's structors, byte-identical to the hand-built body it replaces. Wiggler_Construct (0x020ede80) is renamed in place to _ZN15dScMgHanachan_c7WigglerC1Ev, the compiler's name for Wiggler's empty inline constructor; its body is the seg[5] Vector2 __cxa_vec_ctor and mwccarm emits it after the factory, where the cartridge has it. This TU's own copies of ~Wiggler and of Vector2's two structors are deadstrip-duplicate rows. tubuild verify: 2/2 MATCH, objisolate clean, ROM-ascending -> TEXT-VERIFIED."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

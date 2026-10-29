@@ -12,81 +12,56 @@
  * (0x021111e4), then a D2 the cartridge has no home for (manifest: deadstrip);
  * the same pragma lays .text down in source order, so this file is ROM-ascending.
  *
- * leftovers:
- * - dBgW_KcMbg::SetFile, dBgActor_c::UpdateKillByMegaChar and
- *   dBgActor_c::IsClsnInRange take Fix12<int> by value, so they stay mangled;
- *   a member call homes the argument and changes the ROM ABI.
- * - The Sound::PlayLong extern is the shards' own spelling.
- *   Retyping it is declaration-changing matching work, so its banked
- *   decl-agreement entry moved to this file unchanged. The path handles
- *   are still 8-byte local views of PathPtr, constructed explicitly.
+ * Notes:
  * - InitResources keeps the param1 mask, the yaw adjust, and the
  *   node-index add as offset writes. Naming them changed the function size.
- * The file ends with the mesh-collider callback func_ov018_021117e8, the
- * veneer func_ov018_02111804 that InitResources installs, and the registry
+ * - Vec3_Asr, AngleDiff, Vec3_Sub, LenVec3, Vec3_MulScalar, SubVec3 and
+ *   Math_Function_0203b14c are arm9 C helpers no header declares yet.
+ * The file ends with the mesh-collider hook HandlePlayerContact, the
+ * veneer BeforeClsnCallback that InitResources installs, and the registry
  * factory daObjSm_Lift_c_classInit (0x02111818).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjSm_Lift_c_AssetId {
-    ASSET_SM_LIFT_BMD = 0x06b3,
-    ASSET_SM_LIFT_KCL = 0x06b4
-};
+enum daObjSm_Lift_c_AssetId { ASSET_SM_LIFT_BMD = 0x06b3, ASSET_SM_LIFT_KCL = 0x06b4 };
 
 #include "daObjSm_Lift_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "nitro/fx/fx.h"
+#include "cstd.h"
+#include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
+#include "Sound.h"
 
-bool ApproachLinear(short &value, short target, short step);
+extern s16 data_02082214[];
+extern int data_ov018_02112f48[];
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int n);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angX);
-extern Matrix4x3 data_020a0e68;
-extern s16 data_02082214[];
-
-int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, s16 a, s16 b, s16 c, int d);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *th, void *kf, void *mtx, int fx, short s, void *clps);
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
-void func_ov018_02111804(void *collider, daObjSm_Lift_c *self, dActor_c *other);
 int AngleDiff(int, int);
-extern int data_ov018_02112f48[];
-void *_ZN7PathPtrC1Ev(void *self);
-
-u8 DecIfAbove0_Byte(u8 *p);
-int Vec3_HorzDist(const void *a, const void *b);
-s16 Vec3_HorzAngle(const void *a, const void *b);
-unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *pos, unsigned int d);
 void Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 void Vec3_Sub(void *out, void *a, void *b);
 int LenVec3(void *v);
-int _ZN4cstd4fdivEii(int a, int b);
 void Vec3_MulScalar(void *out, void *v, int scalar);
 void SubVec3(void *a, void *b, void *c);
 }
 
-/* Model handles construct through func_02017acc and destroy through
+/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and destroy
  * through SharedFilePtr_Destruct_Clsn. The manifest aliases those undefined
  * member spellings onto the real ROM functions; each handle is the base plus
  * the two words that family actually stores. */
 struct SmLiftModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     SmLiftModelFilePtr(u32 fileID);
     ~SmLiftModelFilePtr();
 };
 
 struct SmLiftClsnFileHandle : SharedFilePtr {
-    u32 words[2];
-
     SmLiftClsnFileHandle(u32 fileID);
     ~SmLiftClsnFileHandle();
 };
@@ -94,29 +69,22 @@ struct SmLiftClsnFileHandle : SharedFilePtr {
 extern SmLiftModelFilePtr gSmLiftModelFile;
 extern SmLiftClsnFileHandle gSmLiftCollisionFile;
 
-struct PathBytes { char b[8]; };
-struct PathPtrObj { int a, b; };
-
 /* Emission order is ROM order. The destructor pair must stay first. */
 #pragma defer_codegen off
 
 // @symbol _ZN14daObjSm_Lift_cD1Ev
 // @symbol _ZN14daObjSm_Lift_cD0Ev
-daObjSm_Lift_c::~daObjSm_Lift_c()
-{
-}
+daObjSm_Lift_c::~daObjSm_Lift_c() {}
 
 // @symbol _ZN14daObjSm_Lift_c15OnHitByMegaCharER6Player
-void daObjSm_Lift_c::OnHitByMegaChar(Player &player)
-{
+void daObjSm_Lift_c::OnHitByMegaChar(Player &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
     mAngleY = mPrevAngleY + 0x4000;
 }
 
-// @symbol _ZN14daObjSm_Lift_c19func_ov018_02111278Ev
-void daObjSm_Lift_c::func_ov018_02111278()
-{
+// @symbol _ZN14daObjSm_Lift_c20UpdateModelTransformEv
+void daObjSm_Lift_c::UpdateModelTransform() {
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
@@ -127,8 +95,7 @@ void daObjSm_Lift_c::func_ov018_02111278()
 }
 
 // @symbol _ZN14daObjSm_Lift_c16CleanupResourcesEv
-s32 daObjSm_Lift_c::CleanupResources()
-{
+s32 daObjSm_Lift_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
@@ -138,56 +105,53 @@ s32 daObjSm_Lift_c::CleanupResources()
 }
 
 // @symbol _ZN14daObjSm_Lift_c6RenderEv
-s32 daObjSm_Lift_c::Render()
-{
+s32 daObjSm_Lift_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN14daObjSm_Lift_c8BehaviorEv
-int daObjSm_Lift_c::Behavior()
-{
+int daObjSm_Lift_c::Behavior() {
     char *self = (char *)this;
-    struct PathPtrObj path;
     Vector3 nodeA, nodeB, diff, scaled;
     s16 target;
-    char *other;
+    dActor_c *other;
 
-    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(self, 0x2000, 0, 0, 0) != 0)
+    if (UpdateKillByMegaChar(0x2000, 0, 0, 0) != 0)
         return 1;
 
-    if (DecIfAbove0_Byte(&unk_331) == 0)
-        unk_330 = 1;
+    if (DecIfAbove0_Byte(&mPauseTimer) == 0)
+        mMoving = 1;
 
-    other = (char *)unk_320;
+    other = mTouchingPlayer;
     if (other != 0) {
-        char *otherPos = other + 0x5c;
-        int dist = Vec3_HorzDist(&mPosX, otherPos);
+        Vector3 *otherPos = &other->mPos;
+        int dist = Vec3_HorzDist(&mPos, otherPos);
         target = (s16)(FX_MUL(dist, data_02082214[((u16)(s16)AngleDiff(
-                                                       Vec3_HorzAngle(&mPosX, otherPos), mAngleY) >>
+                                                       Vec3_HorzAngle(&mPos, otherPos), mAngleY) >>
                                                    4) *
                                                       2 +
                                                   1]) /
                        256);
     } else {
         if (mNodeStep > 0 && mNodeIndex == 1) {
-            if (Vec3_HorzDist(&mPosX, &mBasePosX) < 0x10000) {
-                unk_330 = 0;
-                unk_331 = 0x3c;
+            if (Vec3_HorzDist(&mPos, (Vector3 *)&mBasePosX) < 0x10000) {
+                mMoving = 0;
+                mPauseTimer = 0x3c;
             }
         }
         target = 0;
     }
     ApproachLinear(mAngleX, target, 0xc0);
 
-    if (unk_330 != 0) {
+    if (mMoving != 0) {
         int idx2;
         int reached;
 
-        unk_350 = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_350, 3, 0x8c, &mCamSpacePosX, 0);
+        mSoundID = Sound::PlayLong(mSoundID, 3, 0x8c, mCamSpacePos, 0);
 
-        _ZN7PathPtrC1Ev(&path);
-        ((PathPtr *)&path)->FromID(mPathId);
+        PathPtr path;
+        path.FromID(mPathId);
 
         {
             int step = mNodeStep;
@@ -195,13 +159,15 @@ int daObjSm_Lift_c::Behavior()
             idx2 = curIdx - step;
             reached = 0;
             if (step > 0) {
-                if (idx2 < 0) idx2 = mNodeCount - 1;
+                if (idx2 < 0)
+                    idx2 = mNodeCount - 1;
             } else {
-                if (idx2 >= mNodeCount) idx2 = 0;
+                if (idx2 >= mNodeCount)
+                    idx2 = 0;
             }
-            ((PathPtr *)&path)->GetNode(nodeA, curIdx);
+            path.GetNode(nodeA, curIdx);
         }
-        ((PathPtr *)&path)->GetNode(nodeB, idx2);
+        path.GetNode(nodeB, idx2);
 
         Math_Function_0203b14c(&mHorzSpeed, 0xa000, 0x200, 0x2000, 0x200);
 
@@ -214,7 +180,7 @@ int daObjSm_Lift_c::Behavior()
                 mPosY = nodeA.y;
                 mPosZ = nodeA.z;
             } else {
-                int scale = _ZN4cstd4fdivEii(mHorzSpeed, len);
+                int scale = cstd::fdiv(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
                 SubVec3(&mPosX, &scaled, &mPosX);
             }
@@ -224,22 +190,22 @@ int daObjSm_Lift_c::Behavior()
             int *pIdx = &mNodeIndex;
             *pIdx = *pIdx + mNodeStep;
             if (mNodeIndex < 0) {
-                if (((PathPtr *)&path)->Loops() != 0) {
+                if (path.Loops() != 0) {
                     mNodeIndex = mNodeCount - 1;
                 } else {
-                    unk_331 = 0x3c;
-                    unk_330 = 0;
+                    mPauseTimer = 0x3c;
+                    mMoving = 0;
                     mNodeStep = 1;
                     int *pIdx2 = &mNodeIndex;
                     *pIdx2 = *pIdx2 + (mNodeStep * 2);
                 }
             }
             if (mNodeIndex >= mNodeCount) {
-                if (((PathPtr *)&path)->Loops() != 0) {
+                if (path.Loops() != 0) {
                     mNodeIndex = 0;
                 } else {
-                    unk_331 = 0x3c;
-                    unk_330 = 0;
+                    mPauseTimer = 0x3c;
+                    mMoving = 0;
                     mNodeStep = -1;
                     int *pIdx3 = (int *)((unsigned)(int)self + 0x33c);
                     *pIdx3 = *pIdx3 + (mNodeStep * 2);
@@ -250,32 +216,31 @@ int daObjSm_Lift_c::Behavior()
         mHorzSpeed = 0;
     }
 
-    func_ov018_02111278();
+    UpdateModelTransform();
 
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) != 0) {
+    if (IsClsnInRange(0, 0) != 0) {
         UpdateClsnPosAndRot();
     }
-    *(int *)(self + 0x320) = 0;
+    mTouchingPlayer = 0;
     return 1;
 }
 
 // @symbol _ZN14daObjSm_Lift_c13InitResourcesEv
-s32 daObjSm_Lift_c::InitResources()
-{
+s32 daObjSm_Lift_c::InitResources() {
     char *c = (char *)this;
     mPathId = *(int *)(c + 8) & 0xff;
     if (mPathId == 0xff)
         return 0;
-    void *f = Model::LoadFile(gSmLiftModelFile);
-    ((ModelBase *)(c + 0xd4))->SetFile((BMD_File *)f, 1, -1);
-    func_ov018_02111278();
+    void *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
+    ((dExtModel_c *)(c + 0xd4))->SetFile((BMD_File *)f, 1, -1);
+    UpdateModelTransform();
     UpdateClsnPosAndRot();
     void *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        c + 0x124, kf, c + 0x2ec, 0x1000, mAngleY, data_ov018_02112f48);
+    mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x1000, mAngleY,
+                          *(CLPS_Block *)data_ov018_02112f48);
     func_020393d4((int *)(c + 0x124), (int)dBgW::UpdatePosWithTransform);
-    func_020393c4((int *)(c + 0x124), (int)func_ov018_02111804);
-    unk_331 = 0x3c;
+    func_020393c4((int *)(c + 0x124), (int)&daObjSm_Lift_c::BeforeClsnCallback);
+    mPauseTimer = 0x3c;
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
@@ -283,37 +248,33 @@ s32 daObjSm_Lift_c::InitResources()
         short *ang = (short *)(c + 0x8e);
         *ang = *ang - 0x4000;
     }
-    PathBytes p;
-    _ZN7PathPtrC1Ev(&p);
-    ((PathPtr *)&p)->FromID(mPathId);
-    mNodeCount = ((PathPtr *)&p)->NumNodes();
+    PathPtr p;
+    p.FromID(mPathId);
+    mNodeCount = p.NumNodes();
     mNodeStep = 1;
     {
         int *ip = (int *)(c + 0x33c);
         *ip = *ip + mNodeStep;
     }
-    unk_320 = 0;
+    mTouchingPlayer = 0;
     return 1;
 }
 
-// @symbol func_ov018_021117e8
+// @symbol _ZN14daObjSm_Lift_c19HandlePlayerContactEP8dActor_c
 /* Remembers the player while the player touches the lift (actor ID 0xbf);
-   Behavior clears unk_320 again at the end of every frame. The comparison
-   is materialised into an int before the test, as the ROM does. */
-extern "C" void func_ov018_021117e8(daObjSm_Lift_c *self, dActor_c *other)
-{
+   Behavior clears mTouchingPlayer again at the end of every frame. The
+   comparison is materialised into an int before the test, as the ROM does. */
+void daObjSm_Lift_c::HandlePlayerContact(dActor_c *other) {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
-        self->unk_320 = other;
+        mTouchingPlayer = other;
 }
 
-// @symbol func_ov018_02111804
+// @symbol _ZN14daObjSm_Lift_c18BeforeClsnCallbackEPvPS_P8dActor_c
 /* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
-   collider and forwards the lift and the touching actor into
-   func_ov018_021117e8. */
-extern "C" void func_ov018_02111804(void *collider, daObjSm_Lift_c *self, dActor_c *other)
-{
-    func_ov018_021117e8(self, other);
+   collider and forwards the touching actor to HandlePlayerContact. */
+void daObjSm_Lift_c::BeforeClsnCallback(void *collider, daObjSm_Lift_c *self, dActor_c *other) {
+    self->HandlePlayerContact(other);
 }
 
 /* Reconstructed source-style name: SM64DS proves daObjSm_Lift_c through RTTI,
@@ -325,8 +286,7 @@ extern "C" void func_ov018_02111804(void *collider, daObjSm_Lift_c *self, dActor
  * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor and the
  * vptr store (the class adds no member with a constructor). */
 // @symbol daObjSm_Lift_c_classInit
-extern "C" daObjSm_Lift_c *daObjSm_Lift_c_classInit(void)
-{
+extern "C" daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
     return new daObjSm_Lift_c;
 }
 

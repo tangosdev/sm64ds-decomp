@@ -4,8 +4,6 @@
 #include "types.h"
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Popping lava bubbles. No model: every frame it (re)issues particle
  * 0xb7 at the closest player's position, feeding last frame's handle
@@ -15,7 +13,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * field closes on it.
  */
 struct daObjLava_c : dActor_c {
-    u8  pad_0d0[0x4];
+    u8 pad_0d0[0x4];
     u32 mEffectHandle; /* 0x0d4 -- live particle handle */
 
     /* Inline and first: out-of-line mwccarm emits D0 before D1; retail
@@ -23,10 +21,6 @@ struct daObjLava_c : dActor_c {
     virtual ~daObjLava_c() {}
     virtual s32 InitResources(); /* slot 0 */
     virtual s32 Behavior();      /* slot 6 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -7,12 +7,32 @@
  */
 // leftovers: opt_propagation off is file-global for LoadOBJ and
 // func_020565b4 (constant VRAM destinations 0x6400000/0x6600000); every other
-// member matches either way. DMASyncWordTransfer and the SetBankFor* calls
-// keep wide u32 spellings (local extern): the definitions' narrower params
-// insert narrowing ops at the call. The func_ helpers keep address names (no
+// member matches either way. DMASyncWordTransfer keeps a wide u32 spelling
+// (local extern): the definition's narrower channel inserts a narrowing op at
+// the call. The func_ helpers keep address names (no
 // recovered names exist).
 
 #include "types.h"
+#include "GX.h"
+
+namespace G2 {
+void *GetBG0ScrPtr(void);
+void *GetBG1ScrPtr(void);
+void *GetBG2CharPtr(void);
+void *GetBG2ScrPtr(void);
+void *GetBG3ScrPtr(void);
+}
+
+namespace G2S {
+unsigned int GetBG0CharPtr(void);
+unsigned int GetBG0ScrPtr(void);
+unsigned int GetBG1CharPtr(void);
+unsigned int GetBG1ScrPtr(void);
+unsigned int GetBG2CharPtr(void);
+unsigned int GetBG2ScrPtr(void);
+unsigned int GetBG3CharPtr(void);
+unsigned int GetBG3ScrPtr(void);
+}
 
 /* opt_propagation off is what LoadOBJ and func_020565b4 (the two
  * constant-destination VRAM copies, 0x6400000/0x6600000) were built under. */
@@ -37,29 +57,9 @@ extern void DMASyncHalfTransfer(u32 ch, const void *src, volatile void *dst, u32
 extern void MultiCopyHalf(const void *src, volatile void *dst, int count);
 extern void MultiCopy_Int(int *src, int *dst, int len);
 
-/* VRAM base-pointer getters, kept as literal symbol spellings (no header
- * declares them), returned the way each definition spells it: G2S for the
- * sub screen, G2 for the main screen. */
-extern unsigned int _ZN3G2S13GetBG3CharPtrEv(void);
-extern unsigned int _ZN3G2S13GetBG2CharPtrEv(void);
-extern unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
-extern unsigned int _ZN3G2S13GetBG0CharPtrEv(void);
-extern void *_ZN2G213GetBG2CharPtrEv(void);
 extern int func_02054d88(void);
 extern void *func_02054ea8(void);
 extern void *func_02054efc(void);
-extern unsigned int _ZN3G2S12GetBG3ScrPtrEv(void);
-extern void *_ZN2G212GetBG3ScrPtrEv(void);
-extern unsigned int _ZN3G2S12GetBG2ScrPtrEv(void);
-extern void *_ZN2G212GetBG2ScrPtrEv(void);
-extern unsigned int _ZN3G2S12GetBG1ScrPtrEv(void);
-extern void *_ZN2G212GetBG1ScrPtrEv(void);
-extern unsigned int _ZN3G2S12GetBG0ScrPtrEv(void);
-extern void *_ZN2G212GetBG0ScrPtrEv(void);
-
-// local extern: u16 parameter per the definition inserts narrowing shifts at the call
-extern void _ZN2GX22SetBankForSubBGExtPlttEt(u32 bank);
-extern void _ZN2GX23SetBankForSubOBJExtPlttEt(u32 bank);
 }
 
 namespace GXS {
@@ -171,7 +171,7 @@ void func_020565b4(const void *src, unsigned int offset, unsigned int count) {
 // Loads BG0 screen data to the main-engine plane (G2::GetBG0ScrPtr).
 // @symbol func_02056554
 void func_02056554(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)_ZN2G212GetBG0ScrPtrEv();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -183,7 +183,7 @@ void func_02056554(const void *src, int offset, int count) {
 // Loads BG0 screen data to the sub-engine plane (G2S::GetBG0ScrPtr).
 // @symbol func_020564f4
 void func_020564f4(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)_ZN3G2S12GetBG0ScrPtrEv();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -195,7 +195,7 @@ void func_020564f4(const void *src, int offset, int count) {
 // Loads BG1 screen data to the main-engine plane (G2::GetBG1ScrPtr).
 // @symbol func_02056494
 void func_02056494(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)_ZN2G212GetBG1ScrPtrEv();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -207,7 +207,7 @@ void func_02056494(const void *src, int offset, int count) {
 // Loads BG1 screen data to the sub-engine plane (G2S::GetBG1ScrPtr).
 // @symbol func_02056434
 void func_02056434(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)_ZN3G2S12GetBG1ScrPtrEv();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -222,7 +222,7 @@ void func_020563d4(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
-    bgPtr = _ZN2G212GetBG2ScrPtrEv();
+    bgPtr = G2::GetBG2ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -236,7 +236,7 @@ void func_02056374(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
-    bgPtr = (void *)_ZN3G2S12GetBG2ScrPtrEv();
+    bgPtr = (void *)G2S::GetBG2ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -247,7 +247,7 @@ void func_02056374(const void *src, u32 offset, u32 count) {
 // Loads BG3 screen data to the main-engine plane (G2::GetBG3ScrPtr).
 // @symbol func_02056314
 void func_02056314(const void *src, u32 offset, u32 count) {
-    void *bgPtr = _ZN2G212GetBG3ScrPtrEv();
+    void *bgPtr = G2::GetBG3ScrPtr();
     s32 ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -262,7 +262,7 @@ void func_020562b4(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
-    bgPtr = (void *)_ZN3G2S12GetBG3ScrPtrEv();
+    bgPtr = (void *)G2S::GetBG3ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -293,7 +293,7 @@ namespace GXS {
 // Loads BG0 character data into SUB BG0 VRAM (G2S::GetBG0CharPtr).
 // @symbol _ZN3GXS11LoadBG0CharEPKvjj
 void LoadBG0Char(const void *src, u32 offset, u32 size) {
-    void *charPtr = (void *)_ZN3G2S13GetBG0CharPtrEv();
+    void *charPtr = (void *)G2S::GetBG0CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
@@ -323,7 +323,7 @@ namespace GXS {
 // Loads BG1 character data into SUB BG1 VRAM (G2S::GetBG1CharPtr).
 // @symbol _ZN3GXS11LoadBG1CharEPKvjj
 void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)_ZN3G2S13GetBG1CharPtrEv();
+    void *base = (void *)G2S::GetBG1CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
@@ -339,7 +339,7 @@ extern "C" {
 // Loads BG2 char data into MAIN BG2 VRAM (G2::GetBG2CharPtr).
 // @symbol func_020560d4
 void func_020560d4(const void *src, u32 offset, u32 size) {
-    void *charPtr = _ZN2G213GetBG2CharPtrEv();
+    void *charPtr = G2::GetBG2CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
@@ -349,7 +349,7 @@ void func_020560d4(const void *src, u32 offset, u32 size) {
 // Loads BG2 char data into SUB BG2 VRAM (G2S::GetBG2CharPtr).
 // @symbol func_02056074
 void func_02056074(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)_ZN3G2S13GetBG2CharPtrEv();
+    void *base = (void *)G2S::GetBG2CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
@@ -373,7 +373,7 @@ void func_02056014(const void *src, unsigned int offset, unsigned int count) {
 // Loads BG3 char data into SUB BG3 VRAM (G2S::GetBG3CharPtr).
 // @symbol func_02055fb4
 void func_02055fb4(const void *src, u32 offset, u32 size) {
-    void *charPtr = (void *)_ZN3G2S13GetBG3CharPtrEv();
+    void *charPtr = (void *)G2S::GetBG3CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
@@ -407,7 +407,7 @@ void EndLoadBGExtPltt() {
     if (dmaId != (u32)-1) {
         func_02059fa8(dmaId);
     }
-    _ZN2GX22SetBankForSubBGExtPlttEt(data_020a60a4);
+    GX::SetBankForSubBGExtPltt(data_020a60a4);
     data_020a60a4 = 0;
 }
 
@@ -434,7 +434,7 @@ void EndLoadOBJExtPltt() {
     if (dmaId != (u32)-1) {
         func_02059fa8(dmaId);
     }
-    _ZN2GX23SetBankForSubOBJExtPlttEt(data_020a60a8);
+    GX::SetBankForSubOBJExtPltt(data_020a60a8);
     data_020a60a8 = 0;
 }
 

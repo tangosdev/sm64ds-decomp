@@ -211,6 +211,31 @@ class Isolate(unittest.TestCase):
         OI.isolate_many(obj, names)
         self.assertEqual(obj.read_bytes(), raw)
 
+    def test_both_vtable_licences_still_refuse_an_unrebased_primary(self):
+        """A primary +8 stays refused when both vtable flags are set.
+
+        rombuild passes ``rtti_rebased`` and ``public_vtables`` together after
+        a deadstrip.  ``public_vtables`` used to accept any positive ABS32
+        addend, which cancelled the ``>= 16`` floor and let an unrebased
+        primary store through.  ModelAnim's secondary remainder is 36.
+        """
+        obj = self.build(
+            'extern "C" int _ZTV1P[];\n'
+            "struct Pair { void First(); void Second(); };\n"
+            "void Pair::Second() { *(int *)this = (int)_ZTV1P; }\n"
+            "void Pair::First() {}\n")
+        names = ["_ZN4Pair5FirstEv", "_ZN4Pair6SecondEv"]
+        primary = self._retarget_addend(obj.read_bytes(), "_ZTV1P", 8)
+        self.assertEqual(self._reloc_addends(primary, "_ZTV1P"), [8])
+        plan = OI.plan_many(
+            primary, names, rtti_rebased=True, public_vtables=True)
+        self.assertIn("undefined RTTI addend 8", plan["error"])
+
+        secondary = self._retarget_addend(obj.read_bytes(), "_ZTV1P", 36)
+        plan = OI.plan_many(
+            secondary, names, rtti_rebased=True, public_vtables=True)
+        self.assertIsNone(plan["error"], plan)
+
     def test_multi_symbol_isolation_refuses_a_missing_member(self):
         obj, names = self._plain_two_function_tu()
         out, plan = OI.derive_many(
@@ -529,6 +554,51 @@ class Isolate(unittest.TestCase):
         # It cannot license anything but a requested compiler-only function.
         _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], duplicates=["_ZN1CD1Ev"])
         self.assertIn("not requested compiler-only functions", plan["error"])
+
+    def test_duplicate_deadstrip_accepts_a_strong_matching_body(self):
+        """An ordinary definition is STB_GLOBAL.  Matching bytes still discard it.
+
+        The model-animation thunk translation unit defines the three destructors
+        as real methods, and mwcc emits those bodies STB_GLOBAL.  Vague linkage
+        is not what that compilation produces.  The cartridge-byte compare is
+        what makes discarding the strong copy safe.  A binding outside
+        vague-or-strong stays a refusal.
+        """
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        obj = self.build('extern "C" int helper(int x) { return x + 1; }\n'
+                         'extern "C" int kept(int x) { return helper(x); }\n')
+        raw = obj.read_bytes()
+        real = self._section_bytes(raw, "helper")
+        elf = ELFFile(io.BytesIO(raw))
+        symtab = elf.get_section_by_name(".symtab")
+        syms = list(symtab.iter_symbols())
+        index = next(i for i, s in enumerate(syms) if s.name == "helper")
+        self.assertEqual(syms[index]["st_info"]["bind"], "STB_GLOBAL")
+        self.assertEqual(symtab.header["sh_entsize"], 16)
+
+        out, plan = OI.derive_deadstrip(raw, ["helper"], {"helper": real})
+        self.assertIsNone(plan["error"], plan)
+        # Same binding, different bytes: the strong case is still a refusal.
+        _out, plan = OI.derive_deadstrip(
+            raw, ["helper"], {"helper": bytes(len(real))})
+        self.assertIn("non-relocated offset", plan["error"])
+        done = ELFFile(io.BytesIO(out))
+        got = next(s for s in done.get_section_by_name(".symtab").iter_symbols()
+                   if s.name == "helper")
+        self.assertEqual(got["st_shndx"], "SHN_UNDEF")
+
+        info_at = symtab.header["sh_offset"] + index * 16 + 12
+        weak = bytearray(raw)
+        weak[info_at] = (2 << 4) | 2  # STB_WEAK, STT_FUNC
+        out, plan = OI.derive_deadstrip(bytes(weak), ["helper"], {"helper": real})
+        self.assertIsNone(plan["error"], plan)
+
+        local = bytearray(raw)
+        local[info_at] = 2  # STB_LOCAL, STT_FUNC
+        _out, plan = OI.derive_deadstrip(bytes(local), ["helper"], {"helper": real})
+        self.assertIn("vague or strong linkage", plan["error"])
 
     def test_duplicate_deadstrip_still_refuses_an_unnamed_section_reference(self):
         """The exemption is keyed on the NAME, so an anonymous reference is untouched.
@@ -1536,12 +1606,12 @@ class Isolate(unittest.TestCase):
 
         Multiple inheritance stores the secondary sub-table's address as well as
         the primary's, so the addend is past the primary slots -- 44 for
-        `ModelAnim` where the primary's is 8. The correction is the same
+        `dExtAnmModel_c` where the primary's is 8. The correction is the same
         subtraction, because mwcc's `_ZTV` addresses the vtable object's start
         while the ROM's IS the slot array, and the ROM names the destination
-        independently: `_ZTV9ModelAnim` 0x0208e980 and
-        `VTable_Animation_ModelAnimThunk` 0x0208e9a4 differ by 0x24, which is
-        exactly 44 - 8.
+        independently: `_ZTV14dExtAnmModel_c` 0x0208e980 and
+        `VTable_dExtFrameCtrl_c_dExtAnmModel_cThunk` 0x0208e9a4 differ by 0x24,
+        which is exactly 44 - 8.
 
         This was refused while no enrolled instance existed to check the
         arithmetic against. Both stores now drop by the preamble."""
@@ -1564,7 +1634,7 @@ class Isolate(unittest.TestCase):
         addend 8 for the primary store, and 24 (8 preamble + 0x10 into the
         secondary block) for the secondary. The secondary used to be refused
         on the UNDEF path while no enrolled instance verified the arithmetic;
-        ModelAnim's externalised 44 - 8 = +0x24 thunk landing is that
+        dExtAnmModel_c's externalised 44 - 8 = +0x24 thunk landing is that
         verification, and dBgCh_Lin's constructor is the first enrolled
         function to walk this exact path."""
         obj = self.build("struct B1 { int p[4]; virtual ~B1(){} };\n"

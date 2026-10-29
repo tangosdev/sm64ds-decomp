@@ -79,7 +79,7 @@
   "bss": [],
   "notes": [
     "Genuine class form: the real header's inline destructor and this TU's out-of-line InitResources key function make mwccarm own retail D1/D0 plus the complete daObjNumber_c RTTI/vtable group; no hand-mangled member definition remains.",
-    "Factory is return new daObjNumber_c(); fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size). The implicit constructor emits dActor_c C2, the class vptr as &_ZTV13daObjNumber_c[2], Model C1 at +0xd4 and TextureSequence C1 at +0x124.",
+    "Factory is return new daObjNumber_c(); fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size). The implicit constructor emits dActor_c C2, the class vptr as &_ZTV13daObjNumber_c[2], dExtSimpleModel_c C1 at +0xd4 and dExtAnmTexPat_c C1 at +0x124.",
     "daObjNumber_c_classInit is a reconstructed source-style name: SM64DS proves the class through RTTI, allocation size, vtable identity, and the OBJ_NUMBER registry profile; later EAD lineage supplies classInit. Exact original SM64DS spelling is not preserved. Historical aliases: Number_Spawn / daObjNumber_c_Spawn.",
     "func_ov002_020f0918 stays a C ABI helper: not a vtable slot, and the only inbound call is arm9 dActor_c::SpawnNumber. Parameter types daObjNumber_c* / dActor_c* are recovered from this consumer and this class's fields; the C name encodes no argument types.",
     "g_profile_OBJ_NUMBER and the four SharedFilePtr handles at 0x0210d9a8/0x0210d9e8/0x0210da08/0x0210da28 are overlay data/bss this TU consumes and does not claim."

@@ -8,9 +8,9 @@
  * ov002 0x020b415c..0x020b46a0, fourteen functions; it ends with the
  * four per-profile registry factories, each `new daObjBlockItemTag_c()`.
  *
- * leftovers:
- * - LoadSilverStarAndNumber and UnloadSilverStarAndNumber keep linker
- *   names: they are ov002 helpers and naming belongs there.
+ * Notes:
+ * - LoadSilverStarAndNumber and UnloadSilverStarAndNumber are ov002 C
+ *   helpers defined outside this TU.
  * - Vec3_Dist keeps a local `const void *` spelling: its header copies
  *   take Vector3 * and live in unrelated leaf headers.
  * - data_ov002_020ff090 (spawn height offsets) and the
@@ -24,7 +24,7 @@
 #include "SharedFilePtr.h"
 #include "dActor_c.h"
 #include "daObjBlockL_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "daShl_c.h"
 #include "daStar_c.h"
 #include "daStarBase_c.h"
@@ -40,10 +40,12 @@ extern s32 data_ov002_020ff090[];
 
 /* PMF action table, indexed by mActionIndex. */
 typedef void (daObjBlockItemTag_c::*ItemTagAction)();
+extern ItemTagAction data_ov002_0210dd30[];
+
+/* arm9 / ov002 C helpers with no shared header. */
 extern "C" {
 extern s32 Vec3_Dist(const void *a, const void *b);
 extern void LoadSilverStarAndNumber();
-extern "C" ItemTagAction data_ov002_0210dd30[];
 }
 
 /* Actor IDs 0xf, 0x10 and 0x11 are three of the daObjBlockL_c brick
@@ -62,13 +64,10 @@ static inline int IsActorID(dActor_c *actor, int id) {
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order. D0 additionally returns the object to the actor heap through
  * dActor_c's inline operator delete. */
-daObjBlockItemTag_c::~daObjBlockItemTag_c()
-{
-}
+daObjBlockItemTag_c::~daObjBlockItemTag_c() {}
 
 // @symbol _ZN19daObjBlockItemTag_c11GetSpawnPosER7Vector3RS_
-void daObjBlockItemTag_c::GetSpawnPos(Vector3 &destination, daObjBlockItemTag_c &tag)
-{
+void daObjBlockItemTag_c::GetSpawnPos(Vector3 &destination, daObjBlockItemTag_c &tag) {
     u8 index = tag.mActionIndex;
     s32 z = tag.mPosZ;
     s32 y = tag.mPosY + data_ov002_020ff090[index];
@@ -80,8 +79,7 @@ void daObjBlockItemTag_c::GetSpawnPos(Vector3 &destination, daObjBlockItemTag_c 
 }
 
 // @symbol _ZN19daObjBlockItemTag_c15SpawnKoopaShellEv
-void daObjBlockItemTag_c::SpawnKoopaShell()
-{
+void daObjBlockItemTag_c::SpawnKoopaShell() {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);
     dActor_c *shell = Spawn(0x11d, 0, spawnPos, 0, mAreaId, -1);
@@ -90,24 +88,21 @@ void daObjBlockItemTag_c::SpawnKoopaShell()
 }
 
 // @symbol _ZN19daObjBlockItemTag_c17SpawnMegaMushroomEv
-void daObjBlockItemTag_c::SpawnMegaMushroom()
-{
+void daObjBlockItemTag_c::SpawnMegaMushroom() {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);
     Spawn(0x115, 0, spawnPos, 0, mAreaId, -1);
 }
 
 // @symbol _ZN19daObjBlockItemTag_c18SpawnOneUpMushroomEv
-void daObjBlockItemTag_c::SpawnOneUpMushroom()
-{
+void daObjBlockItemTag_c::SpawnOneUpMushroom() {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);
     Spawn(0x114, 0, spawnPos, 0, mAreaId, -1);
 }
 
 // @symbol _ZN19daObjBlockItemTag_c15SpawnSilverStarEv
-void daObjBlockItemTag_c::SpawnSilverStar()
-{
+void daObjBlockItemTag_c::SpawnSilverStar() {
     Vector3 spawnPos;
     dActor_c *starMarker;
     dActor_c *silverStar;
@@ -126,25 +121,31 @@ void daObjBlockItemTag_c::SpawnSilverStar()
 }
 
 // @symbol _ZN19daObjBlockItemTag_c16CleanupResourcesEv
-int daObjBlockItemTag_c::CleanupResources()
-{
-  switch(actorID){
-  case 0x141: data_ov002_0210d9d8.Release(); break;
-  case 0x142: data_ov002_0210da30.Release(); break;
-  case 0x143: data_ov002_0210da18.Release(); break;
-  case 0x144: UnloadSilverStarAndNumber(); break;
-  }
-  return 1;
+int daObjBlockItemTag_c::CleanupResources() {
+    switch (actorID) {
+    case 0x141:
+        data_ov002_0210d9d8.Release();
+        break;
+    case 0x142:
+        data_ov002_0210da30.Release();
+        break;
+    case 0x143:
+        data_ov002_0210da18.Release();
+        break;
+    case 0x144:
+        UnloadSilverStarAndNumber();
+        break;
+    }
+    return 1;
 }
 
 // @symbol _ZN19daObjBlockItemTag_c8BehaviorEv
-int daObjBlockItemTag_c::Behavior()
-{
+int daObjBlockItemTag_c::Behavior() {
     if (mIsAttached == 0) {
         dActor_c *block;
         for (block = dActor_c::Next(0); block != 0; block = dActor_c::Next(block)) {
             if (IsActorID(block, 0x10) || IsActorID(block, 0x0f) || IsActorID(block, 0x11)) {
-                if (Vec3_Dist(&mPosX, &block->mPosX) < 0x32000) {
+                if (Vec3_Dist(&mPos, &block->mPos) < 0x32000) {
                     ((daObjBlockL_c *)block)->mLinkedActor = this;
                     mIsAttached = 1;
                     return 1;
@@ -168,8 +169,7 @@ int daObjBlockItemTag_c::Behavior()
 }
 
 // @symbol _ZN19daObjBlockItemTag_c13InitResourcesEv
-int daObjBlockItemTag_c::InitResources()
-{
+int daObjBlockItemTag_c::InitResources() {
     mStarID = param1 & 0x7f;
     if (mStarID == 0x7f)
         mStarID = 0;
@@ -177,15 +177,15 @@ int daObjBlockItemTag_c::InitResources()
     switch (actorID) {
     case 0x141:
         mActionIndex = 0;
-        Model::LoadFile(data_ov002_0210d9d8);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
         break;
     case 0x142:
         mActionIndex = 1;
-        Model::LoadFile(data_ov002_0210da30);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
         break;
     case 0x143:
         mActionIndex = 2;
-        Model::LoadFile(data_ov002_0210da18);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
         break;
     case 0x144:
         mActionIndex = 3;
@@ -207,33 +207,26 @@ int daObjBlockItemTag_c::InitResources()
  * GreenShellBlockTag_Spawn, MegaMushroomBlockTag_Spawn,
  * OneUpMushroomBlockTag_Spawn. */
 // @symbol daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG()
-{
+extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG() {
     return new daObjBlockItemTag_c();
 }
 
 // @symbol daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG()
-{
+extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG() {
     return new daObjBlockItemTag_c();
 }
 
 // @symbol daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG()
-{
+extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 
 // @symbol daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG()
-{
+extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 
 // @symbol data_ov002_0210dd30
 ItemTagAction data_ov002_0210dd30[4] = {
-    &daObjBlockItemTag_c::SpawnOneUpMushroom,
-    &daObjBlockItemTag_c::SpawnMegaMushroom,
-    &daObjBlockItemTag_c::SpawnKoopaShell,
-    &daObjBlockItemTag_c::SpawnSilverStar
-};
+    &daObjBlockItemTag_c::SpawnOneUpMushroom, &daObjBlockItemTag_c::SpawnMegaMushroom,
+    &daObjBlockItemTag_c::SpawnKoopaShell, &daObjBlockItemTag_c::SpawnSilverStar};

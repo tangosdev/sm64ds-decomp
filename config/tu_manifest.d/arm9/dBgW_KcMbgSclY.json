@@ -77,14 +77,14 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN14dBgW_KcMbgSclY9SetScaleYE5Fix12IiE",
+      "symbol": "_ZN14dBgW_KcMbgSclY9SetScaleYEi",
       "address": "0x0203aad8",
       "size": "0x0000002c",
       "legacy_source": "src/_ZN14dBgW_KcMbgSclY9SetScaleYE5Fix12IiE.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block",
+      "symbol": "_ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
       "address": "0x0203ab04",
       "size": "0x00000038",
       "legacy_source": "src/_ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c",

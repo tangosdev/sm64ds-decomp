@@ -44,8 +44,12 @@ extern "C" void func_02055624(void)
     *(volatile unsigned int *)0x4000454 = 0;
 }
 
-// @symbol _ZN3G3X6SetFogEbiii
-void G3X::SetFog(bool enable, int a, int b, int c) {
+// @symbol _ZN3G3X6SetFogEiiii
+/* The Nitro SDK's G3X_SetFog(BOOL enable, GXFogBlend, GXFogSlope, int): the
+   flag is an int. The body tests it the same either way, and dScStage_c's
+   RenderFog passes the stage's fog byte with no 0/1 conversion, which a bool
+   parameter would insert. */
+void G3X::SetFog(int enable, int a, int b, int c) {
     if (enable) {
         *(volatile unsigned short *)0x400035c = (unsigned short)c;
         *(volatile unsigned short *)0x4000060 =

@@ -193,7 +193,7 @@
     },
     "emission_order": "D1 first at 0x02126504, then D0 at 0x02126554, and they are the FIRST two functions of the text run.",
     "shape": "D0 does NOT call D1 -- it inlines D1's whole body and then deletes. Both store the vtable address point 0x02128c04 into this+0, then destroy the five members in reverse construction order, then call _ZN8dActor_cD2Ev (0x020112c8). D0 additionally loads a Heap* from [0x020a0eac] and tail-calls _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE (0x0203c1e8).",
-    "member_destruction_order": "0x1e4 _ZN10dBgCh_ActrD1Ev, 0x1b0 _ZN7dCcAc_cD1Ev, 0x188 _ZN11ShadowModelD1Ev, 0x138 _ZN5ModelD1Ev, 0xd4 _ZN9ModelAnimD1Ev -- exactly the reverse of the factory's construction order, which is the second independent witness for the field layout."
+    "member_destruction_order": "0x1e4 _ZN10dBgCh_ActrD1Ev, 0x1b0 _ZN7dCcAc_cD1Ev, 0x188 _ZN11ShadowModelD1Ev, 0x138 _ZN17dExtSimpleModel_cD1Ev, 0xd4 _ZN14dExtAnmModel_cD1Ev -- exactly the reverse of the factory's construction order, which is the second independent witness for the field layout."
   },
   "size": "0x3f4",
   "size_evidence": "1012 = 0x3f4 read straight out of the cartridge: daGmch_c_classInit at 0x02127adc disassembles to `mov r0, #0x3f4` at 0x02127ae0 immediately followed by `bl 0x02043444` = _ZN7fBase_cnwEj (fBase_c::operator new). The literal is the factory's own, not inferred. Corroborated twice: symbols/profile_reconstruction_registry.json records alloc_size 0x000003f4 for actor_id 261, and the highest object displacement anywhere in the text run is +0x3f2 (a byte), which closes on 0x3f4 after alignment.",
@@ -203,7 +203,7 @@
     "size": "0x58",
     "source_file_today": "src/d_a_gmch.c",
     "note": "This is the 37th function of the text run and is NOT one of the 36 queue shards -- it already lives in a named file rather than a func_ov081_* shard. config/arm9/overlays/ov081/delinks.txt assigns src/d_a_gmch.c the range .text 0x02127adc..0x02127b34.",
-    "body": "operator new(0x3f4) -> dActor_c::dActor_c() -> store vtable 0x02128c04 -> ModelAnim(+0xd4), Model(+0x138), ShadowModel(+0x188), dCcAc_c(+0x1b0), dBgCh_Actr(+0x1e4)."
+    "body": "operator new(0x3f4) -> dActor_c::dActor_c() -> store vtable 0x02128c04 -> dExtAnmModel_c(+0xd4), dExtSimpleModel_c(+0x138), ShadowModel(+0x188), dCcAc_c(+0x1b0), dBgCh_Actr(+0x1e4)."
   },
   "profile": {
     "symbol": "g_profile_GAMAGUCHI",
@@ -404,13 +404,13 @@
   "fields": [
     {
       "offset": "0xd4",
-      "type": "ModelAnim",
-      "proof": "constructed by _ZN9ModelAnimC1Ev at 0x02127b00 and destroyed by _ZN9ModelAnimD1Ev in D1/D0 -- two witnesses"
+      "type": "dExtAnmModel_c",
+      "proof": "constructed by _ZN14dExtAnmModel_cC1Ev at 0x02127b00 and destroyed by _ZN14dExtAnmModel_cD1Ev in D1/D0 -- two witnesses"
     },
     {
       "offset": "0x138",
-      "type": "Model",
-      "proof": "constructed by _ZN5ModelC1Ev at 0x02127b08, destroyed by _ZN5ModelD1Ev"
+      "type": "dExtSimpleModel_c",
+      "proof": "constructed by _ZN17dExtSimpleModel_cC1Ev at 0x02127b08, destroyed by _ZN17dExtSimpleModel_cD1Ev"
     },
     {
       "offset": "0x188",

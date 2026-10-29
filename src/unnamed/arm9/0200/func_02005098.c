@@ -6,7 +6,7 @@ typedef struct {
     char pad_000[0x110];
     char *mTargetPlayer; /* 0x110 */
     char pad_114[0x28];
-    int mState_13c; /* 0x13c */
+    int mMode; /* 0x13c */
 } CameraView;
 
 int func_02005098(int param_1) {
@@ -14,7 +14,7 @@ int func_02005098(int param_1) {
     /* + 0x5c is the player's mPosX..mPosZ (include/dActor_c.h); + 0x644 is
        a Player field with no name yet. */
     char *ip = cam->mTargetPlayer;
-    func_0200bec4(param_1, (int)(ip + 0x5c), *(int *)(ip + 0x644), cam->mState_13c, 0x20000);
+    func_0200bec4(param_1, (int)(ip + 0x5c), *(int *)(ip + 0x644), cam->mMode, 0x20000);
     func_02009138(param_1, 0x80000);
     return 1;
 }

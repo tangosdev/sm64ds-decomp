@@ -10,7 +10,10 @@ src/game/actors/d_a_obj_cv_news_lift.cpp:
     complete
     .text start:0x021111a0 end:0x021121e8
     .rodata start:0x02114740 end:0x02114748
+    .init start:0x02113500 end:0x02113688
+    .ctor start:0x02113734 end:0x02113738
     .data start:0x02114748 end:0x0211480c
+    .bss start:0x021149a0 end:0x02114a50
 
 src/game/actors/d_a_grock.cpp:
     complete
@@ -25,7 +28,3 @@ src/game/actors/d_a_obj_cv_shutter.cpp:
     .init start:0x021136c8 end:0x02113734
     .ctor start:0x0211373c end:0x02113740
     .bss start:0x02114a64 end:0x02114a8c
-
-src/unnamed/ov021/__sinit_ov021_02113500.c:
-    complete
-    .init start:0x02113500 end:0x02113688

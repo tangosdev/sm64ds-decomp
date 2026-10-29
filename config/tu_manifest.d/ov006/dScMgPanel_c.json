@@ -1235,28 +1235,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1404,139 +1384,139 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2228",
+      "from": "@2229",
       "to": "@2234",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2234 to @2228; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2234; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2234 to @2228; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2234; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2221) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2230",
+      "from": "@2231",
       "to": "@2236",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2236 to @2230; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2236; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2236 to @2230; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2236; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2223) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2232",
+      "from": "@2233",
       "to": "@2238",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2238 to @2232; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2238; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2238 to @2232; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2238; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2225) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2234",
+      "from": "@2235",
       "to": "@2240",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2240 to @2234; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2240; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2240 to @2234; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2240; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2227) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2236",
+      "from": "@2237",
       "to": "@2242",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2242 to @2236; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2242; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2242 to @2236; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2242; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2229) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2250",
+      "from": "@2251",
       "to": "@2256",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2256 to @2250; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2256; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2256 to @2250; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2256; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2243) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2238",
+      "from": "@2239",
       "to": "@2244",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2244 to @2238; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2244; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2244 to @2238; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2244; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2231) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2240",
+      "from": "@2241",
       "to": "@2246",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2246 to @2240; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2246; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2246 to @2240; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2246; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2233) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2242",
+      "from": "@2243",
       "to": "@2248",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2248 to @2242; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2248; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2248 to @2242; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2248; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2235) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2244",
+      "from": "@2245",
       "to": "@2250",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2250 to @2244; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2250; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2250 to @2244; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2250; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2237) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2246",
+      "from": "@2247",
       "to": "@2252",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2252 to @2246; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2252; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2252 to @2246; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2252; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2239) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2248",
+      "from": "@2249",
       "to": "@2254",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2254 to @2248; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2254; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2254 to @2248; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2254; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2241) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2252",
+      "from": "@2253",
       "to": "@2258",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2258 to @2252; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2258; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2258 to @2252; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2258; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2245) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2254",
+      "from": "@2255",
       "to": "@2260",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2260 to @2254; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2260; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2260 to @2254; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2260; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2247) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2256",
+      "from": "@2257",
       "to": "@8810",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2262 to @2256; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8810; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2262 to @2256; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8810; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2249) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2260",
+      "from": "@2261",
       "to": "@8812",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2266 to @2260; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8812; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2266 to @2260; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8812; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2253) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2258",
+      "from": "@2259",
       "to": "@8811",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2264 to @2258; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8811; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2264 to @2258; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8811; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2251) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2266",
+      "from": "@2267",
       "to": "@8815",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2272 to @2266; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8815; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2272 to @2266; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8815; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2259) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2262",
+      "from": "@2263",
       "to": "@8813",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2268 to @2262; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8813; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2268 to @2262; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8813; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2255) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2264",
+      "from": "@2265",
       "to": "@8814",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2270 to @2264; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8814; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2270 to @2264; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8814; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2257) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2268",
+      "from": "@2269",
       "to": "@8816",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2274 to @2268; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8816; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2274 to @2268; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8816; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2261) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2270",
+      "from": "@2271",
       "to": "@2276",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2276 to @2270; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2276; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2276 to @2270; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2276; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2263) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2272",
+      "from": "@2273",
       "to": "@2278",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2278 to @2272; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2278; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2278 to @2272; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2278; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2265) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2274",
+      "from": "@2275",
       "to": "@2280",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2280 to @2274; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2280; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2280 to @2274; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2280; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2267) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2276",
+      "from": "@2277",
       "to": "@2282",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2282 to @2276; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2282; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2282 to @2276; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2282; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2269) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2278",
+      "from": "@2279",
       "to": "@2284",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2284 to @2278; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2284; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2284 to @2278; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2284; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2271) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2280",
+      "from": "@2281",
       "to": "@2286",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2286 to @2280; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2286; see notes/experiments/scene-physics3955-review.md."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2286 to @2280; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2286; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2273) when dScMgBase_c.h gained Mg_DrawLine."
     }
   ],
   "symbol_binding_rewrites": [

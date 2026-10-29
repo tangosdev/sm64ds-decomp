@@ -7,16 +7,16 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "NOT FROM tu_map. tools/tu_map.py reports arm9 main as one unit, so this boundary is the address run in config/arm9/symbols.txt.",
-    "Contiguous run 0x02005d94..0x02006588 for the class's arm9 methods. Twelve tile this TU's licensed range 0x02005d94..0x0200651c: 0x94+0xb0+0x34+0x94+0xb4+0xa0+0xbc+0xd0+0x38+0xf8+0x130+0x3c = 0x788. D1 (0x0200651c..0x02006554) and C2 (0x02006554..0x02006588) keep their single-function files at the run's end.",
+    "Contiguous run 0x02005d94..0x02006588 for the class's arm9 methods. Fourteen tile this TU's licensed range: 0x94+0xb0+0x34+0x94+0xb4+0xa0+0xbc+0xd0+0x38+0xf8+0x130+0x3c+0x38+0x34 = 0x7f4. D1 (0x0200651c..0x02006554) and C2 (0x02006554..0x02006588) are the tail, the real destructor and constructor.",
     "func_02005e28 and func_02005ed8 are dCapEnemy_c methods, not foreign classes. 0x02005e28 reads mCapId and the player table; 0x02005ed8 tests mCapIcon.mFlags bit 2 and calls dCapIcon_c::Unlink. dCapIcon_c::Unlink itself is ov001 0x020ab110.",
-    "D1 and C2 stay out of this TU because the destructor is the class's key function: only a member ~dCapEnemy_c() emits _ZTV11dCapEnemy_c, and a member dtor/ctor in a multi-function object also emits D0/D2/C1 as STB_GLOBAL homed to the ov002 TU (0x020aedbc, 0x020aedf4), which plan_many cannot deadstrip. The same shape as ov002/daObjKuruma_c's licensed-range trim.",
+    "D1 and C2 are the real members. The destructor is inline, so D0 is vague linkage and D2 is not emitted. D0 duplicates ov002 0x020aedf4 and is deadstrip-duplicate; C1 has no home and is deadstripped. PinD1 places D1 before C2.",
     "Below: dScBoot_c::InitResources ends at 0x02005d94. Above: main starts at 0x02007000. Nothing of another class sits inside the run."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02005d94",
-      "end": "0x0200651c"
+      "end": "0x02006588"
     }
   ],
   "functions": [
@@ -103,28 +103,194 @@
       "size": "0x0000003c",
       "legacy_source": "src/_ZN11dCapEnemy_c14UnloadCapModelEv.cpp",
       "ordinal": 11
+    },
+    {
+      "symbol": "_ZN11dCapEnemy_cD1Ev",
+      "address": "0x0200651c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN11dCapEnemy_cD1Ev.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN11dCapEnemy_cC2Ev",
+      "address": "0x02006554",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN11dCapEnemy_cC2Ev.cpp",
+      "ordinal": 13
     }
   ],
   "data": [],
   "bss": [],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_Z5PinD1P11dCapEnemy_c",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The inline destructor is vague linkage and otherwise trails C2, so this call is the odr-use that emits D1's section before C2. The function is not in the ROM and nothing that survives references it."
+    },
+    {
+      "symbol": "_ZN11dCapEnemy_cC1Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The real constructor emits C1 beside C2. No symbols.txt names a dCapEnemy_c C1; the cartridge kept C2 at arm9 0x02006554. Nothing that survives references C1."
+    },
+    {
+      "symbol": "_ZN11dCapEnemy_cD0Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov002",
+      "canonical_address": "0x020aedf4",
+      "reason": "The inline destructor emits D0 as STB_LOPROC. ov002 src/runtime/actor/d_cap_enemy.cpp already owns that body at 0x020aedf4. This copy matches it and is discarded so the arm9 object does not define a second one."
+    },
+    {
+      "symbol": "_ZTV11dCapEnemy_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108284",
+      "reason": "The destructor emits the vtable. Its home is ov002 0x02108284, outside this entry's .text, and romdata_check compares the body before the copy is discarded."
+    },
+    {
+      "symbol": "_ZTI11dCapEnemy_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108260",
+      "reason": "Vague typeinfo emitted with the vtable. Home is ov002 0x02108260, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTS11dCapEnemy_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210826c",
+      "reason": "Vague type name emitted with the vtable. Home is ov002 0x0210826c, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "Inherited vague typeinfo for dEnemyBase_c. Home is ov002 0x021081c0, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Inherited vague type name for dEnemyBase_c. Home is ov002 0x021081cc, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague typeinfo for dActor_c. Home is arm9 0x0208e390, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague type name for dActor_c. Home is arm9 0x0208e384, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague typeinfo for dBase_c. Home is arm9 0x02086e78, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague type name for dBase_c. Home is arm9 0x02086e54, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague typeinfo for fBase_c. Home is arm9 0x02086d70, outside this entry's claimed range."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague type name for fBase_c. Home is arm9 0x02086e60, outside this entry's claimed range."
+    }
+  ],
   "notes": [
     "The ov002 half stays src/runtime/actor/d_cap_enemy.cpp. This file is the arm9 half because that path is already enrolled in ov002 and rombuild refuses one complete path in two modules.",
-    "D1 and C2 keep per-function shards: the destructor is the key function, and only a member ~dCapEnemy_c() emits _ZTV11dCapEnemy_c for romdata_check. A member definition in this multi-function object would also emit global D0/D2/C1, homed to the ov002 TU, which plan_many cannot deadstrip."
+    "D1 and C2 are real members. The inline destructor emits D1 and D0 as STB_LOPROC and does not emit D2. D0 is a duplicate of ov002 0x020aedf4. C1 has no configured home. PinD1 is the odr-use that emits D1 before C2. The destructor emits _ZTV11dCapEnemy_c; romdata_check verifies it, then the record is deadstrip-data because its home is ov002."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-dCapEnemy_c/dCapEnemy_c_arm9.o (gitignored)",
+    "object": "build/tu/arm9-dCapEnemy_c/d_cap_enemy_arm9.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 12,
-    "functions_declared": 12,
+    "functions_matched": 14,
+    "functions_declared": 14,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
+      "requested": [
+        "_Z5PinD1P11dCapEnemy_c",
+        "_ZN11dCapEnemy_cC1Ev",
+        "_ZN11dCapEnemy_cD0Ev"
+      ],
+      "deadstripped": [
+        "_Z5PinD1P11dCapEnemy_c",
+        "_ZN11dCapEnemy_cC1Ev",
+        "_ZN11dCapEnemy_cD0Ev"
+      ],
+      "droppedSections": [
+        28,
+        31,
+        32,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53
+      ],
+      "data": [
+        "_ZTV11dCapEnemy_c",
+        "_ZTI11dCapEnemy_c",
+        "_ZTS11dCapEnemy_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dCapEnemy_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS11dCapEnemy_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV11dCapEnemy_c"
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

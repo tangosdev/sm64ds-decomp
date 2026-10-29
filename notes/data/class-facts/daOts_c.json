@@ -85,10 +85,10 @@
      "callers": "2 inbound, 0x02116e98 and 0x0211776c -- children", "name_evidence": "none"}
   ],
   "size": "0x398",
-  "size_evidence": "include/daOts_c.h's static assert, and every member closes exactly on the next: ModelAnim 0x64 at 0x110 ends at 0x174, dBgCh_Actr 0x1bc at 0x174 ends at 0x330, mFileTable plus padding ends at 0x33c, dCcAc_c 0x34 at 0x33c ends at 0x370, ShadowModel 0x28 at 0x370 ends at 0x398. Confirmed by this TU's D1 (0x02115ee0), which destroys exactly those four members at exactly those offsets and then chains to _ZN12dEnemyBase_cD2Ev.",
+  "size_evidence": "include/daOts_c.h's static assert, and every member closes exactly on the next: dExtAnmModel_c 0x64 at 0x110 ends at 0x174, dBgCh_Actr 0x1bc at 0x174 ends at 0x330, mFileTable plus padding ends at 0x33c, dCcAc_c 0x34 at 0x33c ends at 0x370, ShadowModel 0x28 at 0x370 ends at 0x398. Confirmed by this TU's D1 (0x02115ee0), which destroys exactly those four members at exactly those offsets and then chains to _ZN12dEnemyBase_cD2Ev.",
   "fields": [
-    {"offset": "0x110", "type": "ModelAnim", "name": "mModelAnim",
-     "evidence": "D1 destroys a ModelAnim here; PlayStepSound and Render call members on it."},
+    {"offset": "0x110", "type": "dExtAnmModel_c", "name": "mModelAnim",
+     "evidence": "D1 destroys a dExtAnmModel_c here; PlayStepSound and Render call members on it."},
     {"offset": "0x174", "type": "dBgCh_Actr", "name": "mWithMeshClsn",
      "evidence": "D1 destroys a dBgCh_Actr here; func_ov064_021165d8 hands c+0x174 to dEnemyBase_c::UpdateWMClsn and IsGoingOffCliff, both of which take dBgCh_Actr&."},
     {"offset": "0x330", "type": "s32", "name": "mFileTable",

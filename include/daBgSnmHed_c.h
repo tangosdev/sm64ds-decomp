@@ -2,8 +2,8 @@
 #define DABGSNMHED_C_H
 
 #include "dActor_c.h"
-#include "Model.h"
-#include "TextureSequence.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmTexPat_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
@@ -13,8 +13,9 @@
  * slots as dActor_c. The D1/D0 pair and factory independently pin the four
  * owned subobjects and the total allocation size.
  *
- * The four state pairs are recovered from __sinit_ov072_021221f8, which copies
- * eight ROM PMF constants into data_ov072_02122c00. SetState indexes that table
+ * The four state pairs are recovered from the static initializer at
+ * 0x021221f8 (now __sinit_d_a_bg_snm_hed.cpp), which copies
+ * eight ROM PMF constants into gBgSnmHedStates. SetState indexes that table
  * at state * 0x10 and invokes the first PMF; Behavior invokes the second.
  * Descriptive original names are absent, so the ROM-evidenced indices remain.
  *
@@ -24,11 +25,11 @@
  * class.
  */
 struct daBgSnmHed_c : dActor_c {
-    u8 mPad0d0[0x4];                    /* 0x0d0 */
-    Model mModel;                       /* 0x0d4 */
-    TextureSequence mTextureSequence;   /* 0x124 */
-    dCcAc_c mCylinder;                  /* 0x138 */
-    dBgCh_Actr mWithMeshClsn;           /* 0x16c */
+    u8 mPad0d0[0x4];                  /* 0x0d0 */
+    dExtSimpleModel_c mModel;         /* 0x0d4 */
+    dExtAnmTexPat_c mTextureSequence; /* 0x124 */
+    dCcAc_c mCylinder;                /* 0x138 */
+    dBgCh_Actr mWithMeshClsn;         /* 0x16c */
 
     typedef int (daBgSnmHed_c::*StateFunc)();
     /* One row of the sinit-built table: the 8-byte init PMF, then the
@@ -37,21 +38,24 @@ struct daBgSnmHed_c : dActor_c {
         StateFunc init;
         StateFunc behavior;
     };
-    StateEntry *mState;                 /* 0x328 */
-    Player *mTalkPlayer;                /* 0x32c */
-    s32 mStateValue;                    /* 0x330 */
-    u8 mSubstate;                       /* 0x334 */
-    u8 mStateTimer;                     /* 0x335 */
-    u8 unk_336;                         /* 0x336 */
-    u8 mPad337;                         /* 0x337 */
+    StateEntry *mState;  /* 0x328 */
+    Player *mTalkPlayer; /* 0x32c */
+    s32 mStateValue;     /* 0x330 */
+    u8 mSubstate;        /* 0x334 */
+    u8 mStateTimer;      /* 0x335 */
+    /* Set to 1 by daBgSnmBdy_c's State3 when the body comes within 380.0
+       of its landing point; State0 then switches to State2, the jump that
+       lands the head on the body. Was unk_336. */
+    u8 mBodyArriving; /* 0x336 */
+    u8 mPad337;       /* 0x337 */
 
-    virtual ~daBgSnmHed_c();             /* slots 16, 17 */
+    virtual ~daBgSnmHed_c(); /* slots 16, 17 */
 
-    virtual int InitResources();        /* slot  0 */
-    virtual int CleanupResources();     /* slot  3 */
-    virtual int Behavior();             /* slot  6 */
-    virtual int Render();               /* slot  9 */
-    virtual void OnPendingDestroy();    /* slot 12 */
+    virtual int InitResources();     /* slot  0 */
+    virtual int CleanupResources();  /* slot  3 */
+    virtual int Behavior();          /* slot  6 */
+    virtual int Render();            /* slot  9 */
+    virtual void OnPendingDestroy(); /* slot 12 */
 
     void UpdateModel();
     int InitState0();
@@ -69,8 +73,7 @@ struct daBgSnmHed_c : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char SnowmanHead_size_must_be_0x338[
-    sizeof(daBgSnmHed_c) == 0x338 ? 1 : -1];
+typedef char SnowmanHead_size_must_be_0x338[sizeof(daBgSnmHed_c) == 0x338 ? 1 : -1];
 #endif
 
 #endif

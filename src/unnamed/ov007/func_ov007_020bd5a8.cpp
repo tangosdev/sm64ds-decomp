@@ -1,9 +1,5 @@
 //cpp
-namespace GX {
-    void SetBankForTex(unsigned short);
-    void SetBankForTexPltt(unsigned short);
-    void SetBankForOBJ(unsigned short);
-}
+#include "GX.h"
 
 extern "C" void func_ov007_020bd5a8(void)
 {

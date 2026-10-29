@@ -3,6 +3,7 @@
  * -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc */
 extern int func_ov007_020c9214();
 enum Flag { F0, F1 };
+/* c: an ov007 model record (animation tables); no class or header names it, so raw. */
 void func_ov007_020bc3dc(void* c, int i, int a2){
   unsigned short** arr = *(unsigned short***)((char*)c+0x14);
   unsigned short* p = arr[i];

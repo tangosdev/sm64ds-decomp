@@ -233,8 +233,8 @@
     "virtual_destructor_evidence": "The vtable has three slots and none of them is 0x020c893c or a deleting stub; the destructor is reached only through literal-pool constants handed to the array-destroy helper at arm9 0x0207328c. A non-virtual destructor with virtual functions is what the cartridge says.",
     "D1": {"symbol": "_ZN16dMgJump3DMario_cD1Ev", "address": "0x020c893c", "size": "0xc8", "rom_ordinal": 26},
     "C1": {"symbol": "_ZN16dMgJump3DMario_cC1Ev", "address": "0x020c8a04", "size": "0x2c", "rom_ordinal": 27},
-    "D1_shape": "Installs 0x0213b0cc at [this]; calls seven arm9 routines on .bss objects (0x02140450, 0x02140460, 0x02140468, 0x02140458, 0x02140438, 0x02140440, 0x02140448); zeroes five .bss words (0x02140430, 0x0214040c, 0x02140424, 0x02140408, 0x0214042c); calls the ModelAnim destructor on this+0x4c; then installs the BASE vtable 0x0213afd8 at [this] and returns this. The trailing base-vptr store is the inlined dMg3DHeyhoObjAdapter_c destructor -- the base destructor is inline and non-virtual.",
-    "C1_shape": "push {r4,lr}; this->dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() via C2 at 0x020c4048; store 0x0213b0cc at [this]; ModelAnim ctor (arm9 0x02016958) on this+0x4c; return this. src/_ZN16dMgJump3DMario_cC1Ev.cpp already reproduces this from an EMPTY constructor body -- the ModelAnim member construction is implicit.",
+    "D1_shape": "Installs 0x0213b0cc at [this]; calls seven arm9 routines on .bss objects (0x02140450, 0x02140460, 0x02140468, 0x02140458, 0x02140438, 0x02140440, 0x02140448); zeroes five .bss words (0x02140430, 0x0214040c, 0x02140424, 0x02140408, 0x0214042c); calls the dExtAnmModel_c destructor on this+0x4c; then installs the BASE vtable 0x0213afd8 at [this] and returns this. The trailing base-vptr store is the inlined dMg3DHeyhoObjAdapter_c destructor -- the base destructor is inline and non-virtual.",
+    "C1_shape": "push {r4,lr}; this->dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() via C2 at 0x020c4048; store 0x0213b0cc at [this]; dExtAnmModel_c ctor (arm9 0x02016958) on this+0x4c; return this. src/_ZN16dMgJump3DMario_cC1Ev.cpp already reproduces this from an EMPTY constructor body -- the dExtAnmModel_c member construction is implicit.",
     "base_ctor": {"symbol": "_ZN22dMg3DHeyhoObjAdapter_cC2Ev", "address": "0x020c4048", "size": "0x18", "in_run": false, "legacy_source": "src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp",
       "shape": "str 0x0213afd8, [r0]; strh #0, [r0, #0x10]; bx lr -- the vptr and one s16.",
       "warning": "This is OUTSIDE the run and stays its own shard. The promoted TU must DECLARE dMg3DHeyhoObjAdapter_c's constructor and NOT define it, or it will emit a second copy."}
@@ -291,8 +291,8 @@
      "evidence": "func_ov006_020c802c copies the 8-byte constant at 0x0213b020 into +0x3c/+0x40 in one shot. Vtable slot 2 compares +0x3c and +0x40 against the constants at 0x0213b058 and 0x0213b070 in the mwccarm PMF-equality shape. Ten run functions write the pair; twelve read or take the address of +0x3c. This is the class's state/behaviour member and it is the reason the .data records exist."},
     {"offset": "0x44", "size": "0x4", "type": "32-bit word", "name": null, "evidence": "ldr/str at +0x44 in three run functions (0x020c7c68, 0x020c833c, 0x020c87d0)."},
     {"offset": "0x48", "size": "0x4", "type": "unknown", "name": null, "evidence": "No access observed."},
-    {"offset": "0x4c", "size": "0x64", "type": "ModelAnim", "name": "mModelAnim",
-     "evidence": "C1 calls arm9 0x02016958 (_ZN9ModelAnimC1Ev) on this+0x4c and D1 calls 0x0201691c (_ZN9ModelAnimD1Ev) on this+0x4c. include/ModelAnim.h asserts sizeof(ModelAnim) == 0x64, so the member spans 0x4c..0xb0. Thirteen run functions do `add rN, this, #0x4c`; four more reach into it at +0x68, +0x9c, +0xa4 and +0xac."},
+    {"offset": "0x4c", "size": "0x64", "type": "dExtAnmModel_c", "name": "mModelAnim",
+     "evidence": "C1 calls arm9 0x02016958 (_ZN14dExtAnmModel_cC1Ev) on this+0x4c and D1 calls 0x0201691c (_ZN14dExtAnmModel_cD1Ev) on this+0x4c. include/dExtAnmModel_c.h asserts sizeof(dExtAnmModel_c) == 0x64, so the member spans 0x4c..0xb0. Thirteen run functions do `add rN, this, #0x4c`; four more reach into it at +0x68, +0x9c, +0xa4 and +0xac."},
     {"offset": "0xb0", "size": "0x8", "type": "unknown", "name": null, "evidence": "NOTHING in the run reads or writes 0xb0..0xb8. The eight bytes are proven only by sizeof == 0xb8 minus 0x4c + 0x64. include/dMgJump3DMario_c.h calls them `u8 unk_0b0[0x08]`; that is a placeholder, not a measurement."}
   ],
 
@@ -309,7 +309,7 @@
 
   "modules_touched": [
     {"module": "ov006", "module_base": "0x020bfec0", "role": "the whole run, both vtables, both RTTI records and both name strings, the 15 PMF constants, the two owning scenes"},
-    {"module": "arm9", "module_base": "0x02000000", "role": "ModelAnim/Animation/SharedFilePtr/OAM/Particle/math helpers the run calls, the array construct/destroy helpers at 0x020733a8 and 0x0207328c, and the two abi type_info vtables at 0x0209a764 and 0x0209a774"}
+    {"module": "arm9", "module_base": "0x02000000", "role": "dExtAnmModel_c/Animation/SharedFilePtr/OAM/Particle/math helpers the run calls, the array construct/destroy helpers at 0x020733a8 and 0x0207328c, and the two abi type_info vtables at 0x0209a764 and 0x0209a774"}
   ],
   "modules_touched_note": "No ov004 and no other overlay. A full cross-module scan (arm9 plus the five overlays that do not overlap ov006's address range) finds zero references into the run, and no module's relocs.txt other than ov006's own names a destination in 0x020c762c..0x020c8a30.",
 
@@ -351,7 +351,7 @@
     "called_from_outside_the_run": 8,
     "reached_only_through_a_PMF_constant": 9,
     "called_only_from_inside_the_run": 6,
-    "member_vs_file_local": "All 23 take `this` as their first argument and index the same field set (+0x04/+0x14/+0x20 vectors, +0x3c PMF, +0x4c ModelAnim), so all 23 are members rather than file-local free helpers. What separates them for stage 3b is not member-ness but reachability -- see callers_outside_the_run."
+    "member_vs_file_local": "All 23 take `this` as their first argument and index the same field set (+0x04/+0x14/+0x20 vectors, +0x3c PMF, +0x4c dExtAnmModel_c), so all 23 are members rather than file-local free helpers. What separates them for stage 3b is not member-ness but reachability -- see callers_outside_the_run."
   },
 
   "sibling_oracles": {
@@ -367,7 +367,7 @@
   "unproven": [
     "The names of all three virtuals. Unk_020c76d8 / Unk_020c76d0 / Unk_020c762c are address-derived placeholders. RTTI proves ownership and slot order; nothing in the cartridge carries their 2004 spelling. Slot 0 returns &this[0x14] and slot 1 returns &this[0x20], both Vector3-shaped, so they are almost certainly accessors -- but do not invent names.",
     "The names of all 23 non-virtual members, and of every field. Offsets and widths are measured; names are not.",
-    "The base/derived SPLIT of the fields below 0x4c. include/dMgJump3DMario_c.h asserts sizeof(dMg3DHeyhoObjAdapter_c) == 0x4c and puts 0x12..0x4c in the base as `u8 unk_012[0x3a]`, but the cartridge proves only that the base initializes +0x00 and +0x10 and that ModelAnim starts at +0x4c. Any split that keeps the total layout is byte-identical TODAY because every shard reaches those fields through `(char *)this + N` casts. It stops being free the moment stage 3b turns +0x3c into a typed member: a pointer-to-member of dMgJump3DMario_c cannot be stored in a member declared in dMg3DHeyhoObjAdapter_c without a cast, which suggests +0x3c is really a DERIVED member and the base is smaller than 0x4c. Do not bank either reading.",
+    "The base/derived SPLIT of the fields below 0x4c. include/dMgJump3DMario_c.h asserts sizeof(dMg3DHeyhoObjAdapter_c) == 0x4c and puts 0x12..0x4c in the base as `u8 unk_012[0x3a]`, but the cartridge proves only that the base initializes +0x00 and +0x10 and that dExtAnmModel_c starts at +0x4c. Any split that keeps the total layout is byte-identical TODAY because every shard reaches those fields through `(char *)this + N` casts. It stops being free the moment stage 3b turns +0x3c into a typed member: a pointer-to-member of dMgJump3DMario_c cannot be stored in a member declared in dMg3DHeyhoObjAdapter_c without a cast, which suggests +0x3c is really a DERIVED member and the base is smaller than 0x4c. Do not bank either reading.",
     "original_tu_extent_unproven: whether the original .cpp was exactly this run. tu_map's cut is name-derived and both neighbours abut with zero gap. Two facts point at a wider file and neither is proof: (a) seven shards immediately below the run (0x020c70d0..0x020c7574, all still .c) call eight of this class's members and are the run's only external callers; (b) src/func_ov006_020c7300.c, also below the run, loads this class's PMF constant at 0x0213b040 -- it installs one of this class's own states. If the original TU included those, the promotion is under-scoped. Nothing measured here settles it.",
     "The contents and purpose of 0xb0..0xb8. No instruction in the run touches those eight bytes.",
     "Whether the 15 PMF constants at 0x0213b020..0x0213b098 belong to this TU's .data or to a neighbour's. They are in UNOWNED .data either way, so the text-only route never has to decide -- but a later intact-object attempt would.",

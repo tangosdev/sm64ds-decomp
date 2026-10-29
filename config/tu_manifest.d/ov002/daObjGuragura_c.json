@@ -14,7 +14,7 @@
     "THE RUN'S LEFT EDGE IS 0x020b5fd8, NOT LOWER. func_ov002_020b5fc4 (0x020b5fc4..0x020b5fd8) and func_ov002_020b5f9c (0x020b5f9c..0x020b5fc4) sit immediately below the destructor pair and are the natural candidate for this TU's head. REFUTED by the census: func_ov002_020b5fc4's only referrer is ov002 0x020b5f90, inside func_ov002_020b5e58, and func_ov002_020b5f9c's only referrer is ov002 0x020b5fd4, inside func_ov002_020b5fc4. The head of that chain, func_ov002_020b5e58, is referenced from {ov016, ov029} -- disjoint from daObjGuragura_c's {ov045, ov064} -- so all three belong to whatever class ov016/ov029 instantiate, not to this one. A field-offset check does NOT refute them on its own, and is recorded here as a refutation that FAILED to discriminate: func_ov002_020b5e58 stores to 0x320, 0x330, 0x33c, 0x340 and 0x344 and func_ov002_020b5f9c to 0x33c and 0x342, every one of them inside sizeof(daObjGuragura_c) = 0x350. Only the referrer sets separate them.",
     "THE RUN'S RIGHT EDGE IS 0x020b6388. func_ov002_020b6244 is the leaf-called setup half (census above). func_ov002_020b6374 (0x020b6374) is named by exactly one word in the image, ov002 0x020b62c8, which is the literal pool at the end of func_ov002_020b6244 -- it is the dBgW callback that setup installs. func_ov002_020b62cc (0x020b62cc) is named by exactly one word in the image, ov002 0x020b6384, inside func_ov002_020b6374. Both are therefore TU-local to this run. 0x020b6388 is _ZN14daObjUkiyuka_cD0Ev, referenced from ov002 0x02109170 = slot 17 of _ZTV14daObjUkiyuka_c, so the next class opens there and this run is closed on the right with nothing between.",
     "SEMANTIC CORROBORATION for the two right-edge additions, arrived at independently of the census: func_ov002_020b62cc stores to this+0x34c (u8 1), this+0x330..0x33f (a quaternion, via Quaternion_FromVector3 then Quaternion_Normalize) and this+0x34d (u8 0xa). sizeof(dBgActor_c) is 0x320 and sizeof(daObjGuragura_c) is 0x350 -- the literal both factories pass to fBase_c::operator new, recorded in include/daObjGuragura_c.h -- so all three stores land in fields this class adds and no base of it has. daObjGuragura_c::Behavior, in this same run, reads all three back: it decrements 0x34d through DecIfAbove0_Byte, reloads 0x330 from data_02092768 when that hits zero, SLerps 0x320 toward 0x330, and clears 0x34c on the way out. The toucher-side half and the per-frame half of one field group sit in one run.",
-    "func_ov002_020b6074 is TU-LOCAL by the same census: its only referrer in the image is ov002 0x020b6200, an ordinary arm_call inside _ZN15daObjGuragura_c8BehaviorEv (0x020b616c..0x020b6244). It reads this+0x320, the live quaternion, and publishes to this+0xf0, dBgActor_c's Model matrix, so it touches this class's own field and its base's and nothing outside either.",
+    "func_ov002_020b6074 is TU-LOCAL by the same census: its only referrer in the image is ov002 0x020b6200, an ordinary arm_call inside _ZN15daObjGuragura_c8BehaviorEv (0x020b616c..0x020b6244). It reads this+0x320, the live quaternion, and publishes to this+0xf0, dBgActor_c's dExtSimpleModel_c matrix, so it touches this class's own field and its base's and nothing outside either.",
     "RTTI edge: ov002 0x0210905c _ZTI15daObjGuragura_c -> __si_class_type_info (0x0209a764), _ZTS '15daObjGuragura_c' at ov002 0x02109068, base ov002 0x021089ec _ZTI10dBgActor_c. Read out of extracted/overlays/overlay_0002.bin at module base 0x020ad660.",
     "vtable ov002 storage 0x0210907c, address point 0x02109084, 32 slots (0x80) ending at 0x02109104, where _ZTI14daObjUkiyuka_c opens the next class's data run -- so the data run 0x0210905c..0x02109104 is closed by this class with nothing between. Read out of the ROM and compared word by word against _ZTV10dBgActor_c (ov002 0x0210ae38): this class overrides exactly slots 6 (Behavior 0x020b616c), 9 (Render 0x020b6144), 16 (D1 0x020b6030) and 17 (D0 0x020b5fd8); slots 0 (InitResources) and 3 (CleanupResources) are BARE ZERO WORDS with no relocation -- the class is abstract there, which is why neither leaf-called helper occupies a slot and why both are reached by an ordinary call from each leaf's own InitResources/CleanupResources instead.",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
@@ -45,14 +45,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020b6074",
+      "symbol": "_ZN15daObjGuragura_c17UpdateModelMatrixEv",
       "address": "0x020b6074",
       "size": "0x00000088",
       "legacy_source": "src/func_ov002_020b6074.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020b60fc",
+      "symbol": "_ZN15daObjGuragura_c20CleanupResourcesFromEP18ResourceDescriptor",
       "address": "0x020b60fc",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b60fc.c",
@@ -73,21 +73,21 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov002_020b6244",
+      "symbol": "_ZN15daObjGuragura_c17InitResourcesFromEP18ResourceDescriptor",
       "address": "0x020b6244",
       "size": "0x00000088",
       "legacy_source": "src/func_ov002_020b6244.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov002_020b62cc",
+      "symbol": "_ZN15daObjGuragura_c10TiltTowardEPh",
       "address": "0x020b62cc",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov002_020b62cc.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov002_020b6374",
+      "symbol": "_ZN15daObjGuragura_c15StoodOnCallbackEPvPS_Ph",
       "address": "0x020b6374",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020b6374.c",
@@ -112,7 +112,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Vector3 declares an empty destructor in include/types.h -- the ROM destroys arrays of it -- so the two members here that hold a Vector3 by value (func_ov002_020b62cc's v and axis, func_ov002_020b6074's v) odr-use its trivial vague-linkage D1 and mwccarm re-emits it alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp already owns that delinks entry; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+      "reason": "Vector3 declares an empty destructor in include/types.h -- the ROM destroys arrays of it -- so the two members here that hold a Vector3 by value (TiltToward's v and axis, UpdateModelMatrix's v) odr-use its trivial vague-linkage D1 and mwccarm re-emits it alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp already owns that delinks entry; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     },
     {
       "symbol": "_ZTV15daObjGuragura_c",
@@ -196,7 +196,7 @@
     "Seeded by tools/tubuild.py create (6 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b6388, rules out func_ov002_020b5f9c and func_ov002_020b5fc4 on the left, and excludes the destructor pair from the licensed range. [Superseded: the licensed range now includes the destructor pair; see the last boundary_evidence entry.]",
     "THREE PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN BEYOND WHAT build/tu_map.json COULD SEE. func_ov002_020b6244 is this class's shared setup half, reached by an ordinary call from each leaf's own InitResources rather than through a vtable slot, because the class is abstract in slots 0 and 3. func_ov002_020b6374 is the dBgW callback that setup installs, and func_ov002_020b62cc is the body that callback forwards to; each is named by exactly one word in the whole image, and both of those words lie inside this run. tu_map cannot see any of the three: none carries a mangled name or a vtable slot, so no label bounds the run on the right.",
     "The class is ABSTRACT: vtable slots 0 (InitResources) and 3 (CleanupResources) are bare zero words with no relocation, and each of the two leaves supplies its own 0x14-byte InitResources/CleanupResources that loads the shared helper and tail-calls it. There is no factory and no g_profile row in ov002 for this class, which is why the entry claims no data, no ctor and no BSS.",
-    "func_ov002_020b6074, func_ov002_020b60fc, func_ov002_020b6244, func_ov002_020b62cc and func_ov002_020b6374 keep their address-derived names. None occupies a vtable slot in any class in the image and nothing in the ROM names any of them, so a coined English name would be invention, not recovery.",
+    "UpdateModelMatrix (0x020b6074), CleanupResourcesFrom (0x020b60fc), InitResourcesFrom (0x020b6244), TiltToward (0x020b62cc) and StoodOnCallback (0x020b6374) are member names coined from their bodies. None occupies a vtable slot in any class in the image and nothing in the ROM names any of them. InitResourcesFrom, CleanupResourcesFrom and StoodOnCallback follow daObjFallBlock_c's spelling for the same three roles.",
     "ONE SOURCE-LEVEL CHANGE WAS FORCED BY THE LANGUAGE MODE, and it is byte-neutral: src/func_ov002_020b6244.c declared the fourth parameter of _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block through a file-local typedef of Fix12 to int. Fix12 is a class template in include/types.h, so in a C++ TU that typedef is a redefinition and mwccarm rejects it (typename redefined). The parameter is spelled int directly instead -- what the mangled name's by-value Fix12<int> lowers to, and the spelling the matched sibling ov002/daObjKaitendai_c already uses for the same call. All seven members match after the change.",
     "POST-PROMOTION tubuild.py linkcheck IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: intact production requires one .text claim and at least one non-text claim. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. The proof of record for this entry is therefore the pre-promotion scratch link recorded below (scratch-link-verified, full ROM built and byte-identical to the stock control), plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the other promoted text-only entries.",
     "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjGuragura_c_EmitDeletingDestructor and daObjGuragura_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjGuragura_c.h because the class's descendants inline its vptr store."
@@ -319,28 +319,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,

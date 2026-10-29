@@ -1,5 +1,5 @@
 #include "types.h"
-/* Three-stop RGB555 colour ramp entry. */
+/* Three-stop RGB555 colour ramp entry (SPL's SPLColorAnim). */
 struct ColorRamp
 {
     u16 startColor;
@@ -11,11 +11,21 @@ struct ColorRamp
     u16 flags;
 };
 
-struct EffectData
-{
-    u16 *palette;
-    int pad4;
-    struct ColorRamp *ramp;
+/* The particle definition's header (func_0204a730's PtclData; SPL's
+ * SPLResourceHeader). 0x12 is the particle's base colour: the ramp runs
+ * startColor -> color -> endColor, and func_0204c584 spawns a particle with
+ * it (its `tex` there; the ramp is its `texAnim` view). */
+struct PtclData {
+    char pad0[0x12];
+    u16 color; /* 0x12 */
+};
+
+/* The particle definition (func_0204a730's PtclDef; SPL's SPLResource), whose
+ * colorAnim slot registers this function as a particle callback. */
+struct PtclDef {
+    struct PtclData *data;       /* 0x00 */
+    void *scaleAnim;             /* 0x04 */
+    struct ColorRamp *colorAnim; /* 0x08 */
 };
 
 struct Particle
@@ -24,10 +34,11 @@ struct Particle
     u16 color;
 };
 
-void func_0204d294(struct Particle *ptcl, struct EffectData *data, int age)
-{
-    u16 *palette = data->palette;
-    struct ColorRamp *ramp = data->ramp;
+/* age is the particle's animation time, 0..255 (func_0204a730 passes its
+ * life rate, or its loop time when the ramp loops). */
+void func_0204d294(struct Particle *ptcl, struct PtclDef *data, int age) {
+    struct PtclData *header = data->data;
+    struct ColorRamp *ramp = data->colorAnim;
     u8 stop1 = ramp->stop1;
     u8 stop2 = ramp->stop2;
     u8 stop3 = ramp->stop3;
@@ -39,7 +50,7 @@ void func_0204d294(struct Particle *ptcl, struct EffectData *data, int age)
     }
     if (age < stop2)
     {
-        u16 hiColor = *(u16 *)((char *)palette + 0x12);
+        u16 hiColor = header->color;
         u16 loColor = ramp->startColor;
         u16 flags = ramp->flags;
         int redHi = hiColor & 0x1f;
@@ -74,7 +85,7 @@ void func_0204d294(struct Particle *ptcl, struct EffectData *data, int age)
     }
     if (age < stop3)
     {
-        u16 loColor = *(u16 *)((char *)palette + 0x12);
+        u16 loColor = header->color;
         u16 hiColor = ramp->endColor;
         u16 flags = ramp->flags;
         int redLo = loColor & 0x1f;

@@ -10,12 +10,10 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daYurei_Mucho_c : dEnemyBase_c {
     /* Two 8-byte PMFs, called on state entry and each frame. The names and
@@ -28,7 +26,7 @@ struct daYurei_Mucho_c : dEnemyBase_c {
 
     dCcAc_c mdCcAc_c;                 /* 0x110 */
     dBgCh_Actr mWithMeshClsn;         /* 0x144 */
-    ModelAnim mModelAnim;             /* 0x300 */
+    dExtAnmModel_c mAnmModel;         /* 0x300 */
     dExtShadowModel_c mShadowModel;         /* 0x364 */
     /* DropShadowRadHeight matrix. func_ov065_0211696c writes a translation of
        (mPosX, mPosY - 0x18000, mPosZ) >> 3. s32[12] rather than Matrix4x3:
@@ -82,15 +80,11 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     int func_ov065_021162c0();
     void func_ov065_02115ff0();
     int func_ov065_02115f84();
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 /* Inline destructor is the key function, so this TU emits the vtable. The
- * factory is `return new daYurei_Mucho_c()`; the leaf size_t operator new
- * forwards to `_ZN7fBase_cnwEj` until #2570's fBase overload lands. */
+ * factory is `return new daYurei_Mucho_c()`, which calls the inherited
+ * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 extern int _ZTV15daYurei_Mucho_c[];
 
 #ifndef SM64DS_PLATFORM_PC

@@ -34,8 +34,8 @@ Left `unk_`:
   angle, a phase or a counter, so the raw poke stays.
 
 Byte-neutral source cleanups in this class: `mBlendModelAnim.speed = 0x1000;` replaced
-`*(s32 *)((char *)&mBlendModelAnim + 0x5c) = 0x1000;` (offset 0x5c of `BlendModelAnim` is
-`speed`, see `include/BlendModelAnim.h`); the `off43c`/`off` scratch integers in `Behavior`
+`*(s32 *)((char *)&mBlendModelAnim + 0x5c) = 0x1000;` (offset 0x5c of `dExtBlendAnmModel_c` is
+`speed`, see `include/dExtBlendAnmModel_c.h`); the `off43c`/`off` scratch integers in `Behavior`
 were dropped in favour of `mStarPos`.
 
 ---
@@ -48,7 +48,7 @@ were dropped in favour of `mStarPos`.
 | 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the `Fix12` triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState`([data_ov078_021270bc](../config/arm9/overlays/ov078/symbols.txt)), the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The [ov078](../config/arm9/overlays/ov078/symbols.txt) handlers read the whole triple: [func_ov078_02123d3c](../src/game/actors/d_a_bombking.cpp) loads all three into a `Vector3`, and [func_ov078_021240a0](../src/game/actors/d_a_bombking.cpp)/[_021243c0](../src/game/actors/d_a_bombking.cpp) pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
 | 0x4e0/0x4e4/0x4e8 | `mHomePosX/Y/Z` | `InitResources` writes them from `mPosX/mPosY/mPosZ` at spawn. |
 | 0x4f8 | `mInitAngleY` | `InitResources`' `*(short*)(this + 0x400 + 0xf8) = mAngleY;`, now spelled `mInitAngleY = mAngleY;`. Previously unnamed inside `pad_4ec`. |
-| 0x4fc | `mAnimSpeed` | `Behavior`'s only read is `mBlendModelAnim.speed = mAnimSpeed << 0xc`, i.e. it is the animation speed in whole units, converted to Fix12 on the way in. `BlendModelAnim`'s `speed` is at +0x5c (`include/BlendModelAnim.h`), and 0x2cc + 0x5c = 0x328, the address the raw poke used. `InitResources` sets it to 1. |
+| 0x4fc | `mAnimSpeed` | `Behavior`'s only read is `mBlendModelAnim.speed = mAnimSpeed << 0xc`, i.e. it is the animation speed in whole units, converted to Fix12 on the way in. `dExtBlendAnmModel_c`'s `speed` is at +0x5c (`include/dExtBlendAnmModel_c.h`), and 0x2cc + 0x5c = 0x328, the address the raw poke used. `InitResources` sets it to 1. |
 | 0x504, 0x505 | `mTimer504`, `mTimer505` | `Behavior` passes both to `DecIfAbove0_Byte` once per frame. The offset stays in the name because the countdown is all the evidence says: nothing in a matched body reads either back. Previously unnamed inside `pad_504`. |
 | 0x507 | `mStarTracked` | `InitResources`: `mStarTracked = dActor_c::TrackStar(this, mStarID, 2);`. |
 | 0x509 | `mStarID` | `InitResources`: `mStarID = param1 & 0xf;` and it is the star id argument of `TrackStar`. |
@@ -126,7 +126,7 @@ Left `unk_`:
   clearly a state, but three values with no name attached is not enough to pick one.
 
 Byte-neutral source cleanups: `mType`, `mCapUniqueID`, `&mHomePos` and
-`mModelAnim.speed = 0x1000` (offset 0x30c + 0x5c = 0x368, `ModelAnim::speed`) replaced the
+`mModelAnim.speed = 0x1000` (offset 0x30c + 0x5c = 0x368, `dExtAnmModel_c::speed`) replaced the
 corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 ---

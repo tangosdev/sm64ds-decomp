@@ -9,14 +9,14 @@
  * The members close exactly on one another, and dEnemyBase_c's own 0x110 closes
  * exactly on the first:
  *
- *     0x110 ModelAnim     0x64   -> 0x174
- *     0x174 Model         0x50   -> 0x1c4
+ *     0x110 dExtAnmModel_c     0x64   -> 0x174
+ *     0x174 dExtSimpleModel_c         0x50   -> 0x1c4
  *     0x1c4 dBgCh_Actr    0x1bc  -> 0x380
  *     0x380 dCcAc_c       0x34   -> 0x3b4
  *     0x3b4 dCcAc_c       0x34   -> 0x3e8
  *     0x3e8 dCcAcPos_c    0x40   -> 0x428
  *
- * The dExtFrameCtrl_c base of mModelAnim sits at 0x160 and mModelAnim.file at 0x170.
+ * The dExtFrameCtrl_c base of mAnmModel sits at 0x160 and mAnmModel.file at 0x170.
  *
  * SIZE IS THE ROM'S OWN, and the observed field span agrees with it:
  * daPkn_c_classInit loads the literal 0x47c from ov084 0x0213016c and hands it
@@ -31,20 +31,20 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
-#include "Model.h"
+#include "dExtAnmModel_c.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
 struct daPkn_c : dEnemyBase_c {
-    ModelAnim       mModelAnim;         /* 0x110 */
-    Model           mModel;             /* 0x174 -- sleep bubble */
+    dExtAnmModel_c mAnmModel;           /* 0x110 */
+    dExtSimpleModel_c mModel;           /* 0x174 -- sleep bubble */
     dBgCh_Actr      mWithMeshClsn;      /* 0x1c4 */
     dCcAc_c         mdCcAc_c1;          /* 0x380 */
     dCcAc_c         mdCcAc_c2;          /* 0x3b4 */
     dCcAcPos_c      mdCcAcPos_c;        /* 0x3e8 -- head, live only in state 2 */
-    Vector3         mBubbleScale;       /* 0x428 -- sleep-bubble Model */
+    Vector3 mBubbleScale;               /* 0x428 -- sleep-bubble dExtSimpleModel_c */
     Vector3         mBubblePos;         /* 0x434 -- sleep-bubble world pos */
     Vector3         mHeadClsnOffset;    /* 0x440 -- head cylinder; rewritten every frame */
     Vector3         mHomePos;           /* 0x44c -- spawn point; InitResources copies 0x440 once */
@@ -69,7 +69,7 @@ struct daPkn_c : dEnemyBase_c {
        emits for an inline in-class destructor; the out-of-line form emits
        D2/D0/D1 in the wrong order plus a homeless D2. The typed member list
        above makes the empty body own the dCcAcPos_c, the two dCcAc_c, the
-       dBgCh_Actr, the Model and the ModelAnim teardowns in that
+       dBgCh_Actr, the dExtSimpleModel_c and the dExtAnmModel_c teardowns in that
        reverse-declaration order, and the chain into _ZN12dEnemyBase_cD2Ev --
        which is exactly what both ROM bodies do.
 

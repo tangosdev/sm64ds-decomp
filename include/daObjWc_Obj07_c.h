@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjKaitendai_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Wet-Dry World's spinning disc. No fields of its own: the
  * factory allocates 0x320 = sizeof(dBgActor_c), which
@@ -20,10 +18,6 @@ struct daObjWc_Obj07_c : daObjKaitendai_c {
     virtual ~daObjWc_Obj07_c() {}
     virtual s32 CleanupResources(); /* slot 3 */
     virtual s32 InitResources();    /* slot 0 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

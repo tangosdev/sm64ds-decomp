@@ -1,4 +1,4 @@
-extern void MultiCopy_Int(int *dst, int *src, int len);
+extern void MultiCopy_Int(int *src, int *dst, int len);
 struct S;
 extern struct S *func_ov007_020c2c68(int a, int len, int b);
 extern void func_ov007_020c27b4(struct S *s);

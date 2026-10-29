@@ -1,8 +1,6 @@
 #include "types.h"
+#include "WmWork.h"
 extern char *data_020a9db4;
-
-#define DISPATCH(a, b) \
-    (*(void (**)(int, void *))(data_020a9db4 + 0x1000 + 0xe1c))((a), (b))
 
 void func_02069918(char *arg0)
 {
@@ -12,5 +10,5 @@ void func_02069918(char *arg0)
     if (v == 7) return;
     if (v == 9) return;
     if (v != 0x15) return;
-    DISPATCH(9, arg0);
+    WM_WORK->userCallback(9, arg0);
 }

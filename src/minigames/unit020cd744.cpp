@@ -4,7 +4,9 @@
  * The run sits between dMgTrmpln2Mario_c and dScMgAmida_c. No RTTI
  * in it. A line slot is a 4x4 patch: positions at +0x5c, normals at
  * +0x1dc, packed normals at +0x2dc. Four slots of 0x32c bytes sit at
- * sTrmpLines. defer_codegen off keeps ROM order.
+ * sTrmpLines. defer_codegen off keeps ROM order. The file owns its
+ * static initializer and its .bss: the line slots, the three ring
+ * model handles, the counters and the function-local unit vectors.
  *
  * leftovers:
  * - Address names stay. Each function keeps its namespace, because
@@ -16,7 +18,7 @@
  *   duplicate of the arm9 copy. Spare4 in TrmpLine_Build emits
  *   another, deadstripped as compiler-only output.
  * - TrmpLine and TrmpItem describe the known named members. Remaining
- *   raw fields preserve partial reconstruction of these records. Model
+ *   raw fields preserve partial reconstruction of these records. dExtSimpleModel_c
  *   and texture-animation operations use their real headers.
  */
 
@@ -27,6 +29,7 @@
 #include "SharedFilePtr.h"
 #include "TrmpLine.h"
 #include "TrmpItem.h"
+#include "math/Approach.h"
 /* Typed access to a TrmpLine slot from the char* helpers below. */
 #define TRMPLINE(p) ((TrmpLine *)(p))
 /* Typed access to a TrmpItem record from the char* helpers below. */
@@ -34,14 +37,44 @@
 
 #pragma defer_codegen off
 
-extern int ApproachLinear(int &, int, int);
-#include "Model.h"
-#include "TextureTransformer.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmTexSRT_c.h"
 #include "SharedFilePtr.h"
+
+/* This unit's globals. The per-function namespaces below still re-declare
+   several of them in the spelling each one-function source used. */
+extern "C" {
+void *sTrmpLinePlttAddr;
+void *sTrmpLineTexAddr;
+int sTrmpItemsHit;
+int sTrmpItemsActive;
+char *sTrmpItems;
+int sTrmp2Score;
+int sTrmpItemCount;
+int sTrmp2MarioPtrs[5];
+void *sTrmpJumpers[5];
+}
+
+/* The three ring model handles (files 0x21a..0x21c), defined at the end of
+   the file. The wrapper name is local; its constructor and destructor are
+   the ROM resource-family functions, aliased in the manifest. */
+struct TrmpItemRingModelFile : SharedFilePtr {
+    TrmpItemRingModelFile(u32 fileID);
+    ~TrmpItemRingModelFile();
+};
+extern TrmpItemRingModelFile sTrmpItemRingAModelFile;
+extern TrmpItemRingModelFile sTrmpItemRingBModelFile;
+extern TrmpItemRingModelFile sTrmpItemRingCModelFile;
+
+/* The four line slots, defined beside TrmpLine's constructor below. */
+extern TrmpLine sTrmpLines[4];
 
 // Partial callback interface only. ROM vtables at 0x0213b2c4/0x0213b2e0
 // implement these five slots through dMgTrmpObjAdapter_c and its children.
 // No destructor slots or complete actor layout are implied by this view.
+namespace cstd {
+int fdiv(s32, s32);
+}
 namespace {
 struct TrampolineObjectCallbacks {
     virtual Vector3 *GetPos();
@@ -50,23 +83,28 @@ struct TrampolineObjectCallbacks {
     virtual int IsActive();
     virtual void Clear();
 };
+
+// The two item counters on the jumper, named as in dMgTrmpln2Mario_c.h.
+struct TrampolineJumperCounts : TrampolineObjectCallbacks {
+    char pad_04[0x20 - 0x04];
+    u16 mItemHitCount;  // +0x20: items hit; doubles the score
+    s16 mItemPushCount; // +0x22: item-end pushes this frame
+};
 }
 
 namespace s020cd744 {
-extern "C" extern void _Z14ApproachLinearRiii(int *a, int b, int c);
-extern "C" extern int _Z15ApproachLinear2Riii(int *a, int b, int c);
 extern "C" {
 extern int sTrmpItemsActive;
 }
 
 extern "C" void TrmpItem_GrowScale(char *c) {
-    _Z14ApproachLinearRiii((int *)(c + 0x68), 0x1200, 0x80);
-    _Z14ApproachLinearRiii((int *)(c + 0x70), 0x1200, 0x80);
-    _Z14ApproachLinearRiii((int *)(c + 0x6c), 0x20000, 0x400);
-    if (_Z15ApproachLinear2Riii((int *)(c + 0x9c), 0, 1) == 0)
+    ApproachLinear(TRMPITEM(c)->mScale.x, 0x1200, 0x80);
+    ApproachLinear(TRMPITEM(c)->mScale.z, 0x1200, 0x80);
+    ApproachLinear(TRMPITEM(c)->mScale.y, 0x20000, 0x400);
+    if (ApproachLinear2(*(int *)&TRMPITEM(c)->mAlpha, 0, 1) == 0)
         return;
     TRMPITEM(c)->mActive = 0;
-    _Z14ApproachLinearRiii(&sTrmpItemsActive, 0, 1);
+    ApproachLinear(sTrmpItemsActive, 0, 1);
 }
 }
 
@@ -89,11 +127,11 @@ extern struct P2 pmf_TrmpItem_GrowScale;
 
 extern "C" void TrmpItem_ProjectToScreen(char *c, int scoreValue) {
     int screenX, screenY;
-    if (*(int *)(c + 0xc) > 0) {
-        Camera_ProjectToScreen(sMgSubCamera, (void *)(c + 8), &screenX, &screenY);
+    if (TRMPITEM(c)->mPos.y > 0) {
+        Camera_ProjectToScreen(sMgSubCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
         screenY = screenY - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen(sMgMainCamera, (void *)(c + 8), &screenX, &screenY);
+        Camera_ProjectToScreen(sMgMainCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
     }
     Jump2Popup_Spawn(screenX << 0xc, screenY << 0xc, (short)scoreValue);
     *(struct P2 *)c = pmf_TrmpItem_GrowScale;
@@ -102,39 +140,22 @@ extern "C" void TrmpItem_ProjectToScreen(char *c, int scoreValue) {
 
 namespace s020cd864 {
 // @symbol TrmpItem_MotionSpinHover
-extern "C" extern void *_ZN7Vector3D1Ev(void *object);
-
-extern "C" extern void func_020731dc(void *object, void *destructor, void **node);
-
 extern "C" void TrmpItem_MotionSpinHover(char *arg) {
+    /* The spin axis and the reference direction, built on first use. */
+    static Vector3 sUnitY(0, 0x1000, 0);
+    static Vector3 sUnitZ(0, 0, 0x1000);
+
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    if ((sTrmpItem_MotionSpinHover_UnitYGuard & 1) == 0) {
-        sTrmpItem_MotionSpinHover_UnitY.x = 0;
-        sTrmpItem_MotionSpinHover_UnitY.y = 0x1000;
-        sTrmpItem_MotionSpinHover_UnitY.z = 0;
-        func_020731dc(&sTrmpItem_MotionSpinHover_UnitY, (void *)_ZN7Vector3D1Ev,
-                      &sTrmpItem_MotionSpinHover_UnitYDtorRec);
-        sTrmpItem_MotionSpinHover_UnitYGuard |= 1;
-    }
-    if ((sTrmpItem_MotionSpinHover_UnitZGuard & 1) == 0) {
-        sTrmpItem_MotionSpinHover_UnitZ.x = 0;
-        sTrmpItem_MotionSpinHover_UnitZ.y = 0;
-        sTrmpItem_MotionSpinHover_UnitZ.z = 0x1000;
-        func_020731dc(&sTrmpItem_MotionSpinHover_UnitZ, (void *)_ZN7Vector3D1Ev,
-                      &sTrmpItem_MotionSpinHover_UnitZDtorRec);
-        sTrmpItem_MotionSpinHover_UnitZGuard |= 1;
-    }
-    func_0203cc28((int *)(arg + 0x38), 0x100);
-    func_0203ce80(&normalCopy, (struct Vector3 *)(arg + 0x38));
-    func_0203cf00(&tangent, (struct Vector3 *)(arg + 0x38), &sTrmpItem_MotionSpinHover_UnitZ);
+    func_0203cc28((int *)&TRMPITEM(arg)->mForward, 0x100);
+    func_0203ce80(&normalCopy, &TRMPITEM(arg)->mForward);
+    func_0203cf00(&tangent, &TRMPITEM(arg)->mForward, &sUnitZ);
     TRMPITEM(arg)->mSide.x = tangent.x;
     TRMPITEM(arg)->mSide.y = tangent.y;
     TRMPITEM(arg)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (struct Vector3 *)(arg + 0x44));
-    Quaternion_FromVector3(TRMPITEM(arg)->mRotation, &sTrmpItem_MotionSpinHover_UnitY,
-                           (struct Vector3 *)(arg + 0x38));
+    func_0203ce80(&tangentCopy, &TRMPITEM(arg)->mSide);
+    Quaternion_FromVector3(TRMPITEM(arg)->mRotation, &sUnitY, &TRMPITEM(arg)->mForward);
     Quaternion_Normalize(TRMPITEM(arg)->mRotation);
     TrmpItem_MotionHover(arg);
 }
@@ -148,7 +169,7 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionSpinHover;
 }
 extern "C" void TrmpItem_SetMotionSpinHover(int *c) {
-    *(short *)((char *)c + 0x9a) = 0;
+    TRMPITEM(c)->mPhase = 0;
     *(struct S *)c = pmf_TrmpItem_MotionSpinHover;
 }
 }
@@ -157,61 +178,28 @@ namespace s020cd9b0 {
 typedef struct {
     int x, y, z;
 } Vec3;
-extern "C" extern void func_020731dc(void *object, void *destructor, void **node);
 extern "C" extern void func_0203cc28(int *p, int angle);
 extern "C" extern void func_0203ce80(Vec3 *dst, Vec3 *src);
 extern "C" extern void func_0203cf00(Vec3 *out, Vec3 *a, Vec3 *b);
 extern "C" extern void Quaternion_FromVector3(int *q, Vec3 *axis, Vec3 *v);
 extern "C" extern void Quaternion_Normalize(int *q);
-extern "C" extern void *_ZN7Vector3D1Ev(void *object);
-
-extern "C" {
-extern int sTrmpItem_MotionSpinDrift_UnitYGuard;
-}
-extern "C" {
-extern Vec3 sTrmpItem_MotionSpinDrift_UnitY;
-}
-extern "C" {
-extern int sTrmpItem_MotionSpinDrift_UnitYDtorRec;
-}
-extern "C" {
-extern int sTrmpItem_MotionSpinDrift_UnitZGuard;
-}
-extern "C" {
-extern Vec3 sTrmpItem_MotionSpinDrift_UnitZ;
-}
-extern "C" {
-extern int sTrmpItem_MotionSpinDrift_UnitZDtorRec;
-}
 
 extern "C" void TrmpItem_MotionSpinDrift(char *self) {
+    /* The spin axis and the reference direction, built on first use. */
+    static Vector3 sUnitY(0, 0x1000, 0);
+    static Vector3 sUnitZ(0, 0, 0x1000);
+
     Vec3 normalCopy, tangent, tangentCopy, unused;
 
-    if (!(sTrmpItem_MotionSpinDrift_UnitYGuard & 1)) {
-        sTrmpItem_MotionSpinDrift_UnitY.x = 0;
-        sTrmpItem_MotionSpinDrift_UnitY.y = 0x1000;
-        sTrmpItem_MotionSpinDrift_UnitY.z = 0;
-        func_020731dc(&sTrmpItem_MotionSpinDrift_UnitY, (void *)&_ZN7Vector3D1Ev,
-                      (void **)&sTrmpItem_MotionSpinDrift_UnitYDtorRec);
-        sTrmpItem_MotionSpinDrift_UnitYGuard |= 1;
-    }
-    if (!(sTrmpItem_MotionSpinDrift_UnitZGuard & 1)) {
-        sTrmpItem_MotionSpinDrift_UnitZ.x = 0;
-        sTrmpItem_MotionSpinDrift_UnitZ.y = 0;
-        sTrmpItem_MotionSpinDrift_UnitZ.z = 0x1000;
-        func_020731dc(&sTrmpItem_MotionSpinDrift_UnitZ, (void *)&_ZN7Vector3D1Ev,
-                      (void **)&sTrmpItem_MotionSpinDrift_UnitZDtorRec);
-        sTrmpItem_MotionSpinDrift_UnitZGuard |= 1;
-    }
-    func_0203cc28((int *)(self + 0x38), 0x100);
-    func_0203ce80(&normalCopy, (Vec3 *)(self + 0x38));
-    func_0203cf00(&tangent, (Vec3 *)(self + 0x38), &sTrmpItem_MotionSpinDrift_UnitZ);
+    func_0203cc28((int *)&TRMPITEM(self)->mForward, 0x100);
+    func_0203ce80(&normalCopy, (Vec3 *)&TRMPITEM(self)->mForward);
+    func_0203cf00(&tangent, (Vec3 *)&TRMPITEM(self)->mForward, (Vec3 *)&sUnitZ);
     TRMPITEM(self)->mSide.x = tangent.x;
     TRMPITEM(self)->mSide.y = tangent.y;
     TRMPITEM(self)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (Vec3 *)(self + 0x44));
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sTrmpItem_MotionSpinDrift_UnitY,
-                           (Vec3 *)(self + 0x38));
+    func_0203ce80(&tangentCopy, (Vec3 *)&TRMPITEM(self)->mSide);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
+                           (Vec3 *)&TRMPITEM(self)->mForward);
     Quaternion_Normalize(TRMPITEM(self)->mRotation);
 }
 }
@@ -224,45 +212,28 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionSpinDrift;
 }
 extern "C" void TrmpItem_SetMotionSpinDrift(char *p) {
-    *(struct S *)(p + 0x0) = pmf_TrmpItem_MotionSpinDrift;
+    *(struct S *)TRMPITEM(p)->mState = pmf_TrmpItem_MotionSpinDrift;
 }
 }
 
 namespace s020cdaec {
 // @symbol TrmpItem_MotionSpinSway
-extern "C" extern void *_ZN7Vector3D1Ev(void *object);
-
-extern "C" extern void func_020731dc(void *object, void *destructor, void **node);
-
 extern "C" void TrmpItem_MotionSpinSway(char *arg) {
+    /* The spin axis and the reference direction, built on first use. */
+    static Vector3 sUnitY(0, 0x1000, 0);
+    static Vector3 sUnitZ(0, 0, 0x1000);
+
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    if ((sTrmpItem_MotionSpinSway_UnitYGuard & 1) == 0) {
-        sTrmpItem_MotionSpinSway_UnitY.x = 0;
-        sTrmpItem_MotionSpinSway_UnitY.y = 0x1000;
-        sTrmpItem_MotionSpinSway_UnitY.z = 0;
-        func_020731dc(&sTrmpItem_MotionSpinSway_UnitY, (void *)_ZN7Vector3D1Ev,
-                      &sTrmpItem_MotionSpinSway_UnitYDtorRec);
-        sTrmpItem_MotionSpinSway_UnitYGuard |= 1;
-    }
-    if ((sTrmpItem_MotionSpinSway_UnitZGuard & 1) == 0) {
-        sTrmpItem_MotionSpinSway_UnitZ.x = 0;
-        sTrmpItem_MotionSpinSway_UnitZ.y = 0;
-        sTrmpItem_MotionSpinSway_UnitZ.z = 0x1000;
-        func_020731dc(&sTrmpItem_MotionSpinSway_UnitZ, (void *)_ZN7Vector3D1Ev,
-                      &sTrmpItem_MotionSpinSway_UnitZDtorRec);
-        sTrmpItem_MotionSpinSway_UnitZGuard |= 1;
-    }
-    func_0203cc28((int *)(arg + 0x38), 0x100);
-    func_0203ce80(&normalCopy, (struct Vector3 *)(arg + 0x38));
-    func_0203cf00(&tangent, (struct Vector3 *)(arg + 0x38), &sTrmpItem_MotionSpinSway_UnitZ);
+    func_0203cc28((int *)&TRMPITEM(arg)->mForward, 0x100);
+    func_0203ce80(&normalCopy, &TRMPITEM(arg)->mForward);
+    func_0203cf00(&tangent, &TRMPITEM(arg)->mForward, &sUnitZ);
     TRMPITEM(arg)->mSide.x = tangent.x;
     TRMPITEM(arg)->mSide.y = tangent.y;
     TRMPITEM(arg)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (struct Vector3 *)(arg + 0x44));
-    Quaternion_FromVector3(TRMPITEM(arg)->mRotation, &sTrmpItem_MotionSpinSway_UnitY,
-                           (struct Vector3 *)(arg + 0x38));
+    func_0203ce80(&tangentCopy, &TRMPITEM(arg)->mSide);
+    Quaternion_FromVector3(TRMPITEM(arg)->mRotation, &sUnitY, &TRMPITEM(arg)->mForward);
     Quaternion_Normalize(TRMPITEM(arg)->mRotation);
     TrmpItem_MotionSway(arg);
 }
@@ -276,18 +247,18 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionSpinSway;
 }
 extern "C" void TrmpItem_SetMotionSpinSway(char *c) {
-    *(short *)(c + 0x9a) = 0x2000;
+    TRMPITEM(c)->mPhase = 0x2000;
     *(struct S *)c = pmf_TrmpItem_MotionSpinSway;
 }
 }
 
 namespace s020cdc38 {
 extern "C" void TrmpItem_MotionHover(void *arg0) {
-    *(u16 *)((char *)arg0 + 0x9a) += 0x100;
-    if (*(u16 *)((char *)arg0 + 0x9a) & 0x8000) {
-        *(s32 *)((char *)arg0 + 0x30) = 0xc00;
+    TRMPITEM(arg0)->mPhase += 0x100;
+    if (TRMPITEM(arg0)->mPhase & 0x8000) {
+        TRMPITEM(arg0)->mVel.y = 0xc00;
     } else {
-        *(s32 *)((char *)arg0 + 0x30) = -0xc00;
+        TRMPITEM(arg0)->mVel.y = -0xc00;
     }
 }
 }
@@ -300,13 +271,12 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionHover;
 }
 extern "C" void TrmpItem_SetMotionHover(char *c) {
-    *(short *)(c + 0x9a) = 0;
+    TRMPITEM(c)->mPhase = 0;
     *(struct S *)c = pmf_TrmpItem_MotionHover;
 }
 }
 
 namespace s020cdc8c {
-extern "C" extern int _ZN4cstd4fdivEii(int a, int b);
 
 #pragma push
 #pragma opt_propagation off
@@ -314,14 +284,14 @@ extern "C" void TrmpItem_MotionSway(char *self) {
     int distanceFromCenterY;
     int xSpeed;
     int minimumSpeed = 0x400;
-    u16 *phase = (u16 *)(self + 0x9a);
+    u16 *phase = &TRMPITEM(self)->mPhase;
 
     *phase = *phase + 0x40;
 
     distanceFromCenterY = TRMPITEM(self)->mPos.y - 0x74000;
     if (distanceFromCenterY < 0)
         distanceFromCenterY = -distanceFromCenterY;
-    xSpeed = (_ZN4cstd4fdivEii(distanceFromCenterY, 0x4c000) >> 3) + minimumSpeed;
+    xSpeed = (cstd::fdiv(distanceFromCenterY, 0x4c000) >> 3) + minimumSpeed;
 
     if (TRMPITEM(self)->mPhase & 0x4000)
         TRMPITEM(self)->mVel.x = xSpeed;
@@ -339,7 +309,7 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionSway;
 }
 extern "C" void TrmpItem_SetMotionSway(char *c) {
-    *(short *)(c + 0x9a) = 0x2000;
+    TRMPITEM(c)->mPhase = 0x2000;
     *(struct S *)c = pmf_TrmpItem_MotionSway;
 }
 }
@@ -348,61 +318,28 @@ namespace s020cdd08 {
 typedef struct {
     int x, y, z;
 } Vec3;
-extern "C" extern void func_020731dc(void *object, void *destructor, void **node);
 extern "C" extern void func_0203cc28(int *p, int angle);
 extern "C" extern void func_0203ce80(Vec3 *dst, Vec3 *src);
 extern "C" extern void func_0203cf00(Vec3 *out, Vec3 *a, Vec3 *b);
 extern "C" extern void Quaternion_FromVector3(int *q, Vec3 *axis, Vec3 *v);
 extern "C" extern void Quaternion_Normalize(int *q);
-extern "C" extern void *_ZN7Vector3D1Ev(void *object);
-
-extern "C" {
-extern int sTrmpItem_MotionSpin_UnitYGuard;
-}
-extern "C" {
-extern Vec3 sTrmpItem_MotionSpin_UnitY;
-}
-extern "C" {
-extern int sTrmpItem_MotionSpin_UnitYDtorRec;
-}
-extern "C" {
-extern int sTrmpItem_MotionSpin_UnitZGuard;
-}
-extern "C" {
-extern Vec3 sTrmpItem_MotionSpin_UnitZ;
-}
-extern "C" {
-extern int sTrmpItem_MotionSpin_UnitZDtorRec;
-}
 
 extern "C" void TrmpItem_MotionSpin(char *self) {
+    /* The spin axis and the reference direction, built on first use. */
+    static Vector3 sUnitY(0, 0x1000, 0);
+    static Vector3 sUnitZ(0, 0, 0x1000);
+
     Vec3 normalCopy, tangent, tangentCopy, d;
 
-    if (!(sTrmpItem_MotionSpin_UnitYGuard & 1)) {
-        sTrmpItem_MotionSpin_UnitY.x = 0;
-        sTrmpItem_MotionSpin_UnitY.y = 0x1000;
-        sTrmpItem_MotionSpin_UnitY.z = 0;
-        func_020731dc(&sTrmpItem_MotionSpin_UnitY, (void *)&_ZN7Vector3D1Ev,
-                      (void **)&sTrmpItem_MotionSpin_UnitYDtorRec);
-        sTrmpItem_MotionSpin_UnitYGuard |= 1;
-    }
-    if (!(sTrmpItem_MotionSpin_UnitZGuard & 1)) {
-        sTrmpItem_MotionSpin_UnitZ.x = 0;
-        sTrmpItem_MotionSpin_UnitZ.y = 0;
-        sTrmpItem_MotionSpin_UnitZ.z = 0x1000;
-        func_020731dc(&sTrmpItem_MotionSpin_UnitZ, (void *)&_ZN7Vector3D1Ev,
-                      (void **)&sTrmpItem_MotionSpin_UnitZDtorRec);
-        sTrmpItem_MotionSpin_UnitZGuard |= 1;
-    }
-    func_0203cc28((int *)(self + 0x38), 0x100);
-    func_0203ce80(&normalCopy, (Vec3 *)(self + 0x38));
-    func_0203cf00(&tangent, (Vec3 *)(self + 0x38), &sTrmpItem_MotionSpin_UnitZ);
+    func_0203cc28((int *)&TRMPITEM(self)->mForward, 0x100);
+    func_0203ce80(&normalCopy, (Vec3 *)&TRMPITEM(self)->mForward);
+    func_0203cf00(&tangent, (Vec3 *)&TRMPITEM(self)->mForward, (Vec3 *)&sUnitZ);
     TRMPITEM(self)->mSide.x = tangent.x;
     TRMPITEM(self)->mSide.y = tangent.y;
     TRMPITEM(self)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (Vec3 *)(self + 0x44));
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sTrmpItem_MotionSpin_UnitY,
-                           (Vec3 *)(self + 0x38));
+    func_0203ce80(&tangentCopy, (Vec3 *)&TRMPITEM(self)->mSide);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
+                           (Vec3 *)&TRMPITEM(self)->mForward);
     Quaternion_Normalize(TRMPITEM(self)->mRotation);
 }
 }
@@ -415,7 +352,7 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionSpin;
 }
 extern "C" void TrmpItem_SetMotionSpin(char *c) {
-    *(int *)(c + 0x30) = 0;
+    TRMPITEM(c)->mVel.y = 0;
     *(struct S *)c = pmf_TrmpItem_MotionSpin;
 }
 }
@@ -440,7 +377,7 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionBob;
 }
 extern "C" void TrmpItem_SetMotionBob(char *c) {
-    *(int *)(c + 0x30) = 0x1000;
+    TRMPITEM(c)->mVel.y = 0x1000;
     *(struct S *)c = pmf_TrmpItem_MotionBob;
 }
 }
@@ -454,11 +391,11 @@ extern int sTrmpItemPatrolSpeed[];
 }
 extern "C" void TrmpItem_MotionPatrol(char *item) {
     int itemType = TRMPITEM(item)->mSizeIdx;
-    if (*(int *)(item + 8) > sTrmpItemPatrolLimits[itemType]) {
+    if (TRMPITEM(item)->mPos.x > sTrmpItemPatrolLimits[itemType]) {
         TRMPITEM(item)->mVel.x = -sTrmpItemPatrolSpeed[itemType];
         return;
     }
-    if (*(int *)(item + 8) < -sTrmpItemPatrolLimits[itemType]) {
+    if (TRMPITEM(item)->mPos.x < -sTrmpItemPatrolLimits[itemType]) {
         TRMPITEM(item)->mVel.x = sTrmpItemPatrolSpeed[itemType];
     }
 }
@@ -475,8 +412,8 @@ extern "C" {
 extern struct S2 pmf_TrmpItem_MotionPatrol;
 }
 extern "C" void TrmpItem_SetMotionPatrol(char *c) {
-    int itemType = *(short *)(c + 0x96);
-    *(int *)(c + 0x2c) = sTrmpItemPatrolSpeed[itemType];
+    int itemType = TRMPITEM(c)->mSizeIdx;
+    TRMPITEM(c)->mVel.x = sTrmpItemPatrolSpeed[itemType];
     *(struct S2 *)c = pmf_TrmpItem_MotionPatrol;
 }
 }
@@ -493,7 +430,7 @@ extern "C" {
 extern struct S pmf_TrmpItem_MotionStill;
 }
 extern "C" void TrmpItem_SetMotionStill(char *p) {
-    *(struct S *)(p + 0x0) = pmf_TrmpItem_MotionStill;
+    *(struct S *)TRMPITEM(p)->mState = pmf_TrmpItem_MotionStill;
 }
 }
 
@@ -502,7 +439,6 @@ namespace s020cdf3c {
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-extern "C" extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern "C" extern void TrmpItem_SetMotionPatrol(char *c);
 extern "C" extern void TrmpItem_SetMotionBob(char *c);
 extern "C" extern void TrmpItem_SetMotionSpin(char *c);
@@ -514,10 +450,10 @@ extern "C" extern void TrmpItem_SetMotionSpinSway(char *c);
 extern "C" extern void TrmpItem_SetMotionSpinHover(char *c);
 
 extern "C" void TrmpItem_StateAppear(char *c) {
-    int yScaleReady = _Z14ApproachLinearRiii((int *)(c + 0x6c), 0x1000, 0xc0);
-    int xScaleReady = _Z14ApproachLinearRiii((int *)(c + 0x68), 0x1000, 0x180);
-    int zScaleReady = _Z14ApproachLinearRiii((int *)(c + 0x70), 0x1000, 0x180);
-    int responseScaleReady = _Z14ApproachLinearRiii((int *)(c + 0x88), 0x800, 0x60);
+    int yScaleReady = ApproachLinear(TRMPITEM(c)->mScale.y, 0x1000, 0xc0);
+    int xScaleReady = ApproachLinear(TRMPITEM(c)->mScale.x, 0x1000, 0x180);
+    int zScaleReady = ApproachLinear(TRMPITEM(c)->mScale.z, 0x1000, 0x180);
+    int responseScaleReady = ApproachLinear(TRMPITEM(c)->mAppearScale, 0x800, 0x60);
     if (yScaleReady == 0)
         return;
     if (xScaleReady == 0)
@@ -571,10 +507,10 @@ extern struct S2 pmf_TrmpItem_StateAppear_2;
 }
 extern "C" void TrmpItem_StartAppear(char *c) {
     ApproachLinear(sTrmpItemsActive, sTrmpItemCount, 1);
-    *(char *)(c + 0x9c) = 0x1f;
-    *(int *)(c + 0x2c) = 0;
-    *(int *)(c + 0x30) = 0;
-    *(int *)(c + 0x34) = 0;
+    TRMPITEM(c)->mAlpha = 0x1f;
+    TRMPITEM(c)->mVel.x = 0;
+    TRMPITEM(c)->mVel.y = 0;
+    TRMPITEM(c)->mVel.z = 0;
     *(struct S2 *)c = pmf_TrmpItem_StateAppear_2;
 }
 }
@@ -621,7 +557,7 @@ extern "C" void TrmpItem_ReflectOffLine(char *item, Obj *jumper) {
         int *growState = pmf_TrmpItem_GrowScale_3;
         int stateWord = *(int *)item;
         if (stateWord == growState[0]) {
-            if (*(int *)(item + 4) == growState[1])
+            if (TRMPITEM(item)->mState[1] == growState[1])
                 return;
             if (stateWord == 0)
                 return;
@@ -632,7 +568,7 @@ extern "C" void TrmpItem_ReflectOffLine(char *item, Obj *jumper) {
     velocity = jumper->GetVelocity();
 
     pushSum = data_020a0ebc;
-    Vec3_Sub(&relativePosition, position, (Vector3 *)(item + 8));
+    Vec3_Sub(&relativePosition, position, &TRMPITEM(item)->mPos);
     positiveEndOffset = relativePosition;
     negativeEndOffset = relativePosition;
     itemToJumper = relativePosition;
@@ -657,14 +593,14 @@ extern "C" void TrmpItem_ReflectOffLine(char *item, Obj *jumper) {
         Vec3_MulScalar(&negativeEndCorrection, &negativeEndOffset, TRMPITEM(item)->mAppearScale);
         AddVec3(position, &negativeEndCorrection, position);
         AddVec3(&pushSum, &negativeEndOffset, &pushSum);
-        *(short *)(((int)jumper + 0x22)) += 1;
+        ((TrampolineJumperCounts *)jumper)->mItemPushCount += 1;
     } else if (positiveEndDistance < 0xE000 && NormalizeVec3IfNonZero(&positiveEndOffset) != 0) {
         Vec3_MulScalarInPlace(&positiveEndOffset, 0xE000 - positiveEndDistance);
         positiveEndOffset.y <<= 1;
         Vec3_MulScalar(&positiveEndCorrection, &positiveEndOffset, TRMPITEM(item)->mAppearScale);
         AddVec3(position, &positiveEndCorrection, position);
         AddVec3(&pushSum, &positiveEndOffset, &pushSum);
-        *(short *)(((int)jumper + 0x22)) += 1;
+        ((TrampolineJumperCounts *)jumper)->mItemPushCount += 1;
     }
 
     Vec3_MulScalar(&endVelocityChange, &pushSum, 0x100);
@@ -731,7 +667,6 @@ extern int sTrmp2Score;
 
 extern "C" extern void TrmpItem_ReflectOffLine(char *a, void *o);
 extern "C" extern int TrmpItem_HitTest2D(char *a, void *o, int arg1);
-extern "C" extern void _Z14ApproachLinearRiii(int *p, int target, int step);
 extern "C" extern void D3D_PlaySeAtX(int a, int b);
 extern "C" extern void Trmp2Spinner_InitAll(int c);
 extern "C" extern void TrmpItem_ProjectToScreen(char *c, unsigned short arg1);
@@ -748,16 +683,16 @@ extern "C" void TrmpItem_UpdateWithJumper(void *object, int arg1) {
 
     if (sTrmpItemHitsOff != 0)
         return;
-    *(unsigned short *)(sb + 0x22) = 0;
+    ((TrampolineJumperCounts *)sb)->mItemPushCount = 0;
 
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
-        if (*(int *)(ELEM + 0x84) == 0)
+        if (TRMPITEM(ELEM)->mActive == 0)
             continue;
         TrmpItem_ReflectOffLine(ELEM, sb);
         if (TrmpItem_HitTest2D(ELEM, sb, arg1) == 0)
             continue;
-        _Z14ApproachLinearRiii(&sTrmpItemsHit, 0x270f, 1);
-        hitCount = *(unsigned short *)(sb + 0x20);
+        ApproachLinear(sTrmpItemsHit, 0x270f, 1);
+        hitCount = ((TrampolineJumperCounts *)sb)->mItemHitCount;
         // Double the award for each prior hit, up to six doublings.
         scoreIncrement = 100;
         scoreDoublings = (hitCount > 6) ? 6 : hitCount;
@@ -765,26 +700,26 @@ extern "C" void TrmpItem_UpdateWithJumper(void *object, int arg1) {
             scoreIncrement <<= 1;
         switch (hitCount) {
         case 0:
-            D3D_PlaySeAtX(0x131, *(int *)(ELEM + 8));
+            D3D_PlaySeAtX(0x131, TRMPITEM(ELEM)->mPos.x);
             break;
         case 1:
-            D3D_PlaySeAtX(0x132, *(int *)(ELEM + 8));
+            D3D_PlaySeAtX(0x132, TRMPITEM(ELEM)->mPos.x);
             break;
         case 2:
-            D3D_PlaySeAtX(0x133, *(int *)(ELEM + 8));
+            D3D_PlaySeAtX(0x133, TRMPITEM(ELEM)->mPos.x);
             break;
         case 3:
-            D3D_PlaySeAtX(0x134, *(int *)(ELEM + 8));
+            D3D_PlaySeAtX(0x134, TRMPITEM(ELEM)->mPos.x);
             break;
         case 4:
         default:
-            D3D_PlaySeAtX(0x135, *(int *)(ELEM + 8));
+            D3D_PlaySeAtX(0x135, TRMPITEM(ELEM)->mPos.x);
             break;
         }
-        _Z14ApproachLinearRiii(&sTrmp2Score, 0xf423f, scoreIncrement);
-        Trmp2Spinner_InitAll(*(unsigned short *)(sb + 0x20));
+        ApproachLinear(sTrmp2Score, 0xf423f, scoreIncrement);
+        Trmp2Spinner_InitAll(((TrampolineJumperCounts *)sb)->mItemHitCount);
         TrmpItem_ProjectToScreen(ELEM, (short)scoreIncrement);
-        (*(unsigned short *)(sb + 0x20))++;
+        ((TrampolineJumperCounts *)sb)->mItemHitCount++;
     }
 }
 }
@@ -822,9 +757,10 @@ extern "C" int TrmpItem_HitTest2D(char *item, void *jumper, int) {
         int *appearState = (int *)AT(pmf_TrmpItem_StateAppear, 0);
         int *growState;
         if ((stateWord == appearState[0] &&
-             (*(int *)(item + 4) == appearState[1] || stateWord == 0)) ||
+             (TRMPITEM(item)->mState[1] == appearState[1] || stateWord == 0)) ||
             (growState = (int *)AT(pmf_TrmpItem_GrowScale_2, 0),
-             stateWord == growState[0] && (*(int *)(item + 4) == growState[1] || stateWord == 0)))
+             stateWord == growState[0] &&
+                 (TRMPITEM(item)->mState[1] == growState[1] || stateWord == 0)))
             return 0;
     }
 
@@ -904,15 +840,15 @@ extern "C" void TrmpItem_ProjectOnLine(char *item, Obj *jumper, int *currentProj
     previousPosition.x = position->x;
     previousPosition.y = position->y;
     previousPosition.z = position->z;
-    Vec3_Sub(&currentRelative, &currentPosition, (struct Vector3 *)(item + 8));
-    Vec3_Sub(&previousRelative, &previousPosition, (struct Vector3 *)(item + 0x14));
+    Vec3_Sub(&currentRelative, &currentPosition, &TRMPITEM(item)->mPos);
+    Vec3_Sub(&previousRelative, &previousPosition, &TRMPITEM(item)->mPrevPos);
     // Only the current relative position receives this vertical offset.
     currentRelative.y += 0xc000;
-    across = DotVec3((struct Vector3 *)(item + 0x38), &currentRelative);
-    currentProjection[0] = DotVec3((struct Vector3 *)(item + 0x44), &currentRelative);
+    across = DotVec3(&TRMPITEM(item)->mForward, &currentRelative);
+    currentProjection[0] = DotVec3(&TRMPITEM(item)->mSide, &currentRelative);
     currentProjection[1] = across;
-    across = DotVec3((struct Vector3 *)(item + 0x50), &previousRelative);
-    previousProjection[0] = DotVec3((struct Vector3 *)(item + 0x5c), &previousRelative);
+    across = DotVec3(&TRMPITEM(item)->mPrevForward, &previousRelative);
+    previousProjection[0] = DotVec3(&TRMPITEM(item)->mPrevSide, &previousRelative);
     previousProjection[1] = across;
 }
 }
@@ -931,14 +867,14 @@ extern struct Matrix4x3 data_020a0e68;
 
 extern "C" void TrmpItem_UpdateMatrix(char *self) {
     Matrix4x3 rotation;
-    Matrix4x3_FromQuaternion(self + 0x74, &rotation);
+    Matrix4x3_FromQuaternion(TRMPITEM(self)->mRotation, &rotation);
     Matrix4x3_FromTranslation(&data_020a0e68, TRMPITEM(self)->mPos.x, TRMPITEM(self)->mPos.y,
                               TRMPITEM(self)->mPos.z);
     MulMat4x3Mat4x3(&rotation, &data_020a0e68, &data_020a0e68);
-    (*(Model **)(self + 0x190))->mat4x3 = data_020a0e68;
-    ((TextureTransformer *)(self + 0x194))->Update((*(Model **)(self + 0x190))->data);
-    (*(Model **)(self + 0x190))->ApplyOpacity(TRMPITEM(self)->mAlpha, 0);
-    (*(Model **)(self + 0x190))->Render((const Vector3 *)(self + 0x68));
+    TRMPITEM(self)->mModel->mat4x3 = data_020a0e68;
+    TRMPITEM(self)->mTexAnim.Update(TRMPITEM(self)->mModel->data);
+    TRMPITEM(self)->mModel->ApplyOpacity(TRMPITEM(self)->mAlpha, 0);
+    TRMPITEM(self)->mModel->Render(&TRMPITEM(self)->mScale);
 }
 }
 
@@ -953,8 +889,8 @@ typedef void (C::*PMF)();
 extern "C" void TrmpItem_Update(char *item) {
     PMF *state = (PMF *)item;
     (((C *)item)->**state)();
-    AddVec3(item + 8, item + 0x2c, item + 8);
-    ((TextureTransformer *)(item + 0x194))->Advance();
+    AddVec3(&TRMPITEM(item)->mPos, &TRMPITEM(item)->mVel, &TRMPITEM(item)->mPos);
+    TRMPITEM(item)->mTexAnim.Advance();
     TRMPITEM(item)->mPrevPos.x = TRMPITEM(item)->mPos.x;
     TRMPITEM(item)->mPrevPos.y = TRMPITEM(item)->mPos.y;
     TRMPITEM(item)->mPrevPos.z = TRMPITEM(item)->mPos.z;
@@ -973,35 +909,20 @@ typedef struct {
 } Vec3;
 
 extern "C" {
-extern int sTrmpItem_Init_UnitYGuard;
-}
-extern "C" {
-extern Vec3 sTrmpItem_Init_UnitY;
-}
-extern "C" {
-extern void *sTrmpItem_Init_UnitYDtorRec;
-}
-extern "C" {
 extern int data_02092768[4];
 }
 extern "C" {
 extern int data_020a0ebc[3];
 }
-extern "C" extern void *_ZN7Vector3D1Ev(void *object);
-extern "C" extern void func_020731dc(void *object, void *destructor, void **node);
 extern "C" extern void func_0203cc28(int *p, int angle);
 extern "C" extern void Quaternion_FromVector3(int *q, Vec3 *a, Vec3 *b);
 extern "C" extern void TrmpItem_StartAppear(char *c);
 
 extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemType,
                               short motionType) {
-    if ((sTrmpItem_Init_UnitYGuard & 1) == 0) {
-        sTrmpItem_Init_UnitY.x = 0;
-        sTrmpItem_Init_UnitY.y = 0x1000;
-        sTrmpItem_Init_UnitY.z = 0;
-        func_020731dc(&sTrmpItem_Init_UnitY, (void *)_ZN7Vector3D1Ev, &sTrmpItem_Init_UnitYDtorRec);
-        sTrmpItem_Init_UnitYGuard |= 1;
-    }
+    /* The axis the starting rotation is built about, built on first use. */
+    static Vector3 sUnitY(0, 0x1000, 0);
+
     TRMPITEM(self)->mPos.x = position[0];
     TRMPITEM(self)->mPos.y = position[1];
     TRMPITEM(self)->mPos.z = position[2];
@@ -1009,20 +930,20 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
     TRMPITEM(self)->mForward.y = normal[1];
     TRMPITEM(self)->mForward.z = normal[2];
     {
-        int *normalComponents = (int *)(int)(self + 0x38);
+        int *normalComponents = (int *)(int)&TRMPITEM(self)->mForward;
         TRMPITEM(self)->mSide.x = normalComponents[0];
         TRMPITEM(self)->mSide.y = normalComponents[1];
         TRMPITEM(self)->mSide.z = normalComponents[2];
     }
-    func_0203cc28((int *)(self + 0x44), -0x4000);
+    func_0203cc28((int *)&TRMPITEM(self)->mSide, -0x4000);
     TRMPITEM(self)->mPrevPos.x = TRMPITEM(self)->mPos.x;
     TRMPITEM(self)->mPrevPos.y = TRMPITEM(self)->mPos.y;
     TRMPITEM(self)->mPrevPos.z = TRMPITEM(self)->mPos.z;
     {
-        int *cachedPosition = (int *)(int)(self + 0x14);
-        *(int *)(self + 0x20) = cachedPosition[0];
-        *(int *)(self + 0x24) = cachedPosition[1];
-        *(int *)(self + 0x28) = cachedPosition[2];
+        int *cachedPosition = (int *)(int)&TRMPITEM(self)->mPrevPos;
+        TRMPITEM(self)->mSpawnPos.x = cachedPosition[0];
+        TRMPITEM(self)->mSpawnPos.y = cachedPosition[1];
+        TRMPITEM(self)->mSpawnPos.z = cachedPosition[2];
     }
     TRMPITEM(self)->mPrevForward.x = TRMPITEM(self)->mForward.x;
     TRMPITEM(self)->mPrevForward.y = TRMPITEM(self)->mForward.y;
@@ -1034,20 +955,21 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
     TRMPITEM(self)->mRotation[1] = data_02092768[1];
     TRMPITEM(self)->mRotation[2] = data_02092768[2];
     TRMPITEM(self)->mRotation[3] = data_02092768[3];
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sTrmpItem_Init_UnitY, (Vec3 *)(self + 0x38));
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
+                           (Vec3 *)&TRMPITEM(self)->mForward);
     TRMPITEM(self)->mSizeIdx = itemType;
     TRMPITEM(self)->mMotionKind = motionType;
     TRMPITEM(self)->mActive = 1;
     switch (TRMPITEM(self)->mSizeIdx) {
     case 0:
-        *(void **)(self + 0x190) = self + 0xa0;
+        TRMPITEM(self)->mModel = &TRMPITEM(self)->mRingA;
         break;
     case 1:
-        *(void **)(self + 0x190) = self + 0xf0;
+        TRMPITEM(self)->mModel = &TRMPITEM(self)->mRingB;
         break;
     case 2:
     default:
-        *(void **)(self + 0x190) = self + 0x140;
+        TRMPITEM(self)->mModel = &TRMPITEM(self)->mRingC;
         break;
     }
     TRMPITEM(self)->mScale.x = data_020a0ebc[0];
@@ -1061,7 +983,7 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
 
 namespace s020cecb4 {
 extern "C" void TrmpItem_Hide(int *p) {
-    p[33] = 0;
+    TRMPITEM(p)->mActive = 0;
 }
 }
 
@@ -1069,42 +991,19 @@ namespace s020cecc0 {
 extern "C" {
 void TrmpItem_Hide(int *p);
 }
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *, BTA_File &, int, int,
-                                                                      unsigned int);
-
-// Consumed file-handle prefix only; the shared class exposes methods, not fields.
-struct SharedModelFileView {
-    int header;
-    BMD_File *file;
-};
-extern "C" {
-extern SharedFilePtr sTrmpItemRingAModelFile;
-}
-extern "C" {
-extern SharedFilePtr sTrmpItemRingBModelFile;
-}
-extern "C" {
-extern SharedFilePtr sTrmpItemRingCModelFile;
-}
 extern "C" {
 extern BTA_File sTrmpItemTextureAnim;
 }
 
 extern "C" void TrmpItem_Load(char *c) {
-    ((Model *)(c + 0xa0))->SetFile(((SharedModelFileView *)&sTrmpItemRingAModelFile)->file, 1, -1);
-    ((Model *)(c + 0xf0))->SetFile(((SharedModelFileView *)&sTrmpItemRingBModelFile)->file, 1, -1);
-    ((Model *)(c + 0x140))->SetFile(((SharedModelFileView *)&sTrmpItemRingCModelFile)->file, 1, -1);
-    ((Model *)(c + 0xa0))->SetPolygonID(1);
-    ((Model *)(c + 0xf0))->SetPolygonID(2);
-    ((Model *)(c + 0x140))->SetPolygonID(3);
-    TextureTransformer::Prepare(*((SharedModelFileView *)&sTrmpItemRingAModelFile)->file,
-                                sTrmpItemTextureAnim);
-    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj((TextureTransformer *)(c + 0x194),
-                                                          sTrmpItemTextureAnim, 0, 0x1000, 0);
+    TRMPITEM(c)->mRingA.SetFile((BMD_File *)sTrmpItemRingAModelFile.filePtr, 1, -1);
+    TRMPITEM(c)->mRingB.SetFile((BMD_File *)sTrmpItemRingBModelFile.filePtr, 1, -1);
+    TRMPITEM(c)->mRingC.SetFile((BMD_File *)sTrmpItemRingCModelFile.filePtr, 1, -1);
+    TRMPITEM(c)->mRingA.SetPolygonID(1);
+    TRMPITEM(c)->mRingB.SetPolygonID(2);
+    TRMPITEM(c)->mRingC.SetPolygonID(3);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)sTrmpItemRingAModelFile.filePtr, sTrmpItemTextureAnim);
+    TRMPITEM(c)->mTexAnim.SetFile(sTrmpItemTextureAnim, 0, 0x1000, 0);
     TrmpItem_Hide((int *)c);
 }
 }
@@ -1126,7 +1025,7 @@ extern "C" void TrmpItem_UpdateMatricesAll(void) {
     int itemIndex;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
         char *p = sTrmpItems + itemIndex * 0x1d0;
-        if (*(int *)(p + 0x84) != 0)
+        if (TRMPITEM(p)->mActive != 0)
             TrmpItem_UpdateMatrix(p);
     }
 }
@@ -1152,7 +1051,7 @@ extern "C" void TrmpItem_UpdateAll(void) {
         itemOffset = 0;
         do {
             char *p = sTrmpItems + itemOffset;
-            if (*(int *)(p + 0x84) != 0) {
+            if (TRMPITEM(p)->mActive != 0) {
                 TrmpItem_Update(p);
             }
             itemIndex++;
@@ -1197,15 +1096,6 @@ extern "C" void TrmpItem_HideAll(void) {
 }
 
 namespace s020ceedc {
-extern "C" {
-extern SharedFilePtr sTrmpItemRingAModelFile;
-}
-extern "C" {
-extern SharedFilePtr sTrmpItemRingBModelFile;
-}
-extern "C" {
-extern SharedFilePtr sTrmpItemRingCModelFile;
-}
 extern "C" void TrmpItem_ReleaseFiles(void) {
     sTrmpItemRingAModelFile.Release();
     sTrmpItemRingBModelFile.Release();
@@ -1216,15 +1106,6 @@ extern "C" void TrmpItem_ReleaseFiles(void) {
 namespace s020cef14 {
 extern "C" extern void TrmpItem_Load(void *p);
 extern "C" {
-extern SharedFilePtr sTrmpItemRingAModelFile;
-}
-extern "C" {
-extern SharedFilePtr sTrmpItemRingBModelFile;
-}
-extern "C" {
-extern SharedFilePtr sTrmpItemRingCModelFile;
-}
-extern "C" {
 extern char *sTrmpItems[];
 }
 extern "C" {
@@ -1234,9 +1115,9 @@ extern int sTrmpItemCount[];
 extern "C" void TrmpItem_LoadAll(char *items, int count) {
     int itemIndex;
     int itemOffset;
-    Model::LoadFile(sTrmpItemRingAModelFile);
-    Model::LoadFile(sTrmpItemRingBModelFile);
-    Model::LoadFile(sTrmpItemRingCModelFile);
+    dExtSimpleModel_c::LoadFile(sTrmpItemRingAModelFile);
+    dExtSimpleModel_c::LoadFile(sTrmpItemRingBModelFile);
+    dExtSimpleModel_c::LoadFile(sTrmpItemRingCModelFile);
     sTrmpItems[0] = items;
     sTrmpItemCount[0] = count;
     itemIndex = 0;
@@ -1273,7 +1154,7 @@ extern "C" char *TrmpItem_Spawn(int position, int *normal, int itemType, int mot
     if (sTrmpItemCount > 0) {
         base = sTrmpItems;
         do {
-            if (*(int *)(base + 0x84) == 0) {
+            if (TRMPITEM(base)->mActive == 0) {
                 itemOffset = itemIndex * 0x1d0;
                 TrmpItem_Init(sTrmpItems + itemOffset, (int *)position, normal, itemType,
                               motionType);
@@ -1296,15 +1177,14 @@ struct Vec3 {
 extern "C" extern int DotVec3(struct Vec3 *a, struct Vec3 *b);
 extern "C" extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
 extern "C" extern int LenVec3(struct Vec3 *v);
-extern "C" extern int _ZN4cstd4fdivEii(int a, int b);
 extern "C" {
 extern int data_ov006_0212e0f0[];
 }
 extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Vec3 *offsetVector) {
     int row;
-    int negatedProjection = -DotVec3(offsetVector, (struct Vec3 *)(sl + 0x14));
-    int *amplitude = (int *)(sl + 0x29c);
-    char *restVertex = sl + 0x11c;
+    int negatedProjection = -DotVec3(offsetVector, (struct Vec3 *)&TRMPLINE(sl)->mNormal);
+    int *amplitude = TRMPLINE(sl)->mFlexAmplitude;
+    char *restVertex = (char *)TRMPLINE(sl)->mRestVerts;
     int weightedAmplitude;
     int *gridWeight = data_ov006_0212e0f0;
     for (row = 0; row < 4; row++) {
@@ -1314,7 +1194,7 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Ve
             SubVec3((struct Vec3 *)restVertex, (struct Vec3 *)referencePoint, &delta);
             int halfLength = (long long)(TRMPLINE(sl)->mHalfWidth);
             int distance = LenVec3(&delta);
-            int distanceWeight = _ZN4cstd4fdivEii(halfLength, halfLength + distance);
+            int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);
             int weightedProjection = FX_MUL(negatedProjection, *gridWeight);
             weightedAmplitude = FX_MUL(weightedProjection, distanceWeight);
             *amplitude = weightedAmplitude;
@@ -1347,9 +1227,9 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
     int column;
     int componentMask = 0x3ff;
 
-    p = self + 0x5c;
-    normal = (Vec3 *)(self + 0x1dc);
-    packedNormal = (int *)(self + 0x2dc);
+    p = (char *)TRMPLINE(self)->mVerts;
+    normal = (Vec3 *)TRMPLINE(self)->mNormals;
+    packedNormal = TRMPLINE(self)->mPackedNormals;
 
     for (row = 0; row < 4; row++) {
         for (column = 0; column < 4; column++) {
@@ -1366,18 +1246,18 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
             components[2] = zero;
 
             if (column == 0)
-                SubVec3((Vec3 *)p, (Vec3 *)(p + 0xc), &columnEdge);
+                SubVec3((Vec3 *)p, (Vec3 *)p + 1, &columnEdge);
             else if (column == 3)
-                SubVec3((Vec3 *)(p - 0xc), (Vec3 *)p, &columnEdge);
+                SubVec3((Vec3 *)p - 1, (Vec3 *)p, &columnEdge);
             else
-                SubVec3((Vec3 *)(p - 0xc), (Vec3 *)(p + 0xc), &columnEdge);
+                SubVec3((Vec3 *)p - 1, (Vec3 *)p + 1, &columnEdge);
 
             if (row == 0)
-                SubVec3((Vec3 *)p, (Vec3 *)(p + 0x30), &rowEdge);
+                SubVec3((Vec3 *)p, (Vec3 *)p + 4, &rowEdge);
             else if (row == 3)
-                SubVec3((Vec3 *)(p - 0x30), (Vec3 *)p, &rowEdge);
+                SubVec3((Vec3 *)p - 4, (Vec3 *)p, &rowEdge);
             else
-                SubVec3((Vec3 *)(p - 0x30), (Vec3 *)(p + 0x30), &rowEdge);
+                SubVec3((Vec3 *)p - 4, (Vec3 *)p + 4, &rowEdge);
 
             CrossVec3(&columnEdge, &rowEdge, normal);
             NormalizeVec3((int *)normal, (int *)normal);
@@ -1435,8 +1315,8 @@ extern "C" extern void func_020553a4(int *m);
 #define REG_BEGIN_VTXS     (*(vu32 *)0x4000500)
 #define REG_END_VTXS       (*(vu32 *)0x4000504)
 
-#define PATCH_VTX(obj) ((Vec3 *)((obj) + 0x5c))
-#define PATCH_NRM(obj) ((int *)((obj) + 0x2dc))
+#define PATCH_VTX(obj) ((Vec3 *)TRMPLINE(obj)->mVerts)
+#define PATCH_NRM(obj) (TRMPLINE(obj)->mPackedNormals)
 
 static inline void G3_Vtx(s16 x, s16 y, s16 z) {
     REG_VTX_16 = (u16)x | ((u16)y << 16);
@@ -1447,7 +1327,7 @@ static inline void G3_Vtx(s16 x, s16 y, s16 z) {
 
 // @symbol TrmpLine_Draw
 /* Loads the object's placement and scale matrices, then draws its 4x4 vertex
- * patch (positions at +0x5c, packed normals at +0x2dc) as three triangle
+ * patch (positions mVerts, packed normals mPackedNormals) as three triangle
  * strips per face, the back face first with negated normals. Each normal
  * pointer steps in its own statement after the REG_NORMAL write; stepping it
  * inside the write reorders the vertex loads. */
@@ -1455,7 +1335,7 @@ extern "C" void TrmpLine_Draw(char *obj) {
     int i;
     int m2[12];
     int m1[12];
-    Matrix4x3_FromTranslation(&data_020a0e68, *((int *)(obj + 8)), TRMPLINE(obj)->mCenter.y,
+    Matrix4x3_FromTranslation(&data_020a0e68, TRMPLINE(obj)->mCenter.x, TRMPLINE(obj)->mCenter.y,
                               TRMPLINE(obj)->mCenter.z);
     MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec, m1);
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, TRMPLINE(obj)->mScale.x, TRMPLINE(obj)->mScale.y,
@@ -1473,15 +1353,15 @@ extern "C" void TrmpLine_Draw(char *obj) {
     REG_TEXIMAGE_PARAM = 0x8da70000 | ((u32)sTrmpLineTexAddr >> 3);
     REG_TEXPLTT_BASE = (u32)sTrmpLinePlttAddr >> 4;
     {
-        short *p31e = (short *)(obj + 0x31e);
-        int sh = *p31e;
+        short *slotIndex = &TRMPLINE(obj)->mSlotIndex;
+        int sh = *slotIndex;
         unsigned short *dif = sTrmpLineDiffuse;
-        volatile unsigned char *alpha = (volatile unsigned char *)(obj + 0x329);
+        volatile unsigned char *alpha = &TRMPLINE(obj)->mAlpha;
         int pl = *alpha;
         REG_POLYGON_ATTR = (((sh + 1) << 24) | 0x82) | (pl << 16);
         {
-            unsigned short *p326 = (unsigned short *)(obj + 0x326);
-            unsigned idx = *p326;
+            unsigned short *bounceCount = &TRMPLINE(obj)->mBounceCount;
+            unsigned idx = *bounceCount;
             REG_DIF_AMB = dif[idx] | (sTrmpLineAmbient[idx] << 16);
         }
     }
@@ -1548,18 +1428,17 @@ extern "C" void TrmpLine_Update(C *c) {
 }
 
 namespace s020cf790 {
-extern "C" extern int _Z15ApproachLinear2Riii(int *a, int b, int c);
 extern "C" extern void TrmpLine_ComputeNormals(char *c);
 
 // @symbol TrmpLine_StateFade
 extern "C" void TrmpLine_StateFade(char *c) {
-    if (_Z15ApproachLinear2Riii((int *)(c + 0x329), 0, 1) != 0) {
+    if (ApproachLinear2(*(int *)&TRMPLINE(c)->mAlpha, 0, 1) != 0) {
         TRMPLINE(c)->mStatus = 0;
         return;
     }
-    *(int *)(((int)c + 0x2C)) += 0x80;
-    *(int *)(((int)c + 0x30)) += 0x80;
-    *(int *)(((int)c + 0x34)) += 0x80;
+    TRMPLINE(c)->mScale.x += 0x80;
+    TRMPLINE(c)->mScale.y += 0x80;
+    TRMPLINE(c)->mScale.z += 0x80;
     TrmpLine_ComputeNormals(c);
 }
 }
@@ -1573,13 +1452,11 @@ extern struct S pmf_TrmpLine_StateFade;
 }
 // @symbol TrmpLine_SetStateFade
 extern "C" void TrmpLine_SetStateFade(char *p) {
-    *(struct S *)(p + 0x0) = pmf_TrmpLine_StateFade;
+    *(struct S *)TRMPLINE(p)->mState = pmf_TrmpLine_StateFade;
 }
 }
 
 namespace s020cf820 {
-extern "C" extern int _Z15ApproachLinear2Riii(int *p, int a, int b);
-extern "C" extern int _Z14ApproachLinearRiii(int *p, int a, int b);
 extern "C" extern void TrmpLine_ComputeNormals(char *c);
 extern "C" {
 extern int data_020a0db0;
@@ -1587,8 +1464,6 @@ extern int data_020a0db0;
 extern "C" {
 extern s16 data_02082214[];
 }
-
-#define LA(p) ((int)(p))
 
 // @symbol TrmpLine_StateSettle
 extern "C" void TrmpLine_StateSettle(char *c) {
@@ -1601,13 +1476,13 @@ extern "C" void TrmpLine_StateSettle(char *c) {
     int *restPosition, *position, *amplitude;
 
     if ((data_020a0db0 & 1) != 0) {
-        if (_Z15ApproachLinear2Riii((int *)(c + 0x329), 0, 1) != 0) {
+        if (ApproachLinear2(*(int *)&TRMPLINE(c)->mAlpha, 0, 1) != 0) {
             TRMPLINE(c)->mStatus = 0;
         }
     }
 
     {
-        u16 *phasePtr = (u16 *)LA(c + 0x320);
+        u16 *phasePtr = &TRMPLINE(c)->mWobblePhase;
         *phasePtr = *phasePtr + TRMPLINE(c)->mWobbleSpeed;
         phase = TRMPLINE(c)->mWobblePhase;
     }
@@ -1620,9 +1495,9 @@ extern "C" void TrmpLine_StateSettle(char *c) {
     deflectionX = FX_MUL(normalX, negativeSine);
     deflectionY = FX_MUL(normalY, negativeSine);
 
-    restPosition = (int *)(c + 0x11c);
-    position = (int *)(c + 0x5c);
-    amplitude = (int *)(c + 0x29c);
+    restPosition = (int *)TRMPLINE(c)->mRestVerts;
+    position = (int *)TRMPLINE(c)->mVerts;
+    amplitude = TRMPLINE(c)->mFlexAmplitude;
 
     targetAmplitude = 0;
     decayStep = 0x100;
@@ -1634,7 +1509,7 @@ extern "C" void TrmpLine_StateSettle(char *c) {
             position[2] = restPosition[2];
             position[0] = position[0] + FX_MUL(*amplitude, deflectionX);
             position[1] = position[1] + FX_MUL(*amplitude, deflectionY);
-            _Z14ApproachLinearRiii(amplitude, targetAmplitude, decayStep);
+            ApproachLinear(*amplitude, targetAmplitude, decayStep);
             restPosition += 3;
             position += 3;
             amplitude += 1;
@@ -1654,7 +1529,7 @@ extern struct S pmf_TrmpLine_StateSettle;
 }
 // @symbol TrmpLine_SetStateSettle
 extern "C" void TrmpLine_SetStateSettle(char *p) {
-    *(struct S *)(p + 0x0) = pmf_TrmpLine_StateSettle;
+    *(struct S *)TRMPLINE(p)->mState = pmf_TrmpLine_StateSettle;
 }
 }
 
@@ -1667,8 +1542,6 @@ extern "C" {
 extern s16 data_02082214[];
 }
 extern "C" extern int TrmpLine_PushJumper(char *o);
-extern "C" extern int _Z14ApproachLinearRiii(int *cur, int target, int step);
-extern "C" extern int _Z15ApproachLinear2Rsss(short *cur, short target, short step);
 extern "C" extern void TrmpLine_ComputeNormals(char *o);
 extern "C" extern void TrmpLine_SetStateFade(char *o);
 
@@ -1690,7 +1563,7 @@ extern "C" void TrmpLine_StateFlex(char *o) {
 
     TrmpLine_PushJumper(o);
 
-    phasePtr = (u16 *)LA(o + 0x320);
+    phasePtr = &TRMPLINE(o)->mWobblePhase;
     *phasePtr = *phasePtr + TRMPLINE(o)->mWobbleSpeed;
 
     normalX = TRMPLINE(o)->mNormal.x;
@@ -1700,13 +1573,13 @@ extern "C" void TrmpLine_StateFlex(char *o) {
     sine = data_02082214[angleIndex * 2];
     negativeSine = -(int)sine;
 
-    restPosition = (Vec3 *)(o + 0x11c);
-    position = (Vec3 *)(o + 0x5c);
+    restPosition = (Vec3 *)TRMPLINE(o)->mRestVerts;
+    position = (Vec3 *)TRMPLINE(o)->mVerts;
 
     deflectionX = FX_MUL(normalX, negativeSine);
     deflectionY = FX_MUL(normalY, negativeSine);
 
-    amplitude = (int *)(o + 0x29c);
+    amplitude = TRMPLINE(o)->mFlexAmplitude;
 
     targetAmplitude = 0;
     firstColumn = 0;
@@ -1720,7 +1593,7 @@ extern "C" void TrmpLine_StateFlex(char *o) {
             position->x += FX_MUL(*amplitude, deflectionX);
             position->y += FX_MUL(*amplitude, deflectionY);
 
-            _Z14ApproachLinearRiii(amplitude, targetAmplitude, decayStep);
+            ApproachLinear(*amplitude, targetAmplitude, decayStep);
             restPosition++;
             position++;
             amplitude++;
@@ -1729,10 +1602,10 @@ extern "C" void TrmpLine_StateFlex(char *o) {
 
     TrmpLine_ComputeNormals(o);
 
-    if (*(s16 *)(o + 0x31e) == 3)
+    if (TRMPLINE(o)->mSlotIndex == 3)
         return;
 
-    if (_Z15ApproachLinear2Rsss((short *)(o + 0x31c), 0, 1) == 0)
+    if (ApproachLinear2(TRMPLINE(o)->mLifeTimer, 0, 1) == 0)
         return;
 
     TrmpLine_SetStateFade(o);
@@ -1748,7 +1621,7 @@ extern struct S pmf_TrmpLine_StateFlex;
 }
 // @symbol TrmpLine_SetStateFlex
 extern "C" void TrmpLine_SetStateFlex(char *p) {
-    *(struct S *)(p + 0x0) = pmf_TrmpLine_StateFlex;
+    *(struct S *)TRMPLINE(p)->mState = pmf_TrmpLine_StateFlex;
 }
 }
 
@@ -1790,7 +1663,6 @@ extern "C" extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" extern int DotVec3(Vector3 *a, Vector3 *b);
 extern "C" extern void Vec2_Sub(int *o, int *a, int *b);
 extern "C" extern int func_0203d524(int *a, int *b);
-extern "C" extern int _ZN4cstd4fdivEii(int a, int b);
 extern "C" extern void D3D_PlaySePannedLoop(int a0, int a1, int a2);
 extern "C" extern void TrmpLine_PointDistance(char *sl, void *arg1, Vector3 *r2);
 extern "C" extern void TrmpLine_SetStateSettle(char *p);
@@ -1851,8 +1723,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
         previousPos.z = previousPositionPtr->z;
 
         Vec3_Sub(&movementDelta, &currentPos, &previousPos);
-        SubVec3(&currentPos, (Vector3 *)(c + 8), &currentPos);
-        SubVec3(&previousPos, (Vector3 *)(c + 8), &previousPos);
+        SubVec3(&currentPos, &TRMPLINE(c)->mCenter, &currentPos);
+        SubVec3(&previousPos, &TRMPLINE(c)->mCenter, &previousPos);
 
         // Test the previous-to-current segment against the c in its own frame.
         currentAlong = DotVec3(&TRMPLINE(c)->mAxis, &currentPos);
@@ -1909,8 +1781,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
             TRMPLINE(c)->mContactMotion.y = movementDelta.y;
             TRMPLINE(c)->mContactMotion.z = movementDelta.z;
 
-            edgeRatio = _ZN4cstd4fdivEii((currentAlong < 0) ? -currentAlong : currentAlong,
-                                         TRMPLINE(c)->mHalfWidth);
+            edgeRatio = cstd::fdiv((currentAlong < 0) ? -currentAlong : currentAlong,
+                                   TRMPLINE(c)->mHalfWidth);
             {
                 int halfLength = TRMPLINE(c)->mHalfWidth;
                 int absoluteAlong = (currentAlong < 0) ? -currentAlong : currentAlong;
@@ -1919,13 +1791,13 @@ extern "C" int TrmpLine_PushJumper(char *c) {
 
             if (offsetTimesHalfLength < 0x400000) {
                 jumpers[jumperIndex]->contactState = 2;
-                D3D_PlaySePannedLoop(0x1b1, *(int *)(c + 8),
+                D3D_PlaySePannedLoop(0x1b1, TRMPLINE(c)->mCenter.x,
                                      (sTrmpLinePushWeakPitchEnd * edgeRatio +
                                       sTrmpLinePushWeakPitchMid * (0x1000 - edgeRatio)) >>
                                          12);
             } else {
                 jumpers[jumperIndex]->contactState = 1;
-                D3D_PlaySePannedLoop(0x1ae, *(int *)(c + 8),
+                D3D_PlaySePannedLoop(0x1ae, TRMPLINE(c)->mCenter.x,
                                      (sTrmpLinePushStrongPitchEnd * edgeRatio +
                                       sTrmpLinePushStrongPitchMid * (0x1000 - edgeRatio)) >>
                                          12);
@@ -1939,7 +1811,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
                 jumpers[jumperIndex]->alongLine = currentAlong;
                 jumpers[jumperIndex]->lineHalfLength = TRMPLINE(c)->mHalfWidth;
                 TRMPLINE(c)->mWobblePhase = 0;
-                TrmpLine_PointDistance(c, (void *)(c + 0x38), &TRMPLINE(c)->mContactMotion);
+                TrmpLine_PointDistance(c, &TRMPLINE(c)->mContactPoint,
+                                       &TRMPLINE(c)->mContactMotion);
 
                 TRMPLINE(c)->mBouncesLeft -= 1;
                 if (TRMPLINE(c)->mBouncesLeft == 0) {
@@ -2011,7 +1884,6 @@ extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
-extern int _ZN4cstd4fdivEii(int a, int b);
 extern void TrmpLine_PointDistance(void *a, void *b, void *c);
 extern void TrmpLine_ComputeNormals(void *a);
 extern void D3D_PlaySePannedLoop(int a0, int a1, int a2);
@@ -2024,6 +1896,9 @@ extern s32 sTrmpLineWeakPitchMid;
 extern s32 sTrmpLineStrongPitchEnd;
 extern s32 sTrmpLineStrongPitchMid;
 }
+
+// The jumper fields a new line writes, the same view TrmpLine_PushJumper uses.
+typedef s020cfc74::TrampolineContactView Contact;
 
 struct Spare4 {
     s32 v;
@@ -2042,7 +1917,7 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
     Fix12i lineLength, rowStep;
     s32 row;
     s32 flag;
-    Vector3 *cell, *mirror;
+    TrmpLine::Vtx *cell, *mirror;
     void *bestObj;
     void *jumper;
     Vector3 *positionPtr, *velocityPtr;
@@ -2118,10 +1993,10 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
     TRMPLINE(c)->mContactMotion.x = 0 - TRMPLINE(c)->mNormal.x;
     TRMPLINE(c)->mContactMotion.y = 0 - TRMPLINE(c)->mNormal.y;
     TRMPLINE(c)->mContactMotion.z = 0 - TRMPLINE(c)->mNormal.z;
-    Vec3_MulScalarInPlace((s32 *)(c + 0x44), 0x800);
+    Vec3_MulScalarInPlace((s32 *)&TRMPLINE(c)->mContactMotion, 0x800);
 
-    SubVec3(&startPosition, (Vector3 *)(c + 8), &startPosition);
-    SubVec3(&endPosition, (Vector3 *)(c + 8), &endPosition);
+    SubVec3(&startPosition, &TRMPLINE(c)->mCenter, &startPosition);
+    SubVec3(&endPosition, &TRMPLINE(c)->mCenter, &endPosition);
     lineLength = Vec3_Dist(&startPosition, &endPosition);
     TRMPLINE(c)->mHalfWidth = lineLength >> 1;
     rowStep = lineLength / 3;
@@ -2137,8 +2012,8 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
         row = 0;
         accum = 0;
         rowFrac = -0x180;
-        cell = (Vector3 *)(c + 0x5C);
-        mirror = (Vector3 *)(c + 0x11C);
+        cell = TRMPLINE(c)->mVerts;
+        mirror = TRMPLINE(c)->mRestVerts;
         do {
             column = 0;
             negRowFrac = 0 - rowFrac;
@@ -2180,10 +2055,10 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
         } while (row < 4);
     }
 
-    *(s16 *)(c + 0x320) = (s16)flag;
-    *(s16 *)(c + 0x322) = 0x1400;
-    *(u8 *)(c + 0x329) = 0x1F;
-    TrmpLine_PointDistance(c, c + 0x38, c + 0x44);
+    TRMPLINE(c)->mWobblePhase = (s16)flag;
+    TRMPLINE(c)->mWobbleSpeed = 0x1400;
+    TRMPLINE(c)->mAlpha = 0x1F;
+    TrmpLine_PointDistance(c, &TRMPLINE(c)->mContactPoint, &TRMPLINE(c)->mContactMotion);
     TrmpLine_ComputeNormals(c);
 
     TRMPLINE(c)->mScale.x = 0x1000;
@@ -2216,7 +2091,7 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
                 velocity.y = velocityPtr->y;
                 velocity.z = velocityPtr->z;
 
-                SubVec3(&relativePosition, (Vector3 *)(c + 8), &relativePosition);
+                SubVec3(&relativePosition, &TRMPLINE(c)->mCenter, &relativePosition);
                 along = DotVec3(&TRMPLINE(c)->mAxis, &relativePosition);
                 across = DotVec3(&TRMPLINE(c)->mNormal, &relativePosition);
                 normalVelocity = DotVec3(&TRMPLINE(c)->mNormal, &velocity);
@@ -2246,30 +2121,30 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
         TRMPLINE(c)->mContactMotion.z = selectedVelocity.z;
 
         absoluteAlong = (selectedAlong < 0) ? (0 - selectedAlong) : selectedAlong;
-        edgeRatio = _ZN4cstd4fdivEii(absoluteAlong, TRMPLINE(c)->mHalfWidth);
+        edgeRatio = cstd::fdiv(absoluteAlong, TRMPLINE(c)->mHalfWidth);
         halfLength = TRMPLINE(c)->mHalfWidth;
         absoluteAlong = (selectedAlong < 0) ? (0 - selectedAlong) : selectedAlong;
         offsetTimesHalfLength = FX_MUL(absoluteAlong, halfLength);
         if (offsetTimesHalfLength < 0x400000) {
-            *(s16 *)((char *)bestObj + 0x18) = 2;
-            D3D_PlaySePannedLoop(0x1B1, *(s32 *)(c + 8),
+            ((Contact *)bestObj)->contactState = 2;
+            D3D_PlaySePannedLoop(0x1B1, TRMPLINE(c)->mCenter.x,
                                  (s32)(sTrmpLineWeakPitchEnd * edgeRatio +
                                        sTrmpLineWeakPitchMid * (0x1000 - edgeRatio)) >>
                                      0xC);
         } else {
-            *(s16 *)((char *)bestObj + 0x18) = 1;
-            D3D_PlaySePannedLoop(0x1AE, *(s32 *)(c + 8),
+            ((Contact *)bestObj)->contactState = 1;
+            D3D_PlaySePannedLoop(0x1AE, TRMPLINE(c)->mCenter.x,
                                  (s32)(sTrmpLineStrongPitchEnd * edgeRatio +
                                        sTrmpLineStrongPitchMid * (0x1000 - edgeRatio)) >>
                                      0xC);
         }
-        *(s32 *)((char *)bestObj + 0x4) = TRMPLINE(c)->mNormal.x;
-        *(s32 *)((char *)bestObj + 0x8) = TRMPLINE(c)->mNormal.y;
-        *(s32 *)((char *)bestObj + 0xC) = TRMPLINE(c)->mNormal.z;
-        *(s32 *)((char *)bestObj + 0x10) = selectedAlong;
-        *(s32 *)((char *)bestObj + 0x14) = TRMPLINE(c)->mHalfWidth;
+        ((Contact *)bestObj)->lineNormal.x = TRMPLINE(c)->mNormal.x;
+        ((Contact *)bestObj)->lineNormal.y = TRMPLINE(c)->mNormal.y;
+        ((Contact *)bestObj)->lineNormal.z = TRMPLINE(c)->mNormal.z;
+        ((Contact *)bestObj)->alongLine = selectedAlong;
+        ((Contact *)bestObj)->lineHalfLength = TRMPLINE(c)->mHalfWidth;
         TRMPLINE(c)->mStatus = 3;
-        TrmpLine_PointDistance(c, c + 0x38, c + 0x44);
+        TrmpLine_PointDistance(c, &TRMPLINE(c)->mContactPoint, &TRMPLINE(c)->mContactMotion);
         TrmpLine_SetStateSettle(c);
         return;
     }
@@ -2290,9 +2165,6 @@ extern "C" extern void TrmpLine_Draw(char *p);
 extern "C" {
 extern char data_0209b3ec[];
 }
-extern "C" {
-extern char sTrmpLines[];
-}
 // @symbol TrmpLine_DrawAll
 extern "C" void TrmpLine_DrawAll(void) {
     struct V3 s;
@@ -2306,9 +2178,9 @@ extern "C" void TrmpLine_DrawAll(void) {
                                  ((((short)s.x >> 3) & 0x3ff) << 20) | 0x40000000;
     *(volatile int *)0x40004cc = 0x40007fff;
     int i;
-    char *p = sTrmpLines;
+    char *p = (char *)sTrmpLines;
     for (i = 0; i < 4; i++) {
-        if (*(unsigned char *)(p + 0x328) != 0) {
+        if (TRMPLINE(p)->mStatus != 0) {
             TrmpLine_Draw(p);
         }
         p += 0x32c;
@@ -2317,16 +2189,13 @@ extern "C" void TrmpLine_DrawAll(void) {
 }
 
 namespace s020d0ac0 {
-extern "C" {
-extern char sTrmpLines[];
-}
 extern "C" extern void TrmpLine_Update(void *c);
 // @symbol TrmpLine_UpdateAll
 extern "C" void TrmpLine_UpdateAll(void) {
     int i = 0;
-    char *p = sTrmpLines;
+    char *p = (char *)sTrmpLines;
     do {
-        if (*(unsigned char *)(p + 0x328) != 0)
+        if (TRMPLINE(p)->mStatus != 0)
             TrmpLine_Update(p);
         i++;
         p += 0x32c;
@@ -2335,18 +2204,15 @@ extern "C" void TrmpLine_UpdateAll(void) {
 }
 
 namespace s020d0b04 {
-extern "C" {
-extern unsigned char sTrmpLines[];
-}
 
 // @symbol TrmpLine_ClearAll
 extern "C" void TrmpLine_ClearAll(void) {
     int i = 0;
-    unsigned char *p = sTrmpLines;
+    unsigned char *p = (unsigned char *)sTrmpLines;
     int r0 = i;
     do {
         i++;
-        *(p + 0x328) = r0;
+        TRMPLINE(p)->mStatus = r0;
         p += 0x32c;
     } while (i < 3);
 }
@@ -2362,7 +2228,7 @@ extern void *sTrmpLinePlttAddr;
 }
 // @symbol TrmpLine_LoadTextures
 extern "C" void TrmpLine_LoadTextures(void) {
-    sTrmpLineTexAddr = (void *)Model::LoadTextureToVram(sTrmpLineTex, 0x400);
+    sTrmpLineTexAddr = (void *)dExtSimpleModel_c::LoadTextureToVram(sTrmpLineTex, 0x400);
     sTrmpLinePlttAddr = (void *)func_02045a50(sTrmpLinePltt, 0x20);
 }
 }
@@ -2384,6 +2250,7 @@ extern "C" void TrmpLine_CreateStartLineT2(void) {
     b[0] = 0xf0;
     b[1] = 0xb0;
     TrmpLine_Build(sTrmpStartLinePoints, a, b);
+    // sTrmpStartLine is the slot's +0x27c: mBouncesLeft, mBounceCount, mSlotIndex.
     sTrmpStartLine[0x54] = 3;
     sTrmpStartLine[0x55] = 0;
     sTrmpStartLine[0x51] = 3;
@@ -2407,6 +2274,7 @@ extern "C" void TrmpLine_CreateStartLineT1(void) {
     b[0] = 0xe8;
     b[1] = 0xb0;
     TrmpLine_Build(sTrmpStartLinePoints, a, b);
+    // sTrmpStartLine is the slot's +0x27c: mBouncesLeft, mBounceCount, mSlotIndex.
     sTrmpStartLine[0x54] = 3;
     sTrmpStartLine[0x55] = 0;
     sTrmpStartLine[0x51] = 3;
@@ -2420,9 +2288,9 @@ namespace s020d0c38 {
  * direction whose absolute X component is below 1401. When the full
  * vector is shorter than 0x30000, rescale the direction using a length
  * with Y weighted by 0xc00 (0.75), then rewrite the endpoints around
- * the midpoint. Then find the first free slot (state byte +0x328 == 0)
+ * the midpoint. Then find the first free slot (mStatus == 0)
  * among the three, rejecting it if the
- * segment crosses any active (state 1) slot's own segment (+0x50/+0x54),
+ * segment crosses any active (state 1) slot's own segment (mStart/mEnd),
  * and initialises the slot through TrmpLine_Build, returning its
  * address (0 when none is free).
  *
@@ -2434,15 +2302,11 @@ namespace s020d0c38 {
 extern "C" extern void func_0203b958(s16 *o, s16 *a, s16 *b);
 extern "C" extern int func_0203d434(int *in);
 extern "C" extern int Vec2_Len(int *v);
-extern "C" extern int _ZN4cstd4fdivEii(int, int);
 extern "C" extern void func_0203d630(int *p, int m);
 extern "C" extern void func_0203d704(int *o, int *a, int *b);
 extern "C" extern void Vec2_Sub(int *o, int *a, int *b);
 extern "C" extern void TrmpLine_Build(s16 *slot, s16 *a, s16 *b);
 
-extern "C" {
-extern char sTrmpLines[];
-}
 extern "C" {
 extern s16 data_ov006_02140cb4[];
 }
@@ -2532,7 +2396,7 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
         scaledDirection[1] = direction[1];
         scaledDirection[1] = weightedY;
         scaledDirectionLength = Vec2_Len(scaledDirection);
-        func_0203d630(direction, _ZN4cstd4fdivEii(0x18000, scaledDirectionLength));
+        func_0203d630(direction, cstd::fdiv(0x18000, scaledDirectionLength));
 
         func_0203d704(adjustedStart, midpoint, direction);
         Vec2_Sub(adjustedEnd, midpoint, direction);
@@ -2543,18 +2407,18 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
         endPoint[1] = (s16)(adjustedEnd[1] >> 12);
     }
 
-    candidateSlot = sTrmpLines;
+    candidateSlot = (char *)sTrmpLines;
     slotIndex = 0;
     do {
-        if ((unsigned char)candidateSlot[0x328] == 0) {
-            p = sTrmpLines;
+        if (TRMPLINE(candidateSlot)->mStatus == 0) {
+            p = (char *)sTrmpLines;
             otherSlotIndex = 0;
             do {
                 if (slotIndex != otherSlotIndex) {
-                    if ((unsigned char)p[0x328] == 1) {
+                    if (TRMPLINE(p)->mStatus == 1) {
                         func_0203b958(testDirection, endPoint, startPoint);
-                        func_0203b958(firstOffset, (s16 *)(p + 0x50), startPoint);
-                        func_0203b958(secondOffset, (s16 *)(p + 0x54), startPoint);
+                        func_0203b958(firstOffset, TRMPLINE(p)->mStart, startPoint);
+                        func_0203b958(secondOffset, TRMPLINE(p)->mEnd, startPoint);
 
                         {
                             s16 ax = testDirection[0];
@@ -2569,13 +2433,13 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
                             }
                         }
                         if (firstCross * secondCross <= 0) {
-                            func_0203b958(otherDirection, (s16 *)(p + 0x54), (s16 *)(p + 0x50));
+                            func_0203b958(otherDirection, TRMPLINE(p)->mEnd, TRMPLINE(p)->mStart);
                             testDirection[0] = otherDirection[0];
                             testDirection[1] = otherDirection[1];
-                            func_0203b958(firstEndpointOffset, startPoint, (s16 *)(p + 0x50));
+                            func_0203b958(firstEndpointOffset, startPoint, TRMPLINE(p)->mStart);
                             firstOffset[0] = firstEndpointOffset[0];
                             firstOffset[1] = firstEndpointOffset[1];
-                            func_0203b958(secondEndpointOffset, endPoint, (s16 *)(p + 0x50));
+                            func_0203b958(secondEndpointOffset, endPoint, TRMPLINE(p)->mStart);
                             secondOffset[0] = secondEndpointOffset[0];
                             secondOffset[1] = secondEndpointOffset[1];
 
@@ -2607,6 +2471,8 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
             slotOffset = slotIndex * 0x32c;
             newLine = (s16 *)((int)sTrmpLines + slotOffset);
             TrmpLine_Build(newLine, startCopy, endCopy);
+            // sTrmpLines + 0x324, 0x326 and 0x31e, addressed through their own
+            // symbols: mBouncesLeft, mBounceCount and mSlotIndex.
             *(s16 *)((int)data_ov006_02140cb4 + slotOffset) = 1;
             *(s16 *)((int)data_ov006_02140cb6 + slotOffset) = 0;
             *(s16 *)((int)data_ov006_02140cae + slotOffset) = (s16)slotIndex;
@@ -2620,28 +2486,24 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
 }
 }
 
-namespace s020d0fe4 {
-extern "C" extern int __cxa_vec_cleanup(void *dest, int a, int size, void (*func)(void));
-extern "C" {
-extern char sTrmpLines;
-}
-extern "C" extern void TrmpLine_Destroy(
-    void); /* local extern: only the two Trampoline scene headers declare it; this unit includes neither */
+/* The four line slots. mwcc builds them in this file's static initializer
+   with __cxa_vec_ctor and registers their cleanup thunk, __arraydtor. */
+TrmpLine sTrmpLines[4];
 
-// @symbol TrmpLine_CleanupAll
-extern "C" void TrmpLine_CleanupAll(void) {
-    __cxa_vec_cleanup(&sTrmpLines, 4, 0x32c, TrmpLine_Destroy);
-}
-}
+/* The constructor and destructor are inline: mwcc emits a used inline body
+   at the end of the file, after the static initializer and __arraydtor, which
+   is where the cartridge has D1 and then C1. Out-of-line bodies would come
+   ahead of __arraydtor and bring a D2/C2 pair with no ROM home. */
+// @symbol _ZN8TrmpLineD1Ev
+inline TrmpLine::~TrmpLine() {}
 
-namespace s020d1008 {
-// @symbol TrmpLine_Destroy
-extern "C" void TrmpLine_Destroy(void) {}
+// @symbol _ZN8TrmpLineC1Ev
+inline TrmpLine::TrmpLine() {
+    mStatus = 0;
 }
 
-namespace s020d100c {
-// @symbol TrmpLine_Reset
-extern "C" void TrmpLine_Reset(char *p) {
-    p[808] = 0;
-}
-}
+/* The ring model handles. The initializer builds them after sTrmpLines,
+   in this order. */
+TrmpItemRingModelFile sTrmpItemRingAModelFile(0x21a);
+TrmpItemRingModelFile sTrmpItemRingBModelFile(0x21b);
+TrmpItemRingModelFile sTrmpItemRingCModelFile(0x21c);

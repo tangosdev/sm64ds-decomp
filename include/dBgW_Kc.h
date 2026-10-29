@@ -49,13 +49,15 @@ struct KCL_File {
     s32 (*positions)[3];   /* 0x00 - file-relative, fixed up on load */
     s16 (*normals)[3];     /* 0x04 */
     KCL_Tri *tris;         /* 0x08 */
-    char *unk_0c;          /* 0x0c - the octree, indexed below */
+    char *octree;          /* 0x0c - indexed below */
 
     /* Octree geometry. UpdateFileOffsets relocates only 0x00..0x0c, so nothing
        from here on is a pointer. Positions and this origin are stored at 1/64 of
        a Fix12i unit (`lsl #6` on read) and face normals with 1.0 == 0x400
-       (`lsl #2`), so none of these is typed Fix12i. */
-    s32 unk_10;
+       (`lsl #2`), so none of these is typed Fix12i. prismThickness is the KCL
+       header's: how far behind its face a prism still reaches, in the same
+       raw x 0x400 units as a face dot. */
+    s32 prismThickness;    /* 0x10 */
     Vector3 origin;        /* 0x14 - .y pinned by dBgW_Kc::GetOctreeOriginY;
                               read as one Vector3 by DetectClsn, which materialises
                               file+0x14 once and reads [r0], [r0,#4], [r0,#8] */
@@ -69,40 +71,51 @@ struct KCL_File {
     u32 zShift;            /* 0x34 */
 };
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *);
+}
 
 struct dBgW_Kc : dBgW {
     KCL_File *kclFile;        /* 0x20 */
     CLPS_BlockRef clps;       /* 0x24 - compiler-owned value lifetime */
-    /* 0x28..0x30 are ONE Vector3, not three scalars: DetectClsn(dBgCh_SphCrr&)
-       hands `this + 0x28` straight to DotVec3 as a vector (0x01ffc278,
-       `add r1, sl, #0x28`) and compares the result against a contact angle. It
-       is the collider's preferred-contact axis. Left as three fields only
-       because retyping it would touch already-matched callers; if you retype it,
-       re-verify SetFile and _ZN10dScEntry_c13InitResourcesEv (renamed from
-       func_ov075_0211a410). */
-    Fix12i unk_28;            /* 0x28 - init 0 */
-    Fix12i unk_2c;            /* 0x2c - init 0x1000 */
-    s32 unk_30;               /* 0x30 - init 0 */
-    u8 unk_34;                /* 0x34 - init 0 */
-    u8 unk_35;                /* 0x35 - init 0 */
+    /* World up, carried into the collider's own space: dBgW_KcMbg::SetFile
+       and Transform rotate (0, 0x1000, 0) through invRotMat into it, and
+       SetFile here seeds that same vector unrotated. DetectClsn(dBgCh_SphCrr&)
+       dots surface normals against it in the floor edge test and measures the
+       wall-reject slab along it (notes/collision-query-classes.md).
+       It and depthDir are plain three-word vectors, not Vector3: a Vector3
+       member makes d_bg_w_kc.cpp emit an unreferenced ~Vector3() copy, which
+       the ROM's object does not have. The type is named because an unnamed
+       one takes a compiler @NNN number in every consumer. */
+    struct PlainVec {
+        Fix12i x, y, z;
+    };
+    PlainVec upAxis; /* 0x28 */
+    /* The penetration-depth policy of DetectClsn(dBgCh_SphCrr&): how far behind a
+       face the sphere centre may sit and still be pushed out. By default it is
+       the file's prismThickness. shallowOnly caps every face at 5.0 (0x50000
+       in face-dot units); depthByDir keeps the prism thickness only for faces
+       whose normal dots above depthDirMinDot against depthDir and caps the rest
+       at 10.0.
+       Set and cleared by func_01ffb0bc/0b0 (shallowOnly), func_01ffb0a4/098
+       (depthByDir), func_01ffb07c (depthDir) and func_020396d0 (depthDirMinDot). */
+    bool shallowOnly; /* 0x34 */
+    bool depthByDir;  /* 0x35 */
     u8 pad_36[2];
-    Fix12i unk_38;            /* 0x38 - init 0x1000 */
-    s32 unk_3c;               /* 0x3c - init 0 */
-    s32 unk_40;               /* 0x40 - init 0 */
-    Fix12i unk_44;            /* 0x44 - init -0x1000 */
-    /* All four are consumed by DetectClsn(dBgCh_SphCrr&) as one edge-contact
-       policy -- see notes/collision-query-classes.md.
-         unk_44  the threshold DotVec3(faceNormal, unk_38) is tested against
-         unk_48  a SHIFT COUNT, not a value: an edge hit is rejected when the
-                 lateral distance outside the edge exceeds faceDot >> unk_48,
-                 i.e. a slope tolerance as a fraction of the penetration
-         unk_4c  master gate for the edge/vertex regions; clear means only a
-                 face contact can register
-         unk_4d  selects the tolerant form of the unk_48 test for walls */
-    s32 unk_48;               /* 0x48 - init 2 */
-    u8 unk_4c;                /* 0x4c - init 1 */
-    u8 unk_4d;                /* 0x4d - init 0 */
+    PlainVec depthDir;     /* 0x38 - init the unit X vector */
+    Fix12i depthDirMinDot; /* 0x44 - init -0x1000 */
+    /* The edge-contact policy of the same query
+       (notes/collision-query-classes.md):
+         edgeToleranceShift  a SHIFT COUNT, not a value: an edge hit is rejected
+                             when the lateral distance outside the edge exceeds
+                             faceDot >> edgeToleranceShift, i.e. a slope
+                             tolerance as a fraction of the penetration
+         edgeContacts        master gate for the edge/vertex regions; clear
+                             means only a face contact can register
+         tolerantWallEdges   selects the tolerant form of that test for walls */
+    s32 edgeToleranceShift; /* 0x48 - init 2 */
+    bool edgeContacts;      /* 0x4c - init true */
+    bool tolerantWallEdges; /* 0x4d - init false */
     u8 pad_4e[2];
 
     /* --- vtable, in ROM order. Do not reorder. --- */
@@ -144,13 +157,15 @@ struct dBgW_Kc : dBgW {
        Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
        in the class or one level up, as include/dActor_c.h records. No layout
        effect: a non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
-
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_Kc_size_must_be_0x50[sizeof(dBgW_Kc) == 0x50 ? 1 : -1];
+typedef char dBgW_Kc_PlainVec_size_must_be_0xc[sizeof(dBgW_Kc::PlainVec) == 0xc ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

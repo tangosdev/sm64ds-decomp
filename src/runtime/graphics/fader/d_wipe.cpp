@@ -12,11 +12,6 @@
  * the vtable/RTTI records land in .data at 0x020926d0..0x02092718.
  *
  * leftovers:
- * - SetBackwardTime keeps its 3-argument extern-C form: the ROM entry
- *   forwards r2 untouched, which the header's 2-param member would drop
- *   (vtable slot 3 still binds through the header decl).
- * - G2x::SetBlendBrightness stays a local extern (the ROM passes r2 with
- *   no sign-extend; the header's s16 emits sxth at this call site).
  * - opt_strength_reduction off runs to end of file: its reset reaches
  *   backward, so it cannot be restored between the two table builders
  *   (measured). func_0202f2c4, func_0202f3a4, func_02053c10, the
@@ -27,24 +22,16 @@
 #include "dWipe_c.h"
 #include "IRQ.h"
 #include "decl_common.h"
+#include "cstd.h"
+#include "CP15.h"
+#include "GX.h"
+#include "G2x.h"
 
 extern "C" {
-/* The ROM's SetBackwardTime entry point reads a third argument in r2 and
-   forwards it untouched; the header's 2-param member call would drop the
-   forwarded register.
-   local extern: byte-required arity, banked in decl-agreement-baseline.json */
-int  _ZN15dFdBrightness_c15SetBackwardTimeEj(dFdBrightness_c *self, u32 time, u32 extra);
-/* local extern: the ROM passes the blend target in r2 with no sign-extend;
-   the header's s16 parameter emits sxth at this call site. */
-void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, u16 a, int b);
-void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 len);
-void _ZN2GX10LoadBGPlttEPKvjj(const void *src, u32 offset, u32 len);
-void _ZN3GXS10LoadBGPlttEPKvjj(const void *src, u32 offset, u32 len);
 void MultiStore_Int(int val, int *dst, int len);
 void func_0202f2c4(void);
 }
 
-extern dWipe_c      data_0209f61c;   /* the wipe singleton */
 extern u8           data_0209f5f8;   /* which display engine the wipe covers */
 extern volatile u8  data_0209f5fc;   /* the next HBlank has a fresh line */
 extern volatile u32 data_0209f608;   /* table index the IRQ reads */
@@ -85,26 +72,22 @@ void dWipe_c::func_0202fb30()
     }
     *(volatile u32 *)0x4000000 &= ~0xe000;
     *(volatile u32 *)0x4001000 &= ~0xe000;
-    if (unk_028 == 1) {
-        type = unk_018;
-        unk_028 = 0;
+    if (typePending == 1) {
+        type = pendingType;
+        typePending = 0;
     }
 }
 
-/* Vtable slot 3, spelled as the ROM built it: a two-argument entry point under
-   the member's mangled name. The extra parameter arrives in r2 and is
-   forwarded to the base call with zero instructions, which is what keeps the
-   cached `type` in r3 as in the cartridge; a real one-argument member fixes
-   the arity and misses by three words (measured, notes/scene-provenance.md).
-   The header still declares slot 3 so the emitted vtable binds here. */
-// @symbol _ZN7dWipe_c15SetBackwardTimeEj
-extern "C" int _ZN7dWipe_c15SetBackwardTimeEj(dWipe_c *self, u32 frames, u32 extra)
-{
+/* Opening half of a wipe. Type 1 is the plain colour fade and the base owns
+   it. `extra` is forwarded and not read; callers pass 0. */
+// @symbol _ZN7dWipe_c15SetBackwardTimeEjj
+int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
+    dWipe_c *self = this;
     s32 type = self->type;
     s32 state;
 
     if (type == 1)
-        return _ZN15dFdBrightness_c15SetBackwardTimeEj(self, frames, extra);
+        return dFdBrightness_c::SetBackwardTime(frames, extra);
 
     state = self->state;
     if (state == 0 || state == 4) {
@@ -119,13 +102,13 @@ extern "C" int _ZN7dWipe_c15SetBackwardTimeEj(dWipe_c *self, u32 frames, u32 ext
         }
 
         if (self->type == 2) {
-            _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209f604, 2);
-            _ZN2GX10LoadBGPlttEPKvjj(data_0209f604, 0, 2);
-            _ZN3GXS10LoadBGPlttEPKvjj(data_0209f604, 0, 2);
+            CP15::FlushAndInvalidateDataCache((u32)data_0209f604, 2);
+            GX::LoadBGPltt(data_0209f604, 0, 2);
+            GXS::LoadBGPltt(data_0209f604, 0, 2);
         } else {
-            _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_020926cc, 2);
-            _ZN2GX10LoadBGPlttEPKvjj(data_020926cc, 0, 2);
-            _ZN3GXS10LoadBGPlttEPKvjj(data_020926cc, 0, 2);
+            CP15::FlushAndInvalidateDataCache((u32)data_020926cc, 2);
+            GX::LoadBGPltt(data_020926cc, 0, 2);
+            GXS::LoadBGPltt(data_020926cc, 0, 2);
         }
 
         self->wipeInterp = 0;
@@ -191,13 +174,13 @@ int dWipe_c::SetForwardTime(u32 frames)
         }
 
         if (type == 2) {
-            _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209f600, 2);
-            _ZN2GX10LoadBGPlttEPKvjj(data_0209f600, 0, 2);
-            _ZN3GXS10LoadBGPlttEPKvjj(data_0209f600, 0, 2);
+            CP15::FlushAndInvalidateDataCache((u32)data_0209f600, 2);
+            GX::LoadBGPltt(data_0209f600, 0, 2);
+            GXS::LoadBGPltt(data_0209f600, 0, 2);
         } else {
-            _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_020926c8, 2);
-            _ZN2GX10LoadBGPlttEPKvjj(data_020926c8, 0, 2);
-            _ZN3GXS10LoadBGPlttEPKvjj(data_020926c8, 0, 2);
+            CP15::FlushAndInvalidateDataCache((u32)data_020926c8, 2);
+            GX::LoadBGPltt(data_020926c8, 0, 2);
+            GXS::LoadBGPltt(data_020926c8, 0, 2);
         }
 
         wipeInterp = 0x200000;
@@ -306,8 +289,8 @@ void dWipe_c::AdvanceFade()
             wipeInterp = 0;
             needsCleanup = 0;
             b = (type == 0) ? 0x10 : -0x10;
-            _ZN3G2x18SetBlendBrightnessEPVtts((u16 *)0x4000050, 0x3f, b);
-            _ZN3G2x18SetBlendBrightnessEPVtts((u16 *)0x4001050, 0x3f, b);
+            G2x::SetBlendBrightness((u16 *)0x4000050, 0x3f, b);
+            G2x::SetBlendBrightness((u16 *)0x4001050, 0x3f, b);
             func_0202fb30();
             state = 4;
         }
@@ -470,7 +453,7 @@ void dWipe_c::func_0202efa0()
         }
     }
 
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209f648, 0x600);
+    CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
     data_0209f60c = idx;
 }
 
@@ -502,7 +485,7 @@ void dWipe_c::func_0202ee94()
     for (i = 0; i < 0x60; i++) {
         if (r8 <= i) {
             int a = i - 0x60 + sl;
-            int s = _ZN4cstd4sqrtEy((u64)(long long)(a * (r7 - a)));
+            int s = cstd::sqrt((u64)(long long)(a * (r7 - a)));
             int lo = 0x80 - s;
             int hi = s + 0x80;
             if (lo < 0) lo = r5;
@@ -519,7 +502,7 @@ void dWipe_c::func_0202ee94()
         r4--;
     }
 
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209f648, 0x600);
+    CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
     data_0209f60c = fp;
 }
 
@@ -561,6 +544,12 @@ int dWipe_c::IsBetweenStartAndEnd()
     return 0;
 }
 
+/* The wipe singleton. A namespace-scope object with a constructor and a
+   destructor, so mwcc emits __sinit_d_wipe.cpp to build it and register
+   ~dWipe_c() (was the handwritten __sinit_02074f80). The minigame
+   overlays still reach it by this address name. */
+dWipe_c data_0209f61c;
+
 /* Scene-side wipe reset: cancel a live capture, then return the singleton to
    its idle state. */
 // @symbol func_0202ed48
@@ -581,8 +570,8 @@ void dWipe_c::func_0202ed14()
     wipeSpeed = 0;
     wipeAccel = 0;
     type = 0;
-    unk_018 = type;
-    unk_028 = 0;
+    pendingType = type;
+    typePending = 0;
 }
 
 /* Vtable slot 8. A pure veneer to the base: the wipe has no end state of its
@@ -602,21 +591,21 @@ void dWipe_c::SetToStart()
 }
 
 /* Request a new wipe `type`. A mid-transition request is stashed into
-   unk_018/unk_028 and committed by func_0202fb30 when the current leg ends;
+   pendingType/typePending and committed by func_0202fb30 when the current leg ends;
    outside a transition it lands directly. */
 // @symbol _ZN7dWipe_c13func_0202ec9cEi
 int dWipe_c::func_0202ec9c(int arg)
 {
     if (arg == type) {
-        unk_028 = 0;
+        typePending = 0;
         return 0;
     }
     if (IsBetweenStartAndEnd()) {
-        unk_018 = arg;
-        unk_028 = 1;
+        pendingType = arg;
+        typePending = 1;
         return 1;
     }
     type = arg;
-    unk_028 = 0;
+    typePending = 0;
     return 0;
 }

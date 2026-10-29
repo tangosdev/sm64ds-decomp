@@ -1,4 +1,7 @@
 //cpp
+#include "Ov007MenuState.h"
+#include "Ov007Work.h"
+
 extern "C" {
 extern void func_ov007_020b46b0(void* elem, void* tp);
 extern void func_ov007_020b7a78(void);
@@ -23,25 +26,28 @@ extern void func_ov007_020add3c(int c);
 extern void func_ov007_020ad660(int a);
 extern char *data_ov007_0210342c;
 
+typedef char
+    Ov007Work_chosenItemId_must_be_at_0x180[(int)&((Ov007Work *)0)->chosenItemId == 0x180 ? 1 : -1];
+
 #pragma opt_strength_reduction off
 void func_ov007_020aed98(void)
 {
-    char *g = data_ov007_0210342c;
-    int r6 = *(int*)(g + 4);
-    int r5 = *(int*)(g + 8);
+    Ov007Work *g = (Ov007Work *)data_ov007_0210342c;
+    Ov007MenuState *r6 = g->states[0];
+    Ov007MenuState *r5 = g->states[1];
     int i;
 
     for (i = 0; i < 0x18; i++) {
-        char *gg = data_ov007_0210342c;
-        func_ov007_020b46b0(*(void**)(gg + i * 4 + 0x114), *(void**)(gg + 0x50));
+        Ov007Work *gg = (Ov007Work *)data_ov007_0210342c;
+        func_ov007_020b46b0(gg->itemViews[i], gg->touch);
     }
 
     func_ov007_020b7a78();
-    func_ov007_020c92d0(r6);
+    func_ov007_020c92d0((int)r6);
 
-    if (*(int*)(r6 + 0xc) == 0) {
-        func_ov007_020c934c(r5, 0);
-        switch (*(short*)r6) {
+    if (r6->stateTicks == 0) {
+        func_ov007_020c934c((int)r5, 0);
+        switch (r6->currentState) {
         case 0: func_ov007_020b066c(); break;
         case 2: func_ov007_020af0e4(); break;
         case 3: func_ov007_020af1f4(); break;
@@ -51,14 +57,14 @@ void func_ov007_020aed98(void)
         }
     }
 
-    func_ov007_020c92d0(r5);
+    func_ov007_020c92d0((int)r5);
 
-    if (*(int*)(r6 + 0xc) == 0 || *(int*)(r5 + 0xc) == 0) {
-        char *gg = data_ov007_0210342c;
-        func_ov007_020c2090(*(int*)(gg + 0x54));
+    if (r6->stateTicks == 0 || r5->stateTicks == 0) {
+        Ov007Work *gg = (Ov007Work *)data_ov007_0210342c;
+        func_ov007_020c2090((int)gg->pad);
     }
 
-    switch (*(short*)r6) {
+    switch (r6->currentState) {
     case 0: func_ov007_020b0548(); break;
     case 1: func_ov007_020b0358(); break;
     case 2: func_ov007_020aefb4(); break;
@@ -69,25 +75,25 @@ void func_ov007_020aed98(void)
     }
 
     {
-        char *gg = data_ov007_0210342c;
-        func_ov007_020c92d0(*(int*)(gg + 0xc));
+        Ov007Work *gg = (Ov007Work *)data_ov007_0210342c;
+        func_ov007_020c92d0((int)gg->states[2]);
     }
 
     {
-        char *gg = data_ov007_0210342c;
-        *(int*)(gg + 0x180) = -1;
+        Ov007Work *gg = (Ov007Work *)data_ov007_0210342c;
+        gg->chosenItemId = -1;
     }
     for (i = 0; i < 0x18; i++) {
-        char *gg = data_ov007_0210342c;
-        func_ov007_020b44ec(*(int*)(gg + i * 4 + 0x114));
+        Ov007Work *gg = (Ov007Work *)data_ov007_0210342c;
+        func_ov007_020b44ec((int)gg->itemViews[i]);
     }
     for (i = 0; i < 9; i++) {
-        char *gg = data_ov007_0210342c;
-        func_ov007_020add3c(*(int*)(gg + i * 4 + 0xa4));
+        Ov007Work *gg = (Ov007Work *)data_ov007_0210342c;
+        func_ov007_020add3c((int)gg->itemNodes[i]);
     }
     for (i = 0; i < 8; i++) {
-        char *gg = data_ov007_0210342c;
-        func_ov007_020ad660(*(int*)(gg + i * 4 + 0xc8));
+        Ov007Work *gg = (Ov007Work *)data_ov007_0210342c;
+        func_ov007_020ad660((int)gg->layerSlots[i]);
     }
 }
 }

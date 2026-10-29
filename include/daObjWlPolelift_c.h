@@ -1,7 +1,7 @@
 #ifndef DAOBJWLPOLELIFT_C_H
 #define DAOBJWLPOLELIFT_C_H
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAcPos_c.h"
 #include "PathPtr.h"
 #include "dExtShadowModel_c.h"
@@ -18,19 +18,19 @@
  *
  * CONSTRUCTION. The reconstructed class initializer
  * daObjWlPolelift_c_classInit (historical placeholder func_ov026_02111678): it opens
- * with `_ZN7fBase_cnwEj(484)`, i.e. fBase_c::operator new(0x1e4). SIZE
+ * with `_ZN7fBase_cnwEm(484)`, i.e. fBase_c::operator new(0x1e4). SIZE
  * 0x1e4 is read directly off the allocator call. The same constructor
  * placement-constructs four sub-objects after installing the vtable chain:
- *   Model                       at 0x0d4 (sizeof 0x50, ends 0x124)
+ *   dExtSimpleModel_c                       at 0x0d4 (sizeof 0x50, ends 0x124)
  *   dCcAcPos_c   at 0x124 (sizeof 0x40, ends 0x164)
  *   PathPtr                     at 0x164 (sizeof 0x08, ends 0x16c)
  *   dExtShadowModel_c                 at 0x188 (sizeof 0x28, ends 0x1b0)
- * dActor_c's own fields run to 0xd0 (dActor_c.h); the Model sub-object
+ * dActor_c's own fields run to 0xd0 (dActor_c.h); the dExtSimpleModel_c sub-object
  * starts 4 bytes later at 0xd4.
  *
  * The destructor (func_ov026_021111a0 / _021111e0) tears down the same
  * three sub-objects that have non-trivial destructors -- dExtShadowModel_c,
- * dCcAcPos_c, Model -- in reverse-ish order (PathPtr has no
+ * dCcAcPos_c, dExtSimpleModel_c -- in reverse-ish order (PathPtr has no
  * destructor call at all, consistent with it being POD).
  *
  * MEMBERS BETWEEN THE SUB-OBJECTS, read from InitResources/Behavior/Render
@@ -60,7 +60,7 @@
  */
 struct daObjWlPolelift_c : dActor_c {
     u8   pad_0d0[0x4];              /* 0x0d0 -- unobserved */
-    Model model;                     /* 0x0d4 */
+    dExtSimpleModel_c model;        /* 0x0d4 */
     dCcAcPos_c clsn;  /* 0x124 */
     PathPtr path;                    /* 0x164 */
     s32  numNodes;                   /* 0x16c */
@@ -79,7 +79,7 @@ struct daObjWlPolelift_c : dActor_c {
        0x021111a0/0x021111e0 pair, and adds a homeless D2. Inline emits D1
        then D0 and no D2, and moves the key function to the first non-inline
        virtual, InitResources. Body is empty: destroying the dExtShadowModel_c,
-       dCcAcPos_c and Model subobjects and running dActor_c's own destructor
+       dCcAcPos_c and dExtSimpleModel_c subobjects and running dActor_c's own destructor
        all follow from the declarations above. */
     virtual ~daObjWlPolelift_c() {}                      /* slots 16 (D1), 17 (D0) */
 

@@ -43,7 +43,7 @@ _ZN14daRedBombhei_c19func_ov084_0212c8b0Ev kind:function(arm,size=0x7c) addr:0x0
 _ZN14daRedBombhei_c19func_ov084_0212c92cEv kind:function(arm,size=0x34) addr:0x0212c92c
 _ZN14daRedBombhei_c19func_ov084_0212c960Ei kind:function(arm,size=0x48) addr:0x0212c960
 _ZN14daRedBombhei_c19func_ov084_0212c9a8Ev kind:function(arm,size=0x48) addr:0x0212c9a8
-_ZN14daRedBombhei_c19func_ov084_0212c9f0Eij kind:function(arm,size=0x70) addr:0x0212c9f0
+_ZN14daRedBombhei_c19func_ov084_0212c9f0Eih kind:function(arm,size=0x70) addr:0x0212c9f0
 _ZN14daRedBombhei_c19func_ov084_0212ca60Ev kind:function(arm,size=0x48) addr:0x0212ca60
 _ZN14daRedBombhei_c19func_ov084_0212caa8Ev kind:function(arm,size=0x18) addr:0x0212caa8
 _ZN14daRedBombhei_c19func_ov084_0212cac0Ev kind:function(arm,size=0x20) addr:0x0212cac0
@@ -126,11 +126,11 @@ data_ov084_0213030c kind:data(any) addr:0x0213030c
 data_ov084_02130320 kind:data(any) addr:0x02130320 ambiguous
 data_ov084_02130334 kind:data(any) addr:0x02130334
 __sinit_d_a_krb.cpp kind:function(arm,size=0x1fc) addr:0x0213035c
-__sinit_ov084_02130558 kind:function(arm,size=0xfc) addr:0x02130558
-__sinit_ov084_02130654 kind:function(arm,size=0x20c) addr:0x02130654
+__sinit_d_a_red_bombhei.cpp kind:function(arm,size=0xfc) addr:0x02130558
+__sinit_d_a_pkn.cpp kind:function(arm,size=0x20c) addr:0x02130654
 .p__sinit_d_a_krb.cpp kind:data(word) addr:0x02130860
-.p__sinit_ov084_02130558 kind:data(word) addr:0x02130864
-.p__sinit_ov084_02130654 kind:data(word) addr:0x02130868
+.p__sinit_d_a_red_bombhei.cpp kind:data(word) addr:0x02130864
+.p__sinit_d_a_pkn.cpp kind:data(word) addr:0x02130868
 data_ov084_02130880 kind:data(any) addr:0x02130880
 data_ov084_0213088c kind:data(any) addr:0x0213088c
 data_ov084_0213089c kind:data(any) addr:0x0213089c
@@ -174,6 +174,7 @@ _ZTS7daPkn_c kind:data(any) addr:0x02130bec
 _ZTI7daPkn_c kind:data(any) addr:0x02130bf8
 g_profile_PAKUN kind:data(any) addr:0x02130c04
 _ZTV7daPkn_c kind:data(any) addr:0x02130c28
+data_ov084_02130ca4 kind:data(any) addr:0x02130ca4
 data_ov084_02130cc0 kind:bss addr:0x02130cc0
 data_ov084_02130cc8 kind:bss addr:0x02130cc8
 data_ov084_02130cd0 kind:bss addr:0x02130cd0
@@ -193,8 +194,8 @@ gKuriboLowModelModelFile kind:bss addr:0x02130d00
 @1950 kind:bss addr:0x02130d5c
 @1951 kind:bss addr:0x02130d68
 data_ov084_02130d74 kind:bss addr:0x02130d74
-data_ov084_02130d9c kind:bss addr:0x02130d9c
-data_ov084_02130da4 kind:bss addr:0x02130da4
+gRedBombheiWaitAnimFile kind:bss addr:0x02130d9c
+gRedBombheiModelFile kind:bss addr:0x02130da4
 data_ov084_02130dac kind:bss addr:0x02130dac
 data_ov084_02130db8 kind:bss addr:0x02130db8
 data_ov084_02130dc4 kind:bss addr:0x02130dc4
@@ -213,3 +214,4 @@ data_ov084_02130e5c kind:bss addr:0x02130e5c
 data_ov084_02130e68 kind:bss addr:0x02130e68
 data_ov084_02130e74 kind:bss addr:0x02130e74
 data_ov084_02130e80 kind:bss addr:0x02130e80
+data_ov084_02130ec8 kind:bss addr:0x02130ec8

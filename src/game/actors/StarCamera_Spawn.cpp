@@ -8,21 +8,24 @@
  * profile-derived label, not a recovered class name.
  *
  * leftovers:
- *  - The constructor is still the mangled extern "C" call: `new dActor_c`
- *    picks a different emitted variant (C2 vs the cartridge's C1) and the
- *    four extra bytes keep their own question; the experiment is deferred
- *    (tangosdev/sm64ds-decomp#3198).
+ *  - The allocation is four bytes over sizeof(dActor_c), and this TU does not
+ *    include that class. Placement new on the local declaration is the
+ *    cartridge's C1; its null test is the old explicit check.
  *  - This is a production source for the factory, not a recovered
  *    translation-unit boundary.
  */
 #include "fBase_c.h"
 
-extern "C" void *_ZN8dActor_cC1Ev(void *thiz);
+struct dActor_c {
+    dActor_c();
+};
+
+inline void *operator new(size_t, void *p) {
+    return p;
+}
 
 // @symbol StarCamera_Spawn
-extern "C" void *StarCamera_Spawn(void)
-{
+extern "C" void *StarCamera_Spawn(void) {
     void *p = fBase_c::operator new(0xd4);
-    if (p == 0) return p;
-    return _ZN8dActor_cC1Ev(p);
+    return ::new (p) dActor_c();
 }

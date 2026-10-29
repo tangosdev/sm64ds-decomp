@@ -25,7 +25,7 @@
  *   slot 12    GetVelocity(Vector3 &)           - zeroes it here
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h.
+ * key-function arrangement from include/dExtModel_c.h.
  *
  * THE TWO DESTRUCTOR BODIES. Both are `ldr r1,[pc,#4]; str r1,[r0]; bx lr'
  * storing the vtable word, and they are byte-identical -- but the compiler
@@ -75,7 +75,15 @@ struct SurfaceInfo;
 struct Vector3_16 { s16 x, y, z; };
 #endif
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *);
+}
+
+struct dBgW;
+/* dBgW::BeforeClsn's hook. Its parameters stay named: each name is one of every
+   consumer TU's @NNN numbers, as they were when the member spelled the type inline. */
+typedef void (*BeforeClsnCallback)(dBgW *self, dActor_c *actor, dBgPi *res, Vector3 *pos,
+                                   Vector3_16 *motionAng, Vector3_16 *ang);
 
 struct dBgW {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
@@ -88,9 +96,7 @@ struct dBgW {
     Fix12i clipOffsetY;       /* 0x10 */
     u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
-    void (*beforeClsnCallback)(dBgW *self, dActor_c *actor,
-                               dBgPi *res, Vector3 *pos,
-                               Vector3_16 *motionAng, Vector3_16 *ang); /* 0x18 */
+    BeforeClsnCallback beforeClsnCallback; /* 0x18 */
     /* Run by func_02038234 when an actor commits a floor hit on this collider
        (dBgCh_Actr's floor-result path), as (collider, owner, actor). */
     void (*stoodOnCallback)(dBgW *, dActor_c *, dActor_c *); /* 0x1c */
@@ -147,8 +153,15 @@ struct dBgW {
        every relocated word -- while calling the wrong function; only the
        reloc-destination check sees it. No layout effect: a non-virtual
        inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 };
+
+/* The enabled-collider table: Enable puts a collider in the first free
+   entry and records the index in slotIdx, Disable and
+   dScStage_c::ResetMeshColliders clear entries, and the query TUs walk it. */
+extern "C" dBgW *data_020a0c80[];
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

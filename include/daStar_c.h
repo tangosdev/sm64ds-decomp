@@ -22,8 +22,8 @@
  *
  *     0x110 dCcAcPos_c  0x40    -> 0x150
  *     0x150 dBgCh_Actr               0x1bc   -> 0x30c
- *     0x30c ModelAnim                  0x64    -> 0x370
- *     0x370 ModelAnim                  0x64    -> 0x3d4
+ *     0x30c dExtAnmModel_c                  0x64    -> 0x370
+ *     0x370 dExtAnmModel_c                  0x64    -> 0x3d4
  *     0x3d4 dExtShadowModel_c                0x28    -> 0x3fc
  *
  * SIZE IS THE ROM'S OWN: `daStar_c_classInit_STAR` calls
@@ -32,7 +32,7 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -86,7 +86,9 @@ struct daStar_c : dEnemyBase_c {
     enum StarFlag {
         FLAG_NO_SPIN         = 0x0001, /* clear: func_ov002_020e84ec spins it (+0xc00 on mAngleY per frame); set: faces mPrevAngleY, 50.0 up */
         FLAG_VISIBLE         = 0x0002, /* Render, the drop shadow and the touch volume all need it; InitResources disables the touch volume while clear */
-        FLAG_COLLECTED_MODEL = 0x0004, /* Render draws mModelAnim2 (the translucent star) instead of mModelAnim1; AddStarMarker turns marker type 2 into 3 */
+        /* Render draws mAnmModel2 (the translucent star) instead of mAnmModel1;
+           AddStarMarker turns marker type 2 into 3 */
+        FLAG_COLLECTED_MODEL = 0x0004,
         FLAG_NO_PICKUP       = 0x0008, /* STATE_BOUNCE skips the pickup test (func_ov002_020e930c) while set */
         FLAG_WATER_MASK      = 0x0030, /* bits 4..5, a WaterState */
         FLAG_RELINK_MARKER   = 0x0040, /* out of bounds -> re-link to a marker (func_ov002_020e7454) instead of going home; set by func_ov002_020e7218 */
@@ -123,8 +125,8 @@ struct daStar_c : dEnemyBase_c {
 
     dCcAcPos_c    mdCc_c;         /* 0x110 -- the touch volume: radius 100.0, height 150.0 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
-    ModelAnim                    mModelAnim1;           /* 0x30c -- the normal star */
-    ModelAnim                    mModelAnim2;           /* 0x370 -- the translucent "already collected" star */
+    dExtAnmModel_c mAnmModel1;                        /* 0x30c -- the normal star */
+    dExtAnmModel_c mAnmModel2; /* 0x370 -- the translucent "already collected" star */
     dExtShadowModel_c                  mShadowModel;          /* 0x3d4 */
 
     daStarShadowMtx              mShadowMtx;            /* 0x3fc */
@@ -209,7 +211,7 @@ struct daStar_c : dEnemyBase_c {
     void func_ov002_020e700c();
     void func_ov002_020e7090(int arg);
     void func_ov002_020e7218(char* a, int gate);
-    int func_ov002_020e73ac();
+    u8 func_ov002_020e73ac();
     void func_ov002_020e7454();
     void func_ov002_020e7554();
     void func_ov002_020e763c();

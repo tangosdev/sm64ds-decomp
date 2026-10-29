@@ -14,21 +14,38 @@ namespace IRQ {
     void Restore(unsigned int x);
 }
 
-struct T {
-    int *f0;
-    int f4;
-    char pad[0x2c];
-    int f34;
+/* The request block shared with ARM7 (NitroSDK CARDiCommandArg); the name
+ * of its first field follows func_02060484.cpp's view. */
+struct ChunkRequest {
+    int mResult; /* 0x00 -- 0 (CARD_RESULT_SUCCESS), 4 (TIMEOUT) retried */
 };
 
+/* The card access state block data_020a8180 (NitroSDK CARDiCommon), the
+ * fields this function touches; names as func_02060484.cpp spells them. */
+struct CardCommon {
+    ChunkRequest *mRequest; /* 0x00 */
+    /* 0x04 -- the request type sent to ARM7 (NitroSDK command): stored here
+     * before each send; only this function writes it */
+    int mCommand;
+    char pad_08[0x2c];
+    /* 0x34 -- CARD_STAT_* bits: 2 once the INIT request has been sent, 0x20
+     * while a request is out (ARM7's reply clears it) */
+    int mFlags;
+};
+
+/* NitroSDK CARDi_Request(p, req_type, retry_count): the first time, wait
+ * for ARM7's FS PXI callback (tag 0xb) and send the INIT request (0)
+ * recursively; then flush the request block and send req_type until the
+ * result is not TIMEOUT (4) or the retries run out, sleeping until ARM7
+ * clears the 0x20 flag. INIT also sends the request block's address.
+ * Returns whether the request succeeded. */
 #pragma opt_loop_invariants off
-extern "C" int func_02060f60(T *thiz, int v, int count) {
+extern "C" int func_02060f60(CardCommon *thiz, int v, int count) {
     unsigned int saved;
     int r;
 
-    if (!(*(volatile int *)&thiz->f34 & 2)) {
-        int *p = (int *)(((int)thiz + 0x34));
-        *p |= 2;
+    if (!(*(volatile int *)&thiz->mFlags & 2)) {
+        thiz->mFlags |= 2;
         if (func_0205ba3c(0xb, 1) == 0) {
             do {
                 func_02059d8c(0x64);
@@ -37,29 +54,29 @@ extern "C" int func_02060f60(T *thiz, int v, int count) {
         func_02060f60(thiz, 0, 1);
     }
 
-    CP15::FlushAndInvalidateDataCache((unsigned int)thiz->f0, 0x20);
+    CP15::FlushAndInvalidateDataCache((unsigned int)thiz->mRequest, 0x20);
     CP15::DrainWriteBuffer();
 
     do {
-        thiz->f4 = v;
-        *(int *)(((int)thiz + 0x34)) |= 0x20;
+        thiz->mCommand = v;
+        thiz->mFlags |= 0x20;
 
         while (IPCSend(0xb, v, 1) < 0) {
         }
 
         if (v == 0) {
-            int *q = thiz->f0;
+            ChunkRequest *q = thiz->mRequest;
             while (IPCSend(0xb, (unsigned int)q, 1) < 0) {
             }
         }
 
         saved = IRQ::Disable();
-        while (thiz->f34 & 0x20) {
+        while (thiz->mFlags & 0x20) {
             OS_SleepThread((u16 *)0);
         }
         IRQ::Restore(saved);
 
-        r = *thiz->f0;
+        r = thiz->mRequest->mResult;
         if (r != 4) {
             break;
         }

@@ -6,6 +6,7 @@
 #include "dView_c.h"
 
 struct dActor_c;
+struct CamMode;
 
 struct dCamera_c : dView_c {
     /* Nested, and only ever needed as a pointer -- dCamera_c::ChangeState is
@@ -57,10 +58,18 @@ struct dCamera_c : dView_c {
     s32 mAspect; /* 0x0f8 */
     s32 mNear;   /* 0x0fc */
     s32 mFar;    /* 0x100 */
-    u8 pad_104[0x8];
+    /* func_0200d954 stores func_02053200 (the fixed-point reciprocal) of the
+       sine and cosine table entries for the field-of-view angle it is given,
+       beside the aspect/near/far it hands dClipper. Nothing in d_camera.cpp
+       reads them back; the names follow the writer (medium confidence). */
+    s32 mInvSinFov; /* 0x104 */
+    s32 mInvCosFov; /* 0x108 */
     /* Render packs these four bytes into the VIEWPORT register (0x04000580). */
     u8 mViewport[4];              /* 0x10c */
-    s32 mTargetPlayer;            /* 0x110 */
+    /* The actor the camera follows: InitResources stores the current
+       player-list entry here. Readers test actorID == 0xbf before treating it
+       as a Player, so it is declared as the dActor_c it is checked as. */
+    dActor_c *mTargetPlayer; /* 0x110 */
     /* King Bob-omb, King Whomp, Chief Chilly, Goomboss, Bowser and the
        mirror-room Luigi store themselves here every frame; Behavior clears it
        at the end of each frame. In a type-7 camera area func_0200c394 aims
@@ -88,8 +97,18 @@ struct dCamera_c : dView_c {
     /* Current state. ChangeState compares its argument against this, and only
        swaps it -- and clears mTurningToTarget -- when they differ. */
     struct State* mState;            /* 0x138 */
-    s32 mState_13c;            /* 0x13c */
-    u8 pad_140[0x4];
+    /* The current 0x28-byte mode record, entry N of the table at 0x02086fcc
+       (func_0200cb58 stores table + N * 0x28). Its +0x10/+0x14/+0x20 are the
+       distances func_0200cce4 places lookAt and pos by, +0x24 the field-of-view
+       angle func_0200ca50 eases mFovAngle toward, and +0x26 a flag halfword.
+       The record is CamMode, defined in d_camera.cpp; consumers that never
+       read it see only the tag. */
+    struct CamMode *mMode; /* 0x13c */
+    /* The mode record func_0200c66c last chose from the floor's camera
+       behaviour and view object (it skips data_02087094); func_0200cf40 seeds
+       it with entry 10. Behavior clears mFlags 0x60 unless it is
+       data_0208733c, and func_0200d0ac tests its +0x26 bit 0. */
+    struct CamMode *mAreaMode; /* 0x140 */
     /* The view object func_0200c66c last chose (GetViewObj's record).
        func_0200bb28 re-reads the base angle only when the object differs. */
     void *mViewObj; /* 0x144 */
@@ -152,13 +171,26 @@ struct dCamera_c : dView_c {
     /* The yaw func_020091f8 and func_02009e70 turn mAngleY toward while
        mTurningToTarget is set. */
     s16 mTargetAngleY; /* 0x186 */
-    u8 pad_188[0x4];
-    /* Shake amplitudes. Render adds mRollShake times the sine of the phase at
-       0x18a to the roll, and mFovShake times the cosine of the phase at 0x192
-       to the field of view; Behavior decays both. */
+    /* Behavior hands mAngleY + mInputYawLag to func_0203dafc, which stores it
+       at +0x10 of the pad-input record data_020a1040, then eases the lag to 0
+       by 0x400 a frame. func_02009e70 subtracts each orbit swing of mAngleY
+       from it, so the yaw the input sees catches up instead of jumping. */
+    s16 mInputYawLag; /* 0x188 */
+    /* Phase of the roll shake: Behavior steps it by 0x3000 while mRollShake
+       decays and zeroes it once mRollShake reaches 0. */
+    s16 mRollShakePhase; /* 0x18a */
+    /* Shake amplitudes. Render adds mRollShake times the sine of
+       mRollShakePhase to the roll, and mFovShake times the cosine of
+       mFovShakePhase to the field of view; Behavior decays both.
+       func_0200d89c sets mRollShake to 0x180; func_0200d8ac raises mFovShake
+       and sets its decay step and phase step together. */
     s16 mRollShake; /* 0x18c */
     s16 mFovShake;  /* 0x18e */
-    u8 pad_190[0x6];
+    /* The fov shake's per-frame decay (Behavior's ApproachLinear2 step), its
+       phase, and the phase step Behavior adds every frame. */
+    s16 mFovShakeDecay;     /* 0x190 */
+    s16 mFovShakePhase;     /* 0x192 */
+    s16 mFovShakePhaseStep; /* 0x194 */
     /* Countdown. func_020098b8 arms it (0x1c) and func_0200987c switches to
        state 0x14 when it runs out; func_0200bb28 reuses it as the repeat
        delay (0x14) between turn-button steps. */

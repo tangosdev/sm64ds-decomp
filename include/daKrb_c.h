@@ -5,15 +5,11 @@
 #include "dCapEnemy_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dExtShadowModel_c.h"
-#include "MaterialChanger.h"
+#include "dExtAnmMaterial_c.h"
 
 struct KrbAnimationFileHandle : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    BCA_File *ptr;
-
     KrbAnimationFileHandle(u32 fileID);
     ~KrbAnimationFileHandle();
 };
@@ -45,9 +41,9 @@ struct Player;
 struct daKrb_c : dCapEnemy_c {
     dCcAc_c mdCcAc_c;         /* 0x180 */
     dBgCh_Actr mWithMeshClsn; /* 0x1b4 */
-    ModelAnim mModelAnim;     /* 0x370 */
+    dExtAnmModel_c mAnmModel; /* 0x370 */
     dExtShadowModel_c mShadowModel; /* 0x3d4 */
-    MaterialChanger mMaterialChanger; /* 0x3fc */
+    dExtAnmMaterial_c mMaterialChanger; /* 0x3fc */
     /* Last position that IsGoingOffCliff did not reject; Behavior snaps back to
        it when the next step would carry the Goomba off a ledge. */
     Vector3 mSafePos;       /* 0x410 */
@@ -103,7 +99,7 @@ struct daKrb_c : dCapEnemy_c {
     s8  mStarTracked;            /* 0x465 */
     u8  mStarID;            /* 0x466 */
     /* Bounce counter in STATE_TUMBLE (sound chosen by it); cleared on entry. */
-    u8  unk_467;            /* 0x467 */
+    u8 mBounceCount;  /* 0x467 */
     u8  mMoveFlags;   /* 0x468 -- MoveFlags */
     u8  pad_469[0x3];
     /* hitFlags of the last hit reaction, saved by func_ov084_02129ed4. */
@@ -112,8 +108,12 @@ struct daKrb_c : dCapEnemy_c {
     /* Slot among the king's minions; daKuriKing_c stores its running spawn
        count here and the Goomba hands it to func_ov074_0212087c. */
     u8  mMinionIndex;       /* 0x474 */
-    /* Reloaded with 30 while the king's mState is 4 and mWalkSpeed is 0. */
-    u8  unk_475;            /* 0x475 */
+    /* Reloaded with 30 while the king's mState is 4 and mWalkSpeed is 0.
+       While func_ov084_0212af74's DecIfAbove0_Byte finds it nonzero the
+       minion leaves its spot beside the king and acts for itself (faces or
+       hops at the player, or wanders), so it outlasts the king's stop by
+       30 frames. */
+    u8 mFreeRoamTimer; /* 0x475 */
     u8  pad_476[0x2];
 
     /* OUT OF LINE, DECLARED FIRST. `#pragma defer_codegen off` in the TU
@@ -201,7 +201,7 @@ struct daKrb_c : dCapEnemy_c {
         DEATH_HIT_20000 = 7      /* hit bit 0x20000 (not in dCc_c.h's table), or a hit reported during the Yoshi-eat update or STATE_TUMBLE */
     };
 
-    /* unk_108 (dEnemyBase_c) is the kind of coin SpawnCoin drops: its value
+    /* mCoinType (dEnemyBase_c) is the kind of coin SpawnCoin drops: its value
        minus one indexes the u16 table at data_ov002_020ff014 = {288 COIN,
        289 RED_COIN, 290 BLUE_COIN}. 0 drops nothing. */
     enum CoinKind {

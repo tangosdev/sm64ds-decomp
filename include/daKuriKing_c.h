@@ -2,28 +2,28 @@
 #define DAKURIKING_C_H
 
 #include "types.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dBgCh_Actr.h"
 
 /* The daKuriKing_c. Its destructor is the layout, and eight boundaries close on
  * sizes other headers assert:
  *
  *     dEnemyBase_c                        ends 0x110
- *     dCcAcPos_c[4] 0x110 + 4*0x40 = 0x210  -> ModelAnim
- *     ModelAnim                    0x210 +   0x64 = 0x274  -> the shadows
+ *     dCcAcPos_c[4] 0x110 + 4*0x40 = 0x210  -> dExtAnmModel_c
+ *     dExtAnmModel_c                    0x210 +   0x64 = 0x274  -> the shadows
  *     dExtShadowModel_c[3]               0x274 + 3*0x28 = 0x2ec
- *     Vector3[3]                   0x3ac + 3*0x0c = 0x3d0  -> MaterialChanger
- *     MaterialChanger              0x3d0 +   0x14 = 0x3e4  -> TextureSequence
- *     TextureSequence              0x3e4 +   0x14 = 0x3f8  -> TextureTransformer
- *     TextureTransformer           0x3f8 +   0x14 = 0x40c  -> dBgCh_Actr
+ *     Vector3[3]                   0x3ac + 3*0x0c = 0x3d0  -> dExtAnmMaterial_c
+ *     dExtAnmMaterial_c              0x3d0 +   0x14 = 0x3e4  -> dExtAnmTexPat_c
+ *     dExtAnmTexPat_c              0x3e4 +   0x14 = 0x3f8  -> dExtAnmTexSRT_c
+ *     dExtAnmTexSRT_c           0x3f8 +   0x14 = 0x40c  -> dBgCh_Actr
  *     dBgCh_Actr                 0x40c +  0x1bc = 0x5c8
  *
  * SIX OF THE GENERATED FIELDS WERE THE Vector3 ARRAY'S OWN COMPONENTS: the
  * header had split a Vector3[3] at 0x3ac into nine scalars and named six of
  * them (elements 1 and 2). Both branches spell the array now. Two more former
  * unknowns sat inside embedded animations rather than in daKuriKing_c at all --
- * 0x3d8 is the MaterialChanger's dExtFrameCtrl_c cursor (+0x08) and 0x3f0 is the
- * TextureSequence's playback speed (+0x0c); see include/dExtFrameCtrl_c.h.
+ * 0x3d8 is the dExtAnmMaterial_c's dExtFrameCtrl_c cursor (+0x08) and 0x3f0 is the
+ * dExtAnmTexPat_c's playback speed (+0x0c); see include/dExtFrameCtrl_c.h.
  *
  * Field provenance: notes/enemy-leaf-provenance.md.
  *
@@ -38,23 +38,31 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dExtShadowModel_c.h"
-#include "MaterialChanger.h"
-#include "TextureSequence.h"
-#include "TextureTransformer.h"
+#include "dExtAnmMaterial_c.h"
+#include "dExtAnmTexPat_c.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
 struct daKuriKing_c : dEnemyBase_c {
     dCcAcPos_c mdCc_cs[4];  /* 0x110 */
-    ModelAnim mModelAnim;                         /* 0x210 */
-    dExtShadowModel_c mShadowModels[3];                 /* 0x274 */
-    u8  pad_2ec[0xc0];
-    Vector3 mCylClsnPos[3];                           /* 0x3ac */
-    MaterialChanger mMaterialChanger;             /* 0x3d0 */
-    TextureSequence mTextureSequence;             /* 0x3e4 */
-    TextureTransformer mTextureTransformer;       /* 0x3f8 */
+    dExtAnmModel_c mAnmModel;                     /* 0x210 */
+    dExtShadowModel_c mShadowModels[3];           /* 0x274 */
+    /* One drop-shadow matrix per foot. func_ov074_02121800 sets each to the
+       identity with that foot's mCylClsnPos x/z and mPosY (>> 3) as translation
+       and hands it to DropShadowRadHeight; func_ov074_021223bc uses [0] alone.
+       Raw words rather than Matrix4x3: see d_a_kuri_king.cpp's deslop notes. */
+    s32 mShadowMatrices[3][12]; /* 0x2ec */
+    /* Body transform. func_ov074_02121300 builds it from mPos >> 3, mAngleY and
+       mScale; func_ov074_02121270 composes a bone's transform with it to get
+       that bone's world position. */
+    s32 mBodyMatrix[12];                          /* 0x37c */
+    Vector3 mCylClsnPos[3];                       /* 0x3ac */
+    dExtAnmMaterial_c mMaterialChanger;           /* 0x3d0 */
+    dExtAnmTexPat_c mTextureSequence;             /* 0x3e4 */
+    dExtAnmTexSRT_c mTextureTransformer;          /* 0x3f8 */
     dBgCh_Actr mWithMeshClsn;                   /* 0x40c */
     /* ClosestPlayer, kept for StartTalk / ShowMessage / GetTalkState. */
     Player *mTalkPlayer;                          /* 0x5c8 */
@@ -195,9 +203,11 @@ struct daKuriKing_c {
     s32 mHorzSpeed;              /* 0x098 */
     s32 mVertAccel;              /* 0x09c -- dActor_c's; InitResources sets -0xa000 */
     s32 mTerminalVelocity;       /* 0x0a0 -- dActor_c's; InitResources sets -0x3c000 */
-    u8  pad_0a4[0x16c];
-    ModelAnim mModelAnim;     /* 0x210 */
-    u8  pad_274[0x138];
+    u8 pad_0a4[0x16c];
+    dExtAnmModel_c mAnmModel; /* 0x210 */
+    u8 pad_274[0x78];
+    s32 mShadowMatrices[3][12]; /* 0x2ec */
+    s32 mBodyMatrix[12];        /* 0x37c */
     /* The C++ branch's Vector3 mCylClsnPos[3], flat -- the six scalars that used
        to sit here as unk_3b8..unk_3cc were elements 1 and 2 of it. */
     s32 mCylClsnPos[9];              /* 0x3ac */

@@ -50,7 +50,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov095_0213579c",
+      "symbol": "_ZN13daObjSeesaw_c14GetActorWeightEP8dActor_c",
       "address": "0x0213579c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov095_0213579c.c",
@@ -64,14 +64,14 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov095_021358cc",
+      "symbol": "_ZN13daObjSeesaw_c11SpringAngleEPsS0_isis",
       "address": "0x021358cc",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov095_021358cc.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov095_0213597c",
+      "symbol": "_ZN13daObjSeesaw_c17UpdateModelMatrixEv",
       "address": "0x0213597c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov095_0213597c.c",
@@ -106,14 +106,14 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov095_02135cdc",
+      "symbol": "_ZN13daObjSeesaw_c9OnStoodOnEP8dActor_c",
       "address": "0x02135cdc",
       "size": "0x000001b4",
       "legacy_source": "src/func_ov095_02135cdc.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov095_02135e90",
+      "symbol": "_ZN13daObjSeesaw_c15StoodOnCallbackEPvPS_P8dActor_c",
       "address": "0x02135e90",
       "size": "0x00000014",
       "legacy_source": "src/func_ov095_02135e90.c",
@@ -176,28 +176,28 @@
       "address": "0x02137780",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 1445; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
+      "evidence": "model resource handle constructed with file ID 1445; dExtSimpleModel_c::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
       "symbol": "gKm3ShisoModelFile",
       "address": "0x02137788",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 1669; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
+      "evidence": "model resource handle constructed with file ID 1669; dExtSimpleModel_c::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
       "symbol": "gObjSeesawModelFile",
       "address": "0x02137790",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 1162; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
+      "evidence": "model resource handle constructed with file ID 1162; dExtSimpleModel_c::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
       "symbol": "gKm1ShisoModelFile",
       "address": "0x02137798",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 1623; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
+      "evidence": "model resource handle constructed with file ID 1623; dExtSimpleModel_c::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
       "symbol": "gBSiSoCollisionFile",
@@ -218,14 +218,14 @@
       "address": "0x021377b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 1645; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
+      "evidence": "model resource handle constructed with file ID 1645; dExtSimpleModel_c::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
       "symbol": "gRcShisoModelFile",
       "address": "0x021377b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 1709; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
+      "evidence": "model resource handle constructed with file ID 1709; dExtSimpleModel_c::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
       "symbol": "gRcShisoCollisionFile",
@@ -253,7 +253,7 @@
       "address": "0x021377d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 1671; Model::LoadFile reaches it through the data_ov095_021374a0 pointer table"
+      "evidence": "model resource handle constructed with file ID 1671; dExtSimpleModel_c::LoadFile reaches it through the data_ov095_021374a0 pointer table"
     },
     {
       "symbol": "gKm1ShisoCollisionFile",
@@ -782,28 +782,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -968,72 +948,72 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@919",
+      "from": "@898",
       "to": "@982",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @905 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@920",
+      "from": "@899",
       "to": "@898",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @906 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@921",
+      "from": "@900",
       "to": "@893",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @907 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@922",
+      "from": "@901",
       "to": "@889",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @908 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@923",
+      "from": "@902",
       "to": "@884",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @909 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@924",
+      "from": "@903",
       "to": "@880",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @910 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@925",
+      "from": "@904",
       "to": "@876",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @911 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@926",
+      "from": "@905",
       "to": "@865",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @912 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@927",
+      "from": "@906",
       "to": "@861",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @913 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@928",
+      "from": "@907",
       "to": "@814",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @914 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@929",
+      "from": "@908",
       "to": "@788",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @915 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@930",
+      "from": "@909",
       "to": "@782",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @916 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@931",
+      "from": "@910",
       "to": "@780",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @917 per TU and that name collides with global @NNN rows owned by other TUs on main"
     },
     {
-      "from": "@932",
+      "from": "@911",
       "to": "@650",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @918 per TU and that name collides with global @NNN rows owned by other TUs on main"
     }

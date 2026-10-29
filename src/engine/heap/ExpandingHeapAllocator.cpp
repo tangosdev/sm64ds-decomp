@@ -22,14 +22,16 @@
  * deslop leftovers:
  * - SetNodeID keeps its documented two-step addressing: `Inner* p = this+0x24`
  *   then `p->id` is load-bearing -- flattening to this+0x34 diffs by three
- *   words (the shard's own measurement, #1221; re-measured: `mNodeID` read and
+ *   words (the shard's own measurement; re-measured: `mNodeID` read and
  *   written directly still diffs by three).
- * - The constructor writes mNodeID/mFlags2/mFirstNode/mLastNode through its
- *   `nodeList` view of this+0x24: spelling those stores as members re-bases
- *   them on `this` and diffs (two words for the list pair, five with all
- *   four).
- * - The AllocateForwards/AllocateBackwards NodeList overlay stays: its `flag`
- *   is mFlags2 and its head/tail are mFirstNode/mLastNode, but both searches
+ * - The constructor writes mNodeID/mFlags2 and the two list pairs through
+ *   its `nodeList` NodeList view of this+0x24: spelling those stores as
+ *   members of `this` re-bases them and diffs (re-measured). It passes the
+ *   heap's first byte as `nodeList + 1` (this+0x38); `this + 1` also diffs.
+ *   Deallocate likewise reaches the in-use list through its NodeList view;
+ *   `&mUsedFirstNode` diffs.
+ * - The AllocateForwards/AllocateBackwards NodeList overlay stays: it spells
+ *   the header's mFirstNode..mFlags2 from this+0x24, but both searches
  *   also pass `c` onward to AllocateNode as the list sentinel -- one object
  *   serving both views. Splitting the access changed the emitted code.
  * - AllocateNode reads the allocator's mFlags through `c[-1]` -- the flag word
@@ -38,9 +40,11 @@
  * - CreateNode indexes its Target* through `int* c`: the body's `c[0]`/`c[1]`
  *   arithmetic is verbatim -- retyping as extent->start/end is the kind of
  *   tidy that already produced a three-word divergence on this class.
- * - Reallocate constructs its first Target through the mangled
- *   `_ZN10MemoryNode6TargetC1EPS_`: the Target must keep its function-scope
- *   stack slot and mwccarm cannot express a placement constructor call.
+ * - Reallocate's two Targets are block-scope locals, each declared in the
+ *   branch that uses it, and the zero fill goes through the FillZero inline.
+ *   mwccarm gives function-scope locals their frame slots first and an
+ *   inlined helper's locals last, so the volatile zero must live in the
+ *   helper to land below both Targets.
  * - The file-local `GetList` inline stays for the same reason it existed in
  *   the shard: spelling `this+0x24` as an accessor call is what mwccarm's
  *   register allocator keys on for Reallocate's r7/r8/sb assignment.
@@ -52,21 +56,24 @@
 #include "ExpandingHeapAllocator.h"
 #include "Heap.h"
 #include "decl_HeapAllocator.h"
+#include "cstd.h"
 
 extern "C" void MultiStore_Int(int val, void *dst, int len);
-extern "C" int _ZN4cstd3absEi(int);
+/* local extern: the factory runs this constructor over storage that already
+   exists (see the leftovers above); a placement new would add a null test. */
 extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
     ExpandingHeapAllocator *self, void *heapEnd, u32 flags);
-extern "C" void _ZN10MemoryNode6TargetC1EPS_(MemoryNode::Target *t, MemoryNode *node);
 
-/* The free list sentinel: the allocator's node bookkeeping at this+0x24,
- * viewed as {head, tail, pad, flag}. `flag` is the search-policy bit the two
- * fit searches read; it is the same word the header calls mFlags2. */
+/* The free list sentinel: a view of the allocator's node bookkeeping from
+ * this+0x24, with the header's member names. mFlags2 bit 0 is the
+ * search-policy bit the two fit searches read. */
 struct NodeList {
-    MemoryNode *head;
-    MemoryNode *tail;
-    unsigned char pad[0xa];
-    unsigned short flag;
+    MemoryNode *mFirstNode;     /* this+0x24 */
+    MemoryNode *mLastNode;      /* this+0x28 */
+    MemoryNode *mUsedFirstNode; /* this+0x2c */
+    MemoryNode *mUsedLastNode;  /* this+0x30 */
+    unsigned short mNodeID;     /* this+0x34 */
+    unsigned short mFlags2;     /* this+0x36 */
 };
 
 /* UnlinkNode's recovered node view -- field order only, names are offsets. */
@@ -85,9 +92,7 @@ static inline MemoryNode **GetList(void *t) {
 // @symbol _ZN10MemoryNode6TargetC1EPS_
 MemoryNode::Target::Target(MemoryNode *node)
     : start((char *)node - (u16)((node->flags >> 8) & 0x7f)),
-      end((char *)(node->size + (u32)((char *)node + 0x10)))
-{
-}
+      end((char *)(node->size + (u32)(node + 1))) {}
 
 // @symbol _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_
 /* Doubly-linked-list removal writing head/tail (c[0], c[1]) directly when the
@@ -152,22 +157,22 @@ void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
 // @symbol _ZN22ExpandingHeapAllocatorC1EPvj
 ExpandingHeapAllocator::ExpandingHeapAllocator(void *heapEnd, u32 flags)
 {
-    char *nodeList = (char *)&mFirstNode;
+    NodeList *nodeList = (NodeList *)&mFirstNode;
     MemoryNode::Target extent;
     MemoryNode *node;
 
-    func_0204df54(this, 0x45585048, nodeList + 0x14, heapEnd, flags);
-    *(u16 *)(nodeList + 0x10) = 0;
-    *(u16 *)(nodeList + 0x12) = 0;
-    *(u16 *)(nodeList + 0x12) &= ~1;
+    func_0204df54(this, 0x45585048, nodeList + 1, heapEnd, flags);
+    nodeList->mNodeID = 0;
+    nodeList->mFlags2 = 0;
+    nodeList->mFlags2 &= ~1;
 
     extent.start = (char *)mStart;
     extent.end = (char *)mEnd;
     node = (MemoryNode *)CreateNode(&extent, 0x4652);
-    *(MemoryNode **)(nodeList + 0x0) = node;
-    *(MemoryNode **)(nodeList + 0x4) = node;
-    *(u32 *)(nodeList + 0x8) = 0;
-    *(u32 *)(nodeList + 0xc) = 0;
+    nodeList->mFirstNode = node;
+    nodeList->mLastNode = node;
+    nodeList->mUsedFirstNode = 0;
+    nodeList->mUsedLastNode = 0;
 }
 
 // @symbol _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt
@@ -225,18 +230,18 @@ void *ExpandingHeapAllocator::AllocateNode(MemoryNode *c, MemoryNode *node,
     void *allocNode = CreateNode(&t2, 0x5544);
 
     unsigned short *flagsPtr = &((MemoryNode *)allocNode)->flags;
-    void *usedList = (char *)c + 8;
+    void *usedList = &((NodeList *)c)->mUsedFirstNode;
     *flagsPtr &= ~0x8000;
     *flagsPtr |= (z & 1) << 15;
     int t0e = (int)t0.end;
     *flagsPtr &= ~0x7f00;
     *flagsPtr |= (((unsigned short)((int)allocNode - t0e)) & 0x7f) << 8;
-    unsigned int cRaw = *(unsigned short *)((char *)c + 0x10);
+    unsigned int cRaw = ((NodeList *)c)->mNodeID;
     unsigned int cValue = cRaw & 0xff;
     *flagsPtr &= ~0xff;
     *flagsPtr |= cValue;
 
-    void *usedTail = (void *)(*(int *)((char *)c + 0xc));
+    void *usedTail = ((NodeList *)c)->mUsedLastNode;
     LinkNode((MemoryNode *)usedList, (MemoryNode *)allocNode, (MemoryNode *)usedTail);
 
     return target;
@@ -250,16 +255,16 @@ void *ExpandingHeapAllocator::AllocateNode(MemoryNode *c, MemoryNode *node,
 void *ExpandingHeapAllocator::AllocateForwards(u32 size, u32 align)
 {
     NodeList *c = (NodeList *)&mFirstNode;
-    unsigned short flag = c->flag;
+    unsigned short flag = c->mFlags2;
     int firstFit = ((unsigned short)(flag & 1) == 0);
     MemoryNode *best = 0;
-    MemoryNode *node = c->head;
+    MemoryNode *node = c->mFirstNode;
     unsigned int bestSize = 0xFFFFFFFF;
     void *bestTarget = 0;
     if (node != 0) {
         unsigned int mask = align - 1;
         do {
-            char *data = (char *)node + 0x10;
+            char *data = (char *)(node + 1);
             char *aligned = (char *)((mask + (unsigned int)data) & ~mask);
             unsigned int pad = (unsigned int)(aligned - data);
             unsigned int nsize = node->size;
@@ -284,16 +289,16 @@ void *ExpandingHeapAllocator::AllocateForwards(u32 size, u32 align)
 void *ExpandingHeapAllocator::AllocateBackwards(u32 size, u32 align)
 {
     NodeList *c = (NodeList *)&mFirstNode;
-    unsigned short flag = c->flag;
+    unsigned short flag = c->mFlags2;
     int firstFit = ((unsigned short)(flag & 1) == 0);
     MemoryNode *best = 0;
-    MemoryNode *node = c->tail;
+    MemoryNode *node = c->mLastNode;
     unsigned int bestSize = 0xFFFFFFFF;
     void *bestTarget = 0;
     if (node != 0) {
         unsigned int mask = align - 1;
         do {
-            char *data = (char *)node + 0x10;
+            char *data = (char *)(node + 1);
             unsigned int nsize = node->size;
             unsigned int t = nsize + (unsigned int)data - size;
             char *aligned = (char *)(~mask & t);
@@ -398,15 +403,20 @@ void *ExpandingHeapAllocator::Allocate(u32 size, int align)
     return this->AllocateBackwards(size, (u32)-align);
 }
 
+/* Zero len bytes at p through a volatile zero, so the store loop takes its
+ * value from a stack slot. */
+static inline void FillZero(void *p, u32 len) {
+    volatile int zero;
+    zero = 0;
+    MultiStore_Int(zero, p, len);
+}
+
 // @symbol _ZN22ExpandingHeapAllocator10ReallocateEPvj
 /* Grow a block in place by swallowing the free node directly after it, or
  * shrink it and hand the tail back to the free list. The allocator's low flag
  * bit asks for freshly-gained bytes to be zero filled. */
 u32 ExpandingHeapAllocator::Reallocate(void *ptrRaw, u32 size)
 {
-    MemoryNode::Target tgt;
-    MemoryNode::Target tgt2;
-    volatile int fill;
     MemoryNode *block;
     u32 blockSize;
     MemoryNode *node;
@@ -437,9 +447,7 @@ u32 ExpandingHeapAllocator::Reallocate(void *ptrRaw, u32 size)
             return 0;
         }
 
-        /* See the leftover note: tgt keeps its function-scope slot, and the
-         * constructor goes through the mangled spelling. */
-        _ZN10MemoryNode6TargetC1EPS_(&tgt, block);
+        MemoryNode::Target tgt(block);
         prev = (MemoryNode *)UnlinkNode((MemoryNode *)list, block);
         oldStart = tgt.start;
         tgt.start = (char *)(size + (u32)ptr);
@@ -455,11 +463,11 @@ u32 ExpandingHeapAllocator::Reallocate(void *ptrRaw, u32 size)
             u16 opt = (u16)(mFlags & 0xff);
             u32 len = (u32)(tgt.start - oldStart);
             if (opt & 1) {
-                fill = 0;
-                MultiStore_Int(fill, oldStart, len);
+                FillZero(oldStart, len);
             }
         }
     } else {
+        MemoryNode::Target tgt2;
         tgt2.start = (char *)(size + (u32)ptr);
         tgt2.end = (char *)(node->size + ((u32)node + 0x10));
         node->size = size;
@@ -478,13 +486,13 @@ u32 ExpandingHeapAllocator::Reallocate(void *ptrRaw, u32 size)
  * 8 past the embedded bookkeeping at this+0x24. */
 int ExpandingHeapAllocator::Deallocate(void *ptr)
 {
-    char *inner;
+    NodeList *inner;
     MemoryNode *node;
 
     node = (MemoryNode *)((char *)ptr - 0x10);
-    inner = (char *)&mFirstNode;
+    inner = (NodeList *)&mFirstNode;
     MemoryNode::Target target(node);
-    UnlinkNode((MemoryNode *)(inner + 8), node);
+    UnlinkNode((MemoryNode *)&inner->mUsedFirstNode, node);
     return FreeNode((MemoryNode *)inner, &target);
 }
 
@@ -511,7 +519,7 @@ u32 ExpandingHeapAllocator::MemoryLeft()
  * and ignored here. */
 int ExpandingHeapAllocator::MaxAllocatableSize(int arg)
 {
-    int align = _ZN4cstd3absEi(arg);
+    int align = cstd::abs(arg);
     unsigned int bestSize = 0;
     unsigned int bestOffset = -1;
     MemoryNode *n = mFirstNode;
@@ -562,7 +570,7 @@ void *ExpandingHeapAllocator::DeallocateAll(DeallocationFunction fn, u32 ctx)
     if (!node) return node;
     do {
         MemoryNode *next = node->next;
-        fn((char *)node + 0x10, this, ctx);
+        fn((char *)(node + 1), this, ctx);
         node = next;
     } while (node);
     return node;

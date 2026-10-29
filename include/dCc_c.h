@@ -52,7 +52,9 @@
 
 #ifdef __cplusplus
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *ptr);
+}
 
 struct dCc_c {
     /* Bit meanings below are a best-effort reading, not pinned by the ROM the
@@ -117,8 +119,9 @@ struct dCc_c {
        Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
        in the class or one level up, as include/dActor_c.h records. No layout
        effect: a non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
-
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -31,31 +31,24 @@
  * destructor is not written here at all; it is inline in the header and so
  * emits last, which is where the cartridge has it.
  *
- * deslop
- * Leftover: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled
- *   in this TU -- both take Fix12<int> by value (wall 6az); a method call
- *   homes the argument and size-DIFFs InitResources / Behavior.
- * Leftover: func_020393d4 is a 4-byte store into dBgW+0x18
+ * UpdateModelMatrix is a coined name; the ROM records none.
+ *
+ * What stays: func_020393d4 is a 4-byte store into dBgW+0x18
  *   (beforeClsnCallback). This TU stores dBgW::UpdatePosWithTransform;
  *   dBgW.h has no setter.
- * Leftover: Matrix4x3_FromRotationXYZExt has no shared header; declared
+ * What stays: Matrix4x3_FromRotationXYZExt has no shared header; declared
  *   locally like every other caller.
- * Leftover: data_ov036_02114020 / 02114028 are this overlay's KCL/BMD
+ * What stays: data_ov036_02114020 / 02114028 are this overlay's KCL/BMD
  *   handles; data_ov036_02112b68 is the CLPS block. This TU consumes them,
  *   overlay .bss/.data owns them.
- * Leftover: g_profile_RC_BURANKO lives outside this TU (S14).
- * Leftover: func_ov036_0211123c keeps C linkage and its cartridge name;
- *   other config still names it.
- * Leftover: common.h first so func_ov036_0211123c's Matrix4x3 translation
+ * What stays: g_profile_RC_BURANKO lives outside this TU (S14).
+ * What stays: common.h first so UpdateModelMatrix's Matrix4x3 translation
  *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
  *   scalarises).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_rc_buranko_AssetId {
-    ASSET_RC_BURANKO_BMD = 0x0695,
-    ASSET_RC_BURANKO_KCL = 0x0696
-};
+enum d_a_obj_rc_buranko_AssetId { ASSET_RC_BURANKO_BMD = 0x0695, ASSET_RC_BURANKO_KCL = 0x0696 };
 
 #include "common.h"
 #include "daObjRcBuranko_c.h"
@@ -66,40 +59,29 @@ enum d_a_obj_rc_buranko_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct RcBurankoModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
-
     RcBurankoModelFilePtr(unsigned int fileID);
     ~RcBurankoModelFilePtr();
 };
 
 struct RcBurankoClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
-
     RcBurankoClsnFilePtr(unsigned int fileID);
     ~RcBurankoClsnFilePtr();
 };
 
-typedef char RcBurankoModelFilePtr_size_must_be_8[
-    sizeof(RcBurankoModelFilePtr) == 8 ? 1 : -1];
-typedef char RcBurankoClsnFilePtr_size_must_be_8[
-    sizeof(RcBurankoClsnFilePtr) == 8 ? 1 : -1];
+typedef char RcBurankoModelFilePtr_size_must_be_8[sizeof(RcBurankoModelFilePtr) == 8 ? 1 : -1];
+typedef char RcBurankoClsnFilePtr_size_must_be_8[sizeof(RcBurankoClsnFilePtr) == 8 ? 1 : -1];
 
 struct KCL_File;
 struct CLPS_Block;
 
-extern "C" {
-extern RcBurankoClsnFilePtr data_ov036_02114020;   /* the collision KCL  */
-extern RcBurankoModelFilePtr data_ov036_02114028;   /* the platform's BMD */
-extern CLPS_Block    data_ov036_02112b68;
+extern RcBurankoClsnFilePtr data_ov036_02114020;  /* the collision KCL  */
+extern RcBurankoModelFilePtr data_ov036_02114028; /* the platform's BMD */
+extern CLPS_Block data_ov036_02112b68;
 
-void func_ov036_0211123c(daObjRcBuranko_c *self);
+/* local extern: no shared header declares these. */
+extern "C" {
 void func_020393d4(dBgW *bgw, void *fn);
 void Matrix4x3_FromRotationXYZExt(void *mtx, int x, int y, int z);
-
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
-    s16 angleY, CLPS_Block *clps);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -109,27 +91,24 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
    RTTI, allocation size, vtable identity, and the RC_BURANKO registry profile;
    later EAD lineage supplies classInit. Exact original spelling is not
    preserved. Historical alias: SwingingPlatform_Spawn. */
-extern "C" daObjRcBuranko_c *daObjRcBuranko_c_classInit()
-{
+extern "C" daObjRcBuranko_c *daObjRcBuranko_c_classInit() {
     return new daObjRcBuranko_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjRcBuranko_c13InitResourcesEv
-int daObjRcBuranko_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov036_02114028), 1, -1);
+int daObjRcBuranko_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov036_02114028), 1, -1);
 
     /* The pendulum starts a quarter of the way over, not hanging straight
        down, so it is already moving on the frame the player first sees it. */
     mAngleZ = 0x2000;
-    func_ov036_0211123c(this);
+    UpdateModelMatrix();
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov036_02114020);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, &data_ov036_02112b68);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov036_02112b68);
 
     /* A rider is carried by the collider's whole transform, not by a position
        and a pair of angles: the platform tilts underfoot as it swings. */
@@ -141,8 +120,7 @@ int daObjRcBuranko_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjRcBuranko_c8BehaviorEv
-int daObjRcBuranko_c::Behavior()
-{
+int daObjRcBuranko_c::Behavior() {
     /* The whole pendulum is these four lines: a constant 4-unit acceleration
        always pointed back at zero, integrated into the angle. There is no
        damping term, so the swing never decays and never needs re-kicking. */
@@ -153,8 +131,8 @@ int daObjRcBuranko_c::Behavior()
 
     mAngleZ += mSwingVelZ;
 
-    func_ov036_0211123c(this);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    UpdateModelMatrix();
+    if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
 
     return 1;
@@ -163,8 +141,7 @@ int daObjRcBuranko_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjRcBuranko_c6RenderEv
-int daObjRcBuranko_c::Render()
-{
+int daObjRcBuranko_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -172,8 +149,7 @@ int daObjRcBuranko_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjRcBuranko_c16CleanupResourcesEv
-int daObjRcBuranko_c::CleanupResources()
-{
+int daObjRcBuranko_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 
@@ -184,20 +160,16 @@ int daObjRcBuranko_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov036_0211123c
+// @symbol _ZN16daObjRcBuranko_c17UpdateModelMatrixEv
 /* Private "put the model where the actor is" helper: rebuilds mModel.mat4x3
  * from the actor's three angles, then writes the actor position >> 3 into
  * that matrix's translation row. */
-extern "C" {
-void func_ov036_0211123c(daObjRcBuranko_c *self)
-{
-    Matrix4x3_FromRotationXYZExt(&self->mModel.mat4x3,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
+void daObjRcBuranko_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
 
-    self->mModel.mat4x3.m[9]  = self->mPosX >> 3;
-    self->mModel.mat4x3.m[10] = self->mPosY >> 3;
-    self->mModel.mat4x3.m[11] = self->mPosZ >> 3;
-}
+    mModel.mat4x3.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -215,7 +187,7 @@ void func_ov036_0211123c(daObjRcBuranko_c *self)
  *
  * Both bodies are short because the chain is short: this class's vptr store,
  * then dBgActor_c's -- inlined, its destructor is defined in its class body --
- * then dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds only
+ * then dBgActor_c's dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. This class adds only
  * an s16, which has no destructor of its own. D0's trailing deallocation is
  * the inherited inline operator delete, which is why nothing here names a
  * heap.

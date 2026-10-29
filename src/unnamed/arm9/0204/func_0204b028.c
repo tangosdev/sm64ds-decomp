@@ -86,7 +86,7 @@ void func_0204b028(Self *self, Node *node)
     u32 f2;
     u32 v;
 
-    v = *(u32 *)((char *)c + 0x74) << 14;
+    v = *(u32 *)&c->cnt << 14;
     f2 = v >> 26;
     v = self->p30 | 0xc0;
     v |= f2 << 24;
@@ -94,7 +94,7 @@ void func_0204b028(Self *self, Node *node)
     *(volatile u32 *)0x40004a4 = v;
     *(volatile u32 *)0x40004a4;
     {
-        Cnt74 *q = (Cnt74 *)(u32)((char *)c + 0x74);
+        Cnt74 *q = &c->cnt;
         q->count++;
         if (c->cnt.count > c->cnt.limit)
             q->count = c->cnt.start;

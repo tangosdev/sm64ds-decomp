@@ -11,10 +11,14 @@ struct dScMgCoin_Coin {
     s32 landY;    /* 0x08 */
     s32 vy;       /* 0x0c */
     u8 state;     /* 0x10 */
-    u8 pad11;     /* 0x11 */
+    /* LayOutCoins sets it on every coin it places and ResetRound clears it;
+       Phase_StateSettle keeps waiting while a placed coin is still hopping. */
+    u8 placed;    /* 0x11 */
     u8 visible;   /* 0x12 */
     u8 value;     /* 0x13 */
-    u8 pad14;     /* 0x14 */
+    /* LayOutCoins marks two random coins in each row; Block_StateWander
+       never claims a marked coin, so each row keeps two worthless coins. */
+    u8 keepEmpty; /* 0x14 */
     u8 collected; /* 0x15 -- Phase_StatePlay ends the round once every valued
                          coin has it; the result screen prints value only while 0 */
     u8 bounces;   /* 0x16 */
@@ -71,7 +75,10 @@ struct dScMgCoin_Block {
     u8 animFrame;  /* 0x18 cycles through four frames */
     u8 hops;       /* 0x19 hops left on this stage */
     u8 stage;      /* 0x1a */
-    u8 unk1b;      /* 0x1b */
+    /* The coin this block claimed: Block_StateWander stores the index,
+       Block_StateDropOnCoin takes that coin's x, and KickBlockUnderCoin
+       finds the block by it. */
+    u8 coin; /* 0x1b */
 };
 #ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Block_size_must_be_0x1c[sizeof(dScMgCoin_Block) == 0x1c ? 1 : -1];
@@ -219,7 +226,11 @@ struct dScMgCoin_c : dScMgBase_c {
     u8 unk_51dc;                       /* 0x51dc */
     u8 pad_51dd;                       /* 0x51dd */
     u8 mCaptionLatch;                  /* 0x51de */
-    u8 pad_51df;                       /* 0x51df */
+    /* Set by Phase_StatePlay when the round ends because every coin worth
+       something was collected (a touch on a worthless coin ends it without
+       it); Phase_StateResult then frees graphics slot 6 and restores the
+       music. ResetRound clears it. */
+    u8 mClearedAll; /* 0x51df */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -9,25 +9,24 @@
  * top of d_a_kpa.cpp. Fix12 values read 0x1000 = 1.0; angles 0x10000 = a full turn.
  *
  * Leftover: unk_420 and unk_422 are written in d_a_kpa.cpp and never read, so they
- * keep placeholder names; the dActor_c words at 0xa4 and 0xac that the file
- * touches are unnamed (they are dActor_c's own unk_0a4 / unk_0ac); the pad_ arrays
- * are bytes nothing in that file reads or writes.
+ * keep placeholder names; the pad_ arrays are bytes nothing in that file reads
+ * or writes.
  *
  * Five sub-objects, and every one's asserted size closes EXACTLY on the next named
  * field -- five independent confirmations of one layout:
  *
  *     dActor_c                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
- *     ModelAnim                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
- *     TextureSequence            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
+ *     dExtAnmModel_c                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
+ *     dExtAnmTexPat_c            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
  *     dBgCh_Actr               0x14c + 0x1bc = 0x308   -> mShadowModel
  *     dExtShadowModel_c                0x308 + 0x028 = 0x330   -> padding
  *     dCcAcPos_c  0x360 + 0x040 = 0x3a0   -> mTargetPlayer
  *
- * TWO OF THE GENERATED HEADER'S FIELDS WERE THE ModelAnim'S OWN INSIDES and are
+ * TWO OF THE GENERATED HEADER'S FIELDS WERE THE dExtAnmModel_c'S OWN INSIDES and are
  * gone from this half: `mAnimation` at 0x124 is 0x0d4 + 0x50, the dExtFrameCtrl_c base
- * inside ModelAnim, and `unk_130` at 0x130 is 0x0d4 + 0x5c. Both were declared as
- * siblings of a `u8 mModelAnim` marker whose pad stopped short of the real object.
- * Same shape as Player's two ModelAnims.
+ * inside dExtAnmModel_c, and `unk_130` at 0x130 is 0x0d4 + 0x5c. Both were declared as
+ * siblings of a `u8 mAnmModel` marker whose pad stopped short of the real object.
+ * Same shape as Player's two dExtAnmModel_c members.
  *
  * sizeof is 0x454, which is not inferred from the fields: daKpa_c_classInit asks
  * fBase_c::operator new for 1108 bytes -- and the last declared field, mSoundID,
@@ -37,8 +36,8 @@
 #ifndef DAKPA_C_H
 #define DAKPA_C_H
 #include "types.h"
-#include "ModelAnim.h"
-#include "TextureSequence.h"
+#include "dExtAnmModel_c.h"
+#include "dExtAnmTexPat_c.h"
 #include "dBgCh_Actr.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAcPos_c.h"
@@ -49,8 +48,8 @@
 
 struct daKpa_c : dActor_c {
     u8  pad_0d0[0x4];
-    ModelAnim mModelAnim;                                   /* 0x0d4 */
-    TextureSequence mTextureSequence;                       /* 0x138 */
+    dExtAnmModel_c mAnmModel;                               /* 0x0d4 */
+    dExtAnmTexPat_c mTextureSequence;                       /* 0x138 */
     dBgCh_Actr mWithMeshClsn;                             /* 0x14c */
     dExtShadowModel_c mShadowModel;                               /* 0x308 */
     /* The shadow's world matrix: a Matrix4x3 written from the scratch matrix at
@@ -63,13 +62,10 @@ struct daKpa_c : dActor_c {
        whatever hit it. */
     dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
     /* A POINTER, not an s32. daKpa_c::Behavior assigns it straight from
-       dActor_c::ClosestPlayer() and then re-spelt every read of the slot as
-       `*(dActor_c **)((char *)&mTargetPlayer)`; typing it here deletes all three
-       of those casts. Declared dActor_c* rather than Player* on purpose --
-       Player.h is not includable here, and dActor_c is the base at offset 0, so
-       the ClosestPlayer() result converts with no adjustment. */
-    dActor_c *mTargetPlayer;      /* 0x3a0 */
-    dActor_c *mGrabbedPlayer;     /* 0x3a4 -- the Player holding the tail; null when nobody does */
+       dActor_c::ClosestPlayer(), so it is a Player *; dActor_c.h's forward
+       declaration of Player is enough for the member. */
+    Player *mTargetPlayer;  /* 0x3a0 */
+    Player *mGrabbedPlayer; /* 0x3a4 -- the Player holding the tail; null when nobody does */
     /* uniqueID of the KOOPATAIL actor (ID 278) that InitResources spawns. */
     s32 mTailUniqueID;            /* 0x3a8 */
     /* uniqueID of the KOOPA2BG actor (ID 166) found with FindWithActorID. The
@@ -104,7 +100,7 @@ struct daKpa_c : dActor_c {
        speed. */
     s32 mSwingSpeed;          /* 0x3f0 */
     s32 mDistToCenter;        /* 0x3f4 -- horizontal distance from the world origin (the arena centre) */
-    s32 mAnimSpeed;            /* 0x3f8 -- written to the ModelAnim's playback speed each frame; 0x1000 = 1.0 */
+    s32 mAnimSpeed; /* 0x3f8 -- written to the dExtAnmModel_c's playback speed each frame; 0x1000 = 1.0 */
     u16 mTimer;            /* 0x3fc -- frames in the current state; reset on every state change */
     u16 mStepCounter;         /* 0x3fe -- general per-state counter; its meaning depends on mState */
     u16 mFireTimer;           /* 0x400 -- frames of fire breath so far */
@@ -258,8 +254,8 @@ struct daKpa_c {
     u8  pad_0a4[0x28];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    ModelAnim mModelAnim;                                   /* 0x0d4 */
-    TextureSequence mTextureSequence;                       /* 0x138 */
+    dExtAnmModel_c mAnmModel;                               /* 0x0d4 */
+    dExtAnmTexPat_c mTextureSequence;                       /* 0x138 */
     dBgCh_Actr mWithMeshClsn;                             /* 0x14c */
     dExtShadowModel_c mShadowModel;                               /* 0x308 */
     /* The shadow's world matrix: a Matrix4x3 written from the scratch matrix at
@@ -309,7 +305,7 @@ struct daKpa_c {
        speed. */
     s32 mSwingSpeed;          /* 0x3f0 */
     s32 mDistToCenter;        /* 0x3f4 -- horizontal distance from the world origin (the arena centre) */
-    s32 mAnimSpeed;            /* 0x3f8 -- written to the ModelAnim's playback speed each frame; 0x1000 = 1.0 */
+    s32 mAnimSpeed; /* 0x3f8 -- written to the dExtAnmModel_c's playback speed each frame; 0x1000 = 1.0 */
     u16 mTimer;            /* 0x3fc -- frames in the current state; reset on every state change */
     u16 mStepCounter;         /* 0x3fe -- general per-state counter; its meaning depends on mState */
     u16 mFireTimer;           /* 0x400 -- frames of fire breath so far */

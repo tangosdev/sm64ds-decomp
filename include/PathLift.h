@@ -2,7 +2,7 @@
 #define PATHLIFT_H
 
 #include "types.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 #include "PathPtr.h"
 
@@ -12,27 +12,31 @@
  * in the base's tail padding at 0x31e (dBgActor_c's last field ends there and its
  * size rounds to 0x320).
  *
- * THE ARRAY IS Model[3]. The ROM destroys it with
- * __cxa_vec_cleanup(this + 0x320, 3, 0x50, _ZN5ModelD1Ev) -- the element
- * destructor is named in the ROM already, and 0x50 is sizeof(Model), so this
+ * THE ARRAY IS dExtSimpleModel_c[3]. The ROM destroys it with
+ * __cxa_vec_cleanup(this + 0x320, 3, 0x50, _ZN17dExtSimpleModel_cD1Ev) -- the element
+ * destructor is named in the ROM already, and 0x50 is sizeof(dExtSimpleModel_c), so this
  * one needed no new type at all. 0x320 + 3 * 0x50 = 0x410.
  */
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 struct dPathLiftActor_c : dBgActor_c {
     u8  pad_31e[0x2];
-    Model mModels[3];                     /* 0x320 */
+    dExtSimpleModel_c mModels[3];         /* 0x320 */
     Vector3 mInitialPos;                  /* 0x410 */
     Vector3_16 mInitialAngle;             /* 0x41c */
     Vector3_16 mPrevPathAngle;            /* 0x422 */
     u16 mWaitTimer;                       /* 0x428 */
     u8  mAfterClsnRan;                    /* 0x42a -- set by AfterClsn, cleared by the last statement of BaseBehavior */
     u8  mTriggerDelay;                    /* 0x42b -- DecIfAbove0_Byte; AfterClsn only fires the state change at 0 */
-    u8  unk_42c;                          /* 0x42c */
+    /* Respawn-after-fall: daObjPathLift_c and daObjRcCarpet_c set it in
+       InitResources, and StateFall then puts the lift back at the start of
+       its path (ResetPath) instead of destroying it. IsUnk42cSet reads it
+       and keeps its symbol-bound name. Was unk_42c. */
+    u8 mRespawnAfterFall; /* 0x42c */
     u8  pad_42d[0x3];
     PathPtr mPath;                        /* 0x430 */
     s32 mCurrPathNode;                    /* 0x438 */
@@ -97,10 +101,10 @@ struct dPathLiftActor_c {
     u8  pad_000[0xc];
     u16 actorID;            /* 0x00c */
     u8  pad_00e[0xc6];
-    /* Model member. The cartridge's own base destructor calls _ZN5ModelD1Ev at +0x0d4
+    /* dExtSimpleModel_c member. The cartridge's own base destructor calls _ZN17dExtSimpleModel_cD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
-    Model mModel;            /* 0x0d4 */
+    dExtSimpleModel_c mModel; /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's base destructor calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
@@ -109,7 +113,7 @@ struct dPathLiftActor_c {
     u16 mWaitTimer;         /* 0x428 */
     u8  mAfterClsnRan;            /* 0x42a */
     u8  mTriggerDelay;            /* 0x42b */
-    u8  unk_42c;            /* 0x42c */
+    u8 mRespawnAfterFall;         /* 0x42c */
     u8  pad_42d[0x3];
     struct PathPtr mPath;    /* 0x430 */
     s32 mCurrPathNode;      /* 0x438 */

@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
 
 #include "ntr/gx.h"
@@ -22,7 +22,7 @@
 #include "fault_probe.h"
 
 extern "C" {
-void _ZN5ModelC1Ev(void *self);
+void _ZN17dExtSimpleModel_cC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
@@ -38,7 +38,7 @@ static int g_failures;
     do { if (!(cond)) { ++g_failures; \
         fprintf(stderr, "FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
 
-static Model *g_model;
+static dExtSimpleModel_c *g_model;
 static void *g_bca;
 static int32_t g_fit[16];
 static size_t g_tris[FRAMES];
@@ -70,7 +70,7 @@ static void game_main()
         _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(&g_model->data, g_bca, frame);
         _ZN15ModelComponents21UpdateVertsUsingBonesEv(&g_model->data);
         scene_setup();
-        g_model->Model::Render(NULL);
+        g_model->dExtSimpleModel_c::Render(NULL);
         ntr::rt_vblank_wait();
     }
 }
@@ -107,11 +107,11 @@ int main(void)
     SharedFilePtrC mp;
     _ZN13SharedFilePtr9ConstructEj(&mp, 1034);          /* piano.bmd */
     static char storage[0x50];
-    g_model = (Model *)storage;
-    _ZN5ModelC1Ev(storage);
-    void *file = Model::LoadFile(*(SharedFilePtr *)&mp);
+    g_model = (dExtSimpleModel_c *)storage;
+    _ZN17dExtSimpleModel_cC1Ev(storage);
+    void *file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&mp);
     CHECK(file != NULL);
-    CHECK(g_model->Model::DoSetFile((char *)file, 0, -1) == 1);
+    CHECK(g_model->dExtSimpleModel_c::DoSetFile((char *)file, 0, -1) == 1);
     ident_fx(&g_model->mat4x3);
 
     SharedFilePtrC ap;
@@ -128,7 +128,7 @@ int main(void)
     NTR_MMIO(uint32_t, 0x04000454) = 0;
     NTR_MMIO(uint32_t, 0x04000440) = 1;
     NTR_MMIO(uint32_t, 0x04000454) = 0;
-    g_model->Model::Render(NULL);
+    g_model->dExtSimpleModel_c::Render(NULL);
     size_t n = 0;
     const ntr::GxTriangle *t = ntr::gx_polygons(n);
     float minx = 1e30f, maxx = -1e30f, miny = 1e30f, maxy = -1e30f;

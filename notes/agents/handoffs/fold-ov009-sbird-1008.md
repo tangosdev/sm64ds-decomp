@@ -1,5 +1,9 @@
 # fold/ov009-sbird-1008 -- daSBird_c head run + PMF member conversion
 
+> Historical. #4451 folded the head file and func_ov009_0211145c (now
+> daSBird_c::StateLaunchFlock) into `src/game/actors/d_a_s_bird.cpp`; the
+> paths below are as they were on 2026-10-08.
+
 ## Target
 
 ov009 `daSBird_c` head run. The class linker unit is 0x021111a0..0x02111a70,
@@ -12,7 +16,7 @@ conversion.
 
 ## What landed
 
-- New `src/game/actors/d_a_s_bird_head.cpp` (manifest `ov009/daSBird_c_head`,
+- New `d_a_s_bird_head.cpp` (manifest `ov009/daSBird_c_head`,
   .text 0x02111224..0x0211145c, 2 functions, TEXT-VERIFIED 2/2):
   `daSBird_c::func_ov009_02111224(int)` (the follower-attach the spawn loops
   call on the child) and `daSBird_c::func_ov009_02111234()` (PMF ordinal 3,

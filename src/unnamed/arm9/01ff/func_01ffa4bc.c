@@ -62,14 +62,21 @@ _L090:
     addpl r0, r0, #1
     bx lr
     stmdb sp!, {lr}
-    ldr r1, =0x40000308
+    ldr r1, [pc, #0x1c]
     bl func_0206ddcc
     ldmia sp!, {lr}
     bx lr
 _L0b0:
     stmdb sp!, {lr}
-    ldr r1, =0x40000208
+    ldr r1, [pc, #0xc]
     bl func_0206ddcc
     ldmia sp!, {lr}
     bx lr
+_pool40000308:
+    dcd 0x40000308
+_pool40000208:
+    dcd 0x40000208
+    eor r0, r0, r1
+    eor r1, r0, r1
+    eor r0, r0, r1
 }

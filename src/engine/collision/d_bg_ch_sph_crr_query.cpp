@@ -12,8 +12,7 @@
  * The query scans keep the spellings that match: int pos rather than a
  * pointer local, the zero/one locals, and data_020a0c80 by its address
  * name. func_02037de8 copies the five-word surface with a u64 so the
- * loads and stores interleave. RecordHit stays the mangled call because
- * the member's s16 parameter would sign-extend here.
+ * loads and stores interleave.
  */
 
 #include "dBgCh_Lin.h"
@@ -29,9 +28,8 @@
 #include "common.h"
 
 extern "C" {
-void func_020353b0(void *ray, void *actor);
-int func_02035354(void *a, void *b);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 int func_020393b4(void *p);
 int func_020393ac(void *p);
 int func_0203939c(void *p);
@@ -39,51 +37,42 @@ int func_0203938c(void *p);
 int func_020393cc(void *p);
 int func_020393bc(void *p);
 void func_02037464(void *c);
-void func_02037e9c(char *p);
-void func_02037de8(int *dst, int *src);
+void func_02037e9c(CLPS *clps);
+void func_02037de8(SurfaceInfo *dst, const SurfaceInfo *src);
 int func_02038298(void *arg);
-// local extern: forwarders pass int triID; the member's short parameter would sign-extend
-void _ZN5dBgPi9RecordHitEsP11SurfaceInfo(void *res, int triID, void *info);
 void func_02036acc(void);
-void func_ov002_020fea4c(int *a, int *b);       /* dM3dGLin::GetEnd */
-void func_ov002_020fea68(int *a, int *b);       /* dM3dGLin::GetStart */
-extern dBgW *data_020a0c80[];
-extern char data_020a0c78;
+extern CLPS data_020a0c78;
 }
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. Vec3 remains the plain
-   three-word copy view. PcAB/PcObj describe func_02037eb0's records;
-   PFN retains its pending stored-callback reconstruction. Position reads
-   keep the measured three-word byte view of the actor: direct mPosX/Y/Z
-   accesses remove one address-setup instruction from each of three scans. */
+   three-word copy view; PFN retains its pending stored-callback
+   reconstruction. Position reads keep the measured three-word byte view of
+   the actor: direct mPosX/Y/Z accesses remove one address-setup
+   instruction from each of three scans. */
 struct Vec3 { int x, y, z; };
 
-struct PcAB { int a; int b; };
-struct PcObj { int a; int b; struct Vector3 v; };
-
 typedef void (*PFN)(int self, int arg, int b);
-
-extern "C" int Vec3_HorzDist(const Vector3*, const Vector3*);
 
 // @symbol _ZN9dBgCh_Gnd10DetectClsnEv
 int dBgCh_Gnd::DetectClsn()
 {
     int ret = 0;
     func_02037464(this);
-    dBgW* o = (dBgW *)data_020a0c80[0];
-    if (o != 0 && func_02035354(this, (void *)func_020393b4(o)) == 0 && o->DetectClsn(*this) != 0) {
-        dBgPi::SetCollider(0, func_020393ac(o), (dActor_c *)func_020393b4(o), (dBgW *)o);
+    dBgW *o = data_020a0c80[0];
+    if (o != 0 && !IsOwnedBy((dActor_c *)func_020393b4(o)) && o->DetectClsn(*this) != 0) {
+        dBgPi::SetCollider(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
         ret = 1;
     }
     int flag = 1;
     int one = 1;
     Vec3 pos;
     for (int i = 1; i < 24; i++) {
-        dBgW* obj = (dBgW *)data_020a0c80[i];
+        dBgW *obj = data_020a0c80[i];
         if (obj == 0) continue;
         dActor_c* p = (dActor_c *)func_020393b4(obj);
-        if (func_02035354(this, p) != 0) continue;
+        if (IsOwnedBy(p))
+            continue;
         if (p != 0 && ((p->mFlags & 2) ? flag : 0) != 0) {
             const char *position = (const char *)p + 0x5c;
             pos.x = *(const s32 *)(position + 0);
@@ -102,7 +91,7 @@ int dBgCh_Gnd::DetectClsn()
             if (Vec3_HorzDist(selfpos, (const Vector3 *)&pos) > thr) continue;
         }
         if (obj->DetectClsn(*this) != 0) {
-            dBgPi::SetCollider(i, func_020393ac(obj), (dActor_c *)func_020393b4(obj), (dBgW *)obj);
+            dBgPi::SetCollider(i, func_020393ac(obj), (dActor_c *)func_020393b4(obj), obj);
             ret = one;
         }
     }
@@ -115,13 +104,13 @@ int dBgCh_Gnd::DetectClsnSlot0() {
     int r = 0;
     dBgW *o;
     func_02037464(this);
-    o = (dBgW *)data_020a0c80[0];
+    o = data_020a0c80[0];
     if (o != 0) {
-        if (func_02035354(this, (void *)func_020393b4(o)) == 0) {
+        if (!IsOwnedBy((dActor_c *)func_020393b4(o))) {
             if (o->DetectClsn(*this) != 0) {
                 int a = func_020393ac(o);
                 int b = func_020393b4(o);
-                dBgPi::SetCollider(0, a, (dActor_c *)b, (dBgW *)o);
+                dBgPi::SetCollider(0, a, (dActor_c *)b, o);
                 r = 1;
             }
         }
@@ -139,17 +128,16 @@ int dBgCh_SphCrr::DetectClsn()
        centre below -- the one local keeps the compiler's register shape */
     char *e = (char *)data_020a0c80[0];
     if (e != 0) {
-        if (func_02035354(this, (void *)func_020393b4(e)) == 0) {
+        if (!IsOwnedBy((dActor_c *)func_020393b4(e))) {
             hits = ((dBgW *)e)->DetectClsn(*this);
             if (hits != 0) {
-                ((dBgPi &)*this).SetCollider(0, func_020393ac(e),
-                    (dActor_c *)func_020393b4(e), (dBgW *)e);
+                dBgPi::SetCollider(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
                 if (hits & 1)
-                    func_020379d0(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
+                    SetFloorCollider(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
                 if (hits & 2)
-                    func_0203799c(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
+                    SetWallCollider(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
                 if (hits & 4)
-                    func_02037968(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
+                    SetUnderCollider(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
                 result = 1;
             }
         }
@@ -161,7 +149,8 @@ int dBgCh_SphCrr::DetectClsn()
         dBgW *o = data_020a0c80[i];
         if (o == 0) continue;
         dActor_c *owner = (dActor_c *)func_020393b4(o);
-        if (func_02035354(this, owner) != 0) continue;
+        if (IsOwnedBy(owner))
+            continue;
         if (owner != 0) {
             int active = (owner->mFlags & 2) ? 1 : 0;
             if (active != 0) {
@@ -183,20 +172,23 @@ int dBgCh_SphCrr::DetectClsn()
                     continue;
             }
         }
-        { int t = ((dBgW *)o)->DetectClsn(*this); hits = t; }
+        /* the scoped temporary keeps the ROM's register shape */
+        {
+            int t = o->DetectClsn(*this);
+            hits = t;
+        }
         if (hits != 0) {
-            ((dBgPi &)*this).SetCollider(i, func_020393ac(o),
-                (dActor_c *)func_020393b4(o), o);
+            dBgPi::SetCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
             if (hits & 1)
-                func_020379d0(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+                SetFloorCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
             if (hits & 2)
-                func_0203799c(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+                SetWallCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
             if (hits & 4)
-                func_02037968(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+                SetUnderCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
             result = 1;
         }
     }
-    this->func_02037a38();
+    this->UpdateDisplacement();
     return result;
 }
 
@@ -207,19 +199,17 @@ int dBgCh_SphCrr::func_02038a38()
     dBgW *o = data_020a0c80[0];
     int result = 0;
     int hits;
-    if (o != 0 && func_02035354(this, (void *)func_020393b4(o)) == 0
-        && (hits = o->DetectClsn(*this)) != 0) {
-        ((dBgPi &)*this).SetCollider(0, func_020393ac(o),
-            (dActor_c *)func_020393b4(o), o);
+    if (o != 0 && !IsOwnedBy((dActor_c *)func_020393b4(o)) && (hits = o->DetectClsn(*this)) != 0) {
+        dBgPi::SetCollider(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
         if (hits & 1)
-            func_020379d0(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+            SetFloorCollider(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
         if (hits & 2)
-            func_0203799c(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+            SetWallCollider(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
         if (hits & 4)
-            func_02037968(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+            SetUnderCollider(0, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
         result = 1;
     }
-    this->func_02037a38();
+    this->UpdateDisplacement();
     return result;
 }
 
@@ -236,7 +226,8 @@ int dBgCh_SphCrr::func_02038824()
         dBgW *o = data_020a0c80[i];
         if (o == 0) continue;
         dActor_c *owner = (dActor_c *)func_020393b4(o);
-        if (func_02035354(this, owner) != 0) continue;
+        if (IsOwnedBy(owner))
+            continue;
         if (owner != 0 && ((owner->mFlags & 2) ? one : zero)) {
             /* The address local must stay declared int -- a pointer local
                diffs. Its value is the dM3dGSph base's centre. */
@@ -259,14 +250,16 @@ int dBgCh_SphCrr::func_02038824()
         }
         int hits = o->DetectClsn(*this);
         if (hits == 0) continue;
-        ((dBgPi &)*this).SetCollider(i, func_020393ac(o),
-            (dActor_c *)func_020393b4(o), o);
-        if (hits & 1) func_020379d0(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
-        if (hits & 2) func_0203799c(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
-        if (hits & 4) func_02037968(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+        dBgPi::SetCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+        if (hits & 1)
+            SetFloorCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+        if (hits & 2)
+            SetWallCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
+        if (hits & 4)
+            SetUnderCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
         result = one;
     }
-    this->func_02037a38();
+    this->UpdateDisplacement();
     return result;
 }
 
@@ -283,7 +276,7 @@ bool dBgCh_Lin::DetectClsn()
     int threshold;
     e = (char *)data_020a0c80[0];
     if (e != 0) {
-        if (func_02035354(this, (void *)func_020393b4(e)) == 0) {
+        if (!IsOwnedBy((dActor_c *)func_020393b4(e))) {
             int mask = ((dBgW *)e)->DetectClsn(*this);
             if (mask != 0) {
                 dBgPi::SetCollider(0, func_020393ac(e), (dActor_c *)func_020393b4(e), (dBgW *)e);
@@ -296,10 +289,11 @@ bool dBgCh_Lin::DetectClsn()
     base = &sphere.centre;
     threshold = (int)sphere.radius;
     for (i = 1; i < 0x18; i++) {
-        o = (dBgW *)data_020a0c80[i];
+        o = data_020a0c80[i];
         if (o == 0) continue;
         info = (dActor_c *)func_020393b4(o);
-        if (func_02035354(this, info) != 0) continue;
+        if (IsOwnedBy(info))
+            continue;
         if (info != 0) {
             int active = (info->mFlags & 2) ? 1 : 0;
             if (active != 0) {
@@ -324,7 +318,7 @@ bool dBgCh_Lin::DetectClsn()
         {
             int mask = o->DetectClsn(*this);
             if (mask != 0) {
-                dBgPi::SetCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), (dBgW *)o);
+                dBgPi::SetCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
                 result = true;
             }
         }
@@ -337,14 +331,14 @@ bool dBgCh_Lin::DetectClsn()
    address name. */
 extern "C" int func_0203859c(void *obj)
 {
-    dBgW *e = (dBgW *)data_020a0c80[0];
+    dBgW *e = data_020a0c80[0];
     int result = 0;
     if (e != 0) {
-        if (func_02035354(obj, (void *)func_020393b4(e)) == 0) {
+        if (!((dBgCh_Lin *)obj)->IsOwnedBy((dActor_c *)func_020393b4(e))) {
             if (e->DetectClsn(*(dBgCh_Lin *)obj) != 0) {
                 int a = func_020393ac(e);
                 int b = func_020393b4(e);
-                ((dBgPi *)((char *)obj + 0x10))->SetCollider(0, a, (dActor_c *)b, (dBgW *)e);
+                ((dBgPi &)*(dBgCh_Lin *)obj).SetCollider(0, a, (dActor_c *)b, e);
                 result = 1;
             }
         }
@@ -362,17 +356,18 @@ extern "C" int func_0203842c(char *self)
     dBgW *o;
     dActor_c *info;
     int m;
-    char *base;
+    Vector3 *base;
     int threshold;
 
-    char *p64 = self + 0x64;
-    base = p64 + 4;
-    threshold = *(int *)(p64 + 0x10);
+    dM3dGSph &sphere = ((dBgCh_Lin *)self)->mBoundSphere;
+    base = &sphere.centre;
+    threshold = sphere.radius;
     for (i = 1; i < 0x18; i++) {
-        o = (dBgW *)data_020a0c80[i];
+        o = data_020a0c80[i];
         if (o == 0) continue;
         info = (dActor_c *)func_020393b4(o);
-        if (func_02035354(self, info) != 0) continue;
+        if (((dBgCh_Lin *)self)->IsOwnedBy(info))
+            continue;
         if (info != 0) {
             int active = (info->mFlags & 2) ? 1 : 0;
             if (active != 0) {
@@ -390,14 +385,15 @@ extern "C" int func_0203842c(char *self)
                 } else {
                     v.y += func_0203938c(o);
                 }
-                if (Vec3_Dist((const Vector3 *)base, &v) > m + threshold)
+                if (Vec3_Dist(base, &v) > m + threshold)
                     continue;
             }
         }
         {
             int mask = o->DetectClsn(*(dBgCh_Lin *)self);
             if (mask != 0) {
-                ((dBgPi *)(self + 0x10))->SetCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), (dBgW *)o);
+                ((dBgPi &)*(dBgCh_Lin *)self)
+                    .SetCollider(i, func_020393ac(o), (dActor_c *)func_020393b4(o), o);
                 result = 1;
             }
         }
@@ -408,8 +404,8 @@ extern "C" int func_0203842c(char *self)
 // @symbol dBgCh_Actr_UpdateDiscreteNoLava_veneer
 /* dBgCh_Actr_UpdateDiscreteNoLava_veneer @ 0x2038420 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava (0x2037024).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *self) {
-    ((dBgCh_Actr *)self)->UpdateDiscreteNoLava();
+extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *self) {
+    self->UpdateDiscreteNoLava();
 }
 
 // @symbol func_02038414
@@ -428,22 +424,22 @@ extern "C" void func_02038408(void) {
 // @symbol dBgCh_Actr_UpdateContinuous_Veneer
 /* dBgCh_Actr_UpdateContinuous_Veneer @ 0x20383fc (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuous (0x20366b4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void *self) {
-    ((dBgCh_Actr *)self)->UpdateContinuous();
+extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *self) {
+    self->UpdateContinuous();
 }
 
 // @symbol func_020383f0
 /* func_020383f0 @ 0x20383f0 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousNoLava (0x2036318).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_020383f0(void *self) {
-    ((dBgCh_Actr *)self)->UpdateContinuousNoLava();
+extern "C" void func_020383f0(dBgCh_Actr *self) {
+    self->UpdateContinuousNoLava();
 }
 
 // @symbol func_020383e4
 /* func_020383e4 @ 0x20383e4 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateExtraContinous (0x20358ac).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_020383e4(void *self) {
-    ((dBgCh_Actr *)self)->UpdateExtraContinous();
+extern "C" void func_020383e4(dBgCh_Actr *self) {
+    self->UpdateExtraContinous();
 }
 
 // @symbol func_02038324
@@ -451,17 +447,21 @@ extern "C" void func_020383e4(void *self) {
    table with dBgPi's collider index and calls its BeforeClsn virtual method. */
 extern "C" void func_02038324(void *arg, int b, int c, int d)
 {
+    dBgPi *hit = (dBgPi *)arg;
     int idx;
     dBgW *obj;
-    if (((dBgPi *)arg)->HasCollider() == 0) return;
-    idx = ((dBgPi *)arg)->GetColliderIndex();
-    obj = (dBgW *)data_020a0c80[idx];
-    if (obj == 0) return;
-    if (func_020393cc(obj) == 0) return;
-    if (func_02038298(arg) == 0) return;
-    obj->BeforeClsn(*(dBgPi *)arg,
-        (dActor_c *)func_020393b4(data_020a0c80[idx]),
-        *(Vector3 *)b, (Vector3_16 *)c, (Vector3_16 *)d);
+    if (hit->HasCollider() == 0)
+        return;
+    idx = hit->GetColliderIndex();
+    obj = data_020a0c80[idx];
+    if (obj == 0)
+        return;
+    if (func_020393cc(obj) == 0)
+        return;
+    if (func_02038298(hit) == 0)
+        return;
+    obj->BeforeClsn(*hit, (dActor_c *)func_020393b4(data_020a0c80[idx]), *(Vector3 *)b,
+                    (Vector3_16 *)c, (Vector3_16 *)d);
 }
 
 // @symbol func_02038298
@@ -470,18 +470,21 @@ extern "C" void func_02038324(void *arg, int b, int c, int d)
    spellings emit the same bl and read worse under decl agreement. */
 extern "C" int func_02038298(void *arg)
 {
-    int idx; void *e; int a, b;
-    if (((dBgPi *)arg)->IsValid() == 0) return 0;
-    idx = ((dBgPi *)arg)->GetColliderIndex();
-    if (idx < 0) goto r;
-    if (idx < 0x18) goto work;
-r:  return 0;
-work:
-    e = data_020a0c80[idx];
-    if (e == 0) return 0;
-    a = func_020393ac(e);
-    b = func_020393b4(e);
-    return ((dBgPi *)arg)->IsHitBy(a, (dActor_c *)b, (dBgW *)e);
+    dBgPi *hit = (dBgPi *)arg;
+    int idx;
+    dBgW *collider;
+    int clsnID, owner;
+    if (hit->IsValid() == 0)
+        return 0;
+    idx = hit->GetColliderIndex();
+    if (idx < 0 || idx >= 0x18)
+        return 0;
+    collider = data_020a0c80[idx];
+    if (collider == 0)
+        return 0;
+    clsnID = func_020393ac(collider);
+    owner = func_020393b4(collider);
+    return hit->IsHitBy(clsnID, (dActor_c *)owner, collider);
 }
 
 // @symbol func_02038234
@@ -517,19 +520,18 @@ CLPS_BlockRef &CLPS_BlockRef::operator=(CLPS_Block &block)
 }
 
 // @symbol func_020381cc
-/* CLPS entry lookup: walks the collider table through a pointer-to-pointer
-   argument. Written first to land last in the ROM (reverse emission). */
-extern "C" {
-void func_020381cc(void *r0, int i, void **out)
-{
-    unsigned char *e = *(unsigned char **)r0;
+/* CLPS entry lookup: hands back entry idx of the block's 8-byte-entry
+   table, or the default entry data_020a0c78 (reset by func_02037e9c) when
+   the block is missing or its entries are not 8 bytes. Written first to
+   land last in the ROM (reverse emission). */
+extern "C" void func_020381cc(void *block, int idx, void **out) {
+    unsigned char *e = *(unsigned char **)block;
     if (e == 0 || *(unsigned short *)(e + 4) != 8) {
         func_02037e9c(&data_020a0c78);
         *out = &data_020a0c78;
         return;
     }
-    *out = e + 8 + (i << 3);
-}
+    *out = e + 8 + (idx << 3);
 }
 
 // @symbol _ZN5dBgPiC1Ev
@@ -597,11 +599,10 @@ void dBgPi::SetCollider(int idx, int uid, dActor_c *actor, dBgW *clsn)
     collider = clsn;
 }
 
-// @symbol _ZN5dBgPi9RecordHitEsP11SurfaceInfo
-void dBgPi::RecordHit(s16 triID, SurfaceInfo *src)
-{
+// @symbol _ZN5dBgPi9RecordHitEiP11SurfaceInfo
+void dBgPi::RecordHit(int triID, SurfaceInfo *src) {
     triangleID = triID;
-    func_02037de8(reinterpret_cast<int *>(&surface), reinterpret_cast<int *>(src));
+    func_02037de8(&surface, src);
 }
 
 // @symbol _ZNK5dBgPi11HasColliderEv
@@ -641,13 +642,10 @@ u32 dBgPi::GetClsnID() const
 }
 
 // @symbol func_02037f44
-/* The word-8 record read that ends the dBgPc run: kept as C inside
-   extern "C" (probe C++OK:hoist). */
-extern "C" {
-int func_02037f44(int *p)
-{
-    return p[8];
-}
+/* The owner of the collider that produced this result; it ends the dBgPi
+   run. d_a_mky.cpp is its caller. */
+extern "C" dActor_c *func_02037f44(const dBgPi *p) {
+    return p->owner;
 }
 
 /* The constructor is defined before the destructor so the deferred
@@ -671,107 +669,71 @@ dBgPc::~dBgPc()
 }
 
 // @symbol func_02037eb0
-/* The record init that opens the dBgPc run. Local record spellings travel
- * with the TU (renamed PcAB/PcObj: the scan stand-ins below reuse Obj for
- * vtable views). struct Vector3 comes from the header chain. */
-extern "C" {
-void func_02037eb0(struct PcObj *o, struct PcAB ab, struct Vector3 *v)
-{
-    o->a = ab.a;
-    o->b = ab.b;
-    o->v.x = v->x;
-    o->v.y = v->y;
-    o->v.z = v->z;
-}
+/* Fill a SurfaceInfo from a CLPS entry, passed by value as its two words,
+   and a face normal. Opens the dBgPc run. */
+extern "C" void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
+    info->clps.w0 = clps.w0;
+    info->clps.w1 = clps.w1;
+    info->normal.x = normal->x;
+    info->normal.y = normal->y;
+    info->normal.z = normal->z;
 }
 
 // @symbol func_02037e9c
-extern "C" {
-void func_02037e9c(char *p)
-{
-    *(int *)(p + 0x0) = 4032;
-    *(int *)(p + 0x4) = 255;
-}
+/* The default CLPS entry: the same two words dBgPc's constructor stores. */
+extern "C" void func_02037e9c(CLPS *clps) {
+    clps->w0 = 0xfc0;
+    clps->w1 = 0xff;
 }
 
-// @symbol func_02037e90
-extern "C" {
-int func_02037e90(int *p)
-{
-    return p[1] & 255;
-}
+// @symbol _ZNK4CLPS13func_02037e90Ev
+int CLPS::func_02037e90() const {
+    return w1 & 0xff;
 }
 
-// @symbol func_02037e84
-extern "C" {
-int func_02037e84(int *p)
-{
-    return p[0] & 31;
-}
+// @symbol _ZNK4CLPS13func_02037e84Ev
+int CLPS::func_02037e84() const {
+    return w0 & 0x1f;
 }
 
 // @symbol SurfaceInfo_TestFlag0x20
-extern "C" {
-int SurfaceInfo_TestFlag0x20(int *p)
-{
-    return p[0] & 32;
-}
+extern "C" int SurfaceInfo_TestFlag0x20(int *p) {
+    return p[0] & 0x20;
 }
 
-// @symbol func_02037e68
-extern "C" {
-int func_02037e68(unsigned int *p)
-{
-    return (p[0] >> 6) & 63;
-}
+// @symbol _ZNK4CLPS13func_02037e68Ev
+int CLPS::func_02037e68() const {
+    return (w0 >> 6) & 0x3f;
 }
 
-// @symbol func_02037e58
-extern "C" {
-int func_02037e58(unsigned int *p)
-{
-    return (p[0] >> 12) & 7;
-}
+// @symbol _ZNK4CLPS13GetFloorClassEv
+int CLPS::GetFloorClass() const {
+    return (w0 >> 12) & 0x7;
 }
 
-// @symbol func_02037e48
-extern "C" {
-int func_02037e48(unsigned int *p)
-{
-    return (p[0] >> 15) & 15;
-}
+// @symbol _ZNK4CLPS13func_02037e48Ev
+int CLPS::func_02037e48() const {
+    return (w0 >> 15) & 0xf;
 }
 
-// @symbol func_02037e38
-extern "C" {
-int func_02037e38(unsigned int *p)
-{
-    return (p[0] >> 19) & 31;
-}
+// @symbol _ZNK4CLPS14GetSurfaceTypeEv
+int CLPS::GetSurfaceType() const {
+    return (w0 >> 19) & 0x1f;
 }
 
 // @symbol func_02037e2c
-extern "C" {
-int func_02037e2c(int *p)
-{
-    return p[0] & 16777216;
-}
+extern "C" int func_02037e2c(int *p) {
+    return p[0] & 0x1000000;
 }
 
 // @symbol func_02037e20
-extern "C" {
-int func_02037e20(int *p)
-{
-    return p[0] & 33554432;
-}
+extern "C" int func_02037e20(int *p) {
+    return p[0] & 0x2000000;
 }
 
 // @symbol func_02037e14
-extern "C" {
-int func_02037e14(int *p)
-{
-    return p[0] & 67108864;
-}
+extern "C" int func_02037e14(int *p) {
+    return p[0] & 0x4000000;
 }
 
 // @symbol func_02037de8
@@ -779,14 +741,11 @@ int func_02037e14(int *p)
    the u64 unit (not the C struct-assign the shard used): C++ schedules the
    struct form load/load/store while the cartridge is load/store
    interleaved, and the u64 spelling recovers it byte-identically. */
-extern "C" {
-void func_02037de8(int *dst, int *src)
-{
-    *reinterpret_cast<u64 *>(dst) = *reinterpret_cast<const u64 *>(src);
-    dst[2] = src[2];
-    dst[3] = src[3];
-    dst[4] = src[4];
-}
+extern "C" void func_02037de8(SurfaceInfo *dst, const SurfaceInfo *src) {
+    *reinterpret_cast<u64 *>(&dst->clps) = *reinterpret_cast<const u64 *>(&src->clps);
+    dst->normal.x = src->normal.x;
+    dst->normal.y = src->normal.y;
+    dst->normal.z = src->normal.z;
 }
 
 // @symbol _ZNK11SurfaceInfo12CopyNormalToER7Vector3
@@ -801,9 +760,6 @@ void SurfaceInfo::CopyNormalTo(Vector3 &out) const
 }
 
 // @symbol func_02037dc4
-extern "C" {
-int func_02037dc4(int p)
-{
+extern "C" int func_02037dc4(int p) {
     return p + 8;
-}
 }

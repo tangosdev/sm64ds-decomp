@@ -4,12 +4,10 @@
  * English minigame identity; the unique factory is named
  * dScMgBSC_c_classInit from that profile+RTTI evidence.
  *
- * SIZE 0x51d0, from dScMgBSC_c_classInit's `_ZN7fBase_cnwEj(0x51d0)`.
+ * SIZE 0x51d0, from dScMgBSC_c_classInit's `_ZN7fBase_cnwEm(0x51d0)`.
  *
- * ONE SHARED MEMBER at 0x4f38, size 0x270 (Dealer_Construct/020c1c64),
- * shared verbatim by five other classes in this family. Its interior is
- * opaque here, but its extent and destructor are measured, so it has a real
- * member type rather than being folded into the scene's padding.
+ * THE DEALER at 0x4f38: a Dealer (include/Dealer.h, 0x270 bytes), the
+ * same record the card, roulette and memory scenes embed there.
  *
  * THE CARD TABLE at 0x51a8, 2 elements of 8 bytes, spelled as two s32
  * positions per card now that this class's own state handlers name the
@@ -20,11 +18,10 @@
  * Math_Function_0203b14c as coordinates (0x02124fd8), and Render reads
  * them back with `>> 12` for the dMeter_c -- 1:4096 fixed-point screen
  * positions, spelled s32 like the camera fields in
- * dScMgSingle3DBase_c.h. The factory still constructs it as raw bytes
- * (`__cxa_vec_ctor(p+0x51a8, 2, 8, func_0203d738,
- * NullDestructor_0203d47c)`) and the destructor still destroys it through
- * `__cxa_vec_cleanup(mCardPos, 2, 8, NullDestructor_0203d47c)`; the layout
- * claim is exactly what those byte helpers already encode.
+ * dScMgSingle3DBase_c.h. Each card is a Vector2 (include/Vector2.h): the
+ * ROM builds and destroys the pair through that type's arm9 structors,
+ * func_0203d738 and NullDestructor_0203d47c, and this TU's manifest
+ * discards its own inline copies of them as duplicates of those bodies.
  *
  * OWN TAIL, 0x51b8..0x51d0, all named: mState is the state number that
  * indexes the member-pointer state table sBSCStateTable (filled at
@@ -46,40 +43,19 @@
  * D1 then D0, and the pair comes out in exactly the cartridge's order. Same
  * mechanism as dScMgSingle3DBase_c one level up -- see that header's note.
  *
- * The explicit array-helper call preserves the cartridge's common 8-byte
- * element destructor target, whose class identity is not yet recovered.
- * The typed shared state is then destroyed automatically, followed by the
- * inherited scene, exactly in reverse-declaration order.
- *
- * No separate operator delete is needed -- dScMgBase_c, two levels up,
- * already provides one. */
+ * The destructor's body is empty: the compiler tears down mCardPos
+ * (__cxa_vec_cleanup with Vector2's destructor) and then mDealer, the
+ * cartridge's order. The factory is `new dScMgBSC_c`, which builds them in
+ * declaration order. dScMgBase_c, two levels up, provides operator new and
+ * delete. */
 #ifndef DSCMGBSC_C_H
 #define DSCMGBSC_C_H
 #include "dScMgSingle3DBase_c.h"
-
-extern "C" int Dealer_Destruct(char *t); /* decl_common.h's own signature */
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void NullDestructor_0203d47c(void);
-
-/* The type name is reconstructed; the 0x270-byte extent and teardown are
-   measured. A real member lets C++ own this part of the scene lifecycle. */
-struct dMgBSCSharedState_c {
-    ~dMgBSCSharedState_c() {
-        Dealer_Destruct((char *)this);
-    }
-
-    u8 data[0x270];
-};
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dMgBSCSharedState_c_size_must_be_0x270[sizeof(dMgBSCSharedState_c) == 0x270 ? 1 : -1];
-#endif
+#include "Dealer.h"
+#include "Vector2.h"
 
 struct dScMgBSC_c : dScMgSingle3DBase_c {
-    virtual ~dScMgBSC_c() {
-        __cxa_vec_cleanup(mCardPos, 2, 8, (void *)NullDestructor_0203d47c);
-    }
+    virtual ~dScMgBSC_c() {}
 
     /* --- this class's own vtable slots, named from the table ---
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
@@ -145,16 +121,8 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
     void StateReturnCards();   /* mState 11     -- ov006 0x02124a08 */
     void StateDone();          /* mState 12, 13 -- ov006 0x02124a04 */
 
-    /* A card's fixed-point screen position, 1:4096 -- the scale Render
-       takes back with `>> 12`. */
-    struct CardPos {
-        s32 x; /* 0x00 */
-        s32 y; /* 0x04 */
-    };
-
-    dMgBSCSharedState_c mShared; /* 0x4f38..0x51a8 */
-    /* ctor __cxa_vec_ctor via func_0203d738, dtor NullDestructor_0203d47c */
-    CardPos mCardPos[2]; /* 0x51a8 */
+    Dealer mDealer;      /* 0x4f38 */
+    Vector2 mCardPos[2]; /* 0x51a8 -- 1:4096 screen positions, see the banner */
     s32 mState;          /* 0x51b8 -- index into sBSCStateTable */
     s32 mStateTimer;     /* 0x51bc */
     s32 mChosenCard;     /* 0x51c0 */
@@ -168,7 +136,6 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dScMgBSC_CardPos_size_must_be_0x8[sizeof(dScMgBSC_c::CardPos) == 0x8 ? 1 : -1];
 typedef char dScMgBSC_c_size_must_be_0x51d0[sizeof(dScMgBSC_c) == 0x51d0 ? 1 : -1];
 #endif
 

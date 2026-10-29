@@ -8,11 +8,9 @@
  *
  * Leftover: DrawNotes reads mState as the raw word at 0x5608.
  *   The member spelling in the note draw loop grows it by 8 bytes.
- * Leftover: DealNotes's deal loop reaches mPairUses and
- *   mPairNotes as q + 0x561a and q + 0x561f, with q = this + pair.
+ * Leftover: DealNotes's deal loop reaches mPairUses[0] and
+ *   mPairNotes[0] through the stepped (dScMgSound_c *)q, q = this + pair.
  *   Indexing the members by pair grows the function by 8 bytes.
- * Leftover: InitResources passes raw + 0x4660, the camera that
- *   dScMgSingle3DBase_c.h still leaves as padding.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -29,6 +27,7 @@ enum dScMgSound_c_AssetId {
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "Sound.h"
 
 /* A cursor keeps the add-#0x5000 split on a walk that advances the scene
    pointer. Pointing the record itself at the slot pools the base instead. */
@@ -48,10 +47,6 @@ struct PmfEntry {
     Pmf pmf;
 };
 
-namespace Sound {
-void PlayBank2_2D(unsigned int id);
-void LoadAndSetMusic_Layer1(int music);
-}
 
 namespace G2S {
 unsigned GetBG2CharPtr();
@@ -167,7 +162,6 @@ extern const u8 sSoundPop00Dirs[3] = {0, 0, 1};
 /* SpawnPops consumes the first three selectors. The other two stored values
  * are retained; their original grouping is unknown. */
 extern const u8 sSoundPopSpawnKinds[5] = {0, 1, 2, 2, 1};
-extern void func_02012790(int);
 extern void Presenter_PlayMatch(void *c);
 extern void Presenter_PlayMiss(char *c);
 extern int sSoundRowLengthAlt[];
@@ -299,37 +293,23 @@ PmfEntry sSoundPop12Table[3] = {
     {pmf_dScMgSound_c_Pop12_Finish},
 };
 
+/* The body is empty: everything the factory's `new` runs (dScMgBase_c's
+   C2, dScMgSingle3DBase_c's vptr and mSysTracker, this class's vptr, then
+   mTable's constructor) is the compiler's inlining of the base and member
+   constructors. */
+inline dScMgSound_c::dScMgSound_c() {}
+
 // @symbol dScMgSound_c_classInit
 /* The MG_SOUND registry factory. It sits directly after InitResources and
-   installs this class's vtable, so it was compiled with the class.
-   Still a hand-written constructor: the header declares none, so the base
-   and Particle::SysTracker constructors are called by their mangled names.
-   The two vtable stores differ on purpose. dScMgSingle3DBase_c's table is
-   external and its symbol is the address point; this class's table is
-   emitted here, where the symbol sits two words lower, hence the `+ 2`. */
-extern "C" void *_ZN11dScMgBase_cC2Ev(void *);
-extern "C" void _ZN8Particle10SysTrackerC1Ev(void *);
-extern "C" void Presenter_Construct(void *);
-extern void *_ZTV19dScMgSingle3DBase_c[];
-extern void *_ZTV12dScMgSound_c[];
-
+   installs this class's vtable, so it was compiled with the class. */
 extern "C" void *dScMgSound_c_classInit(void) {
-    char *p = (char *)_ZN7fBase_cnwEj(0x562c);
-    if (p) {
-        _ZN11dScMgBase_cC2Ev(p);
-        *(void **)p = _ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
-        *(void **)p = _ZTV12dScMgSound_c + 2;
-        Presenter_Construct(p + 0x4f38);
-    }
-    return p;
+    return new dScMgSound_c;
 }
 
 // @symbol _ZN12dScMgSound_c13InitResourcesEv
 /* Loads the minigame's graphics for both screens, sets up the camera and
    the table, then deals the first round. */
 s32 dScMgSound_c::InitResources() {
-    u8 *raw = (u8 *)this;
     int objChars, objPltt, file;
 
     data_0209d45c |= 0x11;
@@ -360,11 +340,13 @@ s32 dScMgSound_c::InitResources() {
     Deallocate((void *)objChars);
     Deallocate((void *)objPltt);
 
-    Camera_InitPresenterView((void *)(raw + 0x4660));
+    /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h);
+       d_s_mg_cup.cpp passes it the same way. */
+    Camera_InitPresenterView((void *)pad_4660);
     if (Presenter_Load((void *)&mTable) == 0)
         return 0;
 
-    mTable.mSuppressSound = 1;
+    mTable.mQuiet = 1;
     ResetRound();
     DealNotes();
     mTries = 3;
@@ -415,7 +397,7 @@ s32 dScMgSound_c::Behavior() {
             (*(u16 *)(int)&mResultTimer)--;
             if (mResultTimer == 0) {
                 if (mTries != 0) {
-                    mTable.mSuppressSound = 0;
+                    mTable.mQuiet = 0;
                     Presenter_PlayCheer((char *)&mTable);
                     if (mTries == 3)
                         Mg_SetPerfectBanner();
@@ -450,7 +432,7 @@ s32 dScMgSound_c::Behavior() {
         if (mResultTimer != 0) {
             (*(u16 *)(int)&mResultTimer)--;
             if (*(s16 *)&mResultTimer <= 0) {
-                mTable.mSuppressSound = 0;
+                mTable.mQuiet = 0;
                 Presenter_PlayLose((char *)&mTable);
                 Mg_SetSharedState(MG_STATE_GAME_OVER);
                 mPromptEnabled = 0;
@@ -513,7 +495,7 @@ void dScMgSound_c::StartRound(int mode) {
         Mg_SubmitScore(total);
     }
 
-    mTable.mSuppressSound = 1;
+    mTable.mQuiet = 1;
     ResetRound();
 
     mTries = 3;
@@ -695,10 +677,12 @@ void dScMgSound_c::DealNotes() {
             note->note.frame = 0;
             note->note.checked = 0;
             do {
+                /* q is this advanced by the picked pair, so its mPairUses[0] and
+                   mPairNotes[0] are that pair's. */
                 q = (char *)this + ((u32)(RND * pairCount) >> 15);
-                pairUses = (u8 *)LAUNDER(q + 0x561a);
+                pairUses = (u8 *)LAUNDER(&((dScMgSound_c *)q)->mPairUses[0]);
             } while (*pairUses >= 2);
-            note->note.note = *(u8 *)(q + 0x561f);
+            note->note.note = ((dScMgSound_c *)q)->mPairNotes[0];
             (*pairUses)++;
             xIndex += 2;
             noteCursor += 0x14;

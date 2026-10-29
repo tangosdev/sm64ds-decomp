@@ -4,7 +4,7 @@
 #include "types.h"
 #include "dEnemyBase_c.h"
 #include "CapIcon.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 struct Vector3;
 struct Vector3_16;
@@ -14,7 +14,7 @@ struct Vector3_16;
  *
  * DERIVES FROM dEnemyBase_c, and the class's own constructor and destructor are the two
  * witnesses. dCapEnemy_c::dCapEnemy_c calls _ZN12dEnemyBase_cC2Ev, stores the vtable, then
- * constructs Model at 0x114 and the CapIcon at 0x164; the destructor tears the
+ * constructs dExtSimpleModel_c at 0x114 and the CapIcon at 0x164; the destructor tears the
  * same two down in the opposite order and chains to _ZN12dEnemyBase_cD2Ev. Forward in one,
  * backward in the other, at the same offsets: a layout read twice.
  *
@@ -49,7 +49,7 @@ struct dCapEnemy_c : dEnemyBase_c {
        Bit 3 and bit 7 are set by ReleaseCap as release markers, which is why
        the reads mask and the writes OR. */
     u8  mCapId;                   /* 0x113 */
-    Model   mModel;               /* 0x114 */
+    dExtSimpleModel_c mModel;     /* 0x114 */
     dCapIcon_c mCapIcon;          /* 0x164 */
 
     dCapEnemy_c();

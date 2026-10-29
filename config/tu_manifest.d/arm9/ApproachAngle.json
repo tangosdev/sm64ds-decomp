@@ -5,7 +5,7 @@
   "promoted_source": "src/ApproachAngle.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
-  "boundary_evidence": "Contiguous .text span 0x0203adec..0x0203b0e8: ApproachLinear (short and int), ApproachLinear2 (short and int), UpdateAngle, and ApproachAngle. Left edge begins where src/DecIfAbove0_Byte.c ends (0x0203adec). Right edge ends where src/AngleDiff.c begins (0x0203b0e8). The Vector3 overload _Z14ApproachLinearR7Vector3RKS_5Fix12IiE stays at 0x0203b89c, outside this run.",
+  "boundary_evidence": "Contiguous .text span 0x0203adec..0x0203b0e8: ApproachLinear (short and int), ApproachLinear2 (short and int), UpdateAngle, and ApproachAngle. Left edge begins where src/DecIfAbove0_Byte.c ends (0x0203adec). Right edge ends where src/AngleDiff.c begins (0x0203b0e8). The Vector3 overload _Z14ApproachLinearR7Vector3RKS_i stays at 0x0203b89c, outside this run.",
   "sections": [
     {
       "name": ".text",

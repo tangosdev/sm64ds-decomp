@@ -2339,7 +2339,12 @@ def canonical_duplicate_policies(entry, homes=None):
     rows = entry.get("compiler_only_output") or []
     if not isinstance(rows, list):
         return [], []  # The existing policy parser reports malformed containers.
-    selected = [r for r in rows if isinstance(r, dict) and "canonical_symbol" in r]
+    # deadstrip-data rows carry canonical_symbol for a different contract: a coined
+    # _ZTI/_ZTS name proved against the cartridge spelling, then discarded. They
+    # are not duplicate function imports, and selecting them here would refuse
+    # the row for lacking deadstrip-duplicate.
+    selected = [r for r in rows if isinstance(r, dict) and "canonical_symbol" in r
+                and r.get("disposition") != "deadstrip-data"]
     if not selected:
         return [], []
     homes = all_symbol_homes() if homes is None else homes
@@ -2617,7 +2622,7 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
                                f"manifest")
             if sym in dict(data_rows):
                 reasons.append(f"duplicate compiler_only_output policy for {sym}")
-            data_rows.append((sym, row.get("disposition")))
+            data_rows.append((sym, row))
             continue
         if row.get("disposition") == "deadstrip-data":
             reasons.append(f"compiler_only_output {sym} is declared compiler-only data "
@@ -2651,7 +2656,10 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
         elif homes.get(sym):
             reasons.append(f"compiler_only_output {sym} has configured ROM home(s) "
                            f"{homes[sym]}; it is not compiler-only")
-    for sym, disposition in data_rows:
+    for sym, row in data_rows:
+        disposition = row.get("disposition")
+        canon = row.get("canonical_symbol")
+        proof = row.get("proof", "compare")
         if disposition == "deadstrip" and sym[:4] in ("_ZTI", "_ZTS", "_ZTV"):
             # Mirrors the rombuild.py guard, and must: the intact-object path
             # returns before rombuild's copy runs, so a guard there alone leaves
@@ -2667,6 +2675,26 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
                            f"name, rename it to the cartridge's RTTI spelling so "
                            f"the row resolves as deadstrip-data; if the ROM "
                            f"genuinely has no such record, drop the row")
+        elif disposition == "deadstrip-data" and canon and canon != sym:
+            # Mirrors rombuild.compiler_only_policies. The emitted spelling has no
+            # symbols.txt home; the canonical spelling does, and the byte proof
+            # below renames a copy onto it before anything is discarded.
+            homes_for = homes.get(canon) or []
+            if proof not in ("compare", "import"):
+                reasons.append(f"compiler_only_output {sym} proof must be compare "
+                               f"or import")
+            elif proof == "import" and not (sym.startswith("_ZTS")
+                                            and str(canon).startswith("_ZTS")):
+                reasons.append(f"compiler_only_output {sym} proof \"import\" is only "
+                               f"valid for a coined _ZTS retargeted onto a cartridge "
+                               f"_ZTS; a _ZTI/_ZTV record has to be compared")
+            elif homes.get(sym):
+                reasons.append(f"compiler_only_output {sym} already has configured "
+                               f"ROM home(s) {homes[sym]}; retarget a coined name, "
+                               f"or declare deadstrip-data on the homed spelling")
+            elif len(homes_for) != 1:
+                reasons.append(f"compiler_only_output {sym} retargets to {canon}, "
+                               f"which needs exactly one configured ROM home")
         elif disposition == "deadstrip-data":
             if not homes.get(sym):
                 reasons.append(f"compiler_only_output {sym} is declared compiler-only "
@@ -2685,12 +2713,27 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     # `duplicates` licenses a surviving reference to a duplicate-homed function
     # without claiming the body is the cartridge's; this path has no cartridge bytes
     # and leaves that proof to rombuild, which passes `expect` instead.
+    # Coined RTTI is the exception: its proof IS the rename-and-compare, and a
+    # scratch verify must not report the TU clean when that compare was skipped.
+    retarget_rows = [row for sym, row in data_rows
+                     if row.get("canonical_symbol") and row.get("canonical_symbol") != sym
+                     and row.get("disposition") == "deadstrip-data"]
+    if retarget_rows:
+        why = RB.retargeted_data_reasons(obj_bytes, retarget_rows, data)
+        if why:
+            return None, {"requested": wanted, "data": data}, \
+                [f"compiler-only data policy: {reason}" for reason in why]
     out, plan = OI.derive_deadstrip(obj_bytes, wanted + data,
                                     expect={r["symbol"]: r["body"] for r in canonical},
                                     duplicates=sorted(duplicates))
     if out is None:
         return None, {"requested": wanted, "objisolate": plan}, \
             [f"compiler-only deadstrip refused: {plan.get('error')}"]
+    if retarget_rows:
+        out, renamed = OI.rename_undefined_symbols(
+            out, {r["symbol"]: r["canonical_symbol"] for r in retarget_rows})
+        if out is None:
+            return None, {"requested": wanted}, [renamed["error"]]
     if canonical:
         out, renamed = OI.rename_undefined_symbols(
             out, {r["symbol"]: r["canonical_symbol"] for r in canonical})

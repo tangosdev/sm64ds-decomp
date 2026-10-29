@@ -14,7 +14,7 @@ _ZN12daBombking_c19func_ov078_02123f1cEv kind:function(arm,size=0x98) addr:0x021
 _ZN12daBombking_c19func_ov078_02123fb4Ev kind:function(arm,size=0x4c) addr:0x02123fb4
 _ZN12daBombking_c19func_ov078_02124000Ev kind:function(arm,size=0x60) addr:0x02124000
 _ZN12daBombking_c19func_ov078_02124060Ev kind:function(arm,size=0x40) addr:0x02124060
-func_ov078_021240a0 kind:function(arm,size=0x320) addr:0x021240a0
+_ZN12daBombking_c19func_ov078_021240a0Ev kind:function(arm,size=0x320) addr:0x021240a0
 _ZN12daBombking_c19func_ov078_021243c0Ev kind:function(arm,size=0xb0) addr:0x021243c0
 _ZN12daBombking_c19func_ov078_02124470Ev kind:function(arm,size=0x60) addr:0x02124470
 _ZN12daBombking_c19func_ov078_021244d0Ev kind:function(arm,size=0x50) addr:0x021244d0
@@ -50,8 +50,8 @@ _ZN12daBombking_c8BehaviorEv kind:function(arm,size=0x264) addr:0x02126104
 _ZN12daBombking_c13InitResourcesEv kind:function(arm,size=0x28c) addr:0x02126368
 _ZN12daBombking_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021265f4
 daBombking_c_classInit kind:function(arm,size=0x64) addr:0x021265fc
-__sinit_ov078_02126660 kind:function(arm,size=0x674) addr:0x02126660
-.p__sinit_ov078_02126660 kind:data(word) addr:0x02126cd4
+__sinit_d_a_bombking.cpp kind:function(arm,size=0x674) addr:0x02126660
+.p__sinit_d_a_bombking.cpp kind:data(word) addr:0x02126cd4
 data_ov078_02126ce0 kind:data(any) addr:0x02126ce0
 data_ov078_02126ce8 kind:data(any) addr:0x02126ce8
 data_ov078_02126cf0 kind:data(any) addr:0x02126cf0
@@ -141,6 +141,6 @@ data_ov078_021270dc kind:bss addr:0x021270dc
 data_ov078_021270ec kind:bss addr:0x021270ec
 data_ov078_021270fc kind:bss addr:0x021270fc
 data_ov078_0212710c kind:bss addr:0x0212710c
-data_ov078_0212711c kind:bss addr:0x0212711c
-data_ov078_02127124 kind:bss addr:0x02127124 ambiguous
-data_ov078_02127128 kind:bss addr:0x02127128
+data_ov078_0212711c kind:bss(size=0x18) addr:0x0212711c
+data_ov078_02127124 kind:bss(size=0x0) addr:0x02127124 ambiguous
+data_ov078_02127128 kind:bss(size=0x0) addr:0x02127128

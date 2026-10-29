@@ -1,3 +1,6 @@
+#include "Ov007MenuState.h"
+#include "Ov007Work.h"
+
 extern void func_ov007_020c1d8c(int i);
 extern void func_ov007_020bca40(int i);
 extern void func_ov007_020bcba8(int i);
@@ -7,25 +10,33 @@ extern void func_ov007_020bd1c0(int i);
 extern void *func_ov007_020b8f78(void);
 extern char *data_ov007_0210342c;
 
+typedef char Ov007Work_transitionMode_must_be_at_0x20[(int)&((Ov007Work *)0)->transitionMode == 0x20
+                                                          ? 1
+                                                          : -1];
+
+/* The extern keeps the tree's char * spelling (the declaration-agreement
+ * gate); the typed view is reached through a cast macro. */
+#define WORK ((Ov007Work *)data_ov007_0210342c)
+
 void func_ov007_020b0358(void)
 {
-    char *b = data_ov007_0210342c;
-    char *s2 = *(char**)(b + 8);
-    int state = *(short*)s2;
-    int r5 = *(int*)(s2 + 0xc);
+    Ov007Work *b = WORK;
+    Ov007MenuState *s2 = b->states[1];
+    int state = s2->currentState;
+    int r5 = s2->stateTicks;
 
     switch (state) {
     case 0:
         if (r5 == 0) {
-            *(int*)(b + 0x18) = 1;
+            b->pendingCapture = 1;
             func_ov007_020c1d8c(0);
             return;
         }
         if (r5 != 1)
             return;
-        *(int*)(b + 0x1c) = 3;
+        b->pendingBgMode = 3;
         func_ov007_020bca40(1);
-        *(short*)(*(char**)(data_ov007_0210342c + 8) + 2) = 1;
+        WORK->states[1]->requestedState = 1;
         return;
     case 1:
         if (r5 == 0) {
@@ -34,9 +45,9 @@ void func_ov007_020b0358(void)
         }
         if (r5 != 1)
             return;
-        *(int*)(b + 0x1c) = 4;
+        b->pendingBgMode = 4;
         func_ov007_020bca40(2);
-        *(short*)(*(char**)(data_ov007_0210342c + 8) + 2) = 2;
+        WORK->states[1]->requestedState = 2;
         return;
     case 2: {
         int hit = 0;
@@ -47,25 +58,25 @@ void func_ov007_020b0358(void)
             func_ov007_020bd1c0(1);
         }
         if (r5 == 0x28) {
-            *(short*)(*(char**)(data_ov007_0210342c + 0xc) + 2) = 7;
+            WORK->states[2]->requestedState = 7;
         }
-        st2 = *(int*)(data_ov007_0210342c + 0x20);
+        st2 = WORK->transitionMode;
         switch (st2) {
         case 1:
             if (*(short*)func_ov007_020b8f78() == 8) {
-                *(short*)(*(char**)(data_ov007_0210342c + 4) + 2) = 2;
+                WORK->states[0]->requestedState = 2;
                 hit = 1;
             }
             break;
         case 0:
             if (*(short*)func_ov007_020b8f78() == 5) {
-                *(short*)(*(char**)(data_ov007_0210342c + 4) + 2) = 3;
+                WORK->states[0]->requestedState = 3;
                 hit = 1;
             }
             break;
         }
         if (hit) {
-            *(int*)(data_ov007_0210342c + 0x1c) = 5;
+            WORK->pendingBgMode = 5;
         }
         return;
     }

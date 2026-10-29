@@ -25,9 +25,9 @@ struct dScMgCurling2_stone {
     u8 active;     /* 0x29 */
     u8 visible;    /* 0x2a, draw gate */
     u8 fast;       /* 0x2b, speed >= 0x3800 after a hit */
-    u8 unk2c;      /* 0x2c */
+    u8 unk2c;      /* 0x2c, write-only: NextStone and ClearStoneFlags zero it, nothing reads it */
     u8 target;     /* 0x2d, a house stone: alt sprite, x100 score */
-    u8 unk2e[0x2]; /* 0x2e */
+    u8 unk2e[0x2]; /* 0x2e, untouched */
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -91,7 +91,7 @@ struct dScMgCurling2_mark {
     u16 countdown; /* 0x0a, frames until the caption shows */
     u8 enable;     /* 0x0c, the countdown runs while set */
     u8 drawn;      /* 0x0d, set on expiry; DrawMarks gates on it */
-    u8 unk0e[0x2]; /* 0x0e */
+    u8 unk0e[0x2]; /* 0x0e, untouched */
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -209,7 +209,7 @@ struct dScMgCurling2_c : dScMgBase_c {
     s32 scrollIdx;                    /* 0x4fd0, scroll mode 0..3; 0xff repicks */
     s32 bg0x;                         /* 0x4fd4, BG0 scroll */
     s32 bg0y;                         /* 0x4fd8 */
-    u8 pad_4fdc[0x4];
+    u8 pad_4fdc[0x4];                 /* 0x4fdc, untouched */
     dScMgCurling2_value mValue[0x3c]; /* 0x4fe0 */
     s32 mState;                       /* 0x5580, Behavior state, indexes sCurling2BehaviorTable */
     s32 mDragX;                       /* 0x5584, drag x (fx32) */
@@ -219,11 +219,11 @@ struct dScMgCurling2_c : dScMgBase_c {
     s32 mGrabOffsetX;                 /* 0x5594, drag x offset from the stylus */
     s32 mGrabOffsetY;                 /* 0x5598, drag y offset */
     s32 mThrowSpeed;                  /* 0x559c, throw power, capped at 0xc000 */
-    s32 unk_55a0;                     /* 0x55a0 */
-    s32 unk_55a4;                     /* 0x55a4 */
+    s32 unk_55a0;                     /* 0x55a0, write-only: DragBegin zeroes it */
+    s32 unk_55a4;                     /* 0x55a4, write-only: DragBegin zeroes it */
     s32 mLastSwingDeltaY;             /* 0x55a8, last drag dy */
     s32 mTopRecord;                   /* 0x55ac, cached Mg_GetTopRecord result */
-    u16 unk_55b0;                     /* 0x55b0 */
+    u16 unk_55b0;                     /* 0x55b0, write-only: ResetGame zeroes it */
     u16 mThrowAngle;                  /* 0x55b2, throw angle, clamped to 0x9800..0xe800 */
     u16 mSpawnTimer;                  /* 0x55b4, counts down to the next stone */
     u16 mStateTimer;                  /* 0x55b6, state-entry countdown */
@@ -235,9 +235,9 @@ struct dScMgCurling2_c : dScMgBase_c {
     u8 sndCooldown;                   /* 0x55bd, scrape-sound throttle */
     u8 mSwingState;                   /* 0x55be, drag phase */
     u8 combo;                         /* 0x55bf, collision-streak counter for SpawnValue */
-    u8 unk_55c0;                      /* 0x55c0 */
-    u8 unk_55c1;                      /* 0x55c1 */
-    u8 unk_55c2;                      /* 0x55c2 */
+    u8 unk_55c0;                      /* 0x55c0, write-only: StoneWait zeroes it */
+    u8 unk_55c1;                      /* 0x55c1, write-only: StoneWait zeroes it */
+    u8 unk_55c2;                      /* 0x55c2, untouched */
     u8 mCounterVisible;               /* 0x55c3, enables DrawCounter */
 };
 

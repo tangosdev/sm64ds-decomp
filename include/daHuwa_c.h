@@ -12,7 +12,7 @@
  * The members close on each other, which is what makes the layout a reading
  * rather than a guess:
  *
- *     0x110 ModelAnim                  0x64    -> 0x174
+ *     0x110 dExtAnmModel_c                  0x64    -> 0x174
  *     0x174 dExtShadowModel_c                0x28    -> 0x19c
  *     0x19c dCcAc_c         0x34    -> 0x1d0
  *     0x1d0 dBgCh_Actr               0x1bc   -> 0x38c
@@ -35,40 +35,44 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 
 struct daHuwa_c : dEnemyBase_c {
-    ModelAnim                    mModelAnim;            /* 0x110 */
-    dExtShadowModel_c                  mShadowModel;          /* 0x174 */
-    dCcAc_c                      mdCcAc_c;              /* 0x19c */
-    dBgCh_Actr                   mWithMeshClsn;         /* 0x1d0 */
+    dExtAnmModel_c mAnmModel;       /* 0x110 */
+    dExtShadowModel_c mShadowModel; /* 0x174 */
+    dCcAc_c mdCcAc_c;               /* 0x19c */
+    dBgCh_Actr mWithMeshClsn;       /* 0x1d0 */
     /* InitResources copies the spawn position here. Behavior faces it when
        there is no player, and when the player has left this radius. Three
        scalars, not a Vector3: Vector3's destructor would run from ~daHuwa_c. */
-    s32                          mHomePosX;             /* 0x38c */
-    s32                          mHomePosY;             /* 0x390 */
-    s32                          mHomePosZ;             /* 0x394 */
+    s32 mHomePosX; /* 0x38c */
+    s32 mHomePosY; /* 0x390 */
+    s32 mHomePosZ; /* 0x394 */
     /* Yaw Behavior approaches mAngleY toward. Home, or the player. */
-    s16                          mTargetAngY;           /* 0x398 */
+    s16 mTargetAngY; /* 0x398 */
     /* 0 chase, 1 recoil. A player bump sets 1 and counts mStateTimer to 0x14. */
-    u8                           mState;                /* 0x39a */
-    u8                           pad_39b[0x1];
+    u8 mState; /* 0x39a */
+    u8 pad_39b[0x1];
 
     /* --- vtable --- */
     virtual ~daHuwa_c();
 
-    virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
-    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+    virtual s32 OnYoshiTryEat();                /* slot 18 */
+    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual s32 OnAimedAtWithEgg();             /* slot 29 */
 
     /* --- non-virtual --- */
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
+
+    void KillWithCoins();
+    void HandleCylinderHit();
+    void UpdateModelTransform();
 };
 
 #ifndef SM64DS_PLATFORM_PC

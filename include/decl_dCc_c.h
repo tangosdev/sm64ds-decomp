@@ -20,7 +20,6 @@
 extern "C" {
 #endif
 
-extern void _ZN5dCc_c4InitE5Fix12IiES1_jj(void*, Fix12i, Fix12i, u32, u32);
 
 
 #ifdef __cplusplus

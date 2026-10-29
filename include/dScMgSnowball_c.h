@@ -5,32 +5,35 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0xc59c, and the allocation is NOT in this class's own constructor.
- * dScMgSnowball_c_Construct takes an already-allocated `char*` -- it is a C2,
- * not a factory. Its one caller, dScMgSnowball_c_classInit, is where
- * the 0xc59c allocation (fBase_c::operator new) lives. Deriving a size from the field span
- * would have stopped at 0xbe94 and been 0x708 short.
+ * The constructor (_ZN15dScMgSnowball_cC1Ev) works on storage its one
+ * caller, dScMgSnowball_c_classInit, allocates with `new` (fBase_c::operator
+ * new). Deriving a size from the field span would have stopped at 0xbe94 and
+ * been 0x708 short.
  *
  * CONSTRUCTOR AND DESTRUCTOR AGREE MEMBER FOR MEMBER, in exact reverse
  * order: mModel at 0xaba4, then mArray1 at 0xacd8 (0x80 elements of 8),
- * mArray2 at 0xb5d8 (0x80 of 8), mArray3 at 0xba14 (0x20 of 0x24). The
- * destructor destroys mArray3, mArray2, mArray1, then mModel. Nothing is
+ * mArray2 at 0xb5d8 (0x80 of 8), mSprays at 0xba14 (0x20 of 0x24). The
+ * destructor destroys mSprays, mArray2, mArray1, then mModel. Nothing is
  * left over either way.
  *
- * mModel IS A REAL, TYPED Model, and two independent witnesses fix it:
- * the constructor calls `_ZN5ModelC1Ev(t + 0xaba4)` and the destructor
- * calls `_ZN5ModelD1Ev(c + 0xaba4)`, and `sizeof(Model)` is 0x50, which
+ * mModel IS A REAL, TYPED dExtSimpleModel_c, and two independent witnesses fix it:
+ * the constructor calls `_ZN17dExtSimpleModel_cC1Ev(t + 0xaba4)` and the destructor
+ * calls `_ZN17dExtSimpleModel_cD1Ev(c + 0xaba4)`, and `sizeof(dExtSimpleModel_c)` is 0x50, which
  * closes exactly on 0xabf4 -- the very next word the constructor writes
  * (`*(int*)(t + 0xabf4) = 0`). That is the "two witnesses that close on
- * each other with nothing left over" bar. The Model destruction is
+ * each other with nothing left over" bar. The dExtSimpleModel_c destruction is
  * therefore left COMPILER-GENERATED here rather than written out: mModel
  * is declared before the three arrays, so reverse-declaration order puts
  * its destructor call last, which is exactly where the ROM has it.
  *
- * THE THREE ARRAYS stay raw bytes -- no source in the tree reads inside
- * an element, so no element type is evidenced. mArray1 and mArray2 share
- * an element ctor/dtor pair (func_0203d738 / NullDestructor_0203d47c), so
- * they are the same element type as each other; mArray3's is its own
- * (SnowSpray_ElemCtor / SnowSpray_ElemDtor).
+ * mArray1 and mArray2 share an element ctor/dtor pair (func_0203d738 /
+ * NullDestructor_0203d47c), the arm9 Vector2 structors (include/Vector2.h),
+ * and both hold Fix12 {x, y} pairs, so they are Vector2[0x80]. mSprays has
+ * its own pair (_ZN9SnowSprayC1Ev / _ZN9SnowSprayD1Ev), and its element
+ * fields are read back from the three SnowSpray_* helpers (SnowSpray,
+ * below). Every element structor is empty and inline, so the constructor and
+ * destructor are compiler-generated around the __cxa_vec_ctor and
+ * __cxa_vec_cleanup calls.
  *
  * THE 0xb0d8..0xb5d8 REGION IS FOUR PARALLEL ARRAYS, not padding, and they
  * tile the 0x500 exactly: Snowball's own Render (src/minigames/d_s_mg_snowball.cpp)
@@ -39,12 +42,12 @@
  * elements each gives 0x200 + 0x80 + 0x80 + 0x200 = 0x500, landing on
  * mArray2. the same file writes the first two the same way.
  *
- * 0xbe94..0xc59c IS A FIFTH ARRAY, and it is why this class has NO trailing
- * slack at all: Bit_DrawAll (in src/minigames/d_s_mg_snowball.cpp) already
- * carries the full element layout (two s32 then three u8 at +0x1e/0x1f/0x20, stride 0x24) as a local
- * `Elem arr[50]` at exactly this offset, and 50 * 0x24 = 0x708 closes
- * precisely on the allocation literal. At least eight further ov006 files
- * index it. Unlike the other four arrays neither structor touches it, so
+ * 0xbe94..0xc59c IS A FIFTH ARRAY (mBits, 50 dScMgSnowball_bit), and it is
+ * why this class has NO trailing slack at all: Bit_DrawAll's view in
+ * src/minigames/d_s_mg_snowball.cpp puts a 0x24-stride `arr[50]` at exactly
+ * this offset, and 50 * 0x24 = 0x708 closes precisely on the allocation
+ * literal. The Bit_* state functions fill in the rest of the element.
+ * Unlike the other four arrays neither structor touches it, so
  * its element type is trivially constructible -- which is exactly why the
  * structors alone could never have found it.
  *
@@ -68,11 +71,72 @@
 #ifndef DSCMGSNOWBALL_C_H
 #define DSCMGSNOWBALL_C_H
 #include "dScMgSingle3DBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
+#include "Vector2.h"
 
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void SnowSpray_ElemDtor(void);
-extern "C" void NullDestructor_0203d47c(void);
+/* One of the 0x20 snow-chunk records at 0xba14 (mSprays), named from
+   SnowSpray_DrawAll/_UpdateAll/_ClearAll. The name is coined. Its empty
+   inline structors are the ROM's own: this TU is the only user, so their
+   single vague-linkage copies sit in its .text, the destructor right after
+   ~dScMgSnowball_c's D0 (0x02125800) and the constructor right after
+   dScMgSnowball_c's C1 (0x0212968c). */
+struct SnowSpray {
+    SnowSpray() {}
+    ~SnowSpray() {}
+
+    s32 x;      /* 0x00 position, AddVec3'd with vx..vz each tick; drawn at x >> 12 */
+    s32 y;      /* 0x04 drawn at (y - z - mScrollY) >> 12 */
+    s32 z;      /* 0x08 height above the course; the chunk dies once it is
+                   below 0 while still falling */
+    s32 vx;     /* 0x0c */
+    s32 vy;     /* 0x10 */
+    s32 vz;     /* 0x14 SnowSpray_UpdateAll takes 0x200 off it a tick (gravity) */
+    s32 life;   /* 0x18 counted down while positive; the chunk dies at 0 */
+    s32 sprite; /* 0x1c sSnowballBitSprites index, SnowSpray_DrawAll */
+    u8 active;  /* 0x20 SnowSpray_DrawAll/_UpdateAll run only live chunks */
+    u8 pad21[3];
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char SnowSpray_size_must_be_0x24[sizeof(SnowSpray) == 0x24 ? 1 : -1];
+#endif
+
+/* One of the 50 snow bits at 0xbe94 (mBits). Trivial: neither structor
+   touches the array, Bit_InitAll seeds every field. */
+struct dScMgSnowball_bit {
+    s32 x;          /* 0x00 Bit_DrawAll draws at x >> 12; the drift states add vx */
+    s32 y;          /* 0x04 drawn at (y - mScrollY) >> 12; Bit_UpdateAll respawns
+                       the bit above the view once that reaches 0xc8 */
+    s32 vx;         /* 0x08 BitA/BitB drift states ramp it, _StateDriftStop
+                       decays it to 0, _StatePause zeroes it */
+    s32 vy;         /* 0x0c added to y each drift tick; Bit_StateFallSpeedUp
+                       ramps it to fallSpeed, _StateFallSlowDown back to 0x100 */
+    s32 fallSpeed;  /* 0x10 Bit_StateFallStart picks it (0x300 + random) */
+    u16 holdTimer;  /* 0x14 the drift states count it down before steering;
+                       BitA/BitB_StatePause wait it out, then re-arm it */
+    u16 driftTimer; /* 0x16 counts down while drifting; at 0 the drift state
+                       goes to 3 (_StateDriftStop) */
+    u16 fallTimer;  /* 0x18 Bit_StateFallStart arms it; _StateFallSpeedUp and
+                       _StateFallSlowDown count it down */
+    u8 active;      /* 0x1a Bit_UpdateAll runs only active bits; Bit_InitAll
+                       sets it */
+    u8 kind;        /* 0x1b sSnowballBitKindTable index; Bit_PickKind sets it */
+    u8 driftState;  /* 0x1c sSnowballBitAStateTable / sSnowballBitBStateTable
+                       index (Bit_RunKindA, Bit_RunKindB) */
+    u8 fallState;   /* 0x1d sSnowballBitStateTable index (Bit_RunKindA); the
+                       fall states step it 0 -> 1 -> 2 -> 0 */
+    u8 visible;     /* 0x1e Bit_DrawAll draws only with it set; Bit_InitAll sets it */
+    u8 spriteA;     /* 0x1f sSnowballBitSprites index, Mg_RenderSubSpriteMtx */
+    u8 spriteB;     /* 0x20 sSnowballBitSprites index, DrawOamSprite; Bit_InitAll
+                       picks it 1..4 entries past spriteA, mod 5 */
+    u8 pad21[3];
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char dScMgSnowball_bit_size_must_be_0x24[sizeof(dScMgSnowball_bit) == 0x24 ? 1 : -1];
+#endif
 
 struct dScMgSnowball_c : dScMgSingle3DBase_c {
     /* The 2-vector value type the collision ring carries the last hit in
@@ -91,6 +155,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
         ~Vec2() {}
     };
 
+    dScMgSnowball_c();
     virtual ~dScMgSnowball_c();
 
     /* --- this class's own vtable slots, named from the table ---
@@ -107,9 +172,9 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     virtual int  OnGraphCallback3();                           /* slot 25 */
 
     /* scene helpers */
-    void SnowSpray_DrawAll();           /* render live mArray3 chunks */
-    void SnowSpray_UpdateAll();           /* step live mArray3 chunks */
-    void SnowSpray_ClearAll();           /* clear the mArray3 chunk records */
+    void SnowSpray_DrawAll();   /* render live mSprays chunks */
+    void SnowSpray_UpdateAll(); /* step live mSprays chunks */
+    void SnowSpray_ClearAll();  /* clear the mSprays chunk records */
     int  IsInWater(int *point); /* point vs walkable corridor */
     int  HitsBreakable(int *point); /* point vs pickup row */
     int  HitsWall(int *point); /* point vs solid tile ring */
@@ -119,9 +184,9 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     void BuildCourse();           /* generate the course tilemap */
     void ResetScene();           /* seed the course + sprite tables */
 
-    /* mArray4 records: the 50 on-course objects, dispatched by the four
+    /* mBits records: the 50 on-course objects, dispatched by the four
        sinit-built PMF tables at sSnowballBitStateTable/38/50/70 */
-    void Bit_DrawAll();           /* render live mArray4 records */
+    void Bit_DrawAll();                   /* render live mBits records */
     void Bit_StateFallSlowDown(int idx);  /* table 02143020 entry 2: cooldown tick */
     void Bit_StateFallSpeedUp(int idx);   /* table 02143020 entry 1 */
     void Bit_StateFallStart(int i);       /* table 02143020 entry 0 */
@@ -136,8 +201,8 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     void BitB_StatePause(int idx);        /* table 02143050 entry 0 */
     void Bit_RunKindB(int idx);    /* table 02143038 entry 1: dispatches 02143050 on state */
     void Bit_PickKind(int idx);    /* table 02143038 entry 0 */
-    void Bit_UpdateAll();           /* walk mArray4, dispatch table 02143038 */
-    void Bit_InitAll();           /* reset the mArray4 records */
+    void Bit_UpdateAll();          /* walk mBits, dispatch table 02143038 */
+    void Bit_InitAll();            /* reset the mBits records */
 
     /* 0x4f38 -- the generated course, 0x10 lanes of 0x2e0 rows. The stride
        is the lane's: BuildCourse writes every tile as
@@ -154,9 +219,11 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mSoundPosX;       /* 0xab50 -- position of the last roll sound; a new
                                 one fires every 0x30000 of travel */
     s32   mSoundPosY;       /* 0xab54 */
-    s32   unk_ab58;         /* 0xab58 -- downhill/uphill debt; while it is 0 the
-                                climb feeds mBallSize instead */
-    s32   unk_ab5c;         /* 0xab5c -- BuildCourse clears it, then
+    s32 mUphillDebt;        /* 0xab58 -- Behavior adds every tick's backwards
+                                (+Y) travel here and pays it off from later
+                                downhill travel; only while it is 0 does the
+                                downhill travel grow mBallSize (by 1/128) */
+    s32 mGoalCenterX;       /* 0xab5c -- BuildCourse clears it, then
                                 writes the generated corridor's centre lane in
                                 Fix12 on the row before the goal */
     s32   mVelX;            /* 0xab60 -- Fix12, capped at 0x8000 */
@@ -167,24 +234,26 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mTouchX;          /* 0xab70 -- last stylus sample */
     s32   mTouchY;          /* 0xab74 */
     u16   mRollAngle;       /* 0xab78 -- += speed * 0x2710 / mBallSize */
-    u16   unk_ab7a;         /* 0xab7a */
+    u16 mAngleY;            /* 0xab7a -- Snowball_UpdateCamera's Y rotation of
+                                the ball, after Z (mHeadingAngle) and X
+                                (mRollAngle); ResetScene zeroes it */
     u16   mHeadingAngle;    /* 0xab7c -- atan2 of the velocity */
     u16   mPrevRollAngle;   /* 0xab7e -- Behavior copies 0xab78..0xab7c here */
-    u16   unk_ab80;         /* 0xab80 */
+    u16 mPrevAngleY;        /* 0xab80 -- Behavior's copy of mAngleY */
     u16   mPrevHeadingAngle;/* 0xab82 */
     s32   mSpinAxis[3];     /* 0xab84 -- Vector3, seeded (0, 0x1000, 0) */
     s32   mSpinQuat[4];     /* 0xab90 -- Quaternion_FromVector3 of mSpinAxis */
-    s32   mBallSize;        /* 0xaba0 -- grows with the climb, capped 0x37000,
-                                shrinks by 0x1000 a tick while melting */
-    Model mModel;           /* 0xaba4 -- 0x50, see file banner */
-    s32 mBallBmd; /* 0xabf4 -- the snowball BMD, loaded by InitResources and freed in slot 3 */
+    s32 mBallSize;          /* 0xaba0 -- grows with downhill (-Y) travel (see
+                                mUphillDebt), capped 0x37000, shrinks by
+                                0x1000 a tick while melting */
+    dExtSimpleModel_c mModel; /* 0xaba4 -- 0x50, see file banner */
+    BMD_File *mBallBmd;     /* 0xabf4 -- the snowball BMD; InitResources loads it,
+                                slot 3 frees it */
     u8    mProbeHit[0x20];  /* 0xabf8 -- one flag per 32-step angle probe: set when that probe hit solid or breakable */
     u8    mProbePush[0x20]; /* 0xac18 -- same probe hit solid; drives the push-out */
     u8    mProbeWater[0x20];/* 0xac38 -- same probe is inside water */
     u8    mArray1Active[0x80]; /* 0xac58 -- 1 = this mArray1 slot is live */
-    s32   mArray1[0x80][2]; /* 0xacd8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
-                               each element is a Fix12 {x,y} the ROM's own
-                               Render indexes as i*8 + 0 / i*8 + 4 */
+    Vector2 mArray1[0x80];     /* 0xacd8 -- Fix12 positions, Render draws them */
     s32   mArray1Kind[0x80]; /* 0xb0d8 -- 1 picks the 8-frame animated sprite
                                 table, anything else the static one */
     u8    mArray1Hit[0x80]; /* 0xb2d8 -- HitsBreakable sets it on
@@ -192,8 +261,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mArray2Active[0x80]; /* 0xb358 -- 1 = this mArray2 slot is live */
     s32   mArray2Kind[0x80]; /* 0xb3d8 -- Render switches 0..2 against 3 to
                                 pick the sprite */
-    s32   mArray2[0x80][2]; /* 0xb5d8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
-                               same Fix12 {x,y} element shape as mArray1 */
+    Vector2 mArray2[0x80];   /* 0xb5d8 -- Fix12 positions, as mArray1 */
     s32   mAnimCounter;     /* 0xb9d8 -- Render bumps it, wraps at 0x20; the
                                 obstacle sprite frame is (n / 4) & 7 */
     s32   mTimeLeft;        /* 0xb9dc -- frames; Render draws it as
@@ -204,8 +272,12 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mAllWater;        /* 0xb9e5 -- every probe was in water */
     u8    mSoundPending;    /* 0xb9e6 */
     u8    pad_b9e7[0x1];    /* 0xb9e7 */
-    s32 mHitSoundX;         /* 0xb9e8 -- x of the prop hit; pans sound 0x16a (y at 0xb9ec) */
-    u8    pad_b9ec[0x8];    /* 0xb9ec */
+    s32 mHitSoundX;         /* 0xb9e8 -- x of the prop hit; pans sound 0x16a */
+    s32 mHitSoundY;         /* 0xb9ec -- HitsBreakable stores the prop's y
+                                beside mHitSoundX */
+    s32 mMeltStarted;       /* 0xb9f0 -- Behavior sets it as it moves to state 4
+                                (water or time out); ResetScene clears it. Not
+                                read in this TU */
     s32   mState;           /* 0xb9f4 -- 0 count-in, 1 rolling, 2/3 crash,
                                 4 melt, 5 over */
     u8    mScreensSwapped;  /* 0xb9f8 -- set once mPosY passes 0xe8000; swaps
@@ -219,8 +291,8 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mScrollLimit;     /* 0xba08 -- mScrollY stops at (n << 16) - 0x1d0000 */
     s32   mCrashTimer;      /* 0xba0c -- counts up through states 2 and 4 */
     s32   mEndDelayTimer;   /* 0xba10 -- 0xb4 frames of state 3 */
-    u8    mArray3[0x480];   /* 0xba14 -- 0x20 * 0x24, elem dtor SnowSpray_ElemDtor */
-    u8    mArray4[0x708];   /* 0xbe94 -- 50 * 0x24, trivial elements, see file banner */
+    SnowSpray mSprays[0x20];     /* 0xba14 */
+    dScMgSnowball_bit mBits[50]; /* 0xbe94 -- 50 * 0x24, see file banner */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -5,15 +5,11 @@
  * historical English-minigame alias.
  *
  * SIZE 0x5930, from dScMgMCarlo2_c_classInit in the combined class TU's
- * `_ZN7fBase_cnwEj(0x5930)`.
+ * `_ZN7fBase_cnwEm(0x5930)`.
  *
- * SHARED TABLE at 0x4f38, size 0x270 (Dealer_Construct/020c1c64), same
- * as five siblings -- see include/dScMgMemory_c.h's own note. TWO fields
- * fall WITHIN it and are real matched access (dScMgMCarlo2_c.cpp):
- * mShared.unk_01a and mShared.unk_1e6 are literally the ctor's own writes
- * and `*(short*)(t+0x1e6)=0` writes (Dealer_Construct's own body) --
- * named here instead of folded into the opaque table, everything else in
- * the table stays pad.
+ * THE DEALER at 0x4f38: a Dealer (include/Dealer.h, 0x270 bytes), the
+ * same record the card, roulette, BSC and memory scenes embed there. This
+ * scene writes and tests its mHand and writes its mReserved directly.
  *
  * ONE ARRAY at 0x51a8, 40 elements of 0x30 bytes each. The compiler lowers
  * its construction/destruction to the ROM's __cxa_vec_ctor/__cxa_vec_cleanup calls.
@@ -24,9 +20,10 @@
  * OWN TAIL, 0x5928..0x5930: three fields are real matched access
  * (src/minigames/d_s_mg_m_carlo2.cpp).
  *
- * LIFECYCLE IS COMPILER-OWNED. The empty inline scene destructor destroys
- * members in reverse declaration order: the typed card array, the shared
- * state wrapper, then the inherited scene. That produces the cartridge's
+ * LIFECYCLE IS COMPILER-OWNED. The factory is `new dScMgMCarlo2_c`, which
+ * builds mDealer and the card array in declaration order. The empty inline
+ * scene destructor destroys them in reverse: the typed card array, the
+ * dealer, then the inherited scene. That produces the cartridge's
  * D1/D0 bodies exactly. The card class's real out-of-line constructor and
  * destructor produce the cartridge C1/D1 exactly; mwccarm's unreferenced
  * C2/D2/D0 companions are explicitly proven dead and removed by the TU
@@ -35,28 +32,7 @@
 #ifndef DSCMGMCARLO2_C_H
 #define DSCMGMCARLO2_C_H
 #include "dScMgSingle3DBase_c.h"
-
-extern "C" int  Dealer_Destruct(char *t); /* decl_common.h's own signature */
-extern "C" void _ZN19dMgMCarlo2CardObj_cD1Ev(void *elem);
-
-/* Shared 0x270-byte minigame state block. The type name is coined; its
-   destructor behavior and layout are measured. Keeping it as a real member
-   lets C++ perform the scene's reverse-order teardown: card array, then this
-   block, then the inherited scene state. */
-struct dMgMCarlo2SharedState_c {
-    ~dMgMCarlo2SharedState_c() { Dealer_Destruct((char *)this); }
-
-    u8  pad_000[0x1a];
-    s16 unk_01a;
-    u8  pad_01c[0x1ca];
-    s16 unk_1e6;
-    u8  pad_1e8[0x88];
-};
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dMgMCarlo2SharedState_c_size_must_be_0x270[sizeof(dMgMCarlo2SharedState_c) == 0x270 ? 1 : -1];
-#endif
+#include "Dealer.h"
 
 struct dMgMCarlo2CardObj_c {
     dMgMCarlo2CardObj_c();
@@ -96,7 +72,7 @@ typedef char dMgMCarlo2CardObj_c_size_must_be_0x30[sizeof(dMgMCarlo2CardObj_c) =
 struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
     virtual ~dScMgMCarlo2_c() {}
 
-    dMgMCarlo2SharedState_c mShared; /* 0x4f38..0x51a8 */
+    Dealer mDealer;                   /* 0x4f38 */
     dMgMCarlo2CardObj_c mArray[0x28]; /* 0x51a8..0x5928 */
     s16 mRoundState;                  /* 0x5928 -- the round's step; Behavior switches on it */
     s16 mTimer;                       /* 0x592a -- step timer (ApproachLinear2 to 0) */

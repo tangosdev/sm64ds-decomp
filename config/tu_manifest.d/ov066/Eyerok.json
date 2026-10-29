@@ -932,16 +932,16 @@
     "tubuild create warning: RAW: src/func_ov066_02118cdc.cpp (func_ov066_02118cdc) did not split (the definition is inside the extern \"C\" block opened on line 6, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov066_02119398.cpp (func_ov066_02119398) did not split (the definition is inside the extern \"C\" block opened on line 3, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov066_021194fc.cpp (func_ov066_021194fc) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_02116390; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021164ec; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021165cc; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021165cc; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021166c8; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021166c8; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtAnmTexPat_c7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_02116390; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021164ec; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021165cc; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtAnmTexPat_c7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021165cc; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021166c8; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtAnmTexPat_c7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021166c8; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov066_02119454' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_021168ec; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_02116ac4; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_02116c6c; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_02116d14; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov066_0211603c and the one that held func_ov066_02116d14; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov066_02116a68 and the one that held func_ov066_02116db0; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov066_02116c6c and the one that held func_ov066_02116db0; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block' differs between the legacy file that used to hold func_ov066_021166c8 and the one that held func_ov066_02116db0; kept the first, the other is commented out for review Resolved: the generated preamble was discarded and hand-curated instead (writer.md, 'discard the generated preamble above roughly 30 members'): every external symbol is now declared exactly once in one extern \"C\" block, with void* parameters so that every caller's spelling converts implicitly, and the member bodies carry casts where a unified spelling needed one. The marker comment was deleted from the source at the same time.",
@@ -1513,28 +1513,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -3322,114 +3302,114 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2147",
+      "from": "@2128",
       "to": "@2176",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211aec4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9e4 (offset 0x5cc), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2179 to @2146; canonical @2176 unchanged; ELF symbol and section indices may shift."
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aec4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9e4 (offset 0x5cc), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2179 to @2146; canonical @2176 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2129",
+      "to": "@2177",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211afb4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9f0 (offset 0x5d8), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2180 to @2147; canonical @2177 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2130",
+      "to": "@2178",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aed0: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9fc (offset 0x5e4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2181 to @2148; canonical @2178 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2131",
+      "to": "@2179",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aedc: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa0c (offset 0x5f4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2182 to @2149; canonical @2179 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2132",
+      "to": "@2180",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aee8: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa18 (offset 0x600), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2183 to @2150; canonical @2180 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2133",
+      "to": "@2181",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211aef4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa24 (offset 0x60c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2184 to @2151; canonical @2181 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2134",
+      "to": "@2182",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af00: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa2c (offset 0x614), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2185 to @2152; canonical @2182 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2135",
+      "to": "@2183",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af0c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa34 (offset 0x61c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2186 to @2153; canonical @2183 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2136",
+      "to": "@2184",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af18: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa40 (offset 0x628), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2187 to @2154; canonical @2184 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2137",
+      "to": "@2185",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af24: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa4c (offset 0x634), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2188 to @2155; canonical @2185 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2138",
+      "to": "@2186",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af30: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa54 (offset 0x63c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2189 to @2156; canonical @2186 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2139",
+      "to": "@2187",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af3c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa60 (offset 0x648), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2190 to @2157; canonical @2187 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2140",
+      "to": "@2188",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af48: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa6c (offset 0x654), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2191 to @2158; canonical @2188 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2141",
+      "to": "@2189",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af54: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa7c (offset 0x664), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2192 to @2159; canonical @2189 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2142",
+      "to": "@2190",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af60: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa84 (offset 0x66c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2193 to @2160; canonical @2190 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2143",
+      "to": "@2191",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af6c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa90 (offset 0x678), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2194 to @2161; canonical @2191 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2144",
+      "to": "@2192",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af78: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa9c (offset 0x684), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2195 to @2162; canonical @2192 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2145",
+      "to": "@2193",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af84: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aaac (offset 0x694), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2196 to @2163; canonical @2193 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2146",
+      "to": "@2194",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af90: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aab8 (offset 0x6a0), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2197 to @2164; canonical @2194 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
+    },
+    {
+      "from": "@2147",
+      "to": "@2195",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211af9c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aac0 (offset 0x6a8), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2198 to @2165; canonical @2195 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
       "from": "@2148",
-      "to": "@2177",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211afb4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9f0 (offset 0x5d8), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2180 to @2147; canonical @2177 unchanged; ELF symbol and section indices may shift."
+      "to": "@2196",
+      "evidence": "Same 12-byte NOBITS registration node at 0x211afa8: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aacc (offset 0x6b4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2199 to @2166; canonical @2196 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
       "from": "@2149",
-      "to": "@2178",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211aed0: unchanged full initializer bytes and R_ARM_ABS32 site 0x211a9fc (offset 0x5e4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2181 to @2148; canonical @2178 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2150",
-      "to": "@2179",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211aedc: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa0c (offset 0x5f4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2182 to @2149; canonical @2179 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2151",
-      "to": "@2180",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211aee8: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa18 (offset 0x600), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2183 to @2150; canonical @2180 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2152",
-      "to": "@2181",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211aef4: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa24 (offset 0x60c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2184 to @2151; canonical @2181 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2153",
-      "to": "@2182",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af00: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa2c (offset 0x614), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2185 to @2152; canonical @2182 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2154",
-      "to": "@2183",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af0c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa34 (offset 0x61c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2186 to @2153; canonical @2183 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2155",
-      "to": "@2184",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af18: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa40 (offset 0x628), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2187 to @2154; canonical @2184 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2156",
-      "to": "@2185",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af24: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa4c (offset 0x634), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2188 to @2155; canonical @2185 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2157",
-      "to": "@2186",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af30: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa54 (offset 0x63c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2189 to @2156; canonical @2186 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2158",
-      "to": "@2187",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af3c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa60 (offset 0x648), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2190 to @2157; canonical @2187 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2159",
-      "to": "@2188",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af48: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa6c (offset 0x654), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2191 to @2158; canonical @2188 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2160",
-      "to": "@2189",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af54: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa7c (offset 0x664), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2192 to @2159; canonical @2189 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2161",
-      "to": "@2190",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af60: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa84 (offset 0x66c), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2193 to @2160; canonical @2190 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2162",
-      "to": "@2191",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af6c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa90 (offset 0x678), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2194 to @2161; canonical @2191 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2163",
-      "to": "@2192",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af78: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aa9c (offset 0x684), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2195 to @2162; canonical @2192 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2164",
-      "to": "@2193",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af84: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aaac (offset 0x694), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2196 to @2163; canonical @2193 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2165",
-      "to": "@2194",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af90: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aab8 (offset 0x6a0), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2197 to @2164; canonical @2194 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2166",
-      "to": "@2195",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211af9c: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aac0 (offset 0x6a8), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2198 to @2165; canonical @2195 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2167",
-      "to": "@2196",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211afa8: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aacc (offset 0x6b4), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2199 to @2166; canonical @2196 unchanged; ELF symbol and section indices may shift."
-    },
-    {
-      "from": "@2168",
       "to": "@2197",
-      "evidence": "Same 12-byte NOBITS registration node at 0x211afc0: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aad8 (offset 0x6c0), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2200 to @2167; canonical @2197 unchanged; ELF symbol and section indices may shift."
+      "evidence": "Same 12-byte NOBITS registration node at 0x211afc0: unchanged full initializer bytes and R_ARM_ABS32 site 0x211aad8 (offset 0x6c0), storage value/size/alignment/binding unchanged after the readability pass (dead externs removed, mangled extern calls replaced by member calls, mState typed EyerokState *) moved raw @2200 to @2167; canonical @2197 unchanged; ELF symbol and section indices may shift. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     }
   ]
 }

@@ -14,25 +14,15 @@
  * store that spelling. The address-only handler names are coined as well,
  * and disclosed in symbols/actor_renames.tsv.
  *
- * Shared table at 0x4f38 (mShared, 0x270 bytes), built by
- * Dealer_Construct and torn down by Dealer_Destruct -- the same
- * pair dScMgCard_c, dScMgMCarlo2_c and dScMgRoulette_c use.
+ * THE DEALER at 0x4f38: a Dealer (include/Dealer.h, 0x270 bytes), the
+ * same record the card, roulette, BSC and Monte Carlo scenes embed there.
+ * The factory is `new dScMgMemory_c`; the compiler builds and destroys it.
  */
 #ifndef DSCMGMEMORY_C_H
 #define DSCMGMEMORY_C_H
 
 #include "dScMgSingle3DBase_c.h"
-
-extern "C" int Dealer_Destruct(char *state);
-
-struct dMgMemorySharedState_c {
-    ~dMgMemorySharedState_c() {
-        Dealer_Destruct((char *)this);
-    }
-    u8 pad_000[0x1e6];
-    s16 ready; /* 0x1e6 -- set when a new Memory Match round starts */
-    u8 pad_1e8[0x88];
-};
+#include "Dealer.h"
 
 struct dMgMemoryCard_c {
     s32 x;             /* 0x00 */
@@ -41,7 +31,7 @@ struct dMgMemoryCard_c {
     s16 angle;         /* 0x0c */
     u16 animTimer;     /* 0x0e */
     u8 value;          /* 0x10 */
-    u8 unk_11;         /* 0x11 */
+    u8 unk_11;         /* 0x11, write-only: ResetGame zeroes it */
     u8 visible;        /* 0x12 */
     u8 active;         /* 0x13 */
     u8 state;          /* 0x14 */
@@ -57,7 +47,7 @@ struct dMgMemoryPlayer_c {
     s16 angle; /* 0x0c */
     s16 delay; /* 0x0e */
     u8 active; /* 0x10 */
-    u8 unk_11; /* 0x11 */
+    u8 unk_11; /* 0x11, write-only: PlayerDrop sets 1, ResetGame zeroes it */
     u8 state;  /* 0x12 */
     u8 pad_13; /* 0x13 */
 };
@@ -75,8 +65,6 @@ struct dMgMemoryCursor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char
-    dMgMemorySharedState_c_size_must_be_0x270[sizeof(dMgMemorySharedState_c) == 0x270 ? 1 : -1];
 typedef char dMgMemoryCard_c_size_must_be_0x18[sizeof(dMgMemoryCard_c) == 0x18 ? 1 : -1];
 typedef char dMgMemoryPlayer_c_size_must_be_0x14[sizeof(dMgMemoryPlayer_c) == 0x14 ? 1 : -1];
 typedef char dMgMemoryCursor_c_size_must_be_0x10[sizeof(dMgMemoryCursor_c) == 0x10 ? 1 : -1];
@@ -153,13 +141,13 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     void StateSetup();
     void SetupDifficulty();
 
-    dMgMemorySharedState_c mShared; /* 0x4f38 */
+    Dealer mDealer;                 /* 0x4f38 */
     dMgMemoryCard_c mCards[12];     /* 0x51a8 */
     dMgMemoryPlayer_c mPlayers[3];  /* 0x52c8 */
     dMgMemoryCursor_c mCursor;      /* 0x5304 */
     s32 mState;                     /* 0x5314 */
     s32 mSubstate;                  /* 0x5318 */
-    u8 pad_531c[4];                 /* 0x531c */
+    u8 pad_531c[4];                 /* 0x531c, untouched */
     u16 mRoundTimer;                /* 0x5320 */
     u16 mCardTimer;                 /* 0x5322 */
     u16 mResultTimer;               /* 0x5324 */
@@ -171,7 +159,7 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     u8 mValueCounts[7];             /* 0x5330 */
     u8 mPairsFound;                 /* 0x5337 */
     u8 mSelectedCount;              /* 0x5338 */
-    u8 unk_5339;                    /* 0x5339 */
+    u8 unk_5339;                    /* 0x5339, write-only: ResetGame zeroes it */
     u8 mMisses;                     /* 0x533a */
     u8 mMaxMisses;                  /* 0x533b */
     u8 mDifficulty;                 /* 0x533c */

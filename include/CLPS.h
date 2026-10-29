@@ -22,27 +22,43 @@
  * BIT LAYOUT, decoded from the matched accessors rather than guessed. Each of
  * these is a one-line matched function in src/, named here beside what it reads:
  *
- *   w0 & 0x1f            func_02037e84   collision kind
+ *   w0 & 0x1f            CLPS::func_02037e84     collision kind
  *   w0 & 0x20            SurfaceInfo_TestFlag0x20   water
- *   (w0 >> 6)  & 0x3f    func_02037e68
- *   (w0 >> 12) & 0x7     func_02037e58   CLPS type
- *   (w0 >> 15) & 0xf     func_02037e48
- *   (w0 >> 19) & 0x1f    func_02037e38   SURFACE TYPE -- dBgCh::ShouldPassThrough
- *                                        Impl special-cases 0x11 and 0x14
+ *   (w0 >> 6)  & 0x3f    CLPS::func_02037e68
+ *   (w0 >> 12) & 0x7     CLPS::GetFloorClass     Player.h's slipperiness class
+ *   (w0 >> 15) & 0xf     CLPS::func_02037e48
+ *   (w0 >> 19) & 0x1f    CLPS::GetSurfaceType    dBgCh::ShouldPassThrough
+ *                                                Impl special-cases 0x11 and 0x14
  *   w0 & 0x01000000      func_02037e2c
  *   w0 & 0x02000000      func_02037e20
  *   w0 & 0x04000000      func_02037e14
- *   w1 & 0xff            func_02037e90
+ *   w1 & 0xff            CLPS::func_02037e90
  *
  * The fields are left as the two raw words on purpose: naming them would mean
  * choosing bitfield boundaries the accessors do not evidence as a partition
  * (0x1f and 0x20 overlap the same low byte, and bits 5 and 27..31 are read by
  * nothing in src/). The accessors are the interface.
+ *
+ * The six the player's floor update reads are const members. Two of them
+ * have names: dBgCh::ShouldPassThroughImpl and the player both treat
+ * GetSurfaceType's value as the surface type, and include/Player.h traces
+ * GetFloorClass's value through five slope and slide tables. The other four
+ * keep their addresses as names, because nothing yet says what they mean. The
+ * four flag tests still take a raw word pointer and are not members yet.
  */
 
 struct CLPS {
     u32 w0;                 /* 0x00 */
     u32 w1;                 /* 0x04 */
+
+#ifdef __cplusplus
+    int func_02037e90() const;
+    int func_02037e84() const;
+    int func_02037e68() const;
+    int GetFloorClass() const;
+    int func_02037e48() const;
+    int GetSurfaceType() const;
+#endif
 };
 
 #ifndef SM64DS_PLATFORM_PC

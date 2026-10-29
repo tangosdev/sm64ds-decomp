@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAc_c.h"
@@ -16,8 +16,8 @@
  *
  *     dEnemyBase_c               ends 0x110
  *     dCcAc_c     0x110 + 0x034 = 0x144  -> dBgCh_Actr
- *     dBgCh_Actr  0x144 + 0x1bc = 0x300  -> Model
- *     Model       0x300 + 0x050 = 0x350  -> dExtShadowModel_c
+ *     dBgCh_Actr  0x144 + 0x1bc = 0x300  -> dExtSimpleModel_c
+ *     dExtSimpleModel_c       0x300 + 0x050 = 0x350  -> dExtShadowModel_c
  *     dExtShadowModel_c 0x350 + 0x028 = 0x378  -> the second cylinder
  *     dCcAc_c     0x378 + 0x034 = 0x3ac  -> mState
  *
@@ -36,7 +36,7 @@ struct ShlState;
 struct daShl_c : dEnemyBase_c {
     dCcAc_c mdCc_c;            /* 0x110 */
     dBgCh_Actr mMeshClsn;      /* 0x144 */
-    Model mModel;              /* 0x300 */
+    dExtSimpleModel_c mModel;  /* 0x300 */
     dExtShadowModel_c mShadowModel;  /* 0x350 */
     dCcAc_c mdCc_c2;           /* 0x378 */
     /* Current state record: {enter, tick}, two pointers-to-member. Behavior
@@ -51,8 +51,8 @@ struct daShl_c : dEnemyBase_c {
     s16 mSpawnAngleY;          /* 0x3bc */
     u8  pad_3be[0x2];
     /* The player riding or holding the shell. */
-    dActor_c *mCarrier;        /* 0x3c0 */
-    /* Model index, 0 or 1, off bit 0 of param1. Behavior gives index 0 a
+    Player *mCarrier; /* 0x3c0 */
+    /* dExtSimpleModel_c index, 0 or 1, off bit 0 of param1. Behavior gives index 0 a
        per-frame splash/trail pass the other does not get. */
     u8  mModelIndex;           /* 0x3c4 */
     u8  mVariant;              /* 0x3c5 -- param1 bit 4 */

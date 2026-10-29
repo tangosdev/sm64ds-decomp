@@ -10,7 +10,7 @@
  * overriding the same seven every direct child gets (0, 3, 6, 9, 12, 16,
  * 17). No new virtual is added.
  *
- * SIZE 0x98, read off the factory's `_ZN7fBase_cnwEj(0x98)`. The factory
+ * SIZE 0x98, read off the factory's `_ZN7fBase_cnwEm(0x98)`. The factory
  * (dScGameOver_c_classInit) lives in this TU as `return new dScGameOver_c()`:
  * that one `new` is fBase_c::operator new(0x98) -- the allocator literal is
  * the size -- then the inlined ctor chain (fBase_c C2, dBase_c/dScene_c

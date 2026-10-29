@@ -33,35 +33,37 @@ struct daObjPile_c : dBgActor_c {
        offsets, widths and read/write sites are observed from
        Behavior/OnGroundPounded/OnHitByMegaChar (slots 6/21/27, ov091
        0x02133738/3648/35d4), not proven semantics. */
-    u8  mStepsLeft;          /* 0x31e -- 3 when intact, 0 once fully sunk */
-    u8  mAttackCooldown;     /* 0x31f -- set to 15 by a hit, counted down in Behavior; hits ignored while nonzero */
-    u8  mBusy;               /* 0x320 -- suppresses OnHitByMegaChar and the coin drops; daWanwan_c sets it to 1 on the stump it spawns */
-    u8  pad_321[3];
-    s32 mAngleDelta;         /* 0x324 -- accumulated turn-toward-player angle */
-    s16 mPrevAngle;          /* 0x328 -- last frame's horizontal angle to player */
-    u8  pad_32a[2];
+    u8 mStepsLeft; /* 0x31e -- 3 when intact, 0 once fully sunk */
+    u8 mAttackCooldown; /* 0x31f -- set to 15 by a hit, counted down in Behavior; hits ignored while nonzero */
+    u8 mBusy; /* 0x320 -- suppresses OnHitByMegaChar and the coin drops; daWanwan_c sets it to 1 on the stump it spawns */
+    u8 pad_321[3];
+    s32 mAngleDelta; /* 0x324 -- accumulated turn-toward-player angle */
+    s16 mPrevAngle;  /* 0x328 -- last frame's horizontal angle to player */
+    u8 pad_32a[2];
     /* KINOKO_TAG backlink: daObjKinokoTag_c::Behavior stores itself here, and
-       daObjPile_c::func_ov091_02133498 reads it back. */
-    dActor_c *mLinkedTag;    /* 0x32c */
+       daObjPile_c::NotifyTagPileGone reads it back. */
+    dActor_c *mLinkedTag; /* 0x32c */
 
-    virtual ~daObjPile_c();                     /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjPile_c(); /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 CleanupResources();             /* slot  3 */
-    virtual s32 Render();                       /* slot  9 */
-    virtual s32 InitResources();                /* slot  0 */
-    virtual s32 Behavior();                     /* slot  6 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Render();           /* slot  9 */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 Behavior();         /* slot  6 */
     /* OnGroundPounded and OnHitByMegaChar return `void`, not `int`: both
        overrides are what proved include/dActor_c.h's slots 21 and 27 wrong
        (each compares class fields and returns early, and mwcc allocates
        registers differently for `int` vs `void` even with r0 untouched) --
        measured with tools/mangle.py, not assumed. */
-    void OnGroundPounded(dActor_c &other);      /* slot 21 */
-    void OnHitByMegaChar(Player &player);       /* slot 27 */
+    void OnGroundPounded(dActor_c &other); /* slot 21 */
+    void OnHitByMegaChar(Player &player);  /* slot 27 */
 
-    /* Non-virtual. The address is the method name. flag is int: the callee
+    /* Non-virtual; coined names. NotifyTagPileGone (ov091 0x02133498) tells
+       the linked KINOKO_TAG its pile is gone. Sink (0x021334b8) drops the
+       pile one step, or every step when flag is set. flag is int: the callee
        compares the full register. */
-    void func_ov091_02133498();
-    void func_ov091_021334b8(int flag);
+    void NotifyTagPileGone();
+    void Sink(int flag);
 };
 
 #ifndef SM64DS_PLATFORM_PC

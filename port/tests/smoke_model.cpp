@@ -1,15 +1,15 @@
 // Gate-4b smoke: the game's whole model pipeline runs on host.
 //
 // SharedFilePtr loads b_mario_all.bmd through the gate-3b card seam into the
-// gate-3a game heap; Model::LoadFile rebases the file image in place
+// gate-3a game heap; dExtSimpleModel_c::LoadFile rebases the file image in place
 // (int base = (int)&file -- the reason this build is 32-bit); LoadTexAndPal
 // pushes textures and palettes through GX::LoadTex into the mapped VRAM
 // windows; DoSetFile builds ModelComponents and the transforms buffer; and
-// Model::Render walks bones and materials, binding TEXIMAGE_PARAM/PLTT_BASE
+// dExtSimpleModel_c::Render walks bones and materials, binding TEXIMAGE_PARAM/PLTT_BASE
 // and pumping display lists through the gate-4a machinery. The ntr GX
 // decodes the same VRAM the game just filled.
 //
-// Method calls are QUALIFIED (ptr->Model::Render) on purpose: the game's C
+// Method calls are QUALIFIED (ptr->dExtSimpleModel_c::Render) on purpose: the game's C
 // constructor installs the Itanium-ordered vtable (D1+D0 in slots 0/1), so
 // MSVC virtual dispatch would land one slot off. Nothing here dispatches
 // virtually, and the HAL vtable slots trap if something ever does.
@@ -18,18 +18,18 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 #include "ntr/gx.h"
 #include "ntr/mmio.h"
 #include "ntr/ppu.h"
 
 extern "C" {
-void _ZN5ModelC1Ev(void *self);
+void _ZN17dExtSimpleModel_cC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
-extern Matrix4x3 data_0209b3ec;     /* camera matrix Model::Render composes */
+extern Matrix4x3 data_0209b3ec;     /* camera matrix dExtSimpleModel_c::Render composes */
 }
 
 static int g_failures;
@@ -91,13 +91,13 @@ int main(void)
     CHECK(!is_mario || ptr.fileID == 784);
 
     static char storage[0x50];
-    Model *model = (Model *)storage;
-    _ZN5ModelC1Ev(storage);
+    dExtSimpleModel_c *model = (dExtSimpleModel_c *)storage;
+    _ZN17dExtSimpleModel_cC1Ev(storage);
 
-    void *file = Model::LoadFile(*(SharedFilePtr *)&ptr);
+    void *file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&ptr);
     CHECK(file != NULL);
     CHECK(ptr.numRefs == 1);
-    CHECK(model->Model::DoSetFile((char *)file, 0, -1) == 1);
+    CHECK(model->dExtSimpleModel_c::DoSetFile((char *)file, 0, -1) == 1);
 
     /* identity model matrix, then the game renders */
     memset(&model->mat4x3, 0, sizeof model->mat4x3);
@@ -106,7 +106,7 @@ int main(void)
     ((int *)&model->mat4x3)[8] = 0x1000;
 
     reset_scene();
-    model->Model::Render(NULL);
+    model->dExtSimpleModel_c::Render(NULL);
 
     size_t tris = 0;
     const ntr::GxTriangle *tarr = ntr::gx_polygons(tris);
@@ -140,7 +140,7 @@ int main(void)
             NTR_MMIO(uint32_t, 0x04000458) = (uint32_t)m[i];
         NTR_MMIO(uint32_t, 0x04000440) = 1;
         NTR_MMIO(uint32_t, 0x04000454) = 0;
-        model->Model::Render(NULL);
+        model->dExtSimpleModel_c::Render(NULL);
         ntr::gx_polygons(tris);
         CHECK(!is_mario || tris == 492);
     }

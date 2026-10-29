@@ -33,10 +33,8 @@
  * not reorder.
  *
  * leftovers:
- * - dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight,
- *   Player::Hurt and Particle::System::NewSimple stay mangled. Each takes
- *   Fix12<int> by value (wall 6az): passing a Fix12<int> local to
- *   mdCcAc_c.Init makes InitResources 0x20 bytes longer.
+ * - Player::Hurt and Particle::System::NewSimple stay mangled. Each takes
+ *   Fix12<int> by value (wall 6az).
  * - The hit check and the placement helper are members but keep their
  *   func_ov098_* address names.
  * - The fragment angle table (data_ov098_0213bf90) is an unnamed ov098 row
@@ -58,6 +56,8 @@ enum daWbm_c_AssetId {
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "nitro/fx/fx.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
 typedef void (daWbm_c::*State)();
 
@@ -68,13 +68,12 @@ enum {
     ACTOR_WATERBOMB = 208
 };
 
-int ApproachLinear(int &value, int target, int step);
 namespace cstd {
 s32 fdiv(s32 numerator, s32 denominator);
 }
 
 extern "C" {
-/* Model files: the fragment's, which the other variants load too. */
+/* dExtSimpleModel_c files: the fragment's, which the other variants load too. */
 extern SharedFilePtr data_ov002_0210da38;
 /* The five fragments' launch angles. */
 extern u16 data_ov098_0213bf90[];
@@ -89,19 +88,15 @@ void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
 s16 Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *counter);
-void func_0201267c(u32 id, void *pos);
 
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(dCcAc_c *self, dActor_c *actor,
-    s32 radius, s32 height, u32 flags, u32 unk);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *self, dActor_c *actor, s32 radius, s32 height,
-    Vector3_16 *a, Vector3_16 *b);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    dActor_c *self, dExtShadowModel_c *shadow, Matrix4x3 *matrix, s32 radius,
-    s32 depth, u8 opacity);
-int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, const Vector3 *from,
-    u32 a, s32 b, u8 c, u8 d, u8 e);
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, s32 radius, s32 height, Vector3_16 *a,
+                         Vector3_16 *b);
+namespace Particle {
+struct System {
+    static void *NewSimple(u32 id, s32 x, s32 y, s32 z);
+};
+}
 }
 
 /* The bomb's file-scope SharedFilePtr object, spelled through the same
@@ -110,8 +105,6 @@ void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z
    The constructor aliases func_02017acc and the destructor func_02017ab4 in
    this unit's manifest. */
 struct WbmModelFilePtr : SharedFilePtr {
-    int unk0;
-    void *file;
     WbmModelFilePtr(unsigned int id);
     ~WbmModelFilePtr();
 };
@@ -156,14 +149,14 @@ int daWbm_c::InitResources()
 
     if (mVariant == 2)
     {
-        bmd = (BMD_File *)Model::LoadFile(data_ov002_0210da38);
+        bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
         if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
-        Model::LoadFile(data_ov002_0210da38);
-        bmd = (BMD_File *)Model::LoadFile(data_ov098_0213c91c);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
+        bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c91c);
         if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
@@ -183,16 +176,16 @@ int daWbm_c::InitResources()
             mScaleX = 0x800;
             mScaleY = 0x800;
             mScaleZ = 0x800;
-            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x14000, 0x28000, 0x200004, 0);
-            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x1e000, 0x1e000, 0, 0);
+            mdCcAc_c.Init(this, 0x14000, 0x28000, 0x200004, 0);
+            mWithMeshClsn.Init(this, 0x1e000, 0x1e000, 0, 0);
         }
         else
         {
             mScaleX = 0x1000;
             mScaleY = 0x1000;
             mScaleZ = 0x1000;
-            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x28000, 0x50000, 0x204004, 0);
-            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+            mdCcAc_c.Init(this, 0x28000, 0x50000, 0x204004, 0);
+            mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
         }
     }
 
@@ -339,7 +332,7 @@ void daWbm_c::StateDrop()
     spawnPos.z = z;
     dActor_c::Spawn(ACTOR_WATERBOMB, 1, spawnPos, 0, mAreaId, -1)->mHorzSpeed = 0;
     mStateTimer = 0x96;
-    func_0201267c(0xd8, &mCamSpacePosX);
+    func_0201267c(0xd8, &mCamSpacePos);
 }
 
 // @symbol _ZN7daWbm_c11StateBounceEv
@@ -406,7 +399,7 @@ int daWbm_c::func_ov098_0213b6e0()
     Vector3 pos;
     u32 otherID = mdCcAc_c.otherOwner;
     if (otherID != 0) {
-        dActor_c *other = dActor_c::FindWithID(otherID);
+        Player *other = static_cast<Player *>(dActor_c::FindWithID(otherID));
         if (other != 0) {
             u16 actorID = other->actorID;
             /* Tested as a flag first: tested inline, or as a switch, the
@@ -416,10 +409,10 @@ int daWbm_c::func_ov098_0213b6e0()
                 pos.x = mPosX;
                 pos.y = mPosY;
                 pos.z = mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((Player *)other, &pos, 1, 0xc000, 1, 0, 1);
+                other->Hurt(pos, 1, 0xc000, 1, 0, 1);
                 if (mVariant == 1) {
-                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1c, mPosX, mPosY, mPosZ);
-                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1d, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(0x1c, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(0x1d, mPosX, mPosY, mPosZ);
                     Burst();
                     return 1;
                 }
@@ -445,15 +438,15 @@ void daWbm_c::Burst()
     for (i = 0; i < 5; i++) {
         dActor_c *frag =
             dActor_c::Spawn(ACTOR_WATERBOMB, 2, mPos, (const Vector3_16 *)0, mAreaId, -1);
-        frag->unk_0a4 = 0;
+        frag->mSpeedX = 0;
         frag->mVertSpeed = 0x14000;
-        frag->unk_0ac = 0;
+        frag->mSpeedZ = 0;
         frag->mHorzSpeed = 0x14000;
         frag->mPrevAngleX = 0;
         frag->mPrevAngleY = data_ov098_0213bf90[i];
         frag->mPrevAngleZ = 0;
     }
-    func_0201267c(0xda, &mCamSpacePosX);
+    func_0201267c(0xda, &mCamSpacePos);
     MarkForDestruction();
 }
 
@@ -467,9 +460,7 @@ void daWbm_c::func_ov098_0213b584()
     mShadowMat = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mModel.mat4x3 = data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel, &mShadowMat,
-        mScaleX * 0xa0, 0x3e8000, 6);
+    DropShadowRadHeight(mShadowModel, mShadowMat, mScaleX * 0xa0, 0x3e8000, 6);
 }
 
 // @symbol _ZN7daWbm_c4LandEv
@@ -483,5 +474,5 @@ void daWbm_c::Land()
     mVertSpeed = 0;
     mHorzSpeed = 0;
     mBouncePhase = 0;
-    func_0201267c(0xd9, &mCamSpacePosX);
+    func_0201267c(0xd9, &mCamSpacePos);
 }

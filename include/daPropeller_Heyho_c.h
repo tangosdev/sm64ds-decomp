@@ -12,7 +12,7 @@
  *
  *     0x110 dCcAc_c         0x34   -> 0x144
  *     0x144 dBgCh_Actr               0x1bc  -> 0x300
- *     0x300 ModelAnim                  0x64   -> 0x364
+ *     0x300 dExtAnmModel_c                  0x64   -> 0x364
  *     0x364 dExtShadowModel_c                0x28   -> 0x38c
  *
  * Member NAMES are the ones this header already used -- a rebase should not
@@ -28,15 +28,13 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daPropeller_Heyho_c : dEnemyBase_c {
     /* What mCurrentState points at. ChangeState writes the pointer and calls
@@ -50,7 +48,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
 
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
-    ModelAnim                    mModelAnim;            /* 0x300 */
+    dExtAnmModel_c mAnmModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
     /* 0x30-byte block copy from data_020a0e68 in func_ov070_02120070; that
        helper then passes it to DropShadowRadHeight. Left as twelve words
@@ -126,16 +124,12 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     int func_ov070_0211f48c();
     int func_ov070_0211f62c();
     int func_ov070_0211f6e0();
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 /* Inline destructor is not the key function; OnYoshiTryEat is the first
  * out-of-line virtual, so this TU emits the vtable. The factory is
- * `return new daPropeller_Heyho_c()`; the leaf size_t operator new
- * forwards to `_ZN7fBase_cnwEj` until #2570's fBase overload lands. */
+ * `return new daPropeller_Heyho_c()`, which calls the inherited
+ * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 extern int _ZTV19daPropeller_Heyho_c[];
 
 #ifndef SM64DS_PLATFORM_PC

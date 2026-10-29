@@ -4,8 +4,6 @@
 #include "dBgActor_c.h"
 #include "dExtShadowModel_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* ROM-proven class identity: _ZTI16daObjFm_Battan_c and
  * _ZTS16daObjFm_Battan_c at ov023:0x02111fa0/0x02111fac. ov023 is
  * SQUASHER(84), not a BoB/WF/BitDW actor. Fm is the fire_mt stage (the ROM
@@ -27,18 +25,10 @@ struct daObjFm_Battan_c : dBgActor_c {
     virtual int Behavior();
     virtual int Render();
 
-    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
-       Parameter is unsigned long (size_t on this ABI). `return new`
-       relocates to `_Znwm` without this. */
-    static void *operator new(size_t size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
-
 private:
     /* The class ownership and call targets are proven. These readable private
      * spellings are inferred aliases; no original symbol strings survive. */
-    int UpdateShadow();
+    void UpdateShadow();
     void UpdateModelTransform();
 };
 

@@ -3,13 +3,11 @@
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /* Spindel (actor 163 DONGURU). RTTI ov025:0x02113730 names `7daDgr_c`.
  * g_profile_DONGURU (ov025:0x0211373c) is this class's registry descriptor.
@@ -22,12 +20,12 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * then `_ZTV10dBgActor_c` -- one intermediate-free inlined base.
  *
  * SIZE IS 0x334 (820 decimal), THE LITERAL THE FACTORY PASSES TO operator new.
- * The factory is `return new daDgr_c()`: leaf `operator new(unsigned long)`
- * forwards `_ZN7fBase_cnwEj`, the implicit ctor calls `dBgActor_c()` and
+ * The factory is `return new daDgr_c()`: the inherited fBase_c::operator new
+ * (`_ZN7fBase_cnwEm`) allocates, the implicit ctor calls `dBgActor_c()` and
  * stores `_ZTV7daDgr_c`. No dedicated `daDgr_c()` body exists in the ROM.
  *
  * MEMBERS. dBgActor_c ends at 0x320; daDgr_c adds 0x14 more bytes and destructs
- * none of them (func_ov025_021111a0 tears down only dBgActor_c's own Model and
+ * none of them (func_ov025_021111a0 tears down only dBgActor_c's own dExtSimpleModel_c and
  * dBgW_KcMbg, then chains to dActor_c -- nothing at 0x320 or later).
  * That means everything from 0x320 to 0x334 is POD, read from InitResources
  * (func_ov025_021117dc) and Behavior (func_ov025_021113f0):
@@ -67,18 +65,11 @@ struct daDgr_c : dBgActor_c {
     s32 mBasePosY;
     s16 mAngleXSpeed;
     u16 mPhaseTimer;
-    s8  mRollStage;
-    u8  mRollDir;
-    u8  pad_32a[0x2];
+    s8 mRollStage;
+    u8 mRollDir;
+    u8 pad_32a[0x2];
     u32 mDustParticle1;
     u32 mDustParticle2;
-
-    /* Leaf allocator until #2570 merges a shared fBase_c::operator new.
-       `unsigned long` is size_t on this ABI; `unsigned int` is illegal. */
-    static void *operator new(size_t size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
     /* --- vtable, in ROM order. Do not reorder. ---
      * DECLARED INLINE, AND FIRST. This is measured against the cartridge, not
@@ -88,7 +79,7 @@ struct daDgr_c : dBgActor_c {
      * class body; the out-of-line form emits D2, D0, D1 plus a homeless D2 and
      * fails linkcheck's ROM-ascending .text audit. The body is empty because
      * this class owns no member with a destructor of its own -- the compiler
-     * emits the two vtable stores and dBgActor_c's Model / dBgW_KcMbg
+     * emits the two vtable stores and dBgActor_c's dExtSimpleModel_c / dBgW_KcMbg
      * teardowns from the base clause alone.
      *
      * (This header previously declared it out of line, reasoning by analogy
@@ -108,14 +99,14 @@ struct daDgr_c : dBgActor_c {
 
     /* --- overrides of inherited fBase_c slots. Each takes its base's index
      *     (see include/fBase_c.h for the full 32-slot table). --- */
-    virtual s32 InitResources();       /* slot 0 */
-    virtual s32 CleanupResources();    /* slot 3 */
-    virtual s32 Behavior();            /* slot 6 */
-    virtual s32 Render();              /* slot 9 */
+    virtual s32 InitResources();    /* slot 0 */
+    virtual s32 CleanupResources(); /* slot 3 */
+    virtual s32 Behavior();         /* slot 6 */
+    virtual s32 Render();           /* slot 9 */
 
-    int func_ov025_0211123c();
-    void func_ov025_021112e0();
-    void func_ov025_02111344();
+    int EnableClsnNearEgg();
+    void UpdateClsnMatrix();
+    void UpdateModelMatrix();
 
     /* slot 31 (Kill) is NOT overridden: the vtable word at data_ov025_02113760
        + 0x7c is 0x020ee55c, identical to dBgActor_c's own slot 31 -- confirmed

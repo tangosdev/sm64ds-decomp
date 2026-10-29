@@ -1,13 +1,13 @@
 _ZN14daObjSm_Lift_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN14daObjSm_Lift_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 _ZN14daObjSm_Lift_c15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x0211123c
-_ZN14daObjSm_Lift_c19func_ov018_02111278Ev kind:function(arm,size=0x84) addr:0x02111278
+_ZN14daObjSm_Lift_c20UpdateModelTransformEv kind:function(arm,size=0x84) addr:0x02111278
 _ZN14daObjSm_Lift_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021112fc
 _ZN14daObjSm_Lift_c6RenderEv kind:function(arm,size=0x28) addr:0x02111340
 _ZN14daObjSm_Lift_c8BehaviorEv kind:function(arm,size=0x34c) addr:0x02111368
 _ZN14daObjSm_Lift_c13InitResourcesEv kind:function(arm,size=0x134) addr:0x021116b4
-func_ov018_021117e8 kind:function(arm,size=0x1c) addr:0x021117e8
-func_ov018_02111804 kind:function(arm,size=0x14) addr:0x02111804
+_ZN14daObjSm_Lift_c19HandlePlayerContactEP8dActor_c kind:function(arm,size=0x1c) addr:0x021117e8
+_ZN14daObjSm_Lift_c18BeforeClsnCallbackEPvPS_P8dActor_c kind:function(arm,size=0x14) addr:0x02111804
 daObjSm_Lift_c_classInit kind:function(arm,size=0x30) addr:0x02111818
 _ZN10daPgMthr_cD1Ev kind:function(arm,size=0x50) addr:0x02111848
 _ZN10daPgMthr_cD0Ev kind:function(arm,size=0x64) addr:0x02111898

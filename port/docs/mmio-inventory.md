@@ -69,13 +69,13 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 - `src/_ZN4cstd3divEii.c:5` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
 - `src/_ZN4cstd3modEii.c:5` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
 - `src/_ZN4cstd4ldivEii.c:4` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
-- `src/_ZN4cstd4sqrtEy.c:9` — `while(*(volatile unsigned short*)0x40002b0 & 0x8000);`
-- `src/func_02013f4c.c:89` — `while ((int)*(volatile u16*)0x4000006 >= 0xc0) {}`
-- `src/func_02013f4c.c:90` — `while ((int)*(volatile u16*)0x4000006 < 0xc0) {}`
-- `src/func_02049018.c:17` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000);`
-- `src/func_02049018.c:18` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000);`
+- `src/cstd_sqrt.cpp:9` — `while(*(volatile unsigned short*)0x40002b0 & 0x8000);`
+- `src/func_02013f4c.cpp:93` — `while ((int)*(volatile u16*)0x4000006 >= 0xc0) {}`
+- `src/func_02013f4c.cpp:94` — `while ((int)*(volatile u16*)0x4000006 < 0xc0) {}`
+- `src/engine/sound/Sound2.cpp:87` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
+- `src/engine/sound/Sound2.cpp:89` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
 - `src/cstd.cpp:2` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
-- `src/func_02053380.c:31` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {}`
+- `src/unnamed/arm9/0205/func_02053320.c:32` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {`
 
 ## Address-passed sites (not lvalue-redirectable)
 
@@ -85,9 +85,9 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 - `src/engine/gx/G3X.cpp:83` — `func_0205a064((&data_02099fd0)[0], 0x4000330, 0, 0x10, 0, 0);`
 - `src/engine/gx/G3X.cpp:84` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4000360, 0, 0x50);`
 - `src/func_02055780.c:4` — `func_020553c0(0x4000400);`
-- `src/func_0205a290.c:35` — `DMAStartTransfer(data_020a6460.f4, base, 0x4000400, -0x3bc00000 | (len >> 2));`
-- `src/func_0205a290.c:38` — `DMAStartTransfer(data_020a6460.f4, base, 0x4000400, 0x84400000 | (len >> 2));`
-- `src/func_ov007_020c0078.c:3` — `* Camera-style perspective setup: writes the viewport register (0x4000580)`
+- `src/func_0205a290.cpp:39` — `DMAStartTransfer(data_020a6460.f4, base, 0x4000400, -0x3bc00000 | (len >> 2));`
+- `src/func_0205a290.cpp:42` — `DMAStartTransfer(data_020a6460.f4, base, 0x4000400, 0x84400000 | (len >> 2));`
+- `src/func_ov007_020c0078.cpp:8` — `* Camera-style perspective setup: writes the viewport register (0x4000580)`
 
 ## Hottest addresses
 

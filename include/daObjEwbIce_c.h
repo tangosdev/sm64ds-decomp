@@ -31,24 +31,24 @@
 struct daObjEwbIce_State;
 
 struct daObjEwbIce_c : dBgActor_c {
-    /* dBgActor_c's own last named fields (unk_31c/unk_31d) are u8, so its
-       sizeof (0x320) includes 2 bytes of pure tail padding to reach 4-byte
-       alignment. mwcc reuses that tail padding for a derived class's first
+    /* dBgActor_c's own last named fields (mMegaKnockback and
+       mMegaKnockbackTimer) are u8, so its sizeof (0x320) includes 2 bytes of
+       pure tail padding to reach 4-byte alignment. mwcc reuses that tail padding for a derived class's first
        member when that member's OWN alignment does not require the full
        round-up -- a byte field placed first lands at 0x31e, not 0x320,
        which the ROM disagrees with (Behavior reads [this, #0x320]).
        Claiming it explicitly here forces the state pointer to its real offset. */
-    u8  pad_31e[0x2];
+    u8 pad_31e[0x2];
     daObjEwbIce_State *mState; /* 0x320 */
-    u8  pad_324[0x4];
-    s32 mWobbleAmp;         /* 0x328 -- arena ice, reset to 0x400 each wobble frame */
-    u8  mVariant;           /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac; indexes the three ov073 file tables */
-    u8  mSpawnIndex;        /* 0x32d -- the per-variant global counter's value at spawn */
-    u8  pad_32e[0x2];
-    u16 mTimer;             /* 0x330 -- DecIfAbove0_Short */
-    u16 mWobblePhase;       /* 0x332 -- advanced by 0x800 while the arena ice wobbles */
-    s32 mBossID;            /* 0x334 -- arena ice copies daKing_Donketu_c::uniqueID */
-    s32 unk_338;            /* 0x338 -- InitResources clears it; no reader in this TU */
+    u8 pad_324[0x4];
+    s32 mWobbleAmp; /* 0x328 -- arena ice, reset to 0x400 each wobble frame */
+    u8 mVariant; /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac; indexes the three ov073 file tables */
+    u8 mSpawnIndex; /* 0x32d -- the per-variant global counter's value at spawn */
+    u8 pad_32e[0x2];
+    u16 mTimer;       /* 0x330 -- DecIfAbove0_Short */
+    u16 mWobblePhase; /* 0x332 -- advanced by 0x800 while the arena ice wobbles */
+    s32 mBossID;      /* 0x334 -- arena ice copies daKing_Donketu_c::uniqueID */
+    s32 unk_338;      /* 0x338 -- InitResources clears it; no reader in this TU */
 
     /* --- vtable --- */
     virtual ~daObjEwbIce_c();
@@ -60,12 +60,25 @@ struct daObjEwbIce_c : dBgActor_c {
        declared out of line and defined identically in both D1Ev.cpp and
        D0Ev.cpp, so those two TUs keep emitting the vtable -- checked with
        objisolate, not assumed. */
-    virtual void Kill();              /* slot 31 */
+    virtual void Kill(); /* slot 31 */
 
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* State handlers, reached through the daObjEwbIce_State records. */
+    int StateSettled_Update();
+    int StateSettled_Enter();
+    int StateArena_Update();
+    int StateArena_Enter();
+    int StateSink_Update();
+    int StateSink_Enter();
+    int StateReport_Update();
+    int StateReport_Enter();
+    int SetState(daObjEwbIce_State *);
+    void OnStoodOn(dActor_c *);
+    static void StoodOnCallback(dBgW *, daObjEwbIce_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -75,38 +88,38 @@ typedef char daObjEwbIce_c_size_must_be_0x33c[sizeof(daObjEwbIce_c) == 0x33c ? 1
 
 #else
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 /* The C spelling of the same object, flat. Retained for any leftover C
    translation unit, same arrangement as include/dExtShadowModel_c.h. */
 struct daObjEwbIce_c {
-    u8  pad_000[0xc];
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    u8  pad_092[0x42];
-    Model mModel;            /* 0x0d4 */
+    u8 pad_000[0xc];
+    u16 mActorID; /* 0x00c */
+    u8 pad_00e[0x4e];
+    s32 mPosX; /* 0x05c */
+    s32 mPosY; /* 0x060 */
+    s32 mPosZ; /* 0x064 */
+    u8 pad_068[0x24];
+    s16 mAngleX; /* 0x08c */
+    s16 mAngleY; /* 0x08e */
+    s16 mAngleZ; /* 0x090 */
+    u8 pad_092[0x42];
+    dExtSimpleModel_c mModel; /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~daObjEwbIce_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x34];
-    void *mState;           /* 0x320 */
-    u8  pad_324[0x4];
-    s32 mWobbleAmp;         /* 0x328 */
-    u8  mVariant;           /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac */
-    u8  mSpawnIndex;        /* 0x32d */
-    u8  pad_32e[0x2];
-    u16 mTimer;             /* 0x330 */
-    u16 mWobblePhase;       /* 0x332 */
-    s32 mBossID;            /* 0x334 */
-    s32 unk_338;            /* 0x338 */
+    dBgW_KcMbg mMeshCollider; /* 0x124 */
+    u8 pad_2ec[0x34];
+    void *mState; /* 0x320 */
+    u8 pad_324[0x4];
+    s32 mWobbleAmp; /* 0x328 */
+    u8 mVariant;    /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac */
+    u8 mSpawnIndex; /* 0x32d */
+    u8 pad_32e[0x2];
+    u16 mTimer;       /* 0x330 */
+    u16 mWobblePhase; /* 0x332 */
+    s32 mBossID;      /* 0x334 */
+    s32 unk_338;      /* 0x338 */
 };
 
 #endif /* __cplusplus */

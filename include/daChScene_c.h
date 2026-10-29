@@ -49,8 +49,6 @@
 #ifdef __cplusplus
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* daChScene_c is a real dActor_c, like every other actor in this family
  * (daChRoom_c_Spawn's neighbor, daBar_c_classInit, and daCamTag_c_Spawn; the
  * bar factory's historical alias was InvisiblePole_Spawn) --
@@ -65,7 +63,7 @@ struct daChScene_c : dActor_c {
        -mAngleY and X by -mAngleX, then inverts in place -- so every Behavior
        test runs in the door's own frame and the box tests are plain axis
        comparisons. */
-    Matrix4x3 mInvMat;            /* 0x0d4 */
+    Matrix4x3 mInvMat; /* 0x0d4 */
 
     /* MEASURED -- INLINE ON PURPOSE, do not move this body out of line.
      * Out of line, mwcc emits D2, D0, D1; the ROM has D1 at ov002 0x020b09b0
@@ -89,12 +87,8 @@ struct daChScene_c : dActor_c {
     virtual s32 Render();
     virtual void OnPendingDestroy();
 
-    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
-       Parameter is size_t (unsigned long on this compiler). `return new`
-       relocates to `_Znwm` without this. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* Store the exit band and load the level param1 names. */
+    void LoadDestinationLevel();
 };
 
 #ifndef SM64DS_PLATFORM_PC

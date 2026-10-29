@@ -49,63 +49,63 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_021339fcEv",
+      "symbol": "_ZN10daHyuhyu_c17HandleCylinderHitEv",
       "address": "0x021339fc",
       "size": "0x00000270",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_021339fcEv.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_02133c6cEv",
+      "symbol": "_ZN10daHyuhyu_c16StateGustFlyMainEv",
       "address": "0x02133c6c",
       "size": "0x000000b0",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_02133c6cEv.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_02133d1cEv",
+      "symbol": "_ZN10daHyuhyu_c16StateGustFlyInitEv",
       "address": "0x02133d1c",
       "size": "0x00000014",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_02133d1cEv.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_02133d30Ev",
+      "symbol": "_ZN10daHyuhyu_c13StateBlowMainEv",
       "address": "0x02133d30",
       "size": "0x000001f4",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_02133d30Ev.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_02133f24Ev",
+      "symbol": "_ZN10daHyuhyu_c13StateBlowInitEv",
       "address": "0x02133f24",
       "size": "0x0000003c",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_02133f24Ev.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_02133f60Ev",
+      "symbol": "_ZN10daHyuhyu_c13StateWaitMainEv",
       "address": "0x02133f60",
       "size": "0x000000ac",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_02133f60Ev.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_0213400cEv",
+      "symbol": "_ZN10daHyuhyu_c13StateWaitInitEv",
       "address": "0x0213400c",
       "size": "0x00000038",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_0213400cEv.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_02134044EP16daHyuhyu_c_State",
+      "symbol": "_ZN10daHyuhyu_c8SetStateEP16daHyuhyu_c_State",
       "address": "0x02134044",
       "size": "0x00000050",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_02134044EP16daHyuhyu_c_State.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN10daHyuhyu_c19func_ov091_02134094Ev",
+      "symbol": "_ZN10daHyuhyu_c20UpdateModelTransformEv",
       "address": "0x02134094",
       "size": "0x00000074",
       "legacy_source": "src/_ZN10daHyuhyu_c19func_ov091_02134094Ev.c",
@@ -246,7 +246,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold _ZN10daHyuhyu_c19func_ov091_021339fcEv and the one that held _ZN10daHyuhyu_c19func_ov091_02133c6cEv; kept the first during generation. Resolution: Calls now use the inherited fBase_c::MarkForDestruction declaration.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold _ZN10daHyuhyu_c19func_ov091_021339fcEv and the one that held _ZN10daHyuhyu_c19func_ov091_02133d30Ev; kept the first during generation. Resolution: The TU uses one void(u32, void *) declaration.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold _ZN10daHyuhyu_c19func_ov091_021339fcEv and the one that held _ZN10daHyuhyu_c19func_ov091_02133d30Ev; kept the first during generation. Resolution: Calls now use dActor_c::Spawn from dActor_c.h.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN10daHyuhyu_c19func_ov091_02133f24Ev and the one that held _ZN10daHyuhyu_c19func_ov091_0213400cEv; kept the first during generation. Resolution: The TU uses one ABI declaration with ModelAnim *, BCA_File *, int flags, int speed and u16 startFrame.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN10daHyuhyu_c19func_ov091_02133f24Ev and the one that held _ZN10daHyuhyu_c19func_ov091_0213400cEv; kept the first during generation. Resolution: The TU uses one ABI declaration with dExtAnmModel_c *, BCA_File *, int flags, int speed and u16 startFrame.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov091_02135684' differs between the legacy file that used to hold _ZN10daHyuhyu_c19func_ov091_0213400cEv and the one that held _ZN10daHyuhyu_c16CleanupResourcesEv; kept the first during generation. Resolution: The TU consistently declares this animation handle as SharedFilePtr.",
     "Hand-assembled: tubuild create generated the nineteen class-labelled functions; the zero-gap daHyuhyu_c_classInit factory was folded in by hand, following the ov091 sibling d_a_linelift2.cpp.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
@@ -470,28 +470,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -507,7 +487,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "_ZN10daHyuhyu_c19func_ov091_02133d30Ev builds two Vector3 locals and _ZN10daHyuhyu_c19func_ov091_02133f60Ev, _ZN10daHyuhyu_c19func_ov091_02133c6cEv and _ZN10daHyuhyu_c19func_ov091_02134094Ev one each; destroying them at scope exit re-emits Vector3's empty inline destructor as vague linkage. Every call is inlined away -- all twenty functions byte-match -- and the cartridge owns the four-byte bx lr at arm9:0x020072c0."
+      "reason": "_ZN10daHyuhyu_c13StateBlowMainEv builds two Vector3 locals and _ZN10daHyuhyu_c13StateWaitMainEv, _ZN10daHyuhyu_c16StateGustFlyMainEv and _ZN10daHyuhyu_c20UpdateModelTransformEv one each; destroying them at scope exit re-emits Vector3's empty inline destructor as vague linkage. Every call is inlined away -- all twenty functions byte-match -- and the cartridge owns the four-byte bx lr at arm9:0x020072c0."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -919,19 +899,19 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@569",
+      "from": "@674",
       "to": "@547",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; dropping the dead named-parameter typedef and hold declarations and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@570",
+      "from": "@675",
       "to": "@545",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; dropping the dead named-parameter typedef and hold declarations and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@571",
+      "from": "@676",
       "to": "@549",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; dropping the dead named-parameter typedef and hold declarations and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }
   ]
 }

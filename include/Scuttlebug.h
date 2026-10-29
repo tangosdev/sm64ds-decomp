@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -29,13 +29,12 @@
  * is the compiler-facing compatibility name; config/arm9/overlays/ov071/symbols.txt
  * deliberately aliases its vtable view (_ZTV10Scuttlebug) to the cartridge's
  * _ZTV7daSpd_c address.  The alias is vtable-only: _ZTS/_ZTI are named under the
- * cartridge spelling alone, so a TU that owns the key function emits
- * _ZTS10Scuttlebug and _ZTI10Scuttlebug with no home in the ROM.  That is
- * survivable on the text-only route and fatal to an intact-object one. */
+ * cartridge spelling alone.  d_a_spd.cpp compiles this class with RTTI off so
+ * the inline destructor does not emit homeless _ZTS10Scuttlebug / _ZTI10Scuttlebug. */
 struct Scuttlebug : dActor_c {
     /* Actor this bug copies its pose from, then clears when it lets go. */
     dActor_c *mParent;                       /* 0x0d0 */
-    ModelAnim mModelAnim;                    /* 0x0d4 */
+    dExtAnmModel_c mAnmModel;                /* 0x0d4 */
     dExtShadowModel_c mShadowModel;                /* 0x138 */
     dCcAc_c mdCcAc_c;  /* 0x160 */
     dBgCh_Actr mWithMeshClsn;              /* 0x194 */
@@ -62,12 +61,11 @@ struct Scuttlebug : dActor_c {
     u8  mCoinCount;                          /* 0x3aa */
     u8  pad_3ab[0x1];
 
-    /* Declared, not defined: ~Scuttlebug is the key function. ROM has D1
-       0x0211f000, D0 0x0211f048, no D2. src/_ZN10ScuttlebugD1Ev.cpp defines
-       it; objisolate keeps its .text and drops the homeless _ZTI/_ZTS10Scuttlebug.
-       An inline body would give those vague linkage in every TU. This TU's
-       licensed run is 0x0211f0a4..0x02120668. */
-    virtual ~Scuttlebug();            /* slots 16 (D1), 17 (D0) */
+    /* Inline: mwcc emits D1 then D0 and no D2, which is the cartridge pair
+       (0x0211f000, 0x0211f048). The body stays on this line so the header
+       field walk still sees the brace. d_a_spd.cpp compiles the class with
+       RTTI off, so the coined name does not emit _ZTI10Scuttlebug. */
+    virtual ~Scuttlebug() {} /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
     virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
@@ -114,11 +112,10 @@ struct Scuttlebug : dActor_c {
 typedef char Scuttlebug_size_must_be_0x3ac[sizeof(Scuttlebug) == 0x3ac ? 1 : -1];
 #endif
 
-/* ~Scuttlebug, the key function, owns the compiler-emitted definition of this
- * vtable, so to every other translation unit it is an ordinary external.
- * daSpd_c_classInit must store its public address point directly because the
- * measured factory calls fBase_c::operator new rather than a natural new; this
- * declaration only exposes that address to the factory seam. */
+/* OnYoshiTryEat is the key function once ~Scuttlebug is inline, so d_a_spd.cpp
+ * emits _ZTV10Scuttlebug and the manifest externalizes it: RTTI off leaves a
+ * zero typeinfo word where retail has _ZTI7daSpd_c. This declaration is the
+ * public address point. */
 extern int _ZTV10Scuttlebug[];
 
 #endif /* SCUTTLEBUG_H */

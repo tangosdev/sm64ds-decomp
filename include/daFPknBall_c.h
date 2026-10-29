@@ -32,44 +32,45 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
 
 struct daFPknBall_c : dEnemyBase_c {
-    dCcAc_c           mdCcAc_c;   /* 0x110 */
-    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
-    dExtShadowModel_c                  mShadowModel;          /* 0x300 */
-    Matrix4x3                    mShadowMat;            /* 0x328 -- translation only; the ball's position >> 3 */
-    struct Player *              mTargetPlayer;         /* 0x358 -- ClosestPlayer, refreshed every Behavior */
-    s32                          mTargetSpeed;          /* 0x35c -- what mHorzSpeed approaches; dActor_c.h names SpawnFireball's fourth argument unk35c; daFPkn_c passes 0xa000 */
-    s32                          mDistanceFlown;        /* 0x360 -- sum of mHorzSpeed each frame */
-    s32                          mMaxDistance;          /* 0x364 -- 0x5dc000 (1500 units) from InitResources */
-    s16                          mTargetAngleY;         /* 0x368 -- toward the player, else the current heading */
-    u16                          unk_36a;               /* 0x36a -- zeroed by InitResources, otherwise unused */
-    u8  pad_36c[0x1];
-    u8                           mVariant;              /* 0x36d -- param1 & 7; daFPkn_c spawns 3. Other than 0 and 4, InitResources sets vulnFlags 0x8000 and OnYoshiTryEat returns 5 */
-    u8                           mMirrored;             /* 0x36e -- when set, the effect and dust position uses -x; never written by this class */
-    u8  pad_36f[0x1];
-    u32                          mTrailEffect;          /* 0x370 -- last result of Particle::System::NewUnkCallback818, passed back in each frame */
-    void *                       mSparkEffect;          /* 0x374 -- last result of Particle::System::New, passed back in each frame */
+    dCcAc_c mdCcAc_c;               /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x144 */
+    dExtShadowModel_c mShadowModel; /* 0x300 */
+    Matrix4x3 mShadowMat;           /* 0x328 -- translation only; the ball's position >> 3 */
+    struct Player *mTargetPlayer;   /* 0x358 -- ClosestPlayer, refreshed every Behavior */
+    s32 mTargetSpeed; /* 0x35c -- what mHorzSpeed approaches; dActor_c.h names SpawnFireball's fourth argument targetSpeed; daFPkn_c passes 0xa000 */
+    s32 mDistanceFlown; /* 0x360 -- sum of mHorzSpeed each frame */
+    s32 mMaxDistance;   /* 0x364 -- 0x5dc000 (1500 units) from InitResources */
+    s16 mTargetAngleY;  /* 0x368 -- toward the player, else the current heading */
+    u16 unk_36a;        /* 0x36a -- zeroed by InitResources, otherwise unused */
+    u8 pad_36c[0x1];
+    u8 mVariant; /* 0x36d -- param1 & 7; daFPkn_c spawns 3. Other than 0 and 4, InitResources sets vulnFlags 0x8000 and OnYoshiTryEat returns 5 */
+    u8 mMirrored; /* 0x36e -- when set, the effect and dust position uses -x; never written by this class (daTrs_c sets it from its own mirrored flag) */
+    u8 pad_36f[0x1];
+    u32 mTrailEffect; /* 0x370 -- last result of Particle::System::NewUnkCallback818, passed back in each frame */
+    /* last result of Particle::System::New, passed back in each frame */
+    void *mSparkEffect; /* 0x374 */
 
     /* --- vtable --- */
     virtual ~daFPknBall_c();
 
-    virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual s32 OnYoshiTryEat(); /* slot 18 */
 
     int Behavior();
     int InitResources();
     int Render();
 
-    void func_ov002_020f88ec();
-    void func_ov002_020f897c();
-    void func_ov002_020f8b24();
+    void TryDropCoin();
+    void TryDropItem();
+    void UpdateVisuals();
 };
 
 #ifndef SM64DS_PLATFORM_PC

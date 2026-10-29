@@ -78,7 +78,7 @@ sentinel hides exactly the signal you need. Use `tools/dtor_diff.py`, which prin
 sizes and the two disassemblies side by side:
 
 ```sh
-python tools/dtor_diff.py src/_ZN5ModelD1Ev.cpp _ZN5ModelD1Ev 0x02016d20 0x38 arm9
+python tools/dtor_diff.py src/_ZN17dExtSimpleModel_cD1Ev.cpp _ZN17dExtSimpleModel_cD1Ev 0x02016d20 0x38 arm9
 # pin 2004/b56   ROM 0x38   candidate 0x30   delta -8 bytes
 ```
 
@@ -88,7 +88,7 @@ back if it does not match. Nothing is kept that did not reproduce the ROM.
 
 ## 2. A delete-expression emits no null test at this pin
 
-`Model::~Model` frees one owned buffer. `delete (char *)transformsBuf` compiles and is
+`dExtSimpleModel_c::~dExtSimpleModel_c` frees one owned buffer. `delete (char *)transformsBuf` compiles and is
 **8 bytes short**: mwcc calls `operator delete` unconditionally where the ROM tests the
 pointer first. Writing the test out is what matches:
 
@@ -160,16 +160,16 @@ derived classes rely on:
 
 ## 4. objisolate cannot yet isolate a multiple-inheritance destructor
 
-`ModelAnim : Model, Animation` and its derivatives fail eligibility with:
+`dExtAnmModel_c : dExtSimpleModel_c, Animation` and its derivatives fail eligibility with:
 
 ```sh
-isolate: _ZTV9ModelAnim: unexpected reloc type=2 addend=44
+isolate: _ZTV14dExtAnmModel_c: unexpected reloc type=2 addend=44
 ```
 
 `tools/objisolate.py` corrects the primary vptr store, whose addend is
 `VTABLE_PREAMBLE` = 8 (offset-to-top + typeinfo), because the ROM's `_ZTV<C>` symbol IS
 the slot array while mwcc's addresses the object's start. A secondary base's vptr points
-further in -- 44 for `ModelAnim`, i.e. 8 + 7 slots + the secondary preamble -- and
+further in -- 44 for `dExtAnmModel_c`, i.e. 8 + 7 slots + the secondary preamble -- and
 objisolate refuses rather than guessing.
 
 **The refusal is correct as written.** The comment above `VTABLE_PREAMBLE` records what
@@ -178,24 +178,24 @@ bytes high across 76 functions and 34 modules, caught by nothing but the byte co
 The generalisation (`_ZTV<C> + (addend - 8)`) is the same arithmetic the primary already
 uses and is verifiable the same way, but it belongs in its own PR with its own evidence.
 
-Until then `ModelAnim`, `ModelAnim2` and `BlendModelAnim` byte-match as real destructors
+Until then `dExtAnmModel_c`, `dExtAnm2Model_c` and `dExtBlendAnmModel_c` byte-match as real destructors
 and **cannot be enrolled** -- migrating them makes them ineligible, which is a
 regression, so they are deliberately left as C files.
 
-## 5. `config/rombuild-exclude.txt` is right about Model, and now there is a number
+## 5. `config/rombuild-exclude.txt` is right about dExtSimpleModel_c, and now there is a number
 
 The exclude list says its C++ destructor entries "linked cleanly but produced the wrong
 bytes ... where a deleting/complete variant resolves differently in a real relink than it
 does when linkcheck verifies the match in isolation". That was tested again here, because
-a real `Model::~Model()` is a different object from the hand-written C file and might
+a real `dExtSimpleModel_c::~dExtSimpleModel_c()` is a different object from the hand-written C file and might
 plausibly have resolved differently.
 
-It does not. With `_ZN5ModelD1Ev` removed from the exclude list:
+It does not. With `_ZN17dExtSimpleModel_cD1Ev` removed from the exclude list:
 
 ```sh
-eligible          10805 -> 10806, gained _ZN5ModelD1Ev, lost nothing
+eligible          10805 -> 10806, gained _ZN17dExtSimpleModel_cD1Ev, lost nothing
 rombuild -j16     105/106 exact, 1 mismatching
-                  arm9  _ZN5ModelD1Ev  0x02016d20 size 0x38   1 word
+                  arm9  _ZN17dExtSimpleModel_cD1Ev  0x02016d20 size 0x38   1 word
 ```
 
 `build_pin.verify` returns `(True, '2004/b56')` for that same file, which is the whole
@@ -210,4 +210,4 @@ actor destructor calls into are real C++. The shape that reproduces from an empt
 is: a real base in the header, a virtual destructor, members whose types are real (or
 have no destructor), and no user logic in the ROM body. Where the ROM body *does* have
 logic it is usually one statement -- a handle released (`MeshCollider`), a buffer freed
-(`Model`), a list unlinked (`ShadowModel`).
+(`dExtSimpleModel_c`), a list unlinked (`ShadowModel`).

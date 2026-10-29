@@ -17,14 +17,14 @@
  *
  *     0x110 dCcAcPos_c  0x40   -> 0x150
  *     0x150 dBgCh_Actr  0x1bc  -> 0x30c
- *     0x30c ModelAnim   0x64   -> 0x370
+ *     0x30c dExtAnmModel_c   0x64   -> 0x370
  *     0x370 dExtShadowModel_c 0x28   -> 0x398
  *
  * and dEnemyBase_c's own 0x110 closes exactly on the first of them.
  *
  * Typing them absorbed four markers that were their insides:
  *   - unk_128 = mdCcAcPos_c.flags  (dCc_c +0x18)
- *   - mAnimation = the ModelAnim's dExtFrameCtrl_c base (+0x50)
+ *   - mAnimation = the dExtAnmModel_c's dExtFrameCtrl_c base (+0x50)
  *   - unk_364 = that dExtFrameCtrl_c's currFrame (+0x08); Behavior reads it as
  *     `>> 12`, the integer frame of a 20.12 fixed-point count
  *   - unk_368 = that dExtFrameCtrl_c's speed (+0x0c); Behavior copies mAnimSpeed
@@ -41,7 +41,7 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -58,7 +58,7 @@ struct daOwl_c : dEnemyBase_c {
 
     dCcAcPos_c mdCcAcPos_c;           /* 0x110 */
     dBgCh_Actr mWithMeshClsn;         /* 0x150 */
-    ModelAnim mModelAnim;             /* 0x30c */
+    dExtAnmModel_c mAnmModel;         /* 0x30c */
     dExtShadowModel_c mShadowModel;         /* 0x370 */
     Matrix4x3 mShadowMat;             /* 0x398 -- fed to DropShadowRadHeight */
     State *mCurrentState;             /* 0x3c8 */
@@ -74,7 +74,7 @@ struct daOwl_c : dEnemyBase_c {
     s32 unk_3e8;                      /* 0x3e8 -- per-state scratch, see d_a_owl.cpp */
     s16 mWanderAngleY;                /* 0x3ec -- heading the hover state steers to */
     u8  pad_3ee[2];
-    Fix12i mAnimSpeed;                /* 0x3f0 -- copied into mModelAnim.speed */
+    Fix12i mAnimSpeed;                /* 0x3f0 -- copied into mAnmModel.speed */
     u32 mSoundHandle;                 /* 0x3f4 -- Sound::PlayLong's returned handle */
 
     /* --- vtable --- */

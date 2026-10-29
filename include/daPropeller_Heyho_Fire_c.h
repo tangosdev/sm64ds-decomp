@@ -17,7 +17,7 @@
  *
  *     0x110 dCcAc_c         0x34   -> 0x144
  *     0x144 dBgCh_Actr               0x1bc  -> 0x300
- *     0x300 Model                      0x50   -> 0x350
+ *     0x300 dExtSimpleModel_c                      0x50   -> 0x350
  *
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
@@ -27,30 +27,30 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
 
 struct daPropeller_Heyho_Fire_c : dEnemyBase_c {
     /* What mCurrentState points at: two member-function pointers.
-       func_ov002_020fed2c calls mInit (when set) as it installs the state;
+       SetState calls mInit (when set) as it installs the state;
        Behavior calls mMain (when set). The one state's pair is
-       func_ov002_020fed18 / func_ov002_020fec94 (data_ov002_02111190). */
+       InitState0 / State0 (data_ov002_02111190). */
     struct State {
-        int (daPropeller_Heyho_Fire_c::*mInit)();       /* 0x00 */
-        int (daPropeller_Heyho_Fire_c::*mMain)();       /* 0x08 */
+        int (daPropeller_Heyho_Fire_c::*mInit)(); /* 0x00 */
+        int (daPropeller_Heyho_Fire_c::*mMain)(); /* 0x08 */
     };
 
-    dCcAc_c           mdCcAc_c;   /* 0x110 */
-    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
-    Model                        mModel;                /* 0x300 */
-    State                       *mCurrentState;         /* 0x350 */
-    s32                          mDeflected;            /* 0x354 -- set when a metal player deflected it; func_ov002_020fec94 then skips the player-hit test */
-    s32                          unk_358;               /* 0x358 */
+    dCcAc_c mdCcAc_c;         /* 0x110 */
+    dBgCh_Actr mWithMeshClsn; /* 0x144 */
+    dExtSimpleModel_c mModel; /* 0x300 */
+    State *mCurrentState;     /* 0x350 */
+    s32 mDeflected; /* 0x354 -- set when a metal player deflected it; State0 then skips the player-hit test */
+    s32 unk_358; /* 0x358 */
 
     /* --- vtable --- */
     virtual ~daPropeller_Heyho_Fire_c();
@@ -60,11 +60,18 @@ struct daPropeller_Heyho_Fire_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+    /* --- non-virtual --- */
+    void CheckPlayerHit();    /* ov002 0x020feb50 */
+    int State0();             /* ov002 0x020fec94 */
+    int InitState0();         /* ov002 0x020fed18 */
+    int SetState(State *);    /* ov002 0x020fed2c */
+    void UpdateModelMatrix(); /* ov002 0x020fed7c */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daPropeller_Heyho_Fire_c_size_must_be_0x35c[sizeof(daPropeller_Heyho_Fire_c) == 0x35c ? 1 : -1];
+typedef char
+    daPropeller_Heyho_Fire_c_size_must_be_0x35c[sizeof(daPropeller_Heyho_Fire_c) == 0x35c ? 1 : -1];
 #endif
 
 #endif /* DAPROPELLER_HEYHO_FIRE_C_H */

@@ -9,8 +9,8 @@
  * daObjKey_c_classInit_OBJ_KEY (0x02132828, historical alias Key_Spawn)
  * constructs the same types at the same offsets:
  *
- *     0x114 ModelAnim     0x64    -> 0x178
- *     0x178 Model         0x50    -> 0x1c8
+ *     0x114 dExtAnmModel_c     0x64    -> 0x178
+ *     0x178 dExtSimpleModel_c         0x50    -> 0x1c8
  *     0x1c8 dExtShadowModel_c   0x28    -> 0x1f0
  *     0x220 dCcAcPos_c    0x40    -> 0x260
  *     0x260 dBgCh_Actr    0x1bc   -> 0x41c
@@ -23,8 +23,8 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -33,8 +33,8 @@ struct daObjKey_c : dEnemyBase_c {
     /* No member name here is a recovered symbol; "coined" marks names given
        from the field's uses in this class's code. */
     Player      *mPlayer;           /* 0x110 coined: the Player collecting the key */
-    ModelAnim   mModelAnim;         /* 0x114 */
-    Model       mModel;             /* 0x178 */
+    dExtAnmModel_c mAnmModel;       /* 0x114 */
+    dExtSimpleModel_c mModel;       /* 0x178 */
     dExtShadowModel_c mShadowModel;       /* 0x1c8 */
     Matrix4x3   mShadowMatrix;      /* 0x1f0 coined: DropShadowRadHeight matrix */
     dCcAcPos_c  mdCcAcPos_c;        /* 0x220 */

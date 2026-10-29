@@ -18,20 +18,12 @@
  * then D0. The cartridge has no D2. The g_profile_* rows stay in
  * their own files.
  *
- * deslop leftovers:
- * - OnGroundPounded: `&mPosX` / `&other.mPosX` with no saved hitter
- *   pointer grew the function 0xf4 -> 0xf8 (dropped r8, added
- *   `sub sp, #4`). The `b` / `b + 0x5c` locals match.
- * - Behavior: `if ((mFlags & 8) != 0)` dropped movne/moveq/cmp and
- *   the this argument of func_ov095_021358cc. Size 0x124 -> 0x114.
- *   `(int)((mFlags & 8) != 0)` matches.
- * - InitResources: mMeshCollider.SetFile(Fix12<int> by value) grew
- *   the function 0x168 -> 0x174 and shifted the func_020393d4 call.
- *   The extern "C" int/pointer call matches.
- * - func_ov095_02135cdc / func_ov095_02135e90 keep their placeholder
- *   names: the veneer is stored into the mesh collider as a raw
- *   address, so it cannot be a member, and the ROM has no name for
- *   the tilt body it forwards to.
+ * What stays:
+ * - OnGroundPounded keeps separate locals for the hitter and its
+ *   position: mwcc holds them in r8 and r4. Spelling both as
+ *   &other.mPos recomputes the add, drops r8 and adds a stack adjust.
+ * - Behavior keeps the 0/1 temporary for the off-screen bit; a direct
+ *   bit test is three instructions shorter than the ROM.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -61,6 +53,7 @@ enum daObjSeesaw_c_AssetId {
 #include "Sound.h"
 #include "Player.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 
 /* Profile actor ids (symbols/profile_reconstruction_registry.json).
  * param1 on a PLAYER (0xbf) is the character; the low two bits index it. */
@@ -97,27 +90,21 @@ enum { kFileStride = 0xc };
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct SeesawModelFilePtr : SharedFilePtr {
-    u32 words[2];
     SeesawModelFilePtr(u32 fileID);
     ~SeesawModelFilePtr();
 };
 struct SeesawCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     SeesawCollisionFilePtr(u32 fileID);
     ~SeesawCollisionFilePtr();
 };
 
-extern "C" {
 extern int data_ov095_02136f58[];
 extern s16 data_02082214[];
-int Vec3_Dist(void *a, void *b);
-s16 Vec3_HorzAngle(void *a, void *b);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int yOffset);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *thiz, void *file, const Matrix4x3 *mat, int scale, short angY, void *clps);
+
+/* local extern: no shared header declares these. */
+extern "C" {
 void func_020393d4(void *clsn, void *callback);
 void func_020393c4(void *clsn, void *callback);
-void func_ov095_02135e90(void *collider, daObjSeesaw_c *self, dActor_c *other);
 }
 
 /* D1 stores this vtable, then dBgActor_c's (inlined), then destroys
@@ -125,18 +112,14 @@ void func_ov095_02135e90(void *collider, daObjSeesaw_c *self, dActor_c *other);
  * This class adds no member with a destructor. */
 // @symbol _ZN13daObjSeesaw_cD1Ev
 // @symbol _ZN13daObjSeesaw_cD0Ev
-daObjSeesaw_c::~daObjSeesaw_c()
-{
-}
+daObjSeesaw_c::~daObjSeesaw_c() {}
 
-/* Pound scale for the actor that hit the seesaw. data_ov095_02136f58 is
+/* Weight of the actor that hit or stands on the seesaw. data_ov095_02136f58 is
  * four fix12 weights indexed by param1 & 3 (the character on a player:
  * 0x1000, 0x800, 0x1800, 0x1000). A non-player keeps that weight. Mega
  * replaces it with kMegaPoundScale. */
-// @symbol func_ov095_0213579c
-extern "C" int func_ov095_0213579c(void *self, void *otherRaw)
-{
-    dActor_c *other = (dActor_c *)otherRaw;
+// @symbol _ZN13daObjSeesaw_c14GetActorWeightEP8dActor_c
+int daObjSeesaw_c::GetActorWeight(dActor_c *other) {
     int scale = data_ov095_02136f58[(int)other->param1 & 3];
     unsigned isPlayer = (unsigned)(other->actorID == ACTOR_PLAYER);
     if (isPlayer == 0)
@@ -149,21 +132,18 @@ extern "C" int func_ov095_0213579c(void *self, void *otherRaw)
 #pragma push
 #pragma opt_propagation off
 // @symbol _ZN13daObjSeesaw_c15OnGroundPoundedER8dActor_c
-void daObjSeesaw_c::OnGroundPounded(dActor_c &other)
-{
+void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
     /* b and bPos stay separate locals: mwcc keeps the hitter in r8 and
-     * its position in r4. Naming both &other.mPosX recomputes the add
-     * and drops r8, and the function grows by the stack adjust. */
-    char *a = (char *)this;
-    char *b = (char *)&other;
-    char *bPos = b + 0x5c;
-    int dist = Vec3_Dist(a + 0x5c, bPos);
-    s16 angle = Vec3_HorzAngle(a + 0x5c, bPos);
+     * its position in r4. */
+    dActor_c *b = &other;
+    Vector3 *bPos = &b->mPos;
+    int dist = Vec3_Dist(&mPos, bPos);
+    s16 angle = Vec3_HorzAngle(&mPos, bPos);
     int n, d, idx, prod, cur, v;
     s16 *pitch;
 
     mPoundedThisFrame = 1;
-    n = func_ov095_0213579c(a, b);
+    n = GetActorWeight(b);
     d = AngleDiff(angle, mAngleY);
     /* data_02082214 is interleaved cos, sin. (angle >> 4) * 2 + 1 is sine. */
     idx = ((u16)(s16)d >> 4) << 1;
@@ -184,20 +164,19 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other)
 }
 #pragma pop
 
-/* Spring *angle toward target by *speed. Behavior calls this with the
- * seesaw, &mAngleX, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3.
- * The first argument is unused; the caller still passes it. */
+/* Spring *angle toward target by *speed. Behavior calls this with
+ * &mAngleX, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3. It reads
+ * nothing from the seesaw itself. Returns 1 once the angle has settled. */
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov095_021358cc
-extern "C" int func_ov095_021358cc(int self, short *angle, short *speed, int target, short thresh, int accel, short mult)
-{
+// @symbol _ZN13daObjSeesaw_c11SpringAngleEPsS0_isis
+int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thresh, int accel,
+                               short mult) {
     short old = angle[0];
     angle[0] = old + speed[0];
     short now = angle[0];
-    if (now == target
-        || ((now - target) * (old - target) < 0
-            && speed[0] > -thresh && speed[0] < thresh)) {
+    if (now == target ||
+        ((now - target) * (old - target) < 0 && speed[0] > -thresh && speed[0] < thresh)) {
         angle[0] = target;
         speed[0] = 0;
         return 1;
@@ -212,20 +191,17 @@ extern "C" int func_ov095_021358cc(int self, short *angle, short *speed, int tar
 #pragma pop
 
 /* Model matrix from the actor angles, translation = position >> 3
- * (world fix12 to the model's units). mModel.mat4x3 is at this+0xf0. */
-// @symbol func_ov095_0213597c
-extern "C" void func_ov095_0213597c(char *raw)
-{
-    daObjSeesaw_c *seesaw = (daObjSeesaw_c *)raw;
-    Matrix4x3_FromRotationXYZExt(&seesaw->mModel.mat4x3, seesaw->mAngleX, seesaw->mAngleY, seesaw->mAngleZ);
-    seesaw->mModel.mat4x3.m[9] = seesaw->mPosX >> 3;
-    seesaw->mModel.mat4x3.m[10] = seesaw->mPosY >> 3;
-    seesaw->mModel.mat4x3.m[11] = seesaw->mPosZ >> 3;
+ * (world fix12 to the model's units). */
+// @symbol _ZN13daObjSeesaw_c17UpdateModelMatrixEv
+void daObjSeesaw_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 // @symbol _ZN13daObjSeesaw_c16CleanupResourcesEv
-int daObjSeesaw_c::CleanupResources()
-{
+int daObjSeesaw_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     (*(SharedFilePtr **)(data_ov095_021374a0 + mVariant * kFileStride))->Release();
@@ -234,15 +210,13 @@ int daObjSeesaw_c::CleanupResources()
 }
 
 // @symbol _ZN13daObjSeesaw_c6RenderEv
-int daObjSeesaw_c::Render()
-{
+int daObjSeesaw_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN13daObjSeesaw_c8BehaviorEv
-int daObjSeesaw_c::Behavior()
-{
+int daObjSeesaw_c::Behavior() {
     /* The 0/1 temporary is the ROM's movne/moveq/cmp. A direct test
      * of the bit is three instructions shorter. */
     int offScreen = (int)((mFlags & kFlagOffScreen) != 0);
@@ -252,7 +226,7 @@ int daObjSeesaw_c::Behavior()
         return 1;
     }
     if (mPoundedThisFrame == 0) {
-        func_ov095_021358cc((int)this, &mAngleX, &mAngleXSpeed, 0, 6, 3, 3);
+        SpringAngle(&mAngleX, &mAngleXSpeed, 0, 6, 3, 3);
     }
     {
         int s = mAngleXSpeed;
@@ -266,133 +240,137 @@ int daObjSeesaw_c::Behavior()
         mAngleX = kMaxPitch;
     if (mAngleX < -kMaxPitch)
         mAngleX = -kMaxPitch;
-    func_ov095_0213597c((char *)this);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    UpdateModelMatrix();
+    if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
     mPoundedThisFrame = 0;
     return 1;
 }
 
 // @symbol _ZN13daObjSeesaw_c13InitResourcesEv
-int daObjSeesaw_c::InitResources()
-{
+int daObjSeesaw_c::InitResources() {
     unsigned char idx;
     int f;
     switch (actorID) {
-        case ACTOR_SEESAW: mVariant = 0; break;
-        case ACTOR_BOMB_SEESAW: mVariant = 1; break;
-        case ACTOR_KM1_SEESAW: mVariant = 2; break;
-        case ACTOR_KM2_YOKOSEESAW: mVariant = 3; break;
-        case ACTOR_KM3_SEESAW: mVariant = 4; break;
-        case ACTOR_KM3_YOKOSEESAW: mVariant = 5; break;
-        case ACTOR_RC_SEESAW: mVariant = 6; break;
+    case ACTOR_SEESAW:
+        mVariant = 0;
+        break;
+    case ACTOR_BOMB_SEESAW:
+        mVariant = 1;
+        break;
+    case ACTOR_KM1_SEESAW:
+        mVariant = 2;
+        break;
+    case ACTOR_KM2_YOKOSEESAW:
+        mVariant = 3;
+        break;
+    case ACTOR_KM3_SEESAW:
+        mVariant = 4;
+        break;
+    case ACTOR_KM3_YOKOSEESAW:
+        mVariant = 5;
+        break;
+    case ACTOR_RC_SEESAW:
+        mVariant = 6;
+        break;
     }
     idx = mVariant;
-    f = (int)Model::LoadFile(**(SharedFilePtr **)(data_ov095_021374a0 + idx * kFileStride));
+    f = (int)dExtSimpleModel_c::LoadFile(
+        **(SharedFilePtr **)(data_ov095_021374a0 + idx * kFileStride));
     mModel.SetFile((BMD_File *)f, 1, -1);
-    func_ov095_0213597c((char *)this);
+    UpdateModelMatrix();
     UpdateClsnPosAndRot();
     {
         unsigned char i = mVariant;
         f = (int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov095_021374a4 + i * kFileStride));
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, (void *)f, &mClsnMat, 0x1000, mAngleY,
-            *(void **)(data_ov095_021374a8 + i * kFileStride));
+        mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
+                              *(CLPS_Block *)(*(void **)(data_ov095_021374a8 + i * kFileStride)));
     }
     /* func_020393d4 stores dBgW+0x18 (beforeClsnCallback). func_020393c4
-     * stores dBgW+0x1c, the stood-on callback: func_ov095_02135e90, the
-     * veneer into the tilt helper below. Both are calls in the ROM; the
+     * stores dBgW+0x1c, the stood-on callback: StoodOnCallback, the
+     * veneer into OnStoodOn below. Both are calls in the ROM; the
      * bodies are a single word store. */
     func_020393d4(&mMeshCollider, (int *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, func_ov095_02135e90);
+    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
     return 1;
 }
 
 /* Stood-on tilt. The mesh collider calls this while another actor rests
  * on the seesaw: mAngleX keeps integrating mAngleXSpeed, and the stander's
- * weight (func_ov095_0213579c) and off-centre distance drive mAngleXSpeed
+ * weight (GetActorWeight) and off-centre distance drive mAngleXSpeed
  * toward a clamp. Unlike OnGroundPounded it does not kick the pitch
  * directly; it accelerates the tilt speed, hard when pushing into the
  * current lean, soft when pushing out of it. */
-// @symbol func_ov095_02135cdc
-extern "C" void func_ov095_02135cdc(daObjSeesaw_c *self, dActor_c *other)
-{
+// @symbol _ZN13daObjSeesaw_c9OnStoodOnEP8dActor_c
+void daObjSeesaw_c::OnStoodOn(dActor_c *other) {
     Vector3 *op = &other->mPos;
-    int dist = Vec3_Dist(&self->mPos, op);
-    int ang = Vec3_HorzAngle(&self->mPos, op);
-    self->mPoundedThisFrame = 1;
-    int r = func_ov095_0213579c(self, other);
+    int dist = Vec3_Dist(&mPos, op);
+    int ang = Vec3_HorzAngle(&mPos, op);
+    mPoundedThisFrame = 1;
+    int r = GetActorWeight(other);
 
-    self->mAngleX += self->mAngleXSpeed;
+    mAngleX += mAngleXSpeed;
     int x = FX_MUL(dist, r);
-    s16 d = (s16)AngleDiff(ang, self->mAngleY);
+    s16 d = (s16)AngleDiff(ang, mAngleY);
     int y = FX_MUL(x, data_02082214[((u16)d >> 4) * 2 + 1]);
 
     int acc;
-    if (self->mAngleXSpeed * x < 0)
+    if (mAngleXSpeed * x < 0)
         acc = FX_MUL(y, 0xa3LL);
     else
         acc = FX_MUL(y, 0x51LL);
 
     s16 dv = acc / 4096;
-    self->mAngleXSpeed += dv;
+    mAngleXSpeed += dv;
     s16 lim = FX_MUL(r, 0x32000LL) / 4096;
-    if (self->mAngleXSpeed > lim)
-        self->mAngleXSpeed = lim;
-    if (self->mAngleXSpeed < -lim)
-        self->mAngleXSpeed = -lim;
+    if (mAngleXSpeed > lim)
+        mAngleXSpeed = lim;
+    if (mAngleXSpeed < -lim)
+        mAngleXSpeed = -lim;
 }
 
-/* The collider callback slot gets three arguments; the tilt helper
- * wants the last two. long_calls keeps the pooled absolute tail call. */
+/* The collider callback slot gets three arguments; OnStoodOn wants the
+ * last two. long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol func_ov095_02135e90
-extern "C" void func_ov095_02135e90(void *collider, daObjSeesaw_c *self, dActor_c *other)
-{
-    func_ov095_02135cdc(self, other);
+// @symbol _ZN13daObjSeesaw_c15StoodOnCallbackEPvPS_P8dActor_c
+void daObjSeesaw_c::StoodOnCallback(void *collider, daObjSeesaw_c *self, dActor_c *other) {
+    self->OnStoodOn(other);
 }
 #pragma pop
 
 // @symbol daObjSeesaw_c_classInit_RC_SEESAW
-extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_RC_SEESAW()
-{
+extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_RC_SEESAW() {
     return new daObjSeesaw_c();
 }
 
 // @symbol daObjSeesaw_c_classInit_KM3_YOKOSEESAW
-extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM3_YOKOSEESAW()
-{
+extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM3_YOKOSEESAW() {
     return new daObjSeesaw_c();
 }
 
 // @symbol daObjSeesaw_c_classInit_KM3_SEESAW
-extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM3_SEESAW()
-{
+extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM3_SEESAW() {
     return new daObjSeesaw_c();
 }
 
 // @symbol daObjSeesaw_c_classInit_KM2_YOKOSEESAW
-extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM2_YOKOSEESAW()
-{
+extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM2_YOKOSEESAW() {
     return new daObjSeesaw_c();
 }
 
 // @symbol daObjSeesaw_c_classInit_KM1_SEESAW
-extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM1_SEESAW()
-{
+extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM1_SEESAW() {
     return new daObjSeesaw_c();
 }
 
 // @symbol daObjSeesaw_c_classInit_BOMB_SEESAW
-extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_BOMB_SEESAW()
-{
+extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_BOMB_SEESAW() {
     return new daObjSeesaw_c();
 }
 
 // @symbol daObjSeesaw_c_classInit_SEESAW
-extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_SEESAW()
-{
+extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_SEESAW() {
     return new daObjSeesaw_c();
 }
 

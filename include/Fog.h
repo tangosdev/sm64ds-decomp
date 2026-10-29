@@ -12,6 +12,10 @@ struct Fog {
     u16 mOffset;            /* 0x022 */
     u16 mColor;             /* 0x024 -- 15-bit BGR */
     u8  pad_026[0x2];
+#ifdef __cplusplus
+    /* Types only. A named parameter renumbers @NNN in every consumer. */
+    void Init(unsigned short, Fix12i, Fix12i);
+#endif
 };
 
 /* 0x28, from the array stride: dScStage_c::LoadFog walks its fog array with

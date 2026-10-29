@@ -1,7 +1,7 @@
 // Gate-4d soak: EVERY model in the catalog through the game's pipeline.
 //
 // The single-model gates prove the seams on two assets; this drives all
-// ~455 catalog models through Construct -> Model::LoadFile -> DoSetFile ->
+// ~455 catalog models through Construct -> dExtSimpleModel_c::LoadFile -> DoSetFile ->
 // Render, per-model SEH so one bad asset is a tally line instead of the end
 // of the run. The point is breadth: every texture format, palette size,
 // compression flavor and bone shape the game ships, all through the same
@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 #include "ntr/gx.h"
 #include "ntr/mmio.h"
@@ -24,7 +24,7 @@
 #include <windows.h>
 
 extern "C" {
-void _ZN5ModelC1Ev(void *self);
+void _ZN17dExtSimpleModel_cC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtrC *self);
@@ -65,14 +65,14 @@ static int run_one(unsigned handle, size_t *tris_out)
     SharedFilePtrC ptr;
     _ZN13SharedFilePtr9ConstructEj(&ptr, handle);
     static char storage[0x50];
-    Model *model = (Model *)storage;
-    _ZN5ModelC1Ev(storage);
-    void *file = Model::LoadFile(*(SharedFilePtr *)&ptr);
+    dExtSimpleModel_c *model = (dExtSimpleModel_c *)storage;
+    _ZN17dExtSimpleModel_cC1Ev(storage);
+    void *file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&ptr);
     if (!file) return 1;
-    if (model->Model::DoSetFile((char *)file, 0, -1) != 1) return 2;
+    if (model->dExtSimpleModel_c::DoSetFile((char *)file, 0, -1) != 1) return 2;
     ident_fx(&model->mat4x3);
     reset_scene();
-    model->Model::Render(NULL);
+    model->dExtSimpleModel_c::Render(NULL);
     ntr::gx_polygons(*tris_out);
     _ZN13SharedFilePtr7ReleaseEv(&ptr);
     return 0;

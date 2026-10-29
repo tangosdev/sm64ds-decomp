@@ -23,12 +23,11 @@
  *
  * Edges: 0x020b4aa4 is the first function after func_ov004_020b4aa0, the
  * last destructor helper __sinit_ov004_020b955c registers for the previous
- * unit. 0x020b67e8 is the end of Coin_Construct, the last helper
- * __sinit_ov004_020b9ad0 registers for this one (with MgCoins_Cleanup,
- * which runs __cxa_vec_cleanup over the array, and the empty per-element
- * destructor Coin_Destroy); the next function reads the .data block
- * that starts at 0x020bc850, outside this unit's .data window
- * (0x020bc7d0..0x020bc83c).
+ * unit. 0x020b67e8 is the end of Sprite's inline constructor, the last
+ * function this unit's own static initializer (0x020b9ad0) references; the
+ * array destructor and Sprite's destructor sit just before it. The next
+ * function reads the .data block that starts at 0x020bc850, outside this
+ * unit's .data window (0x020bc7d0..0x020bc83c).
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
  * the reverse of source order, so the highest-address function is written
@@ -77,15 +76,17 @@
  *   0x020b653c  MgCoins_DrawDelta
  *   0x020b65e4  MgCoins_Update
  *   0x020b66d4  MgCoins_Reset
- *   0x020b67bc  MgCoins_Cleanup
- *   0x020b67e0  Coin_Destroy
- *   0x020b67e4  Coin_Construct
+ *   0x020b67bc  MgCoins_Cleanup (now __arraydtor$192)
+ *   0x020b67e0  Coin_Destroy (now Sprite::~Sprite)
+ *   0x020b67e4  Coin_Construct (now Sprite::Sprite)
  */
 
 #include "types.h"
 #include "PlayerInput.h"
 #include "dScMgBase_c.h"
 #include "nitro/fx/fx.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
 struct Vec2i { int x, y; };
 
@@ -94,6 +95,9 @@ struct Vec2i { int x, y; };
 struct Sprite;
 typedef void (Sprite::*SpriteFn)();
 struct Sprite {
+    Sprite();
+    ~Sprite();
+
     SpriteFn mState;   /* 0x00 run every frame by Coin_Update */
     Vec2i mPos;        /* 0x08 */
     Vec2i mTarget;     /* 0x10 */
@@ -106,16 +110,11 @@ struct Sprite {
 typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
 #endif
 
-namespace Sound { void PlayBank2_2D(unsigned int); }
-int ApproachLinear(int&, int, int);
-int ApproachLinear2(short&, short, short);
 
 extern "C" {
 extern void Vec2_Sub(void* o, void* a, void* b);
 extern void func_0203d680(void* out, void* in, int scale);
 extern int __aeabi_idiv(int a, int b);
-extern void __cxa_vec_cleanup(void *, unsigned int, unsigned int, void (*)(void *));
-extern unsigned int func_02012790(unsigned int a);
 extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 
@@ -150,7 +149,6 @@ extern void MgCoins_StepLaunchQuick(void);
 extern void MgCoins_StepLaunch(void);
 extern void MgCoins_AddBetCoin(void);
 extern void MgCoins_DrawDelta(int arg);
-extern void Coin_Destroy(void);
 
 extern int sMgCoinRiseFrames[];
 extern int sMgCoinsBetCap;   /* cap MgCoins_AddBetCoin raises the count to */
@@ -186,26 +184,16 @@ extern int gMgCoinsInPlay;   /* sprites in play */
 extern int sMgCoinsSlowLaunches;   /* MgCoins_StepLaunchQuick steps this many with a delay */
 extern void (*sMgCoinsStep)(); /* the current step; 0 when idle */
 extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
-extern struct Sprite sMgCoins[];
 /* The address of sMgCoins[0].mVisible; the ROM indexes the
    array's visible bytes from it. */
 extern unsigned char sMgCoinsVisible[];
 extern int data_020a0db0;
 }
 
-// @symbol Coin_Construct
-extern "C" void Coin_Construct(void) {}
-
-// @symbol Coin_Destroy
-extern "C" void Coin_Destroy(void)
-{
-}
-
-// @symbol MgCoins_Cleanup
-extern "C" void MgCoins_Cleanup(void)
-{
-    __cxa_vec_cleanup(sMgCoins, 0x14, 0x24, (void (*)(void *))Coin_Destroy);
-}
+/* The twenty sprites. mwcc builds them in this file's static initializer
+   (retail 0x020b9ad0) with __cxa_vec_ctor and registers their cleanup
+   thunk, __arraydtor, which it emits after the initializer. */
+Sprite sMgCoins[0x14];
 
 // @symbol MgCoins_Reset
 /* Reset every sprite and the sequence state. */
@@ -275,11 +263,11 @@ extern "C" void MgCoins_DrawDelta(int arg)
     if (arg >= 0) {
         int idx = GetGameLanguage();
         r4 = 0x14;
-        gfx = *(int *)(sMgCoinsDeltaSprites[idx] + 0x34);
+        gfx = ((int *)sMgCoinsDeltaSprites[idx])[13];
     } else {
         int idx = GetGameLanguage();
         r4 = 0x28;
-        gfx = *(int *)(sMgCoinsDeltaSprites[idx] + 0x38);
+        gfx = ((int *)sMgCoinsDeltaSprites[idx])[14];
     }
 
     Mg_DrawCreditsIcon(0x6e, 0x60, 0, -1);
@@ -1054,3 +1042,12 @@ extern "C" void Coin_FlyToCounter(Sprite* s) {
     ApproachLinear(sMgCoinsPayoutLeft, 0, 1);
     Coin_Reset(s);
 }
+
+/* The constructor and destructor are empty and inline: mwcc emits their used
+   bodies at the end of the object, after __arraydtor, which is where the
+   cartridge has D1 (0x020b67e0) and then C1 (0x020b67e4). */
+// @symbol _ZN6SpriteD1Ev
+inline Sprite::~Sprite() {}
+
+// @symbol _ZN6SpriteC1Ev
+inline Sprite::Sprite() {}

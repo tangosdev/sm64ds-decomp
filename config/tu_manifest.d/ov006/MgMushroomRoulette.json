@@ -26,7 +26,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "Roulette_ConstructElement",
+      "symbol": "_ZN13RouletteRacerC1Ev",
       "address": "0x0210a4ac",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0210a4ac.c",
@@ -58,5 +58,22 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13RouletteRacerC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line RouletteRacer::RouletteRacer(). The cartridge carries only C1 at 0x0210a4ac (size 0x4), the last word of this TU's .text, and the factory hands __cxa_vec_ctor the C1 address, so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN13RouletteBoardD1Ev",
+      "disposition": "deadstrip",
+      "reason": "RouletteBoard's implicit destructor, emitted as vague linkage once the factory's `new dScMgRoulette_c` expands the inline constructor chain. The scene's own D1/D0 (ov006/dScMgRoulette_c) inline it rather than call it, the factory does not reference it (its relocations name only the constructors, the two vtables and RouletteRacer's C1/D1), and no module's symbols.txt gives it a home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor of dScMgSingle3DBase_c, emitted as vague linkage once the factory's `new dScMgRoulette_c` expands the inline constructor chain (the same byproduct ov006/dScMgFlower_c, ov006/dScMgMemory2_c and ov006/dMg3DEspAnimSet_c license for theirs). dScMgRoulette_c's D1/D0 inline the base destructor rather than chain to it, and no module's symbols.txt gives _ZN19dScMgSingle3DBase_cD2Ev a home. Homeless and unreferenced, so a plain deadstrip."
+    }
+  ]
 }

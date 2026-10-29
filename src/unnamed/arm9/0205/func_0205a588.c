@@ -1,6 +1,3 @@
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
-// assembly primitive, so there is no original C to recover and no match to chase. Counts as
-// done under the asm-primitive policy - see notes/arm9-endgame.md.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only runtime primitive).
 // SDK byte-fill (memset): aligns to halfword then word with read-modify-write at the
 // unaligned head/tail (ldrh; and #0xff00; orr; strh to preserve the adjacent byte),

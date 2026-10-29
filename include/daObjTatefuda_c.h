@@ -12,7 +12,7 @@
  * THE BASE IS dBgActor_c, and the destructor says so outright. _ZN15daObjTatefuda_cD1Ev
  * (ov002 0x020badd0) stores exactly two vtables -- _ZTV15daObjTatefuda_c, then
  * _ZTV10dBgActor_c -- with this class's own three members destroyed between them
- * and dBgActor_c's Model and dBgW_KcMbg destroyed after. Two stores is a
+ * and dBgActor_c's dExtSimpleModel_c and dBgW_KcMbg destroyed after. Two stores is a
  * DIRECT child; an intermediate layer would have put a third one in between.
  * daObjTatefuda_c_classInit agrees from the other side: it calls _ZN10dBgActor_cC2Ev and then
  * overwrites the vptr with _ZTV15daObjTatefuda_c -- the row that used to be
@@ -51,7 +51,7 @@
  *   daObjTatefuda_c -- daObjTatefuda_c_classInit (was SignPost_Spawn), g_profile_TATEFUDA (was SignPost_SpawnInfo)
  */
 #include "types.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 #include "dBgCh_Actr.h"
 
@@ -222,10 +222,10 @@ struct daObjTatefuda_c {
     u8  pad_0a4[0xc];
     s32 mFlags;                      /* 0x0b0 */
     u8  pad_0b4[0x20];
-    /* Model member. The cartridge's own ~daObjTatefuda_c calls _ZN5ModelD1Ev at +0x0d4
+    /* dExtSimpleModel_c member. The cartridge's own ~daObjTatefuda_c calls _ZN17dExtSimpleModel_cD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
-    Model mModel;                    /* 0x0d4 */
+    dExtSimpleModel_c mModel; /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~daObjTatefuda_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */

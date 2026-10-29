@@ -1,5 +1,5 @@
 // HAND-ASM PRIMITIVE: IRQ/FIQ context save; reads source frame from ip/r12 (not a
-// normal C arg) and writes into data_020a63ac. Sibling func_0201cb2c is unrelated
+// normal C arg) and writes into data_020a63ac. Sibling Message::SetTextGlobals is unrelated
 // pointer-setup; this matches func_02059468's callee chain as asm-only.
 extern char data_020a63ac;
 

@@ -1,11 +1,7 @@
 //cpp
 #include "types.h"
 #include "G2x.h"
-
-namespace GX {
-void SetGraphicsMode(int, int, int);
-void SetBankForBG(unsigned short);
-}
+#include "GX.h"
 
 extern "C" {
 extern void func_020541a4(void);

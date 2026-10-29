@@ -17,31 +17,20 @@
 
 #include "types.h"
 #include "dMgPsOpt_c.h"
+#include "Sound.h"
 
 /* The blitter's 2x2 matrix. This panel always passes none. */
 struct M;
 
-/* {halfW, halfH} records laid down by __sinit_ov004_020b9b24, stride 4.
-   Width and height are two linker symbols two bytes apart, and the ROM
-   loads each base on its own. */
+/* {halfW, halfH} records, stride 4. The ROM reads the width through the
+   array's own symbol and the height through a second linker symbol two
+   bytes in (sPsOptIconPosAY and friends), and loads each base on its own. */
 #define HALF_AT(base, i) (*(short *)((char *)(base) + (i) * 4))
 
-/* dThIcon_c leaves these unk_. The other derived icons do not agree on
-   names, so the names stay in this file.
-     unk_004 mX, unk_006 mY          center, pixels
-     unk_008 mHalfW, unk_00a mHalfH  hit box and the BG highlight
-     unk_00c mBlink                  countdown; 0 means settled
-     unk_010 mOn                     lit / pressed
-     unk_011 mReady                  accepts a touch
+/* dThIcon_c leaves these two unk_. The other derived icons do not agree
+   on names, so the names stay in this file.
      unk_01c mStyle                  which graphic
      unk_020 mVariant                sound mode, or 0 */
-#define mX unk_004
-#define mY unk_006
-#define mHalfW unk_008
-#define mHalfH unk_00a
-#define mBlink unk_00c
-#define mOn unk_010
-#define mReady unk_011
 #define mStyle unk_01c
 #define mVariant unk_020
 
@@ -67,19 +56,10 @@ enum {
     kStyleBack = 6
 };
 
-enum {
-    kPanelShut = 0,
-    kPanelOpen = 1,
-    kPanelClosing = 2
-};
+enum { kPanelShut = 0, kPanelOpen = 1, kPanelClosing = 2 };
 
 /* 0x64 mode changed, 0x65 back, 0x66 backlight changed, 0x67 rejected. */
-enum {
-    kSndMode = 0x64,
-    kSndBack = 0x65,
-    kSndLight = 0x66,
-    kSndReject = 0x67
-};
+enum { kSndMode = 0x64, kSndBack = 0x65, kSndLight = 0x66, kSndReject = 0x67 };
 
 /* Sub-screen BG enable shadow. Value 2 is this panel. */
 enum { kSubBgBit = 2 };
@@ -92,21 +72,12 @@ extern u16 data_ov004_020bca60[];
 extern int GetGameLanguage(void);
 /* Writes the icon center, half extents, touch kind, and clears the blink. */
 extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
-extern short sPsOptIconPosA[];
-extern short sPsOptIconPosAY[];
-extern short sPsOptIconPosB[];
-extern short sPsOptIconPosBY[];
-extern short sPsOptStylePos[];
-extern short sPsOptStylePosY[];
 int TouchArea_Update(void *icon, int touch);
-/* Toggles mOn, drops mReady, and reloads mBlink from the icon's +0x18. */
+/* Toggles mOn, drops mReady, and reloads mPressTimer from mPressTime. */
 void func_ov001_020ab3f0(void *icon);
 /* Sound::Play2D(2, id). The ROM calls this thunk, not Play2D. */
-void func_02012790(int id);
 int GetSoundMode(void);
 void SetSoundMode(int mode);
-/* If mOn is clear, sets it. Otherwise the same pulse as func_ov001_020ab3f0. */
-void func_ov001_020ab41c(void *icon);
 void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 u8 DecIfAbove0_Byte(u8 *p);
@@ -117,25 +88,56 @@ extern unsigned char data_0208ee3c;
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
 }
 
-namespace G2S { u16 *GetBG1ScrPtr(); }
-
-// @symbol _ZN10dMgPsOpt_c11TouchIcon_cC1Ev
-dMgPsOpt_c::TouchIcon_c::TouchIcon_c()
-{
+namespace G2S {
+u16 *GetBG1ScrPtr();
 }
 
+/* One icon's half extents. The destructor is the shared empty arm9 one
+   (NoOpDestructor, 0x0203b98c), so it is declared here and not defined. */
+struct PsOptHalfSize {
+    PsOptHalfSize(short w, short h) : mHalfW(w), mHalfH(h) {}
+    ~PsOptHalfSize();
+
+    short mHalfW;
+    short mHalfH;
+};
+
+/* Half extents per language: the sound-mode caption (sPsOptIconPosA), the
+   backlight caption (sPsOptIconPosB), and per style for every other icon
+   (sPsOptStylePos). mwcc builds and registers each element in this file's
+   static initializer (retail 0x020b9b24). */
+PsOptHalfSize sPsOptIconPosA[5] = {
+    PsOptHalfSize(0x20, 0x10), PsOptHalfSize(0x20, 0x10), PsOptHalfSize(0x18, 0x10),
+    PsOptHalfSize(0x1c, 0x10), PsOptHalfSize(0x1c, 0x10),
+};
+PsOptHalfSize sPsOptIconPosB[5] = {
+    PsOptHalfSize(0x30, 0x10), PsOptHalfSize(0x18, 0x10), PsOptHalfSize(0x30, 0x10),
+    PsOptHalfSize(0x30, 0x10), PsOptHalfSize(0x30, 0x10),
+};
+PsOptHalfSize sPsOptStylePos[7] = {
+    PsOptHalfSize(0x3c, 0x10), PsOptHalfSize(0x1c, 0x10), PsOptHalfSize(0x08, 0x10),
+    PsOptHalfSize(0x08, 0x10), PsOptHalfSize(0x18, 0x10), PsOptHalfSize(0x28, 0x10),
+    PsOptHalfSize(0x20, 0x10),
+};
+/* The heights, two bytes into each array. */
+extern short sPsOptIconPosAY[];
+extern short sPsOptIconPosBY[];
+extern short sPsOptStylePosY[];
+
+// @symbol _ZN10dMgPsOpt_c11TouchIcon_cC1Ev
+dMgPsOpt_c::TouchIcon_c::TouchIcon_c() {}
+
 // @symbol _ZN10dMgPsOpt_cC1Ev
-dMgPsOpt_c::dMgPsOpt_c()
-{
+dMgPsOpt_c::dMgPsOpt_c() {
     PsOpt_PlaceIcon(&mIcons[kIconSoundMode], kStyleSoundMode, GetSoundMode(), 0xac, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconSoundPrev], kStyleSoundPrev, 0, 0x64, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconSoundNext], kStyleSoundNext, 0, 0xf4, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconSoundLabel], kStyleSoundLabel, 0,
-                    sPsOptIconPosA[GetGameLanguage() * 2] + 0x18, 0x38);
+                    sPsOptIconPosA[GetGameLanguage()].mHalfW + 0x18, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconLightOn], kStyleLight, 0, 0x8c, 0x68);
     PsOpt_PlaceIcon(&mIcons[kIconLightOff], kStyleLight, 0, 0xcc, 0x68);
     PsOpt_PlaceIcon(&mIcons[kIconLightLabel], kStyleLightLabel, 0,
-                    sPsOptIconPosB[GetGameLanguage() * 2] + 0x18, 0x68);
+                    sPsOptIconPosB[GetGameLanguage()].mHalfW + 0x18, 0x68);
     PsOpt_PlaceIcon(&mIcons[kIconBack], kStyleBack, 0, 0x80, 0xa8);
 
     /* The ROM stores the full count and then clears it. Both stores stay. */
@@ -145,20 +147,15 @@ dMgPsOpt_c::dMgPsOpt_c()
 }
 
 // @symbol _ZN10dMgPsOpt_cD1Ev
-dMgPsOpt_c::~dMgPsOpt_c()
-{
-}
+dMgPsOpt_c::~dMgPsOpt_c() {}
 
 // @symbol _ZN10dMgPsOpt_c11TouchIcon_cD1Ev
-dMgPsOpt_c::TouchIcon_c::~TouchIcon_c()
-{
-}
+dMgPsOpt_c::TouchIcon_c::~TouchIcon_c() {}
 
 // @symbol _ZN10dMgPsOpt_c4OpenEv
 /* Open. Lights the current sound and backlight choices and sets sub BG
    value 2. Called from the pause menu (Mg_UpdateMenu). */
-void dMgPsOpt_c::Open()
-{
+void dMgPsOpt_c::Open() {
 
     mIcons[kIconSoundMode].mOn = 1;
     if (data_0208ee3c != 0) {
@@ -177,8 +174,7 @@ void dMgPsOpt_c::Open()
 // @symbol _ZN10dMgPsOpt_c5CloseEv
 /* Shut. Clears sub BG value 2. The close delay calls this, and so does
    dScMgBase_c::CloseMenu. */
-void dMgPsOpt_c::Close()
-{
+void dMgPsOpt_c::Close() {
 
     data_0209d454 &= ~kSubBgBit;
     mIconCount = 0;
@@ -188,8 +184,7 @@ void dMgPsOpt_c::Close()
 // @symbol _ZN10dMgPsOpt_c6UpdateEv
 /* One frame of input. Returns mActive; the pause menu
    (Mg_UpdateMenu) yields the frame while that is nonzero. */
-u8 dMgPsOpt_c::Update()
-{
+u8 dMgPsOpt_c::Update() {
     u8 state = mActive;
 
     switch (state) {
@@ -207,17 +202,21 @@ u8 dMgPsOpt_c::Update()
                 int changed = 0;
                 int mode = GetSoundMode();
 
-                if (TouchArea_Update(&mIcons[kIconSoundMode], -1)
-                    || TouchArea_Update(&mIcons[kIconSoundNext], -1)
-                    || TouchArea_Update(&mIcons[kIconSoundLabel], -1)) {
-                    if (mode == 2) mode = 0;
-                    else mode = (mode + 1) & 0xff;
+                if (TouchArea_Update(&mIcons[kIconSoundMode], -1) ||
+                    TouchArea_Update(&mIcons[kIconSoundNext], -1) ||
+                    TouchArea_Update(&mIcons[kIconSoundLabel], -1)) {
+                    if (mode == 2)
+                        mode = 0;
+                    else
+                        mode = (mode + 1) & 0xff;
                     mIcons[kIconSoundNext].mOn = 0;
                     func_ov001_020ab3f0(&mIcons[kIconSoundNext]);
                     changed = 1;
                 } else if (TouchArea_Update(&mIcons[kIconSoundPrev], -1)) {
-                    if (mode == 0) mode = 2;
-                    else mode = (mode - 1) & 0xff;
+                    if (mode == 0)
+                        mode = 2;
+                    else
+                        mode = (mode - 1) & 0xff;
                     mIcons[kIconSoundPrev].mOn = 0;
                     func_ov001_020ab3f0(&mIcons[kIconSoundPrev]);
                     changed = 1;
@@ -226,13 +225,12 @@ u8 dMgPsOpt_c::Update()
                 if (changed != 0) {
                     SetSoundMode(mode);
                     mIcons[kIconSoundMode].mVariant = mode;
-                    func_ov001_020ab41c(&mIcons[kIconSoundMode]);
+                    mIcons[kIconSoundMode].Select();
                     func_02012790(kSndMode);
                 }
             }
 
-            if (mIcons[kIconLightOn].mReady != 0
-                && mIcons[kIconLightOff].mReady != 0) {
+            if (mIcons[kIconLightOn].mReady != 0 && mIcons[kIconLightOff].mReady != 0) {
                 /* On turns the backlight on, off turns it off, the caption toggles. */
                 int dir = 0;
 
@@ -251,7 +249,7 @@ u8 dMgPsOpt_c::Update()
                         TurnBacklightOn();
                         func_02012790(kSndLight);
                     }
-                    func_ov001_020ab41c(&mIcons[kIconLightOn]);
+                    mIcons[kIconLightOn].Select();
                     mIcons[kIconLightOff].mOn = 0;
                 } else if (dir > 0) {
                     if (mIcons[kIconLightOff].mOn != 0) {
@@ -261,7 +259,7 @@ u8 dMgPsOpt_c::Update()
                         func_02012790(kSndLight);
                     }
                     mIcons[kIconLightOn].mOn = 0;
-                    func_ov001_020ab41c(&mIcons[kIconLightOff]);
+                    mIcons[kIconLightOff].Select();
                 }
             }
         }
@@ -293,8 +291,7 @@ u8 dMgPsOpt_c::Update()
 // @symbol _ZN10dMgPsOpt_c4DrawEv
 /* Draw every live icon. Returns 1 while the panel is up, which makes
    Mg_DrawMenu skip the rest of the touch-screen UI. */
-int dMgPsOpt_c::Draw()
-{
+int dMgPsOpt_c::Draw() {
     int i;
 
     if (mActive == kPanelShut)
@@ -310,13 +307,12 @@ int dMgPsOpt_c::Draw()
 // @symbol _ZN10dMgPsOpt_c6IsIdleEv
 /* 1 when no live icon is still counting down a press. BeforeBehavior uses
    that as the gate before CloseMenu closes the panel. */
-int dMgPsOpt_c::IsIdle()
-{
+int dMgPsOpt_c::IsIdle() {
     TouchIcon_c *icon = mIcons;
     int i;
 
     for (i = 0; i < mIconCount; i++) {
-        if (icon->mBlink != 0)
+        if (icon->mPressTimer != 0)
             return 0;
         icon++;
     }
@@ -329,9 +325,8 @@ int dMgPsOpt_c::IsIdle()
    (kind 2); the back button is a held hit (kind 1). TouchArea_Update is
    what reads that kind. The two captions take their half extents from the
    per-language records; every other style shares the flat table. */
-extern "C" void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant,
-                                    short x, short y)
-{
+extern "C" void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x,
+                                short y) {
     int kind;
     int lang, lang2;
 
@@ -361,8 +356,7 @@ extern "C" void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int va
    fresh 13-wide run for the current sound mode, then all three of them
    set or clear the palette bits over the icon's rectangle. The captions
    (styles 4 and 5) draw nothing of their own. */
-void dMgPsOpt_c::TouchIcon_c::Render()
-{
+void dMgPsOpt_c::TouchIcon_c::Render() {
     volatile s16 xy[2];
     void *sprites;
     u16 *scr;

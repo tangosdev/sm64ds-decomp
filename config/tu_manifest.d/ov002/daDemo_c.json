@@ -9,18 +9,23 @@
     "HISTORY: contiguous linker run: 0x20f1f70..0x20f8808, 145 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): CutsceneObject, daDemo_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-09): daDemo_c_classInit (0x30, 0x020f8808), the one-function source right of this run, abuts its .text end with no gap and is now inside it (0x020f1f70..0x020f8838). The factory allocates sizeof(daDemo_c) (0x104), runs dActor_c's base ctor and stores _ZTV8daDemo_c; it is written last in the file because the TU sets #pragma defer_codegen off. The two _ZThn80_ anmModel_c thunks after it (0x020f8838..0x020f8858) stay with their own sources: this TU's copies remain deadstrip-duplicate, because _ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp is the source whose project-spelled nested vtables (_ZTVN8daDemo_c10anmModel_cE, _ZTVN8daDemo_c13simpleModel_cE) romdata_check verifies; retiring it loses those two exact symbols."
+    "CLASSINIT TAIL FOLD (2026-10-09): daDemo_c_classInit (0x30, 0x020f8808), the one-function source right of this run, abuts its .text end with no gap and is now inside it. The factory allocates sizeof(daDemo_c) (0x104), runs dActor_c's base ctor and stores _ZTV8daDemo_c; it is written last in the file because the TU sets #pragma defer_codegen off. THUNK TAIL FOLD: the two _ZThn80_ anmModel_c thunks (0x020f8838..0x020f8858) are the copies this TU already emitted for the dExtFrameCtrl_c base at +0x50. They sort after the vtables, so they close .text and the run is 0x020f1f70..0x020f8858. The nested bases are the arm9 model classes; their vague-linkage _ZTI/_ZTS copies stay canonical imports of the arm9 records, and this TU emits no homeless _ZTI. The nested vtables remain deadstrip-data at their configured homes."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020f1f70",
-      "end": "0x020f8838"
+      "end": "0x020f8858"
     },
     {
       "name": ".data",
       "start": "0x0210b940",
       "end": "0x0210b958"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02110afc",
+      "end": "0x02110e24"
     }
   ],
   "functions": [
@@ -844,7 +849,7 @@
       "ordinal": 116
     },
     {
-      "symbol": "_ZN8daDemo_c7param_c19func_ov002_020f6a50Ev",
+      "symbol": "_ZN8daDemo_c7param_cC2Ev",
       "address": "0x020f6a50",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f6a50.c",
@@ -1045,6 +1050,20 @@
       "size": "0x00000030",
       "legacy_source": "src/d_a_demo.c",
       "ordinal": 145
+    },
+    {
+      "symbol": "_ZThn80_N8daDemo_c10anmModel_cD0Ev",
+      "address": "0x020f8838",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
+      "ordinal": 146
+    },
+    {
+      "symbol": "_ZThn80_N8daDemo_c10anmModel_cD1Ev",
+      "address": "0x020f8848",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
+      "ordinal": 147
     }
   ],
   "data": [
@@ -1061,8 +1080,585 @@
       "evidence": "compiler-emitted single-inheritance RTTI record matches retail and points to the ROM-proven dActor_c base identity"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "_ZGVsViewEnd$3750",
+      "address": "0x02110afc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of func_ov002_020f7538's function-local static sViewEnd; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "data_ov002_02110b00",
+      "address": "0x02110b00",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "_ZGVsViewStart$3746",
+      "address": "0x02110b04",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of func_ov002_020f7538's function-local static sViewStart; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "_ZGVsViewIdle$3754",
+      "address": "0x02110b08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of func_ov002_020f7538's function-local static sViewIdle; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "_ZGVsLookTarget$3570",
+      "address": "0x02110b0c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of func_ov002_020f6c60's function-local static sLookTarget; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "data_ov002_02110b10",
+      "address": "0x02110b10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b18",
+      "address": "0x02110b18",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b20",
+      "address": "0x02110b20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b28",
+      "address": "0x02110b28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b30",
+      "address": "0x02110b30",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b38",
+      "address": "0x02110b38",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b40",
+      "address": "0x02110b40",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b48",
+      "address": "0x02110b48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b50",
+      "address": "0x02110b50",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "char-sized bss object; the following symbol is 8-aligned so the retail 8-byte slot stays inside this contiguous .bss claim"
+    },
+    {
+      "symbol": "data_ov002_02110b58",
+      "address": "0x02110b58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b60",
+      "address": "0x02110b60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b68",
+      "address": "0x02110b68",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b70",
+      "address": "0x02110b70",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "char-sized bss object; the following symbol is 8-aligned so the retail 8-byte slot stays inside this contiguous .bss claim"
+    },
+    {
+      "symbol": "data_ov002_02110b78",
+      "address": "0x02110b78",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "char-sized bss object; the following symbol is 8-aligned so the retail 8-byte slot stays inside this contiguous .bss claim"
+    },
+    {
+      "symbol": "data_ov002_02110b80",
+      "address": "0x02110b80",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b88",
+      "address": "0x02110b88",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b90",
+      "address": "0x02110b90",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110b98",
+      "address": "0x02110b98",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "char-sized bss object; the following symbol is 8-aligned so the retail 8-byte slot stays inside this contiguous .bss claim"
+    },
+    {
+      "symbol": "data_ov002_02110ba0",
+      "address": "0x02110ba0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110ba8",
+      "address": "0x02110ba8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bb0",
+      "address": "0x02110bb0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bb8",
+      "address": "0x02110bb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bc0",
+      "address": "0x02110bc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bc8",
+      "address": "0x02110bc8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bd0",
+      "address": "0x02110bd0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bd8",
+      "address": "0x02110bd8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110be0",
+      "address": "0x02110be0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110be8",
+      "address": "0x02110be8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bf0",
+      "address": "0x02110bf0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110bf8",
+      "address": "0x02110bf8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c00",
+      "address": "0x02110c00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c08",
+      "address": "0x02110c08",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c10",
+      "address": "0x02110c10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c18",
+      "address": "0x02110c18",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "char-sized bss object; the following symbol is 8-aligned so the retail 8-byte slot stays inside this contiguous .bss claim"
+    },
+    {
+      "symbol": "sLookTarget$3570",
+      "address": "0x02110c20",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_ov002_020f6c60's function-local static Vector3(0xffdd6000, 0xbe4000, 0x2ae000); retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "data_ov002_02110c2c",
+      "address": "0x02110c2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c38",
+      "address": "0x02110c38",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c44",
+      "address": "0x02110c44",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c50",
+      "address": "0x02110c50",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c5c",
+      "address": "0x02110c5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c68",
+      "address": "0x02110c68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c74",
+      "address": "0x02110c74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c80",
+      "address": "0x02110c80",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c8c",
+      "address": "0x02110c8c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110c98",
+      "address": "0x02110c98",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110ca4",
+      "address": "0x02110ca4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110cb0",
+      "address": "0x02110cb0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110cbc",
+      "address": "0x02110cbc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110cc8",
+      "address": "0x02110cc8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110cd4",
+      "address": "0x02110cd4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110ce0",
+      "address": "0x02110ce0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110cec",
+      "address": "0x02110cec",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110cf8",
+      "address": "0x02110cf8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d04",
+      "address": "0x02110d04",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d10",
+      "address": "0x02110d10",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d1c",
+      "address": "0x02110d1c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d28",
+      "address": "0x02110d28",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d34",
+      "address": "0x02110d34",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d40",
+      "address": "0x02110d40",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d4c",
+      "address": "0x02110d4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d58",
+      "address": "0x02110d58",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d64",
+      "address": "0x02110d64",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d70",
+      "address": "0x02110d70",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d7c",
+      "address": "0x02110d7c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d88",
+      "address": "0x02110d88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110d94",
+      "address": "0x02110d94",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110da0",
+      "address": "0x02110da0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "@3757",
+      "address": "0x02110dac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for sViewIdle; func_ov002_020f7538 passes it as the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "@3573",
+      "address": "0x02110db8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for sLookTarget; func_ov002_020f6c60 passes it as the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "data_ov002_02110dc4",
+      "address": "0x02110dc4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110dd0",
+      "address": "0x02110dd0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "data_ov002_02110ddc",
+      "address": "0x02110ddc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "bss object inside 0x02110afc..0x02110e24, defined here so the four function-local Vector3 statics keep their retail addresses"
+    },
+    {
+      "symbol": "@3749",
+      "address": "0x02110de8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for sViewStart; func_ov002_020f7538 passes it as the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sViewStart$3746",
+      "address": "0x02110df4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_ov002_020f7538's function-local static Vector3(0x2800, 0xfffee900, -0x4200); retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@3753",
+      "address": "0x02110e00",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for sViewEnd; func_ov002_020f7538 passes it as the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sViewEnd$3750",
+      "address": "0x02110e0c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_ov002_020f7538's function-local static Vector3(0x3300, 0xfffee900, -0x5e00); retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "sViewIdle$3754",
+      "address": "0x02110e18",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_ov002_020f7538's function-local static Vector3(0x4c00, -0xf200, -0xff00); retail stores the three words under the guard and registers ~Vector3() for it"
+    }
+  ],
   "notes": [
+    "Four function-local Vector3 statics (sLookTarget in func_ov002_020f6c60, sViewStart/sViewEnd/sViewIdle in func_ov002_020f7538) replace the handwritten guard, stores and func_020731dc registration. mwcc emits the guard test, the stores and the registration inline, byte- and relocation-identical. No __sinit. Their .bss is interleaved with the cutscene file handles, so this TU claims 0x02110afc..0x02110e24 and defines every object in that span.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges equal the canonical records, and the linked TU range 0x020f1f70..0x020f8858 was identical).",
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/func_ov002_020f3978.cpp (func_ov002_020f3978) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov002_020f6618.cpp (func_ov002_020f6618) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
@@ -1091,7 +1687,7 @@
     "tubuild create warning: CONFLICT: extern declaration '_ZN6Memory16operator_delete2EPv' differs between the legacy file that used to hold func_ov002_020f23d0 and the one that held func_ov002_020f5f60; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold func_ov002_020f1fcc and the one that held func_ov002_020f5fe4; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN6Memory16operator_delete2EPv' differs between the legacy file that used to hold func_ov002_020f23d0 and the one that held func_ov002_020f63a0; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration '_Znwj' differs between the legacy file that used to hold func_ov002_020f2630 and the one that held func_ov002_020f6448; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Znwj' differs between the legacy file that used to hold func_ov002_020f2630 and the one that held func_ov002_020f6448; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN15dExtFrameCtrl_c7AdvanceEv' differs between the legacy file that used to hold func_ov002_020f64ac and the one that held func_ov002_020f65ec; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'ReadUnalignedShort' differs between the legacy file that used to hold func_ov002_020f6b4c and the one that held func_ov002_020f6bc0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_ov002_020f6514' differs between the legacy file that used to hold func_ov002_020f64ac and the one that held func_ov002_020f6c34; kept the first, the other is commented out for review",
@@ -1102,8 +1698,8 @@
     "tubuild create warning: CONFLICT: extern declaration '_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE' differs between the legacy file that used to hold func_ov002_020f2790 and the one that held func_ov002_020f71c4; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE' differs between the legacy file that used to hold func_ov002_020f2790 and the one that held func_ov002_020f72bc; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov002_020f71c4 and the one that held func_ov002_020f7384; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_0209b274' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7384; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_0209b274' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7410; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7384; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7410; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7410; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_LslInPlace' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7410; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov002_020f71c4 and the one that held func_ov002_020f7410; kept the first, the other is commented out for review",
@@ -1111,12 +1707,12 @@
     "tubuild create warning: CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_LslInPlace' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov002_020f71c4 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_0209b274' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_0209b274' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Math_Function_0203b0fc' differs between the legacy file that used to hold func_ov002_020f7538 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov002_020f6b4c and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_0209b274' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f79c0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f79c0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Math_Function_0203b0fc' differs between the legacy file that used to hold func_ov002_020f7538 and the one that held func_ov002_020f79c0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov002_020f6f48 and the one that held func_ov002_020f79c0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
@@ -1125,7 +1721,7 @@
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov002_020f6b4c and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN4cstd5atan2E5Fix12IiES1_' differs between the legacy file that used to hold func_ov002_020f3ba0 and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'data_0209b41c' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held _ZN8daDemo_c6RenderEv; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration '_Znwj' differs between the legacy file that used to hold func_ov002_020f2630 and the one that held _ZN8daDemo_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Znwj' differs between the legacy file that used to hold func_ov002_020f2630 and the one that held _ZN8daDemo_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov002_020f2210 and the one that held func_ov002_020f237c; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov002_020f2210 and the one that held func_ov002_020f2e30; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'E') differs between the legacy file that used to hold func_ov002_020f378c and the one that held func_ov002_020f5678; kept the first, the other is commented out for review",
@@ -1152,26 +1748,22 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-daDemo_c/daDemo_c.o (gitignored)",
+    "object": "build/tu/ov002-daDemo_c/d_a_demo.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 146,
-    "functions_declared": 146,
+    "functions_matched": 148,
+    "functions_declared": 148,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN8daDemo_cD2Ev",
         "_ZN8daDemo_c10anmModel_cD2Ev",
         "_ZN8daDemo_c13simpleModel_cD2Ev",
-        "_ZN7Vector3D1Ev",
-        "_ZThn80_N8daDemo_c10anmModel_cD0Ev",
-        "_ZThn80_N8daDemo_c10anmModel_cD1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
         "_ZN7Vector3D1Ev",
         "_ZN8daDemo_c10anmModel_cD2Ev",
         "_ZN8daDemo_c13simpleModel_cD2Ev",
-        "_ZN8daDemo_cD2Ev",
-        "_ZThn80_N8daDemo_c10anmModel_cD0Ev",
-        "_ZThn80_N8daDemo_c10anmModel_cD1Ev"
+        "_ZN8daDemo_cD2Ev"
       ],
       "droppedSections": [
         9,
@@ -1195,11 +1787,7 @@
         280,
         281,
         282,
-        283,
-        305,
-        306,
-        307,
-        308
+        283
       ],
       "data": [
         "_ZTV8daDemo_c",
@@ -1222,7 +1810,8 @@
         "_ZTV8daDemo_c",
         "_ZTVN8daDemo_c10anmModel_cE",
         "_ZTVN8daDemo_c13simpleModel_cE"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -1246,7 +1835,7 @@
       },
       "tuRange": {
         "start": "0x020f1f70",
-        "end": "0x020f8838",
+        "end": "0x020f8858",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -1254,7 +1843,7 @@
         {
           "section": ".text",
           "start": "0x020f1f70",
-          "end": "0x020f8838",
+          "end": "0x020f8858",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1264,11 +1853,17 @@
           "end": "0x0210b958",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02110afc",
+          "end": "0x02110e24",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 148
+          "LICENSED": 150
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1293,28 +1888,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1348,18 +1923,22 @@
       "reason": "A Vector3 local emits the inline destructor. The ROM homes that four-byte body in arm9 at 0x020072c0; this copy is discarded."
     },
     {
-      "symbol": "_ZThn80_N8daDemo_c10anmModel_cD0Ev",
+      "symbol": "_ZN7Vector3C1Ev",
       "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020f8838",
-      "reason": "Non-virtual thunk to the Animation base for anmModel_c::D0. The cartridge homes the identical 0x10-byte thunk at ov002:0x020f8838, owned by the classInit source; this copy is discarded."
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "param_c's constructor builds its Vector3 mScale[1] through __cxa_vec_ctor(this, 1, 0xc, func_0203d384, _ZN7Vector3D1Ev), as the retail body at 0x020f6a50 does. The emitted 4-byte inline Vector3 default constructor is that arm9 callback; this copy is discarded."
     },
     {
-      "symbol": "_ZThn80_N8daDemo_c10anmModel_cD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020f8848",
-      "reason": "Non-virtual thunk to the Animation base for anmModel_c::D1. The cartridge homes the identical 0x10-byte thunk at ov002:0x020f8848, owned by the classInit source; this copy is discarded."
+      "symbol": "_ZN8daDemo_c7param_cC1Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The out-of-line param_c constructor emits C1 and C2 with identical bodies. param_c is only ever a base, so every retail caller (the seven inlined new-expressions in InitResources) calls C2, which is the 0x020f6a50 body; the cartridge has no C1."
+    },
+    {
+      "symbol": "_ZN8daDemo_c7param_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless and unreferenced. Declaring param_c's constructor makes the TU emit the implicit param_c destructor (the mScale cleanup) out of line; the nested model destructors still destroy the array inline, as retail does, and nothing calls this copy."
     },
     {
       "symbol": "_ZTV8daDemo_c",
@@ -1401,7 +1980,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x0210babc",
-      "reason": "vmi_class typeinfo for anmModel_c (bases ModelAnim + virtual param_c). Cartridge copy at ov002:0x0210babc."
+      "reason": "vmi_class typeinfo for anmModel_c (bases dExtAnmModel_c + virtual param_c). Cartridge copy at ov002:0x0210babc."
     },
     {
       "symbol": "_ZTSN8daDemo_c10anmModel_cE",
@@ -1415,7 +1994,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x0210bafc",
-      "reason": "vmi_class typeinfo for simpleModel_c (bases Model + virtual param_c). Cartridge copy at ov002:0x0210bafc."
+      "reason": "vmi_class typeinfo for simpleModel_c (bases dExtSimpleModel_c + virtual param_c). Cartridge copy at ov002:0x0210bafc."
     },
     {
       "symbol": "_ZTSN8daDemo_c13simpleModel_cE",
@@ -1575,7 +2154,7 @@
       "size": "0xe",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e7ac",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtModel_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtModel_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": []
     },
     {
@@ -1586,7 +2165,7 @@
       "size": "0x8",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e73c",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtModel_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtModel_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": [
         {
           "offset": 0,
@@ -1616,7 +2195,7 @@
       "size": "0x12",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e84c",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtFrameCtrl_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtFrameCtrl_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": []
     },
     {
@@ -1627,7 +2206,7 @@
       "size": "0x8",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e744",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtFrameCtrl_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtFrameCtrl_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": [
         {
           "offset": 0,
@@ -1657,7 +2236,7 @@
       "size": "0x14",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e8c4",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtSimpleModel_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtSimpleModel_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": []
     },
     {
@@ -1668,7 +2247,7 @@
       "size": "0xc",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e794",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtSimpleModel_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtSimpleModel_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": [
         {
           "offset": 0,
@@ -1707,7 +2286,7 @@
       "size": "0x11",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e7fc",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtAnmModel_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtAnmModel_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": []
     },
     {
@@ -1718,7 +2297,7 @@
       "size": "0x20",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e924",
-      "reason": "vague-linkage copy emitted under the cartridge spelling (daDemo_c.h declares the base as dExtAnmModel_c); canonical definition is owned by arm9.",
+      "reason": "vague-linkage copy of the dExtAnmModel_c typeinfo, emitted because daDemo_c's nested classes derive from it; canonical definition is owned by arm9.",
       "relocations": [
         {
           "offset": 0,
@@ -1768,75 +2347,26 @@
       "evidence": "anmModel_c vtable import; secondary vptr references carry nonzero addends, so the import must resolve through a non-_ZTV configured name to stay addend-exact under the preamble-normalizing intact path; daDemo_anmModel_vtbl names the same address and preserves every linked byte."
     },
     {
-      "symbol": "_ZN14dExtAnmModel_cD2Ev",
-      "canonical_symbol": "_ZN9ModelAnimD2Ev",
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
       "canonical_module": "arm9",
-      "canonical_address": "0x201689c",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN17dExtSimpleModel_cD2Ev",
-      "canonical_symbol": "_ZN5ModelD2Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x2016ca8",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN14dExtAnmModel_c11UpdateVertsEv",
-      "canonical_symbol": "_ZN9ModelAnim11UpdateVertsEv",
-      "canonical_module": "arm9",
-      "canonical_address": "0x201686c",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN14dExtAnmModel_c9Virtual10ER9Matrix4x3",
-      "canonical_symbol": "_ZN9ModelAnim9Virtual10ER9Matrix4x3",
-      "canonical_module": "arm9",
-      "canonical_address": "0x201682c",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN14dExtAnmModel_c6RenderEPK7Vector3",
-      "canonical_symbol": "_ZN9ModelAnim6RenderEPK7Vector3",
-      "canonical_module": "arm9",
-      "canonical_address": "0x20167f8",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN14dExtAnmModel_c9Virtual18EjPK7Vector3",
-      "canonical_symbol": "_ZN9ModelAnim9Virtual18EjPK7Vector3",
-      "canonical_module": "arm9",
-      "canonical_address": "0x20167c4",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN17dExtSimpleModel_c9DoSetFileEPcii",
-      "canonical_symbol": "_ZN5Model9DoSetFileEPcii",
-      "canonical_module": "arm9",
-      "canonical_address": "0x2016bf8",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN17dExtSimpleModel_c11UpdateVertsEv",
-      "canonical_symbol": "_ZN5Model11UpdateVertsEv",
-      "canonical_module": "arm9",
-      "canonical_address": "0x2016c98",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN17dExtSimpleModel_c9Virtual10ER9Matrix4x3",
-      "canonical_symbol": "_ZN5Model9Virtual10ER9Matrix4x3",
-      "canonical_module": "arm9",
-      "canonical_address": "0x2016bb8",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
-    },
-    {
-      "symbol": "_ZN17dExtSimpleModel_c6RenderEPK7Vector3",
-      "canonical_symbol": "_ZN5Model6RenderEPK7Vector3",
-      "canonical_module": "arm9",
-      "canonical_address": "0x2016b78",
-      "evidence": "daDemo_c.h declares the nested classes' bases under the cartridge RTTI spelling (notes/model-rtti-names.md); the emitted member name resolves to the same function the project spelling configures."
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated function-local static registration in func_ov002_020f6c60 and func_ov002_020f7538; retail calls func_020731dc with the Vector3, ~Vector3() and the registration node"
     }
+  ],
+  "symbol_binding_rewrites": [
+    {"symbol": "_ZGVsLookTarget$3570", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static guard; DSD requires a configured global symbol at 0x02110b0c"},
+    {"symbol": "@3573", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "compiler-local destructor-registration node for sLookTarget; DSD requires a configured global symbol at 0x02110db8"},
+    {"symbol": "sLookTarget$3570", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x02110c20"},
+    {"symbol": "_ZGVsViewStart$3746", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static guard; DSD requires a configured global symbol at 0x02110b04"},
+    {"symbol": "@3749", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "compiler-local destructor-registration node for sViewStart; DSD requires a configured global symbol at 0x02110de8"},
+    {"symbol": "sViewStart$3746", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x02110df4"},
+    {"symbol": "_ZGVsViewEnd$3750", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static guard; DSD requires a configured global symbol at 0x02110afc"},
+    {"symbol": "@3753", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "compiler-local destructor-registration node for sViewEnd; DSD requires a configured global symbol at 0x02110e00"},
+    {"symbol": "sViewEnd$3750", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x02110e0c"},
+    {"symbol": "_ZGVsViewIdle$3754", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static guard; DSD requires a configured global symbol at 0x02110b08"},
+    {"symbol": "@3757", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "compiler-local destructor-registration node for sViewIdle; DSD requires a configured global symbol at 0x02110dac"},
+    {"symbol": "sViewIdle$3754", "from": "STB_LOCAL", "to": "STB_GLOBAL", "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x02110e18"}
   ],
   "production_mode": "intact-object",
   "relocations": [

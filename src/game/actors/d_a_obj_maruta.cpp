@@ -14,33 +14,21 @@
  * ABSTRACT: no classInit in this TU. The leaves own the factories
  * (ov022 daObjFlMaruta_c, ov030 daObjHmMaruta_c).
  *
- * Remaining interfaces:
- * Leftover: func_ov080_021274ac / 0212714c / 021270dc keep C linkage.
- *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward InitResources,
- *   Behavior and CleanupResources into these exact symbols. No ROM-proven
- *   English spelling; a member rename would fan those leaves. THIS-TU reason.
- * Leftover: func_ov080_0212758c / 02127658 stay placeholder labels
- *   (BeforeClsn body + arg-shifting veneer). 02127658 is stored as a
- *   dBgW callback address, so it cannot be a non-static member.
- * Leftover: dBgW_KcMbg::SetFile 6az: InitResources passes Fix12<int> by
- *   value; the header method form size-DIFFs.
- * Leftover: dBgActor_c::UpdateKillByMegaChar 6az: Behavior passes
- *   Fix12<int> by value; a method call homes the argument.
- * Leftover: dBgActor_c::IsClsnInRange / IsClsnInRangeOnScreen 6az
- *   (Behavior; header method form refused).
- * Leftover: func_020393d4 / func_020393c4 are 4-byte stores into dBgW+0x18
- *   / +0x1c. This TU stores dBgW::UpdatePosWithVelocity and
- *   &func_ov080_02127658; dBgW.h has no setter.
- * Leftover: func_02012694 (sound 0x1e at mCamSpacePosX).
- * Leftover: Matrix4x3_FromRotationXYZExt has no shared header.
- * Leftover: Vec3_Sub / LenVec3 / Vec3_HorzAngle / Vec3_Dist / AngleDiff:
- *   no shared header this TU can take without a campaign.
- * Leftover: (Vector3 *)&mRestPosX / &mHitPosX: the class stores those
- *   triples as scalars (issue #2566).
- * Leftover: sine table data_02082214 (arm9).
- * Leftover: no return new -- this class is abstract; the leaves own
- *   classInit.
- * Leftover: common.h first so func_ov080_02127094's Matrix4x3 translation
+ * Notes:
+ * - func_ov080_021274ac / 0212714c / 021270dc keep C linkage for now.
+ *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward
+ *   InitResources, Behavior and CleanupResources into them, so naming them
+ *   means converting both leaves in the same change.
+ * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW+0x18 / +0x1c.
+ *   This TU stores dBgW::UpdatePosWithVelocity and BeforeClsnCallback there;
+ *   dBgW.h has no setter.
+ * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
+ *   Vec3_Sub, LenVec3 and AngleDiff are arm9 C helpers no header declares yet.
+ * - (Vector3 *)&mRestPosX / &mHitPosX: the class stores those triples as
+ *   scalars (issue #2566).
+ * - The sine table keeps its arm9 linker name, data_02082214.
+ * - Abstract class: the leaves own classInit.
+ * - common.h comes first so UpdateModelTransform's Matrix4x3 translation
  *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
  *   scalarises).
  */
@@ -54,6 +42,7 @@
 #include "Sound.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 
@@ -62,38 +51,23 @@ struct ResourceDescriptor {
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-typedef char ResourceDescriptor_size_must_be_0x0c[
-    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
 void func_02012694(int a, void *b);
 void Matrix4x3_FromRotationXYZExt(void *mtx, int x, int y, int z);
-int DecIfAbove0_Byte(u8 *p);
-int Vec3_Dist(void *a, void *b);
-short Vec3_HorzAngle(void *a, void *b);
 int AngleDiff(int a, int b);
 void Vec3_Sub(void *out, void *a, void *b);
 int LenVec3(void *v);
-u16 DecIfAbove0_Short(u16 *p);
-int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(
-    dBgActor_c *self, s16 a, s16 b, s16 c, int d);
-int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(
-    dBgActor_c *self, int a, int b);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
-    dBgActor_c *self, int a, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
-    s16 angleY, CLPS_Block *clps);
+
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
-extern s16 data_02082214[];
 
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
-void func_ov080_0212758c(daObjMaruta_c *self, dActor_c *other);
-void func_ov080_02127658(void *a, void *b, void *c);
 }
+extern s16 data_02082214[];
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */
@@ -111,42 +85,34 @@ void func_ov080_02127658(void *a, void *b, void *c);
  * the cartridge's D0-then-D1 order, with no D2. */
 
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
-void daObjMaruta_c_EmitDeletingDestructor(daObjMaruta_c *p)
-{
+void daObjMaruta_c_EmitDeletingDestructor(daObjMaruta_c *p) {
     delete p;
 }
 
 /* Not called. Forces the out-of-line copy of the inline destructor. */
-void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p)
-{
+void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p) {
     p->~daObjMaruta_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN13daObjMaruta_c15OnHitByMegaCharER6Player, 0x02127058 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjMaruta_c15OnHitByMegaCharER6Player
 /* Vtable slot 27, and this class's KEY FUNCTION: the destructor is inline in
    the class body, so the first out-of-line virtual declared anchors
    _ZTV13daObjMaruta_c and the RTTI chain, and this TU is where it is defined.
    dBgActor_c::KillByMegaChar is non-virtual, so the unqualified call is the
    direct `bl` the ROM has. */
-void daObjMaruta_c::OnHitByMegaChar(Player &player)
-{
+void daObjMaruta_c::OnHitByMegaChar(Player &player) {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePosX);
     KillByMegaChar(player);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- func_ov080_02127094, 0x02127094, size 0x48 */
+/* ROM ordinal 1 -- 0x02127094, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjMaruta_c19func_ov080_02127094Ev
-void daObjMaruta_c::func_ov080_02127094()
-{
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3,
-        mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9]  = mPosX >> 3;
+// @symbol _ZN13daObjMaruta_c20UpdateModelTransformEv
+void daObjMaruta_c::UpdateModelTransform() {
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
@@ -155,8 +121,7 @@ void daObjMaruta_c::func_ov080_02127094()
 /* ROM ordinal 2 -- func_ov080_021270dc, 0x021270dc, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov080_021270dc
-extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg)
-{
+extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg) {
     if (self->mMeshCollider.IsEnabled())
         self->mMeshCollider.Disable();
     arg->model->Release();
@@ -164,15 +129,11 @@ extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN13daObjMaruta_c6RenderEv, 0x02127124, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjMaruta_c6RenderEv
-/* Dispatches through the Model at 0xd4 (dBgActor_c's mModel, inherited) --
-   Model::Render(const Vector3 *) with a null scale, matching the ROM's
+/* Dispatches through the dExtSimpleModel_c at 0xd4 (dBgActor_c's mModel, inherited) --
+   dExtSimpleModel_c::Render(const Vector3 *) with a null scale, matching the ROM's
    literal-0 argument. */
-s32 daObjMaruta_c::Render()
-{
+s32 daObjMaruta_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -181,16 +142,14 @@ s32 daObjMaruta_c::Render()
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov080_0212714c
-extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
-{
+extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
     Vector3 tmp;
     int len;
     int ang;
     s16 v;
     int horz;
 
-    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(
-            self, (s16)-0x1500, 0, 0, 0) != 0)
+    if (self->UpdateKillByMegaChar((s16)-0x1500, 0, 0, 0) != 0)
         return 1;
     if ((int)((self->mFlags & 8) != 0) != 0)
         return 1;
@@ -277,14 +236,14 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
             DecIfAbove0_Short(&self->mSoundTimer);
         }
     }
-    self->func_ov080_02127094();
+    self->UpdateModelTransform();
     {
         int is66 = (int)(self->actorID == 0x66);
         if (is66 != 0) {
-            if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(self, 0, 0) != 0)
+            if (self->IsClsnInRangeOnScreen(0, 0) != 0)
                 self->UpdateClsnPosAndRot();
         } else {
-            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) != 0)
+            if (self->IsClsnInRange(0, 0) != 0)
                 self->UpdateClsnPosAndRot();
         }
     }
@@ -296,20 +255,16 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
 /* ROM ordinal 5 -- func_ov080_021274ac, 0x021274ac, size 0xe0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov080_021274ac
-extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
-{
+extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
     struct Vector3 d;
-    self->mModel.SetFile(
-        (BMD_File *)Model::LoadFile(*arg->model), 1, -1);
-    self->func_ov080_02127094();
+    self->mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
+    self->UpdateModelTransform();
     self->UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &self->mMeshCollider,
-        (KCL_File *)dBgW_Kc::LoadFile(*arg->collision),
-        &self->mClsnMat, 0x1000, self->mAngleY, arg->clps);
-    func_020393d4((int *)&self->mMeshCollider,
-        (int)&dBgW::UpdatePosWithVelocity);
-    func_020393c4((int *)&self->mMeshCollider, (int)&func_ov080_02127658);
+    ((dBgW_KcMbg *)(&self->mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), *(&self->mClsnMat),
+                              0x1000, self->mAngleY, *(arg->clps));
+    func_020393d4((int *)&self->mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+    func_020393c4((int *)&self->mMeshCollider, (int)&daObjMaruta_c::BeforeClsnCallback);
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
     self->mRestPosZ = self->mPosZ;
@@ -321,38 +276,37 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov080_0212758c, 0x0212758c, size 0xcc */
+/* ROM ordinal 6 -- 0x0212758c, size 0xcc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov080_0212758c
-/* BeforeClsn helper: if the other actor's actorID is PLAYER (0xbf), copy
-   its mPos into mHitPos, arm mHitByPlayer / mHitTimer, and shove that
-   actor along mAngleY by half of mHorzSpeed. Retain the volatile actor-ID
-   read and the position view: separate scalar member loads change codegen. */
-extern "C" void func_ov080_0212758c(daObjMaruta_c *self, dActor_c *other)
-{
+// @symbol _ZN13daObjMaruta_c19HandlePlayerContactEP8dActor_c
+/* If the other actor's actorID is PLAYER (0xbf), copy its mPos into mHitPos,
+   arm mHitByPlayer / mHitTimer, and shove that actor along mAngleY by half
+   of mHorzSpeed. Retain the volatile actor-ID read and the position view:
+   separate scalar member loads change codegen. */
+void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
     int t;
     int half;
 
     t = (*(volatile u16 *)&other->actorID == 0xbf);
     if (t != 0) {
         Vector3 *position = &other->mPos;
-        self->mHitPosX = position->x;
-        self->mHitPosY = position->y;
-        self->mHitPosZ = position->z;
-        self->mHitByPlayer = 1;
-        self->mHitTimer = 0x78;
+        mHitPosX = position->x;
+        mHitPosY = position->y;
+        mHitPosZ = position->z;
+        mHitByPlayer = 1;
+        mHitTimer = 0x78;
 
-        half = self->mHorzSpeed >> 1;
+        half = mHorzSpeed >> 1;
 
         {
-            int idx = ((u16)self->mAngleY) >> 4;
+            int idx = ((u16)mAngleY) >> 4;
             int sc = data_02082214[idx * 2];
             int v = position->x;
             position->x = v + FX_MUL(half, sc);
         }
 
         {
-            int idx = ((u16)self->mAngleY) >> 4;
+            int idx = ((u16)mAngleY) >> 4;
             int sc = data_02082214[idx * 2 + 1];
             int v = position->z;
             position->z = v + FX_MUL(half, sc);
@@ -361,16 +315,15 @@ extern "C" void func_ov080_0212758c(daObjMaruta_c *self, dActor_c *other)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov080_02127658, 0x02127658, size 0x14 */
+/* ROM ordinal 7 -- 0x02127658, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov080_02127658
+// @symbol _ZN13daObjMaruta_c18BeforeClsnCallbackEPvS0_S0_
 /* Arg-shifting tail-call veneer, handed to the dBgW at mMeshCollider by
-   func_ov080_021274ac below. Drops the first argument and forwards the next
+   func_ov080_021274ac above. Drops the first argument and forwards the next
    two; long_calls emits the pooled `ldr ip,[pc,#8]; bx ip` absolute
    tail-call. Bracketed closed immediately: long_calls is positional. */
 #pragma long_calls on
-extern "C" void func_ov080_02127658(void *a, void *b, void *c)
-{
-    func_ov080_0212758c((daObjMaruta_c *)b, (dActor_c *)c);
+void daObjMaruta_c::BeforeClsnCallback(void *a, void *b, void *c) {
+    ((daObjMaruta_c *)b)->HandlePlayerContact((dActor_c *)c);
 }
 #pragma long_calls off

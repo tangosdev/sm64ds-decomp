@@ -28,7 +28,7 @@ char data_ov098_0213c388[0x18];
 // ---- gate-9 method bridges (C name -> MSVC method), the gx_upload pattern -
 #include "dBgActor_c.h"
 #include "dExtShadowModel_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 extern "C" {
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self)
 { ((dBgActor_c *)self)->dBgActor_c::UpdateClsnPosAndRot(); }
@@ -38,10 +38,10 @@ void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self)
    data_020ad524 is BUILT AT RUNTIME by boot code not yet hosted (the ov000
    static image holds path strings there). InitCuboid and the per-frame
    drop-shadow install are no-ops until that boot path lands. */
-void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-    void *, void *, void *, int, int, int, unsigned) {}
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp)
-{ return Model::LoadFile(*(SharedFilePtr *)fp); }
+void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x3iiih(
+    void *, void *, void *, int, int, int, unsigned char) {}
+void *_ZN17dExtSimpleModel_c8LoadFileER13SharedFilePtr(void *fp)
+{ return dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)fp); }
 
 // BSS the shadow/collider systems use
 char data_020ad524[0x40];       /* dExtShadowModel_c's template BMD stub */
@@ -49,12 +49,12 @@ void *data_020a0c80[24];        /* the collision actor registry (gate 8) */
 }
 
 #include "dBgW_Kc.h"
-#include "ModelBase.h"
+#include "dExtModel_c.h"
 extern "C" {
 void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp)
 { return dBgW_Kc::LoadFile(*(SharedFilePtr *)fp); }
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
-{ ((ModelBase *)self)->ModelBase::SetFile((BMD_File *)bmd, a, b); }
+void _ZN11dExtModel_c7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
+{ ((dExtModel_c *)self)->dExtModel_c::SetFile((BMD_File *)bmd, a, b); }
 }
 #pragma comment(linker, "/alternatename:?data_ov098_0213c380@@3PADA=_data_ov098_0213c380")
 #pragma comment(linker, "/alternatename:?data_ov098_0213c384@@3PADA=_data_ov098_0213c384")
@@ -102,31 +102,31 @@ extern "C" void Memory_Deallocate(void *p) { _ZN6Memory10DeallocateEPv(p); }
 extern "C" int hal_f0204424c(char *c);
 int func_0204424c(int c) { return hal_f0204424c((char *)c); }
 
-// gate 9: the Model vtable gains real slots at RUNTIME (targets without the
-// Model methods keep the zero storage; nothing dispatches there). MSVC
-// order per Model.h: dtor 0, DoSetFile 1, UpdateVerts 2, Virtual10 3,
-// Render 4. ModelBase::SetFile dispatches DoSetFile -- the first virtual
+// gate 9: the dExtSimpleModel_c vtable gains real slots at RUNTIME (targets without the
+// dExtSimpleModel_c methods keep the zero storage; nothing dispatches there). MSVC
+// order per dExtSimpleModel_c.h: dtor 0, DoSetFile 1, UpdateVerts 2, Virtual10 3,
+// Render 4. dExtModel_c::SetFile dispatches DoSetFile -- the first virtual
 // the actor lifecycle exercises.
 static int __fastcall mv_dosetfile(void *self, void *, char *f, int a, int b)
-{ return ((Model *)self)->Model::DoSetFile(f, a, b); }
+{ return ((dExtSimpleModel_c *)self)->dExtSimpleModel_c::DoSetFile(f, a, b); }
 static void __fastcall mv_updateverts(void *self, void *)
-{ ((Model *)self)->Model::UpdateVerts(); }
+{ ((dExtSimpleModel_c *)self)->dExtSimpleModel_c::UpdateVerts(); }
 static void __fastcall mv_virtual10(void *self, void *, void *m)
-{ ((Model *)self)->Model::Virtual10(*(Matrix4x3 *)m); }
+{ ((dExtSimpleModel_c *)self)->dExtSimpleModel_c::Virtual10(*(Matrix4x3 *)m); }
 static void __fastcall mv_render(void *self, void *, const void *s)
-{ ((Model *)self)->Model::Render((const Vector3 *)s); }
+{ ((dExtSimpleModel_c *)self)->dExtSimpleModel_c::Render((const Vector3 *)s); }
 extern "C" {
-extern void *_ZTV5Model[8];
+extern void *_ZTV17dExtSimpleModel_c[8];
 void hal_fill_model_vtable(void)
 {
-    _ZTV5Model[1] = (void *)mv_dosetfile;
-    _ZTV5Model[2] = (void *)mv_updateverts;
-    _ZTV5Model[3] = (void *)mv_virtual10;
-    _ZTV5Model[4] = (void *)mv_render;
+    _ZTV17dExtSimpleModel_c[1] = (void *)mv_dosetfile;
+    _ZTV17dExtSimpleModel_c[2] = (void *)mv_updateverts;
+    _ZTV17dExtSimpleModel_c[3] = (void *)mv_virtual10;
+    _ZTV17dExtSimpleModel_c[4] = (void *)mv_render;
     /* Slot 5 too: TUs that dispatch through LOCAL shadow classes count in
        ROM/Itanium numbering (two dtor slots), which lands Render at 5.
-       Model.h-compiled TUs land it at 4. The object serves both. */
-    _ZTV5Model[5] = (void *)mv_render;
+       dExtSimpleModel_c.h-compiled TUs land it at 4. The object serves both. */
+    _ZTV17dExtSimpleModel_c[5] = (void *)mv_render;
 }
 }
 
@@ -155,13 +155,13 @@ void Heap::_Destroy() { Heap_Destroy(this); }
 #pragma comment(linker, "/alternatename:?Deallocate@Memory@@SAXPAXPAUHeap_t@mHeap@@@Z=?Deallocate@Memory@@YAXPAXPAUHeap_t@mHeap@@@Z")
 
 extern "C" {
-void *_ZN5Model23AddToCommonModelDataArrER8BMD_File(void *file)
-{ return Model::AddToCommonModelDataArr(*(BMD_File *)file); }
-void *func_0203cc0c(unsigned size);
-void _ZN6Memory10DeallocateEPv(void *p);
-/* the DS global operator new/delete route through the Memory layer */
-void *_Znwj(unsigned size) { return func_0203cc0c(size); }
-/* _ZN6Memory16operator_delete2EPv now lives in hal/ctor_bridge.cpp:
+void *_ZN17dExtSimpleModel_c23AddToCommonModelDataArrER8BMD_File(void *file)
+{ return dExtSimpleModel_c::AddToCommonModelDataArr(*(BMD_File *)file); }
+/* The DS global operator new is spelled `operator new(size_t)` (_Znwm) in
+   src/engine/heap/Heap.cpp and stays the CRT's on the host; the one
+   host-compiled allocation that must come from the DS heap
+   (src/engine/model/d_ext_model.cpp) calls func_0203cc0c directly.
+   _ZN6Memory16operator_delete2EPv now lives in hal/ctor_bridge.cpp:
    every target that builds a migrated model-family constructor needs
    it, not just the ones that link this file. */
 }

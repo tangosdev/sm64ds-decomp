@@ -5,7 +5,7 @@
 
 #ifdef __cplusplus
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #endif
 
 /* The swinging pendulum inside the clock painting -- a leaf dActor_c child at
@@ -52,10 +52,9 @@
  * implementation, so it is not part of this recovery.
  *
  * All four bytes still match; the symbol names were placeholders
- * (func_ov013_0211xxxx) before the rename. func_ov013_02111238, the small
- * helper both InitResources and Behavior call, now lives in the same TU but
- * stays a free function under its func_ name -- it is not a vtable slot, and
- * nothing in the cartridge says whether it is a member.
+ * (func_ov013_0211xxxx) before the rename. UpdateModelTransform
+ * (0x02111238), the small helper both InitResources and Behavior call, is a
+ * non-virtual member: it takes the object in r0 and touches only its fields.
  *
  * REAL METHODS, NOT THE FREE-FUNCTION IDIOM. Older recoveries (daDoor_c before
  * its promotion, src/runtime/actor/ActorBase.cpp) declare the override here but define
@@ -71,14 +70,14 @@
  * implicit `this`; the ROM bytes still match at 106/106.
  *
  * SIZE. daObjClockHuriko_c_classInit asks fBase_c::operator new for 296 =
- * 0x128 bytes. dActor_c is 0xd0 (include/dActor_c.h) and Model is 0x50
- * (include/Model.h), so the embedded Model runs 0xd4..0x124 (the same
+ * 0x128 bytes. dActor_c is 0xd0 (include/dActor_c.h) and dExtSimpleModel_c is 0x50
+ * (include/dExtSimpleModel_c.h), so the embedded dExtSimpleModel_c runs 0xd4..0x124 (the same
  * 4-byte alignment pad include/dBgActor_c.h and include/daDoor_c.h both take
- * before their own Model/ModelAnim members). That leaves exactly
+ * before their own dExtSimpleModel_c/dExtAnmModel_c members). That leaves exactly
  * 0x124..0x127 (4 bytes) as this class's own storage -- one s16, mAngSpeed,
  * plus 2 bytes of trailing padding. Same offset, daObjClock_c.h's sibling
  * field (`mHandIndex`, u8) confirms the shape -- one small scalar right
- * after the embedded Model.
+ * after the embedded dExtSimpleModel_c.
  *
  * Field NAMES are placeholders and cannot change codegen. Offsets and widths
  * are observed.
@@ -90,16 +89,14 @@
 
 #ifdef __cplusplus
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daObjClockHuriko_c : dActor_c {
-    u8  pad_0d0[0x4];
-    /* Named by the implicit constructor's _ZN5ModelC1Ev call at +0xd4 -- a
+    u8 pad_0d0[0x4];
+    /* Named by the implicit constructor's _ZN17dExtSimpleModel_cC1Ev call at +0xd4 -- a
        relocation the ROM build checks. */
-    Model mModel;             /* 0x0d4 */
+    dExtSimpleModel_c mModel; /* 0x0d4 */
 
-    s16 mAngSpeed;               /* 0x124 -- swing speed, see SIZE above */
-    u8  pad_126[0x2];
+    s16 mAngSpeed; /* 0x124 -- swing speed, see SIZE above */
+    u8 pad_126[0x2];
 
     /* --- vtable. The destructor is INLINE, and that is load-bearing rather
        than a style choice. Out of line, mwccarm emits D0 before D1 -- the
@@ -119,17 +116,12 @@ struct daObjClockHuriko_c : dActor_c {
        Now real daObjClockHuriko_c:: methods, defined in
        src/game/actors/d_a_obj_clock_huriko.cpp; the earlier free-function-under-a-
        mangled-symbol idiom is gone with the promotion. --- */
-    virtual s32 InitResources();          /* slot 0 */
-    virtual s32 CleanupResources();       /* slot 3 */
-    virtual s32 Behavior();               /* slot 6 */
-    virtual s32 Render();                 /* slot 9 */
+    virtual s32 InitResources();    /* slot 0 */
+    virtual s32 CleanupResources(); /* slot 3 */
+    virtual s32 Behavior();         /* slot 6 */
+    virtual s32 Render();           /* slot 9 */
 
-    /* Until #2570 merges, a leaf `unsigned long` new forwards the retail
-       `fBase_c::operator new(unsigned int)`. `unsigned int` here mangles
-       differently and the factory misses. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void UpdateModelTransform();
 };
 
 /* Holds the chain to the size the factory's operator new(0x128) evidences.

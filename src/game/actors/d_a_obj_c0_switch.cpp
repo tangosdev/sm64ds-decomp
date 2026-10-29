@@ -26,12 +26,10 @@
  * include/daObjC0_Switch_c.h, declared last, and so emits first, which is
  * where the cartridge has it.
  *
- * deslop leftovers:
- * - dBgW_KcMbg::SetFile 6az: InitResources' by-value Fix12<int> scale makes
- *   the header method form size-DIFF.
- * - dBgActor_c::IsClsnInRange 6az: Behavior's two by-value Fix12<int>
- *   parameters; the header method form is refused by the bytes
- *   (include/dBgActor_c.h).
+ * Notes:
+ * - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange are header member
+ *   calls; their Fix12 parameters are Fix12i, a plain s32. Fix12<int> by
+ *   value would size-DIFF the callers (notes/mwccarm-codegen.md 6az).
  * - data_ov012_021124a8 / 021124a0 are this overlay's BMD/KCL handles,
  *   defined here. data_ov012_02111cd0 is the CLPS block this TU does
  *   not own. data_0209caa0 is an arm9 shared-flags global.
@@ -48,12 +46,9 @@
  */
 
 /* daObjC0_Switch_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
+   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_c0_switch_AssetId {
-    ASSET_C0_SWITCH_BMD = 0x05a9,
-    ASSET_C0_SWITCH_KCL = 0x05aa
-};
+enum d_a_obj_c0_switch_AssetId { ASSET_C0_SWITCH_BMD = 0x05a9, ASSET_C0_SWITCH_KCL = 0x05aa };
 
 #include "daObjC0_Switch_c.h"
 #include "SharedFilePtr.h"
@@ -62,35 +57,22 @@ enum d_a_obj_c0_switch_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct C0SwitchModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     C0SwitchModelFilePtr(u32 fileID);
     ~C0SwitchModelFilePtr();
 };
 
 struct C0SwitchCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     C0SwitchCollisionFilePtr(u32 fileID);
     ~C0SwitchCollisionFilePtr();
 };
 
-extern "C" {
 /* This TU's two file handles: the switch model and its collision file.
  * InitResources loads both, CleanupResources releases them. Defined at the
  * end of this file so the constructors do not enter .text. */
 extern C0SwitchModelFilePtr data_ov012_021124a8;
 extern C0SwitchCollisionFilePtr data_ov012_021124a0;
-extern int data_ov012_02111cd0[];
+extern CLPS_Block data_ov012_02111cd0;
 extern int data_0209caa0[];
-
-/* dBgActor_c::IsClsnInRange(Fix12<int>, Fix12<int>) -- wall 6az on Behavior. */
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-/* dBgW_KcMbg::SetFile -- wall 6az on InitResources. */
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
-    s16 angY, void *clps);
-}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -101,14 +83,13 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
  * preserved. Historical alias: daObjC0_Switch_c_Spawn.
  *
  * Every instruction the cartridge has here falls out of the one `new`.
- * 0x02111424 loads 800 = 0x320 -- the class's own size -- into the header's
- * leaf operator new; 0x02111434 calls dBgActor_c's C2 and the store at
+ * 0x02111424 loads 800 = 0x320 -- the class's own size -- into the inherited
+ * fBase_c::operator new; 0x02111434 calls dBgActor_c's C2 and the store at
  * 0x02111440 lays down this class's vptr. The null check is the one `new`
  * itself emits. The implicit constructor is what keeps the intervening
  * dBgActor_c construction inlined; declaring a constructor of our own would
  * emit a `bl` the factory does not have. */
-extern "C" daObjC0_Switch_c *daObjC0_Switch_c_classInit()
-{
+extern "C" daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
     return new daObjC0_Switch_c();
 }
 
@@ -118,17 +99,15 @@ extern "C" daObjC0_Switch_c *daObjC0_Switch_c_classInit()
 /* daObjC0_Switch_c::InitResources -- vtable slot 0, ov012 0x02111370.
  *
  * mModel/mMeshCollider/mClsnMat/mAngleY are dBgActor_c's/dActor_c's own named
- * fields. Model::LoadFile, ModelBase::SetFile, dBgW_Kc::LoadFile,
- * UpdateModelPosAndRotY and UpdateClsnPosAndRot are real method calls.
- * dBgW_KcMbg::SetFile stays mangled -- it takes Fix12<int> BY VALUE
- * (mwccarm-codegen.md 6az).
+ * fields. dExtSimpleModel_c::LoadFile, dExtModel_c::SetFile, dBgW_Kc::LoadFile,
+ * UpdateModelPosAndRotY, UpdateClsnPosAndRot and dBgW_KcMbg::SetFile are
+ * real method calls.
  *
  * mPosY -= 0x64000 and mPressed = 1 only run when data_0209caa0[2] & 0x80000
  * is set -- some other pillar in the group already reported pressed (see
  * OnGroundPounded), so this one starts sunk and pre-flagged. */
-int daObjC0_Switch_c::InitResources()
-{
-    void *mdl = Model::LoadFile(data_ov012_021124a8);
+int daObjC0_Switch_c::InitResources() {
+    void *mdl = dExtSimpleModel_c::LoadFile(data_ov012_021124a8);
     mModel.SetFile((BMD_File *)mdl, 1, -1);
     if (data_0209caa0[2] & 0x80000) {
         mPosY -= 0x64000;
@@ -137,26 +116,22 @@ int daObjC0_Switch_c::InitResources()
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     void *kcl = dBgW_Kc::LoadFile(data_ov012_021124a0);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)kcl, &mClsnMat, 0x199, mAngleY,
-        data_ov012_02111cd0);
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY, data_ov012_02111cd0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjC0_Switch_c8BehaviorEv
-s32 daObjC0_Switch_c::Behavior()
-{
-    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
+s32 daObjC0_Switch_c::Behavior() {
+    IsClsnInRange(0, 0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjC0_Switch_c6RenderEv
-s32 daObjC0_Switch_c::Render()
-{
+s32 daObjC0_Switch_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -164,8 +139,7 @@ s32 daObjC0_Switch_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjC0_Switch_c16CleanupResourcesEv
-s32 daObjC0_Switch_c::CleanupResources()
-{
+s32 daObjC0_Switch_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov012_021124a8.Release();
     data_ov012_021124a0.Release();
@@ -183,9 +157,9 @@ s32 daObjC0_Switch_c::CleanupResources()
  * otherwise it sinks, marks itself pressed, then returns at the first
  * non-this actorID-0x22 pillar and, if that one is already pressed, sets
  * the shared group flag in data_0209caa0[2] that InitResources reads. */
-void daObjC0_Switch_c::OnGroundPounded(dActor_c &other)
-{
-    if (mPressed) return;
+void daObjC0_Switch_c::OnGroundPounded(dActor_c &other) {
+    if (mPressed)
+        return;
     mPosY -= 0x64000;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();

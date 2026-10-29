@@ -183,7 +183,12 @@ struct dScMgBomroom_c : dScMgBase_c {
     u8 mShowTally;      /* 0x62f9 -- DrawRemaining draws mTallyCount while set */
     u8 mRoundOver;      /* 0x62fa -- gates the round-over sprite */
     u8 mFusesFrozen;    /* 0x62fb -- set when a pen fills; the fuses stop */
-    u8 unk_62fc[0x4];   /* 0x62fc -- trailing bytes, handed out as a small buffer */
+    u8 mSpawnHatchFlip; /* 0x62fc -- SpawnBombs toggles bit 0 on each wave of
+                           spawn steps 7, 8 and 11: clear sends the wave from
+                           hatch 0 (y 0), set from hatch 1 (y 0xb8); step 8
+                           also adds the bit to the bomb count. ResetRound
+                           clears it. */
+    u8 pad_62fd[0x3];   /* 0x62fd -- tail padding to the 0x6300 allocation */
 };
 
 #ifndef SM64DS_PLATFORM_PC

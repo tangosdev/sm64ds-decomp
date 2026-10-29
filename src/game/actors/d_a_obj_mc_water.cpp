@@ -14,18 +14,11 @@
  * written FIRST. The inline destructor in include/daObjMcWater_c.h emits
  * the retail D1/D0 pair first and emits no D2 body.
  *
- * deslop leftovers:
- * - TextureTransformer::SetFile / dBgW_KcMbg::SetFile 6az: InitResources
- *   passes Fix12<int> by value; the header method form size-DIFFs.
- * - SharedFilePtr +4: InitResources' TextureTransformer::Prepare reads the
- *   BMD at data_ov009_02113c68 +4; SharedFilePtr.h has no fields.
- * - data_ov009_02113c68 / 02113c70 / 02112bc4 / 02112c38 model/KCL/BTA/CLPS
- *   handles and data_ov009_02113d8c / 02113de0 / 02113e34 spawn tables;
- *   this TU consumes them, overlay .bss/.data owns them.
- * - S14: g_profile_MC_WATER stays outside the licensed .text.
- * - func_ov009_02111b1c stays a C-linkage free function; the cartridge
- *   gives it a global symbol other config still names.
- * - no Player.h.
+ * Notes:
+ * - data_ov009_02112bc4 / 02112c38 BTA/CLPS blocks: this TU consumes
+ *   them, overlay .data owns them. The model/KCL handles and the three
+ *   spawn tables are defined here.
+ * - g_profile_MC_WATER stays outside the licensed .text.
  *
  * Absorbed these legacy one-function sources (ROM address order), all deleted
  * by tools/tu_promote.py:
@@ -49,40 +42,71 @@ struct BTA_File;
 struct KCL_File;
 struct CLPS_Block;
 
-extern "C" {
-void func_ov009_02111b1c(daObjMcWater_c *self);
-void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-    void *self, void *bta, int a, int fix, unsigned b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, void *kcl, void *mtx, int fix, short s, void *clps);
-
-extern void *data_ov009_02113c68[];
-extern SharedFilePtr data_ov009_02113c70;
 extern BTA_File data_ov009_02112bc4;
 extern CLPS_Block data_ov009_02112c38;
-extern Vector3 data_ov009_02113d8c[];
-extern Vector3 data_ov009_02113de0[];
-extern Vector3 data_ov009_02113e34[];
 extern unsigned char data_0209f2d8[];
 extern int data_0209caa0[];
 extern int data_0209f32c;
-}
+
+/* Runtime asset handles, distinct from the NitroFS file IDs. */
+enum daObjMcWater_c_AssetId { ASSET_MC_WATER_BMD = 0x0693, ASSET_MC_WATER_KCL = 0x0694 };
+
+/* The handles reach their files through these wrappers' constructor and
+   destructor veneers; the manifest maps each to the retail destination.
+   Descriptive local types, not recovered spellings. */
+struct McWaterModelFile : SharedFilePtr {
+    McWaterModelFile(u32 fileID);
+    ~McWaterModelFile();
+};
+
+struct McWaterCollisionFile : SharedFilePtr {
+    McWaterCollisionFile(u32 fileID);
+    ~McWaterCollisionFile();
+};
+
+/* This TU's file handles and spawn tables, in the order the retail
+   initializer (0x02112524) builds them. */
+McWaterModelFile gMcWaterModelFile(ASSET_MC_WATER_BMD);
+McWaterCollisionFile gMcWaterCollisionFile(ASSET_MC_WATER_KCL);
+
+/* SpawnWaterfalls spawns actor 0xc5 at each of the seven positions in one
+   of these tables. Its default table: */
+Vector3 data_ov009_02113d8c[7] = {
+    Vector3(-0x16b2000, -0x5a000, -0x9f6000),  Vector3(-0x15e0000, -0x5a000, -0xad2000),
+    Vector3(-0x1540000, -0x5a000, -0xbc2000),  Vector3(-0x14aa000, -0x5a000, -0xcbc000),
+    Vector3(-0x1450000, -0x5a000, -0xdca000),  Vector3(-0x141e000, -0x5a000, -0xeec000),
+    Vector3(-0x141e000, -0x5a000, -0x100e000),
+};
+
+/* ... when bit 0x80000 of data_0209caa0[2] is set: */
+Vector3 data_ov009_02113e34[7] = {
+    Vector3(-0x152c000, -0x320000, -0x97e000), Vector3(-0x1450000, -0x320000, -0xa46000),
+    Vector3(-0x13a6000, -0x320000, -0xb2c000), Vector3(-0x1324000, -0x320000, -0xc30000),
+    Vector3(-0x12ac000, -0x320000, -0xd34000), Vector3(-0x12ac000, -0x320000, -0xda2000),
+    Vector3(-0x1298000, -0x320000, -0xe56000),
+};
+
+/* ... and when data_0209f2d8[0] is 1: */
+Vector3 data_ov009_02113de0[7] = {
+    Vector3(-0x14d2000, -0x42e000, -0x960000), Vector3(-0x140a000, -0x42e000, -0xa32000),
+    Vector3(-0x136a000, -0x42e000, -0xb18000), Vector3(-0x12f2000, -0x42e000, -0xc12000),
+    Vector3(-0x1284000, -0x42e000, -0xd0c000), Vector3(-0x1266000, -0x42e000, -0xe1a000),
+    Vector3(-0x128e000, -0x42e000, -0xf32000),
+};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjMcWater_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: CastleWater_Spawn. */
-extern "C" daObjMcWater_c *daObjMcWater_c_classInit()
-{
+extern "C" daObjMcWater_c *daObjMcWater_c_classInit() {
     return new daObjMcWater_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjMcWater_c13InitResourcesEv
-int daObjMcWater_c::InitResources()
-{
+int daObjMcWater_c::InitResources() {
     int b = (int)(data_0209f2d8[0] == 1);
     if (b == 0) {
         if (data_0209caa0[2] & 0x80000) {
@@ -90,35 +114,31 @@ int daObjMcWater_c::InitResources()
         }
     }
     {
-        BMD_File *bmd = (BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov009_02113c68);
+        BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gMcWaterModelFile);
         mModel.SetFile(bmd, 1, 0x14);
     }
-    TextureTransformer::Prepare(*(BMD_File *)data_ov009_02113c68[1], data_ov009_02112bc4);
-    /* 6az: header SetFile takes Fix12<int> by value. */
-    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-        &mTexTransformer, &data_ov009_02112bc4, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gMcWaterModelFile.filePtr, data_ov009_02112bc4);
+    mTexTransformer.SetFile(data_ov009_02112bc4, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov009_02113c70);
-        /* 6az: header SetFile takes Fix12<int> by value. */
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, &data_ov009_02112c38);
+        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(gMcWaterCollisionFile);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112c38);
     }
     mMeshCollider.Enable(this);
     {
         int v = mPosY - 0x64000;
-        if (data_0209f32c > v) data_0209f32c = v;
+        if (data_0209f32c > v)
+            data_0209f32c = v;
     }
-    func_ov009_02111b1c(this);
+    SpawnWaterfalls();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjMcWater_c8BehaviorEv
-int daObjMcWater_c::Behavior()
-{
+int daObjMcWater_c::Behavior() {
     mTexTransformer.speed = 0x1000;
     mTexTransformer.Advance();
     return 1;
@@ -127,8 +147,7 @@ int daObjMcWater_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjMcWater_c6RenderEv
-int daObjMcWater_c::Render()
-{
+int daObjMcWater_c::Render() {
     mTexTransformer.Update(mModel.data);
     mModel.Render(0);
     return 1;
@@ -137,10 +156,9 @@ int daObjMcWater_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjMcWater_c16CleanupResourcesEv
-int daObjMcWater_c::CleanupResources()
-{
-    ((SharedFilePtr *)data_ov009_02113c68)->Release();
-    data_ov009_02113c70.Release();
+int daObjMcWater_c::CleanupResources() {
+    gMcWaterModelFile.Release();
+    gMcWaterCollisionFile.Release();
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     return 1;
@@ -148,20 +166,20 @@ int daObjMcWater_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov009_02111b1c
-extern "C" void func_ov009_02111b1c(daObjMcWater_c *self)
-{
+// @symbol _ZN14daObjMcWater_c15SpawnWaterfallsEv
+void daObjMcWater_c::SpawnWaterfalls() {
     Vector3 *vec;
     int i;
     int b = (int)(data_0209f2d8[0] == 1);
     if (b != 0) {
-        if (self->mPosX > 0) return;
+        if (mPosX > 0)
+            return;
         vec = data_ov009_02113de0;
     } else {
         vec = (data_0209caa0[2] & 0x80000) ? data_ov009_02113e34 : data_ov009_02113d8c;
     }
     for (i = 0; i < 7; i++) {
-        dActor_c::Spawn(0xc5, 0, vec[i], 0, self->mAreaId, -1);
+        dActor_c::Spawn(0xc5, 0, vec[i], 0, mAreaId, -1);
     }
 }
 

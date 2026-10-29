@@ -35,10 +35,14 @@
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
- * gets __arraydtor$954 (and @955), and symbols.txt and the manifest name
- * __arraydtor$954, so an edit here has to keep that count. The named
- * parameters on the ApproachLinear2 and __cxa_vec_cleanup prototypes stand
- * in for names removed elsewhere, and the
+ * gets __arraydtor$974 (and @975); symbols.txt names the thunk
+ * __arraydtor$954, and the manifest renames both onto their configured
+ * names, so an edit here that moves the count re-keys those two rows. The
+ * two function-local Vector2 statics (Banner_StartWaveBurst,
+ * Banner_SetupZoomBurst) are renamed the same way, onto the ov004 .bss names
+ * at 0x020bf3ec..0x020bf41c that this unit owns. The named
+ * parameters on the __cxa_vec_cleanup prototype stand in for names
+ * removed elsewhere, and the
  * six record copies in Banner_StartSpin, Banner_StartWaveBurst and
  * Banner_Press stay W2 (int[2]) copies: assigning the records as
  * ElemFn emits the same code but moves the counter by 8 (measured).
@@ -96,6 +100,9 @@
 
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "Vector2.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
 struct M { int _00, _01, _10, _11; };
 struct Pair { int a, b; };
@@ -150,26 +157,23 @@ struct MgBanner {
     ~MgBanner() {}
 };
 
-extern int ApproachLinear(int &, int, int);
-extern int ApproachLinear2(short &value, short target, short step);
 
+namespace cstd {
+int fdiv(s32 a, s32 b);
+}
 extern "C" {
 void Deallocate(void *ptr);
 int GetGameLanguage(void);
 int LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(int a, void *b, int c, int d);
-int _ZN4cstd4fdivEii(int a, int b);
 int func_02053200(int x);
-unsigned int func_02012790(unsigned int x);
-void __register_global_object(void *object, void *destructor, void **node);
 void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, int angle);
 int RandomIntInternal(int *seed);
 void Mg_SpawnFx(int c, short a1, int *a2, int *r3, int *sp0);
-/* local extern: only sibling minigame scene headers declare these two, and the
-   named __cxa_vec_cleanup parameters hold the @NNN count noted above. */
-void NullDestructor_0203d47c(void);
+/* local extern: only sibling minigame scene headers declare it, and its
+   named parameters hold the @NNN count noted above. */
 void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, void (*dtor)(void *));
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(int a, int b, int c, int d, int e);
@@ -197,12 +201,13 @@ extern int pmf_Banner_DrawSpin[];
 extern int pmf_Banner_UpdateSpin[];
 extern int pmf_Banner_UpdatePressed_2[];
 extern unsigned char sMgBannerGfxSlotUsed[];
-extern int sBannerWaveFxPosGuard;
-extern int sBannerZoomFxPosGuard;
-extern int sBannerWaveFxPos[2];
-extern int sBannerZoomFxPos[2];
-extern void *sBannerZoomFxPosDtorRec[3];
-extern void *sBannerWaveFxPosDtorRec[3];
+/* Where Banner_Init decompresses a banner for each graphics slot: the byte
+   offset into the OBJ character VRAM of each screen it draws on. */
+enum MgBannerCharOffset {
+    MG_BANNER_SLOT0_CHARS = 0x7000,
+    MG_BANNER_SLOT1_CHARS = 0x6000,
+    MG_BANNER_SLOT2_CHARS = 0x6800
+};
 extern PairW sBannerUpdateTable[];
 extern PairW sBannerSetupTable[];
 extern PairW sBannerDrawTable[];
@@ -404,25 +409,25 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     case 14: case 16: case 17: case 18: case 19: case 20: case 21:
         if (sMgBannerGfxSlotUsed[0] != 0)
             return;
-        DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + 0x7000));
+        DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT0_CHARS));
         if (b != 0)
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + 0x7000));
+            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT0_CHARS));
         e->mGfxSlot = 0;
         sMgBannerGfxSlotUsed[0] = 1;
         break;
     default:
         if (sMgBannerGfxSlotUsed[1] == 0) {
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + 0x6000));
+            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT1_CHARS));
             if (b != 0)
-                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + 0x6000));
+                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT1_CHARS));
             e->mGfxSlot = 1;
             sMgBannerGfxSlotUsed[1] = 1;
             break;
         }
         if (sMgBannerGfxSlotUsed[2] == 0) {
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + 0x6800));
+            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT2_CHARS));
             if (b != 0)
-                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + 0x6800));
+                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT2_CHARS));
             e->mGfxSlot = 2;
             sMgBannerGfxSlotUsed[2] = 1;
             break;
@@ -640,7 +645,6 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     int boxA[2], boxB[2], boxC[2];
     int posA[2];
     int outA[2], outB[2];
-    int flags;
 
     int shifted;
 
@@ -657,26 +661,18 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     boxB[0] = 0; boxB[1] = -0x1800;
     boxC[0] = 0; boxC[1] = -0x4000;
 
-    flags = sBannerWaveFxPosGuard;
-
     {
-        int y12 = e->mY;
-        int y10 = e->mX;
-        int sY12, sY10;
-        flags = flags & 1;
-        sY12 = y12 << 12;
-        sY10 = y10 << 12;
-        posA[0] = sY10;
-        posA[1] = sY12;
+        int y = e->mY;
+        int x = e->mX;
+        int fy = y << 12;
+        int fx = x << 12;
+        posA[0] = fx;
+        posA[1] = fy;
     }
 
-    if (flags == 0) {
-        sBannerWaveFxPos[0] = 0;
-        sBannerWaveFxPos[1] = 0xc0;
-        __register_global_object(sBannerWaveFxPos, (void *)NullDestructor_0203d47c,
-                                 sBannerWaveFxPosDtorRec);
-        sBannerWaveFxPosGuard = sBannerWaveFxPosGuard | 1;
-    }
+    /* The burst's effect origin: built once, on the first burst, then
+       registered for destruction at exit. */
+    static Vector2 sBannerWaveFxPos(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
         int r;
@@ -694,7 +690,7 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
         ang = ang + 0x5a;
         spawnAngle = (s16)ang;
 
-        Mg_SpawnFx(0, spawnAngle, outA, outB, sBannerWaveFxPos);
+        Mg_SpawnFx(0, spawnAngle, outA, outB, (int *)&sBannerWaveFxPos);
     }
 }
 
@@ -707,7 +703,7 @@ extern "C" void Banner_DrawSqueeze(MgBanner *e) {
     m = FX_MUL(e->mTimer, 0xcc);
     {
         u8* el = e->mOam;
-        fd = _ZN4cstd4fdivEii(m, 0x1000);
+        fd = cstd::fdiv(m, 0x1000);
         t = FX_MUL(fd, 0x1000);
         v = func_02053200(m);
         {
@@ -758,7 +754,7 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
             if (e->mTimer >= 0x14000) {
                 v = 0x1000;
             } else {
-                int t = _ZN4cstd4fdivEii(0x1000, 0x18000);
+                int t = cstd::fdiv(0x1000, 0x18000);
                 v -= FX_MUL(e->mTimer, t);
                 v = func_02053200(v);
             }
@@ -809,7 +805,7 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
             if (e->mTimer >= 0x14000) {
                 v = 0x1000;
             } else {
-                int t = _ZN4cstd4fdivEii(0x1000, 0x18000);
+                int t = cstd::fdiv(0x1000, 0x18000);
                 v -= FX_MUL(e->mTimer, t);
                 v = func_02053200(v);
             }
@@ -950,12 +946,12 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
             if (val < 0x14000) {
                 int t;
                 d = FX_MUL(val, 0x100);
-                t = _ZN4cstd4fdivEii(d, 0x1400);
+                t = cstd::fdiv(d, 0x1400);
                 scale = FX_MUL(t, 0x1400);
             } else {
                 int a = FX_MUL((val - 0x14000), 0x66);
                 int b = 0x1400 - a;
-                int t = _ZN4cstd4fdivEii(b - 0x1000, 0x400);
+                int t = cstd::fdiv(b - 0x1000, 0x400);
                 scale = (0x1000 - t) + FX_MUL(t, 0x1400);
                 d = b;
             }
@@ -1019,12 +1015,12 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
             if (val < 0x14000) {
                 int t;
                 d = FX_MUL(val, 0x100);
-                t = _ZN4cstd4fdivEii(d, 0x1400);
+                t = cstd::fdiv(d, 0x1400);
                 scale = FX_MUL(t, 0x1400);
             } else {
                 int a = FX_MUL((val - 0x14000), 0x66);
                 int b = 0x1400 - a;
-                int t = _ZN4cstd4fdivEii(b - 0x1000, 0x400);
+                int t = cstd::fdiv(b - 0x1000, 0x400);
                 scale = (0x1000 - t) + FX_MUL(t, 0x1400);
                 d = b;
             }
@@ -1087,7 +1083,6 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     int boxA[2], boxB[2], boxC[2];
     int posA[2];
     int outA[2], outB[2];
-    int flags;
     int r;
     int ang;
     s16 spawnAngle;
@@ -1102,26 +1097,16 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     boxC[0] = 0;
     boxC[1] = -0x4000;
 
-    flags = sBannerZoomFxPosGuard;
-
     {
-        int y12 = e->mY;
-        int y10 = e->mX;
-        int sY12, sY10;
-        flags = flags & 1;
-        sY12 = y12 << 12;
-        sY10 = y10 << 12;
-        posA[0] = sY10;
-        posA[1] = sY12;
+        int y = e->mY;
+        int x = e->mX;
+        int fy = y << 12;
+        int fx = x << 12;
+        posA[0] = fx;
+        posA[1] = fy;
     }
 
-    if (flags == 0) {
-        sBannerZoomFxPos[0] = 0;
-        sBannerZoomFxPos[1] = 0xc0;
-        __register_global_object(sBannerZoomFxPos, (void *)NullDestructor_0203d47c,
-                                 sBannerZoomFxPosDtorRec);
-        sBannerZoomFxPosGuard = sBannerZoomFxPosGuard | 1;
-    }
+    static Vector2 sBannerZoomFxPos(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
         func_0203d704(outA, posA, boxC);
@@ -1135,7 +1120,7 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
         ang = ang + 0x5a;
         spawnAngle = (s16)ang;
 
-        Mg_SpawnFx(0, spawnAngle, outA, outB, sBannerZoomFxPos);
+        Mg_SpawnFx(0, spawnAngle, outA, outB, (int *)&sBannerZoomFxPos);
     }
 }
 

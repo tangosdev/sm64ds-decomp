@@ -37,28 +37,28 @@
       "ordinal": 1
     },
     {
-      "symbol": "daObjFallBlock_c_LinkGroup",
+      "symbol": "_ZN16daObjFallBlock_c9LinkGroupEv",
       "address": "0x0213a00c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov098_0213a00c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "daObjFallBlock_c_PollLinkedStar",
+      "symbol": "_ZN16daObjFallBlock_c14PollLinkedStarEv",
       "address": "0x0213a0a8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov098_0213a0a8.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "daObjFallBlock_c_FindLinkedStar",
+      "symbol": "_ZN16daObjFallBlock_c14FindLinkedStarEv",
       "address": "0x0213a0e8",
       "size": "0x00000060",
       "legacy_source": "src/func_ov098_0213a0e8.c",
       "ordinal": 4
     },
     {
-      "symbol": "daObjFallBlock_c_ResetMotion",
+      "symbol": "_ZN16daObjFallBlock_c11ResetMotionEv",
       "address": "0x0213a148",
       "size": "0x00000034",
       "legacy_source": "src/func_ov098_0213a148.c",
@@ -72,7 +72,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjFallBlock_c_ApplyModelXyz",
+      "symbol": "_ZN16daObjFallBlock_c13ApplyModelXyzEv",
       "address": "0x0213a23c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov098_0213a23c.c",
@@ -86,7 +86,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_ov098_0213a2cc",
+      "symbol": "_ZN16daObjFallBlock_c20CleanupResourcesFromEP18ResourceDescriptor",
       "address": "0x0213a2cc",
       "size": "0x00000048",
       "legacy_source": "src/func_ov098_0213a2cc.c",
@@ -107,21 +107,21 @@
       "ordinal": 11
     },
     {
-      "symbol": "daObjFallBlock_c_InitResources",
+      "symbol": "_ZN16daObjFallBlock_c17InitResourcesFromEP18ResourceDescriptor",
       "address": "0x0213a794",
       "size": "0x0000014c",
       "legacy_source": "src/func_ov098_0213a794.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "daObjFallBlock_c_RequestShake",
+      "symbol": "_ZN16daObjFallBlock_c12RequestShakeEP8dActor_c",
       "address": "0x0213a8e0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov098_0213a8e0.c",
       "ordinal": 13
     },
     {
-      "symbol": "daObjFallBlock_c_OnStoodOn",
+      "symbol": "_ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWPS_P8dActor_c",
       "address": "0x0213a8ec",
       "size": "0x00000014",
       "legacy_source": "src/func_ov098_0213a8ec.c",

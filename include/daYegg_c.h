@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -19,8 +19,8 @@
  * at 0x38c, so everything below that is this class's own.
  *
  * The old flat header also carried a marker at 0x350 called mAnimation. That is not a
- * member of this class at all -- ModelAnim derives from BOTH Model and dExtFrameCtrl_c, and
- * the dExtFrameCtrl_c base sits at +0x50, so 0x300 + 0x50 is mModelAnim's dExtFrameCtrl_c
+ * member of this class at all -- dExtAnmModel_c derives from BOTH dExtSimpleModel_c and dExtFrameCtrl_c, and
+ * the dExtFrameCtrl_c base sits at +0x50, so 0x300 + 0x50 is mAnmModel's dExtFrameCtrl_c
  * subobject. It disappears here because the type expresses it.
  */
 /* The egg's state number (mState, +0x3f0) indexes a table of eight member-function
@@ -58,7 +58,7 @@ enum daYegg_Flag {
 struct daYegg_c : dEnemyBase_c {
     dCcAc_c             mdCcAc_c;               /* 0x110 */
     dBgCh_Actr          mWithMeshClsn;          /* 0x144 */
-    ModelAnim           mModelAnim;             /* 0x300 */
+    dExtAnmModel_c mAnmModel;                   /* 0x300 */
     dExtShadowModel_c         mShadowModel;           /* 0x364 */
     /* The ROM loads this WORD and passes it to _ZN6Player16IsInsideOfCannonEv as that
        function's `this`, which is an object address -- so the word is a Player *.
@@ -115,8 +115,11 @@ struct daYegg_c : dEnemyBase_c {
     u8  mTargetedCount;                         /* 0x41c */
     u8  mWobbling;                              /* 0x41d -- state 2: the tilt is being
                                                    damped back to level */
-    u8  unk_41e;                                /* 0x41e -- DecIfAbove0_Byte countdown
-                                                   in state 0; only ever cleared here */
+    /* State 0 (func_ov002_020ed0d4) rebuilds the hold target and goal angles
+       only while DecIfAbove0_Byte finds this at 0, so a nonzero count holds
+       them frozen; the rebuild clears it. Nothing in the tree loads it
+       nonzero (medium confidence). Was unk_41e. */
+    u8 mHoldFreezeTimer; /* 0x41e */
     /* func_ov002_020ed6cc reloads this to 0xf whenever the egg moved 50 units or
        more since its last call, and counts it down otherwise. */
     u8  mStallTimer;                            /* 0x41f */

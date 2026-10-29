@@ -16,21 +16,21 @@
  * itself to this tag. */
 struct daObjBlockItemTag_c : dActor_c {
     u8 pad_0d0[0x4];
-    s8 mStarID;                    /* 0x0d4 -- Silver Star number, 0x7f -> 0 */
-    s8 mTrackStarID;               /* 0x0d5 -- dActor_c::TrackStar result */
-    u8 mActionPending;             /* 0x0d6 */
-    u8 mActionIndex;               /* 0x0d7 -- index into the four-entry PMF table */
-    u8 mIsAttached;                /* 0x0d8 -- linked to a physical block */
+    s8 mStarID;        /* 0x0d4 -- Silver Star number, 0x7f -> 0 */
+    s8 mTrackStarID;   /* 0x0d5 -- dActor_c::TrackStar result */
+    u8 mActionPending; /* 0x0d6 */
+    u8 mActionIndex;   /* 0x0d7 -- index into the four-entry PMF table */
+    u8 mIsAttached;    /* 0x0d8 -- linked to a physical block */
     u8 pad_0d9[0x3];
 
     /* Declared first so the single out-of-line definition in
      * src/game/actors/d_a_obj_block_item_tag.cpp stays the key function and the TU
      * emits the same verified data passengers. */
-    virtual ~daObjBlockItemTag_c();                         /* slots 16, 17 */
+    virtual ~daObjBlockItemTag_c(); /* slots 16, 17 */
 
-    virtual int InitResources();                   /* slot  0 */
-    virtual int CleanupResources();                /* slot  3 */
-    virtual int Behavior();                        /* slot  6 */
+    virtual int InitResources();    /* slot  0 */
+    virtual int CleanupResources(); /* slot  3 */
+    virtual int Behavior();         /* slot  6 */
 
     /* The ROM helper takes (&destination, &tag), not a member-function ABI
      * (this, &destination). A static class helper preserves that observed

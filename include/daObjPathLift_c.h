@@ -13,16 +13,16 @@
  * SIZE 0x4b4, the literal daObjPathLift_c_classInit factory passes to
  * fBase_c::operator new. dPathLiftActor_c ends at 0x450; the D1 destructor
  * destroys only a dExtShadowModel_c at 0x450 before storing the base vtable and
- * running dPathLiftActor_c's destructor (Model[3] array, inlined per
+ * running dPathLiftActor_c's destructor (dExtSimpleModel_c[3] array, inlined per
  * include/PathLift.h), so dExtShadowModel_c is this class's only member with a
  * constructor/destructor of its own.
  *
- * unk_428, unk_42c, unk_43c and unk_440 are NOT this class's own fields --
- * they are all < 0x450, inside dPathLiftActor_c's own storage. This class's
- * methods reach them as inherited members.
+ * mWaitTimer, mRespawnAfterFall, mPathDirection and mPathSpeed are NOT this
+ * class's own fields -- they are all < 0x450, inside dPathLiftActor_c's own
+ * storage. This class's methods reach them as inherited members.
  *
- * unk_478 is the drop-shadow matrix func_ov100_02146e70 fills and hands to
- * dActor_c::DropShadowScaleXYZ; 0x478 + 0x30 = 0x4a8. Kept as raw storage:
+ * mShadowMat is the drop-shadow matrix UpdateShadow fills and hands
+ * to dActor_c::DropShadowScaleXYZ; 0x478 + 0x30 = 0x4a8. Kept as s32[12]:
  * a Matrix4x3 member (Vector3 translation) is non-trivial and changes the
  * factory.
  */
@@ -35,19 +35,12 @@
 #include "PathLift.h"
 #include "dExtShadowModel_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daObjPathLift_c : dPathLiftActor_c {
     dExtShadowModel_c mShadowModel; /* 0x450 */
-    u8          unk_478[0x30]; /* 0x478 */
-    u32         mSoundHandle; /* 0x4a8 */
-    s32         mGroundY;     /* 0x4ac */
-    u8          mTimer;       /* 0x4b0 */
-
-    static void *operator new(size_t size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    s32 mShadowMat[12];             /* 0x478 -- [9..11] the translation, pos >> 3 */
+    u32 mSoundHandle;               /* 0x4a8 */
+    s32 mGroundY;                   /* 0x4ac */
+    u8 mTimer;                      /* 0x4b0 */
 
     virtual ~daObjPathLift_c() {}
 
@@ -55,12 +48,18 @@ struct daObjPathLift_c : dPathLiftActor_c {
     int CleanupResources();
     int Behavior();
     int Render();
+
+    /* ov100 0x0214700c: mModel's matrix from the pitch and yaw plus
+       position >> 3; returns the z word, which no caller reads. */
+    int UpdateModelMatrix();
+    /* ov100 0x02146e70: place mShadowModel under the lift (skipped in
+       level 13 and when the lift is below its ground). */
+    void UpdateShadow();
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjPathLift_c_size_must_be_0x4b4[
-    sizeof(daObjPathLift_c) == 0x4b4 ? 1 : -1];
+typedef char daObjPathLift_c_size_must_be_0x4b4[sizeof(daObjPathLift_c) == 0x4b4 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

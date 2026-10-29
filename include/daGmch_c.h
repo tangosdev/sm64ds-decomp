@@ -3,8 +3,8 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "ModelAnim.h"
-#include "Model.h"
+#include "dExtAnmModel_c.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -23,15 +23,15 @@ struct daGmch_c : dActor_c {
        fact the player is not asserted here.
        [UpdateState6, EnterState7] */
     dActor_c *mHolder;                       /* 0x0d0 */
-    ModelAnim mModelAnim;                    /* 0x0d4 */
-    Model mModel;                            /* 0x138 */
+    dExtAnmModel_c mAnmModel;                /* 0x0d4 */
+    dExtSimpleModel_c mModel;                /* 0x138 */
     dExtShadowModel_c mShadowModel;                /* 0x188 */
     dCcAc_c mdCcAc_c;  /* 0x1b0 */
     dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
     /* InitResources assigns IDENTITY_MATRIX4X3 into it whole, and
        UpdateDrawMatrices writes the position, scaled by 8, into its
        translation row before handing it to DropShadowRadHeight.  The
-       Matrix4x3 type reaches this header through Model.h.
+       Matrix4x3 type reaches this header through dExtSimpleModel_c.h.
        [InitResources, UpdateDrawMatrices] */
     Matrix4x3 mMatrix;      /* 0x3a0 */
     /* Copy of mPosX/Y/Z taken once in InitResources.

@@ -18,9 +18,24 @@
       "end": "0x0211ff34"
     },
     {
+      "name": ".init",
+      "start": "0x02122018",
+      "end": "0x021221f8"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02122708",
+      "end": "0x0212270c"
+    },
+    {
       "name": ".data",
-      "start": "0x02122780",
+      "start": "0x02122720",
       "end": "0x0212283c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02122b20",
+      "end": "0x02122bc4"
     }
   ],
   "functions": [
@@ -230,6 +245,90 @@
   ],
   "data": [
     {
+      "symbol": "data_ov072_02122720",
+      "address": "0x02122720",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122728",
+      "address": "0x02122728",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122730",
+      "address": "0x02122730",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122738",
+      "address": "0x02122738",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122740",
+      "address": "0x02122740",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122748",
+      "address": "0x02122748",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122750",
+      "address": "0x02122750",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122758",
+      "address": "0x02122758",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122760",
+      "address": "0x02122760",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122768",
+      "address": "0x02122768",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122770",
+      "address": "0x02122770",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov072_02122778",
+      "address": "0x02122778",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into gBgSnmBdyStates; target matched to the retail .data relocation"
+    },
+    {
       "symbol": "_ZTI12daBgSnmBdy_c",
       "address": "0x02122780",
       "size": "0xc",
@@ -256,7 +355,57 @@
       "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x021227c0"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "gBgSnmBdyModelFile",
+      "address": "0x02122b20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with asset 0x2ad and registered with func_02017ab4, as in retail"
+    },
+    {
+      "symbol": "data_ov072_02122b28",
+      "address": "0x02122b28",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov072_02122b34",
+      "address": "0x02122b34",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "gBgSnmBdyReachPoint",
+      "address": "0x02122b40",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "file-scope Vector3(-0xad0000, 0x290000, -0x9d0000); retail stores the three words and registers ~Vector3()"
+    },
+    {
+      "symbol": "data_ov072_02122b4c",
+      "address": "0x02122b4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "gBgSnmBdyLandingPoint",
+      "address": "0x02122b58",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "file-scope Vector3(-0x1004000, -0x591000, 0x6fe000); retail stores the three words and registers ~Vector3(). The next configured bss symbol, 0x02122bc4, is daBgSnmHed_c's model handle"
+    },
+    {
+      "symbol": "gBgSnmBdyStates",
+      "address": "0x02122b64",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "six two-PMF state rows (init, behavior) that the initializer fills from the twelve literals; SetState indexes it at state * 0x10"
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "_ZN12daBgSnmBdy_cD1Ev",
@@ -269,6 +418,108 @@
       "from": "STB_LOPROC",
       "to": "STB_GLOBAL",
       "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the one-function control and configured ROM symbol use global binding"
+    },
+    {
+      "symbol": "__sinit_d_a_bg_snm_bdy.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_bg_snm_bdy.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_ov072_02122720",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122728",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122730",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122738",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122740",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122748",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122750",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122758",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122760",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122768",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122770",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122778",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122b28",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122b34",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov072_02122b4c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
     }
   ],
   "relocations": [
@@ -631,6 +882,386 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020100dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122028",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122038",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212215c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122184",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122194",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBgSnmBdyModelFile",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122b20"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212219c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122b28",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122b28"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122750",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122750"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122728",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122728"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122720",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122720"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122730",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122730"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122748",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122748"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122738",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122738"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122740",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122740"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122778",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122778"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBgSnmBdyStates",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122b64"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122770",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122770"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122758",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122758"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122768",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122768"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122760",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122760"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBgSnmBdyReachPoint",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122b40"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7Vector3D1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020072c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122b34",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBgSnmBdyLandingPoint",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122b58"
+    },
+    {
+      "section": ".init",
+      "source": "0x021221f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122b4c",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122b4c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02122708",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_bg_snm_bdy.cpp",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122018"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122720",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c10InitState1Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211faf0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122728",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c6State0Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211fb14"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122730",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c6State1Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211fa08"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122738",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c6State2Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f81c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122740",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c10InitState3Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f804"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122748",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c10InitState2Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f9c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122750",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c10InitState0Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211fb7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122758",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c6State4Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f598"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122760",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c6State5Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f48c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122768",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c10InitState5Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f578"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122770",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c10InitState4Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f63c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02122778",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBgSnmBdy_c6State3Ev",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x0211f65c"
     }
   ],
   "compiler_only_output": [
@@ -796,7 +1427,8 @@
     "Legacy per-function contribution comparison is not applicable to the final lifecycle form: the two old out-of-line destructor shards cannot compile beside the inline destructor that emits their exact replacements. The ordinary intact-object linkcheck is the production proof.",
     "Substantial reconstruction work remains. Recounted at adopted input dc12411cff6a88cb2789e6ded97df809b499c9e3 with tiers.py's RAW_OFFSET regex: 18 of 26 out-of-line member definitions contain its raw-offset pattern, 154 occurrences across 117 source lines. The separate factory makes 27 out-of-line definitions total; the inline destructor emits the other two of the 29 function symbols. The previous report's 639 source lines were a historical snapshot; that input has 642. The TU still spells other modules' mangled symbols directly instead of calling declared C++ methods. Promotion is a packaging state, not a finished reconstruction.",
     "Historical leftover cleanup substituted named fields and already-declared methods (LoadFile/SetFile/FromID/UpdatePos/FindWithID/FindWithActorID/IsOnGround/JustHitGround/CopyNormalTo/StartTalk/ShowMessage/GetTalkState, mShadowMat = IDENTITY_MATRIX4X3 with common.h first, State3 daBgSnmHed_c::unk_336 via include/daBgSnmHed_c.h). That historical pass recorded these remaining interfaces and alternate spellings: 6az Init/SetRanges/DropShadowRadHeight/Earthquake/RunningSlidingDustAt/Func_02015560/Player::Hurt; dBgCh_Actr::Init header Fix12i vs ROM Fix12<int>; UpdateContinuous veneer; GetFloorResult not in the header; func_0203568c/84; func_0201267c; Sound::PlayLong; data_ov072_* handles; AdvancePath c+off (named members 29-word DIFF, GetNode/NumNodes methods 14-word DIFF); State1/State3 (int)this+0x3a2 mSubstate++ (named form size-DIFFs); (long long)(int) on mScaleX/mRadius. Including daBgSnmHed_c.h stops mwccarm emitting unused Matrix4x3 D1; compiler_only_output keeps only Vector3 D1.",
-    "The native-vector continuation replaces four int[3] stack stand-ins with real Vector3 locals in State1, State5 and AdvancePath. UpdateGroundCollision uses the already-declared const GetFloorResult method and the actual borrowed dBgPi.surface, rather than a char pointer plus four-byte view. The local scalar Player::Hurt bridge now agrees with the current int(Player*, void*, u32, int, u8, u8, u8) definition and preserves the discarded result and all argument values. Existing flat actor/home coordinates, raw AdvancePath fields, matrix-copy form, native PMF/state return contracts and other fixed-point scalar bridges remain partial reconstruction under issue2476. The earlier GetFloorResult-not-declared and int[3]-node descriptions are historical, not current constraints. The current compilation emits the existing Vector3 D1 earlier; its body, attributes and canonical duplicate policy are unchanged. No new storage, helper admission, canonical home, enrollment or shared-header change is made. Current exact proof is recorded separately in notes/experiments/snmbdy-native-vectors1015.json; the older verification block retains its original historical pin."
+    "The native-vector continuation replaces four int[3] stack stand-ins with real Vector3 locals in State1, State5 and AdvancePath. UpdateGroundCollision uses the already-declared const GetFloorResult method and the actual borrowed dBgPi.surface, rather than a char pointer plus four-byte view. The local scalar Player::Hurt bridge now agrees with the current int(Player*, void*, u32, int, u8, u8, u8) definition and preserves the discarded result and all argument values. Existing flat actor/home coordinates, raw AdvancePath fields, matrix-copy form, native PMF/state return contracts and other fixed-point scalar bridges remain partial reconstruction under issue2476. The earlier GetFloorResult-not-declared and int[3]-node descriptions are historical, not current constraints. The current compilation emits the existing Vector3 D1 earlier; its body, attributes and canonical duplicate policy are unchanged. No new storage, helper admission, canonical home, enrollment or shared-header change is made. Current exact proof is recorded separately in notes/experiments/snmbdy-native-vectors1015.json; the older verification block retains its original historical pin.",
+    "Static initializer folded: the model handle, the six-row state table and the two Vector3 course points are real definitions in d_a_bg_snm_bdy.cpp, replacing the handwritten src/unnamed/ov072/__sinit_ov072_02122018.c. mwcc emits __sinit_d_a_bg_snm_bdy.cpp (0x1e0), its .ctor word, the twelve PMF literals and the three registration nodes itself; all are byte- and relocation-identical to retail. Ownership: ov072 .ctor words run in .text TU order (0x02122710 is d_a_bg_snwmn's, 0x02122714 d_a_pg_bby's), so 0x02122708 and 0x0212270c are the body's and the head's; this initializer constructs asset 0x2ad (big_snowman_body.bmd) and fills the PMF table that only this TU's SetState reads."
   ],
   "verification": {
     "linkcheck": {
@@ -809,7 +1441,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -827,16 +1459,36 @@
           "firstDiff": null
         },
         {
+          "section": ".init",
+          "start": "0x02122018",
+          "end": "0x021221f8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02122708",
+          "end": "0x0212270c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
-          "start": "0x02122780",
+          "start": "0x02122720",
           "end": "0x0212283c",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02122b20",
+          "end": "0x02122bc4",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 33
+          "LICENSED": 54
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -845,48 +1497,185 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".data",
+            "section": ".init",
             "original": [
-              12,
-              16,
-              17,
-              19
+              104
             ],
             "desired": [
-              12,
-              16,
+              104
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              102
+            ],
+            "desired": [
+              102
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              13,
+              15,
+              18,
+              22,
+              24,
+              26,
+              28,
+              30,
+              35,
+              46,
+              47,
+              50
+            ],
+            "desired": [
+              18,
+              11,
+              26,
+              28,
+              30,
+              24,
+              22,
+              7,
+              5,
+              9,
+              13,
+              15,
+              35,
+              46,
+              47,
+              50
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
               17,
-              19
+              37,
+              40,
+              41,
+              42,
+              43,
+              49
+            ],
+            "desired": [
+              17,
+              42,
+              37,
+              40,
+              41,
+              43,
+              49
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                18,
+                22,
+                24,
+                26,
+                28,
+                30,
+                35,
+                46,
+                47,
+                50
+              ],
+              "desired": [
+                18,
+                11,
+                26,
+                28,
+                30,
+                24,
+                22,
+                7,
+                5,
+                9,
+                13,
+                15,
+                35,
+                46,
+                47,
+                50
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                18,
+                22,
+                24,
+                26,
+                28,
+                30,
+                35,
+                46,
+                47,
+                50
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                17,
+                37,
+                40,
+                41,
+                42,
+                43,
+                49
+              ],
+              "desired": [
+                17,
+                42,
+                37,
+                40,
+                41,
+                43,
+                49
+              ],
+              "slots": [
+                17,
+                37,
+                40,
+                41,
+                42,
+                43,
+                49
+              ]
+            }
+          ],
+          "symbolIndices": 23,
+          "sectionLinks": 0,
+          "sectionInfos": 15,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -922,5 +1711,123 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_d_a_bg_snm_bdy.cpp",
+      "address": "0x02122018",
+      "size": "0x1e0",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov072_02122018 (0x1e0) and carries the same 25 relocation sites in the same order"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_bg_snm_bdy.cpp",
+      "address": "0x02122708",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@528",
+      "to": "data_ov072_02122b28",
+      "evidence": "compiler temp mapped to 0x02122b28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@530",
+      "to": "data_ov072_02122750",
+      "evidence": "compiler temp mapped to 0x02122750 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@532",
+      "to": "data_ov072_02122728",
+      "evidence": "compiler temp mapped to 0x02122728 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@534",
+      "to": "data_ov072_02122720",
+      "evidence": "compiler temp mapped to 0x02122720 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@536",
+      "to": "data_ov072_02122730",
+      "evidence": "compiler temp mapped to 0x02122730 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@538",
+      "to": "data_ov072_02122748",
+      "evidence": "compiler temp mapped to 0x02122748 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@540",
+      "to": "data_ov072_02122738",
+      "evidence": "compiler temp mapped to 0x02122738 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@542",
+      "to": "data_ov072_02122740",
+      "evidence": "compiler temp mapped to 0x02122740 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@544",
+      "to": "data_ov072_02122778",
+      "evidence": "compiler temp mapped to 0x02122778 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@546",
+      "to": "data_ov072_02122770",
+      "evidence": "compiler temp mapped to 0x02122770 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@548",
+      "to": "data_ov072_02122758",
+      "evidence": "compiler temp mapped to 0x02122758 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@550",
+      "to": "data_ov072_02122768",
+      "evidence": "compiler temp mapped to 0x02122768 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@552",
+      "to": "data_ov072_02122760",
+      "evidence": "compiler temp mapped to 0x02122760 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@553",
+      "to": "data_ov072_02122b34",
+      "evidence": "compiler temp mapped to 0x02122b34 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@554",
+      "to": "data_ov072_02122b4c",
+      "evidence": "compiler temp mapped to 0x02122b4c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN17BgSnmBdyModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN17BgSnmBdyModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    }
+  ]
 }

@@ -15,30 +15,11 @@
  * reconstruction of the tree walk, not a literal string in the image.
  *
  * The three BSS objects are eight bytes apart and are initialized by the
- * SharedFilePtr constructor veneers, then consumed by the model,
- * mesh-collision and animation loaders respectively.
- *
- * LAYOUT is pinned by the constructor body func_02017e0c -- the one all three
- * veneers (func_02017acc, func_02017b4c, _ZN13SharedFilePtr9ConstructEj)
- * tail into:
- *
- *   strh r0, [r4]        -> fileID is a halfword at 0x00
- *   strb r2, [r4, #2]    -> refCount is a byte at 0x02, zeroed
- *   str  r2, [r4, #4]    -> file is a word at 0x04, zeroed
- *
- * Offset 0x03 is never written, which is the pad, and 8 bytes is exactly the
- * spacing of the three objects. Nothing here is inferred.
+ * SharedFilePtr constructor veneers (func_02017acc, func_02017b4c,
+ * _ZN13SharedFilePtr9ConstructEj, all tailing into func_02017e0c), then
+ * consumed by the model, mesh-collision and animation loaders respectively.
+ * Their layout is SharedFilePtr's own (include/SharedFilePtr.h).
  */
-typedef struct SharedFilePtrLayout {
-    u16 fileID;   /* 0x00 - strh; the ctor stores func_02018a24's result, not the raw ID */
-    u8 refCount;  /* 0x02 - strb 0 */
-    u8 pad_03;    /* 0x03 - never written */
-    void *file;   /* 0x04 - str 0 */
-} SharedFilePtrLayout;
-
-typedef char SharedFilePtrLayout_SizeIs8[
-    sizeof(SharedFilePtrLayout) == 8 ? 1 : -1
-];
 
 /* Readable aliases for the three ov063 BSS handles, defined by
  * d_a_piano.cpp under the configured data_ov063_* names so mwcc emits the

@@ -5,11 +5,15 @@
  * a volatile read coalesces the three hypotenuses into the spill pool.
  * DetectClsn(dBgCh_SphCrr&) keeps the volatile round-trip on rsc so the
  * radius lands at sp+0x104; spelled inline, the compiler recomputes it.
- * DetectClsn(dBgCh_Lin&) keeps info, normal and pos at function scope with
- * an explicit dBgPc ctor and dtor, declares the leaf pointer among the cell
- * temps, and dots the edge normals inline. RecordHit and
- * ShouldPassThroughImpl stay mangled: this TU passes an int triangle id
- * and the raw slope flag. The func_01ffb0* helpers stay address names.
+ * Its region dispatch keeps its gotos: the ROM shares each vertex block
+ * between the two edges that meet at it and branches to the shared blocks
+ * (see the comment above the dispatch). EDGE_FILTER keeps the
+ * `(const dBgCh_SphCrr &)` view on the flags read; the plain read is a
+ * different load.
+ * DetectClsn(dBgCh_Lin&) declares its dBgPc and normal in the hit block and
+ * pos in the result block, which is where the cartridge's frame puts them;
+ * it declares the leaf pointer among the cell temps, and dots the edge normals
+ * inline. The func_01ffb0* helpers stay address names.
  */
 /* dBgW_Kc_itcm: the ITCM half of dBgW_Kc (static-mesh collider, vtable
  * 0x020993dc). The cartridge keeps the hot collision-query code
@@ -45,51 +49,37 @@
 
 extern "C" {
 
-/* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp). */
-s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);   /* prism -> triangle index */
-int func_020397dc(int x);   /* near-zero divisor guard */
-int func_020397b8(int x);   /* wall-facing test */
-int func_02039794(int x);   /* slope-band classify */
+/* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp).
+   local extern: they are free functions of that TU and no header declares them. */
+s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
+bool func_020397dc(int x);                      /* near-zero divisor guard */
+bool func_020397b8(int x);                      /* wall-facing test */
+int func_02039794(int x);                       /* slope-band classify */
 
-/* Hit-record writers into the query's embedded dBgPi. */
-/* local extern: dBgPi::RecordHit by its mangled name -- the Lin query's call shape (int* res/info) is byte-required, so dBgPi.h's member spelling is not used here. */
-void _ZN5dBgPi9RecordHitEsP11SurfaceInfo(void *res, int triIdx, void *info);
+/* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
+   lookup and the SurfaceInfo write, which takes the entry by value into 0x0
+   and the normal into 0x8.
+   local extern: no header in include/ declares them. */
+void func_020381cc(void *block, int idx, void **out);
+void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
-/* CLPS helpers. */
-void func_020381cc(void *block, int idx, void **out);   /* entry lookup */
-int func_02037e58(unsigned int *p);
-
-/* 8 bytes, passed by value into the SurfaceInfo write below. */
-struct CLPS_Entry { u32 a, b; };
-
-/* SurfaceInfo write at 0x02037eb0: entry into 0x0, normal into 0x8. The real
-   signature's pair-of-words type is file-local to its own TU; CLPS_Entry covers
-   the same eight bytes. local extern: the def's own tags are not nameable here. */
-void func_02037eb0(SurfaceInfo *info, CLPS_Entry entry, Vector3 *normal);
-
-/* The pass-through policy call. The real member is
-   dBgCh::ShouldPassThroughImpl(void *, const CLPS &, const dBgCh &, bool);
-   the cartridge caller passes the raw slope flag without a bool widening, so
-   the int spelling stays. local extern: ROM-proven arg shape. */
-int _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
-                                                    void *ray, int flag);
-
-/* local extern: dBgPc's real ctor/dtor (include/dBgPc.h), called explicitly
-   against SurfaceInfo-shaped storage the way the cartridge does it. C++ can
-   only spell the constructor call as placement new, which adds a null test. */
-void _ZN5dBgPcC1Ev(dBgPc *info);
-void _ZN5dBgPcD1Ev(dBgPc *info);
-
-s32 DotVec3(const s32 *a, const Vector3 *b);   /* local extern: ROM reads s16 normals through an s32* view */
+/* local extern: the ROM reads s16 normals through an s32* view. */
+s32 DotVec3(const s32 *a, const Vector3 *b);
+/* local extern: no header in include/ declares it. */
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 
 }
 
-/* The shared scratch SurfaceInfo at 0x020a0cec, filled by GetSurfaceInfo and
-   read straight back by ShouldPassThroughImpl and the hit record. */
-extern SurfaceInfo data_020a0cec;
+/* The shared scratch dBgPc at 0x020a0cec, defined (and constructed) by
+   d_bg_w_kc.cpp. GetSurfaceInfo fills its surface record, which
+   ShouldPassThroughImpl and the hit record read straight back.
+   local extern: no header in include/ declares it. */
+extern dBgPc data_020a0cec;
 
-namespace cstd { int fdiv(int a, int b); }
+namespace cstd {
+/* local extern: no header in include/ declares it. */
+int fdiv(int a, int b);
+}
 
 /* The ROM inlines a RAW hardware sqrt at four sites -- NOT cstd::sqrt(u64)
    (0x0203d744), which pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`.
@@ -169,9 +159,9 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    `smull` / `adds #0x800` / `adc` / `lsr #0xc` / `orr lsl #20`: the collider's
    axis is Fix12i where the edge normals are 0x400-scale, so MUL10 is wrong here
    and FX_MUL is wrong everywhere else. */
-#define AXIS_DOT0(v) (FX_MUL(unk_28, (v).x) \
-                    + FX_MUL(unk_2c, (v).y) \
-                    + FX_MUL(unk_30, (v).z))
+#define AXIS_DOT0(v) (FX_MUL(upAxis.x, (v).x) \
+                    + FX_MUL(upAxis.y, (v).y) \
+                    + FX_MUL(upAxis.z, (v).z))
 
 /* A vertex region: the closest point is where edge normals `ea` and `eb` meet.
    `nn` is their cosine, already formed by the dispatch. Solve the 2x2 for the
@@ -192,49 +182,66 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     goto vtail;
 
 /* The filter each edge block runs before its distance is taken, and the reason
-   dBgW_Kc::unk_48, unk_4d and the 0x28 vector exist. unk_48 is a SHIFT
-   COUNT, not a value: the test is "is the lateral distance outside this edge
-   more than faceDot >> unk_48", i.e. a slope tolerance expressed as a fraction
-   of the penetration. Only a floor (cls 0) that fails it gets the expensive
-   path -- a real hypotenuse through the hardware sqrt, then the contact angle
-   through cstd::fdiv, compared against the collider's stored axis at +0x28.
-   func_020397dc guards the divisor: |x| <= 8 means near-zero, so bail. */
-#define EDGE_FILTER(d, zval, armA, dsqL, hypv)                                      \
-    if (sphere.flags & 2) goto armA;                                          \
-    if (cls == 1) {                                                           \
-        if (func_02037e58((unsigned int *)&data_020a0cec) == 1) {             \
-            if ((d) > (faceDot >> unk_48)) continue;                          \
-        } else if (unk_4d) {                                                  \
-            if ((d) > (faceDot >> unk_48)) continue;                          \
-        } else {                                                              \
-            if ((d) > faceDot) continue;                                      \
-        }                                                                     \
-    } else if ((d) > (faceDot >> unk_48)) {                                   \
-        s32 axisDot;                                                      \
-        s32 dh;                                                           \
-        s32 fh;                                                           \
-        if (cls != 0) continue;                                           \
-        if (((const dBgCh_SphCrr &)sphere).flags & 0x20) continue;        \
-        dh = (d) >> 4;                                                    \
-        fh = faceDot >> 4;                                                \
-        axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28);    \
-        SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);        \
-        hypv = SQRT_RESULT;      \
-        if (func_020397dc(hypv)) continue;                                 \
-        if (axisDot > cstd::fdiv(fh, hypv)) continue;                      \
-    }                                                                         \
-    goto dsqL;                                                                \
-    armA:                                                                     \
-    if (cls == 1) {                                                           \
-        if ((d) > faceDot) continue;                                          \
-    } else if ((d) > (faceDot >> unk_48)) continue;                           \
-    dsqL:;
+   dBgW_Kc::edgeToleranceShift, tolerantWallEdges and upAxis exist.
+   edgeToleranceShift is a SHIFT COUNT, not a value: the test is "is the lateral
+   distance outside this edge more than faceDot >> edgeToleranceShift", i.e. a
+   slope tolerance expressed as a fraction of the penetration. Only a floor
+   (cls 0) that fails it gets the expensive path -- a real hypotenuse through
+   the hardware sqrt, then the contact angle through cstd::fdiv, compared
+   against upAxis. func_020397dc guards the divisor: |x| <= 8 means near-zero,
+   so bail. */
+#define EDGE_FILTER(d, zval, hypv)                                                 \
+    if (!(sphere.flags & 2)) {                                                     \
+        if (cls == 1) {                                                            \
+            if (data_020a0cec.surface.clps.GetFloorClass() == 1) {                         \
+                if ((d) > (faceDot >> edgeToleranceShift))                         \
+                    continue;                                                      \
+            } else if (tolerantWallEdges) {                                        \
+                if ((d) > (faceDot >> edgeToleranceShift))                         \
+                    continue;                                                      \
+            } else {                                                               \
+                if ((d) > faceDot)                                                 \
+                    continue;                                                      \
+            }                                                                      \
+        } else if ((d) > (faceDot >> edgeToleranceShift)) {                        \
+            s32 axisDot;                                                           \
+            s32 dh;                                                                \
+            s32 fh;                                                                \
+            if (cls != 0)                                                          \
+                continue;                                                          \
+            if (((const dBgCh_SphCrr &)sphere).flags & 0x20)                       \
+                continue;                                                          \
+            dh = (d) >> 4;                                                         \
+            fh = faceDot >> 4;                                                     \
+            axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&upAxis);         \
+            SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);               \
+            hypv = SQRT_RESULT;                                                    \
+            if (func_020397dc(hypv))                                               \
+                continue;                                                          \
+            if (axisDot > cstd::fdiv(fh, hypv))                                    \
+                continue;                                                          \
+        }                                                                          \
+    } else if (cls == 1) {                                                         \
+        if ((d) > faceDot)                                                         \
+            continue;                                                              \
+    } else if ((d) > (faceDot >> edgeToleranceShift)) {                            \
+        continue;                                                                  \
+    }
+
+/* Widen the query's push-out range [lo, hi] on one axis to take in this
+   contact's depth along the face normal's component `nc`. */
+#define WIDEN_PUSH_OUT(lo, hi, nc)                                                 \
+    v = (s32)(((s64)depth * (nc)) >> 14) >> 2;                                     \
+    if (v > (hi))                                                                  \
+        (hi) = v;                                                                  \
+    else if (v < (lo))                                                             \
+        (lo) = v;
 
 /* ---- defs in reverse ROM order ---- */
 // @symbol _ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo
 void dBgW_Kc::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
 {
-    CLPS_Entry *entry;
+    CLPS *entry;
     Vector3 normal;
     KCL_Tri *tri = &kclFile->tris[triID];
 
@@ -308,7 +315,7 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
         idx = ((u32)z >> shift) << file->zShift
             | ((u32)y >> shift) << file->yShift;
         idx |= (u32)x >> shift;
-        node = (u32 *)file->unk_0c;
+        node = (u32 *)file->octree;
         word = node[idx];
 
         /* Non-negative: a byte offset to the child block. One bit per axis. */
@@ -352,8 +359,8 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
             if ((s64)dx * normal[0] + (s64)dyv * normal[1]
               + (s64)dz * normal[2] < 0) continue;
 
-            GetSurfaceInfo(func_020396dc(this, tri), data_020a0cec);
-            if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(this, &data_020a0cec, &ray, 0))
+            GetSurfaceInfo(func_020396dc(this, tri), data_020a0cec.surface);
+            if (dBgCh::ShouldPassThroughImpl(this, data_020a0cec.surface.clps, ray, false))
                 continue;
 
             if (dy + vtx[1] < file->origin.y) continue;   /* below the octree */
@@ -365,7 +372,7 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
             /* through the REFERENCE: a pointer-level upcast makes mwcc emit
                the null-checked MI adjustment (movs/addne), the ROM's is
                unconditional */
-            ((dBgPi &)ray).RecordHit(func_020396dc(this, tri), &data_020a0cec);
+            ((dBgPi &)ray).RecordHit(func_020396dc(this, tri), &data_020a0cec.surface);
         }
 
         /* Snap to the bottom of the node just tested and drop one cell. */
@@ -430,14 +437,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     u16 *leaf;
     KCL_Tri *tri;
     s32 *vtx;
-    /* volatile POINTEE, not a volatile pointer.  The ROM loads `c` from its stack
-       home before almost every component read -- twice for the three `raw` reads in
-       the prologue alone -- and mwcc will otherwise keep it in a register and read
-       through it once.  `const volatile` is worth 290 instructions back onto their
-       correct index and is what brings the count to exactly 1778.  A plain
-       `(const Vector3 *)c` cast does nothing here: `c` is already const, so it
-       changes no qualifier, and it is the QUALIFIER CHANGE that re-issues a load.
-       Making the POINTER volatile instead (`const Vector3 *volatile c`) is -57 shape. */
     s32 d1h;
     s32 d2h;
     s32 d3h;
@@ -454,7 +453,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 z15c;
     s32 k2;
     s32 tlen;
-    s32 passArg;
     u32 z;
     u32 shift;
     u32 *node;
@@ -498,6 +496,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 den12;
     s32 den23;
     s32 den31;
+    /* volatile POINTEE, not a volatile pointer.  The ROM loads `c` from its stack
+       home before almost every component read -- twice for the three `raw` reads in
+       the prologue alone -- and mwcc will otherwise keep it in a register and read
+       through it once.  `const volatile` is worth 290 instructions back onto their
+       correct index and is what brings the count to exactly 1778.  A plain
+       `(const Vector3 *)c` cast does nothing here: `c` is already const, so it
+       changes no qualifier, and it is the QUALIFIER CHANGE that re-issues a load.
+       Making the POINTER volatile instead (`const Vector3 *volatile c`) is -57 shape. */
     const volatile Vector3 *c;
     s32 rsc;
     s32 rawX;
@@ -595,7 +601,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                 idx = (z >> shift) << f->zShift
                     | (y >> shift) << f->yShift;
                 idx |= x >> shift;
-                node = (u32 *)f->unk_0c;
+                node = (u32 *)f->octree;
                 word = node[idx];
 
                 while (word >= 0) {
@@ -647,50 +653,47 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            reused cursor: the ROM keeps en1 in r5, en2 in r4 and
                            en3 spilled at sp+0x94, and step 5 reads all three
                            again after the reject chain has finished with them. */
-                        /* sp+0xa8, seeded per prism at 0x01ffbe8c, set to 3 by the
-                           vertex tail and defaulted to 2 by the shared tail. The
-                           seed is sp+0x114, which 0x01ffba10 loads from sp+0x28
-                           one instruction after 0x01ffb9c8 zeroed it -- so it is
-                           the hoisted constant 0, not a value from anywhere. */
                         {
-                        s32 dx = rawX - vtx[0];
-                        s32 dy = rawY - vtx[1];
-                        s32 dz = rawZ - vtx[2];
-                        en1 = f->normals[tri->edgeNormal1Idx];
-                        dot1 = dx * en1[0] + dy * en1[1] + dz * en1[2];
-                        if (dot1 >= rsc) continue;
-                        en2 = f->normals[tri->edgeNormal2Idx];
-                        dot2 = dx * en2[0] + dy * en2[1] + dz * en2[2];
-                        if (dot2 >= rsc) continue;
-                        en3 = f->normals[tri->edgeNormal3Idx];
-                        tlen = tri->length;
-                        dot3 = dx * en3[0] + dy * en3[1] + dz * en3[2] - tlen;
-                        if (dot3 >= rsc) continue;
+                            s32 dx = rawX - vtx[0];
+                            s32 dy = rawY - vtx[1];
+                            s32 dz = rawZ - vtx[2];
+                            en1 = f->normals[tri->edgeNormal1Idx];
+                            dot1 = dx * en1[0] + dy * en1[1] + dz * en1[2];
+                            if (dot1 >= rsc)
+                                continue;
+                            en2 = f->normals[tri->edgeNormal2Idx];
+                            dot2 = dx * en2[0] + dy * en2[1] + dz * en2[2];
+                            if (dot2 >= rsc)
+                                continue;
+                            en3 = f->normals[tri->edgeNormal3Idx];
+                            tlen = tri->length;
+                            dot3 = dx * en3[0] + dy * en3[1] + dz * en3[2] - tlen;
+                            if (dot3 >= rsc)
+                                continue;
 
-                        fn = f->normals[tri->normalIdx];
-                        faceDot = dx * fn[0] + dy * fn[1] + dz * fn[2];
-                        if (faceDot > rsc) continue;
+                            fn = f->normals[tri->normalIdx];
+                            faceDot = dx * fn[0] + dy * fn[1] + dz * fn[2];
+                            if (faceDot > rsc)
+                                continue;
                         }
 
-                        /* this->unk_34 / unk_35 gate the face test. These are the
-                           dBgW_Kc bytes whose set/clear accessors were among
-                           the original eleven ITCM matches (func_01ffb098/0a4 for
-                           0x35, func_01ffb0b0/0bc for 0x34); this is what they are
-                           for. unk_38 is the Vector3 func_01ffb07c writes, seeded
-                           by SetFile to the unit X vector. */
-                        if (unk_34) {
+                        /* The depth policy (include/dBgW_Kc.h): how far behind
+                           the face the centre may sit. */
+                        if (shallowOnly) {
                             if (faceDot < -0x50000) continue;
-                        } else if (unk_35) {
+                        } else if (depthByDir) {
                             nrm[0] = fn[0] << 2;
                             nrm[1] = fn[1] << 2;
                             nrm[2] = fn[2] << 2;
-                            if (DotVec3(nrm, (const Vector3 *)&unk_38) > unk_44) {
-                                if (faceDot < -f->unk_10) continue;
+                            if (DotVec3(nrm, (const Vector3 *)&depthDir) > depthDirMinDot) {
+                                if (faceDot < -f->prismThickness)
+                                    continue;
                             } else {
                                 if (faceDot < -0xa0000) continue;
                             }
                         } else {
-                            if (faceDot < -f->unk_10) continue;
+                            if (faceDot < -f->prismThickness)
+                                continue;
                         }
 
                         /* Accepted. The overlap along the face normal is what gets
@@ -702,17 +705,21 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            dBgW_Kc::GetSurfaceInfo and the dBgCh_Gnd twin:
                            mwccarm's dispatch reads `this` from r0, a hand-rolled
                            one reads it from the callee-saved copy. */
-                        GetSurfaceInfo(triID, data_020a0cec);
-                        data_020a0cec.CopyNormalTo(sn);
+                        GetSurfaceInfo(triID, data_020a0cec.surface);
+                        data_020a0cec.surface.CopyNormalTo(sn);
 
                         /* 0 = floor, 1 = wall, 2 = underside -- and those select
                            the 0x74 / 0x9c / 0xc4 result slots and the 4 / 8 / 0x10
                            flag bits respectively. */
                         cls = func_02039794(sn.y);
+                        /* contactKind (sp+0xa8), seeded per prism at 0x01ffbe8c, set
+                           to 3 by the vertex tail and defaulted to 2 by the shared
+                           tail. The seed is sp+0x114, which 0x01ffba10 loads from
+                           sp+0x28 one instruction after 0x01ffb9c8 zeroed it -- so
+                           it is the hoisted constant 0, not a value from anywhere. */
                         contactKind = k0;
-                        if (cls == 1) passArg = k1; else passArg = k0;
-                        if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
-                                this, &data_020a0cec, &sphere, passArg))
+                        if (dBgCh::ShouldPassThroughImpl(this, data_020a0cec.surface.clps, sphere,
+                                                         cls == 1))
                             continue;
 
                         /* Voronoi region select: whichever edge the centre is
@@ -722,12 +729,10 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            already in `depth` -- is the answer. Otherwise the true
                            distance has to be computed against that edge or its
                            endpoints, which is what the squared radius at sp+0x60/64
-                           is compared against.
+                           is compared against. The edge and vertex branches are
+                           gated by edgeContacts.
 
-                           TODO: the three symmetric edge/vertex branches. They are
-                           gated by this->unk_4c and are ~1100 of the function's
-                           1778 words. */
-                        /* The dispatch picks the edge the centre is furthest
+                           The dispatch picks the edge the centre is furthest
                            outside, then asks -- against BOTH of that edge's
                            neighbours -- whether the closest point is still on the
                            edge or has passed a vertex.
@@ -739,83 +744,93 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            edge-3 dispatch is entered from both halves of the top
                            test. That sharing is why the ROM branches to labels
                            instead of falling through, and why gotos are the
-                           faithful spelling here. */
+                           faithful spelling here. The labels sit in the ROM's
+                           block order: feat1-3, edge1-3, v12, v23, v31, vtail,
+                           tail, face. */
                         if (dot1 > dot2) {
-                            if (dot1 > dot3) goto feat1;
-                            goto feat3;
-                        } else {
-                            if (dot2 > dot3) goto feat2;
-                            goto feat3;
+                            if (dot1 > dot3)
+                                goto feat1;
+                        } else if (dot2 > dot3) {
+                            goto feat2;
                         }
+                        goto feat3;
                     feat1:
-                        {
-                            if (dot1 <= 0) goto face;
-                            if (!unk_4c) continue;
-                            if (dot2 > dot3) {
-                                nn = EDGENORMAL_DOT(en1, en2);
-                                d1h = dot1 >> 31;
-                                nnh = nn >> 31;
-                                if (MUL10(nn, dot1) > dot2) goto edge1;
-                                goto v12;
-                            } else {
-                                nn = EDGENORMAL_DOT(en1, en3);
-                                d1h = dot1 >> 31;
-                                nnh = nn >> 31;
-                                if (MUL10(nn, dot1) > dot3) goto edge1;
-                                goto v31;
-                            }
-                            goto edge1;
+                        if (dot1 <= 0)
+                            goto face;
+                        if (!edgeContacts)
+                            continue;
+                        if (dot2 > dot3) {
+                            nn = EDGENORMAL_DOT(en1, en2);
+                            d1h = dot1 >> 31;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot1) > dot2)
+                                goto edge1;
+                            goto v12;
+                        } else {
+                            nn = EDGENORMAL_DOT(en1, en3);
+                            d1h = dot1 >> 31;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot1) > dot3)
+                                goto edge1;
+                            goto v31;
                         }
+
                     feat2:
-                        if (dot2 <= 0) goto face;
-                        if (!unk_4c) continue;
+                        if (dot2 <= 0)
+                            goto face;
+                        if (!edgeContacts)
+                            continue;
                         if (dot3 > dot1) {
                             nn = EDGENORMAL_DOT(en2, en3);
                             d2h = dot2 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot2) > dot3) goto edge2;
+                            if (MUL10(nn, dot2) > dot3)
+                                goto edge2;
                             goto v23;
                         } else {
                             nn = EDGENORMAL_DOT(en2, en1);
                             d2h = dot2 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot2) > dot1) goto edge2;
+                            if (MUL10(nn, dot2) > dot1)
+                                goto edge2;
                             goto v12;
                         }
-                        goto edge2;
 
                     feat3:
-                        if (dot3 <= 0) goto face;
-                        if (!unk_4c) continue;
+                        if (dot3 <= 0)
+                            goto face;
+                        if (!edgeContacts)
+                            continue;
                         if (dot1 > dot2) {
                             nn = EDGENORMAL_DOT(en3, en1);
                             d3h = dot3 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot3) > dot1) goto edge3;
+                            if (MUL10(nn, dot3) > dot1)
+                                goto edge3;
                             goto v31;
                         } else {
                             nn = EDGENORMAL_DOT(en3, en2);
                             d3h = dot3 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot3) > dot2) goto edge3;
+                            if (MUL10(nn, dot3) > dot2)
+                                goto edge3;
                             goto v23;
                         }
-                        goto edge3;
 
                     edge1:
-                        EDGE_FILTER(dot1, z118, arm1_, dsq1_, hyp1)
+                        EDGE_FILTER(dot1, z118, hyp1)
                         d1h = dot1 >> 31;
                         dsq = rsq - (s64)dot1 * dot1;
                         goto tail;
 
                     edge2:
-                        EDGE_FILTER(dot2, z11c, arm2_, dsq2_, hyp2)
+                        EDGE_FILTER(dot2, z11c, hyp2)
                         d2h = dot2 >> 31;
                         dsq = rsq - (s64)dot2 * dot2;
                         goto tail;
 
                     edge3:
-                        EDGE_FILTER(dot3, z120, arm3_, dsq3_, hyp3)
+                        EDGE_FILTER(dot3, z120, hyp3)
                         d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
@@ -825,23 +840,32 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                     v31:  VERTEX_BLOCK(nn, nnh, den31, en3, en1, dot3, dot1)
 
                     vtail:
-                        if (sphere.flags & 0x40) v = z154; else v = k1;
-                        if (!v) continue;
+                        if (sphere.flags & 0x40)
+                            v = z154;
+                        else
+                            v = k1;
+                        if (!v)
+                            continue;
                         dsq = (s64)vx * vx + (s64)vy * vy + (s64)vz * vz;
-                        if (faceDot < 0) continue;
-                        if ((s64)faceDot * faceDot < dsq) continue;
+                        if (faceDot < 0)
+                            continue;
+                        if ((s64)faceDot * faceDot < dsq)
+                            continue;
                         dsq = rsq - dsq;
-                        if (dsq <= 0) continue;
+                        if (dsq <= 0)
+                            continue;
                         contactKind = k3;
-                        goto tail;
 
                     tail:
                         depth = SqrtRaw((u64)dsq, z15c, k1) - faceDot;
-                        if (depth < 0) continue;
-                        if (!contactKind) contactKind = k2;
+                        if (depth < 0)
+                            continue;
+                        if (!contactKind)
+                            contactKind = k2;
 
                     face:
-                        if (sphere.mScale < sn.y) continue;
+                        if (sphere.mMaxNormalY < sn.y)
+                            continue;
 
                         /* Walls only, and only once the cheap tests have accepted
                            the prism. Rebuild the triangle's three real vertices --
@@ -851,14 +875,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            along the collider's axis.
 
                            The slab is NOT symmetric: the bounds are
-                           -(unk_ec + radius) and (unk_ec - radius), built at
+                           -(ext + radius) and (ext - radius), built at
                            0x01ffcfa8 by `add r1,r6,r3` then `rsb r2,r1,#0` and
                            then re-formed by `sub r1,r6,r3`. And the sense is
                            wholly-INSIDE rejects -- the last compare is
                            `ble 0x1ffd314`, the reject -- so a triangle that
                            escapes the slab in any component keeps its hit. */
-                        if (sphere.unk_0ec > 0 && cls == 1
-                                && !(tri->length & 0xf0000000)) {
+                        if (sphere.mWallRejectHalfExtent > 0 && cls == 1 &&
+                            !(tri->length & 0xf0000000)) {
 
                             tp.x = vtx[0] << 6;
                             tp.y = vtx[1] << 6;
@@ -876,85 +900,79 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             KCL_VERTEX(&vc.x, en1, tp.x, tp.y, tp.z)
 
                             {
-                            s32 da, db, dc;
-                            /* `c` being a volatile pointee already forces most of the
-                               reloads the ROM makes (ldr [sp,#0xc4], nine times in this
-                               block).  These two re-binds are what is left: without them
-                               mwcc folds `c` back to `sphere.pos` and addresses the
-                               component straight off the object.  Each is a no-op --
-                               `c` already holds &sphere.pos.  All 64 site subsets were
-                               swept individually; four of the original six are
-                               unnecessary and are gone.  One fold survives even so:
-                               `vc.z -= c->z` still compiles to `ldr r8,[fp,#0x44]`
-                               where the ROM goes through the pointer. */
-                            tp.x -= c->x;
-                            tp.y -= c->y;
-                            tp.z -= c->z;
-                            da = AXIS_DOT0(tp);
-                            vb.x -= c->x;
-                            vb.y -= c->y;
-                            vb.z -= c->z;
-                            db = AXIS_DOT0(vb);
-                            vc.x -= c->x;
-                            vc.y -= c->y;
-                            vc.z -= c->z;
-                            dc = AXIS_DOT0(vc);
-                            /* The two loads and the add have to be spelled apart.  The cartridge
-                               loads unk_0ec first and radius second, then adds them in that same
-                               order; written as one expression those two orders are welded together
-                               and mwcc picks the operand order from the source, so flipping the sum
-                               re-orders the LOADS instead and costs three.  Naming the two reads
-                               makes them independent knobs, and then both land. */
-                            s32 ext = sphere.unk_0ec;
-                            s32 rad = sphere.radius;
-                            if (da >= -(ext + rad) && da <= ext - rad
-                             && db >= -(ext + rad) && db <= ext - rad
-                             && dc >= -(ext + rad) && dc <= ext - rad)
-                                continue;
+                                s32 da, db, dc;
+                                /* `c` being a volatile pointee already forces most of the
+                                   reloads the ROM makes (ldr [sp,#0xc4], nine times in this
+                                   block).  These two re-binds are what is left: without them
+                                   mwcc folds `c` back to `sphere.pos` and addresses the
+                                   component straight off the object.  Each is a no-op --
+                                   `c` already holds &sphere.pos.  All 64 site subsets were
+                                   swept individually; four of the original six are
+                                   unnecessary and are gone.  One fold survives even so:
+                                   `vc.z -= c->z` still compiles to `ldr r8,[fp,#0x44]`
+                                   where the ROM goes through the pointer. */
+                                tp.x -= c->x;
+                                tp.y -= c->y;
+                                tp.z -= c->z;
+                                da = AXIS_DOT0(tp);
+                                vb.x -= c->x;
+                                vb.y -= c->y;
+                                vb.z -= c->z;
+                                db = AXIS_DOT0(vb);
+                                vc.x -= c->x;
+                                vc.y -= c->y;
+                                vc.z -= c->z;
+                                dc = AXIS_DOT0(vc);
+                                /* The two loads and the add have to be spelled apart.
+                                   The cartridge loads the extent first and radius
+                                   second, then adds them in that same order; written as
+                                   one expression those two orders are welded together
+                                   and mwcc picks the operand order from the source, so
+                                   flipping the sum re-orders the LOADS instead and costs
+                                   three.  Naming the two reads makes them independent
+                                   knobs, and then both land. */
+                                s32 ext = sphere.mWallRejectHalfExtent;
+                                s32 rad = sphere.radius;
+                                if (da >= -(ext + rad) && da <= ext - rad && db >= -(ext + rad) &&
+                                    db <= ext - rad && dc >= -(ext + rad) && dc <= ext - rad)
+                                    continue;
                             }
                         }
-                        if (!contactKind) contactKind = k1;
+                        if (!contactKind)
+                            contactKind = k1;
 
-                        ((dBgPi &)sphere).RecordHit(triID, &data_020a0cec);
+                        ((dBgPi &)sphere).RecordHit(triID, &data_020a0cec.surface);
                         sphere.flags |= 1;
 
                         if (cls == 0) {
                             if (!(sphere.flags & 4)) {
-                                sphere.func_020379f4(triID, &data_020a0cec);
+                                sphere.RecordFloorHit(triID, &data_020a0cec.surface);
                                 hitFlags |= 1;
                             }
                             hitFlags2 = k1;
                             sphere.flags |= 4;
-                            v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
-                            if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
-                            if (sn.y > sphere.unk_100) sphere.func_0203794c((const s32 *)&sn);
+                            WIDEN_PUSH_OUT(loPY, hiPY, sn.y)
+                            if (sn.y > sphere.mFloorNormal.y)
+                                sphere.SetFloorNormal((const s32 *)&sn);
                         } else if (cls == 1) {
                             sphere.flags |= 8;
-                            sphere.func_020379c0(triID, &data_020a0cec);
+                            sphere.RecordWallHit(triID, &data_020a0cec.surface);
                             hitFlags |= 2;
                             if (contactKind == 1) {
-                                v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
-                                if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
-                                v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
-                                if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
+                                WIDEN_PUSH_OUT(loPX, hiPX, sn.x)
+                                WIDEN_PUSH_OUT(loPZ, hiPZ, sn.z)
                             } else {
-                                v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
-                                if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
-                                v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
-                                if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
-                                v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
-                                if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
+                                WIDEN_PUSH_OUT(loPX, hiPX, sn.x)
+                                WIDEN_PUSH_OUT(loPY, hiPY, sn.y)
+                                WIDEN_PUSH_OUT(loPZ, hiPZ, sn.z)
                             }
                         } else {
                             sphere.flags |= 0x10;
-                            sphere.func_0203798c(triID, &data_020a0cec);
+                            sphere.RecordUnderHit(triID, &data_020a0cec.surface);
                             hitFlags |= 4;
-                            v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
-                            if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
-                            v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
-                            if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
-                            v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
-                            if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
+                            WIDEN_PUSH_OUT(loPX, hiPX, sn.x)
+                            WIDEN_PUSH_OUT(loPY, hiPY, sn.y)
+                            WIDEN_PUSH_OUT(loPZ, hiPZ, sn.z)
                         }
                     }
                 }
@@ -962,19 +980,24 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                 x += stepX;
             } while (x <= hiX);
             y += stepY;
-            prev1 = p1; prev2 = p2; prev3 = p3;
+            prev1 = p1;
+            prev2 = p2;
+            prev3 = p3;
         } while (y <= hiY);
         z += stepZ;
     } while (z <= hiZ);
 
-    /* The accumulated extent goes back as two corners; the flags word is the
-       return value. func_02037a6c (0x02037a6c, 0xb0) is still unnamed. */
-    if (!hitFlags && !hitFlags2) goto ret0;
-    sphere.func_02037a6c(loPX, loPY, loPZ, hiPX, hiPY, hiPZ);
-    return hitFlags;
-ret0:
+    /* Merge the accumulated push-out range into the query; return the hit flags. */
+    if (hitFlags || hitFlags2) {
+        sphere.ExpandPushOutBounds(loPX, loPY, loPZ, hiPX, hiPY, hiPZ);
+        return hitFlags;
+    }
     return 0;
 }
+
+/* The crossing point's offset from vertex 0 dotted with an edge normal. A
+   macro, not a local: a named local for the normal spills the leaf pointer. */
+#define REL_DOT(n) ((n)[0] * rel.x + (n)[1] * rel.y + (n)[2] * rel.z)
 
 /* dBgW_Kc::DetectClsn(dBgCh_Lin&) at 0x01ffb0fc (ITCM), 0x734 bytes.
  * vtable slot 7. The ray march: walk the KCL octree over the line's AABB,
@@ -983,8 +1006,11 @@ ret0:
  * leaf shared across row cells is walked once; rowStep/rowLeaf track the row's
  * first leaf.
  *
- * info, normal and pos stay at function scope, with the dBgPc ctor and
- * dtor spelled on info. The leaf pointer is declared among the cell temps
+ * The accepted-hit record is a block-scope dBgPc, constructed and destroyed
+ * once per tested prism. It and normal are declared in that block, and pos in
+ * the result block. mwccarm gives function-scope locals their slots first,
+ * then block-scope locals in declaration order, and that order reproduces the
+ * cartridge's frame. The leaf pointer is declared among the cell temps
  * and walked with *++leaf. The edge-normal dots stay inline; a named local
  * for them spills the leaf pointer.
  */
@@ -996,7 +1022,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     s32 loZ, hiZ;
     s32 stepX, stepY, stepZ;
     s32 rowStep;
-    s32 found;
+    bool found;
     u16 *rowLeaf;
     u16 *prevLeaf;
     s32 bestDist;
@@ -1005,9 +1031,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     Vector3 e, min, max, best;
     Vector3 d0, d1, delta, scaled, rel;
     Vector3 hit;
-    SurfaceInfo info;
-    Vector3 normal;
-    Vector3 pos;
 
     const Vector3 *lineStart = &ray.start;
     const Vector3 *lineEnd = &ray.lineEnd;
@@ -1058,7 +1081,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
     if (loZ >= hiZ) return 0;
 
-    found = 0;
+    found = false;
     rowLeaf = 0;
     prevLeaf = 0;
     bestDist = ray.clsnDist >> 6;
@@ -1079,7 +1102,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                 idx = (z >> shift) << f->zShift
                     | (y >> shift) << f->yShift;
                 idx |= x >> shift;
-                node = (u32 *)f->unk_0c;
+                node = (u32 *)f->octree;
                 v = node[idx];
                 u16 *leaf;
                 s32 size, mask, cy, cz;
@@ -1102,83 +1125,90 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                 if (cy < stepY) stepY = cy;
 
                 if (leaf != prevLeaf) {
-                if (cy > rowStep && leaf[1] != 0) {
-                    rowStep = cy;
-                    rowLeaf = leaf;
-                }
-
-                while (*++leaf != 0) {
-                    KCL_Tri *prism = &f->tris[*leaf];
-                    s16 *fnrm = f->normals[prism->normalIdx];
-                    s32 *v0 = f->positions[prism->posIdx];
-                                        s32 dotS, dotE, denom, t, dot, dist;
-                    s32 dx, dy, dz;
-                    s16 triIdx;
-
-                    dz = s.z - v0[2];
-                    dy = s.y - v0[1];
-                    dx = s.x - v0[0];
-                    d0.x = dx;
-                    d0.y = dy;
-                    d0.z = dz;
-                    dotS = fnrm[0] * dx + fnrm[1] * dy + fnrm[2] * dz;
-                    if (dotS <= 0) continue;
-
-                    dz = e.z - v0[2];
-                    dy = e.y - v0[1];
-                    dx = e.x - v0[0];
-                    d1.x = dx;
-                    d1.y = dy;
-                    d1.z = dz;
-                    dotE = fnrm[0] * dx + fnrm[1] * dy + fnrm[2] * dz;
-                    if (dotE >= 0) continue;
-
-                    denom = (dotS - dotE) >> 4;
-                    if (denom <= 0) continue;
-                    if (func_020397dc(denom)) continue;
-                    t = cstd::fdiv(dotS >> 4, denom) << 4;
-
-                    delta.x = d1.x - d0.x;
-                    scaled.x = (s32)(((s64)delta.x * t) >> 16);
-                    rel.x = d0.x + scaled.x;
-                    delta.y = d1.y - d0.y;
-                    scaled.y = (s32)(((s64)delta.y * t) >> 16);
-                    rel.y = d0.y + scaled.y;
-                    delta.z = d1.z - d0.z;
-                    scaled.z = (s32)(((s64)delta.z * t) >> 16);
-                    rel.z = d0.z + scaled.z;
-
-                    if (f->normals[prism->edgeNormal1Idx][0] * rel.x + f->normals[prism->edgeNormal1Idx][1] * rel.y + f->normals[prism->edgeNormal1Idx][2] * rel.z > 0x20000)
-                        continue;
-                    if (f->normals[prism->edgeNormal2Idx][0] * rel.x + f->normals[prism->edgeNormal2Idx][1] * rel.y + f->normals[prism->edgeNormal2Idx][2] * rel.z > 0x20000)
-                        continue;
-                    dot = f->normals[prism->edgeNormal3Idx][0] * rel.x + f->normals[prism->edgeNormal3Idx][1] * rel.y + f->normals[prism->edgeNormal3Idx][2] * rel.z;
-                    if (dot < -0x20000) continue;
-                    if (dot > *(s32 *)prism + 0x20000) continue;
-
-                    hit.x = rel.x + v0[0];
-                    hit.y = rel.y + v0[1];
-                    hit.z = rel.z + v0[2];
-                    dist = Vec3_Dist(&hit, &s) >> 6;
-                    if (bestDist <= dist) continue;
-
-                    {
-                    _ZN5dBgPcC1Ev((dBgPc *) &info);
-                    triIdx = func_020396dc(this, prism);
-                    GetSurfaceInfo(triIdx, info);
-                    info.CopyNormalTo(normal);
-                    if (!_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
-                            this, &info, &ray, func_020397b8(normal.y))) {
-                        best.x = hit.x;
-                        best.y = hit.y;
-                        best.z = hit.z;
-                        bestDist = dist;
-                        _ZN5dBgPi9RecordHitEsP11SurfaceInfo((int *) &(dBgPi &)ray, triIdx, (int *) &info);
-                        found = 1;
+                    if (cy > rowStep && leaf[1] != 0) {
+                        rowStep = cy;
+                        rowLeaf = leaf;
                     }
-                    _ZN5dBgPcD1Ev((dBgPc *) &info);
+
+                    while (*++leaf != 0) {
+                        KCL_Tri *prism = &f->tris[*leaf];
+                        s16 *fnrm = f->normals[prism->normalIdx];
+                        s32 *v0 = f->positions[prism->posIdx];
+                        s32 dotS, dotE, denom, t, dot, dist;
+                        s32 dx, dy, dz;
+                        s16 triIdx;
+
+                        dz = s.z - v0[2];
+                        dy = s.y - v0[1];
+                        dx = s.x - v0[0];
+                        d0.x = dx;
+                        d0.y = dy;
+                        d0.z = dz;
+                        dotS = fnrm[0] * dx + fnrm[1] * dy + fnrm[2] * dz;
+                        if (dotS <= 0)
+                            continue;
+
+                        dz = e.z - v0[2];
+                        dy = e.y - v0[1];
+                        dx = e.x - v0[0];
+                        d1.x = dx;
+                        d1.y = dy;
+                        d1.z = dz;
+                        dotE = fnrm[0] * dx + fnrm[1] * dy + fnrm[2] * dz;
+                        if (dotE >= 0)
+                            continue;
+
+                        denom = (dotS - dotE) >> 4;
+                        if (denom <= 0)
+                            continue;
+                        if (func_020397dc(denom))
+                            continue;
+                        t = cstd::fdiv(dotS >> 4, denom) << 4;
+
+                        delta.x = d1.x - d0.x;
+                        scaled.x = (s32)(((s64)delta.x * t) >> 16);
+                        rel.x = d0.x + scaled.x;
+                        delta.y = d1.y - d0.y;
+                        scaled.y = (s32)(((s64)delta.y * t) >> 16);
+                        rel.y = d0.y + scaled.y;
+                        delta.z = d1.z - d0.z;
+                        scaled.z = (s32)(((s64)delta.z * t) >> 16);
+                        rel.z = d0.z + scaled.z;
+
+                        if (REL_DOT(f->normals[prism->edgeNormal1Idx]) > 0x20000)
+                            continue;
+                        if (REL_DOT(f->normals[prism->edgeNormal2Idx]) > 0x20000)
+                            continue;
+                        dot = REL_DOT(f->normals[prism->edgeNormal3Idx]);
+                        if (dot < -0x20000)
+                            continue;
+                        if (dot > prism->length + 0x20000)
+                            continue;
+
+                        hit.x = rel.x + v0[0];
+                        hit.y = rel.y + v0[1];
+                        hit.z = rel.z + v0[2];
+                        dist = Vec3_Dist(&hit, &s) >> 6;
+                        if (bestDist <= dist)
+                            continue;
+
+                        {
+                            dBgPc pc;
+                            Vector3 normal;
+                            triIdx = func_020396dc(this, prism);
+                            GetSurfaceInfo(triIdx, pc.surface);
+                            pc.surface.CopyNormalTo(normal);
+                            if (!dBgCh::ShouldPassThroughImpl(this, pc.surface.clps, ray,
+                                                              func_020397b8(normal.y))) {
+                                best.x = hit.x;
+                                best.y = hit.y;
+                                best.z = hit.z;
+                                bestDist = dist;
+                                ((dBgPi &)ray).RecordHit(triIdx, &pc.surface);
+                                found = true;
+                            }
+                        }
                     }
-                }
                 }
                 x += stepX;
             } while (x <= hiX);
@@ -1192,10 +1222,11 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
 
     ray.clsnDist = bestDist << 6;
     {
-    pos.x = best.x << 6;
-    pos.y = best.y << 6;
-    pos.z = best.z << 6;
-    ray.SetClsnPos(pos);
+        Vector3 pos;
+        pos.x = best.x << 6;
+        pos.y = best.y << 6;
+        pos.z = best.z << 6;
+        ray.SetClsnPos(pos);
     }
     ray.hasClsn = 1;
     return 1;
@@ -1227,34 +1258,32 @@ extern "C" KCL_File *func_01ffb0c8(dBgW_Kc *self)
 // @symbol func_01ffb0bc
 extern "C" void func_01ffb0bc(dBgW_Kc *self)
 {
-    self->unk_34 = 1;
+    self->shallowOnly = true;
 }
 
 // @symbol func_01ffb0b0
 extern "C" void func_01ffb0b0(dBgW_Kc *self)
 {
-    self->unk_34 = 0;
+    self->shallowOnly = false;
 }
 
 // @symbol func_01ffb0a4
 extern "C" void func_01ffb0a4(dBgW_Kc *self)
 {
-    self->unk_35 = 1;
+    self->depthByDir = true;
 }
 
 // @symbol func_01ffb098
 extern "C" void func_01ffb098(dBgW_Kc *self)
 {
-    self->unk_35 = 0;
+    self->depthByDir = false;
 }
 
-/* Copies a Vector3 into 0x38..0x40 -- three separate word loads and stores.
-   Those three fields are declared as scalars (unk_38/unk_3c/unk_40) but behave
-   as one Vector3: SetFile seeds them to (0x1000, 0, 0), the unit X vector. */
+/* Copies the depth direction memberwise: three separate word loads and stores. */
 // @symbol func_01ffb07c
 extern "C" void func_01ffb07c(dBgW_Kc *self, const Vector3 *v)
 {
-    self->unk_38 = v->x;
-    self->unk_3c = v->y;
-    self->unk_40 = v->z;
+    self->depthDir.x = v->x;
+    self->depthDir.y = v->y;
+    self->depthDir.z = v->z;
 }

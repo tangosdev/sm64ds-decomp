@@ -75,8 +75,9 @@ include/daDemo_c.h
 # method and is read as a field.
 include/CLPS_BlockRef.h
 
-# A function-POINTER member split across three lines (`void (*beforeClsnCallback)(...)`
-# with its parameter list wrapped). DECL is line-at-a-time.
+# A function-pointer member spelled through a typedef (`BeforeClsnCallback
+# beforeClsnCallback;`). The size table knows no typedef'd pointer types, so the field
+# reads UNPARSED. Subclasses still size the base right; dBgW_Kc.h checks clean.
 include/dBgW.h
 
 # Inline-DEFINED structors -- `dThIcon_c() {}`. The method-declaration pattern requires

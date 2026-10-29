@@ -52,17 +52,25 @@
 #include "dBgActor_c.h"
 
 struct daObjUkiyuka_c : dBgActor_c {
+    /* Resource record each descendant passes to the shared setup and teardown
+       below: the model and collision handles, then the collision surface table. */
+    struct Resources {
+        SharedFilePtr *model;
+        SharedFilePtr *collision;
+        CLPS_Block *clps;
+    };
+
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    s32 mRestY;             /* 0x320 */
-    Fix12i mBobAmplitude;   /* 0x324 */
-    s16 mBobPhase;          /* 0x328 */
-    u16 mRestTimer;         /* 0x32a */
+    s32 mRestY;           /* 0x320 */
+    Fix12i mBobAmplitude; /* 0x324 */
+    s16 mBobPhase;        /* 0x328 */
+    u16 mRestTimer;       /* 0x32a */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
        _ZN14daObjUkiyuka_cD1Ev (which does exist out of line, at ov002
-       0x020b63e0, still under its func_ov002_ name). An out-of-line declaration
+       0x020b63e0). An out-of-line declaration
        here would make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjUkiyuka_c() {}
 
@@ -80,7 +88,7 @@ struct daObjUkiyuka_c : dBgActor_c {
        function before eligible.py and rombuild.py judge it -- checked on this
        file, not assumed. */
     s32 Behavior();
-    s32 Render();                      /* slot 9, ov002 0x020b646c -- mModel.Render(0) */
+    s32 Render(); /* slot 9, ov002 0x020b646c -- mModel.Render(0) */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero
@@ -94,8 +102,14 @@ struct daObjUkiyuka_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual s32 InitResources() = 0;        /* slot  0 */
-    virtual s32 CleanupResources() = 0;     /* slot  3 */
+    virtual s32 InitResources() = 0;    /* slot  0 */
+    virtual s32 CleanupResources() = 0; /* slot  3 */
+
+    /* The shared bodies both descendants' InitResources / CleanupResources
+       hand their own Resources record to; setup also seeds mRestY and
+       mBobAmplitude. */
+    int CleanupResourcesFrom(Resources *);
+    int InitResourcesFrom(Resources *, int);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -109,11 +123,11 @@ typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ?
    inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
    as include/dBgActor_c.h. */
 struct daObjUkiyuka_c {
-    u8  pad_000[0x320];
-    s32 mRestY;             /* 0x320 */
-    Fix12i mBobAmplitude;   /* 0x324 */
-    s16 mBobPhase;          /* 0x328 */
-    u16 mRestTimer;         /* 0x32a */
+    u8 pad_000[0x320];
+    s32 mRestY;           /* 0x320 */
+    Fix12i mBobAmplitude; /* 0x324 */
+    s16 mBobPhase;        /* 0x328 */
+    u16 mRestTimer;       /* 0x32a */
 };
 
 #endif /* __cplusplus */

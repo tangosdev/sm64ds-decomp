@@ -1,4 +1,12 @@
 //cpp
+struct Vector3_16f;
+namespace Particle {
+struct Callback;
+struct System {
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+    static void NewSimple(unsigned int, int, int, int);
+};
+}
 /* da1up_c -- the mushroom, in all fourteen of the ways it can behave.
  *
  * One class covers the 1-Up and the Mega Mushroom and the ways they are placed:
@@ -88,15 +96,13 @@
  *   it `int` so func_ov002_020af218 could tail-return it costs four of its
  *   five words; af218 instead tail-returns it through an
  *   `int (*)(void *)` cast of its name (folds to the same `bl`).
- * - dBgCh_Actr::Init / dCcAc_c::Init / DropShadowRadHeight / ReflectAngle 6az
- *   (Fix12i mangles as i; ROM is Fix12<int> -- method form Undefined)
- * - Particle::System::New / NewSimple: no method declaration in include/
+ * - Particle::System::New: no method declaration in include/
  * - Behavior 0x100: named ++mStateTimer size-DIFF vs unsigned-short launder
  *   (the u16 casts of dEnemyBase_c::mStateTimer at 0x100 stay everywhere they
  *   appear. The u16 at 0x38c is a distinct field, mStateFrames.)
  * - func_ov002_020af0c0: reading the player's position directly instead of
  *   through the laundered int* changes the bytes, so the launder stays.
- * - SharedFilePtr has no recovered fields; handles stay data_ov002_*
+ * - The shared file handles keep their data_ov002_* address names
  * - decl_common.h stays out (its surviving claims are redundant with the
  *   decl region and this file's own definition)
  *
@@ -106,7 +112,7 @@
  * - The da1up_MushroomType names describe what each type does when it runs;
  *   they are not recovered original names (nor are the address-named
  *   handlers).
- * - unk_0a4 / unk_0ac are dActor_c's velocity x/z words (UpdatePosWithHorzSpeedAndAng
+ * - mSpeedX / mSpeedZ are dActor_c's velocity x/z words (UpdatePosWithHorzSpeedAndAng
  *   writes them from mHorzSpeed and mPrevAngleY); they stay unnamed here because
  *   naming them is a shared dActor_c.h change.
  * - The SND3_* names and the effect ids are known by use only (0x68 is played
@@ -123,6 +129,7 @@
 #pragma defer_codegen off
 
 #include "types.h"
+#include "cstd.h"
 #include "common.h"
 #include "da1up_c.h"
 #include "dBgCh_Actr.h"
@@ -131,8 +138,7 @@
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
 
 /* Actor IDs, from the profile ids in symbols/actor_debug_names.tsv: 276 and
    277 are this class's two profiles, 331 is the 1UP logo it spawns. */
@@ -196,18 +202,13 @@ void Vec3_Asr(struct Vec3*, struct Vec3*, int);
 void Matrix4x3_FromRotationY(void*, int);
 void Matrix4x3_FromTranslation(void*, int, int, int);
 void GiveCoins(int, int);
-short _ZN4cstd5atan2E5Fix12IiES1_(int, int);
-int _ZN4cstd4fdivEii(int, int);
-short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void*, int, int, short);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void*, void*, void*, int, int, unsigned char);
-int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int, unsigned int, int, int, int, const struct Vec3*, void*);
+short atan2_hold_d_a_1up_1(int, int);
 }
-/*                         _ZN7da1up_cD0Ev, 0x020aee88, size 0x5c              */
 // @symbol _ZN7da1up_cD1Ev
 // @symbol _ZN7da1up_cD0Ev
 /* ONE definition, both variants. The complete-object destructor (D1) tears the
    four members down in exact reverse of the factories' construction order --
-   dExtShadowModel_c at 0x350, Model at 0x300, dBgCh_Actr at 0x144, dCcAc_c at 0x110,
+   dExtShadowModel_c at 0x350, dExtSimpleModel_c at 0x300, dBgCh_Actr at 0x144, dCcAc_c at 0x110,
    then ~dEnemyBase_c -- and every one of those is a typed member of this class,
    so the body is empty and the compiler writes the chain. The deleting
    destructor (D0) inlines that same teardown and then calls
@@ -246,8 +247,8 @@ void da1up_c::func_ov002_020aeee4() {
     pos.z = mPosZ;
     pos.y += 0x1e000;
     volatile Vector3* vp = &pos;
-    mParticleID = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(volatile unsigned int*)&mParticleID, effectID, vp->x, vp->y, pos.z, 0, 0);
+    mParticleID = Particle::System::New(*(volatile unsigned int *)&mParticleID, effectID, vp->x,
+                                        vp->y, pos.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -284,30 +285,29 @@ void func_ov002_020aefa4(char *raw)
    non-virtual methods. The merged TU has both real classes complete through
    da1up_c.h, so the shadows are gone and the calls go through the real types --
    which mangle identically, the class name being the whole of the difference.
-   _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s stays spelt out. Its reconstructed
-   symbol encodes by-value Fix12<int> parameters; the recorded typed-call
-   experiment changed the bytes. This bridge remains pending further
-   signature/codegen work. */
+   ReflectAngle is a real member call: the by-value Fix12<int> its old
+   mangled name claimed was never in the ROM, and with scalar parameters the
+   typed call costs nothing (notes/mwccarm-codegen.md 6az, batch 5). */
 void da1up_c::func_ov002_020aefb8() {
 
     UpdatePosWithHorzSpeedAndAng();
     if (mWithMeshClsn.IsOnGround()) {
-        unk_0a4 += mFloorNormalX * 0xa;
-        unk_0ac += mFloorNormalZ * 0xa;
+        mSpeedX += mFloorNormalX * 0xa;
+        mSpeedZ += mFloorNormalZ * 0xa;
         if (mWithMeshClsn.JustHitGround()) {
             mVertSpeed = -(mVertSpeed << 2) / 10;
         } else {
             mVertSpeed = 0;
         }
-        if (Vec3_HorzLen((Vector3*)&unk_0a4) > mHorzSpeed) {
-            mHorzSpeed = Vec3_HorzLen((Vector3*)&unk_0a4);
+        if (Vec3_HorzLen((Vector3 *)&mSpeedX) > mHorzSpeed) {
+            mHorzSpeed = Vec3_HorzLen((Vector3 *)&mSpeedX);
             if (mHorzSpeed >= 0xf000) mHorzSpeed = 0xf000;
         }
     }
     UpdatePosWithOnlySpeed((dCc_c*)&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
-    mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this, mWallNormalX, mWallNormalZ, mPrevAngleY);
+    mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -345,7 +345,7 @@ void da1up_c::func_ov002_020af0c0() {
             diff.y = ppos.y - mPosY + 0x78000;
         diff.z = ppos.z - mPosZ;
         int len = Vec3_HorzLen(&diff);
-        short pitch = _ZN4cstd5atan2E5Fix12IiES1_(len, diff.y);
+        short pitch = cstd::atan2(len, diff.y);
         short yaw = Vec3_HorzAngle(&mPos, &ppos);
         ApproachLinear(mPrevAngleY, yaw, 0x1000);
         ApproachLinear(mPrevAngleX, pitch, 0x1000);
@@ -363,12 +363,12 @@ void da1up_c::func_ov002_020af0c0() {
    when hitFlags bit 0x400000 is set -- the "player" bit of the table in
    include/dCc_c.h, a best-effort reading there that the callers' use of the
    result as a Player agrees with. */
-int da1up_c::func_ov002_020af1dc() {
-  Player* r=0;
-  unsigned int id=mdCcAc_c.otherOwner;
-  if(id && (r=(Player*)dActor_c::FindWithID(id)) && (mdCcAc_c.hitFlags&CC_HIT_PLAYER))
-    return (int)r;
-  return 0;
+Player *da1up_c::func_ov002_020af1dc() {
+    Player *r = 0;
+    unsigned int id = mdCcAc_c.otherOwner;
+    if (id && (r = (Player *)dActor_c::FindWithID(id)) && (mdCcAc_c.hitFlags & CC_HIT_PLAYER))
+        return r;
+    return 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -455,7 +455,7 @@ void da1up_c::OnTurnIntoEgg(Player &player)
         Spawn(ACTOR_OBJ_1UPLOGO, 8, vec, 0, mAreaId, -1);
         KillAndTrackInDeathTable();
     } else {
-        ((Player *)(&player))->func_ov002_020bdf8c();
+        player.func_ov002_020bdf8c();
         KillAndTrackInDeathTable();
     }
 }
@@ -478,7 +478,7 @@ s32 da1up_c::OnYoshiTryEat()
    above itself; either way the mushroom then removes itself. */
 void da1up_c::func_ov002_020af3a8() {
 
-    Player* r = (Player*)func_ov002_020af1dc();
+    Player *r = func_ov002_020af1dc();
     if (r == 0)
         return;
 
@@ -596,7 +596,7 @@ void da1up_c::func_ov002_020af4ec() {
         radius = (mdCcAc_c.radius - 0xa000) * 2;
     }
 
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &mShadowModel, &mModel.mat4x3, radius, depth, 0xf);
+    DropShadowRadHeight(mShadowModel, mModel.mat4x3, radius, depth, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -729,9 +729,10 @@ void da1up_c::func_ov002_020af908() {
    hands off to func_ov002_020af684 with target 7 (a waiting type 7 loses one
    from its mUnlockCount). */
 void da1up_c::func_ov002_020af924() {
-  Player* r=(Player*)func_ov002_020af1dc();
-  if(!r) return;
-  func_ov002_020af684(7, r);
+    Player *r = func_ov002_020af1dc();
+    if (!r)
+        return;
+    func_ov002_020af684(7, r);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -797,9 +798,10 @@ void da1up_c::func_ov002_020afa50() {
    hands off to func_ov002_020af684 with target 5 (a waiting type 5 loses one
    from its mUnlockCount). */
 void da1up_c::func_ov002_020afa6c() {
-  Player* r=(Player*)func_ov002_020af1dc();
-  if(!r) return;
-  func_ov002_020af684(5, r);
+    Player *r = func_ov002_020af1dc();
+    if (!r)
+        return;
+    func_ov002_020af684(5, r);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -907,7 +909,7 @@ void da1up_c::func_ov002_020afc68() {
         mVertSpeed = 0;
     } else {
         int t = FX_MUL(mHorzSpeed, 0xfae);
-        mHorzSpeed = _ZN4cstd4fdivEii(t, 0x1000);
+        mHorzSpeed = cstd::fdiv(t, 0x1000);
     }
     if (mHorzSpeed > 0x28000) {
         mHorzSpeed = 0x28000;
@@ -930,12 +932,12 @@ void da1up_c::func_ov002_020afd10() {
     volatile Fix12i v[3];
 
     if (mState != 0) {
-        v[0] = unk_0a4;
+        v[0] = mSpeedX;
         v[1] = mVertSpeed;
-        v[2] = unk_0ac;
+        v[2] = mSpeedZ;
         func_ov002_020aefb8();
-        unk_0a4 = v[0];
-        unk_0ac = v[2];
+        mSpeedX = v[0];
+        mSpeedZ = v[2];
     }
 
     switch (mState) {
@@ -1051,9 +1053,13 @@ void da1up_c::func_ov002_020aff10() {
    is spelt as the shard that uses it recovered it; nothing above declares
    any of them, so nothing here overrides a recovered view. */
 extern "C" {
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, dActor_c* a, int r, int h, Vector3_16* p, int q);
+namespace Particle {
+struct SystemHold {
+    static void NewSimple(unsigned int id, int x, int y, int z);
+};
+}
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *thiz, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 int IsStarCollectedInCurLevel(int a);
 }
 
@@ -1064,10 +1070,6 @@ int IsStarCollectedInCurLevel(int a);
 typedef void (da1up_c::*PMF)();
 
 extern PMF data_ov002_0210dc00[14];
-
-/* Ordinal 35's view of data_ov002_0210d9b8: a cached model handle whose second
-   word is the BMD file pointer. */
-struct ModelCache { int pad0; BMD_File* file; };
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c16CleanupResourcesEv
@@ -1089,7 +1091,7 @@ int da1up_c::CleanupResources()
     else data_ov002_0210da30.Release();
   }
   if ((unsigned int)(mMushroomType - 0xb) <= 1)
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(PTCL_TYPE_11_12_CLEANUP, mPosX, mPosY + 0x28000, mPosZ);
+      Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPosX, mPosY + 0x28000, mPosZ);
   return 1;
 }
 
@@ -1175,7 +1177,7 @@ int da1up_c::Behavior()
    the current level, it calls MarkForDestruction and returns 0. */
 int da1up_c::InitResources()
 {
-    extern ModelCache data_ov002_0210d9b8;
+    extern SharedFilePtr data_ov002_0210d9b8;
     extern SharedFilePtr data_ov002_0210d9d8;
     extern SharedFilePtr data_ov002_0210da30;
     extern signed char data_0209f2f8;
@@ -1191,19 +1193,19 @@ int da1up_c::InitResources()
     isOneUp = (actorID == ACTOR_ONEUPKINOKO);
     if (isOneUp) {
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
-            if (mModel.SetFile(data_ov002_0210d9b8.file, 1, 1) == 0)
+            if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
                 return 0;
         } else {
-            f = (BMD_File*)Model::LoadFile(data_ov002_0210d9d8);
+            f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
             if (mModel.SetFile(f, 1, 1) == 0)
                 return 0;
         }
     } else {
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
-            if (mModel.SetFile(data_ov002_0210d9b8.file, 1, 1) == 0)
+            if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
                 return 0;
         } else {
-            f = (BMD_File*)Model::LoadFile(data_ov002_0210da30);
+            f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
             if (mModel.SetFile(f, 1, 1) == 0)
                 return 0;
         }
@@ -1213,16 +1215,16 @@ int da1up_c::InitResources()
         return 0;
 
     if (mMushroomType == 6 || mMushroomType == 8 || (unsigned int)(mMushroomType - 0xb) <= 1) {
-        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (dActor_c*)this, 0x64000, 0x40000, 0x100002, 0);
+        mdCcAc_c.Init((dActor_c *)this, 0x64000, 0x40000, 0x100002, 0);
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
             mdCcAc_c.vulnFlags |= CC_VULN_YOSHI_TONGUE;
         }
     } else {
         isMega = (actorID == ACTOR_SCALEUP_KINOKO);
         if (isMega) {
-            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (dActor_c*)this, 0x41000, 0x41000, 0x100002, 0);
+            mdCcAc_c.Init((dActor_c *)this, 0x41000, 0x41000, 0x100002, 0);
         } else {
-            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (dActor_c*)this, 0x32000, 0x32000, 0x100002, 0);
+            mdCcAc_c.Init((dActor_c *)this, 0x32000, 0x32000, 0x100002, 0);
         }
     }
 
@@ -1245,7 +1247,7 @@ int da1up_c::InitResources()
     mSpawnPosZ = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mParticleID = 0;
 
@@ -1259,7 +1261,7 @@ int da1up_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* MEGA_MUSHROOM (277 / SCALEUP_KINOKO). Leaf operator new routes to
+/* MEGA_MUSHROOM (277 / SCALEUP_KINOKO). `new` calls the inherited
    fBase_c::operator new; the implicit constructor inlines the dEnemyBase_c
    base step, vptr store, and the four member constructors. */
 // @symbol da1up_c_classInit_SCALEUP_KINOKO

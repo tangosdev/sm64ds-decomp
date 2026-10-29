@@ -6,8 +6,6 @@
 
 struct Player;
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned int size);
-
 /* Six-byte configuration selected by param1. The member spellings are
    lineage-supported; its stride and every access are ROM-proven. */
 struct daStarGateInfo {
@@ -36,8 +34,6 @@ struct daStarGate_c : dActor_c {
         StateFunc init;
         StateFunc main;
     };
-
-    static void *operator new(size_t size);
 
     u8          pad_0d0[0x4];
     dExtCommonModel_c mModel;          /* 0x0d4 */
@@ -78,11 +74,6 @@ struct daStarGate_c : dActor_c {
     static State ST_TALKING_TO_PLAYER;
     static State ST_UNLOCKING;
 };
-
-inline void *daStarGate_c::operator new(size_t size)
-{
-    return _ZN7fBase_cnwEj((unsigned)size);
-}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

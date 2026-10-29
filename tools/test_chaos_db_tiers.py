@@ -62,42 +62,42 @@ class Scratch(unittest.TestCase):
             "# header\n# commit: " + commit + "\n" + "\n".join(keys) + "\n", encoding="utf-8")
 
 
-class LinkedList(Scratch):
+class PortedList(Scratch):
     def test_a_list_from_the_stamped_build_is_believed(self):
         self.stamp()
         self.listing()
-        self.assertEqual(CDB.linked_functions(), {"arm9:0x02000000", "ov001:0x02100000"})
+        self.assertEqual(CDB.ported_functions(), {"arm9:0x02000000", "ov001:0x02100000"})
 
     def test_a_list_from_another_build_is_ignored(self):
         self.stamp("abc1234")
         self.listing("def5678")
-        self.assertIsNone(CDB.linked_functions())
+        self.assertIsNone(CDB.ported_functions())
 
     def test_a_list_with_no_stamp_is_ignored(self):
         self.listing()
-        self.assertIsNone(CDB.linked_functions())
+        self.assertIsNone(CDB.ported_functions())
 
     def test_a_stamp_with_no_provenance_does_not_vouch_for_a_list(self):
         (self.root / "config" / "port_linkage.json").write_text(
             json.dumps({"linkedTus": 2, "matchedTus": 3}), encoding="utf-8")
         self.listing()
-        self.assertIsNone(CDB.linked_functions())
+        self.assertIsNone(CDB.ported_functions())
 
     def test_no_list_means_no_column(self):
         self.stamp()
-        self.assertIsNone(CDB.linked_functions())
+        self.assertIsNone(CDB.ported_functions())
 
 
-class LinkedBarCountsFunctions(Scratch):
-    """The LINKED bar counts functions, like MATCHED; units are detail."""
+class PortedBarCountsFunctions(Scratch):
+    """The PORTED bar counts functions, like MATCHED; units are detail."""
 
     def setUp(self):
         super().setUp()
-        saved = (tiers.LINKED_STAMP, tiers.LINKED_FUNCTIONS)
-        tiers.LINKED_STAMP = self.root / "config" / "port_linkage.json"
-        tiers.LINKED_FUNCTIONS = self.root / "config" / "port_linked_functions.txt"
-        self.addCleanup(lambda: (setattr(tiers, "LINKED_STAMP", saved[0]),
-                                 setattr(tiers, "LINKED_FUNCTIONS", saved[1])))
+        saved = (tiers.PORTED_STAMP, tiers.PORTED_FUNCTIONS)
+        tiers.PORTED_STAMP = self.root / "config" / "port_linkage.json"
+        tiers.PORTED_FUNCTIONS = self.root / "config" / "port_linked_functions.txt"
+        self.addCleanup(lambda: (setattr(tiers, "PORTED_STAMP", saved[0]),
+                                 setattr(tiers, "PORTED_FUNCTIONS", saved[1])))
 
     def listing(self, commit="abc1234", universe=5, keys=("arm9:0x02000000", "ov001:0x02100000")):
         lines = ["# header", "# commit: " + commit]
@@ -109,50 +109,97 @@ class LinkedBarCountsFunctions(Scratch):
     def test_a_list_makes_the_bar_per_function_and_keeps_the_unit_detail(self):
         self.stamp()
         self.listing()
-        k = tiers.linked()
-        self.assertEqual((k["unit"], k["linked"], k["of"], k["pct"]), ("functions", 2, 5, 40.0))
-        self.assertEqual((k["linkedTus"], k["matchedTus"]), (2, 3))
+        k = tiers.ported()
+        self.assertEqual((k["unit"], k["ported"], k["of"], k["pct"]), ("functions", 2, 5, 40.0))
+        self.assertEqual((k["portedTus"], k["matchedTus"]), (2, 3))
 
     def test_an_older_stamp_with_no_list_still_reads_as_units(self):
         self.stamp()
-        k = tiers.linked()
-        self.assertEqual((k["unit"], k["linked"], k["of"]), ("units", 2, 3))
+        k = tiers.ported()
+        self.assertEqual((k["unit"], k["ported"], k["of"]), ("units", 2, 3))
 
     def test_a_list_from_another_build_leaves_the_unit_reading(self):
         self.stamp("abc1234")
         self.listing("def5678")
-        self.assertEqual(tiers.linked()["unit"], "units")
+        self.assertEqual(tiers.ported()["unit"], "units")
 
     def test_a_list_with_no_universe_leaves_the_unit_reading(self):
         self.stamp()
         self.listing(universe=None)
-        self.assertEqual(tiers.linked()["unit"], "units")
+        self.assertEqual(tiers.ported()["unit"], "units")
 
     def test_no_stamp_means_no_bar(self):
         self.listing()
-        self.assertIsNone(tiers.linked())
+        self.assertIsNone(tiers.ported())
 
     def test_the_published_tier_shares_the_function_denominator(self):
         self.stamp()
         self.listing()
-        t = CDB.tier_stats(linked_n=2, total=7)
-        self.assertEqual((t["linked"], t["linkedOf"], t["linkedPct"]), (2, 7, 28.57))
-        self.assertEqual((t["linkedUnits"], t["linkedUnitsOf"]), (2, 3))
+        t = CDB.tier_stats(linked_n=7, total=9, ported_n=2, ported_total=7)
+        self.assertEqual((t["linked"], t["linkedOf"], t["linkedPct"]), (7, 9, 77.78))
+        self.assertEqual((t["ported"], t["portedOf"], t["portedPct"]), (2, 7, 28.57))
+        self.assertEqual((t["portedUnits"], t["portedUnitsOf"]), (2, 3))
         self.assertFalse(any(k.startswith("converted") for k in t))
 
     def test_the_published_tier_falls_back_to_units_without_a_list(self):
         self.stamp()
-        t = CDB.tier_stats(linked_n=None, total=7)
-        self.assertEqual((t["linked"], t["linkedOf"]), (2, 3))
+        t = CDB.tier_stats(linked_n=7, total=9, ported_n=None, ported_total=7)
+        self.assertEqual((t["linked"], t["linkedOf"]), (7, 9))
+        self.assertEqual((t["ported"], t["portedOf"]), (2, 3))
 
-    def test_the_readme_row_says_functions_or_tus(self):
+    def test_the_readme_rows_say_functions_or_tus(self):
         self.stamp()
         self.listing()
-        row = lambda: tiers.bar_block({"matched": None,
-                                       "linked": tiers.linked()}).splitlines()[-2]
-        self.assertTrue(row().endswith("2 / 5 functions"), row())
+        block = lambda: tiers.bar_block({"matched": None,
+                                         "linked": {"linked": 7, "of": 9, "pct": 77.78},
+                                         "ported": tiers.ported()})
+        self.assertTrue(block().splitlines()[-2].endswith("2 / 5 functions"))
+        self.assertTrue(block().splitlines()[-3].endswith("7 / 9 functions"))
         (self.root / "config" / "port_linked_functions.txt").unlink()
-        self.assertTrue(row().endswith("2 / 3 matched TUs"), row())
+        block2 = tiers.bar_block({"matched": None,
+                                  "linked": {"linked": 7, "of": 9, "pct": 77.78},
+                                  "ported": tiers.ported()}).splitlines()
+        self.assertTrue(block2[-2].endswith("2 / 3 matched TUs"), block2)
+
+
+class LinkedIsLiveRomLink(Scratch):
+    """LINKED counts enrolled functions live from committed config, no stamp."""
+
+    def authors(self, keys=("arm9:0x02000000", "arm9:0x02000010", "ov001:0x02100000")):
+        (self.root / "function-authors.json").write_text(
+            json.dumps({"functions": {k: {"author": "t", "name": "f"} for k in keys}}),
+            encoding="utf-8")
+
+    def entry(self, module_path, source, start, end, complete=True):
+        d = self.root / "config" / module_path
+        d.mkdir(parents=True, exist_ok=True)
+        dl = d / "delinks.txt"
+        with open(dl, "a", encoding="utf-8") as f:
+            f.write(f"{source}:\n")
+            if complete:
+                f.write("    complete\n")
+            f.write(f"    .text start:{start} end:{end}\n\n")
+
+    def test_enrolled_functions_count_and_gaps_do_not(self):
+        self.authors()
+        self.entry("arm9", "src/a.c", "0x02000000", "0x02000014")
+        k = tiers.linked(authors_path=self.root / "function-authors.json",
+                         config_root=self.root / "config")
+        # 0x02000000 and 0x02000010 are inside the range; 0x02100000 has no entry
+        self.assertEqual((k["linked"], k["of"], k["pct"], k["unit"]),
+                         (2, 3, 66.67, "functions"))
+
+    def test_an_unenrolled_range_does_not_count(self):
+        self.authors()
+        self.entry("arm9", "src/a.c", "0x02000000", "0x02000014", complete=False)
+        k = tiers.linked(authors_path=self.root / "function-authors.json",
+                         config_root=self.root / "config")
+        self.assertEqual((k["linked"], k["of"]), (0, 3))
+
+    def test_no_authors_file_means_no_bar(self):
+        k = tiers.linked(authors_path=self.root / "function-authors.json",
+                         config_root=self.root / "config")
+        self.assertIsNone(k)
 
 
 class UnitIndex(Scratch):
@@ -196,7 +243,7 @@ class CommittedListAgreesWithTheStamp(unittest.TestCase):
         listing = REPO / "config" / "port_linked_functions.txt"
         if not listing.is_file():
             self.skipTest("no committed per-function list")
-        stamp = tiers.linked()
+        stamp = tiers.ported()
         self.assertIsNotNone(stamp, "config/port_linkage.json has no usable stamp")
         header = {}
         for line in listing.read_text(encoding="utf-8").splitlines():
@@ -207,10 +254,10 @@ class CommittedListAgreesWithTheStamp(unittest.TestCase):
                          "config/port_linked_functions.txt and config/port_linkage.json come from "
                          "different port builds; re-run tools/port_linked_functions.py --stamp")
         self.assertEqual(header.get("branch"), stamp["branch"])
-        self.assertEqual(int(header["linkedTus"]), stamp["linkedTus"])
+        self.assertEqual(int(header["linkedTus"]), stamp["portedTus"])
         self.assertEqual(int(header["matchedTus"]), stamp["matchedTus"])
         self.assertEqual(stamp["unit"], "functions", "the committed list must back the bar")
-        self.assertEqual(stamp["linked"], int(header["functions"]))
+        self.assertEqual(stamp["ported"], int(header["functions"]))
         self.assertEqual(stamp["of"], int(header["universe"]))
 
     def test_every_key_is_a_module_and_an_address(self):

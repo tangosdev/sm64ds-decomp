@@ -59,6 +59,24 @@ def test_scaffold_reproduces_the_hand_made_dabar_manifest_shape():
     assert plan["vtable"][0]["symbol"] == "_ZN7daBar_c13InitResourcesEv"
 
 
+def test_dry_run_plan_points_at_the_class_form_note(capsys):
+    """The scaffold's plan output ends by sending the writer to notes/cpp-class-form.md,
+    the measured destructor / vtable / struct-copy source forms (no inputs needed)."""
+    import class_scaffold as CS
+    plan = {"class": "daBar_c", "tree_name": "daBar_c", "module": "ov002",
+            "record": {"kind": "class", "mangled": "7daBar_c", "addr": "0x0", "ztv": None,
+                       "vtable": "0x0"},
+            "bases": [], "size": None, "vtable": [], "base_slots": 0, "members": [],
+            "lifecycle": "none", "warnings": [], "already_in_manifest": [],
+            "destination": None, "destination_reason": "-", "existing_header": None,
+            "files": []}
+    CS.print_plan(plan)
+    out = capsys.readouterr().out.rstrip().splitlines()
+    assert out[-1].startswith("class form ")
+    assert "notes/cpp-class-form.md" in out[-1]
+    assert (REPO / "notes" / "cpp-class-form.md").is_file()
+
+
 def test_scalar_fix12_mangling_rewrites_only_the_simple_shape():
     import class_scaffold as CS
     assert CS.scalar_fix12_mangling("_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt") == \
@@ -75,16 +93,23 @@ def test_scaffold_output_passes_the_source_style_patterns():
         pytest.skip("needs extracted/ and build/rtti.json (python tools/rtti_extract.py)")
     import re
     import class_scaffold as CS
-    for name, kw in (("daBar_c", {}), ("dExtAnm2Model_c", {"exclude_lifecycle": True})):
+    for name, kw in (("daBar_c", {}), ("dExtAnm2Model_c", {"exclude_lifecycle": True}),
+                     ("dCcAc_c", {})):
         plan, _entry = CS.build_plan(name, out=str(REPO / "build" / "scaffold" / "_test"), **kw)
         for path, text in plan["files"].items():
             if path.endswith(".json"):
                 continue
             assert not re.search(r"\bunk_[0-9a-fA-F]+", text), path
             assert not re.search(r"\)\s*\n\{", text), path
+        tu_text = next(t for p, t in plan["files"].items() if p.endswith(".cpp"))
+        assert "notes/cpp-class-form.md" in tu_text
+        # dExtAnm2Model_c::Func_020162C4 moved off the by-value Fix12 mangling
+        # (#4311), so its scaffold carries the scalar symbol and no wall note;
+        # dCcAc_c::Init still takes a Fix12<int> by value and must get one.
         if name == "dExtAnm2Model_c":
-            tu = next(t for p, t in plan["files"].items() if p.endswith(".cpp"))
-            assert "WALL 6az" in tu and "_ZN10ModelAnim213Func_020162C4Ejiit" in tu
+            assert "_ZN15dExtAnm2Model_c13Func_020162C4Ejiit" in tu_text
+        if name == "dCcAc_c":
+            assert "WALL 6az" in tu_text
 
 
 @pytest.mark.parametrize("param", ["R5Fix12IiE", "RK5Fix12IiE", "P5Fix12IiE"])
@@ -100,3 +125,40 @@ def test_fix12_scalar_suggestion_never_retypes_a_reference_in_a_mixed_signature(
     symbol = "_ZN7daBar_c4TestER5Fix12IiE5Fix12IiE"
     assert CS.scalar_fix12_mangling(symbol) is None
     assert "Ask tools/mangle.py" in "\n".join(CS.fix12_wall_note(symbol))
+
+
+def _tu_map_with(tmp_path, fingerprint):
+    meta = {"under_segmented": []}
+    if fingerprint is not None:
+        meta["rtti_vtables_fingerprint"] = fingerprint
+    path = tmp_path / "tu_map.json"
+    path.write_text(json.dumps({"meta": meta, "modules": {"ov002": {"units": [
+        {"start": "0x02001000", "end": "0x02001100"}]}}}), encoding="utf-8")
+    return path
+
+
+def test_tu_unit_refuses_a_map_built_from_other_rom_images(tmp_path, monkeypatch):
+    import class_scaffold as CS
+    import rom_fingerprint as RF
+    monkeypatch.setattr(CS, "TU_MAP", _tu_map_with(
+        tmp_path, {"scheme": RF.SCHEME, "sha256": "0" * 64}))
+    monkeypatch.setattr(RF, "fingerprint",
+                        lambda repo=None: {"scheme": RF.SCHEME, "sha256": "1" * 64})
+    with pytest.raises(SystemExit, match="different ROM images"):
+        CS.tu_unit("ov002", [0x02001010])
+
+
+def test_tu_unit_accepts_a_matching_map_and_warns_on_an_old_one(tmp_path, monkeypatch, capsys):
+    import class_scaffold as CS
+    import rom_fingerprint as RF
+    here = {"scheme": RF.SCHEME, "sha256": "1" * 64}
+    monkeypatch.setattr(RF, "fingerprint", lambda repo=None: here)
+    monkeypatch.setattr(CS, "TU_MAP", _tu_map_with(tmp_path, dict(here)))
+    unit, _under = CS.tu_unit("ov002", [0x02001010])
+    assert unit["start"] == "0x02001000"
+    assert capsys.readouterr().err == ""
+    RF._warned.clear()
+    monkeypatch.setattr(CS, "TU_MAP", _tu_map_with(tmp_path, None))
+    unit, _under = CS.tu_unit("ov002", [0x02001010])
+    assert unit["start"] == "0x02001000"      # warned, not refused
+    assert "no ROM fingerprint" in capsys.readouterr().err

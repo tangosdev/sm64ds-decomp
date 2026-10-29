@@ -20,7 +20,7 @@
  * stores this vtable, then nulls the owner.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
- * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * include/dExtModel_c.h for the key-function rule and the objisolate exemption
  * to it. One ~dCcAc_c() in src/engine/collision/d_cc_ac.cpp emits the ROM's
  * D2, D0 and D1 copies.
  *
@@ -41,6 +41,10 @@ struct dActor_c;
 
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
+namespace Memory {
+void operator_delete2(void *);
+}
+
 struct dCcAc_c : dCc_c {
     dActor_c *owner;           /* 0x30 - nulled by C2 */
 
@@ -55,7 +59,7 @@ struct dCcAc_c : dCc_c {
     dCcAc_c();
 
     /* --- non-virtual --- */
-    void Init(dActor_c *actor, Fix12<int> radius, Fix12<int> height, u32 flags, u32 vulnFlags);
+    void Init(dActor_c *actor, Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
@@ -71,8 +75,9 @@ struct dCcAc_c : dCc_c {
        Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
        in the class or one level up, as include/dActor_c.h records. No layout
        effect: a non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
-
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

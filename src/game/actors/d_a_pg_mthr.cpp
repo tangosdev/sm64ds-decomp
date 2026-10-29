@@ -1,8 +1,5 @@
 //cpp
 /* leftovers:
- * - SetAnim, SetFile, dCcAc_c::Init and DropShadowRadHeight stay
- *   scalar externs. The Fix12<int> method form grows those bodies
- *   and emits an unlicensed .data word.
  * - dBgCh_Actr::Init's member call mangles with int. The ROM row is
  *   Fix12<int>. GetFloorResult and GetWallResult are not on the header.
  * - func_0201267c is Sound::Play(3, id, pos). The state helpers stay
@@ -32,15 +29,16 @@ enum d_a_pg_mthr_AssetId {
 #include "nitro/fx/fx.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
-#include "TextureSequence.h"
+#include "dExtAnmTexPat_c.h"
 #include "dBgCh_Gnd.h"
 #include "dExtFrameCtrl_c.h"
 #include "SurfaceInfo.h"
 #include "dBgPi.h"
 #include "Player.h"
 #include "dBgCh_Actr.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "Sound.h"
+#include "cstd.h"
+#include "math/Approach.h"
 
 enum {
     ACTOR_PLAYER = 0xbf,
@@ -63,15 +61,6 @@ enum {
     HIT_TOUCH = 0x8000000
 };
 
-/* SharedFilePtr's header has no fields. Model::LoadFile and
-   SharedFilePtr::Load both store the loaded buffer at +0x4. */
-struct PgLoadedFile {
-    u16 fileID;
-    u8 numRefs;
-    u8 pad;
-    void *filePtr;
-};
-
 /* __sinit_d_a_pg_mthr.cpp constructs these, and the relocs at 02112c04 /
    02112c0c point the two tables at them:
      02113c00  file 0x3fb  BMD   model          (dtor 02017ab4)
@@ -81,27 +70,21 @@ struct PgLoadedFile {
      02113be8  file 0x407  BTP   stand/talk
      02112c04 = { &02113bf8, &02113be8 }
      02112c0c = { &02113bf0, &02113c08 }   (decl_common spells this int[])
-   SharedFilePtr declares no fields and no constructor of its own, so the
+   SharedFilePtr declares no constructor of its own, so the
    model handle gets the func_02017acc/func_02017ab4 pair, the animation
    handles get SharedFilePtr::Construct/Destruct_Anim and the texture
    sequences get SharedFilePtr_Construct_TexSeq/Destruct_TexSeq through
    thin declaration-only wrappers; the manifest aliases those mangled
    spellings to the arm9 destinations the retail initializer calls. */
 struct PgMthrModelFileHandle : SharedFilePtr {
-    s32 fileId;
-    void *file;
     PgMthrModelFileHandle(unsigned int fileID);
     ~PgMthrModelFileHandle();
 };
 struct PgMthrAnimFileResHandle : SharedFilePtr {
-    s32 fileId;
-    void *file;
     PgMthrAnimFileResHandle(unsigned int fileID);
     ~PgMthrAnimFileResHandle();
 };
 struct PgMthrTexSeqFileHandle : SharedFilePtr {
-    s32 fileId;
-    void *file;
     PgMthrTexSeqFileHandle(unsigned int fileID);
     ~PgMthrTexSeqFileHandle();
 };
@@ -119,21 +102,17 @@ extern int AngleDiff(int a, int b);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 /* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
    previous function (0x02012664); this TU's bl is not that one. */
-extern void func_0201267c(int a, void *b);
 extern int Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void *, dExtShadowModel_c &sm, Matrix4x3 &mf, int c, int d, unsigned int e);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mf, short angX);
 extern Matrix4x3 data_020a0e68;
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, int b, unsigned int c);
-extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *, BTP_File &f, int a, int b, unsigned int c);
 extern PgMthrAnimFileResHandle gPenguinWalkAnimationFile;
 extern PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern dActor_c *func_ov018_021118fc(char *c);
+extern Player *func_ov018_021118fc(daPgMthr_c *self);
 extern PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;
 extern PgMthrAnimFileResHandle gPenguinWait1AnimationFile;
 extern PgMthrState data_ov018_02113c4c[3];
@@ -142,8 +121,8 @@ extern void func_ov018_02112398(daPgMthr_c *self);
 extern void func_ov018_0211235c(daPgMthr_c *self);
 extern PgMthrModelFileHandle data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, int a, int b, unsigned int c2, unsigned int d);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *c2, void *d);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, void *act, int a, int b, void *c2, void *d);
 }
 
 // @symbol daPgMthr_c_classInit
@@ -155,21 +134,19 @@ extern "C" daPgMthr_c *daPgMthr_c_classInit()
 // @symbol _ZN10daPgMthr_c13InitResourcesEv
 int daPgMthr_c::InitResources()
 {
-    void *m = Model::LoadFile(data_ov018_02113c00);
-    mModelAnim.SetFile((BMD_File *)m, 1, 1);
+    void *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
+    mAnmModel.SetFile((BMD_File *)m, 1, 1);
     for (int i = 0; i < 2; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov018_02112c0c[i]);
     for (int i = 0; i < 2; i++) {
         SharedFilePtr *t = data_ov018_02112c04[i];
-        TextureSequence::LoadFile(*t);
-        TextureSequence::Prepare(
-            *(BMD_File *)((PgLoadedFile *)&data_ov018_02113c00)->filePtr,
-            *(BTP_File *)((PgLoadedFile *)t)->filePtr);
+        dExtAnmTexPat_c::LoadFile(*t);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov018_02113c00.filePtr, *(BTP_File *)t->filePtr);
     }
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     /* Cylinder 260 x 300. Flags 0x4800004 / vuln 0x900000. */
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x104000, 0x12c000, 0x4800004, 0x900000);
+    mdCcAc_c.Init(this, 0x104000, 0x12c000, 0x4800004, 0x900000);
     func_ov018_021123d0(0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -177,7 +154,7 @@ int daPgMthr_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     /* Mesh radius and height 50.0. */
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     Vector3 pos;
     pos.x = mPosX;
     pos.y = mPosY;
@@ -201,11 +178,11 @@ int daPgMthr_c::InitResources()
 int daPgMthr_c::Behavior()
 {
     func_ov018_0211235c(this);
-    mModelAnim.dExtFrameCtrl_c::Advance();
+    mAnmModel.dExtFrameCtrl_c::Advance();
     mTextureSequence.Advance();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
-    mModelAnim.UpdateVerts();
+    mAnmModel.UpdateVerts();
     func_ov018_02111d28();
     return 1;
 }
@@ -213,9 +190,9 @@ int daPgMthr_c::Behavior()
 // @symbol _ZN10daPgMthr_c6RenderEv
 int daPgMthr_c::Render()
 {
-    mTextureSequence.Update(mModelAnim.data);
-    /* ModelAnim overrides Render. Qualifying it is the direct bl. */
-    mModelAnim.Model::Render(0);
+    mTextureSequence.Update(mAnmModel.data);
+    /* dExtAnmModel_c overrides Render. Qualifying it is the direct bl. */
+    mAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
 
@@ -258,9 +235,9 @@ extern "C" void func_ov018_0211235c(daPgMthr_c *self)
 /* State 0 enter. Idle anim, stopped, not talking. */
 int daPgMthr_c::func_ov018_021122ec()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&gPenguinWait1AnimationFile)->filePtr, 0, 0x1000, 0);
-    mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&gPenguinWait1TextureSequenceFile)->filePtr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
+    mAnmModel.speed = 0x1000;
+    mTextureSequence.SetFile(*(BTP_File *)gPenguinWait1TextureSequenceFile.filePtr, 0, 0x1000, 0);
     mHorzSpeed = 0;
     mPlayer = 0;
     unk_37c = 0;
@@ -276,7 +253,7 @@ int daPgMthr_c::func_ov018_02112234()
 
     if (mGaveStar != 0)
         func_ov018_02111b3c();
-    toucher = (Player *)func_ov018_021118fc((char *)this);
+    toucher = func_ov018_021118fc(this);
     held = 0;
     if (toucher != 0) {
         /* Yoshi's baby is in his mouth; this path does not count it. */
@@ -289,9 +266,9 @@ int daPgMthr_c::func_ov018_02112234()
     UpdatePos(&mdCcAc_c);
     func_ov018_02111bf0((char *)this, &mWithMeshClsn);
     if (mGaveStar == 0 && mHoldingBaby == 0) {
-        unsigned int frame = ((unsigned int)mModelAnim.currFrame << 4) >> 16;
+        unsigned int frame = ((unsigned int)mAnmModel.currFrame << 4) >> 16;
         if (frame == 0x10 || frame == 0x25)
-            func_0201267c(0xdf, &mCamSpacePosX);
+            func_0201267c(0xdf, &mCamSpacePos);
     }
     return 1;
 }
@@ -299,8 +276,8 @@ int daPgMthr_c::func_ov018_02112234()
 // @symbol _ZN10daPgMthr_c19func_ov018_021121dcEv
 int daPgMthr_c::func_ov018_021121dc()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&gPenguinWait1AnimationFile)->filePtr, 0, 0x1000, 0);
-    mModelAnim.speed = 0x1000;
+    mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
+    mAnmModel.speed = 0x1000;
     mTalkStep = 0;
     mTalkTimer = 0x3c;
     unk_37c = 1;
@@ -332,7 +309,7 @@ int daPgMthr_c::func_ov018_02111fac()
                 mouth[1] = data_020a0e68.m[10];
                 mouth[2] = data_020a0e68.m[11];
                 if (mPlayer->ShowMessage(*(fBase_c *)this, mMessageId, (Vector3 *)mouth, 0, 0)) {
-                    func_0201267c(0xdf, &mCamSpacePosX);
+                    func_0201267c(0xdf, &mCamSpacePos);
                     {
                         u8 *p = &mTalkStep;
                         *p = *p + 1;
@@ -365,9 +342,9 @@ int daPgMthr_c::func_ov018_02111fac()
     }
     func_ov018_02111a48((char *)mPlayer);
     if (mGaveStar == 0 && mHoldingBaby == 0) {
-        unsigned frame = ((unsigned)mModelAnim.currFrame << 4) >> 0x10;
+        unsigned frame = ((unsigned)mAnmModel.currFrame << 4) >> 0x10;
         if (frame == 0x10 || frame == 0x25)
-            func_0201267c(0xdf, &mCamSpacePosX);
+            func_0201267c(0xdf, &mCamSpacePos);
     }
     return 1;
 }
@@ -378,9 +355,9 @@ int daPgMthr_c::func_ov018_02111f1c()
     if (mPlayer == 0 && mGaveStar == 0)
         func_ov018_021123d0(0);
     mHorzSpeed = 0x5000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&gPenguinWalkAnimationFile)->filePtr, 0, 0x1000, 0);
-    mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&gPenguinAngryTextureSequenceFile)->filePtr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gPenguinWalkAnimationFile.filePtr, 0, 0x1000, 0);
+    mAnmModel.speed = 0x1000;
+    mTextureSequence.SetFile(*(BTP_File *)gPenguinAngryTextureSequenceFile.filePtr, 0, 0x1000, 0);
     unk_37c = 2;
     return 1;
 }
@@ -393,9 +370,9 @@ int daPgMthr_c::func_ov018_02111e28()
     UpdatePos(&mdCcAc_c);
     func_ov018_02111bf0((char *)this, &mWithMeshClsn);
     func_ov018_02111a48((char *)mPlayer);
-    unsigned int frame = ((unsigned int)mModelAnim.currFrame << 4) >> 0x10;
+    unsigned int frame = ((unsigned int)mAnmModel.currFrame << 4) >> 0x10;
     if (frame == 9 || frame == 0x15)
-        func_0201267c(0xde, &mCamSpacePosX);
+        func_0201267c(0xde, &mCamSpacePos);
     int holding;
     if (mPlayer->param1 == CHAR_YOSHI)
         holding = (mPlayer->mObjInMouth != 0);
@@ -411,40 +388,38 @@ int daPgMthr_c::func_ov018_02111e28()
 // @symbol _ZN10daPgMthr_c19func_ov018_02111d28Ev
 void daPgMthr_c::func_ov018_02111d28()
 {
+    /* Unused, but deleting this local DIFFs. */
     char *s = (char *)this;
-    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
-    /* 0x114/0x118/0x11c are mat4x3's translation (pos >> 3). Writing those
-       through m[] and passing the member into DropShadow, then storing the
-       bone back through the same pointer, was 0xfc. ROM is 0x100. */
-    *(int *)(s + 0x114) = mPosX >> 3;
-    *(int *)(s + 0x118) = mPosY >> 3;
-    *(int *)(s + 0x11c) = mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, mShadowModel, *(Matrix4x3 *)(s + 0xf0), 0x140000, 0x50000, 0xf);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    /* m[9..11] are mat4x3's translation (pos >> 3). */
+    mAnmModel.mat4x3.m[9] = mPosX >> 3;
+    mAnmModel.mat4x3.m[10] = mPosY >> 3;
+    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
     if (mLookAngX != 0 || mLookAngY != 0) {
-        Matrix4x3 *bone = &mModelAnim.data.transforms[LOOK_BONE];
+        Matrix4x3 *bone = &mAnmModel.data.transforms[LOOK_BONE];
         data_020a0e68 = *bone;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookAngY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mLookAngX);
-        *(Matrix4x3 *)((*(char **)(s + 0xe8)) + 0xf0) = data_020a0e68;
+        mAnmModel.data.transforms[LOOK_BONE] = data_020a0e68;
     }
 }
 
 extern "C" {
 /* dBgPi is 0x28. The copy below is not dBgPi::CopyTo: `b ? a : a` is the
-   load that matches, and a real dBgPi local would run the constructor. */
+   load that matches, and a real dBgPi local would run the constructor.
+   A view of dBgPi past its vptr, flattened: nesting the real SurfaceInfo
+   (whose Vector3 has a constructor) renumbers every @NNN in this file. */
 struct dBgPiRawBody {
-    int a, b, c, d, e;
-    unsigned short f, g;
-    int h, i, j;
+    int clpsW0, clpsW1;            /* surface.clps.w0/w1 */
+    int normalX, normalY, normalZ; /* surface.normal */
+    unsigned short triangleID, colliderIdx;
+    int clsnID, owner, collider;
 };
 struct dBgPiRaw {
     void *vt;
     struct dBgPiRawBody info;
 };
-void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *w);
-int _ZN4cstd4fdivEii(int a, int b);
-void _ZN5dBgPiD1Ev(struct dBgPiRaw *r);
 extern int data_02099368[];
 
 void func_ov018_02111bf0(void *cv, void *wv)
@@ -455,11 +430,11 @@ void func_ov018_02111bf0(void *cv, void *wv)
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (w->IsOnGround() != 0) {
         Vector3 n;
-        dBgPi *floor = (dBgPi *)w->GetFloorResult();
+        dBgPi *floor = w->GetFloorResult();
         floor->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = FX_MUL(n.x, self->unk_0a4) + FX_MUL(n.z, self->unk_0ac);
-            self->mVertSpeed = -(_ZN4cstd4fdivEii(s, n.y) + 0x8000);
+            int s = FX_MUL(n.x, self->mSpeedX) + FX_MUL(n.z, self->mSpeedZ);
+            self->mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
@@ -467,26 +442,26 @@ void func_ov018_02111bf0(void *cv, void *wv)
         struct dBgPiRaw cr;
         Vector3 wn;
         struct dBgPiRawBody *dst = &cr.info;
-        int a = *(int *)((char *)src + 4);
-        int b = *(int *)((char *)src + 8);
+        int a = src->info.clpsW0;
+        int b = src->info.clpsW1;
         /* `= a` DIFFs. The tautology is the load. */
-        *(int *)((char *)dst + 0) = b ? a : a;
-        *(int *)((char *)dst + 4) = b;
-        int t = *(int *)((char *)src + 0xc);
+        dst->clpsW0 = b ? a : a;
+        dst->clpsW1 = b;
+        int t = src->info.normalX;
         void *vt = (void *)data_02099368;
-        *(int *)((char *)dst + 8) = t;
-        t = *(int *)((char *)src + 0x10);
-        *(int *)((char *)dst + 0xc) = t;
-        t = *(int *)((char *)src + 0x14);
-        *(int *)((char *)dst + 0x10) = t;
+        dst->normalX = t;
+        t = src->info.normalY;
+        dst->normalY = t;
+        t = src->info.normalZ;
+        dst->normalZ = t;
         cr.vt = vt;
-        cr.info.f = *(unsigned short *)((char *)src + 0x18);
-        cr.info.g = *(unsigned short *)((char *)src + 0x1a);
-        cr.info.h = *(int *)((char *)src + 0x1c);
-        cr.info.i = *(int *)((char *)src + 0x20);
-        cr.info.j = *(int *)((char *)src + 0x24);
+        cr.info.triangleID = src->info.triangleID;
+        cr.info.colliderIdx = src->info.colliderIdx;
+        cr.info.clsnID = src->info.clsnID;
+        cr.info.owner = src->info.owner;
+        cr.info.collider = src->info.collider;
         ((SurfaceInfo *)dst)->CopyNormalTo(wn);
-        _ZN5dBgPiD1Ev(&cr);
+        ((dBgPi *)&cr)->dBgPi::~dBgPi();
     }
 }
 }
@@ -545,7 +520,7 @@ void daPgMthr_c::func_ov018_02111a48(char *b)
         lookTarget.x = tx;
         lookTarget.z = tz;
         lookTarget.y = ty;
-        bone = &mModelAnim.data.transforms[LOOK_BONE];
+        bone = &mAnmModel.data.transforms[LOOK_BONE];
         nodePos.x = bone->m[9];
         nodePos.y = bone->m[10];
         nodePos.z = bone->m[11];
@@ -598,17 +573,15 @@ talk:
 }
 
 extern "C" {
-struct dActor_c *func_ov018_021118fc(char *c)
-{
-    daPgMthr_c *self = (daPgMthr_c *)c;
-    struct dActor_c *newToucher = 0;
+Player *func_ov018_021118fc(daPgMthr_c *self) {
+    Player *newToucher = 0;
     if (self->mdCcAc_c.hitFlags & HIT_TOUCH) {
         struct dActor_c *a = dActor_c::FindWithID(self->mdCcAc_c.otherOwner);
         if (a) {
             int ok = (a->actorID == ACTOR_PLAYER) ? 1 : (int)newToucher;
             if (ok) {
                 if (a != self->mLastPlayer)
-                    newToucher = a;
+                    newToucher = static_cast<Player *>(a);
                 self->mLastPlayer = a;
             }
         }

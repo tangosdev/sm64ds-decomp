@@ -53,11 +53,23 @@ class WorklistTests(unittest.TestCase):
             s.write("notes.txt", GOOD)
             self.assertEqual(CD.drafts(s.dir), [draft])
 
-    def test_an_empty_worklist_fails(self):
-        with Scratch() as s, unittest.mock.patch.object(CD, "drafts", return_value=[]):
+    def test_an_empty_tree_passes_when_the_scanner_sees_a_probe(self):
+        with unittest.mock.patch.object(CD, "drafts", return_value=[]):
+            report = CD.check()
+            self.assertTrue(report["ok"], report["failures"])
+            self.assertEqual(report["drafts"], 0)
+
+    def test_an_empty_worklist_fails_when_the_scanner_is_blind(self):
+        with unittest.mock.patch.object(CD, "drafts", return_value=[]), \
+                unittest.mock.patch.object(CD.AP, "has_draft_banner", return_value=False):
             report = CD.check()
             self.assertFalse(report["ok"])
             self.assertEqual(report["drafts"], 0)
+
+    def test_the_probe_banner_is_a_draft(self):
+        with Scratch() as s:
+            draft = s.write("func_probe.c", CD.PROBE_BANNER)
+            self.assertEqual(CD.drafts(s.dir), [draft])
 
 
 class CompileTests(unittest.TestCase):
@@ -83,7 +95,6 @@ class CompileTests(unittest.TestCase):
 
     def test_the_committed_tree_compiles(self):
         report = CD.check()
-        self.assertGreater(report["drafts"], 0)
         self.assertTrue(report["ok"], report["failures"])
 
 

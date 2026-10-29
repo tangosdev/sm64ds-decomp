@@ -35,7 +35,8 @@ int func_0206610c(void)
     Rec r;
     struct Out out;
 
-    if (data_020a9db8->unk_1524 == 0) return 0x15;
+    if (data_020a9db8->mFileCount == 0)
+        return 0x15;
 
     loopCount = 0;
     do {

@@ -4,7 +4,6 @@
 #include "types.h"
 
 #ifdef __cplusplus
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 #include "dBgActor_c.h"
 
@@ -18,12 +17,12 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * this is not a compatibility alias.
  *
  * SIZE 0x3a8, the factory's own literal (936). dBgActor_c fills 0x000..0x31f
- * (D1 restores _ZTV10dBgActor_c, destroys dBgW_KcMbg at 0x124 and Model at
- * 0x0d4, then chains to dActor_c). This class owns the extra Model at 0x320
+ * (D1 restores _ZTV10dBgActor_c, destroys dBgW_KcMbg at 0x124 and dExtSimpleModel_c at
+ * 0x0d4, then chains to dActor_c). This class owns the extra dExtSimpleModel_c at 0x320
  * -- D1 destroys it first, and the factory constructs it after the vptr
  * store -- plus the collider matrix and the four-byte state tail:
  *
- *   0x320  mModel2     -- BMD; Render calls Model::Render
+ *   0x320  mModel2     -- BMD; Render calls dExtSimpleModel_c::Render
  *   0x370  mClsnMat2   -- SetFile / Transform matrix; helpers write Y rot + pos
  *   0x3a0  mStateTimer -- blink counter while the plank is out
  *   0x3a2  mState      -- 0 hidden, 1 shown
@@ -38,12 +37,12 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  */
 
 struct daObjWc_Obj04_c : dBgActor_c {
-    Model mModel2;            /* 0x320 */
-    Matrix4x3 mClsnMat2;      /* 0x370 */
-    u16 mStateTimer;          /* 0x3a0 */
-    u8  mState;               /* 0x3a2 */
-    u8  mVisible;             /* 0x3a3 */
-    u8  mEventID;             /* 0x3a4 */
+    dExtSimpleModel_c mModel2; /* 0x320 */
+    Matrix4x3 mClsnMat2;       /* 0x370 */
+    u16 mStateTimer;           /* 0x3a0 */
+    u8 mState;                 /* 0x3a2 */
+    u8 mVisible;               /* 0x3a3 */
+    u8 mEventID;               /* 0x3a4 */
 
     /* Overrides of fBase_c's slots 0, 3, 6 and 9. Virtualness is inherited. */
     int InitResources();
@@ -51,21 +50,15 @@ struct daObjWc_Obj04_c : dBgActor_c {
     int Behavior();
     int Render();
 
-    /* Leaf size_t operator new. A plain `new daObjWc_Obj04_c` without this
-       relocates to the global `_Znwm`; this routes the factory through
-       fBase_c::operator new, the call this TU's classInit actually makes. */
-    static void *operator new(size_t size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void UpdateClsnMatrix();  /* ov029 0x021126dc */
+    void UpdateModelMatrix(); /* ov029 0x02112710 */
 
-    virtual ~daObjWc_Obj04_c() {}     /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjWc_Obj04_c() {} /* slots 16 (D1), 17 (D0) */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjWc_Obj04_c_size_must_be_0x3a8[
-    sizeof(daObjWc_Obj04_c) == 0x3a8 ? 1 : -1];
+typedef char daObjWc_Obj04_c_size_must_be_0x3a8[sizeof(daObjWc_Obj04_c) == 0x3a8 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

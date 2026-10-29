@@ -1,17 +1,22 @@
 //cpp
 /* Model4 -- VRAM upload for a BMD model, 0x020458e0..0x020468a0.
  *
- * Not part of src/engine/model/Model.cpp: func_020458a8 sits between that TU
- * and this run. TextureSequence::UpdateFileOffsets begins at 0x020468a0.
- * The name is the tree's Model class plus the numeric suffix already used
+ * Not part of src/engine/model/d_ext_model.cpp: func_020458a8 sits between that TU
+ * and this run. dExtAnmTexPat_c::UpdateFileOffsets begins at 0x020468a0.
+ * The name is the tree's dExtSimpleModel_c class plus the numeric suffix already used
  * for a second translation unit (Juan 2026-10-11).
  *
  * mwccarm's default deferred codegen emits .text in reverse source order, so
  * the definitions are highest address first. Do not reorder.
  */
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "G3X.h"
+#include "cstd.h"
+
+namespace CP15 {
+void EnableDTCM(void);
+}
 
 extern "C" {
 extern u32 data_020a4bc8;
@@ -22,17 +27,14 @@ extern u32 data_020a4be0;
 extern u32 data_020a4be4;
 extern u32 data_020a4be8;
 void Crash();
-void _ZN2GX16BeginLoadTexPlttEv(void);
-void _ZN2GX11LoadTexPlttEPKvjj(const void *src, u32 slot, u32 size);
-void _ZN2GX14EndLoadTexPlttEv(void);
+
 int func_02053e34(void);
 int func_02053e1c(void);
 }
 
-// @symbol _ZN5Model17UpdateFileOffsetsER8BMD_File
+// @symbol _ZN17dExtSimpleModel_c17UpdateFileOffsetsER8BMD_File
 #define REBASE(p) ((char *)(p) + base)
-void Model::UpdateFileOffsets(BMD_File &file)
-{
+void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
     u32 i;
     int k;
     int base = (int)&file;
@@ -90,8 +92,6 @@ void Model::UpdateFileOffsets(BMD_File &file)
 }
 #undef REBASE
 
-extern "C" int _ZN4cstd6strcmpEPKcS1_(const char *a, const char *b);
-
 // @symbol func_02046590
 extern "C" int func_02046590(const void *tbl, const char *name)
 {
@@ -111,7 +111,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
         struct Entry *entry = t->entries;
         while (1)
         {
-            if (_ZN4cstd6strcmpEPKcS1_(entry->name, name) == 0)
+            if (cstd::strcmp(entry->name, name) == 0)
                 return (int)i;
             i++;
             entry = (struct Entry *)((char *)entry + 0x30);
@@ -494,14 +494,13 @@ extern "C" void func_02045e2c(int obj, int i, int a, short b)
     e->b = b;
 }
 
-extern "C" void _ZN4CP1510EnableDTCMEv(void);
 extern "C" u16 func_02053ed0(void);
 extern "C" u16 func_02053ec0(void);
 
 // @symbol func_02045d9c
 extern "C" void func_02045d9c(void)
 {
-    _ZN4CP1510EnableDTCMEv();
+    CP15::EnableDTCM();
     u16 r3 = *(volatile u16 *)0x4000060;
     u16 r1 = (u16)0x4000340;
     int r2 = 0x7fff;
@@ -555,9 +554,8 @@ struct GX {
     static void EndLoadTex();
 };
 
-// @symbol _ZN5Model13GetVramOffsetEj
-u32 Model::GetVramOffset(u32 size)
-{
+// @symbol _ZN17dExtSimpleModel_c13GetVramOffsetEj
+u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     u32 *p;
     u32 b = data_020a4be8 - data_020a4bc8;
     u32 a = data_020a4bdc - data_020a4be0;
@@ -572,9 +570,8 @@ u32 Model::GetVramOffset(u32 size)
     return *p;
 }
 
-// @symbol _ZN5Model17LoadTextureToVramEPcj
-u32 Model::LoadTextureToVram(char *texData, u32 size)
-{
+// @symbol _ZN17dExtSimpleModel_c17LoadTextureToVramEPcj
+u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
     u32 vramOffset = GetVramOffset(size);
     GX::BeginLoadTex();
     GX::LoadTex(texData, vramOffset, size);
@@ -583,12 +580,11 @@ u32 Model::LoadTextureToVram(char *texData, u32 size)
     return vramOffset;
 }
 
-// @symbol _ZN5Model27LoadCompressedTextureToVramEPcjS0_
+// @symbol _ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjS0_
 /* Stays off through the rest of the file. Restoring it before deferred
    codegen emits this function reorders five words. */
 #pragma opt_common_subs off
-u32 Model::LoadCompressedTextureToVram(char *src, u32 size, char *dst)
-{
+u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *dst) {
     u32 vramOffset;
 
     if ((data_020a4be8 - data_020a4bc8) < size)
@@ -618,9 +614,9 @@ extern "C" u32 func_02045ad8(const void *src, u32 size)
     if (slot + size > end)
         Crash();
 
-    _ZN2GX16BeginLoadTexPlttEv();
-    _ZN2GX11LoadTexPlttEPKvjj(src, data_020a4bcc, size);
-    _ZN2GX14EndLoadTexPlttEv();
+    GX::BeginLoadTexPltt();
+    GX::LoadTexPltt(src, data_020a4bcc, size);
+    GX::EndLoadTexPltt();
 
     slot = data_020a4bcc;
     data_020a4bcc = slot + ((size + 0xf) & 0xfff0);
@@ -643,17 +639,16 @@ extern "C" u32 func_02045a50(const void *src, u32 size)
 
     data_020a4bd8 -= (size + 0xf) & 0xfff0;
 
-    _ZN2GX16BeginLoadTexPlttEv();
-    _ZN2GX11LoadTexPlttEPKvjj(src, data_020a4bd8, size);
-    _ZN2GX14EndLoadTexPlttEv();
+    GX::BeginLoadTexPltt();
+    GX::LoadTexPltt(src, data_020a4bd8, size);
+    GX::EndLoadTexPltt();
 
     return data_020a4bd8;
 }
 
 // 0x020458e0 (0x170)
-// @symbol _ZN5Model13LoadTexAndPalER8BMD_File
-void Model::LoadTexAndPal(BMD_File &file)
-{
+// @symbol _ZN17dExtSimpleModel_c13LoadTexAndPalER8BMD_File
+void dExtSimpleModel_c::LoadTexAndPal(BMD_File &file) {
     u32 i;
     u32 ret;
     u32 sz;

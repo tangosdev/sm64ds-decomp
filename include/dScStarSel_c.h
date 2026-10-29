@@ -2,7 +2,7 @@
 #define DSCSTARSEL_C_H
 
 #include "dScene_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 /* One of dScene_c's ten direct children (see the census in dScene_c.h) --
  * the star-select screen shown before entering a course.
@@ -15,20 +15,20 @@
  * dScStarSel_c). No new virtual is added.
  *
  * CONSTRUCTION. dScStarSel_c_classInit is the factory: it opens with
- * `_ZN7fBase_cnwEj(0x13c)`, i.e. fBase_c::operator new(0x13c). SIZE 0x13c
+ * `_ZN7fBase_cnwEm(0x13c)`, i.e. fBase_c::operator new(0x13c). SIZE 0x13c
  * is read directly off the allocator call. The same factory then calls the
  * shared "construct N elements of size S" helper, __cxa_vec_ctor(p+0x64, 2,
- * 0x50, Model::Model, Model::~Model) -- two Model objects (include/Model.h,
- * itself confirmed sizeof(Model) == 0x50) back to back at 0x064..0x104.
+ * 0x50, dExtSimpleModel_c::dExtSimpleModel_c, dExtSimpleModel_c::~dExtSimpleModel_c) -- two dExtSimpleModel_c objects (include/dExtSimpleModel_c.h,
+ * itself confirmed sizeof(dExtSimpleModel_c) == 0x50) back to back at 0x064..0x104.
  * The matching destructor (func_ov003_020addfc / _020ade54) tears the same
- * range down with __cxa_vec_cleanup(p+0x64, 2, 0x50, Model::~Model) before
+ * range down with __cxa_vec_cleanup(p+0x64, 2, 0x50, dExtSimpleModel_c::~dExtSimpleModel_c) before
  * calling fBase_c's D2 -- two independent witnesses agreeing on both count
  * and stride. InitResources (func_ov003_020af8a0) confirms the same two
- * offsets from the other side: it calls Model::LoadAndSetFile at arg0+0x64
+ * offsets from the other side: it calls dExtSimpleModel_c::LoadAndSetFile at arg0+0x64
  * and arg0+0xB4 (0x64 + 0x50), i.e. models[0] and models[1].
  *
  * MEMBERS BELOW 0x50 are all inherited (dScene_c/dBase_c add none of their
- * own -- see dScene_c.h). Everything from 0x050 up to the Model pair, and
+ * own -- see dScene_c.h). Everything from 0x050 up to the dExtSimpleModel_c pair, and
  * everything after it, is read by Behavior/Render (func_ov003_020af038,
  * func_ov003_020ae6f4 -- both NONMATCHING-banner near-misses, not byte
  * gates) through dozens of scalar this-relative offsets (cursor index,
@@ -36,12 +36,12 @@
  * that scalar layout field-by-field is a separate, later pass; this header
  * only needs to hold the byte ranges it occupies, which it does as opaque
  * storage below, sized exactly by the constructor/destructor evidence
- * above (the Model pair) and the allocator literal (everything else).
+ * above (the dExtSimpleModel_c pair) and the allocator literal (everything else).
  *
  * VTABLE ORDER follows dScene_c's (unchanged slot indices; dScStarSel_c
  * adds no new virtual). The destructor pair is at slots 16/17, same
  * convention as dScEntry_c and every other fBase_c-family class
- * (dScene_c.h/dScEntry_c.h): func_ov003_020addfc (D1) tears down the Model
+ * (dScene_c.h/dScEntry_c.h): func_ov003_020addfc (D1) tears down the dExtSimpleModel_c
  * pair then writes dScene_c's/dBase_c's vptrs before fBase_c::~fBase_c;
  * func_ov003_020ade54 (D0) does the same then calls
  * Memory::Deallocate(this, GAME_HEAP_PTR) -- dScStarSel_c declares no
@@ -53,7 +53,7 @@ struct dScStarSel_c : dScene_c {
                                         (Behavior/Render access as 32-bit
                                         fixed-point values at 0x50/0x54/0x58/
                                         0x5c/0x60) */
-    Model models[2];                 /* 0x064 -- Model::LoadAndSetFile'd pair,
+    dExtSimpleModel_c models[2]; /* 0x064 -- dExtSimpleModel_c::LoadAndSetFile'd pair,
                                         see CONSTRUCTION above */
     u8    unk_104[0x38];  /* 0x104 -- opaque; cursor state, per-
                                         character UI positions and timers */

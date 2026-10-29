@@ -1,8 +1,5 @@
 //cpp
-
-namespace cstd {
-int mod(int, int);
-}
+#include "cstd.h"
 
 extern "C" {
 extern int func_ov007_020c3ba8(int r4);

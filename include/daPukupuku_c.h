@@ -25,7 +25,7 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
@@ -34,15 +34,13 @@ struct PukuStateC;
 typedef int (PukuStateC::*PukuStatePMF)();
 
 struct daPukupuku_c : dEnemyBase_c {
-    dCcAcPos_c mdCcAcPos_c;/* 0x110 */
-    dBgCh_Actr mWithMeshClsn;       /* 0x150 */
-    ModelAnim mModelAnim;             /* 0x30c */
+    dCcAcPos_c mdCcAcPos_c;   /* 0x110 */
+    dBgCh_Actr mWithMeshClsn; /* 0x150 */
+    dExtAnmModel_c mAnmModel; /* 0x30c */
     /* The current state record: enter PMF at +0, main PMF at +8.
-       func_ov090_021332e8 installs it and calls enter; Behavior calls main. */
-    PukuStatePMF *mState;               /* 0x370 */
-    s32 mHomePosX;                      /* 0x374 */
-    s32 mHomePosY;                      /* 0x378 */
-    s32 mHomePosZ;                      /* 0x37c */
+       SetState installs it and calls enter; Behavior calls main. */
+    PukuStatePMF *mState; /* 0x370 */
+    Vector3 mHomePos;     /* 0x374 */
 
     /* --- vtable --- */
     /* Inline and first: measured (class-form skill) that mwccarm 2004/b56
@@ -56,14 +54,22 @@ struct daPukupuku_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
-    int func_ov090_02133190();
-    int func_ov090_02133200();
-    int func_ov090_021332e8(PukuStatePMF *p);
+    void CheckPlayerHit();         /* ov090 0x021330c8 */
+    int StatePause();              /* ov090 0x02133190 */
+    int InitStatePause();          /* ov090 0x021331c4 */
+    int StateSwim();               /* ov090 0x02133200 */
+    int InitStateSwim();           /* ov090 0x02133290 */
+    int SetState(PukuStatePMF *p); /* ov090 0x021332e8 */
+    void UpdateModelMatrix();      /* ov090 0x02133338 */
 
-    /* Tail padding. The field span stops short of the real size:
+    /* The field span stops short of the real size:
        daPukupuku_c_classInit calls fBase_c::operator new(0x388), read off
-       the retail instruction. A span is only a LOWER BOUND. */
-    u8 pad_380[0x8];      /* 0x380, to the ROM's 0x388 */
+       the retail instruction. */
+    u8 pad_380[0x4]; /* 0x380 */
+    /* InitStateSwim picks it at random; StateSwim points it home when the
+       fish strays and turns mPrevAngleY toward it. */
+    s16 mTargetAngleY; /* 0x384 */
+    u8 pad_386[0x2];   /* to the ROM's 0x388 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -77,31 +83,31 @@ typedef char daPukupuku_c_size_must_be_0x388[sizeof(daPukupuku_c) == 0x388 ? 1 :
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
 struct daPukupuku_c {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x4];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x1a];
-    u32 mFlags;            /* 0x0b0 */
-    u8  pad_0b4[0x5c];
+    u8 pad_000[0x5c];
+    s32 mPosX; /* 0x05c */
+    s32 mPosY; /* 0x060 */
+    s32 mPosZ; /* 0x064 */
+    u8 pad_068[0x26];
+    s16 mAngleY; /* 0x08e */
+    u8 pad_090[0x4];
+    s16 mPrevAngleY; /* 0x094 */
+    u8 pad_096[0x1a];
+    u32 mFlags; /* 0x0b0 */
+    u8 pad_0b4[0x5c];
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12daPukupuku_cD1Ev, now in src/game/actors/d_a_pukupuku.cpp] */
-    dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
+    dCcAcPos_c mdCcAcPos_c; /* 0x110 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12daPukupuku_cD1Ev, now in src/game/actors/d_a_pukupuku.cpp] */
-    dBgCh_Actr mWithMeshClsn;            /* 0x150 */
-    u8  mModelAnim;            /* 0x30c */
+    dBgCh_Actr mWithMeshClsn; /* 0x150 */
+    u8 mAnmModel;             /* 0x30c */
     u8 pad_30d[0x63];
-    void *mState;             /* 0x370 */
-    s32 mHomePosX;            /* 0x374 */
-    s32 mHomePosY;            /* 0x378 */
-    s32 mHomePosZ;            /* 0x37c */
+    void *mState;  /* 0x370 */
+    s32 mHomePosX; /* 0x374 */
+    s32 mHomePosY; /* 0x378 */
+    s32 mHomePosZ; /* 0x37c */
 };
 
 #endif /* __cplusplus */

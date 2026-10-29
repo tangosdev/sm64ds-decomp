@@ -9,7 +9,7 @@
 #   ov0FileID by leaving it in r1 across a one-argument call; the HAL
 #   provides an ABI-portable Construct instead.
 #   SharedFilePtr::Load -- the seam itself (card hardware).
-# Model::LoadFile and dExtFrameCtrl_c::LoadFile compile only where
+# dExtSimpleModel_c::LoadFile and dExtFrameCtrl_c::LoadFile compile only where
 # SM64DS_PORT_GATE4B is defined, and dBgW_Kc::LoadFile only where
 # SM64DS_PORT_GATE8 is (see CMakeLists.txt): they need the UpdateFileOffsets
 # members that only the gate-4b / gate-8 slices carry.

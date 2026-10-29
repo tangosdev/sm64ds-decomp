@@ -30,7 +30,7 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
@@ -38,19 +38,19 @@ struct daHyuhyu_c;
 
 /* One state: its enter and execute handlers. Both are optional. */
 struct daHyuhyu_c_State {
-    int (daHyuhyu_c::*enter)();       /* 0x00 */
-    int (daHyuhyu_c::*execute)();     /* 0x08 */
+    int (daHyuhyu_c::*enter)();   /* 0x00 */
+    int (daHyuhyu_c::*execute)(); /* 0x08 */
 };
 
 struct daHyuhyu_c : dEnemyBase_c {
-    dCcAc_c mdCcAc_c;                 /* 0x110 */
-    dBgCh_Actr mWithMeshClsn;         /* 0x144 */
-    ModelAnim mModelAnim;             /* 0x300 -- the cloud only */
-    daHyuhyu_c_State *mState;         /* 0x364 */
-    u32 mGustParticle;                /* 0x368 -- particle system handles */
-    u32 mGustParticle2;               /* 0x36c */
-    u8  pad_370[0x4];
-    s32 mVariant;                     /* 0x374 -- 0 cloud, 1 gust */
+    dCcAc_c mdCcAc_c;         /* 0x110 */
+    dBgCh_Actr mWithMeshClsn; /* 0x144 */
+    dExtAnmModel_c mAnmModel; /* 0x300 -- the cloud only */
+    daHyuhyu_c_State *mState; /* 0x364 */
+    u32 mGustParticle;        /* 0x368 -- particle system handles */
+    u32 mGustParticle2;       /* 0x36c */
+    u8 pad_370[0x4];
+    s32 mVariant; /* 0x374 -- 0 cloud, 1 gust */
 
     /* Inline is load-bearing: out-of-line emits D0 before D1. */
     virtual ~daHyuhyu_c() {}
@@ -60,25 +60,24 @@ struct daHyuhyu_c : dEnemyBase_c {
     virtual int Behavior();
     virtual int Render();
     virtual void OnPendingDestroy();
-    virtual int OnYoshiTryEat();               /* slot 18 */
+    virtual int OnYoshiTryEat();                /* slot 18 */
     virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
-    virtual int OnAimedAtWithEgg();            /* slot 29 */
+    virtual int OnAimedAtWithEgg();             /* slot 29 */
 
-    void func_ov091_021339fc();
-    int  func_ov091_02133c6c();
-    int  func_ov091_02133d1c();
-    int  func_ov091_02133d30();
-    int  func_ov091_02133f24();
-    int  func_ov091_02133f60();
-    int  func_ov091_0213400c();
-    int  func_ov091_02134044(daHyuhyu_c_State *state);
-    void func_ov091_02134094();
+    void HandleCylinderHit();
+    int StateGustFlyMain();
+    int StateGustFlyInit();
+    int StateBlowMain();
+    int StateBlowInit();
+    int StateWaitMain();
+    int StateWaitInit();
+    int SetState(daHyuhyu_c_State *state);
+    void UpdateModelTransform();
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daHyuhyu_c_size_must_be_0x378[
-    sizeof(daHyuhyu_c) == 0x378 ? 1 : -1];
+typedef char daHyuhyu_c_size_must_be_0x378[sizeof(daHyuhyu_c) == 0x378 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

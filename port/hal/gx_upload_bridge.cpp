@@ -1,6 +1,6 @@
 // MSVC-method bridges for gate 4b (the cross-linkage seam, gate-3a style).
 //
-// The Model TUs declare GX's upload entry points as STATIC MEMBERS of a
+// The dExtSimpleModel_c TUs declare GX's upload entry points as STATIC MEMBERS of a
 // struct GX (mangling ?LoadTex@GX@@SAX...), while the definitions are either
 // namespace-style C++ (GX::LoadTex from src/) or C-named HAL stubs. Same
 // story for the SharedFilePtr and ModelComponents methods whose real
@@ -9,7 +9,7 @@
 typedef unsigned int u32;
 typedef unsigned short u16;
 #include "SharedFilePtr.h"
-#include "ModelBase.h"
+#include "dExtModel_c.h"
 
 // Three older callers still declare LoadFile as void. MSVC encodes return
 // types, unlike Itanium here; the call ABI is otherwise identical and all three
@@ -64,14 +64,14 @@ void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(
 // That draft is typed void (the ARM contract returned the block offset in a
 // register the C shape never names), so the bridge supplies the return the
 // caller depends on: the PRE-bump block cursor is where this texture landed.
-extern "C" void _ZN5Model27LoadCompressedTextureToVramEPcjS0_(char *, u32, char *);
+extern "C" void _ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjS0_(char *, u32, char *);
 extern "C" u32 data_020a4bc8;
-struct Model {
+struct dExtSimpleModel_c {
     static u32 LoadCompressedTextureToVram(char *src, u32 size, char *idx);
 };
-u32 Model::LoadCompressedTextureToVram(char *src, u32 size, char *idx)
+u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *idx)
 {
     const u32 offset = data_020a4bc8;
-    _ZN5Model27LoadCompressedTextureToVramEPcjS0_(src, size, idx);
+    _ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjS0_(src, size, idx);
     return offset;
 }

@@ -2,7 +2,7 @@
 #define DAOBJC0WATER_C_H
 
 #include "dBgActor_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 
 /* daObjC0Water_c -- Castle basement water (profile C0_WATER / BASEMENT_WATER,
  * actor 35, ov012). It sits still until the switch pillars set the shared
@@ -44,7 +44,7 @@ struct daObjC0Water_c : dBgActor_c {
     virtual int Render();                         /* slot 9 */
 
     u8  pad_31e[0x2];
-    TextureTransformer mTextureTransformer;       /* 0x320 -- scrolls the water's
+    dExtAnmTexSRT_c mTextureTransformer;          /* 0x320 -- scrolls the water's
                                                      surface texture every frame */
     s32 mLoweredY;                                /* 0x334 -- drain target:
                                                      InitResources stores

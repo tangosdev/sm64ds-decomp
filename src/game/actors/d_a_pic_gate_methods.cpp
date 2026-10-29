@@ -14,7 +14,7 @@
  * are the flat 2x2 quad; their other handlers are outside this run.
  *
  * The grid is square (mCols is copied from mRows) and indexed with mRows
- * as the stride. Vertex::color is the packed GX normal, not a color: the
+ * as the stride. Vertex::normal is the packed GX normal (10 bits per axis): the
  * strip writer stores it at 0x04000484.
  *
  * The five handlers are daPicGate_c members bound through the four
@@ -22,8 +22,8 @@
  * names. #pragma defer_codegen off keeps .text in
  * source order. The destructor pair and g_profile_PICTURE_GATE are outside
  * this run. The abutting registry factory daPicGate_c_classInit
- * (0x02126f8c) is written last, built by hand (see the note above it).
- * SetRanges is the int adapter; dActor_c.h does not declare the member.
+ * (0x02126f8c) is written last.
+ * SetRanges is a real dActor_c method now (dActor_c.h declares it).
  *
  * deslop leftovers:
  * - func_ov080_021264ec and func_ov080_021269b8: mWavePhase += phaseStep
@@ -67,6 +67,7 @@ enum daPicGate_c_AssetId {
 #include "daPicGate_c.h"
 #include "SharedFilePtr.h"
 #include "common.h"
+#include "math/Approach.h"
 
 /* Geometry command ports. Plain stores, not volatile: a volatile port
  * reloads where the cartridge keeps the value in a register. */
@@ -108,14 +109,10 @@ extern int data_0209caa0[];
 extern void MulMat4x3Mat4x3(const int *a, const int *b, int *out);
 extern Matrix4x3 data_0209b3ec;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-    void *self, int offsetY, int radius, int clip, int far);
 extern u8 data_ov080_02127714[];
 extern void func_020553a4(void *mtx);
 extern void *data_ov080_02127834;
 extern void func_0203cbc0(void *a);
-/* daPicGate_c_classInit builds the object by hand; see the note above it. */
-extern void *_ZN8dActor_cC2Ev(void *self);
 }
 
 /* The cartridge's vtable label is the address point (slot 0), and the
@@ -137,13 +134,11 @@ namespace Memory { void *operator_new2(unsigned int size); }
 #define BuildGateMatrix func_ov080_0212555c
 #define LoadTexture func_ov080_02125630
 #define LoadMtx43 func_020553a4
-#define SetRanges _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_
 #define kSave data_0209caa0
 #define kStates data_ov080_02128628
 #define kDefaultWave data_ov080_02127834
 
 extern daPicGate_c::State data_ov080_02128628[];
-int ApproachLinear(int &ref, int target, int step);
 
 /* A picture's texture/collision handle. The nineteen instances below are
    constructed by __sinit_d_a_pic_gate_methods.cpp and reached through the rodata
@@ -151,8 +146,6 @@ int ApproachLinear(int &ref, int target, int step);
    ctor/dtor stand for the cartridge's func_020178cc/func_020178b4 pair;
    words[] is the two words the ROM object carries. */
 struct PicGateFilePtr : SharedFilePtr {
-    u32 words[2];
-
     PicGateFilePtr(u32 fileID);
     ~PicGateFilePtr();
 };
@@ -164,7 +157,7 @@ struct PicGateFilePtr : SharedFilePtr {
  * as two VTX_16 writes. vx/vy/vz/s0/s1/s2 are the caller's locals. */
 #define EMIT_VTX(v) \
     G3_TEXCOORD = (v)->texCoord; \
-    G3_NORMAL = (v)->color; \
+    G3_NORMAL = (v)->normal; \
     vx = (v)->x; \
     vy = (v)->y; \
     vz = (v)->z; \
@@ -204,7 +197,7 @@ void daPicGate_c::func_ov080_021265ec()
     int n = this->mRows;
     int rows;
     if (n > 0) {
-        int color = kFlatNormal;
+        int normal = kFlatNormal;
         do {
             int col = 0;
             int m = this->mCols;
@@ -212,7 +205,10 @@ void daPicGate_c::func_ov080_021265ec()
                 do {
                     daPicGate_c::Vertex *v = &this->mCells[row * this->mRows + col];
                     int cols;
-                    v->x = x; v->y = y; v->z = z; v->color = color;
+                    v->x = x;
+                    v->y = y;
+                    v->z = z;
+                    v->normal = normal;
                     cols = this->mCols;
                     if (col == cols - 2) x = ((u8)(this->param1 & 0xf) + 1) * kCell;
                     else x += ((u8)(this->param1 & 0xf) + 1) * kCell / (cols - 1);
@@ -333,7 +329,7 @@ void daPicGate_c::func_ov080_02126a54()
                     v->x = x;
                     v->y = y;
                     v->z = 0;
-                    v->color = kFlatNormal;
+                    v->normal = kFlatNormal;
                     int du = kTexSpan / ((int)this->mCols - 1);
                     int dv = kTexSpan / ((int)this->mRows - 1);
                     int s = du * col;
@@ -445,7 +441,7 @@ s32 daPicGate_c::InitResources() {
     {
         int width = (int)((unsigned char)(param1 & 0xf) + 1) * kCell;
         int height = (int)((unsigned char)((param1 >> 4) & 0xf) + 1) * kCell;
-        SetRanges(this, height / 2, width / 2 + kRangePad, kFar, kFar);
+        SetRanges(height / 2, width / 2 + kRangePad, kFar, kFar);
     }
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicUnclipped) {
         if ((unsigned char)((param1 >> 0xd) & 3) == 1)
@@ -462,23 +458,9 @@ s32 daPicGate_c::InitResources() {
     return 1;
 }
 
-/* daPicGate_c_classInit is not `new daPicGate_c()`. ~daPicGate_c() is the
- * key function and is defined outside this file, so the new-expression's
- * vptr store reaches the undefined _ZTV11daPicGate_c with addend 8 (the
- * start-of-object spelling); the cartridge stores the address-point label
- * itself, and production isolation refuses an undefined vtable reference
- * with a nonzero addend (measured: the rombuild link control fails on it).
- * The factory keeps the hand-built sequence: operator new(0x1bc), the
- * dActor_c constructor, the vtable store. */
 // @symbol daPicGate_c_classInit
-extern "C" daPicGate_c *daPicGate_c_classInit()
-{
-    int *p = (int *)_ZN7fBase_cnwEj(sizeof(daPicGate_c));
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV11daPicGate_c;
-    }
-    return (daPicGate_c *)p;
+extern "C" daPicGate_c *daPicGate_c_classInit() {
+    return new daPicGate_c;
 }
 
 /* Source order is construction order: the nineteen picture file handles

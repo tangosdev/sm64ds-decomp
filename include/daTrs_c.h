@@ -12,8 +12,8 @@
  *
  *     0x184 dCcAcPos_c   0x40  -> 0x1c4
  *     0x1c4 dBgCh_Actr                0x1bc -> 0x380
- *     0x380 ModelAnim                   0x64  -> 0x3e4
- *     0x3e4 Model                       0x50  -> 0x434
+ *     0x380 dExtAnmModel_c                   0x64  -> 0x3e4
+ *     0x3e4 dExtSimpleModel_c                       0x50  -> 0x434
  *     0x434 dExtShadowModel_c (1st)           0x28  -> 0x45c
  *     0x45c dExtShadowModel_c (2nd)           0x28  -> 0x484
  *
@@ -38,13 +38,11 @@
 #include "types.h"
 
 #include "dCapEnemy_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /* The flags halfword at 0x5d4. Named (not anonymous inline) so
    check_header_offsets can parse the member declaration. Bit N is the N-th
@@ -76,7 +74,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
        Behavior's area-reset block runs only while it is clear.
    mirrored (0x100): 02118914 sets it (x = -home x, yaw turned by 0x8000)
        and each relocation (02117364) toggles it. While set: 0211640c places
-       the body (mModelAnim) and mShadowModel1 at -x with the yaw negated,
+       the body (mAnmModel) and mShadowModel1 at -x with the yaw negated,
        and also drops mShadowModel2 at +x;
        02117364's particles, 021177b0's particles and 0211a3d0's PoofDustAt
        (variant 0xf) use -x; 021177b0's camera midpoint is (player x - x) / 2
@@ -109,13 +107,13 @@ struct daTrs_c : dCapEnemy_c {
     s32 mBooDefeatCount;           /* 0x180 */
     dCcAcPos_c mdCcAcPos_c;  /* 0x184 */
     dBgCh_Actr               mWithMeshClsn;               /* 0x1c4 */
-    ModelAnim                  mModelAnim;                  /* 0x380 */
-    /* Not "mModel": dCapEnemy_c's own Model at 0x114 is inherited, and calling
+    dExtAnmModel_c mAnmModel;                             /* 0x380 */
+    /* Not "mModel": dCapEnemy_c's own dExtSimpleModel_c at 0x114 is inherited, and calling
        this one mModel shadows it. This is the item the Boo carries, not its
-       body (that is mModelAnim): InitResources loads the Boo cage (T_BASKET) or a
+       body (that is mAnmModel): InitResources loads the Boo cage (T_BASKET) or a
        coin model chosen by mCarriedID. Render draws it at mCarriedScaleX
        while `carrying` is set. */
-    Model                      mCarriedModel;               /* 0x3e4 */
+    dExtSimpleModel_c mCarriedModel;                              /* 0x3e4 */
     dExtShadowModel_c                mShadowModel1;               /* 0x434 */
     dExtShadowModel_c                mShadowModel2;               /* 0x45c */
     /* Refreshed from ClosestPlayer every Behavior; the angle/distance below
@@ -245,7 +243,11 @@ struct daTrs_c : dCapEnemy_c {
        first. */
     s16 mPreKnockbackAngleY;   /* 0x5b4 */
     s16 mKnockbackAngleY;      /* 0x5b6 */
-    u16 unk_5b8;               /* 0x5b8 -- read >> 4, no nonzero writer found */
+    /* Phase of the squash-and-stretch wobble: func_ov063_0211a964 reads it
+       >> 4 as a sine-table index and moves mScaleX / mScaleY by opposite
+       amounts. Only zero is ever stored (InitResources, twice), so the name
+       rests on that one reader. Medium confidence. */
+    u16 mWobblePhase; /* 0x5b8 */
     /* Carried-item yaw: 021166ac adds 0xc00 a frame unless mCarriedID is
        T_BASKET, so a coin spins and the cage does not. */
     s16 mCarriedAngleY;        /* 0x5ba */
@@ -322,12 +324,6 @@ struct daTrs_c : dCapEnemy_c {
     int  InitResources();
     void OnPendingDestroy();
     int  Render();
-
-    /* Existing leaf forwarding adapter: `return new daTrs_c()` routes
-       through the retail allocator. fBase_c also declares an adapter. */
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
     /* The func_ov063_* methods. r0 is this Boo. The address is the name:
        the cartridge does not spell these. func_ov063_021169c4 lives on

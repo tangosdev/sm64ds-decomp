@@ -17,7 +17,7 @@
  * The ActorBase manifest verifies that metadata before externalizing it to
  * the existing canonical ROM storage. Keep this declaration in slot 0:
  * removing it would shift the other seventeen slots.
- *   0x02043444  is the real start: _ZN7fBase_cnwEj, this class's own
+ *   0x02043444  is the real start: _ZN7fBase_cnwEm, this class's own
  *               operator new (size 0x50, discussed further down this file).
  *               The old 0x02043494 began at OnHeapCreated and excluded it.
  *   0x02043f4c  is the real end -- the byte after _ZN7fBase_cC2Ev, and the
@@ -44,10 +44,7 @@
    declarations of one name in a single TU, which mwcc rejects. */
 extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
 extern "C" void *data_020a0eac;
-/* ROM body of fBase_c::operator new(unsigned) — mangled _ZN7fBase_cnwEj.
-   CW will not accept that signature as an in-class operator new (first
-   parameter is not size_t). Defined in src/runtime/actor/ActorBase.cpp. */
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "Memory.h"
 
 struct fBase_c {
     /* Intrusive scene-graph node owned by every actor. */
@@ -159,13 +156,12 @@ struct fBase_c {
     int Process(ProcessFunction action, BeforeProcessFunction before,
                 AfterProcessFunction after);
     void MarkForDestruction();
-    /* size_t is unsigned long (`m`). The ROM allocator is operator new(unsigned)
-       (`j` / _ZN7fBase_cnwEj); CW rejects that signature in-class
-       ("illegal 'operator' declaration"). `return new T` binds this size_t
-       overload and forwards. Not virtual, not layout. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* The actor-heap allocator every process is created through; defined in
+       src/runtime/actor/ActorBase.cpp. size_t is unsigned long under mwccarm,
+       so this is _ZN7fBase_cnwEm, and `new T` on any class derived from this
+       one calls it directly. The parameter stays unnamed: a named parameter in
+       a shared class declaration renumbers every consumer's @NNN. */
+    static void *operator new(size_t);
     /* CW builds D0 (slot 17) as "run the destructor, then call operator delete".
        The inline class overload selects the actor heap at data_020a0eac. The
        global _ZdlPv exists at arm9 0x0203cbf0 but uses Memory::defaultHeapPtr. The
@@ -173,7 +169,9 @@ struct fBase_c {
        This inline overload reaches only fBase_c and dBase_c --
        CW inlines it from the class itself or its IMMEDIATE base -- which is why
        include/dActor_c.h carries its own copy. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
+    void operator delete(void *ptr) {
+        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+    }
 };
 
 #else

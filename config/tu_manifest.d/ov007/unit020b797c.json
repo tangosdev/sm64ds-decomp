@@ -1,0 +1,231 @@
+{
+  "id": "ov007/unit020b797c",
+  "module": "ov007",
+  "source": "src/ui/menus/unit020b797c.cpp",
+  "promoted_source": "src/ui/menus/unit020b797c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous run 0x020b797c..0x020b8f50, 27 functions, all byte-matched from the one unit source. A sub-range of build/tu_map.json's unattributed ov007 unit 0x020b72a0..0x020cc028, which the map cannot cut: no ROM RTTI, vtable or static initializer falls in it.",
+    "data window (relocs.txt): the bss words 0x02103458..0x02103488 and the screens 0x02103998, 0x02103f98 and 0x02104598, the .data words 0x02102dd8, 0x02102ddc, 0x02102df8 and 0x02102ef8, and the .rodata tables 0x020d7a34..0x020d7b04 are referenced by functions 0x020b797c..0x020b8d48 and by nothing else in the overlay.",
+    "start edge (high): func_ov007_020b7948 references bss 0x0210343c / 0x02103440 and ends unit020b7658 (bss 0x02103434..0x02103458); func_ov007_020b797c references 0x02103478 and 0x02102ddc, in this block.",
+    "end edge (medium): func_ov007_020b8ec0 touches no overlay data (it reads the arm9 range table data_0208eeec). It sits between this block's last user, func_ov007_020b8d48, and unit020b8f50 (bss 0x02104b98..0x02104ba4), whose start edge leaves it out, and its only callers are in this run."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b797c",
+      "end": "0x020b8f50"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov007_020b797c",
+      "address": "0x020b797c",
+      "size": "0x0000004c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b797c.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov007_020b79c8",
+      "address": "0x020b79c8",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b79c8.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov007_020b79e4",
+      "address": "0x020b79e4",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b79e4.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov007_020b7a00",
+      "address": "0x020b7a00",
+      "size": "0x00000034",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b7a00.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov007_020b7a34",
+      "address": "0x020b7a34",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b7a34.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov007_020b7a44",
+      "address": "0x020b7a44",
+      "size": "0x00000034",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b7a44.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov007_020b7a78",
+      "address": "0x020b7a78",
+      "size": "0x0000031c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b7a78.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov007_020b7d94",
+      "address": "0x020b7d94",
+      "size": "0x00000158",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b7d94.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov007_020b7eec",
+      "address": "0x020b7eec",
+      "size": "0x00000184",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b7eec.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov007_020b8070",
+      "address": "0x020b8070",
+      "size": "0x00000118",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8070.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov007_020b8188",
+      "address": "0x020b8188",
+      "size": "0x00000360",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8188.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov007_020b84e8",
+      "address": "0x020b84e8",
+      "size": "0x0000000c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b84e8.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov007_020b84f4",
+      "address": "0x020b84f4",
+      "size": "0x0000000c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b84f4.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov007_020b8500",
+      "address": "0x020b8500",
+      "size": "0x0000000c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8500.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov007_020b850c",
+      "address": "0x020b850c",
+      "size": "0x0000003c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b850c.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov007_020b8548",
+      "address": "0x020b8548",
+      "size": "0x00000148",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8548.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov007_020b8690",
+      "address": "0x020b8690",
+      "size": "0x00000084",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8690.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov007_020b8714",
+      "address": "0x020b8714",
+      "size": "0x00000128",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8714.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov007_020b883c",
+      "address": "0x020b883c",
+      "size": "0x00000024",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b883c.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov007_020b8860",
+      "address": "0x020b8860",
+      "size": "0x00000060",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8860.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov007_020b88c0",
+      "address": "0x020b88c0",
+      "size": "0x000001b8",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b88c0.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov007_020b8a78",
+      "address": "0x020b8a78",
+      "size": "0x00000088",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8a78.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov007_020b8b00",
+      "address": "0x020b8b00",
+      "size": "0x00000080",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8b00.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov007_020b8b80",
+      "address": "0x020b8b80",
+      "size": "0x0000017c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8b80.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov007_020b8cfc",
+      "address": "0x020b8cfc",
+      "size": "0x0000004c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8cfc.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov007_020b8d48",
+      "address": "0x020b8d48",
+      "size": "0x00000178",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8d48.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov007_020b8ec0",
+      "address": "0x020b8ec0",
+      "size": "0x00000090",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020b8ec0.cpp",
+      "ordinal": 26
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text only: the .data, .rodata and bss stay ROM-owned and are reached by extern, as the one-function sources did.",
+    "Folded from 27 sources (7 C, 20 C++). Their shadow layouts are merged: the window record data_ov007_02102ddc is one Ov007MessageWindow (it was an int array, a char array and three partial structs), the window's two sprites are Ov007Sprite (they were char *, int and two shadow structs), and the plane table data_ov007_02103478 is one s32 *[3] (it was spelled int, int [], int *[], u32 *[] and a three-int struct).",
+    "The unit is compiled under one file-level #pragma opt_loop_invariants off, which func_ov007_020b8d48 needs (its glyph loop) and the other 26 functions tolerate; there is no per-function pragma bracket. func_ov007_020b8690 keeps the pragma-free null-guard shape from notes/mwccarm-codegen.md 6dh."
+  ],
+  "verification": {
+    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_matched": 27,
+    "functions_declared": 27,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS"
+    }
+  }
+}

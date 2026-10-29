@@ -9,43 +9,14 @@
  * fBase_c::operator new(0x5410). The out-of-line destructor emits D1
  * 0x020f5564 then D0 0x020f55b8.
  *
- * mShared is what Dealer_Construct builds and Dealer_Destruct tears
- * down. The real BlendModelAnim / Model / dExtShadowModel_c stay byte arrays:
- * a member with a destructor would run twice.
+ * THE DEALER at 0x4f38: a Dealer (include/Dealer.h, 0x270 bytes), the
+ * same record the card, roulette, BSC, Monte Carlo and Memory Match scenes
+ * embed there. The compiler builds and destroys it.
  */
 #ifndef DSCMGMEMORY2_C_H
 #define DSCMGMEMORY2_C_H
 #include "dScMgSingle3DBase_c.h"
-
-extern "C" int Dealer_Destruct(char *t); /* decl_common.h's own signature */
-
-extern "C" int Dealer_Construct(char *sharedState);
-
-struct dMgMemory2SharedState_c {
-    dMgMemory2SharedState_c() {
-        Dealer_Construct((char *)this);
-    }
-    ~dMgMemory2SharedState_c() {
-        Dealer_Destruct((char *)this);
-    }
-
-    u8 pad_000[0x1a];        /* 0x000 */
-    s16 unk_01a;             /* 0x01a -- Dealer_Construct stores 0 */
-    u8 blendModelAnim[0x70]; /* 0x01c -- BlendModelAnim */
-    u8 model[0x50];          /* 0x08c -- Model */
-    /* MascotWalker_Construct: file handles, a second BlendModelAnim at +0x18,
-       dExtShadowModel_c at +0x88. */
-    u8 at_0dc[0xf8];  /* 0x0dc */
-    u8 pad_1d4[0x8];  /* 0x1d4 */
-    s16 unk_1dc;      /* 0x1dc -- Dealer_Construct stores 0 */
-    u8 pad_1de[0x8];  /* 0x1de */
-    s16 ready;        /* 0x1e6 */
-    u8 filePtr[0x78]; /* 0x1e8 -- 15 SharedFilePtr, through +0x258 */
-    s32 unk_260;      /* 0x260 */
-    s32 unk_264;      /* 0x264 */
-    s32 unk_268;      /* 0x268 */
-    s32 unk_26c;      /* 0x26c */
-};
+#include "Dealer.h"
 
 struct dMgMemory2Card_c {
     s32 x;
@@ -88,8 +59,6 @@ struct dMgMemory2Cursor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char
-    dMgMemory2SharedState_c_size_must_be_0x270[sizeof(dMgMemory2SharedState_c) == 0x270 ? 1 : -1];
 typedef char dMgMemory2Card_c_size_must_be_0x18[sizeof(dMgMemory2Card_c) == 0x18 ? 1 : -1];
 typedef char dMgMemory2Player_c_size_must_be_0x14[sizeof(dMgMemory2Player_c) == 0x14 ? 1 : -1];
 typedef char dMgMemory2Cursor_c_size_must_be_0x10[sizeof(dMgMemory2Cursor_c) == 0x10 ? 1 : -1];
@@ -189,7 +158,7 @@ struct dScMgMemory2_c : dScMgSingle3DBase_c {
     void StateSetup();
     void SetupDifficulty();
 
-    dMgMemory2SharedState_c mShared; /* 0x4f38 */
+    Dealer mDealer;                  /* 0x4f38 */
     dMgMemory2Card_c mCards[20];     /* 0x51a8 */
     dMgMemory2Player_c mPlayers[3];  /* 0x5388 */
     dMgMemory2Cursor_c mCursor;      /* 0x53c4 */

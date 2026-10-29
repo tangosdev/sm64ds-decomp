@@ -4,8 +4,6 @@
 #include "dExtCommonModel_c.h"
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* Rainbow Ride's flapping wing (profile RC_HANE): a decorative model that
  * rocks about the actor's X and Y angles on a canned 64-entry table, and
  * optionally ticks a wingbeat sound every 0x40 frames.
@@ -50,7 +48,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * LAYOUT. daObjRc_Hane_c_classInit allocates 284 = 0x11c, constructs
  * dActor_c, stores the vptr and constructs a dExtCommonModel_c at 0xd4; D1 destroys
  * that model before chaining to dActor_c. dExtCommonModel_c's mat4x3 sits at +0xc,
- * which is why func_ov036_02111618 writes the composed matrix to 0xe0.
+ * which is why UpdateModelTransform writes the composed matrix to 0xe0.
  * InitResources snapshots the three actor angles into 0x110..0x114 and
  * Behavior advances the frame and the two parameter-derived mode flags at
  * 0x116..0x119.
@@ -66,35 +64,31 @@ struct daObjRc_Hane_c : dActor_c {
        pair land here rather than in whichever other TU happens to name them.
        The body is empty because the chain is short: this class's vptr store,
        then dExtCommonModel_c's destructor, then dActor_c's. */
-    virtual ~daObjRc_Hane_c() {}      /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjRc_Hane_c() {} /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 InitResources();      /* slot  0 */
-    virtual s32 CleanupResources();   /* slot  3 */
-    virtual s32 Behavior();           /* slot  6 */
-    virtual s32 Render();             /* slot  9 */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Behavior();         /* slot  6 */
+    virtual s32 Render();           /* slot  9 */
+
+    /* Compose mPos and the three angles (Y, X, Z) into mModel.mat4x3. */
+    void UpdateModelTransform();
 
     /* --- fields --- */
-    u8          pad_0d0[0x4];    /* 0x0d0 */
-    dExtCommonModel_c mModel;          /* 0x0d4 */
-    s16         mBaseAngleX;     /* 0x110 */
-    s16         mBaseAngleY;     /* 0x112 */
-    s16         mBaseAngleZ;     /* 0x114 */
-    u16         mFrame;          /* 0x116 */
-    u8          mReverseMotion;  /* 0x118 */
-    u8          mPlaySound;      /* 0x119 */
-    u8          pad_11a[0x2];    /* 0x11a */
-
-    /* Leaf until #2570 lands fBase_c::operator new. unsigned long is mwccarm
-       size_t; the unsigned cast is the ROM's _ZN7fBase_cnwEj signature. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    u8 pad_0d0[0x4];          /* 0x0d0 */
+    dExtCommonModel_c mModel; /* 0x0d4 */
+    s16 mBaseAngleX;          /* 0x110 */
+    s16 mBaseAngleY;          /* 0x112 */
+    s16 mBaseAngleZ;          /* 0x114 */
+    u16 mFrame;               /* 0x116 */
+    u8 mReverseMotion;        /* 0x118 */
+    u8 mPlaySound;            /* 0x119 */
+    u8 pad_11a[0x2];          /* 0x11a */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjRc_Hane_c_size_must_be_0x11c[
-    sizeof(daObjRc_Hane_c) == 0x11c ? 1 : -1];
+typedef char daObjRc_Hane_c_size_must_be_0x11c[sizeof(daObjRc_Hane_c) == 0x11c ? 1 : -1];
 #endif
 
 #endif /* DAOBJRC_HANE_C_H */

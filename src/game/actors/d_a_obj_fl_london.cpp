@@ -12,19 +12,15 @@
  * daObjFl_London_c_classInit is reconstructed (RTTI daObjFl_London_c,
  * LAVA_BRIDGE / FL_LONDON registry). Retail does not store that spelling.
  *
- * deslop
- * Leftover: dBgW_KcMbg::SetFile stays mangled (Fix12<int> by value, wall 6az).
- * Leftover: dBgActor_c::IsClsnInRange stays mangled (same 6az claim; header
- *   method form Undefined).
- * Leftover: func_020393d4 stores &dBgW::UpdatePosWithTransform (no setter).
- * Leftover: data_ov022_02114580 / data_ov022_02114578 SharedFilePtr handles
+ * What stays, and why:
+ * - func_020393d4 stores &dBgW::UpdatePosWithTransform (no setter).
+ * - data_ov022_02114580 / data_ov022_02114578 SharedFilePtr handles
  *   and data_ov064_0211bb2c CLPS; symbols.txt has no recovered names.
- * Leftover: common.h first (dBgActor_c.h already pulls it; Model.h's nested
- *   Matrix4x3 would scalarize a 12-word copy).
- * Leftover: Behavior writes mPrevAngleZ through a short* (member
- *   assignment size-DIFFs).
- * Leftover: inline destructor (out-of-line emits D0 before D1 plus a
- *   homeless D2). Leaf operator new(unsigned long) until #2570.
+ * - common.h first (dBgActor_c.h already pulls it; dExtSimpleModel_c.h's
+ *   nested Matrix4x3 would scalarize a 12-word copy).
+ * - Behavior writes mPrevAngleZ through a short* (member assignment
+ *   size-DIFFs).
+ * - Inline destructor (out-of-line emits D0 before D1 plus a homeless D2).
  */
 
 #include "common.h"
@@ -34,6 +30,7 @@
 #include "Sound.h"
 #include "dBgW.h"
 #include "dBgW_Kc.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 
@@ -43,37 +40,28 @@ struct CLPS_Block;
  * are local; the handle constructors and destructors are the ROM
  * resource-family functions, aliased in the manifest. */
 struct LondonModelFile : SharedFilePtr {
-    u32 words[2];
-
     LondonModelFile(u32 fileID);
     ~LondonModelFile();
 };
 
 struct LondonCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     LondonCollisionFilePtr(u32 fileID);
     ~LondonCollisionFilePtr();
 };
 
-extern "C" {
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
-void func_020393d4(void *p, void *v);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *t, int a, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, void *kcl, Matrix4x3 *mtx, int fix, short s, void *clps);
-void func_ov022_02111a1c(daObjFl_London_c *t);
-
 extern LondonModelFile data_ov022_02114580;
 extern LondonCollisionFilePtr data_ov022_02114578;
 extern CLPS_Block data_ov064_0211bb2c;
+
+/* local extern: the arm9 rotation builder and the dBgW callback store,
+ * with no shared header yet. */
+extern "C" {
+void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
+void func_020393d4(void *p, void *v);
 }
 
-
 // @symbol daObjFl_London_c_classInit
-extern "C" daObjFl_London_c *daObjFl_London_c_classInit()
-{
+extern "C" daObjFl_London_c *daObjFl_London_c_classInit() {
     return new daObjFl_London_c();
 }
 
@@ -92,16 +80,13 @@ extern "C" SpawnInfo<daObjFl_London_c> g_profile_FL_LONDON = {
 };
 
 // @symbol _ZN16daObjFl_London_c13InitResourcesEv
-s32 daObjFl_London_c::InitResources()
-{
-    void *f = Model::LoadFile(data_ov022_02114580);
+s32 daObjFl_London_c::InitResources() {
+    void *f = dExtSimpleModel_c::LoadFile(data_ov022_02114580);
     mModel.SetFile((BMD_File *)f, 1, -1);
-    func_ov022_02111a1c(this);
+    UpdateModelMatrix();
     UpdateClsnPosAndRot();
     void *k = dBgW_Kc::LoadFile(data_ov022_02114578);
-    /* MATCH: real mMeshCollider.SetFile DIFFs (Fix12<int> by value, wall 6az). */
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov064_0211bb2c);
+    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x1000, mAngleY, data_ov064_0211bb2c);
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
     mFlag = 0;
     mCooldown = 0xf;
@@ -109,19 +94,26 @@ s32 daObjFl_London_c::InitResources()
 }
 
 // @symbol _ZN16daObjFl_London_c8BehaviorEv
-s32 daObjFl_London_c::Behavior()
-{
+s32 daObjFl_London_c::Behavior() {
     if (DecIfAbove0_Byte(&mCooldown) == 0) {
         if (mFlag == 0) {
             /* MATCH: mPrevAngleZ = mPrevAngleZ - 0x100 size-DIFFs (member
              * addressing CSEs the field). */
             short *p = &mPrevAngleZ;
             *p = *p - 0x100;
-            if (mPrevAngleZ <= -0x2000) { mPrevAngleZ = -0x2000; mCooldown = 0xf; mFlag = 1; }
+            if (mPrevAngleZ <= -0x2000) {
+                mPrevAngleZ = -0x2000;
+                mCooldown = 0xf;
+                mFlag = 1;
+            }
         } else {
             short *p = &mPrevAngleZ;
             *p = *p + 0x100;
-            if (mPrevAngleZ >= 0) { mPrevAngleZ = 0; mCooldown = 0xf; mFlag = 0; }
+            if (mPrevAngleZ >= 0) {
+                mPrevAngleZ = 0;
+                mCooldown = 0xf;
+                mFlag = 0;
+            }
         }
     } else {
         if (mCooldown == 1) {
@@ -132,23 +124,20 @@ s32 daObjFl_London_c::Behavior()
         }
     }
     mAngleZ = mPrevAngleZ;
-    func_ov022_02111a1c(this);
-    /* MATCH: header method form of IsClsnInRange is Undefined (wall 6az). */
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    UpdateModelMatrix();
+    if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
     return 1;
 }
 
 // @symbol _ZN16daObjFl_London_c6RenderEv
-s32 daObjFl_London_c::Render()
-{
+s32 daObjFl_London_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN16daObjFl_London_c16CleanupResourcesEv
-s32 daObjFl_London_c::CleanupResources()
-{
+s32 daObjFl_London_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
@@ -157,16 +146,15 @@ s32 daObjFl_London_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov022_02111a1c
+// @symbol _ZN16daObjFl_London_c17UpdateModelMatrixEv
 /* Rebuild the model matrix from the actor's three angles, then publish the
  * position at 1/8 scale. Both callers (InitResources and Behavior) are in
  * this TU. */
-extern "C" void func_ov022_02111a1c(daObjFl_London_c *t)
-{
-    Matrix4x3_FromRotationZXYExt(&t->mModel.mat4x3, t->mAngleX, t->mAngleY, t->mAngleZ);
-    t->mModel.mat4x3.m[9]  = t->mPosX >> 3;
-    t->mModel.mat4x3.m[10] = t->mPosY >> 3;
-    t->mModel.mat4x3.m[11] = t->mPosZ >> 3;
+void daObjFl_London_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 // @symbol _ZN16daObjFl_London_cD1Ev

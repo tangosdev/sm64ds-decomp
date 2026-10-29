@@ -1,5 +1,6 @@
-/* dScMgRoulette_c -- Mushroom Roulette. Racers are dealt onto a spinning
- * board and paid by the tile they stop on. Child of dScMgSingle3DBase_c,
+/* dScMgRoulette_c -- Mushroom Roulette. The dealer hands out racers, the
+ * player drops them on the board's tiles, and a ball spins round the wheel;
+ * the racers on the tile it stops on pay out. Child of dScMgSingle3DBase_c,
  * size 0x5400.
  *
  * RTTI: dScMgRoulette_c : dScMgSingle3DBase_c (tools/rtti_extract.py).
@@ -10,30 +11,97 @@
  * compiler_only_output.
  *
  * The destructor is inline and declared first, so D1 comes out before D0
- * and no D2 is emitted. Its four calls follow the ROM: second model, first
- * model, racer array, table. Typed members would destroy in a different
- * order. InitResources stays the key function. dScMgBase_c supplies
- * operator delete.
+ * and no D2 is emitted. Its body is empty: the compiler tears the members
+ * down in reverse declaration order (mBoard's ball and wheel, the racer
+ * array through __cxa_vec_cleanup, then mDealer), which is the ROM's order.
+ * The factory is `new dScMgRoulette_c`, so the same members are built in
+ * declaration order. InitResources stays the key function. dScMgBase_c
+ * supplies operator new and delete.
  */
 #ifndef DSCMGROULETTE_C_H
 #define DSCMGROULETTE_C_H
 #include "dScMgSingle3DBase_c.h"
+#include "BMD_File.h"
+#include "Dealer.h"
+#include "dExtSimpleModel_c.h"
 
-extern "C" int  Dealer_Destruct(char *t); /* decl_common.h's own signature */
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void Roulette_Nothing(void);
-extern "C" void _ZN5ModelD1Ev(void *);
+/* One racer the dealer hands out, 0x34 bytes; the scene holds five at
+ * 0x51a8. The name is coined: the record has no vtable, so no RTTI names it.
+ * Its constructor (ov006 0x0210a4ac, in d_s_mg_roulette.cpp) and destructor
+ * (0x021079c8, in d_s_mg_roulette_methods.cpp) are both empty, and both are
+ * out of line: the scene builds and tears down the array through
+ * __cxa_vec_ctor / __cxa_vec_cleanup, which take their addresses.
+ * x/y slide toward targetX/targetY by stepX/stepY. state: 0 handled with 3,
+ * 1 sliding, 2 under the stylus, 3 stopped, 4 about to hop, 5 hopping,
+ * 6 settled, 7 sent to the side pile. */
+struct RouletteRacer {
+    RouletteRacer();
+    ~RouletteRacer();
+
+    s32 x;        /* 0x00 */
+    s32 y;        /* 0x04 */
+    s32 grabX;    /* 0x08 */
+    s32 grabY;    /* 0x0c */
+    s32 stepX;    /* 0x10 */
+    s32 stepY;    /* 0x14 */
+    s32 targetX;  /* 0x18 */
+    s32 targetY;  /* 0x1c */
+    s32 homeX;    /* 0x20, the deal spot AimAt sends it to; Release returns it there */
+    s32 homeY;    /* 0x24 */
+    s32 priority; /* 0x28, OAM priority for RenderOamBothScreens; Draw resets it
+                     to 1, RouletteStrip_DrawRacers lifts it to 0 */
+    s16 tile;     /* 0x2c, Roulette_TileAt's tile; 0x25 is off the board */
+    s16 payout;   /* 0x2e, GetPayout's multiplier for the winning tile */
+    s16 hop;      /* 0x30 */
+    u8 state;     /* 0x32 */
+    u8 unk33;     /* 0x33 */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char RouletteRacer_size_must_be_0x34[sizeof(RouletteRacer) == 0x34 ? 1 : -1];
+#endif
+
+struct RouletteBoard;
+typedef void (RouletteBoard::*RouletteBoardState)();
+
+/* The wheel and the ball that orbits it, 0xd4 bytes at the scene's 0x530c.
+ * The name is coined (no vtable, so no RTTI). It declares no constructor or
+ * destructor of its own: the compiler's implicit ones build and destroy
+ * mWheel and mBall, and inline into the scene's. The RouletteBoard_ helpers
+ * in d_s_mg_roulette_methods.cpp run its state. */
+struct RouletteBoard {
+    RouletteBoardState mState; /* 0x00 -- RouletteBoard_StateSpin, then StateSlow */
+    BMD_File *mWheelFile;      /* 0x08 -- file 0x21d */
+    BMD_File *mBallFile;       /* 0x0c -- file 0x21e */
+    dExtSimpleModel_c mWheel;  /* 0x10 -- turned by mBoardAngle */
+    dExtSimpleModel_c mBall;   /* 0x60 -- placed each frame from mBallRadius and mOrbitAngle */
+    s32 mBallRadius;           /* 0xb0 -- Fix12; 0x4200 when the spin starts */
+    s32 mBallRadiusVel;        /* 0xb4 -- added to mBallRadius each frame */
+    s32 mSpinSpeed;            /* 0xb8 -- the ball's speed; at 0 it has stopped:
+                                  Render draws the cursor and phase 3 pays out */
+    s32 mRollSoundHandle;      /* 0xbc -- Sound_PlayIfNotActive's handle */
+    s16 mOrbitAngle;           /* 0xc0 -- the ball's angle round the wheel */
+    s16 mBoardAngle;           /* 0xc2 -- the wheel's own angle */
+    s16 mSlowBias;             /* 0xc4 -- -mBoardAngle when the slowdown starts */
+    s16 mAngleStep;            /* 0xc6 -- mOrbitAngle's step this frame */
+    s16 mBoardSpin;            /* 0xc8 -- mBoardAngle's step, -0x200 */
+    s16 mStopTile;             /* 0xca -- the tile under the ball
+                                  (data_ov006_0212ed34); phase 3 scores against it */
+    s16 mRollSound;            /* 0xcc -- 0 quiet; 1 on the rim (sound 0x157); 2 off
+                                  the rim, in the bowl (0x158). Phase 1 sets 1 once
+                                  the dealer is done; striking a stop plays 0x159
+                                  and clears it */
+    s16 pad_ce;                /* 0xce */
+    s32 mBraking;              /* 0xd0 -- phase 2 sets it; the spin then eases to 0 */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char RouletteBoard_size_must_be_0xd4[sizeof(RouletteBoard) == 0xd4 ? 1 : -1];
+#endif
 
 struct dScMgRoulette_c : dScMgSingle3DBase_c {
-    /* Inline and declared first: see the file banner. The four explicit calls
-       are the ROM's own order -- mModel2, mModel1, mArray, mTable -- which
-       typed members could not reproduce. */
-    virtual ~dScMgRoulette_c() {
-        _ZN5ModelD1Ev(mModel2);
-        _ZN5ModelD1Ev(mModel1);
-        __cxa_vec_cleanup(mArray, 5, 0x34, (void *)Roulette_Nothing);
-        Dealer_Destruct((char *)mTable);
-    }
+    /* Inline and declared first: see the file banner. */
+    virtual ~dScMgRoulette_c() {}
 
     /* --- this class's own vtable slots, named from the table ---
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
@@ -46,20 +114,10 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     virtual void StartRound(int arg);               /* slot 18 */
     virtual int  CanEndState(int mode);              /* slot 19 */
 
-    u8    mTable[0x270];   /* 0x4f38 -- the spinning board */
-    u8    mArray[0x104];   /* 0x51a8 -- 5 racers, 0x34 each */
-    u8    mMeter[4][0x18]; /* 0x52ac -- strips for payouts 12, 6, 3, 2 */
-    u8    mSlider[0x10];   /* 0x530c -- PMF state and the two model files */
-    u8    mModel1[0x50];   /* 0x531c -- raw Model; the destructor calls it explicitly */
-    u8    mModel2[0x50];   /* 0x536c */
-    u8    pad_53bc[0x8];   /* 0x53bc */
-    s32   mBoardBusy;      /* 0x53c4 -- while 0 the board is idle: Render draws
-                              the cursor and phase 3 pays out */
-    u8    pad_53c8[0xe];   /* 0x53c8 */
-    s16   mSelectedTile;   /* 0x53d6 -- cursor tile; phase 3 scores against it */
-    s16   mTableReady;     /* 0x53d8 -- set once the table first reports ready */
-    s16   pad_53da;        /* 0x53da */
-    s32   mTilesScored;    /* 0x53dc -- set to 1 when phase 2 records the tiles */
+    Dealer mDealer;           /* 0x4f38 */
+    RouletteRacer mRacers[5]; /* 0x51a8 */
+    u8 mMeter[4][0x18];       /* 0x52ac -- strips for payouts 12, 6, 3, 2 */
+    RouletteBoard mBoard;     /* 0x530c */
     s32   unk_53e0;        /* 0x53e0 -- reset to 0x100; not read in this TU */
     s16   mCameraPreset;     /* 0x53e4 -- Render copies row n of the camera
                                 tables (data_ov006_0213e34c / _0213e370 at stride

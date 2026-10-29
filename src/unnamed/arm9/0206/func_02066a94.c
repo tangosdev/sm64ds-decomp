@@ -1,5 +1,30 @@
 #include "types.h"
+#include "private/arm9_a9db8_mb_parent.h"
 extern char *data_020a9db8;
+
+/* Typed through a cast: the other declarations of data_020a9db8 spell it as
+ * a byte pointer. */
+#define MB_WORK ((MbParentWork *)data_020a9db8)
+
+/* File record i, reached the way the ROM builds its address: the work
+ * pointer stepped a whole MbParentFile per index, then mFiles[0] from there
+ * (the same stepped form as func_0206655c's MB_FILE). */
+#define MB_FILE(i) (((MbParentWork *)(data_020a9db8 + (i) * (int)sizeof(MbParentFile)))->mFiles)
+
+/* Leading fields of NitroSDK WMStartParentCallback, the argument the WM
+ * parent callback (func_02069994) passes for CONNECTED (code 0),
+ * DISCONNECTED (code 1) and BEACON_SENT (code 0x1c). Codes 0xff (a failed
+ * WM call, from func_0206879c: {apiid, errcode}) and 0x100 (any other WM
+ * result) read only the WMCallback header the SDK callbacks all share. */
+typedef struct WmStartParentCallback {
+    u16 apiid;        /* 0x00 */
+    u16 errcode;      /* 0x02 */
+    u16 wlCmdID;      /* 0x04 */
+    u16 wlResult;     /* 0x06 */
+    u16 state;        /* 0x08 */
+    u8 macAddress[6]; /* 0x0a */
+    u16 aid;          /* 0x10 */
+} WmStartParentCallback;
 
 extern int func_02066fec(int a, int b, int c);
 extern void func_0205a588(void *dst, int val, u32 size);
@@ -13,6 +38,8 @@ extern void MultiStore32Bytes(u32 val, void *dst, int len);
 
 void func_02066a94(int arg0, char *arg1)
 {
+    WmStartParentCallback *cb = (WmStartParentCallback *)arg1;
+
     switch (arg0) {
     case 0x15:
         func_02066fec(0, 1, (int)arg1);
@@ -21,48 +48,48 @@ void func_02066a94(int arg0, char *arg1)
         func_02066fec(0, 0xc, 0);
         break;
     case 0: {
-        u16 v = *(u16 *)(arg1 + 0x10);
+        u16 v = cb->aid;
         if (v != 0 && v < 0x10) {
             func_02066fec(v, 2, (int)arg1);
         }
         break;
     }
     case 1: {
-        u16 v = *(u16 *)(arg1 + 0x10);
+        u16 v = cb->aid;
         if (v != 0 && v < 0x10) {
-            *(u16 *)(data_020a9db8 + (v - 1) * 2 + 0x148a) = 0;
-            func_0205a588(data_020a9db8 + 0x14a8 + (*(u16 *)(arg1 + 0x10) - 1) * 4, 0, 4);
-            func_0205a588(data_020a9db8 + 0x1340 + (*(u16 *)(arg1 + 0x10) - 1) * 0x16, 0, 0x16);
+            MB_WORK->mChildVersion[v - 1] = 0;
+            func_0205a588(&MB_WORK->mChildGameId[cb->aid - 1], 0, 4);
+            func_0205a588(MB_WORK->mChildUser[cb->aid - 1], 0, 0x16);
             {
                 int cur = func_0206881c();
-                func_0205a588(data_020a9db8 + 0x1538 + ((*(u16 *)(arg1 + 0x10) - 1) << 5), 0,
+                func_0205a588(&MB_WORK->mChildRequest[cb->aid - 1], 0,
                               (cur - 2) * 0x1e / (func_0206881c() - 2));
             }
-            *(int *)(data_020a9db8 + (*(u16 *)(arg1 + 0x10) - 1) * 4 + 0x1718) = 0;
+            MB_WORK->mChildRequestPieces[cb->aid - 1] = 0;
             {
-                u16 id = *(u16 *)(arg1 + 0x10);
-                s8 slot = *(s8 *)(data_020a9db8 + (id - 1) + 0x1526);
+                u16 id = cb->aid;
+                s8 slot = MB_WORK->mChildFile[id - 1];
                 if (slot != -1) {
-                    u32 off = (u8)slot * 0x5c4;
+                    u32 off = (u8)slot * sizeof(MbParentFile);
                     u32 mask = ~(1 << id);
-                    *(u16 *)(data_020a9db8 + off + 0x1d46) &= mask;
-                    *(u16 *)(data_020a9db8 + off + 0x1d48) |= (1 << id);
-                    *(s8 *)(data_020a9db8 + (id - 1) + 0x1526) = -1;
-                    *(u16 *)(data_020a9db8 + off + 0x1d44) &= mask;
+                    ((MbParentWork *)(data_020a9db8 + off))->mFiles->mEntryBitmap &= mask;
+                    ((MbParentWork *)(data_020a9db8 + off))->mFiles->mEntryChanged |= (1 << id);
+                    MB_WORK->mChildFile[id - 1] = -1;
+                    ((MbParentWork *)(data_020a9db8 + off))->mFiles->mChildBitmap &= mask;
                 }
             }
-            if (*(u16 *)(data_020a9db8 + 0x1536) & (1 << *(u16 *)(arg1 + 0x10))) {
-                *(u8 *)(data_020a9db8 + 0x1535) -= 1;
-                *(u16 *)(data_020a9db8 + 0x1536) &= ~(1 << *(u16 *)(arg1 + 0x10));
+            if (MB_WORK->mChildEntryBitmap & (1 << cb->aid)) {
+                MB_WORK->mChildCount -= 1;
+                MB_WORK->mChildEntryBitmap &= ~(1 << cb->aid);
             }
             {
-                u16 id2 = *(u16 *)(arg1 + 0x10);
-                if (*(int *)(data_020a9db8 + (id2 - 1) * 4 + 0x14e8) == 8) {
+                u16 id2 = cb->aid;
+                if (MB_WORK->mChildState[id2 - 1] == 8) {
                     func_02066fec(id2, 9, 0);
                 }
             }
-            func_02066fec(*(u16 *)(arg1 + 0x10), 3, (int)arg1);
-            *(int *)(data_020a9db8 + (*(u16 *)(arg1 + 0x10) - 1) * 4 + 0x14e8) = 0;
+            func_02066fec(cb->aid, 3, (int)arg1);
+            MB_WORK->mChildState[cb->aid - 1] = 0;
         }
         break;
     }
@@ -75,13 +102,15 @@ void func_02066a94(int arg0, char *arg1)
     case 0x1c: {
         u8 i;
         for (i = 0; i < 0x10; i++) {
-            char *e = data_020a9db8 + i * 0x5c4;
-            if (*(u8 *)(e + 0x1d4a) != 0) {
-                u16 f48 = *(u16 *)(e + 0x1d48);
+            MbParentWork *e = (MbParentWork *)(data_020a9db8 + i * (int)sizeof(MbParentFile));
+            if (e->mFiles->mActive != 0) {
+                u16 f48 = e->mFiles->mEntryChanged;
                 if (f48 != 0) {
-                    func_0206853c(data_020a9db8 + 0x186c + i * 0x5c4, data_020a9db8 + 0x1340,
-                                  *(u16 *)(e + 0x1d46), f48);
-                    *(u16 *)(data_020a9db8 + i * 0x5c4 + 0x1d48) = 0;
+                    /* the game info record func_0206853c refreshes sits after
+                     * the 0xe4 bytes of mHeader that func_020662c0 sends */
+                    func_0206853c((char *)&MB_WORK->mFiles[i].mHeader[0xe4], MB_WORK->mChildUser,
+                                  e->mFiles->mEntryBitmap, f48);
+                    MB_FILE(i)->mEntryChanged = 0;
                 }
             }
         }
@@ -89,7 +118,7 @@ void func_02066a94(int arg0, char *arg1)
         break;
     }
     case 0xff: {
-        u16 v = *(u16 *)(arg1 + 2);
+        u16 v = cb->errcode;
         switch (v) {
         case 1:
         case 4:
@@ -116,7 +145,7 @@ void func_02066a94(int arg0, char *arg1)
         break;
     }
     case 0x100: {
-        u16 v = *(u16 *)arg1;
+        u16 v = cb->apiid;
         switch (v) {
         case 0:
         case 7:

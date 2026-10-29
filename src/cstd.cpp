@@ -8,31 +8,18 @@
  * definition is the declaration its callers need, with the remaining
  * callees forward-declared below.
  *
- * leftovers:
- * - cstd::fdiv_async / cstd::reciprocal_async keep the shards' extern "C"
- *   spellings of their mangled names: the real signatures take Fix12<int>
- *   by value, and a class-typed by-value parameter the body reads is
- *   stack-homed under mwccarm (wall 6az, notes/mwccarm-codegen.md). The
- *   mangled symbols come out identical either way; fdiv/ldiv/func_02053200/
- *   func_02053130 call them through the same spellings.
+ * cstd::fdiv_async and cstd::reciprocal_async are real namespaced functions.
+ * They used to keep the shards' extern "C" spellings of mangled names
+ * carrying Fix12<int> by value, on the grounds that such a parameter is
+ * stack-homed when the body reads it (wall 6az). The Fix12<int> in those
+ * names was ours, not the ROM's: declared with the honest scalar Fix12i
+ * (plain int) parameters they reproduce exactly. See notes/mwccarm-codegen.md 6az, MEASURED 2026-10-22.
  */
 #include "types.h"
 #include "nitro/hw/registers.h"
-
-namespace cstd {
-int mod(int a, int b);
-int div(int a, int b);
-int fdiv_result(void);
-long long ldiv_result(void);
-long long ldiv(int a, int b);
-int fdiv(int numerator, int denominator);
-}
+#include "cstd.h"
 
 extern "C" {
-void _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE(int a, int b);
-void _ZN4cstd16reciprocal_asyncE5Fix12IiE(int a);
-int _ZN4cstd11fdiv_resultEv(void);
-long long _ZN4cstd11ldiv_resultEv(void);
 int func_02052fdc(void);
 void func_02053008(int n);
 }
@@ -72,8 +59,8 @@ namespace cstd {
 
 s32 fdiv(s32 numerator, s32 denominator)
 {
-    _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE(numerator, denominator);
-    return _ZN4cstd11fdiv_resultEv();
+    fdiv_async(numerator, denominator);
+    return fdiv_result();
 }
 
 }
@@ -83,9 +70,10 @@ namespace cstd {
 
 long long ldiv(int a, int b)
 {
-  _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE(a, b);
-  while(*(volatile unsigned short*)0x4000280 & 0x8000);
-  return *(volatile long long*)0x40002a0;
+    fdiv_async(a, b);
+    while (*(volatile unsigned short *)0x4000280 & 0x8000)
+        ;
+    return *(volatile long long *)0x40002a0;
 }
 
 }
@@ -94,8 +82,8 @@ long long ldiv(int a, int b)
 extern "C" {
 s32 func_02053200(s32 x)
 {
-    _ZN4cstd16reciprocal_asyncE5Fix12IiE(x);
-    return _ZN4cstd11fdiv_resultEv();
+    cstd::reciprocal_async(x);
+    return cstd::fdiv_result();
 }
 }
 
@@ -125,9 +113,9 @@ s32 func_02053130(s32 x)
     s64 quotient;
 
     if (x > 0) {
-        _ZN4cstd16reciprocal_asyncE5Fix12IiE(x);
+        cstd::reciprocal_async(x);
         func_02053008(x);
-        quotient = _ZN4cstd11ldiv_resultEv();
+        quotient = cstd::ldiv_result();
 
         while (REG_SQRTCNT & SQRT_CONTROL_BUSY)
             ;
@@ -162,12 +150,12 @@ int fdiv_result(void)
 
 }
 
-// @symbol _ZN4cstd16reciprocal_asyncE5Fix12IiE
-extern "C" {
-void _ZN4cstd16reciprocal_asyncE5Fix12IiE(int a){
-  *(volatile unsigned short*)0x4000280 = 1;
-  *(volatile unsigned long long*)0x4000290 = ((unsigned long long)0x1000) << 32;
-  *(volatile unsigned long long*)0x4000298 = (unsigned)a;
+// @symbol _ZN4cstd16reciprocal_asyncEi
+namespace cstd {
+void reciprocal_async(Fix12i a) {
+    *(volatile unsigned short *)0x4000280 = 1;
+    *(volatile unsigned long long *)0x4000290 = ((unsigned long long)0x1000) << 32;
+    *(volatile unsigned long long *)0x4000298 = (unsigned)a;
 }
 }
 
@@ -208,12 +196,12 @@ int func_02052fdc(void) {
 }
 }
 
-// @symbol _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE
-extern "C" {
-void _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE(int a, int b){
-  *(volatile unsigned short*)0x4000280 = 1;
-  *(volatile unsigned long long*)0x4000290 = ((unsigned long long)(unsigned)a) << 32;
-  *(volatile unsigned long long*)0x4000298 = (unsigned)b;
+// @symbol _ZN4cstd10fdiv_asyncEii
+namespace cstd {
+void fdiv_async(Fix12i a, Fix12i b) {
+    *(volatile unsigned short *)0x4000280 = 1;
+    *(volatile unsigned long long *)0x4000290 = ((unsigned long long)(unsigned)a) << 32;
+    *(volatile unsigned long long *)0x4000298 = (unsigned)b;
 }
 }
 

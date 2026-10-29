@@ -2,7 +2,7 @@
 #define DABTTBK_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -28,9 +28,9 @@
  * daBttBk_c_classInit calls _ZN10dBgCh_ActrC1Ev at that offset, so it is the
  * real 0x1bc-byte member (0x180..0x33c). The 0x38 bytes from 0x33c..0x374
  * are named from how d_a_btt_bk.cpp uses them: a shadow matrix at 0x33c
- * (func_ov080_02124c3c), the current state-table row at 0x36c and its index
- * at 0x370; mCarrier holds the carrier actor (func_ov080_02124acc stores it,
- * 02124c3c/02124edc read it).
+ * (UpdateModelTransform), the current state-table row at 0x36c and its index
+ * at 0x370; mCarrier holds the carrier actor (HandleCollision stores it,
+ * UpdateModelTransform/StateCarriedMain read it).
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. daBttBk_c
  * overrides slot 0 (InitResources), slot 3 (CleanupResources), slot 6
@@ -46,48 +46,48 @@
  * registry profile.
  */
 struct daBttBk_c : dActor_c {
-    u8  pad_0d0[0x4];
-    /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x0d4. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
-    Model mModel;            /* 0x0d4 */
+    u8 pad_0d0[0x4];
+    /* dExtSimpleModel_c member, named by the class's own destructor calling
+       dExtSimpleModel_c's D1 at +0x0d4. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
+    dExtSimpleModel_c mModel; /* 0x0d4 */
     /* dExtShadowModel_c member, named by the class's own destructor calling
        dExtShadowModel_c's D1 at +0x124. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
-    dExtShadowModel_c mShadowModel;            /* 0x124 */
+    dExtShadowModel_c mShadowModel; /* 0x124 */
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x14c. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
-    dCcAc_c mdCcAc_c;            /* 0x14c */
+    dCcAc_c mdCcAc_c; /* 0x14c */
     /* dBgCh_Actr member, named by daBttBk_c_classInit's own C1 call and the
        class's own destructor's D1 call at +0x180.
        [daBttBk_c_classInit and D0, src/game/actors/d_a_btt_bk.cpp] */
-    dBgCh_Actr mWithMeshClsn;            /* 0x180 */
-    u8  mShadowMtx[0x30];   /* 0x33c -- Matrix4x3 for the drop shadow (func_ov080_02124c3c) */
-    char *mStateRow;        /* 0x36c -- current row of the state table */
-    s32 mState;             /* 0x370 -- index stored by each state's enter function */
-    dActor_c *mCarrier;     /* 0x374 -- the actor this crate rides, or null */
+    dBgCh_Actr mWithMeshClsn; /* 0x180 */
+    u8 mShadowMtx[0x30];      /* 0x33c -- Matrix4x3 for the drop shadow (UpdateModelTransform) */
+    char *mStateRow;          /* 0x36c -- current row of the state table */
+    s32 mState;               /* 0x370 -- index stored by each state's enter function */
+    dActor_c *mCarrier;       /* 0x374 -- the actor this crate rides, or null */
 
-    virtual ~daBttBk_c();            /* slots 16 (D1), 17 (D0) */
+    virtual ~daBttBk_c(); /* slots 16 (D1), 17 (D0) */
 
-    virtual s32  InitResources();         /* slot  0 */
-    virtual s32  CleanupResources();      /* slot  3 */
-    virtual s32  Behavior();         /* slot  6 */
-    virtual s32  Render();           /* slot  9 */
-    virtual void OnPendingDestroy();      /* slot 12 */
-    virtual s32  OnYoshiTryEat();         /* slot 18 */
+    virtual s32 InitResources();                /* slot  0 */
+    virtual s32 CleanupResources();             /* slot  3 */
+    virtual s32 Behavior();                     /* slot  6 */
+    virtual s32 Render();                       /* slot  9 */
+    virtual void OnPendingDestroy();            /* slot 12 */
+    virtual s32 OnYoshiTryEat();                /* slot 18 */
     virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 
-    /* Non-virtual. The first parameter was this actor, so each is a member.
-       The cartridge keeps no English spelling; the ROM address is the name. */
-    void func_ov080_02124acc();
-    void func_ov080_02124c3c();
-    int func_ov080_02124e60();
-    int func_ov080_02124eb0();
-    int func_ov080_02124edc();
-    int func_ov080_02124fec();
-    int func_ov080_0212500c();
-    int func_ov080_0212509c();
-    void func_ov080_021250c8();
-    void func_ov080_02125104();
-    void func_ov080_0212513c(int i);
+    /* Non-virtual: the helpers, then the three Init/Main state pairs and the
+       state-table driver. */
+    void HandleCollision();
+    void UpdateModelTransform();
+    int StateYoshiMouthMain();
+    int StateYoshiMouthInit();
+    int StateCarriedMain();
+    int StateCarriedInit();
+    int StateFallMain();
+    int StateFallInit();
+    void UpdateState();
+    void EnterState();
+    void SetState(int i);
 };
 
 #ifndef SM64DS_PLATFORM_PC

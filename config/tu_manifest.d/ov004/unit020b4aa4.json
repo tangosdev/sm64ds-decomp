@@ -4,19 +4,36 @@
   "source": "src/minigames/unit020b4aa4.cpp",
   "promoted_source": "src/minigames/unit020b4aa4.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous run 0x20b4aa4..0x20b67e8, 43 function(s), every one text-verified in this one compile. This is a SUB-RANGE of build/tu_map.json's unattributed ov004 unit 0x020b2c58..0x020b8714 (137 functions), which the map cannot cut because no class label falls inside it; the cuts here come from the ROM's own static-initializer records.",
     "start edge: __sinit_ov004_020b955c (.init 0x020b955c..0x020b9ad0) loads func_ov004_020b4a70, func_ov004_020b4a7c and func_ov004_020b4aa0 as destructor helpers for the preceding unit's statics; 0x020b4aa4 is the next function and its bss references (0x020bf9f8, 0x020bfa18) fall in this unit's bss window 0x020bf9e4..0x020bfa56, not the preceding unit's 0x020bf3e8..0x020bf648.",
     "end edge: __sinit_ov004_020b9ad0 (.init 0x020b9ad0..0x020b9b24) loads MgCoins_Cleanup, Coin_Destroy and Coin_Construct and the array sMgCoins / record data_ov004_020bfa28; MgCoins_Cleanup runs __cxa_vec_cleanup over sMgCoins (0x14 x 0x24) with Coin_Destroy. The next function, Mg_SetNextBanner, reads sMgNextBanner, in the .data block that starts at 0x020bc850, past this unit's .data window 0x020bc7d0..0x020bc83c.",
     "no ROM RTTI or vtable record (build/rtti.json) falls in the range; no class label, so the unit<addr> name.",
-    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide). Neither edge is corroborated by a class label."
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide). Neither edge is corroborated by a class label.",
+    "STATIC INITIALIZER (folded 2026-10-28, was src/unnamed/ov004/__sinit_ov004_020b9ad0.c): ov004 .init follows .text TU order, and the initializer at 0x020b9ad0 follows unit020b2c84's (0x020b955c..0x020b9ad0). It builds sMgCoins with __cxa_vec_ctor(C1 0x020b67e4, D1 0x020b67e0) and registers 0x020b67bc, this unit's __arraydtor; all three are this unit's last functions, and sMgCoins is read only here and by dMgState_c's comment."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020b4aa4",
       "end": "0x020b67e8"
+    },
+    {
+      "name": ".init",
+      "start": "0x020b9ad0",
+      "end": "0x020b9b24"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x020b9dec",
+      "end": "0x020b9df0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020bfa28",
+      "end": "0x020bfd04"
     }
   ],
   "functions": [
@@ -301,21 +318,21 @@
       "ordinal": 39
     },
     {
-      "symbol": "MgCoins_Cleanup",
+      "symbol": "__arraydtor$192",
       "address": "0x020b67bc",
       "size": "0x00000024",
       "legacy_source": "src/func_ov004_020b67bc.c",
       "ordinal": 40
     },
     {
-      "symbol": "Coin_Destroy",
+      "symbol": "_ZN6SpriteD1Ev",
       "address": "0x020b67e0",
       "size": "0x00000004",
       "legacy_source": "src/func_ov004_020b67e0.c",
       "ordinal": 41
     },
     {
-      "symbol": "Coin_Construct",
+      "symbol": "_ZN6SpriteC1Ev",
       "address": "0x020b67e4",
       "size": "0x00000004",
       "legacy_source": "src/func_ov004_020b67e4.c",
@@ -323,11 +340,27 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov004_020bfa28",
+      "address": "0x020bfa28",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration node the static initializer passes to __register_global_object with __arraydtor"
+    },
+    {
+      "symbol": "sMgCoins",
+      "address": "0x020bfa34",
+      "size": "0x2d0",
+      "binding": "STB_GLOBAL",
+      "evidence": "the twenty 0x24-byte Sprite records (0x14 x 0x24 = 0x2d0); the static initializer builds them with __cxa_vec_ctor(C1, D1). The interior label sMgCoinsVisible (&sMgCoins[0].mVisible) falls inside it"
+    }
+  ],
   "notes": [
     "Text only: this unit's .data (0x020bc7d0..0x020bc83c) and .bss (0x020bf9e4..0x020bfa56) stay ROM-owned and are reached by extern, as the one-function sources did; __sinit_ov004_020b9ad0 stays its own enrolled source.",
     "Folded from 43 one-function sources. The per-source extern declarations disagreed on type for a handful of symbols (sMgCoinsStep, sMgCoins, gMgScene, the ApproachLinear / Vec2_Sub spellings); the single declaration set in the unit source picks one type each and the bodies cast to match. ApproachLinear and ApproachLinear2 are declared as the C++ overloads (int&, int, int) and (short&, short, short), which mangle to the ROM's _Z14ApproachLinearRiii and _Z15ApproachLinear2Rsss.",
-    "Struct copies of the entry templates go through structs whose only member is an int[2]; plain {int a, b} structs scalarize under C++ and miss the ROM's block move by two words in eight functions."
+    "Struct copies of the entry templates go through structs whose only member is an int[2]; plain {int a, b} structs scalarize under C++ and miss the ROM's block move by two words in eight functions.",
+    "2026-10-28 static-initializer fold: the file defines `Sprite sMgCoins[0x14]`. mwcc emits __sinit_unit020b4aa4.cpp byte- and relocation-identical to the retired src/unnamed/ov004/__sinit_ov004_020b9ad0.c, and the old MgCoins_Cleanup / Coin_Destroy / Coin_Construct are now the compiler's __arraydtor$192 and Sprite's inline D1/C1, emitted after the initializer in ROM order (the unit020cd744 TrmpLine shape)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -349,6 +382,264 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov004-unit020b4aa4/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b4aa4",
+        "end": "0x020b67e8",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b4aa4",
+          "end": "0x020b67e8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x020b9ad0",
+          "end": "0x020b9b24",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x020b9dec",
+          "end": "0x020b9df0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020bfa28",
+          "end": "0x020bfd04",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 47
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              87
+            ],
+            "desired": [
+              87
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              85
+            ],
+            "desired": [
+              85
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_unit020b4aa4.cpp",
+      "address": "0x020b9ad0",
+      "size": "0x54",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov004_020b9ad0 (0x54: __cxa_vec_ctor over sMgCoins, then its __arraydtor registration) and carries the same seven relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_unit020b4aa4.cpp",
+      "address": "0x020b9dec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_unit020b4aa4.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_unit020b4aa4.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "__arraydtor$192",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local array destructor thunk for sMgCoins; it is a configured initializer relocation destination at 0x020b67bc"
+    },
+    {
+      "symbol": "data_ov004_020bfa28",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned destructor-registration node; DSD requires a configured global symbol at 0x020bfa28, and changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x020b9af0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__cxa_vec_ctor",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020733a8"
+    },
+    {
+      "section": ".init",
+      "source": "0x020b9b00",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x020b9b10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6SpriteD1Ev",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b67e0"
+    },
+    {
+      "section": ".init",
+      "source": "0x020b9b14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgCoins",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bfa34"
+    },
+    {
+      "section": ".init",
+      "source": "0x020b9b18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6SpriteC1Ev",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b67e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x020b9b1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__arraydtor$192",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b67bc"
+    },
+    {
+      "section": ".init",
+      "source": "0x020b9b20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bfa28",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bfa28"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x020b9dec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_unit020b4aa4.cpp",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b9ad0"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@201",
+      "to": "data_ov004_020bfa28",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @199 now that dScMgBase_c.h declares Mg_DrawLine (+6 from @193; ov073 already defines @193). It is renamed to the configured name at 0x020bfa28. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "__arraydtor$200",
+      "to": "__arraydtor$192",
+      "owned_function": {
+        "module": "ov004",
+        "address": "0x020b67bc",
+        "size": "0x00000024",
+        "function_ordinal": 40,
+        "raw_type": "STT_FUNC",
+        "raw_binding": "STB_LOCAL"
+      },
+      "evidence": "the sMgCoins array destructor thunk; mwccarm emits it as __arraydtor$200 once dScMgBase_c.h declares Mg_DrawLine and fBase_c.h includes Memory.h (+8 from __arraydtor$192); renamed onto the configured __arraydtor$192 at 0x020b67bc."
+    }
+  ]
 }

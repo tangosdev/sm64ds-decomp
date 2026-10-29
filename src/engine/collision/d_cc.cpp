@@ -18,6 +18,7 @@
 #include "dCc_c.h"
 #include "dActor_c.h"
 #include "nitro/fx/fx.h"
+#include "cstd.h"
 
 struct Player;
 struct Arg;
@@ -26,19 +27,14 @@ extern "C" {
 /* local extern: the collider-list head. decl_common.h's copy is `void*`; the
    real type is the node pointer every method here reads. */
 extern dCc_c *data_0209cee8;
+/* local extern: no header declares the C vector helpers; src/Vec3_HorzLen.cpp
+   defines it with this signature. */
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
-/* local extern: file-static pair below -- the head-link helpers only this
-   TU calls. */
-void func_02014f44(u32 id, dCc_c *clsn);
 /* local extern: no header declares it; the definition lives in Player.cpp
    (extern "C", takes its collider param as its file-local `Arg` scaffold --
    arg->m2() is vtable slot 2, our GetPos, and it tests the flags word at
    +0x18). */
 int func_ov002_020caf98(struct Player *player, struct Arg *clsn);
-}
-
-namespace cstd {
-int fdiv(int a, int b);
 }
 
 // @symbol _ZN5dCc_cC2Ev
@@ -58,17 +54,12 @@ dCc_c::~dCc_c() {
     Unlink();
 }
 
-// @symbol _ZN5dCc_c4InitE5Fix12IiES1_jj
-/* The header's scalar Init(Fix12i, Fix12i, u32, u32) reproduces these
- * bytes as a method, but emits _ZN5dCc_c4InitEiijj. Production still names
- * this entry _ZN5dCc_c4InitE5Fix12IiES1_jj; keep the C-linkage boundary
- * until the symbol and its callers are reconciled. */
-extern "C" void _ZN5dCc_c4InitE5Fix12IiES1_jj(dCc_c *self, int radius, int height, unsigned flags,
-                                              unsigned vulnFlags) {
-    self->radius = radius;
-    self->height = height;
-    self->flags = flags;
-    self->vulnFlags = vulnFlags;
+// @symbol _ZN5dCc_c4InitEiijj
+void dCc_c::Init(Fix12i radius_, Fix12i height_, u32 flags_, u32 vulnFlags_) {
+    radius = radius_;
+    height = height_;
+    flags = flags_;
+    vulnFlags = vulnFlags_;
 }
 
 // @symbol _ZN5dCc_c5ClearEv
@@ -111,20 +102,19 @@ void dCc_c::Unlink() {
 
 // @symbol func_02014f5c
 /* Resolve a collider hit owner and notify it only when it is the player.
- * Keep the integer predicate: 2004/b56 folds a bool/direct test differently.
- * self is a dCc_c; the Player notifier reads it through its local Arg view
- * (the flags word at +0x18 and the m2() position). */
+ * IsPlayer returns int: the ROM materialises the 0/1 before testing it, and a
+ * bool predicate or a direct compare folds that away. self is a dCc_c; the
+ * Player notifier reads it through its local Arg view (the flags word at
+ * +0x18 and the m2() position). */
 #define PLAYER_ACTOR_ID 0xbf
+static inline int IsPlayer(dActor_c *actor) {
+    return actor->actorID == PLAYER_ACTOR_ID;
+}
+
 extern "C" void func_02014f5c(dCc_c *self, u32 id) {
-    dActor_c *player;
-    int isPlayer;
-    player = dActor_c::FindWithID(id);
-    if (!player)
-        return;
-    isPlayer = (int)(player->actorID == PLAYER_ACTOR_ID);
-    if (isPlayer == 0)
-        return;
-    func_ov002_020caf98((Player *)player, (Arg *)self);
+    dActor_c *player = dActor_c::FindWithID(id);
+    if (player && IsPlayer(player))
+        func_ov002_020caf98((Player *)player, (Arg *)self);
 }
 
 // @symbol func_02014f44
@@ -189,9 +179,7 @@ void dCc_c::Process() {
             other->otherOwner = data_0209cee8->GetOwnerID();
 
             if (sharedFlags & 0x4000000) {
-                u32 *otherHitFlags = &other->hitFlags;
-                u32 *hitFlags = &data_0209cee8->hitFlags;
-                *hitFlags |= 0x8000000;
+                data_0209cee8->hitFlags |= 0x8000000;
                 overlap -= 0x50000;
                 other->hitFlags |= 0x8000000;
                 if (overlap < 0)

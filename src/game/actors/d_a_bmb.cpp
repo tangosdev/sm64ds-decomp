@@ -1,37 +1,44 @@
 //cpp
+namespace Particle {
+struct Callback;
+}
+struct Vector3_16f;
+namespace Particle {
+struct System {
+    static void *NewSimple(unsigned, int, int, int);
+
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 /* Bob-omb (BOB_OMB 206 / BOMBHEI) -- ov102/daBmb_c.
  *
  * common.h FIRST. InitResources and the carry update copy twelve matrix words.
  * math/Matrix.h's nested Matrix4x3 scalarizes that copy (Vector3 is non-POD).
  *
  * Leftovers, remeasured in this file:
- * - ModelAnim::SetAnim, dCcAc_c::Init and DropShadowRadHeight: the header
- *   methods take Fix12<int> by value and the call grows. dBgCh_Actr::Init's
- *   header is Fix12i (mangles as i); this TU's call is Fix12<int>.
- *   The 4-arg KillByInvincibleChar stays a scalar extern; Behavior already
- *   calls the 3-arg method.
  * - Behavior skips 4 bytes past GetFloorResult's dBgPi to the SurfaceInfo
  *   and tests CLPS bit 0x20 (water).
- * - States 0, 1 and 3 advance the dExtFrameCtrl_c base of mModelAnim
+ * - States 0, 1 and 3 advance the dExtFrameCtrl_c base of mAnmModel
  *   explicitly. The qualified base call preserves the ROM entry point
- *   without a byte-offset pointer or a ModelAnim forwarding call.
- * - The word after mClipResult (dActor_c pad, 0xc8) is a Matrix4x3* while
- *   mVariant is 2. Naming it would be a field on dActor_c. Player+0xc8 is
- *   that same pad on the carrier, tested as a nonzero int.
+ *   without a byte-offset pointer or a dExtAnmModel_c forwarding call.
+ * - dActor_c::mCarryMatrix (0xc8) is the matrix 0214b53c copies into the
+ *   model while mVariant is 2; on the carrier it is only tested nonzero.
  * - func_ov102_0214bf64 keeps its existing free-function label over daBmb_c.
- *   func_ov102_0214bd90 and func_ov102_0214b03c are methods:
- *   the first argument is this Bob-omb. Both methods call func_0200fc44 and
- *   func_0201267c through the file-scope extern "C" prototypes: a block-scope
- *   extern inside a member gets C++ linkage and the module stops linking.
+ *   func_ov102_0214bd90, func_ov102_0214b03c and func_ov102_0214b988 are
+ *   methods: the first argument is this Bob-omb. Their C callees come from
+ *   extern "C" file-scope declarations (this block, Sound.h, CalcLib.h):
+ *   a block-scope extern inside a member gets C++ linkage and the module
+ *   stops linking.
  * - func_ov102_0214ad14, 0214ae1c and 0214b384 are called from other overlays,
  *   so those labels stay. data_ov102_* are the file handles; SharedFilePtr
  *   has no fields, so the loaded BCA is still the word at +4.
  * - func_0203568c / func_02035684 are the out-of-line stores of
  *   mWithMeshClsn.mRadius / mHeight. Inlining them drops the call.
- * - func_ov102_0214b53c keeps the volatile stack pins, and the carrier's
- *   angles at +0x8c/+0x8e/+0x90, the matrix at +0x5ec, and the halfwords at
- *   +0x580/+0x582/+0x584. Those player slots are not named on Player.
- * - unk_3e0 and unk_3f6 stay. ov078/daBombking_c writes them by those names.
+ * - func_ov102_0214b53c keeps the volatile stack pins and reads the eating
+ *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, the matrix at
+ *   +0x5ec and the halfwords at +0x580/+0x582/+0x584, which Player.cpp fills
+ *   from bone 15's rotX/rotY/rotZ. Those two slots are still pad on Player.
+ * - ov078/daBombking_c writes mHurtDamage and mDetonate by those names.
  */
 
 #include "common.h"
@@ -42,16 +49,41 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
+#include "math/Approach.h"
+#include "math/CalcLib.h"
 
-bool ApproachLinear(short &value, short target, short step);
-
-/* The three shared files this actor claims.  InitResources loads them and
+/* The three shared files this actor claims: ov002's model handle here and the
+   two animation handles below.  InitResources loads them and
    CleanupResources releases them, so both C++-named members need one agreed
    spelling; the members below that read the loaded handle out of the same bytes
    take their own view with a cast rather than a second declaration. */
-extern SharedFilePtr data_ov102_0214e9c0;
-extern SharedFilePtr data_ov102_0214e9c8;
 extern SharedFilePtr data_ov002_0210d9e0;
+
+/* Runtime asset handles, distinct from the NitroFS file IDs. */
+enum daBmb_c_AssetId { ASSET_BOMBHEI_CARRY_BCA = 0x02b7, ASSET_BOMBHEI_WALK_BCA = 0x02b8 };
+
+/* The two animation handles reach their files through this wrapper's
+   constructor and destructor veneers; the manifest maps each to the retail
+   destination.  Descriptive local type, not a recovered spelling. */
+struct BmbAnimFile : SharedFilePtr {
+    BmbAnimFile(u32 fileID);
+    ~BmbAnimFile();
+};
+
+/* This TU's own handles, in the order the retail initializer (0x0214de70)
+   builds them. */
+BmbAnimFile gBmbWalkAnimFile(ASSET_BOMBHEI_WALK_BCA);
+BmbAnimFile gBmbCarryAnimFile(ASSET_BOMBHEI_CARRY_BCA);
+
+/* Carry offsets, indexed by the carrier's pose (bit 0: front-sliding or
+   just lost the grab; bit 1: carrier param1 == 2).  The retail initializer
+   constructs and registers each element in turn. */
+Vector3 gBmbCarryOffsets[4] = {
+    Vector3(0x1c000, -0x14000, 0x28000),
+    Vector3(0x1c000, -0x14000, 0x3c000),
+    Vector3(0x2b000, -0xa000, -0x14000),
+    Vector3(0x30000, -0x1e000, 0x3c000),
+};
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -78,16 +110,8 @@ void  func_ov102_0214c0b8(void *self);
 /* -- other modules -- */
 void  GiveCoins(int who, int count);
 int   SurfaceInfo_TestFlag0x20(int *si);
-
-void  _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *, void *, void *, unsigned int);
-
-
-
-/* dCcAc_c::Init / dBgCh_Actr::Init stay scalar: they carry Fix12<int> BY
-   VALUE (6az). dBgCh_Actr::Init's header is Fix12i, which mangles as i;
-   ROM is Fix12<int>. */
-void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
-void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c *a, Fix12i b, Fix12i c, Vector3_16 *d, Vector3_16 *e);
+/* 0x0203b0e8. Not declared in math/CalcLib.h (a shared header); callers spell it int, int. */
+int AngleDiff(int, int);
 
 /* Hoisted out of four member bodies.  A class member function may not sit in a
    block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
@@ -97,7 +121,6 @@ void  func_ov102_0214b3b8(void *c);
 /* Real definitions: func_0201267c and func_0200fc44 (arm9).
    The methods call through these so the names stay unmangled. aa18, a free
    function, still redeclares func_0200fc44 at block scope. */
-void  func_0201267c(unsigned int id, const Vector3 *v);
 int   func_0200fc44(int a, Vector3 *pos, int flag);
 
 extern signed char   data_0209f2f8;
@@ -115,8 +138,8 @@ extern unsigned char data_0209f2d8;
  * C linkage preserves the project's existing bare registry-factory label.
  * The address is ROM-proven; the original SM64DS spelling is not preserved.
  * `return new daBmb_c()` MATCHES (size 0x50); the synthesized ctor stores
- * `_ZTV7daBmb_c + 2` because this TU defines the vtable. The retained leaf operator new
- * forwards to the retail `_ZN7fBase_cnwEj` allocator, as does fBase_c's adapter.
+ * `_ZTV7daBmb_c + 2` because this TU defines the vtable. `new` calls the
+ * inherited fBase_c::operator new, the retail `_ZN7fBase_cnwEm` allocator.
  *
  * Reconstructed source-style name: SM64DS proves daBmb_c through RTTI,
  * allocation size, vtable identity, and the BOMBHEI registry profile; later EAD
@@ -162,7 +185,7 @@ s32 daBmb_c::OnYoshiTryEat() {
  *
  * param1's low three bits pick the variant: 2 is the one that starts inert --
  * it sets the collision volume's `hit` bit, clears a behaviour flag and leaves
- * unk_108 clear -- 4 also starts clear, and everything else starts live.
+ * mCoinType clear -- 4 also starts clear, and everything else starts live.
  * ======================================================================== */
 
 // @symbol _ZN7daBmb_c13InitResourcesEv
@@ -170,10 +193,10 @@ int daBmb_c::InitResources()
 {
     BMD_File* bmd;
 
-    dExtFrameCtrl_c::LoadFile(data_ov102_0214e9c0);
-    dExtFrameCtrl_c::LoadFile(data_ov102_0214e9c8);
-    bmd = (BMD_File*)Model::LoadFile(data_ov002_0210d9e0);
-    if (mModelAnim.SetFile(bmd, 1, -1) == 0)
+    dExtFrameCtrl_c::LoadFile(gBmbWalkAnimFile);
+    dExtFrameCtrl_c::LoadFile(gBmbCarryAnimFile);
+    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+    if (mAnmModel.SetFile(bmd, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -181,7 +204,7 @@ int daBmb_c::InitResources()
     mVariant = (unsigned char)(param1 & 7);
     mNoticeAngle = 0x2000;
     func_ov102_0214c0b8(this);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, this, 0x3c000, 0x50000, 0x200004, 0xa6d380);
+    mdCc_c.Init(this, 0x3c000, 0x50000, 0x200004, 0xa6d380);
     mTerminalVelocity = -0x37000;
 
     if (mVariant == 2) {
@@ -189,11 +212,11 @@ int daBmb_c::InitResources()
            mFlags bit 0 (the profile clip-enable bit). */
         mdCc_c.flags |= 2;
         mFlags &= ~1u;
-        unk_108 = 0;
+        mCoinType = 0;
     } else if (mVariant == 4) {
-        unk_108 = 0;
+        mCoinType = 0;
     } else {
-        unk_108 = 1;
+        mCoinType = 1;
     }
 
     mHomePosX = mPosX;
@@ -207,14 +230,14 @@ int daBmb_c::InitResources()
     mScaleZ = 0x1000;
     mCarrier = 0;
     mTurnCount = 0;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     mShouldRender = 1;
     /* Matrix4x3* while mVariant is 2. It lives in dActor_c's pad, the word
        after mClipResult. */
     *(int *)((char *)&mClipResult + 4) = 0;
-    unk_3e0 = 2;
-    unk_3f6 = 0;
+    mHurtDamage = 2;
+    mDetonate = 0;
     mHomeAngleY = mAngleY;
     return 1;
 }
@@ -230,7 +253,7 @@ int daBmb_c::Behavior()
     int killResult;
     void *other;
 
-    if (unk_3f6 != 0) {
+    if (mDetonate != 0) {
         func_ov102_0214ae1c(this);
         return 1;
     }
@@ -241,7 +264,7 @@ int daBmb_c::Behavior()
         return 1;
     }
 
-    killResult = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 0);
+    killResult = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 0);
     if (killResult != 0) {
         if (killResult == 2) {
             func_ov102_0214ae1c(this);
@@ -273,7 +296,7 @@ int daBmb_c::Behavior()
                 v[0] = -0x2000;
                 v[1] = 0;
                 v[2] = 0;
-                _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, v, other, 0x32000);
+                KillByInvincibleChar(*(Vector3_16 *)v, *(Player *)other, 0x32000);
                 UpdatePos(&mdCc_c);
                 UpdateWMClsn(mWithMeshClsn, 0);
                 mdCc_c.Clear();
@@ -347,7 +370,7 @@ int daBmb_c::Render()
         int flags = mFlags;
         int b = (flags & 0x40000) != 0;
         if (!b) {
-            mModelAnim.Render(&mScale);
+            mAnmModel.Render(&mScale);
         }
     }
     return result;
@@ -362,8 +385,8 @@ int daBmb_c::Render()
 int daBmb_c::CleanupResources()
 {
     data_ov002_0210d9e0.Release();
-    data_ov102_0214e9c0.Release();
-    data_ov102_0214e9c8.Release();
+    gBmbWalkAnimFile.Release();
+    gBmbCarryAnimFile.Release();
     return 1;
 }
 
@@ -373,9 +396,7 @@ int daBmb_c::CleanupResources()
 extern "C" {
 
 // @symbol func_ov102_0214c0b8
-void func_ov102_0214c0b8(void *cv)
-{
-    extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *anim, void *file, int a, int b, unsigned int u);
+void func_ov102_0214c0b8(void *cv) {
     daBmb_c *self = (daBmb_c *)cv;
 
     self->mState = 0;
@@ -383,16 +404,15 @@ void func_ov102_0214c0b8(void *cv)
         self->mHorzSpeed = 0;
     else
         self->mHorzSpeed = 0x5000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c0 + 4), 0, 0x1000, 0);
+    self->mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
     self->mTurnTimer = 0x200;
     self->mVertAccel = -0x2000;
     self->mCarrier = 0;
 }
-
 }
 
 /* State 0: the dispatch passes this Bob-omb. Use its actual fields and
- * the ModelAnim frame-controller base. Scalar position members remain
+ * the dExtAnmModel_c frame-controller base. Scalar position members remain
  * borrowed Vector3 views; no owning Vector3 temporaries are introduced.
  * The existing external free-function label is retained. */
 
@@ -401,19 +421,13 @@ extern "C" {
 // @symbol func_ov102_0214bf64
 void func_ov102_0214bf64(void *ov)
 {
-    extern unsigned short DecIfAbove0_Short(unsigned short* p);
-    extern void _Z14ApproachLinearRiii(int& v, int target, int step);
-    extern short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
-    extern int Vec3_Dist(const Vector3* a, const Vector3* b);
-    extern void func_ov102_0214b988(void* c);
-
     daBmb_c *o = (daBmb_c *)ov;
 
     DecIfAbove0_Short(&o->mTurnTimer);
     if (o->mVariant != 1) {
         if (o->mChasePlayer == 0) {
-            _Z14ApproachLinearRiii(o->mHorzSpeed, 0x5000, 0x2aa);
-            func_ov102_0214b988(o);
+            ApproachLinear(o->mHorzSpeed, 0x5000, 0x2aa);
+            o->func_ov102_0214b988();
             if (o->mChasePlayer != 0) {
                 o->mHorzSpeed = 0;
                 o->mVertSpeed = 0x14000;
@@ -432,7 +446,7 @@ void func_ov102_0214bf64(void *ov)
                 }
             }
         } else {
-            _Z14ApproachLinearRiii(o->mHorzSpeed, 0x10000, 0x1000);
+            ApproachLinear(o->mHorzSpeed, 0x10000, 0x1000);
             s16 target = Vec3_HorzAngle(&o->mPos, &o->mChasePlayer->mPos);
             if (o->mVariant == 3) {
                 /* Player::mGrabbedByActor: stop turning toward a held player. */
@@ -443,9 +457,9 @@ void func_ov102_0214bf64(void *ov)
             ApproachLinear(o->mPrevAngleY, target, 0x800);
             o->mAngleY = o->mPrevAngleY;
         }
-        o->mModelAnim.speed = o->mHorzSpeed >> 3;
+        o->mAnmModel.speed = o->mHorzSpeed >> 3;
     }
-    o->mModelAnim.dExtFrameCtrl_c::Advance();
+    o->mAnmModel.dExtFrameCtrl_c::Advance();
 }
 
 }
@@ -458,9 +472,6 @@ extern "C" {
 // @symbol func_ov102_0214beb4
 void func_ov102_0214beb4(void *cv)
 {
-    extern short Vec3_HorzAngle(const void* a, const void* b);
-    extern int Vec3_Dist(const void* a, const void* b);
-    extern int RandomIntInternal(int* seed);
     extern int data_0209e650;
 
     daBmb_c *self = (daBmb_c *)cv;
@@ -469,13 +480,16 @@ void func_ov102_0214beb4(void *cv)
     self->mTurnCount += 1;
     Player *o = self->mChasePlayer;
     if (o == 0) {
-        *(short *)&self->mTargetAngY = Vec3_HorzAngle(&self->mPosX, &self->mHomePosX);
-        if (Vec3_Dist(&self->mPosX, &self->mHomePosX) >= 0x500000) return;
+        *(short *)&self->mTargetAngY =
+            Vec3_HorzAngle((const Vector3 *)&self->mPosX, (const Vector3 *)&self->mHomePosX);
+        if (Vec3_Dist((const Vector3 *)&self->mPosX, (const Vector3 *)&self->mHomePosX) >= 0x500000)
+            return;
         unsigned int r = RandomIntInternal(&data_0209e650);
         *(short *)&self->mTargetAngY += (short)(r >> 0x10);
         return;
     }
-    *(short *)&self->mTargetAngY = Vec3_HorzAngle(&self->mPosX, &o->mPosX);
+    *(short *)&self->mTargetAngY =
+        Vec3_HorzAngle((const Vector3 *)&self->mPosX, (const Vector3 *)&o->mPosX);
 }
 
 }
@@ -492,14 +506,14 @@ void func_ov102_0214beb4(void *cv)
 // @symbol _ZN7daBmb_c6State1Ev
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
-        mModelAnim.speed = 0x800;
+        mAnmModel.speed = 0x800;
         ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x400);
     } else {
-        mModelAnim.speed = 0x1000;
+        mAnmModel.speed = 0x1000;
         ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x800);
     }
     mAngleY = mPrevAngleY;
-    mModelAnim.dExtFrameCtrl_c::Advance();
+    mAnmModel.dExtFrameCtrl_c::Advance();
     if (mState == 2) return;
     if (mPrevAngleY != *(short *)&mTargetAngY) return;
     func_ov102_0214c0b8(this);
@@ -536,20 +550,17 @@ void daBmb_c::func_ov102_0214bd90(){
 extern "C" {
 
 // @symbol func_ov102_0214bd20
-void func_ov102_0214bd20(char* c)
-{
-    extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int a, int b, unsigned int u);
+void func_ov102_0214bd20(char *c) {
     daBmb_c *self = (daBmb_c *)c;
 
     self->mState = 3;
     self->mVertAccel = 0;
     self->mHorzSpeed = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c8 + 4), 0, 0x1000, 0);
+    self->mAnmModel.SetAnim((BCA_File *)gBmbCarryAnimFile.filePtr, 0, 0x1000, 0);
     func_ov102_0214b384(c, 0x96);
     self->mdCc_c.flags |= 2;
     self->mdCc_c.flags &= ~4;
 }
-
 }
 
 /* ==========================================================================
@@ -588,7 +599,7 @@ void daBmb_c::State3()
             func_ov102_0214c0b8(this);
         }
     }
-    mModelAnim.dExtFrameCtrl_c::Advance();
+    mAnmModel.dExtFrameCtrl_c::Advance();
 }
 
 /* ==========================================================================
@@ -608,9 +619,7 @@ extern "C" Quad data_ov102_0214e514 = {{0x28000, 0x28000, 0x50000, 0x28000}};
 extern "C" Quad data_ov102_0214e524 = {{0xa000, 0xa000, 0x1a000, 0xa000}};
 
 // @symbol func_ov102_0214bc20
-void func_ov102_0214bc20(char* c)
-{
-    extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *anim, void *file, int a, int b, unsigned int u);
+void func_ov102_0214bc20(char *c) {
     daBmb_c *self = (daBmb_c *)c;
 
     Quad a1 = data_ov102_0214e514;
@@ -624,10 +633,9 @@ void func_ov102_0214bc20(char* c)
     self->mHorzSpeed = a1.v[idx];
     self->mVertSpeed = a2.v[idx];
     self->mState = 4;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c0 + 4), 0, 0x1000, 0);
+    self->mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
     self->mVertAccel = -0x2000;
 }
-
 }
 
 /* ==========================================================================
@@ -736,23 +744,15 @@ void daBmb_c::State5()
 /* ==========================================================================
  * ======================================================================== */
 
-extern "C" {
-
-// @symbol func_ov102_0214b988
-void func_ov102_0214b988(void *thiz)
-{
-    extern int Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
-    extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
-    extern int AngleDiff(int, int);
-
-    daBmb_c *self = (daBmb_c *)thiz;
+// @symbol _ZN7daBmb_c19func_ov102_0214b988Ev
+void daBmb_c::func_ov102_0214b988() {
     Player *pl;
     struct Vector3 v;
 
-    self->mChasePlayer = 0;
-    pl = self->ClosestPlayer();
+    mChasePlayer = 0;
+    pl = ClosestPlayer();
     if (!pl) return;
-    if (Vec3_Dist(&self->mPos, &pl->mPos) > 0x190000)
+    if (Vec3_Dist(&mPos, &pl->mPos) > 0x190000)
         return;
     {
         int *src = (int *)&pl->mPosX;
@@ -760,12 +760,10 @@ void func_ov102_0214b988(void *thiz)
         v.y = src[1];
         v.z = src[2];
     }
-    if (AngleDiff(Vec3_HorzAngle(&self->mPos, &v), self->mAngleY) >= self->mNoticeAngle)
+    if (AngleDiff(Vec3_HorzAngle(&mPos, &v), mAngleY) >= mNoticeAngle)
         return;
-    self->mChasePlayer = pl;
-    func_ov102_0214b384(self, 0x96);
-}
-
+    mChasePlayer = pl;
+    func_ov102_0214b384(this, 0x96);
 }
 
 /* ==========================================================================
@@ -778,172 +776,160 @@ void func_ov102_0214b988(void *thiz)
 extern "C" {
 
 // @symbol func_ov102_0214b53c
-void func_ov102_0214b53c(char *c)
-{
-  extern void *func_ov002_020e496c(char *c);
-  extern void Math_Function_0203b14c(void *out, int a1, int a2, int a3, int a4);
-  extern void Matrix4x3_FromRotationY(void *m, int angle);
-  extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
-  extern void Vec3_Lsl(Vector3 *d, Vector3 *s, int sh);
-  extern void Vec3_LslInPlace(Vector3 *v, int sh);
-  extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(int sys, unsigned int kind, int fx, int a1, int a2, const void *v, void *cb);
-  extern void func_ov102_0214b444(void *c);
-  extern int data_ov102_0214ea18[];
-  extern int data_ov102_0214ea1c[];
-  extern int data_ov102_0214ea20[];
-  extern Matrix4x3 data_020a0e68;
-  extern s16 data_02082214[];
+void func_ov102_0214b53c(char *c) {
+    extern void *func_ov002_020e496c(Player * c);
+    extern void Math_Function_0203b14c(void *out, int a1, int a2, int a3, int a4);
+    extern void Matrix4x3_FromRotationY(void *m, int angle);
+    extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
+    extern void Vec3_Lsl(Vector3 * d, Vector3 * s, int sh);
+    extern void Vec3_LslInPlace(Vector3 * v, int sh);
+    extern int d_a_bmbNewHold(int sys, unsigned int kind, int fx, int a1, int a2, const void *v,
+                              void *cb);
+    extern void func_ov102_0214b444(void *c);
+    extern Matrix4x3 data_020a0e68;
+    extern s16 data_02082214[];
 
-  daBmb_c *self = (daBmb_c *)c;
-  volatile u16 tmp[6]; /* angle-home pins */
-  Vector3 p;
-  volatile Vector3 dead; /* stack-layout placeholder; never a live value */
-  int x0;
-  Vector3 d;
-  int xSaved;
-  char *pPos;
-  char *src;
-  /* Plain short-circuit.  A chain of `& 0xFFFFFFFFu` masks is C-only: under
+    daBmb_c *self = (daBmb_c *)c;
+    volatile u16 tmp[6]; /* angle-home pins */
+    Vector3 p;
+    volatile Vector3 dead; /* stack-layout placeholder; never a live value */
+    int x0;
+    Vector3 d;
+    int xSaved;
+    char *pPos;
+    char *src;
+    /* Plain short-circuit.  A chain of `& 0xFFFFFFFFu` masks is C-only: under
      -lang c++ the `&&` is a bool and the mask costs three instructions. */
-  if ((self->mVariant == 2) && ((src = *((char **) ((char *)&self->mClipResult + 4))) != 0))
-  {
-    self->mModelAnim.mat4x3 = *((Matrix4x3 *) src);
-  }
-  else
-  {
-    int haveMtx = (int) ((self->mFlags & 0x4000) != 0);
-    Player *player0;
-    if (((haveMtx != 0) && ((player0 = self->mCarrier) != 0)) && ((*((int *) ((char *)&player0->mClipResult + 4))) != 0))
-    {
-      char *ret = (char *) func_ov002_020e496c((char *)player0);
-      u8 idx = 0;
-      if (self->mCarrier->IsFrontSliding() != 0)
-      {
-        idx = 1;
-      }
-      if ((self->mCarrier->LostGrabbedObject() != 0) && (((u32) (((u32) ((*((int *) (ret + 0x58))) << 4)) >> 0x10)) < 0xe))
-      {
-        idx = 1;
-      }
-      if (self->mCarrier->param1 == 2)
-      {
-        idx = (u8) (idx + 2);
-      }
-      int off = idx * 0xc;
-      Math_Function_0203b14c(self->mCarryOff, *((int *) (((char *) data_ov102_0214ea18) + off)), 0x800, 0x3e8000, 4);
-      Math_Function_0203b14c(&self->mCarryOff[1], *((int *) (((char *) data_ov102_0214ea1c) + off)), 0x800, 0x3e8000, 4);
-      Math_Function_0203b14c(&self->mCarryOff[2], *((int *) (((char *) data_ov102_0214ea20) + off)), 0x800, 0x3e8000, 4);
-      Matrix4x3 *rmtx = self->UpdateCarry(*self->mCarrier, *(Vector3 *)self->mCarryOff);
-      self->mModelAnim.mat4x3 = *rmtx;
-    }
-    else
-    {
-      self->mCarryOff[0] = 0;
-      self->mCarryOff[1] = 0;
-      self->mCarryOff[2] = 0;
-      Matrix4x3_FromRotationY(&self->mModelAnim.mat4x3, self->mAngleY);
-      self->mModelAnim.mat4x3.m[9] = self->mPosX >> 3;
-      self->mModelAnim.mat4x3.m[10] = self->mPosY >> 3;
-      self->mModelAnim.mat4x3.m[11] = self->mPosZ >> 3;
-    }
-  }
-  int haveMtx2 = (int) ((self->mFlags & 0x4000) != 0);
-  if ((haveMtx2 != 0) || (self->mFuse != 0))
-  {
-    {
-      Matrix4x3 *g = &data_020a0e68;
-      Matrix4x3 *m = &self->mModelAnim.mat4x3;
-      p.x = 0;
-      p.y = 0;
-      p.z = 0;
-      *g = *m;
-    }
-    MulMat4x3Mat4x3((char *)self->mModelAnim.data.transforms + 0x60, &data_020a0e68, &data_020a0e68);
-    {
-      int ty = *((int *) (((char *) (&data_020a0e68)) + 0x28));
-      int tx = *((int *) (((char *) (&data_020a0e68)) + 0x24));
-      p.y = ty;
-      int tz = *((int *) (((char *) (&data_020a0e68)) + 0x2c));
-      p.z = tz;
-      p.x = tx;
-      Vec3_Lsl(&d, &p, 3);
-    }
-    {
-      int dy = *((int *) (((char *) (&d)) + 4));
-      int dx = *((int *) (((char *) (&d)) + 0));
-      x0 = dx;
-      p.y = dy;
-      int dz = *((int *) (((char *) (&d)) + 8));
-      p.x = x0;
-      p.z = dz;
-    }
-    int haveMtx3 = (int) ((self->mFlags & 0x4000) != 0);
-    if (haveMtx3 != 0)
-    {
-      self->mCarryParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(self->mCarryParticle, 0x13, p.x, p.y, p.z, 0, 0);
-    }
-    if (self->mFuse != 0)
-    {
-      int haveShadow = (int) ((self->mFlags & 0x40000) != 0);
-      if (haveShadow != 0)
-      {
-        char *obj = (char *)self->mEatingPlayer;
-        if (obj != 0)
-        {
-          char *pos = obj + 0x5c;
-          int dx = *((int *) pos);
-          int gbase = (int) &data_020a0e68;
-          dead.x = dx;
-          int dy = *((int *) (pos + 4));
-          int off5ec = 0x5ec;
-          dead.y = dy;
-          int dz = *((int *) (pos + 8));
-          dead.z = dz;
-          data_020a0e68 = *((Matrix4x3 *) ((char *)self->mEatingPlayer + off5ec));
-          {
-            int tx = *(volatile int *) ((char *) &data_020a0e68 + 0x24); /* pin mtx translation loads */
-            int ty = *(volatile int *) ((char *) &data_020a0e68 + 0x28);
-            int tz = *(volatile int *) ((char *) &data_020a0e68 + 0x2c);
-            p.x = tx;
-            p.z = tz;
-            pPos = (char *) &p;
-            p.y = ty;
-            Vec3_LslInPlace((Vector3 *) pPos, 3);
-          }
-          char *p2 = (char *)self->mEatingPlayer;
-          u16 a8c = *((volatile u16 *) (p2 + 0x8c)); /* pin angle loads */
-          u16 a8e = *((volatile u16 *) (p2 + 0x8e));
-          tmp[1] = a8e;
-          tmp[0] = a8c;
-          xSaved = p.x;
-          x0 = *((volatile u16 *) (p2 + 0x90));
-          s16 angY = (s16) tmp[1];
-          tmp[2] = (u16) x0;
-          u16 v580 = *((volatile u16 *) (p2 + 0x580));
-          tmp[4] = *((u16 *) (p2 + 0x582));
-          tmp[3] = v580;
-          s16 v582s = (s16) tmp[4];
-          tmp[5] = *((u16 *) (p2 + 0x584));
-          int diff = (angY + 0x1800) - v582s;
-          tmp[1] = (u16) diff;
-          {
-            u16 ang8e = tmp[1];
-            u16 v582 = (u16) v582s;
-            int py = p.y + 0x14000;
-            p.y = py;
-            p.y = py + (((int) data_02082214[(v582 >> 4) * 2]) * 0x1e);
-            int idxX2 = (ang8e >> 4) * 2;
-            p.x = xSaved + (((int) data_02082214[idxX2]) * 0x3c);
-            p.z = p.z + (((int) data_02082214[idxX2 + 1]) * 0x3c);
-          }
+    if ((self->mVariant == 2) && ((src = (char *)self->mCarryMatrix) != 0)) {
+        self->mAnmModel.mat4x3 = *((Matrix4x3 *)src);
+    } else {
+        int haveMtx = (int)((self->mFlags & 0x4000) != 0);
+        Player *player0;
+        if (((haveMtx != 0) && ((player0 = self->mCarrier) != 0)) && (player0->mCarryMatrix != 0)) {
+            char *ret = (char *)func_ov002_020e496c(player0);
+            u8 idx = 0;
+            if (self->mCarrier->IsFrontSliding() != 0) {
+                idx = 1;
+            }
+            if ((self->mCarrier->LostGrabbedObject() != 0) &&
+                (((u32)(((u32)(((dExtAnmModel_c *)ret)->currFrame << 4)) >> 0x10)) < 0xe)) {
+                idx = 1;
+            }
+            if (self->mCarrier->param1 == 2) {
+                idx = (u8)(idx + 2);
+            }
+            Math_Function_0203b14c(self->mCarryOff, gBmbCarryOffsets[idx].x, 0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&self->mCarryOff[1], gBmbCarryOffsets[idx].y, 0x800, 0x3e8000,
+                                   4);
+            Math_Function_0203b14c(&self->mCarryOff[2], gBmbCarryOffsets[idx].z, 0x800, 0x3e8000,
+                                   4);
+            Matrix4x3 *rmtx = self->UpdateCarry(*self->mCarrier, *(Vector3 *)self->mCarryOff);
+            self->mAnmModel.mat4x3 = *rmtx;
+        } else {
+            self->mCarryOff[0] = 0;
+            self->mCarryOff[1] = 0;
+            self->mCarryOff[2] = 0;
+            Matrix4x3_FromRotationY(&self->mAnmModel.mat4x3, self->mAngleY);
+            self->mAnmModel.mat4x3.m[9] = self->mPosX >> 3;
+            self->mAnmModel.mat4x3.m[10] = self->mPosY >> 3;
+            self->mAnmModel.mat4x3.m[11] = self->mPosZ >> 3;
         }
-      }
-      self->mFuseParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(self->mFuseParticle, 0x19, p.x, p.y, p.z, 0, 0);
     }
-  }
-  func_ov102_0214b444(c);
+    int haveMtx2 = (int)((self->mFlags & 0x4000) != 0);
+    if ((haveMtx2 != 0) || (self->mFuse != 0)) {
+        {
+            Matrix4x3 *g = &data_020a0e68;
+            Matrix4x3 *m = &self->mAnmModel.mat4x3;
+            p.x = 0;
+            p.y = 0;
+            p.z = 0;
+            *g = *m;
+        }
+        MulMat4x3Mat4x3(&self->mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
+        {
+            int ty = *((int *)(((char *)(&data_020a0e68)) + 0x28));
+            int tx = *((int *)(((char *)(&data_020a0e68)) + 0x24));
+            p.y = ty;
+            int tz = *((int *)(((char *)(&data_020a0e68)) + 0x2c));
+            p.z = tz;
+            p.x = tx;
+            Vec3_Lsl(&d, &p, 3);
+        }
+        {
+            int dy = *((int *)(((char *)(&d)) + 4));
+            int dx = *((int *)(((char *)(&d)) + 0));
+            x0 = dx;
+            p.y = dy;
+            int dz = *((int *)(((char *)(&d)) + 8));
+            p.x = x0;
+            p.z = dz;
+        }
+        int haveMtx3 = (int)((self->mFlags & 0x4000) != 0);
+        if (haveMtx3 != 0) {
+            self->mCarryParticle =
+                Particle::System::New(self->mCarryParticle, 0x13, p.x, p.y, p.z, 0, 0);
+        }
+        if (self->mFuse != 0) {
+            int haveShadow = (int)((self->mFlags & 0x40000) != 0);
+            if (haveShadow != 0) {
+                char *obj = (char *)self->mEatingPlayer;
+                if (obj != 0) {
+                    char *pos = (char *)&((Player *)obj)->mPos;
+                    int dx = *((int *)pos);
+                    int gbase = (int)&data_020a0e68;
+                    dead.x = dx;
+                    int dy = *((int *)(pos + 4));
+                    int off5ec = 0x5ec;
+                    dead.y = dy;
+                    int dz = *((int *)(pos + 8));
+                    dead.z = dz;
+                    data_020a0e68 = *((Matrix4x3 *)((char *)self->mEatingPlayer + off5ec));
+                    {
+                        /* pin mtx translation loads */
+                        int tx = *(volatile int *)((char *)&data_020a0e68 + 0x24);
+                        int ty = *(volatile int *)((char *)&data_020a0e68 + 0x28);
+                        int tz = *(volatile int *)((char *)&data_020a0e68 + 0x2c);
+                        p.x = tx;
+                        p.z = tz;
+                        pPos = (char *)&p;
+                        p.y = ty;
+                        Vec3_LslInPlace((Vector3 *)pPos, 3);
+                    }
+                    char *p2 = (char *)self->mEatingPlayer;
+                    Player *eater = (Player *)p2;
+                    u16 a8c = *((volatile u16 *)&eater->mAngleX); /* pin angle loads */
+                    u16 a8e = *((volatile u16 *)&eater->mAngleY);
+                    tmp[1] = a8e;
+                    tmp[0] = a8c;
+                    xSaved = p.x;
+                    x0 = *((volatile u16 *)&eater->mAngleZ);
+                    s16 angY = (s16)tmp[1];
+                    tmp[2] = (u16)x0;
+                    u16 v580 = *((volatile u16 *)(p2 + 0x580));
+                    tmp[4] = *((u16 *)(p2 + 0x582));
+                    tmp[3] = v580;
+                    s16 v582s = (s16)tmp[4];
+                    tmp[5] = *((u16 *)(p2 + 0x584));
+                    int diff = (angY + 0x1800) - v582s;
+                    tmp[1] = (u16)diff;
+                    {
+                        u16 ang8e = tmp[1];
+                        u16 v582 = (u16)v582s;
+                        int py = p.y + 0x14000;
+                        p.y = py;
+                        p.y = py + (((int)data_02082214[(v582 >> 4) * 2]) * 0x1e);
+                        int idxX2 = (ang8e >> 4) * 2;
+                        p.x = xSaved + (((int)data_02082214[idxX2]) * 0x3c);
+                        p.z = p.z + (((int)data_02082214[idxX2 + 1]) * 0x3c);
+                    }
+                }
+            }
+            self->mFuseParticle =
+                Particle::System::New(self->mFuseParticle, 0x19, p.x, p.y, p.z, 0, 0);
+        }
+    }
+    func_ov102_0214b444(c);
 }
-
 }
 
 /* ==========================================================================
@@ -954,8 +940,6 @@ extern "C" {
 // @symbol func_ov102_0214b444
 void func_ov102_0214b444(void *cv)
 {
-    extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        int self, int sm, int mat, int fix, int t, unsigned int j);
 
     daBmb_c *self = (daBmb_c *)cv;
     int c = (int)self;
@@ -987,8 +971,10 @@ void func_ov102_0214b444(void *cv)
     self->mMatrix[10] = v >> 3;
     self->mMatrix[11] = self->mPosZ >> 3;
 
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        c, (int)&self->mShadowModel, (int)self->mMatrix, self->mScaleX * 0x50, 0x1e000, 0xf);
+    ((dActor_c *)c)
+        ->DropShadowRadHeight(*(dExtShadowModel_c *)((int)&self->mShadowModel),
+                              *(Matrix4x3 *)((int)self->mMatrix), self->mScaleX * 0x50, 0x1e000,
+                              0xf);
 }
 
 }
@@ -1062,7 +1048,6 @@ extern "C" {
 // @symbol func_ov102_0214b248
 int func_ov102_0214b248(void *cv)
 {
-    extern unsigned short DecIfAbove0_Short(unsigned short *p);
     extern void func_0203568c(int *p, int v);
     extern void func_02035684(int *p, int v);
     extern void func_ov002_020ef228(void *c, int arg);
@@ -1157,9 +1142,8 @@ void func_ov102_0214b128(void *cv) {
 
 // @symbol _ZN7daBmb_c19func_ov102_0214b03cEv
 void daBmb_c::func_ov102_0214b03c() {
-    if (mState < 2 && mModelAnim.file == *((BCA_File **)((char *)&data_ov102_0214e9c0 + 4))) {
-        if (((dExtFrameCtrl_c *)((char *)this + 0x350))->WillHitFrame(0) != 0 ||
-            ((dExtFrameCtrl_c *)((char *)this + 0x350))->WillHitFrame(0x10) != 0) {
+    if (mState < 2 && mAnmModel.file == (BCA_File *)gBmbWalkAnimFile.filePtr) {
+        if (mAnmModel.WillHitFrame(0) != 0 || mAnmModel.WillHitFrame(0x10) != 0) {
             func_0201267c(0x132, &mCamSpacePos);
         }
     }
@@ -1196,10 +1180,8 @@ extern "C" {
 // @symbol func_ov102_0214ae1c
 void func_ov102_0214ae1c(void *cv) {
     typedef struct Bmb_Ae1cVec3 { int x, y, z; } Vec3;
-    extern void func_0201267c(int a, void *b);
-    extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
+    extern void d_a_bmbNewSimpleHold(unsigned int id, int x, int y, int z);
     extern void func_ov002_020ef228(void *a, void *b);
-    extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, Vec3 *v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
 
     daBmb_c *self = (daBmb_c *)cv;
     Vec3 v;
@@ -1211,17 +1193,17 @@ void func_ov102_0214ae1c(void *cv) {
     v.x = self->mPosX;
     v.y = w;
     v.z = z;
-    if (self->unk_108) {
+    if (self->mCoinType) {
         dActor_c::Spawn(0x120, 2, *(Vector3 *)&v, 0, self->mAreaId, -1);
-        self->unk_108 = 0;
+        self->mCoinType = 0;
     }
-    func_0201267c(0x10c, &self->mCamSpacePosX);
+    func_0201267c(0x10c, &self->mCamSpacePos);
     v.y = self->mPosY + 0x64000;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x14, v.x, v.y, v.z);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x15, v.x, v.y, v.z);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x16, v.x, v.y, v.z);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x17, v.x, v.y, v.z);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x18, v.x, v.y, v.z);
+    Particle::System::NewSimple(0x14, v.x, v.y, v.z);
+    Particle::System::NewSimple(0x15, v.x, v.y, v.z);
+    Particle::System::NewSimple(0x16, v.x, v.y, v.z);
+    Particle::System::NewSimple(0x17, v.x, v.y, v.z);
+    Particle::System::NewSimple(0x18, v.x, v.y, v.z);
     func_ov002_020ef228(&self->mWithMeshClsn, self);
     if (self->mCarrier) {
         Vec3 w;
@@ -1229,7 +1211,7 @@ void func_ov102_0214ae1c(void *cv) {
         w.x = self->mPosX;
         w.y = self->mPosY;
         w.z = self->mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(self->mCarrier, &w, 2, 0xc000, 1, 0, 1);
+        self->mCarrier->Hurt(*(Vector3 *)&w, 2, 0xc000, 1, 0, 1);
         self->mCarrier = 0;
     } else if (self->mdCc_c.otherOwner) {
         dActor_c *a = dActor_c::FindWithID(self->mdCc_c.otherOwner);
@@ -1239,7 +1221,7 @@ void func_ov102_0214ae1c(void *cv) {
                 w.x = self->mPosX;
                 w.y = self->mPosY;
                 w.z = self->mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(a, &w, self->unk_3e0, 0xc000, 1, 0, 1);
+                ((Player *)a)->Hurt(*(Vector3 *)&w, self->mHurtDamage, 0xc000, 1, 0, 1);
             }
         }
     }
@@ -1248,8 +1230,8 @@ void func_ov102_0214ae1c(void *cv) {
         w.x = self->mPosX;
         w.y = self->mPosY;
         w.z = self->mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((Player *)self->mEatingPlayer, &w, self->unk_3e0, 0xc000, 1, 0, 1);
-        ((Player *)self->mEatingPlayer)->func_ov002_020d718c();
+        self->mEatingPlayer->Hurt(*(Vector3 *)&w, self->mHurtDamage, 0xc000, 1, 0, 1);
+        self->mEatingPlayer->func_ov002_020d718c();
         self->mEatingPlayer = 0;
     }
     func_ov102_0214baa0((char *)self);
@@ -1264,7 +1246,7 @@ void func_ov102_0214ae1c(void *cv) {
 // @symbol _ZN7daBmb_c13OnTurnIntoEggER6Player
 void daBmb_c::OnTurnIntoEgg(Player &player)
 {
-    if (unk_108 == 1) {
+    if (mCoinType == 1) {
         Sound::PlayBank3(0x11, mCamSpacePos);
         GiveCoins(player.mPlayerNo, 1);
         player.Heal(0x100);
@@ -1327,9 +1309,7 @@ void func_ov102_0214ad14(void *c)
 extern "C" {
 
 // @symbol func_ov102_0214ab1c
-int func_ov102_0214ab1c(void *selfv)
-{
-    extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int i, int fx, unsigned int j);
+int func_ov102_0214ab1c(void *selfv) {
 
     daBmb_c *self = (daBmb_c *)selfv;
     Player *player;
@@ -1341,7 +1321,7 @@ int func_ov102_0214ab1c(void *selfv)
 
     self->mFlags &= ~0x10000000u;
 
-    player = (Player *)self->mEatingPlayer;
+    player = self->mEatingPlayer;
     if (player != 0) {
         if (player->IsInsideOfCannon() != 0) {
             goto shocked;
@@ -1363,7 +1343,7 @@ after_cannon:
     if (self->mVariant == 2) {
         self->mVariant = 3;
         self->mState = 0;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c0 + 4), 0, 0x1000, 0);
+        self->mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
         self->mTurnTimer = 0x200;
         self->mVertAccel = -0x2000;
         self->mdCc_c.flags &= ~2u;
@@ -1380,7 +1360,7 @@ after_cannon:
     }
 
     if (self->mEatenByYoshi != 0) {
-        if (self->unk_104 == 5) {
+        if (self->mSpitOutTimer == 5) {
             self->mdCc_c.flags &= ~0x8000u;
         }
     }
@@ -1400,7 +1380,7 @@ hit:
 skip_hit:
     self->mdCc_c.Clear();
     if (self->mEatenByYoshi != 0) {
-        if (self->unk_104 == 0) {
+        if (self->mSpitOutTimer == 0) {
             self->mdCc_c.dCc_c::Update();
         }
     }
@@ -1410,7 +1390,6 @@ skip_hit:
 ret0:
     return 0;
 }
-
 }
 
 /* ==========================================================================
@@ -1463,5 +1442,5 @@ int func_ov102_0214aa18(void *selfv)
 
 // @symbol _ZN7daBmb_c16OnAimedAtWithEggEv
 s32 daBmb_c::OnAimedAtWithEgg() {
-    return 204800;
+    return 0x32000;
 }

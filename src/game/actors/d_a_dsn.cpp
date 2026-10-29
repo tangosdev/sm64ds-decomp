@@ -15,7 +15,7 @@
  * the highest address, so it is written first. g_profile_DOSUN stays
  * overlay data.
  *
- * deslop leftovers:
+ * Notes (measured spellings that do not match):
  * - Behavior: `(frame - 1) << 12` is one lsl #12 and the function shrinks
  *   0x1d4 to 0x1d0. The ROM is lsl #16; lsr #4, which is
  *   `(((unsigned)frame - 1) << 16) >> 4`.
@@ -25,15 +25,12 @@
  *   ROM's mov r1, #0; mov r2, r1. dBgActor_c.h does not declare it.
  * - OnHitByMegaChar: `Vector3 poofPosCopy = poofPos` is ldm/stm and shrinks
  *   the function 0x9c to 0x94. The three field stores are the ROM copies.
- * - OnHitByMegaChar: Particle::System::NewSimple as Fix12<int> by value
- *   grows it 0x9c to 0xc0. include/Particle__System.h has no NewSimple.
- *   Scalar ints match r0 = id, r1/r2/r3 = x/y/z.
  * - OnHitByMegaChar: Sound::Play(3, 0x1e, &mCamSpacePosX) grows it 0x9c to
  *   0xa0 and the reloc is _ZN5Sound4PlayEjjRK7Vector3, not func_02012694.
  *   func_02012694 is the bank-3 veneer the ROM calls.
- * - The seven func_ov091_* names stay. They are defined in
- *   src/game/actors/d_a_dsn_base.cpp and daDkk_c calls the same symbols. Four
- *   are daDsnBase_c methods now. Three stay C-linkage.
+ * - The seven cycle helpers (StateRise .. StateRecover, UpdateDropShadow,
+ *   WakeNearYoshiEgg) are daDsnBase_c members defined in
+ *   src/game/actors/d_a_dsn_base.cpp; daDkk_c calls the same ones.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -46,6 +43,7 @@ enum daDsn_c_AssetId {
 #include "daDsn_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
 
 /* The three resource handles as the ROM lays them out: {id, loaded file}.
  * The model handle constructs through func_02017acc and destroys through
@@ -54,31 +52,23 @@ enum daDsn_c_AssetId {
  * SharedFilePtr_Construct_TexSeq / SharedFilePtr_Destruct_TexSeq. The
  * manifest aliases each undefined member onto its ROM symbol. */
 struct DsnModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     DsnModelFilePtr(u32 fileID);
     ~DsnModelFilePtr();
 };
 
 struct DsnCollisionFileHandle : SharedFilePtr {
-    u32 words[2];
-
     DsnCollisionFileHandle(u32 fileID);
     ~DsnCollisionFileHandle();
 };
 
 struct DsnTextureSeqFileHandle : SharedFilePtr {
-    u32 words[2];
-
     DsnTextureSeqFileHandle(u32 fileID);
     ~DsnTextureSeqFileHandle();
 };
 
-extern "C" {
 extern DsnModelFilePtr gDosuneModelFile;
 extern DsnCollisionFileHandle gDosuneCollisionFile;
 extern DsnTextureSeqFileHandle gDosuneTextureSequenceFile;
-}
 
 /* data_ov091_02135138 is the six-word table daDsnBase_c::Init reads out of
    the pointer this leaf stores:
@@ -86,21 +76,11 @@ extern DsnTextureSeqFileHandle gDosuneTextureSequenceFile;
      +0x04 SharedFilePtr * KCL      +0x10 shadow extent X
      +0x08 CLPS block (not a file)  +0x14 shadow extent Z
    It is declared int [] as include/decl_common.h has it. The symbol stays
-   the overlay's; this TU does not own the bytes.
-
-   func_ov091_02132ff4, func_ov091_02132e98 and func_ov091_02132e64 stay
-   C-linkage with a char * parameter. func_ov091_02133098,
-   func_ov091_02133020, func_ov091_02132f04 and func_ov091_02132dc0 are
-   daDsnBase_c methods. */
-extern "C" {
+   the overlay's; this TU does not own the bytes. */
 extern int data_ov091_02135138[];
-void func_ov091_02132ff4(char *self); /* hover */
-void func_ov091_02132e98(char *self); /* rest */
-void func_ov091_02132e64(char *self); /* recover */
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-void func_02012694(unsigned int id, const Vector3 *pos);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int radius, int yOffset);
-}
+
+/* The bank-3 sound veneer (src/engine/sound/Sound.cpp); no shared header. */
+extern "C" void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* -------------------------------------------------------------------------- */
 
@@ -112,10 +92,9 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int radius, int yOff
  *
  * The whole body falls out of the one `new`: operator new(932 == 0x3a4),
  * dBgActor_c::C2, the mid-construction daDsnBase_c vptr,
- * TextureSequence@0x324, dExtShadowModel_c@0x338 and this class's vptr are the
+ * dExtAnmTexPat_c@0x324, dExtShadowModel_c@0x338 and this class's vptr are the
  * implicit constructor, inlined. */
-extern "C" daDsn_c *daDsn_c_classInit()
-{
+extern "C" daDsn_c *daDsn_c_classInit() {
     return new daDsn_c();
 }
 
@@ -123,8 +102,7 @@ extern "C" daDsn_c *daDsn_c_classInit()
 /* Vtable slot 0. Stores this leaf's file table and starts the cycle at rest.
    data_ov091_02135138 is the table daDsnBase_c::Init reads: model, KCL,
    CLPS, BTP, then the two shadow extents. Overlay .data owns the bytes. */
-int daDsn_c::InitResources()
-{
+int daDsn_c::InitResources() {
     mFileTable = (int)data_ov091_02135138;
     int result = Init();
     mState = 0;
@@ -143,10 +121,9 @@ int daDsn_c::InitResources()
  *   2  play the wind-up; a fresh trigger slams immediately
  *   3  rest, and if it ends while still triggered, stretch the timer
  *   4  recover, same stretch
- * The seven calls are daDsnBase_c's helpers, in that order of the cycle
- * plus the shadow update and the egg-proximity wake. */
-int daDsn_c::Behavior()
-{
+ * The calls are daDsnBase_c's cycle states plus the shadow update and the
+ * egg-proximity wake. */
+int daDsn_c::Behavior() {
     if (mState < 2) {
         if (mTriggered != 0)
             mState = 2;
@@ -165,31 +142,31 @@ int daDsn_c::Behavior()
             if (mHoldTimer != 0)
                 mHoldTimer--;
             else
-                func_ov091_02133020(); /* rise */
+                StateRise();
         }
         break;
     }
     case 1:
-        func_ov091_02132ff4((char *)this); /* hover */
+        StateHover();
         break;
     case 2:
         if (mTriggered != 0) {
             mTextureSequence.currFrame = 0;
-            func_ov091_02132f04(); /* slam */
+            StateSlam();
         } else {
             mTextureSequence.Advance();
             if (mTextureSequence.Finished() != 0) {
                 if (mHoldTimer != 0)
                     mHoldTimer--;
                 else
-                    func_ov091_02132f04(); /* slam */
+                    StateSlam();
             } else {
                 mHoldTimer = 5;
             }
         }
         break;
     case 3:
-        func_ov091_02132e98((char *)this); /* rest */
+        StateRest();
         if (mState == 4) {
             if (mTriggered != 0) {
                 mRetrigger = 0x5a;
@@ -202,13 +179,12 @@ int daDsn_c::Behavior()
             mTriggered = 0;
             mRetrigger = 0x5a;
         }
-        func_ov091_02132e64((char *)this); /* recover */
+        StateRecover();
         break;
     }
     UpdateModelPosAndRotY();
-    func_ov091_02133098(); /* drop shadow */
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0 ||
-        func_ov091_02132dc0() != 0) /* Yoshi egg within mClipRadius */
+    UpdateDropShadow();
+    if (IsClsnInRange(0, 0) != 0 || WakeNearYoshiEgg() != 0)
         UpdateClsnPosAndRot();
     return 1;
 }
@@ -218,15 +194,14 @@ int daDsn_c::Behavior()
    actor position plus OnAimedAtWithEgg's height (real virtual call),
    poof, remove, and play bank-3 sound 0x1e at the camera-space position.
    func_02012694 is that veneer (src/engine/sound/Sound.cpp -> Sound::Play). */
-void daDsn_c::OnHitByMegaChar(Player &player)
-{
+void daDsn_c::OnHitByMegaChar(Player &player) {
     player.IncMegaKillCount();
     Vector3 poofPos;
     poofPos.x = mPosX;
     poofPos.y = mPosY;
     poofPos.z = mPosZ;
     poofPos.y += OnAimedAtWithEgg();
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x48, poofPos.x, poofPos.y, poofPos.z);
+    Particle::System::NewSimple(0x48, poofPos.x, poofPos.y, poofPos.z);
     Vector3 poofPosCopy;
     poofPosCopy.x = poofPos.x;
     poofPosCopy.y = poofPos.y;
@@ -238,8 +213,7 @@ void daDsn_c::OnHitByMegaChar(Player &player)
 
 // @symbol _ZN7daDsn_c16OnAimedAtWithEggEv
 /* Vtable slot 29. Constant aim height, 206.0 in 20.12. */
-int daDsn_c::OnAimedAtWithEgg()
-{
+int daDsn_c::OnAimedAtWithEgg() {
     return 0xce000;
 }
 

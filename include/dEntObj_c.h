@@ -1,6 +1,6 @@
 /* The multiplayer entry scene object. Its two ROM destructor variants reveal
- * the complete ownership chain: dBase_c, Particle::SysTracker, Model,
- * ModelAnim, and four 0x158-byte player records. The record constructor and
+ * the complete ownership chain: dBase_c, Particle::SysTracker, dExtSimpleModel_c,
+ * dExtAnmModel_c, and four 0x158-byte player records. The record constructor and
  * destructor were previously anonymous address symbols; their four member
  * constructor/destructor calls prove the typed prefix below, while the array
  * stride proves its trailing extent.
@@ -17,11 +17,12 @@
 
 #include "dBase_c.h"
 #include "Particle__SysTracker.h"
-#include "Model.h"
-#include "ModelAnim.h"
-#include "BlendModelAnim.h"
-#include "TextureSequence.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
+#include "dExtBlendAnmModel_c.h"
+#include "dExtAnmTexPat_c.h"
 #include "dExtShadowModel_c.h"
+#include "private/ov075_entry_mesh.h"
 
 /* One figure on the entry stage. mMoveState and mAnimState index the two
  * pointer-to-member state tables in src/game/stages/d_ent_obj.cpp; the fields
@@ -49,9 +50,9 @@ struct UnknownVsPlayer {
         ANIM_FAST_GAIT
     };
 
-    BlendModelAnim mModel;            /* 0x000 */
-    ModelAnim mAnimation;             /* 0x070 */
-    TextureSequence mTextureSequence; /* 0x0d4 */
+    dExtBlendAnmModel_c mModel;       /* 0x000 */
+    dExtAnmModel_c mAnimation;        /* 0x070 */
+    dExtAnmTexPat_c mTextureSequence; /* 0x0d4 */
     dExtShadowModel_c mShadow;        /* 0x0e8 */
     s32 mMoveState;                   /* 0x110 */
     s32 mAnimState;                   /* 0x114 */
@@ -124,22 +125,21 @@ struct dEntObj_c : dBase_c {
     enum SceneState { STATE_IDLE = 0, STATE_WAIT_FOR_EXIT, STATE_RUN_OFF_STAGE };
 
     Particle::SysTracker mParticles; /* 0x050 */
-    Model mModel;                    /* 0x86c */
-    ModelAnim mModelAnim;            /* 0x8bc */
+    dExtSimpleModel_c mModel;        /* 0x86c */
+    dExtAnmModel_c mAnmModel;        /* 0x8bc */
     UnknownVsPlayer mPlayers[4];     /* 0x920 */
-    u8 unk_e80;                      /* 0xe80 */
-    u8 pad_e81[0xa7];
-    s32 mCamPosX;      /* 0xf28 */
-    s32 mCamPosY;      /* 0xf2c */
-    s32 mCamPosZ;      /* 0xf30 */
-    s32 mCamTargetX;   /* 0xf34 */
-    s32 mCamTargetY;   /* 0xf38 */
-    s32 mCamTargetZ;   /* 0xf3c */
-    u8 mAnimActive;    /* 0xf40 */
-    u8 mState;         /* 0xf41 */
-    u8 mFocusedPlayer; /* 0xf42 */
-    u8 mPlayerCount;   /* 0xf43 */
-    u8 mSuspended;     /* 0xf44 */
+    EntryMesh mMesh;                 /* 0xe80 -- the entry-menu grid mesh */
+    s32 mCamPosX;                    /* 0xf28 */
+    s32 mCamPosY;                    /* 0xf2c */
+    s32 mCamPosZ;                    /* 0xf30 */
+    s32 mCamTargetX;                 /* 0xf34 */
+    s32 mCamTargetY;                 /* 0xf38 */
+    s32 mCamTargetZ;                 /* 0xf3c */
+    u8 mAnimActive;                  /* 0xf40 */
+    u8 mState;                       /* 0xf41 */
+    u8 mFocusedPlayer;               /* 0xf42 */
+    u8 mPlayerCount;                 /* 0xf43 */
+    u8 mSuspended;                   /* 0xf44 */
 
     virtual ~dEntObj_c();
     virtual int InitResources();

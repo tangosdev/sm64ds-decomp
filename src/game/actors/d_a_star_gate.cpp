@@ -16,8 +16,6 @@
  * compiler-ordered.
  *
  * deslop
- * Leftover: dCamera_c::GoBehindPlayer / SetFlag_3 stay mangled (dCamera_c.h shifts
- *   this TU's @452 uniquifier). This TU's St_OpenClose_Init / Main.
  * Leftover: func_ov100_02144fcc / 02145014 / 02145070 / 02144f84 stay those
  *   ROM labels. 02144fcc keeps the ellipsis: St_StayClosed_Main passes
  *   (this, player); the body is 0-arg.
@@ -26,10 +24,8 @@
  * Leftover: StarGateVector3 POD for data_ov100_02148948, messagePos, tmp,
  *   vec -- Vector3's inline dtor is non-POD; a Vector3 BSS object would
  *   register in sinit.
- * Leftover: gObjStargateModelFile model handle (SharedFilePtr.h has no fields;
- *   StarGateModelFilePtr is the 8-byte wrapper). data_ov100_02148390 gate
- *   table.
- * Leftover: (Vector3 *)&unk_0a4 (dActor_c consecutive
+ * Leftover: data_ov100_02148390 gate table.
+ * Leftover: (Vector3 *)&mSpeedX (dActor_c consecutive
  *   s32s; a Vector3 member is not this class).
  * Leftover: data_0209caa0 +0x41 character byte (SaveData.mCharacter).
  *   SaveData.h shifts this TU's @432..@446 PTMF uniquifiers in symbols.txt.
@@ -43,21 +39,17 @@ enum d_a_star_gate_AssetId {
 #include "SpawnInfo.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
-#include "Model.h"
-
-struct dCamera_c;
+#include "dExtSimpleModel_c.h"
+#include "dCamera_c.h"
+#include "math/Approach.h"
 
 extern "C" {
 int func_ov100_02144fcc(...);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_02012694(int soundID, void *position, ...);
-/* local extern: including dCamera_c.h shifts this TU's @452 uniquifier; the TU binding policy refuses it */
-void _ZN9dCamera_c14GoBehindPlayerEj(dCamera_c *self, unsigned int a);
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, Vector3 *in);
 void ChangeArea(int areaID);
 int ShowArea(int areaID);
-/* local extern: including dCamera_c.h shifts this TU's @452 uniquifier; the TU binding policy refuses it */
-int _ZN9dCamera_c9SetFlag_3Ev(void *camera);
 int func_ov100_02145014(void);
 void func_ov100_02145070(int value);
 unsigned char NumStars(void);
@@ -69,7 +61,6 @@ u8 IsAreaShowing(int areaID);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
 
-int ApproachLinear(int &x, int a, int b);
 
 extern u8 data_0209f250;
 extern dCamera_c *data_0209f318;
@@ -78,8 +69,6 @@ extern int data_0209caa0[];
 extern char data_020a0ebc[];
 
 struct StarGateModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     StarGateModelFilePtr(u32 fileID);
     ~StarGateModelFilePtr();
 };
@@ -158,7 +147,7 @@ int daStarGate_c::InitResources()
 {
     param1 = (u32)param1 >> 16;
 
-    BMD_File *file = (BMD_File *)Model::LoadFile(gObjStargateModelFile);
+    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(gObjStargateModelFile);
     if (!mModel.SetFile(file, 1, 1))
         return 0;
 
@@ -190,15 +179,15 @@ int daStarGate_c::Render()
     if (IsAreaShowing((s8)mAngleX) != 0 ||
         IsAreaShowing((s8)mAngleZ) != 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.t.x = (mPosX + unk_0a4) >> 3;
+        mModel.mat4x3.t.x = (mPosX + mSpeedX) >> 3;
         mModel.mat4x3.t.y = (mPosY + mVertSpeed) >> 3;
-        mModel.mat4x3.t.z = (mPosZ + unk_0ac) >> 3;
+        mModel.mat4x3.t.z = (mPosZ + mSpeedZ) >> 3;
         mModel.Render(0);
 
         Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngleY + 0x8000));
-        mModel.mat4x3.t.x = (mPosX - unk_0a4) >> 3;
+        mModel.mat4x3.t.x = (mPosX - mSpeedX) >> 3;
         mModel.mat4x3.t.y = (mPosY - mVertSpeed) >> 3;
-        mModel.mat4x3.t.z = (mPosZ - unk_0ac) >> 3;
+        mModel.mat4x3.t.z = (mPosZ - mSpeedZ) >> 3;
         mModel.Render(0);
     }
 
@@ -384,7 +373,7 @@ bool daStarGate_c::St_OpenClose_Init(Player *)
 {
     ShowArea((s8)mAngleX);
     ShowArea((s8)mAngleZ);
-    _ZN9dCamera_c9SetFlag_3Ev((void *)data_0209f318);
+    data_0209f318->SetFlag_3();
     mTerminalVelocity = -0x8a000;
     func_02012694(0x4e, &mCamSpacePosX);
     return true;
@@ -408,7 +397,7 @@ bool daStarGate_c::St_OpenClose_Main(Player *player)
                 mTerminalVelocity = 0;
                 func_02012694(0x4f, &mCamSpacePosX, 0);
             } else if (mCloseDoorTimer == 8) {
-                _ZN9dCamera_c14GoBehindPlayerEj(data_0209f318, data_0209f250);
+                data_0209f318->GoBehindPlayer(data_0209f250);
             }
         } else if (ready != 0) {
             ChangeState(&ST_WAIT, player);
@@ -432,8 +421,7 @@ bool daStarGate_c::St_OpenClose_Main(Player *player)
     vec.x = vd;
     vec.z = gz;
     vec.y = gy;
-    Vec3_RotateYAndTranslate((Vector3 *)&unk_0a4, &data_020a0ebc,
-                             mAngleY, (Vector3 *)&vec);
+    Vec3_RotateYAndTranslate((Vector3 *)&mSpeedX, &data_020a0ebc, mAngleY, (Vector3 *)&vec);
     return true;
 }
 

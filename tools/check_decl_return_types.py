@@ -536,9 +536,9 @@ def check_plain_c(root=REPO):
                              f"{hpath}:{hline}"))
         hit = index.get(sym)
         if hit is None:
-            # Either the row is stale -- src/ui/messages/func_0201fe08.c is
-            # the body, under the recovered name LoadMessageBankForLanguage --
-            # or the function has no recovered source at all. Counted, not
+            # Either the row is stale -- the body was renamed out of the func_
+            # family and decl_common.h kept the old name -- or the function
+            # has no recovered source at all. Counted, not
             # guessed at, and split by whether the config still knows the name.
             acct["no_definition"] += 1
             if symbols:

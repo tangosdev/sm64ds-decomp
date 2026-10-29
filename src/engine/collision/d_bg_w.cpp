@@ -5,7 +5,8 @@
  * derived colliders. Their original member/free-function form is not
  * established by the address names. Definitions retain their source order.
  * ShouldPassThroughImpl keeps the int* view of CLPS and the unsigned char*
- * view of the query. data_020a0c80 is the 0x18-entry enabled-collider
+ * view of the query for the flag tests that are still free functions.
+ * data_020a0c80 (declared in dBgW.h) is the 0x18-entry enabled-collider
  * table Enable fills and dScStage_c::ResetMeshColliders clears.
  */
 /* dBgW: root of the KCL collider family. Type name 0x02099370, typeinfo
@@ -15,38 +16,37 @@
 #include "dBgW.h"
 #include "dBgW_Kc.h"
 #include "dBgCh.h"
+#include "CLPS.h"
 #include "dScStage_c.h"
 #include "dActor_c.h"
 #include "decl_common.h"
 
 extern "C" {
-
-/* The enabled-collider table: Enable puts a collider in the first free
-   entry and records the index in slotIdx. The query TUs walk it. */
-extern dBgW *data_020a0c80[];
-extern int SurfaceInfo_TestFlag0x20(int *p);
-extern int func_02037e38(unsigned int *p);
+/* local extern: no header declares the CLPS water test (CLPS.h only
+   documents it); d_bg_ch_sph_crr_query.cpp defines it with this
+   signature. */
+extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 }
 
-/* Preserve the address-based helper ABI while using the declared callback type. */
-typedef void (*BeforeClsnCallback)(dBgW *, dActor_c *, dBgPi *, Vector3 *, Vector3_16 *,
-                                   Vector3_16 *);
+/* Preserve the address-based helper ABI while using the declared callback
+   type; BeforeClsnCallback is dBgW.h's. */
+typedef void (*StoodOnCallback)(dBgW *, dActor_c *, dActor_c *);
 
 // @symbol func_020396d0
 
-/* Stores dBgW_Kc::unk_44 (+0x44), the sphere query's face-dot threshold. */
+/* Stores dBgW_Kc::depthDirMinDot (+0x44), the sphere query's face-dot threshold. */
 extern "C" void func_020396d0(int *collider, int faceDotThreshold) {
-    reinterpret_cast<dBgW_Kc *>(collider)->unk_44 = faceDotThreshold;
+    reinterpret_cast<dBgW_Kc *>(collider)->depthDirMinDot = faceDotThreshold;
 }
 
 // @symbol func_020396c0
 
-/* Stores dBgW_Kc::unk_48 (+0x48), the edge-tolerance shift, clamped at 0. */
+/* Stores dBgW_Kc::edgeToleranceShift (+0x48), clamped at 0. */
 extern "C" void func_020396c0(void *collider, int edgeToleranceShift) {
     dBgW_Kc *mesh = static_cast<dBgW_Kc *>(collider);
     if (edgeToleranceShift < 0)
         edgeToleranceShift = 0;
-    mesh->unk_48 = edgeToleranceShift;
+    mesh->edgeToleranceShift = edgeToleranceShift;
 }
 
 // @symbol _ZN4dBgWC2Ev
@@ -92,10 +92,11 @@ bool dBgCh::ShouldPassThroughImpl(void *unused, const CLPS &surfaceProperties, c
                                   bool checkType14) {
     /* Each special surface asks whether the query detects its kind, through
        dBgCh::mDetectFlags: a water surface (CLPS 0x20) needs the water bit
-       (2), CLPS bit 0x02000000 needs the toxic bit (8). A surface no rule
-       covers stops only queries that detect ordinary ground (bit 1). The
-       CLPS predicates and the checkType14 tests are C helpers taking raw word and
-       byte views. */
+       (2), CLPS bit 0x02000000 needs the toxic bit (8). Surface types 0x11
+       and 0x14 run the other way: the query passes through them when it is
+       ignoring them. A surface no rule covers stops only queries that detect
+       ordinary ground (bit 1). The CLPS predicates and the remaining flag
+       tests are C helpers taking raw word and byte views. */
     int *clpsWords = (int *)&surfaceProperties;
     unsigned char *queryBytes = (unsigned char *)&query;
     bool ruleApplies = false;
@@ -120,14 +121,14 @@ bool dBgCh::ShouldPassThroughImpl(void *unused, const CLPS &surfaceProperties, c
         if (func_0203545c(queryBytes) == 0)
             return true;
     }
-    if (func_02037e38((unsigned int *)clpsWords) == 0x11) {
+    if (surfaceProperties.GetSurfaceType() == 0x11) {
         ruleApplies = true;
-        if (func_02035408(queryBytes) != 0)
+        if (query.IsIgnoringVanishSurfaces())
             return true;
     }
-    if (checkType14 && func_02037e38((unsigned int *)clpsWords) == 0x14) {
+    if (checkType14 && surfaceProperties.GetSurfaceType() == 0x14) {
         ruleApplies = true;
-        if (func_020353d4(queryBytes) != 0)
+        if (query.IsIgnoringType14Walls())
             return true;
     }
     if (!ruleApplies && func_020354b0(queryBytes) == 0)
@@ -213,14 +214,14 @@ extern "C" int func_020393cc(int *collider) {
 /* Sets stoodOnCallback (+0x1c). */
 extern "C" void func_020393c4(int *collider, int callbackAddress) {
     reinterpret_cast<dBgW *>(collider)->stoodOnCallback =
-        (void (*)(dBgW *, dActor_c *, dActor_c *))callbackAddress;
+        reinterpret_cast<StoodOnCallback>(callbackAddress);
 }
 
 // @symbol func_020393bc
 
 /* Reads stoodOnCallback (+0x1c). */
 extern "C" int func_020393bc(int *collider) {
-    return (int)reinterpret_cast<dBgW *>(collider)->stoodOnCallback;
+    return reinterpret_cast<int>(reinterpret_cast<dBgW *>(collider)->stoodOnCallback);
 }
 
 // @symbol func_020393b4

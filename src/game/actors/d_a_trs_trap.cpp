@@ -42,9 +42,8 @@
  *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
  * - func_020393d4/func_020393c4 install the BeforeClsn/unk_1c callback words;
  *   dBgW carries no setter, and dBgW.h itself blesses this spelling.
- * - SharedFilePtr+4 is the loaded KCL file: the handle's layout is still
- *   unrecovered (SharedFilePtr.h), and the ROM re-reads the word rather than
- *   keeping dBgW_Kc::LoadFile's return.
+ * - The ROM re-reads the loaded KCL from filePtr rather than keeping
+ *   dBgW_Kc::LoadFile's return.
  * - The dispatch table is a pointer-to-member of daTrsTrap_c itself. An
  *   earlier draft bound it to an opaque forward-declared class on the theory
  *   that a polymorphic receiver changes the {ptr, adj} record shape; that is
@@ -87,6 +86,15 @@ enum d_a_trs_trap_AssetId {
 #include "dBgW.h"
 #include "Sound.h"
 
+/* daBook_c::mLinkedActorID (daBook_c.h, 0x418): the BOOK_SWITCH (0xd5)
+   looks its trap up by this ID (daBook_c's FindWithID calls). Seen through
+   a local view: including daBook_c.h renumbers this TU's @NNN labels. */
+struct BookSwitchView {
+    u8 head[0x418];
+    u32 mLinkedActorID;
+};
+typedef char BookSwitchView_size_must_be_0x41c[sizeof(BookSwitchView) == 0x41c ? 1 : -1];
+
 #pragma defer_codegen off
 
 /* The per-trap resource rows, indexed by mIndex: the model handle, the
@@ -107,15 +115,11 @@ extern PMF data_ov063_0211ef38[];
  * collision files func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct TrsTrapModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     TrsTrapModelFilePtr(u32 fileID);
     ~TrsTrapModelFilePtr();
 };
 
 struct TrsTrapCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     TrsTrapCollisionFilePtr(u32 fileID);
     ~TrsTrapCollisionFilePtr();
 };
@@ -129,14 +133,12 @@ extern "C" {
 void func_ov063_0211c684(char *p);
 void func_ov063_0211c6f8(daTrsTrap_c *c);
 void func_ov063_0211c82c(char *p);
-void func_ov063_0211d28c(dBgW *clsn, daTrsTrap_c *self, dActor_c *actor);
 /* dBgW callback-word stores (see above). */
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
+extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
 
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
 /* Staircase settle offsets, one signed byte per frame 0..3. */
@@ -150,7 +152,6 @@ void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 u8 IsAreaShowing(int idx);
-unsigned int func_02012790(unsigned int);
 }
 
 /* InitResources tests the profile's actor id as a 0/1 value. */
@@ -524,8 +525,8 @@ int daTrsTrap_c::InitResources()
     mSoundTimer = 0;
 
     dBgW_Kc::LoadFile(*data_ov063_0211e28c[mIndex]);
-    if (mModel.SetFile((BMD_File *)Model::LoadFile(
-            *data_ov063_0211e27c[mIndex]), 1, -1) == 0)
+    if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov063_0211e27c[mIndex]), 1,
+                       -1) == 0)
         return 0;
 
     func_ov063_0211c6f8(this);
@@ -533,18 +534,18 @@ int daTrsTrap_c::InitResources()
     {
         int m = mIndex;
         if (m == 3) {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                &mMovingMeshCollider, *(void **)((char *)data_ov063_0211e28c[m] + 4), &mClsnMat,
-                0x1000, mAngleY, data_ov063_0211e9e8[m]);
+            ((dBgW_KcMbg *)(&mMovingMeshCollider))
+                ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), *(&mClsnMat),
+                                      0x1000, mAngleY, *(CLPS_Block *)(data_ov063_0211e9e8[m]));
         } else {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                &mMovingMeshCollider, *(void **)((char *)data_ov063_0211e28c[m] + 4), &mClsnMat,
-                0x199, mAngleY, data_ov063_0211e9e8[m]);
+            ((dBgW_KcMbg *)(&mMovingMeshCollider))
+                ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), *(&mClsnMat),
+                                      0x199, mAngleY, *(CLPS_Block *)(data_ov063_0211e9e8[m]));
         }
     }
 
     func_020393d4((int *)&mMovingMeshCollider, (int)&dBgW::UpdatePosAndAngs);
-    func_020393c4((int *)&mMovingMeshCollider, (int)&func_ov063_0211d28c);
+    func_020393c4((int *)&mMovingMeshCollider, (int)&daTrsTrap_c::OnMeshClsnTouch);
     mMovingMeshCollider.Enable(this);
 
     if (mIndex == 2) {
@@ -566,7 +567,7 @@ int daTrsTrap_c::InitResources()
             base.y = mHomePosY + data_ov063_0211e9f8[odd];
             base.z = mHomePosZ - 0xb4000;
             sp = dActor_c::Spawn(actorId, j, base, &v16, mAreaId, neg1);
-            *(s32 *)((char *)sp + 0x418) = uniqueID;
+            ((BookSwitchView *)sp)->mLinkedActorID = uniqueID;
             even += 2; odd += 2;
         }
         mSavedAreaId = mAreaId;

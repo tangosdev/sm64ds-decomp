@@ -2,7 +2,7 @@
 //
 // Header offsets are from include/BMD_File.h in the decomp, which pins them from
 // matched code. The display-list table is the numDisplayListGroups /
-// displayListGroups chain that Model::UpdateFileOffsets walks:
+// displayListGroups chain that dExtSimpleModel_c::UpdateFileOffsets walks:
 //
 //     displayListGroups -> numDisplayListGroups BMD_DisplayListGroup records
 //               lists    -> numLists BMD_DisplayList records of 0x10 bytes

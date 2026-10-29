@@ -15,7 +15,7 @@ int func_ov007_020c30ac(struct Vector3 *arr, int count, struct Vector3 *target, 
     for (i = 0; i < count; i++) {
         SubVec3(arr, target, &diff);
         d2 = (long long)diff.x * diff.x + (long long)diff.y * diff.y + (long long)diff.z * diff.z;
-        arr = (struct Vector3 *)((char *)arr + 0xc);
+        arr++;
         if (d2 < best) {
             bestIdx = i;
             best = d2;

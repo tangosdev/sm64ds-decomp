@@ -20,6 +20,7 @@ would change anything, which is what catches a rule that eats its own result.
 WHAT IT REWRITES
 ----------------
 1. mangled names   -- only inside a `_Z...` token, `<len><Old>` -> `<newlen><New>`
+                      (never when a digit precedes `<len>`: `15ModelComponents`)
 2. the class name  -- word-bounded `\\bOld\\b`
 3. derived C symbols -- `\\bOld_` (e.g. `CannonHatch_Spawn`, `..._SpawnInfo`),
                       only with --with-derived, because those names are coined at
@@ -88,11 +89,20 @@ def rules(old, new, with_derived):
     out = []
 
     old_tag, new_tag = f"{len(old)}{old}", f"{len(new)}{new}"
+    # A `<len>` is a whole digit run, so `5Model` preceded by a digit is not a
+    # token: it is the tail of `15ModelComponents` or of `12WcObj05Model`, and
+    # rewriting it corrupts a different class. A letter or `_` before the run is
+    # a real boundary (`_ZN5Model4DrawEv`: `4Draw` follows the `l`), so only a
+    # digit is refused. Known miss: a source name that itself ends in a digit,
+    # directly followed by this class (`_Z4Set25Model`), is left alone -- a
+    # missed rewrite leaves the old spelling in the tree for review, where a
+    # wrong one invents a plausible symbol that nothing checks.
+    old_tag_re = re.compile(rf"(?<![0-9]){re.escape(old_tag)}")
 
     def mangled(text):
         # Confined to `_Z...` tokens so a plain identifier that happens to spell
         # `11CannonHatch` in prose is never touched.
-        return MANGLED_TOKEN.sub(lambda m: m.group(0).replace(old_tag, new_tag), text)
+        return MANGLED_TOKEN.sub(lambda m: old_tag_re.sub(new_tag, m.group(0)), text)
 
     out.append(("mangled", mangled))
     out.append(("class-name", lambda t: re.sub(rf"\b{re.escape(old)}\b", new, t)))

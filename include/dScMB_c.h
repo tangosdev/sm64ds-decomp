@@ -24,7 +24,7 @@
  * own table holds there.
  *
  * CONSTRUCTION. A real Spawn-style factory, dScMB_c_classInit: it opens with
- * `_ZN7fBase_cnwEj(0x68)`, i.e. fBase_c::operator new(0x68). SIZE 0x68 is
+ * `_ZN7fBase_cnwEm(0x68)`, i.e. fBase_c::operator new(0x68). SIZE 0x68 is
  * read directly off the allocator call.
  *
  * The same constructor writes the vtable chain fBase_c -> (dBase_c/dScene_c
@@ -99,6 +99,10 @@ public:
                                 single unrotated sprite and count down */
     u8 mEnabled;    /* 0x0d -- nothing draws while 0 */
     u8 mAdvancing;  /* 0x0e -- gates the spin advance */
+
+    /* Clears only the owner; InitResources fills in the rest through
+       func_02034b1c. The global's static initializer runs this. */
+    graphCallback_c() : mOwner(0) {}
 
     virtual int GraphCallback0(); /* slot 0 */
     virtual int GraphCallback2(); /* slot 2 */

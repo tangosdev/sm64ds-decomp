@@ -31,8 +31,7 @@
 struct dScMgTeresa_c : dScMgBase_c {
     /* One of the 16 small Boos (0x24 bytes; the big Boo is a separate
        record at 0x4bcc). Meanings come from DrawBoos,
-       SpawnBoos, AnimateBoo and the Boo_State handlers; unk_ bytes are
-       written but not yet understood. */
+       SpawnBoos, AnimateBoo and the Boo_State handlers. */
     struct SmallBoo {
         s32 mX;          /* 0x00 -- 20.12 screen x */
         s32 mY;          /* 0x04 -- 20.12 screen y */
@@ -40,12 +39,16 @@ struct dScMgTeresa_c : dScMgBase_c {
         u16 mHeading;    /* 0x0c -- angle; the sine table's sign picks mAnim */
         u16 mTimer;      /* 0x0e */
         u16 mAnimTimer;  /* 0x10 -- counts to 0xf, then advances mFrame */
-        u16 unk_12;      /* 0x12 */
+        u16 mTurnTimer;  /* 0x12 -- Boo_StateFadeIn sets 0x80 on entering FadeAway (7);
+                            FadeAway counts it down, then reverses mHeading and
+                            sets mFrame to 6, which stops the 3..5 frame cycle */
         u16 mDelay;      /* 0x14 */
         u8  mFade;       /* 0x16 -- nonzero draws semi-transparent */
         u8  mInPlay;     /* 0x17 */
         u8  mState;      /* 0x18 */
-        u8  unk_19;      /* 0x19 */
+        u8 mSettled;     /* 0x19 -- AreBoosSettled sets it as it moves a hidden Boo
+                            to FadeIn; Appear and SpawnBoos clear it. Not read
+                            in this TU */
         u8  mVisible;    /* 0x1a */
         u8  mPriority;   /* 0x1b -- OAM priority */
         u8  mFound;      /* 0x1c -- set when a touch test finds this Boo */
@@ -121,6 +124,27 @@ struct dScMgTeresa_c : dScMgBase_c {
         u8  active;      /* 0x08 */
         u8  visible;     /* 0x09 */
         u8  pad0a[0x2];
+    };
+
+    /* The big Boo that crosses the room before each round and shows the
+       result after it (BigBoo_*). The flight functions take an index and
+       step one record. x/y are the sprite's screen position (20.12). yVel is
+       added into y and then pulled down until y sits at 192. frameTimer
+       counts up and the sprite frame steps when it trips. */
+    struct BigBoo {
+        s32 x;          /* 0x00 -- 20.12 */
+        s32 y;          /* 0x04 -- 20.12 */
+        s32 xVel;       /* 0x08 */
+        s32 yVel;       /* 0x0c */
+        u16 frameTimer; /* 0x10 */
+        u16 wait;       /* 0x12 */
+        u8 active;      /* 0x14 -- the state machine runs only while set */
+        u8 state;       /* 0x15 -- which flight function runs */
+        u8 shown;       /* 0x16 -- BigBoo_Draw returns at once when clear */
+        u8 frame;       /* 0x17 -- sprite; moveRight adds 4 */
+        u8 moveRight;   /* 0x18 -- the +x flight and the flipped sprite row */
+        u8 done;        /* 0x19 -- sends the Boo out instead of turning it around */
+        u8 pad1a[2];
     };
 
     virtual ~dScMgTeresa_c();
@@ -214,13 +238,46 @@ struct dScMgTeresa_c : dScMgBase_c {
        step it by 0x20, and the dispatcher passes 0. [inference from codegen] */
     Reveal     mReveal[1];       /* 0x4ba0 */
     Marker     mMarker;          /* 0x4bc0 */
-    /* The big Boo, 0x1c bytes; d_s_mg_teresa.cpp's `struct Boo` (BOO()) is
-       its typed view. */
-    u8  pad_4bcc[0x1c];
+    /* A one-element array: the BigBoo_State handlers take an index and
+       dispatch on mBigBoo[i].state, and BigBoo_Update passes 0. */
+    BigBoo mBigBoo[1]; /* 0x4bcc */
     s32 mSceneState; /* 0x4be8 -- state index for Behavior's pmf dispatch */
-    u8  pad_4bec[0x2a];
-    s16 unk_4c16;            /* 0x4c16 */
-    u8  pad_4c18[0x9];
+    /* The stylus point ReadRubTouch reads each frame while mRubTouching. */
+    s32 mRubX; /* 0x4bec */
+    s32 mRubY; /* 0x4bf0 */
+    /* Last frame's point: seeded from mRubX/Y on the press; UpdateRubbing draws
+       the rub line from it to mRubX/Y, then copies mRubX/Y in. */
+    s32 mRubPrevX; /* 0x4bf4 */
+    s32 mRubPrevY; /* 0x4bf8 */
+    u8 pad_4bfc[0xc];
+    s32 mRubSound; /* 0x4c08 -- the rub sound's handle; func_02012468 takes it back */
+    /* Scene_StateRoundEnd's and Scene_StateResult's delay: CheckRoundEnd and
+       Scene_StateRoundEnd load 0x60 on entering scene states 3 and 4, and each
+       state counts it down before it moves on. */
+    u16 mSceneTimer; /* 0x4c0c */
+    /* Loaded with 0x60 once the found numbers spawn; Scene_StateRoundEnd calls
+       StepBg3Scroll each frame while it counts down. */
+    u16 mBg3FlashTimer; /* 0x4c0e */
+    u8 pad_4c10[0x4];
+    /* The countdown's seconds: StartCountdown loads 3 (2 from level 15),
+       UpdateCountdown takes one off every 0x3c frames, DrawCountdown draws it,
+       and CheckRoundEnd ends the round when it reaches 0. */
+    u16 mTimeLeft;       /* 0x4c14 */
+    u16 mBannerTimer;    /* 0x4c16 -- 0x20 when banner 0xd is shown; Scene_StatePlay counts it
+                         down, then frees the banner and enables the prompt */
+    u16 mBg3FlashTick;   /* 0x4c18 -- StepBg3Scroll's frames into the current flash step */
+    u8 mCountdownFrames; /* 0x4c1a -- UpdateCountdown's frame count toward the next second */
+    u8 mCountdownShown;  /* 0x4c1b -- DrawCountdown draws only while set; StartCountdown sets it,
+                            BigBoo_ShowResult clears it, as does Scene_StateResult on a new record */
+    u8 mCountdownRunning; /* 0x4c1c -- set once by StartCountdown; UpdateCountdown runs only while set */
+    u8 mRubTouching; /* 0x4c1d -- set on the stylus press, cleared on release */
+    u8 pad_4c1e[0x1];
+    /* 1 when CheckRoundEnd finds every Boo, 0 when time runs out: picks the
+       round-clear or game-over result and the big Boo's result frames. */
+    u8 mRoundCleared; /* 0x4c1f */
+    /* Set by CheckRevealDone once no active Boo is still in reveal stage 0..2;
+       StartCountdown, UpdateRubbing and CheckRoundEnd wait on it. */
+    u8 mRevealDone;          /* 0x4c20 */
     u8  mFoundCount;         /* 0x4c21 -- Boos found this round; stamped into mFoundOrder */
     u8  mLastSettledBoo;     /* 0x4c22 -- the Boo AreBoosSettled settled last */
     u8 mBooPattern;          /* 0x4c23 -- spawn pattern: mLevel, or 10..13 from level 15 */
@@ -234,6 +291,7 @@ struct dScMgTeresa_c : dScMgBase_c {
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgTeresa_c_Reveal_size_must_be_0x20[sizeof(dScMgTeresa_c::Reveal) == 0x20 ? 1 : -1];
+typedef char dScMgTeresa_c_BigBoo_size_must_be_0x1c[sizeof(dScMgTeresa_c::BigBoo) == 0x1c ? 1 : -1];
 typedef char dScMgTeresa_c_Marker_size_must_be_0xc[sizeof(dScMgTeresa_c::Marker) == 0xc ? 1 : -1];
 typedef char dScMgTeresa_c_Exclaim_size_must_be_0xc[sizeof(dScMgTeresa_c::Exclaim) == 0xc ? 1 : -1];
 typedef char

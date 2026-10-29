@@ -23,12 +23,12 @@ struct Player;
  * aliases: IceBlock (the class), IceBlock_Spawn.
  */
 struct daObjIceBlock_c : dBgActor_c {
-    dCcAc_c mCollider;            /* 0x320 -- the cylinder fire and explosions hit */
-    u8  mMeltTimer;               /* 0x354 -- 0x1e on a fire hit; counts the melt down to destruction */
-    s32 mScale;                   /* 0x358 -- 1.0 until melting, then mMeltTimer / 30 */
-    u32 mParticleHandle1;         /* 0x35c -- recycled Particle::System handle, effect 0x77 */
-    u32 mParticleHandle2;         /* 0x360 -- the same, effect 0x78 */
-    dActor_c *mContainedActor;    /* 0x364 -- the actor frozen inside (actor 0xb2), or null */
+    dCcAc_c mCollider;    /* 0x320 -- the cylinder fire and explosions hit */
+    u8 mMeltTimer;        /* 0x354 -- 0x1e on a fire hit; counts the melt down to destruction */
+    s32 mScale;           /* 0x358 -- 1.0 until melting, then mMeltTimer / 30 */
+    u32 mParticleHandle1; /* 0x35c -- recycled Particle::System handle, effect 0x77 */
+    u32 mParticleHandle2; /* 0x360 -- the same, effect 0x78 */
+    dActor_c *mContainedActor; /* 0x364 -- the actor frozen inside (actor 0xb2), or null */
 
     /* Inline is load-bearing: out-of-line emits D0 before D1. */
     virtual ~daObjIceBlock_c() {}
@@ -37,14 +37,15 @@ struct daObjIceBlock_c : dBgActor_c {
     virtual s32 CleanupResources();
     virtual s32 Behavior();
     virtual s32 Render();
-    virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
-    virtual void Kill();                            /* slot 31 */
+    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual void Kill();                          /* slot 31 */
+
+    void ReleaseStar();
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjIceBlock_c_size_must_be_0x368[
-    sizeof(daObjIceBlock_c) == 0x368 ? 1 : -1];
+typedef char daObjIceBlock_c_size_must_be_0x368[sizeof(daObjIceBlock_c) == 0x368 ? 1 : -1];
 #endif
 
 #endif /* DAOBJICEBLOCK_C_H */

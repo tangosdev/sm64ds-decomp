@@ -1,8 +1,24 @@
     .text       start:0x01ff8000 end:0x01ffdf3c kind:code align:32
     .bss        start:0x01ffdf40 end:0x01ffdf40 kind:bss align:32
+src/_dadd.c:
+    complete
+    .text start:0x01ff8000 end:0x01ff859c
+
 src/unnamed/arm9/01ff/func_01ff859c.c:
     complete
     .text start:0x01ff859c end:0x01ff8708
+
+src/_dmul.c:
+    complete
+    .text start:0x01ff8708 end:0x01ff8e10
+
+src/unnamed/arm9/01ff/func_01ff8e10.c:
+    complete
+    .text start:0x01ff8e10 end:0x01ff9378
+
+src/unnamed/arm9/01ff/func_01ff9378.c:
+    complete
+    .text start:0x01ff9378 end:0x01ff97d8
 
 src/unnamed/arm9/01ff/func_01ff97d8.c:
     complete
@@ -12,9 +28,37 @@ src/unnamed/arm9/01ff/func_01ffa344.c:
     complete
     .text start:0x01ffa344 end:0x01ffa440
 
+src/unnamed/arm9/01ff/func_01ffa440.c:
+    complete
+    .text start:0x01ffa440 end:0x01ffa4bc
+
 src/unnamed/arm9/01ff/func_01ffa4bc.c:
     complete
-    .text start:0x01ffa4bc end:0x01ffa588
+    .text start:0x01ffa4bc end:0x01ffa594
+
+src/unnamed/arm9/01ff/func_01ffa594.c:
+    complete
+    .text start:0x01ffa594 end:0x01ffa9dc
+
+src/_ll_udiv.c:
+    complete
+    .text start:0x01ffa9dc end:0x01ffa9e8
+
+src/_ull_mod.c:
+    complete
+    .text start:0x01ffa9e8 end:0x01ffaa34
+
+src/_ll_sdiv.c:
+    complete
+    .text start:0x01ffaa34 end:0x01ffabe4
+
+src/_s32_div_f.c:
+    complete
+    .text start:0x01ffabe4 end:0x01ffadf0
+
+src/_u32_div_f.c:
+    complete
+    .text start:0x01ffadf0 end:0x01ffafd4
 
 src/unnamed/arm9/01ff/func_01ffafd4.c:
     complete
@@ -44,19 +88,14 @@ src/OSReadROMArea.c:
     complete
     .text start:0x01ffdbd8 end:0x01ffdd08
 
-src/unnamed/arm9/01ff/func_01ffdd08.c:
+src/unnamed/arm9/01ff/func_01ffdd08.cpp:
     complete
-    .text start:0x01ffdd08 end:0x01ffdd98
-
-src/unnamed/arm9/01ff/func_01ffdd98.c:
-    complete
-    .text start:0x01ffdd98 end:0x01ffde00
-
-src/DMAStartTransferFB.c:
+    .text start:0x01ffdd08 end:0x01ffde00
+src/DMAStartTransferFB.cpp:
     complete
     .text start:0x01ffde00 end:0x01ffde50
 
-src/DMAStartTransfer.c:
+src/DMAStartTransfer.cpp:
     complete
     .text start:0x01ffde50 end:0x01ffde98
 

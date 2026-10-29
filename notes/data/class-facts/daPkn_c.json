@@ -109,7 +109,7 @@
     "D2": null,
     "D2_evidence": "No D2 exists. Three independent checks. (1) A case-sensitive grep for both `daPkn_c` and `PiranhaPlant` across all 106 config/**/symbols.txt files returns 23 rows and none is a D2, C1 or C2. (2) Every one of the 24 functions in the class's .text run is accounted for -- 8 by a vtable slot, 9 by a pointer-to-member record, 6 by an intra-overlay BL, 1 by the profile descriptor -- so no unnamed function is available to be a D2. (3) Nothing derives from daPkn_c (0 edges in build/rtti.json), so no derived class could need one.",
     "shape": "D0 is NOT a thunk that calls D1. It is a full inline duplicate of D1's body -- same vptr store, same six member destructor calls in the same order, same dEnemyBase_c::~dEnemyBase_c call -- followed by Memory::Deallocate. Both are 0x58/0x6c bytes of real code.",
-    "order": "Both store the vptr (0x02130c28) into [this] first, then destroy members in REVERSE declaration order: +0x3e8 dCcAcPos_c::~dCcAcPos_c, +0x3b4 dCcAc_c::~dCcAc_c, +0x380 dCcAc_c::~dCcAc_c, +0x1c4 dBgCh_Actr::~dBgCh_Actr, +0x174 Model::~Model, +0x110 ModelAnim::~ModelAnim, then _ZN12dEnemyBase_cD2Ev (ov002:0x020aed18) on this.",
+    "order": "Both store the vptr (0x02130c28) into [this] first, then destroy members in REVERSE declaration order: +0x3e8 dCcAcPos_c::~dCcAcPos_c, +0x3b4 dCcAc_c::~dCcAc_c, +0x380 dCcAc_c::~dCcAc_c, +0x1c4 dBgCh_Actr::~dBgCh_Actr, +0x174 dExtSimpleModel_c::~dExtSimpleModel_c, +0x110 dExtAnmModel_c::~dExtAnmModel_c, then _ZN12dEnemyBase_cD2Ev (ov002:0x020aed18) on this.",
     "D0_delete": "D0 tail: `ldr r1,[0x020a0eac]; ldr r1,[r1]` then bl 0x0203c1e8 = _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE, with the heap taken from arm9's GAME_HEAP_PTR (data_020a0eac)."
   },
 
@@ -123,8 +123,8 @@
     "no_out_of_line_constructor": "There is no _ZN12PiranhaPlantC1Ev / C2Ev anywhere in any symbols.txt. The whole of construction is inlined into the factory: operator new, dEnemyBase_c::dEnemyBase_c (the C2 base variant, ov002:0x020aed98), the vptr store, then the six member constructors.",
     "vptr_store": "`str r1,[r4]` with r1 = the literal 0x02130c28, i.e. the vtable address point written directly with no +8 adjustment.",
     "member_ctors_in_order": [
-      {"offset": "0x110", "call": "0x02016958", "symbol": "_ZN9ModelAnimC1Ev"},
-      {"offset": "0x174", "call": "0x02016d58", "symbol": "_ZN5ModelC1Ev"},
+      {"offset": "0x110", "call": "0x02016958", "symbol": "_ZN14dExtAnmModel_cC1Ev"},
+      {"offset": "0x174", "call": "0x02016d58", "symbol": "_ZN17dExtSimpleModel_cC1Ev"},
       {"offset": "0x1c4", "call": "0x02037430", "symbol": "_ZN10dBgCh_ActrC1Ev"},
       {"offset": "0x380", "call": "0x020149c8", "symbol": "_ZN7dCcAc_cC1Ev"},
       {"offset": "0x3b4", "call": "0x020149c8", "symbol": "_ZN7dCcAc_cC1Ev"},
@@ -231,7 +231,7 @@
 
   "non_virtual": [
     {"address": "0x0212ebb4", "size": "0x50",  "kind": "helper",  "callers": ["9x from 0x0212f6d8 (state 2)", "8x from 0x0212ef00"], "note": "sets mState = 5 and starts an animation from data_ov084_02130e24.w[1]"},
-    {"address": "0x0212ec04", "size": "0x54",  "kind": "helper",  "callers": ["1x from func_ov084_0212dc30 at 0x0212dd5c -- INSIDE ov084 but in the daFPkn_c run"], "note": "sets mState = 2, calls ModelAnim::SetAnim on this+0x110, writes this+0x168. The caller spawns a PAKUN by profile id 0xfa via dActor_c::Spawn and passes the returned actor as `this`, so this is a daPkn_c entry point called by FirePiranhaPlantBig code."},
+    {"address": "0x0212ec04", "size": "0x54",  "kind": "helper",  "callers": ["1x from func_ov084_0212dc30 at 0x0212dd5c -- INSIDE ov084 but in the daFPkn_c run"], "note": "sets mState = 2, calls dExtAnmModel_c::SetAnim on this+0x110, writes this+0x168. The caller spawns a PAKUN by profile id 0xfa via dActor_c::Spawn and passes the returned actor as `this`, so this is a daPkn_c entry point called by FirePiranhaPlantBig code."},
     {"address": "0x0212ec60", "size": "0x2a0", "kind": "helper",  "callers": ["1x from _ZN12PiranhaPlant8BehaviorEv"]},
     {"address": "0x0212ef00", "size": "0x2d0", "kind": "helper",  "callers": ["1x from 0x0212f630 (state 3)", "1x from 0x0212fa7c (state 1)", "1x from 0x0212fc10 (state 0)"]},
     {"address": "0x0212f1d0", "size": "0x34",  "kind": "helper",  "callers": ["1x from 0x0212f588 (state 4)", "1x from 0x0212fa7c (state 1)"], "note": "reads a pointer from this+0x460 and tests two fields on it"},
@@ -285,8 +285,8 @@
 
   "fields": [
     {"offset": "0x000", "type": "dEnemyBase_c", "name": "(base subobject)", "evidence": "_ZTI7daPkn_c +8 names dEnemyBase_c; daPkn_c_classInit calls _ZN12dEnemyBase_cC2Ev on this; D1/D0 call _ZN12dEnemyBase_cD2Ev on this. Size 0x110, from the first member's offset."},
-    {"offset": "0x110", "type": "ModelAnim",  "name": "mModelAnim",  "evidence": "ctor _ZN9ModelAnimC1Ev at +0x110 in the factory, dtor _ZN9ModelAnimD1Ev at +0x110 in D1 and D0"},
-    {"offset": "0x174", "type": "Model",      "name": "mModel",      "evidence": "ctor _ZN5ModelC1Ev / dtor _ZN5ModelD1Ev at +0x174"},
+    {"offset": "0x110", "type": "dExtAnmModel_c",  "name": "mModelAnim",  "evidence": "ctor _ZN14dExtAnmModel_cC1Ev at +0x110 in the factory, dtor _ZN14dExtAnmModel_cD1Ev at +0x110 in D1 and D0"},
+    {"offset": "0x174", "type": "dExtSimpleModel_c",      "name": "mModel",      "evidence": "ctor _ZN17dExtSimpleModel_cC1Ev / dtor _ZN17dExtSimpleModel_cD1Ev at +0x174"},
     {"offset": "0x1c4", "type": "dBgCh_Actr", "name": "mWithMeshClsn","evidence": "ctor _ZN10dBgCh_ActrC1Ev / dtor _ZN10dBgCh_ActrD1Ev at +0x1c4"},
     {"offset": "0x380", "type": "dCcAc_c",    "name": "mdCcAc_c1",   "evidence": "ctor _ZN7dCcAc_cC1Ev / dtor _ZN7dCcAc_cD1Ev at +0x380"},
     {"offset": "0x3b4", "type": "dCcAc_c",    "name": "mdCcAc_c2",   "evidence": "ctor _ZN7dCcAc_cC1Ev / dtor _ZN7dCcAc_cD1Ev at +0x3b4"},

@@ -81,3 +81,6 @@ remainder* so nobody re-opens the wall as if it were unfinished work.
 module — a number the recomp is indifferent to. The rest of arm9's remaining work is ordinary
 near-misses being closed the normal way. Codegen detail is in `notes/mwccarm-codegen.md`
 section 9.*
+
+The exceptions-on/off map of the surrounding MSL and C++ runtime code is in
+`notes/arm9-exceptix-boundaries.md`.

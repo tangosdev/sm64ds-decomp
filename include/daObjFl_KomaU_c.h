@@ -13,7 +13,7 @@
  * __cxa_vec_cleanup(this + 0x360, 8, 0x3c, _ZN8dCcPos_cD1Ev): 0x3c is
  * sizeof(dCcPos_c) and the element destructor is a name the tree
  * already had. The destructor also calls _ZN10dBgW_KcMbgD1Ev at +0x124 and
- * _ZN5ModelD1Ev at +0xd4 (the inherited mMeshCollider and mModel), D1 and not
+ * _ZN17dExtSimpleModel_cD1Ev at +0xd4 (the inherited mMeshCollider and mModel), D1 and not
  * D2, so they are members and not inlined bases.
  *
  * BASE: dBgActor_c, direct. The __si_class_type_info record _ZTI15daObjFl_KomaU_c

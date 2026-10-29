@@ -14,11 +14,11 @@
  *
  *     0x110 dCcAcPos_c  0x40    -> 0x150
  *     0x150 dBgCh_Actr               0x1bc   -> 0x30c
- *     0x30c Model                      0x50    -> 0x35c
- *     0x35c TextureTransformer         0x14    -> 0x370
+ *     0x30c dExtSimpleModel_c                      0x50    -> 0x35c
+ *     0x35c dExtAnmTexSRT_c         0x14    -> 0x370
  *
  * Typing them absorbed markers that were their insides:
- *   - unk_368 = TextureTransformer.speed
+ *   - unk_368 = dExtAnmTexSRT_c.speed
  *
  * SIZE IS THE ROM'S OWN: `daWater_Ring_c_classInit` calls
  * `fBase_c::operator new(912)` -- 0x390 -- and stores this class's
@@ -31,14 +31,14 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAcPos_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
 
 struct daWater_Ring_c : dEnemyBase_c {
     /* One state is two member-function pointers: init runs once, when
-       func_ov064_02119ecc installs the state, and execute runs every frame
+       SetState installs the state, and execute runs every frame
        from Behavior. The tables (0x0211c944, 0x0211c954, 0x10 each) are
        filled in by the overlay's static initializer. */
     struct State {
@@ -46,28 +46,28 @@ struct daWater_Ring_c : dEnemyBase_c {
         int (daWater_Ring_c::*execute)();
     };
 
-    dCcAcPos_c    mdCcAcPos_c; /* 0x110 */
-    dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
-    Model                        mModel;                /* 0x30c */
-    TextureTransformer           mTextureTransformer;   /* 0x35c */
-    const State                 *mState;                /* 0x370 */
+    dCcAcPos_c mdCcAcPos_c;              /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x150 */
+    dExtSimpleModel_c mModel;            /* 0x30c */
+    dExtAnmTexSRT_c mTextureTransformer; /* 0x35c */
+    const State *mState;                 /* 0x370 */
     /* Phase accumulators: each frame adds 0x1000 / 0x800, and the high bits
        index the sine table for the scale wobble / the spin. */
-    s32                          mWobblePhase;          /* 0x374 */
-    s32                          mSpinPhase;            /* 0x378 */
+    s32 mWobblePhase; /* 0x374 */
+    s32 mSpinPhase;   /* 0x378 */
     /* param1 & 0xff, clamped to 0..2. 1 is the heal ring. */
-    s32                          mRingType;             /* 0x37c */
-    u8                           mOpacity;              /* 0x380 */
-    u8  pad_381[0x3];
+    s32 mRingType; /* 0x37c */
+    u8 mOpacity;   /* 0x380 */
+    u8 pad_381[0x3];
     /* Resting scale the wobble is added to; approaches 0x2000 while active. */
-    s32                          mScaleBase;            /* 0x384 */
+    s32 mScaleBase; /* 0x384 */
     /* The previous HorzAngleToCPlayer reading; the pass test compares a
        side bit of it against the current reading. */
-    s16                          mPrevPlayerAngle;      /* 0x388 */
-    u8  pad_38a[0x2];
+    s16 mPrevPlayerAngle; /* 0x388 */
+    u8 pad_38a[0x2];
     /* The actor that spawned this ring; stored by the spawner after
        dActor_c::Spawn (daWater_Hakidasi_c for type 2). */
-    dActor_c                    *mSpawner;              /* 0x38c */
+    dActor_c *mSpawner; /* 0x38c */
 
     /* --- vtable --- */
     virtual ~daWater_Ring_c();
@@ -78,15 +78,14 @@ struct daWater_Ring_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
-    /* State-machine bodies the tables below point at, the installer, and the
-       per-frame model pose update. ROM names unrecovered; address names. */
-    void func_ov064_02119afc();                    /* checks whether the player swam through */
-    int  func_ov064_02119c60();                    /* fading out: grow, fade, destroy */
-    int  func_ov064_02119ce4();                    /* passed init: tell the spawner */
-    int  func_ov064_02119d28();                    /* active execute: wobble, spin, wait */
-    s32  func_ov064_02119ea0();                    /* active init */
-    int  func_ov064_02119ecc(const State *state);  /* install a state, run its init */
-    void func_ov064_02119f1c();                    /* pose the model */
+    /* --- non-virtual --- */
+    void CheckPlayerPass();           /* 0x02119afc: did the player swim through */
+    int StatePassed();                /* 0x02119c60: grow, fade, destroy */
+    int InitStatePassed();            /* 0x02119ce4: tell the spawner */
+    int StateActive();                /* 0x02119d28: wobble, spin, wait */
+    s32 InitStateActive();            /* 0x02119ea0 */
+    int SetState(const State *state); /* 0x02119ecc: install a state, run its init */
+    void UpdateModel();               /* 0x02119f1c: matrix and opacity */
 };
 
 #ifndef SM64DS_PLATFORM_PC

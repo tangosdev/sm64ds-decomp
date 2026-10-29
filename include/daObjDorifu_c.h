@@ -32,11 +32,11 @@
  * THE TWO ARRAYS ARE THIS CLASS'S. Its own destructor --
  * daObjDorifu_c::~daObjDorifu_c at ov002 0x020b4af8 -- destroys a
  * dBgW_KcMbg[5] at
- * 0x4b0 and a Model[5] at 0x320 while the vptr is this class's, before storing
+ * 0x4b0 and a dExtSimpleModel_c[5] at 0x320 while the vptr is this class's, before storing
  * dBgActor_c's and destroying dBgActor_c's own two. Both arrays close exactly on the
- * next thing: 0x320 + 5 * sizeof(Model) = 0x320 + 5 * 0x50 = 0x4b0, and
+ * next thing: 0x320 + 5 * sizeof(dExtSimpleModel_c) = 0x320 + 5 * 0x50 = 0x4b0, and
  * 0x4b0 + 5 * sizeof(dBgW_KcMbg) = 0x4b0 + 5 * 0x1c8 = 0xd98. The strides
- * come from the ROM's __cxa_vec_cleanup arguments and the sizes from Model.h and
+ * come from the ROM's __cxa_vec_cleanup arguments and the sizes from dExtSimpleModel_c.h and
  * dBgW_KcMbg.h; they agree without being told to.
  *
  * THE FOUR BYTES AT 0xdc8 ARE THIS CLASS'S TOO, for the same reason:
@@ -44,14 +44,14 @@
  * overlay, and it reads all four. It is a small state machine -- 0xdca selects
  * the state, 0xdcb indexes an Event bit, 0xdc9 counts down between steps, and
  * 0xdc8 walks 0..4 to pick which of the five colliders is enabled. Render
- * (`daObjDorifu_c::Render`) indexes the Model array at 0x320 with the same 0xdc8.
+ * (`daObjDorifu_c::Render`) indexes the dExtSimpleModel_c array at 0x320 with the same 0xdc8.
  * The names below are coined from that; nothing in the ROM names them.
  *
  * SIZE 0xdcc closes the class: all three factories that build a descendant of it
  * -- daObjKm1_Dorifu_c_classInit, daObjKm3_Dorifu_c_classInit and daObjRc_Dorifu_c_classInit
  * (historical alias TrickyTriangles_Spawn), one per
  * descendant -- pass 0xdcc to fBase_c::operator new, and each of them then
- * constructs the Model[5] and dBgW_KcMbg[5] in place at 0x320 and 0x4b0
+ * constructs the dExtSimpleModel_c[5] and dBgW_KcMbg[5] in place at 0x320 and 0x4b0
  * with the same strides the destructor uses.
  *
  * 0xd98..0xdc8 IS UNOBSERVED, not inherited. Nothing this class's own methods
@@ -62,7 +62,7 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW_KcMbg.h"
 
@@ -74,7 +74,7 @@ struct daObjDorifuResources {
 
 struct daObjDorifu_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    Model mPlankModels[5];                  /* 0x320 */
+    dExtSimpleModel_c mPlankModels[5]; /* 0x320 */
     dBgW_KcMbg mPlankClsn[5];       /* 0x4b0 */
     Matrix4x3 mPlatformMat;                 /* 0xd98 */
     u8  mActivePlank;       /* 0xdc8 - 0..4, which collider is enabled */
@@ -105,8 +105,8 @@ struct daObjDorifu_c : dBgActor_c {
     s32 Behavior();
 
     /* Slot 9, ov002 0x020b4bc4. Indexes mPlankModels with mActivePlank and
-       calls Model::Render(NULL) -- the shadow-struct recovery's `Base::m(0)`
-       at vtable slot 5, which is Model's own Render(const Vector3*) taking
+       calls dExtSimpleModel_c::Render(NULL) -- the shadow-struct recovery's `Base::m(0)`
+       at vtable slot 5, which is dExtSimpleModel_c's own Render(const Vector3*) taking
        a null scale pointer (spelled 0, matching every other Render(0) call
        in the tree). */
     s32 Render();

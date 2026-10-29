@@ -76,8 +76,6 @@ src/d_a_coin_coin.c	WEAK-refs-only	ov002				1		None		-
 src/CollectStar.c	PURE-C	arm9				1		None		-
 src/CollectStarInCurLevel.c	PURE-C	arm9				1		None		-
 src/CollectStarInLevel.c	PURE-C	arm9				1		None		-
-src/Color_Interp.c	PURE-C	ov002				1		None		-
-src/ContinueKuppaScriptIfNecessary.c	WEAK-refs-only	arm9				1		None		-
 src/Copy32Bytes.c	PURE-C	arm9				1		None		-
 src/Copy36Bytes.c	PURE-C	arm9				1		None		-
 src/Copy48Bytes.c	PURE-C	arm9				1		None		-
@@ -352,15 +350,10 @@ src/d_a_mip.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_pg_rcer.c	WEAK-refs-only	ov019				1		None		-
 src/RandomIntInternal.c	PURE-C	arm9				1		None		-
 src/ReadSignedVarInt.c	PURE-C	arm9				1		None		-
-src/ReadUnalignedInt.c	PURE-C	arm9				1		None		-
-src/ReadUnalignedShort.c	PURE-C	arm9				1		None		-
-src/ReadUnalignedUshort.c	PURE-C	arm9				1		None		-
 src/d_a_coin_red_coin.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_fire_obj_red_fire.c	WEAK-refs-only	ov002				1		None		-
-src/RequestScreenFade.c	PURE-C	ov007				1		None		-
 src/ResetCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/ResetInput.c	PURE-C	arm9				1		None		-
-src/ResetKuppaScript.c	PURE-C	arm9				1		None		-
 src/d_a_obj_km1_kurumajiku.c	S1-stores-rom-vptr	ov043			stores _ZTV11RickshawBdw	1		None	_ZTV11RickshawBdw/_ZTV17daObjKurumajiku_c	-
 src/game/actors/d_a_obj_km3_kurumajiku.cpp	S1-stores-rom-vptr	ov047			stores _ZTV17daObjKurumajiku_c	1		None	_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
 src/daObjKm1_Kuruma_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm1_Kuruma_c	-
@@ -378,7 +371,6 @@ src/d_a_obj_fl_koma_d.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c
 src/game/actors/d_a_obj_wc_obj07.cpp	S1-stores-rom-vptr	ov029			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
 src/d_a_obj_rotate_updown_lift_hs_updown_lift.c	WEAK-refs-only	ov091				1		None		-
 src/d_a_obj_rotate_updown_lift_updown_lift.c	WEAK-refs-only	ov091				1		None		-
-src/RunKuppaScript.c	PURE-C	arm9				1		None		-
 src/Scuttlebug_SetState.c	PURE-C	ov071				1		None		-
 src/daSpd_c_classInit.c	WEAK-refs-only	ov071				1		None		-
 src/daObjWakame_c_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV13daObjWakame_c	1		None	_ZTV13daObjWakame_c	-
@@ -457,7 +449,6 @@ src/game/actors/d_a_star_base.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_switch_star_switch.c	WEAK-refs-only	ov002				1		None		-
 src/StartExitCharacterWipe.c	PURE-C	arm9				1		None		-
 src/StartFile.c	WEAK-refs-only	arm9				1		None		-
-src/StartIntroCutscene.c	WEAK-refs-only	arm9				1		None		-
 src/StartMinigameMenu.c	WEAK-refs-only	arm9				1		None		-
 src/StartWithFarCamera.c	PURE-C	arm9				1		None		-
 src/d_a_obj_simple_bg_ki_iwa.c	WEAK-refs-only	ov102				1		None		-
@@ -478,7 +469,6 @@ src/d_a_obj_tt_futa.c	S1-stores-rom-vptr	ov033			stores _ZTV13daObjTtFuta_c	1		N
 src/d_a_obj_tt_water.c	WEAK-refs-only	ov033				1		None		-
 src/d_a_kinopio.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_tor.c	WEAK-refs-only	ov096				1		None		-
-src/TouchArea_Update.c	PURE-C	ov001				1		None		-
 src/d_a_obj_bk_lift.c	WEAK-refs-only	ov015				1		None		-
 src/Trap_Spawn.c	S1-stores-rom-vptr	ov010			stores _ZTV14daObjC1_Trap_c	1		None	_ZTV14daObjC1_Trap_c	-
 src/d_a_obj_tbox.c	WEAK-refs-only	ov064				1		None		-
@@ -568,8 +558,8 @@ src/_ZN10FlameChomp16OnPendingDestroyEv.c	P1-vtable+mangled	ov070	daKrpa_c	Flame
 src/_ZN10FlameChompD0Ev.c	DTOR-ONLY	ov070	daKrpa_c	FlameChomp/daKrpa_c	_ZN10FlameChompD0Ev	1		True		-
 src/_ZN16daObjFl_London_cD0Ev.c	DTOR-ONLY	ov022	daObjFl_London_c	daObjFl_London_c/daObjFl_London_c	_ZN16daObjFl_London_cD0Ev	1		True	_ZTV16daObjFl_London_c/_ZTV10dBgActor_c	-
 src/_ZN10LavaSeesawD0Ev.c	DTOR-ONLY	ov022	daObjFl_Seesaw_c	LavaSeesaw/daObjFl_Seesaw_c	_ZN10LavaSeesawD0Ev	1		True	_ZTV10LavaSeesaw/_ZTV10dBgActor_c	-
-src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c	P3-mangled-method-only	arm9		ModelAnim2	_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt	1		True		by-value-class-param
-src/_ZN10ModelAnim2C1Ev.c	P3-mangled-method-only	arm9		ModelAnim2	_ZN10ModelAnim2C1Ev	1		True	_ZTV10ModelAnim2	-
+src/_ZN15dExtAnm2Model_c13Func_020162C4Eji5Fix12IiEt.c	P3-mangled-method-only	arm9		dExtAnm2Model_c	_ZN15dExtAnm2Model_c13Func_020162C4Eji5Fix12IiEt	1		True		by-value-class-param
+src/_ZN15dExtAnm2Model_cC1Ev.c	P3-mangled-method-only	arm9		dExtAnm2Model_c	_ZN15dExtAnm2Model_cC1Ev	1		True	_ZTV15dExtAnm2Model_c	-
 src/_ZN21daObjDlPyramidDummy_cD0Ev.c	DTOR-ONLY	ov024	daObjDlPyramidDummy_c	daObjDlPyramidDummy_c/daObjDlPyramidDummy_c	_ZN21daObjDlPyramidDummy_cD0Ev	1		True		-
 src/_ZN10RockPillarD0Ev.c	DTOR-ONLY	ov016	daObjKi_Hasira_c	RockPillar/daObjKi_Hasira_c	_ZN10RockPillarD0Ev	1		True	_ZTV10RockPillar/_ZTV10dBgActor_c	-
 src/_ZN10Scuttlebug16CleanupResourcesEv.c	P1-vtable+mangled	ov071	daSpd_c	Scuttlebug/daSpd_c	vtable daSpd_c slot 3 @0x2120308 | _ZN10Scuttlebug16CleanupResourcesEv	1		True		-
@@ -728,9 +718,9 @@ src/_ZN13daObjEmmLog_c16CleanupResourcesEv.c	P1-vtable+mangled	ov052	daObjEmmLog
 src/_ZN13daObjEmmLog_c8BehaviorEv.c	P1-vtable+mangled	ov052	daObjEmmLog_c	daObjEmmLog_c	vtable daObjEmmLog_c slot 6 @0x21112ac | _ZN13daObjEmmLog_c8BehaviorEv	1		True		-
 src/_ZN13daObjMaruta_cD0Ev.c	DTOR-ONLY	ov080	daPicGate_c	daObjMaruta_c/daPicGate_c	_ZN13daObjMaruta_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjMaruta_c	-
 src/_ZN13daObjMaruta_cD1Ev.c	DTOR-ONLY	ov080	daPicGate_c	daObjMaruta_c/daPicGate_c	_ZN13daObjMaruta_cD1Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjMaruta_c	-
-src/_ZN14BlendModelAnimC1Ev.c	P3-mangled-method-only	arm9		BlendModelAnim	_ZN14BlendModelAnimC1Ev	1		True	_ZTV14BlendModelAnim	-
-src/_ZN14BlendModelAnimD0Ev.c	DTOR-ONLY	arm9	dExtBlendAnmModel_c	BlendModelAnim/dExtBlendAnmModel_c	_ZN14BlendModelAnimD0Ev	1		True	_ZTV14BlendModelAnim	-
-src/_ZN14BlendModelAnimD1Ev.c	DTOR-ONLY			BlendModelAnim	_ZN14BlendModelAnimD1Ev	0		True	_ZTV14BlendModelAnim	not-in-delinks
+src/_ZN19dExtBlendAnmModel_cC1Ev.c	P3-mangled-method-only	arm9		dExtBlendAnmModel_c	_ZN19dExtBlendAnmModel_cC1Ev	1		True	_ZTV19dExtBlendAnmModel_c	-
+src/_ZN19dExtBlendAnmModel_cD0Ev.c	DTOR-ONLY	arm9	dExtBlendAnmModel_c	dExtBlendAnmModel_c/dExtBlendAnmModel_c	_ZN19dExtBlendAnmModel_cD0Ev	1		True	_ZTV19dExtBlendAnmModel_c	-
+src/_ZN19dExtBlendAnmModel_cD1Ev.c	DTOR-ONLY			dExtBlendAnmModel_c	_ZN19dExtBlendAnmModel_cD1Ev	0		True	_ZTV19dExtBlendAnmModel_c	not-in-delinks
 src/_ZN14CutsceneObject16OnPendingDestroyEv.c	P1-vtable+mangled	ov002	daDemo_c	CutsceneObject/daDemo_c	vtable daDemo_c slot 12 @0x20f80a8 | _ZN14CutsceneObject16OnPendingDestroyEv	1		True		-
 src/_ZN14CutsceneObjectD0Ev.cpp	DTOR-ONLY	ov002	daDemo_c	CutsceneObject/daDemo_c	_ZN14CutsceneObjectD0Ev	1		True	_ZTV14CutsceneObject	-
 src/_ZN14EnemySwitchTagD0Ev.c	DTOR-ONLY	ov002	daESwitch_c	EnemySwitchTag/daESwitch_c	_ZN14EnemySwitchTagD0Ev	1		True		-
@@ -746,15 +736,15 @@ src/_ZN9dEntObj_cD0Ev.c	DTOR-ONLY	ov075	dEntObj_c	dEntObj_c/dEntObj_c	_ZN9dEntOb
 src/_ZN15dFdBrightness_cD2Ev.c	DTOR-ONLY	arm9		dFdBrightness_c	_ZN15dFdBrightness_cD2Ev	1		True		-
 src/_ZN16daObjKm2_Agaru_cD0Ev.c	DTOR-ONLY	ov045	daObjKm2_Agaru_c	daObjKm2_Agaru_c/daObjKm2_Agaru_c	_ZN16daObjKm2_Agaru_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKm2_Agaru_c	-
 src/_ZN15IceSlideManagerD0Ev.c	DTOR-ONLY	ov019	daSldMng_c	IceSlideManager/daSldMng_c	_ZN15IceSlideManagerD0Ev	1		True	_ZTV15IceSlideManager	-
-src/_ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		MaterialChanger	_ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj	1		True		by-value-class-param
-src/_ZN15MaterialChangerC1Ev.c	P3-mangled-method-only	arm9		MaterialChanger	_ZN15MaterialChangerC1Ev	1		True	_ZTV15MaterialChanger	-
+src/_ZN17dExtAnmMaterial_c7SetFileER8BMA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		dExtAnmMaterial_c	_ZN17dExtAnmMaterial_c7SetFileER8BMA_Filei5Fix12IiEj	1		True		by-value-class-param
+src/_ZN17dExtAnmMaterial_cC1Ev.c	P3-mangled-method-only	arm9		dExtAnmMaterial_c	_ZN17dExtAnmMaterial_cC1Ev	1		True	_ZTV17dExtAnmMaterial_c	-
 src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.c	P3-mangled-method-only	arm9		ModelComponents	_ZN15ModelComponents21UpdateVertsUsingBonesEv	1	active	False		no-header:ModelComponents
 src/_ZN8daSCre_cD0Ev.c	DTOR-ONLY	ov018	daSCre_c	PowerStarCreate/daSCre_c	_ZN8daSCre_cD0Ev	1		True	_ZTV8daSCre_c	-
 src/_ZN13daObjCloset_c13InitResourcesEv.c	P1-vtable+mangled	ov058	daObjCloset_c	daObjCloset_c/daObjCloset_c	vtable daObjCloset_c slot 0 @0x211161c | _ZN13daObjCloset_c13InitResourcesEv	1		False		no-header:daObjCloset_c/daObjCloset_c
 src/_ZN13daObjCloset_c16CleanupResourcesEv.c	P1-vtable+mangled	ov058	daObjCloset_c	daObjCloset_c/daObjCloset_c	vtable daObjCloset_c slot 3 @0x2111234 | _ZN13daObjCloset_c16CleanupResourcesEv	1		False		no-header:daObjCloset_c/daObjCloset_c
 src/_ZN15RotatingFirebarD0Ev.c	DTOR-ONLY	ov064	daObjFl_KomaU_c	RotatingFirebar/daObjFl_KomaU_c	_ZN15RotatingFirebarD0Ev	1		True	_ZTV10dBgActor_c/_ZTV15RotatingFirebar	-
-src/_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		TextureSequence	_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj	1		True		by-value-class-param
-src/_ZN15TextureSequenceC1Ev.c	P3-mangled-method-only	arm9		TextureSequence	_ZN15TextureSequenceC1Ev	1		True	_ZTV15TextureSequence	-
+src/_ZN15dExtAnmTexPat_c7SetFileER8BTP_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		dExtAnmTexPat_c	_ZN15dExtAnmTexPat_c7SetFileER8BTP_Filei5Fix12IiEj	1		True		by-value-class-param
+src/_ZN15dExtAnmTexPat_cC1Ev.c	P3-mangled-method-only	arm9		dExtAnmTexPat_c	_ZN15dExtAnmTexPat_cC1Ev	1		True	_ZTV15dExtAnmTexPat_c	-
 src/_ZN15TtcRotatingCubeD0Ev.c	DTOR-ONLY	ov065	daObjCtRotateBlock_c	TtcRotatingCube/daObjCtRotateBlock_c	_ZN15TtcRotatingCubeD0Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN15TtcRotatingCubeD1Ev.c	DTOR-ONLY	ov065	daObjCtRotateBlock_c	TtcRotatingCube/daObjCtRotateBlock_c	_ZN15TtcRotatingCubeD1Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN16daObjCtMecha08_c8BehaviorEv.c	P1-vtable+mangled	ov065	daObjCtMecha08_c	daObjCtMecha08_c/daObjCtMecha08_c	vtable daObjCtMecha08_c slot 6 @0x211b8f8 | _ZN16daObjCtMecha08_c8BehaviorEv	1		True		-
@@ -801,8 +791,8 @@ src/_ZN17daObjKm3_Dorifu_cD0Ev.c	DTOR-ONLY	ov047	daObjKm3_Dorifu_c	daObjKm3_Dori
 src/_ZN18RotatingPlatformRrD0Ev.c	DTOR-ONLY	ov036	daObjRc_Kaitendai_c	RotatingPlatformRr/daObjRc_Kaitendai_c	_ZN18RotatingPlatformRrD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV18RotatingPlatformRr	-
 src/_ZN17daObjBk_Ukisima_cD0Ev.c	DTOR-ONLY	ov015	daObjBk_Ukisima_c	daObjBk_Ukisima_c/daObjBk_Ukisima_c	_ZN17daObjBk_Ukisima_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV17daObjBk_Ukisima_c	-
 src/_ZN18SolidHeapAllocatorC1EPvj.c	P3-mangled-method-only	arm9		SolidHeapAllocator	_ZN18SolidHeapAllocatorC1EPvj	1		True		-
-src/_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		TextureTransformer	_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj	1		True		by-value-class-param
-src/_ZN18TextureTransformerC1Ev.c	P3-mangled-method-only	arm9		TextureTransformer	_ZN18TextureTransformerC1Ev	1		True	_ZTV18TextureTransformer	-
+src/_ZN15dExtAnmTexSRT_c7SetFileER8BTA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		dExtAnmTexSRT_c	_ZN15dExtAnmTexSRT_c7SetFileER8BTA_Filei5Fix12IiEj	1		True		by-value-class-param
+src/_ZN15dExtAnmTexSRT_cC1Ev.c	P3-mangled-method-only	arm9		dExtAnmTexSRT_c	_ZN15dExtAnmTexSRT_cC1Ev	1		True	_ZTV15dExtAnmTexSRT_c	-
 src/_ZN18TiltingPlatformBfs13InitResourcesEv.c	P1-vtable+mangled	ov045	daObjKm2_Gura_c	TiltingPlatformBfs/daObjKm2_Gura_c	vtable daObjKm2_Gura_c slot 0 @0x2111cf8 | _ZN18TiltingPlatformBfs13InitResourcesEv	1		True		-
 src/_ZN18TiltingPlatformBfs16CleanupResourcesEv.c	P1-vtable+mangled	ov045	daObjKm2_Gura_c	TiltingPlatformBfs/daObjKm2_Gura_c	vtable daObjKm2_Gura_c slot 3 @0x2111ce4 | _ZN18TiltingPlatformBfs16CleanupResourcesEv	1		True		-
 src/_ZN18TiltingPlatformBfsD0Ev.c	DTOR-ONLY	ov045	daObjKm2_Gura_c	TiltingPlatformBfs/daObjKm2_Gura_c	_ZN18TiltingPlatformBfsD0Ev	1		True	_ZTV10dBgActor_c/_ZTV15daObjGuragura_c/_ZTV18TiltingPlatformBfs	-
@@ -901,18 +891,18 @@ src/_ZN4ViewD1Ev.cpp	DTOR-ONLY	arm9	dView_c	View/dView_c	_ZN4ViewD1Ev	1		False	_
 src/_ZN11daWarpkun_cD0Ev.c	DTOR-ONLY	ov002	daWarpkun_c	daWarpkun_c/daWarpkun_c	_ZN11daWarpkun_cD0Ev	1		True	_ZTV11daWarpkun_c	-
 src/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
 src/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd16reciprocal_asyncE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
-src/_ZN4cstd5atan2E5Fix12IiES1_.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd5atan2E5Fix12IiES1_	1		False		by-value-class-param;no-header:cstd
+src/cstd_atan2.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd5atan2E5Fix12IiES1_	1		False		by-value-class-param;no-header:cstd
 src/_ZN11daDonketu_cD0Ev.c	DTOR-ONLY	ov064	daDonketu_c	daDonketu_c/daDonketu_c	_ZN11daDonketu_cD0Ev	1		True	_ZTV11daDonketu_c	-
 src/_ZN11daObjKumo_cD0Ev.c	DTOR-ONLY	ov039	daObjKumo_c	daObjKumo_c/daObjKumo_c	_ZN11daObjKumo_cD0Ev	1		True		-
 src/_ZN5Crate13OnTurnIntoEggER6Player.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 19 @0x2139e78 | _ZN5Crate13OnTurnIntoEggER6Player	1		True		-
 src/_ZN5Crate13OnYoshiTryEatEv.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 18 @0x2139e64 | _ZN5Crate13OnYoshiTryEatEv	1		True		-
 src/_ZN5Crate4KillEv.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 31 @0x2139070 | _ZN5Crate4KillEv	1		True		-
 src/_ZN8dFader_cD2Ev.c	DTOR-ONLY	arm9		dFader_c	_ZN8dFader_cD2Ev	1		True		-
-src/_ZN5ModelC1Ev.c	P3-mangled-method-only	arm9		Model	_ZN5ModelC1Ev	1		True	_ZTV5Model	-
-src/_ZN5ModelC2Ev.cpp	P3-mangled-method-only	arm9		Model	_ZN5ModelC2Ev	1		True	_ZTV5Model	-
-src/_ZN5ModelD0Ev.cpp	DTOR-ONLY	arm9	dExtSimpleModel_c	Model/dExtSimpleModel_c	_ZN5ModelD0Ev	1		True	_ZTV5Model	-
-src/_ZN5ModelD1Ev.cpp	DTOR-ONLY	arm9		Model	_ZN5ModelD1Ev	1		True	_ZTV5Model	-
-src/_ZN5ModelD2Ev.cpp	DTOR-ONLY	arm9		Model	_ZN5ModelD2Ev	1		True	_ZTV5Model	-
+src/_ZN17dExtSimpleModel_cC1Ev.c	P3-mangled-method-only	arm9		dExtSimpleModel_c	_ZN17dExtSimpleModel_cC1Ev	1		True	_ZTV17dExtSimpleModel_c	-
+src/_ZN17dExtSimpleModel_cC2Ev.cpp	P3-mangled-method-only	arm9		dExtSimpleModel_c	_ZN17dExtSimpleModel_cC2Ev	1		True	_ZTV17dExtSimpleModel_c	-
+src/_ZN17dExtSimpleModel_cD0Ev.cpp	DTOR-ONLY	arm9	dExtSimpleModel_c	dExtSimpleModel_c/dExtSimpleModel_c	_ZN17dExtSimpleModel_cD0Ev	1		True	_ZTV17dExtSimpleModel_c	-
+src/_ZN17dExtSimpleModel_cD1Ev.cpp	DTOR-ONLY	arm9		dExtSimpleModel_c	_ZN17dExtSimpleModel_cD1Ev	1		True	_ZTV17dExtSimpleModel_c	-
+src/_ZN17dExtSimpleModel_cD2Ev.cpp	DTOR-ONLY	arm9		dExtSimpleModel_c	_ZN17dExtSimpleModel_cD2Ev	1		True	_ZTV17dExtSimpleModel_c	-
 src/_ZN5PokeyD0Ev.c	DTOR-ONLY	ov096	daSanbo_c	Pokey/daSanbo_c	_ZN5PokeyD0Ev	1		True		-
 src/_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE.c	P3-mangled-method-only	arm9		Sound	_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE	1		True		by-value-class-param
 src/_ZN5Sound4PlayEjjRK7Vector3.c	P3-mangled-method-only	arm9		Sound	_ZN5Sound4PlayEjjRK7Vector3	1	active	True		-
@@ -1043,15 +1033,15 @@ src/_ZN9daRFlag_c16CleanupResourcesEv.c	P1-vtable+mangled	ov062	daRFlag_c	daRFla
 src/_ZN9daRFlag_cD0Ev.c	DTOR-ONLY	ov062	daRFlag_c	daRFlag_c/daRFlag_c	_ZN9daRFlag_cD0Ev	1		True		-
 src/_ZN15daObjC1Hikari_c16CleanupResourcesEv.c	P1-vtable+mangled	ov010	daObjC1Hikari_c	daObjC1Hikari_c/daObjC1Hikari_c	vtable daObjC1Hikari_c slot 3 @0x2111a94 | _ZN15daObjC1Hikari_c16CleanupResourcesEv	1		True		-
 src/_ZN15daObjC1Hikari_cD0Ev.c	DTOR-ONLY	ov010	daObjC1Hikari_c	daObjC1Hikari_c/daObjC1Hikari_c	_ZN15daObjC1Hikari_cD0Ev	1		True		-
-src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj	1		True		by-value-class-param
-src/_ZN9ModelAnimC1Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC1Ev	1		True	_ZTV9ModelAnim	-
-src/_ZN9ModelAnimC2Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC2Ev	1		True	_ZTV9ModelAnim	-
-src/_ZN9ModelAnimD0Ev.c	DTOR-ONLY	arm9	dExtAnmModel_c	ModelAnim/dExtAnmModel_c	_ZN9ModelAnimD0Ev	1		True	_ZTV9ModelAnim	-
-src/_ZN9ModelAnimD2Ev.cpp	DTOR-ONLY	arm9		ModelAnim	_ZN9ModelAnimD2Ev	1		True	_ZTV9ModelAnim	-
-src/_ZN9ModelBaseC1Ev.c	P3-mangled-method-only	arm9		ModelBase	_ZN9ModelBaseC1Ev	1		True		-
-src/_ZN9ModelBaseD0Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD0Ev	1		True		-
-src/_ZN9ModelBaseD1Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD1Ev	1		True		-
-src/_ZN9ModelBaseD2Ev.cpp	DTOR-ONLY	arm9		ModelBase	_ZN9ModelBaseD2Ev	1		True		-
+src/_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		dExtAnmModel_c	_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj	1		True		by-value-class-param
+src/_ZN14dExtAnmModel_cC1Ev.c	P3-mangled-method-only	arm9		dExtAnmModel_c	_ZN14dExtAnmModel_cC1Ev	1		True	_ZTV14dExtAnmModel_c	-
+src/_ZN14dExtAnmModel_cC2Ev.c	P3-mangled-method-only	arm9		dExtAnmModel_c	_ZN14dExtAnmModel_cC2Ev	1		True	_ZTV14dExtAnmModel_c	-
+src/_ZN14dExtAnmModel_cD0Ev.c	DTOR-ONLY	arm9	dExtAnmModel_c	dExtAnmModel_c/dExtAnmModel_c	_ZN14dExtAnmModel_cD0Ev	1		True	_ZTV14dExtAnmModel_c	-
+src/_ZN14dExtAnmModel_cD2Ev.cpp	DTOR-ONLY	arm9		dExtAnmModel_c	_ZN14dExtAnmModel_cD2Ev	1		True	_ZTV14dExtAnmModel_c	-
+src/_ZN11dExtModel_cC1Ev.c	P3-mangled-method-only	arm9		dExtModel_c	_ZN11dExtModel_cC1Ev	1		True		-
+src/_ZN11dExtModel_cD0Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	dExtModel_c/dExtModel_c	_ZN11dExtModel_cD0Ev	1		True		-
+src/_ZN11dExtModel_cD1Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	dExtModel_c/dExtModel_c	_ZN11dExtModel_cD1Ev	1		True		-
+src/_ZN11dExtModel_cD2Ev.cpp	DTOR-ONLY	arm9		dExtModel_c	_ZN11dExtModel_cD2Ev	1		True		-
 src/_ZN11daChoropu_c16CleanupResourcesEv.c	P1-vtable+mangled	ov080	daChoropu_c	daChoropu_c/daChoropu_c	vtable daChoropu_c slot 3 @0x2124458 | _ZN11daChoropu_c16CleanupResourcesEv	1		True		-
 src/_ZN11daChoropu_cD0Ev.c	DTOR-ONLY	ov080	daChoropu_c	daChoropu_c/daChoropu_c	_ZN11daChoropu_cD0Ev	1		True		-
 src/_ZN16daObjPushblock_c16CleanupResourcesEv.c	P1-vtable+mangled	ov002	daObjPushblock_c	daObjPushblock_c/daObjPushblock_c	vtable daObjPushblock_c slot 3 @0x20b8d68 | _ZN16daObjPushblock_c16CleanupResourcesEv	1		True		-
@@ -1080,7 +1070,6 @@ src/_ZNK7PathPtr7GetNodeER7Vector3j.c	P3-mangled-method-only	arm9		PathPtr	_ZNK7
 src/_ZNK8Particle10SysTracker8Contents8FindDataEj.c	P3-mangled-method-only	arm9		Contents	_ZNK8Particle10SysTracker8Contents8FindDataEj	1		False		no-header:Contents
 src/__destroy_arr.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/unnamed/arm9/0207/__sinit_02073a24.c	PURE-C	arm9				0		None		extra-sections:init
-src/unnamed/arm9/0207/__sinit_02073e6c.c	WEAK-refs-only	arm9				0		None		extra-sections:init
 src/unnamed/arm9/0207/__sinit_02074d90.c	PURE-C	arm9				0		None		extra-sections:init
 src/unnamed/arm9/0207/__sinit_02074da8.c	PURE-C	arm9				0		None		extra-sections:init
 src/unnamed/arm9/0207/__sinit_02074dbc.c	PURE-C	arm9				0		None		extra-sections:init
@@ -1101,7 +1090,6 @@ src/unnamed/arm9/0207/__sinit_020750ec.c	PURE-C	arm9				0		None		extra-sections:
 src/unnamed/arm9/0207/__sinit_0207511c.c	WEAK-refs-only	arm9				0		None		extra-sections:init
 src/unnamed/arm9/0207/__sinit_02075150.c	PURE-C	arm9				0		None		extra-sections:init
 src/unnamed/arm9/0207/__sinit_02075154.c	PURE-C	arm9				0		None		extra-sections:init
-src/unnamed/ov002/__sinit_ov002_02100560.c	PURE-C	ov002				0		None		extra-sections:init
 src/unnamed/ov002/__sinit_ov002_02100938.c	PURE-C	ov002				0		None		extra-sections:init
 src/unnamed/ov002/__sinit_ov002_02100adc.c	PURE-C	ov002				0		None		extra-sections:init
 src/unnamed/ov002/__sinit_ov002_02100c50.c	PURE-C	ov002				0		None		extra-sections:init
@@ -1129,11 +1117,8 @@ src/unnamed/ov002/__sinit_ov002_0210804c.c	WEAK-refs-only	ov002				0		None		extr
 src/unnamed/ov002/__sinit_ov002_02108094.c	PURE-C	ov002				0		None		extra-sections:init
 src/unnamed/ov004/__sinit_ov004_020b948c.c	PURE-C	ov004				0		None		extra-sections:init
 src/unnamed/ov004/__sinit_ov004_020b955c.c	PURE-C	ov004				0		None		extra-sections:init
-src/unnamed/ov004/__sinit_ov004_020b9ad0.c	PURE-C	ov004				0		None		extra-sections:init
-src/unnamed/ov004/__sinit_ov004_020b9b24.c	PURE-C	ov004				0		None		extra-sections:init
 src/unnamed/ov006/__sinit_ov006_0212f4c4.c	WEAK-refs-only	ov006				0		None		extra-sections:init
 src/unnamed/ov006/__sinit_ov006_0212f52c.c	WEAK-refs-only	ov006				0		None		extra-sections:init
-src/unnamed/ov006/__sinit_ov006_0212f660.c	PURE-C	ov006				0		None		extra-sections:init
 src/unnamed/ov006/__sinit_ov006_0212f6b4.c	WEAK-refs-only	ov006				0		None		extra-sections:init
 src/unnamed/ov006/__sinit_ov006_0212fc7c.c	PURE-C	ov006				0		None		extra-sections:init
 src/unnamed/ov006/__sinit_ov006_0212fd48.c	PURE-C	ov006				0		None		extra-sections:init
@@ -1206,7 +1191,6 @@ src/unnamed/ov022/__sinit_ov022_02112e58.c	PURE-C	ov022				0		None		extra-sectio
 src/unnamed/ov022/__sinit_ov022_02112ec0.c	PURE-C	ov022				0		None		extra-sections:init
 src/unnamed/ov022/__sinit_ov022_02112f78.c	PURE-C	ov022				0		None		extra-sections:init
 src/unnamed/ov022/__sinit_ov022_02112fe4.c	PURE-C	ov022				0		None		extra-sections:init
-src/unnamed/ov022/__sinit_ov022_02113050.c	PURE-C	ov022				0		None		extra-sections:init
 src/unnamed/ov022/__sinit_ov022_021130bc.c	PURE-C	ov022				0		None		extra-sections:init
 src/unnamed/ov023/__sinit_ov023_02111aa8.c	PURE-C	ov023				0		None		extra-sections:init
 src/unnamed/ov024/__sinit_ov024_02112808.c	PURE-C	ov024				0		None		extra-sections:init
@@ -1431,90 +1415,21 @@ src/unnamed/arm9/0200/func_02005324.c	WEAK-refs-only	arm9				1		None		-
 src/func_02005348.c	WEAK-refs-only	arm9				1		None		-
 src/func_02005e28.c	WEAK-refs-only	arm9				1		None		-
 src/func_02005ed8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020070e8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020071a8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020071e0.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0200/func_020072c4.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0200/func_020073a0.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007414.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007450.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_02007484.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0200/func_020074e8.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200751c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007548.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020075b4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200762c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007698.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007758.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020077f0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007870.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020078c4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007910.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020079ac.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007a8c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007b0c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007b98.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007c14.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007c9c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007cec.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007d0c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007d58.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007e5c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02007f14.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_02007fcc.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008008.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008028.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008080.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020080b0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020080f0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200814c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008200.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020082a0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_020082f8.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200840c.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008450.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008474.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_020084b0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_02008500.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200897c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020089d8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020089f8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008a70.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008abc.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_02008b08.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_02008b4c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_02008cb4.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009138.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020091f8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200928c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_020092c4.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009374.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020093d4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020093f4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009414.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020094a8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020094c0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020094e4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_02009540.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_020095c4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020095e4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020097ec.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200985c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200987c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020098b8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_020098e0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_02009a8c.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009aa8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009d30.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009d70.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009d90.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009db0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009dd0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009df0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009e10.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009e30.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_02009e50.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200af0c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200af20.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200b0fc.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200b590.c	WEAK-refs-only	arm9				1		None		-
@@ -1558,16 +1473,6 @@ src/func_0200d89c.c	PURE-C	arm9				1		None		-
 src/func_0200d8ac.c	PURE-C	arm9				1		None		-
 src/func_0200d8c8.c	WEAK-refs-only	arm9				1		None		-
 src/func_0200d954.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200e494.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200e4e4.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200e55c.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200e5ac.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200e5fc.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200e6d8.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200e728.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200ee68.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200ee8c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0200/func_0200eec8.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200f0bc.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200f220.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0200/func_0200f2cc.c	WEAK-refs-only	arm9				1		None		-
@@ -1906,15 +1811,6 @@ src/unnamed/arm9/0203/func_02030c38.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0203/func_02030ca0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0203/func_02030dac.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0203/func_02030e4c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0203/func_02030fa8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0203/func_02031028.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0203/func_02031154.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0203/func_0203128c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0203/func_020313d8.c	WEAK-refs-only					0		None		not-in-delinks
-src/unnamed/arm9/0203/func_02031428.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0203/func_020316d8.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0203/func_020318a4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0203/func_020319fc.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0203/func_02031b84.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0203/func_02031cd4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0203/func_02031e00.c	PURE-C	arm9				1		None		-
@@ -2265,17 +2161,6 @@ src/unnamed/arm9/0204/func_02042784.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_020427c4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_020427f8.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02042f68.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02042fe4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02042ffc.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_0204302c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02043060.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02043098.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02043180.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_020431c4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_0204322c.c	WEAK-refs-only	arm9				1	inert	None		-
-src/unnamed/arm9/0204/func_02043288.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0204/func_020432e4.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0204/func_0204335c.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0204/func_020433b8.c	PURE-C	arm9				1		None		-
 src/func_02043810.c	PURE-C	arm9				1		None		-
 src/func_02043880.c	WEAK-refs-only	arm9				1		None		-
@@ -2342,26 +2227,12 @@ src/func_020471ac.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0204/func_02047218.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02047910.c	PURE-C	arm9				1		None		-
 src/func_02048234.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048528.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_020485f0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048720.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048908.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048a18.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048a1c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048af4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048c30.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048d80.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048e54.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048e74.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048e94.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0204/func_02048ed4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02048ef4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02048f04.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02048f14.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02048f24.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_02048f34.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02048fd4.c	PURE-C	arm9				1		None		-
-src/func_02049018.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_0204921c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_020494cc.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_02049764.c	PURE-C	arm9				1		None		-
@@ -3263,7 +3134,6 @@ src/func_ov001_020ab374.c	P2-vtable-only	ov001	dCapIcon_c	dCapIcon_c	vtable dCap
 src/func_ov001_020ab3a0.c	P2-vtable-only	ov001	dCapIcon_c	dCapIcon_c	vtable dCapIcon_c slot 0 @0x20ab3a0	1		False		no-header:dCapIcon_c
 src/func_ov001_020ab3c4.c	PURE-C	ov001				1		None		-
 src/unnamed/ov001/func_ov001_020ab3f0.c	PURE-C	ov001				1		None		-
-src/unnamed/ov001/func_ov001_020ab41c.c	PURE-C	ov001				1		None		-
 src/func_ov001_020ab54c.c	P2-vtable-only	ov001	dThIcon_c	dThIcon_c	vtable dThIcon_c slot 1 @0x20ab54c	1		False		no-header:dThIcon_c
 src/func_ov001_020ab550.c	P2-vtable-only	ov001	dThIcon_c	dThIcon_c	vtable dThIcon_c slot 0 @0x20ab550	1		False		no-header:dThIcon_c
 src/unnamed/ov001/func_ov001_020ab5b0.c	PURE-C	ov001				1		None		-
@@ -3624,11 +3494,6 @@ src/unnamed/ov002/func_ov002_020e63a4.c	WEAK-refs-only	ov002				1		None		-
 src/unnamed/ov002/func_ov002_020e640c.c	WEAK-refs-only	ov002				1		None		-
 src/unnamed/ov002/func_ov002_020e6780.c	PURE-C	ov002				1		None		-
 src/unnamed/ov002/func_ov002_020e69c0.c	PURE-C	ov002				1		None		-
-src/unnamed/ov002/func_ov002_020e6a78.c	PURE-C	ov002				1		None		-
-src/unnamed/ov002/func_ov002_020e6ad4.c	PURE-C	ov002				1		None		-
-src/unnamed/ov002/func_ov002_020e6b3c.c	PURE-C	ov002				1		None		-
-src/unnamed/ov002/func_ov002_020e6b74.c	PURE-C	ov002				1		None		-
-src/unnamed/ov002/func_ov002_020e6bb0.c	WEAK-refs-only	ov002				1		None		-
 src/func_ov002_020e6d88.c	WEAK-refs-only	ov002				1		None		-
 src/func_ov002_020e6edc.c	WEAK-refs-only	ov002				1		None		-
 src/func_ov002_020e700c.c	WEAK-refs-only	ov002				1		None		-
@@ -5436,32 +5301,9 @@ src/unnamed/ov007/func_ov007_020b2764.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b283c.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b2998.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b2bd4.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b2cdc.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b2cf0.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b2e64.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3050.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b30b0.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3190.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3360.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3708.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3c54.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3e04.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3e84.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b3edc.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b3f20.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b40c0.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b4100.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b413c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b42d8.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b43dc.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b4438.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b4464.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b44ec.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b45b0.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b4b5c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b4c04.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b5068.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b50e8.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b58e4.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b5bf0.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b5f64.c	PURE-C	ov007				1		None		-
@@ -5479,10 +5321,7 @@ src/unnamed/ov007/func_ov007_020b6a84.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b6c54.cpp	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b6cd0.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b6d40.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b6eb4.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b6f4c.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7040.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7090.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b7138.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b72a0.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b72d8.c	PURE-C	ov007				1		None		-
@@ -5492,64 +5331,14 @@ src/unnamed/ov007/func_ov007_020b7364.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b7384.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b73b4.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b7594.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7658.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7690.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b76a0.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b76c4.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7708.cpp	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b77ac.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b782c.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b78d0.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7914.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7948.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b797c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b79c8.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b79e4.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7a00.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7a34.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7a44.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7a78.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7d94.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b7eec.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8070.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b84e8.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b84f4.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8500.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b850c.cpp	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8548.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8690.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8714.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b883c.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8860.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b88c0.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8a78.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8b00.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8b80.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8cfc.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8d48.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8ec0.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8f50.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8f64.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8f78.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8f8c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8fa0.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b8fb4.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b8fd4.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b91b4.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b9640.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b9880.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b9ca8.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020b9f0c.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020b9fc0.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020ba05c.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
-src/unnamed/ov007/func_ov007_020ba2e0.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020ba368.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020ba9bc.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020baa10.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bad8c.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bb09c.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bb4b0.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bbc08.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bbe60.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bbf98.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bbff0.c	WEAK-refs-only	ov007				1		None		-
@@ -5573,23 +5362,9 @@ src/unnamed/ov007/func_ov007_020bd4a0.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bd4e8.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bd648.cpp	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bd960.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bd9e4.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bda38.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bda8c.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bdbcc.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bde2c.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bde70.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bdeb0.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bdebc.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bdf60.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020be00c.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020be098.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020be0dc.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020be47c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020be50c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020be684.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020be7a8.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020be850.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020be8b8.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020be964.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020be980.c	PURE-C	ov007				1		None		-
@@ -5597,17 +5372,10 @@ src/unnamed/ov007/func_ov007_020be9ac.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020beaa0.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020beb80.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bed60.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bee14.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020beeb0.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bf304.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bf428.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bf57c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bf630.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bf690.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bf790.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bfbdc.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bfc54.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020bfcec.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bfe4c.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bff38.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020bffb8.c	PURE-C	ov007				1		None		-
@@ -5643,18 +5411,11 @@ src/unnamed/ov007/func_ov007_020c121c.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c12ac.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c13a4.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c13f4.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c1404.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c1448.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c14b8.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c14d4.c	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c1560.c	WEAK-refs-only	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c15ec.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c1620.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c162c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c16dc.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c17f4.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c1804.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c1814.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c184c.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c19cc.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c1d78.cpp	PURE-C	ov007				1		None		-
@@ -5704,10 +5465,6 @@ src/unnamed/ov007/func_ov007_020c3abc.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c3ba8.cpp	WEAK-refs-only	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c3bc8.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c3be0.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c3d40.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c3e1c.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c3e2c.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c3e3c.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c3e4c.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c3e64.cpp	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c3ee8.c	PURE-C	ov007				1		None		-
@@ -5811,9 +5568,6 @@ src/unnamed/ov007/func_ov007_020c93c4.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c940c.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c9460.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c946c.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c94a0.c	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c94e4.cpp	PURE-C	ov007				1		None		-
-src/unnamed/ov007/func_ov007_020c951c.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c95fc.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c9988.c	PURE-C	ov007				1		None		-
 src/unnamed/ov007/func_ov007_020c99d8.c	PURE-C	ov007				1		None		-
@@ -5849,7 +5603,6 @@ src/func_ov007_020cca98.c	WEAK-refs-only	ov007				1		None		-
 src/func_ov007_020ccab4.c	WEAK-refs-only	ov007				1		None		-
 src/d_s_dsmt.c	S1-stores-rom-vptr	ov007			stores _ZTV8dScene_c	1		None	_ZTV8dScene_c	-
 src/func_ov009_02111224.c	PURE-C	ov009				1		None		-
-src/unnamed/ov009/func_ov009_0211145c.c	WEAK-refs-only					0		None		NONMATCHING-draft;not-in-delinks
 src/func_ov009_021115d8.c	WEAK-refs-only	ov009				1		None		-
 src/func_ov010_0211124c.c	PURE-C	ov010				1		None		-
 src/func_ov010_0211125c.c	PURE-C	ov010				1		None		-
@@ -6503,33 +6256,10 @@ src/func_ov075_02116028.c	PURE-C	ov075				1		None		-
 src/func_ov075_02116030.c	PURE-C	ov075				1		None		-
 src/func_ov075_02116040.c	P2-vtable-only	ov075	dScEntry_c::graphCallback_c	dScEntry_c	vtable dScEntry_c::graphCallback_c slot 2 @0x2116040	1		True		-
 src/func_ov075_021160b4.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_021165b0.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02116818.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02116ad4.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02116c38.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_02116c8c.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02116ce4.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_02116d40.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_02116d9c.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02116e00.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02116e44.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02116ebc.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211705c.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_021173a8.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211763c.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02117918.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02117ac4.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02117bc4.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02117c0c.c	PURE-C	ov075				1		None		-
 src/func_ov075_02117d80.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
-src/unnamed/ov075/func_ov075_02117e84.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02117f5c.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02117fe4.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02118248.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02118378.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211867c.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_021188b4.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_02118a78.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_02118a84.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_02118bf8.c	WEAK-refs-only	ov075				1		None		-
 src/unnamed/ov075/func_ov075_02118cd0.c	WEAK-refs-only	ov075				1		None		-
@@ -6556,18 +6286,9 @@ src/dScEntry_c_classInit_RESULT.c	S1-stores-rom-vptr	ov075			stores _ZTV8dScene_
 src/func_ov075_0211a834.c	PURE-C	ov075				1		None		-
 src/func_ov075_0211a838.c	PURE-C	ov075				1		None		-
 src/dScEntry_c_classInit_ENTRY.c	S1-stores-rom-vptr	ov075			stores _ZTV8dScene_c	1		None	_ZTV8dScene_c	-
-src/unnamed/ov075/func_ov075_0211aa00.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_0211aa94.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211ab38.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_0211abb0.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211ad60.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211aea4.c	PURE-C	ov075				1		None		-
 src/unnamed/ov075/func_ov075_0211aeb8.c	WEAK-refs-only	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211af0c.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211af84.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211b1cc.c	PURE-C	ov075				1	inert	None		-
-src/unnamed/ov075/func_ov075_0211b260.c	PURE-C	ov075				1		None		-
-src/unnamed/ov075/func_ov075_0211b3b8.c	PURE-C	ov075				1		None		-
 src/func_ov077_02123814.c	PURE-C	ov077				1		None		-
 src/func_ov077_02123880.c	WEAK-refs-only	ov077				1		None		-
 src/func_ov077_02123fcc.c	WEAK-refs-only	ov077				1		None		-

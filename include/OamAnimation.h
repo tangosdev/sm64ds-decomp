@@ -24,7 +24,11 @@ public:
     u8  enabled;                 /* 0x25 */
     u8  affine;                  /* 0x26 */
     u8  pad_027;                 /* 0x27 */
-    s32 unk_028;                 /* 0x28 */
+    /* 0x28 -- which engine draws it: func_0202048c renders on the main
+       screen for 0, the sub screen for 1, and both for 2 (the main copy
+       0xc0 lower). func_02020820 stores its third argument here. Was
+       unk_028. */
+    s32 screen;
 
     OamAnimation();
     ~OamAnimation();

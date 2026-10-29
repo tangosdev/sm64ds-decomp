@@ -45,7 +45,7 @@ struct dFdBrightness_c : dFader_c {
     virtual ~dFdBrightness_c();
 
     virtual void AdvanceFade();                 /* slot 2 */
-    virtual int  SetBackwardTime(u32 frames);   /* slot 3 */
+    virtual int SetBackwardTime(u32 frames, u32); /* slot 3 */
     virtual int  SetForwardTime(u32 frames);    /* slot 4 */
     virtual int  IsAtStart();                   /* slot 5 */
     virtual int  IsAtEnd();                     /* slot 6 */

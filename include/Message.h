@@ -17,27 +17,30 @@
 /* fwd */
 struct msg;
 struct Message {
-    u8  pad_000[0x196];
-    u8  unk_196;            /* 0x196 */
+    u8 pad_000[0x196];
+    u8 unk_196; /* 0x196 */
 #ifdef __cplusplus
     /* methods */
-    void Display(unsigned int msg);
 
     /* Static -- no `this`; see the header note. Parameter types are read off the
-       mangled name: `Et` is u16, `Eta` is (u16, s8). */
+       mangled name: `Et` is u16, `Eth` is (u16, u8). */
+    static void Display(u32 msg);
     static void PrepareTalk();
     static void EndTalk();
     /* The parameter is unnamed on purpose. In mwccarm a named parameter in a
        class-scope declaration takes a number from the counter that names the
        compiler's @NNN temporaries, so naming it would renumber every TU
        that includes this header, and the TU manifests pin those numbers. */
-    static void AddChar(char);
+    static void AddChar(u8);
+    static void AddCharVS(u8);
     static int UpdateWindow();
     static void Update();
     static void ResetAllGlobals();
     static void DisplaySaveMenuText(u16 msgID);
-    static void DisplayLevelClearText(u16 msgID, s8 course);
+    static void DisplayLevelClearText(u16 msgID, u8 course);
+    static void SetTextGlobals();
     static void SetTextGlobalsVS();
+    static void LoadText();
 
     /* The rest of the display entry points. `Et` is u16, `Eth` is (u16, u8),
        `Ej` is u32 -- all read off the mangled name.
@@ -50,16 +53,19 @@ struct Message {
        spellings tested byte-match at both sites, and the byte gate could not decide it.
        Settled on the definition instead, and moved to decl_common.h so there is one.
 
-       Note the two Message methods' OWN char signedness is not part of that: `Eth` and
-       `Eta` are ROM-mangled truth about these functions and stay exactly as they are. */
-    static void DisplayText(u16 msgID);
+       The two Message methods' OWN char parameter is a separate question. Both are
+       `Eth` (u8): DisplayLevelClearText used to be spelled `Eta` (s8), but its one
+       caller narrows the course with `and 0xff`, which only a u8 parameter emits. */
+    static void DisplayText(int msgID);
     static void DisplaySaving(u16 msgID);
     static void DisplayPauseText(u16 msgID, u8 course);
     static void DisplayVsExitText(u16 msgID);
     static void DisplayPauseTextVS(u16 msgID);
     static void DisplayDontSaveText(u16 msgID);
+    static void DisplayDontSaveTextVS(u16);
     static void DisplaySaveStatusText(u16 msgID);
-    static void DisplayOptionsMenuText(u16 msgID);
+    static void DisplayOptionsMenuText(s16 msgID);
+    static void DisplayOptionsMenuTextVS(s16);
     static void DisplayControllerModeText(u16 msgID);
     static void DisplayStarNameForStarSelect(u32 star);
     static void DisplayCourseNameForStarSelect(u32 course);

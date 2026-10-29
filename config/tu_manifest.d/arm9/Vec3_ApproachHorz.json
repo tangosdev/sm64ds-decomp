@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "ApproachLinear(Vector3&, const Vector3&, Fix12<int>) at 0x0203b89c joins Vec3_ApproachHorz. The scalar ApproachLinear overloads are a different run.",
+    "ApproachLinear(Vector3&, const Vector3&, Fix12i) at 0x0203b89c joins Vec3_ApproachHorz. The scalar ApproachLinear overloads are a different run.",
     "TOP EDGE: Vec3_HorzAngle ends at 0x0203b7dc and is the previous file.",
     "BOTTOM EDGE: func_0203b958 begins at 0x0203b958 and is the next file."
   ],
@@ -26,7 +26,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_Z14ApproachLinearR7Vector3RKS_5Fix12IiE",
+      "symbol": "_Z14ApproachLinearR7Vector3RKS_i",
       "address": "0x0203b89c",
       "size": "0x000000bc",
       "legacy_source": "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp",
@@ -37,7 +37,7 @@
   "bss": [],
   "compiler_only_output": [],
   "notes": [
-    "Vec3_ApproachHorz matched as extern \"C\" inside this C++ file. ApproachLinear keeps the extern \"C\" spelling of its mangled name."
+    "Vec3_ApproachHorz matched as extern \"C\" inside this C++ file. ApproachLinear is a real C++ definition; its step is a scalar Fix12i (mangled i), not Fix12<int> (notes/mwccarm-codegen.md 6az)."
   ],
   "production_mode": "text-only",
   "verification": {

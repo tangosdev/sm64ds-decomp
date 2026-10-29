@@ -155,11 +155,9 @@ jobs:
         # per (module, addr); the duplicate is transient, cleaned here on the way to the
         # refresh commit below (which already includes nearmiss/db.jsonl).
         run: python tools/nearmiss_db.py dedupe
-      - name: Refresh README progress bar
-        run: python tools/progress.py --write-readme --from-db _chaos_data/chaos-db.json
-      - name: Refresh README tier block
-        # MATCHED here reads the same db the bar just used, so the two blocks cannot
-        # drift apart. LINKED is read from the stamp
+      - name: Refresh README progress block
+        # Single README block (MATCHED + LINKED). MATCHED reads chaos-db.json;
+        # LINKED is read from the stamp
         # in config/port_linkage.json and is deliberately NOT recomputed: it needs an
         # MSVC port build this runner does not have. README.md is already in the
         # refresh commit's file list below, so that needs no change.

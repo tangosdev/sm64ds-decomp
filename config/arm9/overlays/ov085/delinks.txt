@@ -7,10 +7,18 @@
 src/game/actors/d_a_kinopio.cpp:
     complete
     .text start:0x02129020 end:0x02129d18
+    .init start:0x0212f2a8 end:0x0212f3a0
+    .ctor start:0x0212fdf0 end:0x0212fdf4
+    .data start:0x0212fe20 end:0x0212ff34
+    .bss start:0x02130480 end:0x021304bc
 
 src/game/actors/d_a_peach.cpp:
     complete
     .text start:0x02129d18 end:0x0212a6d4
+    .init start:0x0212f3a0 end:0x0212f5ec
+    .ctor start:0x0212fdf4 end:0x0212fdf8
+    .data start:0x0212ff34 end:0x0213003c
+    .bss start:0x021304bc end:0x021305ac
 
 src/game/actors/d_a_mip.cpp:
     complete
@@ -39,12 +47,4 @@ src/game/actors/d_a_obj_kanban.cpp:
     .init start:0x0212fdb0 end:0x0212fdf0
     .ctor start:0x0212fe04 end:0x0212fe08
     .bss start:0x02130858 end:0x0213086c
-
-src/unnamed/ov085/__sinit_ov085_0212f2a8.c:
-    complete
-    .init start:0x0212f2a8 end:0x0212f3a0
-
-src/unnamed/ov085/__sinit_ov085_0212f3a0.c:
-    complete
-    .init start:0x0212f3a0 end:0x0212f5ec
 

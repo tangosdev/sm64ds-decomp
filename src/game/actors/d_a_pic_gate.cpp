@@ -45,7 +45,7 @@
 #include "daPicGate_c.h"
 #include "common.h"
 #include "Player.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
@@ -81,6 +81,22 @@ struct Vec3 { int x, y, z; };
  * has to carry its definition's name to agree. */
 typedef struct { int x, y, z; } Vec3_Fix12;
 
+/* One 0x30-byte BMD material, seen only as far as its DIF_AMB/SPE_EMI pair:
+   LoadTexture copies both into the Ov080Mat record that LoadMaterial pushes
+   to the G3 DIF_AMB/SPE_EMI ports. BMD_File.h still spells them pad_28. */
+struct PicGateMaterial {
+    u8 pad_00[0x28];
+    u32 difAmb; /* 0x28 */
+    u32 speEmi; /* 0x2c */
+};
+#ifndef SM64DS_PLATFORM_PC
+typedef char PicGateMaterial_size_must_be_0x30[sizeof(PicGateMaterial) == 0x30 ? 1 : -1];
+#endif
+
+namespace cstd {
+Fix12i fdiv(s32, s32);
+}
+
 extern "C" {
 void  Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -95,7 +111,6 @@ Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void  MulMat4x3Mat4x3(const int *m1, const int *m0, int *mF);
 void  func_020553a4(void *m);
 void  func_02012694(u32 id, void *pos);
-Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
 int   __aeabi_idiv(int a, int b);
 void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
@@ -178,33 +193,32 @@ void daPicGate_c::func_ov080_0212555c()
 u8 *daPicGate_c::func_ov080_02125630(s32 i)
 {
     int off = 0x18 * i;
-    unsigned char *e = &data_ov080_02128688[off];
+    Ov080Mat *e = (Ov080Mat *)&data_ov080_02128688[off];
     unsigned char *fl = &data_ov080_0212869c[off];
     if (data_ov080_0212869c[off] == 0) {
-        char *a;
-        char *b;
-        char *c;
+        BMD_Texture *a;
+        PicGateMaterial *b;
+        BMD_Palette *c;
         SharedFilePtr *sfp = data_ov080_0212775c[i];
-        char *o = (char *)func_0201787c(sfp);
-        a = *(char **)(o + 0x18);
-        b = *(char **)(o + 0x28);
-        c = *(char **)(o + 0x20);
+        BMD_File *o = (BMD_File *)func_0201787c(sfp);
+        a = o->textures;
+        b = (PicGateMaterial *)o->materials;
+        c = o->palettes;
         int sz;
-        *(int *)(e + 0) = (int)Model::LoadCompressedTextureToVram(
-            *(char **)(a + 4), *(unsigned int *)(a + 8),
-            *(char **)(a + 4) + *(unsigned int *)(a + 8));
-        sz = *(int *)(c + 8);
+        e->texAddr = (int)dExtSimpleModel_c::LoadCompressedTextureToVram(a->data, a->size,
+                                                                         a->data + a->size);
+        sz = c->size;
         if (sz <= 8)
-            *(int *)(e + 4) = (int)func_02045ad8(*(const void **)(c + 4), (unsigned int)sz);
+            e->pltAddr = (int)func_02045ad8(c->data, (unsigned int)sz);
         else
-            *(int *)(e + 4) = (int)func_02045a50(*(const void **)(c + 4), (unsigned int)sz);
-        *(int *)(e + 8) = *(int *)(b + 0x28);
-        *(int *)(e + 0xc) = *(int *)(b + 0x2c);
-        *(int *)(e + 0x10) = *(int *)(a + 0x10);
+            e->pltAddr = (int)func_02045a50(c->data, (unsigned int)sz);
+        e->difAmb = b->difAmb;
+        e->speEmi = b->speEmi;
+        e->param = a->flags;
         *fl = 1;
         sfp->Release();
     }
-    return e;
+    return (u8 *)e;
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_021256f8Ev
@@ -286,7 +300,7 @@ void daPicGate_c::func_ov080_021256f8()
 // @symbol _ZN11daPicGate_c19func_ov080_02125940Ev
 /* BuildNormals: each cell's normal is the cross product of its column and
  * row neighbours (edge cells take the one-sided edge), halved in z, then
- * normalized and packed 10 bits per axis into Vertex::color. */
+ * normalized and packed 10 bits per axis into Vertex::normal. */
 void daPicGate_c::func_ov080_02125940()
 {
     Vec3 ej;
@@ -324,9 +338,7 @@ void daPicGate_c::func_ov080_02125940()
             CrossVec3((const Vec3_Fix12 *)&ej, (const Vec3_Fix12 *)&ei, (Vec3_Fix12 *)&n);
             n.z >>= 1;
             NormalizeVec3((int *)&n, (int *)&n);
-            p->color = (n.x >> 3 & mask)
-                | ((n.y >> 3 & mask) << 10)
-                | ((n.z >> 3 & mask) << 20);
+            p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p += 1;
         }
     }
@@ -343,7 +355,7 @@ void daPicGate_c::func_ov080_02125af0()
         if (e->x == 0 || e->x == ((unsigned char)(param1 & 0xf) + 1) * 0x64000 || e->y == 0 ||
             e->y == ((unsigned char)((param1 >> 4) & 0xf) + 1) * 0x64000) {
             e->z = 0;
-            mCells[i].color = 0x1ff00000;
+            mCells[i].normal = 0x1ff00000;
         }
     }
 }
@@ -355,7 +367,7 @@ void daPicGate_c::func_ov080_02125af0()
 s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
 {
     unsigned short r4 = mWaveTimer;
-    int *obj;
+    const WaveParams *wave;
     int r5res, r4res, sum, idx;
     Fix12i f;
     short tv;
@@ -364,11 +376,13 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
         return 0;
 
     if (((unsigned char)((param1 >> 13) & 3)) == 0) {
-        obj = (int *)mWaveParams;
+        wave = mWaveParams;
         {
-            int a = __aeabi_idiv(0xffff, obj[1]);
-            int b = __aeabi_idiv(obj[2], a);
-            if (r6 > b * (obj[4] - r4))
+            /* Frames per cycle, then distance per frame: past the
+               wavefront the picture is still flat. */
+            int a = __aeabi_idiv(0xffff, wave->phaseStep);
+            int b = __aeabi_idiv(wave->wavelength, a);
+            if (r6 > b * (wave->duration - r4))
                 return 0;
         }
     }
@@ -376,7 +390,7 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
     r5res = func_ov080_02125d08(r6);
     r4res = func_ov080_02125cd4(mWaveParams->duration - mWaveTimer);
 
-    f = _ZN4cstd4fdivEii(r4res, mWaveParams->unk_0c);
+    f = cstd::fdiv(r4res, mWaveParams->radius);
     sum = r4res + FX_MUL(-f, r6);
     if (sum < 0)
         sum = 0;
@@ -387,23 +401,23 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125cd4Ei
-/* unk_00 / duration of the current WaveParams row, as a frame count. */
+/* The wave's amplitude after n frames: it decays linearly from
+ * amplitude to 0 over duration. */
 s32 daPicGate_c::func_ov080_02125cd4(s32 n)
 {
     const WaveParams *p = mWaveParams;
-    int r4 = p->unk_00;
+    int r4 = p->amplitude;
     int r1 = p->duration;
     int r = __aeabi_idiv(r4, r1);
     return r4 - r * n;
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125d08Ei
-/* frames * unk_08, 4.12 fixed-point, minus the running phase mWavePhase. */
-s32 daPicGate_c::func_ov080_02125d08(s32 frames)
-{
-    int *obj = (int *)mWaveParams;
-    Fix12i speed = _ZN4cstd4fdivEii(0xffff, obj[2]);
-    int result = FX_MUL(frames, speed);
+/* The wave's phase at distance dist from the origin: dist * 0xffff /
+ * wavelength, 4.12 fixed-point, minus the running phase mWavePhase. */
+s32 daPicGate_c::func_ov080_02125d08(s32 dist) {
+    Fix12i speed = cstd::fdiv(0xffff, mWaveParams->wavelength);
+    int result = FX_MUL(dist, speed);
     s16 cur = mWavePhase;
     return (s16)(result - cur);
 }
@@ -413,22 +427,23 @@ s32 daPicGate_c::func_ov080_02125d08(s32 frames)
 struct Elem { struct Vector3 pos; int dist; int pad[2]; };  /* 0x18 */
 
 // @symbol func_ov080_02125d64
-/* Refresh every cell's planar distance from the wave origin (unk_134);
+/* Refresh every cell's planar distance from the wave origin (mWaveOrigin);
  * Elem::dist feeds RippleHeight. */
 extern "C" void func_ov080_02125d64(char *c)
 {
     int i;
 
-    for (i = 0; i < *(unsigned short*)(c + 0x1b8); i++) {
-        struct Elem *e = (struct Elem *)(*(char **)(c + 0x1a0) + i * 0x18);
+    for (i = 0; i < ((daPicGate_c *)c)->mNumCells; i++) {
+        struct Elem *e = (struct Elem *)((char *)((daPicGate_c *)c)->mCells + i * 0x18);
         Vec3 tmp = *(struct Vec3 *)&e->pos;
         tmp.z = 0;
-        e->dist = Vec3_Dist((struct Vector3 *)(c + 0x134), (struct Vector3 *)&tmp);
+        e->dist =
+            Vec3_Dist((struct Vector3 *)((daPicGate_c *)c)->mWaveOrigin, (struct Vector3 *)&tmp);
     }
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125de0Eiii
-/* BeginWave: the origin in cell space goes to unk_134, every cell's dist
+/* BeginWave: the origin in cell space goes to mWaveOrigin, every cell's dist
  * is refreshed, then a WaveParams row is picked for this param1 shape
  * (front/back rows differ) and mWaveTimer reloads from it. */
 void daPicGate_c::func_ov080_02125de0(s32 a1, s32 a2, s32 a3)
@@ -436,9 +451,9 @@ void daPicGate_c::func_ov080_02125de0(s32 a1, s32 a2, s32 a3)
     u32 m8;
     int r0;
     unsigned char f;
-    unk_134[0] = a1;
-    unk_134[1] = a2;
-    unk_134[2] = 0;
+    mWaveOrigin[0] = a1;
+    mWaveOrigin[1] = a2;
+    mWaveOrigin[2] = 0;
     func_ov080_02125d64((char *)this);
     m8 = param1;
     r0 = 0;
@@ -472,22 +487,22 @@ void daPicGate_c::func_ov080_02125f00()
     mCorners[0].x = 0;
     mCorners[0].y = 0;
     mCorners[0].z = 0;
-    mCorners[0].color = 0x20000000;
+    mCorners[0].normal = 0x20000000;
     mCorners[0].texCoord = 0x8000800;
     mCorners[1].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[1].y = 0;
     mCorners[1].z = 0;
-    mCorners[1].color = 0x20000000;
+    mCorners[1].normal = 0x20000000;
     mCorners[1].texCoord = 0x8000000;
     mCorners[2].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[2].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[2].z = 0;
-    mCorners[2].color = 0x20000000;
+    mCorners[2].normal = 0x20000000;
     mCorners[2].texCoord = 0;
     mCorners[3].x = 0;
     mCorners[3].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[3].z = 0;
-    mCorners[3].color = 0x20000000;
+    mCorners[3].normal = 0x20000000;
     mCorners[3].texCoord = 0x800;
 }
 
@@ -499,7 +514,7 @@ void daPicGate_c::func_ov080_02125fd0()
 {
     int tmp[13];
     int i;
-    int *p;
+    Vertex *p;
 
     G3_MTX_PUSH = 0;
     MulMat4x3Mat4x3(mMtx, (const int *)&data_0209b3ec, tmp);
@@ -515,22 +530,22 @@ void daPicGate_c::func_ov080_02125fd0()
     G3_BEGIN = 1;
 
     i = 0;
-    p = (int *)mCorners;
+    p = mCorners;
     do {
         int v0, v1, v2;
         s16 s0, s1, s2;
-        G3_TEXCOORD = p[5];
-        G3_NORMAL = p[4];
-        v0 = p[0];
-        v1 = p[1];
-        v2 = p[2];
+        G3_TEXCOORD = p->texCoord;
+        G3_NORMAL = p->normal;
+        v0 = p->x;
+        v1 = p->y;
+        v2 = p->z;
         s0 = (s16)(v0 >> 8);
         s1 = (s16)(v1 >> 8);
         s2 = (s16)(v2 >> 8);
         G3_VTX_16 = (u16)s0 | ((u16)s1 << 16);
         G3_VTX_16 = (u16)s2;
         i++;
-        p += 6;
+        p++;
     } while (i < 4);
 
     G3_END = 0;
@@ -551,22 +566,22 @@ void daPicGate_c::func_ov080_02126124()
     mCorners[0].x = 0;
     mCorners[0].y = 0;
     mCorners[0].z = 0;
-    mCorners[0].color = 0x20000000;
+    mCorners[0].normal = 0x20000000;
     mCorners[0].texCoord = 0x8000000;
     mCorners[1].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[1].y = 0;
     mCorners[1].z = 0;
-    mCorners[1].color = 0x20000000;
+    mCorners[1].normal = 0x20000000;
     mCorners[1].texCoord = 0x8000800;
     mCorners[2].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[2].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[2].z = 0;
-    mCorners[2].color = 0x20000000;
+    mCorners[2].normal = 0x20000000;
     mCorners[2].texCoord = 0x800;
     mCorners[3].x = 0;
     mCorners[3].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[3].z = 0;
-    mCorners[3].color = 0x20000000;
+    mCorners[3].normal = 0x20000000;
     mCorners[3].texCoord = 0;
 }
 
@@ -583,7 +598,7 @@ extern int data_ov080_0212771c[];
 }
 /* texgen=NORMAL variant: no per-vertex TEXCOORD, positions at >>7. */
 #define EMIT_VTX7(v) \
-    G3_NORMAL = (v)->color; \
+    G3_NORMAL = (v)->normal; \
     vz = (v)->z; \
     s2 = (s16)(vz >> 7); \
     vx = (v)->x; \

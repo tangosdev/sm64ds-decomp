@@ -28,11 +28,9 @@
  * leftovers (member spellings measured and rejected on size):
  * - Kill: Particle::System::NewSimple(Fix12<int> x, y, z) is +0x24
  *   (0x8c -> 0xb0). The scalar extern passes the three positions in r1-r3.
- * - func_ov091_02131160: dActor_c::DropShadowScaleXYZ as a method is +0x1c
- *   (0x1e0 -> 0x1fc). A Matrix4x3 * at pad_348 is +4 (0x1e0 -> 0x1e4);
- *   the translation row stays this+0x36c / 0x370 / 0x374.
- * - Behavior: dBgActor_c::UpdateKillByMegaChar as a method is +0xc
- *   (0x488 -> 0x494). One this+0x3a2 halfword for the arrived pitch is
+ * - func_ov091_02131160: a Matrix4x3 * local for mShadowMat is +4
+ *   (0x1e0 -> 0x1e4); the translation row is stored through `this`.
+ * - Behavior: one this+0x3a2 halfword for the arrived pitch is
  *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
  *   step stays this+0x300+0xa4.
  * - InitResources: dBgW_KcMbg::SetFile as a method is +4 (0x2b4 -> 0x2b8).
@@ -108,15 +106,11 @@ struct UpdownClpsSlot {
  * this TU names the handles directly; the UpdownFileSlot rows above
  * point at them. */
 struct RotateUpdownLiftModelFile : SharedFilePtr {
-    u32 words[2];
-
     RotateUpdownLiftModelFile(u32 fileID);
     ~RotateUpdownLiftModelFile();
 };
 
 struct RotateUpdownLiftCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     RotateUpdownLiftCollisionFilePtr(u32 fileID);
     ~RotateUpdownLiftCollisionFilePtr();
 };
@@ -156,14 +150,13 @@ void func_020393a4(int *collider, int range);
 void func_02039394(int *collider, int range);
 void func_020393d4(int *collider, void *callback);
 
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-int _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-    void *self, void *shadow, void *mat, int sx, int sy, int sz, unsigned int opacity);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
-    int scale, s16 angY, CLPS_Block *clps);
+namespace Particle {
+struct System {
+    static void *NewSimple(unsigned int id, int x, int y, int z);
+};
+}
+extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
+                                            int scale, s16 angY, CLPS_Block *clps);
 }
 
 // 0x02130f00 (0x4c)
@@ -210,7 +203,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
 // @symbol _ZN23daObjRotateUpdownLift_c4KillEv
 void daObjRotateUpdownLift_c::Kill()
 {
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xbb, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0xbb, mPosX, mPosY, mPosZ);
     /* memberwise stores: the (x,y,z) ctor form batches the loads */
     Vector3 v;
     v.x = mPosX;
@@ -219,7 +212,7 @@ void daObjRotateUpdownLift_c::Kill()
     PoofDustAt(v);
     Sound::PlayBank3(0xf, mCamSpacePos);
     mIsDead = 1;
-    unk_31c = 0;
+    mMegaKnockback = 0;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 }
@@ -244,19 +237,18 @@ void daObjRotateUpdownLift_c::OnHitByMegaChar(Player &player)
 // @symbol func_ov091_02131160
 /* Aim the cuboid shadow and the clip volume. Called every frame except
    for HS_UPDOWN_LIFT. */
-int daObjRotateUpdownLift_c::func_ov091_02131160()
-{
-    /* The shadow matrix is the 0x30 bytes at 0x348 (pad_348). Holding that
-       as a Matrix4x3 * steals r4 from `this` and the function grows. The
-       three translation words are stored from `this`, not from that pointer. */
+void daObjRotateUpdownLift_c::func_ov091_02131160() {
+    /* Holding mShadowMat in a Matrix4x3 * local steals r4 from `this` and
+       the function grows. The three translation words are stored from
+       `this`, not from that pointer. */
     char *c = (char *)this;
     VariantWords shadowBaseY = data_ov091_02134bac;
     VariantWords shadowSizeX = data_ov091_02134bd0;
     VariantWords shadowSizeZ = data_ov091_02134bb8;
     VariantWords clipCap = data_ov091_02134ba0;
 
-    Matrix4x3_FromRotationY((Matrix4x3 *)(c + 0x348), mAngleY);
-    *(int *)(c + 0x36c) = mPosX >> 3;
+    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngleY);
+    ((Matrix4x3 *)mShadowMat)->t.x = mPosX >> 3;
 
     int sinIdx = (u16)mAngleX >> 4;
     int sine = data_02082214[sinIdx << 1];
@@ -266,8 +258,8 @@ int daObjRotateUpdownLift_c::func_ov091_02131160()
     int base = shadowBaseY.v[variantA];
     int sum = base + scaled;
     int py = mPosY;
-    *(int *)(c + 0x370) = (py - sum) >> 3;
-    *(int *)(c + 0x374) = mPosZ >> 3;
+    ((Matrix4x3 *)mShadowMat)->t.y = (py - sum) >> 3;
+    ((Matrix4x3 *)mShadowMat)->t.z = mPosZ >> 3;
 
     int variantB = mVariant;
     int h = mPosY - mGroundY;
@@ -287,8 +279,8 @@ int daObjRotateUpdownLift_c::func_ov091_02131160()
     int fac = 0xa0000 - shr;
     if (cosine < 0)
         cosine = -cosine;
-    return _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-        c, c + 0x320, c + 0x348, sx, h, shadowSizeZ.v[variantC] + FX_MUL(fac, cosine), 0xf);
+    DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, sx, h,
+                       shadowSizeZ.v[variantC] + FX_MUL(fac, cosine), 0xf);
 }
 
 // 0x02131340 (0x48)
@@ -359,25 +351,24 @@ int daObjRotateUpdownLift_c::Behavior()
         if (isParent != 0) {
             daObjRotateUpdownLift_c *platform0;
             daObjRotateUpdownLift_c *platform1;
-            if ((daObjRotateUpdownLift_c *)mPlatform0 == 0
-                || (daObjRotateUpdownLift_c *)mPlatform1 == 0) {
+            if (mPlatform0 == 0 || mPlatform1 == 0) {
                 daObjRotateUpdownLift_c *nearby;
                 nearby = (daObjRotateUpdownLift_c *)FindWithActorID(0x1d, 0);
                 if (nearby != 0) {
                     do {
                         if (nearby != this && Vec3_HorzDist(&mPos, &nearby->mPos) < 0xa0000) {
-                            if ((daObjRotateUpdownLift_c *)mPlatform0 == 0)
-                                mPlatform0 = (s32)nearby;
-                            else if ((daObjRotateUpdownLift_c *)mPlatform1 == 0)
-                                mPlatform1 = (s32)nearby;
+                            if (mPlatform0 == 0)
+                                mPlatform0 = nearby;
+                            else if (mPlatform1 == 0)
+                                mPlatform1 = nearby;
                         }
                         nearby = (daObjRotateUpdownLift_c *)FindWithActorID(0x1d, nearby);
                     } while (nearby != 0);
                 }
             }
-            platform0 = (daObjRotateUpdownLift_c *)mPlatform0;
+            platform0 = mPlatform0;
             if (platform0 != 0) {
-                platform1 = (daObjRotateUpdownLift_c *)mPlatform1;
+                platform1 = mPlatform1;
                 if (platform1 != 0) {
                     int offScreen;
                     if (platform0->mIsDead != 0 && platform1->mIsDead != 0)
@@ -385,10 +376,10 @@ int daObjRotateUpdownLift_c::Behavior()
                     offScreen = (mFlags & 8) ? 1 : 0;
                     if (offScreen != 0) {
                         if (DistToCPlayer() > 0x7d0000) {
-                            platform0 = (daObjRotateUpdownLift_c *)mPlatform0;
+                            platform0 = mPlatform0;
                             if (platform0->mIsDead != 0)
                                 platform0->func_ov091_02130fac();
-                            platform1 = (daObjRotateUpdownLift_c *)mPlatform1;
+                            platform1 = mPlatform1;
                             if (platform1->mIsDead != 0)
                                 platform1->func_ov091_02130fac();
                         }
@@ -402,7 +393,7 @@ int daObjRotateUpdownLift_c::Behavior()
         return 1;
     }
 
-    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(this, 0x2000, 0, 0, 0) != 0)
+    if (UpdateKillByMegaChar(0x2000, 0, 0, 0) != 0)
         return 1;
 
     {
@@ -476,10 +467,10 @@ int daObjRotateUpdownLift_c::Behavior()
             func_ov091_02131160();
             func_020393a4((int *)&mMeshCollider, 0x150000);
             func_02039394((int *)&mMeshCollider, 0x1000);
-            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x150000, 0x1000) != 0)
+            if (IsClsnInRange(0x150000, 0x1000) != 0)
                 UpdateClsnPosAndRot();
         } else {
-            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+            if (IsClsnInRange(0, 0) != 0)
                 UpdateClsnPosAndRot();
         }
     }
@@ -502,7 +493,7 @@ int daObjRotateUpdownLift_c::InitResources()
 
     if (param1 == 0xffff) {
         mFlags &= ~2;
-        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0, 0x1000, 0, 0);
+        SetRanges(0, 0x1000, 0, 0);
         return 1;
     }
 
@@ -542,7 +533,7 @@ int daObjRotateUpdownLift_c::InitResources()
     mPosZ = placed.z;
 
     variant = mVariant;
-    bmd = Model::LoadFile(*data_ov091_02134c30[variant].file);
+    bmd = dExtSimpleModel_c::LoadFile(*data_ov091_02134c30[variant].file);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
     func_ov091_02131340();
@@ -550,9 +541,9 @@ int daObjRotateUpdownLift_c::InitResources()
 
     variant = mVariant;
     kcl = dBgW_Kc::LoadFile(*data_ov091_02134c34[variant].file);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)kcl, &mClsnMat, 0x199, mAngleY,
-        data_ov091_02134c38[variant].clps);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)kcl, *(&mClsnMat), 0x199, mAngleY,
+                              *(data_ov091_02134c38[variant].clps));
     func_020393d4((int *)&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
 
     {

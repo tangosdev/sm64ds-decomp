@@ -11,8 +11,8 @@
  * until the rename.
  *
  * Derives from dBgActor_c: the destructor stores this class's vtable, then
- * dBgActor_c's -- inlined -- then destroys this class's own Model at 0x320,
- * the dBgW_KcMbg at 0x124 and the Model at 0xd4 before chaining to dActor_c.
+ * dBgActor_c's -- inlined -- then destroys this class's own dExtSimpleModel_c at 0x320,
+ * the dBgW_KcMbg at 0x124 and the dExtSimpleModel_c at 0xd4 before chaining to dActor_c.
  *
  * On top of dBgActor_c's model and collider it carries a second model and a
  * second collider matrix of its own, kept in step by
@@ -22,13 +22,13 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 struct daObjDpBrock_c : dBgActor_c {
     u8  pad_31e[0x2];
     /* The class's own model. NOT "mModel": dBgActor_c's inherited
-       Model at 0xd4 already owns that name. */
-    Model mStepModel;                 /* 0x320 */
+       dExtSimpleModel_c at 0xd4 already owns that name. */
+    dExtSimpleModel_c mStepModel;     /* 0x320 */
     u16 mStateTimer;                  /* 0x370 - frames in the current state */
     u8  mState;                       /* 0x372 - 0 sinking, 1 rising */
     u8  pad_373[0x1];

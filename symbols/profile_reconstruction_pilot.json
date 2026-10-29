@@ -400,7 +400,7 @@
       "tu_left_boundary_confidence": "medium",
       "tu_right_boundary_confidence": "medium",
       "tu_classes": [
-        "BlendModelAnim",
+        "dExtBlendAnmModel_c",
         "CLPS_BlockRef",
         "CP15",
         "Event",
@@ -417,14 +417,14 @@
         "Heap",
         "HeapAllocator",
         "IRQ",
-        "MaterialChanger",
+        "dExtAnmMaterial_c",
         "Memory",
         "MemoryNode",
         "Message",
-        "Model",
-        "ModelAnim",
-        "ModelAnim2",
-        "ModelBase",
+        "dExtSimpleModel_c",
+        "dExtAnmModel_c",
+        "dExtAnm2Model_c",
+        "dExtModel_c",
         "ModelComponents",
         "NestedHeapIterator",
         "OAM",
@@ -436,8 +436,8 @@
         "SolidHeapAllocator",
         "Sound",
         "SurfaceInfo",
-        "TextureSequence",
-        "TextureTransformer",
+        "dExtAnmTexPat_c",
+        "dExtAnmTexSRT_c",
         "Timer",
         "Vector3",
         "Vector3s",
@@ -499,7 +499,7 @@
           ],
           "evidence": [
             "1 ownership global(s) have no recovered source consumer",
-            "ordered hypothesis main:19 (main/BlendModelAnim+CLPS_BlockRef+CP15+Event+ExpandingHeap+ExpandingHeapAllocator+Fog+G2+G2S+G2x+G3X+G3i+GX+GXS+Heap+HeapAllocator+IRQ+MaterialChanger+Memory+MemoryNode+Message+Model+ModelAnim+ModelAnim2+ModelBase+ModelComponents+NestedHeapIterator+OAM+Particle+PathPtr+SaveData+SharedFilePtr+SolidHeap+SolidHeapAllocator+Sound+SurfaceInfo+TextureSequence+TextureTransformer+Timer+Vector3+Vector3s+cstd+dActor_c+dBase_c+dBgCh+dBgCh_Actr+dBgCh_Gnd+dBgCh_Lin+dBgCh_SphCrr+dBgPc+dBgPi+dBgW+dBgW_Kc+dBgW_KcMbg+dBgW_KcMbgSclY+dCamera_c+dCapEnemy_c+dCcAcPos_c+dCcAc_c+dCcPos_c+dCc_c+dClipper+dExtCommonModel_c+dExtFrameCtrl_c+dExtShadowModel_c+dFader_c+dFdBrightness_c+dFdColor_c+dFdDummy_c+dFdWipe_c+dGraph_c+dM3dGSph+dPa_c+dScBoot_c+dScMB_c+dScStage_c+dScene_c+dView_c+dWipe_c+fBase_c+fLiNdBaPr_c+fLiNdBa_c): module has one sinit per candidate TU; this is corroboration, not proof"
+            "ordered hypothesis main:19 (main/dExtBlendAnmModel_c+CLPS_BlockRef+CP15+Event+ExpandingHeap+ExpandingHeapAllocator+Fog+G2+G2S+G2x+G3X+G3i+GX+GXS+Heap+HeapAllocator+IRQ+dExtAnmMaterial_c+Memory+MemoryNode+Message+dExtSimpleModel_c+dExtAnmModel_c+dExtAnm2Model_c+dExtModel_c+ModelComponents+NestedHeapIterator+OAM+Particle+PathPtr+SaveData+SharedFilePtr+SolidHeap+SolidHeapAllocator+Sound+SurfaceInfo+dExtAnmTexPat_c+dExtAnmTexSRT_c+Timer+Vector3+Vector3s+cstd+dActor_c+dBase_c+dBgCh+dBgCh_Actr+dBgCh_Gnd+dBgCh_Lin+dBgCh_SphCrr+dBgPc+dBgPi+dBgW+dBgW_Kc+dBgW_KcMbg+dBgW_KcMbgSclY+dCamera_c+dCapEnemy_c+dCcAcPos_c+dCcAc_c+dCcPos_c+dCc_c+dClipper+dExtCommonModel_c+dExtFrameCtrl_c+dExtShadowModel_c+dFader_c+dFdBrightness_c+dFdColor_c+dFdDummy_c+dFdWipe_c+dGraph_c+dM3dGSph+dPa_c+dScBoot_c+dScMB_c+dScStage_c+dScene_c+dView_c+dWipe_c+fBase_c+fLiNdBaPr_c+fLiNdBa_c): module has one sinit per candidate TU; this is corroboration, not proof"
           ],
           "blockers": [
             "no touched global maps to a candidate TU"
@@ -636,7 +636,7 @@
       "tu_left_boundary_confidence": "medium",
       "tu_right_boundary_confidence": "medium",
       "tu_classes": [
-        "BlendModelAnim",
+        "dExtBlendAnmModel_c",
         "CLPS_BlockRef",
         "CP15",
         "Event",
@@ -653,14 +653,14 @@
         "Heap",
         "HeapAllocator",
         "IRQ",
-        "MaterialChanger",
+        "dExtAnmMaterial_c",
         "Memory",
         "MemoryNode",
         "Message",
-        "Model",
-        "ModelAnim",
-        "ModelAnim2",
-        "ModelBase",
+        "dExtSimpleModel_c",
+        "dExtAnmModel_c",
+        "dExtAnm2Model_c",
+        "dExtModel_c",
         "ModelComponents",
         "NestedHeapIterator",
         "OAM",
@@ -672,8 +672,8 @@
         "SolidHeapAllocator",
         "Sound",
         "SurfaceInfo",
-        "TextureSequence",
-        "TextureTransformer",
+        "dExtAnmTexPat_c",
+        "dExtAnmTexSRT_c",
         "Timer",
         "Vector3",
         "Vector3s",
@@ -735,7 +735,7 @@
           ],
           "evidence": [
             "1 ownership global(s) have no recovered source consumer",
-            "ordered hypothesis main:19 (main/BlendModelAnim+CLPS_BlockRef+CP15+Event+ExpandingHeap+ExpandingHeapAllocator+Fog+G2+G2S+G2x+G3X+G3i+GX+GXS+Heap+HeapAllocator+IRQ+MaterialChanger+Memory+MemoryNode+Message+Model+ModelAnim+ModelAnim2+ModelBase+ModelComponents+NestedHeapIterator+OAM+Particle+PathPtr+SaveData+SharedFilePtr+SolidHeap+SolidHeapAllocator+Sound+SurfaceInfo+TextureSequence+TextureTransformer+Timer+Vector3+Vector3s+cstd+dActor_c+dBase_c+dBgCh+dBgCh_Actr+dBgCh_Gnd+dBgCh_Lin+dBgCh_SphCrr+dBgPc+dBgPi+dBgW+dBgW_Kc+dBgW_KcMbg+dBgW_KcMbgSclY+dCamera_c+dCapEnemy_c+dCcAcPos_c+dCcAc_c+dCcPos_c+dCc_c+dClipper+dExtCommonModel_c+dExtFrameCtrl_c+dExtShadowModel_c+dFader_c+dFdBrightness_c+dFdColor_c+dFdDummy_c+dFdWipe_c+dGraph_c+dM3dGSph+dPa_c+dScBoot_c+dScMB_c+dScStage_c+dScene_c+dView_c+dWipe_c+fBase_c+fLiNdBaPr_c+fLiNdBa_c): module has one sinit per candidate TU; this is corroboration, not proof"
+            "ordered hypothesis main:19 (main/dExtBlendAnmModel_c+CLPS_BlockRef+CP15+Event+ExpandingHeap+ExpandingHeapAllocator+Fog+G2+G2S+G2x+G3X+G3i+GX+GXS+Heap+HeapAllocator+IRQ+dExtAnmMaterial_c+Memory+MemoryNode+Message+dExtSimpleModel_c+dExtAnmModel_c+dExtAnm2Model_c+dExtModel_c+ModelComponents+NestedHeapIterator+OAM+Particle+PathPtr+SaveData+SharedFilePtr+SolidHeap+SolidHeapAllocator+Sound+SurfaceInfo+dExtAnmTexPat_c+dExtAnmTexSRT_c+Timer+Vector3+Vector3s+cstd+dActor_c+dBase_c+dBgCh+dBgCh_Actr+dBgCh_Gnd+dBgCh_Lin+dBgCh_SphCrr+dBgPc+dBgPi+dBgW+dBgW_Kc+dBgW_KcMbg+dBgW_KcMbgSclY+dCamera_c+dCapEnemy_c+dCcAcPos_c+dCcAc_c+dCcPos_c+dCc_c+dClipper+dExtCommonModel_c+dExtFrameCtrl_c+dExtShadowModel_c+dFader_c+dFdBrightness_c+dFdColor_c+dFdDummy_c+dFdWipe_c+dGraph_c+dM3dGSph+dPa_c+dScBoot_c+dScMB_c+dScStage_c+dScene_c+dView_c+dWipe_c+fBase_c+fLiNdBaPr_c+fLiNdBa_c): module has one sinit per candidate TU; this is corroboration, not proof"
           ],
           "blockers": [
             "no touched global maps to a candidate TU"

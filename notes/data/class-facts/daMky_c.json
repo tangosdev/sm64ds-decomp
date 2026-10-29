@@ -401,7 +401,7 @@
       "address": "0x02111688",
       "size": "0x48",
       "vtable_slot": 16,
-      "body": "Stores the vtable address point 0x02115bfc into this+0 (literal at 0x021116cc), then destroys members in exactly REVERSE construction order: dBgCh_Actr::~dBgCh_Actr(this+0x194) @arm9 0x020373f8, dCcAc_c::~dCcAc_c(this+0x160) @0x020149a4, ShadowModel::~ShadowModel(this+0x138) @0x02015ff8, ModelAnim::~ModelAnim(this+0xd4) @0x0201691c, then the base _ZN8dActor_cD2Ev @0x020112c8. PathPtr at +0x398 is NOT destroyed (trivial destructor). Returns this."
+      "body": "Stores the vtable address point 0x02115bfc into this+0 (literal at 0x021116cc), then destroys members in exactly REVERSE construction order: dBgCh_Actr::~dBgCh_Actr(this+0x194) @arm9 0x020373f8, dCcAc_c::~dCcAc_c(this+0x160) @0x020149a4, ShadowModel::~ShadowModel(this+0x138) @0x02015ff8, dExtAnmModel_c::~dExtAnmModel_c(this+0xd4) @0x0201691c, then the base _ZN8dActor_cD2Ev @0x020112c8. PathPtr at +0x398 is NOT destroyed (trivial destructor). Returns this."
     },
     "D0": {
       "address": "0x021116d0",
@@ -529,7 +529,7 @@
       "_ZN7fBase_cnwEj(0x3cc)                     @arm9 0x02043444",
       "_ZN8dActor_cC2Ev(this)                     @arm9 0x0201150c",
       "store vptr: this[0] = 0x02115bfc            (the vtable ADDRESS POINT itself, loaded from the factory literal pool at 0x02114634 / 0x0211468c)",
-      "_ZN9ModelAnimC1Ev(this+0x0d4)              @arm9 0x02016958",
+      "_ZN14dExtAnmModel_cC1Ev(this+0x0d4)              @arm9 0x02016958",
       "_ZN11ShadowModelC1Ev(this+0x138)           @arm9 0x02016068",
       "_ZN7dCcAc_cC1Ev(this+0x160)                @arm9 0x020149c8",
       "_ZN10dBgCh_ActrC1Ev(this+0x194)            @arm9 0x02037430",
@@ -542,8 +542,8 @@
     "proven_subobjects": [
       {
         "offset": "0x0d4",
-        "type": "ModelAnim",
-        "evidence": "both factories call _ZN9ModelAnimC1Ev on this+0x0d4; D1 and D0 both call _ZN9ModelAnimD1Ev (arm9 0x0201691c) on the same address"
+        "type": "dExtAnmModel_c",
+        "evidence": "both factories call _ZN14dExtAnmModel_cC1Ev on this+0x0d4; D1 and D0 both call _ZN14dExtAnmModel_cD1Ev (arm9 0x0201691c) on the same address"
       },
       {
         "offset": "0x138",
@@ -799,12 +799,12 @@
         }
       },
       "notes": [
-        "Offsets 0x0d0 through 0x184 are inside or just past the dActor_c base and the ModelAnim/ShadowModel subobjects; the base register there is frequently NOT `this`. Do not read them as own fields.",
+        "Offsets 0x0d0 through 0x184 are inside or just past the dActor_c base and the dExtAnmModel_c/ShadowModel subobjects; the base register there is frequently NOT `this`. Do not read them as own fields.",
         "0x3bc is read exactly ONCE (at 0x021128dc, `ldr r1,[r5,#0x3bc]`) and never written with an immediate-offset store. The previous scout file's claim that it is 'incremented by 0x400 and compared with a fixed threshold' is not supported by any immediate-offset access measured here; treat its semantics as unproven.",
         "0x3c0..0x3c5 have ZERO accesses of any measured kind."
       ]
     },
-    "existing_header": "include/Ukiki.h already exists at this base (5082 bytes). It declares the class as `Ukiki`, asserts sizeof == 0x3cc, and already carries the ModelAnim/ShadowModel/dCcAc_c/dBgCh_Actr/PathPtr members at the offsets proven above plus several unk_/pad_ fields. The writer should treat its field NAMES (mSpawnPosX/Y/Z, mCapUniqueID, mCapPlayerNo, mHasSpawnedCap, unk_*) as prior reconstruction, not as ROM facts -- none of those names are in the cartridge."
+    "existing_header": "include/Ukiki.h already exists at this base (5082 bytes). It declares the class as `Ukiki`, asserts sizeof == 0x3cc, and already carries the dExtAnmModel_c/ShadowModel/dCcAc_c/dBgCh_Actr/PathPtr members at the offsets proven above plus several unk_/pad_ fields. The writer should treat its field NAMES (mSpawnPosX/Y/Z, mCapUniqueID, mCapPlayerNo, mHasSpawnedCap, unk_*) as prior reconstruction, not as ROM facts -- none of those names are in the cartridge."
   },
   "data_and_bss": {
     "class_owns_no_data": "MEASURED: not one of the 44 shards (nor either factory shard) declares a .data, .bss, .rodata or .init section in config/arm9/overlays/ov030/delinks.txt. Count of non-.text sections on class shards: 0. This is consistent with the queue's promotion_route: text-only -- and it is what makes the pointer-to-member hazard below real.",

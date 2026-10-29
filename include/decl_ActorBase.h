@@ -21,8 +21,7 @@ extern "C" {
 #endif
 
 extern int _ZN7fBase_c14BeforeBehaviorEv(void*);
-extern void*_ZN7fBase_cnwEj(unsigned);
-
+extern void *_ZN7fBase_cnwEm(unsigned long);
 
 #ifdef __cplusplus
 }

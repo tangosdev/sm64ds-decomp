@@ -206,7 +206,7 @@ All three overloads are `dBgW_Kc` vtable slots 6/7/8, all in **ITCM**:
 The drivers `dBgCh_Gnd::DetectClsn()`, `dBgCh_Lin::DetectClsn()` and
 `dBgCh_SphCrr::DetectClsn()` are all matched and enrolled. Each walks the 24-entry table
 `data_020a0c80`: slot 0 is the stage's static mesh and skips broad phase; slots 1–23 are
-culled by `func_02035354` (self-collision — the query's `owner`/`ownerID` against the
+culled by `dBgCh::IsOwnedBy` (self-collision — the query's `owner`/`ownerID` against the
 collider's) and then by range. `dBgCh_Lin` culls on its own **`dM3dGSph` bounding sphere
 at +0x64** — centre +0x68, radius +0x74. **[P]**
 

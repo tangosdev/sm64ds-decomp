@@ -208,6 +208,7 @@ jobs:
             tools.test_check_call_arity \
             tools.test_check_data_definitions \
             tools.test_check_literal_load \
+            tools.test_class_rename \
             tools.test_classqueue \
             tools.test_classqueue_v2 \
             tools.test_cpp_rename_verify \
@@ -232,6 +233,7 @@ jobs:
             tools.test_profile_reconstruction \
             tools.test_progress \
             tools.test_reloc_audit_flags \
+            tools.test_rom_fingerprint \
             tools.test_romdata_check \
             tools.test_rombuild \
             tools.test_rombuild_cache \
@@ -294,6 +296,10 @@ jobs:
 #                                      instead of naming the symbol: byte-exact and
 #                                      invisible to --strict-relocs, because a hardcoded
 #                                      literal has no relocation slot for it to check.
+#   test_class_rename            (7)   class_rename.py's rewrite rules -- a mangled
+#                                      `<len><Old>` preceded by a digit is the tail of
+#                                      another name (`15ModelComponents`,
+#                                      `12WcObj05Model`) and must not be rewritten.
 #   test_cpp_rename_verify      (16)   cpp_rename.py -- func_ADDR -> demangled _ZN name
 #                                      renames. A wrong substitution here is silent.
 #   test_delaunder              (25)   delaunder.py -- removing launder idioms one site
@@ -435,6 +441,15 @@ jobs:
 #                                      contradict a promoted TU -- and fails closed on
 #                                      an unreadable, fieldless or empty manifest
 #                                      rather than passing on zero rows.
+#   test_rom_fingerprint        (21)   rom_fingerprint.py -- the ROM hash recorded
+#                                      inside build/rtti_vtables.json, and the gates that
+#                                      read it. A vtable file built from a stale dsd
+#                                      extraction put 364 of 426 tables wrong with
+#                                      nothing saying so. A mismatch is REFUSED (the
+#                                      builder, tu_map), a file with no
+#                                      field is warned about once and still loads, and
+#                                      the "_" metadata key is never read as a class.
+#                                      Fake tree in a tempdir; needs no ROM.
 #   test_rombuild               (37)   rombuild.py -- the source-to-ROM build itself:
 #                                      intact-TU policy resolution, per-file verdicts and
 #                                      the `.init` retargeting that decides which `.text`

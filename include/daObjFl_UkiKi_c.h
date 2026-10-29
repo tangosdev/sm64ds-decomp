@@ -17,7 +17,7 @@
  * below differ from _ZTV10dBgActor_c, every other slot holds the base's own
  * word and is inherited. The destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and the
- * Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c,
+ * dExtSimpleModel_c at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c,
  * and everything this header used to restate below 0x31e is inherited.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up, and agrees with the 0x328 the
@@ -29,13 +29,13 @@
 
 struct daObjFl_UkiKi_c : dBgActor_c {
     /* dBgActor_c's fields end at 0x31e; mOriginalPosY needs 4-byte alignment. */
-    u8  pad_31e[0x2];
+    u8 pad_31e[0x2];
     /* Where InitResources found the platform. Behavior rebuilds mPosY from this
        rest height plus the sine term, so the bob never accumulates drift. */
-    s32 mOriginalPosY;  /* 0x320 */
+    s32 mOriginalPosY; /* 0x320 */
     /* Seeded from mAngleX, += 0x400 per Behavior; (u16)>>4 indexes the shared
        sin/cos table at arm9 0x02082214. */
-    s16 mPhaseAngle;    /* 0x324 */
+    s16 mPhaseAngle; /* 0x324 */
 
     /* MEASURED -- DEFINED INLINE, EMPTY, AND DECLARED FIRST. This is the key
        function, so the TU that defines it emits _ZTV15daObjFl_UkiKi_c together
@@ -49,12 +49,12 @@ struct daObjFl_UkiKi_c : dBgActor_c {
        isolation refuses, and it also emits a D2 this class has no home for.
        The brace stays on the signature line -- tools/check_header_offsets.py
        recognises an inline body only when the signature line carries it. */
-    virtual ~daObjFl_UkiKi_c() {}    /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjFl_UkiKi_c() {} /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 InitResources();     /* slot  0 */
-    virtual s32 CleanupResources();  /* slot  3 */
-    virtual s32 Behavior();          /* slot  6 */
-    virtual s32 Render();            /* slot  9 */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Behavior();         /* slot  6 */
+    virtual s32 Render();           /* slot  9 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

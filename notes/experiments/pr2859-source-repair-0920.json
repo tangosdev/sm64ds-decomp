@@ -1123,7 +1123,7 @@
         "owned_contract": "short (int, int)",
         "definitions": [
           {
-            "path": "src/_ZN4cstd5atan2E5Fix12IiES1_.c",
+            "path": "src/cstd_atan2.c",
             "line": 13,
             "contract": "short (int, int)"
           }
@@ -1404,7 +1404,7 @@
   "corrected_contract_provenance": [
     {
       "symbol": "_ZN4cstd5atan2E5Fix12IiES1_",
-      "definition": "src/_ZN4cstd5atan2E5Fix12IiES1_.c",
+      "definition": "src/cstd_atan2.c",
       "contract": "s16(s32 y,s32 x)",
       "paired_definition": "src/_ZN8dActor_c14GetSubtractionEss.cpp",
       "paired_contract": "int dActor_c::GetSubtraction(short,short)",

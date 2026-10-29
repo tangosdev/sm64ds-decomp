@@ -10,7 +10,7 @@
  *
  *     dBgCh_Actr         0x110 + 0x1bc = 0x2cc   -> mKpaUniqueID
  *     dCcAc_c            0x2d0 + 0x034 = 0x304   -> mShadowModel
- *     dExtShadowModel_c  0x304 + 0x028 = 0x32c   -> pad_32c (shadow matrix)
+ *     dExtShadowModel_c  0x304 + 0x028 = 0x32c   -> mShadowMat (shadow matrix)
  *
  * There is NO unk_2e8 here any more, and its absence is the point. An earlier
  * revision named 0x2e8 as a daKpaFire_c field on the strength of a single
@@ -82,7 +82,7 @@ struct daKpaFire_c : dEnemyBase_c {
     s32 mKpaUniqueID;               /* 0x2cc */
     dCcAc_c mdCcAc_c;               /* 0x2d0 */
     dExtShadowModel_c mShadowModel; /* 0x304 */
-    u8  pad_32c[0x30];              /* 0x32c -- shadow Matrix4x3 storage */
+    u8 mShadowMat[0x30];            /* 0x32c -- shadow Matrix4x3 storage */
     s32 mVariant;                   /* 0x35c */
     s32 mFireScale;                 /* 0x360 -- Fix12 */
     s32 mGroundY;                   /* 0x364 */
@@ -108,9 +108,11 @@ struct daKpaFire_c : dEnemyBase_c {
     int Render();
     int Behavior();
 
+    void func_ov060_02117624(); /* per-frame drop shadow */
     void func_ov060_0211747c(); /* variant 0 handler */
     void func_ov060_021172e0(); /* variant 6/7 handler */
     int func_ov060_021172c8(unsigned int n);
+    void func_ov060_02116740();
     void func_ov060_0211722c();
     void func_ov060_021171e8();
     void func_ov060_0211712c();

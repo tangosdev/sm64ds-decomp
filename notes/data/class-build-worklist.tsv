@@ -2,7 +2,7 @@ class_name	state	header_path	base_class	subclass_count	overlays	method_count
 fBase_c	DONE	include\fBase_c.h		1	arm9	25
 dPa_c::level_c::callback_c	DONE	include\dPa_c.h  [alias: header uses pre-rename name]		6		0
 cMgSmartball_object_c	DONE	include\cMgSmartball_object_c.h		11	ov006	3
-dExtModel_c	DONE	include\ModelBase.h  [alias: header uses pre-rename name]		3	arm9	6
+dExtModel_c	DONE	include\dExtModel_c.h  [alias: header uses pre-rename name]		3	arm9	6
 dExtFrameCtrl_c	DONE	include\Animation.h  [alias: header uses pre-rename name]		4	arm9	13
 dFader_c	DONE	include\dFader_c.h  [alias: header uses pre-rename name]		1	arm9	4
 dGraph_c::callback_c	DONE	include\dGraph_c.h  [alias: header uses pre-rename name]		5		0
@@ -41,13 +41,13 @@ cMgSmartball_pushswitch_c	DONE	include\cMgSmartball_pushswitch_c.h	cMgSmartball_
 cMgSmartball_slot_c	DONE	include\cMgSmartball_slot_c.h	cMgSmartball_object_c	0	ov006	3
 cMgSmartball_spring_c	DONE	include\cMgSmartball_spring_c.h	cMgSmartball_object_c	0	ov006	3
 cMgSmartball_wing_c	DONE	include\cMgSmartball_wing_c.h	cMgSmartball_object_c	0	ov006	3
-dExtSimpleModel_c	DONE	include\Model.h  [alias: header uses pre-rename name]	dExtModel_c	2	arm9	21
+dExtSimpleModel_c	DONE	include\dExtSimpleModel_c.h  [alias: header uses pre-rename name]	dExtModel_c	2	arm9	21
 dExtCommonModel_c	DONE	include\CommonModel.h  [alias: header uses pre-rename name]	dExtModel_c	0	arm9	7
 dExtShadowModel_c	DONE	include\ShadowModel.h  [alias: header uses pre-rename name]	dExtModel_c	0	arm9	9
-dExtAnmModel_c	DONE	include\ModelAnim.h  [alias: header uses pre-rename name]	dExtSimpleModel_c	3	arm9	11
-dExtAnmMaterial_c	DONE	include\MaterialChanger.h  [alias: header uses pre-rename name]	dExtFrameCtrl_c	0	arm9	6
-dExtAnmTexPat_c	DONE	include\TextureSequence.h  [alias: header uses pre-rename name]	dExtFrameCtrl_c	0	arm9	8
-dExtAnmTexSRT_c	DONE	include\TextureTransformer.h  [alias: header uses pre-rename name]	dExtFrameCtrl_c	0	arm9	6
+dExtAnmModel_c	DONE	include\dExtAnmModel_c.h  [alias: header uses pre-rename name]	dExtSimpleModel_c	3	arm9	11
+dExtAnmMaterial_c	DONE	include\dExtAnmMaterial_c.h  [alias: header uses pre-rename name]	dExtFrameCtrl_c	0	arm9	6
+dExtAnmTexPat_c	DONE	include\dExtAnmTexPat_c.h  [alias: header uses pre-rename name]	dExtFrameCtrl_c	0	arm9	8
+dExtAnmTexSRT_c	DONE	include\dExtAnmTexSRT_c.h  [alias: header uses pre-rename name]	dExtFrameCtrl_c	0	arm9	6
 dFdBrightness_c	DONE	include\dFdBrightness_c.h  [alias: header uses pre-rename name]	dFader_c	1	arm9	11
 dScDSMT_c::graphCallback_c	MISSING	include\dScDSMT_c.h  [alias: header uses pre-rename name]	dGraph_c::callback_c	0	ov007	0
 dScEntry_c::graphCallback_c	MISSING	include\dScEntry_c.h  [alias: header uses pre-rename name]	dGraph_c::callback_c	0	ov075	0
@@ -86,8 +86,8 @@ dPa_c::level_c::edStarKiraCallback_c	DONE	include\dPa_c.h  [alias: header uses p
 dPa_c::level_c::fitWaterSimpleCallback_c	DONE	include\dPa_c.h  [alias: header uses pre-rename name]	dPa_c::level_c::simpleCallback_c	0	arm9	0
 dPa_c::level_c::scaleCallback_c	DONE	include\dPa_c.h  [alias: header uses pre-rename name]	dPa_c::level_c::simpleCallback_c	0	arm9	0
 dPa_c::level_c::splashCallback_c	DONE	include\dPa_c.h  [alias: header uses pre-rename name]	dPa_c::level_c::simpleCallback_c	0		0
-dExtAnm2Model_c	DONE	include\ModelAnim2.h  [alias: header uses pre-rename name]	dExtAnmModel_c	0	arm9	5
-dExtBlendAnmModel_c	DONE	include\BlendModelAnim.h  [alias: header uses pre-rename name]	dExtAnmModel_c	0	arm9	10
+dExtAnm2Model_c	DONE	include\dExtAnm2Model_c.h  [alias: header uses pre-rename name]	dExtAnmModel_c	0	arm9	5
+dExtBlendAnmModel_c	DONE	include\dExtBlendAnmModel_c.h  [alias: header uses pre-rename name]	dExtAnmModel_c	0	arm9	10
 dFdColor_c	DONE	include\dFdColor_c.h  [alias: header uses pre-rename name]	dFdBrightness_c	3	arm9	4
 dBgW_KcMbg	DONE	include\dBgW_KcMbg.h	dBgW_Kc	1	arm9	16
 dCcAcPos_c	DONE	include\dCcAcPos_c.h	dCcAc_c	0	arm9	6

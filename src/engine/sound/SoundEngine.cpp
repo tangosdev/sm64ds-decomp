@@ -20,6 +20,8 @@
 #include "HeapAllocator.h"
 #include "SolidHeapAllocator.h"
 #include "Heap.h"
+#include "cstd.h"
+#include "CP15.h"
 
 namespace IRQ {
     /* Defined at 0x02059d1c/0x02059d30 (the IRQ TU); namespace-scope externs
@@ -160,9 +162,33 @@ struct data_020a5bb8_t {
     /* 0x80 */ void *unk80;             /* loaded only when func_02050d54's flag is set */
     /* 0x84 */ void *info;              /* the Info*Entry::GetWithID tables */
 };
+/* The INFO block data_020a5bb8_t::info points at. After its 8-byte block
+   header come the offsets, from the block start, of its record tables; each
+   lookup below reads one, bounds-checks the id against the table's count and
+   returns the record at the id's offset (0 for none). */
+struct SndInfoBlock {
+    char header[8];
+    int seqTable;     /* 0x08: Sound::InfoSequenceEntry::GetWithID */
+    int seqArcTable;  /* 0x0c: func_02050c14 */
+    int bankTable;    /* 0x10: Sound::InfoInstrumentBankEntry::GetWithID */
+    int waveArcTable; /* 0x14: func_02050b4c; a bank's four ids index it */
+    int playerTable;  /* 0x18: func_02050ae8; func_02052008 reads each record's
+                         playable-seq count from its first byte */
+    int groupTable;   /* 0x1c: func_02050a84 */
+};
+/* One file record: func_020509d8 reads `size` bytes from `offset` into the
+   SDAT; func_02051634 sizes its buffer from func_02050a5c's `size`, and
+   func_02050994 caches the loaded copy that func_020509b0 hands back. */
+struct FatEntry {
+    int offset; /* 0x0 */
+    int size;   /* 0x4 */
+    int loaded; /* 0x8 */
+    int pad_c;
+};
 struct Hdr84 {
     char pad[8];
     int count;
+    struct FatEntry entries[1]; /* 0xc, count of them */
 };
 struct G {
     s32 f0;        
@@ -248,7 +274,8 @@ struct E1 {
     /* 0x34 */ unsigned short unk34;
     /* 0x36 */ unsigned char pad_36[6];
     /* 0x3c */ unsigned char f3c; /* player number */
-    /* 0x3d */ unsigned char pad_3d;
+    /* func_0204f364's key; func_0204f400 keeps the list sorted by it */
+    /* 0x3d */ unsigned char priority;
     /* 0x3e */ short lastVolume;    /* last value sent with func_0205ad3c */
     /* 0x40 */ unsigned char unk40; /* 0..0x7f, indexes data_02086384 */
     /* 0x41 */ unsigned char unk41; /* 0..0x7f, indexes data_02086384 */
@@ -295,12 +322,25 @@ struct Obj_205212c {
     /* 0x000 */ char pad0[0x44];
     /* 0x044 */ char file[0xc]; /* NitroSDK FSFile; u50 is its stat word */
     /* 0x050 */ u32 u50;
-    /* 0x054 */ char pad1[0xf0 - 0x54];
+    /* 0x054 */ char pad1[0xc8 - 0x54];
+    /* volume ramp func_020522c4 steps; its value >> 8 indexes data_02086384 */
+    /* 0x0c8 */ struct Obj2 fade;
+    /* 0x0d8 */ char pad1b[0xf0 - 0xd8];
     /* 0x0f0 */ u32 uf0;
-    /* 0x0f4 */ char pad2[0x100 - 0xf4];
+    /* func_020522c4 reads the next two only while uf0 bit 0 is set: a nonzero
+       stopPending stops the stream at once (func_02052208), and a nonzero
+       startReady lets a pending start (bit 2) go through func_0204ffcc, after
+       which func_020522c4 swaps bit 2 for bit 1. Nothing in this file writes either (medium
+       confidence). */
+    /* 0x0f4 */ int stopPending;
+    /* 0x0f8 */ int startReady;
+    /* 0x0fc */ char pad2[0x100 - 0xfc];
     /* 0x100 */ int useCount; /* func_020520dc releases on the last drop */
     /* 0x104 */ char pad3[0x114 - 0x104];
     /* 0x114 */ int *u114;
+    /* 0x118 */ char pad4[0x11c - 0x118];
+    /* 0x11c */ int volumeIndex; /* indexes data_02086384; func_020522c4 adds the fade term */
+    /* 0x120 */ int lastVolume;  /* last value func_020522c4 sent with func_0204fe5c */
 };
 struct Elem_2051f1c { u8 pad0[4]; u16 f4; u8 pad6[2]; u8 f8; u8 f9; };
 struct Bank_205179c { int f0; u16 f4; };
@@ -360,13 +400,11 @@ extern void MultiStore_Int(int val, int *dst, int len);
 extern struct NestedHeapIterator;
 extern struct Obj;
 extern struct Obj1;
+/* local extern: these callers run the constructor over storage that already
+   exists (and func_02051064 returns its r0), which C++ cannot spell without a
+   placement new the tree does not have. */
 extern int _ZN18NestedHeapIteratorC1Ej(int a, int b);
-extern u32 _ZN3IRQ7DisableEv(void);
-extern u32 _ZN3IRQ7RestoreEj(u32 state);
-extern void _ZN4CP1514FlushDataCacheEjj(unsigned int a, unsigned int b);
-extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int n);
-extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
-extern unsigned int _ZN4cstd6strlenEPKc(const char *s);
+
 extern int __aeabi_idiv(int a, int b);
 extern unsigned int __aeabi_uidiv(unsigned int a, unsigned int b);
 extern s16 data_02086384[];
@@ -639,33 +677,33 @@ extern "C" void func_020522c4(void)
     int t1;
     char *r = ((char*)data_020a5bd4);
     for (i = 0; i < 4; i++) {
-        int flags = *(int *)(r + 0xf0);
+        int flags = ((Obj_205212c *)r)->uf0;
         if ((flags << 31) >> 31) {
-            if (*(int *)(r + 0xf4) != 0) {
+            if (((Obj_205212c *)r)->stopPending != 0) {
                 func_02052208((void *)(r));
             } else {
                 if ((flags << 29) >> 31) {
-                    if (*(int *)(r + 0xf8) != 0) {
+                    if (((Obj_205212c *)r)->startReady != 0) {
                         func_0204ffcc(r);
                         {
-                            int *flagsp = (int *)(r + 0xf0);
+                            int *flagsp = (int *)&((Obj_205212c *)r)->uf0;
                             *flagsp |= 2;
                             *flagsp &= ~4;
                         }
                     }
                 }
-                if ((*(int *)(r + 0xf0) << 30) >> 31) {
+                if (((int)((Obj_205212c *)r)->uf0 << 30) >> 31) {
                     unsigned long t2;
-                    func_02052438(r + 0xc8);
-                    t1 = data_02086384[*(int *)(r + 0x11c)];
-                    t2 = data_02086384[func_02052458((int *)(r + 0xc8)) >> 8];
+                    func_02052438((char *)&((Obj_205212c *)r)->fade);
+                    t1 = data_02086384[((Obj_205212c *)r)->volumeIndex];
+                    t2 = data_02086384[func_02052458((int *)&((Obj_205212c *)r)->fade) >> 8];
                     t1 = t2 + t1;
-                    if (t1 != *(int *)(r + 0x120)) {
+                    if (t1 != ((Obj_205212c *)r)->lastVolume) {
                         func_0204fe5c(r, t1);
-                        *(int *)(r + 0x120) = t1;
+                        ((Obj_205212c *)r)->lastVolume = t1;
                     }
-                    if ((*(int *)(r + 0xf0) << 28) >> 31) {
-                        if (func_02052420((int *)(r + 0xc8))) {
+                    if (((int)((Obj_205212c *)r)->uf0 << 28) >> 31) {
+                        if (func_02052420((int *)&((Obj_205212c *)r)->fade)) {
                             func_02052208((void *)(r));
                         }
                     }
@@ -873,7 +911,8 @@ extern "C" int func_02051bd0(void **p, int a1, unsigned int a2, int a3, struct A
         if (np == 0) { ((void(*)(int r7))func_0204f630)(r7); return 0; }
     }
 
-    ((int(*)(int thiz, int p1, int p2, int p3))func_0204f600)(r7, (int)((char *)np + *(int *)((char *)np + 0x18)), 0, r5);
+    ((int (*)(int thiz, int p1, int p2, int p3))func_0204f600)(
+        r7, (int)((char *)np + ((struct P5 *)np)->off18), 0, r5);
     func_0204f914(p, a4->b6);
     ((void(*)(void **c, unsigned char v))func_0204f89c)(p, a4->b7);
     ((void(*)(void *pp, int v))func_0204f720)(p, a5);
@@ -1089,7 +1128,7 @@ extern "C" void* func_02051634(unsigned int a0, unsigned int a1, unsigned int a2
     r4 = ((extern void*(*)(void *owner, unsigned int elemSize, unsigned int p2, unsigned int p3, unsigned int p4))func_020511d4)(owner, r5 + 0x20, a1, a2, a3);
     if (r4 == 0) return 0;
     if (r5 != ((extern int(*)(unsigned int a, void* b, int c, int d))func_020509d8)(a0, r4, r5, 0)) return 0;
-    _ZN4CP1514FlushDataCacheEjj((unsigned int)r4, r5);
+    CP15::FlushDataCache((unsigned int)r4, r5);
     return r4;
 }
 
@@ -1187,10 +1226,13 @@ extern "C" void *func_0205130c(unsigned int addr, unsigned int size)
     void *alloc;
     if (aligned > end)
         return 0;
-    if (end - aligned < 0x10)
+    /* The SolidHeapWithIter header func_02051024 fills sits at aligned; the
+       solid heap takes the rest. */
+    if (end - aligned < sizeof(struct SolidHeapWithIter))
         return 0;
-    alloc = mHeap::Heap_t::CreateSolidHeapAllocator((void *)(aligned + 0x10),
-                                                    (end - aligned) - 0x10, 0);
+    alloc = mHeap::Heap_t::CreateSolidHeapAllocator(
+        (void *)(aligned + sizeof(struct SolidHeapWithIter)),
+        (end - aligned) - sizeof(struct SolidHeapWithIter), 0);
     if (alloc == 0)
         return 0;
     if (((int(*)(void *self, void *alloc))func_02051024)((void *)aligned, alloc) != 0)
@@ -1426,14 +1468,14 @@ extern "C" void *func_02050cdc(int a, int idx)
 Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
 {
     char* root = data_020a5bb8;
-    char* sub = *(char**)(root + 0x84);
-    int off = *(int*)(sub + 0x8);
+    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    int off = ((struct SndInfoBlock *)sub)->seqTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
     if (id >= *(unsigned*)tbl) return 0;
     int v = ((int*)(tbl + id * 4))[1];
-    char* base = *(char**)(root + 0x84);
+    char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (InfoSequenceEntry *)(base + v);
 }
 
@@ -1441,14 +1483,14 @@ Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
 extern "C" int func_02050c14(unsigned int id)
 {
     char* root = data_020a5bb8;
-    char* sub = *(char**)(root + 0x84);
-    int off = *(int*)(sub + 0xc);
+    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    int off = ((struct SndInfoBlock *)sub)->seqArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
     if (id >= *(unsigned*)tbl) return 0;
     int v = ((int*)(tbl + id * 4))[1];
-    char* base = *(char**)(root + 0x84);
+    char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (int)(base + v);
 }
 
@@ -1456,14 +1498,14 @@ extern "C" int func_02050c14(unsigned int id)
 Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(u32 id)
 {
     char* root = data_020a5bb8;
-    char* sub = *(char**)(root + 0x84);
-    int off = *(int*)(sub + 0x10);
+    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    int off = ((struct SndInfoBlock *)sub)->bankTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
     if (id >= *(unsigned*)tbl) return 0;
     int v = ((int*)(tbl + id * 4))[1];
-    char* base = *(char**)(root + 0x84);
+    char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (InfoInstrumentBankEntry *)(base + v);
 }
 
@@ -1471,14 +1513,14 @@ Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(u32 id
 extern "C" int func_02050b4c(unsigned int id)
 {
     char* root = data_020a5bb8;
-    char* sub = *(char**)(root + 0x84);
-    int off = *(int*)(sub + 0x14);
+    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    int off = ((struct SndInfoBlock *)sub)->waveArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
     if (id >= *(unsigned*)tbl) return 0;
     int v = ((int*)(tbl + id * 4))[1];
-    char* base = *(char**)(root + 0x84);
+    char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (int)(base + v);
 }
 
@@ -1486,14 +1528,14 @@ extern "C" int func_02050b4c(unsigned int id)
 extern "C" int func_02050ae8(unsigned int id)
 {
     char* root = data_020a5bb8;
-    char* sub = *(char**)(root + 0x84);
-    int off = *(int*)(sub + 0x18);
+    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    int off = ((struct SndInfoBlock *)sub)->playerTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
     if (id >= *(unsigned*)tbl) return 0;
     int v = ((int*)(tbl + id * 4))[1];
-    char* base = *(char**)(root + 0x84);
+    char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (int)(base + v);
 }
 
@@ -1501,14 +1543,14 @@ extern "C" int func_02050ae8(unsigned int id)
 extern "C" int func_02050a84(unsigned int id)
 {
     char* root = data_020a5bb8;
-    char* sub = *(char**)(root + 0x84);
-    int off = *(int*)(sub + 0x1c);
+    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    int off = ((struct SndInfoBlock *)sub)->groupTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
     if (id >= *(unsigned*)tbl) return 0;
     int v = ((int*)(tbl + id * 4))[1];
-    char* base = *(char**)(root + 0x84);
+    char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (int)(base + v);
 }
 
@@ -1516,42 +1558,43 @@ extern "C" int func_02050a84(unsigned int id)
 extern "C" int func_02050a5c(unsigned int i) {
     struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->fileTable;
     if (i >= (unsigned int)h->count) return 0;
-    return *(int *)((char *)h + i * 16 + 0x10);
+    return h->entries[i].size;
 }
 
 // @symbol func_020509d8
 extern "C" int func_020509d8(unsigned int idx, int a1, unsigned int len, unsigned int off)
 {
     char *G = (char *)data_020a5bb8;
-    char *T = *(char **)(G + 0x7c);
-    char *entry;
+    struct Hdr84 *T = ((data_020a5bb8_t *)G)->fileTable;
+    struct FatEntry *entry;
     unsigned int avail;
 
-    if (idx >= *(unsigned int *)(T + 8))
+    if (idx >= (unsigned int)T->count)
         return -1;
 
-    entry = T + 0xc + idx * 16;
-    avail = *(unsigned int *)(entry + 4) - off;
+    entry = &T->entries[idx];
+    avail = (unsigned int)entry->size - off;
     if (len > avail)
         len = avail;
 
-    if (((int(*)(int *o, int r1, int sel))func_0205d368)((int *)(G + 0x30), *(int *)entry + off, 0) == 0)
+    if (((int (*)(int *o, int r1, int sel))func_0205d368)((int *)((data_020a5bb8_t *)G)->file,
+                                                          entry->offset + off, 0) == 0)
         return -1;
 
-    return ((int(*)(int *o, int a1, unsigned int len))FS_ReadFile)((int *)(G + 0x30), a1, len);
+    return ((int (*)(int *o, int a1, unsigned int len))FS_ReadFile)(
+        (int *)((data_020a5bb8_t *)G)->file, a1, len);
 }
 
 // @symbol func_020509b0
 extern "C" int func_020509b0(unsigned int i) {
     struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->fileTable;
     if (i >= (unsigned int)h->count) return 0;
-    return *(int *)((char *)h + i * 16 + 0x14);
+    return h->entries[i].loaded;
 }
 
 // @symbol func_02050994
 extern "C" void func_02050994(int i, int val) {
-    int *p = (int*)((int *)data_020a5bb8)[0x7c / 4];
-    (p + i * 4)[5] = val;
+    ((data_020a5bb8_t *)data_020a5bb8)->fileTable->entries[i].loaded = val;
 }
 
 // @symbol func_02050988
@@ -1578,23 +1621,26 @@ extern "C" void func_02050950(void) { data_020a55fc = 0; *(int*)(&data_020a5634)
 // @symbol func_020508a0
 extern "C" void func_020508a0(void)
 {
-    char *g = ((char*)&data_020a5634);
+    G_20503a4 *g = ((G_20503a4 *)&data_020a5634);
     s32 *sub;
     int v;
-    if (*(s32 *)(g + 0) == 0) return;
-    if (*(s32 *)(g + 4) != 0) return;
-    sub = (s32 *)(g + 0x38);
+    if (g->f0 == 0)
+        return;
+    if (g->f4 != 0)
+        return;
+    sub = (s32 *)g->f38;
     ((void(*)(s32 *p))func_02052438)(sub);
-    if (*(s32 *)(g + 0x48) != 0) {
+    if (g->f48 != 0) {
         if (((int(*)(s32 *p))func_02052420)(sub) != 0) {
             func_020502b8();
             return;
         }
     }
     v = ((int(*)(s32 *p))func_02052458)(sub) >> 8;
-    if (v == *(s32 *)(g + 0x4c)) return;
-    func_0205aa68(*(void **)(g + 0x20), v, 0);
-    *(s32 *)(g + 0x4c) = v;
+    if (v == g->f4c)
+        return;
+    func_0205aa68((void *)g->f20, v, 0);
+    g->f4c = v;
 }
 
 // @symbol func_020507e0
@@ -1605,7 +1651,7 @@ extern "C" int func_020507e0(int a0, unsigned int a1, int a2, int a3, int a4, in
     if (((int*)&data_020a5634)[0] != 0) return 0;
     z = 0;
     MultiStore_Int(z, (int *)a0, a1);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((unsigned int)a0, a1);
+    CP15::FlushAndInvalidateDataCache((unsigned int)a0, a1);
     return ((int(*)(int a0, int a1, int a2, int a3, int s0, int s1, int s2, int s3, int s4, int s5, int s6, int s7, int s8, int s9, int s10))func_020503a4)(1, a0, a0 + (a1 >> 1), a1 >> 1,
                          a2, 0, 0, 1, a3, 0x7f, 0, 0x7f, a4, a5, a6);
 }
@@ -1656,8 +1702,8 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
 
     handle = -1;
     g = ((G_20503a4*)&data_020a5634);
-    ((void(*)(int a, int b))_ZN4CP1527FlushAndInvalidateDataCacheEjj)(b, dd);
-    ((void(*)(int a, int b))_ZN4CP1527FlushAndInvalidateDataCacheEjj)(c, dd);
+    CP15::FlushAndInvalidateDataCache(b, dd);
+    CP15::FlushAndInvalidateDataCache(c, dd);
     stereo = (p5 == 1) ? 1 : 0;
     align = 0xffb0ff / p9;
     if (p14 != 0) {
@@ -1747,18 +1793,18 @@ extern "C" void func_020502b8(void)
 // @symbol func_02050258
 extern "C" void func_02050258(void)
 {
-    char *G = ((char*)&data_020a5634);
+    struct D *G = &data_020a5634;
     int sh;
     int mask;
     void *p;
-    if (*(int *)G == 0)
+    if (G->f0 == 0)
         return;
-    sh = *(int *)(G + 0x28);
+    sh = G->f28;
     if (sh >= 0)
         mask = 1 << sh;
     else
         mask = 0;
-    ((void(*)(int a, int b, int mask, int d))func_0205abb8)(*(int *)(G + 0x20), *(int *)(G + 0x24), mask, 0);
+    ((void (*)(int a, int b, int mask, int d))func_0205abb8)(G->f20, G->f24, mask, 0);
     p = func_0205afb4();
     ((void(*)(int v))func_0205b070)(1);
     ((void(*)(void *p))func_0205afe0)(p);
@@ -1776,8 +1822,10 @@ extern "C" void func_020501b8(void)
     ((extern void(*)(int val, int *dst, int len))MultiStore_Int)(a, g->dstc, g->len);
     b = 0;
     ((extern void(*)(int val, int *dst, int len))MultiStore_Int)(b, g->dst10, g->len);
-    ((extern void(*)(unsigned int a, unsigned int b))_ZN4CP1527FlushAndInvalidateDataCacheEjj)((unsigned int)g->dstc, g->len);
-    ((extern void(*)(unsigned int a, unsigned int b))_ZN4CP1527FlushAndInvalidateDataCacheEjj)((unsigned int)g->dst10, g->len);
+    ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(
+        (unsigned int)g->dstc, g->len);
+    ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(
+        (unsigned int)g->dst10, g->len);
     {
         int sh = g->f28;
         int mask = (sh >= 0) ? (1 << sh) : 0;
@@ -1804,8 +1852,8 @@ extern "C" void func_020500a4(struct T *thiz)
         data_020a55f8 = data_020a55f8 + 1;
         if (data_020a55f8 >= 8) data_020a55f8 = 0;
     } else {
-        _ZN4CP1519InvalidateDataCacheEjj(e6, quot);
-        _ZN4CP1519InvalidateDataCacheEjj(e5, quot);
+        CP15::InvalidateDataCache(e6, quot);
+        CP15::InvalidateDataCache(e5, quot);
         thiz->f30(e6, e5, quot, thiz->f8, thiz->f34);
     }
     {
@@ -1823,8 +1871,10 @@ extern "C" void func_02050038(void)
     for (;;) {
         ((void(*)(void *a, void **out, int c))func_020587e4)(&data_020a5600, &out, 1);
         r = (struct Outer *)out;
-        ((void(*)(unsigned int a, unsigned int b))_ZN4CP1519InvalidateDataCacheEjj)((unsigned int)r->hc, (unsigned int)r->h4);
-        ((void(*)(unsigned int a, unsigned int b))_ZN4CP1519InvalidateDataCacheEjj)((unsigned int)r->h10, (unsigned int)r->h4);
+        ((void (*)(unsigned int a, unsigned int b))CP15::InvalidateDataCache)((unsigned int)r->hc,
+                                                                              (unsigned int)r->h4);
+        ((void (*)(unsigned int a, unsigned int b))CP15::InvalidateDataCache)((unsigned int)r->h10,
+                                                                              (unsigned int)r->h4);
         r->p0->h30((unsigned int)r->hc, (unsigned int)r->h10, (unsigned int)r->h4, r->p0->h8, r->p0->h34);
     }
 }
@@ -1959,44 +2009,45 @@ extern "C" void func_0204fc40(void)
 
 // @symbol func_0204fafc
 extern "C" void func_0204fafc(void) {
-    char* node;
-    char* next;
+    struct E1 *node;
+    struct E1 *next;
     unsigned int mask;
     int v;
 
     mask = func_0205b608();
-    node = (char*)(((NestedHeapIterator*)(((char*)&data_020a4d60)))->Next(0));
+    node = (struct E1 *)(((NestedHeapIterator *)(((char *)&data_020a4d60)))->Next(0));
     if (node == 0) {
         return;
     }
     do {
-        next = (char*)(((NestedHeapIterator*)(((char*)&data_020a4d60)))->Next((HeapAllocator*)(node)));
-        if (*(u8*)(node + 0x2d) == 0) {
-            if (func_0205af78(*(u32*)(node + 0x30))) {
-                *(u8*)(node + 0x2d) = 1;
+        next = (struct E1 *)(((NestedHeapIterator *)(((char *)&data_020a4d60)))
+                                 ->Next((HeapAllocator *)(node)));
+        if (node->started == 0) {
+            if (func_0205af78((u32)node->cmdTag)) {
+                node->started = 1;
             }
         }
-        if (*(u8*)(node + 0x2d) != 0 && (mask & (1 << *(u8*)(node + 0x3c))) == 0) {
-            ((extern void(*)(char* p))func_0204f2d4)(node);
+        if (node->started != 0 && (mask & (1 << node->f3c)) == 0) {
+            ((extern void (*)(char *p))func_0204f2d4)((char *)node);
         } else {
             int t1, t2, t3;
-            ((extern int(*)(int* p))func_02052438)((int*)(node + 0x1c));
-            t1 = data_02086384[*(u8*)(node + 0x41)];
-            t2 = data_02086384[*(u8*)(node + 0x40)];
-            t3 = data_02086384[((extern int(*)(int* p))func_02052458)((int*)(node + 0x1c)) >> 8];
+            ((extern int (*)(int *p))func_02052438)((int *)&node->fade);
+            t1 = data_02086384[node->unk41];
+            t2 = data_02086384[node->unk40];
+            t3 = data_02086384[((extern int (*)(int *p))func_02052458)((int *)&node->fade) >> 8];
             v = t3 + (t2 + t1);
             if (v < -0x2d3) {
                 v = -0x2d3;
             } else if (v > 0) {
                 v = 0;
             }
-            if (v != *(s16*)(node + 0x3e)) {
-                ((extern void(*)(unsigned int a, int b))func_0205ad3c)(*(u8*)(node + 0x3c), v);
-                *(s16*)(node + 0x3e) = v;
+            if (v != node->lastVolume) {
+                ((extern void (*)(unsigned int a, int b))func_0205ad3c)(node->f3c, v);
+                node->lastVolume = v;
             }
-            if (*(u8*)(node + 0x2c) == 2) {
-                if (((extern int(*)(int* o))func_02052420)((int*)(node + 0x1c))) {
-                    ((extern void(*)(unsigned char* c))func_0204f3e0)((unsigned char*)node);
+            if (node->f2c == 2) {
+                if (((extern int (*)(int *o))func_02052420)((int *)&node->fade)) {
+                    ((extern void (*)(unsigned char *c))func_0204f3e0)((unsigned char *)node);
                 }
             }
         }
@@ -2017,13 +2068,13 @@ extern "C" int func_0204fa3c(int owner, void *b, u32 c)
     void *res;
     r4 = (char *)((void *(*)(void *a, u32 elemSize, u32 p2, u32 p3, u32 p4))func_020511d4)(b, c + 0x14, (u32)func_0204f278, 0, 0);
     if (!r4) return 0;
-    *(int *)(r4 + 0xc) = 0;
-    *(int *)(r4 + 0x10) = owner;
-    *(int *)(r4 + 8) = 0;
+    ((Elem_204f278 *)r4)->owner = 0;
+    ((Elem_204f278 *)r4)->playerIndex = owner;
+    ((Elem_204f278 *)r4)->heap = 0;
     res = func_0205130c((unsigned int)(r4 + 0x14), c);
     if (!res) return 0;
-    *(void **)(r4 + 8) = res;
-    ((NestedHeapIterator*)(((char*)data_020a4d6c) + owner * 0x1c + 0xc))->AddLast((HeapAllocator*)(r4));
+    ((Elem_204f278 *)r4)->heap = (int *)res;
+    data_020a4d6c[owner].mLists[1].AddLast((HeapAllocator *)(r4));
     return 1;
 }
 
@@ -2083,15 +2134,17 @@ extern "C" void func_0204f924(void **p, unsigned char v) {
 // @symbol func_0204f914
 extern "C" void func_0204f914(void **p, unsigned char v) {
     unsigned char *o = (unsigned char *)*p;
-    if (o) o[0x40] = v;
+    if (o)
+        ((struct E1 *)o)->unk40 = v;
 }
 
 // @symbol func_0204f8cc
 extern "C" void func_0204f8cc(char **c, int a, int b) {
     char *p = *c;
     if (p == 0) return;
-    if (*(unsigned char *)(p + 0x2c) == 2) return;
-    ((void(*)(void *o, int a, int b))func_02052494)(p + 0x1c, a << 8, b);
+    if (((struct E1 *)p)->f2c == 2)
+        return;
+    ((void (*)(void *o, int a, int b))func_02052494)(&((struct E1 *)p)->fade, a << 8, b);
 }
 
 // @symbol func_0204f89c
@@ -2143,14 +2196,15 @@ extern "C" void func_0204f6f8(struct Inner83 **o, short a, short b) {
 // @symbol func_0204f63c
 extern "C" void *func_0204f63c(void **p, int idx, int r7)
 {
-    void *node = &((unsigned char*)data_020a4d6c)[idx * 0x1c];
+    SoundPlayerRecord *node = &data_020a4d6c[idx];
     void *prev = p[0];
     void **r5;
     if (prev != 0) ((void(*)(void **p))func_0204f934)(p);
-    if (*(unsigned short*)((char*)node + 8) >= *(unsigned int*)((char*)node + 0x18)) {
-        unsigned char *it = (unsigned char*)(((NestedHeapIterator*)node)->Next(0));
+    if (node->mLists[0].mCount >= node->mPlayableSeqCount) {
+        unsigned char *it = (unsigned char *)(node->mLists[0].Next(0));
         if (it == 0) return 0;
-        if (r7 < (int)it[0x3d]) return 0;
+        if (r7 < (int)((struct E1 *)it)->priority)
+            return 0;
         func_0204f3e0(it);
     }
     r5 = (void**)((void *(*)(int x))func_0204f364)(r7);
@@ -2262,7 +2316,7 @@ extern "C" void func_0204f400(HeapAllocator_204f400* self) {
 // @symbol func_0204f3e0
 extern "C" void func_0204f3e0(unsigned char *c)
 {
-    ((void(*)(unsigned int x))func_0205ad98)(c[0x3c]);
+    ((void (*)(unsigned int x))func_0205ad98)(((struct E1 *)c)->f3c);
     ((void(*)(void *c))func_0204f2d4)(c);
 }
 
@@ -2272,13 +2326,13 @@ extern "C" char* func_0204f364(int key)
     char* node = (char*)(((NestedHeapIterator*)&data_020a4d54)->Next(0));
     if (node == 0) {
         node = (char*)(((NestedHeapIterator*)(((char*)&data_020a4d60)))->Next(0));
-        if (key < *(u8*)(node + 0x3d)) {
+        if (key < ((struct E1 *)node)->priority) {
             return 0;
         }
         ((extern void(*)(unsigned char* c))func_0204f3e0)((unsigned char*)node);
     }
     ((NestedHeapIterator*)&data_020a4d54)->Remove((HeapAllocator*)(node));
-    *(u8*)(node + 0x3d) = key;
+    ((struct E1 *)node)->priority = key;
     ((extern void(*)(char* self))func_0204f400)(node);
     return node;
 }
@@ -2314,7 +2368,7 @@ extern "C" void func_0204f278(Elem_204f278 *thiz) {
         return;
     }
     int idx = thiz->playerIndex;
-    ((NestedHeapIterator*)((HeapAllocator *)((char *)&data_020a4d6c[idx] + 0xc)))->Remove((HeapAllocator*)(thiz));
+    data_020a4d6c[idx].mLists[1].Remove((HeapAllocator *)(thiz));
 }
 
 // @symbol func_0204f214
@@ -2434,11 +2488,25 @@ extern "C" void func_0204efe0(s8 levelID)
     ((void(*)(s8 courseID))func_02052234)(courseID);
 }
 
+/* The Nitro archive file header func_0204ef9c validates ('NARC', byte-order
+   mark 0xfffe, version 1.0). func_0204ee40 walks numBlocks blocks starting
+   headerSize bytes in. */
+struct NarcHeader {
+    u32 magic;      /* 0x00 */
+    u16 byteOrder;  /* 0x04 */
+    u16 version;    /* 0x06 */
+    u32 fileSize;   /* 0x08 */
+    u16 headerSize; /* 0x0c */
+    u16 numBlocks;  /* 0x0e */
+};
+
 // @symbol func_0204ef9c
 extern "C" int func_0204ef9c(void* p) {
-    if (*(u32*)p != 0x4352414e) return 0;
-    if (*(u16*)((char*)p + 4) != 0xfffe) return 0;
-    return *(u16*)((char*)p + 6) == 0x100;
+    if (((struct NarcHeader *)p)->magic != 0x4352414e)
+        return 0;
+    if (((struct NarcHeader *)p)->byteOrder != 0xfffe)
+        return 0;
+    return ((struct NarcHeader *)p)->version == 0x100;
 }
 
 // @symbol func_0204ee40
@@ -2458,8 +2526,8 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     if (((int(*)(void *p))func_0204ef9c)(p) == 0)
         return 0;
 
-    cur = p + *(unsigned short *)(p + 0xc);
-    n = *(unsigned short *)(p + 0xe);
+    cur = p + ((struct NarcHeader *)p)->headerSize;
+    n = ((struct NarcHeader *)p)->numBlocks;
     i = 0;
     if (n > 0) {
         do {
@@ -2486,7 +2554,7 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     fimg_off = fimg + 8;
     self->f58 = (unsigned char *)fimg_off;
 
-    if (func_0205cc80(self, (void *)(name),  (void *)((int(*)(const char *s))_ZN4cstd6strlenEPKc)(name)) == 0)
+    if (func_0205cc80(self, (void *)name, (void *)cstd::strlen(name)) == 0)
         return 0;
 
     if (((int(*)(void *p, int a, int b0, int b4, int c0, int c4, void *fn1, void *fn2))func_0205cb68)(self, (int)fimg_off, (int)(fatb + 0xc) - (int)fimg_off,
@@ -2519,7 +2587,7 @@ extern "C" int func_0204ede8(struct S82 *o, unsigned int i) {
 // @symbol func_0204eda4
 extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
     int r = 0;
-    if (idx < *(u16*)(*(char**)(a + 0x54) + 8)) {
+    if (idx < *(u16 *)(((struct S82 *)a)->f54 + 8)) {
         struct Pair p;
         p.a = a;
         p.idx = idx;

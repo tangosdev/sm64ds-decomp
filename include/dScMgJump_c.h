@@ -2,8 +2,8 @@
  * dScMgJump_c : dScMgD3DBase_c, single edge, offset 0 (build/rtti.json).
  * Its own vtable is ov006:0x0213cbe4.
  *
- * SIZE 0x5834, from dScMgJump_c_classInit's own
- * `_ZN7fBase_cnwEj(0x5834)`. THAT FACTORY IS THIS CLASS'S, despite its
+ * SIZE 0x5834, the allocation dScMgJump_c_classInit (`return new
+ * dScMgJump_c;`) makes. THAT FACTORY IS THIS CLASS'S, despite its
  * name: it writes dScMgD3DBase_c's vtable, then THIS class's, and
  * everything it builds after that derived vptr store belongs here. The
  * English name is kept because it is already attributed, the same
@@ -15,13 +15,14 @@
  * THE LAST MEMBER CLOSES EXACTLY ON THE ALLOCATION LITERAL:
  * 0x5294 + 6 * 0xf0 = 0x5834. Nothing is left over.
  *
- * mModel IS A TYPED Model, and here that works. The factory constructs it
- * (`_ZN5ModelC1Ev(p + 0x501c)`), the destructor destroys it, and
- * sizeof(Model) == 0x50 closes exactly on mPlayers at 0x506c. Because mModel
+ * mModel IS A TYPED dExtSimpleModel_c, and here that works. The factory constructs it
+ * (dExtSimpleModel_c's C1 at p + 0x501c), the destructor destroys it, and
+ * sizeof(dExtSimpleModel_c) == 0x50 closes exactly on mPlayers at 0x506c. Because mModel
  * is declared BEFORE the two arrays, reverse-declaration order destroys
- * mArray2, mPlayers, then mModel -- exactly the ROM's order, so the compiler
- * emits the Model call and the body does not. Contrast
- * include/dScMgJump2_c.h, whose ROM destructor destroys its Model FIRST and
+ * mHeyhos, mPlayers, then mModel -- exactly the ROM's order, so the compiler
+ * emits all three and the destructor body is empty. All three members are
+ * typed, so the factory's member construction is compiler-written too. Contrast
+ * include/dScMgJump2_c.h, whose ROM destructor destroys its dExtSimpleModel_c FIRST and
  * therefore cannot use a typed member at all. Same class, same member, two
  * different answers, decided by the ROM's own ordering.
  *
@@ -43,13 +44,8 @@
 #define DSCMGJUMP_C_H
 #include "dScMgD3DBase_c.h"
 #include "dMgJump3DMario_c.h"
-#include "Model.h"
-
-/* The array runtime passes each element address and ignores callback results.
- * The casts below adapt the existing lifecycle entries at that ABI boundary. */
-extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride,
-                       void (*dtor)(void *));
-extern "C" int Heyho_Destruct(int *object);
+#include "dExtSimpleModel_c.h"
+#include "Heyho.h"
 
 struct dScMgJump_c : dScMgD3DBase_c {
     /* DEFINED IN THE CLASS BODY, DELIBERATELY -- not a style choice.
@@ -67,9 +63,7 @@ struct dScMgJump_c : dScMgD3DBase_c {
        DECLARED but not defined here is InitResources below, which lives in
        src/minigames/d_s_mg_jump_methods.cpp, so _ZTV11dScMgJump_c is emitted by that one
        translation unit and by no other. */
-    virtual ~dScMgJump_c() {
-        __cxa_vec_cleanup(mArray2, 6, 0xf0, (void (*)(void *))Heyho_Destruct);
-    }
+    virtual ~dScMgJump_c() {}
 
     /* This class's own overrides, read off the ROM's vtable: the slots where the
        table differs from dScMgD3DBase_c's. Spelled WITHOUT the `virtual` keyword,
@@ -111,9 +105,9 @@ struct dScMgJump_c : dScMgD3DBase_c {
     s32   mAccumStep;      /* 0x5010 -- Fix12 */
     s16   mStateTimer;     /* 0x5014 -- countdown to the state change */
     u8    pad_5016[0x6];   /* 0x5016 */
-    Model mModel;          /* 0x501c -- 0x50, destroyed last, see banner */
+    dExtSimpleModel_c mModel;     /* 0x501c -- 0x50, destroyed last, see banner */
     dMgJump3DMario_c mPlayers[3]; /* 0x506c -- RTTI-proven element type */
-    u8    mArray2[0x5a0];  /* 0x5294 -- 6 * 0xf0, elem dtor Heyho_Destruct */
+    Heyho mHeyhos[6];             /* 0x5294 -- 6 * 0xf0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -12,7 +12,7 @@
  *
  *     0x110 dCcAc_c         0x34   -> 0x144
  *     0x144 dBgCh_Actr               0x1bc  -> 0x300
- *     0x300 ModelAnim                  0x64   -> 0x364
+ *     0x300 dExtAnmModel_c                  0x64   -> 0x364
  *     0x364 dExtShadowModel_c                0x28   -> 0x38c
  *
  * Typing them absorbed these markers, which were a member's insides:
@@ -39,20 +39,18 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daBmb_c : dEnemyBase_c {
     dCcAc_c           mdCc_c;         /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
-    ModelAnim                    mModelAnim;            /* 0x300 */
+    dExtAnmModel_c mAnmModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
     /* 0214b988 stores ClosestPlayer here after the notice-angle test;
        0214ad14 stores it unconditionally. Arm 0 chases this pointer. */
@@ -74,8 +72,10 @@ struct daBmb_c : dEnemyBase_c {
     /* Behavior skips the body at 5, the egg hand-off is 4, the wall bounce
        is allowed only at 0. 0214b03c dispatches arms 0..5. */
     s32                          mState;                /* 0x3dc */
-    /* Hurt damage. InitResources stores 2. ov078/daBombking_c writes 0. */
-    s32                          unk_3e0;               /* 0x3e0 */
+    /* Hurt damage: the third argument of the Player::Hurt calls in
+       func_ov102_0214ae1c. InitResources stores 2. ov078/daBombking_c
+       writes 0 for its own bob-ombs. */
+    s32 mHurtDamage; /* 0x3e0 */
     /* Sound::PlayLong handle for the fuse tick. */
     u32                          mFuseSound;            /* 0x3e4 */
     u16                          mTurnTimer;            /* 0x3e8 */
@@ -95,8 +95,9 @@ struct daBmb_c : dEnemyBase_c {
     u8                           unk_3f4;               /* 0x3f4 */
     /* param1 & 7. 2 starts inert, 4 starts clear, anything else starts live. */
     u8                           mVariant;              /* 0x3f5 */
-    /* Non-zero: Behavior detonates and returns. ov078/daBombking_c sets 1. */
-    u8                           unk_3f6;               /* 0x3f6 */
+    /* Non-zero: Behavior detonates (func_ov102_0214ae1c) and returns.
+       InitResources stores 0; ov078/daBombking_c sets 1. */
+    u8 mDetonate;                                       /* 0x3f6 */
     u8                           pad_3f7;               /* 0x3f7 */
     u32                          mCarryParticle;        /* 0x3f8 -- effect 0x13 while carried */
     u32                          mFuseParticle;         /* 0x3fc -- effect 0x19 while the fuse is lit */
@@ -107,7 +108,7 @@ struct daBmb_c : dEnemyBase_c {
        at 0x0214a9b4 and carries no D2 anywhere, which is what mwccarm 2004/b56
        emits for an inline in-class destructor; the out-of-line form emits
        D2/D0/D1 in the wrong order plus a homeless D2. The typed member list
-       above makes the empty body own the dExtShadowModel_c, ModelAnim, dBgCh_Actr and
+       above makes the empty body own the dExtShadowModel_c, dExtAnmModel_c, dBgCh_Actr and
        dCcAc_c teardowns and the chain into _ZN12dEnemyBase_cD2Ev.
 
        With the destructor inline, OnYoshiTryEat becomes the first out-of-line
@@ -140,12 +141,7 @@ struct daBmb_c : dEnemyBase_c {
     void State5();
     void func_ov102_0214bd90();
     void func_ov102_0214b03c();
-
-    /* Retained leaf size_t adapter to the retail unsigned-size allocator.
-       fBase_c also supplies this forwarding adapter. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void func_ov102_0214b988();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -2,14 +2,6 @@
   "schema": 1,
   "exceptions": [
     {
-      "path": "src/engine/view/Graphics3D.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3",
-      "count": 2,
-      "reason": "G3i::PerspectiveW_ takes six Fix12<int> by value, and include/G3i.h deliberately leaves it undeclared for that reason (the by-value Fix12 ABI wall). Initialise3dGraphics calls it once to load the default perspective; the second occurrence is the extern \"C\" declaration. Follow-up: retire it with the other Fix12-by-value walls once a Fix12 spelling that passes in registers exists.",
-      "evidence": "include/G3i.h header comment (PerspectiveW_ is NOT declared here); carried verbatim from src/Initialise3dGraphics.cpp on main, which this PR folds; arm9/Graphics3D 4/4 TEXT-VERIFIED"
-    },
-    {
       "path": "src/game/stages/d_s_star_sel_methods.cpp",
       "rule": "handspelled-member",
       "match": "_ZN2G212GetBG2ScrPtrEv",
@@ -28,17 +20,17 @@
     {
       "path": "src/game/stages/d_s_star_sel_methods.cpp",
       "rule": "handspelled-member",
-      "match": "_ZN5ModelC1Ev",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
       "count": 2,
-      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
+      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. dExtSimpleModel_c's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
       "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
     },
     {
       "path": "src/game/stages/d_s_star_sel_methods.cpp",
       "rule": "handspelled-member",
-      "match": "_ZN5ModelD1Ev",
+      "match": "_ZN17dExtSimpleModel_cD1Ev",
       "count": 2,
-      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
+      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. dExtSimpleModel_c's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
       "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
     },
     {
@@ -46,24 +38,8 @@
       "rule": "handspelled-member",
       "match": "_ZN7fBase_cC2Ev",
       "count": 2,
-      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
+      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. dExtSimpleModel_c's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
       "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_star_sel_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7fBase_cnwEj",
-      "count": 2,
-      "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. Model's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
-      "evidence": "src/game/stages/d_s_star_sel.cpp on main (7 occurrences of these four names); ROM ov003 0x020b04f0 size 0x90; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
-      "count": 47,
-      "reason": "OAM::Render (scaled overload): it takes Fix12<int> by value, which this tree cannot declare without changing the call ABI (the Fix12 wall); the C++ name is spelled as the mangled symbol so the by-value word is passed as a plain int, exactly as the absorbed shard did.",
-      "evidence": "include/OAM.h:14 (the three Fix12 Render overloads are deliberately not declared there); arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
     },
     {
       "path": "src/game/stages/d_s_stage_methods.cpp",
@@ -92,22 +68,6 @@
     {
       "path": "src/game/stages/d_s_stage_methods.cpp",
       "rule": "handspelled-member",
-      "match": "_ZN3G2x18SetBlendBrightnessEPVtts",
-      "count": 7,
-      "reason": "PS_Init passes `a | 0x20` unnarrowed; through G2x.h's `unsigned short val` the call gains a narrowing and PS_Init grows from 0x1d4 to 0x1e4 bytes (measured), so the call keeps the mangled spelling with an int middle parameter.",
-      "evidence": "include/G2x.h:40; PS_Init 0x0202942c size 0x1d4; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN3G3X6SetFogEbiii",
-      "count": 2,
-      "reason": "RenderFog passes the fog record's enable byte as a raw int; G3X.h's `bool enable` normalises it and RenderFog stops matching (measured: G3X::SetFog(fog->mEnabled, ...) DIFFs), so the call keeps the mangled spelling.",
-      "evidence": "include/G3X.h:18; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
       "match": "_ZN10dScStage_c14LoadGraphics2DEbi",
       "count": 2,
       "reason": "InitResources passes a raw int as the bool parameter; through the header's `bool e3d` InitResources stops matching (measured: dScStage_c::LoadGraphics2D(v0_6, data_0209f2f8) DIFFs), so the call keeps the mangled spelling (the member definition itself is a real dScStage_c::LoadGraphics2D).",
@@ -124,34 +84,10 @@
     {
       "path": "src/game/stages/d_s_stage_methods.cpp",
       "rule": "handspelled-member",
-      "match": "_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj",
-      "count": 2,
-      "reason": "TextureTransformer::SetFile: it takes Fix12<int> by value, which this tree cannot declare without changing the call ABI (the Fix12 wall); the C++ name is spelled as the mangled symbol so the by-value word is passed as a plain int, exactly as the absorbed shard did.",
-      "evidence": "include/TextureTransformer.h; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
       "match": "_ZN4cstd5atan2E5Fix12IiES1_",
       "count": 2,
       "reason": "cstd::atan2: it takes Fix12<int> by value, which this tree cannot declare without changing the call ABI (the Fix12 wall); the C++ name is spelled as the mangled symbol so the by-value word is passed as a plain int, exactly as the absorbed shard did.",
       "evidence": "arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN5ModelC1Ev",
-      "count": 2,
-      "reason": "LoadSkybox spells the allocation as _Znwj plus a null-guarded constructor call, which a new-expression does not emit in this shape; the constructor is called by its mangled name.",
-      "evidence": "LoadSkybox; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN18TextureTransformerC1Ev",
-      "count": 2,
-      "reason": "LoadTextureTransformers spells the allocation as _Znwj plus a null-guarded constructor call, which a new-expression does not emit in this shape; the constructor is called by its mangled name.",
-      "evidence": "LoadTextureTransformers; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
     },
     {
       "path": "src/game/stages/d_s_stage_methods.cpp",
@@ -235,27 +171,19 @@
     },
     {
       "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7fBase_cnwEj",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
       "rule": "unknown-field",
       "match": "unk_287",
       "count": 1,
-      "reason": "dScEntry_c::InitResources clears byte 0x287, moved verbatim from the retired src/_ZN10dScEntry_c13InitResourcesEv.cpp (`self->unk_287 = 0` on main). include/dScEntry_c.h names the field unk_287. Its other users are unnamed raw-offset helpers in the same unit (func_ov075_02117e84 and func_ov075_02118378 store 0 and 0xe; func_ov075_02119dc4 clears it as a bit mask out of data_0209d45c), and data_0209d45c's role is itself unproven, so no name is invented. Follow-up: rename the header field when those helpers fold into this class and data_0209d45c is identified.",
+      "reason": "dScEntry_c::InitResources clears byte 0x287, moved verbatim from the retired src/_ZN10dScEntry_c13InitResourcesEv.cpp (`self->unk_287 = 0` on main). include/dScEntry_c.h names the field unk_287. Its other users are in the same unit (UpdateRematchSync and EnterRematchPrompt store 0 and 0xe; func_ov075_02119dc4 clears it as a bit mask out of data_0209d45c), and data_0209d45c's role is itself unproven, so no name is invented. Follow-up: rename the header field when those helpers fold into this class and data_0209d45c is identified.",
       "evidence": "src/_ZN10dScEntry_c13InitResourcesEv.cpp on main line 95; include/dScEntry_c.h line 33 (`u8 unk_287; /* 0x287 */`); ROM ov075 dScEntry_c::InitResources TEXT-VERIFIED in ov075/d_s_entry_methods"
     },
     {
-      "path": "src/Message2.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
-      "count": 9,
-      "reason": "OAM::Render's scaled overload takes two Fix12<int> by value, and include/OAM.h deliberately leaves the by-value Fix12 overloads out: a method with that parameter homes r0-r3 to the stack, which the ROM callers do not. Message::Update calls it eight times to draw the choice cursor and the next-page arrow; the ninth occurrence is the extern \"C\" declaration. Follow-up: retire it together with the other Fix12-by-value walls once a Fix12 spelling that passes in registers exists.",
-      "evidence": "include/OAM.h header comment (by-value Fix12 overloads not declared); carried verbatim from src/_ZN7Message6UpdateEv.cpp on main (9 occurrences), which this PR folds; arm9/Message2 13/13 TEXT-VERIFIED"
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(data_0209ee90+0x1d4",
+      "count": 1,
+      "reason": "dScEntry_c::RenderWinCounts, folded from src/unnamed/ov075/func_ov075_02117fe4.cpp, reads the base score at data_0209ee90+0x1d4 then adds the player's win count, the same access d_s_entry.cpp's 0211621c helper carries an exception for. The arm9 global's layout is not reconstructed. Follow-up: recover its owning arm9 type and verify all consumers before substituting a shared field.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021165b0..0x0211a854. 67/67 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked (tools/tubuild.py verify ov075/d_s_entry_methods); rombuild 106/106 exact."
     },
     {
       "path": "src/Message.cpp",
@@ -291,35 +219,11 @@
     },
     {
       "path": "src/game/stages/d_s_entry.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
-      "count": 4,
-      "reason": "Existing and absorbed OAM scaled Render calls retain the measured Fix12-by-value ABI bridge (OAM.h, wall 6az). Follow-up: resolve that ABI across consumers before replacing the integer arguments.",
-      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
-    },
-    {
-      "path": "src/game/stages/d_s_entry.cpp",
       "rule": "raw-offset",
       "match": "(int*)(data_0209ee90+0x1d4",
       "count": 1,
       "reason": "Inherited score field access in absorbed helper 0211621c; ROM loads the base score at offset 0x1d4 then adds the per-player delta. The cross-overlay global layout is not yet reconstructed. Follow-up: recover its owning arm9 type and verify all consumers before substituting a shared field.",
       "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
-    },
-    {
-      "path": "src/engine/model/ModelAnim2.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN15dExtFrameCtrl_c12SetAnimationEti5Fix12IiEt",
-      "count": 2,
-      "reason": "Func_020162C4 calls dExtFrameCtrl_c::SetAnimation, which takes Fix12<int> speed by value; a by-value Fix12 argument costs the caller too (wall 6az, notes/mwccarm-codegen.md, CORRECTED 2026-09-23). One occurrence is the local extern \"C\" declaration, one the call. The same bridge is already used by ModelAnim.cpp and BlendModelAnim.cpp. Follow-up: rename SetAnimation to its scalar mangling across its callers, or retire it with the other Fix12-by-value walls.",
-      "evidence": "Measured on 2004/b56 at arm9 0x020162c4 (target 0x5c): calling otherAnim.SetAnimation(..., *(Fix12<int> *)&speed, ...) through dExtFrameCtrl_c.h gives 0x70; the extern \"C\" scalar call reproduces 0x5c. arm9/ModelAnim2 4/4 TEXT-VERIFIED and LINK-VERIFIED."
-    },
-    {
-      "path": "src/engine/model/ModelAnim2.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt",
-      "count": 1,
-      "reason": "Definition of ModelAnim2::Func_020162C4 under its existing Fix12<int> mangling, as an extern \"C\" function with a scalar speed (wall 6az): the body reads speed twice, and a class-typed parameter is homed per use. include/ModelAnim2.h carries the real member declaration. Follow-up: rename the symbol to its scalar mangling _ZN10ModelAnim213Func_020162C4Ejiit, which matches as a real member, once Player.cpp's four extern call sites move to the member call.",
-      "evidence": "Measured on 2004/b56 at arm9 0x020162c4 (target 0x5c): a real member with Fix12<int> speed gives 0x6c; a real member with Fix12i speed (mangles _ZN10ModelAnim213Func_020162C4Ejiit) reproduces 0x5c exactly; the extern \"C\" definition reproduces 0x5c. Carried from the absorbed one-function source."
     },
     {
       "path": "src/game/actors/d_a_krb.cpp",
@@ -402,22 +306,6 @@
       "evidence": "df88a655 RenderModel/RenderModelTransparent local Inner::count; include/BMD_File.h BMD_Bone pad_08 spans0x08..0x33; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
     },
     {
-      "path": "src/minigames/d_mg_trmpln2_mario.cpp",
-      "rule": "raw-offset",
-      "match": "(ModelAnim*)(self+0x78",
-      "count": 2,
-      "reason": "The real ModelAnim API replaces shadow calls for the embedded model at +0x78. The address and model storage are inherited from Trmp2Mario; the enclosing record remains partial. Retire this cast when its model member is represented without changing lifecycle codegen.",
-      "evidence": "df88a655 Trmp2Mario_Draw and Trmp2Mario_UpdateMatrix model at+0x78; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
-    },
-    {
-      "path": "src/minigames/d_mg_trmpln2_mario.cpp",
-      "rule": "raw-offset",
-      "match": "(ModelAnim*)(self+0x6c",
-      "count": 2,
-      "reason": "The real ModelAnim API replaces shadow calls for the embedded model at +0x6c. The address and model storage are inherited from Trmp3DMario; the enclosing record remains partial. Retire this cast when its model member is represented without changing lifecycle codegen.",
-      "evidence": "df88a655 Trmp3DMario_Draw and Trmp3DMario_UpdateMatrix model at+0x6c; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
-    },
-    {
       "path": "src/minigames/d_s_mg_roulette_methods.cpp",
       "rule": "raw-offset",
       "match": "(RouletteSliderView*)(c+0x530c",
@@ -428,34 +316,34 @@
     {
       "path": "src/minigames/unit020cd744.cpp",
       "rule": "raw-offset",
-      "match": "(TextureTransformer*)(self+0x194",
+      "match": "(dExtAnmTexSRT_c*)(self+0x194",
       "count": 1,
-      "reason": "Call the real TextureTransformer API on the existing embedded object at item+0x194. Main already used the same embedded-object address through receiver c; this change uses the real typed API and model update migration uses self. Retire the raw expression when the containing item lifecycle/layout can name this member.",
-      "evidence": "df88a655 TrmpItem_UpdateMatrix handspelled TextureTransformer::Update at c+0x194; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
+      "reason": "Call the real dExtAnmTexSRT_c API on the existing embedded object at item+0x194. Main already used the same embedded-object address through receiver c; this change uses the real typed API and model update migration uses self. Retire the raw expression when the containing item lifecycle/layout can name this member.",
+      "evidence": "df88a655 TrmpItem_UpdateMatrix handspelled dExtAnmTexSRT_c::Update at c+0x194; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
     },
     {
       "path": "src/minigames/unit020cd744.cpp",
       "rule": "raw-offset",
-      "match": "(TextureTransformer*)(item+0x194",
+      "match": "(dExtAnmTexSRT_c*)(item+0x194",
       "count": 1,
-      "reason": "Call the real TextureTransformer API on the existing embedded object at item+0x194. Main already used the same embedded-object address through receiver c; this change uses the real typed API and the native update uses item. Retire the raw expression when the containing item lifecycle/layout can name this member.",
+      "reason": "Call the real dExtAnmTexSRT_c API on the existing embedded object at item+0x194. Main already used the same embedded-object address through receiver c; this change uses the real typed API and the native update uses item. Retire the raw expression when the containing item lifecycle/layout can name this member.",
       "evidence": "df88a655 TrmpItem_Update handspelled dExtFrameCtrl_c::Advance at c+0x194; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
     },
     {
       "path": "src/minigames/d_s_mg_roulette_methods.cpp",
       "rule": "raw-offset",
-      "match": "(Model*)(slider+0x10",
+      "match": "(dExtSimpleModel_c*)(slider+0x10",
       "count": 1,
-      "reason": "Use real Model calls for the embedded model at slider+0x10; main already used ModelBase/Sub views at the same address. The containing slider remains partial; name the model member only once lifecycle and complete layout are established.",
-      "evidence": "df88a655 Roulette slider render ModelBase/Sub at+0x10; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
+      "reason": "Use real dExtSimpleModel_c calls for the embedded model at slider+0x10; main already used dExtModel_c/Sub views at the same address. The containing slider remains partial; name the model member only once lifecycle and complete layout are established.",
+      "evidence": "df88a655 Roulette slider render dExtModel_c/Sub at+0x10; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
     },
     {
       "path": "src/minigames/d_s_mg_roulette_methods.cpp",
       "rule": "raw-offset",
-      "match": "(Model*)(slider+0x60",
+      "match": "(dExtSimpleModel_c*)(slider+0x60",
       "count": 1,
-      "reason": "Use real Model calls for the embedded model at slider+0x60; main already used ModelBase/Sub views at the same address. The containing slider remains partial; name the model member only once lifecycle and complete layout are established.",
-      "evidence": "df88a655 Roulette slider render ModelBase/Sub at+0x60; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
+      "reason": "Use real dExtSimpleModel_c calls for the embedded model at slider+0x60; main already used dExtModel_c/Sub views at the same address. The containing slider remains partial; name the model member only once lifecycle and complete layout are established.",
+      "evidence": "df88a655 Roulette slider render dExtModel_c/Sub at+0x60; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
     },
     {
       "path": "include/cMgSmartball_wing_c.h",
@@ -464,6 +352,630 @@
       "count": 1,
       "reason": "The wing-only GetAngle accessor reads the existing byte pair at base+0x32 as s16. The base deliberately stores u8 bytes because ana, board, wing and propeller require different views; renaming this shared byte as a signed angle would misstate those readers. Keep this one explicit boundary until a shared representation justified by every consumer exists.",
       "evidence": "include/cMgSmartball_object_c.h documents per-reader signedness across0x031..0x033; cMgSmartball_wing_c::GetAngle casts the named byte storage. Fresh b56 compile preserves the entire production-prepared Smartball object byte-for-byte versus a317608eec;132/132 owned strict function checks VERIFIED; build/review3955-smartball-proof/proof.json."
+    },
+    {
+      "path": "src/game/player/Player.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN13SharedFilePtr9ConstructEj",
+      "count": 295,
+      "reason": "__sinit_ov002_021019d0 is the enrolled C initializer under #pragma cplusplus off, so SharedFilePtr::Construct cannot be spelled as a member call. Follow-up: keep this initializer in C until a C++ spelling reproduces the same .init bytes.",
+      "evidence": "Retired src/unnamed/ov002/__sinit_ov002_021019d0.c, folded into src/game/player/Player.cpp; ov002/Player .init 0x021019d0 size 0x5470 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/_ZN10dScEntry_c17RenderWaitingTextEv.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+      "count": 2,
+      "reason": "Retained scalar ABI bridge for the Fix12-by-value OAM overload, carried from the old waiting renderer. OAM.h deliberately excludes this overload; RenderSub uses the shared header. Follow-up: replace the bridge when the Fix12 interface is reconstructed with matching call ABI.",
+      "evidence": "include/OAM.h; notes/mwccarm-codegen.md section 6az; notes/agents/handoffs/entry-sync1018.md; ov075 0x021194e4 size0x15c links exactly with all six destinations verified."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_000",
+      "count": 2,
+      "reason": "AddSystem already stores through Particle::System::Flags. The 6-bit field is the loan of Manager::unk_02c, then copied into unk_00c. include/Particle__System.h and Particle_SysTracker_Contents.cpp keep the placeholder; no reader names it. Follow-up: rename the bitfield once a consumer establishes its role.",
+      "evidence": "include/Particle__System.h Flags unk_000:6 at +0x74; Particle_SysTracker_Contents.cpp Entry::Initialise reads the same field. Typed member access, not a raw offset. mwccarm 2004/b56 match.py: _ZN8Particle7Manager9AddSystemEiR7Vector3 at 0x02049e0c size 0xdc MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_006",
+      "count": 1,
+      "reason": "AddSystem stores Manager::unk_02e through the existing 6-bit Flags member. The shared header name stays unknown; Contents::Entry::Initialise compares the same field. Follow-up: rename it together with unk_000 and unk_00c.",
+      "evidence": "include/Particle__System.h Flags unk_006:6; src/engine/particle/Particle_SysTracker_Contents.cpp. mwccarm 2004/b56 match.py: AddSystem at 0x02049e0c size 0xdc MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_00c",
+      "count": 1,
+      "reason": "AddSystem copies flags.unk_000 into the existing 6-bit Flags member. The shared header name stays unknown. Follow-up: rename it together with unk_000 and unk_006.",
+      "evidence": "include/Particle__System.h Flags unk_00c:6; Contents::Entry::Initialise writes the same field. mwccarm 2004/b56 match.py: AddSystem at 0x02049e0c size 0xdc MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_02c",
+      "count": 2,
+      "reason": "func_0204a4c8's (short*)(p+0x2c) store and AddSystem's read are the existing Manager member. The constructor's third argument is loaned into each system's flags.unk_000; no consumer names the value. Follow-up: name Manager+0x2c with that flag field.",
+      "evidence": "include/Particle__Manager.h u16 unk_02c at +0x2c. Replaces (short*)(p+0x2c). mwccarm 2004/b56 match.py: func_0204a4c8 at 0x0204a4c8 size 0xf4 MATCH; AddSystem at 0x02049e0c size 0xdc MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_02e",
+      "count": 2,
+      "reason": "func_0204a4c8's (short*)(p+0x2e) store and AddSystem's read are the existing Manager member. The constructor's fourth argument is loaned into flags.unk_006; no consumer names the value. Follow-up: name Manager+0x2e with that flag field.",
+      "evidence": "include/Particle__Manager.h u16 unk_02e at +0x2e. Replaces (short*)(p+0x2e). mwccarm 2004/b56 match.py: func_0204a4c8 at 0x0204a4c8 size 0xf4 MATCH; AddSystem at 0x02049e0c size 0xdc MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_028",
+      "count": 1,
+      "reason": "func_0204a4c8's (short*)(p+0x28) store is the existing Manager member, the constructor's first argument. Nothing else in this TU reads it, so the header name stays unknown. Follow-up: name Manager+0x28 when a reader establishes its role.",
+      "evidence": "include/Particle__Manager.h u16 unk_028 at +0x28. Replaces (short*)(p+0x28). mwccarm 2004/b56 match.py: func_0204a4c8 at 0x0204a4c8 size 0xf4 MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_02a",
+      "count": 1,
+      "reason": "func_0204a4c8's (short*)(p+0x2a) store is the existing Manager member, the constructor's second argument. Nothing else in this TU reads it, so the header name stays unknown. Follow-up: name Manager+0x2a when a reader establishes its role.",
+      "evidence": "include/Particle__Manager.h u16 unk_02a at +0x2a. Replaces (short*)(p+0x2a). mwccarm 2004/b56 match.py: func_0204a4c8 at 0x0204a4c8 size 0xf4 MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_020",
+      "count": 1,
+      "reason": "func_0204a4c8's (int*)(p+0x20) clear is the existing Manager member. func_0204a17c then fills the same slot as the second resource table through the file-local EData view. The shared header name stays unknown. Follow-up: name Manager+0x20 once that table is shared outside this TU.",
+      "evidence": "include/Particle__Manager.h void *unk_020 at +0x20. Replaces (int*)(p+0x20). mwccarm 2004/b56 match.py: func_0204a4c8 at 0x0204a4c8 size 0xf4 MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_024",
+      "count": 1,
+      "reason": "func_0204a4c8's (short*)(p+0x24) store is the existing Manager member. The same halfword is EData::numA, the first resource-table count func_0204a17c writes. The shared header name stays unknown. Follow-up: name Manager+0x24 with that count once both views share one record.",
+      "evidence": "include/Particle__Manager.h u16 unk_024 at +0x24. Replaces (short*)(p+0x24) and the following unsigned load of unk_026. mwccarm 2004/b56 match.py: func_0204a4c8 at 0x0204a4c8 size 0xf4 MATCH."
+    },
+    {
+      "path": "src/engine/particle/Particle_Manager.cpp",
+      "rule": "unknown-field",
+      "match": "unk_026",
+      "count": 2,
+      "reason": "func_0204a4c8's (unsigned short*)(p+0x26) clear and the reload into unk_024 are the existing Manager member. The same halfword is EData::numB. The shared header name stays unknown. Follow-up: name Manager+0x26 with that count once both views share one record.",
+      "evidence": "include/Particle__Manager.h u16 unk_026 at +0x26. Replaces both (unsigned short*)(p+0x26) occurrences. mwccarm 2004/b56 match.py: func_0204a4c8 at 0x0204a4c8 size 0xf4 MATCH."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+      "count": 3,
+      "reason": "Scalar ABI bridge for the Fix12-by-value OAM overload. include/OAM.h excludes it because a by-value Fix12 parameter homes r0-r3 to the stack. Carried from RenderWaitingText and func_ov075_021199d8. Follow-up: retire the bridge when a Fix12 spelling that passes in registers exists.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9dEntObj_c19func_ov075_0211505cEv",
+      "count": 2,
+      "reason": "Folded helpers call dEntObj_c::func_ov075_02115134, func_ov075_02115098 and func_ov075_0211505c through the explicit-pointer spelling their shards matched. The methods are declared on dEntObj_c; this form is the byte-proved call. Follow-up: switch to member calls when the rest of the hole is folded and rechecked.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9dEntObj_c19func_ov075_02115098Ei",
+      "count": 5,
+      "reason": "Folded helpers call dEntObj_c::func_ov075_02115134, func_ov075_02115098 and func_ov075_0211505c through the explicit-pointer spelling their shards matched. The methods are declared on dEntObj_c; this form is the byte-proved call. Follow-up: switch to member calls when the rest of the hole is folded and rechecked.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN9dEntObj_c19func_ov075_02115134Ev",
+      "count": 4,
+      "reason": "Folded helpers call dEntObj_c::func_ov075_02115134, func_ov075_02115098 and func_ov075_0211505c through the explicit-pointer spelling their shards matched. The methods are declared on dEntObj_c; this form is the byte-proved call. Follow-up: switch to member calls when the rest of the hole is folded and rechecked.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)(c+0x70",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)(c+0x94",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(c+0x26c",
+      "count": 5,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(c+0x270",
+      "count": 5,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(c+0x278",
+      "count": 2,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(r4+0x278",
+      "count": 2,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(u8*)(c+0x280",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(u8*)(c+0x281",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(u8*)(c+0x282",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(c+0x280",
+      "count": 2,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(c+0x281",
+      "count": 2,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(c+0x282",
+      "count": 5,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(c+0x80",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(c+0xa4",
+      "count": 1,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/stages/d_s_entry_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedchar*)(r4+0x282",
+      "count": 2,
+      "reason": "These helpers still address the scene through the offset casts their shards matched. include/dScEntry_c.h names most of the bytes, but retyping the casts changes instruction selection; this fold measured that on the step-word save and the data_02086b58 copy. Follow-up: name the accesses when the remaining hole 0x021165b0..0x021190a4 is folded.",
+      "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
+    },
+    {
+      "path": "src/game/actors/d_a_ots.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dExtAnmModel_c7SetAnimEP8BCA_Fileiit",
+      "count": 2,
+      "reason": "func_ov064_02116560 tail-forwards SetAnim's r0 as its own int result. A return on the void member does not compile, and splitting it into call-then-return loses the tail call. The two occurrences are the int-returning local extern and its single call.",
+      "evidence": "src/engine/model/d_ext_anm_model.cpp: void dExtAnmModel_c::SetAnim(BCA_File *, int, Fix12i, u16) at 0x02016748 size 0x5c MATCH under 2004/b56; func_ov064_02116560 byte-matched with the int-returning spelling; the local extern carries a 'local extern:' reason at d_a_ots.cpp:230."
+    },
+    {
+      "path": "include/dScMgJump2_c.h",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cD1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: include/dScMgJump2_c.h on main carries the same 2 occurrence(s) as _ZN5ModelD1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:include/dScMgJump2_c.h 2x _ZN5ModelD1Ev; head 2x _ZN17dExtSimpleModel_cD1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "include/dScMgRoulette_c.h",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cD1Ev",
+      "count": 3,
+      "reason": "Respelled by the Model-family RTTI rename: include/dScMgRoulette_c.h on main carries the same 3 occurrence(s) as _ZN5ModelD1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:include/dScMgRoulette_c.h 3x _ZN5ModelD1Ev; head 3x _ZN17dExtSimpleModel_cD1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_dp_lift.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_dp_lift.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_dp_lift.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_path_lift.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_obj_path_lift.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_obj_path_lift.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_path_lift.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cD1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_obj_path_lift.cpp on main carries the same 2 occurrence(s) as _ZN5ModelD1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_obj_path_lift.cpp 2x _ZN5ModelD1Ev; head 2x _ZN17dExtSimpleModel_cD1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_rc_carpet.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dExtAnmModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_obj_rc_carpet.cpp on main carries the same 2 occurrence(s) as _ZN9ModelAnimC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_obj_rc_carpet.cpp 2x _ZN9ModelAnimC1Ev; head 2x _ZN14dExtAnmModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_rc_carpet.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_obj_rc_carpet.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_obj_rc_carpet.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_rc_carpet.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cD1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_obj_rc_carpet.cpp on main carries the same 2 occurrence(s) as _ZN5ModelD1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_obj_rc_carpet.cpp 2x _ZN5ModelD1Ev; head 2x _ZN17dExtSimpleModel_cD1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_sm_lift.cpp",
+      "rule": "raw-offset",
+      "match": "(dExtModel_c*)(c+0xd4",
+      "count": 1,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_obj_sm_lift.cpp on main carries the same 1 occurrence(s) as (ModelBase*)(c+0xd4. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_obj_sm_lift.cpp 1x (ModelBase*)(c+0xd4; head 1x (dExtModel_c*)(c+0xd4; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_wl_polelift.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_obj_wl_polelift.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_obj_wl_polelift.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/actors/d_a_spd.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dExtAnmModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/actors/d_a_spd.cpp on main carries the same 2 occurrence(s) as _ZN9ModelAnimC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/actors/d_a_spd.cpp 2x _ZN9ModelAnimC1Ev; head 2x _ZN14dExtAnmModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/stages/d_ent_obj.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dExtAnmModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/stages/d_ent_obj.cpp on main carries the same 2 occurrence(s) as _ZN9ModelAnimC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/stages/d_ent_obj.cpp 2x _ZN9ModelAnimC1Ev; head 2x _ZN14dExtAnmModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/game/stages/d_ent_obj.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/game/stages/d_ent_obj.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/game/stages/d_ent_obj.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 3,
+      "reason": "Respelled by the Model-family RTTI rename: src/minigames/d_mg3d_esp_anim_set.cpp on main carries the same 3 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/minigames/d_mg3d_esp_anim_set.cpp 3x _ZN5ModelC1Ev; head 3x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "raw-offset",
+      "match": "(dExtFrameCtrl_c*)(c+0x5034",
+      "count": 1,
+      "reason": "FlashSync reads mEspModel's mAnmModel frame control (0x4fd8 + 0xc + 0x50). The ROM pool-loads 0x5034 as one constant, and spelling it as that member grows FlashSync from 0xb4 to 0xb8 bytes (the comment at the call says so). The offset was already the untyped this of a hand-spelled _ZNK15dExtFrameCtrl_c12WillHitFrameEi call; this change only turns that call into a member call. Follow-up: drop the offset if a member spelling that keeps the single pooled constant is found.",
+      "evidence": "ov006/dMg3DEspAnimSet_c 68/68 TEXT-VERIFIED (tubuild verify --no-write); the base spelling was _ZNK15dExtFrameCtrl_c12WillHitFrameEi(c + 0x5034, 0)"
+    },
+    {
+      "path": "src/minigames/d_mg3d_heyho_obj_adapter.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14dExtAnmModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/minigames/d_mg3d_heyho_obj_adapter.cpp on main carries the same 2 occurrence(s) as _ZN9ModelAnimC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/minigames/d_mg3d_heyho_obj_adapter.cpp 2x _ZN9ModelAnimC1Ev; head 2x _ZN14dExtAnmModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/minigames/d_s_mg_jump.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/minigames/d_s_mg_jump.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/minigames/d_s_mg_jump2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/minigames/d_s_mg_jump2.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/minigames/d_s_mg_jump2.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/minigames/d_s_mg_roulette.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 3,
+      "reason": "Respelled by the Model-family RTTI rename: src/minigames/d_s_mg_roulette.cpp on main carries the same 3 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/minigames/d_s_mg_roulette.cpp 3x _ZN5ModelC1Ev; head 3x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/minigames/d_s_mg_snowball.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN17dExtSimpleModel_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the Model-family RTTI rename: src/minigames/d_s_mg_snowball.cpp on main carries the same 2 occurrence(s) as _ZN5ModelC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/main:src/minigames/d_s_mg_snowball.cpp 2x _ZN5ModelC1Ev; head 2x _ZN17dExtSimpleModel_cC1Ev; tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/minigames/d_mg3d_esp_anim_set.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtAnmTexSRT_cC1Ev",
+      "count": 2,
+      "reason": "Respelled by the texture-animation RTTI rename: src/minigames/d_mg3d_esp_anim_set.cpp on cpp/model-family-rom-names carries the same 2 occurrence(s) as _ZN18TextureTransformerC1Ev. No new hand-spelled binding is added. Follow-up: convert to a real member call with the rest of this file's bindings.",
+      "evidence": "origin/cpp/model-family-rom-names:src/minigames/d_mg3d_esp_anim_set.cpp 2x _ZN18TextureTransformerC1Ev; head 2x _ZN15dExtAnmTexSRT_cC1Ev; tools/source_style.py --base origin/cpp/model-family-rom-names"
+    },
+    {
+      "path": "src/game/actors/d_a_sound_obj.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN5Sound7PlaySubEjjjib",
+      "count": 3,
+      "reason": "func_ov002_020f9468 passes the u8 mLoop as Sound::PlaySub's last argument. Calling the member converts it to bool and grows the function from 0x94 to 0xac, so this one extern \"C\" callback keeps a declaration under the linker spelling with an int last parameter. The three occurrences are that declaration and the two calls in func_ov002_020f9468; InitResources and Behavior call Sound::PlaySub by name.",
+      "evidence": "The file's banner Leftover note and the comment on the declaration (#4326). Before #4326 the same calls spelled _ZN5Sound7PlaySubEjjj5Fix12IiEb, which the Fix12-by-value exemption covered."
+    },
+    {
+      "path": "src/game/actors/d_a_kpa3_bg.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c10EarthquakeERK7Vector3i",
+      "count": 2,
+      "reason": "func_ov060_02117db8 parses as C (cplusplus off; the same body as C++ DIFFs), so it cannot call dActor_c::Earthquake as a member and keeps the linker spelling, as its PoofDustAt and MarkForDestruction calls already do. Making Earthquake a scalar-Fix12i member respells the existing extern from _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE (exempt as Fix12-by-value) with its count unchanged. Follow-up: call the member once func_ov060_02117db8 matches as C++.",
+      "evidence": "origin/main:src/game/actors/d_a_kpa3_bg.cpp 2x _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE; head 2x _ZN8dActor_c10EarthquakeERK7Vector3i; file banner (func_ov060_02117db8 parses as C); tools/source_style.py --base origin/main"
+    },
+    {
+      "path": "src/unnamed/arm9/0201/func_02018c00.c",
+      "rule": "raw-offset",
+      "match": "(int*)(self+0x20",
+      "count": 1,
+      "reason": "func_02018cbc moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0201/func_02018cbc.c; folded into src/unnamed/arm9/0201/func_02018c00.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/arm9/0206/func_0206116c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)msg+0x14",
+      "count": 2,
+      "reason": "func_02061188 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0206/func_02061188.c; folded into src/unnamed/arm9/0206/func_0206116c.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/arm9/0206/func_0206116c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)msg+0x1c",
+      "count": 1,
+      "reason": "func_02061188 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/arm9/0206/func_02061188.c; folded into src/unnamed/arm9/0206/func_0206116c.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)obj+0x24",
+      "count": 1,
+      "reason": "func_ov002_020e6b74 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/ov002/func_ov002_020e6b74.c; folded into src/unnamed/ov002/func_ov002_020e6a78.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)p+0x40",
+      "count": 1,
+      "reason": "func_ov002_020e6ad4 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/ov002/func_ov002_020e6ad4.c; folded into src/unnamed/ov002/func_ov002_020e6a78.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(dst+0x1c",
+      "count": 1,
+      "reason": "func_ov002_020e6b74 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/ov002/func_ov002_020e6b74.c; folded into src/unnamed/ov002/func_ov002_020e6a78.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(src+0x1c",
+      "count": 1,
+      "reason": "func_ov002_020e6bb0 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/ov002/func_ov002_020e6bb0.c; folded into src/unnamed/ov002/func_ov002_020e6a78.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/ov002/func_ov002_020e6a78.cpp",
+      "rule": "raw-offset",
+      "match": "(unsignedint*)(base+0x24",
+      "count": 1,
+      "reason": "func_ov002_020e6bb0 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/ov002/func_ov002_020e6bb0.c; folded into src/unnamed/ov002/func_ov002_020e6a78.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/ov007/func_ov007_020c0a44.c",
+      "rule": "raw-offset",
+      "match": "(char*)o+0x1c",
+      "count": 1,
+      "reason": "func_ov007_020c0aa8 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/ov007/func_ov007_020c0aa8.c; folded into src/unnamed/ov007/func_ov007_020c0a44.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "src/unnamed/ov007/func_ov007_020c0a44.c",
+      "rule": "raw-offset",
+      "match": "(char*)o+0x1e",
+      "count": 1,
+      "reason": "func_ov007_020c0aa8 moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
+      "evidence": "present on origin/main in src/unnamed/ov007/func_ov007_020c0aa8.c; folded into src/unnamed/ov007/func_ov007_020c0a44.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
+    },
+    {
+      "path": "include/decl_ActorBase.h",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_cnwEm",
+      "count": 1,
+      "reason": "The extern \"C\" declaration the three C star factories call fBase_c::operator new through; C cannot name the member. The name changed only from the GCC size_t spelling (_ZN7fBase_cnwEj) to mwccarm's (_ZN7fBase_cnwEm). Follow-up: retires with the last C caller.",
+      "evidence": "spelled _ZN7fBase_cnwEj on origin/main; renamed with the symbol (arm9 0x02043444, size 0x50); every src file recompiled at base and head, bytes and relocation destinations identical"
+    },
+    {
+      "path": "src/engine/gx/G3i.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN3G3i13PerspectiveW_EiiiiiibP9Matrix4x3",
+      "count": 1,
+      "reason": "The definition of G3i::PerspectiveW_ stays a C-linkage body under `#pragma cplusplus off` because a real C++ method does not reproduce the ROM body (the G3i.json note), so it spells the mangled name once at the definition. Follow-up: retire once a method form of the body matches.",
+      "evidence": "Symbol renamed from the Fix12<int> mangling to the Fix12i (plain int) one in config/arm9/symbols.txt and config/tu_manifest.d/arm9/G3i.json; arm9 0x02055bfc and the callers still byte-match (rombuild 106/106 exact)."
+    },
+    {
+      "path": "src/game/actors/d_a_grock.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x3iih",
+      "count": 2,
+      "reason": "Kept on purpose: this caller is int-returning and ends in a tail call, `return <callee>(...)`, so the callee's r0 flows out as its result. dActor_c::DropShadowRadHeight is void, so the member form cannot express that without inventing a return value, which changes the bytes. The local extern therefore declares an int return. Every other site of this symbol is a real member call (notes/mwccarm-codegen.md 6az, batch 5). Follow-up: retire when this caller's own return type is settled.",
+      "evidence": "src/game/actors/d_a_grock.cpp: `return _ZN8dActor_c19DropShadowRadHeightER17dEx...(...)` in an int-returning caller; tubuild verify TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_ct_mecha11.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x3iiih",
+      "count": 2,
+      "reason": "Kept on purpose: this caller is int-returning and ends in a tail call, `return <callee>(...)`, so the callee's r0 flows out as its result. dActor_c::DropShadowScaleXYZ is void, so the member form cannot express that without inventing a return value, which changes the bytes. The local extern therefore declares an int return. Every other site of this symbol is a real member call (notes/mwccarm-codegen.md 6az, batch 5). Follow-up: retire when this caller's own return type is settled.",
+      "evidence": "src/game/actors/d_a_obj_ct_mecha11.cpp: `return _ZN8dActor_c18DropShadowScaleXYZER17dExt...(...)` in an int-returning caller; tubuild verify TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_ct_rotate_block.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x3iiih",
+      "count": 2,
+      "reason": "Kept on purpose: this caller is int-returning and ends in a tail call, `return <callee>(...)`, so the callee's r0 flows out as its result. dActor_c::DropShadowScaleXYZ is void, so the member form cannot express that without inventing a return value, which changes the bytes. The local extern therefore declares an int return. Every other site of this symbol is a real member call (notes/mwccarm-codegen.md 6az, batch 5). Follow-up: retire when this caller's own return type is settled.",
+      "evidence": "src/game/actors/d_a_obj_ct_rotate_block.cpp: `return _ZN8dActor_c18DropShadowScaleXYZER17dExt...(...)` in an int-returning caller; tubuild verify TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_fm_battan.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x3iiih",
+      "count": 2,
+      "reason": "Kept on purpose: this caller is int-returning and ends in a tail call, `return <callee>(...)`, so the callee's r0 flows out as its result. dActor_c::DropShadowScaleXYZ is void, so the member form cannot express that without inventing a return value, which changes the bytes. The local extern therefore declares an int return. Every other site of this symbol is a real member call (notes/mwccarm-codegen.md 6az, batch 5). Follow-up: retire when this caller's own return type is settled.",
+      "evidence": "src/game/actors/d_a_obj_fm_battan.cpp: `return _ZN8dActor_c18DropShadowScaleXYZER17dExt...(...)` in an int-returning caller; tubuild verify TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_pile.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c10SpawnCoinsERK7Vector3iis",
+      "count": 3,
+      "reason": "Kept on purpose: daObjPile_c calls SpawnCoins once through a function-pointer cast and passes its position as a by-value V3 (r1-r3), which the member's const Vector3 & cannot express byte-identically. Follow-up: retire with daObjPile_c's position layout.",
+      "evidence": "tools/tubuild.py verify ov091/daObjPile_c TEXT-VERIFIED with the extern kept"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_power_up_item.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x3iih",
+      "count": 2,
+      "reason": "Kept on purpose: this caller is int-returning and ends in a tail call, `return <callee>(...)`, so the callee's r0 flows out as its result. dActor_c::DropShadowRadHeight is void, so the member form cannot express that without inventing a return value, which changes the bytes. The local extern therefore declares an int return. Every other site of this symbol is a real member call (notes/mwccarm-codegen.md 6az, batch 5). Follow-up: retire when this caller's own return type is settled.",
+      "evidence": "src/game/actors/d_a_obj_power_up_item.cpp: `return _ZN8dActor_c19DropShadowRadHeightER17dEx...(...)` in an int-returning caller; tubuild verify TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/actors/d_a_obj_rotate_updown_lift.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x3iiih",
+      "count": 2,
+      "reason": "Kept on purpose: this caller is int-returning and ends in a tail call, `return <callee>(...)`, so the callee's r0 flows out as its result. dActor_c::DropShadowScaleXYZ is void, so the member form cannot express that without inventing a return value, which changes the bytes. The local extern therefore declares an int return. Every other site of this symbol is a real member call (notes/mwccarm-codegen.md 6az, batch 5). Follow-up: retire when this caller's own return type is settled.",
+      "evidence": "src/game/actors/d_a_obj_rotate_updown_lift.cpp: `return _ZN8dActor_c18DropShadowScaleXYZER17dExt...(...)` in an int-returning caller; tubuild verify TEXT-VERIFIED"
+    },
+    {
+      "path": "src/game/player/Player.cpp",
+      "rule": "raw-offset",
+      "match": "(Matrix4x3*)(c+0x5bc",
+      "count": 1,
+      "reason": "func_ov002_020e444c is still a char *c offset-view function, and Player declares no member at 0x5bc (the drop-shadow matrix). The member call needs a Matrix4x3 &, so the view is cast at the call; the offset was already spelled `c + 0x5bc` on main. Follow-up: name the Matrix4x3 at Player+0x5bc in the layout pass, then this becomes `player->DropShadowRadHeight(player->mShadowModel, player->m<name>, ...)`.",
+      "evidence": "origin/main:src/game/player/Player.cpp passes `c + 0x5bc` to the mangled extern; batch 5 member call"
+    },
+    {
+      "path": "src/game/actors/d_a_kinopio.cpp",
+      "rule": "raw-offset",
+      "match": "(dExtShadowModel_c*)(c+0x16c",
+      "count": 1,
+      "reason": "daKinopio_c::UpdateModelPose addresses its shadow model (0x16c) and shadow transform (0x1c4) through `char *c = (char *)this`, as the file header records the ROM reading this block with ldm/stm. Spelling the member call with the declared members mShadowModel/mShadowTransform was measured: UpdateModelPose stops matching (tubuild verify ov085/daKinopio_c 14/15). So the call casts the same offsets the old extern call passed as `c + 0x16c`/`c + 0x1c4`. Follow-up: retire with the rest of this function's offset view.",
+      "evidence": "tools/tubuild.py verify ov085/daKinopio_c: cast form TEXT-VERIFIED, member-name form 14/15"
+    },
+    {
+      "path": "src/game/actors/d_a_kinopio.cpp",
+      "rule": "raw-offset",
+      "match": "(Matrix4x3*)(c+0x1c4",
+      "count": 1,
+      "reason": "daKinopio_c::UpdateModelPose addresses its shadow model (0x16c) and shadow transform (0x1c4) through `char *c = (char *)this`, as the file header records the ROM reading this block with ldm/stm. Spelling the member call with the declared members mShadowModel/mShadowTransform was measured: UpdateModelPose stops matching (tubuild verify ov085/daKinopio_c 14/15). So the call casts the same offsets the old extern call passed as `c + 0x16c`/`c + 0x1c4`. Follow-up: retire with the rest of this function's offset view.",
+      "evidence": "tools/tubuild.py verify ov085/daKinopio_c: cast form TEXT-VERIFIED, member-name form 14/15"
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200af20.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dClipper13Func_020156DCEisii",
+      "count": 2,
+      "reason": "Respelled by the dClipper::Func_020156DC parameter correction (u16 -> s16 fov angle; both ROM callers pass a short angle loaded with ldrsh and unconverted): src/unnamed/arm9/0200/func_0200af20.c on main carried the same 2 occurrence(s) as _ZN8dClipper13Func_020156DCEitii. The shard is C++ now, but the member takes a by-value Fix12<int> (the Fix12 wall), so the call keeps the scalar mangled spelling; see the file's local extern note.",
+      "evidence": "origin/main:src/unnamed/arm9/0200/func_0200af20.c 2x _ZN8dClipper13Func_020156DCEitii; head 2x _ZN8dClipper13Func_020156DCEisii; tools/source_style.py --base origin/main"
     }
   ]
 }

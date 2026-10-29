@@ -80,9 +80,9 @@ extern "C" {
 
    THE HOST KEEPS ITS OWN GLOBAL OPERATORS. Defining operator delete here would
    replace the CRT's for the whole PC port, and port/hal already answers the
-   DS spellings the headers reference (_Znwj, _ZdlPv and Memory's two
-   operators). Only the two unnamed veneers have no host bridge, so the host
-   gets them over the same default heap. Nothing here reaches mwccarm. */
+   DS spellings the headers reference (_ZdlPv and Memory's two operators).
+   Only the two unnamed veneers have no host bridge, so the host gets them
+   over the same default heap. Nothing here reaches mwccarm. */
 #ifdef _MSC_VER
 extern "C" void *func_0203cc0c(u32 size) {
     return Memory::defaultHeapPtr->Allocate(size);
@@ -111,19 +111,20 @@ void operator delete(void *ptr) throw() {
     Memory::defaultHeapPtr->_Deallocate(ptr);
 }
 
-extern "C" {
-
-// @symbol _Znwj
-/* operator new(unsigned int) at 0x0203cbe4 -- a three-word tail-call veneer
- * to func_0203cc0c (`ldr ip,[pc] / bx ip / .word 0x0203cc0c').
+// @symbol _Znwm
+/* operator new(size_t) at 0x0203cbe4 -- a three-word tail-call veneer to
+ * func_0203cc0c (`ldr ip,[pc] / bx ip / .word 0x0203cc0c').
  *
- * The name stays hand-spelled under extern "C". mwccarm's size_t is
- * unsigned long, so a real `operator new(size_t)' emits _Znwm, and
- * `operator new(unsigned int)' is rejected as an illegal 'operator'
- * declaration. Renaming the symbol to _Znwm is a claim of its own. */
-void *_Znwj(u32 size) {
+ * mwccarm's size_t is unsigned long, so the global allocator mangles to
+ * _Znwm. The tree used to carry it as the GCC spelling _Znwj, defined
+ * hand-spelled under extern "C" because `operator new(unsigned int)' is an
+ * illegal 'operator' declaration here; the cartridge carries no mangled
+ * names, so the name was ours to correct. Every new-expression in src/ now
+ * resolves to this definition. An explicit call is spelled `::operator new':
+ * inside a member of an fBase_c-derived class, plain `operator new' finds
+ * fBase_c's class allocator first. */
+void *operator new(size_t size) {
     return func_0203cc0c(size);
-}
 }
 
 namespace Memory {
@@ -315,7 +316,7 @@ Heap_t* Heap_t::CreateRootHeap(void* mem, u32 size)
 {
     ExpandingHeap* heap = (ExpandingHeap*)mem;
 
-    heap->heapStart = (char*)heap + 0x18;
+    heap->heapStart = heap + 1;
     heap->allocator = CreateExpandingHeapAllocator(heap->heapStart, size - 0x18, 3);
     if (heap->allocator != 0)
     {
@@ -346,7 +347,7 @@ Heap_t* Heap_t::CreateExpandingHeap(u32 size, Heap_t* root, int align)
     ExpandingHeap* heap = (ExpandingHeap*)parent->Allocate(size + 0x18, align);
     if (heap != 0)
     {
-        heap->heapStart = (char*)heap + 0x18;
+        heap->heapStart = heap + 1;
         heap->allocator = CreateExpandingHeapAllocator(heap->heapStart, size, 3);
         if (heap->allocator == 0)
         {
@@ -395,7 +396,7 @@ Heap_t* Heap_t::CreateSolidHeap(u32 size, Heap_t* root, int align)
     SolidHeap* heap = (SolidHeap*)parent->Allocate(size + 0x18, align);
     if (heap != 0)
     {
-        heap->heapStart = (char*)heap + 0x18;
+        heap->heapStart = heap + 1;
         heap->allocator = CreateSolidHeapAllocator(heap->heapStart, size, 3);
         if (heap->allocator == 0)
         {
@@ -480,7 +481,7 @@ void ExpHeap_t::VDestroy()
  * SolidHeap function at all. */
 
 /* 0x0204ebb8, twelve bytes and still unnamed. It is almost certainly
-   SolidHeapAllocator::Destroy -- _ZN13HeapAllocator7DestroyEv at 0x0204e3b4 is
+   SolidHeapAllocator::Destroy -- HeapAllocator::Destroy() at 0x0204e3b4 is
    the same size and shape -- but "almost certainly" is not evidence, and minting
    a mangled symbol is a claim with its own gate (see the naming rule in
    notes/plan-cpp-language-mode.md section 4). The call stays raw until then;
@@ -535,9 +536,9 @@ void* ExpHeap_t::VAllocate(u32 size, int align)
  * instructions: load the allocator from this+0x14 and tail-call it, passing
  * r1 and r2 through untouched.
  *
- * THE SYMBOL WAS _ZN9SolidHeap9VAllocateEjj AND THAT WAS WRONG. `Ejj' claims
+ * THE SYMBOL WAS SolidHeap::VAllocate(u32, u32) AND THAT WAS WRONG. `Ejj' claims
  * (u32, u32); ExpandingHeap's override of the SAME SLOT is
- * _ZN5mHeap9ExpHeap_t9VAllocateEji, which claims (u32, int). Two overrides of
+ * mHeap::ExpHeap_t::VAllocate(u32, int), which claims (u32, int). Two overrides of
  * one slot cannot have different parameter types, so one import was wrong, and
  * nothing in the tree could tell which -- a caller cannot observe a parameter's
  * signedness through a virtual call, and until SolidHeap actually derived from
@@ -860,8 +861,9 @@ void SolidHeap_t::VDeallocate(void* ptr)
  * block).
  *
  * Deallocate is now a real member call, replacing the hand-spelled
- * `extern void _ZN22ExpandingHeapAllocator10DeallocateEPv(void*, void*)` -- which in a
- * C++ TU would have mangled a second time.
+ * extern spelling of ExpandingHeapAllocator::Deallocate(void*) as a free
+ * function taking (void*, void*) -- which in a C++ TU would have mangled a
+ * second time.
  */
 void ExpandingHeapAllocator::InvokeDeallocate(void* p, ExpandingHeapAllocator* alloc, u32 size)
 {

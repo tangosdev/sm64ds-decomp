@@ -4,17 +4,12 @@
  * pointer one word below it is _ZTI13dScMgMCarlo_c, which is what ties
  * that table to this class rather than to a neighbour.
  *
- * SIZE 0x60b0, from the factory's own `_ZN7fBase_cnwEj(0x60b0)`
+ * SIZE 0x60b0, from the factory's own `_ZN7fBase_cnwEm(0x60b0)`
  * (the classInit factory in src/minigames/d_s_mg_m_carlo.cpp).
  *
- * SHARED TABLE at 0x4f38, size 0x270, constructed by Dealer_Construct
- * and destroyed by Dealer_Destruct -- the same pair dScMgCard_c and
- * dScMgMCarlo2_c use at this same offset; see include/dScMgCard_c.h's own
- * note. The SAME two fields fall within it here as in both of those
- * siblings, mShared.unk_01a and mShared.unk_1e6, and they are the same thing there too:
- * literally the shared constructor's own `*(short*)(t+0x1a)=0` and
- * `*(short*)(t+0x1e6)=0` writes. Named here rather than folded into the
- * opaque table; everything else in the table stays pad.
+ * THE DEALER at 0x4f38: a Dealer (include/Dealer.h, 0x270 bytes), the
+ * same record the card, roulette, BSC and memory scenes embed there. This
+ * scene writes and tests its mHand and writes its mReserved directly.
  *
  * ONE ARRAY, 0x50 elements of 0x30 bytes, at 0x51a8: the factory builds it
  * with the compiler-spelled element C1 and the scene destructor destroys it
@@ -35,10 +30,11 @@
  * below 0x4f38 (0x0a8, 0x0ac) are dropped: both are dScMgBase_c's own and
  * are already declared there.
  *
- * LIFECYCLE IS COMPILER-OWNED. The empty inline scene destructor destroys
- * members in reverse declaration order: the typed card array, the shared
- * state wrapper, then the inherited scene. That produces the cartridge's
- * D1/D0 bodies exactly. The card class's real out-of-line constructor and
+ * LIFECYCLE IS COMPILER-OWNED. The factory is `new dScMgMCarlo_c`, which
+ * builds mDealer and the card array in declaration order. The empty inline
+ * scene destructor destroys them in reverse: the typed card array, the
+ * dealer, then the inherited scene. That produces the cartridge's D1/D0
+ * bodies exactly. The card class's real out-of-line constructor and
  * destructor produce the cartridge C1/D1 exactly; mwccarm's unreferenced
  * C2/D2/D0 companions are explicitly proven dead and removed by the TU
  * manifest. InitResources remains the scene key function and Render the card
@@ -46,29 +42,7 @@
 #ifndef DSCMGMCARLO_C_H
 #define DSCMGMCARLO_C_H
 #include "dScMgSingle3DBase_c.h"
-
-extern "C" int Dealer_Destruct(char *t); /* decl_common.h's own signature */
-extern "C" void _ZN18dMgMCarloCardObj_cD1Ev(void *elem);
-
-/* The shared state name is reconstructed; its 0x270 layout and destructor
-   behavior are measured. A real member lets C++ spell the scene teardown. */
-struct dMgMCarloSharedState_c {
-    ~dMgMCarloSharedState_c() {
-        Dealer_Destruct((char *)this);
-    }
-
-    u8 pad_000[0x1a];
-    s16 unk_01a;
-    u8 pad_01c[0x1ca];
-    s16 unk_1e6;
-    u8 pad_1e8[0x88];
-};
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char
-    dMgMCarloSharedState_c_size_must_be_0x270[sizeof(dMgMCarloSharedState_c) == 0x270 ? 1 : -1];
-#endif
+#include "Dealer.h"
 
 /* --- the board-card element class ------------------------------------------
    Name RTTI-confirmed (build/rtti.json: _ZTS18dMgMCarloCardObj_c at
@@ -100,8 +74,8 @@ typedef char
    element -- see the ONE ARRAY paragraph above.
 
    The objects are constructed and destroyed by the real C1/D1 definitions
-   in the same original TU. C++ cannot take a destructor's address, so the
-   factory's array helper references D1 through the ABI declaration above. */
+   in the same original TU; the factory's `new` hands both to
+   __cxa_vec_ctor. */
 
 struct dMgMCarloCardObj_c {
     dMgMCarloCardObj_c();
@@ -183,7 +157,7 @@ struct dScMgMCarlo_c : dScMgSingle3DBase_c {
     static void SetupBoard(dMgMCarloCardObj_c *cards); /* ov006 0x020f7c10 */
     void RenderHud();                                  /* ov006 0x020f8540 */
 
-    dMgMCarloSharedState_c mShared;  /* 0x4f38..0x51a8 */
+    Dealer mDealer;                  /* 0x4f38 */
     dMgMCarloCardObj_c mArray[0x50]; /* 0x51a8..0x60a8 */
     s16 mRoundState;                 /* 0x60a8 - shared by play and exit handlers */
     s16 mRoundTimer;                 /* 0x60aa - card-hide interval / final delay */

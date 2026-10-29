@@ -31,23 +31,16 @@
  * coin (actor 0x120) bound back to the manager.
  */
 
-// leftovers:
-// - func_ov064_02118da0 keeps its Vec-typed read of the manager's position;
+// What stays, and why:
+// - StateInit keeps its Vec-typed read of the manager's position;
 //   spelling it as a plain member changes the bytes.
-// - Behavior's IsClsnInRange call keeps its mangled free-function form
-//   (Fix12 by value).
-// - Model::LoadFile and dBgW_KcMbg::SetFile stay ABI-exact free
-//   declarations; SetFile's by-value Fix12<int> grows the call when spelled
-//   as the real method.
 // - unk_32c is only zeroed in this file.
 // - The two callback helpers keep their address names and stay free
 //   extern "C" functions.
 // - The two daWater_Hakidasi_c slots past this span are not piece methods.
-// - func_ov064_02118ee4 keeps the p_addr/u64 round trip and m1: removing
-//   the locals renumbers the TU's static-init temporaries (@700..@714),
-//   which the manifest pins.
-// - The 0xe7 shake-end sound keeps its pointer-form local decl: including
-//   Sound.h (reference form) renumbers the same temporaries.
+// - AdvanceStepScript keeps the p_addr/u64 round trip and m1: removing
+//   the locals renumbers the TU's static-init temporaries, which the
+//   manifest pins.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_Coin_c_AssetId {
     ASSET_FL_14_00_BMD = 0x05ff,
@@ -74,50 +67,46 @@ enum daObjFl_Coin_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "daCoin_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
+#include "Sound.h"
+#include "math/MtxStack.h"
 
 /* State table at 0x0211c904. Each entry is a pointer-to-member that Behavior
  * calls. The targets are the piece methods below. */
 typedef void (daObjFl_Puzzle_c::*PMF)();
-struct Entry { PMF pmf; };
+struct Entry {
+    PMF pmf;
+};
 
 /* Actor IDs (symbols/actor_debug_names.tsv). */
 enum {
-    ACTOR_ID_FL_COIN = 0x4f,   /* the manager, daObjFl_Coin_c */
-    ACTOR_ID_COIN = 0x120      /* daCoin_c */
+    ACTOR_ID_FL_COIN = 0x4f, /* the manager, daObjFl_Coin_c */
+    ACTOR_ID_COIN = 0x120    /* daCoin_c */
 };
-
-/* InitResources' legacy file completed CLPS_Block as one word. No header
- * defines the body; the call passes it by reference. */
-struct CLPS_Block { int x; };
 
 /* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (func_02017acc /
  * func_02017ab4 for the models, func_02017b4c / SharedFilePtr_Destruct_Clsn
  * for the collision); the subclasses exist to spell those entry points. */
 struct FlCoinModelFilePtr : SharedFilePtr {
-    u32 words[2];
     FlCoinModelFilePtr(u32 fileID);
     ~FlCoinModelFilePtr();
 };
 struct FlCoinCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     FlCoinCollisionFilePtr(u32 fileID);
     ~FlCoinCollisionFilePtr();
 };
 
-extern "C" {
-extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int n, const struct Vector3 *v);
-extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
 extern Entry data_ov064_0211c904[];
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, Fix12i a, Fix12i b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, KCL_File*, const Matrix4x3&, int fix, short s, CLPS_Block&);
-void func_020393c4(int* p, int v);
 extern SharedFilePtr *data_ov064_0211adc8[];
 extern FlCoinCollisionFilePtr data_ov064_0211c800;
 extern CLPS_Block data_ov064_0211baac;
-extern Matrix4x3 data_020a0e68;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
 extern int data_ov064_0211c198[];
+
+/* local extern: func_020393c4 stores the before-collision callback and has
+ * no shared header; the two piece callbacks are defined just below. */
+extern "C" {
+void func_020393c4(int *p, int v);
 /* The collision callback piece InitResources installs, and the touch helper
  * it forwards to; both are defined just below. */
 void func_ov064_0211929c(daObjFl_Puzzle_c *self, dActor_c *other);
@@ -134,8 +123,7 @@ void func_ov064_021192bc(void *collider, daObjFl_Puzzle_c *self, dActor_c *other
  * `new daObjFl_Puzzle_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x33c), dBgActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void)
-{
+extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
     return new daObjFl_Puzzle_c;
 }
 
@@ -149,8 +137,7 @@ extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void)
  * `new daObjFl_Coin_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0xd8), dActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void)
-{
+extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
     return new daObjFl_Coin_c;
 }
 
@@ -160,16 +147,14 @@ extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void)
 #pragma push
 #pragma long_calls on
 // @symbol func_ov064_021192bc
-extern "C" void func_ov064_021192bc(void *collider, daObjFl_Puzzle_c *self, dActor_c *other)
-{
+extern "C" void func_ov064_021192bc(void *collider, daObjFl_Puzzle_c *self, dActor_c *other) {
     func_ov064_0211929c(self, other);
 }
 #pragma pop
 
 // @symbol func_ov064_0211929c
 /* The player (actor 0xbf) touched the piece: raise mHadClsn. */
-extern "C" void func_ov064_0211929c(daObjFl_Puzzle_c *self, dActor_c *other)
-{
+extern "C" void func_ov064_0211929c(daObjFl_Puzzle_c *self, dActor_c *other) {
     u8 isPlayer = other->actorID == 0xbf;
     if (isPlayer)
         self->mHadClsn = 1;
@@ -191,16 +176,14 @@ s32 daObjFl_Coin_c::InitResources() {
  * position, registers func_ov064_021192bc with the collider through
  * func_020393c4, and starts in PIECE_STATE_INIT with the step marked running
  * and the coin spawn still allowed. */
-int daObjFl_Puzzle_c::InitResources()
-{
+int daObjFl_Puzzle_c::InitResources() {
     mType = param1 & 0xf;
-    mModel.SetFile((BMD_File *)Model::LoadFile(*data_ov064_0211adc8[mType]), 1, -1);
-    func_ov064_02119010();
-    func_ov064_02118fa4();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000,
-        mAngleY, data_ov064_0211baac);
-    func_020393c4((int*)((char*)&mMeshCollider), (int)&func_ov064_021192bc);
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov064_0211adc8[mType]), 1, -1);
+    UpdateModelMatrix();
+    UpdateClsnMatrix();
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000,
+                          mAngleY, data_ov064_0211baac);
+    func_020393c4((int *)((char *)&mMeshCollider), (int)&func_ov064_021192bc);
     mStepScript = data_ov064_0211c198[mType];
     mStepIndex = 0;
     unk_32c = 0;
@@ -219,7 +202,7 @@ s32 daObjFl_Coin_c::Behavior() {
     switch (mPhase) {
     case 0:
         if (mPieceFlags == (FLCOIN_FLAG_PLAYER_TOUCHED | FLCOIN_FLAG_SCRIPT_WRAPPED)) {
-            if (DistToCPlayer() < 0x3e8000) {   /* player within 1000 units */
+            if (DistToCPlayer() < 0x3e8000) { /* player within 1000 units */
                 mPhase++;
             }
         }
@@ -237,27 +220,26 @@ s32 daObjFl_Coin_c::Behavior() {
  * IsClsnInRange(0, 0) returns nonzero rebuild the collision matrix and update
  * the collider. */
 int daObjFl_Puzzle_c::Behavior() {
-    func_ov064_02118ee4();
+    AdvanceStepScript();
     (this->*data_ov064_0211c904[mState].pmf)();
-    daObjFl_Coin_c* mgr = 0;
+    daObjFl_Coin_c *mgr = 0;
     unsigned int id = mCoinMgrId;
     if (id != 0)
-        mgr = (daObjFl_Coin_c*)dActor_c::FindWithID(id);
+        mgr = (daObjFl_Coin_c *)dActor_c::FindWithID(id);
     /* The step timer only runs while the manager is gone or has no live coins. */
     if (mgr == 0 || mgr->mLiveCoinCount == 0) {
-        u16* ctr = &mStepTimer;
+        u16 *ctr = &mStepTimer;
         *ctr = *ctr + 1;
     }
-    func_ov064_02119010();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
-        func_ov064_02118fa4();
+    UpdateModelMatrix();
+    if (IsClsnInRange(0, 0) != 0)
+        UpdateClsnMatrix();
     return 1;
 }
 
 // @symbol _ZN16daObjFl_Puzzle_c6RenderEv
 /* Draws the model. */
-int daObjFl_Puzzle_c::Render()
-{
+int daObjFl_Puzzle_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -265,8 +247,7 @@ int daObjFl_Puzzle_c::Render()
 // @symbol _ZN16daObjFl_Puzzle_c16CleanupResourcesEv
 /* Disables the collider and releases this type's model file and the shared
  * collision file. */
-int daObjFl_Puzzle_c::CleanupResources()
-{
+int daObjFl_Puzzle_c::CleanupResources() {
     unsigned char idx;
     mMeshCollider.Disable();
     idx = mType;
@@ -275,77 +256,75 @@ int daObjFl_Puzzle_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02119010Ev
-/* Model matrix translation: the position (plus the shake offset on Y), each
+// @symbol _ZN16daObjFl_Puzzle_c17UpdateModelMatrixEv
+/* dExtSimpleModel_c matrix translation: the position (plus the shake offset on Y), each
  * axis shifted right by 3. */
-void daObjFl_Puzzle_c::func_ov064_02119010() {
+void daObjFl_Puzzle_c::UpdateModelMatrix() {
     int x = mPosX >> 3;
     int y = (mPosY + mShakeOffsetY) >> 3;
     int z = mPosZ >> 3;
     Matrix4x3_FromTranslation(&mModel.mat4x3, x, y, z);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118fa4Ev
+// @symbol _ZN16daObjFl_Puzzle_c16UpdateClsnMatrixEv
 /* Builds a translation at the position (shake offset added to Y) in the scratch
  * matrix at 0x020a0e68, copies it into mClsnMat, and hands it to the moving
  * mesh collider along with the Y angle. */
-void daObjFl_Puzzle_c::func_ov064_02118fa4() {
+void daObjFl_Puzzle_c::UpdateClsnMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY + mShakeOffsetY, mPosZ);
     mClsnMat = data_020a0e68;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118ee4Ev
+// @symbol _ZN16daObjFl_Puzzle_c17AdvanceStepScriptEv
 /* Step script driver. While mHadClsn is set, writes FLCOIN_FLAG_PLAYER_TOUCHED into the
  * manager's flags. If no step is running, takes the next script byte as mState,
  * and when the byte after it is -1 rewinds the script and ORs
  * FLCOIN_FLAG_SCRIPT_WRAPPED into the manager's flags. Then marks a step as
  * running and restarts the step timer. */
-void daObjFl_Puzzle_c::func_ov064_02118ee4()
-{
-  daObjFl_Coin_c *a;
-  int p_addr;
-  if (mHadClsn) {
-    if (mCoinMgrId) {
-      a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
-      if (a)
-        a->mPieceFlags = FLCOIN_FLAG_PLAYER_TOUCHED;
-    }
-  }
-  if (mStepActive)
-    return;
-  p_addr = (u32)&mStepIndex;
-  {
-    u8 idx = mStepIndex;
-    s8 *tab = (s8 *)mStepScript;
-    u8 *p = (u8 *)((u64)p_addr);
-    int m1 = ~0;
-    mState = tab[idx];
-    *p = *p + 1;
-    if (((s8 *)mStepScript)[mStepIndex] == (s8)m1) {
-      mStepIndex = 0;
-      if (mCoinMgrId) {
-        a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
-        if (a) {
-          u8 *f = &a->mPieceFlags;
-          *f |= FLCOIN_FLAG_SCRIPT_WRAPPED;
+void daObjFl_Puzzle_c::AdvanceStepScript() {
+    daObjFl_Coin_c *a;
+    int p_addr;
+    if (mHadClsn) {
+        if (mCoinMgrId) {
+            a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
+            if (a)
+                a->mPieceFlags = FLCOIN_FLAG_PLAYER_TOUCHED;
         }
-      }
     }
-  }
-  mStepActive = 1;
-  mStepTimer = 0;
+    if (mStepActive)
+        return;
+    p_addr = (u32)&mStepIndex;
+    {
+        u8 idx = mStepIndex;
+        s8 *tab = (s8 *)mStepScript;
+        u8 *p = (u8 *)((u64)p_addr);
+        int m1 = ~0;
+        mState = tab[idx];
+        *p = *p + 1;
+        if (((s8 *)mStepScript)[mStepIndex] == (s8)m1) {
+            mStepIndex = 0;
+            if (mCoinMgrId) {
+                a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
+                if (a) {
+                    u8 *f = &a->mPieceFlags;
+                    *f |= FLCOIN_FLAG_SCRIPT_WRAPPED;
+                }
+            }
+        }
+    }
+    mStepActive = 1;
+    mStepTimer = 0;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118e24Eiii
-/* Shared move handler. a1/a2 are the X/Z distance per tick (fix12) and a3 the
- * number of sliding ticks. Ticks 0..0x13 only shake (Y offset 0 on even ticks,
+// @symbol _ZN16daObjFl_Puzzle_c14ShakeThenSlideEiii
+/* Shared move handler. dx/dz are the X/Z distance per tick (fix12) and
+ * slideTicks the number of sliding ticks. Ticks 0..0x13 only shake (Y offset 0 on even ticks,
  * -0x6000 = -6 units on odd). Tick 0x14 clears the offset and plays sound
  * 0xe7 at the camera-space position; the piece slides on ticks 0x14 up to but
- * not including a3 + 0x14, and the first tick at or past that returns to
+ * not including slideTicks + 0x14, and the first tick at or past that returns to
  * PIECE_STATE_WAIT and ends the step. */
-void daObjFl_Puzzle_c::func_ov064_02118e24(int a1, int a2, int a3)
-{
+void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
     unsigned int st = mStepTimer;
 
     if (st < 0x14) {
@@ -359,10 +338,10 @@ void daObjFl_Puzzle_c::func_ov064_02118e24(int a1, int a2, int a3)
 
     if (st == 0x14) {
         mShakeOffsetY = 0;
-        _ZN5Sound9PlayBank3EjRK7Vector3(0xe7, &mCamSpacePos);
+        Sound::PlayBank3(0xe7, mCamSpacePos);
     }
 
-    if ((int)mStepTimer >= a3 + 0x14) {
+    if ((int)mStepTimer >= slideTicks + 0x14) {
         mState = PIECE_STATE_WAIT;
         mStepActive = 0;
         return;
@@ -371,99 +350,98 @@ void daObjFl_Puzzle_c::func_ov064_02118e24(int a1, int a2, int a3)
     {
         int *px = &mPosX;
         int *pz = &mPosZ;
-        *px += a1;
-        *pz += a2;
+        *px += dx;
+        *pz += dz;
     }
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118da0Ev
+// @symbol _ZN16daObjFl_Puzzle_c9StateInitEv
 /* PIECE_STATE_INIT. Finds the FL_COIN manager; if there is one, remembers its
  * unique ID, sets the manager's Y to this piece's Y (X and Z are read and
  * written back unchanged), ends the step and advances mState to WAIT. With no
  * manager the piece marks itself for destruction. */
-void daObjFl_Puzzle_c::func_ov064_02118da0(){
-  /* Stack shape: the ROM frame reserves these 16 bytes. */
-  typedef struct { int x, y, z; } Vec;
-  volatile int pad[4];
-  daObjFl_Coin_c* a = (daObjFl_Coin_c*)dActor_c::FindWithActorID(ACTOR_ID_FL_COIN, 0);
-  (void)&pad;
-  if(a!=0){
-    Vec* p = (Vec*)&a->mPosX;
-    mCoinMgrId = a->uniqueID;
-    int z = p->z;
-    int x = p->x;
-    int y = mPosY;
-    a->mPosX = x;
-    a->mPosY = y;
-    a->mPosZ = z;
-    mStepActive = 0;
-    mState++;
-    return;
-  }
-  MarkForDestruction();
+void daObjFl_Puzzle_c::StateInit() {
+    /* Stack shape: the ROM frame reserves these 16 bytes. */
+    typedef struct {
+        int x, y, z;
+    } Vec;
+    volatile int pad[4];
+    daObjFl_Coin_c *a = (daObjFl_Coin_c *)dActor_c::FindWithActorID(ACTOR_ID_FL_COIN, 0);
+    (void)&pad;
+    if (a != 0) {
+        Vec *p = (Vec *)&a->mPosX;
+        mCoinMgrId = a->uniqueID;
+        int z = p->z;
+        int x = p->x;
+        int y = mPosY;
+        a->mPosX = x;
+        a->mPosY = y;
+        a->mPosZ = z;
+        mStepActive = 0;
+        mState++;
+        return;
+    }
+    MarkForDestruction();
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118d3cEv
+// @symbol _ZN16daObjFl_Puzzle_c9StateWaitEv
 /* PIECE_STATE_WAIT. Once, when the manager reaches phase 1, spawns this piece's
  * coin. Ends the step once the timer has reached 0x18 (24). */
-void daObjFl_Puzzle_c::func_ov064_02118d3c(){
-  if (mCanSpawnCoin != 0) {
-    unsigned int id = mCoinMgrId;
-    if (id != 0) {
-      daObjFl_Coin_c *a = (daObjFl_Coin_c *)dActor_c::FindWithID(id);
-      if (a != 0 && a->mPhase == 1) {
-        mCanSpawnCoin = 0;
-        func_ov064_02118c48();
-      }
+void daObjFl_Puzzle_c::StateWait() {
+    if (mCanSpawnCoin != 0) {
+        unsigned int id = mCoinMgrId;
+        if (id != 0) {
+            daObjFl_Coin_c *a = (daObjFl_Coin_c *)dActor_c::FindWithID(id);
+            if (a != 0 && a->mPhase == 1) {
+                mCanSpawnCoin = 0;
+                SpawnCoin();
+            }
+        }
     }
-  }
-  if (mStepTimer >= 0x18)
-    mStepActive = 0;
+    if (mStepTimer >= 0x18)
+        mStepActive = 0;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118d20Ev
+// @symbol _ZN16daObjFl_Puzzle_c13StateMoveNegXEv
 /* PIECE_STATE_MOVE_NEG_X: 120 units (0x78000) per tick toward -X, 4 ticks. */
-void daObjFl_Puzzle_c::func_ov064_02118d20()
-{
-    func_ov064_02118e24(-0x78000, 0, 4);
+void daObjFl_Puzzle_c::StateMoveNegX() {
+    ShakeThenSlide(-0x78000, 0, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118d08Ev
+// @symbol _ZN16daObjFl_Puzzle_c13StateMovePosXEv
 /* PIECE_STATE_MOVE_POS_X: 120 units per tick toward +X, 4 ticks. */
-void daObjFl_Puzzle_c::func_ov064_02118d08() {
-    func_ov064_02118e24(0x78000, 0, 4);
+void daObjFl_Puzzle_c::StateMovePosX() {
+    ShakeThenSlide(0x78000, 0, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118cecEv
+// @symbol _ZN16daObjFl_Puzzle_c13StateMoveNegZEv
 /* PIECE_STATE_MOVE_NEG_Z: 120 units per tick toward -Z, 4 ticks. */
-void daObjFl_Puzzle_c::func_ov064_02118cec()
-{
-    func_ov064_02118e24(0, -0x78000, 4);
+void daObjFl_Puzzle_c::StateMoveNegZ() {
+    ShakeThenSlide(0, -0x78000, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118cd4Ev
+// @symbol _ZN16daObjFl_Puzzle_c13StateMovePosZEv
 /* PIECE_STATE_MOVE_POS_Z: 120 units per tick toward +Z, 4 ticks. */
-void daObjFl_Puzzle_c::func_ov064_02118cd4() {
-    func_ov064_02118e24(0, 0x78000, 4);
+void daObjFl_Puzzle_c::StateMovePosZ() {
+    ShakeThenSlide(0, 0x78000, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c19func_ov064_02118c48Ev
+// @symbol _ZN16daObjFl_Puzzle_c9SpawnCoinEv
 /* Spawns a COIN (0x120, spawn param 2) at this piece's position with the
  * piece's mAreaId and death-table ID -1. If it spawned and this piece
  * has a manager ID, finds the manager, stores its unique ID in the coin's
  * mPuzzleManagerID and bumps the manager's live-coin count. */
-void daObjFl_Puzzle_c::func_ov064_02118c48()
-{
+void daObjFl_Puzzle_c::SpawnCoin() {
     dActor_c *spawned = dActor_c::Spawn(ACTOR_ID_COIN, 2, mPos, 0, mAreaId, -1);
-    daObjFl_Coin_c* found;
+    daObjFl_Coin_c *found;
     if (spawned == 0)
         return;
     if (mCoinMgrId == 0)
         return;
-    found = (daObjFl_Coin_c*)dActor_c::FindWithID(mCoinMgrId);
+    found = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
     if (found == 0)
         return;
-    ((daCoin_c*)spawned)->mPuzzleManagerID = found->uniqueID;
+    ((daCoin_c *)spawned)->mPuzzleManagerID = found->uniqueID;
     found->mLiveCoinCount += 1;
 }
 
@@ -474,35 +452,30 @@ void daObjFl_Puzzle_c::func_ov064_02118c48()
  * qualified so dispatch is direct, then use the class-specific deallocator.
  * The inline body includes member/base teardown; no separate flat D1 provider
  * is supplied by this branch. The mwccarm definition below is unchanged. */
-extern "C" daObjFl_Puzzle_c *_ZN16daObjFl_Puzzle_cD0Ev(daObjFl_Puzzle_c *thiz)
-{
-    thiz->daObjFl_Puzzle_c::~daObjFl_Puzzle_c();          /* direct member/base teardown */
-    daObjFl_Puzzle_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
+extern "C" daObjFl_Puzzle_c *_ZN16daObjFl_Puzzle_cD0Ev(daObjFl_Puzzle_c *thiz) {
+    thiz->daObjFl_Puzzle_c::~daObjFl_Puzzle_c(); /* direct member/base teardown */
+    daObjFl_Puzzle_c::operator delete(thiz);     /* the class-specific delete D0 ends with */
     return thiz;
 }
 #else
-void daObjFl_Puzzle_c_EmitDeletingDestructor(daObjFl_Puzzle_c *piece)
-{
+void daObjFl_Puzzle_c_EmitDeletingDestructor(daObjFl_Puzzle_c *piece) {
     delete piece;
 }
 #endif
 
 // @symbol _ZN16daObjFl_Puzzle_cD1Ev
 /* Force mwccarm to emit the class-body destructor as a genuine C++ D1. */
-void daObjFl_Puzzle_c_EmitDestructor(daObjFl_Puzzle_c *piece)
-{
+void daObjFl_Puzzle_c_EmitDestructor(daObjFl_Puzzle_c *piece) {
     piece->~daObjFl_Puzzle_c();
 }
 
 /* Not called. The coin destructor is inline in the header; these two calls
  * are what ask mwccarm for the out-of-line D1 and D0. */
-void daObjFl_Coin_c_EmitDeletingDestructor(daObjFl_Coin_c *coin)
-{
+void daObjFl_Coin_c_EmitDeletingDestructor(daObjFl_Coin_c *coin) {
     delete coin;
 }
 
-void daObjFl_Coin_c_EmitDestructor(daObjFl_Coin_c *coin)
-{
+void daObjFl_Coin_c_EmitDestructor(daObjFl_Coin_c *coin) {
     coin->~daObjFl_Coin_c();
 }
 

@@ -3,9 +3,6 @@
  * - common.h stays first.
  * - The destructor stays inline. Out of line it emits D0 before D1,
  *   and a D2.
- * - dCcAcPos_c::Init is not on the header, and a by-value Fix12
- *   changes InitResources. DropShadowScaleXYZ takes three Fix12<int>
- *   by value.
  * - func_ov026_02111234 and func_ov026_021112a4 stay address-named
  *   C-linkage helpers.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c
@@ -23,7 +20,7 @@
  * into the drop-shadow matrix, and the cartridge does it as one flat
  * twelve-word ldm/stm run. common.h's flat `s32 m[12]` spelling of Matrix4x3
  * is that copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} -- which
- * Model.h would otherwise pull in first -- scalarizes the last three words,
+ * dExtSimpleModel_c.h would otherwise pull in first -- scalarizes the last three words,
  * because Vector3 declares a destructor and is therefore not POD. Measured:
  * 0x88 emitted against the cartridge's 0x70. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -42,38 +39,15 @@ enum d_a_obj_wl_polelift_AssetId {
  * and destructor are the ROM resource-family functions, aliased in the
  * manifest. */
 struct PoleliftModelFile : SharedFilePtr {
-    u32 words[2];
-
     PoleliftModelFile(u32 fileID);
     ~PoleliftModelFile();
 };
-
-/* The class vtable. mwccarm's own emitted _ZTV symbol addresses the vtable
- * object; the address recorded in ov026/symbols.txt is the public address
- * point eight bytes later, which is exactly what &_ZTV[2] on an int[]
- * computes. */
-extern int _ZTV17daObjWlPolelift_c[];
 
 namespace cstd {
 int fdiv(int a, int b);
 }
 
 extern "C" {
-/* Factory ABI: the allocation goes through fBase_c::operator new by name, but
- * the base/subobject construction sequence stays explicit here. */
-void *_ZN8dActor_cC2Ev(void *self);
-void *_ZN5ModelC1Ev(void *self);
-void *_ZN10dCcAcPos_cC1Ev(void *self);
-void *_ZN7PathPtrC1Ev(void *self);
-void *_ZN17dExtShadowModel_cC1Ev(void *self);
-
-/* ABI seams: both take Fix12<int> by value. */
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset,
-    Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
-void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-    void *self, void *shadow, void *mtx, int x, int y, int z, unsigned int flags);
-
 u16 DecIfAbove0_Short(u16 *timer);
 void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 int LenVec3(Vector3 *v);
@@ -92,17 +66,7 @@ extern PoleliftModelFile data_ov026_02113ea0;
 // @symbol daObjWlPolelift_c_classInit
 extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
 {
-    daObjWlPolelift_c *actor =
-        (daObjWlPolelift_c *)fBase_c::operator new(sizeof(daObjWlPolelift_c));
-    if (actor) {
-        _ZN8dActor_cC2Ev(actor);
-        *(int *)actor = (int)&_ZTV17daObjWlPolelift_c[2];
-        _ZN5ModelC1Ev(&actor->model);
-        _ZN10dCcAcPos_cC1Ev(&actor->clsn);
-        _ZN7PathPtrC1Ev(&actor->path);
-        _ZN17dExtShadowModel_cC1Ev(&actor->shadow);
-    }
-    return actor;
+    return new daObjWlPolelift_c();
 }
 
 // @symbol _ZN17daObjWlPolelift_c13InitResourcesEv
@@ -110,7 +74,7 @@ extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
  * actor-owned shadow and cylinder. */
 s32 daObjWlPolelift_c::InitResources()
 {
-    model.SetFile((BMD_File *)Model::LoadFile(data_ov026_02113ea0), 1, -1);
+    model.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov026_02113ea0), 1, -1);
     if ((data_0209caa0[1] & 0x204) == 0)
         return 0;
 
@@ -123,8 +87,7 @@ s32 daObjWlPolelift_c::InitResources()
     offset.x = data_ov026_02113a9c.x;
     offset.y = data_ov026_02113a9c.y;
     offset.z = data_ov026_02113a9c.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &clsn, this, &offset, 0x50000, 0x12c000, 0x80000c, 0);
+    clsn.Init(this, offset, 0x50000, 0x12c000, 0x80000c, 0);
     func_ov026_021112a4(this);
     return 1;
 }
@@ -220,7 +183,7 @@ s32 daObjWlPolelift_c::Behavior()
 }
 
 // @symbol _ZN17daObjWlPolelift_c6RenderEv
-/* Vtable slot 9. The owned Model renders through its own vtable. */
+/* Vtable slot 9. The owned dExtSimpleModel_c renders through its own vtable. */
 s32 daObjWlPolelift_c::Render()
 {
     model.Render(0);
@@ -254,8 +217,7 @@ extern "C" void func_ov026_02111234(daObjWlPolelift_c *actor)
 {
     actor->dropShadowMtx = actor->model.mat4x3;
     actor->dropShadowMtx.m[10] = actor->groundY >> 3;
-    _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-        actor, &actor->shadow, &actor->dropShadowMtx, 0x64000, 0xc8000, 0x64000, 0xf);
+    actor->DropShadowScaleXYZ(actor->shadow, actor->dropShadowMtx, 0x64000, 0xc8000, 0x64000, 0xf);
 }
 
 /* _ZN17daObjWlPolelift_cD1Ev and _ZN17daObjWlPolelift_cD0Ev are NOT written

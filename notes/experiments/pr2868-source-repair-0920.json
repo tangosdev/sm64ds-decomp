@@ -158,7 +158,7 @@
           ],
           "source_contract": "Block changes atan2 from short return to int, and GetSubtraction from int(short,short) to short(short,int).",
           "actual_contract": "At this exact9022/47ee pin atan2 returns s16(s32,s32), and GetSubtraction is int dActor_c::GetSubtraction(short,short).",
-          "definition": "src/_ZN4cstd5atan2E5Fix12IiES1_.c:13; src/_ZN8dActor_c14GetSubtractionEss.cpp:6",
+          "definition": "src/cstd_atan2.c:13; src/_ZN8dActor_c14GetSubtractionEss.cpp:6",
           "repair": "Correct the pair together, measure all affected functions. Do not import a later branch atan2 contract into this pinned tree."
         },
         {

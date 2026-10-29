@@ -21,7 +21,7 @@
  * height 140.0, flags 0x4800002). Behavior spreads them every frame,
  * 100 units apart across the cupboard's width, centred on it.
  *
- * deslop leftovers:
+ * Notes (each measured with mwccarm 2004/b56):
  * - Behavior: selfPos, frontPos and playerPos are stored and never read.
  *   Dropping volatile on those three is 0x314 against the ROM's 0x3e0.
  * - Behavior: colliderPos stays volatile. Without it the spread loop is
@@ -30,32 +30,32 @@
  *   halfword, twice. (u16)mAngleY is 0x3ec against 0x3e0.
  * - Behavior: the positions are Vec3Raw, not Vector3. Vector3's
  *   destructor makes the function 0x3f0 against 0x3e0.
- * - Behavior: the jingles call func_02012790. Sound::Play2D(2, id) is
- *   0x3e8 and relocates to _ZN5Sound6Play2DEjj, not 0x02012790.
- * - InitResources: dCcAcPos_c::Init with Fix12<int> by value is 0x7c
- *   against 0x6c. The call stays the scalar mangled symbol
- *   (notes/mwccarm-codegen.md 6az).
+ * - Behavior: the jingles call func_02012790 (Sound.h), the ROM's wrapper
+ *   for Sound::Play2D(2, id). Calling Play2D directly is 0x3e8 and
+ *   relocates to _ZN5Sound6Play2DEjj, not 0x02012790.
  */
 
 #include "daObjCloset_c.h"
 #include "Player.h"
 #include "Message.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "Sound.h"
+#include "math/Approach.h"
 
 /* include/types.h's Vector3 declares a destructor. Under that type the
    five locals below grow the frame by 0x10. The ROM copies are a plain
    12-byte triple, so this TU keeps a POD. */
-struct Vec3Raw { int x, y, z; };
+struct Vec3Raw {
+    int x, y, z;
+};
 
 enum {
     kPlayerActor = 0xbf,
     kCylinderCount = 5,
     kCylinderSpacing = 100,
-    kCylinderRadius = 110 << 12,   /* 110.0 */
-    kCylinderHeight = 140 << 12,   /* 140.0 */
+    kCylinderRadius = 110 << 12, /* 110.0 */
+    kCylinderHeight = 140 << 12, /* 140.0 */
     kCylinderFlags = 0x4800002,
-    kFrontReach = 90 << 12,        /* 90.0, straight ahead */
+    kFrontReach = 90 << 12, /* 90.0, straight ahead */
     kQuarterTurn = 0x4000,
     kHalfTurn = 0x8000,
     kFxRound = 0x800,
@@ -70,21 +70,15 @@ enum {
 };
 
 extern "C" {
-/* Sound::Play2D(2, id). The ROM calls this wrapper, not Play2D. */
-unsigned int func_02012790(unsigned int id);
 short Vec3_HorzAngle(const struct Vec3Raw *a, const struct Vec3Raw *b);
 int AngleDiff(int a, int b);
 /* 1: return to the rec room when the menu closes. */
 void StartMinigameMenu(unsigned char returnToRecRoom);
+}
+
 extern s16 data_02082214[];
 extern u8 data_0209d684;
 extern u8 data_0209d660;
-/* Scalar Fix12i, not Fix12<int>: the class-typed header method pools
-   the constants (notes/mwccarm-codegen.md 6az). */
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    void *self, void *actor, void *offset, Fix12i radius, Fix12i height,
-    unsigned int flags, unsigned int vulnFlags);
-}
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -95,19 +89,15 @@ void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: one vtable store, the five dCcAcPos_c members in reverse,
  * then ~dActor_c. */
-daObjCloset_c::~daObjCloset_c()
-{
-}
+daObjCloset_c::~daObjCloset_c() {}
 
 // @symbol _ZN13daObjCloset_c16CleanupResourcesEv
-s32 daObjCloset_c::CleanupResources()
-{
+s32 daObjCloset_c::CleanupResources() {
     return 1;
 }
 
 // @symbol _ZN13daObjCloset_c8BehaviorEv
-s32 daObjCloset_c::Behavior()
-{
+s32 daObjCloset_c::Behavior() {
     volatile Vec3Raw selfPos, frontPos, playerPos;
     Vec3Raw actorPos;
     volatile Vec3Raw colliderPos;
@@ -121,8 +111,15 @@ s32 daObjCloset_c::Behavior()
         frontPos.x = mPosX;
         frontPos.y = mPosY;
         frontPos.z = mPosZ;
-        frontPos.x = mPosX + (int)(((s64)kFrontReach * data_02082214[(*(volatile u16 *)&mAngleY >> 4) * 2] + kFxRound) >> 12);
-        frontPos.z = mPosZ + (int)(((s64)kFrontReach * data_02082214[(*(volatile u16 *)&mAngleY >> 4) * 2 + 1] + kFxRound) >> 12);
+        frontPos.x =
+            mPosX + (int)(((s64)kFrontReach * data_02082214[(*(volatile u16 *)&mAngleY >> 4) * 2] +
+                           kFxRound) >>
+                          12);
+        frontPos.z =
+            mPosZ +
+            (int)(((s64)kFrontReach * data_02082214[(*(volatile u16 *)&mAngleY >> 4) * 2 + 1] +
+                   kFxRound) >>
+                  12);
         {
             struct Vec3Raw *tp = (struct Vec3Raw *)&target->mPosX;
             playerPos.x = tp->x;
@@ -236,20 +233,17 @@ s32 daObjCloset_c::Behavior()
 }
 
 // @symbol _ZN13daObjCloset_c13InitResourcesEv
-s32 daObjCloset_c::InitResources()
-{
+s32 daObjCloset_c::InitResources() {
     int i;
     dCcAcPos_c *collider = mColliders;
     for (i = 0; i < kCylinderCount; i++) {
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            collider, this, &mPosX, kCylinderRadius, kCylinderHeight, kCylinderFlags, 0);
+        collider->Init(this, mPos, kCylinderRadius, kCylinderHeight, kCylinderFlags, 0);
         collider++;
     }
     return 1;
 }
 
 // @symbol daObjCloset_c_classInit
-extern "C" daObjCloset_c *daObjCloset_c_classInit()
-{
+extern "C" daObjCloset_c *daObjCloset_c_classInit() {
     return new daObjCloset_c();
 }

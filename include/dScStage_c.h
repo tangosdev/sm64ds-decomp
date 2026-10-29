@@ -2,12 +2,13 @@
 #define DSCSTAGE_C_H
 
 #include "dScene_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgW_Kc.h"
 #include "Fog.h"
 
 struct SceneRelated;
 struct LVL_Overlay;
+struct dExtAnmTexSRT_c;
 
 /* Particle::SysTracker, embedded at dScStage_c+0x50. The one definition lives in
  * include/Particle__SysTracker.h; see notes/scene-provenance.md and
@@ -17,14 +18,14 @@ struct LVL_Overlay;
 /* One per level texture animation, eight slots' worth at dScStage_c+0x8bc.
  * dScStage_c::LoadTextureTransformers fills them: for each entry of the level's
  * animation table (data_0209f340) that carries a BTA file it news a 0x14-byte
- * TextureTransformer, constructs it, and stores it in the slot, striding 0xc.
+ * dExtAnmTexSRT_c, constructs it, and stores it in the slot, striding 0xc.
  * dScStage_c::Render advances the transformer when the flag at +0x04 is set;
  * dScStage_c::RenderModelTransparent reads the same flag to decide whether that
  * part's materials get the transparent bit; dScStage_c::CleanupResources destroys
  * the transformer through its vtable and then walks the list at +0x08, whose
  * next pointer is at +0x0c, freeing every block. */
 struct StageTexAnimSlot {
-    void *mTransformer; /* 0x00 - TextureTransformer, 0x14 bytes, heap */
+    struct dExtAnmTexSRT_c *mTransformer; /* 0x00 - heap */
     u8 mActive;         /* 0x04 */
     u8 pad_05[0x3];
     void *mBlockList; /* 0x08 - singly linked, next pointer at +0x0c */
@@ -34,6 +35,14 @@ struct StageTexAnimSlot {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char StageTexAnimSlot_size_must_be_0xc[sizeof(struct StageTexAnimSlot) == 0xc ? 1 : -1];
 #endif
+
+/* The level loader's minimap-change sentinel: link a record into area idx's
+ * height-sorted mBlockList so that above the given height the minimap switches
+ * to the given id (0xf for none). The height is a plain Fix12i; a by-value
+ * Fix12<int> would cost the caller a literal-pool reload
+ * (notes/mwccarm-codegen.md 6az). The id is signed: LoadSimpleObjects
+ * sign-extends it into r2 (lsl/asr #24), where an unsigned id would mask. */
+void LoadMinimapChangeObject(int, Fix12i, s8);
 
 /* The playable level: fBase_c -> dBase_c -> dScene_c -> dScStage_c (dScStage_c in
  * the ROM's own type graph). A leaf; it adds no virtual of its own and
@@ -48,15 +57,15 @@ typedef char StageTexAnimSlot_size_must_be_0xc[sizeof(struct StageTexAnimSlot) =
  */
 struct dScStage_c : dScene_c {
     Particle::SysTracker mSysTracker;  /* 0x050 */
-    Model mModel;                      /* 0x86c */
-    StageTexAnimSlot mTexAnimSlots[8]; /* 0x8bc - Model ends here, and dBgW_Kc
+    dExtSimpleModel_c mModel;          /* 0x86c */
+    StageTexAnimSlot mTexAnimSlots[8]; /* 0x8bc - dExtSimpleModel_c ends here, and dBgW_Kc
                                            does not start until 0x91c */
     dBgW_Kc mMeshCollider;             /* 0x91c */
     /* Two fog setups, 0x28 apart: LoadFog fills both by hand and then walks
        this array with `dst += 0x28` per level fog record. */
     Fog mFog[2]; /* 0x96c */
     /* Allocated by LoadSkybox, destroyed through its vtable by CleanupResources. */
-    Model *mSkyboxModel; /* 0x9bc */
+    dExtSimpleModel_c *mSkyboxModel; /* 0x9bc */
 
     /* Declared first, deliberately: makes ~dScStage_c the key function. */
     virtual ~dScStage_c();

@@ -275,7 +275,7 @@ Three independent places in the tree pin that 8:
   rewritten for the ROM link.
 - `tools/reloc_audit.py`: `_VT_PREAMBLE = 8`, with measured examples — a `dBgCh_Lin`
   constructor's addends 8 and 0x18 landing on the configured destinations, and a
-  `ModelAnim2` deleting destructor whose addend 44 resolves onto `_ZTI8dFader_c` if the
+  `dExtAnm2Model_c` deleting destructor whose addend 44 resolves onto `_ZTI8dFader_c` if the
   preamble is *not* subtracted.
 - `tools/tubuild.py`, which refuses to infer it: the manifest must spell both
   `emitted_storage_address` and `address_point_bias`, because "recognizing `_ZTV` and

@@ -49,7 +49,7 @@ struct daKpaTail_c : dActor_c {
     u32 mBowserUniqueID;                                /* 0x108 */
     /* The Player this tail has grabbed (set by the grab check, cleared on release
        or when the hold times out); null when nothing is held. */
-    dActor_c *mHeldPlayer;                              /* 0x10c */
+    Player *mHeldPlayer; /* 0x10c */
     /* Index into the three-entry state table: 0 free (watching for a grab),
        1 cooldown after a release, 2 holding a Player. */
     s32 mState;                                         /* 0x110 */

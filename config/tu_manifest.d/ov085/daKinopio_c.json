@@ -15,6 +15,26 @@
       "name": ".text",
       "start": "0x02129020",
       "end": "0x02129d18"
+    },
+    {
+      "name": ".init",
+      "start": "0x0212f2a8",
+      "end": "0x0212f3a0"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0212fdf0",
+      "end": "0x0212fdf4"
+    },
+    {
+      "name": ".data",
+      "start": "0x0212fe20",
+      "end": "0x0212ff34"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02130480",
+      "end": "0x021304bc"
     }
   ],
   "functions": [
@@ -124,12 +144,131 @@
       "ordinal": 14
     }
   ],
-  "data": [],
-  "bss": [],
+  "data": [
+    {
+      "symbol": "data_ov085_0212fe20",
+      "address": "0x0212fe20",
+      "size": "0x5",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated string literal \"TALK\", the name word of state record 1 (retail relocation 0x0212feac -> 0x0212fe20); bytes identical"
+    },
+    {
+      "symbol": "data_ov085_0212fe28",
+      "address": "0x0212fe28",
+      "size": "0x5",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated string literal \"WAIT\", the name word of state record 0 (retail relocation 0x0212fe98 -> 0x0212fe28); bytes identical"
+    },
+    {
+      "symbol": "data_ov085_0212fe30",
+      "address": "0x0212fe30",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov085_0212fe88; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov085_0212fe38",
+      "address": "0x0212fe38",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov085_0212fe88; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov085_0212fe40",
+      "address": "0x0212fe40",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov085_0212fe88; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov085_0212fe48",
+      "address": "0x0212fe48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov085_0212fe88; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "_ZTI11daKinopio_c",
+      "address": "0x0212fe50",
+      "size": "0xc",
+      "evidence": "ROM single-inheritance RTTI record naming dActor_c as the direct base; exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS11daKinopio_c",
+      "address": "0x0212fe5c",
+      "size": "0xe",
+      "evidence": "literal ROM RTTI type-name string \"11daKinopio_c\" and exact compiler emission"
+    },
+    {
+      "symbol": "g_profile_KINOPIO",
+      "address": "0x0212fe6c",
+      "size": "0x1c",
+      "evidence": "typed actor profile; factory relocation to daKinopio_c_classInit, behavior priority 0xb9 and all fields compared to retail"
+    },
+    {
+      "symbol": "data_ov085_0212fe88",
+      "address": "0x0212fe88",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "two {init, main, name} state records; the initializer fills the member pointers from the four literals and the name words relocate to the two string literals as in retail; SetState and RunState index it"
+    },
+    {
+      "symbol": "_ZTV11daKinopio_c",
+      "address": "0x0212feb8",
+      "emitted_storage_address": "0x0212feb0",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x0212feb8, and the storage ends at 0x0212ff34, where d_a_peach's .data begins"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "gKinopioModelFile",
+      "address": "0x02130480",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with id 0x35c and registered with func_02017ab4, as in retail"
+    },
+    {
+      "symbol": "gKinopioIdleAnimFile",
+      "address": "0x02130488",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x35d through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail; St_Idle_Init plays it"
+    },
+    {
+      "symbol": "gKinopioTalkAnimFile",
+      "address": "0x02130490",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x35e through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail; the talk state plays it"
+    },
+    {
+      "symbol": "data_ov085_02130498",
+      "address": "0x02130498",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov085_021304a4",
+      "address": "0x021304a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov085_021304b0",
+      "address": "0x021304b0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c12St_Idle_MainEv; kept the first, the other is commented out for review -- RECONCILED: the two spellings differed only in the return type, `char *` in St_Talk_Main against `void *` in St_Idle_Main; the single u32 parameter agreed, and each legacy file cast the result locally anyway. The TU declares `void *` once and casts at the two sites that want a char pointer, so no call site changed shape. Both functions reproduce their cartridge bytes.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_InitEv and the one that held _ZN11daKinopio_c12St_Idle_InitEv; kept the first, the other is commented out for review -- RECONCILED: St_Talk_Init declared the return as `void`, St_Idle_Init as `int`; the parameter list agreed and neither caller uses the result. Kept `void`. Both state initializers still match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_InitEv and the one that held _ZN11daKinopio_c12St_Idle_InitEv; kept the first, the other is commented out for review -- RECONCILED: St_Talk_Init declared the return as `void`, St_Idle_Init as `int`; the parameter list agreed and neither caller uses the result. Kept `void`. Both state initializers still match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c15UpdateModelPoseEv; kept the first, the other is commented out for review -- RECONCILED: same disagreement as the St_Idle_Main row, here `char *` against `u32`. Settled once as `void *` with casts at use; UpdateModelPose matches.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c8BehaviorEv; kept the first, the other is commented out for review -- RECONCILED: St_Talk_Main spelled both parameters `const Vector3 *`, Behavior `const void *`. The loose spelling is the one that survives the merge, because Behavior passes `&mPosX` -- the address of an s32 member, not a Vector3 lvalue. The `s16` return agreed in both and is kept; it is load-bearing, since the result feeds _Z14ApproachLinearRsss.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c8BehaviorEv; kept the first, the other is commented out for review -- RECONCILED: St_Talk_Main declared the return as `int`, Behavior as `void`. Kept `int`, and the choice is load-bearing rather than cosmetic: St_Talk_Main tests the result, so the `void` spelling cannot compile the merged TU at all. Behavior's three calls discard the result and are unaffected; both functions match.",
@@ -138,7 +277,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold _ZN11daKinopio_c8BehaviorEv and the one that held _ZN11daKinopio_c13InitResourcesEv; kept the first, the other is commented out for review -- RECONCILED: the declarations differ only in the parameter's NAME, `void *c` against `void *thiz`; the types are identical, so this row was textual and nothing more. Kept `thiz`.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c13InitResourcesEv; kept the first, the other is commented out for review -- RECONCILED: `char *` against `void *` return; the six parameters agreed. Kept `void *` and cast where a char pointer is wanted. Both callers match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'NumStars' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c13InitResourcesEv; kept the first, the other is commented out for review -- RECONCILED: `extern u8 NumStars();` against `extern u8 NumStars(void);`. The `u8` return agreed; only the empty parameter list differed. Kept `(void)`.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'IsStarCollectedInCurLevel' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c13InitResourcesEv; kept the first, the other is commented out for review -- RECONCILED: this is the one row the merge could not settle by taking a looser spelling: St_Talk_Main declared it with NO parameters, InitResources as `int IsStarCollectedInCurLevel(int)`, and the two cannot coexist under C linkage. The cartridge settles it. At 0x021292e4 St_Talk_Main loads mStarID with `ldrb r0,[r6,#0x20c]`, compares it against 0xff and falls through to the call at 0x021292f0 with that value still in r0, so the ROM is passing the argument. The zero-argument spelling reproduced those bytes only because the preceding comparison happened to leave it in the right register. The TU declares the one-parameter form and St_Talk_Main passes mStarID explicitly; St_Talk_Main and InitResources both still match byte for byte."
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'IsStarCollectedInCurLevel' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c13InitResourcesEv; kept the first, the other is commented out for review -- RECONCILED: this is the one row the merge could not settle by taking a looser spelling: St_Talk_Main declared it with NO parameters, InitResources as `int IsStarCollectedInCurLevel(int)`, and the two cannot coexist under C linkage. The cartridge settles it. At 0x021292e4 St_Talk_Main loads mStarID with `ldrb r0,[r6,#0x20c]`, compares it against 0xff and falls through to the call at 0x021292f0 with that value still in r0, so the ROM is passing the argument. The zero-argument spelling reproduced those bytes only because the preceding comparison happened to leave it in the right register. The TU declares the one-parameter form and St_Talk_Main passes mStarID explicitly; St_Talk_Main and InitResources both still match byte for byte.",
+    "Static initializer folded: the model and two animation handles (ids 0x35c..0x35e) and the two {init, main, name} state records are real definitions in d_a_kinopio.cpp, replacing the handwritten src/unnamed/ov085/__sinit_ov085_0212f2a8.cpp. mwcc emits __sinit_d_a_kinopio.cpp (0xf8), its .ctor word, the four PMF literals, the two name strings and the registration nodes itself; all are byte- and relocation-identical to retail. The state record's third word is the state's name string, so daKinopio_c::State::unk_10 becomes const char *name. Ownership: ov085 .init, .ctor and .bss run in .text TU order; d_a_kinopio is the first .text TU, this initializer is the first in .init, its .ctor word is the first, and its .bss 0x02130480..0x021304bc ends where d_a_peach's begins; the literals name only this TU's state handlers. The same change licenses the TU's whole .data run 0x0212fe20..0x0212ff34 (strings, PMF literals, _ZTI/_ZTS, the new typed g_profile_KINOPIO, the state records and the vtable, whose 0x84-byte storage starts at 0x0212feb0, two words ahead of the configured address point) and makes the TU intact-object."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -208,7 +348,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov085-daKinopio_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -216,7 +356,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -232,45 +372,195 @@
           "end": "0x02129d18",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0212f2a8",
+          "end": "0x0212f3a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0212fdf0",
+          "end": "0x0212fdf4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0212fe20",
+          "end": "0x0212ff34",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02130480",
+          "end": "0x021304bc",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 34
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              74
+            ],
+            "desired": [
+              74
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              72
+            ],
+            "desired": [
+              72
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              44,
+              46,
+              48,
+              50,
+              51,
+              53,
+              55,
+              56,
+              58,
+              60,
+              61
+            ],
+            "desired": [
+              55,
+              50,
+              51,
+              53,
+              46,
+              48,
+              61,
+              60,
+              44,
+              56,
+              58
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "desired": [
+              6,
+              5,
+              7,
+              8,
+              9,
+              10
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                44,
+                46,
+                48,
+                50,
+                51,
+                53,
+                55,
+                56,
+                58,
+                60,
+                61
+              ],
+              "desired": [
+                55,
+                50,
+                51,
+                53,
+                46,
+                48,
+                61,
+                60,
+                44,
+                56,
+                58
+              ],
+              "slots": [
+                44,
+                46,
+                48,
+                50,
+                51,
+                53,
+                55,
+                56,
+                58,
+                60,
+                61
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "desired": [
+                6,
+                5,
+                7,
+                8,
+                9,
+                10
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ]
+            }
+          ],
+          "symbolIndices": 17,
+          "sectionLinks": 0,
+          "sectionInfos": 8,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -292,69 +582,942 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "Three members declare Vector3 locals (St_Talk_Main's playerPos/messagePos/starPos, Behavior's two copies, InitResources' objPos), so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0, and src/_ZN7Vector3D1Ev.cpp already owns it as a complete .text 0x020072c0..0x020072c4 range; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_kinopio.cpp",
+      "address": "0x0212f2a8",
+      "size": "0xf8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov085_0212f2a8 (0xf8) and carries the same relocation sites in the same order"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_kinopio.cpp",
+      "address": "0x0212fdf0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@469",
+      "to": "data_ov085_02130498",
+      "evidence": "compiler temp mapped to 0x02130498 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
     },
     {
-      "symbol": "_ZTV11daKinopio_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov085",
-      "canonical_address": "0x0212feb8",
-      "reason": "This TU emits daKinopio_c's class vtable: it is the TU that materializes the class's only virtual destructor and its factory constructs the class, so mwcc emits the complete 0x84-byte storage with its ABI preamble. The cartridge's storage begins at ov085:0x0212feb0, where offset-to-top is 0 and the next word at 0x0212feb4 points at _ZTI11daKinopio_c (0x0212fe50); the public address point recorded in symbols.txt is 0x0212feb8, eight bytes above the start of storage and outside this text-only entry's licensed range, so dsd supplies that ROM data independently. romdata_check applies the measured eight-byte address-point bias and proves every emitted slot and relocation against the cartridge before production isolation discards the copy."
+      "from": "@470",
+      "to": "data_ov085_021304a4",
+      "evidence": "compiler temp mapped to 0x021304a4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
     },
     {
-      "symbol": "_ZTI11daKinopio_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov085",
-      "canonical_address": "0x0212fe50",
-      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned. The twelve bytes at ov085:0x0212fe50 are a __si_class_type_info: its type-info vtable pointer, then _ZTS11daKinopio_c at 0x0212fe5c, then _ZTI8dActor_c at 0x0208e390 as the single base -- which is the cartridge's own statement of this class's parent."
+      "from": "@471",
+      "to": "data_ov085_021304b0",
+      "evidence": "compiler temp mapped to 0x021304b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
     },
     {
+      "from": "@868",
+      "to": "data_ov085_0212fe40",
+      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@870",
+      "to": "data_ov085_0212fe48",
+      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@873",
+      "to": "data_ov085_0212fe30",
+      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@875",
+      "to": "data_ov085_0212fe38",
+      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@871",
+      "to": "data_ov085_0212fe28",
+      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@876",
+      "to": "data_ov085_0212fe20",
+      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_kinopio.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_kinopio.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_ov085_0212fe20",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_0212fe28",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_0212fe30",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_0212fe38",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_0212fe40",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_0212fe48",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_02130498",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_021304a4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov085_021304b0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN16KinopioModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN15KinopioAnimFileC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN16KinopioModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN15KinopioAnimFileD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x0212f2b8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f2c8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f2d4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f2e4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f2f0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f300",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f364",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKinopioModelFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02130480"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f368",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f36c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_02130498",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02130498"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f370",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKinopioIdleAnimFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02130488"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f378",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f37c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_021304a4",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304a4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f380",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKinopioTalkAnimFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02130490"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f388",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_021304b0",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304b0"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f38c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe88",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe88"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f390",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe40",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe40"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f394",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe48",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe48"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f398",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe30",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe30"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212f39c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe38",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe38"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x0212fdf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_kinopio.cpp",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212f2a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Talk_InitEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212943c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Talk_MainEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021291ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Idle_InitEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021294f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Idle_MainEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129470"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
       "symbol": "_ZTS11daKinopio_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov085",
-      "canonical_address": "0x0212fe5c",
-      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned. These fourteen bytes are why the class is spelled daKinopio_c and why no part of the name is coined: they are the length-prefixed mangled string \"11daKinopio_c\"."
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe5c"
     },
     {
+      "section": ".data",
+      "source": "0x0212fe58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
       "symbol": "_ZTI8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
     },
     {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+      "section": ".data",
+      "source": "0x0212fe6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daKinopio_c_classInit",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129cd0"
     },
     {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+      "section": ".data",
+      "source": "0x0212fe98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe28",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe28"
     },
     {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+      "section": ".data",
+      "source": "0x0212feac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe20",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe20"
     },
+    {
+      "section": ".data",
+      "source": "0x0212feb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI11daKinopio_c",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe50"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212feb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129a7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212febc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fec0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fec4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021297e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fec8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fecc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fed0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129878"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fed4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fed8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fedc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129854"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fee4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212feec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fef4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_cD1Ev",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129020"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fefc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_cD0Ev",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129060"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212ff30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    }
+  ],
+  "production_mode": "intact-object",
+  "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
       "canonical_module": "arm9",
       "canonical_address": "0x02086d70",
-      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e60"
+        }
+      ]
     },
     {
       "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e54"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086d70"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e384"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e78"
+        }
+      ]
     }
   ]
 }

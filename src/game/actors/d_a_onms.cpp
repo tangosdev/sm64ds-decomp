@@ -7,7 +7,7 @@
  * are twelve words, not .r/.t. The factory daOnms_c_classInit
  * (0x02132018..0x02132074, historical alias ToxBox_Spawn) now appends after
  * InitResources, at the end of source order: fBase_c::operator new(size_t)
- * forwards `return new daOnms_c();` to the same _ZN7fBase_cnwEj allocator the
+ * forwards `return new daOnms_c();` to the same _ZN7fBase_cnwEm allocator the
  * loose factory called by hand, and daOnms_c has no user-declared
  * constructor, so the inherited dBgActor_c ctor plus the vtable store plus
  * the member subobjects in field order (dBgCh_Actr, dCcAcPos_c, PathPtr)
@@ -33,11 +33,8 @@
  *   0x74 -> 0x78. That wrapper is Sound::Play(3, id, pos).
  * - func_ov092_02131a88: UpdateClsnPosAndRot(), size 0x64 -> 0xc. The
  *   body is that function written out; the ROM does not call it.
- * - InitResources: dCcAcPos_c::Init and dBgW_KcMbg::SetFile do not compile
- *   (header Fix12<int>, and this TU's ints are not that type). A direct
- *   beforeClsnCallback store, size 0x278 -> 0x274. func_020393d4 stays;
- *   it writes dBgW + 0x18. dBgCh_Actr::Init stays the mangled free call:
- *   the header method mangles with int, the ROM symbol with Fix12<int>.
+ * - InitResources: a direct beforeClsnCallback store is size 0x278 -> 0x274.
+ *   func_020393d4 stays; it writes dBgW + 0x18.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -89,54 +86,46 @@ typedef struct { int x, y, z; } Vec3;
  * their compiler-generated undefined member imports onto the existing
  * evidence-bounded ROM symbols. */
 struct OnmsModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     OnmsModelFilePtr(u32 fileID);
     ~OnmsModelFilePtr();
 };
 
 struct OnmsCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     OnmsCollisionFilePtr(u32 fileID);
     ~OnmsCollisionFilePtr();
 };
 
-/* BMD (Model::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
+/* BMD (dExtSimpleModel_c::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
 extern "C" OnmsModelFilePtr gOnimasuModelFile;
 extern "C" OnmsCollisionFilePtr gOnimasuCollisionFile;
 extern "C" daOnms_cStateEntry data_ov092_02132568[9];
 
 extern "C" {
 int func_ov002_020de328(void *player);
-void dBgCh_Actr_UpdateContinuous_Veneer(void *self);
-void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *v, int f);
+void d_a_onmsEarthquakeHold(void *v, int f);
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
-int func_02037e38(unsigned int *p);
-int func_02037e84(int *p);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
 void func_0203568c(void *p, int v);
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int b, int cc, int d);
+namespace Particle {
+struct System {
+    static void *NewSimple(unsigned int a, int b, int cc, int d);
+};
+}
 s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16 data_02082214[];
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int range, int offset);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
 void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
-    int scale, short angY, void *clps);
+extern void hold_d_a_onms(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
+                          short angY, void *clps);
 /* Stores beforeClsnCallback: p[6] = value, the word at dBgW + 0x18. */
 void func_020393d4(int *p, int v);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset,
-    int radius, int height, unsigned int flags, unsigned int vulnFlags);
 /* CLPS block ("CLPS" magic) handed to SetFile. */
 extern char data_ov092_02132220;
 /* Three s32* move scripts, indexed by param1 & 3. A path (kind 3) ignores it. */
@@ -202,8 +191,7 @@ int daOnms_c::StateBounce()
     eq.x = mPosX;
     eq.y = mPosY;
     eq.z = mPosZ;
-    ((void (*)(void *, const Vector3 *, int))_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE)(
-        this, &eq, 0x5dc000);
+    Earthquake(eq, 0x5dc000);
     func_02012694(0x46, CamPos(this));
 
     /* tmp is a dead copy the ROM keeps; building dust directly differs. */
@@ -253,14 +241,14 @@ void daOnms_c::StateKnocked()
     /* The wrapper returns the sphere query's dBgPi. Its dBgPc base owns
        the surface. Keep each CLPS address at its call site; the earlier
        hoisted-address probe differed by 13 words. */
-    dBgPi *floor = (dBgPi *)mWithMeshClsn.GetFloorResult();
+    dBgPi *floor = mWithMeshClsn.GetFloorResult();
 
-    if (func_02037e38(&floor->surface.clps.w0) == 9) {
+    if (floor->surface.clps.GetSurfaceType() == 9) {
         mMoveDir = kDirSink;
         mHorzSpeed = 0;
         mVertSpeed = 0;
         func_02012694(0x178, CamPos(this));
-    } else if (func_02037e84((int *)&floor->surface.clps.w0) == 8) {
+    } else if (floor->surface.clps.func_02037e84() == 8) {
         /* The player's position is read through p: reading o->mPosX
            directly changes the code. */
         dActor_c *o;
@@ -272,8 +260,7 @@ void daOnms_c::StateKnocked()
         v1.x = p[0];
         v1.y = p[1];
         v1.z = p[2];
-        ((void (*)(void *, const Vector3 *, int))_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE)(
-            this, &v1, 0xff8000);
+        Earthquake(v1, 0xff8000);
         mPosX = saved.x;
         mPosY = saved.y;
         mPosZ = saved.z;
@@ -282,15 +269,14 @@ void daOnms_c::StateKnocked()
         dActor_c *o;
         int *p;
         TriplePoofDust();
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfa, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(0xfa, mPosX, mPosY, mPosZ);
         MarkForDestruction();
         o = mPlayerActor;
         p = &o->mPosX;
         v2.x = p[0];
         v2.y = p[1];
         v2.z = p[2];
-        ((void (*)(void *, const Vector3 *, int))_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE)(
-            this, &v2, 0xff8000);
+        Earthquake(v2, 0xff8000);
         Sound::PlayBank3(0x41, *CamPos(this));
     }
     mPlayerActor = 0;
@@ -358,8 +344,7 @@ void daOnms_c::StateLand()
     if (!mStateTimer) {
         Vector3 v;
         v.x = mPosX; v.y = mPosY; v.z = mPosZ;
-        ((void (*)(void *, const Vector3 *, int))_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE)(
-            this, &v, 0x860000);
+        Earthquake(v, 0x860000);
         func_02012694(0x46, CamPos(this));
     }
     mPosY = mRestPos.y + 0x3000;
@@ -564,7 +549,7 @@ int daOnms_c::Behavior()
         mStateTimer = 0;
 
     UpdateModelMtx();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+    if (IsClsnInRange(0, 0) != 0)
         func_ov092_02131a88((char *)this);
 
     if (mRollDone == 1) {
@@ -592,11 +577,10 @@ int daOnms_c::InitResources()
     void *f;
     Vec3 tmp;
 
-    f = Model::LoadFile(gOnimasuModelFile);
+    f = dExtSimpleModel_c::LoadFile(gOnimasuModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, (int)this, 0xfa000, 0, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)(int)this, 0xfa000, 0, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
 
     mMoveKind = param1 & 3;
@@ -625,9 +609,9 @@ int daOnms_c::InitResources()
     func_ov092_02131a88((char *)this);
 
     f = dBgW_Kc::LoadFile(gOnimasuCollisionFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)f, &mClsnMat,
-        0x1000, mAngleY, &data_ov092_02132220);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)f, *(&mClsnMat), 0x1000, mAngleY,
+                              *(CLPS_Block *)(&data_ov092_02132220));
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
 
     mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);
@@ -639,8 +623,7 @@ int daOnms_c::InitResources()
         offset.x = 0;
         offset.y = -0xfa000;
         offset.z = 0;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            &mdCcAcPos_c, this, &offset, 0xc8000, 0x190000, 2, 0x6003c0);
+        mdCcAcPos_c.Init(this, offset, 0xc8000, 0x190000, 2, 0x6003c0);
     }
 
     mPlayerActor = 0;

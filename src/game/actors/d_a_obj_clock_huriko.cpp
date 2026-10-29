@@ -25,46 +25,43 @@
  *   [0] 0x021111a0  daObjClockHuriko_c::~daObjClockHuriko_c  (D1)
  *   [1] 0x021111d0  daObjClockHuriko_c::~daObjClockHuriko_c  (D0)
  *   [2] 0x02111214  daObjClockHuriko_c::CleanupResources
- *   [3] 0x02111238  func_ov013_02111238
+ *   [3] 0x02111238  daObjClockHuriko_c::UpdateModelTransform
  *   [4] 0x02111280  daObjClockHuriko_c::Render
  *   [5] 0x021112a8  daObjClockHuriko_c::Behavior
  *   [6] 0x0211133c  daObjClockHuriko_c::InitResources
  *   [7] 0x02111384  daObjClockHuriko_c_classInit  (factory, actor 294)
  *
- * deslop leftovers:
- * - data_ov013_02112280: SharedFilePtr handle. This TU consumes it; overlay
- *   .bss owns it. symbols.txt has no recovered name, so it is not coined.
- * - Matrix4x3_FromRotationZXYExt stays the C helper (no class method).
- * - func_ov013_02111238 keeps its func_ name: not a vtable slot, and nothing
- *   in the cartridge says it is a member.
+ * Notes:
+ * - data_ov013_02112280 is the pendulum model's SharedFilePtr; this TU's
+ *   static initializer constructs it. symbols.txt has no recovered name.
+ * - Matrix4x3_FromRotationZXYExt stays a local C extern; no shared header
+ *   declares it.
+ * - UpdateModelTransform is the same model-matrix rebuild as the sibling
+ *   daObjClock_c::UpdateModelTransform (ov013 0x02111430).
  * - g_profile_CLOCK_HURIKO is overlay .data, not licensed to this TU.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_clock_huriko_AssetId {
-    ASSET_C2_HURIKO_BMD = 0x05b3
-};
+enum d_a_obj_clock_huriko_AssetId { ASSET_C2_HURIKO_BMD = 0x05b3 };
 
 #include "daObjClockHuriko_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 
-/* Model handles construct through func_02017acc and destroy through
+/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4. The manifest aliases those undefined members onto the ROM
  * symbols. */
 struct ClockHurikoModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     ClockHurikoModelFilePtr(u32 fileID);
     ~ClockHurikoModelFilePtr();
 };
 
 extern "C" {
 extern void Matrix4x3_FromRotationZXYExt(void *, int, int, int);
-void func_ov013_02111238(daObjClockHuriko_c *self);
+}
+
 extern signed char data_02092110[];
 extern ClockHurikoModelFilePtr data_ov013_02112280;
-}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -73,8 +70,7 @@ extern ClockHurikoModelFilePtr data_ov013_02112280;
  * allocation size, vtable identity, and the CLOCK_HURIKO registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: daObjClockHuriko_c_Spawn. */
-extern "C" daObjClockHuriko_c *daObjClockHuriko_c_classInit()
-{
+extern "C" daObjClockHuriko_c *daObjClockHuriko_c_classInit() {
     return new daObjClockHuriko_c();
 }
 
@@ -85,11 +81,10 @@ extern "C" daObjClockHuriko_c *daObjClockHuriko_c_classInit()
 /* daObjClockHuriko_c::InitResources -- vtable slot 0, ov013 0x0211133c.
  * A REAL MEMBER ON PURPOSE: the destructor is inline in the header, so this
  * class's key function is its first declared non-inline virtual. */
-s32 daObjClockHuriko_c::InitResources()
-{
-    void *f = Model::LoadFile(data_ov013_02112280);
+s32 daObjClockHuriko_c::InitResources() {
+    void *f = dExtSimpleModel_c::LoadFile(data_ov013_02112280);
     mModel.SetFile((BMD_File *)f, 1, -1);
-    func_ov013_02111238(this);
+    UpdateModelTransform();
     mAngSpeed = 0x100;
     return 1;
 }
@@ -104,8 +99,7 @@ s32 daObjClockHuriko_c::InitResources()
  *
  * The swing angle is dActor_c::mAngleZ. Its separately materialized pointer
  * below preserves the ROM's load/read-modify-write order under 2004/b56. */
-s32 daObjClockHuriko_c::Behavior()
-{
+s32 daObjClockHuriko_c::Behavior() {
     if (data_02092110[0] <= 0) {
         s16 *angleZ = &mAngleZ;
         /* The test reads the field instead of going through angleZ, and that is
@@ -125,7 +119,7 @@ s32 daObjClockHuriko_c::Behavior()
             Sound::PlayBank3(0x16, mCamSpacePos);
         }
     }
-    func_ov013_02111238(this);
+    UpdateModelTransform();
 
     return 1;
 }
@@ -134,22 +128,22 @@ s32 daObjClockHuriko_c::Behavior()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjClockHuriko_c6RenderEv
 /* daObjClockHuriko_c::Render -- vtable slot 9, ov013 0x02111280. */
-s32 daObjClockHuriko_c::Render() { mModel.Render(0); return 1; }
+s32 daObjClockHuriko_c::Render() {
+    mModel.Render(0);
+    return 1;
+}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov013_02111238
-/* Not a vtable slot and not provably a member, so it keeps its func_ name.
+// @symbol _ZN18daObjClockHuriko_c20UpdateModelTransformEv
+/* Rebuilds mModel.mat4x3 from the actor angles and from position >> 3.
  * The marker above is not decoration -- without it tools/tiers.py folds this
  * body into the preceding member's fragment. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov013_02111238(daObjClockHuriko_c *self)
-{
-    Matrix4x3_FromRotationZXYExt(&self->mModel.mat4x3, self->mAngleX, self->mAngleY, self->mAngleZ);
-    self->mModel.mat4x3.t.x = self->mPosX >> 3;
-    self->mModel.mat4x3.t.y = self->mPosY >> 3;
-    self->mModel.mat4x3.t.z = self->mPosZ >> 3;
-}
+void daObjClockHuriko_c::UpdateModelTransform() {
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -157,8 +151,7 @@ void func_ov013_02111238(daObjClockHuriko_c *self)
 // @symbol _ZN18daObjClockHuriko_c16CleanupResourcesEv
 /* daObjClockHuriko_c::CleanupResources -- vtable slot 3, ov013 0x02111214.
  * Releases the one shared file the painting holds; it never touches `this`. */
-s32 daObjClockHuriko_c::CleanupResources()
-{
+s32 daObjClockHuriko_c::CleanupResources() {
     data_ov013_02112280.Release();
     return 1;
 }

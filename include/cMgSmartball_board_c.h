@@ -4,7 +4,7 @@
  * The eleventh and last direct child of cMgSmartball_object_c -- see that
  * header for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x9c, from _Znwj(0x9c) in dScMgSmartball_c::SpawnObjects immediately before the
+ * SIZE 0x9c, from operator new(0x9c) in dScMgSmartball_c::SpawnObjects immediately before the
  * call to this class's constructor cMgSmartball_board_c_Construct. Base ends at 0x34, so
  * this class adds 0x68 bytes.
  *
@@ -16,10 +16,11 @@
  * eight-element arrays in the pre-migration matched source.
  *
  * THE FIELD NAMES BELOW MOSTLY COME FROM cMgSmartball_board_c::ClaimCell, the out-of-scope
- * helper SaveSnapshot calls the instant a ball claims a cell. It reaches this
- * object through its own shadow struct -- `u8 cells[9]` at 0x31, `int
- * lines[8]` at 0x6c, `u8 marks[8]` at 0x8c, and the two scalars at 0x94/0x98
- * -- and it is the only place any of the last four are WRITTEN: on completing
+ * helper SaveSnapshot calls the instant a ball claims a cell. Before it was
+ * converted to these members it reached the object through its own shadow
+ * struct -- `u8 cells[9]` at 0x31, `int lines[8]` at 0x6c, `u8 marks[8]` at
+ * 0x8c, and the two scalars at 0x94/0x98 -- and it is the only place any of
+ * the last four are WRITTEN: on completing
  * a line it sets that line's timer to 0x21d, raises its mark, arms 0x94 with
  * 0xb5 and increments 0x98. That is what settles 0x94 as a fanfare countdown
  * and 0x98 as a count of completed lines rather than a second timer.
@@ -83,9 +84,9 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
                         name: the whole array is reached as (&mTriggered)[i],
                         because a member cannot straddle the base boundary.
                         Declared only so the layout below sits at the right
-                        offsets. cMgSmartball_board_c::ClaimCell models the same nine bytes
-                        as a plain `u8 cells[9]` at 0x31 in its own shadow
-                        struct, which is the corroboration for the length. */
+                        offsets. cMgSmartball_board_c::ClaimCell's former shadow struct
+                        modelled the same nine bytes as a plain `u8 cells[9]`
+                        at 0x31, which is the corroboration for the length. */
 
     /* Genuine gap -- RestoreInitial's exhaustive zero pass steps straight from
        the 9 bytes ending at 0x39 to the s32 array at 0x3c. UNMODELLED, NOT

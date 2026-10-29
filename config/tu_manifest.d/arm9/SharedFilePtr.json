@@ -7,9 +7,9 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "Contiguous linker run arm9:0x0201787c..0x02017e60, 28 functions, gapless in config/arm9/delinks.txt, each a one-function file.",
-    "BOTTOM EDGE: the dFader_c TU (src/runtime/graphics/fader/d_fader.cpp) ends at 0x0201787c with dFader_c's D1; func_0201787c begins there. func_0201787c calls SharedFilePtr::LoadFile and Model::UpdateFileOffsets, and func_020178b4/func_020178cc chain into func_02017a9c/func_02017ae4, so the run's first three functions are this family, not the fader's.",
+    "BOTTOM EDGE: the dFader_c TU (src/runtime/graphics/fader/d_fader.cpp) ends at 0x0201787c with dFader_c's D1; func_0201787c begins there. func_0201787c calls SharedFilePtr::LoadFile and dExtSimpleModel_c::UpdateFileOffsets, and func_020178b4/func_020178cc chain into func_02017a9c/func_02017ae4, so the run's first three functions are this family, not the fader's.",
     "TOP EDGE: func_02017e0c, func_02017e34 and func_02017e48 belong. They stamp, publish and construct the handle's own fields (+0 fileID, +2 numRefs, +4 filePtr), and inside this run they are reached only from this run's construct/destroy helpers. func_02017e60 is the first function that does not belong: it clears the 12-entry table at data_0209d3c4 that func_02017e94 (the overlay unloader) walks, and func_02018aa4 calls it. That is the overlay/FS loader run (UnloadOverlay, LoadOverlay, LoadFile, Deallocate ...), which is a different subsystem.",
-    "The four X::LoadFile(SharedFilePtr&) members of Model, TextureSequence, dExtFrameCtrl_c and dBgW_Kc sit inside the run between SharedFilePtr's own members and helpers, so they are this file's, not their classes' TUs.",
+    "The four X::LoadFile(SharedFilePtr&) members of dExtSimpleModel_c, dExtAnmTexPat_c, dExtFrameCtrl_c and dBgW_Kc sit inside the run between SharedFilePtr's own members and helpers, so they are this file's, not their classes' TUs.",
     "No ROM RTTI names this unit. The file is named after the tree class SharedFilePtr (include/SharedFilePtr.h), and confidence stays medium because the original file name and the upper edge's ownership of func_02017e0c..func_02017e48 come from call-graph evidence, not from a symbol."
   ],
   "sections": [
@@ -42,10 +42,10 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN15TextureSequence8LoadFileER13SharedFilePtr",
+      "symbol": "_ZN15dExtAnmTexPat_c8LoadFileER13SharedFilePtr",
       "address": "0x020178e4",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN15TextureSequence8LoadFileER13SharedFilePtr.cpp",
+      "legacy_source": "src/_ZN15dExtAnmTexPat_c8LoadFileER13SharedFilePtr.cpp",
       "ordinal": 3
     },
     {
@@ -105,10 +105,10 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN5Model8LoadFileER13SharedFilePtr",
+      "symbol": "_ZN17dExtSimpleModel_c8LoadFileER13SharedFilePtr",
       "address": "0x02017a3c",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN5Model8LoadFileER13SharedFilePtr.cpp",
+      "legacy_source": "src/_ZN17dExtSimpleModel_c8LoadFileER13SharedFilePtr.cpp",
       "ordinal": 12
     },
     {
@@ -223,7 +223,7 @@
   "notes": [
     "Definitions are written ROM-descending. Default mwccarm deferred codegen emits .text in reverse source order, so emission is ROM-ascending. No file-wide pragma.",
     "The unnamed helpers keep their address names and C linkage, with the signatures their one-function files defined, so no caller's declaration agreement changes. SharedFilePtr_Construct_TexSeq / _Destruct_TexSeq / _Destruct_Anim / _Destruct_Clsn keep their existing linker names.",
-    "Host build (port/): the refcounting core (func_02017e0c, func_02017c24, LoadFile, Release) compiles for gate 3b. Model::LoadFile and dExtFrameCtrl_c::LoadFile compile only under SM64DS_PORT_GATE4B and dBgW_Kc::LoadFile only under SM64DS_PORT_GATE8, which port/CMakeLists.txt defines on the targets that link those slices. Everything else is under #ifndef _MSC_VER."
+    "Host build (port/): the refcounting core (func_02017e0c, func_02017c24, LoadFile, Release) compiles for gate 3b. dExtSimpleModel_c::LoadFile and dExtFrameCtrl_c::LoadFile compile only under SM64DS_PORT_GATE4B and dBgW_Kc::LoadFile only under SM64DS_PORT_GATE8, which port/CMakeLists.txt defines on the targets that link those slices. Everything else is under #ifndef _MSC_VER."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

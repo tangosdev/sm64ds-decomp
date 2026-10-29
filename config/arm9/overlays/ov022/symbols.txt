@@ -4,8 +4,8 @@ _ZN14daObjFl_Ring_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0211
 _ZN14daObjFl_Ring_c6RenderEv kind:function(arm,size=0x28) addr:0x02111284
 _ZN14daObjFl_Ring_c8BehaviorEv kind:function(arm,size=0x1f0) addr:0x021112ac
 _ZN14daObjFl_Ring_c13InitResourcesEv kind:function(arm,size=0xbc) addr:0x0211149c
-func_ov022_02111558 kind:function(arm,size=0xc) addr:0x02111558
-func_ov022_02111564 kind:function(arm,size=0x14) addr:0x02111564
+_ZN14daObjFl_Ring_c9OnStoodOnEP8dActor_c kind:function(arm,size=0xc) addr:0x02111558
+_ZN14daObjFl_Ring_c15StoodOnCallbackEP4dBgWPS_P8dActor_c kind:function(arm,size=0x14) addr:0x02111564
 daObjFl_Ring_c_classInit kind:function(arm,size=0x30) addr:0x02111578
 _ZN16daObjFl_Koma_D_cD1Ev kind:function(arm,size=0x50) addr:0x021115a8
 _ZN16daObjFl_Koma_D_cD0Ev kind:function(arm,size=0x64) addr:0x021115f8
@@ -18,12 +18,12 @@ _ZN15daObjFl_Block_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021
 _ZN15daObjFl_Block_c6RenderEv kind:function(arm,size=0x28) addr:0x021117a4
 _ZN15daObjFl_Block_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x021117cc
 _ZN15daObjFl_Block_c13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111870
-func_ov022_0211191c kind:function(arm,size=0x20) addr:0x0211191c
-func_ov022_0211193c kind:function(arm,size=0x14) addr:0x0211193c
+_ZN15daObjFl_Block_c9OnStoodOnEP8dActor_c kind:function(arm,size=0x20) addr:0x0211191c
+_ZN15daObjFl_Block_c15StoodOnCallbackEP4dBgWPS_P8dActor_c kind:function(arm,size=0x14) addr:0x0211193c
 daObjFl_Block_c_classInit kind:function(arm,size=0x30) addr:0x02111950
 _ZN16daObjFl_London_cD1Ev kind:function(arm,size=0x44) addr:0x02111980
 _ZN16daObjFl_London_cD0Ev kind:function(arm,size=0x58) addr:0x021119c4
-func_ov022_02111a1c kind:function(arm,size=0x48) addr:0x02111a1c
+_ZN16daObjFl_London_c17UpdateModelMatrixEv kind:function(arm,size=0x48) addr:0x02111a1c
 _ZN16daObjFl_London_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111a64
 _ZN16daObjFl_London_c6RenderEv kind:function(arm,size=0x28) addr:0x02111aa8
 _ZN16daObjFl_London_c8BehaviorEv kind:function(arm,size=0x10c) addr:0x02111ad0
@@ -31,7 +31,7 @@ _ZN16daObjFl_London_c13InitResourcesEv kind:function(arm,size=0xa0) addr:0x02111
 daObjFl_London_c_classInit kind:function(arm,size=0x30) addr:0x02111c7c
 _ZN16daObjFl_Seesaw_cD1Ev kind:function(arm,size=0x44) addr:0x02111cac
 _ZN16daObjFl_Seesaw_cD0Ev kind:function(arm,size=0x58) addr:0x02111cf0
-_ZN16daObjFl_Seesaw_c19func_ov022_02111d48Ev kind:function(arm,size=0x48) addr:0x02111d48
+_ZN16daObjFl_Seesaw_c20UpdateModelTransformEv kind:function(arm,size=0x48) addr:0x02111d48
 _ZN16daObjFl_Seesaw_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111d90
 _ZN16daObjFl_Seesaw_c6RenderEv kind:function(arm,size=0x28) addr:0x02111dd4
 _ZN16daObjFl_Seesaw_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x02111dfc
@@ -102,7 +102,7 @@ __sinit_d_a_obj_fl_block.cpp kind:function(arm,size=0x6c) addr:0x02112d80
 __sinit_d_a_obj_fl_london.cpp kind:function(arm,size=0x6c) addr:0x02112dec
 __sinit_d_a_obj_fl_seesaw.cpp kind:function(arm,size=0x68) addr:0x02112e58
 __sinit_d_a_obj_fl_ukiyuka.cpp kind:function(arm,size=0xb8) addr:0x02112ec0
-__sinit_ov022_02112f78 kind:function(arm,size=0x6c) addr:0x02112f78
+__sinit_d_a_obj_fl_uki_ki.cpp kind:function(arm,size=0x6c) addr:0x02112f78
 __sinit_d_a_obj_fl_fall_block.cpp kind:function(arm,size=0x6c) addr:0x02112fe4
 __sinit_ov022_02113050 kind:function(arm,size=0x6c) addr:0x02113050
 __sinit_d_a_obj_fl_maruta.cpp kind:function(arm,size=0x3c) addr:0x021130bc
@@ -112,7 +112,7 @@ __sinit_d_a_obj_fl_maruta.cpp kind:function(arm,size=0x3c) addr:0x021130bc
 .p__sinit_d_a_obj_fl_london.cpp kind:data(word) addr:0x02113104
 .p__sinit_d_a_obj_fl_seesaw.cpp kind:data(word) addr:0x02113108
 .p__sinit_d_a_obj_fl_ukiyuka.cpp kind:data(word) addr:0x0211310c
-.p__sinit_ov022_02112f78 kind:data(word) addr:0x02113110
+.p__sinit_d_a_obj_fl_uki_ki.cpp kind:data(word) addr:0x02113110
 .p__sinit_d_a_obj_fl_fall_block.cpp kind:data(word) addr:0x02113114
 .p__sinit_ov022_02113050 kind:data(word) addr:0x02113118
 .p__sinit_d_a_obj_fl_maruta.cpp kind:data(word) addr:0x0211311c
@@ -280,9 +280,7 @@ gFlUkiYukaModelFile kind:bss addr:0x021145e0
 @608 kind:bss addr:0x021145f4
 @611 kind:bss addr:0x02114600
 @610 kind:bss addr:0x0211460c
-data_ov022_02114618 kind:bss addr:0x02114618
 FloatingFloorLllBig_ClsnFile kind:bss addr:0x02114618
-data_ov022_02114620 kind:bss addr:0x02114620
 FloatingFloorLllBig_ModelFile kind:bss addr:0x02114620
 data_ov022_02114628 kind:bss addr:0x02114628
 data_ov022_0211462c kind:bss addr:0x0211462c ambiguous

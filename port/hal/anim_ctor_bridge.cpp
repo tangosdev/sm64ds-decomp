@@ -21,16 +21,17 @@ extern "C" {
 void _ZN15dExtFrameCtrl_cC2Ev(void *self) { ::new (self) dExtFrameCtrl_c(); }
 }
 
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 
-// ModelAnim, same shape as Model in hal/ctor_bridge.cpp: the port dispatches
-// it through the synthetic _ZTV9ModelAnim that hal/model_host.cpp provides and
-// src/_ZN9ModelAnimC2Ev.cpp installs, so the constructor runs for its member
-// initialization and the vptr goes back to the table the port dispatches
-// through rather than the one placement new leaves.
-extern "C" void *_ZTV9ModelAnim[10];
-extern "C" void _ZN9ModelAnimC1Ev(void *self)
+// dExtAnmModel_c, same shape as dExtSimpleModel_c in hal/ctor_bridge.cpp: the port dispatches
+// it through the synthetic _ZTV14dExtAnmModel_c that hal/model_host.cpp provides and
+// dExtAnmModel_c::dExtAnmModel_c() in src/engine/model/d_ext_model.cpp installs, so the
+// constructor runs for its member initialization and the vptr goes back to
+// the table the port dispatches through rather than the one placement new
+// leaves.
+extern "C" void *_ZTV14dExtAnmModel_c[10];
+extern "C" void _ZN14dExtAnmModel_cC1Ev(void *self)
 {
-    ::new (self) ModelAnim();
-    *(void **)self = _ZTV9ModelAnim;
+    ::new (self) dExtAnmModel_c();
+    *(void **)self = _ZTV14dExtAnmModel_c;
 }

@@ -27,10 +27,9 @@
  *   member is byte-identical to dropping it).
  * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
  *   Fix12<int> overloads (codegen wall, pinned in
- *   notes/experiments/gameover-2711-oam-render-fix12.md). The G2/GX/Sound
- *   decls below have no header; _ZN3G2S12GetBG1ScrPtrEv keeps the u16*
- *   spelling for 0730's pointer arithmetic (typing ergonomics, not a codegen
- *   wall -- void* compiles identically, see
+ *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S::GetBG1ScrPtr
+ *   comes from G2.h as `void *` and 0730 casts it to u16* for its pointer
+ *   arithmetic (typing ergonomics, not a codegen wall -- see
  *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * - data_0209f5bc (the active scene) gates Behavior through a plain virtual
  *   call on slot 5; the tree's spellings disagree with each other
@@ -53,12 +52,18 @@ enum dScGameOver_c_AssetId {
 };
 
 #include "dScGameOver_c.h"
+#include "G2.h"
+#include "GX.h"
 #include "dScStage_c.h"
 #include "OamAttr.h"
+struct OAM {
+    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
+};
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
+#include "Sound.h"
 
 /* File scope is the only place this pragma works. 0x020b060c needs
  * `#pragma opt_strength_reduction off`: it walks the eight glyphs with an
@@ -121,26 +126,11 @@ extern u8 data_0209f204;
  * Ergonomics, not a constraint: the void* form compiles to identical bytes
  * at both consumers (see notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * Init passes the result to DecompressLZ16's void* param either way. */
-extern unsigned short *_ZN3G2S12GetBG1ScrPtrEv(void);
-void *_ZN2G213GetBG2CharPtrEv(void);
-void *_ZN2G212GetBG2ScrPtrEv(void);
-void *_ZN2G212GetBG0ScrPtrEv(void);
-void *_ZN3G2S12GetBG2ScrPtrEv(void);
-u32 _ZN3G2S13GetBG1CharPtrEv(void);
-void _ZN2GX12SetBankForBGEt(u16 v);
-void _ZN2GX13SetBankForOBJEt(u16 v);
-void _ZN2GX15SetBankForSubBGEt(u16 v);
-void _ZN2GX16SetBankForSubOBJEt(u16 v);
-void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette,
-                                                 s32 priority, Fix12i scaleX, Fix12i scaleY,
-                                                 s32 rotation, s32 mode);
-void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);
+
+void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette, s32 priority,
+                               Fix12i scaleX, Fix12i scaleY, s32 rotation, s32 mode);
 int LoadFile(int handle);
 void DecompressLZ16(int src, void *dst);
-void func_02012790(int se);
 }
 
 /* The stylus went down this frame: held, with the held state just changed
@@ -179,20 +169,20 @@ s32 dScGameOver_c::InitResources() {
     int f;
 
     func_02019028();
-    _ZN2GX15DisableAllBanksEv();
-    _ZN2GX12SetBankForBGEt(1);
-    _ZN2GX13SetBankForOBJEt(0x40);
-    _ZN2GX15SetBankForSubBGEt(4);
-    _ZN2GX16SetBankForSubOBJEt(8);
+    GX::DisableAllBanks();
+    GX::SetBankForBG(1);
+    GX::SetBankForOBJ(0x40);
+    GX::SetBankForSubBG(4);
+    GX::SetBankForSubOBJ(8);
 
     *(volatile u32 *)0x4000000 &= 0xffcfffef;
     *(volatile u32 *)0x4001000 &= 0xffcfffef;
-    _ZN2GX15SetGraphicsModeEiii(1, 0, 0);
-    _ZN3GXS15SetGraphicsModeEi(3);
+    GX::SetGraphicsMode(1, 0, 0);
+    GXS::SetGraphicsMode(3);
 
     *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x38000000) | 0x8000000;
     *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & ~0x20e) | 0x20e;
-    _ZN2GX6DispOnEv();
+    GX::DispOn();
 
     *(volatile u32 *)0x4001000 |= 0x10000;
 
@@ -224,19 +214,19 @@ s32 dScGameOver_c::InitResources() {
     } else {
         f = LoadFile(0xa00c);
     }
-    DecompressLZ16(f, _ZN2G213GetBG2CharPtrEv());
+    DecompressLZ16(f, G2::GetBG2CharPtr());
     Deallocate((void *)f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_BG_NCL_BIN);
-    _ZN2GX10LoadBGPlttEPKvjj((const void *)f, 0, 0x1a0);
+    GX::LoadBGPltt((const void *)f, 0, 0x1a0);
     Deallocate((void *)f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_BG_NSC_BIN);
-    DecompressLZ16(f, _ZN2G212GetBG2ScrPtrEv());
+    DecompressLZ16(f, G2::GetBG2ScrPtr());
     Deallocate((void *)f);
 
     f = LoadFile(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN);
-    DecompressLZ16(f, _ZN2G212GetBG0ScrPtrEv());
+    DecompressLZ16(f, G2::GetBG0ScrPtr());
     Deallocate((void *)f);
 
     *(volatile u16 *)0x400000e &= ~3;
@@ -249,7 +239,7 @@ s32 dScGameOver_c::InitResources() {
     Deallocate((void *)f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_NCL_BIN);
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)f, 0, 0x200);
+    GX::LoadOBJPltt((const void *)f, 0, 0x200);
     Deallocate((void *)f);
 
     data_0209d45c = 0x14;
@@ -275,15 +265,15 @@ s32 dScGameOver_c::InitResources() {
     } else {
         f = LoadFile(0xa00d);
     }
-    DecompressLZ16(f, (void *)_ZN3G2S13GetBG1CharPtrEv());
+    DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
     Deallocate((void *)f);
 
     f = LoadFile(0x9807);
-    _ZN3GXS10LoadBGPlttEPKvjj((const void *)f, 0, 0x200);
+    GXS::LoadBGPltt((const void *)f, 0, 0x200);
     Deallocate((void *)f);
 
     f = LoadFile(0x9801);
-    DecompressLZ16(f, _ZN3G2S12GetBG1ScrPtrEv());
+    DecompressLZ16(f, G2S::GetBG1ScrPtr());
     Deallocate((void *)f);
 
     *(volatile u16 *)0x400100c &= ~3;
@@ -292,7 +282,7 @@ s32 dScGameOver_c::InitResources() {
     SetSubBg2Offset(0, 0);
 
     f = LoadFile(ASSET_D_2D_BTM_GAME_OVER_BG_NSC_BIN);
-    DecompressLZ16(f, _ZN3G2S12GetBG2ScrPtrEv());
+    DecompressLZ16(f, G2S::GetBG2ScrPtr());
     Deallocate((void *)f);
 
     func_0201cebc(0x27d);
@@ -314,8 +304,8 @@ s32 dScGameOver_c::InitResources() {
     *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
     *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1400;
     data_0209f204 = 1;
-    _ZN5Sound16LoadInitialGroupEi(2);
-    _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x15);
+    Sound::LoadInitialGroup(2);
+    Sound::LoadAndSetMusic_Layer1(0x15);
     data_0208ee44 = 1;
     return 1;
 }
@@ -385,7 +375,7 @@ s32 dScGameOver_c::Behavior() {
                         func_0202ae74();
                     else
                         dScene_c::StartSceneFade(1, 0, 0);
-                    _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
+                    Sound::StopLoadedMusic_Layer1(0x3c);
                 }
             }
             break;
@@ -401,8 +391,8 @@ s32 dScGameOver_c::Behavior() {
 s32 dScGameOver_c::Render() {
     int i;
     for (i = 0; i < 8; i++) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, sGameOverGlyphTemplates[i], mGlyphX[i],
-                                                    mGlyphY[i], -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, sGameOverGlyphTemplates[i], mGlyphX[i], mGlyphY[i], -1, -1, 0x1000, 0x1000,
+                    0, -1);
     }
     if (mIntroPhase >= 2)
         dScStage_c::RenderBouncingArrows();
@@ -425,7 +415,7 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
     for (i = 0; i < 2; i++) {
         unsigned int v;
         int j;
-        unsigned short *p = _ZN3G2S12GetBG1ScrPtrEv();
+        unsigned short *p = (unsigned short *)G2S::GetBG1ScrPtr();
         p += sGameOverPromptTileOffsets[i];
         if (arg) {
             v = 0x1000;

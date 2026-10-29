@@ -11,7 +11,6 @@
 #include "types.h"
 
 #ifdef __cplusplus
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 #include "dBgActor_c.h"
 #include "dExtShadowModel_c.h"
 
@@ -22,30 +21,25 @@ struct daObjCtMecha03_c : dBgActor_c {
      * mSwingAccel * mSwingDir; mSwingAngle accumulates mSwingSpeed and is
      * copied into dActor_c::mAngleZ. mwccarm reuses dBgActor_c's 0x31e tail
      * padding for mSwingDir. */
-    s16 mSwingDir;                    /* 0x31e -- 1 at InitResources */
-    s16 mSwingAccel;                  /* 0x320 -- data_ov065_0211c0b0[setting], re-rolled to 0xd/0x2a under setting 2 */
-    s16 mSwingAngle;                  /* 0x322 -- 0x1964 at InitResources */
-    s16 mSwingSpeed;                  /* 0x324 */
-    s16 mSoundTimer;                  /* 0x326 -- DecIfAbove0_Short; at 0 plays bank-3 sound 0x38, reloaded as mPauseTimer + 0xf */
-    s16 mPauseTimer;                  /* 0x328 -- DecIfAbove0_Short; gates the whole swing update */
-    s32 mGroundY;                     /* 0x32c -- probe Y, then dBgCh_Gnd::clsnY on a hit */
-    dExtShadowModel_c mShadowModel;         /* 0x330 */
-    /* func_ov065_02119fe8 builds this from mAngleY, then writes X / ground Y / Z
+    s16 mSwingDir; /* 0x31e -- 1 at InitResources */
+    s16 mSwingAccel; /* 0x320 -- data_ov065_0211c0b0[setting], re-rolled to 0xd/0x2a under setting 2 */
+    s16 mSwingAngle; /* 0x322 -- 0x1964 at InitResources */
+    s16 mSwingSpeed; /* 0x324 */
+    s16 mSoundTimer; /* 0x326 -- DecIfAbove0_Short; at 0 plays bank-3 sound 0x38, reloaded as mPauseTimer + 0xf */
+    s16 mPauseTimer;                /* 0x328 -- DecIfAbove0_Short; gates the whole swing update */
+    s32 mGroundY;                   /* 0x32c -- probe Y, then dBgCh_Gnd::clsnY on a hit */
+    dExtShadowModel_c mShadowModel; /* 0x330 */
+    /* UpdateShadow builds this from mAngleY, then writes X / ground Y / Z
      * into its translation before passing it to DropShadowScaleXYZ. */
-    Matrix4x3 mShadowMat;             /* 0x358 */
+    Matrix4x3 mShadowMat; /* 0x358 */
 
     int CleanupResources();
     int InitResources();
     int Behavior();
     int Render();
 
-    /* Helpers taking this. The ROM address is the method name. */
-    void func_ov065_02119fe8();
-    int func_ov065_0211a114();
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void UpdateShadow();     /* drops the shadow under the swinging bob */
+    int UpdateModelMatrix(); /* returns the translation Z it stored */
 
     /* Declared last and inline so class instantiation emits the retail D1/D0
      * pair in cartridge order without a separate leaf D2 body. */

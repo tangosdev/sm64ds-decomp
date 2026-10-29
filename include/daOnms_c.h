@@ -19,7 +19,7 @@
 #include "types.h"
 
 /* dBgActor_c.h deliberately selects the flat Matrix4x3 spelling before
- * Model.h. It must therefore be the first ownership header included here. */
+ * dExtSimpleModel_c.h. It must therefore be the first ownership header included here. */
 #include "dBgActor_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"

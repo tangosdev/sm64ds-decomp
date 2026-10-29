@@ -88,7 +88,7 @@ def conflict(a, b):
 
 # --------------------------------------------------------------------------- E1
 # ov000 is loaded, entered at its own base address, and unloaded again inside one
-# function -- src/func_0201a2f8.c:41-43 --
+# function -- src/func_0201a2f8.cpp:44-46 --
 #
 #     LoadOverlay((int)&overlay_0);
 #     func_020aa420();                 /* == ov000's base address */

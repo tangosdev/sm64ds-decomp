@@ -124,9 +124,12 @@ struct dActor_c : dBase_c {
     s32 mHorzSpeed;         /* 0x098 */
     s32 mVertAccel;         /* 0x09c -- fix12, negative (gravity) */
     s32 mTerminalVelocity;  /* 0x0a0 -- fix12, negative */
-    s32 unk_0a4;            /* 0x0a4 */
+    /* mSpeedX, mVertSpeed and mSpeedZ are the velocity vector:
+       UpdatePosWithOnlySpeed adds it to mPos, and UpdatePosWithHorzSpeedAndAng
+       derives the x/z words from mHorzSpeed along the heading mPrevAngleY. */
+    s32 mSpeedX;            /* 0x0a4 */
     s32 mVertSpeed;         /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac */
+    s32 mSpeedZ;            /* 0x0ac */
     /* Two populations of bits share this word. The profile descriptor's +0x08
      * word is copied in verbatim by the constructor; the framework then sets and
      * clears its own bits in the same storage. Across the 353 soundly-parsed
@@ -237,6 +240,18 @@ struct dActor_c : dBase_c {
     s16  HorzAngleToCPlayer();
     s16  HorzAngleToFPlayer();
     s16  HorzAngleToCPlayerOrAng();
+    /* Both took a by-value Fix12<int> in their old mangled names; measured
+       2026-10-23, the honest parameter is the scalar Fix12i and both reproduce
+       as real methods (0x02010e08/0x24 and 0x0200f70c/0x54).
+       notes/mwccarm-codegen.md 6az. Parameters are unnamed on purpose: a
+       named class-scope parameter consumes an @NNN number in every consumer.
+       SetRanges(clipOffsetY, clipRadius, clipDistance, farDistance);
+       IsTooFarAwayFromPlayer(threshold). */
+    void SetRanges(Fix12i, Fix12i, Fix12i, Fix12i);
+    int IsTooFarAwayFromPlayer(Fix12i);
+    /* Intensity is a 0x1000-scaled Fix12i, not a by-value Fix12<int>. */
+    void Earthquake(const Vector3 &, Fix12i);
+
     bool IsPlayerInRange(s32 maxDist);
     bool IsPlayerInRange(const Vector3 &pos, s32 maxDist);
 
@@ -294,7 +309,9 @@ struct dActor_c : dBase_c {
     void KillAndTrackInDeathTable();
     void TrackInDeathTable();
     void UntrackInDeathTable();
-    void SpawnSoundObj(u32 soundObjParam);
+    /* Returns the spawned daSoundObj_c: r0 is Spawn's result at the return,
+       and daStar_c and Player keep or test it. */
+    dActor_c *SpawnSoundObj(u32 soundObjParam);
     s32  GetWaterHeightWDW();
     bool DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos);
 
@@ -326,19 +343,28 @@ struct dActor_c : dBase_c {
     static dActor_c *Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                         const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 
-    /* Declared for callers only. Methods whose mangled names carry a by-value
-       class parameter must never be DEFINED as methods -- CW homes those to the
-       stack, costing +0x14. See notes/mwccarm-codegen.md 6az. */
-    void SpawnFireball(const Vector3 &pos, const Vector3_16 *rot,
-                        Fix12<int> horzSpeed, Fix12<int> unk35c, u32 param1);
-    bool IsPlayerInRange(Fix12<int> posX, Fix12<int> posY, Fix12<int> posZ,
-                          s32 maxDist);
-    void DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12<int> scaleX,
-                            Fix12<int> scaleY, Fix12<int> scaleZ, u32 opacity);
-    s16  ReflectAngle(Fix12<int> normalX, Fix12<int> normalZ, s16 angToReflect);
-    void SpawnCoins(const Vector3 &pos, u32 count, Fix12<int> spread, s16 angle);
-    void DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12<int> radius,
-                             Fix12<int> depth, u32 opacity);
+    /* MEASURED 2026-10-26: the five Fix12 declarations below -- SpawnFireball,
+       DropShadowScaleXYZ, ReflectAngle, SpawnCoins, DropShadowRadHeight -- are
+       real methods now, bytes unchanged (IsPlayerInRange was already scalar).
+       They used to be "declared for callers only" on the rule that a mangled
+       name carrying a by-value class parameter can never be DEFINED as a
+       method, because CW homes such a parameter to the stack (+0x14). The
+       by-value class was never in the ROM -- it was our own spelling of a
+       20.12 scalar -- so with Fix12i the rule does not apply. The parameter
+       NAMES here are load-bearing: a class-scope named parameter consumes an
+       @NNN number in every consumer, so they must not be dropped.
+       notes/mwccarm-codegen.md 6az. */
+    /* Returns the spawned ball; see the definition. */
+    dActor_c *SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix12i horzSpeed,
+                            Fix12i targetSpeed, u32 param1);
+    bool IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDist);
+    void DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12i scaleX, Fix12i scaleY,
+                            Fix12i scaleZ, u8 opacity);
+    s16 ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect);
+    /* count is signed; see the branch evidence at the definition. */
+    void SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angle);
+    void DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12i radius, Fix12i depth,
+                             u8 opacity);
 
     /* INLINE, AND ON THIS CLASS RATHER THAN A BASE -- both are load-bearing.
        CW builds D0 (slot 17) as "run the destructor, then call operator delete",
@@ -409,9 +435,12 @@ struct dActor_c {
     s32 mHorzSpeed;         /* 0x098 */
     s32 mVertAccel;         /* 0x09c */
     s32 mTerminalVelocity;  /* 0x0a0 */
-    s32 unk_0a4;            /* 0x0a4 */
+    /* mSpeedX, mVertSpeed and mSpeedZ are the velocity vector:
+       UpdatePosWithOnlySpeed adds it to mPos, and UpdatePosWithHorzSpeedAndAng
+       derives the x/z words from mHorzSpeed along the heading mPrevAngleY. */
+    s32 mSpeedX;            /* 0x0a4 */
     s32 mVertSpeed;         /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac */
+    s32 mSpeedZ;            /* 0x0ac */
     u32 mFlags;             /* 0x0b0 */
     s32 mClipOffsetY;       /* 0x0b4 */
     s32 mClipRadius;        /* 0x0b8 */

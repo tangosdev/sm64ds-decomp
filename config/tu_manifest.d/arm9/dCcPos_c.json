@@ -28,7 +28,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj",
+      "symbol": "_ZN8dCcPos_c4InitERK7Vector3iijj",
       "address": "0x020147d4",
       "size": "0x00000044",
       "legacy_source": "src/_ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj.cpp",

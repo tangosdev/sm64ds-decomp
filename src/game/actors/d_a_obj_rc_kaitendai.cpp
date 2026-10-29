@@ -11,20 +11,14 @@
  * daObjRc_Kaitendai_c, RC_KAITEN registry). Retail does not store
  * that spelling.
  *
- * deslop
- * Leftover: func_ov002_020b676c / func_ov002_020b66a8 are still the
- *   linker names of daObjKaitendai_c Init/Cleanup (the base leaves
- *   those slots pure virtual). Naming belongs in ov002.
- * Leftover: the two start-angle halfwords 02113b18 / 02113b1c sit
- *   8 bytes before typeinfo at 02113b20; they are not owned here.
- * Leftover: g_profile_RC_KAITEN lives outside this TU (S14).
+ * Notes:
+ * - The two start-angle halfwords 02113b18 / 02113b1c sit 8 bytes before
+ *   typeinfo at 02113b20; they are not owned here.
+ * - g_profile_RC_KAITEN lives outside this TU.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_rc_kaitendai_AssetId {
-    ASSET_RC_KAITEN_BMD = 0x06a7,
-    ASSET_RC_KAITEN_KCL = 0x06a8
-};
+enum d_a_obj_rc_kaitendai_AssetId { ASSET_RC_KAITEN_BMD = 0x06a7, ASSET_RC_KAITEN_KCL = 0x06a8 };
 
 #include "daObjRc_Kaitendai_c.h"
 #include "SharedFilePtr.h"
@@ -36,8 +30,7 @@ struct ResourceDescriptor {
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-typedef char ResourceDescriptor_size_must_be_0x0c[
-    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x6a7, collision file 0x6a8). mwcc emits
@@ -47,47 +40,35 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
  * names the handles directly; the ResourceDescriptor row above points at
  * them. */
 struct RcKaitendaiModelFile : SharedFilePtr {
-    u32 words[2];
-
     RcKaitendaiModelFile(u32 fileID);
     ~RcKaitendaiModelFile();
 };
 
 struct RcKaitendaiCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     RcKaitendaiCollisionFilePtr(u32 fileID);
     ~RcKaitendaiCollisionFilePtr();
 };
 
-extern "C" {
-int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
-                        s16 angle);
-int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov036_02113b2c;
 extern s16 data_ov036_02113b18;
 extern s16 data_ov036_02113b1c;
-}
 
 // @symbol daObjRc_Kaitendai_c_classInit
-extern "C" daObjRc_Kaitendai_c *daObjRc_Kaitendai_c_classInit()
-{
+extern "C" daObjRc_Kaitendai_c *daObjRc_Kaitendai_c_classInit() {
     return new daObjRc_Kaitendai_c();
 }
 
 // @symbol _ZN19daObjRc_Kaitendai_c13InitResourcesEv
-s32 daObjRc_Kaitendai_c::InitResources()
-{
+s32 daObjRc_Kaitendai_c::InitResources() {
     s16 angle = data_ov036_02113b18;
     if ((param1 & 0xff) == 1)
         angle = data_ov036_02113b1c;
-    return func_ov002_020b676c(this, &data_ov036_02113b2c, angle);
+    return InitResourcesFrom(&data_ov036_02113b2c, angle);
 }
 
 // @symbol _ZN19daObjRc_Kaitendai_c16CleanupResourcesEv
-s32 daObjRc_Kaitendai_c::CleanupResources()
-{
-    return func_ov002_020b66a8(this, &data_ov036_02113b2c);
+s32 daObjRc_Kaitendai_c::CleanupResources() {
+    return CleanupResourcesFrom(&data_ov036_02113b2c);
 }
 
 /* Static-init globals (was the handwritten __sinit_ov036_0211261c shard).

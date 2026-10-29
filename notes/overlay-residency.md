@@ -53,7 +53,7 @@ Note what this does **not** say: [ov000](../config/arm9/overlays/ov000/symbols.t
 
 ## 3. [ov000](../config/arm9/overlays/ov000/symbols.txt) is a boot overlay (**E1**)
 
-`src/func_0201a2f8.c` -- loaded, entered at its own base address, unloaded, all
+`src/func_0201a2f8.cpp` -- loaded, entered at its own base address, unloaded, all
 before anything else exists:
 
 ```c
@@ -201,10 +201,10 @@ ambiguity -- and it is now the biggest single block of work left.
 | `src/game/actors/d_a_obj_key.cpp` (`daObjKey_c::StateStarJump`, was `func_ov089_0213162c`) | [ov089](../config/arm9/overlays/ov089/symbols.txt) | [ov089](../config/arm9/overlays/ov089/symbols.txt) is loaded by many levels. The source names `data_ov055_02111b68`, the one unambiguous `kind:bss` row at that address, following func_ov002_020e3e00 in `src/game/player/Player.cpp` for its neighbours `0x02111b64`/`0x02111b6c`. |
 | `src/game/actors/d_a_propeller_heyho_fire.cpp` (`daPropeller_Heyho_Fire_c::InitResources`) | [ov002](../config/arm9/overlays/ov002/symbols.txt) | [ov065](../config/arm9/overlays/ov065/symbols.txt) vs [ov075](../config/arm9/overlays/ov075/symbols.txt) (see below). **Since settled:** the source names `data_ov065_0211d610`, the unflagged candidate, which CleanupResources already used. |
 | `src/_ZN8CapEnemy6AddCapEj.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov007](../config/arm9/overlays/ov007/symbols.txt); arm9 spans both. |
-| `src/unnamed/arm9/0200/func_02008b4c.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov006](../config/arm9/overlays/ov006/symbols.txt); both hold a real function. |
+| `src/engine/view/d_camera.cpp` (func_02008b4c) | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov006](../config/arm9/overlays/ov006/symbols.txt); both hold a real function. |
 | `func_02029408` (in `src/game/stages/d_s_stage_methods.cpp`) | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) `_ZN6Player8CanPauseEv` vs [ov004](../config/arm9/overlays/ov004/symbols.txt) (see below). |
-| `src/unnamed/arm9/0201/func_0201a458.c` | [arm9](../config/arm9/symbols.txt) | [ov062](../config/arm9/overlays/ov062/symbols.txt) vs [ov065](../config/arm9/overlays/ov065/symbols.txt), and [ov006](../config/arm9/overlays/ov006/symbols.txt) vs [ov100](../config/arm9/overlays/ov100/symbols.txt) (see below). |
-| `src/func_0201a2f8.c` | [arm9](../config/arm9/symbols.txt) | the one place [ov000](../config/arm9/overlays/ov000/symbols.txt) *is* the answer. The tool refuses instead of answering ov001, which is the point of passing the function; the source above settles it by inspection. |
+| `src/unnamed/arm9/0201/func_0201a428.cpp` | [arm9](../config/arm9/symbols.txt) | [ov062](../config/arm9/overlays/ov062/symbols.txt) vs [ov065](../config/arm9/overlays/ov065/symbols.txt), and [ov006](../config/arm9/overlays/ov006/symbols.txt) vs [ov100](../config/arm9/overlays/ov100/symbols.txt) (see below). |
+| `src/func_0201a2f8.cpp` | [arm9](../config/arm9/symbols.txt) | the one place [ov000](../config/arm9/overlays/ov000/symbols.txt) *is* the answer. The tool refuses instead of answering ov001, which is the point of passing the function; the source above settles it by inspection. |
 
 Four of these have a second, weaker line of evidence available. **dsd flags a symbol
 `ambiguous` in `symbols.txt` when it invented it only to have a name for a possible
@@ -230,7 +230,7 @@ structure problem, not a lookup.
 
 ## 10. A misnaming found on the way
 
-`overlay_64` and `overlay_66` in [src/func_ov007_020cc2cc.c](../config/arm9/overlays/ov007/symbols.txt) and [src/unnamed/ov075/func_ov075_02117bc4.c](../config/arm9/overlays/ov075/symbols.txt) are **overlay ids 100 and 102**: the literals in the ROM are `0x64` and `0x66` and whoever named them wrote the hex digits as decimal. `func_02034fbc` in [src/game/stages/d_s_mb.cpp](../src/game/stages/d_s_mb.cpp) now names `overlay_100` and `overlay_102`.
+`overlay_64` and `overlay_66` in [src/func_ov007_020cc2cc.c](../config/arm9/overlays/ov007/symbols.txt) and `dScEntry_c::EnterQuit` in [src/game/stages/d_s_entry_methods.cpp](../src/game/stages/d_s_entry_methods.cpp) are **overlay ids 100 and 102**: the literals in the ROM are `0x64` and `0x66` and whoever named them wrote the hex digits as decimal. `func_02034fbc` in [src/game/stages/d_s_mb.cpp](../src/game/stages/d_s_mb.cpp) now names `overlay_100` and `overlay_102`.
 `overlay_75` next to them is genuine decimal 75 (`0x4b`), so the convention is not
 even consistent. Taken literally, [ov064](../config/arm9/overlays/ov064/symbols.txt) and [ov066](../config/arm9/overlays/ov066/symbols.txt) overlap and `LoadOverlay` would `Crash()`; [ov100](../config/arm9/overlays/ov100/symbols.txt) and [ov102](../config/arm9/overlays/ov102/symbols.txt) do not. Renaming them is a separate, easy change.
 

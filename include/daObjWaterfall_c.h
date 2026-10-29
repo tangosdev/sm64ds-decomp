@@ -4,8 +4,6 @@
 #include "types.h"
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Waterfall mist. No model: InitResources picks a particle ID from the
  * current course, then every frame Behavior (re)issues that particle at
@@ -16,9 +14,9 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * field closes on it.
  */
 struct daObjWaterfall_c : dActor_c {
-    u8  pad_0d0[0x4];
-    u16 mParticleID;     /* 0x0d4 */
-    u8  pad_0d6[0x2];
+    u8 pad_0d0[0x4];
+    u16 mParticleID; /* 0x0d4 */
+    u8 pad_0d6[0x2];
     /* Handle, not a pointer: Behavior stores Particle::System::New's
        result and feeds it back as the unique-ID argument next frame.
        Nothing dereferences it. */
@@ -28,16 +26,11 @@ struct daObjWaterfall_c : dActor_c {
     virtual ~daObjWaterfall_c() {}
     virtual s32 InitResources(); /* slot 0 */
     virtual s32 Behavior();      /* slot 6 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjWaterfall_c_size_must_be_0xdc[
-    sizeof(daObjWaterfall_c) == 0xdc ? 1 : -1];
+typedef char daObjWaterfall_c_size_must_be_0xdc[sizeof(daObjWaterfall_c) == 0xdc ? 1 : -1];
 #endif
 
 #endif /* DAOBJWATERFALL_C_H */

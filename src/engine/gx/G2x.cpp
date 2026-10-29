@@ -41,26 +41,23 @@ void G2x::SetBGyAffine(volatile unsigned short *p, Matrix2x2 *m, int a, int b, i
     *(volatile int *)(p + 6) = y >> 4;
 }
 
-// @symbol _ZN3G2x13SetBlendAlphaEPVttttj
-/* The final argument is 32-bit: the ROM loads its stack slot with `ldr`, not
-   `ldrh`. The former `...ttttt` name contradicted that instruction. */
-void G2x::SetBlendAlpha(volatile u16 *reg, u16 firstTarget,
-                        u16 secondTarget, u16 firstAlpha,
-                        u32 secondAlpha)
-{
+// @symbol _ZN3G2x13SetBlendAlphaEPVtiiii
+/* The Nitro SDK's G2x_SetBlendAlpha_(vu16 *, int, int, int, int). The final
+   argument is 32-bit: the ROM loads its stack slot with `ldr`, not `ldrh`. */
+void G2x::SetBlendAlpha(volatile u16 *reg, int firstTarget, int secondTarget, int firstAlpha,
+                        int secondAlpha) {
     *(volatile u32 *)reg =
         ((firstTarget | 0x40) | (secondTarget << 8)) |
         ((firstAlpha | (secondAlpha << 8)) << 16);
 }
 
-// @symbol _ZN3G2x18SetBlendBrightnessEPVtts
+// @symbol _ZN3G2x18SetBlendBrightnessEPVtii
 /* Writes the hardware brightness registers behind `p`. The SIGN of `amt`
  * selects the mode rather than a separate flag: negative sets bits 0xc0
  * (fade to black) and writes the magnitude, positive sets 0x80 (fade to
  * white) and writes the value as-is. So one signed argument carries both
  * "which way" and "how much". */
-void G2x::SetBlendBrightness(volatile unsigned short *p, unsigned short val, short amt)
-{
+void G2x::SetBlendBrightness(volatile unsigned short *p, int val, int amt) {
     if (amt < 0) {
         p[0] = val | 0xc0;
         p[2] = -amt;

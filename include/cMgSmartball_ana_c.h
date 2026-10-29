@@ -3,7 +3,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x38, from _Znwj(0x38) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
+ * SIZE 0x38, from operator new(0x38) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
  * this class adds exactly one field: a 4-byte countdown at 0x34.
  *
  * WHAT THE ONE FIELD IS. mRespawnTimer is armed with 0x3c -- one second --

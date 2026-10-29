@@ -15,7 +15,7 @@ struct G3X {
     /* All static -- see the header note. */
     static void SetClearColor(unsigned short a, int b, int c, int d, bool e);
     static void SetFogTable(void *table);
-    static void SetFog(bool enable, int a, int b, int c);
+    static void SetFog(int enable, int a, int b, int c);
 #endif
 };
 

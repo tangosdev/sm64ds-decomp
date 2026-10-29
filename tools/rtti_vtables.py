@@ -38,6 +38,15 @@ Validated against the documented counts: fBase_c (= the tree's ActorBase) reads 
 slots, matching the 18-slot virtual order in notes/cpp-naming-guide.md, and Animation
 reads 2, matching notes/model-rtti-names.md.
 
+Which ROM it came from
+----------------------
+The tables are read out of extracted/dsd/arm9_overlays, a dsd extraction, while the
+byte gates compare against extracted/overlays. A stale extraction put 364 of 426
+tables wrong with nothing saying so. So this pass refuses to run unless the two agree
+(tools/rom_fingerprint.py), and the file it writes records the hash of the ROM images
+under "_rom_fingerprint", which tu_map.py and class_scaffold.py check before they use
+it. Read the file through rom_fingerprint.split() if you iterate it as {class: table}.
+
 Usage
 -----
     python tools/rtti_vtables.py --report            # every class, slot counts
@@ -57,6 +66,10 @@ import struct
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "tools"))
+
+import rom_fingerprint as RF  # noqa: E402
+
 RTTI = REPO / "build" / "rtti.json"
 ARM9 = REPO / "extracted" / "arm9_dec.bin"
 OVDIR = REPO / "extracted" / "dsd" / "arm9_overlays"
@@ -356,8 +369,14 @@ def main():
     ap.add_argument("--out", default=str(REPO / "build" / "rtti_vtables.json"))
     a = ap.parse_args()
 
+    # Refuse to derive from an extraction that is not the ROM: a stale one put 364 of
+    # 426 vtables wrong once and every later tool read the file as fact.
+    RF.require_matching_extraction("rtti_vtables")
     tables, parent, by_name, diag = build()
-    pathlib.Path(a.out).write_text(json.dumps(tables, indent=1) + "\n",
+    # The fingerprint goes in the file so a reader can tell which ROM it came from. It
+    # is a "_"-prefixed key: tools that iterate {class: table} go through RF.split().
+    stamped = RF.stamp(tables)
+    pathlib.Path(a.out).write_text(json.dumps(stamped, indent=1) + "\n",
                                    encoding="utf-8", newline="\n")
 
     # self-check against the two counts the notes document

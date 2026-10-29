@@ -18,7 +18,7 @@
  *
  * CONSTRUCTION. Not spawned on its own. It is an embedded member of
  * dScDSMT_c (ov007) at offset 0x54: dScDSMT_c_classInit (dScDSMT_c's
- * factory) calls `_ZN7fBase_cnwEj(0x64)`, builds the outer object, places a
+ * factory) calls `_ZN7fBase_cnwEm(0x64)`, builds the outer object, places a
  * dGraph_c::callback_c-derived sub-object at 0x50, then constructs this
  * class's sub-object at 0x54 via _ZN10dFdDummy_cC1Ev -- which writes the full
  * dFader_c -> dFdBrightness_c -> dFdColor_c -> dFdDummy_c vtable chain and the
@@ -50,7 +50,7 @@ struct dFdDummy_c : dFdColor_c {
     dFdDummy_c();                                /* 0x02017278 */
     virtual ~dFdDummy_c();                       /* slots 0 (D1), 1 (D0) */
     virtual void AdvanceFade();                  /* slot 2 */
-    virtual int  SetBackwardTime(u32 frames);    /* slot 3 */
+    virtual int SetBackwardTime(u32 frames, u32); /* slot 3 */
     virtual int  SetForwardTime(u32 frames);     /* slot 4 */
 };
 

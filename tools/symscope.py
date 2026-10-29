@@ -63,7 +63,7 @@ per module from `config/arm9/**/symbols.txt`, never flattened.
   `data_ov000_*` references span-overlap ov003 (ov000 is 0x020aa420..0x020bf4e0,
   ov003's family starts at 0x020ad660, inside it), yet ov000 is a BOOT-ONLY
   overlay (E1): the ROM's only `LoadOverlay(0)`/`UnloadOverlay(0)` sites are
-  three consecutive lines in `func_0201a2f8` (src/func_0201a2f8.c:41-43), which
+  three consecutive lines in `func_0201a2f8` (src/func_0201a2f8.cpp:44-46), which
   unloads it again before any scene runs, so span overlap alone would have
   passed a caller that could not possibly still see it. `overlay_residency.py`
   encodes exactly these ROM-proven facts (E1-E6, its own module docstring) and

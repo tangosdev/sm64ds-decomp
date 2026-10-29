@@ -3,8 +3,6 @@
 
 #include "types.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Jolly Roger Bay floating plank (`ita` = board).
  *
@@ -18,16 +16,10 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 #include "daObjFloatBoard_c.h"
 
 struct daObjKi_Ita_c : daObjFloatBoard_c {
-    int InitResources();               /* slot  0 */
+    int InitResources(); /* slot  0 */
 
-    static void *operator new(unsigned long size);
     virtual ~daObjKi_Ita_c() {}
 };
-
-inline void *daObjKi_Ita_c::operator new(unsigned long size)
-{
-    return _ZN7fBase_cnwEj(size);
-}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

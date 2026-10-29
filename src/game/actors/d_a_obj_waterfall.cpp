@@ -11,54 +11,30 @@
  * daObjWaterfall_c_classInit is reconstructed (RTTI daObjWaterfall_c,
  * WATERFALL registry). Retail does not store that spelling.
  *
- * deslop
- * Leftover: Particle::System::New is a TU-local inline that forwards
- *   to the 5Fix12IiE reconstructed symbol. Declaring the real
- *   Fix12<int> parameters will not convert from s32 mPosX (no ctor)
- *   and the pun/temps DIFF. Declaring int parameters mangle to a
- *   different symbol. Do not put the typed mangled extern on
- *   Particle__System.h.
- * Leftover: data_0209f2f8 is LEVEL_ID in verified.tsv; a local
- *   `signed char &LEVEL_ID` alias size-DIFF 999. Rename is symbols.txt.
- * Leftover: three scalar mPosX/Y/Z into New. A Vector3 overlay of
- *   `&mPosX` size-DIFF 999 (z is the first stack arg, not an ldm).
+ * NOTES:
+ * - data_0209f2f8 is LEVEL_ID in verified.tsv; a local
+ *   `signed char &LEVEL_ID` alias size-DIFFs, so the rename belongs in
+ *   symbols.txt.
+ * - Behavior passes mPosX/Y/Z as three scalars: z is the first stack
+ *   argument, stored on its own rather than through an ldm of mPos.
  */
 
 #include "daObjWaterfall_c.h"
 #include "SpawnInfo.h"
+#include "Particle__System.h"
 
-extern "C" s8 data_0209f2f8; /* LEVEL_ID */
-
-extern "C" int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    unsigned handle, unsigned effectID, int x, int y, int z,
-    const void *dir, void *cb);
-
-namespace Particle {
-struct Callback;
-/* Forwarder only -- not the layout in Particle__System.h. Inlines to
-   the reconstructed 5Fix12IiE symbol so the call spells
-   Particle::System::New. See leftover. */
-struct System {
-    static int New(unsigned handle, unsigned effectID,
-                   int x, int y, int z, const void *dir, Callback *cb)
-    {
-        return _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            handle, effectID, x, y, z, dir, cb);
-    }
-};
-}
+extern s8 data_0209f2f8; /* LEVEL_ID */
 
 enum {
     kCourse16 = 0x16,
     kCourse21 = 0x21,
-    kWaterfallMistDefault  = 0x24,
+    kWaterfallMistDefault = 0x24,
     kWaterfallMistCourse16 = 0x71,
     kWaterfallMistCourse21 = 0xeb
 };
 
 // @symbol daObjWaterfall_c_classInit
-extern "C" daObjWaterfall_c *daObjWaterfall_c_classInit()
-{
+extern "C" daObjWaterfall_c *daObjWaterfall_c_classInit() {
     return new daObjWaterfall_c();
 }
 
@@ -71,12 +47,10 @@ extern "C" SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
     0x00060000,
     0x00300000,
     0x02000000,
-    0
-};
+    0};
 
 // @symbol _ZN16daObjWaterfall_c13InitResourcesEv
-s32 daObjWaterfall_c::InitResources()
-{
+s32 daObjWaterfall_c::InitResources() {
     mParticleID = kWaterfallMistDefault;
     switch (data_0209f2f8) {
     case kCourse16:
@@ -90,9 +64,8 @@ s32 daObjWaterfall_c::InitResources()
 }
 
 // @symbol _ZN16daObjWaterfall_c8BehaviorEv
-s32 daObjWaterfall_c::Behavior()
-{
-    mParticleHandle = Particle::System::New(
-        mParticleHandle, mParticleID, mPosX, mPosY, mPosZ, 0, 0);
+s32 daObjWaterfall_c::Behavior() {
+    mParticleHandle =
+        Particle::System::New(mParticleHandle, mParticleID, mPosX, mPosY, mPosZ, 0, 0);
     return 1;
 }

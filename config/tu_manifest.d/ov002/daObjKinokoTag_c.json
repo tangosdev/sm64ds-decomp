@@ -161,6 +161,13 @@
       "canonical_module": "ov002",
       "canonical_address": "0x02108cf4",
       "reason": "InitResources naturally emits the complete 0x84-byte class vtable storage. romdata_check applies the measured eight-byte public-address-point bias and proves every slot before isolation."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior copies the tag's position into a real Vector3 for LandingDustAt, so the TU emits Vector3's vague-linkage destructor, so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ],
   "notes": [
@@ -168,7 +175,7 @@
     "SpawnMegaMushroom and TrySpawnMegaMushroom are readable inferred private spellings. Their class ownership, call graph, bodies, relocations, and codegen are proven; their exact original English spellings are not.",
     "Both factories are return new daObjKinokoTag_c(); the leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size) until #2570. KINOKO_TAG and KINOKO_CREATE_TAG both construct daObjKinokoTag_c, so one global daObjKinokoTag_c_classInit spelling would collide; the exact original factory distinction is unresolved and neither factory is renamed.",
     "g_profile_KINOKO_TAG and g_profile_KINOKO_CREATE_TAG are reconstructed source-style names: SM64DS proves the literal registry IDs, descriptor/factory relationships, and class identity; later EAD lineage supplies the global spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were MegaMushroomTag_SpawnInfo and MegaMushroomCreateTag_SpawnInfo.",
-    "The PILE (daObjPile_c.h) backlink at +0x32c remains a measured seam; adding dActor_c *mKinokoTag to daObjPile_c.h is shared-header work.",
+    "Behavior writes the nearest PILE's backlink through daObjPile_c::mLinkedTag (+0x32c), byte-identical to the old raw-offset store.",
     "The resource SharedFilePtr at 0x0210da30 and __sinit_ov002_02100560 are external to this class TU and are not claimed."
   ],
   "verification": {

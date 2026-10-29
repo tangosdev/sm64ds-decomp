@@ -1,4 +1,7 @@
 //cpp
+namespace Particle {
+struct Callback;
+}
 /* daObjTatefuda_c: the wooden signpost (TATEFUDA profile, ov002).
  *
  * The whole unit, ov002 .text 0x020badd0..0x020bc414, 29 functions: the
@@ -39,19 +42,13 @@
  *   block moves under 2004/b56.
  * - Behavior's `enum Bool` casts are a measured codegen view: plain `int`
  *   spellings size-DIFF under 2004/b56.
- * - Still raw: the holder's word at +0xc8 (Behavior, Render; inside
- *   dActor_c's unnamed 0xc5..0xcb padding), and the offsets into the holder's
- *   body Model (the func_ov002_020e496c result) in AttachToHolder: +0x14
- *   (ModelBase.h's data.transforms), +0x1c (mat4x3), +0x58 (the animation's
- *   current frame, per Player.h) and +0x2a0 (the matrix of bone 14).
  * - Unrecovered meanings: mFlags bits 0x100, 0x400, 0x2000, 0x4000 and
  *   0x4000000 as this class uses them, hit-flag bit 0x8000000 and bits
  *   0x2000/0x4000000 of mdCcAc_c.flags, the global words data_0209b454,
  *   data_0209d660, data_0209d6bc and data_0209f284, the Player::Hurt
  *   arguments after the first two, and what the player-side calls
  *   func_ov002_020bec84 and func_ov002_020bec9c test and start.
- * - dCcAc_c::Init, dBgCh_Actr::Init, DropShadow, Particle::New and the
- *   Player/Sound helpers stay mangled scalar externs (Fix12<int>-by-value
+ * - The Player helpers stay mangled scalar externs (Fix12<int>-by-value
  *   member form is the 6az wall).
  * - SignPost_ClsnFile / SignPost_ModelFile keep their coined BSS names
  *   (historical, like the Spawn aliases).
@@ -79,9 +76,10 @@ enum daObjTatefuda_c_AssetId {
 #include "dBgW.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgCh_Actr.h"
 #include "dCc_c.h"
+#include "math/Approach.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -126,20 +124,16 @@ struct CLPS_Block; struct Vector3_16;
  * their compiler-generated undefined member imports onto the existing
  * evidence-bounded ROM symbols. */
 struct SignPostModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     SignPostModelFilePtr(u32 fileID);
     ~SignPostModelFilePtr();
 };
 
 struct SignPostCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     SignPostCollisionFilePtr(u32 fileID);
     ~SignPostCollisionFilePtr();
 };
 
-/* BMD (Model::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
+/* BMD (dExtSimpleModel_c::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
 extern "C" SignPostModelFilePtr SignPost_ModelFile;
 extern "C" SignPostCollisionFilePtr SignPost_ClsnFile;
 
@@ -150,14 +144,13 @@ enum {
 };
 
 extern "C" {
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, int b, int d, unsigned int e, unsigned int f);
 extern void Matrix4x3_FromRotationY(void *, int);
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Matrix4x3* m, int x, int y, int z);
 extern struct Matrix4x3 data_020a0e68;
-extern char *func_ov002_020e496c(void *p);
+extern char *func_ov002_020e496c(Player *p);
 extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void Vec3_Lsl(struct Vec3 *d, struct Vec3 *s, int sh);
@@ -166,7 +159,14 @@ extern int data_ov002_020ff0d4[];
 extern int data_ov002_020ff0d8[];
 extern int data_ov002_020ff0dc[];
 extern "C" void func_02012694(int a, void *b);
-extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_( u32 id, Fix12i x, Fix12i y, Fix12i z);
+namespace Particle {
+struct System {
+    static void NewSimple(u32 id, Fix12i x, Fix12i y, Fix12i z);
+
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+    static u32 NewUnkCallback818(u32, u32, int, int, int, const ::Vector3_16f *);
+};
+}
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern s16 data_02082214[];
@@ -175,23 +175,20 @@ extern u8 data_0209d6bc;
 extern u8 data_0209f284;
 extern s32 Vec3_HorzDist(struct Vector3 *a, struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
-extern int func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
-extern void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh( void *player, void *actor, unsigned int msg, struct Vector3 *pos, unsigned int a, unsigned int b);
-extern void func_02012790(int id);
-extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* thiz, void* v, unsigned a, int b, unsigned c, unsigned d, unsigned e);
-extern void _Z14ApproachLinearRiii(int* p, int a, int b);
+extern void func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
 extern "C" unsigned int data_0209b454;
 extern "C" void AttachToHolder(struct daObjTatefuda_c *self);
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
-extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a, short b, short c, int fix);
-extern "C" void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern "C" u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const Vector3_16f *v);
-extern "C" void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *m, int a, int b, int c, u32 j);
-extern "C" void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern "C" void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v,
+                                         void *cb);
+extern "C" u32 d_a_obj_tatefudaNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
+                                                     const Vector3_16f *v);
 extern "C" void RebuildModelMatrix(struct daObjTatefuda_c *self);
-extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh, CLPS_Block &b);
-extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_( void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v, Vector3_16 *v2);
+extern "C" void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
+                                      CLPS_Block &b);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v,
+                         Vector3_16 *v2);
 extern "C" CLPS_Block data_ov002_0210d714;
 }
 
@@ -214,23 +211,20 @@ extern "C" daObjTatefuda_c *daObjTatefuda_c_classInit(void)
     return new daObjTatefuda_c;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 --_ZN15daObjTatefuda_c13InitResourcesEv, 0x020bc240, size 0x188 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-/* Model::LoadFile and dBgW_Kc::LoadFile by their real ROM symbols, carried
+/* dExtSimpleModel_c::LoadFile and dBgW_Kc::LoadFile by their real ROM symbols, carried
    forward from #1554. decl_common.h's ModelLoadFile / MeshColliderLoadFile are
    phantoms -- names no module defines -- and match.py compares relocated words as
    wildcards, so the byte gate never saw it. */
 /* THREE OF THE SHADOWS ARE GONE, because daObjTatefuda_c.h now says `daObjTatefuda_c :
-   dBgActor_c` and dBgActor_c.h brings in the real dBgActor_c, Model/ModelBase and
+   dBgActor_c` and dBgActor_c.h brings in the real dBgActor_c, dExtSimpleModel_c/dExtModel_c and
    dBgW_KcMbg. Each one is replaced by the thing it was standing in for:
 
-     ModelBase          -> mModel.SetFile, whose real declaration in
-                           include/ModelBase.h mangles identically
-                           (_ZN9ModelBase7SetFileEP8BMD_Fileii) -- only the
+     dExtModel_c          -> mModel.SetFile, whose real declaration in
+                           include/dExtModel_c.h mangles identically
+                           (_ZN11dExtModel_c7SetFileEP8BMD_Fileii) -- only the
                            return type differed, and that is not mangled.
      dBgActor_c           -> the two calls are unqualified members now.
      dBgW_KcMbg -> its real SetFile takes Fix12<int> BY VALUE, so it
@@ -242,15 +236,12 @@ extern "C" daObjTatefuda_c *daObjTatefuda_c_classInit(void)
                            and so emitted a `bl` to
                            ..._Matrix4x3isR10CLPS_Block, which exists nowhere.
                            match.py compares relocated words as wildcards, so
-                           nothing caught it.
-
-   The remaining ABI-only calls are dCcAc_c::Init and dBgCh_Actr::Init; they
-   have the same Fix12<int> problem with no collision forcing the issue yet. */
+                           nothing caught it. */
 /* dBgCh_Actr is the real class now, through this actor's header, and it
    declares StartDetectingWater itself. */
 int daObjTatefuda_c::InitResources()
 {
-    void *mf = Model::LoadFile(SignPost_ModelFile);
+    void *mf = dExtSimpleModel_c::LoadFile(SignPost_ModelFile);
     mModel.SetFile((BMD_File*)mf, 1, -1);
     mShadowModel.InitCuboid();
 
@@ -269,11 +260,10 @@ int daObjTatefuda_c::InitResources()
     UpdateShadowMatrix();
 
     void *kf = dBgW_Kc::LoadFile(SignPost_ClsnFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File*)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mdCcAc_c, (dActor_c*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
+    mdCcAc_c.Init((dActor_c *)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
 
     mPoundsLeft = 2;
     mHomePosX = mPosX;
@@ -285,16 +275,12 @@ int daObjTatefuda_c::InitResources()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, (dActor_c*)((char *)this), 0x28000, 0x28000, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- _ZN15daObjTatefuda_c8BehaviorEv, 0x020bbea4, size 0x39c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c8BehaviorEv
 /* daObjTatefuda_c::Behavior -- vtable slot 6. Real C++ method over the shared header.
  *
@@ -309,8 +295,8 @@ int daObjTatefuda_c::InitResources()
  *  1. If this sign's mFlags bit 0x4000000 and the same bit of the global word
  *     data_0209b454 are both set while a player holds it, tell that player to
  *     let go (Player::DropActor).
- *  2. If there is a holder, mFlags bit 0x4000 is set and the holder's word at
- *     +0xc8 is non-zero: put the sign on the holder (AttachToHolder), clip radius
+ *  2. If there is a holder, mFlags bit 0x4000 is set and the holder's
+ *     mCarryMatrix is non-zero: put the sign on the holder (AttachToHolder), clip radius
  *     0x20000 (32 units), and set mFlags bit 0x4000000. Otherwise clip radius
  *     0x10000 (16 units) and clear that bit.
  *  3. A hidden sign, or one that is fully pounded in (mPoundsLeft == 0), counts
@@ -380,13 +366,13 @@ int daObjTatefuda_c::Behavior()
         }
     }
 
-    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(this, -0x2000, 0, 0, 0x46000))
+    if (UpdateKillByMegaChar(-0x2000, 0, 0, 0x46000))
         return 1;
 
     if (mBreakTimer != 0) {
         int x, y, z;
-        if (_ZN4dBgW9IsEnabledEv(&mMeshCollider))
-            _ZN4dBgW7DisableEv(&mMeshCollider);
+        if (((dBgW *)&mMeshCollider)->IsEnabled())
+            ((dBgW *)&mMeshCollider)->Disable();
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x50000;
@@ -394,10 +380,10 @@ int daObjTatefuda_c::Behavior()
         ((int *)&v)[1] = y;
         ((int *)&v)[2] = z;
         if (DecIfAbove0_Byte(&mBreakTimer) != 0) {
-            *(void **)&mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
-            mParticleHandle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
+            *(void **)&mParticleHandle1 =
+                (void *)Particle::System::New(mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
+            mParticleHandle2 =
+                Particle::System::NewUnkCallback818(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
         } else {
             int x2, y2, z2;
             x2 = mPosX;
@@ -411,14 +397,13 @@ int daObjTatefuda_c::Behavior()
             Reset();
             return 1;
         }
-        _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-            this, &mShadowModel, &mShadowMat, 0x50000, 0x28000, 0x28000, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x50000, 0x28000, 0x28000, 0xf);
         return 1;
     }
 
     DecIfAbove0_Byte(&mPoundCooldown);
     if (mHidden == 0)
-        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
+        IsClsnInRange(0, 0);
     UpdateState();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -427,23 +412,19 @@ int daObjTatefuda_c::Behavior()
         if (s == STATE_THROWN) {
             RebuildModelMatrix(this);
         } else if (mPoundsLeft == 2 && (u32)s <= 1) {  /* STATE_IDLE or STATE_TALK */
-            _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-                this, &mShadowModel, &mShadowMat, 0x50000, 0x28000, 0x28000, 0xf);
+            DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x50000, 0x28000, 0x28000, 0xf);
         }
     }
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- _ZN15daObjTatefuda_c6RenderEv, 0x020bbe30, size 0x74 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 /* Draws the sign: nothing while hidden. If a player holds it (same test as
    Behavior's step 2) the sign is put on the holder first, so the model is drawn
    where the holder has it this frame. The draw itself is a call through slot 5
-   of the Model (via the local Sub041 view). */
+   of the dExtSimpleModel_c (via the local Sub041 view). */
 int daObjTatefuda_c::Render() {
     if (mHidden != 0)
         return 1;
@@ -459,9 +440,6 @@ int daObjTatefuda_c::Render() {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- _ZN15daObjTatefuda_c16CleanupResourcesEv, 0x020bbdec, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
@@ -475,9 +453,6 @@ int daObjTatefuda_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN15daObjTatefuda_c11UpdateStateEv, 0x020bbda4, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c11UpdateStateEv
 /* Runs the current state's UPDATE routine: row mState of the table, member 1.
    The rows are copied into data_ov002_0210e084 by this overlay's static
@@ -487,17 +462,11 @@ struct Entry { PMF pmf[2]; };
 extern Entry data_ov002_0210e084[];
 void daObjTatefuda_c::UpdateState() { int j = mState; (this->*data_ov002_0210e084[j].pmf[1])(); }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN15daObjTatefuda_c8SetStateEi, 0x020bbd5c, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c8SetStateEi
 /* Switches to state `state` and runs that state's ENTER routine (row state,
    member 0). */
 void daObjTatefuda_c::SetState(int state) { mState = state; int j = mState; (this->*data_ov002_0210e084[j].pmf[0])(); }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN15daObjTatefuda_c11InitCarriedEv, 0x020bbd50, size 0xc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c11InitCarriedEv
 /* CARRIED, enter: stop the sign's horizontal speed. */
 void daObjTatefuda_c::InitCarried()
@@ -505,9 +474,6 @@ void daObjTatefuda_c::InitCarried()
     mHorzSpeed = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN15daObjTatefuda_c7CarriedEv, 0x020bbcb8, size 0x98 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c7CarriedEv
 // Carried at 0x020bbcb8
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
@@ -541,9 +507,6 @@ void daObjTatefuda_c::Carried()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN15daObjTatefuda_c10InitThrownEv, 0x020bbc78, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c10InitThrownEv
 /* THROWN, enter: launch with horizontal speed 0x50000 (80 units/frame) and
  * vertical speed 0xa000 (10 units/frame), remember the holder as the last
@@ -562,9 +525,6 @@ void daObjTatefuda_c::InitThrown()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN15daObjTatefuda_c6ThrownEv, 0x020bbb14, size 0x164 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c6ThrownEv
 /* recovered: shared common types */
 /* THROWN, update. Each frame: tumble the sign about X by 0x2000 (one
@@ -580,7 +540,7 @@ void daObjTatefuda_c::Thrown()
 {
     int b;
     struct Vector3 vec;
-    void* found;
+    Player *found;
     unsigned id;
 
     {
@@ -599,7 +559,7 @@ void daObjTatefuda_c::Thrown()
     /* otherOwner: the uniqueID of the actor whose collider this one touched. */
     id = mdCcAc_c.otherOwner;
     if (id != 0) {
-        found = dActor_c::FindWithID(id);
+        found = static_cast<Player *>(dActor_c::FindWithID(id));
         if (found != 0) {
             if (found != mLastHolder) {
                 b = ((dActor_c *)found)->actorID;
@@ -608,13 +568,13 @@ void daObjTatefuda_c::Thrown()
                     vec.x = mPosX;
                     vec.y = mPosY;
                     vec.z = mPosZ;
-                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(found, &vec, 1, 0xc000, 1, 0, 1);
+                    found->Hurt(vec, 1, 0xc000, 1, 0, 1);
                 }
             }
         }
     }
 
-    _Z14ApproachLinearRiii(&mHorzSpeed, 0, 0x555);
+    ApproachLinear(mHorzSpeed, 0, 0x555);
 
     if (((dBgW *)&mMeshCollider)->IsEnabled() != 0) {
         ((dBgW *)&mMeshCollider)->Disable();
@@ -629,9 +589,6 @@ void daObjTatefuda_c::Thrown()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN15daObjTatefuda_c11InitDroppedEv, 0x020bbac8, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c11InitDroppedEv
 /* DROPPED, enter: zero the horizontal and vertical speeds, move the sign to
  * the holder's position raised by 0x64000 (100 units), and hand the holder
@@ -654,12 +611,7 @@ void daObjTatefuda_c::InitDropped()
     mHoldingPlayer = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN15daObjTatefuda_c7DroppedEv, 0x020bba28, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c7DroppedEv
-bool ApproachLinear(short &value, short target, short step);
-extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 
 /* DROPPED, update: turn the X angle toward 0x4000 (a quarter turn) by at most
  * 0x1000 per frame, move, and Kill the sign if it touched the ground, a wall or
@@ -678,9 +630,6 @@ void daObjTatefuda_c::Dropped(){
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN15daObjTatefuda_c8InitIdleEv, 0x020bba24, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c8InitIdleEv
 /* IDLE, enter: nothing to do. The PMF record binds a member, so this
    receives `this` and ignores it. */
@@ -688,9 +637,6 @@ void daObjTatefuda_c::InitIdle()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN15daObjTatefuda_c4IdleEv, 0x020bb9fc, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c4IdleEv
 /* IDLE, update: let a player start talking to the sign (TryStartTalk);
  * only if that did not happen, check for a grab or a break (CheckGrabOrBreak). */
@@ -699,9 +645,6 @@ void daObjTatefuda_c::Idle(){
   CheckGrabOrBreak();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN15daObjTatefuda_c8InitTalkEv, 0x020bb9f0, size 0xc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c8InitTalkEv
 /* TALK, enter: restart the talk walk-up at step 0. */
 void daObjTatefuda_c::InitTalk()
@@ -709,9 +652,6 @@ void daObjTatefuda_c::InitTalk()
     mTalkStep = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN15daObjTatefuda_c4TalkEv, 0x020bb614, size 0x3dc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c4TalkEv
 /* recovered: shared common types */
 /* TALK, update: daObjTatefuda_c's talk routine, ov002 0x020bb614, 0x3dc bytes.
@@ -853,13 +793,11 @@ void daObjTatefuda_c::Talk()
                     } else if (func_ov002_020bec84(player, 2) != 0 && player->FinishedAnim() != 0) {
                         func_ov002_020bec9c(player, 3, 0x40000000, 0x1000, 0);
                     } else if (func_ov002_020bec84(player, 3) != 0 && player->FinishedAnim() != 0) {
-                        _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-                            player, this, (s16)msgId, &msgPos, 0, 1);
+                        player->ShowMessage2(*this, (s16)msgId, &msgPos, 0, 1);
                     }
                 } else {
                     func_ov002_020bec9c(player, 0, 0, 0x1000, 0);
-                    _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-                        player, this, (s16)msgId, &msgPos, 0, 1);
+                    player->ShowMessage2(*this, (s16)msgId, &msgPos, 0, 1);
                 }
             }
             break;
@@ -889,9 +827,6 @@ void daObjTatefuda_c::Talk()
     mFlagSeen = data_0209f284;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN15daObjTatefuda_c12TryStartTalkEv, 0x020bb520, size 0xf4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c12TryStartTalkEv
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
@@ -912,7 +847,7 @@ int daObjTatefuda_c::TryStartTalk() {
     if (mPoundsLeft == 0)
         return 0;
     {
-        dActor_c *other = dActor_c::FindWithID(id);
+        Player *other = static_cast<Player *>(dActor_c::FindWithID(id));
         if (other == 0)
             goto fail;
         {
@@ -926,8 +861,8 @@ int daObjTatefuda_c::TryStartTalk() {
         int ang = Vec3_HorzAngle(&mPos, &other->mPos);
         if (AngleDiff(ang, mAngleY) > 0x4000)
             return 0;
-        mTalkingPlayer = (Player *)other;
-        if (((Player *)other)->StartTalk(*this, false) == 0)
+        mTalkingPlayer = other;
+        if (other->StartTalk(*this, false) == 0)
             return 0;
         SetState(STATE_TALK);
         return 1;
@@ -935,9 +870,6 @@ int daObjTatefuda_c::TryStartTalk() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN15daObjTatefuda_c16CheckGrabOrBreakEv, 0x020bb42c, size 0xf4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c16CheckGrabOrBreakEv
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
@@ -951,11 +883,11 @@ int daObjTatefuda_c::TryStartTalk() {
  * Player::TryGrab must accept; then the player becomes mHoldingPlayer and the
  * sign enters CARRIED. */
 void daObjTatefuda_c::CheckGrabOrBreak() {
-    dActor_c *other;
+    Player *other;
     unsigned int id = mdCcAc_c.otherOwner;
     if (id == 0)
         return;
-    other = dActor_c::FindWithID(id);
+    other = static_cast<Player *>(dActor_c::FindWithID(id));
     if (other == 0)
         return;
     {
@@ -976,15 +908,12 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
     }
     if ((mdCcAc_c.hitFlags & 0x1000) == 0)
         return;
-    if (((Player *)other)->TryGrab(*this) == 0)
+    if (other->TryGrab(*this) == 0)
         return;
-    mHoldingPlayer = (Player *)other;
+    mHoldingPlayer = other;
     SetState(STATE_CARRIED);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN15daObjTatefuda_c4KillEv, 0x020bb3b8, size 0x74 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c4KillEv
 /* daObjTatefuda_c::Kill() at ov002 0x020bb3b8, 0x74 bytes -- vtable slot 31.
  *
@@ -1006,9 +935,7 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
  *
  * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
- * instructions where the ROM has six. Particle::System::NewSimple stays spelled
- * as its mangled name -- its parameters are Fix12<int> BY VALUE and declaring
- * the true types changes how the caller passes them. */
+ * instructions where the ROM has six. */
 /* Reset returns void now; Kill drops the value regardless. */
 void daObjTatefuda_c::Kill()
 {
@@ -1020,7 +947,7 @@ void daObjTatefuda_c::Kill()
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xe, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0xe, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;
@@ -1029,9 +956,6 @@ void daObjTatefuda_c::Kill()
     Reset();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN15daObjTatefuda_c15OnHitByMegaCharER6Player, 0x020bb374, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c15OnHitByMegaCharER6Player
 /* daObjTatefuda_c::OnHitByMegaChar -- vtable slot 27, ov002 0x020bb374.
  * reloc: _ZTV15daObjTatefuda_c+0x6c -> 0x020bb374, _ZTV10dBgActor_c+0x6c ->
@@ -1052,9 +976,6 @@ void daObjTatefuda_c::OnHitByMegaChar(Player &player)
     mAngleY = mPrevAngleY;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN15daObjTatefuda_c15OnGroundPoundedER8dActor_c, 0x020bb27c, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c15OnGroundPoundedER8dActor_c
 /* daObjTatefuda_c::OnGroundPounded -- vtable slot 21, ov002 0x020bb27c.
  * reloc: _ZTV15daObjTatefuda_c+0x54 -> 0x020bb27c, _ZTV10dBgActor_c+0x54 ->
@@ -1094,9 +1015,6 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN15daObjTatefuda_c11OnAttacked1ER8dActor_c, 0x020bb23c, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c11OnAttacked1ER8dActor_c
 /* daObjTatefuda_c::OnAttacked1 -- vtable slot 22, ov002 0x020bb23c.
  * reloc: _ZTV15daObjTatefuda_c+0x58 -> 0x020bb23c, _ZTV10dBgActor_c+0x58 ->
@@ -1122,12 +1040,12 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
 /* -------------------------------------------------------------------------- */
 // @symbol AttachToHolder
 /* Put the sign on its holder (Behavior's step 2 and Render both call this).
- * `result` is the holder's current body model, from the shared helper
- * func_ov002_020e496c; m2 is the pointer stored at +0x14 of it, and the
- * Matrix4x3 at m2 + 0x2a0 is multiplied in. r4 picks a pose, 0 or 1: 1 when
+ * `body` is the holder's current body dExtAnmModel_c, from the shared helper
+ * func_ov002_020e496c; its mat4x3 is copied out and the matrix of bone 14
+ * (data.transforms[14]) is multiplied in. r4 picks a pose, 0 or 1: 1 when
  * the holder is front-sliding, or has lost its grabbed object while the body
- * model's word at +0x58 (the dExtFrameCtrl_c base's current frame, per Player.h)
- * satisfies (word << 4) >> 16 < 0xe. The X angle approaches data_ov002_020ff0d0[r4] by 0x1000 per call;
+ * animation's currFrame satisfies (frame << 4) >> 16 < 0xe. The X angle
+ * approaches data_ov002_020ff0d0[r4] by 0x1000 per call;
  * the sign copies the holder's Y angle (into mAngleY and mPrevAngleY); the
  * matrix is built from a translation, a pivot offset of 0x8c00 up and back, the
  * sign's rotation (Matrix4x3_ApplyInPlaceToRotationXYZExt), and a per-pose offset taken from the three tables at
@@ -1138,14 +1056,14 @@ void AttachToHolder(struct daObjTatefuda_c *self)
 {
     struct Vec3 v;
     struct Vec3 lo;
-    char *result = func_ov002_020e496c(self->mHoldingPlayer);
-    char *m2 = *(char **)(result + 0x14);
+    dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(self->mHoldingPlayer);
+    Matrix4x3 *bones = body->data.transforms;
     int r4 = 0;
 
     if (self->mHoldingPlayer->IsFrontSliding())
         r4 = 1;
     if (self->mHoldingPlayer->LostGrabbedObject()) {
-        if ((unsigned int)(*(int *)(result + 0x58) << 4) >> 0x10 < 0xe)
+        if ((unsigned int)(body->currFrame << 4) >> 0x10 < 0xe)
             r4 = 1;
     }
 
@@ -1154,8 +1072,8 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     ((int *)&v)[0] = 0;
     ((int *)&v)[1] = 0;
     ((int *)&v)[2] = 0;
-    *(struct RawMatrix4x3 *)&data_020a0e68 = *(struct RawMatrix4x3 *)(result + 0x1c);
-    MulMat4x3Mat4x3(m2 + 0x2a0, &data_020a0e68, &data_020a0e68);
+    *(struct RawMatrix4x3 *)&data_020a0e68 = *(struct RawMatrix4x3 *)&body->mat4x3;
+    MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
     v.y = data_020a0e68.t.y;
     v.z = data_020a0e68.t.z;
@@ -1200,9 +1118,6 @@ void RebuildModelMatrix(struct daObjTatefuda_c* self){
     *(struct RawMatrix4x3 *)&self->mModel.mat4x3 = *(struct RawMatrix4x3 *)&data_020a0e68;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN15daObjTatefuda_c18UpdateShadowMatrixEv, 0x020baf80, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c18UpdateShadowMatrixEv
 /* Rebuild the drop shadow's matrix: a rotation about Y by the sign's angle,
  * with the translation set to the position >> 3 (the matrix's 0x24..0x2f is
@@ -1215,9 +1130,6 @@ void daObjTatefuda_c::UpdateShadowMatrix()
     mShadowMat.t.z = mPosZ >> 3;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN15daObjTatefuda_c5ResetEv, 0x020bae9c, size 0xe4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_c5ResetEv
 /* The reset: the sign goes back where it was spawned and hides. Sets mHidden
  * and mRespawnDelay = 0x1e (30 frames), clears the break countdown and both
@@ -1245,26 +1157,19 @@ void daObjTatefuda_c::Reset()
   UpdateClsnPosAndRot();
   UpdateShadowMatrix();
   SetState(STATE_IDLE);
-  unk_31c = 0;
-  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x64000, 0x64000, 0x4800002, 0x41000);
-  if (_ZN4dBgW9IsEnabledEv(&mMeshCollider))
-  {
-    _ZN4dBgW7DisableEv(&mMeshCollider);
+  mMegaKnockback = 0;
+  mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
+  if (((dBgW *)&mMeshCollider)->IsEnabled()) {
+      ((dBgW *)&mMeshCollider)->Disable();
   }
   mdCcAc_c.Clear();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN15daObjTatefuda_cD0Ev, 0x020bae2c, size 0x70 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_cD0Ev
 /* The deleting destructor comes from the key function: Kill is defined in
  * this TU (real body, vtable slot 31), so mwcc emits the vtable, the RTTI
  * and the destructor variants alongside it. No shard tricks remain. */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN15daObjTatefuda_cD1Ev, 0x020badd0, size 0x5c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_cD1Ev
 /* The complete-object destructor comes from the key function (see D0). */
 

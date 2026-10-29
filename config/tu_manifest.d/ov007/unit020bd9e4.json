@@ -1,0 +1,118 @@
+{
+  "id": "ov007/unit020bd9e4",
+  "module": "ov007",
+  "source": "src/ui/menus/unit020bd9e4.cpp",
+  "promoted_source": "src/ui/menus/unit020bd9e4.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous run 0x020bd9e4..0x020be0dc, 11 functions, all byte-matched from the one unit source. A sub-range of build/tu_map.json's unattributed ov007 unit 0x020b72a0..0x020cc028 (397 functions), which the map cannot cut: no ROM RTTI, vtable or static initializer falls in it.",
+    "data window: the bss words 0x02104ba4..0x02104bc0 are referenced by functions 0x020bd9e4..0x020be098 and by nothing else in the overlay; the .data it reads (the sound-id table 0x02103134 and the heap-name strings \"sound\" 0x02103218 and \"sound request\" 0x02103220) is referenced by nothing else.",
+    "module shape: init func_ov007_020be00c is a direct callee of the menu's init dispatcher func_ov007_020b7138 and teardown func_ov007_020bdf60 of the teardown dispatcher func_ov007_020b6f4c, as for the other menu modules.",
+    "start edge: func_ov007_020bd960 is a leaf helper of func_ov007_020b7138 with no data references. End edge: func_ov007_020be0dc references bss 0x02104bc0, the next block, whose users run to func_ov007_020be8b8."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020bd9e4",
+      "end": "0x020be0dc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov007_020bd9e4",
+      "address": "0x020bd9e4",
+      "size": "0x00000054",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bd9e4.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov007_020bda38",
+      "address": "0x020bda38",
+      "size": "0x00000054",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bda38.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov007_020bda8c",
+      "address": "0x020bda8c",
+      "size": "0x00000140",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bda8c.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov007_020bdbcc",
+      "address": "0x020bdbcc",
+      "size": "0x00000260",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bdbcc.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov007_020bde2c",
+      "address": "0x020bde2c",
+      "size": "0x00000044",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bde2c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov007_020bde70",
+      "address": "0x020bde70",
+      "size": "0x00000040",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bde70.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov007_020bdeb0",
+      "address": "0x020bdeb0",
+      "size": "0x0000000c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bdeb0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov007_020bdebc",
+      "address": "0x020bdebc",
+      "size": "0x000000a4",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bdebc.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov007_020bdf60",
+      "address": "0x020bdf60",
+      "size": "0x000000ac",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020bdf60.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov007_020be00c",
+      "address": "0x020be00c",
+      "size": "0x0000008c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020be00c.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov007_020be098",
+      "address": "0x020be098",
+      "size": "0x00000044",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020be098.cpp",
+      "ordinal": 10
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text only: the bss block 0x02104ba4..0x02104bc0 and the .data above stay ROM-owned and are reached by extern, as the one-function sources did.",
+    "Folded from 11 one-function sources. Their extern declarations disagreed on the type of data_ov007_02104bbc / data_ov007_02104bb8 and of the arm9 sound-handle helpers' first parameter; the unit declares them all int *."
+  ],
+  "verification": {
+    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_matched": 11,
+    "functions_declared": 11,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS"
+    }
+  }
+}

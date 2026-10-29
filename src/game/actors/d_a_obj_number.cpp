@@ -10,14 +10,7 @@
  * factory is defined first. The destructor is inline in the header;
  * InitResources is the key function and this TU owns the RTTI/vtable.
  *
- * deslop leftovers:
- * - TextureSequence::SetFile 6az: InitResources passes Fix12<int> by
- *   value (notes/mwccarm-codegen.md 6az).
- * - Particle::System::NewSimple 6az: Behavior's particle 0xd2; the
- *   header has no NewSimple and the mangled name carries Fix12<int>.
- * - SharedFilePtr +4: InitResources' Prepare/SetFile read the BMD/BTP
- *   at data_ov002_0210da28 / 0210da08 / 0210d9a8 / 0210d9e8 +4;
- *   SharedFilePtr.h has no fields.
+ * What stays:
  * - data_ov002_0210d9a8 / 0210d9e8 / 0210da08 / 0210da28: this TU
  *   consumes the four handles; overlay .bss owns them. symbols.txt has
  *   no recovered name, so they are not coined.
@@ -28,15 +21,17 @@
  *   mPosX/Y/Z; reading the three fields directly DIFFs Behavior.
  * - Render's star walk keeps the `for (;;)` with a break: a `while`
  *   on the FindWithActorID result DIFFs.
- * - func_ov002_020f0918 keeps its func_ name: not a vtable slot, and
- *   the only caller is arm9 dActor_c::SpawnNumber.
- * - Matrix4x3_FromTranslation stays the C helper (no class method).
+ * - func_ov002_020f0918 keeps its func_ name and C linkage: not a vtable
+ *   slot, and the only caller, arm9 dActor_c::SpawnNumber, tail-calls it
+ *   and returns what it leaves in r0, through its own local extern.
  * - g_profile_OBJ_NUMBER is overlay .data, not licensed to this TU.
  */
 
 #include "daObjNumber_c.h"
 #include "daStar_c.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
+#include "math/MtxStack.h"
 
 /* POD view used only to preserve the three-word position ABI without
  * emitting Vector3's vague-linkage destructor. */
@@ -46,25 +41,17 @@ struct NumberPos {
     s32 z;
 };
 
-typedef char NumberPos_size_must_be_0xc[
-    sizeof(NumberPos) == 0xc ? 1 : -1];
+typedef char NumberPos_size_must_be_0xc[sizeof(NumberPos) == 0xc ? 1 : -1];
 
 extern SharedFilePtr data_ov002_0210da08;
 extern SharedFilePtr data_ov002_0210da28;
 extern SharedFilePtr data_ov002_0210d9e8;
 extern SharedFilePtr data_ov002_0210d9a8;
 
-extern "C" {
 extern int data_0209b454;
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-    void *self, void *btp, int a, int b, unsigned int c);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-    unsigned int id, int x, int y, int z);
-void func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner);
-}
 
-extern int _ZTV13daObjNumber_c[];
+/* local extern: defined below; no header declares it. */
+extern "C" void func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -76,46 +63,34 @@ extern int _ZTV13daObjNumber_c[];
  *
  * Every instruction the cartridge has here falls out of the one `new`.
  * 0x020f0d94 loads 336 = 0x150 -- the class's own size -- into
- * fBase_c::operator new; dActor_c's C2, this class's vptr, Model C1 at
- * +0xd4 and TextureSequence C1 at +0x124 are the implicit constructor. */
-extern "C" daObjNumber_c *daObjNumber_c_classInit(void)
-{
+ * fBase_c::operator new; dActor_c's C2, this class's vptr, dExtSimpleModel_c C1 at
+ * +0xd4 and dExtAnmTexPat_c C1 at +0x124 are the implicit constructor. */
+extern "C" daObjNumber_c *daObjNumber_c_classInit(void) {
     return new daObjNumber_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjNumber_c13InitResourcesEv
-s32 daObjNumber_c::InitResources()
-{
+s32 daObjNumber_c::InitResources() {
     if (param1 & 0x10) {
-        TextureSequence::LoadFile(data_ov002_0210da08);
-        void *m = Model::LoadFile(data_ov002_0210da28);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210da08);
+        void *m = dExtSimpleModel_c::LoadFile(data_ov002_0210da28);
         if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
             return 0;
-        TextureSequence::Prepare(
-            **(BMD_File **)((char *)&data_ov002_0210da28 + 4),
-            **(BTP_File **)((char *)&data_ov002_0210da08 + 4));
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-            &mTextureSequence,
-            *(void **)((char *)&data_ov002_0210da08 + 4),
-            0x40000000, 0, 0);
-        mTextureSequence.currFrame =
-            (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210da28.filePtr,
+                                 *(BTP_File *)data_ov002_0210da08.filePtr);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov002_0210da08.filePtr, 0x40000000, 0, 0);
+        mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
     } else {
-        TextureSequence::LoadFile(data_ov002_0210d9e8);
-        void *m = Model::LoadFile(data_ov002_0210d9a8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210d9e8);
+        void *m = dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
         if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
             return 0;
-        TextureSequence::Prepare(
-            **(BMD_File **)((char *)&data_ov002_0210d9a8 + 4),
-            **(BTP_File **)((char *)&data_ov002_0210d9e8 + 4));
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-            &mTextureSequence,
-            *(void **)((char *)&data_ov002_0210d9e8 + 4),
-            0x40000000, 0, 0);
-        mTextureSequence.currFrame =
-            (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210d9a8.filePtr,
+                                 *(BTP_File *)data_ov002_0210d9e8.filePtr);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov002_0210d9e8.filePtr, 0x40000000, 0, 0);
+        mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
     }
 
     mState = 0;
@@ -134,8 +109,7 @@ s32 daObjNumber_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjNumber_c8BehaviorEv
-s32 daObjNumber_c::Behavior()
-{
+s32 daObjNumber_c::Behavior() {
     NumberPos pos;
 
     if (mDelay != 0)
@@ -157,8 +131,7 @@ s32 daObjNumber_c::Behavior()
     case 1:
         if (mPosY < mStartPosY) {
             /* volatile mPosY: a plain field read CSE's with the add above. */
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, *(volatile int *)&mPosY,
-                                                           mPosZ);
+            Particle::System::NewSimple(0xd2, mPosX, *(volatile int *)&mPosY, mPosZ);
             MarkForDestruction();
         }
         break;
@@ -189,8 +162,7 @@ s32 daObjNumber_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjNumber_c6RenderEv
-s32 daObjNumber_c::Render()
-{
+s32 daObjNumber_c::Render() {
     /* While data_0209b454 bit 0x4000000 is set, a power star (0xb2) of
        kind 6 at camera step 0x64 removes the popup. */
     if (data_0209b454 & 0x4000000) {
@@ -219,8 +191,7 @@ s32 daObjNumber_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjNumber_c16CleanupResourcesEv
-s32 daObjNumber_c::CleanupResources()
-{
+s32 daObjNumber_c::CleanupResources() {
     if (param1 & 0x10) {
         data_ov002_0210da28.Release();
         data_ov002_0210da08.Release();
@@ -238,8 +209,7 @@ s32 daObjNumber_c::CleanupResources()
  * inbound call is arm9 SpawnNumber, so the func_ name stays. Parameters
  * are this popup and the owner SpawnNumber was given -- uniqueID at
  * owner+4, follow offset is this mPosY minus the owner's. */
-extern "C" void func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner)
-{
+extern "C" void func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner) {
     if (!owner)
         return;
     self->mOwnerUniqueID = owner->uniqueID;

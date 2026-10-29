@@ -18,23 +18,21 @@
  * pad_31e reuses that tail padding so mHomePosX lands at 0x320. pad_31e is
  * not live -- it is alignment, not unk_31e.
  *
- * dBgActor_c.h FIRST so common.h beats Model.h on Matrix4x3.
+ * dBgActor_c.h FIRST so common.h beats dExtSimpleModel_c.h on Matrix4x3.
  */
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daObjCannonShutter_c : dBgActor_c {
-    u8  pad_31e[0x2];
-    s32 mHomePosX;                      /* 0x320 */
-    s32 mHomePosY;                      /* 0x324 */
-    s32 mHomePosZ;                      /* 0x328 */
-    u8 mOpening;                       /* 0x32c */
-    u8 mOpenPhase;                       /* 0x32d */
-    u8 mCannonOpen;                       /* 0x32e */
+    u8 pad_31e[0x2];
+    s32 mHomePosX;  /* 0x320 */
+    s32 mHomePosY;  /* 0x324 */
+    s32 mHomePosZ;  /* 0x328 */
+    u8 mOpening;    /* 0x32c */
+    u8 mOpenPhase;  /* 0x32d */
+    u8 mCannonOpen; /* 0x32e */
 
     /* INLINE IS LOAD-BEARING. Out of line, mwccarm emits D0 before D1
        (cartridge is 0x020bc8f4 D1 then 0x020bc938 D0) plus a D2 with no ROM
@@ -46,19 +44,13 @@ struct daObjCannonShutter_c : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
-    void func_ov002_020bc990();
-
-    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
-       Parameter is size_t (unsigned long on this compiler). `return new`
-       relocates to `_Znwm` without this. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void StartOpening();
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjCannonShutter_c_size_must_be_0x330[sizeof(daObjCannonShutter_c) == 0x330 ? 1 : -1];
+typedef char
+    daObjCannonShutter_c_size_must_be_0x330[sizeof(daObjCannonShutter_c) == 0x330 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

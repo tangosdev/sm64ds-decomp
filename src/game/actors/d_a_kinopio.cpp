@@ -18,35 +18,27 @@
  * - Source is ROM-ascending under defer_codegen off; the destructor is
  *   header-declared and defined out of line (D1 then D0, no D2).
  * - The opt_propagation off brackets on St_Talk_Main and InitResources
- *   and the qualified `mModelAnim.Model::Render(0)` are the matched
+ *   and the qualified `mAnmModel.dExtSimpleModel_c::Render(0)` are the matched
  *   form.
- * - dCcAc_c::Init, ModelAnim::SetAnim, DropShadowRadHeight and
- *   Sound::PlaySub stay mangled: by-value Fix12<int> is wall 6az. The
- *   companion Spawn passes mPos itself (a real Vector3 local changes
+ * - The companion Spawn passes mPos itself (a real Vector3 local changes
  *   codegen, unlike the star Spawn's).
  * - Vec3_* helpers, func_020138dc / func_02013a44,
  *   ObjectMessageIDToActualMessageID, IsStarCollectedInCurLevel,
  *   NumStars and data_0209f2f8 / data_0209caa0 keep linker names; the
- *   ov085/ov002 file handles stay address-named.
+ *   ov002 file handles stay address-named.
  * - MatrixWords keeps UpdateModelPose's aggregate 12-word copies in
  *   ldm/stm form; `char *c` offset spelling stays where the ROM reads
  *   untyped fields (mTalkPlayer, the model internals at +0x11c, the
  *   spawned actor's words).
  */
 /* common.h FIRST, and the order is load-bearing. Both it and math/Matrix.h
- * define Matrix4x3 behind one shared guard -- flat `s32 m[12]` here, and
- * `Matrix3x3 r; Vector3 t;` there -- and whichever a translation unit reaches
- * first stands. The structured spelling holds a Vector3, which declares its own
- * destructor, so Matrix4x3 acquires a compiler-declared one; this class has two
- * Matrix4x3 members, and synthesizing that member destructor while generating
- * this class's own makes mwccarm emit the variant group D2, D0, D1 instead of
- * D1, D0, D2. The cartridge has D1 at 0x02129020 below D0 at 0x02129060 and no
- * D2 at all, so the group must come out D1 first for the licensed pair to link
- * in cartridge order once the homeless D2 is discarded. Measured on this class:
- * with math/Matrix.h first the object emits D2, D0, D1; with common.h first it
- * emits D1, D0, D2. Neither spelling is named anywhere below -- the two members
- * are layout only -- and all fifteen functions reproduce their cartridge bytes
- * either way. */
+ * define Matrix4x3 behind one shared guard -- flat `s32 m[12]` here,
+ * `Matrix3x3 r; Vector3 t;` there -- and whichever the TU reaches first
+ * stands. The structured spelling pulls in Vector3's destructor, and with
+ * two Matrix4x3 members that makes mwccarm emit D2, D0, D1; the cartridge
+ * has D1 below D0 and no D2. Measured: math/Matrix.h first emits D2, D0,
+ * D1; common.h first emits D1, D0, D2, which links in cartridge order
+ * once the homeless D2 is discarded. */
 #include "common.h"
 #include "daKinopio_c.h"
 #include "SharedFilePtr.h"
@@ -54,23 +46,51 @@
 #include "Message.h"
 #include "dCc_c.h"
 #include "dBgCh_Gnd.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
+#include "SpawnInfo.h"
 
 struct BCA_File;
 struct BMD_File;
 
-/* The pointer-to-member state table at 0x0212fe88. mwccarm leaves a file-scope
-   variable's name unmangled in C++, so this names the ROM symbol as spelled. */
-extern daKinopio_c::State data_ov085_0212fe88[];
+/* The pointer-to-member state table, defined after the profile below.
+   mwccarm leaves a file-scope variable's name unmangled in C++, so this
+   names the ROM symbol as spelled. */
+extern daKinopio_c::State data_ov085_0212fe88[2];
+
+/* Runtime asset handles, distinct from the NitroFS file IDs. */
+enum daKinopio_c_AssetId {
+    ASSET_KINOPIO_BMD = 0x035c,
+    ASSET_KINOPIO_WAIT1_BCA = 0x035d,
+    ASSET_KINOPIO_WAIT2_BCA = 0x035e
+};
+
+/* The handles reach their files through these wrappers' constructor and
+   destructor veneers; the manifest maps each to the retail destination.
+   Descriptive local types, not recovered spellings. */
+struct KinopioModelFile : SharedFilePtr {
+    KinopioModelFile(u32 fileID);
+    ~KinopioModelFile();
+};
+
+struct KinopioAnimFile : SharedFilePtr {
+    KinopioAnimFile(u32 fileID);
+    ~KinopioAnimFile();
+};
+
+/* This TU's file handles, in the order the retail initializer (0x0212f2a8)
+   builds them. */
+KinopioModelFile gKinopioModelFile(ASSET_KINOPIO_BMD);
+KinopioAnimFile gKinopioIdleAnimFile(ASSET_KINOPIO_WAIT1_BCA);
+KinopioAnimFile gKinopioTalkAnimFile(ASSET_KINOPIO_WAIT2_BCA);
+
+namespace Sound {
+bool PlaySub(u32, u32, u32, int, bool);
+}
 
 extern "C" {
 
 /* ov085 statics */
 extern u8 data_ov085_0212f27c[];           /* star-count requirement table */
-extern SharedFilePtr data_ov085_02130480;  /* body model      */
-extern SharedFilePtr data_ov085_02130488;  /* idle animation  */
-extern SharedFilePtr data_ov085_02130490;  /* talk animation  */
 
 /* ov002 statics -- the three models the variant-1 Toad preloads */
 extern SharedFilePtr data_ov002_0210da40;
@@ -83,14 +103,13 @@ extern int data_0209caa0[];
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-/* math / vector helpers.
-   ApproachLinear returns whether it arrived, and that is load-bearing: St_Talk_Main
-   tests the result to decide whether the turn has finished. */
+/* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
+   it arrived, and that is load-bearing: St_Talk_Main tests the result to decide
+   whether the turn has finished.) */
 s16 Vec3_HorzAngle(const void *a, const void *b);
 s16 Vec3_VertAngle(const void *a, const void *b);
 s32 Vec3_HorzDist(const void *a, const void *b);
 s32 AngleDiff(s32 a, s32 b);
-void _Z15ApproachLinear2Riii(s32 *cur, s32 tgt, s32 step);
 void Matrix4x3_FromRotationY(void *m, int angY);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 ang);
 void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 ang);
@@ -109,16 +128,7 @@ u8 NumStars(void);
    The mangled spellings are kept wherever the real declaration takes a
    Fix12<int> BY VALUE, because mwccarm passes those differently at
    the call site than a loose spelling would. */
-int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    void *thiz, void *sm, void *mtx, int rad, int height, u32 flags);
-
-/* model / collision / shadow */
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-    void *thiz, BCA_File *file, int a, int speed, u32 flags);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
-
+int d_a_kinopioPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 }
 
 /* St_Talk_Main's legacy source used this to keep an address computation from
@@ -135,19 +145,11 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 // @symbol _ZN11daKinopio_cD1Ev
 // @symbol _ZN11daKinopio_cD0Ev
-/* ONE definition, TWO ROM functions. mwccarm emits the deleting variant D0 and
- * the complete variant D1 from this single declaration, so D0 has no source of
- * its own; with deferred code generation off they land in the cartridge's order,
- * D1 first at 0x02129020 and D0 at 0x02129060, and the base-object variant D2
- * the compiler also emits is homeless and discarded.
- *
- * The body is empty because there is nothing to write: one vptr store and three
- * member destructor calls, every one a consequence of
- * `struct daKinopio_c : dActor_c` and the members that declaration types --
- * dExtShadowModel_c (0x16c), ModelAnim (0x108) and dCcAc_c (0x0d4) in reverse
- * declaration order, then dActor_c's own. D0's deallocation is an inline
- * operator delete reached through dActor_c, this class's immediate base, which
- * is why nothing here mentions a heap. */
+/* ONE definition, TWO ROM functions (D1 at 0x02129020, D0 at 0x02129060;
+ * the D2 the compiler also emits is homeless and discarded). The empty
+ * body is one vptr store plus the member destructors in reverse
+ * declaration order, then dActor_c's own; D0 adds the inline operator
+ * delete through dActor_c. */
 daKinopio_c::~daKinopio_c()
 {
 }
@@ -222,8 +224,7 @@ void daKinopio_c::St_Talk_Main()
             if ((data_0209caa0[1] & 0x40000000) == 0)
                 data_0209caa0[1] |= 0x40000000;
         }
-        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(
-                0x25, 0x14, 0x7f, 0x15666, 1) == 0)
+        if (Sound::PlaySub(0x25, 0x14, 0x7f, 0x15666, 1) == 0)
             return;
         {
             int y = mPosY;
@@ -279,7 +280,7 @@ void daKinopio_c::St_Talk_Main()
         }
     }
 
-    if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x25, 0x7f, 0, 0x7222, 0) == 0)
+    if (Sound::PlaySub(0x25, 0x7f, 0, 0x7222, 0) == 0)
         return;
     Message::EndTalk();
     SetState(0);
@@ -290,9 +291,8 @@ void daKinopio_c::St_Talk_Main()
 void daKinopio_c::St_Talk_Init()
 {
     u32 flags = 0;
-    BCA_File *file = (BCA_File *)(((int *)&data_ov085_02130490)[1]);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, file, 0, 0x1000, flags);
+    BCA_File *file = (BCA_File *)gKinopioTalkAnimFile.filePtr;
+    mAnmModel.SetAnim((BCA_File *)file, 0, 0x1000, flags);
 }
 
 // @symbol _ZN11daKinopio_c12St_Idle_MainEv
@@ -319,8 +319,7 @@ void daKinopio_c::St_Idle_Main()
 // @symbol _ZN11daKinopio_c12St_Idle_InitEv
 void daKinopio_c::St_Idle_Init()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, ((BCA_File **)&data_ov085_02130488)[1], 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gKinopioIdleAnimFile.filePtr, 0, 0x1000, 0);
 }
 
 // @symbol _ZN11daKinopio_c8SetStateEi
@@ -400,8 +399,9 @@ void daKinopio_c::UpdateModelPose()
     *(s32 *)(c + 0x1e8) = mPosX >> 3;
     *(s32 *)(c + 0x1ec) = (mPosY - 0x8000) >> 3;
     *(s32 *)(c + 0x1f0) = mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        c, c + 0x16c, c + 0x1c4, 0x50000, 0x64000, 0xf);
+    ((dActor_c *)c)
+        ->DropShadowRadHeight(*(dExtShadowModel_c *)(c + 0x16c), *(Matrix4x3 *)(c + 0x1c4), 0x50000,
+                              0x64000, 0xf);
 }
 
 // @symbol _ZN11daKinopio_c16CleanupResourcesEv
@@ -416,23 +416,23 @@ int daKinopio_c::CleanupResources()
         data_ov002_0210d9a0.Release();
         data_ov002_0210d9c0.Release();
     }
-    data_ov085_02130480.Release();
-    data_ov085_02130488.Release();
-    data_ov085_02130490.Release();
+    gKinopioModelFile.Release();
+    gKinopioIdleAnimFile.Release();
+    gKinopioTalkAnimFile.Release();
     return 1;
 }
 
 // @symbol _ZN11daKinopio_c6RenderEv
-/* One call. THE CALL IS QUALIFIED, AND THAT IS LOAD-BEARING. Model::Render is
- * virtual (slot 5 of _ZTV5Model) and ModelAnim overrides it, so a plain
- * `mModelAnim.Render(0)` emits the vtable dispatch -- three words where the ROM
+/* One call. THE CALL IS QUALIFIED, AND THAT IS LOAD-BEARING. dExtSimpleModel_c::Render is
+ * virtual (slot 5 of _ZTV17dExtSimpleModel_c) and dExtAnmModel_c overrides it, so a plain
+ * `mAnmModel.Render(0)` emits the vtable dispatch -- three words where the ROM
  * has one `bl`. Naming the base explicitly suppresses the dispatch and
  * reproduces the cartridge exactly. The null argument is the scale, and passing
  * 0 is what makes this Toad render at his own size rather than a
  * caller-supplied one. */
 int daKinopio_c::Render()
 {
-    mModelAnim.Model::Render(0);
+    mAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
 
@@ -460,7 +460,7 @@ int daKinopio_c::Render()
 int daKinopio_c::Behavior()
 {
     RunState();
-    mModelAnim.UpdateVerts();
+    mAnmModel.UpdateVerts();
 
     Player *player = ClosestPlayer();
     if (player != 0) {
@@ -519,15 +519,15 @@ int daKinopio_c::Behavior()
     ApproachLinear(mHeadYaw, mHeadYawTarget, 0x250);
     ApproachLinear(mHeadPitch, mHeadPitchTarget, 0x100);
 
-    _Z15ApproachLinear2Riii((s32 *)&mOpacity, mTargetOpacity, 6);
+    ApproachLinear2(*(s32 *)&mOpacity, mTargetOpacity, 6);
 
-    mModelAnim.Advance();
+    mAnmModel.Advance();
 
     UpdateModelPose();
 
-    mModelAnim.speed = 0x1000;
+    mAnmModel.speed = 0x1000;
 
-    mModelAnim.ApplyOpacity((u32)(u8)(mOpacity >> 3), 1);
+    mAnmModel.ApplyOpacity((u32)(u8)(mOpacity >> 3), 1);
 
     mCollider.Clear();
     mCollider.Update();
@@ -562,12 +562,11 @@ int daKinopio_c::Behavior()
 int daKinopio_c::InitResources()
 {
     Vector3 objPos;
-    dExtFrameCtrl_c::LoadFile(data_ov085_02130488);
-    dExtFrameCtrl_c::LoadFile(data_ov085_02130490);
-    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov085_02130480), 1, 0x16);
+    dExtFrameCtrl_c::LoadFile(gKinopioIdleAnimFile);
+    dExtFrameCtrl_c::LoadFile(gKinopioTalkAnimFile);
+    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gKinopioModelFile), 1, 0x16);
     mShadowModel.InitCylinder();
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mCollider, this,
-        0x78000, 0x8c000, 0x4200004, 0);
+    mCollider.Init(this, 0x78000, 0x8c000, 0x4200004, 0);
     mOpacity = 0xff;
     mTargetOpacity = 0xff;
     mMessageID = param1;
@@ -577,9 +576,9 @@ int daKinopio_c::InitResources()
         mMessageID = 0;
     mCapUniqueID = 0;
     if (mVariant == 1) {
-        Model::LoadFile(data_ov002_0210da40);
-        Model::LoadFile(data_ov002_0210d9a0);
-        Model::LoadFile(data_ov002_0210d9c0);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
         if (func_02013a44() != 0) {
             Player *player = ClosestPlayer();
             if (player != 0) {
@@ -623,22 +622,32 @@ int daKinopio_c::InitResources()
 #pragma opt_propagation on
 
 // @symbol daKinopio_c_classInit
-/* The registry factory behind the KINOPIO profile. It allocates 0x210 -- this
- * class's own sizeof -- and installs this class's vtable, which is the second of
- * the two independent witnesses the header's layout is read from.
- *
+/* The registry factory behind the KINOPIO profile: `return new` allocates
+ * 0x210 (this class's sizeof) and installs this class's vtable.
  * Reconstructed source-style name: SM64DS proves daKinopio_c through RTTI,
- * allocation size, vtable identity and the KINOPIO registry profile; later EAD
- * lineage supplies classInit. The exact original spelling is not preserved.
- * Historical alias: Toad_Spawn.
- *
- * `return new daKinopio_c()` is the whole body: the synthesized constructor is
- * what stores the vptr and runs the dCcAc_c, ModelAnim and dExtShadowModel_c
- * constructors the ROM calls, in that order, and `operator new` is fBase_c's.
- * Spelling the vptr store by hand instead would be wrong here as well as longer
- * -- this TU emits the vtable itself, so the store has to be the compiler's
- * own. */
+ * allocation size, vtable identity and the KINOPIO registry profile; later
+ * EAD lineage supplies classInit. The exact original spelling is not
+ * preserved. Historical alias: Toad_Spawn. */
 extern "C" daKinopio_c *daKinopio_c_classInit(void)
 {
     return new daKinopio_c();
 }
+
+/* The actor profile, in SpawnInfo's layout (include/SpawnInfo.h). The
+ * retail values are unchanged. */
+SpawnInfo<daKinopio_c> g_profile_KINOPIO = {
+    daKinopio_c_classInit, /* classInit */
+    0x00b9,                /* behaviorPriority */
+    0x00ab,                /* renderPriority */
+    0x00000003,            /* actorFlags */
+    0x40000,               /* clipOffsetY */
+    0x80000,               /* clipRadius */
+    0x01000000,            /* clipDistance */
+    0x01000000             /* farDistance */
+};
+
+/* SetState and RunState index this by mState: 0 idles, 1 talks. */
+daKinopio_c::State data_ov085_0212fe88[2] = {
+    {&daKinopio_c::St_Idle_Init, &daKinopio_c::St_Idle_Main, "WAIT"},
+    {&daKinopio_c::St_Talk_Init, &daKinopio_c::St_Talk_Main, "TALK"},
+};

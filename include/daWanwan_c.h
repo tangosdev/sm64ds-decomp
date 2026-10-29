@@ -3,20 +3,20 @@
 
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAcPos_c.h"
 
 /* Bob-omb Battlefield Chain Chomp. Seven links, so seven of each subobject.
- * dEnemyBase_c ends at 0x110; dCcAcPos_c, ModelAnim and dExtShadowModel_c close on
- * 0x150, 0x1b4 and 0x1dc; then Model[7], dExtShadowModel_c[7] and two Vector3[7].
+ * dEnemyBase_c ends at 0x110; dCcAcPos_c, dExtAnmModel_c and dExtShadowModel_c close on
+ * 0x150, 0x1b4 and 0x1dc; then dExtSimpleModel_c[7], dExtShadowModel_c[7] and two Vector3[7].
  */
 struct daWanwan_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;                                /* 0x110 */
-    ModelAnim mModelAnim;                                  /* 0x150 */
+    dExtAnmModel_c mAnmModel;                              /* 0x150 */
     dExtShadowModel_c mShadowModel;                        /* 0x1b4 */
-    Model mLinkModels[7];                                  /* 0x1dc */
+    dExtSimpleModel_c mLinkModels[7];                      /* 0x1dc */
     dExtShadowModel_c mLinkShadows[7];                     /* 0x40c */
     /* InitResources copies the chomp position into every link. 0211250c then
        walks [1..6]; [0] is the head, written from the actor position each frame. */

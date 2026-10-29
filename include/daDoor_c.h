@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 
 class Player;
 
@@ -52,27 +52,27 @@ class Player;
  * fields through the class below.
  *
  * SIZE. daDoor_c_classInit's `new daDoor_c` calls fBase_c's operator new
- * with 328 -- 0x148 -- then _ZN8dActor_cC2Ev and _ZN9ModelAnimC1Ev at +0xd4. dActor_c is 0xd0
- * (include/dActor_c.h) and ModelAnim is 0x64 (include/ModelAnim.h), so the
- * embedded ModelAnim runs 0xd4..0x138 (the same 4-byte alignment pad
- * include/dBgActor_c.h takes before its own Model member). That leaves
+ * with 328 -- 0x148 -- then _ZN8dActor_cC2Ev and _ZN14dExtAnmModel_cC1Ev at +0xd4. dActor_c is 0xd0
+ * (include/dActor_c.h) and dExtAnmModel_c is 0x64 (include/dExtAnmModel_c.h), so the
+ * embedded dExtAnmModel_c runs 0xd4..0x138 (the same 4-byte alignment pad
+ * include/dBgActor_c.h takes before its own dExtSimpleModel_c member). That leaves
  * 0x138..0x147 (0x10 = 16 bytes) as this class's own storage, touched by the sources in src/game/actors/d_a_door.cpp: two pointers at
  * 0x138/0x13c, a state pointer at 0x140 (read in Behavior as a
  * pointer-to-member dispatch, written by func_ov100_021453d8), a key-model
  * index byte at 0x144 and a countdown byte at 0x145 (touched only by the
  * state helpers). 0x146..0x147 are untouched padding.
  *
- * 0x138 IS A Model*, and this header used to say the opposite -- that the
- * virtual calls through it "resolve to unidentified Model vtable slots" and
- * typing it was future work. They were never unidentified. include/Model.h
+ * 0x138 IS A dExtSimpleModel_c*, and this header used to say the opposite -- that the
+ * virtual calls through it "resolve to unidentified dExtSimpleModel_c vtable slots" and
+ * typing it was future work. They were never unidentified. include/dExtSimpleModel_c.h
  * names slot 4 Virtual10(Matrix4x3&) at vtable offset 0x10 and slot 5
  * Render(const Vector3*) at 0x14, and those are exactly the two the ROM
  * dispatches in _ZN8daDoor_c6RenderEv (`ldr r2,[r2,#0x10]`, `ldr r2,[r2,#0x14]`);
  * CleanupResources' third call is slot 1, the deleting destructor. Four
- * independent things agree the object is a Model and not merely Model-shaped:
- * InitResources allocates it `_Znwj(0x50)` and sizeof(Model) is 0x50; it runs
- * _ZN5ModelC1Ev on the result; it stores a matrix at +0x1c, which is
- * Model::mat4x3; and Render hands it this door's own bone transforms. Typed
+ * independent things agree the object is a dExtSimpleModel_c and not merely dExtSimpleModel_c-shaped:
+ * InitResources allocates it `operator new(0x50)` and sizeof(dExtSimpleModel_c) is 0x50; it runs
+ * _ZN17dExtSimpleModel_cC1Ev on the result; it stores a matrix at +0x1c, which is
+ * dExtSimpleModel_c::mat4x3; and Render hands it this door's own bone transforms. Typed
  * below, and the shadow structs both consumers carried for it are gone.
  * 0x13c and 0x140 stay void* -- 0x13c is written from both a SharedFilePtr
  * and an int global, so typing it is a separate question.
@@ -90,10 +90,10 @@ class Player;
 
 struct daDoor_c : dActor_c {
     u8  pad_0d0[0x4];
-    /* Named by daDoor_c_classInit's own _ZN9ModelAnimC1Ev call at +0xd4 -- a
+    /* Named by daDoor_c_classInit's own _ZN14dExtAnmModel_cC1Ev call at +0xd4 -- a
        relocation the ROM build checks, same idiom as include/dBgActor_c.h's
        mModel. */
-    ModelAnim mModel;        /* 0x0d4 */
+    dExtAnmModel_c mModel; /* 0x0d4 */
 
     /* This class's own storage, 0x138..0x147 -- see SIZE above.
        The decoration group. A door variant may hang a second model off itself. Only
@@ -101,12 +101,12 @@ struct daDoor_c : dActor_c {
        a second file (`e->keyFile`). Which doors carry one: variant 1, the
        star doors (the file is chosen by star count) and the key doors (one
        shared file); what each of those models shows is not identified.
-         mKeyModel  -- `new Model` + ModelBase::SetFile in InitResources,
-                       Model::Virtual10(mModel.data.transforms) + Render in
+         mKeyModel  -- `new dExtSimpleModel_c` + dExtModel_c::SetFile in InitResources,
+                       dExtSimpleModel_c::Virtual10(mModel.data.transforms) + Render in
                        Render (the local there is literally called `key`), and
-                       `delete key` through Model's vtable slot 1 in
+                       `delete key` through dExtSimpleModel_c's vtable slot 1 in
                        CleanupResources. Owned by this class.
-         mKeyFile   -- a separate file the door pre-loads (Model::LoadFile) only
+         mKeyFile   -- a separate file the door pre-loads (dExtSimpleModel_c::LoadFile) only
                        in game mode 0 and Release()s in CleanupResources; it is
                        not mKeyModel's file (that is e->keyFile). Three
                        sources: data_ov002_0211094c when the entry's
@@ -118,7 +118,7 @@ struct daDoor_c : dActor_c {
                        0xc; mKeyModelIdx + 1 (taken before that re-zero, so
                        param1 - 7) indexes LoadKeyModels/data_ov089_02132894.
        [src/game/actors/d_a_door.cpp] */
-    Model *mKeyModel;          /* 0x138 -- owned, see SIZE above */
+    dExtSimpleModel_c *mKeyModel; /* 0x138 -- owned, see SIZE above */
     void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
     /* The current state: a 16-byte {enter, execute} pair of
        pointers-to-member, one of the nine tables data_ov100_021488a4 ..
@@ -188,7 +188,7 @@ typedef char daDoor_c_size_must_be_0x148[sizeof(daDoor_c) == 0x148 ? 1 : -1];
 
 /* Flat layout for the C translation units, which can express neither the base
    class nor the virtual functions -- the same split include/dActor_c.h and
-   include/ModelAnim.h already carry, and for the same reason.
+   include/dExtAnmModel_c.h already carry, and for the same reason.
 
    This branch is what retired include/daDoor_c.h, the generated flat
    placeholder this class used to be described by. That header restated
@@ -196,18 +196,18 @@ typedef char daDoor_c_size_must_be_0x148[sizeof(daDoor_c) == 0x148 ? 1 : -1];
    two spellings of one object could drift and the C sources could not see
    that 0x05c..0x0cf is inherited storage dActor_c has already named. Nesting
    the bases instead makes drift impossible: the offsets below are not
-   written down here at all, they are whatever dActor_c and ModelAnim say.
+   written down here at all, they are whatever dActor_c and dExtAnmModel_c say.
 
    Every field daDoor_c.h named has a home: 0x05c/0x060/0x064 are
    base.mPosX/Y/Z, 0x080/0x084/0x088 base.mScaleX/Y/Z, 0x08c/0x08e/0x090
-   base.mAngleX/Y/Z, 0x0a4/0x0a8/0x0ac base.unk_0a4/mVertSpeed/unk_0ac,
+   base.mAngleX/Y/Z, 0x0a4/0x0a8/0x0ac base.mSpeedX/mVertSpeed/mSpeedZ,
    0x0e8 mModel.data.transforms, and mState, mKeyModelIdx and mTimer are
    this class's own. */
 struct daDoor_c {
     struct dActor_c base;    /* 0x000..0x0cf */
     u8  pad_0d0[0x4];
-    ModelAnim mModel;        /* 0x0d4..0x137 */
-    Model *mKeyModel;          /* 0x138 -- owned, see SIZE above */
+    dExtAnmModel_c mModel;        /* 0x0d4..0x137 */
+    dExtSimpleModel_c *mKeyModel; /* 0x138 -- owned, see SIZE above */
     void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
     void *mState;                 /* 0x140 -- the state pair, see SIZE above */
     s8   mKeyModelIdx;            /* 0x144 -- key-model index */
@@ -224,7 +224,7 @@ typedef char daDoor_c_size_must_be_0x148[sizeof(struct daDoor_c) == 0x148 ? 1 : 
 #endif
 
 /* So a source declaring a daDoor_c reads the same in both modes, the way
-   include/ModelAnim.h does it. */
+   include/dExtAnmModel_c.h does it. */
 typedef struct daDoor_c daDoor_c;
 
 #endif /* __cplusplus */

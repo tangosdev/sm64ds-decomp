@@ -33,15 +33,14 @@
  * 0x02111688) is highest and so comes first in source, ahead of
  * InitResources.
  *
- * Leftover: the ov080 helpers keep their linker names and C linkage, and the
- * two per-stage tables keep data_ov030_* names.
+ * Note: the ov080 helpers keep their linker names and C linkage. They are
+ * defined in d_a_obj_maruta.cpp and shared with daObjFlMaruta_c, so they
+ * become members together with both leaves. The two per-stage tables keep
+ * data_ov030_* names.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjHmMaruta_c_AssetId {
-    ASSET_HM_MARUTA_BMD = 0x061a,
-    ASSET_HM_MARUTA_KCL = 0x061b
-};
+enum daObjHmMaruta_c_AssetId { ASSET_HM_MARUTA_BMD = 0x061a, ASSET_HM_MARUTA_KCL = 0x061b };
 
 #include "daObjHmMaruta_c.h"
 #include "SharedFilePtr.h"
@@ -50,12 +49,10 @@ enum daObjHmMaruta_c_AssetId {
  * func_02017ab4. The collision handle constructs through func_02017b4c and
  * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
 struct MarutaModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     MarutaModelFilePtr(unsigned int fileId);
     ~MarutaModelFilePtr();
 };
 struct MarutaClsnFileHandle : SharedFilePtr {
-    unsigned int words[2];
     MarutaClsnFileHandle(unsigned int fileId);
     ~MarutaClsnFileHandle();
 };
@@ -84,10 +81,10 @@ int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 #pragma long_calls off
+}
 
 extern ResourceDescriptor data_ov030_02115a04;
 extern int data_ov030_021159f4;
-}
 
 /* Reconstructed source-style name: SM64DS proves daObjHmMaruta_c through
  * RTTI, allocation size, vtable identity, and the HM_MARUTA registry
@@ -100,29 +97,25 @@ extern int data_ov030_021159f4;
  * three explicitly-written functions below to keep coming out in their
  * documented ROM order. */
 // @symbol daObjHmMaruta_c_classInit
-extern "C" daObjHmMaruta_c *daObjHmMaruta_c_classInit()
-{
+extern "C" daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
     return new daObjHmMaruta_c();
 }
 
 // @symbol _ZN15daObjHmMaruta_c13InitResourcesEv
 /* Vtable slot 0. */
-int daObjHmMaruta_c::InitResources()
-{
+int daObjHmMaruta_c::InitResources() {
     return func_ov080_021274ac(this, &data_ov030_02115a04);
 }
 
 // @symbol _ZN15daObjHmMaruta_c8BehaviorEv
 /* Vtable slot 6. The word handed over reads 0x412000 on the cartridge. */
-int daObjHmMaruta_c::Behavior()
-{
+int daObjHmMaruta_c::Behavior() {
     return func_ov080_0212714c(this, &data_ov030_021159f4);
 }
 
 // @symbol _ZN15daObjHmMaruta_c16CleanupResourcesEv
 /* Vtable slot 3. */
-int daObjHmMaruta_c::CleanupResources()
-{
+int daObjHmMaruta_c::CleanupResources() {
     return func_ov080_021270dc(this, &data_ov030_02115a04);
 }
 

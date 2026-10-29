@@ -7,12 +7,12 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x02008c34	NO-SLOT	-	-	-	_ZN4cstd4finvEi	data	no-slot		
 0x0200e444	DIVERGED	arm9	Camera_Spawn	function	_ZN9dCamera_cC1Ev	function	plain		
 0x0201609c	DIVERGED	arm9	_ZN17dExtCommonModel_c12SetPolygonIDEj	function	_ZN17dExtCommonModel_c13Func_0201609CEj	function	identity
-0x02017168	DIVERGED	arm9	_ZThn80_N9ModelAnimD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
-0x02017178	DIVERGED	arm9	_ZThn80_N9ModelAnimD1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
-0x02017188	DIVERGED	arm9	_ZThn80_N14BlendModelAnimD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
-0x02017198	DIVERGED	arm9	_ZThn80_N14BlendModelAnimD1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
-0x020171a8	DIVERGED	arm9	_ZThn80_N10ModelAnim2D0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
-0x020171b8	DIVERGED	arm9	_ZThn80_N10ModelAnim2D1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
+0x02017168	DIVERGED	arm9	_ZThn80_N14dExtAnmModel_cD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
+0x02017178	DIVERGED	arm9	_ZThn80_N14dExtAnmModel_cD1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
+0x02017188	DIVERGED	arm9	_ZThn80_N19dExtBlendAnmModel_cD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
+0x02017198	DIVERGED	arm9	_ZThn80_N19dExtBlendAnmModel_cD1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
+0x020171a8	DIVERGED	arm9	_ZThn80_N15dExtAnm2Model_cD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
+0x020171b8	DIVERGED	arm9	_ZThn80_N15dExtAnm2Model_cD1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
 0x02017574	DIVERGED	arm9	_ZN10dFdColor_cD2Ev	function	_ZN5ColorD1Ev	function	identity		
 0x020230d8	NO-SLOT	-	-	-	PARTICLE_SPA_FILE	data	no-slot		
 0x02023598	DIVERGED	arm9	_ZN9dScBoot_cD1Ev	function	_ZN5SceneD2Ev	function	identity		
@@ -21,7 +21,7 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x0202e088	DIVERGED	arm9	Stage_Spawn	function	_ZN10dScStage_cC1Ev	function	plain		
 0x02038018	DIVERGED	arm9	_ZN5dBgPiaSERKS_	function	_ZN10ClsnResultaSERKS_	function	plain		
 0x0203cc0c	CONFIG-PLACEHOLDER	arm9	func_0203cc0c	function	_Znwj	function	placeholder		
-0x02043444	DIVERGED	arm9	_ZN7fBase_cnwEj	function	_ZN9ActorBasenwEj	function	plain		
+0x02043444	DIVERGED	arm9	_ZN7fBase_cnwEm	function	_ZN9ActorBasenwEj	function	plain		
 0x020469ac	DIVERGED	arm9	_ZN15dExtFrameCtrl_c17UpdateFileOffsetsER8BCA_File	function	_ZN15dExtFrameCtrl_c17UpdateFileOffsets_ZN15dExtFrameCtrl_cER8BCA_File	function	plain
 0x0204df54	CONFIG-PLACEHOLDER	arm9	func_0204df54	function	_ZN13HeapAllocatorC1EjPvPvj	function	placeholder		
 0x02052551	NO-SLOT	-	-	-	Matrix3x3_SetRotationX	data	no-slot		

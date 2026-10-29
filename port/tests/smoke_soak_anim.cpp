@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
 
 #include "ntr/gx.h"
@@ -25,7 +25,7 @@
 #include <windows.h>
 
 extern "C" {
-void _ZN5ModelC1Ev(void *self);
+void _ZN17dExtSimpleModel_cC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtrC *self);
@@ -72,10 +72,10 @@ static int run_pair(unsigned mh, unsigned ah, size_t *tris, int *frames_out)
     SharedFilePtrC mp;
     _ZN13SharedFilePtr9ConstructEj(&mp, mh);
     static char storage[0x50];
-    Model *model = (Model *)storage;
-    _ZN5ModelC1Ev(storage);
+    dExtSimpleModel_c *model = (dExtSimpleModel_c *)storage;
+    _ZN17dExtSimpleModel_cC1Ev(storage);
     reset_scene();
-    void *file = Model::LoadFile(*(SharedFilePtr *)&mp);
+    void *file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&mp);
     if (!file) return 1;
     unsigned model_bones = *(unsigned *)((char *)file + 4);
 
@@ -92,7 +92,7 @@ static int run_pair(unsigned mh, unsigned ah, size_t *tris, int *frames_out)
         return 3;   /* incompatible: skeleton mismatch, skip */
     }
 
-    if (model->Model::DoSetFile((char *)file, 0, -1) != 1) return 2;
+    if (model->dExtSimpleModel_c::DoSetFile((char *)file, 0, -1) != 1) return 2;
     ident_fx(&model->mat4x3);
 
     int probes[3] = { 0, num_frames / 2, num_frames - 1 };
@@ -100,7 +100,7 @@ static int run_pair(unsigned mh, unsigned ah, size_t *tris, int *frames_out)
         _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(&model->data, bca, probes[k]);
         _ZN15ModelComponents21UpdateVertsUsingBonesEv(&model->data);
         reset_scene();
-        model->Model::Render(NULL);
+        model->dExtSimpleModel_c::Render(NULL);
     }
     ntr::gx_polygons(*tris);
     _ZN13SharedFilePtr7ReleaseEv(&ap);

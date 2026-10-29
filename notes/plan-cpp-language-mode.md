@@ -109,7 +109,7 @@ a later header fix silently misses it, and two files can disagree about the same
 forever. This is the
 same disease as the declaration debt in `notes/declaration-centralization.md` (**43,931**
 `extern` lines across **8,950** files at `b7f04b91`, 27% mutually inconsistent,
-`ModelAnim::SetAnim` under 123 spellings) wearing a different coat. The runbook quotes
+`dExtAnmModel_c::SetAnim` under 123 spellings) wearing a different coat. The runbook quotes
 43,922/8,948 for those first two; the tree has since drifted by 9 lines and 2 files, so
 re-measure rather than cite — that paragraph has been wrong once before and says so.
 

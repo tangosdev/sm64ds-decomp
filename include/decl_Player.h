@@ -20,23 +20,7 @@
 extern "C" {
 #endif
 
-extern int _ZN6Player12GetHurtStateEv(void*);
-extern int _ZN6Player12Unk_020c4f40Et(int, u16);
-extern int _ZN6Player13TryTalkToDoorEh(char*, unsigned char);
-extern int _ZN6Player15IsEnteringLevelEv(void*);
-extern int _ZN6Player16IsInsideOfCannonEv(void*);
 extern int DrawAimMarker(char*);
-extern int _ZN6Player18HasFinishedTalkingEv(void*);
-extern int _ZN6Player9IsOnShellEv(void*);
-extern void _ZN6Player10SpinBounceE5Fix12IiE(void*, int);
-extern void _ZN6Player14St_OnWall_InitEv(char*);
-extern void _ZN6Player17St_PunchKick_InitEv(void*);
-extern void _ZN6Player18St_LevelEnter_MainEv();
-extern void _ZN6Player18TurnOffToonShadingEj(char*, u32);
-extern void _ZN6Player4BurnEv(void*);
-extern void _ZN6Player6BounceE5Fix12IiE(void*, int);
-extern void _ZN6Player8BlowAwayEs(void*, short);
-
 
 #ifdef __cplusplus
 }

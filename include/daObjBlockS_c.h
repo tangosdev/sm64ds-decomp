@@ -24,7 +24,7 @@
 #ifndef DAOBJBLOCKS_C_H
 #define DAOBJBLOCKS_C_H
 #include "types.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 
 /* Player is only ever pointed at from here, so a declaration is enough --
@@ -185,10 +185,10 @@ struct daObjBlockS_c {
     u32 mFlags;                 /* 0x0b0 */
     u8  pad_0b4[0x1c];
     s32 mEatingPlayer;          /* 0x0d0 */
-    /* Model member. The cartridge's own ~daObjBlockS_c calls _ZN5ModelD1Ev at +0x0d4 (D0/D1), a
+    /* dExtSimpleModel_c member. The cartridge's own ~daObjBlockS_c calls _ZN17dExtSimpleModel_cD1Ev at +0x0d4 (D0/D1), a
        relocation the ROM build checks; recovered by tools/dtor_members.py. D1 and not
        D2, so it is this type and not an inlined base. */
-    Model mModel;               /* 0x0d4 */
+    dExtSimpleModel_c mModel; /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~daObjBlockS_c calls _ZN10dBgW_KcMbgD1Ev at +0x124
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */

@@ -18,17 +18,17 @@
  * Butterfly_Spawn) appends after InitResources, at the end of source order:
  * the pragma above never toggles back on, so it stays in effect for this
  * new function too. fBase_c::operator new(size_t) forwards
- * `return new daBtfly_c();` to the same _ZN7fBase_cnwEj(1012) allocator the
+ * `return new daBtfly_c();` to the same _ZN7fBase_cnwEm(1012) allocator the
  * loose factory called by hand, and daBtfly_c has no user-declared
  * constructor, so the inherited dActor_c ctor plus the vtable store plus the
- * six member subobjects in field order (ModelAnim, Model, dExtShadowModel_c x2,
+ * six member subobjects in field order (dExtAnmModel_c, dExtSimpleModel_c, dExtShadowModel_c x2,
  * dBgCh_Actr, dCcAcPos_c) come from the implicit default constructor with
  * zero mangled calls.
  *
  * deslop leftovers:
- * - State7 mFlutterPhase / mScale: named += is 0x234 vs 0x258. The phase
- *   load is ldrsh plus a zero-extend shift (ldrh of the field is shorter),
- *   and the adds take the int-cast address, not add #0x300.
+ * - State7 mFlutterPhase: named += is 0x234 vs 0x258. The phase load is
+ *   ldrsh plus a zero-extend shift (ldrh of the field is shorter), and the
+ *   adds take the int-cast address, not add #0x300.
  * - State7 Player::Hurt: method form is 0x264 vs 0x258 (+0xc). Fix12<int>
  *   by value. Player.h does not declare Hurt.
  * - State7 UpdateContinuous(): WRONG-DEST. ROM calls
@@ -40,16 +40,8 @@
  * - Behavior scratch matrix: Matrix4x3 assignment is 0x264 vs 0x22c.
  *   Flat Mtx copy is the ROM ldm/stm; the real type's translation is a
  *   Vector3 and runs ~Vector3.
- * - InitResources ModelAnim::SetAnim: method form is 0x244 vs 0x238
- *   (+0xc). Fix12<int> speed.
- * - InitResources dBgCh_Actr::Init: header Fix12i mangles as cii. ROM
- *   symbol is 5Fix12IiES3_.
- * - InitResources dCcAcPos_c::Init: method form is 0x248 vs 0x238
- *   (+0x10). Fix12<int> by value, and a stack Vector3 emits ~Vector3, so
- *   the offset stays a destructor-free Vec3.
  * - State0: building the angle triple before reading param1 differs by
  *   10 words.
- * - State6 SetRanges stays the scalar symbol. dActor_c does not declare it.
  * - daBtfly_c_classInit and g_profile_BUTTERFLY sit past this text run.
  */
 
@@ -67,8 +59,7 @@ enum daBtfly_c_AssetId {
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "nitro/fx/fx.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
 
 /* Makes the per-member `#pragma opt_common_subs` bracket around State2 bind.
  * Without it mwccarm defers codegen and the last file-global state wins. */
@@ -87,31 +78,20 @@ typedef void (daBtfly_c::*ButterflyState)();
  * handles (model file 0x43a, animation file 0x43b) and fill the eight-entry
  * state table. mwcc emits __sinit_d_a_btfly.cpp from those definitions. */
 struct BtflyModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     BtflyModelFilePtr(u32 fileID);
     ~BtflyModelFilePtr();
 };
 
 struct BtflyAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
-
     BtflyAnimationFilePtr(u32 fileID);
     ~BtflyAnimationFilePtr();
 };
 
-/* SharedFilePtr.h has no fields. LoadFile stashes the file in the second word. */
-#define LOADED(h) (((void **)&(h))[1])
-
-/* State2's player-position reload. opt_common_subs is off in that function;
- * folding the cast lets the two reloads CSE. */
-#define M(p) (p)
 /* State7's flutter-phase add. A plain mFlutterPhase += folds to add #0x300;
  * the int cast keeps the pool-offset add the ROM has. */
 #define L(p) ((int)(p))
 
 extern "C" {
-void _Z14ApproachLinearRiii(int *p, int target, int step);
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 s16 Vec3_HorzAngle(const void *a, const void *b);
 void Vec3_Sub(Vector3 *out, void *a, void *b);
@@ -119,7 +99,6 @@ int Vec3_HorzLen(Vector3 *v);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
-void dBgCh_Actr_UpdateContinuous_Veneer(void *c);
 int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern s16 data_02082214[]; /* sin/cos; index (u16 angle >> 4) * 2 */
@@ -134,16 +113,8 @@ extern ButterflyState data_ov100_02148628[];
 
 /* Fix12<int> by value. The header method form homes those arguments on the
  * stack; these scalar entries are the ROM calls. */
-void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *c, int oy, int rad, int clip, int far);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    void *actor, void *shadow, void *mtx, int radius, int height, unsigned int opacity);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *ma, void *bca, int flags, int speed, u32 start);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    void *w, void *actor, int radius, int height, void *a, void *b);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    void *c, void *actor, void *pos, int radius, int height, u32 flags, u32 vuln);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-    void *player, Vector3 *pos, unsigned int a, int damage, unsigned int c, unsigned int d, unsigned int e);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *w, void *actor, int radius, int height, void *a, void *b);
 }
 
 // @symbol _ZN9daBtfly_cD1Ev
@@ -156,27 +127,27 @@ daBtfly_c::~daBtfly_c()
 // @symbol _ZN9daBtfly_c6State7Ev
 void daBtfly_c::State7()
 {
-    char *c = (char *)this;
+    char *c = (char *)this; /* unused, but removing it renumbers the @NNN labels */
     int hasContact;
     int v;
 
-    /* 0x3ee does not fit a halfword immediate, and the sign-extend then
-     * zero-extend is not the same instruction as ldrh of mFlutterPhase. */
+    /* Read mFlutterPhase signed, then zero-extend: a single (u16) read
+     * shortens State7 by 8 bytes. */
     if (mStateTimer > 0x78) {
-        int ang = (short)*(s16 *)(c + 0x3ee);
+        int ang = mFlutterPhase;
         ang = (unsigned short)(short)ang;
         int idx = ang >> 4;
         v = FX_MUL((int)data_02082214[(idx << 1) + 1], 0xa3);
         if (v > 0) {
             v = FX_MUL(v, 0x4800);
-            *(u16 *)L(c + 0x3ee) += 0x2710;
+            *(u16 *)L(&mFlutterPhase) += 0x2710;
         } else {
-            *(u16 *)L(c + 0x3ee) += 0xfa0;
+            *(u16 *)L(&mFlutterPhase) += 0xfa0;
         }
-        *(int *)L(c + 0x3e0) += v;
+        mScale += v;
     }
 
-    _Z14ApproachLinearRiii(&mHorzSpeed, 0x14000, 0x1000);
+    ApproachLinear(mHorzSpeed, 0x14000, 0x1000);
 
     Player *player = ClosestPlayer();
     if (player != 0) {
@@ -211,7 +182,7 @@ void daBtfly_c::State7()
                 pos.x = mPosX;
                 pos.y = mPosY;
                 pos.z = mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(hit, &pos, 2, 0xc000, 1, 0, 1);
+                ((Player *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
             }
         }
     }
@@ -249,7 +220,7 @@ void daBtfly_c::State6()
     mScale += 0x40;
     if (mScale < 0x800)
         return;
-    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0x32000, 0x32000, 0x1000000, 0x320000);
+    SetRanges(0x32000, 0x32000, 0x1000000, 0x320000);
     mFlutterPhase = 0;
     mStateTimer = 0;
     mState = 7;
@@ -272,7 +243,7 @@ void daBtfly_c::State5()
         mState = 6;
         mFlags &= ~0x10000;
     } else {
-        _Z14ApproachLinearRiii(&mHorzSpeed, 0x8000, 0x800);
+        ApproachLinear(mHorzSpeed, 0x8000, 0x800);
     }
 
     if (mStateTimer >= 0x3c)
@@ -373,7 +344,7 @@ void daBtfly_c::State3()
 // @symbol _ZN9daBtfly_c6State2Ev
 void daBtfly_c::State2()
 {
-    char *player;
+    Player *player;
     Vector3 v;
     Vector3 d;
 
@@ -381,21 +352,21 @@ void daBtfly_c::State2()
     mPosY = mHomePosY;
     mPosZ = mHomePosZ;
 
-    player = (char *)ClosestPlayer();
+    player = ClosestPlayer();
     if (player != 0) {
         int *pp;
         int k = 0x5000;
         int py;
         int t;
         int five = 5;
-        Vec3_Sub(&d, &mPosX, player + 0x5c);
+        Vec3_Sub(&d, &mPosX, &player->mPosX);
         v.x = d.x;
         v.y = d.y;
         v.z = d.z;
         if (Vec3_HorzLen(&v) > 0x4b0000)
             mState = 3;
 
-        pp = (int *)(int)M(player + 0x5c);
+        pp = &player->mPosX;
         mPosX = mPrevPosX;
         mPosY = mPrevPosY;
         mPosZ = mPrevPosZ;
@@ -409,7 +380,7 @@ void daBtfly_c::State2()
         v.z = v.z + t / 4;
         ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &v), 0x300);
 
-        pp = (int *)(int)M(player + 0x5c);
+        pp = &player->mPosX;
         v.x = pp[0];
         py = pp[1];
         v.y = py;
@@ -499,7 +470,7 @@ int daBtfly_c::Render()
     if (mState == 4)
         return 1;
     if (mUseAnimModel != 0)
-        mModelAnim.Render(0);
+        mAnmModel.Render(0);
     else
         mModel.Render((Vector3 *)&mScaleX);
     return 1;
@@ -524,10 +495,10 @@ int daBtfly_c::Behavior()
             int horiz = FX_MUL((int)data_02082214[idx + 1], s);
             int idx2 = ((unsigned short)mPrevAngleY >> 4) << 1;
             int velX = FX_MUL(horiz, (int)data_02082214[idx2]);
-            unk_0a4 = velX;
+            mSpeedX = velX;
             int idx3 = (((unsigned short)mPrevAngleY >> 4) << 1) + 1;
             int velZ = FX_MUL(horiz, (int)data_02082214[idx3]);
-            unk_0ac = velZ;
+            mSpeedZ = velZ;
         }
         UpdatePosWithOnlySpeed(0);
         mStateTimer++;
@@ -540,14 +511,12 @@ int daBtfly_c::Behavior()
         mAngleY = mPrevAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
         if (mUseAnimModel != 0) {
-            *(Mtx *)&mModelAnim.mat4x3 = *(Mtx *)&data_020a0e68;
-            _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-                this, &mShadowModel1, &mModelAnim.mat4x3, 0x14000, 0x12c000, 0xf);
-            mModelAnim.Advance();
+            *(Mtx *)&mAnmModel.mat4x3 = *(Mtx *)&data_020a0e68;
+            DropShadowRadHeight(mShadowModel1, mAnmModel.mat4x3, 0x14000, 0x12c000, 0xf);
+            mAnmModel.Advance();
         } else {
             *(Mtx *)&mModel.mat4x3 = *(Mtx *)&data_020a0e68;
-            _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-                this, &mShadowModel2, &mModel.mat4x3, 0x64000, 0x12c000, 0xf);
+            DropShadowRadHeight(mShadowModel2, mModel.mat4x3, 0x64000, 0x12c000, 0xf);
         }
     }
     return 1;
@@ -556,31 +525,28 @@ int daBtfly_c::Behavior()
 // @symbol _ZN9daBtfly_c13InitResourcesEv
 int daBtfly_c::InitResources()
 {
-    Model::LoadFile(data_ov002_0210d9d8);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
     dExtFrameCtrl_c::LoadFile(gButterflyFlyAnimationFile);
-    Model::LoadFile(data_ov100_02148668);
-    void *bmd = Model::LoadFile(gButterflyModelFile);
+    dExtSimpleModel_c::LoadFile(data_ov100_02148668);
+    void *bmd = dExtSimpleModel_c::LoadFile(gButterflyModelFile);
 
-    if (mModelAnim.SetFile((BMD_File *)bmd, 1, 1) == 0)
+    if (mAnmModel.SetFile((BMD_File *)bmd, 1, 1) == 0)
         return 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, LOADED(gButterflyFlyAnimationFile), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gButterflyFlyAnimationFile.filePtr, 0, 0x1000, 0);
     if (mShadowModel1.InitCylinder() == 0)
         return 0;
-    if (mModel.SetFile((BMD_File *)LOADED(data_ov100_02148668), 1, 1) == 0)
+    if (mModel.SetFile((BMD_File *)data_ov100_02148668.filePtr, 1, 1) == 0)
         return 0;
     if (mShadowModel2.InitCylinder() == 0)
         return 0;
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
     Vec3 v;
     v.x = 0;
     v.y = -0x32000;
     v.z = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mdCcAcPos_c, this, &v, 0x32000, 0x64000, 0x200000, 0);
+    mdCcAcPos_c.Init(this, *(Vector3 *)&v, 0x32000, 0x64000, 0x200000, 0);
 
     int sub = (int)(u8)(param1 & 0x30);
     if (sub != 0x10 && sub != 0x20) {
@@ -600,9 +566,9 @@ int daBtfly_c::InitResources()
     mHomePosZ = mPosZ;
 
     int r = RandomIntInternal(&data_0209e650);
-    int fc = mModelAnim.GetFrameCount();
+    int fc = mAnmModel.GetFrameCount();
     u32 rem = (u32)r % (u32)fc;
-    mModelAnim.currFrame = (rem << 16) >> 4;
+    mAnmModel.currFrame = (rem << 16) >> 4;
 
     mScale = 0x1000;
     s32 spd = mScale;

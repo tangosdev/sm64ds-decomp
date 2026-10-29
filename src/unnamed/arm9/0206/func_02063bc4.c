@@ -1,24 +1,14 @@
 #include "types.h"
-typedef struct {
-    u8 status;      /* 0x0 */
-    u8 byte1;       /* 0x1 */
-    u8 byte2;       /* 0x2 */
-    char pad3[0x10 - 0x3];
-    int u10;        /* 0x10 */
-    int u14;        /* 0x14 */
-} Elem;
+#include "private/arm9_wbt.h"
 
-typedef struct {
-    char pad0[0x14];
-    int u14;        /* 0x14 */
-    int u18;        /* 0x18 */
-    int u1c;        /* 0x1c */
-    s16 h20;        /* 0x20 */
-} Slot;
-
+/* NitroSDK WBTBlockInfoList, the field read here (the type keeps the name
+ * func_02065a94's definition gives it). */
 typedef struct {
     char pad[0x32];
-    u16 h32;        /* 0x32 */
+    /* 0x32 -- NitroSDK block_type: WBT_RegisterBlock (func_020658c0) sets
+     * 0 (COMMON) when it is given the block's data and 1 (USER) when it is
+     * not, so each packet has to be asked for with PREPARE_SEND_DATA */
+    u16 block_type;
 } Node65;
 
 extern int func_02065a74(void);
@@ -29,36 +19,47 @@ extern int func_02064d6c(int a, int b, int c, int d, int e, int f, int g);
 extern int func_02065bc0(void);
 extern void func_02064554(void *base, int a, int b, int c);
 
+/* NitroSDK WBT: answer a peer's completed GET_BLOCK request (peer command 4)
+ * with one packet of the block. A COMMON block's packet comes straight from
+ * the registered data (func_02064888); a USER block's comes from the
+ * application, through a PREPARE_SEND_DATA (0xd) system callback on
+ * system_cmd. Views are private/arm9_wbt.h's. */
 int func_02063bc4(void *base, int idx, int r8) {
     int r6 = 0;
-    Slot *s = (Slot*)((char*)base + 0x138);
-    Elem *e = (Elem*)((char*)base + 0x1d4 + idx * 0x68);
-    if (e->status == 2) {
+    WBTWork *work = (WBTWork *)base;
+    WBTCommand *sys = &work->system_cmd;
+    WBTPeerRecord *e = &work->peer[idx];
+    if (e->state == 2) {
         int r7;
         if (func_02065a74() == 0) r7 = 0xfffe; else r7 = 1;
-        if (e->byte1 == 4) {
-            Node65 *node = func_02065a94(e->u10);
+        if (e->command == 4) {
+            Node65 *node = func_02065a94(e->block_id);
             if (node != 0) {
-                int v = func_0206491c(e->u10, e->u14);
-                if (node->h32 == 0) {
-                    int r = func_02064888(e->u10, v);
+                int v = func_0206491c(e->block_id, e->seq_no);
+                if (node->block_type == 0) {
+                    int r = func_02064888(e->block_id, v);
                     if (r == 0) {
-                        r6 = func_02064d6c(r8, r7, e->byte2, e->u10, e->u14, 0, 0);
+                        r6 = func_02064d6c(r8, r7, e->cmd_counter, e->block_id, e->seq_no, 0, 0);
                     } else {
-                        r6 = func_02064d6c(r8, r7, e->byte2, e->u10, v, r, func_02065bc0());
+                        r6 = func_02064d6c(r8, r7, e->cmd_counter, e->block_id, v, r,
+                                           func_02065bc0());
                     }
-                } else if (node->h32 == 1) {
-                    s->u14 = e->u10;
-                    s->u18 = v;
-                    s->h20 = func_02065bc0();
-                    s->u1c = 0;
+                } else if (node->block_type == 1) {
+                    sys->u.prepare_send_data.block_id = e->block_id;
+                    sys->u.prepare_send_data.block_seq_no = v;
+                    sys->u.prepare_send_data.own_packet_size = func_02065bc0();
+                    sys->u.prepare_send_data.data_ptr = 0;
                     func_02064554(base, 0xd, idx, 0);
-                    if (s->u1c != 0) {
-                        r6 = func_02064d6c(r8, r7, e->byte2, s->u14, s->u18, s->u1c, s->h20);
+                    if (sys->u.prepare_send_data.data_ptr != 0) {
+                        r6 =
+                            func_02064d6c(r8, r7, e->cmd_counter, sys->u.prepare_send_data.block_id,
+                                          sys->u.prepare_send_data.block_seq_no,
+                                          (int)sys->u.prepare_send_data.data_ptr,
+                                          sys->u.prepare_send_data.own_packet_size);
                     }
                 }
             }
-            e->status = 1;
+            e->state = 1;
         }
     }
     return r6;

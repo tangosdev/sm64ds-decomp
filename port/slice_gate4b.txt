@@ -1,15 +1,18 @@
-# Gate-4b slice: the Model pipeline -- load, rebase, VRAM upload, bone walk,
+# Gate-4b slice: the dExtSimpleModel_c pipeline -- load, rebase, VRAM upload, bone walk,
 # material bind, display-list submit -- on top of slices 2/3a/3b and the
 # gate-4a pump. MMIO-touching files build via hostgen (see CMakeLists);
 # everything here compiles as-is.
 
-# Model
-src/engine/model/Model.cpp
-# Model::LoadFile lives in src/SharedFilePtr.cpp (slice 3b), compiled
-# under SM64DS_PORT_GATE4B.
-src/_ZN5Model23AddToCommonModelDataArrER8BMD_File.cpp
+# The dExt model family -- dExtModel_c, dExtSimpleModel_c, dExtAnmModel_c,
+# dExtBlendAnmModel_c, dExtAnm2Model_c, dExtCommonModel_c, dExtShadowModel_c,
+# dExtFrameCtrl_c and the three texture animators -- is one production
+# translation unit. Every slice that needs any of those classes links this
+# one, so the file is listed here and nowhere else.
+src/engine/model/d_ext_model.cpp
+# dExtSimpleModel_c::LoadFile lives in src/SharedFilePtr.cpp (slice 3b), compiled
+# under SM64DS_PORT_GATE4B. AddToCommonModelDataArr and SetPolygonID live
+# in d_ext_model.cpp with the rest of the class.
 src/engine/model/Model4.cpp
-src/_ZN5Model12SetPolygonIDEi.cpp
 # ModelComponents::Render: HOST copy in port/unmatched -- the matched TU
 # passes the material index by leaving it in r1 (see the file header there).
 port/unmatched/ModelComponents_Render.cpp
@@ -27,30 +30,27 @@ src/engine/gx/GX.cpp
 # silently -- the exact failure hostgen exists to prevent.
 src/MulMat4x3Mat4x3.c
 src/func_020458a8.c
-src/func_02016b24.c
 src/func_02048234.c
 src/MulMat3x3Mat3x3.c
-src/_ZN9ModelBaseC2Ev.cpp
+# func_02016b24 and dExtModel_c::C2 live in src/engine/model/d_ext_model.cpp above.
 src/DMASyncWordTransfer.c
 src/func_02059fd0.c
 
 # gate 4c additions: the animation path (UpdateBones recursion).
 # func_020453c0 lives in the ModelComponents TU listed above.
-src/func_0204547c.c
-src/func_020457f0.c
-src/func_020456a0.c
+src/func_0204547c.cpp
 # cstd::abs is defined host-side in hal/heap_globals.cpp: its src/ home,
 # src/cstd4.cpp, carries hand-asm the host cannot compile, and every target that
 # links this slice links heap_globals.cpp as well.
 # dExtFrameCtrl_c::LoadFile lives in src/SharedFilePtr.cpp (slice 3b),
 # compiled under SM64DS_PORT_GATE4B.
-src/_ZN15dExtFrameCtrl_c17UpdateFileOffsetsER8BCA_File.cpp
+src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp
 
 # Whole-class slice. Once a constructor is a real C++ constructor its TU
 # becomes the vtable's key function on MSVC as well, and the host emits the
 # vtable there -- which needs EVERY virtual defined, not the subset a gate
 # happens to exercise. A migrated class can no longer be sliced method by
-# method; it comes across whole. src/engine/model/Model.cpp (above) is that
+# method; it comes across whole. src/engine/model/d_ext_model.cpp (above) is that
 # TU for this class. Its destructor calls the delete veneer func_0203cbc0,
 # which src/engine/heap/Heap.cpp (slice 3a) now defines for the host, along
 # with the allocator func_0203cc0c this slice used to list as well.

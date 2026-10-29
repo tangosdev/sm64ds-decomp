@@ -25,7 +25,6 @@
 #include "dBgCh_Lin.h"
 
 extern "C" {
-void func_020353b0(void *ray, void *actor);
 void func_ov002_020fea4c(int *a, int *b);       /* dM3dGLin::GetEnd */
 void func_ov002_020fea68(int *a, int *b);       /* dM3dGLin::GetStart */
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
@@ -50,7 +49,7 @@ void dBgCh_Lin::SetObjAndLine(const Vector3 &start, const Vector3 &end,
 {
     Vector3 midpoint;
     dM3dGLin::Set(start, end);
-    func_020353b0(this, actor);
+    SetActor(actor);
     func_02037608();
     midpoint.x = start.x + end.x;
     midpoint.y = start.y + end.y;

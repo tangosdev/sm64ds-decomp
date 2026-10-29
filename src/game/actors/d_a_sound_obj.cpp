@@ -21,11 +21,9 @@
  * daSoundObj_c_classInit is reconstructed (RTTI daSoundObj_c, SOUND_OBJ
  * registry). Retail does not store that spelling.
  *
- * deslop
- * Leftover: Sound::PlaySub stays mangled -- Fix12<int> by value (wall
- *   6az); the namespace spelling homes an 8-byte stack slot (measured
- *   in d_a_sld_mng.cpp). loop stays int: the row byte passes through
- *   unconverted.
+ * Leftover: func_ov002_020f9468 passes mLoop through `*(bool *)&`.
+ *   A bool parameter converts the u8 and the function grows from 0x94
+ *   to 0xac.
  * Leftover: SoundObjectCallbackOwner stays a shadow: entries 0-2 of
  *   the callback table are arm9 Sound:: starters, not daSoundObj_c
  *   members, and the sinit fills the table as non-polymorphic {ptr,0}
@@ -65,10 +63,13 @@ struct SoundObjectCallbackOwner;
 
 typedef int (SoundObjectCallbackOwner::*SoundObjectCallback)(u16 *);
 
+namespace Sound {
+bool PlaySub(u32, u32, u32, int, bool);
+}
+
 extern "C" {
-extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 soundID, u32 volume, u32 pan, Fix12i distance, int loop);
 extern SoundObjectCallback data_ov002_0211110c[];
-extern SoundObjRow data_ov002_0210c080[];  /* 7 rows; row 7 is the _ZTV12daSoundObj_c header */
+extern SoundObjRow data_ov002_0210c080[]; /* 7 rows; row 7 is the _ZTV12daSoundObj_c header */
 extern int data_0208e430;                 /* current sub-sound ID, owned by Sound::PlaySub */
 extern int data_0209b490;                 /* MUSIC_VOLUME_LSL_12 */
 extern int data_0209b49c;                 /* MESSAGE_SOUND_VOLUME_LSL_12 */
@@ -113,7 +114,7 @@ int daSoundObj_c::InitResources()
             break;
         if (actor != this) {
             actor->MarkForDestruction();
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(current, 0x7f, 0, 0x7f000, 0);
+            Sound::PlaySub(current, 0x7f, 0, 0x7f000, 0);
         }
     }
 
@@ -131,7 +132,7 @@ int daSoundObj_c::Behavior()
         || (mCounter > 0xa && data_0209b49c <= 0x7f)) {
         MarkForDestruction();
         if (data_0208e430 != 0x22) {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(data_0208e430, 0x7f, 0, 0x7f000, 0);
+            Sound::PlaySub(data_0208e430, 0x7f, 0, 0x7f000, 0);
         }
     }
     if (param1 != 6) {
@@ -148,16 +149,15 @@ int daSoundObj_c::Behavior()
 static const int kPoolDist = 0x8777;
 
 // @symbol func_ov002_020f9468
-extern "C" int func_ov002_020f9468(daSoundObj_c *self, u16 *counter)
-{
+extern "C" int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     /* The starter shape PlaySecretSound, PlaySmallSecretSound and
        func_0200f7f0 share: the pool fallback is an else-if, so the
        steady-state branch falls through to the one `return 0`. */
     if (*counter < self->mCounterLimit - 0xf) {
         int vol = self->mVolume;
-        _ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, vol, 0x7f, (0x7f - vol) << 0xc, self->mLoop);
+        Sound::PlaySub(self->mSoundID, vol, 0x7f, (0x7f - vol) << 0xc, *(bool *)&self->mLoop);
         *counter += 1;
-    } else if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, 0x7f, 0, kPoolDist, self->mLoop)) {
+    } else if (Sound::PlaySub(self->mSoundID, 0x7f, 0, kPoolDist, *(bool *)&self->mLoop)) {
         return 1;
     }
     return 0;
@@ -168,11 +168,11 @@ extern "C" int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter)
 {
     if (counter[0] < self->mCounterLimit) {
         int vol = self->mVolume;
-        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, vol, 0x7f, ((0x7f - vol) << 12) / 5, 1) != 0)
+        if (Sound::PlaySub(self->mSoundID, vol, 0x7f, ((0x7f - vol) << 12) / 5, 1) != 0)
             self->mCounterLimit = 1;
         counter[0]++;
     } else if (self->mCounterLimit == 0) {
-        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, 0x7f, 0, 0xcb33, 1) != 0)
+        if (Sound::PlaySub(self->mSoundID, 0x7f, 0, 0xcb33, 1) != 0)
             return 1;
     }
     return 0;

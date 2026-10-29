@@ -1,20 +1,16 @@
 //cpp
 /* Production translation unit for ov065/daObjCtMecha05_c.
  *
- * deslop
- *
- * Leftover:
+ * What stays, and why:
  * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange
- *   stay mangled (Fix12-by-value, 6az)
+ *   are header member calls whose headers spell Fix12 as Fix12i, a plain
+ *   s32 (6az)
  * - func_020393d4 stores dBgW+0x18 (beforeClsnCallback); func_020393a4
  *   stores +0x0c; func_02039394 stores +0x10 (no setter)
- * - func_ov065_0211ac0c / func_ov065_0211ad70 stay address-named
- *   (symbols.txt; naming them as methods would miss those labels)
  * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /
  *   TTC_MovingBar_ClsnFile are symbols.txt BSS labels shared with the
  *   neighbouring class
- * - SharedFilePtr +4 BMD (LoadFile/Release; header has no fields)
- * - common.h first (func_ov065_0211ac0c mShadowMatrix.m[9..11])
+ * - common.h first (UpdateShadow writes mShadowMatrix.m[9..11])
  * - return new emits homeless _ZN10dBgActor_cD2Ev; compiler-only policy
  *   deadstrips it
  *
@@ -23,6 +19,9 @@
  * toward the compiler-owned destructor group. Keep the factory first.
  *
  * The factory is `return new` in this file.
+ *
+ * S41: D1 0x0211ab60 size 0x4c, D0 0x0211abac size 0x60; no separate body,
+ * inline virtual destructor + vtable emits D1 then D0, no D2.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -38,6 +37,8 @@ enum daObjCtMecha05_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x5c2, collision file 0x5c3). mwcc emits
@@ -48,15 +49,11 @@ enum daObjCtMecha05_c_AssetId {
  * shard's data_ov065_* labels for the same addresses are dropped from
  * symbols.txt, and their stale decl_common.h lines with them (S42). */
 struct Mecha05ModelFile : SharedFilePtr {
-    u32 words[2];
-
     Mecha05ModelFile(u32 fileID);
     ~Mecha05ModelFile();
 };
 
 struct Mecha05CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     Mecha05CollisionFilePtr(u32 fileID);
     ~Mecha05CollisionFilePtr();
 };
@@ -64,77 +61,47 @@ struct Mecha05CollisionFilePtr : SharedFilePtr {
 extern Mecha05ModelFile TTC_MovingBar_ModelFile;
 extern Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile;
 
-/* Fix12-by-value calls retain their measured raw ABI declarations. Natural
- * class-typed declarations make mwccarm home arguments absent from retail. */
-extern "C" {
-extern void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
-extern void MulVec3Mat4x3(const Vector3 *src, const Matrix4x3 *matrix,
-                          Vector3 *dst);
-extern void AddVec3(const Vector3 *left, const Vector3 *right, Vector3 *dst);
-extern void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-    dActor_c *actor, dExtShadowModel_c *shadow, Matrix4x3 *matrix,
-    int scaleX, int scaleY, int scaleZ, u32 opacity);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
-    dBgActor_c *actor, int radius, int verticalOffset);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *collider, KCL_File *file, Matrix4x3 *matrix,
-    int scale, s16 angle, CLPS_Block *clps);
-extern void func_020393d4(dBgW *collider, void *callback);
-extern void func_020393a4(dBgW *collider, int value);
-extern void func_02039394(dBgW *collider, int value);
-
-extern void func_ov065_0211ac0c(daObjCtMecha05_c *actor);
-extern void func_ov065_0211ad70(daObjCtMecha05_c *actor);
-extern int RandomIntInternal(int *seed);
-extern u16 DecIfAbove0_Short(u16 *p);
-
 extern u8 data_0209f2c0;
 extern int data_0209e650;
 extern s16 data_02082214[];
 extern s16 data_ov065_0211c0c8[];
 extern s8 data_ov065_0211d26c[];
 extern CLPS_Block data_ov035_02112258;
+
+/* local extern: arm9 vector helpers and the dBgW stores; no shared header. */
+extern "C" {
+extern void MulVec3Mat4x3(const Vector3 *src, const Matrix4x3 *matrix, Vector3 *dst);
+extern void AddVec3(const Vector3 *left, const Vector3 *right, Vector3 *dst);
+extern void func_020393d4(dBgW *collider, void *callback);
+extern void func_020393a4(dBgW *collider, int value);
+extern void func_02039394(dBgW *collider, int value);
 }
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
  * lineage-supported reconstruction. The descriptor is at ov065:0x0211d290. */
 extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit();
 extern "C" SpawnInfo<daObjCtMecha05_c> g_profile_CT_MECHA05 = {
-    daObjCtMecha05_c_classInit,
-    0x0071,
-    0x00ec,
-    0x00000002,
-    0,
-    0x00600000,
-    0x01000000,
-    0x02000000
-};
+    daObjCtMecha05_c_classInit, 0x0071, 0x00ec, 0x00000002, 0, 0x00600000, 0x01000000, 0x02000000};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjCtMecha05_c_classInit
-extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit()
-{
+extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit() {
     return new daObjCtMecha05_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha05_c13InitResourcesEv
-int daObjCtMecha05_c::InitResources()
-{
-    void *modelFile = Model::LoadFile(TTC_MovingBar_ModelFile);
+int daObjCtMecha05_c::InitResources() {
+    void *modelFile = dExtSimpleModel_c::LoadFile(TTC_MovingBar_ModelFile);
     mModel.SetFile((BMD_File *)modelFile, 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     void *collisionFile = dBgW_Kc::LoadFile(TTC_MovingBar_ClsnFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)collisionFile,
-        &mClsnMat, 0x199, mAngleY,
-        &data_ov035_02112258);
-    func_020393d4(&mMeshCollider,
-        (void *)&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY, data_ov035_02112258);
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
     func_020393a4(&mMeshCollider, 0x1c0000);
     func_02039394(&mMeshCollider, 0x1000);
     mPrevAngleY = mAngleY;
@@ -161,8 +128,7 @@ int daObjCtMecha05_c::InitResources()
 // @symbol _ZN16daObjCtMecha05_c8BehaviorEv
 /* mHorzSpeed is reused here as a fix12 travel accumulator rather than a
  * physical speed. */
-int daObjCtMecha05_c::Behavior()
-{
+int daObjCtMecha05_c::Behavior() {
     if (data_0209f2c0 == 3) {
         int ang;
         /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
@@ -171,8 +137,8 @@ int daObjCtMecha05_c::Behavior()
         ang = *(u16 *)&mPrevAngleY;
         mPosZ = mHomePosZ + FX_MUL(data_02082214[((ang >> 4) << 1) + 1], 0xfa000);
         UpdateModelPosAndRotY();
-        func_ov065_0211ac0c(this);
-        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+        UpdateShadow();
+        if (IsClsnInRange(0, 0) != 0)
             UpdateClsnPosAndRot();
         return 1;
     }
@@ -182,7 +148,8 @@ int daObjCtMecha05_c::Behavior()
 
     switch (mState) {
     case 0:
-        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0) goto Lend;
+        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
+            goto Lend;
         if (data_0209f2c0 == 2) {
             int v = (u16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
             if (v % 2 == 0) {
@@ -209,83 +176,81 @@ int daObjCtMecha05_c::Behavior()
         int d = mTravel;
         if (d != 0xfa000) {
             int val = FX_MUL((0xfa000 - d), (0xfa000 - mPrevTravel));
-            if (val >= 0) goto L280;
+            if (val >= 0)
+                goto L280;
         }
         {
             int sp = mHorzSpeed;
-            if (sp <= -0x8000) goto L280;
-            if (sp >= 0x8000) goto L280;
+            if (sp <= -0x8000)
+                goto L280;
+            if (sp >= 0x8000)
+                goto L280;
             mState++;
             mHorzSpeed = 0;
             mStateTimer = 0x1e;
             goto Lend;
         }
-      L280:
-        {
-            int m = (mTravel < 0xfa000) ? 0x6666 : -0x6666;
-            int sp = mHorzSpeed;
-            int delta;
-            if (FX_MUL(sp, m) >= 0)
-                delta = m;
-            else
-                delta = FX_MUL(m, 0x2599);
-            mHorzSpeed += delta;
-            if (data_0209f2c0 != 2) goto Lend;
-        }
-            if (FX_MUL(mTravel, mPrevTravel) >= 0)
-                goto Lend;
-            if ((RandomIntInternal(&data_0209e650) & 3) != 0)
-                goto Lend;
-            func_ov065_0211ad70(this);
+    L280: {
+        int m = (mTravel < 0xfa000) ? 0x6666 : -0x6666;
+        int sp = mHorzSpeed;
+        int delta;
+        if (FX_MUL(sp, m) >= 0)
+            delta = m;
+        else
+            delta = FX_MUL(m, 0x2599);
+        mHorzSpeed += delta;
+        if (data_0209f2c0 != 2)
             goto Lend;
+    }
+        if (FX_MUL(mTravel, mPrevTravel) >= 0)
+            goto Lend;
+        if ((RandomIntInternal(&data_0209e650) & 3) != 0)
+            goto Lend;
+        ResetToHome();
+        goto Lend;
     }
 
     case 3:
-        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0) goto Lend;
+        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
+            goto Lend;
         mHorzSpeed = -0x5000;
         if (mTravel < 0)
-            func_ov065_0211ad70(this);
+            ResetToHome();
         goto Lend;
     }
 
 Lend:
     UpdatePos(0);
     UpdateModelPosAndRotY();
-    func_ov065_0211ac0c(this);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
-            this, 0x1c0000, 0x1000) != 0)
+    UpdateShadow();
+    if (IsClsnInRange(0x1c0000, 0x1000) != 0)
         UpdateClsnPosAndRot();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* Address-named TU-local helper; original spelling unknown. */
-// @symbol func_ov065_0211ad70
-void func_ov065_0211ad70(daObjCtMecha05_c *actor)
-{
-    actor->mState = 0;
-    actor->mTravel = 0;
-    actor->mHorzSpeed = 0;
-    actor->mPosX = actor->mHomePosX;
-    actor->mPosY = actor->mHomePosY;
-    actor->mPosZ = actor->mHomePosZ;
+// @symbol _ZN16daObjCtMecha05_c11ResetToHomeEv
+void daObjCtMecha05_c::ResetToHome() {
+    mState = 0;
+    mTravel = 0;
+    mHorzSpeed = 0;
+    mPosX = mHomePosX;
+    mPosY = mHomePosY;
+    mPosZ = mHomePosZ;
 
     u8 setting = data_0209f2c0;
-    actor->mStateTimer = data_ov065_0211c0c8[setting];
+    mStateTimer = data_ov065_0211c0c8[setting];
     if (setting != 2)
         return;
 
-    actor->mStateTimer = data_ov065_0211d26c[
-        (u16)((u32)RandomIntInternal(&data_0209e650) >> 16) & 3];
-}
+    mStateTimer = data_ov065_0211d26c[(u16)((u32)RandomIntInternal(&data_0209e650) >> 16) & 3];
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha05_c6RenderEv
-int daObjCtMecha05_c::Render()
-{
+int daObjCtMecha05_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -293,8 +258,7 @@ int daObjCtMecha05_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha05_c16CleanupResourcesEv
-int daObjCtMecha05_c::CleanupResources()
-{
+int daObjCtMecha05_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     TTC_MovingBar_ModelFile.Release();
@@ -304,11 +268,9 @@ int daObjCtMecha05_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* Address-named TU-local helper; original spelling unknown. */
-// @symbol func_ov065_0211ac0c
-void func_ov065_0211ac0c(daObjCtMecha05_c *actor)
-{
-    int distance = actor->mPosY - actor->mGroundY;
+// @symbol _ZN16daObjCtMecha05_c12UpdateShadowEv
+void daObjCtMecha05_c::UpdateShadow() {
+    int distance = mPosY - mGroundY;
     if (distance < 0)
         distance = -distance;
     if (distance > 0x9c4000 || distance < 0xa000)
@@ -324,24 +286,19 @@ void func_ov065_0211ac0c(daObjCtMecha05_c *actor)
     offset.x = 0;
     offset.y = 0;
 
-    Matrix4x3_FromRotationY(&actor->mShadowMatrix, actor->mAngleY);
-    MulVec3Mat4x3(&offset, &actor->mShadowMatrix, &shadowPos);
-    AddVec3(&shadowPos, &actor->mPos, &shadowPos);
+    Matrix4x3_FromRotationY(&mShadowMatrix, mAngleY);
+    MulVec3Mat4x3(&offset, &mShadowMatrix, &shadowPos);
+    AddVec3(&shadowPos, &mPos, &shadowPos);
 
-    actor->mShadowMatrix.m[9] = shadowPos.x >> 3;
-    actor->mShadowMatrix.m[10] = actor->mGroundY >> 3;
-    actor->mShadowMatrix.m[11] = shadowPos.z >> 3;
+    mShadowMatrix.m[9] = shadowPos.x >> 3;
+    mShadowMatrix.m[10] = mGroundY >> 3;
+    mShadowMatrix.m[11] = shadowPos.z >> 3;
 
-    _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-        actor, &actor->mShadowModel, &actor->mShadowMatrix,
-        0xdc000, 0x32000, 0x28a000, 0xf);
-}
+    DropShadowScaleXYZ(mShadowModel, mShadowMatrix, 0xdc000, 0x32000, 0x28a000, 0xf);
 }
 // @symbol _ZN16daObjCtMecha05_cD1Ev
 // @symbol _ZN16daObjCtMecha05_cD0Ev
 /* -------------------------------------------------------------------------- */
-/*   _ZN16daObjCtMecha05_cD1Ev  0x0211ab60  size 0x4c  (complete-object)      */
-/*   _ZN16daObjCtMecha05_cD0Ev  0x0211abac  size 0x60  (deleting)            */
 /* -------------------------------------------------------------------------- */
 /* No separate body lives here. The inline virtual destructor in the class
  * declaration and this TU's vtable instantiation make mwccarm emit retail's

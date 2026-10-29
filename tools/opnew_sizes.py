@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Class sizes read out of the ROM: the literal the cartridge hands its own `operator new`.
 
-`fBase_c::operator new(unsigned int)` -- `_ZN7fBase_cnwEj`, arm9 0x02043444 -- is this
+`fBase_c::operator new(size_t)` -- `_ZN7fBase_cnwEm`, arm9 0x02043444 -- is this
 game's allocator, and every `new Class` in the original source compiled to a `mov r0,
 #sizeof(Class)` immediately before a `bl` to it.  That immediate is not inference: it is
 `sizeof` as the original compiler computed it, frozen in the instruction stream.  There
@@ -28,7 +28,7 @@ the vtable it was attributed through, and whether any two sites disagree.
 
 How a site is read
 ------------------
-    bl _ZN7fBase_cnwEj      r0 on entry is the size.  Constant-propagate backwards
+    bl _ZN7fBase_cnwEm      r0 on entry is the size.  Constant-propagate backwards
                             through the enclosing function to recover it.
     ...                     r0 on return is the object.  Follow it.
     str rV, [rObj]          rV a pool literal -> that is a vptr store.
@@ -127,8 +127,8 @@ except ImportError:                                                    # pragma:
 REPO = pathlib.Path(__file__).resolve().parent.parent
 
 ARM9_BASE = 0x02004000
-OPERATOR_NEW = 0x02043444          # _ZN7fBase_cnwEj
-OPERATOR_NEW_SYM = "_ZN7fBase_cnwEj"
+OPERATOR_NEW = 0x02043444          # _ZN7fBase_cnwEm
+OPERATOR_NEW_SYM = "_ZN7fBase_cnwEm"
 
 # How deep to follow `bl <ctor>` looking for the vptr store the factory did not inline.
 # Two levels covers factory -> ctor -> base ctor; deeper has never added a class and a

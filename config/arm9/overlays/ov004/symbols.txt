@@ -45,7 +45,7 @@ Mg_PlayJingle kind:function(arm,size=0x54) addr:0x020ae274
 Mg_StartMusic kind:function(arm,size=0x68) addr:0x020ae2c8
 Mg_InitMusic kind:function(arm,size=0x84) addr:0x020ae330
 _ZN11dScMgBase_c11PaintSquareEiiii kind:function(arm,size=0x210) addr:0x020ae3b4
-Mg_DrawLine kind:function(arm,size=0x294) addr:0x020ae5c4
+_ZN11dScMgBase_c11Mg_DrawLineEiiiiii kind:function(arm,size=0x294) addr:0x020ae5c4
 Mg_DrawMenu kind:function(arm,size=0x1d8) addr:0x020ae858
 Mg_DrawSpriteList kind:function(arm,size=0x48) addr:0x020aea30
 Mg_DrawSpriteListEntry kind:function(arm,size=0xac) addr:0x020aea78
@@ -210,9 +210,9 @@ MgCoins_Draw kind:function(arm,size=0x10c) addr:0x020b6430
 MgCoins_DrawDelta kind:function(arm,size=0xa8) addr:0x020b653c
 MgCoins_Update kind:function(arm,size=0xf0) addr:0x020b65e4
 MgCoins_Reset kind:function(arm,size=0xe8) addr:0x020b66d4
-MgCoins_Cleanup kind:function(arm,size=0x24) addr:0x020b67bc
-Coin_Destroy kind:function(arm,size=0x4) addr:0x020b67e0
-Coin_Construct kind:function(arm,size=0x4) addr:0x020b67e4
+__arraydtor$192 kind:function(arm,size=0x24) addr:0x020b67bc
+_ZN6SpriteD1Ev kind:function(arm,size=0x4) addr:0x020b67e0
+_ZN6SpriteC1Ev kind:function(arm,size=0x4) addr:0x020b67e4
 Mg_SetNextBanner kind:function(arm,size=0x10) addr:0x020b67e8
 Mg_SetPerfectBanner kind:function(arm,size=0x10) addr:0x020b67f8
 Mg_ResetRecordBannerPos kind:function(arm,size=0x24) addr:0x020b6808
@@ -281,12 +281,12 @@ sMgBrushPalette kind:data(any) addr:0x020b9468
 sMgCoinRiseFrames kind:data(any) addr:0x020b9488
 __sinit_d_s_mg_base.cpp kind:function(arm,size=0xd0) addr:0x020b948c
 __sinit_unit020b2c84.cpp kind:function(arm,size=0x574) addr:0x020b955c
-__sinit_ov004_020b9ad0 kind:function(arm,size=0x54) addr:0x020b9ad0
-__sinit_ov004_020b9b24 kind:function(arm,size=0x2c0) addr:0x020b9b24
+__sinit_unit020b4aa4.cpp kind:function(arm,size=0x54) addr:0x020b9ad0
+__sinit_d_mg_ps_opt.cpp kind:function(arm,size=0x2c0) addr:0x020b9b24
 .p__sinit_d_s_mg_base.cpp kind:data(word) addr:0x020b9de4
 .p__sinit_unit020b2c84.cpp kind:data(word) addr:0x020b9de8
-.p__sinit_ov004_020b9ad0 kind:data(word) addr:0x020b9dec
-.p__sinit_ov004_020b9b24 kind:data(word) addr:0x020b9df0
+.p__sinit_unit020b4aa4.cpp kind:data(word) addr:0x020b9dec
+.p__sinit_d_mg_ps_opt.cpp kind:data(word) addr:0x020b9df0
 data_ov004_020b9e00 kind:data(any) addr:0x020b9e00
 data_ov004_020b9e04 kind:data(any) addr:0x020b9e04
 data_ov004_020b9e08 kind:data(any) addr:0x020b9e08
@@ -883,3 +883,4 @@ data_ov004_020bfea8 kind:bss addr:0x020bfea8
 data_ov004_020bfeac kind:bss addr:0x020bfeac
 data_ov004_020bfeb0 kind:bss addr:0x020bfeb0
 data_ov004_020bfeb4 kind:bss addr:0x020bfeb4
+data_ov004_020bfeb8 kind:bss(size=0x0) addr:0x020bfeb8

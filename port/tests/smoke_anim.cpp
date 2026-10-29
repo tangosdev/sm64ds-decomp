@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
 
 #include "ntr/gx.h"
@@ -20,7 +20,7 @@
 #include "ntr/ppu.h"
 
 extern "C" {
-void _ZN5ModelC1Ev(void *self);
+void _ZN17dExtSimpleModel_cC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void *_ZN13SharedFilePtr8LoadFileEv(SharedFilePtrC *self);
@@ -66,11 +66,11 @@ int main(void)
     SharedFilePtrC mp;
     _ZN13SharedFilePtr9ConstructEj(&mp, 1034);
     static char storage[0x50];
-    Model *model = (Model *)storage;
-    _ZN5ModelC1Ev(storage);
-    void *file = Model::LoadFile(*(SharedFilePtr *)&mp);
+    dExtSimpleModel_c *model = (dExtSimpleModel_c *)storage;
+    _ZN17dExtSimpleModel_cC1Ev(storage);
+    void *file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&mp);
     CHECK(file != NULL);
-    CHECK(model->Model::DoSetFile((char *)file, 0, -1) == 1);
+    CHECK(model->dExtSimpleModel_c::DoSetFile((char *)file, 0, -1) == 1);
     ident_fx(&model->mat4x3);
 
     SharedFilePtrC ap;
@@ -101,7 +101,7 @@ int main(void)
     }
 
     reset_scene();
-    model->Model::Render(NULL);
+    model->dExtSimpleModel_c::Render(NULL);
     size_t tris = 0;
     const ntr::GxTriangle *tarr = ntr::gx_polygons(tris);
     printf("  piano triangles, frame 0 of piano_attack: %zu\n", tris);
@@ -126,7 +126,7 @@ int main(void)
             }
             reset_scene();
             ntr::gx_stream_hash_reset();
-            model->Model::Render(NULL);
+            model->dExtSimpleModel_c::Render(NULL);
             printf("stream %08x state %08x stores %d  ", ntr::gx_stream_hash_reset(),
                    ntr::gx_state_hash(), ntr::gx_store_count_reset());
             size_t n2 = 0;
@@ -166,7 +166,7 @@ int main(void)
             NTR_MMIO(uint32_t, 0x04000458) = (uint32_t)m[i];
         NTR_MMIO(uint32_t, 0x04000440) = 1;
         NTR_MMIO(uint32_t, 0x04000454) = 0;
-        model->Model::Render(NULL);
+        model->dExtSimpleModel_c::Render(NULL);
     }
     ntr::Framebuffer fb;
     for (int y = 0; y < ntr::SCREEN_H; ++y)

@@ -13,15 +13,7 @@ src/ui/hud/d_cap_icon.cpp:
     .text start:0x020ab110 end:0x020ab41c
     .data start:0x020ad450 end:0x020ad478
 
-src/unnamed/ov001/func_ov001_020ab41c.c:
-    complete
-    .text start:0x020ab41c end:0x020ab450
-
-src/TouchArea_Update.c:
-    complete
-    .text start:0x020ab450 end:0x020ab54c
-
 src/ui/hud/d_th_icon.cpp:
     complete
-    .text start:0x020ab54c end:0x020ab5f8
+    .text start:0x020ab41c end:0x020ab5f8
 

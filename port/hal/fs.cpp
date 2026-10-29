@@ -2,7 +2,7 @@
 //
 // SEAM LEVEL: SharedFilePtr::Load(). Everything above it -- LoadFile's
 // refcounting, Release, func_02017c24, func_02017e0c, and every
-// Model/dExtFrameCtrl_c/Collider LoadFile -- is portable src/ and runs verbatim.
+// dExtSimpleModel_c/dExtFrameCtrl_c/Collider LoadFile -- is portable src/ and runs verbatim.
 // Load itself is card hardware (overlay-file table, card streaming, CP15
 // cache flushes), so the HAL reimplements its CONTRACT: resolve fileID to
 // bytes, decompress if LZ77-tagged, allocate the result from the game's own

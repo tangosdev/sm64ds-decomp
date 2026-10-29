@@ -3,36 +3,49 @@ extern void func_0202043c(char *thiz);
 
 extern int data_0208ee44;
 
+/* C view of include/OamAnimation.h's OamAnimation (a C++ class this C file
+ * cannot include), with the header's names; only the fields read here. */
+typedef struct OamAnimation {
+    unsigned char pad_00[0x14];
+    int frame;         /* 0x14 */
+    int frameDuration; /* 0x18 */
+    int elapsed;       /* 0x1c */
+    unsigned char pad_20[4];
+    unsigned char loops;   /* 0x24 */
+    unsigned char enabled; /* 0x25 */
+} OamAnimation;
+
+/* Advance an enabled animation by data_0208ee44 ticks: once elapsed reaches
+ * frameDuration, step to the next frame (func_0202044c); past the last one,
+ * restart (func_0202043c) -- forever with loops 0, otherwise until loops
+ * counts down to 1, where it stops. */
 void func_02020768(char *thiz)
 {
-    int *acc;
-    unsigned char *cnt;
+    OamAnimation *anim = (OamAnimation *)thiz;
 
-    if (*(unsigned char *)(thiz + 0x25) == 0)
+    if (anim->enabled == 0)
         return;
 
-    acc = (int *)(((int)(thiz + 0x1c)));
-    *acc += data_0208ee44;
+    anim->elapsed += data_0208ee44;
 
-    if (*(int *)(thiz + 0x1c) < *(int *)(thiz + 0x18))
+    if (anim->elapsed < anim->frameDuration)
         return;
 
-    *(int *)(thiz + 0x1c) = 0;
+    anim->elapsed = 0;
 
-    if (func_0202044c(thiz, *(int *)(thiz + 0x14) + 1) != 0)
+    if (func_0202044c(thiz, anim->frame + 1) != 0)
         return;
 
-    if (*(unsigned char *)(thiz + 0x24) == 0) {
+    if (anim->loops == 0) {
         func_0202043c(thiz);
         return;
     }
 
-    if (*(unsigned char *)(thiz + 0x24) <= 1) {
-        *(unsigned char *)(thiz + 0x25) = 0;
+    if (anim->loops <= 1) {
+        anim->enabled = 0;
         return;
     }
 
-    cnt = (unsigned char *)(((int)(thiz + 0x24)));
-    *cnt -= 1;
+    anim->loops -= 1;
     func_0202043c(thiz);
 }

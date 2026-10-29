@@ -11,6 +11,8 @@
 
 #include "dActor_c.h"
 
+struct Fog;
+
 /* daMugenBGM_c_classInit allocates 0xd4 bytes, constructs dActor_c, and installs
  * _ZTV12daMugenBGM_c. D1 chains directly to dActor_c::~dActor_c, so the class has
  * no owned subobjects; its behavior uses only inherited actor state.
@@ -25,12 +27,14 @@ struct daMugenBGM_c : dActor_c {
     virtual s32 Behavior();
     virtual s32 Render();
     virtual void OnPendingDestroy();
+
+    /* The stored Fog while the stored area is the current one, else null. */
+    static Fog *GetActiveFog();
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daMugenBGM_c_size_must_be_0xd4[
-    sizeof(daMugenBGM_c) == 0xd4 ? 1 : -1];
+typedef char daMugenBGM_c_size_must_be_0xd4[sizeof(daMugenBGM_c) == 0xd4 ? 1 : -1];
 #endif
 
 #endif /* DAMUGENBGM_C_H */

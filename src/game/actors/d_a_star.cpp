@@ -1,4 +1,8 @@
 //cpp
+namespace Particle {
+struct Callback;
+}
+struct Vector3_16f;
 /* daStar_c / daStarBase_c -- the Power Star, the silver star, and the marker
  * that spawns one.
  *
@@ -27,15 +31,11 @@
  * numbers; the sound calls are func_02012694 (positional, bank 3) and
  * func_02012790 (2D, bank 2).
  *
- * Leftover. The first four items were tried in their clean form and moved
+ * Leftover. The first three items were tried in their clean form and moved
  * the bytes; the rest are names or types the evidence does not give:
  * - func_ov002_020e9d18 keeps the masked `(((int)&mStarFlags) & ~0ULL)`
  *   halfword stores and the LA label; a plain mBits.answer store loses the
  *   address rematerialization.
- * - func_ov002_020e8398 keeps `c + 0x3fc` for the shadow matrix and the M48
- *   struct copy of IDENTITY_MATRIX4X3.
- * - func_ov002_020e86ec keeps the raw `rc` buffer: a real dBgCh_Gnd local
- *   there adds code.
  * - Render keeps its gotos, and mStateTimer keeps its (u16) casts.
  * - func_ov002_020e8244 stays a free function; its first parameter is the
  *   output vector, not the star.
@@ -62,17 +62,20 @@ enum daStar_c_AssetId {
 #include "common.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
-#include "decl_Animation.h"
-#include "decl_dBgCh_Actr.h"
 #include "decl_Actor.h"
 #include "Player.h"
 #include "Message.h"
 #include "SaveData.h"
 #include "SharedFilePtr.h"
+#include "dExtFrameCtrl_c.h"
 #include "dCamera_c.h"
 #include "fBase_c.h"
 #include "daSoundObj_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
+#include "Sound.h"
+#include "cstd.h"
+#include "Event.h"
+#include "math/Approach.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
@@ -86,24 +89,16 @@ typedef struct Mtx { int m[12]; } Mtx; /* IDENTITY_MATRIX4X3 */
    daStar_c::State. */
 typedef void (daStar_c::*StateHandler)();
 
-/* A resource handle as the ROM lays it out: {id, loaded file}. The files the
-   star loads are read through .ptr. */
-struct SharedFilePtrRaw { u32 id; void *ptr; };
-
-/* Model handles construct through func_02017acc and destroy through
+/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
    func_02017ab4. Animation handles construct through SharedFilePtr::Construct
    and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
    undefined members onto the ROM symbols. */
 struct StarModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
-
     StarModelFilePtr(u32 fileID);
     ~StarModelFilePtr();
 };
 
 struct StarAnimationFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
-
     StarAnimationFileHandle(u32 fileID);
     ~StarAnimationFileHandle();
 };
@@ -164,23 +159,19 @@ enum {
 enum { CUTSCENE_FLAG = 0x4000000 };
 
 extern "C" {
-/* ModelAnim::SetAnim, called with a scalar speed. */
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned short d);
+/* dExtAnmModel_c::SetAnim, called with a scalar speed. */
 extern char data_02082714[];
 extern int func_0203d024(struct Vector3*, struct Vector3*);
 extern void DeathTable_ClearBit(int);
 extern void FUN_0202a130(void);
 extern void UnloadSilverStarAndNumber(void);
 extern StarAnimationFileHandle data_ov002_02110934;
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
 extern int Vec3_Dist(void*, void*);
 extern unsigned int data_0209b454;
 extern int data_ov002_0210da28[];
-extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(void* self, struct Vector3* pos, unsigned int n, int flag, unsigned short t, void* src);
 extern signed char data_0209f310[];
 extern "C" signed char NumRedCoins(void);
 extern unsigned char data_0209f2d8;
-extern char *_ZN8dActor_c13SpawnSoundObjEj(void *thiz, unsigned int id);
 extern void func_02035860(void* o, void* src);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
@@ -189,9 +180,13 @@ extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern short data_02082214[];
 extern void func_02012694(int a, void* p);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int a, int b, int d);
-/* local extern: the call passes an untyped this, so it cannot use the header method. */
-extern int _ZN15dExtFrameCtrl_c8FinishedEv(void* anim);
+namespace Particle {
+struct System {
+    static void NewSimple(unsigned int id, int a, int b, int d);
+
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" void SubVec3(Vector3* a, Vector3* b, Vector3* c);
 extern "C" void AddVec3(Vector3* a, Vector3* b, Vector3* c);
@@ -201,52 +196,35 @@ extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
 extern void Vec3_LslInPlace(void* v, int sh);
 extern struct M48 data_020a0e68;
 extern Mtx IDENTITY_MATRIX4X3;
-extern int _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(char *self, struct dExtShadowModel_c *sm, struct Matrix4x3 *m, int fix, int t, u32 f);
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void _ZN5Event8ClearBitEj(unsigned int b);
-extern void *_ZN9dBgCh_GndC1Ev(void* r);
-extern void _ZN9dBgCh_GndD1Ev(void* r);
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern int data_0209f32c;
-extern int func_02037e38(void* p);
-extern int func_02037e58(void* p);
 extern signed char data_0209f2f8;
 extern void SetStarMarker(int i, int v1, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern int data_0209f40c[];
 extern u8 data_0209f208;
 extern unsigned char data_0209f264;
-void func_02012790(int a);
-// local extern: Player.h's u8 parameters re-narrow the arguments (func_ov002_020e8ef0 differs).
-int _ZN6Player17SetNoControlStateEhih(void* p, int a, int b, int d);
-void _ZN5Event6SetBitEj(u32 a);
 void GiveVsStars(int idx, int delta);
 void CollectStarInCurLevel(int i);
 int SublevelToLevel(int i);
 s16 NumCoins(void);
-// local extern: SaveData.h's s8 level parameter re-narrows the argument (the caller differs).
-void _ZN8SaveData21SetCoinRecordIfHigherEah(int a, u8 b);
 extern u8 data_0209f228;
 extern u8 data_0209f2ac;
 extern s16 data_0209f358[];
 extern u8 data_0209d684;
-extern int _ZN5Event6GetBitEj(unsigned int bit);
-/* local extern: ROM calls the mangled name with no arg, reusing r0 as `this`. */
-extern void _ZN12daStarBase_c7CollectEv(void);
-extern int _ZN4cstd4sqrtEy(u64 v);
 extern int Vec3_HorzDist(const Vec3* a, const Vec3* b);
 extern s16 GetAngleToCamera(int i);
 extern u8 *data_0209f344;
-extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* c, Fix12i a, Fix12i b, short ang);
-extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32, int);
+}
+extern "C" {
 extern int func_ov002_020c6e14(void*);
 extern u8 data_0209d660;
 extern void EndKuppaScript(void);
 extern s8 data_0209f310[];
 extern "C" signed char data_0209f310[];
 extern int NumVsStarsObtained(void);
-extern int _Z14ApproachLinearRiii(int *v, int target, int step);
 extern StarModelFilePtr data_ov002_0211092c;
 extern StarModelFilePtr data_ov002_0211093c;
 extern StarAnimationFileHandle data_ov002_02110924;
@@ -266,38 +244,29 @@ extern s32 data_02092138;
 extern StarModelFilePtr data_ov002_0211094c;
 extern StarModelFilePtr data_ov002_02110954;
 extern StarModelFilePtr data_ov002_0211095c;
-/* local extern: the call passes an untyped this, so it cannot use the header method. */
-extern void _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(void *f);
 extern void LoadSilverStarAndNumber(void);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern s32 IsStarCollected(s32 level, s32 idx);
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c15FindWithActorIDEjPS_, from the legacy file for func_ov002_020e7554, NOT applied: extern char* _ZN8dActor_c15FindWithActorIDEjPS_(u32 actorID, char* prev); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020e7554, NOT applied: extern char* _ZN8dActor_c10FindWithIDEj(u32 id); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209b454, from the legacy file for func_ov002_020e763c, NOT applied: extern int data_0209b454; */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN9dCamera_c9SetLookAtERK7Vector3, from the legacy file for func_ov002_020e7934, NOT applied: extern void _ZN9dCamera_c9SetLookAtERK7Vector3(void* cam, const Vector3* v); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN9dCamera_c6SetPosERK7Vector3, from the legacy file for func_ov002_020e7934, NOT applied: extern void _ZN9dCamera_c6SetPosERK7Vector3(void* cam, const Vector3* v); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov002_020e7934, NOT applied: extern int Vec3_Dist(const Vector3* a, const Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE, from the legacy file for func_ov002_020e7fcc, NOT applied: extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE( u32 slot, u32 effect, Fix12i x, Fix12i y, Fix12i z, const void* rot, struct Callback* cb); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_, from the legacy file for func_ov002_020e7fcc, NOT applied: extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 effect, Fix12i x, Fix12i y, Fix12i z); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN15dExtFrameCtrl_c8FinishedEv, from the legacy file for func_ov002_020e8098, NOT applied: extern "C" int _ZN15dExtFrameCtrl_c8FinishedEv(void* anim); */
+/* TUBUILD CONFLICT -- alternate declaration of Particle::System::NewSimple, from the legacy file for func_ov002_020e7fcc, NOT applied: extern void Particle::System::NewSimple(u32 effect, Fix12i x, Fix12i y, Fix12i z); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8244, from the legacy file for func_ov002_020e8098, NOT applied: extern "C" void func_ov002_020e8244(Vector3* out, char* self); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE, from the legacy file for func_ov002_020e8098, NOT applied: extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE( unsigned int a, unsigned int b, int c, int d, int e, const void* f, void* g); */
 /* TUBUILD CONFLICT -- alternate declaration of SubVec3, from the legacy file for func_ov002_020e8244, NOT applied: extern void SubVec3(struct V3* a, struct V3* b, struct V3* c); */
 /* TUBUILD CONFLICT -- alternate declaration of AddVec3, from the legacy file for func_ov002_020e8244, NOT applied: extern void AddVec3(struct V3* a, struct V3* b, struct V3* c); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209b454, from the legacy file for func_ov002_020e8618, NOT applied: extern int data_0209b454; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN15dExtFrameCtrl_c8FinishedEv, from the legacy file for func_ov002_020e8618, NOT applied: extern int _ZN15dExtFrameCtrl_c8FinishedEv(char* a); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c11UntrackStarERa, from the legacy file for func_ov002_020e8618, NOT applied: extern void _ZN8dActor_c11UntrackStarERa(char* c, signed char* p); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9448, from the legacy file for func_ov002_020e88a8, NOT applied: extern void func_ov002_020e9448(void* self); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov002_020e88a8, NOT applied: extern int Vec3_Dist(struct Vector3* a, struct Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020e88a8, NOT applied: extern short Vec3_HorzAngle(struct Vector3* a, struct Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020e8abc, NOT applied: extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7fBase_c18MarkForDestructionEv, from the legacy file for func_ov002_020e8abc, NOT applied: extern void _ZN7fBase_c18MarkForDestructionEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02035860, from the legacy file for func_ov002_020e8abc, NOT applied: extern void func_02035860(char *o, void *src); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9464, from the legacy file for func_ov002_020e8abc, NOT applied: extern void func_ov002_020e9464(char *p); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9448, from the legacy file for func_ov002_020e8abc, NOT applied: extern void func_ov002_020e9448(unsigned char *p); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9464, from the legacy file for func_ov002_020e8e80, NOT applied: extern void func_ov002_020e9464(char* c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020e8ef0, NOT applied: void* _ZN8dActor_c10FindWithIDEj(u32 id); */
 /* TUBUILD CONFLICT -- alternate declaration of LinkSilverStarAndStarMarker, from the legacy file for func_ov002_020e8ef0, NOT applied: void LinkSilverStarAndStarMarker(void* a, void* b); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN5dCc_c5ClearEv, from the legacy file for func_ov002_020e8ef0, NOT applied: void _ZN5dCc_c5ClearEv(void* c); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9630, from the legacy file for func_ov002_020e8ef0, NOT applied: int func_ov002_020e9630(char* c); */
@@ -305,29 +274,20 @@ extern s32 IsStarCollected(s32 level, s32 idx);
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9464, from the legacy file for func_ov002_020e8ef0, NOT applied: void func_ov002_020e9464(char* c); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209f2d8, from the legacy file for func_ov002_020e8ef0, NOT applied: extern u8 data_0209f2d8; */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209b454, from the legacy file for func_ov002_020e8ef0, NOT applied: extern u32 data_0209b454; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020e930c, NOT applied: extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8ef0, from the legacy file for func_ov002_020e930c, NOT applied: extern int func_ov002_020e8ef0(void* a, void* b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020e947c, NOT applied: extern short Vec3_HorzAngle(const Vec3* a, const Vec3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020e9590, NOT applied: extern "C" dActor_c* _ZN8dActor_c10FindWithIDEj(unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c15FindWithActorIDEjPS_, from the legacy file for func_ov002_020e9590, NOT applied: extern "C" dActor_c* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int actorID, dActor_c* prev); */
 /* TUBUILD CONFLICT -- alternate declaration of LinkSilverStarAndStarMarker, from the legacy file for func_ov002_020e9590, NOT applied: extern "C" void LinkSilverStarAndStarMarker(void* a, void* b); */
 /* TUBUILD CONFLICT -- alternate declaration of SublevelToLevel, from the legacy file for func_ov002_020e9630, NOT applied: extern int SublevelToLevel(int i); */
 /* TUBUILD CONFLICT -- alternate declaration of GiveVsStars, from the legacy file for func_ov002_020e96a0, NOT applied: extern void GiveVsStars(int idx, int delta); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8244, from the legacy file for func_ov002_020e96a0, NOT applied: extern void func_ov002_020e8244(int *out, char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_, from the legacy file for func_ov002_020e96a0, NOT applied: extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(char *c, int *pos, int num, int b, int t, char *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c11UntrackStarERa, from the legacy file for func_ov002_020e96a0, NOT applied: extern void _ZN8dActor_c11UntrackStarERa(char *c, signed char *p); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e7e58, from the legacy file for func_ov002_020e96a0, NOT applied: extern void func_ov002_020e7e58(char *c); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7fBase_c18MarkForDestructionEv, from the legacy file for func_ov002_020e96a0, NOT applied: extern void _ZN7fBase_c18MarkForDestructionEv(char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c24KillAndTrackInDeathTableEv, from the legacy file for func_ov002_020e96a0, NOT applied: extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020e9840, NOT applied: extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov002_020e9840, NOT applied: extern void func_02012694(unsigned int id, const struct Vector3 *v); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9448, from the legacy file for func_ov002_020e9840, NOT applied: extern void func_ov002_020e9448(unsigned char *p); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209f2d8, from the legacy file for func_ov002_020e9840, NOT applied: extern u8 data_0209f2d8; */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE, from the legacy file for func_ov002_020e9d18, NOT applied: extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, int vol); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN15dExtFrameCtrl_c8FinishedEv, from the legacy file for func_ov002_020e9d18, NOT applied: extern int _ZN15dExtFrameCtrl_c8FinishedEv(char *anim); */
 /* TUBUILD CONFLICT -- alternate declaration of GiveVsStars, from the legacy file for func_ov002_020e9d18, NOT applied: extern void GiveVsStars(int idx, int n); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8244, from the legacy file for func_ov002_020e9d18, NOT applied: extern void func_ov002_020e8244(Vec3 *t, char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_, from the legacy file for func_ov002_020e9d18, NOT applied: extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(char *self, Vec3 *vec, int n, u32 b, int t, int actor); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8618, from the legacy file for func_ov002_020e9d18, NOT applied: extern void func_ov002_020e8618(char *c); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012790, from the legacy file for func_ov002_020e9d18, NOT applied: extern void func_02012790(int n); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9630, from the legacy file for func_ov002_020e9d18, NOT applied: extern int func_ov002_020e9630(char *c); */
@@ -335,18 +295,15 @@ extern s32 IsStarCollected(s32 level, s32 idx);
 /* TUBUILD CONFLICT -- alternate declaration of data_0209f2d8, from the legacy file for func_ov002_020ea3a4, NOT applied: extern "C" unsigned char data_0209f2d8; */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8ef0, from the legacy file for func_ov002_020ea410, NOT applied: extern void func_ov002_020e8ef0(void*, u32); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012790, from the legacy file for func_ov002_020ea420, NOT applied: extern void func_02012790(int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c11UntrackStarERa, from the legacy file for func_ov002_020ea420, NOT applied: extern void _ZN8dActor_c11UntrackStarERa(char *self, char *p); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e930c, from the legacy file for func_ov002_020ea420, NOT applied: extern void func_ov002_020e930c(char *self); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209b454, from the legacy file for func_ov002_020ea420, NOT applied: extern int data_0209b454; */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9464, from the legacy file for func_ov002_020ea7ac, NOT applied: extern void func_ov002_020e9464(char *p); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e7d08, from the legacy file for func_ov002_020ea7ac, NOT applied: extern void func_ov002_020e7d08(char *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020ea824, NOT applied: extern int _ZN8dActor_c10FindWithIDEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for func_ov002_020ea824, NOT applied: extern int Vec3_HorzDist(char* a, char* b); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9448, from the legacy file for func_ov002_020ea824, NOT applied: extern void func_ov002_020e9448(char* c); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e81e0, from the legacy file for func_ov002_020ea824, NOT applied: extern void func_ov002_020e81e0(char* c); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e7e24, from the legacy file for func_ov002_020ea824, NOT applied: extern void func_ov002_020e7e24(char* c); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e7d08, from the legacy file for func_ov002_020ea824, NOT applied: extern void func_ov002_020e7d08(char* c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020ea90c, NOT applied: char* _ZN8dActor_c10FindWithIDEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for func_ov002_020ea90c, NOT applied: s32 Vec3_HorzDist(const Vector3* a, const Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e81e0, from the legacy file for func_ov002_020ea90c, NOT applied: void func_ov002_020e81e0(char* a0); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e7e24, from the legacy file for func_ov002_020ea90c, NOT applied: void func_ov002_020e7e24(char* a0); */
@@ -358,16 +315,11 @@ extern s32 IsStarCollected(s32 level, s32 idx);
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7fBase_c18MarkForDestructionEv, from the legacy file for func_ov002_020ea9d0, NOT applied: extern void _ZN7fBase_c18MarkForDestructionEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov002_020ea9d0, NOT applied: extern void func_02012694(u32 id, void *v); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9448, from the legacy file for func_ov002_020ea9d0, NOT applied: extern void func_ov002_020e9448(void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov002_020ea9d0, NOT applied: extern char *_ZN8dActor_c10FindWithIDEj(u32 id); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for func_ov002_020ea9d0, NOT applied: extern s32 Vec3_HorzDist(void *a, void *b); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e947c, from the legacy file for func_ov002_020ea9d0, NOT applied: extern void func_ov002_020e947c(void *c, struct Vector3 *p, s32 n); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8dd8, from the legacy file for func_ov002_020ea9d0, NOT applied: extern s32 func_ov002_020e8dd8(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for _ZN12daStarBase_c16OnPendingDestroyEv, NOT applied: extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c11UntrackStarERa, from the legacy file for _ZN8daStar_c16CleanupResourcesEv, NOT applied: extern "C" void _ZN8dActor_c11UntrackStarERa(void* self, signed char* star); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromTranslation, from the legacy file for _ZN12daStarBase_c8BehaviorEv, NOT applied: extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for _ZN12daStarBase_c8BehaviorEv, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int ang); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j, from the legacy file for _ZN12daStarBase_c8BehaviorEv, NOT applied: extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j( */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for _ZN12daStarBase_c8BehaviorEv, NOT applied: extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN5dCc_c5ClearEv, from the legacy file for _ZN12daStarBase_c8BehaviorEv, NOT applied: extern void _ZN5dCc_c5ClearEv(void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209f208, from the legacy file for _ZN12daStarBase_c8BehaviorEv, NOT applied: extern unsigned char data_0209f208; */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209f344, from the legacy file for _ZN12daStarBase_c8BehaviorEv, NOT applied: extern unsigned char *data_0209f344; */
@@ -376,8 +328,6 @@ extern s32 IsStarCollected(s32 level, s32 idx);
 /* TUBUILD CONFLICT -- alternate declaration of _ZN5dCc_c6UpdateEv, from the legacy file for _ZN8daStar_c8BehaviorEv, NOT applied: extern void _ZN5dCc_c6UpdateEv(char *c); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209b454, from the legacy file for _ZN8daStar_c8BehaviorEv, NOT applied: extern int data_0209b454; */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj, from the legacy file for _ZN12daStarBase_c13InitResourcesEv, NOT applied: extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, const void *v, int d, int e, u32 f, u32 g); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, from the legacy file for _ZN12daStarBase_c13InitResourcesEv, NOT applied: extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Model8LoadFileER13SharedFilePtr, from the legacy file for _ZN12daStarBase_c13InitResourcesEv, NOT applied: extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp); */
 /* TUBUILD CONFLICT -- alternate declaration of IsStarCollectedInCurLevel, from the legacy file for _ZN12daStarBase_c13InitResourcesEv, NOT applied: extern int IsStarCollectedInCurLevel(u8 x); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7fBase_c18MarkForDestructionEv, from the legacy file for _ZN12daStarBase_c13InitResourcesEv, NOT applied: extern void _ZN7fBase_c18MarkForDestructionEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov002_0210d9a8, from the legacy file for _ZN12daStarBase_c13InitResourcesEv, NOT applied: extern char data_ov002_0210d9a8; */
@@ -391,12 +341,9 @@ extern s32 IsStarCollected(s32 level, s32 idx);
 /* TUBUILD CONFLICT -- alternate declaration of data_ov002_02110934, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern struct SharedFilePtr data_ov002_02110934; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov002_02110944, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern struct SharedFilePtr data_ov002_02110944; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov002_02110964, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern struct SharedFilePtr data_ov002_02110964; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelBase7SetFileEP8BMD_Fileii, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern s32 _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, s32 a, s32 b); */
 /* TUBUILD CONFLICT -- alternate declaration of SublevelToLevel, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern s32 SublevelToLevel(s32 sub); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, s32 a, s32 spd, u32 g); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN17dExtShadowModel_c12InitCylinderEv, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern s32 _ZN17dExtShadowModel_c12InitCylinderEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj( */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as( */
 /* TUBUILD CONFLICT -- alternate declaration of NumVsStarsObtained, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern s32 NumVsStarsObtained(void); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e9448, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void func_ov002_020e9448(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN10dBgCh_Actr19StartDetectingWaterEv, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self); */
@@ -404,11 +351,8 @@ extern s32 IsStarCollected(s32 level, s32 idx);
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7fBase_c18MarkForDestructionEv, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void _ZN7fBase_c18MarkForDestructionEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e8dd8, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void func_ov002_020e8dd8(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov002_020e7d08, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void func_ov002_020e7d08(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Event8ClearBitEj, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void _ZN5Event8ClearBitEj(u32 bit); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern char *_ZN8dActor_c10FindWithIDEj(u32 id); */
+/* TUBUILD CONFLICT -- alternate declaration of _ZN5Event8ClearBitEj, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void Event::ClearBit(u32 bit); */
 /* TUBUILD CONFLICT -- alternate declaration of LinkSilverStarAndStarMarker, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void LinkSilverStarAndStarMarker(void *a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c18GetBitInDeathTableEv, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern s32 _ZN8dActor_c18GetBitInDeathTableEv(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c24KillAndTrackInDeathTableEv, from the legacy file for _ZN8daStar_c13InitResourcesEv, NOT applied: extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self); */
 }
 
 /* The two destructor bodies are defined first so their D1/D0 groups lead the
@@ -419,16 +363,13 @@ extern s32 IsStarCollected(s32 level, s32 idx);
  * ends the object. (d_a_kpa.cpp precedent.) */
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 0-1 -- _ZN8daStar_cD1Ev, 0x020e6c40 / _ZN8daStar_cD0Ev, 0x020e6c90 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_cD1Ev
 // @symbol _ZN8daStar_cD0Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * One vtable store and 6 destructor calls, every one a consequence of
  * `struct daStar_c : dEnemyBase_c` and the members that declaration now types:
- * its own vptr, then dExtShadowModel_c (0x3d4), ModelAnim (0x370), ModelAnim (0x30c),
+ * its own vptr, then dExtShadowModel_c (0x3d4), dExtAnmModel_c (0x370), dExtAnmModel_c (0x30c),
  * dBgCh_Actr (0x150),
  * dCcAcPos_c (0x110)
  * in reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.
@@ -467,9 +408,6 @@ daStar_c::~daStar_c()
 
 #pragma defer_codegen on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 76 -- _ZN8daStar_c13InitResourcesEv, 0x020eb63c, size 0x820 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c13InitResourcesEv
 /* Spawn-time set-up for the Power Star (actor 0xb2) and the silver star
  * (0xb3). Loads the shared animation files and the star models, then picks the
@@ -516,20 +454,20 @@ s32 daStar_c::InitResources()
     mInitPosY = mPosY;
     mInitPosZ = mPosZ;
     mMusicTimer = 0;
-    _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(&data_ov002_02110944);
-    _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(&data_ov002_02110924);
-    _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(&data_ov002_02110964);
-    _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(&data_ov002_02110934);
+    dExtFrameCtrl_c::LoadFile(data_ov002_02110944);
+    dExtFrameCtrl_c::LoadFile(data_ov002_02110924);
+    dExtFrameCtrl_c::LoadFile(data_ov002_02110964);
+    dExtFrameCtrl_c::LoadFile(data_ov002_02110934);
 
     b = (s32)(actorID == ACTOR_STAR);
     if (b != 0) {
-        if (mModelAnim1.SetFile((BMD_File *)data_ov002_0211094c.ptr, 1, 1) == 0 ||
-            mModelAnim2.SetFile((BMD_File *)data_ov002_0211095c.ptr, 1, 0x18) == 0)
+        if (mAnmModel1.SetFile((BMD_File *)data_ov002_0211094c.filePtr, 1, 1) == 0 ||
+            mAnmModel2.SetFile((BMD_File *)data_ov002_0211095c.filePtr, 1, 0x18) == 0)
             ret = 0;
     } else {
         LoadSilverStarAndNumber();
-        if (mModelAnim1.SetFile((BMD_File *)data_ov002_02110954.ptr, 1, 1) == 0 ||
-            mModelAnim2.SetFile((BMD_File *)data_ov002_02110954.ptr, 1, 1) == 0)
+        if (mAnmModel1.SetFile((BMD_File *)data_ov002_02110954.filePtr, 1, 1) == 0 ||
+            mAnmModel2.SetFile((BMD_File *)data_ov002_02110954.filePtr, 1, 1) == 0)
             ret = 0;
     }
 
@@ -559,17 +497,16 @@ s32 daStar_c::InitResources()
         mMarkerType = 1;
     }
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110964.ptr, 0x40000000, 0x1000, 0);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, data_ov002_02110964.ptr, 0x40000000, 0x1000, 0);
+    mAnmModel1.SetAnim((BCA_File *)data_ov002_02110964.filePtr, 0x40000000, 0x1000, 0);
+    mAnmModel2.SetAnim((BCA_File *)data_ov002_02110964.filePtr, 0x40000000, 0x1000, 0);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
     v2.x = data_ov002_0210aa0c[0];
     v2.y = data_ov002_0210aa0c[1];
     v2.z = data_ov002_0210aa0c[2];
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mdCc_c, this, &v2, 0x64000, 0x96000, 0x100002, 0x8000);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x50000, 0, 0, 0);
+    mdCc_c.Init(this, *(Vector3 *)&v2, 0x64000, 0x96000, 0x100002, 0x8000);
+    mWithMeshClsn.Init(this, 0x50000, 0, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mStarID = (u8)(param1 & 0xf);
     if (mKind != KIND_7 && mKind != KIND_3)
@@ -651,8 +588,8 @@ s32 daStar_c::InitResources()
         func_ov002_020e8dd8();
     func_ov002_020e7d08();
     if (data_0209cef0 == 0) {
-        _ZN5Event8ClearBitEj(0x1e);
-        _ZN5Event8ClearBitEj(0x1d);
+        Event::ClearBit(0x1e);
+        Event::ClearBit(0x1d);
         if (mKind != KIND_3) {
             if ((s32)(data_0209f2d8 == 1) != 0 || (s32)(actorID == ACTOR_SILVER_STAR) != 0) {
                 sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x50, mPos, 0, mSavedAreaId, -1);
@@ -689,9 +626,6 @@ s32 daStar_c::InitResources()
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 75 -- _ZN12daStarBase_c13InitResourcesEv, 0x020eb204, size 0x438 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daStarBase_c13InitResourcesEv
 /* Spawn-time set-up for the marker that shows where a star will appear. param1
  * bits 4..7 pick the flavour: kind 6 only spawns the switch star (actor 0xb2,
@@ -716,7 +650,7 @@ int daStarBase_c::InitResources()
     v0.x = 0;
     v0.y = -0x50000;
     v0.z = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v0, 0x50000, 0xa0000, 0x100002, 0x8000);
+    mdCcAcPos_c.Init(this, v0, 0x50000, 0xa0000, 0x100002, 0x8000);
     dBgCh_Gnd ground;
     ground.StartDetectingWater();
 
@@ -743,7 +677,7 @@ int daStarBase_c::InitResources()
         if (sp != 0) {
             ((daStar_c *)sp)->mBits.switchStar = 1;
         }
-        mModel.SetFile((BMD_File *)Model::LoadFile(data_ov002_0211093c), 1, 0x18);
+        mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18);
         return 0;
     }
 
@@ -753,14 +687,14 @@ int daStarBase_c::InitResources()
         v4.x = 0;
         v4.y = -0x50000;
         v4.z = 0;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v4, 0x50000, 0xa0000, 0x100004, 0);
+        mdCcAcPos_c.Init(this, v4, 0x50000, 0xa0000, 0x100004, 0);
         mAppearTimer = 0;
     } else if (kind == 5) {
         mState = 3;
         v5.x = 0;
         v5.y = -0x50000;
         v5.z = 0;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v5, 0x50000, 0xa0000, 1, 0);
+        mdCcAcPos_c.Init(this, v5, 0x50000, 0xa0000, 1, 0);
     } else if (kind & 1) {
         mState = 1;
         if (kind & 2) {
@@ -772,12 +706,14 @@ int daStarBase_c::InitResources()
     }
 
     if (mState != 0) {
-        Model::LoadFile(data_ov002_0210d9a8);
-        if (mModel.SetFile((BMD_File *)Model::LoadFile(data_ov002_0211092c), 1, 0x19) == 0) {
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
+        if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211092c), 1, 0x19) ==
+            0) {
             return 0;
         }
     } else {
-        if (mModel.SetFile((BMD_File *)Model::LoadFile(data_ov002_0211093c), 1, 0x18) == 0) {
+        if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18) ==
+            0) {
             return 0;
         }
     }
@@ -810,9 +746,6 @@ int daStarBase_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 74 -- _ZN8daStar_c8BehaviorEv, 0x020eb05c, size 0x1a8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c8BehaviorEv
 /* Per-frame update. Looks once for an ice block, clears the cached centre, and
  * while a Yoshi has the star in its mouth only rebuilds the matrices.
@@ -830,7 +763,7 @@ int daStar_c::Behavior()
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         int state = mState;
         if (state >= STATE_COLLECT_BEGIN && state <= STATE_COLLECT_TALK && mEatingPlayer != 0) {
-            ((Player *)mEatingPlayer)->func_ov002_020d718c();
+            mEatingPlayer->func_ov002_020d718c();
             mEatingPlayer = 0;
             mFlags &= ~0xe0000;
             func_ov002_020e84ec();
@@ -839,7 +772,7 @@ int daStar_c::Behavior()
         }
         if ((data_0209b454 & CUTSCENE_FLAG) != 0) {
             if ((int)((mFlags & CUTSCENE_FLAG) != 0) != 0) {
-                dActor_c *p = (dActor_c *)mEatingPlayer;
+                dActor_c *p = mEatingPlayer;
                 if (p != 0)
                     p->mFlags |= CUTSCENE_FLAG;
             }
@@ -868,9 +801,6 @@ int daStar_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 73 -- _ZN12daStarBase_c8BehaviorEv, 0x020ead90, size 0x2cc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daStarBase_c8BehaviorEv
 /* Per-frame update of the marker. mAppearTimer counts down while this marker's
  * star id is the next one in data_0209f344[data_0209f208], and the marker
@@ -925,8 +855,9 @@ int daStarBase_c::Behavior()
             int rad = 0xa0000;
             if (mState != 0)
                 rad = 0xc8000;
-            _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-                (char *)this, (struct dExtShadowModel_c *)&mShadowModel, (struct Matrix4x3 *)&mShadowMtx, rad, d + 0x28000, 0xf);
+            ((dActor_c *)this)
+                ->DropShadowRadHeight(*(dExtShadowModel_c *)&mShadowModel,
+                                      *(Matrix4x3 *)&mShadowMtx, rad, d + 0x28000, 0xf);
         }
     }
     if (mState != 0) {
@@ -951,11 +882,8 @@ int daStarBase_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 72 -- _ZN8daStar_c6RenderEv, 0x020eacf4, size 0x9c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c6RenderEv
-/* Draws mModelAnim2 (collected, translucent) or mModelAnim1, unless the star
+/* Draws mAnmModel2 (collected, translucent) or mAnmModel1, unless the star
  * is scaled to nothing, hidden by mFlags & 0x40000, or not visible. */
 int daStar_c::Render()
 {
@@ -968,15 +896,12 @@ done:
     return 1;
 callit:
     if (!mBits.collectedModel)
-        mModelAnim1.Render(&mScale);
+        mAnmModel1.Render(&mScale);
     else
-        mModelAnim2.Render(&mScale);
+        mAnmModel2.Render(&mScale);
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 71 -- _ZN12daStarBase_c6RenderEv, 0x020eacb8, size 0x3c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daStarBase_c6RenderEv
 /* Draws the marker's model while it is visible. */
 int daStarBase_c::Render()
@@ -986,9 +911,6 @@ int daStarBase_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 70 -- _ZN8daStar_c16CleanupResourcesEv, 0x020eac18, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c16CleanupResourcesEv
 /* Gives up the map marker slot (kind 8 never had one), unloads the silver star
  * and number models when InitResources loaded them (silver star, or kind 6),
@@ -1014,9 +936,6 @@ int daStar_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 69 -- _ZN12daStarBase_c16CleanupResourcesEv, 0x020eabcc, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daStarBase_c16CleanupResourcesEv
 /* Releases the model files that InitResources loaded for this marker's
  * flavour. */
@@ -1031,9 +950,6 @@ int daStarBase_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 68 -- _ZN12daStarBase_c16OnPendingDestroyEv, 0x020eab8c, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daStarBase_c16OnPendingDestroyEv
 /* If the linked star exists but has no death-table slot of its own
  * (mDeathTableID < 0), clears the death-table bit this marker remembered for
@@ -1272,7 +1188,7 @@ void daStar_c::func_ov002_020ea420() {
             } else if (mScaleX != 0x1000) {
                 spd = mScaleX;
                 if (mAppearTimer >= lim + 0xa) {
-                    if (_Z14ApproachLinearRiii(&spd, 0x1000, step) != 0) {
+                    if (ApproachLinear(spd, 0x1000, step) != 0) {
                         AddStarMarker();
                         mdCc_c.flags &= ~1;
                     }
@@ -1312,7 +1228,7 @@ void daStar_c::func_ov002_020ea420() {
                 } else {
                     step2 = 0x100;
                 }
-                if (_Z14ApproachLinearRiii(&spd2, 0, step2) != 0) {
+                if (ApproachLinear(spd2, 0, step2) != 0) {
                     mBits.appeared = 0;
                     UntrackStar(mMarkerSlot);
                 }
@@ -1388,8 +1304,6 @@ int daStar_c::func_ov002_020ea3a4() {
  * otherwise, in a VS match, it takes one star off the player's VS count
  * (GiveVsStars -1, when the count is not zero) and bounces away. */
 extern "C" {
-// local extern: Player.h's u8 parameter re-narrows the state (func_ov002_020e9d18 and 020ea100 differ).
-extern int _ZN6Player12Unk_020c9e5cEh(void *thisPtr, int state);
 extern int func_ov002_020ca0f4(void *player);
 
 
@@ -1401,13 +1315,13 @@ struct VObj {
 
 void daStar_c::func_ov002_020ea100() {
     Player *common;
-    int state;
+    u8 state;
 
     common = mPlayer;
     state = func_ov002_020e73ac();
 
-    if (_ZN6Player12Unk_020c9e5cEh(common, state)) {
-        if (state == 1 || state == 2) {
+    if (common->Unk_020c9e5c(state)) {
+        if ((int)state == 1 || (int)state == 2) {
             func_ov002_020e6fbc(0x14);
             mSoundObjMode = 1;
         } else if (state != 3) {
@@ -1450,9 +1364,9 @@ void daStar_c::func_ov002_020ea100() {
         func_ov002_020e9464();
 
         if (common->mIsUnderwater != 0) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110924.ptr, 0x40000000, 0x1000, 0);
+            mAnmModel1.SetAnim((BCA_File *)data_ov002_02110924.filePtr, 0x40000000, 0x1000, 0);
         } else {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110944.ptr, 0x40000000, 0x1000, 0);
+            mAnmModel1.SetAnim((BCA_File *)data_ov002_02110944.filePtr, 0x40000000, 0x1000, 0);
         }
 
         {
@@ -1462,7 +1376,7 @@ void daStar_c::func_ov002_020ea100() {
         }
 
         if (mKind == KIND_9) {
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, 0x7f000);
+            Sound::ChangeMusicVolume(0, 0x7f000);
         }
     } else {
         if (func_ov002_020ca0f4(common) != 0) {
@@ -1507,10 +1421,10 @@ void daStar_c::func_ov002_020ea06c() {
     mState = STATE_COLLECT_TALK;
     mSeqTimer = 0;
     mTalkStep = 0;
-    mModelAnim1.Advance();
+    mAnmModel1.Advance();
     func_ov002_020e8098();
     if (mKind == KIND_9) {
-        _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, 0x7f000);
+        Sound::ChangeMusicVolume(0, 0x7f000);
     }
     ++mMusicTimer;
 }
@@ -1535,10 +1449,11 @@ void daStar_c::func_ov002_020ea06c() {
 void daStar_c::func_ov002_020e9d18() {
     u32 r2v;
     u32 b2;
-    u32 st;
+    bool st;
     Vec3 t1;
     Vec3 t2;
     int *src;
+    u8 st2;
 
     src = (int *)&mPlayer->mPosX;
     mPosX = src[0];
@@ -1547,13 +1462,13 @@ void daStar_c::func_ov002_020e9d18() {
     mPrevAngleY = mPlayer->mAngleY;
     if (mKind == KIND_9) {
         if (mMusicTimer < 0x78) {
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, 0x7f000);
+            Sound::ChangeMusicVolume(0, 0x7f000);
             mMusicTimer++;
         } else {
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0xcb33);
+            Sound::ChangeMusicVolume(0x40, 0xcb33);
         }
     }
-    if (mModelAnim1.Finished() != 0) {
+    if (mAnmModel1.Finished() != 0) {
         mSeqTimer++;
     } else {
         func_ov002_020e7eb4();
@@ -1581,7 +1496,7 @@ modes:
             if (data_0209f310[idx] == 4) {
                 GiveVsStars(idx, 1);
                 func_ov002_020e8244(&t1, this);
-                _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_((char *)this, (Vector3 *)&t1, 5, st, 0, (void *)(int)mPlayer);
+                SpawnNumber(*(Vector3 *)&t1, 5, st, 0, mPlayer);
                 func_ov002_020e8618();
             }
         } else if (mode == 5) {
@@ -1591,16 +1506,13 @@ modes:
             if (r2v == false)
                 GiveVsStars(idx2, 1);
             func_ov002_020e8244(&t2, this);
-            _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_((char *)this, (Vector3 *)&t2,
-                data_0209f310[mPlayer->mPlayerNo], st, 0,
-                (void *)(int)mPlayer);
+            SpawnNumber(*(Vector3 *)&t2, data_0209f310[mPlayer->mPlayerNo], st, 0, mPlayer);
             func_ov002_020e8618();
         }
         goto end;
     }
 big_else:
     {
-        u32 st2;
         if (mKind == KIND_9) {
             st2 = 0x11;
 LA:
@@ -1620,14 +1532,14 @@ LA:
             }
         }
         mSeqTimer = 0xa;
-        if (_ZN6Player12Unk_020c9e5cEh((void *)mPlayer, st2) == 0) {
+        if (mPlayer->Unk_020c9e5c(st2) == 0) {
             mTalkStep = 2;
             mState = STATE_SAVE_MESSAGE;
             mSeqTimer = 0;
             mPlayer->mFlags &= ~CUTSCENE_FLAG;
             EndKuppaScript();
         }
-        mModelAnim1.Advance();
+        mAnmModel1.Advance();
         func_ov002_020e8098();
         return;
         }
@@ -1639,7 +1551,7 @@ LA:
             func_ov002_020e8618();
     }
 end:
-    mModelAnim1.Advance();
+    mAnmModel1.Advance();
     func_ov002_020e8098();
 }
 
@@ -1656,10 +1568,10 @@ end:
 void daStar_c::func_ov002_020e9af4() {
     if (mKind == KIND_9) {
         if (mMusicTimer < 0x78) {
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, 0x7f000);
+            Sound::ChangeMusicVolume(0, 0x7f000);
             mMusicTimer++;
         } else {
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0xcb33);
+            Sound::ChangeMusicVolume(0x40, 0xcb33);
         }
     }
     mPrevAngleY = mPlayer->mAngleY;
@@ -1717,13 +1629,13 @@ void daStar_c::func_ov002_020e99e8() {
     mPrevPosY = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(c, mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
     }
     func_ov002_020e86ec();
     if (mWithMeshClsn.JustHitGround()) {
         func_ov002_020e88a8();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(c, mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
         if (mBits.water == WATER_IN)
             mVertSpeed = 0xe000;
         else
@@ -1784,13 +1696,13 @@ void daStar_c::func_ov002_020e9840() {
 
     {
         int r0 = (data_0209f2d8 == 1) ? 1 : 0;
-        dActor_c *r3 = actor->mHitActor;
+        Player *r3 = static_cast<Player *>(actor->mHitActor);
         if (r0 == 0) return;
         if (r3 == 0) return;
 
         mBits.noPickup = 1;
         mHorzSpeed = 0xc000;
-        mPrevAngleY = GetAngleToCamera(((Player *)r3)->mPlayerNo) + 0x8000;
+        mPrevAngleY = GetAngleToCamera(r3->mPlayerNo) + 0x8000;
     }
 }
 
@@ -1801,9 +1713,10 @@ void daStar_c::func_ov002_020e9840() {
 /* STATE_PLAY_AND_END: plays the animation with its effects, then destroys the
  * star. */
 void daStar_c::func_ov002_020e9804() {
-    mModelAnim1.Advance();
+    mAnmModel1.Advance();
     func_ov002_020e7fcc();
-    if (!mModelAnim1.Finished()) return;
+    if (!mAnmModel1.Finished())
+        return;
     MarkForDestruction();
 }
 
@@ -1830,7 +1743,8 @@ void daStar_c::func_ov002_020e96a0() {
             GiveVsStars(mPlayer->mPlayerNo, 1);
             func_ov002_020e8244(v, this);
             p = (char *)mPlayer;
-            _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_((char *)this, (Vector3 *)v, (unsigned int)data_0209f310[mPlayer->mPlayerNo], 1, 0, p);
+            SpawnNumber(*(Vector3 *)v, (unsigned int)data_0209f310[mPlayer->mPlayerNo], 1, 0,
+                        (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
         mBits.visible = 0;
@@ -1908,9 +1822,9 @@ void daStar_c::func_ov002_020e947c(Vector3 *p, int n) {
     if (dy < 0)
         dy = -dy;
     {
-        int s0 = _ZN4cstd4sqrtEy((u64)(s64)n);
-        int s1 = _ZN4cstd4sqrtEy((u64)(s64)(n + dy));
-        int s2 = _ZN4cstd4sqrtEy((u64)(s64)n);
+        int s0 = cstd::sqrt((u64)(s64)n);
+        int s1 = cstd::sqrt((u64)(s64)(n + dy));
+        int s2 = cstd::sqrt((u64)(s64)n);
         dy = (s0 * 0x32) / (s1 + s2);
     }
     {
@@ -1981,20 +1895,24 @@ void daStar_c::func_ov002_020e930c() {
     flags = mdCc_c.hitFlags;
     if (flags & 0x400000) {
         if (b->mIsNoControl != 0) return;
-        if (_ZN5Event6GetBitEj(0x1e) != 0) return;
+        if (Event::GetBit(0x1e) != 0)
+            return;
         if (func_ov002_020e8ef0(o) == 0) return;
         if (mKind != KIND_6) return;
-        if (dActor_c::FindWithID(mMarkerID) == 0)
+        o = dActor_c::FindWithID(mMarkerID);
+        if (o == 0)
             return;
-        _ZN12daStarBase_c7CollectEv();
+        ((daStarBase_c *)o)->Collect();
     } else {
         if (flags & 0x8000) {
             if (b->mIsNoControl != 0) return;
-            if (_ZN5Event6GetBitEj(0x1e) != 0) return;
-            if (mKind != KIND_6) return;
-            if (dActor_c::FindWithID(mMarkerID) == 0)
+            if (Event::GetBit(0x1e) != 0)
                 return;
-            _ZN12daStarBase_c7CollectEv();
+            if (mKind != KIND_6) return;
+            o = dActor_c::FindWithID(mMarkerID);
+            if (o == 0)
+                return;
+            ((daStarBase_c *)o)->Collect();
         }
     }
 }
@@ -2015,7 +1933,7 @@ void daStar_c::func_ov002_020e930c() {
 int daStar_c::func_ov002_020e8ef0(void* p) {
     void* found;
     int r5;
-    int r4;
+    u8 r4;
     int sb;
 
     mState = STATE_TOUCHED;
@@ -2052,22 +1970,22 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
                 if (!t2) {
                     if (mHomeState != STATE_WAIT_MARKER) {
                         if (mStarID == 0) {
-                            sb = _ZN6Player17SetNoControlStateEhih(p, r4, 0x186, 0);
+                            sb = ((Player *)p)->SetNoControlState(r4, 0x186, 0);
                             Message::PrepareTalk();
                             r5 = 1;
                         } else if (func_ov002_020e9630() != 0) {
-                            sb = _ZN6Player17SetNoControlStateEhih(p, r4, 0x187, 0);
+                            sb = ((Player *)p)->SetNoControlState(r4, 0x187, 0);
                             Message::PrepareTalk();
                             r5 = 1;
                         } else {
-                            sb = _ZN6Player17SetNoControlStateEhih(p, r4, -1, 0);
+                            sb = ((Player *)p)->SetNoControlState(r4, -1, 0);
                         }
                         goto after_sc;
                     }
                 }
             }
         }
-        sb = _ZN6Player17SetNoControlStateEhih(p, r4, -1, 0);
+        sb = ((Player *)p)->SetNoControlState(r4, -1, 0);
     after_sc:;
 
         if (sb == 0) {
@@ -2077,13 +1995,13 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         {
             int b1 = (data_0209f2d8 == 1);
             if (!b1) {
-                _ZN5Event6SetBitEj(0x1e);
+                Event::SetBit(0x1e);
             } else {
                 GiveVsStars(((Player *)p)->mPlayerNo, 1);
             }
         }
         if (r4 == 0) {
-            _ZN5Event6SetBitEj(0x1d);
+            Event::SetBit(0x1d);
         }
 
         {
@@ -2108,7 +2026,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
                 if (lvl <= 0xe) {
                     int rec = SaveData::GetCoinRecord(lvl);
                     if (rec < NumCoins()) {
-                        _ZN8SaveData21SetCoinRecordIfHigherEah(
+                        SaveData::SetCoinRecordIfHigher(
                             lvl,
                             (u8)(data_0209f358[((Player *)p)->mPlayerNo] & 0xff));
                     }
@@ -2147,17 +2065,11 @@ ret0:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 45 -- _ZN8daStar_c13OnYoshiTryEatEv, 0x020e8ee8, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c13OnYoshiTryEatEv
 s32 daStar_c::OnYoshiTryEat() {
     return 4;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- _ZN8daStar_c13OnTurnIntoEggER6Player, 0x020e8edc, size 0xc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c13OnTurnIntoEggER6Player
 /* daStar_c::OnTurnIntoEgg -- vtable slot 19, verified against ov002 relocs.txt:
  * _ZTV8daStar_c (0x0210ab3c) + 0x4c -> 0x020e8edc, exactly this placeholder's
@@ -2221,9 +2133,6 @@ int daStar_c::func_ov002_020e8dd8() {
     AddStarMarker();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- _ZN8daStar_c13AddStarMarkerEv, 0x020e8ca0, size 0x138 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c13AddStarMarkerEv
 /* Claims a free slot of the map-marker table (data_0209f40c, 12 entries) for
  * this star. The marker type is 1 for the silver star, 2 for the Power Star
@@ -2386,7 +2295,7 @@ void daStar_c::func_ov002_020e88a8() {
         mHorzSpeed = 0xc000;
         mVertSpeed = 0x17000;
     }
-    r = func_02037e38((char *)mWithMeshClsn.GetFloorResult() + 4);
+    r = mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType();
     if (r == 1 || r == 9) {
         w.x = mSafePosX;
         w.y = mSafePosY;
@@ -2414,7 +2323,7 @@ void daStar_c::func_ov002_020e88a8() {
         mPrevAngleY = Vec3_HorzAngle(&v, &mPos);
         if (mFloorNormalY >= *(short*)(data_02082714 + 0x56)) {
             if (data_0209f2f8 != 0x1d) return;
-            if (func_02037e58((char *)mWithMeshClsn.GetFloorResult() + 4) != 5)
+            if (mWithMeshClsn.GetFloorResult()->surface.clps.GetFloorClass() != 5)
                 return;
         }
         {
@@ -2422,7 +2331,7 @@ void daStar_c::func_ov002_020e88a8() {
             *a = *a + 0x8000;
         }
     } else {
-        dActor_c *q = (dActor_c *)_ZN8dActor_c14FarthestPlayerEv((char *)this);
+        dActor_c *q = FarthestPlayer();
         if (q != 0) {
             mPrevAngleY = Vec3_HorzAngle(&mPos, &q->mPos);
         }
@@ -2440,7 +2349,6 @@ void daStar_c::func_ov002_020e88a8() {
  * surface (data_0209f32c) is less than 60.0 above the star. */
 void daStar_c::func_ov002_020e86ec() {
     struct Vector3 v;
-    char rc[0x54];
     int tx, ty, tz, ta;
 
     if (mBits.water < WATER_IN) {
@@ -2451,12 +2359,12 @@ void daStar_c::func_ov002_020e86ec() {
         if (mBits.water == WATER_NONE) {
             mBits.water = WATER_TOUCH;
             mPosY = mPrevPosY;
-            _ZN10dBgCh_Actr15ClearGroundFlagEv(&mWithMeshClsn);
-            _ZN10dBgCh_Actr22ClearJustHitGroundFlagEv(&mWithMeshClsn);
-            _ZN10dBgCh_Actr18StopDetectingWaterEv(&mWithMeshClsn);
+            mWithMeshClsn.ClearGroundFlag();
+            mWithMeshClsn.ClearJustHitGroundFlag();
+            mWithMeshClsn.StopDetectingWater();
         }
-        _ZN9dBgCh_GndC1Ev(rc);
-        ((dBgCh *)rc)->StartDetectingWater();
+        dBgCh_Gnd rc;
+        rc.StartDetectingWater();
         ty = mPosY;
         tz = mPosZ;
         tx = mPosX;
@@ -2464,10 +2372,10 @@ void daStar_c::func_ov002_020e86ec() {
         v.x = tx;
         v.y = ta;
         v.z = tz;
-        ((dBgCh_Gnd *)rc)->SetObjAndPos(*(Vector3 *)&v, this);
-        if (((dBgCh_Gnd *)rc)->DetectClsn() != 0) {
-            if (SurfaceInfo_TestFlag0x20(rc + 0x14) != 0) {
-                mWaterHeight = ((dBgCh_Gnd *)rc)->clsnY;
+        rc.SetObjAndPos(*(Vector3 *)&v, this);
+        if (rc.DetectClsn() != 0) {
+            if (SurfaceInfo_TestFlag0x20(&rc.surface) != 0) {
+                mWaterHeight = rc.clsnY;
                 data_0209f32c = mWaterHeight;
                 if (mWaterHeight >= mPosY + 0x3c000) {
                     mBits.water = WATER_IN;
@@ -2478,7 +2386,6 @@ void daStar_c::func_ov002_020e86ec() {
                 }
             }
         }
-        _ZN9dBgCh_GndD1Ev(rc);
     } else {
         if (data_0209f32c < mPosY + 0x3c000) {
             mBits.water = WATER_NONE;
@@ -2497,7 +2404,8 @@ void daStar_c::func_ov002_020e86ec() {
  * records it in the death table, and ends the cutscene (CUTSCENE_FLAG cleared
  * everywhere, event bits 0x1e and 0x1d cleared). */
 void daStar_c::func_ov002_020e8618() {
-    if (mModelAnim1.Finished() == 0) return;
+    if (mAnmModel1.Finished() == 0)
+        return;
     func_ov002_020e7e58();
     mBits.visible = 0;
     UntrackStar(mMarkerSlot);
@@ -2509,8 +2417,8 @@ void daStar_c::func_ov002_020e8618() {
     mPlayer->mFlags &= ~CUTSCENE_FLAG;
     mFlags &= ~CUTSCENE_FLAG;
     data_0209b454 &= ~CUTSCENE_FLAG;
-    _ZN5Event8ClearBitEj(0x1e);
-    _ZN5Event8ClearBitEj(0x1d);
+    Event::ClearBit(0x1e);
+    Event::ClearBit(0x1d);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2529,29 +2437,29 @@ void daStar_c::func_ov002_020e84ec() {
 
     if (mKind == KIND_8) {
         Vec3_Asr(&v, &mPos, 3);
-        Matrix4x3_FromTranslation(&mModelAnim1.mat4x3, v.x, v.y, v.z);
+        Matrix4x3_FromTranslation(&mAnmModel1.mat4x3, v.x, v.y, v.z);
     } else if (mCarryMatrix != 0) {
         /* M48 overlay: the class headers above switch Matrix4x3 to the
          * structured math/Matrix.h spelling, whose struct-copy codegen
          * differs from the flat 12-word copy this shard proved. M48 is the
          * same 12 words; proven byte-identical in isolation. */
-        *(struct M48 *)&mModelAnim1.mat4x3 = *(struct M48 *)mCarryMatrix;
+        *(struct M48 *)&mAnmModel1.mat4x3 = *(struct M48 *)mCarryMatrix;
     } else if (!mBits.noSpin) {
         ang = (s16 *)&mAngleY;
         t = *ang + 0xc00;
         *ang = t;
-        Matrix4x3_FromRotationY(&mModelAnim1.mat4x3, mAngleY);
-        mModelAnim1.mat4x3.t.x = mPosX >> 3;
-        mModelAnim1.mat4x3.t.y = mPosY >> 3;
-        mModelAnim1.mat4x3.t.z = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mAngleY);
+        mAnmModel1.mat4x3.t.x = mPosX >> 3;
+        mAnmModel1.mat4x3.t.y = mPosY >> 3;
+        mAnmModel1.mat4x3.t.z = mPosZ >> 3;
     } else {
-        Matrix4x3_FromRotationY(&mModelAnim1.mat4x3, mPrevAngleY);
-        mModelAnim1.mat4x3.t.x = mPosX >> 3;
-        mModelAnim1.mat4x3.t.y = (mPosY + 0x32000) >> 3;
-        mModelAnim1.mat4x3.t.z = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mPrevAngleY);
+        mAnmModel1.mat4x3.t.x = mPosX >> 3;
+        mAnmModel1.mat4x3.t.y = (mPosY + 0x32000) >> 3;
+        mAnmModel1.mat4x3.t.z = mPosZ >> 3;
     }
 
-    *(struct M48*)&mModelAnim2.mat4x3 = *(struct M48*)&mModelAnim1.mat4x3;
+    *(struct M48 *)&mAnmModel2.mat4x3 = *(struct M48 *)&mAnmModel1.mat4x3;
     func_ov002_020e8398();
 }
 
@@ -2594,13 +2502,15 @@ void daStar_c::func_ov002_020e8398() {
 
     t = delta + 0x28000;
 
-    *(struct M48*)(c + 0x3fc) = *(struct M48*)&IDENTITY_MATRIX4X3;
+    *(Mtx *)&mShadowMtx = IDENTITY_MATRIX4X3;
 
     mShadowMtx.tx = mPosX >> 3;
     mShadowMtx.ty = mPosY >> 3;
     mShadowMtx.tz = mPosZ >> 3;
 
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(c, (struct dExtShadowModel_c *)&mShadowModel, (struct Matrix4x3 *)(c + 0x3fc), r8, t, 0xf);
+    ((dActor_c *)c)
+        ->DropShadowRadHeight(*(dExtShadowModel_c *)&mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t,
+                              0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2627,7 +2537,7 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPosX, b->mPosY, b->mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
-    local = *(struct M48 *)b->mModelAnim1.data.transforms;
+    local = *(struct M48 *)b->mAnmModel1.data.transforms;
     MulMat4x3Mat4x3(&local, &data_020a0e68, &data_020a0e68);
     b->mCenterX = data_020a0e68.w[9];
     b->mCenterY = data_020a0e68.w[10];
@@ -2637,7 +2547,7 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     AddVec3((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
     {
         int *p = &b->mCenterY;
-        *p = *(int *)((char *)b->mModelAnim1.data.bones + 0xc) * 0xd + *p;
+        *p = *(int *)((char *)b->mAnmModel1.data.bones + 0xc) * 0xd + *p;
     }
     ((int *)out)[0] = b->mCenterX;
     ((int *)out)[1] = b->mCenterY;
@@ -2650,15 +2560,17 @@ void func_ov002_020e8244(void *out, daStar_c *b)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c19func_ov002_020e81e0Ev
 /* Keeps trail effect 0x113 (mParticle[0]) 13.0 above the star. */
-extern "C" void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    int a0, unsigned int a1, int a2, int a3, int a4, void *a5, void *a6);
+extern "C" void *d_a_starNewHold(int a0, unsigned int a1, int a2, int a3, int a4, void *a5,
+                                 void *a6);
 void daStar_c::func_ov002_020e81e0() {
     Vector3 v;
     v.x = mPosX;
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xd000;
-    *(void **)&mParticle[0] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(volatile unsigned int *)&mParticle[0], 0x113, *(volatile int *)&v.x, *(volatile int *)&v.y, v.z, 0, 0);
+    *(void **)&mParticle[0] =
+        (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0], 0x113,
+                                      *(volatile int *)&v.x, *(volatile int *)&v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2672,7 +2584,8 @@ void daStar_c::func_ov002_020e81e0() {
 void daStar_c::func_ov002_020e8098() {
     Vector3 vc;
     Vector3 v;
-    if (mModelAnim1.Finished()) return;
+    if (mAnmModel1.Finished())
+        return;
     func_ov002_020e8244(&v, this);
     vc.x = v.x;
     vc.y = v.y;
@@ -2684,10 +2597,10 @@ void daStar_c::func_ov002_020e8098() {
     vc.y = FX_MUL(vc.y, mScaleY);
     vc.z = FX_MUL(vc.z, mScaleZ);
     AddVec3(&vc, &mPos, &vc);
-    *(void**)&mParticle[0] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticle[0], 0x115, vc.x, vc.y, vc.z, 0, 0);
-    *(void**)&mParticle[1] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticle[1], 0x116, vc.x, vc.y, vc.z, 0, 0);
+    *(void **)&mParticle[0] =
+        (void *)Particle::System::New(mParticle[0], 0x115, vc.x, vc.y, vc.z, 0, 0);
+    *(void **)&mParticle[1] =
+        (void *)Particle::System::New(mParticle[1], 0x116, vc.x, vc.y, vc.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2702,20 +2615,19 @@ void daStar_c::func_ov002_020e7fcc() {
     struct Vector3 v1;
     struct Vector3 v2;
 
-    obj = mModelAnim1.data.bones;
+    obj = mAnmModel1.data.bones;
 
-    if (!mModelAnim1.Finished()
-        && (u32)((*(u32*)&mModelAnim1.currFrame << 4) >> 0x10) >= 2
-        && *(int*)((char*)obj + 0xc) != 0) {
+    if (!mAnmModel1.Finished() && (u32)((*(u32 *)&mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
+        *(int *)((char *)obj + 0xc) != 0) {
         func_ov002_020e8244(&v1, this);
-        mParticle[0] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mParticle[0], 0x2f, v1.x, v1.y, v1.z, 0, 0);
+        mParticle[0] = (u32)Particle::System::New(mParticle[0], 0x2f, v1.x, v1.y, v1.z, 0, 0);
         return;
     }
 
-    if (!mModelAnim1.WillHitFrame(0x75)) return;
+    if (!mAnmModel1.WillHitFrame(0x75))
+        return;
     func_ov002_020e8244(&v2, this);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x30, v2.x, v2.y, v2.z);
+    Particle::System::NewSimple(0x30, v2.x, v2.y, v2.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2743,8 +2655,7 @@ void daStar_c::func_ov002_020e7f2c() {
         zvar = zraw;
         y = yadj;
     }
-    mParticle[2] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(volatile u32 *)&mParticle[2], 0x114, x, y, z, 0, 0);
+    mParticle[2] = (u32)Particle::System::New(*(volatile u32 *)&mParticle[2], 0x114, x, y, z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2757,8 +2668,7 @@ void daStar_c::func_ov002_020e7eb8() {
     int b = (actorID == ACTOR_SILVER_STAR);
     if (b == 0) return;
     func_ov002_020e8244(&v, this);
-    mParticle[3] = (int)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticle[3], 0x10e, v.x, v.y, v.z, 0, 0);
+    mParticle[3] = (int)Particle::System::New(mParticle[3], 0x10e, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2797,7 +2707,7 @@ void daStar_c::func_ov002_020e7e58() {
 void daStar_c::func_ov002_020e7e24() {
     if (mSoundObj6State != 0xff)
         return;
-    if (_ZN8dActor_c13SpawnSoundObjEj(this, 6))
+    if (SpawnSoundObj(6))
         mSoundObj6State = 0x78;
 }
 
@@ -2811,9 +2721,6 @@ int daStar_c::func_ov002_020e7e14() {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN12daStarBase_c7CollectEv, 0x020e7d84, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daStarBase_c7CollectEv
 /* The marker was touched: plays sound 3/0x53, puts the marker on hold and
  * hides it, clears its touch volume and bursts effects 0x12c, 0x12d and 0x12e. */
@@ -2825,9 +2732,9 @@ void daStarBase_c::Collect()
         mBits.visible = 0;
     }
     mdCcAcPos_c.Clear();
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x12c, mPosX, mPosY, mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x12d, mPosX, mPosY, mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x12e, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0x12c, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0x12d, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0x12e, mPosX, mPosY, mPosZ);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2858,8 +2765,6 @@ void daStar_c::func_ov002_020e7d08() {
 /* Camera placement from a StarCamera marker (actor 0xb1): looks at the star
  * from the position of the marker whose star id matches. Returns 1 when one
  * was found. */
-extern "C" {
-}
 
 int daStar_c::func_ov002_020e7c90(void* cam) {
     dActor_c *a = 0;
@@ -3119,7 +3024,7 @@ void daStar_c::func_ov002_020e7454() {
 /* The talk state the player is put in when it takes this star: 3 for star id
  * 8; 2 in a VS match, for the silver star and for a marker-placed star; 1 for
  * star id 0 and the levels func_ov002_020e9630 accepts; 0 otherwise. */
-int daStar_c::func_ov002_020e73ac() {
+u8 daStar_c::func_ov002_020e73ac() {
     int c, a, b;
     unsigned char r2 = mStarID;
     if (r2 == 8) {
@@ -3152,9 +3057,6 @@ ret0:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv, 0x020e72d8, size 0xd4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv
 /* Once the eighth red coin is in (NumRedCoins() == 8) spawns this marker's
  * Power Star 120.0 above it. The star takes the map marker, remembers this
@@ -3190,7 +3092,7 @@ void daStar_c::func_ov002_020e7218(char* player, int gate) {
     Player *a = (Player *)player;
     if (gate == 0) {
         struct Vector3 pos[2];
-        int b;
+        bool b;
         int* v;
         v = (int *)&a->mPosX;
         pos[0].x = v[0];
@@ -3202,7 +3104,7 @@ void daStar_c::func_ov002_020e7218(char* player, int gate) {
         pos[1].x = pos[0].x;
         pos[1].z = pos[0].z;
         pos[1].y = pos[0].y;
-        _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_((char *)this, &pos[1], data_0209f310[a->mPlayerNo], b, 0x15, a);
+        SpawnNumber(pos[1], data_0209f310[a->mPlayerNo], b, 0x15, a);
     }
     mBits.relink = 1;
     func_ov002_020e7554();
@@ -3235,8 +3137,8 @@ void daStarBase_c::LinkSilverStarAndStarMarker(char* b) {
 extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void LoadSilverStarAndNumber(void)
 {
-    Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da28);
-    Model::LoadFile(data_ov002_02110954);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da28);
+    dExtSimpleModel_c::LoadFile(data_ov002_02110954);
 }
 }
 
@@ -3320,7 +3222,7 @@ void daStar_c::func_ov002_020e700c() {
  * sound id func_ov002_020ea3a4 picks at volume arg. */
 void daStar_c::func_ov002_020e6fbc(int arg) {
   if (mSoundObjID != 0) return;
-  daSoundObj_c *s = (daSoundObj_c *)_ZN8dActor_c13SpawnSoundObjEj((char *)this, 4);
+  daSoundObj_c *s = (daSoundObj_c *)SpawnSoundObj(4);
   if (s == 0) return;
   mSoundObjID = s->uniqueID;
   s->mSoundID = func_ov002_020ea3a4();
@@ -3336,12 +3238,12 @@ void daStar_c::func_ov002_020e6fbc(int arg) {
 void daStar_c::func_ov002_020e6edc() {
     struct Vector3 v;
     mKind = KIND_8;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, (struct BCA_File *)data_ov002_02110934.ptr, 0x40000000, 0x1000, 0);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, (struct BCA_File *)data_ov002_02110934.ptr, 0x40000000, 0x1000, 0);
+    mAnmModel1.SetAnim((struct BCA_File *)data_ov002_02110934.filePtr, 0x40000000, 0x1000, 0);
+    mAnmModel2.SetAnim((struct BCA_File *)data_ov002_02110934.filePtr, 0x40000000, 0x1000, 0);
     v.x = data_ov002_0210aa0c[0];
     v.y = data_ov002_0210aa0c[1];
     v.z = data_ov002_0210aa0c[2];
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCc_c, this, &v, 0x64000, 0x96000, 1, 0);
+    mdCc_c.Init(this, v, 0x64000, 0x96000, 1, 0);
     mState = STATE_PLAY_AND_END;
     mBits.noSpin = 1;
     mBits.visible = 1;
@@ -3354,21 +3256,20 @@ void daStar_c::func_ov002_020e6edc() {
 /* Kind 9 set-up (param1 & 0x7f == 0x6f): visible, no spin, star id 6, starts
  * in STATE_COLLECT_HOLD. */
 void daStar_c::func_ov002_020e6df8() {
-  mKind = KIND_9;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110944.ptr, 0x40000000, 0x1000, 0);
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, data_ov002_02110944.ptr, 0x40000000, 0x1000, 0);
-  {
-    Vector3 v;
-    v.x = data_ov002_0210aa0c[0];
-    v.y = data_ov002_0210aa0c[1];
-    v.z = data_ov002_0210aa0c[2];
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-      &mdCc_c, this, &v, 0x64000, 0x96000, 1, 0);
-  }
-  mBits.noSpin = 1;
-  mBits.visible = 1;
-  mStarID = 6;
-  mState = STATE_COLLECT_HOLD;
+    mKind = KIND_9;
+    mAnmModel1.SetAnim((BCA_File *)data_ov002_02110944.filePtr, 0x40000000, 0x1000, 0);
+    mAnmModel2.SetAnim((BCA_File *)data_ov002_02110944.filePtr, 0x40000000, 0x1000, 0);
+    {
+        Vector3 v;
+        v.x = data_ov002_0210aa0c[0];
+        v.y = data_ov002_0210aa0c[1];
+        v.z = data_ov002_0210aa0c[2];
+        mdCc_c.Init(this, v, 0x64000, 0x96000, 1, 0);
+    }
+    mBits.noSpin = 1;
+    mBits.visible = 1;
+    mStarID = 6;
+    mState = STATE_COLLECT_HOLD;
 }
 
 /* -------------------------------------------------------------------------- */

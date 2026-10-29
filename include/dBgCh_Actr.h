@@ -89,15 +89,15 @@ struct dBgCh_Actr : dBgCh {
        constructions are synthesised, in exactly the ROM's order. Interior
        offsets that used to be spelled on this flat list moved home with
        their bytes: 0x6c was mSphereClsn.disp (+0x4c), 0x90 is
-       mSphereClsn.flags (+0x70), 0x128/0x12c are mSphereClsn.mScale /
+       mSphereClsn.flags (+0x70), 0x128/0x12c are mSphereClsn.mMaxNormalY /
        .mMotionAngPtr. 0x130 stays ours -- sizeof(dBgCh_SphCrr) is pinned at
        0x110, so 0x130 falls outside the sub-object (include/dBgCh_SphCrr.h). */
     dBgCh_SphCrr mSphereClsn;   /* 0x020 - spans [0x20,0x130) */
     s32 mAngPtr; /* 0x130 - Init stores its Vector3_16 * arg 5; dBgW::BeforeClsn's `ang` */
     dBgCh_Lin mRaycastLine;     /* 0x134 - spans [0x134,0x1ac) */
-    Vector3 mGroundNormal;      /* 0x1ac - func_02037318 copies mSphereClsn.unk_0fc..unk_104 here
+    Vector3 mGroundNormal;      /* 0x1ac - func_02037318 copies mSphereClsn.mFloorNormal here
                                    on a grounded frame. That payload is the floor normal with
-                                   the largest y (dBgW_Kc's sphere query hands func_0203794c
+                                   the largest y (dBgW_Kc's sphere query hands SetFloorNormal
                                    `&sn` when sn.y beats it); func_020371fc snaps only when .y
                                    is under 0xf20, i.e. on a slope. */
     Fix12i mScale;              /* 0x1b8 - (?) Init sets 0x1000 */
@@ -158,8 +158,11 @@ struct dBgCh_Actr : dBgCh {
     s32 JustHitGround() const;     /* mFlags & 0x20 */
     s32 ShouldUpdatePos() const;   /* !(mFlags & 0x2000) */
     s32 ShouldUpdatePosY() const;  /* !(mFlags & 0x1000) */
-    void *GetFloorResult() const;  /* func_02037938(&mSphereClsn) -- mClsnResult1 */
-    void *GetWallResult() const;   /* func_020378dc(&mSphereClsn) -- mClsnResult2 */
+    /* Both forward mSphereClsn's own accessor, which returns the dBgPi hit
+       record, so they return it typed too. The return type is not in the
+       mangled name and a pointer return is the same `bx lr` either way. */
+    dBgPi *GetFloorResult() const; /* func_02037938(&mSphereClsn) -- mClsnResult1 */
+    dBgPi *GetWallResult() const;  /* func_020378dc(&mSphereClsn) -- mClsnResult2 */
     s32 TouchesWater() const;      /* SurfaceInfo flag 0x20 on mSphereClsn.surface */
 };
 
@@ -168,6 +171,21 @@ struct dBgCh_Actr : dBgCh {
 typedef char dBgCh_Actr_size_must_be_0x1bc[
     sizeof(dBgCh_Actr) == 0x1bc ? 1 : -1];
 #endif
+
+/* The arm9 tail-call veneers over the Update* members, defined in
+   src/engine/collision/d_bg_ch_sph_crr_query.cpp. Each is its own ROM
+   function, and callers branch to it rather than to the member, so a call
+   has to name the veneer or its relocation moves. */
+extern "C" {
+void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *);     /* UpdateContinuous */
+void func_020383f0(dBgCh_Actr *);                          /* UpdateContinuousNoLava */
+void func_020383e4(dBgCh_Actr *);                          /* UpdateExtraContinous */
+void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *); /* UpdateDiscreteNoLava */
+}
+
+/* mSphereClsn as its dBgPi base: the result of the last query. Defined in
+   src/engine/collision/d_bg_ch_actr.cpp. */
+extern "C" dBgPi *func_0203567c(dBgCh_Actr *);
 
 #else
 

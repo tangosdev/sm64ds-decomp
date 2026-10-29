@@ -5,19 +5,16 @@
  * Slots 0 (InitResources), 3 (CleanupResources) and 6 (Behavior) are pure
  * virtual here; Render (slot 9) is the one real slot this class fills. The two
  * leaves, daObjBSwdoor_c (ov014) and daObjCvShutter_c (ov021), fill the null
- * slots by calling func_ov002_020bad10, func_ov002_020baba8 and
- * func_ov002_020bac18 with their own file tables.
+ * slots by calling InitResourcesFrom, CleanupResourcesFrom and UpdateShutter
+ * with their own file tables.
  *
  * The class's four byte fields (mTurnDir and mState in dBgActor_c's tail
- * padding, then mTimer and mEventBit) are set by func_ov002_020bad10 and run
- * by func_ov002_020bac18; the leaves' own methods never name them.
+ * padding, then mTimer and mEventBit) are set by InitResourcesFrom and run
+ * by UpdateShutter; the leaves' own methods never name them.
  *
- * leftovers:
- * - The three helpers keep their ROM-address names: slots 0, 3 and 6 are pure
- *   virtual, and the leaves call the helpers directly.
- * - dBgW_KcMbg::SetFile stays mangled (Fix12<int> by value).
- * - func_020393d4 is a 4-byte store into the dBgW at +0x18; naming it belongs
- *   with dBgW in arm9.
+ * Notes:
+ * - func_020393d4 is a 4-byte store into the dBgW at +0x18; dBgW.h has no
+ *   setter.
  * - Abstract class: no factory and no g_profile row.
  */
 
@@ -28,6 +25,7 @@
 #include "dBgW.h"
 #include "Sound.h"
 #include "Event.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 
@@ -36,19 +34,10 @@ struct ResourceDescriptor {
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-typedef char ResourceDescriptor_size_must_be_0x0c[
-    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_020393d4(dBgW_KcMbg *clsn, void *fn);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
-    s16 angleY, CLPS_Block *clps);
-
-int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
-int func_ov002_020bac18(daObjSwdoor_c *self);
-int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 }
 
 // @symbol _ZN13daObjSwdoor_cD0Ev
@@ -71,50 +60,43 @@ int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
  * qualified so dispatch is direct, then use the class-specific deallocator.
  * The inline body includes member/base teardown; no separate flat D1 provider
  * is supplied by this branch. The mwccarm definition below is unchanged. */
-extern "C" daObjSwdoor_c *_ZN13daObjSwdoor_cD0Ev(daObjSwdoor_c *thiz)
-{
-    thiz->daObjSwdoor_c::~daObjSwdoor_c();          /* direct member/base teardown */
+extern "C" daObjSwdoor_c *_ZN13daObjSwdoor_cD0Ev(daObjSwdoor_c *thiz) {
+    thiz->daObjSwdoor_c::~daObjSwdoor_c(); /* direct member/base teardown */
     daObjSwdoor_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
     return thiz;
 }
 #else
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
-void daObjSwdoor_c_EmitDeletingDestructor(daObjSwdoor_c *p)
-{
+void daObjSwdoor_c_EmitDeletingDestructor(daObjSwdoor_c *p) {
     delete p;
 }
 #endif
 
 /* Not called. Forces the out-of-line copy of the inline destructor. */
-void daObjSwdoor_c_EmitDestructor(daObjSwdoor_c *p)
-{
+void daObjSwdoor_c_EmitDestructor(daObjSwdoor_c *p) {
     p->~daObjSwdoor_c();
 }
 
-/* func_ov002_020baba8, 0x020baba8, size 0x48.
+/* 0x020baba8, size 0x48.
  * Teardown both leaves call: disable the collider if enabled, release the
  * descriptor's two files. */
-// @symbol func_ov002_020baba8
-extern "C" {
-int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
-{
-    if (self->mMeshCollider.IsEnabled())
-        self->mMeshCollider.Disable();
+// @symbol _ZN13daObjSwdoor_c20CleanupResourcesFromEP18ResourceDescriptor
+s32 daObjSwdoor_c::CleanupResourcesFrom(ResourceDescriptor *descriptor) {
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
     descriptor->model->Release();
     descriptor->collision->Release();
     return 1;
 }
-}
 
 /* Vtable slot 9, ov002 0x020babf0. Key function. */
 // @symbol _ZN13daObjSwdoor_c6RenderEv
-s32 daObjSwdoor_c::Render()
-{
+s32 daObjSwdoor_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-/* func_ov002_020bac18, 0x020bac18, size 0xf8.
+/* 0x020bac18, size 0xf8.
  * Per-frame shutter the leaves install in the null Behavior slot. mState
  * runs 0, 1, 2:
  *   0  wait for the event bit and for the timer to run out, then arm a
@@ -122,66 +104,57 @@ s32 daObjSwdoor_c::Render()
  *   1  turn mAngleY by 0x100 a frame (direction from mTurnDir) until the timer
  *      runs out, then set the 0x1 bit of mFlags again;
  *   2  done. */
-// @symbol func_ov002_020bac18
-extern "C" {
-
-int func_ov002_020bac18(daObjSwdoor_c *self)
-{
-    switch (self->mState) {
+// @symbol _ZN13daObjSwdoor_c13UpdateShutterEv
+s32 daObjSwdoor_c::UpdateShutter() {
+    switch (mState) {
     case 0:
-        if (Event::GetBit(self->mEventBit) != 0) {
-            if (DecIfAbove0_Byte(&self->mTimer) == 0) {
-                self->mTimer = 0x40;
-                self->mState++;
-                self->mFlags &= ~1;
-                Sound::PlayBank3(0x3f, self->mCamSpacePos);
+        if (Event::GetBit(mEventBit) != 0) {
+            if (DecIfAbove0_Byte(&mTimer) == 0) {
+                mTimer = 0x40;
+                mState++;
+                mFlags &= ~1;
+                Sound::PlayBank3(0x3f, mCamSpacePos);
             }
         }
         break;
     case 1:
-        if (DecIfAbove0_Byte(&self->mTimer) != 0) {
-            if (self->mTurnDir != 0) {
-                self->mAngleY += 0x100;
+        if (DecIfAbove0_Byte(&mTimer) != 0) {
+            if (mTurnDir != 0) {
+                mAngleY += 0x100;
             } else {
-                self->mAngleY -= 0x100;
+                mAngleY -= 0x100;
             }
         } else {
-            self->mState++;
-            self->mFlags |= 1;
+            mState++;
+            mFlags |= 1;
         }
         break;
     case 2:
         break;
     }
 
-    self->UpdateModelPosAndRotY();
+    UpdateModelPosAndRotY();
     return 1;
 }
-}
 
-/* func_ov002_020bad10, 0x020bad10, size 0xc0.
+/* 0x020bad10, size 0xc0.
  * Resource setup both leaves call. The descriptor's model file goes to
- * Model::LoadFile, its collision file to dBgW_Kc::LoadFile, and its CLPS block
+ * dExtSimpleModel_c::LoadFile, its collision file to dBgW_Kc::LoadFile, and its CLPS block
  * into SetFile; then the stock UpdatePosAndAngs hook and Enable. The four
  * byte fields are set last: mTurnDir from bit 0 of param1, mEventBit from
  * bits 1..5, mState 0 and the start-up mTimer 5. */
-// @symbol func_ov002_020bad10
-extern "C" {
-int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
-{
-    self->mModel.SetFile((BMD_File *)Model::LoadFile(*descriptor->model), 1, -1);
-    self->UpdateModelPosAndRotY();
-    self->UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &self->mMeshCollider,
-        (KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision),
-        &self->mClsnMat, 0x1000, self->mAngleY, descriptor->clps);
-    func_020393d4(&self->mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
-    self->mMeshCollider.Enable(self);
-    self->mTurnDir = self->param1 & 1;
-    self->mEventBit = (self->param1 >> 1) & 0x1f;
-    self->mState = 0;
-    self->mTimer = 5;
+// @symbol _ZN13daObjSwdoor_c17InitResourcesFromEP18ResourceDescriptor
+s32 daObjSwdoor_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
+                          mAngleY, *descriptor->clps);
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    mMeshCollider.Enable(this);
+    mTurnDir = param1 & 1;
+    mEventBit = (param1 >> 1) & 0x1f;
+    mState = 0;
+    mTimer = 5;
     return 1;
-}
 }

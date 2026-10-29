@@ -107,7 +107,7 @@
   "bss": [],
   "notes": [
     "Consolidates the existing 12-function candidate with cartridge RTTI class names and native factories, destructors, field accesses and calls.",
-    "One fixed-point ABI bridge remains: the current dCcAc_c::Init definition takes raw words. Three native Fix12<int> spellings grew InitResources from 0xac to 0xc4 under 2004/b56; see the scoped handoff.",
+    "dCcAc_c::Init is a member call through its scalar Fix12i declaration. Three by-value Fix12<int> spellings grew InitResources from 0xac to 0xc4 under 2004/b56; see the scoped handoff.",
     "Shared baseline, attribution and rename-ledger integration remains pending separately scoped bookkeeping permission."
   ],
   "compiler_only_output": [

@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjDorifu_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * daKpa_c in the Sky's drifting stairs (`dorifu`). No fields of
  * its own: the factory allocates 0xdcc, which daObjDorifu_c fills
@@ -19,18 +17,13 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 struct daObjKm3_Dorifu_c : daObjDorifu_c {
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
     virtual ~daObjKm3_Dorifu_c() {}
-    int CleanupResources();                /* slot  3 */
-    int InitResources();                   /* slot  0 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
+    int CleanupResources(); /* slot  3 */
+    int InitResources();    /* slot  0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjKm3_Dorifu_c_size_must_be_0xdcc[
-    sizeof(daObjKm3_Dorifu_c) == 0xdcc ? 1 : -1];
+typedef char daObjKm3_Dorifu_c_size_must_be_0xdcc[sizeof(daObjKm3_Dorifu_c) == 0xdcc ? 1 : -1];
 #endif
 
 #endif /* DAOBJKM3_DORIFU_C_H */

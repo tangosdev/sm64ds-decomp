@@ -12,11 +12,7 @@
  * first). Do not reorder.
  */
 
-// leftovers:
-// - dBgW_KcMbg::SetFile takes Fix12<int> by value, so the call in this TU's
-//   InitResources keeps the mangled spelling (the member form emits
-//   different code there).
-// - The daObjIceBoard_c_* file-handle names are this TU's own; the retired
+// Note: the daObjIceBoard_c_* file-handle names are this TU's own; the retired
 //   shard's data_ov018_* labels for the same addresses are dropped from
 //   symbols.txt with their decl_common.h lines.
 
@@ -30,6 +26,7 @@ enum d_a_obj_ice_board_AssetId {
 #include "Player.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x472, collision file 0x473). mwcc emits
@@ -41,15 +38,11 @@ enum d_a_obj_ice_board_AssetId {
  * addresses are dropped from symbols.txt, and their stale decl_common.h
  * lines with them (S42). */
 struct IceBoardModelFile : SharedFilePtr {
-    u32 words[2];
-
     IceBoardModelFile(u32 fileID);
     ~IceBoardModelFile();
 };
 
 struct IceBoardCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     IceBoardCollisionFilePtr(u32 fileID);
     ~IceBoardCollisionFilePtr();
 };
@@ -57,21 +50,7 @@ struct IceBoardCollisionFilePtr : SharedFilePtr {
 extern IceBoardModelFile daObjIceBoard_c_ModelFile;
 extern IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile;
 
-extern "C" {
 extern CLPS_Block data_ov002_0210d754;
-
-/* Particle::System::NewSimple's true signature takes Fix12<int> by value.
- * Declaring that on this TU's Kill does not compile: mPosX/Y/Z are s32 and
- * mwccarm refuses the implicit conversion. The scalar ABI spelling is the
- * measured form (notes/mwccarm-codegen.md 6az). */
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, Fix12i z);
-
-/* dBgW_KcMbg::SetFile likewise takes Fix12<int> by value. A real member
- * call on this TU's InitResources emits different code there. */
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
-    s16 angY, CLPS_Block *clps);
-}
 
 // @symbol daObjIceBoard_c_classInit
 /* Every instruction the cartridge has here falls out of the one `new`.
@@ -81,44 +60,38 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
  * The implicit constructor is what keeps the intervening dBgActor_c
  * construction inlined; declaring a constructor of our own would emit a `bl`
  * the factory does not have. */
-extern "C" daObjIceBoard_c *daObjIceBoard_c_classInit()
-{
+extern "C" daObjIceBoard_c *daObjIceBoard_c_classInit() {
     return new daObjIceBoard_c();
 }
 
 // @symbol _ZN15daObjIceBoard_c13InitResourcesEv
-int daObjIceBoard_c::InitResources()
-{
-    void *modelFile = Model::LoadFile(daObjIceBoard_c_ModelFile);
+int daObjIceBoard_c::InitResources() {
+    void *modelFile = dExtSimpleModel_c::LoadFile(daObjIceBoard_c_ModelFile);
     mModel.SetFile((BMD_File *)modelFile, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(daObjIceBoard_c_ClsnFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, clsnFile, &mClsnMat, 0x199, mAngleY,
-        &data_ov002_0210d754);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov002_0210d754);
     return 1;
 }
 
 // @symbol _ZN15daObjIceBoard_c8BehaviorEv
-int daObjIceBoard_c::Behavior()
-{
+int daObjIceBoard_c::Behavior() {
     if (!mMeshCollider.IsEnabled())
         mMeshCollider.Enable(this);
     return 1;
 }
 
 // @symbol _ZN15daObjIceBoard_c6RenderEv
-int daObjIceBoard_c::Render()
-{
+int daObjIceBoard_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN15daObjIceBoard_c16CleanupResourcesEv
-int daObjIceBoard_c::CleanupResources()
-{
+int daObjIceBoard_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 
@@ -132,10 +105,11 @@ int daObjIceBoard_c::CleanupResources()
  *
  * param1 is the player's character id; 2 is Wario. The trailing unqualified
  * Kill() reaches this class's own slot-31 override through the vtable. */
-void daObjIceBoard_c::OnGroundPounded(dActor_c &other)
-{
-    if (&other == 0) return;
-    if (other.param1 != 2) return;
+void daObjIceBoard_c::OnGroundPounded(dActor_c &other) {
+    if (&other == 0)
+        return;
+    if (other.param1 != 2)
+        return;
     Kill();
 }
 
@@ -158,12 +132,11 @@ void daObjIceBoard_c::OnGroundPounded(dActor_c &other)
  * Hoisting them into locals is one instruction shorter per call and does not
  * reproduce; naming the fields at each call site is what asks for the loads
  * the cartridge has. */
-void daObjIceBoard_c::Kill()
-{
+void daObjIceBoard_c::Kill() {
     Sound::PlayBank3(0x41, mCamSpacePos);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x74, mPosX, mPosY, mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x75, mPosX, mPosY, mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x76, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0x74, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0x75, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0x76, mPosX, mPosY, mPosZ);
     MarkForDestruction();
 }
 
@@ -172,8 +145,7 @@ void daObjIceBoard_c::Kill()
  *
  * Player::IncMegaKillCount is a real method, and the trailing unqualified
  * Kill() reaches this class's own slot-31 override. */
-void daObjIceBoard_c::OnHitByMegaChar(Player &player)
-{
+void daObjIceBoard_c::OnHitByMegaChar(Player &player) {
     player.IncMegaKillCount();
     Kill();
 }
@@ -192,7 +164,7 @@ void daObjIceBoard_c::OnHitByMegaChar(Player &player)
  *
  * Both bodies are short because the chain is short and this class adds no
  * member of its own: this class's vptr store, then dBgActor_c's -- inlined,
- * its destructor is defined in its class body -- then dBgActor_c's Model and
+ * its destructor is defined in its class body -- then dBgActor_c's dExtSimpleModel_c and
  * dBgW_KcMbg, then dActor_c. D0's trailing deallocation is the inherited
  * inline operator delete, which is why nothing here names a heap.
  */

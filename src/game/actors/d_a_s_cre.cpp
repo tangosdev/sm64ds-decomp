@@ -9,9 +9,6 @@
  * daSCre_c_classInit is reconstructed (RTTI daSCre_c, STAR_CREATE
  * registry). Retail does not store that spelling.
  *
- * deslop
- * Leftover: Pos() is a leaf overlay of mPosX/Y/Z. The shared
- *   dActor_c::Pos() boundary is issue #2566, not this branch.
  */
 
 #include "daSCre_c.h"
@@ -33,8 +30,8 @@ extern "C" daSCre_c *daSCre_c_classInit(void)
 s32 daSCre_c::Behavior()
 {
     if (DistToCPlayer() < kPlayerRangeFix12) {
-        Spawn(kStarActorId, (param1 & kStarIndexMask) | kStarSpawnStyle,
-            Pos(), 0, mAreaId, -1); /* no rot, no death-table id */
+        Spawn(kStarActorId, (param1 & kStarIndexMask) | kStarSpawnStyle, mPos, 0, mAreaId,
+              -1); /* no rot, no death-table id */
     }
     MarkForDestruction();
     return 1;

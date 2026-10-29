@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -20,7 +20,7 @@
  *
  *   _ZN7daOts_cD1Ev (ov064 0x02115ee0, 0x48) -- this class's own destructor. It stores
  *   data_ov064_0211b768 and destroys dExtShadowModel_c 0x370, dCcAc_c 0x33c,
- *   dBgCh_Actr 0x174, ModelAnim 0x110, then chains to _ZN12dEnemyBase_cD2Ev. D0 at
+ *   dBgCh_Actr 0x174, dExtAnmModel_c 0x110, then chains to _ZN12dEnemyBase_cD2Ev. D0 at
  *   0x02115f28 is the same plus Memory::Deallocate.
  *
  *   An out-of-line D1/D0 pair and the inline destructor below are not in conflict:
@@ -39,7 +39,7 @@
  * through ov066 all load their .text at 0x02115ee0. Resolve inside ov064 or the
  * table will lie to you.)
  *
- * SIZE 0x398, and every member closes exactly on the next: ModelAnim 0x64 ends at
+ * SIZE 0x398, and every member closes exactly on the next: dExtAnmModel_c 0x64 ends at
  * 0x174, dBgCh_Actr 0x1bc ends at 0x330, mFileTable plus two particle ids end at
  * 0x33c, dCcAc_c 0x34 ends at 0x370, dExtShadowModel_c 0x28 ends at 0x398. Nothing
  * allocates a plain daOts_c, so the ceiling comes from the children instead: the
@@ -139,7 +139,7 @@ struct daOts_c : dEnemyBase_c {
     /* The object viewed as a Tail. */
     Tail &tail() { return *(Tail *)this; }
 
-    ModelAnim           mModelAnim;             /* 0x110 */
+    dExtAnmModel_c mAnmModel;                 /* 0x110 */
     dBgCh_Actr        mWithMeshClsn;          /* 0x174 */
     /* Pointer to a per-variant config block (this TU reads it through CONFIG()). All
        three children declare a field here, which is what makes it the base's
@@ -199,7 +199,7 @@ struct daOts_c : dEnemyBase_c {
 
     /* Non-virtual shared workers. All three children wrap these from the
        pure-virtual InitResources / Behavior slots after their own preamble.
-       Class ownership is proven by this-pointer layout (ModelAnim 0x110,
+       Class ownership is proven by this-pointer layout (dExtAnmModel_c 0x110,
        dBgCh_Actr 0x174, mFileTable 0x330, dCcAc_c 0x33c, dExtShadowModel_c 0x370)
        and by named daOts callees already in this TU. The English spellings
        describe those call sites; the stripped image carries no original
@@ -211,7 +211,7 @@ struct daOts_c : dEnemyBase_c {
     int func_ov064_0211616c();
     void func_ov064_02116220();
     void func_ov064_02116460();
-    int func_ov064_02116560();
+    void func_ov064_02116560();
     void func_ov064_021165d8();
     int func_ov064_021166f0();
     void func_ov064_02116754();

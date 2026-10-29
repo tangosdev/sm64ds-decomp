@@ -9,9 +9,6 @@
  * leftovers:
  * - mLevel (dScMgBase_c) and mDrawSubScreen (dScMgD3DBase_c) are read here
  *   as the `mLevel % 5` egg check and the Render flag test.
- * - `base + 0x466c` / `base + 0x4728` still address the two per-minigame
- *   cameras by offset: include/dScMgD3DBase_c.h already calls them camera
- *   elements and records "typing it as a real array is its own change".
  * - struct C must stay a non-polymorphic stand-in for the state PMF at
  *   0x5004: mwccarm lays out a pointer-to-member of a polymorphic class
  *   differently, so Behavior cannot dispatch through dScMgJump_c itself.
@@ -27,6 +24,8 @@
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "types.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
 /* `C` stands in for the receiver of the state pointer-to-member at 0x5004.
  * It must stay non-polymorphic: mwccarm lays out a pointer-to-member of a
@@ -68,7 +67,6 @@ struct Base {
  * sJumpBackFile; a declared-only subclass so the static initializer
  * names the real entry points. */
 struct MgJumpModelFilePtr : SharedFilePtr {
-    u32 words[2];
     MgJumpModelFilePtr(u32 fileID);
     ~MgJumpModelFilePtr();
 };
@@ -86,7 +84,6 @@ void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void func_02012790(int a0);
 void FreeGfxSlotsById(int arg);
 int  LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -123,9 +120,12 @@ extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
 }
 
 namespace GX   { void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size); }
-namespace G3X  { void SetFog(bool enable, int mode, int slope, int offset); }
-namespace cstd { s32 fdiv(s32 a, s32 b); }
-short ApproachLinear2(short &value, short target, short step);
+namespace G3X {
+void SetFog(int enable, int mode, int slope, int offset);
+}
+namespace cstd {
+s32 fdiv(s32 a, s32 b);
+}
 
 // @symbol _ZN11dScMgJump_c10StartRoundEi
 /* Slot 18. 0 is an eat (one more egg, capped like the HUD score), 0x12 a
@@ -211,12 +211,9 @@ int dScMgJump_c::CanEndState(int sel)
 }
 
 // @symbol _ZN11dScMgJump_c13InitResourcesEv
-/* Slot 0, and the key function (see the banner). The two camera blocks at
- * 0x466c and 0x4728 are untyped padding in dScMgD3DBase_c.h, so they are
- * still passed by offset. */
+/* Slot 0, and the key function (see the banner). */
 s32 dScMgJump_c::InitResources()
 {
-    char *base = (char *)this;
     s32 idx;
     int buf1, buf2;
     s32 fov;
@@ -237,25 +234,25 @@ s32 dScMgJump_c::InitResources()
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082614);
 
-    this->mCamera0EyeX = 0;
-    this->mCamera0EyeY = -0x64000;
-    this->mCamera0EyeZ = 0;
-    this->mCamera0TargetX = 0;
-    this->mCamera0TargetY = 0;
-    this->mCamera0TargetZ = fov;
-    this->mCamera0Angle = 0x800;
-    Camera_UpdateMatrices(base + 0x466c);
+    this->mCameras[0].mEyeX = 0;
+    this->mCameras[0].mEyeY = -0x64000;
+    this->mCameras[0].mEyeZ = 0;
+    this->mCameras[0].mTargetX = 0;
+    this->mCameras[0].mTargetY = 0;
+    this->mCameras[0].mTargetZ = fov;
+    this->mCameras[0].mAngle = 0x800;
+    Camera_UpdateMatrices(&mCameras[0]);
 
-    this->mCamera1EyeX = 0;
-    this->mCamera1EyeY = 0x82000;
-    this->mCamera1EyeZ = 0;
-    this->mCamera1TargetX = 0;
-    this->mCamera1TargetY = 0;
-    this->mCamera1TargetZ = fov;
-    this->mCamera1Angle = 0x800;
-    Camera_UpdateMatrices(base + 0x4728);
+    this->mCameras[1].mEyeX = 0;
+    this->mCameras[1].mEyeY = 0x82000;
+    this->mCameras[1].mEyeZ = 0;
+    this->mCameras[1].mTargetX = 0;
+    this->mCameras[1].mTargetY = 0;
+    this->mCameras[1].mTargetZ = fov;
+    this->mCameras[1].mAngle = 0x800;
+    Camera_UpdateMatrices(&mCameras[1]);
 
-    if (Heyho_InitPool((char *)mArray2, 6) == 0)
+    if (Heyho_InitPool((char *)mHeyhos, 6) == 0)
         return 0;
     if (Jump3D_InitPool((char *)mPlayers, 3) == 0)
         return 0;
@@ -265,7 +262,7 @@ s32 dScMgJump_c::InitResources()
     } else {
         sJumpBackFile = &gJumpBack01ModelFile;
     }
-    modelFile = Model::LoadFile(*(SharedFilePtr *)sJumpBackFile);
+    modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)sJumpBackFile);
     r = mModel.SetFile((BMD_File *)modelFile, 1, -1);
     if (r == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
@@ -503,7 +500,7 @@ s32 dScMgJump_c::Render()
         *(int *)((char *)p + 0x18) = mAccum;
 
         {
-            Model *model = &mModel;
+            dExtSimpleModel_c *model = &mModel;
             model->Render((Vector3 *)&t);
         }
     }

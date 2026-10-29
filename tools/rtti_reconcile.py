@@ -55,10 +55,19 @@ unknown_class      no _ZTV symbol: the tree has never named this class
 root_both          ROM says root, tree says root
 root_rom_only      ROM says root, tree claims a base -- the tree invented an edge
 
-Note `agree_primary_only` keys on the base at **offset 0**, not the first in the record's
-list.  vmi base order is not offset order: `dExtAnmModel_c` lists dExtFrameCtrl_c (offset
-80) before dExtSimpleModel_c (offset 0).  Testing list position put that row in plain
-`agree` while the tree was in fact missing an entire base.
+Note `agree_primary_only` keys on the base at **offset 0**, not on whichever base comes
+first.  Neither order on offer is offset order:
+
+  * the ROM's own vmi base list.  `daDemo_c::anmModel_c` (ov002:0x0210babc) lists
+    daDemo_c::param_c at +0x64 before dExtAnmModel_c at +0x0.
+  * build/rtti.json's edge order, which sorts each class's edges by base key
+    (module:address) rather than keeping the record's list.  `dExtAnmModel_c`
+    (arm9:0x0208e924; the tree called it ModelAnim before #4319) lists
+    dExtSimpleModel_c at +0x0 then dExtFrameCtrl_c at +0x50, but dExtFrameCtrl_c's
+    record has the lower address, so rtti.json gives it first.
+
+Testing position put the dExtAnmModel_c row in plain `agree` while the tree was in fact
+missing an entire base.  Each row's `rom_bases` is emitted in offset order, primary first.
 """
 
 from __future__ import annotations
@@ -166,6 +175,11 @@ def build(rtti_path, eh_path):
     parents = collections.defaultdict(list)
     for e in rtti["edges"]:
         parents[e["derived_key"]].append(e)
+    # Offset order, so the primary base comes first.  rtti.json orders edges by
+    # base key, which puts dExtFrameCtrl_c (+0x50) ahead of dExtSimpleModel_c
+    # (+0x0) for dExtAnmModel_c.  The sort is stable for equal offsets.
+    for es in parents.values():
+        es.sort(key=lambda e: e.get("offset", 0))
 
     # ---- extend the name map structurally, then corroborate ---------------
     # A tree name that is not itself a ROM name, sitting where the ROM names a
@@ -294,11 +308,13 @@ def build(rtti_path, eh_path):
                 good = [h for h in hit if h[1]]
                 if good:
                     proven_by = good[0][2]
-                    # The primary base is the one at OFFSET 0, not edges[0]: vmi
-                    # base order is not offset order.  dExtAnmModel_c lists
-                    # dExtFrameCtrl_c (offset 80) before dExtSimpleModel_c
-                    # (offset 0), so keying on list position hid a row where the
-                    # tree is missing an entire base.
+                    # The primary base is the one at OFFSET 0.  Neither the ROM's
+                    # base list nor rtti.json's edge order (by base key) is offset
+                    # order: rtti.json gives dExtAnmModel_c's dExtFrameCtrl_c
+                    # (+0x50) ahead of dExtSimpleModel_c (+0x0), and keying on that
+                    # position hid a row where the tree is missing an entire base.
+                    # `edges` is offset-sorted above; this still asks for offset 0
+                    # rather than trusting position.
                     zero = [e["base_key"] for e in edges if e.get("offset", 0) == 0]
                     primary = zero[0] if zero else rom_bases[0]
                     pm, _how = corroborated_match(believed, primary)

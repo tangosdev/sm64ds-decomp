@@ -4,17 +4,9 @@
     .ctor       start:0x02112b34 end:0x02112b44 kind:rodata align:4
     .data       start:0x02112b60 end:0x02113c20 kind:data align:32
     .bss        start:0x02113c20 end:0x02113ee0 kind:bss align:32
-src/game/actors/d_a_s_bird_head.cpp:
-    complete
-    .text start:0x021111a0 end:0x0211145c
-
-src/unnamed/ov009/func_ov009_0211145c.cpp:
-    complete
-    .text start:0x0211145c end:0x021115d8
-
 src/game/actors/d_a_s_bird.cpp:
     complete
-    .text start:0x021115d8 end:0x02111a70
+    .text start:0x021111a0 end:0x02111a70
     .init start:0x02112458 end:0x02112524
     .ctor start:0x02112b34 end:0x02112b38
     .data start:0x021138fc end:0x0211391c
@@ -23,6 +15,9 @@ src/game/actors/d_a_s_bird.cpp:
 src/game/actors/d_a_obj_mc_water.cpp:
     complete
     .text start:0x02111a70 end:0x02111dc4
+    .init start:0x02112524 end:0x02112a5c
+    .ctor start:0x02112b38 end:0x02112b3c
+    .bss start:0x02113c68 end:0x02113e88
 
 src/game/actors/d_a_obj_mc_metalnet.cpp:
     complete
@@ -37,8 +32,4 @@ src/game/actors/d_a_mc_flag.cpp:
     .init start:0x02112ac8 end:0x02112b34
     .ctor start:0x02112b40 end:0x02112b44
     .bss start:0x02113eb0 end:0x02113ed8
-
-src/unnamed/ov009/__sinit_ov009_02112524.c:
-    complete
-    .init start:0x02112524 end:0x02112a5c
 

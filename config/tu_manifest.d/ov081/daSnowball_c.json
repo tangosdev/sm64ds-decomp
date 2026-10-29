@@ -9,7 +9,7 @@
   "boundary_evidence": [
     "contiguous run 0x02125f14..0x021264b4, 12 functions, each delink complete and abutting: D1, D0, five helpers, five virtuals",
     "ROM RTTI for vtable 0x02128abc is daSnowball_c: _ZTI12daSnowball_c at 0x02128a7c, string 12daSnowball_c at 0x02128a88",
-    "The five helpers between D0 and CleanupResources are this class's: InitResources installs the state record handled by func_ov081_021261d4, Behavior calls func_ov081_02126224, and func_ov081_021260fc/02125fb8 read daSnowball_c fields (+0x380 spawn height, +0x388). The next function, daSnowball_c_classInit at 0x021264b4, was folded in by the 0930c classInit fold (below).",
+    "The five helpers between D0 and CleanupResources are this class's: InitResources installs the state record through SetState (0x021261d4), Behavior calls UpdateModelMatrix (0x02126224), and State0/HandleContact (0x021260fc/0x02125fb8) read daSnowball_c fields (+0x380 spawn height, +0x388). The next function, daSnowball_c_classInit at 0x021264b4, was folded in by the 0930c classInit fold (below).",
     "classInit fold (0930c): the SNOWBALL registry factory daSnowball_c_classInit (0x021264b4, 0x50) abuts the run's end 0x021264b4 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x02125f14..0x02126504 (13 functions) ends where the daGmch_c TU (src/game/actors/d_a_gmch.cpp) begins.",
     "the compiler-generated __sinit_d_a_snowball.cpp is byte-identical to retail __sinit_ov081_021284b4 (0x3c, three ABS32 relocations). It copies the two pointer-to-member descriptors at 0x02128a6c and 0x02128a74 into the state record at 0x02128eb4. The ctor word at 0x0212882c points at that initializer."
   ],
@@ -56,35 +56,35 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov081_02125fb8",
+      "symbol": "_ZN12daSnowball_c13HandleContactEv",
       "address": "0x02125fb8",
       "size": "0x00000144",
       "legacy_source": "src/func_ov081_02125fb8.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN12daSnowball_c19func_ov081_021260fcEv",
+      "symbol": "_ZN12daSnowball_c6State0Ev",
       "address": "0x021260fc",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov081_021260fc.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN12daSnowball_c19func_ov081_021261b8Ev",
+      "symbol": "_ZN12daSnowball_c10InitState0Ev",
       "address": "0x021261b8",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov081_021261b8.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov081_021261d4",
+      "symbol": "_ZN12daSnowball_c8SetStateEP19daSnowball_StateRec",
       "address": "0x021261d4",
       "size": "0x00000050",
       "legacy_source": "src/func_ov081_021261d4.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov081_02126224",
+      "symbol": "_ZN12daSnowball_c17UpdateModelMatrixEv",
       "address": "0x02126224",
       "size": "0x00000074",
       "legacy_source": "src/func_ov081_02126224.c",
@@ -248,7 +248,7 @@
       "source": "0x02128a6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daSnowball_c19func_ov081_021261b8Ev",
+      "symbol": "_ZN12daSnowball_c10InitState0Ev",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x021261b8"
@@ -258,7 +258,7 @@
       "source": "0x02128a74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daSnowball_c19func_ov081_021260fcEv",
+      "symbol": "_ZN12daSnowball_c6State0Ev",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x021260fc"
@@ -266,7 +266,7 @@
   ],
   "notes": [
     "Widened to the full unit 0x02125f14..0x021264b4 (the destructor pair and the five helpers folded in front of the five virtuals). The factory daSnowball_c_classInit at 0x021264b4 was folded in afterwards by the 0930c classInit fold (below).",
-    "classInit fold (0930c): daSnowball_c_classInit is folded in last, in ROM order, under the file's `#pragma defer_codegen off`, as `return new daSnowball_c();`. The retired one-function source hand-called fBase_c::operator new(908 = 0x38c), dEnemyBase_c's C2 constructor, this class's vtable store and the four member C1 constructors (dCcAc_c 0x110, dBgCh_Actr 0x144, Model 0x300, dExtShadowModel_c 0x350); daSnowball_c has no user-declared constructor, so the synthesized one emits the identical sequence and no new compiler-only output. tubuild verify: 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_snowball.c; its credit carries in attribution.json as a path#symbol override.",
+    "classInit fold (0930c): daSnowball_c_classInit is folded in last, in ROM order, under the file's `#pragma defer_codegen off`, as `return new daSnowball_c();`. The retired one-function source hand-called fBase_c::operator new(908 = 0x38c), dEnemyBase_c's C2 constructor, this class's vtable store and the four member C1 constructors (dCcAc_c 0x110, dBgCh_Actr 0x144, dExtSimpleModel_c 0x300, dExtShadowModel_c 0x350); daSnowball_c has no user-declared constructor, so the synthesized one emits the identical sequence and no new compiler-only output. tubuild verify: 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_snowball.c; its credit carries in attribution.json as a path#symbol override.",
     "The file-scope state record data_ov081_02128eb4 is defined in this TU. mwcc emits __sinit_d_a_snowball.cpp, the ctor word, and the two anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02128a7c, where _ZTI12daSnowball_c begins. The handwritten src/__sinit_ov081_021284b4.c is retired.",
     "Uniquifier resync: the fold recorded those descriptors as @673 and @675 against headers from before the dBgCh_SphCrr fold. Parsing the post-fold dBgCh_SphCrr.h (included through dBgCh_Actr.h) advances mwcc's positional counter by 30, and the decl_common.h externs removed in that same merge move it back by 2, so the fold-era tree emitted @701 and @703; the types.h Vector3 ctors advanced the counter again, so the pre-interface-cleanup tree emitted @716 and @718. The current actor-interface cleanup emits @714 and @716, respectively renamed onto the unchanged @701/@703 pins. Addresses, sizes, and section bytes are unchanged. The folded TU stays folded.",
     "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control. The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the five owned ranges matched."
@@ -282,7 +282,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Vector3's four-byte inline destructor, vague linkage from the Vector3 local in func_ov081_02125fb8. The cartridge's copy is arm9:0x020072c0."
+      "reason": "Vector3's four-byte inline destructor, vague linkage from the Vector3 local in HandleContact (0x02125fb8). The cartridge's copy is arm9:0x020072c0."
     },
     {
       "symbol": "_ZTV12daSnowball_c",
@@ -544,28 +544,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -577,12 +557,12 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@714",
+      "from": "@818",
       "to": "@701",
       "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity."
     },
     {
-      "from": "@716",
+      "from": "@820",
       "to": "@703",
       "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity."
     }

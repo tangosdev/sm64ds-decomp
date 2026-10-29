@@ -9,29 +9,18 @@
  * factory first. The inline destructor declared last in daSldMng_c emits the
  * retail D1/D0 pair first and emits no D2 body.
  *
- * deslop
- * Leftover: Sound::PlaySub stays mangled (Fix12<int> by value, wall 6az;
- *   this TU's Behavior measured 0xa4 -> 0xb4 in method form).
- * Leftover: data_ov019_021135d8 keeps its ROM-address name (the Vector3
- *   spawn position; nothing in the ROM names it).
- * Leftover: g_profile_SLIDER_MANAGER (ov019 0x021133a8) stays outside this
- *   TU (S14) -- defining it here would emit .data this entry is not
- *   licensed to own.
- * Leftover: unk_0d0 (header) has no observed meaning; pad_0d7 is never
+ * What stays:
+ * - data_ov019_021135d8 keeps its ROM-address name (the Vector3 spawn
+ *   position; nothing in the ROM names it).
+ * - g_profile_SLIDER_MANAGER (ov019 0x021133a8) stays outside this TU (S14):
+ *   defining it here would emit .data this entry is not licensed to own.
+ * - unk_0d0 (header) has no observed meaning; pad_0d7 is never
  *   dereferenced.
  */
 
 #include "daSldMng_c.h"
-
-extern "C" {
-extern u16 DecIfAbove0_Short(u16 *timer);
-/* ABI wall: spelling this as Sound::PlaySub(..., Fix12<int>, bool) makes
- * mwccarm home the by-value Fix12 in an 8-byte stack slot, growing Behavior
- * from 0xa4 to 0xb8. The cartridge passes the same raw fixed-point word in
- * r3, so the measured scalar call view is retained. */
-extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(
-    u32 soundID, u32 volume, u32 pan, Fix12i distance, bool loop);
-}
+#include "Sound.h"
+#include "math/CalcLib.h"
 
 /* The spawn position, ov019 0x021135d8. Nothing in the ROM names it.
  * The cartridge's initializer stores the three fields and registers
@@ -39,7 +28,11 @@ extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(
  * __sinit_d_a_sld_mng.cpp emits the stores. The wrapper is local; the
  * manifest aliases its destructor to the ROM's _ZN7Vector3D1Ev. */
 struct SldMngVec3 : Vector3 {
-    SldMngVec3(Fix12i a, Fix12i b, Fix12i c) { x = a; y = b; z = c; }
+    SldMngVec3(Fix12i a, Fix12i b, Fix12i c) {
+        x = a;
+        y = b;
+        z = c;
+    }
     ~SldMngVec3();
 };
 
@@ -50,14 +43,12 @@ SldMngVec3 data_ov019_021135d8(-0x12a0000, 0x700000, -0x200000);
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: daSldMng_c_Spawn. */
 // @symbol daSldMng_c_classInit
-extern "C" daSldMng_c *daSldMng_c_classInit()
-{
+extern "C" daSldMng_c *daSldMng_c_classInit() {
     return new daSldMng_c();
 }
 
 // @symbol _ZN10daSldMng_c13InitResourcesEv
-int daSldMng_c::InitResources()
-{
+int daSldMng_c::InitResources() {
     mPosX = data_ov019_021135d8.x;
     mPosY = data_ov019_021135d8.y;
     mPosZ = data_ov019_021135d8.z;
@@ -66,20 +57,17 @@ int daSldMng_c::InitResources()
 }
 
 // @symbol _ZN10daSldMng_c8BehaviorEv
-int daSldMng_c::Behavior()
-{
+int daSldMng_c::Behavior() {
     switch (mState) {
     case 0:
         if (DistToCPlayer() < 0x180000) {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(
-                0x20, 0x14, 0x7f, 0x15666, false);
+            Sound::PlaySub(0x20, 0x14, 0x7f, 0x15666, false);
             ++mState;
         }
         break;
     case 1:
         if (DecIfAbove0_Short(&mKillTimer) == 0) {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(
-                0x20, 0x7f, 0, 0x15666, false);
+            Sound::PlaySub(0x20, 0x7f, 0, 0x15666, false);
             KillAndTrackInDeathTable();
         }
         break;

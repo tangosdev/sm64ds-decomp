@@ -18,12 +18,12 @@
  * registry profile.
  */
 struct daBDonketu_c : daOts_c {
-    u8  pad_398[0x62];
-    u16 mSecretSoundCounter;        /* 0x3fa -- Sound::PlaySecretSound advances it */
-    u8  mStarID;                    /* 0x3fc */
-    u8  mTrackStarID;                /* 0x3fd -- dActor_c::TrackStar result */
-    u8  mNumBulliesKilled;          /* 0x3fe -- daDonketu_c increments it (found via mBigBullyID); 0xff skips the small-Bully phase */
-    u8  pad_3ff[0x1];
+    u8 pad_398[0x62];
+    u16 mSecretSoundCounter; /* 0x3fa -- Sound::PlaySecretSound advances it */
+    u8 mStarID;              /* 0x3fc */
+    u8 mTrackStarID;         /* 0x3fd -- dActor_c::TrackStar result */
+    u8 mNumBulliesKilled; /* 0x3fe -- daDonketu_c increments it (found via mBigBullyID); 0xff skips the small-Bully phase */
+    u8 pad_3ff[0x1];
 
     virtual ~daBDonketu_c() {}
 

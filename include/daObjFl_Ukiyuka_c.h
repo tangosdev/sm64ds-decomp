@@ -17,12 +17,12 @@
 #include "daObjUkiyuka_c.h"
 
 struct daObjFl_Ukiyuka_c : daObjUkiyuka_c {
-    u8  mVariant;           /* 0x32c */
+    u8 mVariant; /* 0x32c */
     /* --- vtable --- */
     virtual ~daObjFl_Ukiyuka_c(); /* slots 16 (D1), 17 (D0) */
 
-    int CleanupResources();            /* slot  3 */
-    int InitResources();               /* slot  0 */
+    int CleanupResources(); /* slot  3 */
+    int InitResources();    /* slot  0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -1,6 +1,6 @@
 _ZN18daObjHsBillboard_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
 _ZN18daObjHsBillboard_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
-func_ov031_02111214 kind:function(arm,size=0x40) addr:0x02111214
+_ZN18daObjHsBillboard_c20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x02111214
 _ZN18daObjHsBillboard_c16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111254
 _ZN18daObjHsBillboard_c6RenderEv kind:function(arm,size=0x28) addr:0x02111280
 _ZN18daObjHsBillboard_c13InitResourcesEv kind:function(arm,size=0x9c) addr:0x021112a8

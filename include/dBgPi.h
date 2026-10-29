@@ -32,7 +32,9 @@ typedef struct dBgPi dBgPi;
 struct dActor_c;
 struct dBgW;
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *);
+}
 
 struct dBgPi : dBgPc {
     /* 0x00 is the vptr; the dBgPc base occupies 0x04..0x17. */
@@ -70,7 +72,9 @@ struct dBgPi : dBgPc {
        deallocation. Inline, in the class itself -- mwcc inlines it only when
        it finds it in the class or one level up. No layout effect: a
        non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 
     /* Defined out of line; objisolate retains the enrolled C1/D1 variants and
        the compiler-generated siblings remain separately enrolled shells. */
@@ -86,11 +90,15 @@ struct dBgPi : dBgPc {
     int IsHitBy(int uid, struct dActor_c *owner, struct dBgW *collider) const;
     int IsValid() const;
     int HasCollider() const;
-    void RecordHit(s16 triID, SurfaceInfo *src);
+    void RecordHit(int triID, SurfaceInfo *src);
     void SetCollider(int idx, int uid, struct dActor_c *owner,
                      struct dBgW *collider);
     void Reset();
 };
+
+/* The result's owner (+0x20), an arm9 free function that ends the dBgPi
+   run in src/engine/collision/d_bg_ch_sph_crr_query.cpp. */
+extern "C" struct dActor_c *func_02037f44(const dBgPi *);
 
 /* Size is the dBgPi's own span AND the stride of the three consecutive results
    dBgCh_SphCrr holds at 0x74/0x9c/0xc4 -- notes/collision-system.md 3.2. */

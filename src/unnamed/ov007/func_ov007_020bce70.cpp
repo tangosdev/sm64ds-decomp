@@ -1,4 +1,5 @@
 //cpp
+#include "cstd.h"
 #include "types.h"
 struct Sub {
     char pad2[2];
@@ -21,7 +22,6 @@ extern "C" void func_ov007_020c92d0(Sub* s);
 extern "C" {
 extern void func_ov007_020c940c(void* s);
 }
-namespace cstd { int div(int, int); }
 extern "C" {
 extern void func_ov007_020c93c4(void* a, char* b, char* c, short* d);
 }

@@ -27,37 +27,13 @@
 // 0x01ffa558 sit inside src/unnamed/arm9/01ff/func_01ffa4bc.c's enrolled range, where nothing would. A row
 // there is reported by `dsd check symbols` as a symbol missing from the linked binary.
 //
-// For the same reason this file is deliberately not added to config/arm9/itcm/delinks.txt:
-// mwldarm cannot resolve either branch, so enrolling it fails the link outright. That
-// matches how src/unnamed/arm9/01ff/func_01ff9378.c and src/unnamed/arm9/01ff/func_01ffa594.c are already carried -- byte-
-// matched sources that the ROM build takes from the gap object.
-//
-// A symbols.txt row is not a way past `tools/eligible.py` either. Its rule 5 only asks
-// that every undefined reference name a symbol config/**/symbols.txt declares, so a row
-// would satisfy the rule while still naming nothing the LINK defines: mwccarm 2004/b56
-// cannot export a second symbol from one asm block, and it is src/unnamed/arm9/01ff/func_01ffa4bc.c's
-// compiled object, not a gap object, that covers both addresses. `func_01ffa440` is
-// therefore listed in config/rombuild-exclude.txt, which is this tree's record of a
-// function that cannot be carved into its own delink object -- the compiler
-// measurements behind that entry are written out there, next to the 0x0206d9dc cluster
-// it shares its shape with. What rule 5 guards against does not apply to the branches
-// themselves: linkcheck resolves both by address and reports VERIFIED with 0 blind
-// words, so every byte of both targets is checked against the ROM:
-//
-//     tools/linkcheck.py --name func_01ffa440 --addr 0x01ffa440 --size 0x7c
-//         --module itcm --c src/unnamed/arm9/01ff/func_01ffa440.c
-//
-// addr/size/module are spelt out because the bare `--name` form reads them from
-// progress/matched.jsonl, which is gitignored -- on a fresh clone that form fails with
-// FileNotFoundError before it checks anything. They are simply unnamed, which is why
-// this file records the routine rather than building it.
+// The two branches are raw PC-relative words, not symbol relocations, so this
+// file is enrolled on its own. The landing sites stay inside func_01ffa4bc.
 //
 // The argument registers are pushed across the call as they are in every other routine in
 // this block, which is the tell that these are one hand-written assembly file.
 
 extern int func_0207322c(void);
-extern void func_01ffa538(void);
-extern void func_01ffa558(void);
 
 asm float func_01ffa440(unsigned int value)
 {
@@ -80,13 +56,13 @@ _L01c:
     ldmia sp!, {r0, r2, r3, ip, lr}
     ldr r3, [r1]
     tst r3, #0x1000
-    bne func_01ffa558
+    dcd 0x1a000032
     orr r3, r3, #0x10
     str r3, [r1]
     tst r3, #0x800000
     bxne lr
     tst r3, #0x400000
-    bne func_01ffa538
+    dcd 0x1a000024
     tst r2, #0x80
     bxeq lr
     ands r1, r2, #0x7f

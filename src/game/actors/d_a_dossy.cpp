@@ -11,30 +11,35 @@
  * does not bind.
  */
 // leftovers:
-// - ModelAnim::SetAnim and the other Fix12<int>-by-value calls stay
+// - dExtAnmModel_c::SetAnim and the other Fix12<int>-by-value calls stay
 //   mangled. A member SetAnim with Fix12<int> speed in func_ov065_021182e4
 //   changes that function.
 // - func_ov065_021180d4, func_ov065_02118c4c and func_ov065_02119210 take
 //   daDossyCap_c, so they stay free functions. decl_common.h still
 //   declares those forms.
-// - func_ov065_02118838 keeps `(i << 9)` platform addressing. A typed
-//   DorriePlatform walk, or mPlatforms[i], changes that function and the
-//   char* walks in CleanupResources and InitResources. Casting
-//   `c + (i << 9) + 0x150` to DorriePlatform * is 4 bytes longer, and
-//   `(char *)mPlatforms + (i << 9)` is 12 bytes longer.
-// - The seven parameter names on the prototypes of Matrix4x3_FromRotationY,
-//   DecIfAbove0_Short and the two mangled method externs hold the @NNN
-//   count: removing the gotos from func_ov065_021183c8 and
+// - func_ov065_02118838 keeps `(i << 9)` platform addressing, spelled
+//   `((daDossy_c *)(c + (i << 9)))->mPlatforms[0].field`. A typed
+//   DorriePlatform walk, a DorriePlatform * local over that address, or
+//   mPlatforms[i], changes that function and the char* walks in
+//   CleanupResources and InitResources. Casting `c + (i << 9) + 0x150` to
+//   DorriePlatform * is 4 bytes longer, and `(char *)mPlatforms + (i << 9)`
+//   is 12 bytes longer.
+// - The seven parameter names on Matrix4x3_FromRotationY,
+//   DecIfAbove0_Short and the four extra names on BgchInitAt_ hold the
+//   @NNN count: removing the gotos from func_ov065_021183c8 and
 //   func_ov065_021180d4 dropped it by 7, and these 7 names put it back.
 // - daDossyCap_c::Render tests the cap-icon flag as `(flags << 30) >> 31`.
 //   `>> 1 & 1` selects asr/ands instead of lsl/lsrs.
 // - data_ov065_* keep their address names, including the state table
 //   data_ov065_0211d7fc.
 // - func_ov065_021195bc and func_ov065_021195d0 are veneers. The first
-//   argument is not the actor. An explicit cast of &daDossy_c::method to
-//   a function pointer is rejected, so each veneer calls the method
-//   through its mangled name with the second and third arguments.
-
+//   argument is not the actor: each veneer calls the method on its second
+//   argument, passing the third.
+// - The BOOL/TRUE/FALSE spelling in func_ov065_02119594 and
+//   func_ov065_0211956c stays. `bool isPlayer = other->actorID == 0xbf`
+//   shrinks each function 0x28 to 0x1c: the ROM keeps the ternary 0/1
+//   materialization plus the `cmp r2, #0` re-test. Removing the typedef
+//   also renumbers this TU's @NNN temps (manifest rename @1027).
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDossy_c_AssetId {
@@ -61,8 +66,36 @@ enum daDossy_c_AssetId {
 #include "Player.h"
 #include "Vector3s.h"
 #include "nitro/fx/fx.h"
+#include "Sound.h"
+#include "math/Approach.h"
+namespace cstd {
+s16 atan2(s32, s32);
+}
 
 typedef enum { FALSE = 0, TRUE = 1 } BOOL;
+
+/* One 0x34-byte runtime pose record of mAnmModel.data.bones, filled by
+   UpdateBones (not BMD_Bone, 0x40, as the header types it). Same shape as
+   d_a_trs.cpp's file-local TrsBone, but the rotation is u16: the ROM reads
+   it with ldrh, and with s16 members func_ov065_02118838 stops matching. */
+struct DossyBone {
+    u8 pad_00[0x1a];
+    u16 rotX; /* 0x1a */
+    u16 rotY; /* 0x1c */
+    u16 rotZ; /* 0x1e */
+    u8 pad_20[0x14];
+};
+/* The spawned daObjMarioCap_c (actor 0x10d) seen only as far as
+   dEnemyBase_c::mEatingPlayer, which daDossyCap_c::Behavior hands over.
+   Including dEnemyBase_c.h instead renumbers this TU's @NNN pins by 26. */
+struct MarioCapEatView : dActor_c {
+    s32 mEatingPlayer; /* 0x0d0 */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char DossyBone_size_must_be_0x34[sizeof(DossyBone) == 0x34 ? 1 : -1];
+typedef char MarioCapEatView_size_must_be_0xd4[sizeof(MarioCapEatView) == 0xd4 ? 1 : -1];
+#endif
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -72,22 +105,16 @@ typedef enum { FALSE = 0, TRUE = 1 } BOOL;
    SharedFilePtr_Destruct_Clsn. The manifest aliases each undefined member
    onto its ROM symbol. */
 struct DossyModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
-
     DossyModelFilePtr(u32 fileID);
     ~DossyModelFilePtr();
 };
 
 struct DossyAnimationFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
-
     DossyAnimationFileHandle(u32 fileID);
     ~DossyAnimationFileHandle();
 };
 
 struct DossyCollisionFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
-
     DossyCollisionFileHandle(u32 fileID);
     ~DossyCollisionFileHandle();
 };
@@ -113,9 +140,7 @@ extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov065_0211c080[];
 extern SharedFilePtr *data_ov065_0211c08c[];
 
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int n, int fix, u32 flags);
-extern void func_0201267c(u32 id, char* p);
-extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
+extern int atan2_hold_d_a_dossy_1(int a, int b);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 a);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 a);
@@ -126,33 +151,23 @@ void AddVec3(const Vector3 *a, const Vector3 *b, Vector3 *o);
 void Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, Fix12i r, short s, void* clps);
+extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12i r, Fix12i h, void* p, void* q);
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, void* a, void* pos, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
 extern int Vec3_HorzDist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern int AngleDiff(int a, int b);
-extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern u16 DecIfAbove0_Short(void *counter);
 
 int func_ov065_021180d4(char* self);
 void func_ov065_02118c4c(char* c);
 int func_ov065_02119210(unsigned char* c);
-int func_ov065_021195bc(void *a, void *b, void *c);
-int func_ov065_021195d0(void *a, void *b, void *c);
-/* local extern: mwcc rejects an explicit cast of &daDossy_c::method to a function pointer. */
-extern void _ZN9daDossy_c19func_ov065_0211956cEP8dActor_c(void *self, void *other); /* local extern: veneer calls this method by its mangled name. */
-extern void _ZN9daDossy_c19func_ov065_02119594EP8dActor_c(void *self, void *other); /* local extern: veneer calls this method by its mangled name. */
+void func_ov065_021195bc(void *a, void *b, void *c);
+void func_ov065_021195d0(void *a, void *b, void *c);
 }
 
-int ApproachLinear(int &value, int target, int step);
-bool ApproachLinear(short &value, short target, short step);
-
-/* The loaded file behind a SharedFilePtr is its second word. */
-#define LOADED_FILE(ptr) ((void *)((int *)&(ptr))[1])
 
 typedef void (daDossy_c::*StateFunc)();
 extern "C" StateFunc data_ov065_0211d7fc[];
@@ -182,17 +197,15 @@ int daDossyCap_c::OnYoshiTryEat()
 
 #pragma long_calls on
 // @symbol func_ov065_021195d0
-extern "C" int func_ov065_021195d0(void *a, void *b, void *c)
-{
-    return ((int (*)(void *, void *))_ZN9daDossy_c19func_ov065_02119594EP8dActor_c)(b, c);
+extern "C" void func_ov065_021195d0(void *a, void *b, void *c) {
+    static_cast<daDossy_c *>(b)->func_ov065_02119594(static_cast<dActor_c *>(c));
 }
 #pragma long_calls off
 
 #pragma long_calls on
 // @symbol func_ov065_021195bc
-extern "C" int func_ov065_021195bc(void *a, void *b, void *c)
-{
-    return ((int (*)(void *, void *))_ZN9daDossy_c19func_ov065_0211956cEP8dActor_c)(b, c);
+extern "C" void func_ov065_021195bc(void *a, void *b, void *c) {
+    static_cast<daDossy_c *>(b)->func_ov065_0211956c(static_cast<dActor_c *>(c));
 }
 #pragma long_calls off
 
@@ -219,9 +232,9 @@ void daDossy_c::func_ov065_0211956c(dActor_c *other)
 // @symbol _ZN12daDossyCap_c13InitResourcesEv
 int daDossyCap_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)LOADED_FILE(data_ov002_0210d9c0), 1, -1);
+    mModel.SetFile((BMD_File *)data_ov002_0210d9c0.filePtr, 1, -1);
     mCapIcon.func_ov001_020ab228((char *)this, 2, 2, 0);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x96000, 0x96000, 0x100002, 0x8000);
+    mdCcAc_c.Init(this, 0x96000, 0x96000, 0x100002, 0x8000);
     mCarrier = 0;
     return 1;
 }
@@ -230,12 +243,12 @@ int daDossyCap_c::InitResources()
 int daDossy_c::InitResources()
 {
     int i;
-    void* f = Model::LoadFile(data_ov065_0211d720);
-    mModelAnim.SetFile((BMD_File *)f, 1, -1);
-    Model::LoadFile(data_ov002_0210d9c0);
+    void *f = dExtSimpleModel_c::LoadFile(data_ov065_0211d720);
+    mAnmModel.SetFile((BMD_File *)f, 1, -1);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
     for (i = 0; i < 3; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov065_0211c080[i]);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d770.ptr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov065_0211d770.filePtr, 0, 0x1000, 0);
     func_ov065_02118cc4();
     func_ov065_02118838();
 
@@ -245,8 +258,9 @@ int daDossy_c::InitResources()
         char* mmc = (char *)&mPlatforms[0].mClsn;
         for (j = 0; j < 7; j++) {
             KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                mmc, kcl, mtx, 0x1000, mAngleY, data_ov065_0211cd68[j]);
+            ((dBgW_KcMbg *)(mmc))
+                ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(mtx), 0x1000, mAngleY,
+                                      *(CLPS_Block *)(data_ov065_0211cd68[j]));
             if ((unsigned)j <= 2) {
                 func_020393d4(mmc, (void *)&dBgW::UpdatePosAndAngs);
                 if (j == 2)
@@ -264,17 +278,14 @@ int daDossy_c::InitResources()
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;
     mPosX += 0x7d0000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x1e0000, 0xa0000, 0, 0);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mCylClsn1, this, 0xdc000, 0xfa000, 2, 0x20);
+    mWithMeshClsn.Init(this, 0x1e0000, 0xa0000, 0, 0);
+    mCylClsn1.Init(this, 0xdc000, 0xfa000, 2, 0x20);
     {
         int v[3];
         v[0] = 0;
         v[1] = 0x50000;
         v[2] = 0x150000;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            &mCylClsn2, this, v, 0x60000, 0x1b0000, 2, 0x400000);
+        mCylClsn2.Init(this, *(Vector3 *)v, 0x60000, 0x1b0000, 2, 0x400000);
     }
     {
         mHomePosX = mPosX;
@@ -329,9 +340,7 @@ int daDossyCap_c::Behavior()
     if (eaten != 0) {
         dActor_c *spit = dActor_c::Spawn(0x10d, 0x1210, mPos, &mAngle, mAreaId, -1);
         if (spit != 0) {
-            /* dEnemyBase_c::mEatingPlayer of the spawned daObjMarioCap_c;
-               including dEnemyBase_c.h renumbers the pins by 26. */
-            *(s32 *)((char *)spit + 0xd0) = mEatingPlayer;
+            ((MarioCapEatView *)spit)->mEatingPlayer = mEatingPlayer;
             ((Player *)mEatingPlayer)->mObjInMouth = (s32)spit;
             spit->mFlags |= 0x20000;
             mFlags &= ~0x20000;
@@ -406,7 +415,7 @@ int daDossy_c::Behavior()
     UpdatePos(0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mPosY = mSpawnPosY - mSinkHeight - mPushDownHeight;
-    mModelAnim.Advance();
+    mAnmModel.Advance();
     func_ov065_02118cc4();
     func_ov065_02118838();
     func_ov065_02118248();
@@ -432,7 +441,7 @@ int daDossyCap_c::Render()
 // @symbol _ZN9daDossy_c6RenderEv
 int daDossy_c::Render()
 {
-    mModelAnim.Render(0);
+    mAnmModel.Render(0);
     return 1;
 }
 
@@ -457,10 +466,10 @@ int daDossy_c::CleanupResources()
 // @symbol _ZN9daDossy_c19func_ov065_02118cc4Ev
 void daDossy_c::func_ov065_02118cc4()
 {
-    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
-    mModelAnim.mat4x3.m[9] = mPosX >> 3;
-    mModelAnim.mat4x3.m[10] = mPosY >> 3;
-    mModelAnim.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    mAnmModel.mat4x3.m[9] = mPosX >> 3;
+    mAnmModel.mat4x3.m[10] = mPosY >> 3;
+    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 // @symbol func_ov065_02118c4c
@@ -498,23 +507,20 @@ void daDossy_c::func_ov065_02118838()
     three = 3;
     tbl = data_ov065_0211c078;
     for (i = 0; i < 7; i++) {
-        /* data.bones holds 0x34-byte runtime pose records filled by
-           UpdateBones, not BMD_Bone (0x40) as the header types it; the
-           rotation sits at +0x1a/+0x1c/+0x1e. */
-        char *ent = (char *)mModelAnim.data.bones + *tbl * 0x34;
+        char *ent = (char *)mAnmModel.data.bones + *tbl * 0x34;
         {
-            u16 tz = *(u16 *)(ent + 0x1e);
-            u16 ty = *(u16 *)(ent + 0x1c);
-            u16 tx = *(u16 *)(ent + 0x1a);
+            u16 tz = ((DossyBone *)ent)->rotZ;
+            u16 ty = ((DossyBone *)ent)->rotY;
+            u16 tx = ((DossyBone *)ent)->rotX;
             rot.x = tx;
             rot.y = ty;
             rot.z = tz;
         }
-        *(Vector3s *)(c + (i << 9) + 0x348) = rot;
+        *(Vector3s *)&((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot = rot;
         if (i == 2) {
-            *(s16 *)(c + (i << 9) + 0x348) += mPlatforms[1].mRot.x;
-            *(s16 *)(c + (i << 9) + 0x34a) += mPlatforms[1].mRot.y;
-            *(s16 *)(c + (i << 9) + 0x34c) += mPlatforms[1].mRot.z;
+            ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.x += mPlatforms[1].mRot.x;
+            ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.y += mPlatforms[1].mRot.y;
+            ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.z += mPlatforms[1].mRot.z;
         }
         v.x = zero;
         v.y = zero;
@@ -522,7 +528,7 @@ void daDossy_c::func_ov065_02118838()
         {
             Matrix4x3 *m = &data_020a0e68;
             *m = base;
-            MulMat4x3Mat4x3(&mModelAnim.data.transforms[*tbl], m, m);
+            MulMat4x3Mat4x3(&mAnmModel.data.transforms[*tbl], m, m);
             v.x = m->m[9];
             v.y = m->m[10];
             v.z = m->m[11];
@@ -558,10 +564,13 @@ void daDossy_c::func_ov065_02118838()
             *hz += data_02082214[((u16)mAngleY >> 4) * 2 + 1] * k82;
         }
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (s16)(mAngleY + *(s16 *)(c + (i << 9) + 0x34a)));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(c + (i << 9) + 0x348));
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(c + (i << 9) + 0x34c));
-        *(Matrix4x3 *)(c + (i << 9) + 0x150) = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToRotationY(
+            &data_020a0e68, (s16)(mAngleY + ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.y));
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
+                                          ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68,
+                                          ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.z);
+        ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mClsnNextMat = data_020a0e68;
         ((dBgW_KcMbg *)pk)->Transform(*(Matrix4x3 *)pm, mAngleY);
         pm += 0x200;
         pk += 0x200;
@@ -588,13 +597,13 @@ void daDossy_c::func_ov065_02118634()
         mState++;
         mHorzSpeed = 0;
         mAngVelY = 0;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d768.ptr, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov065_0211d768.filePtr, 0x40000000, 0x1000, 0);
         mCylClsn1.Clear();
         mCylClsn2.Clear();
         mStateTimer = 0;
         mStateState = 0;
         mPushDownHeight = mStateState;
-        func_0201267c(0xe6, (char *)&mCamSpacePosX);
+        func_0201267c(0xe6, &mCamSpacePos);
     } else {
         s16 target;
         int speed;
@@ -603,7 +612,7 @@ void daDossy_c::func_ov065_02118634()
             target = player->mAngleY;
             speed = 0x7000;
         } else {
-            int a = _ZN4cstd5atan2E5Fix12IiES1_(0x7d0000, mDistToCenter - 0x7d0000);
+            int a = cstd::atan2(0x7d0000, mDistToCenter - 0x7d0000);
             s16 base = mAngToCenter;
             s16 diff = (s16)(mAngleY - base);
             if (diff < 0) a = (s16)(-a);
@@ -654,14 +663,14 @@ void daDossy_c::func_ov065_021183c8()
         }
     }
 
-    if (mModelAnim.Finished() == 0)
+    if (mAnmModel.Finished() == 0)
         return;
 
     mStateTimer++;
-    DecIfAbove0_Short(&mUnkTimer);
+    DecIfAbove0_Short(&mRideCooldown);
 
     if (mClsnPlayer != 0) {
-        if (mClsnState == 2 && mUnkTimer == 0) {
+        if (mClsnState == 2 && mRideCooldown == 0) {
             if (mCap == 0 || func_ov065_02119210((unsigned char *)mCap) == 0) {
                 playerPos = mClsnPlayer->mPos;
                 if (playerPos.y >= mHomePosY
@@ -669,8 +678,8 @@ void daDossy_c::func_ov065_021183c8()
                     && ((Player *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
                     mState++;
                     mStateState = 0;
-                    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
-                        data_ov065_0211d748.ptr, 0x40000000, 0x1000, 0);
+                    mAnmModel.SetAnim((BCA_File *)data_ov065_0211d748.filePtr, 0x40000000, 0x1000,
+                                      0);
                     mRider = mClsnPlayer;
                 }
             }
@@ -681,8 +690,7 @@ void daDossy_c::func_ov065_021183c8()
         if (mStateTimer > 0x96) {
             mState++;
             mStateState = 0;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
-                data_ov065_0211d748.ptr, 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov065_0211d748.filePtr, 0x40000000, 0x1000, 0);
         }
         mStateTimer++;
     }
@@ -693,9 +701,10 @@ void daDossy_c::func_ov065_021182e4()
 {
     switch (mStateState) {
     case 0:
-        if (mModelAnim.Finished() == 0) return;
+        if (mAnmModel.Finished() == 0)
+            return;
         mStateState = 1;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d770.ptr, 0, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov065_0211d770.filePtr, 0, 0x1000, 0);
         if (mRider == 0) return;
         ((Player *)mRider)->Unk_020ca150(5);
         return;
@@ -773,7 +782,7 @@ extern "C" int func_ov065_021180d4(char *self)
                     if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
                         cap->mCapIcon.Unlink();
                         cap->mCapIcon.func_ov001_020ab228(self, 2, 0, 0);
-                        ((daDossy_c *)cap->mCarrier)->mUnkTimer = 0x1e;
+                        ((daDossy_c *)cap->mCarrier)->mRideCooldown = 0x1e;
                     }
                 }
                 return 1;

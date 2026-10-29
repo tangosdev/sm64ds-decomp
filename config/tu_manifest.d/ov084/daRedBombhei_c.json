@@ -15,6 +15,26 @@
       "name": ".text",
       "start": "0x0212c10c",
       "end": "0x0212d248"
+    },
+    {
+      "name": ".init",
+      "start": "0x02130558",
+      "end": "0x02130654"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02130864",
+      "end": "0x02130868"
+    },
+    {
+      "name": ".data",
+      "start": "0x021309c4",
+      "end": "0x02130ab4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02130d9c",
+      "end": "0x02130df4"
     }
   ],
   "functions": [
@@ -89,7 +109,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c9f0Eij",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c9f0Eih",
       "address": "0x0212c9f0",
       "size": "0x00000070",
       "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c9f0Eij.c",
@@ -180,8 +200,113 @@
       "ordinal": 22
     }
   ],
-  "data": [],
-  "bss": [],
+  "data": [
+    {
+      "symbol": "data_ov084_021309c4",
+      "address": "0x021309c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130dc4; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_021309cc",
+      "address": "0x021309cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130dc4; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_021309d4",
+      "address": "0x021309d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130dc4; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_021309dc",
+      "address": "0x021309dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130dc4; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_021309e4",
+      "address": "0x021309e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130dc4; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "data_ov084_021309ec",
+      "address": "0x021309ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated member-pointer literal (function word plus zero adjustment) that the initializer copies into data_ov084_02130dc4; target matched to the retail .data relocation"
+    },
+    {
+      "symbol": "_ZTI14daRedBombhei_c",
+      "address": "0x021309f4",
+      "size": "0xc",
+      "evidence": "ROM single-inheritance RTTI record naming dActor_c as the direct base; exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS14daRedBombhei_c",
+      "address": "0x02130a00",
+      "size": "0x11",
+      "evidence": "literal ROM RTTI type-name string \"14daRedBombhei_c\" and exact compiler emission"
+    },
+    {
+      "symbol": "g_profile_RED_BOMBHEI",
+      "address": "0x02130a14",
+      "size": "0x1c",
+      "evidence": "typed actor profile; factory relocation to daRedBombhei_c_classInit, behavior priority 0xb5 and all fields compared to retail"
+    },
+    {
+      "symbol": "_ZTV14daRedBombhei_c",
+      "address": "0x02130a38",
+      "emitted_storage_address": "0x02130a30",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x02130a38, and the storage ends at 0x02130ab4, where d_a_f_pkn's .data begins"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "gRedBombheiWaitAnimFile",
+      "address": "0x02130d9c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with id 0x2ba through SharedFilePtr::Construct and registered with SharedFilePtr_Destruct_Anim, as in retail"
+    },
+    {
+      "symbol": "gRedBombheiModelFile",
+      "address": "0x02130da4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with id 0x2b9 and registered with func_02017ab4, as in retail"
+    },
+    {
+      "symbol": "data_ov084_02130dac",
+      "address": "0x02130dac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130db8",
+      "address": "0x02130db8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov084_02130dc4",
+      "address": "0x02130dc4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "three {enter, update} pointer-to-member records that the initializer fills from the six literals; the state dispatchers index it"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "Historical tubuild create RAW warning (RESOLVED): _ZN14daRedBombhei_c19func_ov084_0212ce50Ev was initially carried from its legacy extern C block; the production TU now has a normal function definition with its includes and declarations at file scope.",
@@ -203,7 +328,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212c960Ei' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212ca60Ev' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c508Ev and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU forward declaration and definition both use int(daRedBombhei_c *).",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold _ZN14daRedBombhei_c8BehaviorEv and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: Calls now use dActor_c::ClosestPlayer from dActor_c.h.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c92cEv and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU consistently declares this handle as SharedFilePtr."
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c92cEv and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU consistently declares this handle as SharedFilePtr.",
+    "Static initializer folded: the model and wait-animation handles (ids 0x2b9/0x2ba) and the three {enter, update} state records are real definitions in d_a_red_bombhei.cpp, replacing the handwritten src/unnamed/ov084/__sinit_ov084_02130558.cpp. mwcc emits __sinit_d_a_red_bombhei.cpp (0xfc), its .ctor word, the six PMF literals and the registration nodes itself; all are byte- and relocation-identical to retail. Ownership: ov084 .init, .ctor and .bss run in .text TU order; d_a_red_bombhei follows d_a_krb in .text, this initializer and its .ctor word 0x02130864 follow krb's, its .bss 0x02130d9c..0x02130df4 starts where krb's ends, and the literals name only this TU's state handlers. The same change licenses the TU's whole .data run 0x021309c4..0x02130ab4 (PMF literals, _ZTI/_ZTS, the new typed g_profile_RED_BOMBHEI and the vtable, whose 0x84-byte storage starts at 0x02130a30, two words ahead of the configured address point) and makes the TU intact-object."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -269,72 +395,198 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov084-daRedBombhei_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0212c10c",
+        "end": "0x0212d248",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0212c10c",
+          "end": "0x0212d248",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02130558",
+          "end": "0x02130654",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02130864",
+          "end": "0x02130868",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021309c4",
+          "end": "0x02130ab4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02130d9c",
+          "end": "0x02130df4",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 40
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              83
+            ],
+            "desired": [
+              83
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              81
+            ],
+            "desired": [
+              81
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              6,
+              8,
+              10,
+              12,
+              14,
+              17,
+              24,
+              32,
+              33,
+              36
+            ],
+            "desired": [
+              6,
+              14,
+              8,
+              10,
+              12,
+              17,
+              24,
+              32,
+              33,
+              36
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              16,
+              30,
+              31,
+              35
+            ],
+            "desired": [
+              5,
+              16,
+              30,
+              31,
+              35
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                6,
+                8,
+                10,
+                12,
+                14,
+                17,
+                24,
+                32,
+                33,
+                36
+              ],
+              "desired": [
+                6,
+                14,
+                8,
+                10,
+                12,
+                17,
+                24,
+                32,
+                33,
+                36
+              ],
+              "slots": [
+                6,
+                8,
+                10,
+                12,
+                14,
+                17,
+                24,
+                32,
+                33,
+                36
+              ]
+            }
+          ],
+          "symbolIndices": 10,
+          "sectionLinks": 0,
+          "sectionInfos": 9,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
-    {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "The key-function TU emits the inherited fBase_c typeinfo as vague linkage; romdata_check proves this exact copy at its canonical arm9 home before text-only isolation discards it."
-    },
-    {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "The key-function TU emits the inherited fBase_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
-    },
-    {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "The key-function TU emits the inherited dBase_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
-    },
-    {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "The key-function TU emits the inherited dActor_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
-    },
-    {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "The key-function TU emits the inherited dActor_c typeinfo as vague linkage; romdata_check proves this copy at its canonical arm9 home before isolation discards it."
-    },
-    {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "The key-function TU emits the inherited dBase_c typeinfo as vague linkage; romdata_check proves this copy at its canonical arm9 home before isolation discards it."
-    },
-    {
-      "symbol": "_ZTS14daRedBombhei_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov084",
-      "canonical_address": "0x02130a00",
-      "reason": "The key-function TU emits daRedBombhei_c's ROM-named type string. Measured in extracted/overlays/overlay_0084.bin (base 0x02129020): the 0x11 bytes at 0x02130a00 are \"14daRedBombhei_c\\0\", padded to g_profile_RED_BOMBHEI at 0x02130a14. ov084 delinks no .data, so the canonical copy stays gap-owned and text-only isolation discards this one."
-    },
-    {
-      "symbol": "_ZTI14daRedBombhei_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov084",
-      "canonical_address": "0x021309f4",
-      "reason": "The key-function TU emits daRedBombhei_c's single-inheritance typeinfo. Measured in overlay_0084.bin: the three words at 0x021309f4 are 0x0209a764 (_ZTVN3abi20__si_class_type_infoE), 0x02130a00 (_ZTS14daRedBombhei_c) and 0x0208e390 (_ZTI8dActor_c). ov084 delinks no .data, so the ROM copy stays ROM-supplied and this one is discarded by text-only isolation."
-    },
-    {
-      "symbol": "_ZTV14daRedBombhei_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov084",
-      "canonical_address": "0x02130a38",
-      "reason": "This class's OWN vtable, emitted here because the inline destructor makes this the only TU that odr-uses it. The compiler's symbol addresses the vtable OBJECT and so spans 0x84; config/arm9/overlays/ov084/symbols.txt binds the name to the public ADDRESS POINT two words higher. Measured in overlay_0084.bin: the header at 0x02130a30 is {0, 0x021309f4 (_ZTI14daRedBombhei_c)} and the 31 slots run 0x02130a38..0x02130ab4, ending exactly at _ZTS8daFPkn_c; slots 0/3/6/9/16/17 are 0x0212d028 InitResources, 0x0212cf10 CleanupResources, 0x0212cf6c Behavior, 0x0212cf40 Render, 0x0212c10c D1 and 0x0212c14c D0. ov084 delinks no .data, so the ROM copy stays ROM-supplied and this one is discarded by text-only isolation."
-    },
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
@@ -346,6 +598,911 @@
       "symbol": "_ZN9Matrix4x3D1Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits Matrix4x3's vague-linkage D1 while lowering the synthesized ctor from `return new daRedBombhei_c()` over the Matrix4x3 member mShadowMat at 0x19c; no configured ROM symbol of that name exists in any module and no surviving reference reaches it"
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_red_bombhei.cpp",
+      "address": "0x02130558",
+      "size": "0xfc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov084_02130558 (0xfc) and carries the same relocation sites in the same order"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_red_bombhei.cpp",
+      "address": "0x02130864",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@632",
+      "to": "data_ov084_02130dac",
+      "evidence": "compiler temp mapped to 0x02130dac by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@633",
+      "to": "data_ov084_02130db8",
+      "evidence": "compiler temp mapped to 0x02130db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@635",
+      "to": "data_ov084_021309dc",
+      "evidence": "compiler temp mapped to 0x021309dc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@637",
+      "to": "data_ov084_021309ec",
+      "evidence": "compiler temp mapped to 0x021309ec by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@639",
+      "to": "data_ov084_021309cc",
+      "evidence": "compiler temp mapped to 0x021309cc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@641",
+      "to": "data_ov084_021309e4",
+      "evidence": "compiler temp mapped to 0x021309e4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@643",
+      "to": "data_ov084_021309c4",
+      "evidence": "compiler temp mapped to 0x021309c4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@645",
+      "to": "data_ov084_021309d4",
+      "evidence": "compiler temp mapped to 0x021309d4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_red_bombhei.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_red_bombhei.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_ov084_021309c4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_021309cc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_021309d4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_021309dc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_021309e4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_021309ec",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130dac",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov084_02130db8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN19RedBombheiModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN18RedBombheiAnimFileC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN19RedBombheiModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN18RedBombheiAnimFileD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02130564",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130574",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130580",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130590",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130618",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRedBombheiModelFile",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130da4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130620",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130624",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130dac",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130dac"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130628",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRedBombheiWaitAnimFile",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130d9c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130630",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130634",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130db8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130db8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130638",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_021309dc",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021309dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213063c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_021309ec",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021309ec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130640",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_021309cc",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021309cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130644",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_021309e4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021309e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130648",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_021309c4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021309c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213064c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130dc4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130dc4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130650",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_021309d4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021309d4"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02130864",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_red_bombhei.cpp",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130558"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c4a0Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c4a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c89cEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c89c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c1a0Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c1a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c92cEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c92c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c508Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c508"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c8b0Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c8b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS14daRedBombhei_c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130a00"
+    },
+    {
+      "section": ".data",
+      "source": "0x021309fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daRedBombhei_c_classInit",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212d200"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI14daRedBombhei_c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021309f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212d028"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212cf10"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212cf6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212cf40"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_cD1Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c10c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daRedBombhei_cD0Ev",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0212c14c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130a9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130aa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130aa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130aa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130aac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130ab0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    }
+  ],
+  "production_mode": "intact-object",
+  "externalized_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e60"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e54"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086d70"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI copy (daSoundObj_c derives directly from dActor_c); canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e384"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e78"
+        }
+      ]
     }
   ]
 }
