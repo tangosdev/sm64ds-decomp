@@ -17,9 +17,14 @@
 
 typedef void (*IrqCallback)(void *);
 
+/* C linkage: these are ROM data symbols named by their exact final names, so a
+   C++ translation unit must not mangle them -- src/IRQ.cpp declared all of them
+   inside its extern "C" block before this file was split out of it. */
+extern "C" {
 extern IRQ::HandlerEntry data_020a60c4[];
 extern u16 data_02099fd4[];
 extern short data_023c0000[];
+}
 
 namespace IRQ {
 

@@ -23,12 +23,15 @@
 
 #define REG_IME (*(volatile u16 *)0x04000208)
 
+/* C linkage: these are ROM data symbols named by their exact final names, so a
+   C++ translation unit must not mangle them -- src/IRQ.cpp declared all of them
+   inside its extern "C" block before this file was split out of it. */
+extern "C" {
 extern IRQ::Handler data_02099fe4[];
 extern IRQ::HandlerEntry data_020a60c4[];
 extern IRQ::HandlerEntry data_020a60f4[];
 extern short data_023c0000[];
 
-extern "C" {
 void func_02057000(void);
 void func_02056e98(u32 idx, u32 handler, u32 arg);
 void func_02056e4c(u32 idx, u32 handler, u32 arg);
