@@ -856,11 +856,12 @@ int host_setting_smooth_motion(void);
 int host_setting_minigame_upscale(void);
 
 /* ---- MinigameHiRes: THE MINIGAMES' TURNED AND MOVING 2D AT RENDER SCALE (run after093, lane MGHIRES1) --
-   Default 1. At a render scale of 2 or more a minigame's turned or scaled sprites and BGs are sampled at every host pixel
+   Default 0. At a render scale of 2 or more a minigame's turned or scaled sprites and BGs are sampled at every host pixel
    and its sprites between two ticks (Smooth Motion) sit at their sub-pixel places, on both screens (ntr/ppu_sub.cpp
    hr_build, hal/message_compositor.cpp mghr_a_*). The DS pixel itself is unchanged. 0 is the DS-pixel picture. It costs
-   picture time (about 1 to 3 ms a picture on the busiest minigames here), so a slow machine fits fewer pictures between
-   ticks with it on. Accepted: 0 / false off, anything else on. SM64DS_MG_HIRES overrides. */
+   picture time (about 1 to 3 ms a picture on the busiest minigames here: Wiggler and Loves Me...? keep a tenth to a
+   quarter of their pictures between ticks at 144 Hz with Smooth Motion on), which is why it is off unless asked for.
+   Accepted: 1 / true on, anything else off. SM64DS_MG_HIRES overrides. */
 int host_setting_minigame_hires(void);
 
 /* ---- THE THREE PICTURE-QUALITY KEYS (run hd1) ---------------------------

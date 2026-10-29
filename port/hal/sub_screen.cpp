@@ -6081,7 +6081,7 @@ extern "C" long hal_sub_screen_blend_check(void)
  * ticks) and, with the MinigameUpscale setting, runs the pixel-art upscaler on
  * it. This is the host's say over when: the stacked layout of a minigame (or the
  * Rec Room), at a render scale of 2 or more (below that there is no finer pixel
- * to draw). The MinigameHiRes setting (default on) is the render-scale half,
+ * to draw). The MinigameHiRes setting (default off) is the render-scale half,
  * MinigameUpscale the upscaler; SM64DS_MG_HIRES / SM64DS_MG_UPSCALE override them. */
 extern "C" void port_mghr_policy_install(int (*fn)(void));
 extern "C" int IsMinigameActorID(unsigned int id);
