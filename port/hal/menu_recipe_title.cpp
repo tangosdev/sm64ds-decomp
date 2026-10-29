@@ -76,14 +76,26 @@ const Box kBoxes[24] = {
 enum { CH_NONE = 0, CH_INTRO = 1, CH_RETURN = 2 };
 enum { CH_LOGO_POP = 22, CH_BOUNCE_LEN = 40, CH_FACE_FADE = 24, CH_LOGO_OUT = 24, CH_LOGO_IN = 30, CH_PLANK_DUR = 28, CH_PLANK_GAP = 6,
        CH_PLANK_START = 4, CH_FLY = 14, CH_VEIL = 10,
-       /* INTRO2 (Tango 10-24): the logo's trip to the top left takes 2 s (120 ticks) after the head has flown in; the planks rise during it */
+       /* INTRO2 (Tango 10-24): the logo's trip to the top left takes 2 s (120 ticks) after the head has flown in; the planks rise during it.
+          LOGOSPEED1: the trip has its own clock now (CH_LOGO_TRIP); this stays the swap's length on the Mods OFF path (the ROM's own logo),
+          and with the PC art the swap ends when the planks are up (CH_SWAP_INTRO_PC) */
        CH_LOGO_MOVE = 120, CH_PLANK_START_INTRO = 40,
+       /* LOGOSPEED1 (Tango 10-29: "the logo pans a little too slow", then "can the logo move up much faster?"): the big logo's trip from
+          the head's arrival to its landing as the small logo, in ticks (Chore::head_t's clock). 40 ticks = 0.67 s, 3x faster than the 120
+          it was. The one number to tune the trip by: the ease, the glide between ticks and the exact-overlap swap at landing all follow it.
+          The ROM has no trip to match: with Mods OFF its own logo stays where it is. The page settles (the skip window closes, the menu
+          takes a press as a choice instead of a skip) at the later of swap_end - 4 and the landing (intro_logo_busy). With the PC art the
+          intro's swap now ends with the planks (CH_SWAP_INTRO_PC = CH_PLANKS_END_INTRO, 80) instead of at 120, so with the head arriving at
+          sw_t 36 the logo lands at sw_t 76 and the page settles at sw_t 76, with the planks finishing their last 4 ticks, instead of sitting
+          still 40 ticks before it takes a choice (at 120 / 120 both were sw_t 156). Mods OFF keeps 120. */
+       CH_LOGO_TRIP = 40,
        /* LOGOFADE1: the longest the logo waits for the head's arrival after the swap began before its hand-over starts anyway */
        CH_HEAD_WAIT = 90,
        /* LOGOFADE1: the head's own animation frame at which its entrance (the drop in and the bounce back up) is over and the head is at rest:
           measured on the picture under the logos (SM64DS_LF1_NOLOGO): the drop t323-333, the bounce t334-345, the settle to t357, frame 34 at t358 */
        CH_HEAD_REST_FRAME = 34,
-       CH_PLANKS_END = CH_PLANK_START + 2 * CH_PLANK_GAP + CH_PLANK_DUR, CH_PLANKS_END_INTRO = CH_PLANK_START_INTRO + 2 * CH_PLANK_GAP + CH_PLANK_DUR };
+       CH_PLANKS_END = CH_PLANK_START + 2 * CH_PLANK_GAP + CH_PLANK_DUR, CH_PLANKS_END_INTRO = CH_PLANK_START_INTRO + 2 * CH_PLANK_GAP + CH_PLANK_DUR,
+       CH_SWAP_INTRO_PC = CH_PLANKS_END_INTRO };
 struct Chore {
     int mode;            /* CH_* */
     int in_fam;          /* the main family (V_INTRO / V_MAIN) is the page */
@@ -105,11 +117,11 @@ struct Chore {
 } g_ch;
 static int g_press_tick;      /* INTRO2: a touch / click went into the ROM this tick */
 /* INTRO2: the swap (sw_t counts it) is the logo's 2 s trip in the intro and the planks' own rise on a return; the planks start at their own tick */
-static inline int swap_end(const Chore &c) { return c.mode == CH_INTRO ? (int)CH_LOGO_MOVE : (int)CH_PLANKS_END; }
+bool pc_assets_ready();
+static inline int swap_end(const Chore &c) { return c.mode == CH_INTRO ? (pc_assets_ready() ? (int)CH_SWAP_INTRO_PC : (int)CH_LOGO_MOVE) : (int)CH_PLANKS_END; }
 /* LOGOFADE1: the intro's logo hand-over (Chore::head_t's clock) can outlast the swap: the intro is not over (no skip window closed, no page at
    rest) until the logo has landed */
-bool pc_assets_ready();
-static inline bool intro_logo_busy(const Chore &c) { return c.mode == CH_INTRO && !c.skip && c.sw_t >= 0 && c.head_t < (int)CH_LOGO_MOVE && pc_assets_ready(); }
+static inline bool intro_logo_busy(const Chore &c) { return c.mode == CH_INTRO && !c.skip && c.sw_t >= 0 && c.head_t < (int)CH_LOGO_TRIP && pc_assets_ready(); }
 static inline int plank_start(const Chore &c) { return c.mode == CH_INTRO ? (int)CH_PLANK_START_INTRO : (int)CH_PLANK_START; }
 static inline int planks_end(const Chore &c) { return c.mode == CH_INTRO ? (int)CH_PLANKS_END_INTRO : (int)CH_PLANKS_END; }
 
@@ -1049,7 +1061,7 @@ void chore_step(int variant, int top, int elem, int req)
        named ff8 for its offset, 0xf8). GLITCHFIX1 read g+0xff8, a word that is never 0x1000 there, so the check never fired. */
     if (c.mode == CH_INTRO && c.sw_t >= 0) {
         const int ff8 = data_ov007_0210342c ? *(const int *)((const char *)data_ov007_0210342c + 0xf8) : 0x1000;
-        if (c.skip && c.head_t < CH_LOGO_MOVE) c.head_t = CH_LOGO_MOVE;
+        if (c.skip && c.head_t < CH_LOGO_TRIP) c.head_t = CH_LOGO_TRIP;
         else if (c.head_t >= 0) ++c.head_t;
         else if (top == 0 && ff8 == 0x1000 && c.face_a >= 255 && head_anim_frame() >= CH_HEAD_REST_FRAME) {
             c.head_t = 0;
@@ -1621,13 +1633,13 @@ void build_main_pc(MenuLayout *L, bool intro)
             dy = logo_bounce(tb);
         }
         if (c.sw_t >= 0) {
-            /* INTRO2 (Tango 10-24): the big logo travels to the top left and shrinks to the small one's size and place over 2 s (smoothstep):
+            /* INTRO2 (Tango 10-24): the big logo travels to the top left and shrinks to the small one's size and place over CH_LOGO_TRIP ticks (smoothstep; 2 s until LOGOSPEED1):
                one logo that becomes the small one.
                LOGOFADE1: the whole hand-over runs on ONE clock, the head's arrival (Chore::head_t): the big logo stays solid and in place until the
                head has arrived, then travels. It stays solid on the way (a see-through logo over the head is the clipping Tango reported), and on
                the tick it lands it IS the small logo, same size and place (add_logos: mv 1 gives the small one's U(ctune(2..4)) box), so the
                small logo takes over on that tick: two logos are never on the picture at once. */
-            const float u = c.head_t < 0 ? 0.f : c.head_t >= CH_LOGO_MOVE ? 1.f : (float)c.head_t / (float)CH_LOGO_MOVE;
+            const float u = c.head_t < 0 ? 0.f : c.head_t >= CH_LOGO_TRIP ? 1.f : (float)c.head_t / (float)CH_LOGO_TRIP;
             mv = smooth01(u);
             if (u >= 1.f) { big_a = 0; small_a = 255; }
         }
@@ -1658,8 +1670,8 @@ void build_main_pc(MenuLayout *L, bool intro)
             const int ibig = menu_add_piece(L, lg);
             /* LOGOFADE1: on its trip the logo glides on every picture: the present draws a picture between ticks part of the way from its rect on
                the tick before (the same smoothstep one head_t earlier) to this tick's (MenuLayout glide, ARROWSLOW1's in-between fraction) */
-            if (c.mode == CH_INTRO && !c.skip && c.head_t >= 1 && c.head_t < CH_LOGO_MOVE && ibig >= 0) {
-                const float mp = smooth01((float)(c.head_t - 1) / (float)CH_LOGO_MOVE);
+            if (c.mode == CH_INTRO && !c.skip && c.head_t >= 1 && c.head_t < CH_LOGO_TRIP && ibig >= 0) {
+                const float mp = smooth01((float)(c.head_t - 1) / (float)CH_LOGO_TRIP);
                 const int dhp = dhb + (int)((float)(dhs - dhb) * mp), dwp = (int)((long long)dhp * iw / ih);
                 L->glide_on = 1; L->glide_piece = (uint8_t)ibig;
                 L->glide_from[0] = (short)(fx0 + (int)((float)(fx1 - fx0) * mp)); L->glide_from[1] = (short)(fy0 + (int)((float)(fy1 - fy0) * mp));
