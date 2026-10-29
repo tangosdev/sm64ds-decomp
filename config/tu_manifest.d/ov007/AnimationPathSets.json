@@ -256,7 +256,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -274,23 +274,65 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata",
+          "section": ".rodata.portraitSelectors",
           "start": "0x020cdb34",
           "end": "0x020cdb4c",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.portraitSelectors",
           "start": "0x020d7e68",
           "end": "0x020d7ec8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.yoshiPlainCounts",
+          "start": "0x020cef80",
+          "end": "0x020cefd0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.marioFrontCounts",
+          "start": "0x020cf700",
+          "end": "0x020cf778",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.yoshiVariantCounts",
+          "start": "0x020cf8ec",
+          "end": "0x020cf9ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.marioSideCounts",
+          "start": "0x020cfa70",
+          "end": "0x020cfaf8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.luigiCounts",
+          "start": "0x020cfb84",
+          "end": "0x020cfc18",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.portraitPointers",
+          "start": "0x020d7f0c",
+          "end": "0x020d85fc",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 6
+          "LICENSED": 27
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -299,7 +341,7 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".rodata",
+            "section": ".rodata.portraitSelectors",
             "original": [
               11
             ],
@@ -308,7 +350,7 @@
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.portraitSelectors",
             "original": [
               5,
               7,
@@ -321,12 +363,96 @@
               5,
               12
             ]
+          },
+          {
+            "section": ".rodata.yoshiPlainCounts",
+            "original": [
+              18
+            ],
+            "desired": [
+              18
+            ]
+          },
+          {
+            "section": ".rodata.marioFrontCounts",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
+            ]
+          },
+          {
+            "section": ".rodata.yoshiVariantCounts",
+            "original": [
+              36,
+              37
+            ],
+            "desired": [
+              37,
+              36
+            ]
+          },
+          {
+            "section": ".rodata.marioSideCounts",
+            "original": [
+              42
+            ],
+            "desired": [
+              42
+            ]
+          },
+          {
+            "section": ".rodata.luigiCounts",
+            "original": [
+              49
+            ],
+            "desired": [
+              49
+            ]
+          },
+          {
+            "section": ".data.portraitPointers",
+            "original": [
+              14,
+              16,
+              19,
+              21,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              38,
+              40,
+              43,
+              45,
+              47
+            ],
+            "desired": [
+              19,
+              16,
+              14,
+              24,
+              26,
+              21,
+              30,
+              40,
+              34,
+              28,
+              38,
+              32,
+              47,
+              43,
+              45
+            ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.portraitSelectors",
               "original": [
                 5,
                 7,
@@ -345,11 +471,80 @@
                 9,
                 12
               ]
+            },
+            {
+              "section": ".rodata.yoshiVariantCounts",
+              "original": [
+                36,
+                37
+              ],
+              "desired": [
+                37,
+                36
+              ],
+              "slots": [
+                36,
+                37
+              ]
+            },
+            {
+              "section": ".data.portraitPointers",
+              "original": [
+                14,
+                16,
+                19,
+                21,
+                24,
+                26,
+                28,
+                30,
+                32,
+                34,
+                38,
+                40,
+                43,
+                45,
+                47
+              ],
+              "desired": [
+                19,
+                16,
+                14,
+                24,
+                26,
+                21,
+                30,
+                40,
+                34,
+                28,
+                38,
+                32,
+                47,
+                43,
+                45
+              ],
+              "slots": [
+                14,
+                16,
+                19,
+                21,
+                24,
+                26,
+                28,
+                30,
+                32,
+                34,
+                38,
+                40,
+                43,
+                45,
+                47
+              ]
             }
           ],
-          "symbolIndices": 4,
+          "symbolIndices": 21,
           "sectionLinks": 0,
-          "sectionInfos": 4,
+          "sectionInfos": 19,
           "error": null
         },
         "errors": null
