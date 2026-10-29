@@ -1433,6 +1433,8 @@ int g_smooth_models = 0;
 int g_smooth_motion = 0;
 /* MinigameUpscale (MGHIRES1): 0 off, 1 the pixel-art upscaler on the minigames' 2D. */
 int g_minigame_upscale = 0;
+/* MinigameHiRes (MGHIRES1): 1 on (the default), 0 the DS-pixel picture. */
+int g_minigame_hires = 1;
 
 /* run hd2's two, latched beside them and for the same kind of reason: the
    filter mode decides whether the texture cache builds a mip chain at the
@@ -1604,6 +1606,7 @@ void load_once(void)
     g_smooth_models = 0;
     g_smooth_motion = 0;
     g_minigame_upscale = 0;
+    g_minigame_hires = 1;
     /* run hd2's two, here for the same reason: nearest sampling and no
        smoothing pass are the picture the port shipped with, so a missing file
        and a file that will not parse both have to land on them. */
@@ -2018,6 +2021,8 @@ void load_once(void)
                            json_bool(text, "SmoothMotion", 0) != 0) ? 1 : 0;
         g_minigame_upscale = (json_int(text, "MinigameUpscale", 0) != 0 ||
                               json_bool(text, "MinigameUpscale", 0) != 0) ? 1 : 0;
+        /* MinigameHiRes: on unless the file says 0 or false (absent = on) */
+        g_minigame_hires = (json_int(text, "MinigameHiRes", 1) != 0 && json_bool(text, "MinigameHiRes", 1) != 0) ? 1 : 0;
         /* run hd2's two, read the same way and sanitised here rather than at
            the accessor, so the stored value is always one the sampler can
            choose a tap count from and the smoothing pass can size itself
@@ -4391,6 +4396,11 @@ extern "C" int host_setting_minigame_upscale(void)
 {
     load_once();
     return g_minigame_upscale;
+}
+extern "C" int host_setting_minigame_hires(void)
+{
+    load_once();
+    return g_minigame_hires;
 }
 
 extern "C" int host_setting_smooth_models(void)

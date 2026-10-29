@@ -3504,14 +3504,15 @@ static uint32_t *g_mghr_pre_under;         /* the pre-smoothing copy under the 2
 static uint8_t g_mghr_sens[128];
 static int g_mghr_bb[4];                   /* DS box of the sensitive entries, one pixel of margin: x0 y0 x1 y1 */
 static Cell g_mghr_bg[192][256];           /* g_a after the BG loop, before the sprites */
+static long g_mghr_half;                   /* composites sampled at half phases (the cost cap) */
 static long g_mghr_n[5];                   /* composites refined, sprites, host px changed, refused by a gate, cells resolved again */
 static double g_mghr_ms, g_mghr_seg[4];    /* under copy, the cells without, sample, decide */
 static inline double mghr_since(std::chrono::steady_clock::time_point t) { return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t).count(); }
 static void mghr_a_report(void)
 {
     if (g_mghr_n[0] || g_mghr_n[3])
-        std::fprintf(stderr, "[mg-hires] engine A: %ld composites refined (%ld sprites, %ld host px, %ld cells resolved without them), %ld refused by a gate, %.3f ms each (under copy %.3f, without %.3f, sample %.3f, decide %.3f)%s\n",
-                     g_mghr_n[0], g_mghr_n[1], g_mghr_n[2], g_mghr_n[4], g_mghr_n[3], g_mghr_n[0] ? g_mghr_ms / g_mghr_n[0] : 0.0,
+        std::fprintf(stderr, "[mg-hires] engine A: %ld composites refined (%ld sprites, %ld host px, %ld cells resolved without them, %ld at half phases), %ld refused by a gate, %.3f ms each (under copy %.3f, without %.3f, sample %.3f, decide %.3f)%s\n",
+                     g_mghr_n[0], g_mghr_n[1], g_mghr_n[2], g_mghr_n[4], g_mghr_half, g_mghr_n[3], g_mghr_n[0] ? g_mghr_ms / g_mghr_n[0] : 0.0,
                      g_mghr_n[0] ? g_mghr_seg[0] / g_mghr_n[0] : 0.0, g_mghr_n[0] ? g_mghr_seg[1] / g_mghr_n[0] : 0.0,
                      g_mghr_n[0] ? g_mghr_seg[2] / g_mghr_n[0] : 0.0, g_mghr_n[0] ? g_mghr_seg[3] / g_mghr_n[0] : 0.0,
                      g_mghr_replay_mode > 0 ? " [replay mode]" : "");
@@ -3846,12 +3847,20 @@ static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &wi
     plane.assign((size_t)BW * (hy1 - hy0), MghrPx{0, 0, 0});
     static uint8_t cellhit[192][256];   /* a sensitive texel landed in this cell at some phase */
     for (int Y = uy0; Y < uy1; ++Y) std::memset(&cellhit[Y][ux0], 0, (size_t)(ux1 - ux0));
+    /* THE COST CAP, engine B's rule: past SM64DS_MG_HIRES_BUDGET_A samples (default 120000, the sprites' own area at S x S
+       phases; about 1 ms here) the phases go every second host pixel and fill 2 x 2 blocks: half-DS-pixel edges */
+    static long budget = -1;
+    if (budget < 0) { const char *eb = std::getenv("SM64DS_MG_HIRES_BUDGET_A"); budget = eb ? std::atol(eb) : 120000; }
+    long est = 0;
+    for (int k = 0; k < ne; ++k) { const MghrEnt &e = g_mghr_ent[sel[k]]; est += (long)e.w * e.h * S * S; }
+    const int st = (est > budget && S % 2 == 0) ? 2 : 1;
+    if (st > 1) ++g_mghr_half;
     for (int k = 0; k < ne; ++k) {
         const MghrEnt &e = g_mghr_ent[sel[k]];
         const int x0 = mghr_mx(0, e.x - 1), x1 = mghr_mn(256, e.x + e.bw + 1);
         const int y0 = mghr_mx(0, e.y - 1), y1 = mghr_mn(192, e.y + e.bh + 1);
         for (int Y = y0; Y < y1; ++Y)
-            for (int j = 0; j < S; ++j) {
+            for (int j = 0; j < S; j += st) {
                 const int qy = (Y - e.y) * 256 + j * 256 / S - e.fy;
                 if (qy < 0 || qy >= e.bh * 256) continue;
                 MghrPx *prow = &plane[(size_t)(Y * S + j - hy0) * BW];
@@ -3863,12 +3872,15 @@ static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &wi
                     xb = mghr_mn(x1, e.x + ((hi + e.fx) >> 8) + 2);
                 }
                 for (int X = xa; X < xb; ++X)
-                    for (int i = 0; i < S; ++i) {
+                    for (int i = 0; i < S; i += st) {
                         uint32_t color;
                         if (!mghr_texel(e, (X - e.x) * 256 + i * 256 / S - e.fx, qy, boundary, map1d, color)) continue;
-                        MghrPx &q = prow[X * S + i + xoff - hx0];
-                        if (q.hit && e.prio > q.prio) continue;
-                        q.color = color; q.hit = 1; q.prio = e.prio;
+                        for (int jj = 0; jj < st; ++jj)
+                            for (int ii = 0; ii < st; ++ii) {
+                                MghrPx &q = prow[(size_t)jj * BW + X * S + i + ii + xoff - hx0];
+                                if (q.hit && e.prio > q.prio) continue;
+                                q.color = color; q.hit = 1; q.prio = e.prio;
+                            }
                         cellhit[Y][X] = 1;
                     }
             }
