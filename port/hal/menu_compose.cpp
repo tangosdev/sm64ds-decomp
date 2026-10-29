@@ -743,11 +743,104 @@ void draw_hostgrad(const MenuLayout *L, int i, const MenuSources *S, uint32_t *d
 }
 
 static float g_bob_frac[MENU_MAX_PIECES]; /* ARROWSLOW1: this picture's sub-pixel part of a bob piece's dest y (0 for every other piece) */
+/* FLIPSMOOTH1: THE PLANK TURN BETWEEN TICKS. The title's online planks turn over (menu_online_plank_phase): the tick narrows the old face to a
+   sliver and widens the new one, one step a tick. A picture between ticks draws each turning piece at its own phase p = turn_a - 1 + a (a = the
+   picture's place between the tick before and this tick, ARROWSLOW1's g_relift_alpha): width |1 - p / half| of the face's full width (40
+   permille at least, as the tick) about the tick rect's centre, x and width only. A piece whose face is not the one p shows is hidden on that
+   picture: on the tick of the middle the recipe adds the OLD face too (face 1 on a face-2 tick), so the pictures before the middle narrow the
+   old face to nothing and the swap lands on the tick picture, edge-on, where the tick swaps it. a = 1 (the tick's own picture, Smooth Motion
+   off) changes nothing but hiding that old face. A host picture plank drawn narrower between ticks is squeezed from one copy of its full-width
+   scale (turn_squeezed) instead of being scaled again every picture. */
+static uint8_t g_turn_hide[MENU_MAX_PIECES];      /* this picture does not draw the piece */
+static uint8_t g_turn_sq[MENU_MAX_PIECES];        /* this picture moved the piece's rect (1), and draws its host picture squeezed (2) */
+static int g_turn_keep[MENU_MAX_PIECES][2];       /* the tick rect's x and width, put back after the draw */
+static void turn_place(MenuLayout &L, double a)
+{
+    for (int i = 0; i < L.np && i < MENU_MAX_PIECES; ++i) {
+        g_turn_hide[i] = 0; g_turn_sq[i] = 0;
+        const MenuPiece &P = L.p[i];
+        if (!P.turn || P.turn_half < 1) continue;
+        const double half = (double)P.turn_half;
+        double p = (double)P.turn_a - (a < 1.0 ? 1.0 - a : 0.0);
+        if (p < 0.0) p = 0.0;
+        if (p > 2.0 * half) p = 2.0 * half;
+        const int face = p < half ? 1 : 2;
+        if (face != P.turn) { g_turn_hide[i] = 1; continue; }
+        if (a >= 1.0) continue;
+        double wf = p < half ? 1.0 - p / half : (p - half) / half;
+        if (wf < 0.04) wf = 0.04;
+        int dw = (int)((double)P.turn_fw * wf);          /* truncated, as the tick law (full width * w1000 / 1000) */
+        if (dw < 1) dw = 1;
+        int *d = L.dest[i];
+        g_turn_keep[i][0] = d[0]; g_turn_keep[i][1] = d[2];
+        const int cx = d[0] + d[2] / 2;
+        d[0] = cx - dw / 2; d[2] = dw;
+        g_turn_sq[i] = P.src == SRC_HOSTIMG && !P.custom ? 2 : 1;
+    }
+#ifndef PORT_ROM_CLEAN
+    { static const int tr = getenv("SM64DS_FS1_TRACE") ? 1 : 0;     /* FLIPSMOOTH1 proof instrument: every turning piece on every picture */
+      if (tr) for (int i = 0; i < L.np && i < MENU_MAX_PIECES; ++i) if (L.p[i].turn)
+          fprintf(stderr, "[fs1-turn] a=%.4f piece %d face %d phase %.3f hide %d rect %d %d\n", a, i, (int)L.p[i].turn,
+                  (double)L.p[i].turn_a - (a < 1.0 ? 1.0 - a : 0.0), (int)g_turn_hide[i], L.dest[i][0], L.dest[i][2]); }
+#endif
+}
+static void turn_restore(MenuLayout &L)
+{
+    for (int i = 0; i < L.np && i < MENU_MAX_PIECES; ++i) {
+        if (g_turn_sq[i]) { L.dest[i][0] = g_turn_keep[i][0]; L.dest[i][2] = g_turn_keep[i][1]; }
+        g_turn_sq[i] = 0; g_turn_hide[i] = 0;
+    }
+}
+/* the piece's picture at dw x dh, squeezed by area from its full-width (turn_fw) scale; the full-width copy is kept here per picture id and
+   size, so the shared two-slot scale cache sees one request per face and turn, not one per picture */
+static const uint32_t *turn_squeezed(const MenuPiece &P, int dw, int dh)
+{
+    struct Full { int id, w, h; std::vector<uint32_t> px; };
+    static Full full[8];
+    static int next;
+    static std::vector<uint32_t> out;
+    const int fw = P.turn_fw;
+    if (fw < 1 || dw < 1 || dh < 1 || dw > fw) return menu_hostimg_scaled(P.hostimg, dw, dh);
+    Full *F = 0;
+    for (int k = 0; k < 8; ++k)
+        if (full[k].id == P.hostimg && full[k].w == fw && full[k].h == dh && !full[k].px.empty()) { F = &full[k]; break; }
+    if (!F) {
+        const uint32_t *s = menu_hostimg_scaled(P.hostimg, fw, dh);
+        if (!s) return 0;
+        F = &full[next]; next = (next + 1) & 7;
+        F->id = P.hostimg; F->w = fw; F->h = dh;
+        F->px.assign(s, s + (size_t)fw * dh);
+    }
+    out.resize((size_t)dw * dh);
+    /* output column x covers source [x * fw / dw, (x + 1) * fw / dw): an area average of the premultiplied channels */
+    for (int x = 0; x < dw; ++x) {
+        const double s0 = (double)x * fw / dw, s1 = (double)(x + 1) * fw / dw;
+        const int c0 = (int)s0, c1 = (int)ceil(s1) > fw ? fw : (int)ceil(s1);
+        for (int y = 0; y < dh; ++y) {
+            const uint32_t *row = &F->px[(size_t)y * fw];
+            double acc[4] = { 0, 0, 0, 0 }, wsum = 0;
+            for (int c = c0; c < c1; ++c) {
+                const double lo = c < s0 ? s0 : (double)c, hi = c + 1 > s1 ? s1 : (double)(c + 1);
+                const double wgt = hi - lo;
+                if (wgt <= 0) continue;
+                const uint32_t v = row[c];
+                for (int k = 0; k < 4; ++k) acc[k] += wgt * (double)((v >> (8 * k)) & 255u);
+                wsum += wgt;
+            }
+            uint32_t o = 0;
+            if (wsum > 0)
+                for (int k = 0; k < 4; ++k) { int q = (int)(acc[k] / wsum + 0.5); if (q > 255) q = 255; o |= (uint32_t)q << (8 * k); }
+            out[(size_t)y * dw + x] = o;
+        }
+    }
+    return out.data();
+}
+
 void draw_hostimg(const MenuLayout *L, int i, uint32_t *dst, int w, int h)
 {
     const MenuPiece &P = L->p[i];
     const int *d = L->dest[i];
-    const uint32_t *src = menu_hostimg_scaled(P.hostimg, d[2], d[3]);
+    const uint32_t *src = i < MENU_MAX_PIECES && g_turn_sq[i] == 2 ? turn_squeezed(P, d[2], d[3]) : menu_hostimg_scaled(P.hostimg, d[2], d[3]);   /* FLIPSMOOTH1 */
     if (!src) return;
     const size_t stride = (size_t)stride_of(w);
     /* ARROWSLOW1: a bob piece drawn bf of a pixel lower than its dest rect: each row is the premultiplied mix of the picture's row and the
@@ -2529,19 +2622,23 @@ void hal_menu_present(uint32_t *dst, int w, int h, int stage)
         D.L.dest[i][1] = (int)fl;
         g_bob_frac[i] = (float)(y - fl);
     }
+    /* FLIPSMOOTH1: a turning plank (MenuPiece.turn) is drawn at this picture's own phase of the turn; see turn_place. The tick's rect comes
+       back after the draw, so the decision (the touch inverse, the next picture) never sees an in-between's rect. */
+    turn_place(D.L, g_in_relift ? g_relift_alpha : 1.0);
     g_rep.enable = cost_fast(); g_rep.valid = 0;
     if (trace_on()) {
         for (int i = 0; i < D.L.np; ++i) {
             const std::chrono::steady_clock::time_point tp = std::chrono::steady_clock::now();
-            menu_piece_draw(&D.L, i, S, dst, w, h);
+            if (!(i < MENU_MAX_PIECES && g_turn_hide[i])) menu_piece_draw(&D.L, i, S, dst, w, h);      /* FLIPSMOOTH1 */
             if (i < 24) g_piece_us[i] = std::chrono::duration<double, std::micro>(std::chrono::steady_clock::now() - tp).count();
         }
         g_piece_n = D.L.np;
         { static int said; if (D.L.np >= 8 && said != D.L.np) { said = D.L.np; for (int i = 0; i < D.L.np; ++i) { const MenuPiece &Q = D.L.p[i]; const int *dd = D.L.dest[i];
             fprintf(stderr, "[menu] piece %d: src %d dest %d,%d %dx%d s %d,%d %dx%d alpha %d custom %d nodraw %d hostimg %d key %d layers %x\n", i, (int)Q.src, dd[0], dd[1], dd[2], dd[3], Q.s.x, Q.s.y, Q.s.w, Q.s.h, (int)Q.alpha, Q.custom ? 1 : 0, (int)Q.nodraw, (int)Q.hostimg, (int)Q.key_backdrop, (unsigned)Q.layers); } } }
     } else {
-        for (int i = 0; i < D.L.np; ++i) menu_piece_draw(&D.L, i, S, dst, w, h);
+        for (int i = 0; i < D.L.np; ++i) if (!(i < MENU_MAX_PIECES && g_turn_hide[i])) menu_piece_draw(&D.L, i, S, dst, w, h);      /* FLIPSMOOTH1 */
     }
+    turn_restore(D.L);      /* FLIPSMOOTH1 */
     g_rep.enable = 0; g_rep.valid = 0;
     /* MGEXIT1: the wipe (the minigames' star and circle) is cut into the finished picture once, about its centre; the two source screens were
        not cut while this recipe is live (ntr::wipe_suppressed), because the recipe moves their pieces */

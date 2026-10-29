@@ -512,14 +512,38 @@ static void arrow_bob_place(MenuPiece &ar, int base2, int sub, int un, int ud, i
    state, or turning between them (menu_online_plank_state). An online-family plank (ONLINE, ADVENTURE ONLINE, VS) is added here, from the mod's
    picture or drawn in code (hal/menu_online_draw.cpp), over the ROM's own box; the function answers 1 when it did. A solo plank is the caller's own
    (its picture or its ROM cut), drawn at *w1000 permille of its width while it turns. */
-bool online_plank(MenuLayout *L, int k, const Box &bx, int rise_px, int alpha, bool lit, bool pressed, bool touch, int *w1000)
+/* FLIPSMOOTH1: THE TURN BETWEEN TICKS. While plank k turns (menu_online_plank_phase, ticks 1 .. 16), every piece added for it carries the turn
+   (MenuPiece.turn: its face, the phase, its full width) and hal_menu_present draws the pictures between ticks at their own phase. On the
+   middle tick (a == half, the tick that swaps the face) the old face is added a second time, at the tick's sliver, with no touch: it is drawn
+   only by the pictures before the middle, so the old face narrows to nothing and the new one takes over on the tick picture, as today. */
+struct TurnTag { int on, a, half, face; };
+TurnTag g_tt;
+bool turn_begin(const MenuLayout *L, int k, int *from)
+{
+    int a = 0, half = 8, fr = 0, to = 0;
+    g_tt.on = menu_online_plank_phase(onl_facts_of(L), k, &a, &half, &fr, &to);
+    g_tt.a = a; g_tt.half = half; g_tt.face = a < half ? 1 : 2;
+    *from = fr;
+    return g_tt.on && a == half;
+}
+void turn_tag(MenuLayout *L, int np0, int full_w)
+{
+    if (!g_tt.on) return;
+    for (int i = np0; i < L->np; ++i) {
+        MenuPiece &P = L->p[i];
+        P.turn = (uint8_t)g_tt.face; P.turn_half = (uint8_t)g_tt.half; P.turn_fw = (short)full_w; P.turn_a = (float)g_tt.a;
+    }
+}
+bool online_plank(MenuLayout *L, int k, const Box &bx, int rise_px, int alpha, bool lit, bool pressed, bool touch, int *w1000, int force_kind = -1)
 {
     const OnlFacts *of = onl_facts_of(L);
     int kind = ONL_K_ONLINE;
     menu_online_plank_state(of, k, &kind, w1000);
+    if (force_kind >= 0) { kind = force_kind; *w1000 = 40; }       /* FLIPSMOOTH1: the old face on the middle tick, at the tick's sliver */
     if (kind != ONL_K_ONLINE && kind != ONL_K_SOLO && kind != ONL_K_ADV_ONLINE && kind != ONL_K_VS) return false;
     const int un = L->unum, ud = L->uden;
     const int bh = bx.y1 - bx.y0, dh = bh * un / ud;
+    const int np0 = L->np;      /* FLIPSMOOTH1 */
     int dw = menu_online_plank_w(kind, dh) * *w1000 / 1000;
     if (dw < 1) dw = 1;
     const int cxu = (bx.x0 + bx.x1) / 2 - 128, cyu2 = bx.y0 + bx.y1;
@@ -527,6 +551,7 @@ bool online_plank(MenuLayout *L, int k, const Box &bx, int rise_px, int alpha, b
     const int ip = menu_online_add_plank(L, kind, fx, fy, dw, dh, bx.x0, bx.y0, bx.x1 - bx.x0, bx.y1 - bx.y0, lit ? 1 : 0, pressed ? 1 : 0, alpha, touch ? 1 : 0,
                                          t_f ? t_f->frame : 0);
     if (touch && ip >= 0) menu_add_hotspot(L, ip, bx.x0, bx.y0, bx.x1 - bx.x0, bx.y1 - bx.y0, -1);
+    turn_tag(L, np0, menu_online_plank_w(kind, dh));      /* FLIPSMOOTH1 */
     return true;
 }
 
@@ -734,13 +759,20 @@ void build_main(MenuLayout *L, bool intro)
     for (int k = 0; k < 3; ++k) {
         Box bx;
         if (!box_of(kPlateId[k], &bx)) continue;
+        int fk = -1;
+        const bool mid = turn_begin(L, k, &fk);       /* FLIPSMOOTH1: see turn_tag */
+        for (int pass = mid ? 2 : 1; pass > 0; --pass) {
+        const bool ghost = pass == 2;                /* FLIPSMOOTH1: the old face on the middle tick: no touch, drawn between ticks only */
+        if (ghost) g_tt.face = 1;
+        else if (g_tt.on) g_tt.face = g_tt.a < g_tt.half ? 1 : 2;
+        const int np0 = L->np;
         int w1000 = 1000;
         /* TITLEART1: a code plank stands on its element's REST box (the dumped one). After the face swap the ROM brings its plates back in from off the
            screen (top-state 1) and the live boxes travel with them, wrapping past the screen's edges; a code plank that followed them vanished, then slid
            in crossed with its neighbour and cut by the window's edge (VS over SOLO). The ROM's own plate art is not in this picture (it is under the
            code plank), so nothing of the ROM's arrival is lost; a touch during it is not taken by the ROM anyway. */
         const Box rb = rest_box(kPlateId[k], bx);
-        if (online_plank(L, k, rb, 0, 0, cur == kPlateId[k], cur == kPlateId[k] && prs, true, &w1000)) continue;   /* NAME1: ONLINE / ADVENTURE ONLINE / VS */
+        if (online_plank(L, k, rb, 0, 0, cur == kPlateId[k], cur == kPlateId[k] && prs, !ghost, &w1000, ghost ? fk : -1)) continue;   /* NAME1: ONLINE / ADVENTURE ONLINE / VS */
         if (planks) {
             /* ASSET2: a plank drawn at the window's resolution over the ROM's own box (the 3D plate is not drawn: its
                wallpaper object is skipped at submit and its sprite is not in any piece). 40 units tall (the box height),
@@ -757,8 +789,10 @@ void build_main(MenuLayout *L, bool intro)
             pl.fx = (short)(L->w / 2 + cxu * L->unum / L->uden - dw / 2);
             pl.fy = (short)(cyu2 * L->unum / (2 * L->uden) - dh / 2);
             if (cur == kPlateId[k]) pl.hl = (uint8_t)(1 | (prs ? 2 : 0));
+            if (ghost) pl.touch = 0;
             const int ip = menu_add_piece(L, pl);
-            menu_add_hotspot(L, ip, bx.x0, bx.y0, bx.x1 - bx.x0, bx.y1 - bx.y0, -1);
+            if (!ghost) menu_add_hotspot(L, ip, bx.x0, bx.y0, bx.x1 - bx.x0, bx.y1 - bx.y0, -1);
+            turn_tag(L, np0, dw0);      /* FLIPSMOOTH1 */
             continue;
         }
         static const int kPlateX[3] = { 0, 70, 188 }, kPlateW[3] = { 70, 118, 68 };
@@ -771,8 +805,11 @@ void build_main(MenuLayout *L, bool intro)
             const int dhf = 52 * un / ud, cx = L->w / 2 + (kPlateX[k] - 128 + kPlateW[k] / 2) * un / ud;
             pl.fixdest = 1; pl.fx = (short)(cx - dwf / 2); pl.fy = (short)(L->h - dhf); pl.fw = (short)dwf; pl.fh = (short)dhf;
         }
+        if (ghost) pl.touch = 0;
         const int ip = menu_add_piece(L, pl);
-        hot(L, ip, &kPlateId[k], 1);
+        if (!ghost) hot(L, ip, &kPlateId[k], 1);
+        turn_tag(L, np0, kPlateW[k] * L->unum / L->uden);      /* FLIPSMOOTH1 */
+        }
     }
     static const int wr_ids[1] = { 7 };
     hot(L, iwr, wr_ids, 1);
@@ -1740,8 +1777,16 @@ void build_main_pc(MenuLayout *L, bool intro)
                 if (u >= 14) continue;
                 if (u > 0) { const float e = (float)u / 14.f; rise = e * e * 72.f; plank_a = 255 - 255 * u / 14; }
             } else if (!c.skip && pt < CH_PLANK_DUR) rise = (1.f - ease_out_back((float)pt / CH_PLANK_DUR)) * 72.f;
+            int fk = -1;
+            const bool mid = turn_begin(L, k, &fk);       /* FLIPSMOOTH1: see turn_tag */
+            for (int pass = mid ? 2 : 1; pass > 0; --pass) {
+            const bool ghost = pass == 2;                /* FLIPSMOOTH1: the old face on the middle tick: no touch, drawn between ticks only */
+            if (ghost) g_tt.face = 1;
+            else if (g_tt.on) g_tt.face = g_tt.a < g_tt.half ? 1 : 2;
+            const int np0 = L->np;
             int w1000 = 1000;
-            if (online_plank(L, k, bx, Uf(rise), plank_a, landed && cur == kPlateId[k], landed && cur == kPlateId[k] && prs, !toy, &w1000)) continue;   /* NAME1 */
+            if (online_plank(L, k, bx, Uf(rise), plank_a, landed && cur == kPlateId[k], landed && cur == kPlateId[k] && prs, !toy && !ghost, &w1000,
+                             ghost ? fk : -1)) continue;   /* NAME1 */
             int pw = 1, ph = 1;
             menu_hostimg_size(kPlankImg[k], &pw, &ph);
             const int bh = bx.y1 - bx.y0;
@@ -1749,14 +1794,16 @@ void build_main_pc(MenuLayout *L, bool intro)
             const int dw = dw0 * w1000 / 1000 < 1 ? 1 : dw0 * w1000 / 1000;     /* NAME1: the turn */
             const int cxu = (bx.x0 + bx.x1) / 2 - 128, cyu2 = bx.y0 + bx.y1;
             MenuPiece pl = menu_piece_make(SRC_HOSTIMG, bx.x0, bx.y0, bx.x1 - bx.x0, bx.y1 - bx.y0, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
-            pl.hostimg = (uint8_t)kPlankImg[k]; pl.touch = toy ? 0 : 1;
+            pl.hostimg = (uint8_t)kPlankImg[k]; pl.touch = toy || ghost ? 0 : 1;
             pl.lden = 1; pl.lnum = 1; pl.fw = (short)dw; pl.fh = (short)dh;
             pl.fx = (short)(w / 2 + cxu * un / ud - dw / 2);
             pl.fy = (short)(cyu2 * un / (2 * ud) - dh / 2 + Uf(rise));
             if (plank_a < 255) pl.alpha = (uint8_t)(plank_a < 1 ? 1 : plank_a);
             if (landed && cur == kPlateId[k]) pl.hl = (uint8_t)(1 | (prs ? 2 : 0));
             const int ip = menu_add_piece(L, pl);
-            if (!toy) menu_add_hotspot(L, ip, bx.x0, bx.y0, bx.x1 - bx.x0, bx.y1 - bx.y0, -1);
+            if (!toy && !ghost) menu_add_hotspot(L, ip, bx.x0, bx.y0, bx.x1 - bx.x0, bx.y1 - bx.y0, -1);
+            turn_tag(L, np0, dw0);      /* FLIPSMOOTH1 */
+            }
         }
         if (c.swap_a >= 0) { swap_fade_span(L, np_swap, np_logo, c.swap_a); swap_fade(L, np_logo_end, c.swap_a); }      /* TITLEUI1: the face, the wrench and the planks take the ROM's fade level (TITLEART2: not the logos) */
         const int np_arrow = L->np;

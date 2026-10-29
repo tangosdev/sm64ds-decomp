@@ -143,6 +143,15 @@ struct MenuPiece {
   short bob_y0;
   float bob_amp;
   int bob_t;
+  /* FLIPSMOOTH1 (appended): turn = a plank turning over about its centre (the title's online planks, menu_online_plank_phase): 1 = its face
+     before the turn's middle, 2 = its face after. turn_a = the turn's phase on this tick in ticks (0 .. 2 * turn_half), turn_fw = the face's
+     full width in host pixels. A picture between ticks draws it at phase p = turn_a - 1 + a: width |1 - p / turn_half| of turn_fw (40 permille
+     at least, the tick's own law) about the tick rect's centre, and only while p is on its face's side of the middle. The tick's own picture
+     (a = 1) is the tick's rect, untouched; a face-1 piece on a face-2 tick (the old face, added for the pictures before the middle) is hidden. */
+  uint8_t turn;
+  uint8_t turn_half;
+  short turn_fw;
+  float turn_a;
 };
 /* ARROWSLOW1: the cursor arrow's bob in half units (0..4), one cycle every 24 ticks (a third of the ROM's 8-tick pace), eased (a cosine); ph in ticks, fractional
    between ticks */
