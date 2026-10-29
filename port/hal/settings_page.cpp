@@ -589,7 +589,7 @@ const Piece *arrow_right_piece(int w, int h)
 
 /* =========================================================== state and rows ============================================ */
 
-enum Tab { T_GENERAL = 0, T_DISPLAY, T_CONTROLS, T_SOUND, T_PATCHES, T_ONLINE, T_COUNT };
+enum Tab { T_GENERAL = 0, T_DISPLAY, T_CONTROLS, T_SOUND, T_PATCHES, T_ONLINE, T_CHEATS, T_COUNT };
 enum RType { R_CHOICE, R_SLIDER, R_CHECK, R_BIND, R_HEAD, R_NOTE };
 struct Row { RType t; const char *label; int id, id2, step; const char *const *names; int nn; const int *vals; int id3p1 = 0; };   /* vals: the value of each choice when it is not min + index (the frame rate stops) */
 
@@ -621,9 +621,6 @@ const int CHAT_VALS[] = { 75, 100, 125, 150, 200 };
 const Row ROWS_GENERAL[] = {
     { R_SLIDER, "Minimap size", SL_MINIMAP_SCALE, -1, 5, 0, 0 },
     { R_NOTE, "The minimap is the small map in the corner.", -1, -1, 0, 0, 0 },
-    { R_CHECK, "Debug menu", SL_DEBUG_MENU, -1, 0, 0, 0 },
-    { R_CHECK, "Custom characters from the start", SL_CHARS_FROM_START, -1, 0, 0, 0 },
-    { R_CHECK, "Character select on star select", SL_CHARACTER_STRIP, -1, 0, 0, 0 },
     { R_CHECK, "Coins in the middle", SL_COINS_MIDDLE, -1, 0, 0, 0 },
     { R_NOTE, "Puts the coin counter at the top middle, like SM64.", -1, -1, 0, 0, 0 },
 };
@@ -687,11 +684,19 @@ const Row ROWS_ONLINE[] = {
     { R_BIND, "Leave party", SL_KEY_BASE + HOST_KEY_PARTY_LEAVE, SL_PAD_BASE + HOST_PAD_PARTY_LEAVE, 0, 0, 0 },
     { R_NOTE, "Name, colours and voice are set in the launcher.", -1, -1, 0, 0, 0 },
 };
+/* CHEATS1: CHEATS holds the rows that change how the game plays, moved from GENERAL (same keys: DebugMenu, CharactersUnlockedFromStart,
+   CharacterStrip; the star select's character panel still reads CharacterStrip) */
+const Row ROWS_CHEATS[] = {
+    { R_CHECK, "Debug menu", SL_DEBUG_MENU, -1, 0, 0, 0 },
+    { R_CHECK, "Custom characters from the start", SL_CHARS_FROM_START, -1, 0, 0, 0 },
+    { R_CHECK, "Character select on star select", SL_CHARACTER_STRIP, -1, 0, 0, 0 },
+    { R_NOTE, "These change how the game plays. Off is the DS.", -1, -1, 0, 0, 0 },
+};
 const Row ROWS_SOUND[] = {
     { R_SLIDER, "Volume", SL_VOLUME, -1, 5, 0, 0 },
     { R_NOTE, "Music and effects share one volume.", -1, -1, 0, 0, 0 },
 };
-const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "DISPLAY", "CONTROLS", "SOUND", "PATCHES", "ONLINE" };
+const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "DISPLAY", "CONTROLS", "SOUND", "PATCHES", "ONLINE", "CHEATS" };
 
 /* DISPLAY is built per call: the Frame rate row is there only when this build's settings_live has a FrameRate row (another lane makes it
    live; until then it stays a launcher setting and the note says so) */
@@ -735,6 +740,7 @@ const Row *rows_of(int tab, int *n)
     case T_PATCHES: return patches_rows(n);
     case T_CONTROLS: *n = (int)(sizeof ROWS_CONTROLS / sizeof ROWS_CONTROLS[0]); return ROWS_CONTROLS;
     case T_ONLINE: *n = (int)(sizeof ROWS_ONLINE / sizeof ROWS_ONLINE[0]); return ROWS_ONLINE;
+    case T_CHEATS: *n = (int)(sizeof ROWS_CHEATS / sizeof ROWS_CHEATS[0]); return ROWS_CHEATS;
     default: *n = (int)(sizeof ROWS_GENERAL / sizeof ROWS_GENERAL[0]); return ROWS_GENERAL;
     }
 }
