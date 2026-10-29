@@ -6048,6 +6048,13 @@ extern "C" void hal_sub_screen_blend_restore(void)
 {
     g_sub = g_sub_keep;
 }
+namespace ntr { void ppu_compose_sub_panel(const SubFramebuffer &sub, uint32_t *dst, const StackLayout &lay); bool ppu_compose_wipe_live(void); }
+/* the bottom screen's panel of the stacked image `img` from g_sub (the rescan above), the rest of the image untouched */
+extern "C" void hal_sub_screen_blend_panel(unsigned int *img)
+{
+    ntr::ppu_compose_sub_panel(g_sub, reinterpret_cast<uint32_t *>(img), *hal_screen_layout());
+}
+extern "C" int hal_sub_screen_wipe_live(void) { return ntr::ppu_compose_wipe_live() ? 1 : 0; }
 
 /* MGINTERP1 proof instrument (SM64DS_MG_INTERP_CHECK): engine B scanned out again from the state as it stands, against the
    tick's own scan-out; the number of pixels that differ (0 = the rescan reproduces the tick). g_sub is left as it was. */

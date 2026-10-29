@@ -10456,6 +10456,10 @@ static void si_pic(char kind, double alpha, const ntr::Framebuffer *fb, const ui
    before the UI went on, and the present is pointed at it. The caller puts
    g_present_stack back to the tick's kept image afterwards. */
 static void mgi_after_compose(void);
+static int g_mgi_fast;            /* MGINTERP1: this tick's pictures redo only the two screens' own pixels */
+static int g_mgi_swapped;
+extern "C" void hal_sub_screen_blend_panel(unsigned int *img);
+extern "C" int hal_sub_screen_wipe_live(void);
 extern "C" void port_compose_state_save(int slot);
 extern "C" void port_compose_state_restore(int slot);
 extern "C" int port_compose_state_have(int slot);
@@ -10503,6 +10507,7 @@ static void ip_stack_for_blend(void)
             for (size_t i = i0; i < i1; ++i)
                 if (g_ip_stack_final[i] != g_ip_stack_pre[i]) W[i] = g_ip_stack_final[i];
         }
+        if (g_mgi_fast && g_mgi_swapped) hal_sub_screen_blend_panel(W);   /* MGINTERP1: the bottom screen's panel */
         ++g_si_blend_n;
         g_si_ms[3] += ip_ms_since(t0);
         g_present_stack = W;
@@ -11235,7 +11240,7 @@ struct MgiState {
 };
 static MgiState g_mgi_prev, g_mgi_cur, g_mgi_live;
 /* g_mgi_tick is declared above ip_build */                 /* this tick's pictures between ticks are drawn by mgi_build */
-static int g_mgi_swapped;              /* the blended state is in the live OAM / registers now */
+/* g_mgi_swapped (declared above ip_stack_for_blend): the blended state is in the live OAM / registers now */
 static unsigned g_mgi_n[10];            /* [8] sprite matrices turned / scaled between ticks, [9] kept (not a pure turn, or too far) */
 static int g_mgi_g3d[2] = { -1, -1 };   /* 3D draw groups of tick N-1 and tick N (0 and 0: the picture under the 2D is the tick's) */
 extern "C" int port_message_engine_a_replay_dirty(void *fbp, const unsigned int *tick_final);
@@ -11979,6 +11984,7 @@ static void ip_scene_present(int stacked, uint32_t *stack_img,
 {
     unsigned tick_hash = 0;
     g_ip_stack_fast = 0;
+    g_mgi_fast = 0;
     {
         static unsigned tick_no;
         static int hash_on = -1;
@@ -12020,6 +12026,22 @@ static void ip_scene_present(int stacked, uint32_t *stack_img,
                 g_ip_stack_fast = (lay.band_h == 0 && lay.head_h == 0 &&
                                    lay.w == w && lay.h == h && !getenv("SM64DS_SCENE_INTERP_FULLCOMPOSE") &&
                                    !g_mgi_tick);   /* MGINTERP1: the bottom screen moves too */
+                /* MGINTERP1: a minigame tick's pictures start from the tick's finished image and redo the two screens' own
+                   pixels only (engine A's rows as the fast path does, engine B's panel from its rescan); the gap band, the side
+                   bars and the margins stay the tick's. Not while a wipe cuts the screens. SM64DS_MG_INTERP_FULLCOMPOSE=1: the
+                   whole compose per picture. */
+                {
+                    static int full = -1;
+                    if (full < 0) { const char *e = getenv("SM64DS_MG_INTERP_FULLCOMPOSE"); full = (e && e[0] == '1') ? 1 : 0; }
+                    g_mgi_fast = g_mgi_tick && !full && lay.head_h == 0 && lay.w == w && lay.h == h && !hal_sub_screen_wipe_live();
+                    if (g_mgi_fast) g_ip_stack_fast = 1;
+                    /* the measured cost of a picture is a different number for the two kinds (a wipe's whole compose is two or
+                       three times the screens-only redraw): when the kind changes the old samples are dropped and the next
+                       picture measures afresh, or one slow picture at a minigame's opening wipe refuses every picture after it */
+                    static int was_fast = -1;
+                    if (was_fast >= 0 && was_fast != g_mgi_fast) { g_ip_cost_n = 0; g_ip_cost_ms = 4.0; }
+                    was_fast = g_mgi_fast;
+                }
                 g_ip_stack_final = stack_img;
                 /* fast: hal's buffer stays the tick's picture and the blends
                    work in the kept copy; otherwise the kept copy is the tick's

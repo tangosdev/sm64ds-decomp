@@ -5805,6 +5805,46 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     wipe_circle_stacked(dst, dst_w, a_y, active_h, b_y, -1, active_h);
 }
 
+/* MGINTERP1: engine B's panel of the stacked image only, the same nearest scale-up ppu_compose_stacked makes into the same
+   rows and columns (the panel's own; the margins, the band and the side bars are left as they are). For a picture between two
+   minigame ticks that starts from the tick's finished image. */
+void ppu_compose_sub_panel(const SubFramebuffer &sub, uint32_t *dst, const StackLayout &lay)
+{
+    if (!dst) return;
+    const int b_y = lay.main_lower ? lay.top_y : lay.bottom_y;
+    if (lay.pan_x0 > 0) {
+        const int px0 = lay.pan_x0, pw = lay.pan_w, ry = active_h / SUB_H, dst_w = lay.w;
+        if (ry <= 0) return;
+        for (int y = 0; y < lay.pan_h; ++y) {
+            const int sy = y / ry;
+            const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
+            uint32_t *o = dst + (size_t)(b_y + y) * dst_w + px0;
+            if (y > 0 && (y - 1) / ry == sy) { std::memcpy(o, o - dst_w, (size_t)pw * 4); continue; }
+            for (int x = 0, sx = 0; x < pw; ++sx) {
+                const uint32_t c = src[sx < SUB_W ? sx : SUB_W - 1];
+                const int e = x + ry < pw ? x + ry : pw;
+                for (; x < e; ++x) o[x] = c;
+            }
+        }
+        return;
+    }
+    const int rx = active_w / SUB_W, ry = active_h / SUB_H, dst_w = lay.w;
+    for (int y = 0; y < active_h; ++y) {
+        const int sy = ry > 0 ? y / ry : (y * SUB_H) / active_h;
+        const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
+        uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
+        for (int x = 0; x < active_w; ++x) {
+            const int sx = rx > 0 ? x / rx : (x * SUB_W) / active_w;
+            out[x] = src[sx < SUB_W ? sx : SUB_W - 1];
+        }
+    }
+}
+bool ppu_compose_wipe_live(void)
+{
+    const uint32_t *rows = nullptr;
+    return rt_window_rows(0, &rows) || rt_window_rows(1, &rows);
+}
+
 /* MGINTERP1: the gap band's and the seam's memory (the ambient follow, the edge rows, the ghost tracks, the snow), kept
    across a compose of a picture BETWEEN two ticks. Those filters step once per compose, so every extra picture used to move
    them on and the next tick's own picture came out different (its band) depending on how many pictures the machine had time
