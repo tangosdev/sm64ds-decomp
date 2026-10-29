@@ -1126,10 +1126,30 @@ void sd_mix_render(sd_s16 *dst, int frames)
     g_statBlocks++;
 }
 
+#ifndef PORT_ROM_CLEAN
+/* LOGOSPEED1 proof instrument (dev builds only; absent from the kit): SM64DS_MIX_CLAMP_TRACE=<path>. The voice loops below add each voice
+   into the s16 block with a clamp per voice, so a partial sum past full scale is cut even when the next voice would bring the sum back.
+   With the knob set, the same voices are also summed in doubles (g_cw) and the two are compared once per render block: one line per block
+   in which they differ by more than the per-voice truncation can explain (partial = samples cut by a per-voice clamp, final = samples whose
+   whole sum is past full scale, max = the largest difference, peak = the largest whole sum), with the mixer's frame count. */
+static int g_cwOn = -1;
+static FILE *g_cwF;
+static double g_cw[2048 * 2];
+static unsigned long long g_cwFrames;
+#endif
 static void sd_mix_render_body(sd_s16 *dst, int frames)
 {
     mode_latch();
     memset(dst, 0, (size_t)frames * 2 * sizeof(sd_s16));
+#ifndef PORT_ROM_CLEAN
+    if (g_cwOn < 0) {
+        const char *e = getenv("SM64DS_MIX_CLAMP_TRACE");
+        g_cwF = (e && *e) ? fopen(e, "w") : 0;
+        g_cwOn = g_cwF ? 1 : 0;
+    }
+    const int cw = g_cwOn > 0 && frames <= 2048;
+    if (cw) memset(g_cw, 0, (size_t)frames * 2 * sizeof(double));
+#endif
     int done = 0;
     while (done < frames) {
         // Frames remaining before the next 192 Hz boundary.
@@ -1205,6 +1225,9 @@ static void sd_mix_render_body(sd_s16 *dst, int frames)
                         }
                         s = (double)sd_hermite(ym1, y0, y1, y2, f);
                     }
+#ifndef PORT_ROM_CLEAN
+                    if (cw) { g_cw[o - dst] += s * gl; g_cw[o - dst + 1] += s * gr; }
+#endif
                     sd_s32 l = (sd_s32)(o[0] + s * gl);
                     sd_s32 r = (sd_s32)(o[1] + s * gr);
                     o[0] = (sd_s16)(l < -32768 ? -32768 : (l > 32767 ? 32767 : l));
@@ -1234,6 +1257,9 @@ static void sd_mix_render_body(sd_s16 *dst, int frames)
                 sd_s32 b = (idx + 1 < c.total) ? c.pcm[idx + 1]
                          : (c.loop ? c.pcm[c.loopStart] : a);
                 double s = c.hold ? (double)a : a + (b - a) * frac;
+#ifndef PORT_ROM_CLEAN
+                if (cw) { g_cw[o - dst] += s * gl; g_cw[o - dst + 1] += s * gr; }
+#endif
                 sd_s32 l = (sd_s32)(o[0] + s * gl);
                 sd_s32 r = (sd_s32)(o[1] + s * gr);
                 o[0] = (sd_s16)(l < -32768 ? -32768 : (l > 32767 ? 32767 : l));
@@ -1255,6 +1281,25 @@ static void sd_mix_render_body(sd_s16 *dst, int frames)
         }
     }
 
+#ifndef PORT_ROM_CLEAN
+    if (cw) {
+        int partial = 0, fin = 0;
+        double mx = 0, pk = 0;
+        for (int i = 0; i < frames * 2; i++) {
+            const double w = g_cw[i];
+            const double wc = w < -32768.0 ? -32768.0 : (w > 32767.0 ? 32767.0 : w);
+            const double d = fabs((double)dst[i] - wc);
+            if (fabs(w) > pk) pk = fabs(w);
+            if (fabs(w) > 32767.0) ++fin;
+            if (d > 24.0) { ++partial; if (d > mx) mx = d; }
+        }
+        if (partial || fin)
+            fprintf(g_cwF, "frame=%llu frames=%d partial=%d final=%d max=%.0f peak=%.0f\n", g_cwFrames, frames, partial, fin, mx, pk);
+        g_cwFrames += (unsigned long long)frames;
+        static int flushes;
+        if ((++flushes & 15) == 0) fflush(g_cwF);
+    }
+#endif
     if (g_pre_volume_render) g_pre_volume_render(dst, frames, g_mixRate);      // lane EGG1, see the hook's banner
 
     // Host master volume: one final scalar on the already-mixed stereo buffer.
