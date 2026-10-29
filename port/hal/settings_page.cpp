@@ -590,6 +590,10 @@ const Piece *arrow_right_piece(int w, int h)
 /* =========================================================== state and rows ============================================ */
 
 enum Tab { T_GENERAL = 0, T_DISPLAY, T_CONTROLS, T_SOUND, T_PATCHES, T_ONLINE, T_CHEATS, T_COUNT };
+/* CHEATS1: the strip shows TAB_VIS of the T_COUNT tabs, a window that keeps the selected tab in the middle where it can
+   (start = clamp(tab - 2, 0, T_COUNT - TAB_VIS)); a window change slides over TAB_SLIDE page frames, a wrap snaps */
+enum { TAB_VIS = 5, TAB_SLIDE = 7 };
+inline int tab_win_of(int tab) { const int w = tab - TAB_VIS / 2; return w < 0 ? 0 : (w > T_COUNT - TAB_VIS ? T_COUNT - TAB_VIS : w); }
 enum RType { R_CHOICE, R_SLIDER, R_CHECK, R_BIND, R_HEAD, R_NOTE };
 struct Row { RType t; const char *label; int id, id2, step; const char *const *names; int nn; const int *vals; int id3p1 = 0; };   /* vals: the value of each choice when it is not min + index (the frame rate stops) */
 
@@ -765,6 +769,8 @@ struct State {
        at the right of the wide layout, dx = the sideways slide in picture pixels, input = 0 while the panel is slid out of sight */
     int emb_on, emb_wide, emb_dx, emb_input;
     int emb_from_pause;                /* opened from the pause (starts on GENERAL), else from the title wrench (CONTROLS) */
+    int slide_t;                       /* CHEATS1: page frames into the strip's slide (1..TAB_SLIDE), 0 = settled on tab_win_of(tab) */
+    double slide_from;                 /* the window start (fractional when a slide was cut short) the slide leaves from */
 };
 /* WARMFIX1 F1: the warm-up runs the page's own draw code, so it gets its OWN state and layout: while tl_warm is set (this thread, inside
    settings_page_warm_step only) S and L name the scratch copies, never the live ones a draw on another thread reads. */
@@ -850,7 +856,9 @@ struct Lay {
     int w, h;
     int sx, sy, sw, sh;               /* the sheet */
     int title[4], back[4];            /* planks: x, y, w, h */
-    int tab_x[T_COUNT], tab_w[T_COUNT], tab_y, tab_h;
+    int tab_x[T_COUNT], tab_w[T_COUNT], tab_y, tab_h;   /* CHEATS1: settled places of the visible window's tabs; tab_w 0 = not in the window */
+    float tab_pos[T_COUNT + 1], tab_gap;                  /* each tab's start along the whole strip of T_COUNT names (tab_pos[T_COUNT] = the end + gap) */
+    int tab_win;                                          /* the settled window start */
     int body[4];                      /* x0, y0, x1, y1 (the clipped area) */
     int rowh, lab_x, ctl_x, ctl_w, rail_w;
     int reset[4];                     /* x, y, w, h */
@@ -884,13 +892,23 @@ void compute_layout(int w, int h)
     L.back[2] = P(158); L.back[3] = L.back[2] * 182 / 320;
     L.back[0] = L.sx + P(30); L.back[1] = L.sy - L.back[3] / 2;
     L.tab_h = P(44); L.tab_y = L.sy + P(74);
-    {   /* the tab names in a row, centred on the sheet */
+    {   /* the tab names in a row, centred on the sheet. CHEATS1: the row is the TAB_VIS names of the window, so the strip is as wide as five
+           names (what it was with five tabs); the names outside the window have no place (tab_w 0) */
         const float em = (float)P(27);
         const float gap = (float)P(22);   /* INPUTMATRIX1: was 34; the margins beside the first and last tab hold the LB / RB hints */
-        float tot = 0, tw[T_COUNT];
-        for (int i = 0; i < T_COUNT; ++i) { tw[i] = ui_text_width(TAB_NAMES[i], em); tot += tw[i] + (i ? gap : 0); }
-        float x = L.sx + (L.sw - tot) * 0.5f;
-        for (int i = 0; i < T_COUNT; ++i) { L.tab_x[i] = (int)(x + 0.5f); L.tab_w[i] = (int)(tw[i] + 0.5f); x += tw[i] + gap; }
+        float pos = 0, tw[T_COUNT];
+        for (int i = 0; i < T_COUNT; ++i) { tw[i] = ui_text_width(TAB_NAMES[i], em); L.tab_pos[i] = pos; pos += tw[i] + gap; }
+        L.tab_pos[T_COUNT] = pos;
+        L.tab_gap = gap;
+        const int ws = tab_win_of(S.tab);
+        L.tab_win = ws;
+        const float tot = L.tab_pos[ws + TAB_VIS] - gap - L.tab_pos[ws];
+        const float x0 = L.sx + (L.sw - tot) * 0.5f;
+        for (int i = 0; i < T_COUNT; ++i) {
+            const bool vis = i >= ws && i < ws + TAB_VIS;
+            L.tab_x[i] = vis ? (int)(x0 + L.tab_pos[i] - L.tab_pos[ws] + 0.5f) : 0;
+            L.tab_w[i] = vis ? (int)(tw[i] + 0.5f) : 0;
+        }
     }
     L.body[0] = L.sx + P(14); L.body[1] = L.tab_y + L.tab_h + P(14); L.body[2] = L.sx + L.sw - P(14); L.body[3] = L.sy + L.sh - P(84);
     L.rowh = P(54);
@@ -1065,13 +1083,19 @@ void start_capture(int id)
     }
 }
 
+double strip_win_now();
 void switch_tab(int t)
 {
+    const bool wrap = t < 0 || t >= T_COUNT;
     if (t < 0) t = T_COUNT - 1;
     if (t >= T_COUNT) t = 0;
     if (t == S.tab) return;
     sl_flush();
     host_menu_cursor_sound();
+    /* CHEATS1: the strip slides from where it stands now to the new tab's window; a wrap from one end to the other snaps */
+    const double from = strip_win_now();
+    if (!wrap && from != (double)tab_win_of(t)) { S.slide_from = from; S.slide_t = 1; }
+    else S.slide_t = 0;
     S.tab = t; S.sel = 0; S.col = 0; S.scroll = 0; S.dd_open = 0; S.drag = -1;
     int n = 0;
     const Row *rows = rows_of(t, &n);
@@ -1094,6 +1118,19 @@ void move_sel(int dir)
     if (s < n && rows[s].t != R_BIND) S.col = 0;
     S.ensure_vis = 1;
     S.dd_open = 0;
+}
+
+/* CHEATS1: the strip's window start as drawn now: settled, or TAB_SLIDE page frames from slide_from to the tab's window, eased. g_sp_pic_alpha is
+   the place between two page frames of the picture being drawn (1 on a tick's own picture); settings_page_set_picture_alpha sets it for one draw. */
+double g_sp_pic_alpha = 1.0;
+double strip_win_now()
+{
+    const double to = tab_win_of(S.tab);
+    if (S.slide_t <= 0) return to;
+    double p = (S.slide_t - 1 + g_sp_pic_alpha) / TAB_SLIDE;
+    p = p < 0 ? 0 : (p > 1 ? 1 : p);
+    const double e = p * p * (3 - 2 * p);
+    return S.slide_from + (to - S.slide_from) * e;
 }
 
 /* ============================================================ the frame =============================================== */
@@ -1169,6 +1206,8 @@ extern "C" int settings_page_tab(void) { return S.tab; }
 extern "C" int settings_page_row(void) { return S.sel; }
 extern "C" const char *settings_page_note(void) { return S.note; }
 extern "C" double settings_page_draw_ms(void) { return S.draw_ms; }
+extern "C" void settings_page_set_picture_alpha(double a) { g_sp_pic_alpha = a < 0 ? 0 : (a > 1 ? 1 : a); }
+extern "C" int settings_page_strip_moving(void) { return S.open && S.slide_t > 0; }
 
 extern "C" void settings_page_set_embed(const SpEmbed *e)
 {
@@ -1230,8 +1269,21 @@ extern "C" int settings_page_frame(const SpInput *in)
 {
     if (!S.open) return 0;
     ++S.pf;
+    if (S.slide_t > 0 && ++S.slide_t > TAB_SLIDE) S.slide_t = 0;      /* CHEATS1: the strip's slide, one step a page frame */
     if (S.note_t > 0 && --S.note_t == 0) S.note[0] = 0;
     compute_layout(S.w, S.h);
+#ifndef PORT_ROM_CLEAN
+    {   /* CHEATS1 proof line (scripted rows only): the strip's window and the settled places of its five names, each frame it changes */
+        static int tr = -1, last_tab = -1, last_t = -1;
+        if (tr < 0) tr = getenv("SM64DS_SETPAGE_SCRIPT") != 0;
+        if (tr && (S.tab != last_tab || S.slide_t != last_t)) {
+            last_tab = S.tab; last_t = S.slide_t;
+            char b[200]; int k = 0;
+            for (int i = L.tab_win; i < L.tab_win + TAB_VIS; ++i) k += snprintf(b + k, sizeof b - k, " %s@%d+%d", TAB_NAMES[i], L.tab_x[i], L.tab_w[i]);
+            fprintf(stderr, "[strip] pf %d tab %d window %d..%d drawn at %.3f slide %d:%s\n", S.pf, S.tab, L.tab_win, L.tab_win + TAB_VIS - 1, strip_win_now(), S.slide_t, b);
+        }
+    }
+#endif
     if (S.emb_on && !S.emb_input) {      /* PAUSE3: slid out of sight (the star tracker is showing): the page sees nothing */
         S.held_prev = in->keys; S.ml_prev = in->mouse_l; S.mr_prev = in->mouse_r;
         return 1;
@@ -1371,7 +1423,7 @@ extern "C" int settings_page_frame(const SpInput *in)
                 else {
                     int tabhit = -1;
                     for (int i = 0; i < T_COUNT; ++i)
-                        if (mx >= L.tab_x[i] - P(10) && mx < L.tab_x[i] + L.tab_w[i] + P(10) && my >= L.tab_y && my < L.tab_y + L.tab_h) tabhit = i;
+                        if (L.tab_w[i] > 0 && mx >= L.tab_x[i] - P(10) && mx < L.tab_x[i] + L.tab_w[i] + P(10) && my >= L.tab_y && my < L.tab_y + L.tab_h) tabhit = i;
                     if (tabhit >= 0) switch_tab(tabhit);
                     else if (over_row >= 0 && over_row < n && row_focusable(rows[over_row])) {
                         const Row &R = rows[over_row];
@@ -1783,7 +1835,29 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
     if (cp == 0 || cp == 2) {   /* tabs */
         const float em = (float)P(27);
         const int by = L.tab_y + L.tab_h - P(10);
+        /* CHEATS1: the window of TAB_VIS names; while it slides every name is drawn at its place along the strip that far along, clipped to
+           the strip's ends, so the leaving name slides out at one end and the arriving one in at the other */
+        float lend = (float)L.tab_x[L.tab_win], rbeg = (float)(L.tab_x[L.tab_win + TAB_VIS - 1] + L.tab_w[L.tab_win + TAB_VIS - 1]);
+        if (S.slide_t > 0) {
+            const double f = strip_win_now();
+            const int a = (int)f, b = a + 1 < T_COUNT - TAB_VIS + 1 ? a + 1 : a;
+            const float fr = (float)(f - a);
+            const float off = L.tab_pos[a] + (L.tab_pos[b] - L.tab_pos[a]) * fr;
+            const float wa = L.tab_pos[a + TAB_VIS] - L.tab_gap - L.tab_pos[a], wb = L.tab_pos[b + TAB_VIS] - L.tab_gap - L.tab_pos[b];
+            const float tot = wa + (wb - wa) * fr;
+            lend = L.sx + (L.sw - tot) * 0.5f; rbeg = lend + tot;
+            const int clip[4] = { (int)floorf(lend), L.tab_y - P(8), (int)ceilf(rbeg), L.tab_y + L.tab_h + P(8) };
+            for (int i = 0; i < T_COUNT; ++i) {
+                const float x = lend + L.tab_pos[i] - off;
+                const float w = L.tab_pos[i + 1] - L.tab_gap - L.tab_pos[i];
+                if (x >= rbeg || x + w <= lend) continue;
+                const int on = i == S.tab;
+                ui_text_draw(&s, x, (float)by, TAB_NAMES[i], em, on ? C_TEXT : C_QUIET, 255, clip);
+                if (on) fill_rrect(s, x, (float)(by + P(6)), w, (float)P(5), (float)P(2), C_TEXT, 255, clip);
+            }
+        } else
         for (int i = 0; i < T_COUNT; ++i) {
+            if (L.tab_w[i] <= 0) continue;
             const int on = i == S.tab;
             ui_text_draw(&s, (float)L.tab_x[i], (float)by, TAB_NAMES[i], em, on ? C_TEXT : C_QUIET, 255, 0);
             if (on) fill_rrect(s, (float)L.tab_x[i], (float)(by + P(6)), (float)L.tab_w[i], (float)P(5), (float)P(2), C_TEXT, 255, 0);
@@ -1793,7 +1867,6 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
         const float sm = (float)P(22);
         const float cy = (float)by - ui_text_cap_height(em) * 0.5f;
         const float lw = ui_text_width("LB", sm), rw = ui_text_width("RB", sm);
-        const float lend = (float)L.tab_x[0], rbeg = (float)(L.tab_x[T_COUNT - 1] + L.tab_w[T_COUNT - 1]);
         text_mid(s, (float)L.sx + (lend - L.sx - lw) * 0.5f, cy, "LB", sm, C_QUIET, 200, 0);
         text_mid(s, rbeg + ((float)(L.sx + L.sw) - rbeg - rw) * 0.5f, cy, "RB", sm, C_QUIET, 200, 0);
     }
@@ -1930,6 +2003,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
     }
     }
     S.draw_ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+    if (!tl_warm) g_sp_pic_alpha = 1.0;                /* CHEATS1: a picture fraction is for one draw */
     if (!tl_warm) publish_pieces();                    /* WARMFIX1 F1 */
     {   /* SM64DS_SETPAGE_COST=1: the cost of the page's draw, a line every 120 frames (proof rows only) */
         static int on = -1, cnt;
