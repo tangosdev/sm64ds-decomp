@@ -5818,10 +5818,11 @@ struct ComposeKeep {
     unsigned peek_frame, hinge_frame, head_frame, seam_frame;
     SnowFlake snow[SNOW_MAX]; unsigned snow_last; int snow_warm; unsigned snow_lcg;
 };
-ComposeKeep *g_keep;
+ComposeKeep *g_keep_slot[2];
 }
-void ppu_compose_state_save(void)
+void ppu_compose_state_save(int slot)
 {
+    ComposeKeep *&g_keep = g_keep_slot[slot & 1];
     if (!g_keep) g_keep = new ComposeKeep;
     ComposeKeep &k = *g_keep;
     k.amb = g_amb; k.amb_frame = g_amb_frame;
@@ -5834,8 +5835,9 @@ void ppu_compose_state_save(void)
     for (int i = 0; i < SNOW_MAX; ++i) k.snow[i] = g_snow[i];
     k.snow_last = g_snow_last_ticks; k.snow_warm = g_snow_warm; k.snow_lcg = g_snow_lcg;
 }
-void ppu_compose_state_restore(void)
+void ppu_compose_state_restore(int slot)
 {
+    ComposeKeep *g_keep = g_keep_slot[slot & 1];
     if (!g_keep) return;
     const ComposeKeep &k = *g_keep;
     g_amb = k.amb; g_amb_frame = k.amb_frame;
@@ -5851,7 +5853,9 @@ void ppu_compose_state_restore(void)
 
 }  // namespace ntr
 
-extern "C" void port_compose_state_save(void) { ntr::ppu_compose_state_save(); }
-extern "C" void port_compose_state_restore(void) { ntr::ppu_compose_state_restore(); }
+/* slot 0: the memory as it was before the tick's own compose (taken by the scene present); slot 1: scratch */
+extern "C" void port_compose_state_save(int slot) { ntr::ppu_compose_state_save(slot); }
+extern "C" void port_compose_state_restore(int slot) { ntr::ppu_compose_state_restore(slot); }
+extern "C" int port_compose_state_have(int slot) { return ntr::g_keep_slot[slot & 1] ? 1 : 0; }
 extern "C" void port_wipe_suppress_set(int on) { ntr::set_wipe_suppress(on != 0); }
 extern "C" int port_wipe_cut_picture(uint32_t *dst, int w, int h, int stride) { return ntr::wipe_cut_picture(dst, w, h, stride) ? 1 : 0; }

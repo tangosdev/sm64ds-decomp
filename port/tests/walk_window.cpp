@@ -10454,8 +10454,9 @@ static void si_pic(char kind, double alpha, const ntr::Framebuffer *fb, const ui
    before the UI went on, and the present is pointed at it. The caller puts
    g_present_stack back to the tick's kept image afterwards. */
 static void mgi_after_compose(void);
-extern "C" void port_compose_state_save(void);
-extern "C" void port_compose_state_restore(void);
+extern "C" void port_compose_state_save(int slot);
+extern "C" void port_compose_state_restore(int slot);
+extern "C" int port_compose_state_have(int slot);
 static void ip_stack_for_blend(void)
 {
     const long long t0 = ip_qpc();
@@ -10509,9 +10510,11 @@ static void ip_stack_for_blend(void)
     /* MGINTERP1: the band's per-compose memory is the tick's before and after this picture (SM64DS_BLEND_KEEPSTATE=0: as before) */
     static int keep = -1;
     if (keep < 0) { const char *e = getenv("SM64DS_BLEND_KEEPSTATE"); keep = (e && e[0] == '0') ? 0 : 1; }
-    if (keep) port_compose_state_save();
+    /* composed from the memory the tick's own picture started from (slot 0), so a picture at alpha 1 is the tick's own */
+    const int use_keep = keep && port_compose_state_have(0);
+    if (use_keep) { port_compose_state_save(1); port_compose_state_restore(0); }
     uint32_t *img = hal_sub_screen_stacked_image(&g_ip_fb->px[0][0]);
-    if (keep) port_compose_state_restore();
+    if (use_keep) port_compose_state_restore(1);
     mgi_after_compose();   /* MGINTERP1: the live OAM, registers and bottom screen back to the tick's */
     if (!img) return;
     ++g_si_blend_n;
@@ -11231,7 +11234,7 @@ struct MgiState {
 static MgiState g_mgi_prev, g_mgi_cur, g_mgi_live;
 /* g_mgi_tick is declared above ip_build */                 /* this tick's pictures between ticks are drawn by mgi_build */
 static int g_mgi_swapped;              /* the blended state is in the live OAM / registers now */
-static unsigned g_mgi_n[8];
+static unsigned g_mgi_n[10];            /* [8] sprite matrices turned / scaled between ticks, [9] kept (not a pure turn, or too far) */
 static int g_mgi_g3d[2] = { -1, -1 };   /* 3D draw groups of tick N-1 and tick N (0 and 0: the picture under the 2D is the tick's) */
 extern "C" int port_message_engine_a_replay_dirty(void *fbp, const unsigned int *tick_final);
 static int mgi_dirty_ok(void)
@@ -11383,7 +11386,8 @@ static void mgi_blend_oam(const unsigned char *P, const unsigned char *C, unsign
             pm[k] = (short)mgi_rd16(P + (g * 4 + k) * 8 + 6);
             cm[k] = (short)mgi_rd16(C + (g * 4 + k) * 8 + 6);
         }
-        if (!mgi_mtx(pm, cm, alpha, om)) continue;
+        if (!mgi_mtx(pm, cm, alpha, om)) { ++g_mgi_n[9]; continue; }
+        if (memcmp(pm, cm, sizeof pm)) ++g_mgi_n[8];
         for (int k = 0; k < 4; ++k) mgi_wr16(O + (g * 4 + k) * 8 + 6, om[k]);
     }
 }
@@ -11480,6 +11484,8 @@ static void mgi_report(void)
     if (!g_mgi_n[0] && !g_mgi_n[6]) return;
     fprintf(stderr, "[mg-interp] %u minigame ticks drawn between, %u refused; %u pictures; sprites moved and blended %u, unmatched (drawn at the tick) %u; BG layers blended %u kept %u; alpha-1 check bad %u\n",
             g_mgi_n[0], g_mgi_n[6], g_mgi_n[1], g_mgi_n[2], g_mgi_n[3], g_mgi_n[4], g_mgi_n[5], g_mgi_n[7]);
+    if (g_mgi_n[8] || g_mgi_n[9])
+        fprintf(stderr, "[mg-interp] sprite matrices: %u turned or scaled between ticks, %u kept at the tick\n", g_mgi_n[8], g_mgi_n[9]);
     if (g_mgi_n[1])
         fprintf(stderr, "[mg-interp] per picture ms: blend %.3f, engine A replay %.3f, engine B scan-out %.3f (the stacked compose is the scene-interp line's)\n",
                 g_mgi_ms[0] / g_mgi_n[1], g_mgi_ms[1] / g_mgi_n[1], g_mgi_ms[2] / g_mgi_n[1]);
@@ -14863,9 +14869,12 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
  * them engine A's affinity instead, which the display swap then carried into
  * the wrong half. Nothing happens in the inset layout: the compose returns 0,
  * the surface falls back to fb and present() keeps reading fb. */
+extern "C" void port_compose_state_save(int slot);
 static void scene_host_present_frame(HWND hwnd, int stacked,
                                      ntr::Framebuffer &fb)
 {
+    /* MGINTERP1: the gap band's memory before this tick's compose, which the pictures after it compose from */
+    if (stacked && g_ip_on > 0) port_compose_state_save(0);
     uint32_t *stack_img = stacked
             ? hal_sub_screen_stacked_image(&fb.px[0][0]) : 0;
     const OvlSurface surf =
